@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/forme-collect-chronological",
   "version": "0.1.0",
-  "description": "Forme collector stage: Stream<ContentNode> → Collection, sorted by frontmatter date descending, with route assignment.",
+  "description": "Forme collector stage: routed ContentNodes → Collection, sorted by frontmatter date descending with canonical routes preserved.",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {

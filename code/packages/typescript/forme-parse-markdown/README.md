@@ -6,7 +6,7 @@ v0 subset of YAML-style frontmatter.
 
 This is the second Forme stage of the blog v0 effort.  Sits between
 `forme-source-fs` (which produces `ContentSource` per file on disk) and
-the collector stages (which sort and assign routes).
+`forme-router` (which assigns canonical routes before product consumers).
 
 ## Stage shape
 
@@ -70,8 +70,8 @@ parser — kept separate so this stage stays zero-dependency.
   sourcePath }`, so:
   - editing the body changes the revision (AST changes);
   - editing frontmatter changes the revision;
-  - moving the file to a new path changes the revision (collectors
-    usually key off path).
+  - moving the file to a new path changes the revision (routers and
+    collectors use the path).
   Two parses of the same input from the same path are byte-identical
   revisions, so the cache layer short-circuits cleanly.
 
@@ -90,7 +90,7 @@ break.
 
 ## v0 simplifications
 
-- `route` is always `null` — route assignment is a collector's job.
+- `route` is always `null` — route assignment is `forme-router`'s job.
 - `assetRefs` is always `[]` — asset extraction is a separate future
   stage that walks the document AST.
 - Frontmatter values are always strings (see grammar above).

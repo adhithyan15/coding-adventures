@@ -7,7 +7,7 @@ slug: hello
 # Hello, Forme
 
 This is the first post built end-to-end by the **Forme** authoring
-pipeline. Four stages, one typed DAG, one HTML file on disk:
+pipeline. Five stages, one typed DAG, one HTML file on disk:
 
 1. `forme-source-fs` walked the content directory and emitted a
    `ContentSource` for this file — bytes plus a stable `LogicalId`
@@ -16,27 +16,29 @@ pipeline. Four stages, one typed DAG, one HTML file on disk:
    frontmatter, and handed the body to `gfm-parser`. The result is a
    `ContentNode` carrying a `DocumentNode` AST plus the parsed
    frontmatter.
-3. `forme-render-static` walked the AST via `document-ast-to-html`,
+3. `forme-router` applied the blog route template to the frontmatter
+   slug and recorded `/blog/hello.html` as the node's canonical route.
+4. `forme-render-static` walked the AST via `document-ast-to-html`,
    wrapped the body in a classless HTML5 theme, derived the title from
    `frontmatter.title`, and emitted a `RenderedPage`.
-4. `forme-emit-fs` mapped the page's `route` (`/blog/hello.html`) to
+5. `forme-emit-fs` mapped the page's `route` (`/blog/hello.html`) to
    a path under `outDir`, wrote the UTF-8 bytes, and assembled the
    final `DeployArtifact` with a manifest naming this one route.
 
 > The orchestrator (`forme-orchestrator`, FM03 §3–4) walks the typed
-> DAG that connects all four stages. Stream-iteration promotion (the
+> DAG that connects all five stages. Stream-iteration promotion (the
 > v0.1.1 fix) is what lets the per-item parser slot between the
 > streaming source and the streaming renderer without an explicit
 > adapter.
 
 ## What this proves
 
-- Kind compatibility checking works on a real four-stage wire.
+- Kind compatibility checking works across a real five-stage DAG.
 - The streaming scheduler delivers items lazily through fan-in /
   fan-out.
 - Capability declarations round-trip — `forme-source-fs` declares
   `storage:read`, `forme-emit-fs` declares `filesystem:write`, the
-  parser and renderer declare nothing, and the orchestrator's
+  parser, router, and renderer declare nothing, and the orchestrator's
   capability check accepts all of them.
 - Identity is stable: re-running the pipeline against an unchanged
   source produces the same `buildId` (BLAKE2b over the route → sha256
@@ -45,9 +47,9 @@ pipeline. Four stages, one typed DAG, one HTML file on disk:
 
 ## What this does not prove yet
 
-- **No collection.** `forme-collect-chronological` is wired up as a
-  package but omitted from this demo until the router stage lands.
-  A multi-post index page is the natural next demo.
+- **No collection.** `forme-collect-chronological` is omitted because this
+  minimal demo has no collection-consuming surface stage. The complete blog
+  example proves that routed fan-out topology.
 - **No Style IR.** The theme is a hard-coded inline `<style>` block
   in `forme-render-static`. FM04 will replace that with a proper
   `StyleDocument` flowing through its own stages.

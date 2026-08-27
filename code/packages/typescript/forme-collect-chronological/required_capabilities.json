@@ -3,5 +3,5 @@
   "version": 1,
   "package": "typescript/forme-collect-chronological",
   "capabilities": [],
-  "justification": "Pure transform: Stream<ContentNode> → Collection.  Buffers the incoming stream in memory, sorts by frontmatter date (descending) with sourcePath tiebreak, derives a slug + route for each entry, and emits one Collection.  No I/O, network, env, or shell access."
+  "justification": "Pure transform: Stream<ContentNode> → Collection.  Requires canonical routes assigned upstream, buffers the incoming stream in memory, sorts by frontmatter date (descending) with sourcePath tiebreak, derives display metadata, and emits one Collection.  No I/O, network, env, or shell access."
 }

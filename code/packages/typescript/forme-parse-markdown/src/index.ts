@@ -28,7 +28,7 @@
  *     * a content edit changes it (DocumentNode shape changes);
  *     * a frontmatter edit changes it;
  *     * moving the file to a new path changes it (downstream
- *       collectors / route assigners care about path).
+ *       routers and collectors care about path).
  *   Two parses of the same input bytes from the same path produce
  *   byte-identical revisions, so the cache layer can short-circuit.
  *
@@ -39,8 +39,8 @@
  *   - Frontmatter grammar is intentionally tiny (see `frontmatter.ts`).
  *     Quoted strings, arrays, nested maps are deferred to a future
  *     sibling stage that wraps a real YAML parser.
- *   - `route` is always emitted as `null` — assignment is a collector's
- *     job (`forme-collect-chronological`), not the parser's.
+ *   - `route` is always emitted as `null` — assignment is
+ *     `forme-router`'s job, not the parser's.
  *   - `assetRefs` is always `[]`.  Asset extraction (FM00 §5.3) is a
  *     separate stage that will run between parse and collect.
  *
@@ -119,7 +119,7 @@ const parseMarkdown = defineStage({
 
     // 4. Recompute revision.  Including sourcePath here means moving
     //    a post (e.g. posts/foo.md → archive/foo.md) invalidates the
-    //    cached node — collectors usually key off path, so a move *is*
+    //    cached node — routers and collectors use path, so a move *is*
     //    a content change from their perspective.
     const revision = computeRevisionId({
       documentJson: document as unknown as JsonValue,

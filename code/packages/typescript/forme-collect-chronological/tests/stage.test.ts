@@ -1,7 +1,7 @@
 /**
  * stage.test.ts — collector integration tests.
  *
- * Verifies the stage value-shape and the full sort + route assignment
+ * Verifies the stage value-shape and the full sort + route-preservation
  * pipeline with a variety of inputs:
  *   - empty stream
  *   - single post
@@ -9,7 +9,7 @@
  *   - posts without dates land last
  *   - identical dates → sourcePath tiebreak
  *   - explicit slug frontmatter wins over derived slug
- *   - custom dateField / slugField / routeTemplate / name
+ *   - custom dateField / slugField / name
  *   - missing-date warning is emitted
  */
 
@@ -71,7 +71,7 @@ function makeNode(opts: {
     revision: ("blake2b:" + "0".repeat(64)) as ContentNode["revision"],
     document: { type: "document", children: [] } as unknown as ContentNode["document"],
     frontmatter: fm,
-    route: opts.route ?? null,
+    route: opts.route === undefined ? `/routed/${nodeSeq}.html` : opts.route,
     assetRefs: [],
     sourcePath: opts.sourcePath,
   };
@@ -115,14 +115,13 @@ describe("collectChronological — stage shape", () => {
     expect(collectChronological.apiVersion).toBe(1);
   });
 
-  it("has a configSchema with all 4 optional fields", () => {
+  it("has a configSchema with all 3 optional fields", () => {
     expect(collectChronological.configSchema).toMatchObject({
       type: "object",
       properties: {
         name:          { type: "string" },
         dateField:     { type: "string" },
         slugField:     { type: "string" },
-        routeTemplate: { type: "string" },
       },
     });
   });
@@ -138,7 +137,12 @@ describe("collectChronological — base behaviour", () => {
 
   it("single post → one entry with date, slug, route filled", async () => {
     const c = await runCollect([
-      makeNode({ sourcePath: "posts/hello.md", date: "2026-05-15", title: "Hello" }),
+      makeNode({
+        sourcePath: "posts/hello.md",
+        date: "2026-05-15",
+        title: "Hello",
+        route: "/blog/hello.html",
+      }),
     ]);
     expect(c.entries.length).toBe(1);
     const e = c.entries[0]!;
@@ -204,24 +208,37 @@ describe("collectChronological — edge cases", () => {
     expect(warnings[0]).toMatch(/missing date/i);
   });
 
-  it("explicit slug frontmatter wins over the derived slug", async () => {
+  it("explicit slug frontmatter changes overlay metadata, not the canonical route", async () => {
     const c = await runCollect([
-      makeNode({ sourcePath: "posts/raw-name.md", date: "2026-01-01", slug: "custom-slug" }),
+      makeNode({
+        sourcePath: "posts/raw-name.md",
+        date: "2026-01-01",
+        slug: "custom-slug",
+        route: "/canonical/from-router.html",
+      }),
     ]);
     expect(c.entries[0]!.overlay.slug).toBe("custom-slug");
-    expect(c.entries[0]!.route).toBe("/blog/custom-slug.html");
+    expect(c.entries[0]!.route).toBe("/canonical/from-router.html");
   });
 
-  it("copies the canonical ContentNode route instead of re-deriving it", async () => {
-    const c = await runCollect(
-      [makeNode({
-        sourcePath: "posts/local-fallback.md",
-        date: "2026-01-01",
-        route: "/canonical/from-router.html",
-      })],
-      { routeTemplate: "/fallback/{slug}.html" },
-    );
+  it("copies the canonical ContentNode route", async () => {
+    const c = await runCollect([makeNode({
+      sourcePath: "posts/routed.md",
+      date: "2026-01-01",
+      route: "/canonical/from-router.html",
+    })]);
     expect(c.entries[0]!.route).toBe("/canonical/from-router.html");
+  });
+
+  it("rejects an unrouted ContentNode with an actionable diagnostic", async () => {
+    const node = makeNode({
+      sourcePath: "posts/unrouted.md",
+      date: "2026-01-01",
+      route: null,
+    });
+    await expect(runCollect([node])).rejects.toThrow(
+      `forme-collect-chronological: ContentNode ${node.identity} (posts/unrouted.md) has no route; add forme-router upstream`,
+    );
   });
 
   it("empty title frontmatter falls back to slug", async () => {
@@ -264,18 +281,23 @@ describe("collectChronological — config customisation", () => {
     expect(c.entries.map((e) => e.orderKey.value)).toEqual(["2026-05-15", "2026-01-01"]);
   });
 
-  it("custom slugField + custom routeTemplate", async () => {
+  it("custom slugField changes overlay metadata without changing the route", async () => {
     const c = await runCollect(
-      [makeNode({ sourcePath: "posts/p.md", date: "2026-01-01", extraFrontmatter: { handle: "my-handle" } })],
-      { slugField: "handle", routeTemplate: "/essays/{slug}/index.html" },
+      [makeNode({
+        sourcePath: "posts/p.md",
+        date: "2026-01-01",
+        route: "/essays/p/index.html",
+        extraFrontmatter: { handle: "my-handle" },
+      })],
+      { slugField: "handle" },
     );
-    expect(c.entries[0]!.route).toBe("/essays/my-handle/index.html");
+    expect(c.entries[0]!.route).toBe("/essays/p/index.html");
     expect(c.entries[0]!.overlay.slug).toBe("my-handle");
   });
 
   it("undefined config behaves like {}", async () => {
     const c = await runCollect(
-      [makeNode({ sourcePath: "posts/p.md", date: "2026-01-01" })],
+      [makeNode({ sourcePath: "posts/p.md", date: "2026-01-01", route: "/blog/p.html" })],
       undefined as unknown as object,
     );
     expect(c.entries[0]!.route).toBe("/blog/p.html");

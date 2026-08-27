@@ -8,8 +8,7 @@
  *   consumes:    streamOf(Kinds.ContentNode)
  *   produces:    Kinds.Collection
  *   capabilities: []                ← pure transform
- *   configSchema: { name?: string; dateField?: string; slugField?: string;
- *                   routeTemplate?: string }
+ *   configSchema: { name?: string; dateField?: string; slugField?: string }
  *
  * === Why "collector" is its own stage ===
  *
@@ -39,13 +38,13 @@
  * output is byte-deterministic across runs — important for cache
  * hashing and for reviewing diffs of generated indexes.
  *
- * === Route assignment ===
+ * === Routing contract ===
  *
  * `forme-router` assigns the canonical URL on `ContentNode.route`.
  * This collector copies that value to `CollectionEntry.route`, so the
  * index/feed side of the DAG and the page-rendering side share one
- * routing decision. A local `routeTemplate` derivation remains only
- * as a compatibility fallback for older standalone callers.
+ * routing decision. Unrouted nodes are rejected with an actionable
+ * diagnostic instead of silently creating a second URL policy.
  *
  * === Spec adherence ===
  *
@@ -53,7 +52,6 @@
  *
  *   - Only string-typed date frontmatter values are supported (the
  *     parser-markdown v0 only produces strings anyway).
- *   - The compatibility route fallback only substitutes `{slug}`.
  *
  * @module index
  */
@@ -68,7 +66,7 @@ import {
   type OrderKey,
 } from "@coding-adventures/forme-types";
 import { defineStage } from "@coding-adventures/forme-stage";
-import { slugify, formatRoute } from "./slug.js";
+import { slugify } from "./slug.js";
 
 /**
  * v0 collector config.  Every field has a sensible default so a bare
@@ -81,13 +79,10 @@ export interface CollectChronologicalConfig {
   readonly dateField?: string;
   /** Frontmatter key carrying an explicit slug.  Default `"slug"`. */
   readonly slugField?: string;
-  /** Deprecated fallback used only when `ContentNode.route` is null. */
-  readonly routeTemplate?: string;
 }
 
 const DEFAULT_DATE_FIELD = "date";
 const DEFAULT_SLUG_FIELD = "slug";
-const DEFAULT_ROUTE_TEMPLATE = "/blog/{slug}.html";
 const DEFAULT_NAME = "posts";
 
 /**
@@ -111,7 +106,6 @@ const collectChronological = defineStage({
       name:          { type: "string" },
       dateField:     { type: "string" },
       slugField:     { type: "string" },
-      routeTemplate: { type: "string" },
     },
   },
   async run(rawInput, rawConfig, ctx) {
@@ -119,7 +113,6 @@ const collectChronological = defineStage({
     const name          = config.name          ?? DEFAULT_NAME;
     const dateField     = config.dateField     ?? DEFAULT_DATE_FIELD;
     const slugField     = config.slugField     ?? DEFAULT_SLUG_FIELD;
-    const routeTemplate = config.routeTemplate ?? DEFAULT_ROUTE_TEMPLATE;
 
     // 1. Buffer the stream.  Collectors are inherently un-streamable
     //    — we need every node before we can sort.  Memory is fine for
@@ -142,7 +135,12 @@ const collectChronological = defineStage({
       const slug = (typeof explicitSlug === "string" && explicitSlug.length > 0)
         ? explicitSlug
         : slugify(node.sourcePath);
-      const route = node.route ?? formatRoute(routeTemplate, slug);
+      if (node.route === null) {
+        throw new Error(
+          `forme-collect-chronological: ContentNode ${node.identity} (${node.sourcePath}) has no route; add forme-router upstream`,
+        );
+      }
+      const route = node.route;
       if (!hasDate) {
         ctx.logger.warn("forme-collect-chronological: post missing date frontmatter", {
           sourcePath: node.sourcePath,
@@ -214,4 +212,4 @@ function stringFromFrontmatter(
 }
 
 export default collectChronological;
-export { collectChronological, slugify, formatRoute };
+export { collectChronological, slugify };

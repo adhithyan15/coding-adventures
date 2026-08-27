@@ -2,7 +2,7 @@ set -e
 
 # BUILD — forme-hello-world
 #
-# End-to-end Forme demo program.  Depends (via file: deps) on the four
+# End-to-end Forme demo program.  Depends (via file: deps) on the five
 # pipeline stages, the orchestrator, the pipeline-config types, and
 # (transitively) the entire FM01 kernel + the document-ast / gfm parser
 # / blake2b primitives those build on top of.
@@ -34,8 +34,9 @@ set -e
 #     forme-orchestrator      ← runs the pipeline
 #     forme-source-fs         ← stage 1
 #     forme-parse-markdown    ← stage 2
-#     forme-render-static     ← stage 3
-#     forme-emit-fs           ← stage 4
+#     forme-router            ← stage 3
+#     forme-render-static     ← stage 4
+#     forme-emit-fs           ← stage 5
 #
 # Each `cd` runs in its own subshell so it does NOT persist to the next
 # line — every command starts fresh from this program's directory.
@@ -61,6 +62,7 @@ cd ../../../packages/typescript/document-ast-to-html && npm install --silent
 cd ../../../packages/typescript/forme-orchestrator && npm install --silent
 cd ../../../packages/typescript/forme-source-fs && npm install --silent
 cd ../../../packages/typescript/forme-parse-markdown && npm install --silent
+cd ../../../packages/typescript/forme-router && npm install --silent
 cd ../../../packages/typescript/forme-render-static && npm install --silent
 cd ../../../packages/typescript/forme-emit-fs && npm install --silent
 npm install --silent

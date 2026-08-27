@@ -57,7 +57,7 @@ function makeNode(opts: {
     revision: ("blake2b:" + "0".repeat(64)) as ContentNode["revision"],
     document: parseGfm(opts.markdown) as unknown as ContentNode["document"],
     frontmatter: opts.frontmatter ?? {},
-    route: opts.route ?? null,
+    route: opts.route === undefined ? `/routed/${seq}.html` : opts.route,
     assetRefs: [],
     sourcePath: opts.sourcePath,
   };
@@ -100,12 +100,11 @@ describe("renderStatic — stage shape", () => {
     expect(renderStatic.apiVersion).toBe(1);
   });
 
-  it("has a configSchema covering routing and public metadata", () => {
+  it("has a configSchema covering public metadata", () => {
     expect(renderStatic.configSchema).toMatchObject({
       type: "object",
       properties: {
         siteTitle:     { type: "string" },
-        routeTemplate: { type: "string" },
         siteUrl:       { type: "string" },
         siteHomeRoute: { type: "string" },
         rssRoute:      { type: "string" },
@@ -134,31 +133,26 @@ describe("renderStatic — single-node rendering", () => {
     expect(page!.html).toContain("<style>");
   });
 
-  it("default route is /blog/{slug}.html", async () => {
-    const [page] = await runRender([
-      makeNode({ sourcePath: "posts/hello-world.md", markdown: "# x\n" }),
-    ]);
-    expect(page!.route).toBe("/blog/hello-world.html");
-  });
-
-  it("custom routeTemplate is honoured", async () => {
-    const [page] = await runRender(
-      [makeNode({ sourcePath: "posts/about.md", markdown: "# x\n" })],
-      { routeTemplate: "/{slug}/index.html" },
-    );
-    expect(page!.route).toBe("/about/index.html");
-  });
-
-  it("prefers the canonical ContentNode route over local derivation", async () => {
+  it("uses the canonical ContentNode route", async () => {
     const [page] = await runRender(
       [makeNode({
-        sourcePath: "posts/local-fallback.md",
+        sourcePath: "posts/routed.md",
         markdown: "# x\n",
         route: "/canonical/from-router.html",
       })],
-      { routeTemplate: "/fallback/{slug}.html" },
     );
     expect(page!.route).toBe("/canonical/from-router.html");
+  });
+
+  it("rejects an unrouted ContentNode with an actionable diagnostic", async () => {
+    const node = makeNode({
+      sourcePath: "posts/unrouted.md",
+      markdown: "# x\n",
+      route: null,
+    });
+    await expect(runRender([node])).rejects.toThrow(
+      `forme-render-static: ContentNode ${node.identity} (posts/unrouted.md) has no route; add forme-router upstream`,
+    );
   });
 
   it("title from frontmatter wins over h1", async () => {

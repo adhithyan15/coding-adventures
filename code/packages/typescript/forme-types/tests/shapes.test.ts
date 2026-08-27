@@ -79,7 +79,7 @@ describe("ContentNode", () => {
     expect(node.frontmatter.title).toBe("Hello");
   });
 
-  it("permits a null route before a collector assigns one", () => {
+  it("permits a null route before a router assigns one", () => {
     const node: ContentNode = {
       identity: SAMPLE_ID,
       revision: SAMPLE_REV,

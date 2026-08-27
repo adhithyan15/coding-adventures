@@ -17,30 +17,23 @@
  *       │       via the orchestrator's stream-iteration promotion —
  *       │       see forme-orchestrator@0.1.1 changelog]
  *       ▼
+ *   forme-router           Stream<ContentNode>     → Stream<ContentNode>
+ *       │
+ *       ▼
  *   forme-render-static    Stream<ContentNode>     → Stream<RenderedPage>
  *       │
  *       ▼
  *   forme-emit-fs          Stream<RenderedPage>    → DeployArtifact  (sink)
- *
- * The orchestrator infers every wire from declared kinds (FM03 §3.3
- * inference rule #2: "most recent declared producer of a compatible
- * kind").  Stages appear in declaration order; no `wires` block is
- * needed.
  *
  * ═══ Why `forme-collect-chronological` is NOT in this topology ════
  *
  * The collector produces `Kinds.Collection`, which is NOT in the
  * orchestrator's sink kind list (DeployArtifact / RequestHandler /
  * Feed / SearchIndex per FM03 §3.3 rule #5).  Wiring it in here
- * would create an orphan terminal producer; the v0 renderer derives
- * its own routes from `sourcePath` and never reads the collection.
- *
- * The fix lands when the v0.2 "router" stage exists and feeds
- * collection-side routes back onto `ContentNode.route`.  At that
- * point the renderer becomes a consumer of routed nodes and the
- * collector slots in cleanly between parse and render.  See
- * forme-render-static's README and the source-level comments in
- * `forme-render-static/src/slug.ts` for the cross-package note.
+ * would create an orphan terminal producer. The complete blog example
+ * fans routed nodes out to both collector and renderer, then consumes
+ * the collection with its surface stage. Hello-world intentionally
+ * remains linear while still proving the canonical routing contract.
  *
  * ═══ Settings rationale ═══════════════════════════════════════════
  *
@@ -70,6 +63,7 @@
 import type { PipelineConfig } from "@coding-adventures/forme-pipeline-config";
 import sourceFs from "@coding-adventures/forme-source-fs";
 import parseMarkdown from "@coding-adventures/forme-parse-markdown";
+import router from "@coding-adventures/forme-router";
 import renderStatic from "@coding-adventures/forme-render-static";
 import emitFs from "@coding-adventures/forme-emit-fs";
 
@@ -138,6 +132,7 @@ export function makePipelineConfig(
       //    `glob: "**/*.md"` matches the v0 walker's "*\*/*.<ext>"
       //    constraint (forme-source-fs/walker.ts).
       {
+        id: "source",
         stage:  sourceFs,
         config: { glob: "**/*.md", root: contentRoot },
       },
@@ -147,29 +142,43 @@ export function makePipelineConfig(
       //    accepted but currently ignored; declaring it documents
       //    intent for when toggling lands).
       {
+        id: "parse",
         stage:  parseMarkdown,
         config: { gfm: true },
       },
 
-      // 3. Render each ContentNode as a self-contained HTML5 page
-      //    with the classless theme.  routeTemplate is the v0
-      //    default (/blog/{slug}.html) — repeating it here makes the
-      //    output path obvious to readers of this config.
+      // 3. Assign the canonical URL once. Every product consumer of a
+      //    ContentNode now requires this upstream routing decision.
       {
+        id: "route",
+        stage: router,
+        config: { routeTemplate: "/blog/{slug}.html" },
+      },
+
+      // 4. Render each routed ContentNode as a self-contained HTML5
+      //    page with the classless theme.
+      {
+        id: "render",
         stage:  renderStatic,
         config: {
-          siteTitle:     "forme-hello-world",
-          routeTemplate: "/blog/{slug}.html",
+          siteTitle: "forme-hello-world",
         },
       },
 
-      // 4. Write each page to disk; emit a final DeployArtifact
+      // 5. Write each page to disk; emit a final DeployArtifact
       //    summarising the build.  outDir is REQUIRED by emit-fs's
       //    schema — undefined here would fail config validation.
       {
+        id: "emit",
         stage:  emitFs,
         config: { outDir },
       },
+    ],
+    wires: [
+      { from: { id: "source" }, to: { id: "parse" } },
+      { from: { id: "parse" },  to: { id: "route" } },
+      { from: { id: "route" },  to: { id: "render" } },
+      { from: { id: "render" }, to: { id: "emit" } },
     ],
   };
 }

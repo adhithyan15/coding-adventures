@@ -16,7 +16,7 @@ import collect from "@coding-adventures/forme-collect-chronological";
 collect.consumes      // streamOf(Kinds.ContentNode)
 collect.produces      // Kinds.Collection
 collect.capabilities  // []  ← pure transform
-collect.configSchema  // { name?, dateField?, slugField?, routeTemplate? }
+collect.configSchema  // { name?, dateField?, slugField? }
 ```
 
 ## What it does
@@ -28,9 +28,8 @@ collect.configSchema  // { name?, dateField?, slugField?, routeTemplate? }
      the sentinel `"0000-01-01"` if absent — a warning is logged.
    - `slug` = `frontmatter[slugField]` (default key `"slug"`) if a
      non-empty string, else `slugify(sourcePath)`.
-   - `route` = `ContentNode.route`, normally assigned by `forme-router`.
-     Older standalone callers retain a `routeTemplate` compatibility
-     fallback when the node route is `null`.
+   - `route` = `ContentNode.route`, assigned by `forme-router`. Unrouted
+     input fails with an actionable diagnostic.
 3. **Sort** by `dateStr` descending; tie-break by `sourcePath`
    ascending (deterministic across runs).
 4. **Emit** one `Collection`:
@@ -86,7 +85,6 @@ interface CollectChronologicalConfig {
   name?:          string;   // collection name, default "posts"
   dateField?:     string;   // frontmatter key for date, default "date"
   slugField?:     string;   // frontmatter key for explicit slug, default "slug"
-  routeTemplate?: string;   // deprecated fallback when node.route is null
 }
 ```
 
@@ -95,7 +93,7 @@ interface CollectChronologicalConfig {
 ## Slug derivation rules
 
 `slugify(sourcePath)` resolves the entry's display slug when frontmatter
-doesn't supply one. It also supports the legacy route fallback:
+doesn't supply one:
 
 1. Take the basename (last path segment; splits on `/` and `\`).
 2. Strip a trailing `.md` / `.mdx` / `.markdown` (case-insensitive).
@@ -109,8 +107,8 @@ doesn't supply one. It also supports the legacy route fallback:
 
 - Only string-typed frontmatter values are supported (the parser-markdown
   v0 only produces strings anyway).
-- The legacy route fallback only supports `{slug}` substitution. Routed
-  pipelines configure URL policy once in `forme-router`.
+- Routed input is required so URL policy remains centralized in
+  `forme-router`.
 - Single fixed `discriminant: "chronological"`. A separate collector
   variant will own per-tag / per-year discriminants.
 

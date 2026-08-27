@@ -4,10 +4,11 @@
 
 ### Changed
 
-- `ContentNode.route` is now authoritative. The renderer copies the route
-  assigned by `forme-router` instead of independently re-deriving a URL.
-- `routeTemplate` remains as a compatibility fallback only when
-  `ContentNode.route` is `null`.
+- `ContentNode.route` is now required and authoritative. The renderer copies
+  the route assigned by `forme-router` instead of independently re-deriving a
+  URL, and unrouted input receives an actionable error.
+- Removed `routeTemplate` and `formatRoute`; URL policy now lives exclusively
+  in `forme-router`.
 - Added optional `siteUrl`, `siteHomeRoute`, `rssRoute`, and `atomRoute`
   configuration. Routed pages now emit canonical URLs, excerpt descriptions,
   feed discovery, and a project-page-safe header link.
@@ -16,8 +17,7 @@
 
 ### Tests
 
-- Added coverage proving an upstream canonical route wins even when the
-  source path and fallback route template disagree.
+- Added coverage for canonical routed input and the unrouted-input diagnostic.
 - Added coverage for deployment-prefix composition, metadata escaping, feed
   discovery, and custom header links.
 

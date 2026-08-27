@@ -2,9 +2,8 @@
  * slug.ts — derive a URL-safe slug from a source path.
  *
  * Used for collection overlay metadata when frontmatter doesn't supply
- * an explicit `slug:` field, and temporarily by the compatibility route
- * fallback for unrouted standalone callers. Rules (kept intentionally
- * tiny — Jekyll-style):
+ * an explicit `slug:` field. Rules (kept intentionally tiny —
+ * Jekyll-style):
  *
  *   1. Take the basename (last path segment).
  *   2. Strip the trailing markdown extension if present
@@ -58,24 +57,6 @@ export function slugify(sourcePath: string): string {
   while (hi > lo && s.charCodeAt(hi - 1) === 45) hi--;
   s = s.slice(lo, hi);
 
-  // Empty result (e.g. input was "@@@.md") falls back to "untitled" so
-  // route templating never produces "/blog/.html".
+  // Empty result (e.g. input was "@@@.md") falls back to "untitled".
   return s.length > 0 ? s : "untitled";
-}
-
-/**
- * Format a route template by substituting `{slug}` (and only `{slug}`
- * in v0).  Future templates may add `{year}`, `{month}`, `{day}` etc.
- *
- * @example
- * formatRoute("/blog/{slug}.html", "hello") === "/blog/hello.html";
- */
-export function formatRoute(template: string, slug: string): string {
-  // Function replacement (not string replacement): `String.prototype.
-  // replace` honours `$&`, `$1`, `$<name>`, etc. in a string second
-  // argument.  A user-supplied frontmatter slug containing those
-  // sequences would inject regex back-references into the route.
-  // The function form is immune — `slug` is used verbatim regardless
-  // of `$` content.
-  return template.replace(/\{slug\}/g, () => slug);
 }

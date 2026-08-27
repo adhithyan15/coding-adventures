@@ -83,8 +83,9 @@ export interface ContentSource {
  * with the surrounding metadata the rest of the pipeline cares about:
  * frontmatter, assigned route, asset references, source provenance.
  *
- * `route` is null until a collector assigns one.  Stages between the
- * parser and the collector should not depend on it.
+ * `route` is null until a router assigns one. Stages between the parser
+ * and router should not depend on it; product renderers and collectors
+ * consume routed nodes.
  */
 export interface ContentNode {
   readonly identity: LogicalId;
