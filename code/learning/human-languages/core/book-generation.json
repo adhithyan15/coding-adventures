@@ -6938,7 +6938,7 @@
       "language": "malayalam",
       "chapter": 1,
       "output": "malayalam/book/chapters/ch01-greetings.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "ML-C01-namaskaram",
         "ML-W01-na-ma-trace",
         "ML-W01-na-ma-guided-copy",
@@ -6949,26 +6949,23 @@
         "ML-W01-namaskaram-read",
         "ML-W01-namaskaram-dictation",
         "ML-C01-practice"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "malayalam",
       "chapter": 2,
       "output": "malayalam/book/chapters/ch02-introductions.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "ML-W02-santosham-guided-copy"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "malayalam",
       "chapter": 3,
       "output": "malayalam/book/chapters/ch03-responding.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "ML-W03-santosham-delayed-copy"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "malayalam",
