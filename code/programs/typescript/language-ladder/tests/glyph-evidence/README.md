@@ -9,7 +9,8 @@ not edit a registry or reload the application corpus.
 For a glyph change:
 
 1. edit only the owning `*.evidence.ts` module;
-2. give a new case an unused numeric `caseOrder` within its existing suite;
+2. give a new case a nearby numeric `caseOrder` within its suite (ties are
+   allowed and receive stable module-path/name tie-breakers);
 3. add one unique level-2 entry file under `../../CHANGELOG.d/`; and
 4. run `npm run typecheck` and `npx vitest run tests/independentvowels.test.ts
    tests/glyph-evidence-ownership.test.ts`.

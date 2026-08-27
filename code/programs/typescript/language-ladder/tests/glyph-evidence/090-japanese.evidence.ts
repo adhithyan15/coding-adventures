@@ -140,5 +140,3 @@ export default [
     },
   },
 ] satisfies readonly GlyphEvidence[];
-
-

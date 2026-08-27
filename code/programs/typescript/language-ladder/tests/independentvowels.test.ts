@@ -23,49 +23,37 @@ const evidence: LocatedEvidence[] = Object.entries(modules).flatMap(([modulePath
   module.default.map((entry) => ({ ...entry, modulePath })),
 );
 
-// Fail closed before registering tests. Explicit numeric ranks preserve the
-// pre-shard execution order without making the aggregator a hand-edited file
-// registry; stable textual tie-breakers make even malformed duplicate ranks
-// deterministic enough to report the same error on every platform.
-const suiteByOrder = new Map<number, string>();
+// Explicit numeric ranks preserve the pre-shard execution order without making
+// the aggregator a hand-edited file registry. Same-rank additions are allowed:
+// parallel agents can independently choose the next rank, and stable textual
+// tie-breakers give their merged evidence one deterministic order.
 const orderBySuite = new Map<string, number>();
-const caseKeys = new Set<string>();
 for (const entry of evidence) {
-  const suiteAtOrder = suiteByOrder.get(entry.suiteOrder);
-  if (suiteAtOrder !== undefined && suiteAtOrder !== entry.suite) {
-    throw new Error(
-      `glyph evidence suite order ${entry.suiteOrder} is shared by '${suiteAtOrder}' and '${entry.suite}'`,
-    );
-  }
   const orderForSuite = orderBySuite.get(entry.suite);
   if (orderForSuite !== undefined && orderForSuite !== entry.suiteOrder) {
     throw new Error(
       `glyph evidence suite '${entry.suite}' uses both ${orderForSuite} and ${entry.suiteOrder}`,
     );
   }
-  suiteByOrder.set(entry.suiteOrder, entry.suite);
   orderBySuite.set(entry.suite, entry.suiteOrder);
-
-  const caseKey = `${entry.suiteOrder}\u0000${entry.caseOrder}`;
-  if (caseKeys.has(caseKey)) {
-    throw new Error(
-      `glyph evidence suite '${entry.suite}' has duplicate case order ${entry.caseOrder}`,
-    );
-  }
-  caseKeys.add(caseKey);
 }
 
 evidence.sort(
   (left, right) =>
     left.suiteOrder - right.suiteOrder ||
+    (left.suite < right.suite ? -1 : left.suite > right.suite ? 1 : 0) ||
     left.caseOrder - right.caseOrder ||
     (left.modulePath < right.modulePath ? -1 : left.modulePath > right.modulePath ? 1 : 0) ||
     (left.name < right.name ? -1 : left.name > right.name ? 1 : 0),
 );
 
-for (const [suiteOrder, suite] of [...suiteByOrder].sort(([left], [right]) => left - right)) {
+for (const [suite] of [...orderBySuite].sort(
+  ([leftSuite, leftOrder], [rightSuite, rightOrder]) =>
+    leftOrder - rightOrder ||
+    (leftSuite < rightSuite ? -1 : leftSuite > rightSuite ? 1 : 0),
+)) {
   describe(suite, () => {
-    for (const entry of evidence.filter((candidate) => candidate.suiteOrder === suiteOrder)) {
+    for (const entry of evidence.filter((candidate) => candidate.suite === suite)) {
       it(entry.name, () => entry.verify(context));
     }
   });
