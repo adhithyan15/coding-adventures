@@ -9437,10 +9437,14 @@ The late-main review does make the roadmap's broad TypeScript-led Forme family
 actionable as a narrower pending owner,
 `forme-portable-core-family-classification`. It must separate deterministic
 graph, routing, content-model, and rendering kernels from browser, Vite,
-filesystem, and UI hosts before any port. Live PR #13244 owns overlapping Forme
-blog paths, so the owner is registered but not selected. The Vigenere BUILD-
-front owner now explicitly depends on the merged neutral-consumer tranche: its
-five false-green or incomplete front doors remain a bounded operational sibling.
+filesystem, and UI hosts before any port. PR #13244 subsequently merged as
+`f7d0b913d3175096197b1d325863012dff90741b`, clearing the temporary path block
+without changing package topology. Live PR #13251 now owns overlapping
+`forme-collect-chronological`, `forme-render-static`, and Forme-roadmap paths,
+so that owner is again registered but collision-blocked. The Vigenere
+BUILD-front owner now explicitly depends on the merged neutral-consumer
+tranche: its five false-green or incomplete front doors remain a bounded
+operational sibling.
 
 The dependency/leverage pass selects
 `atbash-language-neutral-fixture-established-lane-consumers` on branch
@@ -9454,12 +9458,27 @@ live open-PR scan found zero exact overlap with Atbash packages, CR01, the
 classical-cipher fixture, generator and CI surfaces, state, roadmap, or the root
 changelog.
 
+Before publication the branch rebased conflict-free twice, finally onto exact
+`origin/main` `a45a88e98a50fb363eb68d441926e59a523a9106`. Intervening
+curriculum, ALGOL, Forme, Venture, HTML-parser, Mermaid, and Language Ladder
+changes have no exact implementation overlap. The refreshed collision-checked
+schema-3 inventory records 1,376 implementation identities and 4,586 slots;
+the bands are 175/266, 123/934, 167/2,100, and 911/12,754, with 723 Rust
+singletons, zero OCaml packages, zero collisions, and zero unknown buckets.
+
+Merged PR #13209 added the Rust-only `browser-navigation` identity. New pending
+owner `browser-navigation-singleton-classification` records its evidently
+portable, host-neutral in-memory history and canonical visited-link contract,
+its `url-parser` dependency order, and the need for neutral fixtures before an
+applicable-lane rollout. Browser fetch, storage, rendering, windows, and native
+paint remain outside that owner.
+
 The strategic OCaml process-free substrate still has every declared dependency
 merged but remains collision-unsafe while open PR #12149 owns the required Go
 validator and entry-point paths. Native Dart and JVM build tools remain blocked
 behind the pending execution-semantics and trusted-platform isolation chain.
-After reconciliation and selection, the complete acyclic graph has 540 owners
-and 796 dependency edges: 162 merged, 377 pending, and exactly one in-progress
+After reconciliation and selection, the complete acyclic graph has 541 owners
+and 796 dependency edges: 162 merged, 378 pending, and exactly one in-progress
 owner, with no active parity PR. The fresh worktree and branch start from exact
 `origin/main` `0302e4e8f35a6e79d7bd385ae91fde710176a53c`.
 

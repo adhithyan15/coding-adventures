@@ -21,21 +21,21 @@
     "notes": "Final head b7e1dcd82e980fd5e441eb487ce3f97e6060d015 completed all 41 reported checks acceptably: 39 successes and two expected skips, with no failure or pending check. GitHub reported MERGEABLE/CLEAN; the loop enabled squash auto-merge, and GitHub merged PR #13224 as 0302e4e8f35a6e79d7bd385ae91fde710176a53c at 2026-08-27T16:18:19Z without a manual merge command."
   },
   "last_inventory": {
-    "revision": "0302e4e8f35a6e79d7bd385ae91fde710176a53c",
+    "revision": "a45a88e98a50fb363eb68d441926e59a523a9106",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1375,
-    "implementation_package_slots": 4585,
-    "all_reported_identities": 1414,
+    "implementation_identities": 1376,
+    "implementation_package_slots": 4586,
+    "all_reported_identities": 1415,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 266,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 167,
     "two_to_four_missing_slots": 2100,
-    "singleton_packages": 910,
-    "singleton_missing_slots": 12740,
-    "rust_singletons": 722,
+    "singleton_packages": 911,
+    "singleton_missing_slots": 12754,
+    "rust_singletons": 723,
     "ocaml_packages": 0,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -1633,7 +1633,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, and rendering kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate browser/Vite/filesystem/UI hosts from deterministic portable cores, define fixtures and dependency order, and record narrow applicability exceptions before any port. Do not implement overlapping Forme paths while live PR #13244 owns the complete blog surface."
+      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, and rendering kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate browser/Vite/filesystem/UI hosts from deterministic portable cores, define fixtures and dependency order, and record narrow applicability exceptions before any port. PR #13244 merged as f7d0b913d3175096197b1d325863012dff90741b without changing package topology; live PR #13251 now owns the overlapping forme-collect-chronological, forme-render-static, and Forme roadmap surfaces, so do not select or implement this owner until that collision clears."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -2380,7 +2380,18 @@
       "pr_number": null,
       "selection_revision": "0302e4e8f35a6e79d7bd385ae91fde710176a53c",
       "selection_notes": "Selected after PR #13224 completed all 41 terminal acceptable checks and squash auto-merge merged its final head as 0302e4e8f35a6e79d7bd385ae91fde710176a53c without a manual merge command. The exact-main schema-3 inventory is unchanged at 15 established lanes, 1,375 implementation identities, 4,585 slots, 1,414 all-reported identities, bands 175/266, 123/934, 167/2,100, and 910/12,740, 722 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets; no inventory-driven gap is newly unowned. This dependency-ready owner reaches all 15 established lanes with the six complete CR01 objects through the bounded dependency-free generated-consumer pattern already proven for Scytale and Vigenere. It is selected ahead of disconnected single-package contracts while the now dependency-complete five-front Vigenere BUILD hardening remains the immediate operational sibling. OCaml remains collision-blocked by open PR #12149 on required Go validator and entry-point paths, and the newly specific Forme family owner remains path-blocked by open PR #13244. A live open-PR scan found zero exact overlap with Atbash packages, CR01, the classical-cipher fixture, prospective generator/CI surfaces, state, roadmap, or root changelog.",
+      "rebase_notes": "Rebased conflict-free twice before publication, finally onto exact origin/main a45a88e98a50fb363eb68d441926e59a523a9106. Intervening Persian, Japanese, and Spanish curriculum work, ALGOL negative-exponent folding, merged Forme PR #13244, Venture navigation convergence, HTML parser recovery, Mermaid Gantt calendar formats, and Language Ladder ownership sharding have no exact overlap with the Atbash package, fixture, generator, CI, state, roadmap, or changelog implementation surfaces. The refreshed collision-checked schema-3 inventory records 15 established lanes, 1,376 implementation identities, 4,586 slots, 1,415 all-reported identities, bands 175/266, 123/934, 167/2,100, and 911/12,754, 723 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The newly exposed Rust-only browser-navigation identity has a dedicated pending classification owner; live PR #13251 now collision-blocks the registered Forme owner without overlapping this Atbash tranche.",
+      "validation_notes": "A dependency-free bounded generator validates the exact classical-ciphers-v1 profile and ordered six-object Atbash roster, strict UTF-8/JSON, duplicate keys, non-finite numbers, surrogates, closed case shapes, source-safe IDs, fixture SHA-256, 131,072-byte/depth-8/8,193-scalar ceilings, and renders one native consumer for every established lane. Thirteen generator tests cover all renderers, hostile interpolation-like text, complete expected-object projection, bounded stale-output reads, and fail-closed drift of F# and Haskell's explicit package-test registrations; generator check, Ruff check/format, Bandit, credential/diff checks, and the central parity/fixture/state suites pass. Native suites pass in C# (7/7; 100% line/branch/method), Dart (9 plus analyze/format/coverage), Elixir (36; 100% coverage), F# (7/7; 86.66% line, 75% branch, 100% method), Go (all six generated; 100% coverage plus vet/format), Haskell (17 examples), Java (19), Kotlin (25), Lua (30), Perl (99 assertions), Python (34; 100% coverage), Ruby (31 runs/96 assertions), Rust (27 unit, six generated assertions, four doctests plus format), Swift (29), and TypeScript (30; 100% coverage plus typecheck). The exact Windows diff plan evaluates 45 Starlark files, discovers 5,093 packages, validates five orphan exceptions, selects 15 changed Atbash roots and 27 affected packages; 26 pass in the full plan and the sole environment-only Elixir miss passes after exposing the installed Erlang/Elixir toolchain. NuGet vulnerability checks and the production TypeScript audit report no vulnerabilities; cargo audit reports no vulnerabilities and two allowed workspace-wide unmaintained warnings; Python exports no runtime dependency beyond the editable package itself. Independent correctness review found and drove fail-closed registration drift checks plus validation-artifact cleanup; final security/authority review reports no actionable finding and no production authority or dependency expansion. The exact rebased schema-3 report is collision-clean with the inventory recorded above.",
       "notes": "Discovered during the post-#13172 fixture-consumer audit before successor selection. The neutral classical-ciphers-v1 corpus pins six complete Atbash objects, but no established Atbash lane currently references the corpus or compares every complete expected object. Add bounded dependency-free generated consumers or test-only adapters across all 15 established packages, preserving empty production capability profiles and the fixture README's rule that schema validation alone is not conformance."
+    },
+    {
+      "id": "browser-navigation-singleton-classification",
+      "title": "Classify and fixture the portable browser-navigation core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked pre-publication refresh after merged PR #13209 added the Rust-only browser-navigation identity, increasing the implementation inventory by one identity and slot and Rust singletons from 722 to 723. The package is explicitly host-neutral and deterministic: it owns in-memory Back/Forward/Home/Reload history plus fragment-insensitive visited-link identity over canonical url-parser forms, with only the Rust Cargo build capability. Define neutral fixtures for stack boundaries, transactional navigation, reload/home behavior, canonical URL equivalence, fragments, and visited membership; then classify dependency order against url-parser and expand across applicable established lanes or record narrowly reviewed exceptions. Browser fetch, storage, rendering, window, and native paint authority remain outside this owner."
     },
     {
       "id": "layout-inline-singleton-classification",
