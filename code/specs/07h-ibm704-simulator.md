@@ -90,10 +90,14 @@ Floating-point interpretation:
   fraction = magnitude in fixed-point binary, normalized so high bit is 1
 
 Instruction interpretation (Type B):
-  ┌─┬──────────────┬─────┬─────────────────┐
-  │S│ 11-bit op    │ tag │  15-bit address │
-  └─┴──────────────┴─────┴─────────────────┘
-   0 1           11 12 14 15              35
+  ┌─┬──┬─────────┬──────┬───┬───────────────────────┐
+  │S│00│ 9-bit op│ unused│tag│       15-bit address       │
+  └─┴──┴─────────┴──────┴───┴───────────────────────┘
+   0 1 2 3     11 12  17 18 20 21                    35
+
+  The displayed operation code convention combines `S` with bits 3–11:
+  `+0500` has `S=0` and operation magnitude `0500`; `-0500` has `S=1`
+  with the same magnitude. Bits 1–2 are always zero for Type B words.
 
 Instruction interpretation (Type A):
   ┌──┬─────────────────┬─────┬─────────────────┐
@@ -197,11 +201,12 @@ switches, and the more obscure transfer/test instructions.
 
 ### Instruction Format Decoding
 
-Most instructions are **Type B** (op | tag | address). The decoder reads bits 0–11
-as opcode and dispatches:
+Most instructions are **Type B**. The decoder verifies that bits 1–2 are zero,
+then combines the sign bit with the 9-bit operation magnitude in bits 3–11:
 
 ```
-opcode (12 bits)  tag (3 bits)  address (15 bits)
+sign (1 bit)  zero (2 bits)  opcode (9 bits)  unused (6 bits)
+tag (3 bits)  address (15 bits)
 ```
 
 Type A instructions (TIX, TXI, TNX, TXH, TXL) use a different layout:
@@ -210,8 +215,9 @@ Type A instructions (TIX, TXI, TNX, TXH, TXL) use a different layout:
 prefix (3 bits)  decrement (15 bits)  tag (3 bits)  address (15 bits)
 ```
 
-The decoder distinguishes by inspecting bits 0–2: if they are `001`, `010`,
-`011`, or `101`, the instruction is Type A; otherwise Type B.
+The decoder distinguishes the formats by inspecting IBM bits 1–2. If they are
+not both zero, the word is Type A and IBM bits S,1,2 form its 3-bit prefix;
+otherwise it is Type B. This is the rule documented by the 1955 IBM manual.
 
 ### Effective Address Computation
 
@@ -354,6 +360,10 @@ byte 0  byte 1  byte 2  byte 3  byte 4
 The high 4 bits of byte 0 are reserved (must be zero). This encoding is purely
 a transport detail for `load(program: bytes)`; once loaded, instructions live
 in the simulator's native 36-bit memory array.
+
+All Rust producers consumed by this simulator must use this same canonical
+big-endian transport. A compatibility shim may read an explicitly identified
+legacy artifact, but `load()` never guesses byte order.
 
 `load()` writes words starting at memory address 0. A program of N instructions
 occupies bytes [0, 5*N) of the input.

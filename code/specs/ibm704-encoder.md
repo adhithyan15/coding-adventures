@@ -1,106 +1,100 @@
 # `ibm704-encoder` spec
 
-> **Status:** v0.1.0 — L4 of the McCarthy Lisp implementation,
-> 2026-06-11.
+> **Status:** v0.2.0 canonical encoding contract, 2026-08-27.
 
 ## Purpose
 
-Pure-Rust encoder for the IBM 704 (1954) — the vacuum-tube
-mainframe John McCarthy and his MIT students first ran Lisp
-on in 1959.  Has no IR knowledge — its job is to turn an
-opcode + 15-bit address into a 36-bit IBM 704 instruction word,
-plus pack that word into 5 bytes on disk.
+Pure-Rust construction and transport of IBM 704 36-bit words. The encoder has
+no IR knowledge. It exposes the historical Type A and Type B field layouts and
+packs words in the canonical five-byte big-endian transport consumed by the
+IBM 704 simulator.
 
-Mirror of `aarch64-encoder` / `x86_64-encoder` / `ge225-encoder` /
-`intel4004-encoder` / `armv7-encoder` / `intel8008-encoder` /
-`riscv-encoder`.
+This contract supersedes the v0.1 idealized nine-bit-opcode layout. That layout
+placed the operation at bits 35–27, called `+0420` HTR, and serialized words
+least-significant byte first. It was never an executable IBM 704 format.
 
-## Public surface
-
-### Opcode constants
-
-| Constant | Value | Mnemonic |
-|----------|-------|----------|
-| `HTR` | `0o420` | **H**alt and **T**ransfe**R** — used as the canonical halt sentinel via `HTR 0` |
-| `CLA` | `0o500` | **CL**ear accumulator and **A**dd — used to load a 15-bit immediate into AC |
-
-### Word geometry
+## Word geometry
 
 | Constant | Value | Meaning |
-|----------|-------|---------|
-| `WORD_BITS` | `36` | one IBM 704 word = 36 bits |
-| `WORD_MASK` | `0xF_FFFF_FFFF` | covers exactly the 36 valid word bits |
-| `BYTES_PER_WORD` | `5` | wire-format bytes per word (40 bits, top 4 wasted) |
-| `ADDR_BITS` | `15` | 32 K word address space (~144 KB) |
-| `ADDR_MASK` | `0x7FFF` | 15-bit address mask |
-| `OPCODE_SHIFT` | `27` | opcode occupies bits 35..27; address bits 14..0 |
+|---|---:|---|
+| `WORD_BITS` | `36` | Width of one IBM 704 word |
+| `WORD_MASK` | `0xF_FFFF_FFFF` | Mask for the valid word bits |
+| `BYTES_PER_WORD` | `5` | Transport bytes per word |
+| `ADDR_BITS` | `15` | Address width |
+| `ADDR_MASK` | `0x7FFF` | Address mask |
+| `OPCODE_SHIFT` | `24` | Type B operation magnitude occupies raw bits 32–24 |
+| `DECREMENT_SHIFT` | `18` | Type A decrement begins at raw bit 18 |
+| `TAG_SHIFT` | `15` | Three-bit tag begins at raw bit 15 |
 
-### Encoder functions
+## Type B words
 
-| Function | Returns | Purpose |
-|----------|---------|---------|
-| `encode_instruction(op, addr)` | `u64` | generic word builder |
-| `encode_htr(addr)` | `u64` | `HTR addr` — opcode 0o420 + 15-bit address |
-| `encode_cla(addr)` | `u64` | `CLA addr` — opcode 0o500 + 15-bit address |
-| `pack_word(word)` | `[u8; 5]` | serialise a 36-bit word LSB-first, top byte's high nibble = 0 |
-
-### Canonical byte constants
-
-| Constant | Value | Meaning |
-|----------|-------|---------|
-| `HTR_HALT_BYTES` | `[0x00, 0x00, 0x00, 0x80, 0x08]` | pre-computed `HTR 0` — `ibm704-backend`'s halt sentinel |
-
-## Word layout (v0.1.0 idealised form)
+IBM bit numbering runs left to right from `S` through 35:
 
 ```text
-bit 35              27 26              15 14               0
-+-------------------+------------------+------------------+
-|   opcode (9 bits) |  (zero, 12 bits) | address (15 bits)|
-+-------------------+------------------+------------------+
+IBM bits:  S  1..2    3..11      12..17   18..20       21..35
+          +--+-----+-----------+----------+--------+----------------+
+          |S | 00  | 9-bit op  | unused   | tag    | 15-bit address |
+          +--+-----+-----------+----------+--------+----------------+
+raw bits: 35 34..33   32..24      23..18    17..15       14..0
 ```
 
-The actual 1959-era IBM 704 ISA was richer (Type A / Type B
-formats, prefix + decrement + tag fields).  v0.1.0 uses this
-simplified layout — enough for the minimal-viable
-`const_*`/`ret_*` backend scope.  A future increment can add
-the Type A prefix + decrement fields for richer ISA coverage.
+The sign and nine-bit operation magnitude together form IBM's displayed
+signed operation code. For example, `CLA` is `+0500`, `CAL` is `-0500`, HTR is
+`+0000`, and HPR is `+0420`.
 
-## Wire format
+`encode_type_b(negative, opcode, tag, address)` masks the opcode to nine bits,
+the tag to three bits, and the address to 15 bits. `encode_instruction` remains
+the positive, tag-zero convenience form. `encode_htr`, `encode_hpr`, and
+`encode_cla` are mnemonic conveniences.
 
-Each 36-bit word is packed as 5 bytes (40 bits — 4 wasted
-padding bits zeroed in the top nibble of the high byte), low
-byte first.  Matches the GE-225 precedent (20-bit words → 3
-bytes) extended to 36 bits.
+## Type A words
 
-## Why this is L4 of McCarthy Lisp (not part of the historical-arch migration)
+```text
+IBM bits:  S..2       3..17       18..20       21..35
+          +--------+-------------+--------+----------------+
+          | prefix | decrement   | tag    | 15-bit address |
+          +--------+-------------+--------+----------------+
+raw bits: 35..33      32..18       17..15       14..0
+```
 
-The historical-arch migration shipped GE-225, Intel 4004, Intel
-8008, ARMv7, and RV32I — the "modern" historical lineup
-(transistors and after).  The IBM 704 is older still — vacuum
-tubes, 1954 — and earned its place by hosting the **first Lisp
-implementation** at MIT in 1959.  `CAR` and `CDR` are literal
-704 instruction-word field names; this encoder lets McCarthy
-Lisp source compile back to that silicon.
+`encode_type_a(prefix, decrement, tag, address)` masks each field to its
+architectural width. Bits 1–2 not both zero distinguish Type A from Type B.
 
-## Tests (13 byte-pinned unit tests)
+## Canonical transport
 
-* Opcode constants pinned: `HTR = 0o420`, `CLA = 0o500`.
-* Word geometry constants pinned.
-* `encode_htr(0) == 0x8_8000_0000` and the bit math is verified.
-* `encode_cla(42) == 0xA_0000_002A` (Twig 42 first instruction).
-* Address mask drops oversize values silently.
-* `pack_word` is LSB-first.
-* Top byte's high nibble is always zero (5-byte-per-36-bit-word invariant).
-* Stray high bits above word are masked.
-* `HTR_HALT_BYTES` matches `pack_word(encode_htr(0))`.
-* End-to-end byte sequence for `CLA 42; HTR 0` (Twig 42 program) pinned.
+`pack_word` serializes a masked word most-significant group first:
 
-## Out of scope
+```text
+byte 0       byte 1       byte 2       byte 3       byte 4
+0000 w35..32 w31..24      w23..16      w15..8       w7..0
+```
 
-* IBM 704 Type A instructions (decrement-field-using ops).
-* Floating-point ops (the 704 had hardware FP).
-* Index registers, address modification, indirect addressing.
-* Disassembly / simulation — a future `ibm704-simulator`
-  crate would handle both.
-* The 9 distinct "decrement" / "tag" interpretation rules of
-  the original 36-bit word format.
+The high nibble of byte 0 is zero. `unpack_word` is the exact inverse and
+rejects a non-zero reserved nibble. `unpack_words` additionally rejects streams
+whose length is not a multiple of five.
+
+`HTR_HALT_BYTES` is `[0, 0, 0, 0, 0]`, the canonical packing of `HTR 0`.
+
+## Backend integration
+
+`ibm704-backend` must emit this transport. `CLA Y` reads memory at `Y`; it is
+not an immediate instruction. Constants are therefore emitted into a literal
+pool and `CLA` addresses that pool. The byte stream for `const 42; ret` is:
+
+1. `CLA 2`
+2. `HTR 0`
+3. the sign-magnitude data word `+42`
+
+## Tests
+
+- Type A and Type B field-boundary vectors.
+- Positive and negative Type B operation codes.
+- Correct distinction between HTR `+0000` and HPR `+0420`.
+- Big-endian byte vectors, reserved-nibble rejection, and round trips.
+- Oversized fields are masked deterministically.
+- Backend output decodes to executable `CLA literal; HTR; literal` programs.
+
+## References
+
+- *IBM 704 Electronic Data-Processing Machine: Manual of Operation*, form
+  24-6661-2 (1955), figures 10 and 11 and “Instruction Types.”

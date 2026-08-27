@@ -91,9 +91,11 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-002**, the Manchester Baby gate-level simulator (this
-change). RCPU-003 is next unless implementation review or CI reveals a
-higher-priority blocker.
+Current selection: **RCPU-P001**, canonical IBM 704 instruction encoding and
+transport. This newly discovered prerequisite blocks RCPU-003 because the
+existing Rust encoder/backend use an idealized layout and byte order that the
+functional simulator cannot execute faithfully. RCPU-003 remains next after
+RCPU-P001 merges.
 
 ## Cross-language wave
 
@@ -121,6 +123,7 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-27 | RCPU-P001: the Rust IBM 704 encoder shifts an idealized 9-bit opcode into bits 35–27, labels `+0420` as HTR, emits little-endian words, and the backend treats a `CLA` address as an immediate. These conflict with the 1955 IBM Type B format and `07h`'s executable big-endian transport contract. | P0, blocks RCPU-003 | Correct the encoder/spec to canonical Type A/Type B fields and big-endian packing; update the backend to emit addressable literal-pool words before implementing the simulator. |
 | 2026-08-27 | Existing Rust simulator APIs are not yet unified by a Rust equivalent of SIM00. | P1, non-blocking | Add an API-convergence design/audit before the cross-language golden-vector freeze; new crates meanwhile expose the five common lifecycle operations. |
 | 2026-08-27 | The older CPU roadmap records Python completion, not Rust pair completion, and its gate-level list is stale. | P1, non-blocking | This file is the canonical Rust wave ledger; link it from the older roadmap in RCPU-001. |
 | 2026-08-27 | Several existing Rust functional crates openly implement subsets (notably 07b ARMv7 and the x86-64 runtime lane). | P1 | Preserve their audit status and create precise follow-ups during their chronological audit items. |
