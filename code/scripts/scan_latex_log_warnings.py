@@ -551,6 +551,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default=None,
         help="Write the full machine-readable scan result here.",
     )
+    parser.add_argument(
+        "--github-annotations",
+        action="store_true",
+        help=(
+            "Emit GitHub Actions ::error:: and ::warning:: commands. "
+            "Opt in only from the real workflow gate so failure-path unit "
+            "tests cannot attach fixture annotations to their own run."
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -558,12 +567,17 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
 
     if not args.book_root.is_dir():
-        print(f"::error::book root {args.book_root} does not exist", file=sys.stderr)
+        prefix = "::error::" if args.github_annotations else "error: "
+        print(f"{prefix}book root {args.book_root} does not exist", file=sys.stderr)
         return 1
 
     results = scan(args.book_root, load_baseline(args.baseline))
     if not results:
-        print(f"::error::no <track>/book/ directories under {args.book_root}")
+        prefix = "::error::" if args.github_annotations else "error: "
+        print(
+            f"{prefix}no <track>/book/ directories under {args.book_root}",
+            file=sys.stderr,
+        )
         return 1
 
     print(render_text_report(results))
@@ -585,29 +599,30 @@ def main(argv: list[str] | None = None) -> int:
             encoding="utf-8",
         )
 
-    # Every value in a workflow command below is either an integer this script
-    # computed or a track name reduced by `safe_track_name`, so a crafted
-    # directory name cannot forge a `::` command line of its own.
-    for result in results:
-        if result["status"] != STATUS_NO_LOG:
-            continue
-        track = safe_track_name(result["track"])
-        if result["blocking"]:
-            print(
-                f"::error::{track} has a recorded baseline but no book.log; "
-                "the gate cannot measure it"
-            )
-        else:
-            print(f"::warning::no book.log found for {track}")
+    if args.github_annotations:
+        # Every value in a workflow command below is either an integer this
+        # script computed or a track name reduced by `safe_track_name`, so a
+        # crafted directory name cannot forge a `::` command line of its own.
+        for result in results:
+            if result["status"] != STATUS_NO_LOG:
+                continue
+            track = safe_track_name(result["track"])
+            if result["blocking"]:
+                print(
+                    f"::error::{track} has a recorded baseline but no book.log; "
+                    "the gate cannot measure it"
+                )
+            else:
+                print(f"::warning::no book.log found for {track}")
 
-    for result in results:
-        track = safe_track_name(result["track"])
-        for regression in result["regressions"]:
-            print(
-                f"::error::{track} {regression['class']} rose to "
-                f"{regression['observed']} against a baseline of "
-                f"{regression['baseline']}"
-            )
+        for result in results:
+            track = safe_track_name(result["track"])
+            for regression in result["regressions"]:
+                print(
+                    f"::error::{track} {regression['class']} rose to "
+                    f"{regression['observed']} against a baseline of "
+                    f"{regression['baseline']}"
+                )
 
     return 1 if any(result["blocking"] for result in results) else 0
 
