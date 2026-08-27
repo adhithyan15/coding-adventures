@@ -204,7 +204,14 @@ describe("generated book source hashes", () => {
     [126, 1],
     [127, 3],
     [128, 3],
-    [129, 2],
+    // 129, 166 and 167 each gained a review lesson when Spanish closed the
+    // reinforcement gap that main's own A1 arrivals reopened (#13061). #13132 and
+    // #13144 moved DELE verbs down from A2 into A1, and their atoms brought their
+    // reinforcement debt with them; the reviews that discharge it are threaded
+    // into EXISTING chapters, so no chapter was added and only these three
+    // sampled counts moved. 129 takes the subjunctive yo-stem review, 166 the
+    // posture-and-motion review, 167 the three-porqués review.
+    [129, 3],
     [130, 1],
     [131, 1],
     [132, 1],
@@ -241,8 +248,8 @@ describe("generated book source hashes", () => {
     [163, 1],
     [164, 1],
     [165, 4],
-    [166, 4],
-    [167, 4],
+    [166, 5],
+    [167, 5],
     [168, 1],
     [169, 1],
     [170, 1],

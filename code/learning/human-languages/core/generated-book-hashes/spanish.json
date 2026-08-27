@@ -1281,10 +1281,11 @@
     {
       "language": "spanish",
       "chapter": 129,
-      "sourceHash": "fnv1a64:d60304d5a27c7c06",
+      "sourceHash": "fnv1a64:08e02b05784188e9",
       "lessonIds": [
         "ES-C18-ojala",
-        "ES-C18-practice"
+        "ES-C18-practice",
+        "ES-C18-repaso-el-yo-que-viaja"
       ],
       "tex": "spanish/book/chapters/ch129-ojala.tex"
     },
@@ -1637,22 +1638,24 @@
     {
       "language": "spanish",
       "chapter": 166,
-      "sourceHash": "fnv1a64:978eef8849a6f77f",
+      "sourceHash": "fnv1a64:4975742e430e35f3",
       "lessonIds": [
         "ES-C37-abrir",
         "ES-C37-cerrar",
         "ES-C37-sentarse",
-        "ES-C37-levantarse"
+        "ES-C37-levantarse",
+        "ES-C37-repaso-sentado-de-pie-andando"
       ],
       "tex": "spanish/book/chapters/ch166-open-close-sit-stand.tex"
     },
     {
       "language": "spanish",
       "chapter": 167,
-      "sourceHash": "fnv1a64:c5fa48a6b46ac9d5",
+      "sourceHash": "fnv1a64:6682465863b5269c",
       "lessonIds": [
         "ES-C38-luego",
         "ES-C38-porque",
+        "ES-C38-repaso-los-tres-porques",
         "ES-C38-imperfecto",
         "ES-C38-contar"
       ],
@@ -2581,12 +2584,14 @@
     {
       "language": "spanish",
       "chapter": 268,
-      "sourceHash": "fnv1a64:5b38cd22b3ef1b24",
+      "sourceHash": "fnv1a64:e8a33ce364b354b6",
       "lessonIds": [
         "ES-C268-donde-esta",
         "ES-C268-billete",
         "ES-C268-habitacion",
-        "ES-C268-problema"
+        "ES-C268-repaso-llegar-y-quedarse",
+        "ES-C268-problema",
+        "ES-C268-repaso-dos-finales-dos-generos"
       ],
       "tex": "spanish/book/chapters/ch268-viajar.tex"
     },
@@ -4106,21 +4111,23 @@
     {
       "language": "spanish",
       "chapter": 388,
-      "sourceHash": "fnv1a64:2bf3c6dfa1ee7158",
+      "sourceHash": "fnv1a64:519242a9f22647b7",
       "lessonIds": [
         "ES-C388-empujar",
         "ES-C388-lanzar",
         "ES-C388-borrar",
-        "ES-C388-gritar"
+        "ES-C388-gritar",
+        "ES-C388-repaso-cuatro-hedges"
       ],
       "tex": "spanish/book/chapters/ch388-empujar-y-lanzar.tex"
     },
     {
       "language": "spanish",
       "chapter": 389,
-      "sourceHash": "fnv1a64:27aec3eae4717933",
+      "sourceHash": "fnv1a64:bda5732921c29e6c",
       "lessonIds": [
-        "ES-C389-saber"
+        "ES-C389-saber",
+        "ES-C389-repaso-se-y-puedo"
       ],
       "tex": "spanish/book/chapters/ch389-saber.tex"
     }

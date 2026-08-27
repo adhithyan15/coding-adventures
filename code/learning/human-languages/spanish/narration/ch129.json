@@ -4,7 +4,7 @@
   "chapter": 129,
   "title": "Ojala --- a Prayer That Outlived Its Religion",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6a57d8756adad52e",
+  "sourceHash": "fnv1a64:0241846223c6b84a",
   "lessons": [
     {
       "id": "ES-C18-ojala",
@@ -471,6 +471,206 @@
             {
               "kind": "speech",
               "text": "What is the first meaning choice? (Asserted event or wanted event.) Give the three regular tú forms. (Hables, comas, vivas.) Give the three bounded special tú forms. (Quieras, puedas, hagas.) Name the two safe triggers. (Quiero que for a different doer; ojalá for a wish.) What still waits? (Plural persons, additional irregular verbs, and additional subjunctive triggers.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-repaso-el-yo-que-viaja",
+      "sequence": 1494,
+      "title": "Review — you never learned a new stem",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "four verbs, four subjunctives, and not one new irregular form among them — the yo you already say is the stem",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b732d98655952744",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I want you to want.\" (Quiero que quieras.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four verbs came at you one after another, and each looked like a fresh thing to memorise. Put them in a column and the memorising disappears."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "you already said",
+                "so you say"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "you already said: vivo. so you say: viva.",
+                "you already said: quiero. so you say: quiera.",
+                "you already said: puedo. so you say: pueda.",
+                "you already said: hago. so you say: haga."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One move, four times: take the yo form, drop the -o, put -a on instead."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at what rode across with the stem."
+            },
+            {
+              "kind": "speech",
+              "text": "Quiero carries ie, and quiera keeps it. Puedo carries ue, and pueda keeps it. Hago carries a g that hacer has nowhere else, and haga keeps that too."
+            },
+            {
+              "kind": "speech",
+              "text": "None of those was a new irregular form. Each was an old one, already paid for, travelling into a new place on the back of the yo you had been saying for weeks. That is why the four lessons felt repetitive: they were."
+            },
+            {
+              "kind": "speech",
+              "text": "The -a is worth one more look. Vivir ends in -ir and querer, poder and hacer end in -er, and all four still land on -a, -as, -a. The two families that stay apart in the present tense stop being two families here."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vivo, viva, quiero, quiera, puedo, pueda, hago, haga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vivo, viva* · *quiero, quiera* · *puedo, pueda* · *hago, haga*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-repaso-el-yo-que-viaja-build",
+              "prompt": "You say puedo. Do the move: drop the -o, add -a.",
+              "assesses": [
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "pueda",
+                "que pueda"
+              ],
+              "feedback": {
+                "correct": "And the ue came along, because it was already in puedo.",
+                "incorrect": "Pueda."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-repaso-el-yo-que-viaja-hago",
+              "prompt": "Same move on hago.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "haga",
+                "que haga"
+              ],
+              "feedback": {
+                "correct": "The g was never new — hago had it first.",
+                "incorrect": "Haga."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-repaso-el-yo-que-viaja-vivo",
+              "prompt": "And on vivo — an -ir verb this time.",
+              "assesses": [
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "viva",
+                "que viva"
+              ],
+              "feedback": {
+                "correct": "Same ending as the -er verbs. Here the two families meet.",
+                "incorrect": "Viva."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form do you start from? (The yo form of the present.) Where did the ie in quiera come from? (Quiero — it was already there.) How many new stems did these four lessons ask you to learn? (None.)"
             }
           ]
         }

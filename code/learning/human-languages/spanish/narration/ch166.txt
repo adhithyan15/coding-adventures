@@ -1,8 +1,8 @@
 Spanish, chapter 166: Opening, Closing, Sitting Down, Standing Up.
-4 lessons. All 4 can be done entirely by ear.
+5 lessons. All 5 can be done entirely by ear.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 abrir — "to open", and the one part of it that misbehaves.
 
 Warm-up.
@@ -42,7 +42,7 @@ Wrap-up Recall.
 What is the past participle of abrir, and what would a regular verb have given? (Abierto; abrido.) Name two English words from aperīre. (Aperture, overt, overture, aperitif.) Is April one? (No — folk etymology.) Which other verb keeps an inherited Latin participle? (Escribir becomes escrito.) And which Latin verb is behind correr? (Currere.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 cerrar — "to close", from the bar across the door.
 
 Warm-up.
@@ -87,7 +87,7 @@ Wrap-up Recall.
 What was a sera, and does cerrar come from claudere? (The bar dropped across a door; and no — Spanish kept claudere only in incluir, excluir, concluir.) Which form of cerrar keeps its plain e, and why? (Cerramos — the stress moves to the ending, as in dormimos.) Which participle is irregular, abierto or cerrado? (Abierto.) And what did intendere, behind entender, mean literally? (To stretch toward.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 sentarse — "to seat oneself", which is how Spanish thinks about sitting down.
 
 Warm-up.
@@ -130,7 +130,7 @@ Wrap-up Recall.
 What does sentarse say literally, and which Latin form was it built on? (To seat oneself; the participle sedēns.) Are English sit and Latin sedēre parent and child, or siblings? (Siblings — separate branches of one root, like father and padre.) Which form keeps its plain e, and what was a sera? (Nos sentamos; the bar across a door.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 levantarse — "to raise oneself", and how Spanish says "stand".
 
 Warm-up.
@@ -171,3 +171,41 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Say the chapter's four verbs, then say how you are standing. (Abro, cierro, me siento, me levanto; estoy de pie.) What do sentar and levantar share in their making, and which also breaks its stem? (Both from a Latin present participle, sedēns and levāns; sentarse breaks e becomes ie.) Name the two roots on that door, and which participle is irregular. (Aperīre and serāre — not claudere; abierto.) Why la mano? (Manus was feminine in Latin.)
+
+
+Lesson 5 of 5.
+Review — down, up, and away.
+
+Warm-up.
+[pause 2 seconds]
+"I sit down." (Me siento.) "I get up." (Me levanto.)
+
+What you've built.
+Four verbs, and between them a whole body's worth of positions.
+[pause 2 seconds]
+Me siento puts you down. Me levanto brings you up. And once you are up, there is a phrase for staying there: de pie — on foot, standing.
+Notice that de pie is not a verb at all. Spanish says the posture with a noun and a preposition where English reaches for standing.
+
+Why it's said this way.
+Sentarse and levantarse look unrelated. They were made by the same move.
+Latin had sedēre, "to sit," and its participle sedēns, "sitting." Someone built a new verb straight off that participle — sedentāre — and Spanish inherited it as sentar. Then Latin had levāre, "to raise," participle levāns, and the same thing happened: levantāre, Spanish levantar.
+[pause 2 seconds]
+Two verbs, one recipe: take the part of the verb that means doing it right now, and build a fresh verb on top.
+Now walk, and the tidiness ends. Caminar comes off el camino, which Latin took from Gaulish — a clean, traceable borrowing. Andar comes from Medieval Latin andāre, and where andāre came from is genuinely disputed. Two candidates, neither proved.
+So these four sit at opposite ends of what can be known. Two you can take apart on the page; one you can trace to the people it was borrowed from; one nobody has settled.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: me siento, me levanto, de pie, camino, ando]
+[pause 8 seconds for the answer]
+[repeat that twice]
+[question — say your answer, then pause 10 seconds]
+You have got up. How do you say you are standing?
+[question — say your answer, then pause 10 seconds]
+Name the two everyday verbs for walking.
+[question — say your answer, then pause 8 seconds]
+Is the origin of andar settled?
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did Latin build sentar and levantar out of? (A participle — sedēns and levāns.) What does de pie mean literally? (On foot.) Which of the four verbs has no agreed origin? (Andar.)

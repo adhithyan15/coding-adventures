@@ -2,9 +2,12 @@
   "id": "ES-PATH-268-ROOM",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C268-habitacion"
+    "ES-C268-habitacion",
+    "ES-C268-repaso-llegar-y-quedarse"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "ES-EXT-268-CONSOLIDATION-ROOM"
+  ],
   "after": []
 }

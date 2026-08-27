@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 166,
   "title": "Opening, Closing, Sitting Down, Standing Up",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4aa7de6cf3ca42ba",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3e73f6b2b41546c8",
   "lessons": [
     {
       "id": "ES-C37-abrir",
@@ -691,6 +691,200 @@
             {
               "kind": "speech",
               "text": "Say the chapter's four verbs, then say how you are standing. (Abro, cierro, me siento, me levanto; estoy de pie.) What do sentar and levantar share in their making, and which also breaks its stem? (Both from a Latin present participle, sedēns and levāns; sentarse breaks e becomes ie.) Name the two roots on that door, and which participle is irregular. (Aperīre and serāre — not claudere; abierto.) Why la mano? (Manus was feminine in Latin.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C37-repaso-sentado-de-pie-andando",
+      "sequence": 2045,
+      "title": "Review — down, up, and away",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "sitting, standing, walking — two verbs Latin built the same way, and two more whose histories could not be less alike",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c03d6d7b6eff970c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I sit down.\" (Me siento.) \"I get up.\" (Me levanto.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four verbs, and between them a whole body's worth of positions."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Me siento puts you down. Me levanto brings you up. And once you are up, there is a phrase for staying there: de pie — on foot, standing."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice that de pie is not a verb at all. Spanish says the posture with a noun and a preposition where English reaches for standing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sentarse and levantarse look unrelated. They were made by the same move."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin had sedēre, \"to sit,\" and its participle sedēns, \"sitting.\" Someone built a new verb straight off that participle — sedentāre — and Spanish inherited it as sentar. Then Latin had levāre, \"to raise,\" participle levāns, and the same thing happened: levantāre, Spanish levantar."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two verbs, one recipe: take the part of the verb that means doing it right now, and build a fresh verb on top."
+            },
+            {
+              "kind": "speech",
+              "text": "Now walk, and the tidiness ends. Caminar comes off el camino, which Latin took from Gaulish — a clean, traceable borrowing. Andar comes from Medieval Latin andāre, and where andāre came from is genuinely disputed. Two candidates, neither proved."
+            },
+            {
+              "kind": "speech",
+              "text": "So these four sit at opposite ends of what can be known. Two you can take apart on the page; one you can trace to the people it was borrowed from; one nobody has settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me siento, me levanto, de pie, camino, ando",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *me siento* · *me levanto* · *de pie* · *camino* · *ando*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C37-repaso-sentado-de-pie-andando-depie",
+              "prompt": "You have got up. How do you say you are standing?",
+              "assesses": [
+                "ES-LEX-DE-PIE-11"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "de pie",
+                "estoy de pie"
+              ],
+              "feedback": {
+                "correct": "On foot — a noun where English uses a verb.",
+                "incorrect": "De pie."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C37-repaso-sentado-de-pie-andando-andar",
+              "prompt": "Name the two everyday verbs for walking.",
+              "assesses": [
+                "ES-LEX-ANDAR-08",
+                "ES-LEX-CAMINAR-07"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "caminar, andar",
+                "caminar y andar",
+                "andar, caminar"
+              ],
+              "feedback": {
+                "correct": "Both take ordinary -ar endings and neither breaks its stem.",
+                "incorrect": "Caminar and andar."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C37-repaso-sentado-de-pie-andando-origen",
+              "prompt": "Is the origin of andar settled?",
+              "assesses": [
+                "ES-LEX-ANDAR-08"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "no",
+                "no, es discutido",
+                "disputed"
+              ],
+              "feedback": {
+                "correct": "Two candidates proposed, neither proved.",
+                "incorrect": "No — it is disputed."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin build sentar and levantar out of? (A participle — sedēns and levāns.) What does de pie mean literally? (On foot.) Which of the four verbs has no agreed origin? (Andar.)"
             }
           ]
         }

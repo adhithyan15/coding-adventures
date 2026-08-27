@@ -1,8 +1,8 @@
 Spanish, chapter 268: Travelling --- Asking, Boarding, Staying, and When It Goes Wrong.
-4 lessons. All 4 can be done entirely by ear.
+6 lessons. All 6 can be done entirely by ear.
 
 
-Lesson 1 of 4.
+Lesson 1 of 6.
 ¿dónde está? — the question that unsticks you.
 
 Warm-up.
@@ -40,7 +40,7 @@ Wrap-up Recall.
 Which of the two "to be" verbs does this question use, and why? (Estar — it is about place, and place changes.) What Latin verb is está? (Stare, "to stand.")
 
 
-Lesson 2 of 4.
+Lesson 2 of 6.
 billete — the ticket, and the note in your pocket.
 
 Warm-up.
@@ -75,7 +75,7 @@ Wrap-up Recall.
 What did Latin bulla mean? (A seal.) What two things does billete name? (A ticket, and a banknote.) Which English words still carry bulla? (Bulletin, and a papal bull.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 6.
 habitación — a room, from a verb meaning to live somewhere.
 
 Warm-up.
@@ -111,7 +111,44 @@ Wrap-up Recall.
 What does the verb habitar mean? (To dwell, to live in.) What does -ción do? (Turns a verb into the noun for its result.) Which article do -ción nouns take? (La — they are feminine.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 6.
+Review — three phrases, in the order you need them.
+
+Warm-up.
+[pause 2 seconds]
+The first thing you say anywhere new. (¿Dónde está?)
+
+What you've built.
+These three arrived one after another, and they are not a list. They are a sequence.
+[pause 2 seconds]
+¿Dónde está? — you find the thing. Un billete — you buy your way onto it. Una habitación — you stop, and sleep.
+Find, travel, rest. Said in any other order they still work, but said in that order they are a day.
+
+Why it's said this way.
+Habitación is the long one, and it is the one that pays you back.
+Take it apart: habitar, "to live in," plus -ción, the ending that turns a doing word into the noun for its result. A habitación is, with no metaphor at all, a place lived in.
+[pause 2 seconds]
+That ending is the profitable part. It does the same job every time it appears, it makes the noun feminine every time, and it is very often an English word you already own wearing different clothes — the English ending is -tion.
+And habitar has a story of its own. It is Latin habitāre, built off habēre, "to have," in a form that means doing something over and over. To dwell somewhere is to keep on having a place. English inhabit and habitat are the same root, barely disguised.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ¿dónde está?, un billete, una habitación]
+[pause 8 seconds for the answer]
+[repeat that twice]
+[question — say your answer, then pause 14 seconds]
+Say the three in the order a journey needs them: find it, buy it, sleep.
+[question — say your answer, then pause 12 seconds]
+Habitar means to live in. What does the -cion ending add?
+[question — say your answer, then pause 10 seconds]
+Ask for a room, politely.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is a habitación, taken literally? (A place lived in.) What did habitar grow out of? (Habēre, to have.) And what do you ask for before you ever need the room? (Un billete.)
+
+
+Lesson 5 of 6.
 problema — the word for when it goes wrong (and the -a that is masculine).
 
 Warm-up.
@@ -144,3 +181,43 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which article does problema take, and why? (El — Greek -ma nouns were neuter and became masculine.) What did próblēma mean literally? (A thing thrown forward.) Name two more of the family. (El sistema, el tema, el programa, el idioma, el clima.)
+
+
+Lesson 6 of 6.
+Review — when the ending tells the truth, and when it lies.
+
+Warm-up.
+[pause 2 seconds]
+La habitación. El problema.
+
+What you've built.
+Two words from the same chapter, and they disagree about the most basic question you can ask a Spanish noun.
+[a table of 2 rows, read aloud]
+word: habitación. ending: -ción. article: la.
+word: problema. ending: -ma. article: el.
+One of those two endings predicts the article. The other does the opposite of what you were taught to expect.
+[pause 2 seconds]
+-ción is one of the most reliable signals in the language: it is feminine, every time, without exception you will meet. And -a, the ending you were taught to read as feminine, hands you el problema.
+
+Why it's said this way.
+The useful part is that neither of these is arbitrary, so neither has to be memorised as a bare fact.
+-ción is feminine because the Latin ending it descends from was feminine, and nothing since has disturbed it. The ending kept its gender the whole way down.
+Problema is masculine because it did not come through Latin from the start. It came from Greek, where nouns ending in -ma were neither masculine nor feminine but a third thing — neuter. Latin had no comfortable place to put them and handed them to the masculine, and Spanish inherited that decision.
+[pause 2 seconds]
+So -ma is not an exception to the -a rule. It is a passport stamp: it tells you the word came in from Greek, and the gender came with it. When you meet another noun in -ma that names an idea, expect el.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: la habitación, el problema]
+[pause 8 seconds for the answer]
+[repeat that twice]
+[question — say your answer, then pause 12 seconds]
+Put the right article on each: habitacion, problema.
+[question — say your answer, then pause 8 seconds]
+Which language did the -ma of problema come through?
+[question — say your answer, then pause 8 seconds]
+A new word ends in -cion. Which article does it take?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which ending always tells you la? (-ción.) Why is problema masculine? (It is Greek — -ma nouns were neuter, and Latin made them masculine.) Is that an exception or a family? (A family.)

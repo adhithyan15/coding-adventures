@@ -338,6 +338,65 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - When a pinned corpus count legitimately moves, **update the pin with a comment saying why** — never delete or loosen the assertion. The surrounding assertions (hash matches the browser-loaded AST, chapter reports `synced`) are the real gate and must stay untouched.
 - Related trap on the same PRs: a wall-clock performance assertion (`expect(Date.now() - started).toBeLessThan(2_000)`) failed at 10,677 ms on a contended runner while the implementation was correctly linear — 561 ms locally for the same input. See the existing "CI is ~25× slower than local" entry. Pick a threshold that separates the algorithmic classes you care about (linear vs quadratic), not one that measures runner load.
 
+## A level claim goes stale when OTHER PRs move material INTO the level
+
+**What happened (#13061).** A branch drove Spanish's A1 reinforcement residue to
+zero and asserted `attained: A1`. It then sat unmerged for a few hours. In that
+window #13132 and #13144 moved DELE A1 verbs **down from A2 into A1**. Those
+verbs' atoms carried their own reinforcement debt, and it landed at A1 because
+that is where the verbs now lived. Rebasing turned the branch's headline
+assertion false: ten atoms at or below A1, revisited fewer than twice.
+
+The reflex is to think a level claim is threatened by PRs that ADD lessons to
+that level. It is equally threatened by PRs that MOVE existing material into it,
+and those are easier to miss because the corpus gained no lessons at all.
+
+**Rule:** after rebasing any branch that asserts a level has been attained,
+re-run the gate before trusting the branch's own numbers. `attained` is a
+statement about a whole corpus, and a merge is a corpus change.
+
+## A "not yet measurable" edge is a bomb with someone else's finger on the pin
+
+Same PR. It documented two atoms as unmeasured-because-nothing-follows-them, and
+wrote that `ES-LEX-GRITAR` "becomes measurable the moment it stops being last."
+It then stopped being last, and the declared known-open edge became a live
+blocker on the very PR that declared it.
+
+Declaring an edge open is honest and worth doing. It is not the same as being
+safe from it. If the thing that makes an edge measurable is *anyone adding
+content*, in a repo landing dozens of PRs a day, expect to inherit it yourself.
+
+## Four rules a new human-language lesson has to satisfy that no single gate names
+
+Authoring seven review lessons hit all four in one pass, each from a different
+test:
+
+1. **Every activity id must begin with its lesson id plus a hyphen.**
+   `integration.test.ts`, not the activity compiler.
+2. **A block's `hl-knowledge: assesses=[...]` must list every atom its
+   activities assess.** Declaring the atom on the activity alone fails with
+   "assesses X outside block Y".
+3. **A lesson beyond the one realizing its path segment's spine node needs an
+   extension node** -- "is local support but belongs to no extension node". Add
+   it to an existing extension's `lessons`, or create one and list it in the
+   path segment's `inline`.
+4. **Transitive prerequisites must actually introduce every atom in `requires`
+   and `practises`.** A review of four verbs needs a prerequisite chain reaching
+   all four, not just the nearest lesson.
+
+Also: `answer` and every `accepted` variant must be distinct after
+normalization, which lowercases -- so `"english"` and `"English"` collide. And
+a table with **four or more columns** is refused by the narrator and counts
+against a corpus-wide refusal pin; three columns are speakable, so put the
+fourth column's content in prose.
+
+## A concept_tag matching /(^|-)VERB-/ registers as a verb even on a review
+
+`ES-VERB-ETYMOLOGY-CERTAINTY-REVIEW` on a review lesson that introduces no verb
+pushed Spanish's namespaced-verb `extras` count 43 -> 44 and failed
+`verbs.test.ts`. The tag is read by `verbCoverage`, not just by humans. Name a
+review's concept tag for what it reviews, without the `VERB-` infix.
+
 ## Repo policy / workflow reminders
 
 - **Always pull `origin/main` first** (`git fetch origin && git merge origin/main`) before starting work — the repo moves fast.

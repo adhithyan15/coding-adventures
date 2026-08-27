@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 389,
   "title": "Knowing How --- the Verb That Once Meant Taste",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e9fee42926b27ca1",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:ebe0f998520a9ca1",
   "lessons": [
     {
       "id": "ES-C389-saber",
@@ -209,6 +209,215 @@
             {
               "kind": "speech",
               "text": "What did sapere mean first? (To taste.) Which is the learned skill, sé leer or puedo leer? (Sé leer.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C389-repaso-se-y-puedo",
+      "sequence": 8310,
+      "title": "Review — the verbs that will not sit behind sé",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "put the verbs from the chapter before behind sé and behind puedo — two of them fit both, and two of them show you what saber actually means",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f63f8232113f03e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I know how to throw.\" (Sé lanzar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have saber plus a plain verb, and you have the four verbs from the chapter before. Put them together and something useful goes wrong."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "behind sé",
+                "behind puedo"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "lanzar. behind sé: sé lanzar — fine. behind puedo: puedo lanzar — fine.",
+                "borrar. behind sé: sé borrar — fine. behind puedo: puedo borrar — fine.",
+                "empujar. behind sé: sé empujar — odd. behind puedo: puedo empujar — fine.",
+                "gritar. behind sé: sé gritar — odd. behind puedo: puedo gritar — fine."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All four go behind puedo without a blink. Only two go behind sé."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Saber before a plain verb does not mean \"can.\" It means know how to — and knowing how is something you were once taught."
+            },
+            {
+              "kind": "speech",
+              "text": "Throwing well is learned. Erasing properly is learned. But nobody was ever taught to shout, and nobody took lessons in pushing. So sé gritar lands strangely. It is not ungrammatical; it claims a skill where there is none."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is the cleanest test there is for the difference you met with poder. Puedo gritar is ordinary: I am able to, right now, or I am allowed to. Swap in sé and the sentence quietly claims you studied it."
+            },
+            {
+              "kind": "speech",
+              "text": "Sé nadar pero hoy no puedo. The skill is permanent; the chance is not."
+            },
+            {
+              "kind": "speech",
+              "text": "And the root says the same thing from underneath. Saber is Latin sapere, \"to taste\" — and the one who can taste is the one who can tell things apart. Discrimination first, knowledge second. It is why the verb for having a flavour and the verb for having a skill are one verb in Spanish."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sé lanzar, sé borrar, puedo empujar, puedo gritar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sé lanzar* · *sé borrar* · *puedo empujar* · *puedo gritar*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C389-repaso-se-y-puedo-skill",
+              "prompt": "Say you know how to throw.",
+              "assesses": [
+                "ES-GRAMMAR-SABER-INFINITIVO",
+                "ES-LEX-LANZAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "se lanzar",
+                "sé lanzar",
+                "yo sé lanzar"
+              ],
+              "feedback": {
+                "correct": "A skill, so saber takes it happily.",
+                "incorrect": "Sé lanzar."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C389-repaso-se-y-puedo-odd",
+              "prompt": "Why does se gritar sound odd?",
+              "assesses": [
+                "ES-GRAMMAR-SABER-INFINITIVO",
+                "ES-LEX-GRITAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "shouting is not a learned skill",
+                "nobody is taught to shout",
+                "it is not learned",
+                "saber claims a skill"
+              ],
+              "feedback": {
+                "correct": "Saber claims you were taught it. Nobody was taught to shout.",
+                "incorrect": "Because saber claims a learned skill, and shouting is not one."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C389-repaso-se-y-puedo-taste",
+              "prompt": "What did Latin sapere mean before it meant to know?",
+              "assesses": [
+                "ES-LEX-SABER"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "to taste",
+                "taste",
+                "saborear"
+              ],
+              "feedback": {
+                "correct": "The one who can taste is the one who can tell things apart.",
+                "incorrect": "To taste."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does saber plus a plain verb claim? (That you learned it.) Which of the two is about the chance you happen to have? (Poder.) And what did sapere mean first? (To taste.)"
             }
           ]
         }

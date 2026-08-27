@@ -1591,6 +1591,7 @@
         "ES-C18-hacer-subjuntivo",
         "ES-C18-ojala",
         "ES-C18-practice",
+        "ES-C18-repaso-el-yo-que-viaja",
         "ES-C18-sintesis-subjuntivo"
       ],
       "before": [],
@@ -1966,10 +1967,13 @@
       "id": "ES-PATH-033-B",
       "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
       "lessons": [
-        "ES-C37-levantarse"
+        "ES-C37-levantarse",
+        "ES-C37-repaso-sentado-de-pie-andando"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-033-B-CONSOLIDATION-POSTURA"
+      ],
       "after": []
     },
     {
@@ -1986,10 +1990,13 @@
       "id": "ES-PATH-034-B",
       "spine_node": "SPINE-SAY-WHY",
       "lessons": [
-        "ES-C38-porque"
+        "ES-C38-porque",
+        "ES-C38-repaso-los-tres-porques"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-034-B-CONSOLIDATION-PORQUE"
+      ],
       "after": []
     },
     {
@@ -3224,20 +3231,26 @@
       "id": "ES-PATH-268-ROOM",
       "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
       "lessons": [
-        "ES-C268-habitacion"
+        "ES-C268-habitacion",
+        "ES-C268-repaso-llegar-y-quedarse"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-268-CONSOLIDATION-ROOM"
+      ],
       "after": []
     },
     {
       "id": "ES-PATH-268-PROBLEM",
       "spine_node": "SPINE-HANDLE-TRAVEL",
       "lessons": [
-        "ES-C268-problema"
+        "ES-C268-problema",
+        "ES-C268-repaso-dos-finales-dos-generos"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-268-CONSOLIDATION-GENDER"
+      ],
       "after": []
     },
     {
@@ -5386,7 +5399,8 @@
         "ES-C388-empujar",
         "ES-C388-lanzar",
         "ES-C388-borrar",
-        "ES-C388-gritar"
+        "ES-C388-gritar",
+        "ES-C388-repaso-cuatro-hedges"
       ],
       "before": [],
       "inline": [
@@ -5398,7 +5412,8 @@
       "id": "ES-PATH-389-01",
       "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
       "lessons": [
-        "ES-C389-saber"
+        "ES-C389-saber",
+        "ES-C389-repaso-se-y-puedo"
       ],
       "before": [],
       "inline": [
@@ -7141,7 +7156,8 @@
       "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C18-sintesis-subjuntivo"
+        "ES-C18-sintesis-subjuntivo",
+        "ES-C18-repaso-el-yo-que-viaja"
       ]
     },
     {
@@ -10825,7 +10841,8 @@
         "ES-C388-empujar",
         "ES-C388-lanzar",
         "ES-C388-borrar",
-        "ES-C388-gritar"
+        "ES-C388-gritar",
+        "ES-C388-repaso-cuatro-hedges"
       ]
     },
     {
@@ -10836,7 +10853,52 @@
       "canDo": "I can say saber, and use sé or sabes before a known infinitive.",
       "prerequisites": [],
       "lessons": [
-        "ES-C389-saber"
+        "ES-C389-saber",
+        "ES-C389-repaso-se-y-puedo"
+      ]
+    },
+    {
+      "id": "ES-EXT-033-B-CONSOLIDATION-POSTURA",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C37-repaso-sentado-de-pie-andando"
+      ]
+    },
+    {
+      "id": "ES-EXT-034-B-CONSOLIDATION-PORQUE",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C38-repaso-los-tres-porques"
+      ]
+    },
+    {
+      "id": "ES-EXT-268-CONSOLIDATION-ROOM",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C268-repaso-llegar-y-quedarse"
+      ]
+    },
+    {
+      "id": "ES-EXT-268-CONSOLIDATION-GENDER",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C268-repaso-dos-finales-dos-generos"
       ]
     }
   ],

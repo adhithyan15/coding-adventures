@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:c80b3a57c7962e8d",
+  "sourceHash": "fnv1a64:92dce81720ee31f4",
   "summary": {
-    "totalLessons": 1010,
-    "voice": 952,
-    "sight": 44,
+    "totalLessons": 1017,
+    "voice": 958,
+    "sight": 45,
     "pen": 14,
-    "drivableLessons": 952,
+    "drivableLessons": 958,
     "drivablePercent": 94,
     "trackCount": 1,
     "chapterCount": 389,
-    "drivablePrefixTotal": 926,
-    "fullyDrivableChapters": 341,
+    "drivablePrefixTotal": 932,
+    "fullyDrivableChapters": 340,
     "unstartableChapters": 36,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "spanish",
-      "lessonCount": 1010,
-      "voice": 952,
-      "sight": 44,
+      "lessonCount": 1017,
+      "voice": 958,
+      "sight": 45,
       "pen": 14,
       "drivablePercent": 94,
-      "drivablePrefixTotal": 926,
+      "drivablePrefixTotal": 932,
       "modalities": [
         "voice",
         "sight",
@@ -2158,16 +2158,17 @@
         },
         {
           "chapter": 129,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 2,
-          "sight": 0,
+          "sight": 1,
           "pen": 0,
           "modalities": [
-            "voice"
+            "voice",
+            "sight"
           ],
           "drivablePrefix": 2,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "ES-C18-repaso-el-yo-que-viaja",
+          "drivable": false,
           "drivableLessonIds": [
             "ES-C18-ojala",
             "ES-C18-practice"
@@ -2766,38 +2767,40 @@
         },
         {
           "chapter": 166,
-          "lessonCount": 4,
-          "voice": 4,
+          "lessonCount": 5,
+          "voice": 5,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 4,
+          "drivablePrefix": 5,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
             "ES-C37-abrir",
             "ES-C37-cerrar",
             "ES-C37-sentarse",
-            "ES-C37-levantarse"
+            "ES-C37-levantarse",
+            "ES-C37-repaso-sentado-de-pie-andando"
           ]
         },
         {
           "chapter": 167,
-          "lessonCount": 4,
-          "voice": 4,
+          "lessonCount": 5,
+          "voice": 5,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 4,
+          "drivablePrefix": 5,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
             "ES-C38-luego",
             "ES-C38-porque",
+            "ES-C38-repaso-los-tres-porques",
             "ES-C38-imperfecto",
             "ES-C38-contar"
           ]
@@ -4404,21 +4407,23 @@
         },
         {
           "chapter": 268,
-          "lessonCount": 4,
-          "voice": 4,
+          "lessonCount": 6,
+          "voice": 6,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 4,
+          "drivablePrefix": 6,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
             "ES-C268-donde-esta",
             "ES-C268-billete",
             "ES-C268-habitacion",
-            "ES-C268-problema"
+            "ES-C268-repaso-llegar-y-quedarse",
+            "ES-C268-problema",
+            "ES-C268-repaso-dos-finales-dos-generos"
           ]
         },
         {
@@ -6755,37 +6760,39 @@
         },
         {
           "chapter": 388,
-          "lessonCount": 4,
-          "voice": 4,
+          "lessonCount": 5,
+          "voice": 5,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 4,
+          "drivablePrefix": 5,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
             "ES-C388-empujar",
             "ES-C388-lanzar",
             "ES-C388-borrar",
-            "ES-C388-gritar"
+            "ES-C388-gritar",
+            "ES-C388-repaso-cuatro-hedges"
           ]
         },
         {
           "chapter": 389,
-          "lessonCount": 1,
-          "voice": 1,
+          "lessonCount": 2,
+          "voice": 2,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 1,
+          "drivablePrefix": 2,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
-            "ES-C389-saber"
+            "ES-C389-saber",
+            "ES-C389-repaso-se-y-puedo"
           ]
         }
       ]
@@ -11413,6 +11420,24 @@
       "sourceHash": "fnv1a64:ddca8a23e004133f"
     },
     {
+      "id": "ES-C18-repaso-el-yo-que-viaja",
+      "language": "spanish",
+      "chapter": 129,
+      "sequence": 1494,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:b732d98655952744"
+    },
+    {
       "id": "ES-C18-sintesis-subjuntivo",
       "language": "spanish",
       "chapter": 130,
@@ -12529,6 +12554,24 @@
       "sourceHash": "fnv1a64:381b0960979d7ac3"
     },
     {
+      "id": "ES-C37-repaso-sentado-de-pie-andando",
+      "language": "spanish",
+      "chapter": 166,
+      "sequence": 2045,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c03d6d7b6eff970c"
+    },
+    {
       "id": "ES-C38-luego",
       "language": "spanish",
       "chapter": 167,
@@ -12563,6 +12606,24 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:7a72f2a4e6f000a0"
+    },
+    {
+      "id": "ES-C38-repaso-los-tres-porques",
+      "language": "spanish",
+      "chapter": 167,
+      "sequence": 2065,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8f656c5ce2dca0e8"
     },
     {
       "id": "ES-C38-imperfecto",
@@ -14815,6 +14876,24 @@
       "sourceHash": "fnv1a64:4c4ec6caf162e20f"
     },
     {
+      "id": "ES-C268-repaso-llegar-y-quedarse",
+      "language": "spanish",
+      "chapter": 268,
+      "sequence": 2645,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f9863cdf582f9875"
+    },
+    {
       "id": "ES-C268-problema",
       "language": "spanish",
       "chapter": 268,
@@ -14831,6 +14910,24 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:29533e953cbc0bad"
+    },
+    {
+      "id": "ES-C268-repaso-dos-finales-dos-generos",
+      "language": "spanish",
+      "chapter": 268,
+      "sequence": 2655,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:eb333335d174dd7f"
     },
     {
       "id": "ES-C269-feliz",
@@ -25013,6 +25110,24 @@
       "sourceHash": "fnv1a64:181273442b7170dc"
     },
     {
+      "id": "ES-C388-repaso-cuatro-hedges",
+      "language": "spanish",
+      "chapter": 388,
+      "sequence": 8285,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:89e99e00a03f9279"
+    },
+    {
       "id": "ES-C389-saber",
       "language": "spanish",
       "chapter": 389,
@@ -25029,6 +25144,24 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:38807c573fdaca92"
+    },
+    {
+      "id": "ES-C389-repaso-se-y-puedo",
+      "language": "spanish",
+      "chapter": 389,
+      "sequence": 8310,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0f63f8232113f03e"
     }
   ],
   "findings": []

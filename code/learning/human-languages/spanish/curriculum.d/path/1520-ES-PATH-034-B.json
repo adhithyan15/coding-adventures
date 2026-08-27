@@ -2,9 +2,12 @@
   "id": "ES-PATH-034-B",
   "spine_node": "SPINE-SAY-WHY",
   "lessons": [
-    "ES-C38-porque"
+    "ES-C38-porque",
+    "ES-C38-repaso-los-tres-porques"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "ES-EXT-034-B-CONSOLIDATION-PORQUE"
+  ],
   "after": []
 }
