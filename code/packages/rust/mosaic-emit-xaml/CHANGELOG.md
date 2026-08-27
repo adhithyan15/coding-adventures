@@ -1,5 +1,30 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — recognize mosstyle's `align: "center-vertical"` (#13164)
+
+Found while auditing TaskApp's remaining `styleDegradations` after
+#13160: `align: "center-vertical"` (and one `align: "center"`) is
+authored 30+ times across real `.msl` files (TaskApp, VentureChrome,
+Calendar, ProjectNav) — always on a `Row`, always meaning "center the
+cross axis" — but nothing lowered it, so every one of those rows
+rendered top-aligned instead of vertically centered.
+
+`align` is not a real mosstyle property (per `UI15-mosstyle.md`
+§1/§11, alignment belongs in `.mll`; mosstyle's grammar has no property
+whitelist to reject it — a separate gap, tracked in #13164 rather than
+fixed here). Given every real occurrence is semantically identical to
+`align-items: center`, `extract_flex_hints` now also recognizes
+`align: "center-vertical"` / `align: "center"`, mapping to the exact
+same `align_items = Some("center")` FlexHints slot — reusing 100% of
+the existing, tested per-child `VerticalAlignment`/`HorizontalAlignment`
+injection, no new mechanism.
+
+Verified against a real regenerated `task-app` XAML project: 60
+`VerticalAlignment="Center"` attributes now appear (versus rows
+rendering top-aligned before), the degradation report no longer lists
+`align` for any part, and `dotnet build` succeeds with 0 errors (same
+98 pre-existing unrelated warnings).
+
 ## [Unreleased] — lower `position: "absolute"` to a pinned Margin (#12028 item 4)
 
 `position: "absolute"`/`top`/`left` had no XAML setter at all and were
