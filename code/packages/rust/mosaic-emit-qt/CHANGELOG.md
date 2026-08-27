@@ -4,6 +4,69 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - lower `Path` to real QML vector geometry (#12028 item 3, UI39)
+
+Qt is the second backend to render the new kernel drawing primitive
+(after XAML). `circle`/`line`/`curve` are implemented; `arc` is a
+stretch goal not included here — a real build using `kind: arc` still
+hard-errors with a named "not yet supported" message.
+
+New `emit_path_qml`, dispatched early in `emit_qml_tree` (dynamic
+per-node geometry can't be expressed by `primitive_to_qml`'s static
+`QmlElement.builtin_lines`, so `Path` gets its own emitter like every
+other host/dynamic primitive):
+- `circle` → a plain `Rectangle` with `radius: width / 2` — QML has no
+  dedicated ellipse primitive, but a square `Rectangle` with a
+  half-width corner radius is the idiomatic circle. Its native
+  `color`/`border.color`/`border.width` properties already match
+  `background`/`border-color`/`border-width` 1:1 — no remapping
+  needed, unlike XAML's `Ellipse` (which has no `Background`/
+  `BorderBrush` dependency properties at all). Reuses the existing
+  `qml_rectangle_paint_lines` directly.
+- `line`/`curve` → `QtQuick.Shapes`' `Shape` + `ShapePath` +
+  `PathLine`/`PathQuad`, added behind a new conditional
+  `import QtQuick.Shapes` (`tree_needs_shapes_import`, mirroring
+  `tree_needs_controls_import`'s pattern) that only fires for
+  `line`/`curve`/`arc` kinds — a `circle`-only tree stays import-free.
+  New `qml_shape_path_paint_lines` maps `background`/`border-color`/
+  `border-width` to `ShapePath`'s differently-named
+  `fillColor`/`strokeColor`/`strokeWidth` (`fillColor` always gets an
+  explicit line, defaulting to `"transparent"`, since `ShapePath`'s own
+  default fill is solid black — would otherwise silently paint a
+  filled wedge behind a stroke-only line or curve).
+
+**A real architectural mismatch found and fixed along the way:**
+`Stack`'s existing QML lowering (`Item` + `anchors.fill: parent`
+injected onto every child, `emit_qml_children`) assumes every Z-overlay
+child wants to fill the whole container — true for every primitive
+that existed before `Path`, false for `Path` itself, whose entire
+purpose is self-positioning via its own geometry props. Without a fix,
+the crescent-moon worked example (two differently-sized/offset circles
+composited via `Stack`, UI39 §3) would have every `Path` child
+stretched to the full container bounds, destroying the positioning.
+Fixed with a narrow, well-justified exception in `emit_qml_children`:
+`Path` children skip the `anchors.fill: parent` injection that every
+other `Stack` child still gets — not a change to `Stack`'s general
+contract. Coordinate props accept only a literal `Number` for now
+(matching XAML's own scope decision); `SlotRef`/`Expr` produce a clear
+compile error, not a silent drop.
+
+`mosaic-package-artifact-builder`'s `("Path", ...)` degradation arm
+narrowed to also exclude `Backend::Qt`.
+
+Verified against the real toolchain: the exact QML syntax above
+(`Rectangle` circle, `Shape`/`ShapePath`/`PathLine`/`PathQuad`) was
+confirmed via `qmllint` and a real `qmlscene` launch *before* writing
+`emit_path_qml` — including a second probe specifically to confirm
+`Shape` doesn't need explicit `width`/`height` to paint correctly,
+since `ShapePath` coordinates are absolute within the `Shape`'s own
+origin regardless. A real `mosaic-compile pkg --backend qt` build of a
+package authoring the actual crescent-moon shape (two overlapping
+`Path` circles) produces `nativeComplete: true, degradations: []`; the
+real emitted `.qml` passes `qmllint` with zero errors and launches
+cleanly via `qmlscene` for both the circle-only case and a combined
+circle+line+curve case exercising the `QtQuick.Shapes` import path.
+
 ### Added - native radio-group mutual exclusion (#13007)
 
 `emit_host_radio_qml`'s `group:` prop was preserved only as a

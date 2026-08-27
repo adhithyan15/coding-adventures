@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - narrow the `Path` degradation to also exclude Qt (#12028 item 3, UI39)
+
+Qt now lowers `Path`'s `circle`/`line`/`curve` kinds to real QML vector
+geometry (`mosaic-emit-qt`). Narrowed the `("Path", ...)` arm in
+`collect_native_degradations` from `backend != Backend::Xaml` to
+`!matches!(backend, Backend::Xaml | Backend::Qt)`, matching
+`HostSlider`'s per-backend narrowing pattern. Same primitive-level
+(not per-kind) caveat as the XAML narrowing: a real build using
+`kind: arc` on Qt still hard-errors from the emitter itself.
+
 ## [Unreleased] - narrow the `Path` degradation to exclude XAML (#12028 item 3, UI39)
 
 XAML now lowers `Path`'s `circle`/`line`/`curve` kinds to real vector
