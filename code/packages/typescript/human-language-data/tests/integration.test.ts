@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Kannada long e", () => {
+  it("keeps the cross-script closure queue measured after Kannada o", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -1225,6 +1225,23 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("kannada.json")?.has("ಏ")).toBe(false);
     expect(affected.get("ಏ") ?? 0).toBe(0);
+    const kannadaO = scripts.kannada!.independentVowels!.find((entry) => entry.glyph === "ಒ")!;
+    expect(kannadaO.sound).toBe("o");
+    expect(kannadaO.penLifts).toBe(0);
+    expect(kannadaO.strokeOrder).toEqual([
+      "turn counterclockwise around the compact upper-left loop",
+      "without lifting, descend through the curved middle into the lower-left bowl",
+      "without lifting, sweep through the join and around the lower-right bowl",
+      "without lifting, climb the right side and curl left at the open terminal",
+    ]);
+    expect(kannadaO.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-o\.gif.*ಒ.*30 frames.*3\.0 seconds.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaO.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*one uninterrupted run.*upper-left loop.*curved middle.*lower-left bowl.*lower-right bowl.*curl left.*open terminal.*Noto Sans Kannada.*zero-lift order/i,
+    );
+    expect(missingByScript.get("kannada.json")?.has("ಒ")).toBe(false);
+    expect(affected.get("ಒ") ?? 0).toBe(0);
     const kannadaAa = scripts.kannada!.independentVowels!.find((entry) => entry.glyph === "ಆ")!;
     expect(kannadaAa.sound).toBe("ā");
     expect(kannadaAa.penLifts).toBe(1);
@@ -1290,7 +1307,7 @@ describe("real curriculum", () => {
     expect(affected.get("ب") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ಒ", 3]);
+    ).toEqual(["گ", 3]);
   });
 
   it("loaded every track (17+ and growing)", () => {
