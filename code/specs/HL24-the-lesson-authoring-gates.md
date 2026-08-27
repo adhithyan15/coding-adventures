@@ -188,7 +188,65 @@ Stated so nobody assumes coverage that is not there.
 
 ---
 
-## 6. Running the gates
+## 6. Content safety — the gap with the worst consequences and no gate at all
+
+Every check in §1-§4 is mechanical. **None of them can tell you that a drill you are about to
+write will make a beginner say something obscene aloud in a classroom.** That failure is not
+theoretical, it is not caught anywhere, and it is worth more attention than any pin in §4.
+
+### 6.1 The rule
+
+**Screen what the DRILL PRODUCES, not what the headword means.** A headword can be entirely
+innocent while the forms a lesson generates around it are not. The generative moves in this
+curriculum's lesson shape are the dangerous ones:
+
+- inflecting for gender (`-o` → `-a`) to show agreement;
+- pluralising to show number;
+- pairing with a common verb to make a phrase;
+- drilling a minimal pair by reading its neighbours aloud in sequence.
+
+Each of those is a normal teaching move. Each can manufacture a form the author never typed.
+
+### 6.2 The worked example: `pollo` / `polvo`
+
+`HL23` §12.3 mandates that `pollo`/`polvo` be taught **as a minimal pair**, because both are
+exam-required and the confusability screen disambiguates rather than drops. The obvious way to
+teach it — walk the learner through `pollo`, `polla`, `polvo`, `polvos` — is **hazardous**:
+
+- **`polla`** is vulgar slang for *penis* in peninsular Spanish;
+- **`echar un polvo`** means *to have sex*.
+
+This is not a modern coincidence that a dictionary might miss. Corominas derives the obscene
+sense from `polla` "girl" and refers to it in as many words as *"la ac. obscena."*
+
+**The constraint, for whoever authors chapter 403:**
+
+- teach the contrast as **`pollo` vs `polvo` only**;
+- **do not inflect** either into `polla` / `pollas`;
+- **do not put `echar` anywhere near `polvo`**, in prose, in a `[YOU SAY:]` cue, or in an example;
+- **do not build a gender-contrast drill on this pair.** If the chapter needs a feminine
+  counterpart to show the *o/a* pattern, use a different word entirely;
+- **leave a comment in the lesson source saying why the forms are missing**, so a later editor
+  does not helpfully complete the paradigm.
+
+That last point is the reusable half. A safety omission that is not explained looks exactly like
+an oversight, and the next person will fix it.
+
+### 6.3 Why no gate will catch this
+
+A banned-word list cannot work here: `pollo`, `polvo`, `polla` and `echar` are all ordinary words,
+and `polla` also means *young hen* and, regionally, *bet*. The hazard is **compositional** — it
+lives in the combination and the register, not in any token. Detecting it mechanically means
+modelling what a learner will produce and how it lands in each variety, which is not a lint.
+
+So this stays an **authoring discipline with a written record**, which is why it is in a spec
+rather than in a test. The practical instruction: when a lesson teaches a minimal pair or an
+inflection pattern, **write out the forms the drill will actually generate and look at that list**
+before writing the prose. It takes a minute and it is the only check there is.
+
+---
+
+## 7. Running the gates
 
 ```
 code/scripts/verify-human-languages.sh --fast    # everything except the 22-book XeLaTeX compile
