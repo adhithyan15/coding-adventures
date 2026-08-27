@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-DIALOGUE-WELLBEING, UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-PRAGMATICS-STANDARD-FAREWELL]
 introduces:
   knowledge: [UR-DIALOGUE-TAKE-LEAVE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-DIALOGUE-WELLBEING, UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-PRAGMATICS-STANDARD-FAREWELL, UR-DIALOGUE-TAKE-LEAVE]
 skills: [listening, speaking, reading]

@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-QAMIZ, UR-ETYMON-QAMIZ-CHEMISE]
 introduces:
   knowledge: [UR-LEX-JUTA, UR-ETYMON-JUTA-YOKE, UR-SCRIPT-TE-VS-TTE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-QAMIZ, UR-ETYMON-QAMIZ-CHEMISE, UR-LEX-JUTA, UR-ETYMON-JUTA-YOKE, UR-SCRIPT-TE-VS-TTE, UR-GRAMMAR-HOW-GENDER, UR-CROSSLINGUAL-THIK, UR-DIALOGUE-TAKE-LEAVE]
 skills: [listening, speaking, reading]

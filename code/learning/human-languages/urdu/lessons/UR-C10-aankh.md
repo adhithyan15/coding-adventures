@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-NAAK, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-SCRIPT-DO-CHASHMI-HE]
 introduces:
   knowledge: [UR-LEX-AANKH, UR-ETYMON-AANKH-EYE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-NAAK, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-SCRIPT-DO-CHASHMI-HE, UR-LEX-AANKH, UR-ETYMON-AANKH-EYE]
 skills: [listening, speaking, reading]

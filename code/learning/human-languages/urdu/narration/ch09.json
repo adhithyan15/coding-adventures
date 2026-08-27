@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "People You'd Introduce",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:03400f396e06b4be",
+  "sourceHash": "fnv1a64:5658223eb1ee6ed3",
   "lessons": [
     {
       "id": "UR-C09-bhai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fbceebe9946f7640",
+      "sourceHash": "fnv1a64:d9eb8148c2eff2eb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e5b293fa6c6d0f9",
+      "sourceHash": "fnv1a64:6bce4b8aed4806f0",
       "notice": null,
       "blocks": [
         {
@@ -350,7 +350,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:735012b737d6b7ac",
+      "sourceHash": "fnv1a64:7d66254282e0e1ab",
       "notice": null,
       "blocks": [
         {
@@ -501,7 +501,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:432eb8668732821e",
+      "sourceHash": "fnv1a64:90d1a109303342d1",
       "notice": null,
       "blocks": [
         {

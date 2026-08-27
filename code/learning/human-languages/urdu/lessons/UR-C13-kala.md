@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-SAFED, UR-ETYMON-SAFED-WHITE-PIE]
 introduces:
   knowledge: [UR-LEX-KALA, UR-ETYMON-KALA-DRAVIDIAN, UR-GRAMMAR-ADJECTIVE-AGREEMENT]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-SAFED, UR-ETYMON-SAFED-WHITE-PIE, UR-LEX-KALA, UR-ETYMON-KALA-DRAVIDIAN, UR-GRAMMAR-ADJECTIVE-AGREEMENT, UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS, UR-PRAGMATICS-RESPECTFUL-GENDER-CHOICE]
 skills: [listening, speaking, reading]

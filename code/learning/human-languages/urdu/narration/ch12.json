@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Water, Tea, Milk, Bread",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e9210dac6052faaf",
+  "sourceHash": "fnv1a64:db08ec16c24f2790",
   "lessons": [
     {
       "id": "UR-C12-pani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95c630b33ba1d5e9",
+      "sourceHash": "fnv1a64:1feffbb79d00e6f8",
       "notice": null,
       "blocks": [
         {
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2e7a8df8a1a0d160",
+      "sourceHash": "fnv1a64:f2c43f8f91dd8ad1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0737ce97bb57fea2",
+      "sourceHash": "fnv1a64:9cbb9d36416b6317",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -474,7 +474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62ba291ba7e6bb42",
+      "sourceHash": "fnv1a64:7872a4c93be0619b",
       "notice": null,
       "blocks": [
         {

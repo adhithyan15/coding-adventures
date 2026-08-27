@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-KALA, UR-GRAMMAR-ADJECTIVE-AGREEMENT, UR-LEX-LAL]
 introduces:
   knowledge: [UR-LEX-NILA, UR-ETYMON-NILA-ANILINE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-KALA, UR-GRAMMAR-ADJECTIVE-AGREEMENT, UR-LEX-LAL, UR-LEX-SAFED, UR-LEX-NILA, UR-ETYMON-NILA-ANILINE, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING, UR-SCRIPT-MERA-NAAM-HAI, UR-CHUNK-AAP-SE-MIL-KAR]
 skills: [listening, speaking, reading]

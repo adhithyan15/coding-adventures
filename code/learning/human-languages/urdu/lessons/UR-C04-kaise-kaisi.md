@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-DIALOGUE-NAME-EXCHANGE, UR-LEX-KYA]
 introduces:
   knowledge: [UR-LEX-KAISE-KAISI, UR-SCRIPT-KAISE-KAISI, UR-GRAMMAR-HOW-GENDER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-DIALOGUE-NAME-EXCHANGE, UR-LEX-KYA, UR-LEX-KAISE-KAISI, UR-SCRIPT-KAISE-KAISI, UR-GRAMMAR-HOW-GENDER]
 skills: [listening, speaking, reading]

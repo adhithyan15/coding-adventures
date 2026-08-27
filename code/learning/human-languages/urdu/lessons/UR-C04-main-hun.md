@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-WELLBEING-QUESTION, UR-GRAMMAR-AAP-HAIN]
 introduces:
   knowledge: [UR-LEX-MAIN, UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-SCRIPT-MAIN-HUN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-WELLBEING-QUESTION, UR-GRAMMAR-AAP-HAIN, UR-LEX-MAIN, UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-SCRIPT-MAIN-HUN]
 skills: [listening, speaking, reading]

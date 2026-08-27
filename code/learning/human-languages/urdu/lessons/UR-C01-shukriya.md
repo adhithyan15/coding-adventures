@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01]
 introduces:
   knowledge: [UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA]
 skills: [listening, speaking, reading, writing]

@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-MUNH, UR-SCRIPT-NUN-NASAL-VOWEL, UR-ETYMON-MUNH-MYTH, UR-REGISTER-TWO-ROADS-ONE-ROOT, UR-ETYMON-KHUDA-PERSIAN]
 introduces:
   knowledge: [UR-LEX-DIL, UR-ETYMON-DIL-HEART-PIE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-MUNH, UR-SCRIPT-NUN-NASAL-VOWEL, UR-ETYMON-MUNH-MYTH, UR-REGISTER-TWO-ROADS-ONE-ROOT, UR-ETYMON-KHUDA-PERSIAN, UR-LEX-DIL, UR-ETYMON-DIL-HEART-PIE, UR-ETYMON-BHAI-BROTHER, UR-ETYMON-AANKH-EYE, UR-ETYMON-NAAK-NOSE]
 skills: [listening, speaking, reading]

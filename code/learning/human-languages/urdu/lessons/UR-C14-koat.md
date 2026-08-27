@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-TOPI, UR-ETYMON-TOPI-INTO-ENGLISH, UR-LEX-JUTA, UR-LEX-QAMIZ]
 introduces:
   knowledge: [UR-LEX-KOAT, UR-REGISTER-ENGLISH-LAYER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-TOPI, UR-ETYMON-TOPI-INTO-ENGLISH, UR-LEX-JUTA, UR-LEX-QAMIZ, UR-LEX-KOAT, UR-REGISTER-ENGLISH-LAYER, UR-LEX-KHUDA-HAFIZ, UR-LEX-WELLBEING-REPLY, UR-PRAGMATICS-STANDARD-FAREWELL]
 skills: [listening, speaking, reading]

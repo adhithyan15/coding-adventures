@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-MAIN, UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-LEX-THIK, UR-DIALOGUE-NAME-EXCHANGE]
 introduces:
   knowledge: [UR-LEX-WELLBEING-REPLY, UR-GRAMMAR-WELLBEING-WORD-ORDER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-MAIN, UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-LEX-THIK, UR-DIALOGUE-NAME-EXCHANGE, UR-LEX-WELLBEING-REPLY, UR-GRAMMAR-WELLBEING-WORD-ORDER]
 skills: [listening, speaking, reading]

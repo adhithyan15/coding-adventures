@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-DIALOGUE-WELLBEING]
 introduces:
   knowledge: [UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-DIALOGUE-WELLBEING, UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN]
 skills: [listening, speaking, reading]

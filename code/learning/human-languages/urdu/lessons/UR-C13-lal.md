@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-ROTI, UR-ETYMON-ROTI-STRIKE]
 introduces:
   knowledge: [UR-LEX-LAL, UR-ETYMON-LAL-PERSIAN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-ROTI, UR-ETYMON-ROTI-STRIKE, UR-LEX-LAL, UR-ETYMON-LAL-PERSIAN, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING, UR-SCRIPT-MERA-NAAM-HAI]
 skills: [listening, speaking, reading]

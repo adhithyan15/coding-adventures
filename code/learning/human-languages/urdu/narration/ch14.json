@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Four Things You Wear",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c252fe07d9fd764a",
+  "sourceHash": "fnv1a64:2bdeebb8465054d9",
   "lessons": [
     {
       "id": "UR-C14-qamiz",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f657e3d46d3bfcfd",
+      "sourceHash": "fnv1a64:c3fe8d26b48b800a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a5a0d789eb23fb53",
+      "sourceHash": "fnv1a64:d84bbd7709636842",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6f70d71fb90cdc2",
+      "sourceHash": "fnv1a64:47de8e799d93cec9",
       "notice": null,
       "blocks": [
         {
@@ -458,7 +458,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2c295672fe6ff21",
+      "sourceHash": "fnv1a64:ca56aa49e5abc188",
       "notice": null,
       "blocks": [
         {

@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-KAAN, UR-ETYMON-KAAN-UNCERTAIN, UR-GRAMMAR-MERA-GENDER-AGREEMENT]
 introduces:
   knowledge: [UR-LEX-NAAK, UR-SCRIPT-KAAN-NAAK-REVERSAL, UR-ETYMON-NAAK-NOSE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-KAAN, UR-ETYMON-KAAN-UNCERTAIN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-LEX-NAAK, UR-SCRIPT-KAAN-NAAK-REVERSAL, UR-ETYMON-NAAK-NOSE]
 skills: [listening, speaking, reading]

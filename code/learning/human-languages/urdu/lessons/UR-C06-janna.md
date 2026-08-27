@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-HONA, UR-LEX-JANA, UR-LEX-ANA, UR-LEX-BOLNA]
 introduces:
   knowledge: [UR-LEX-JANNA, UR-SCRIPT-JANNA-DOUBLE-NUN, UR-ETYMON-JANNA-KNOW]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-HONA, UR-LEX-JANA, UR-LEX-ANA, UR-LEX-BOLNA, UR-LEX-JANNA, UR-SCRIPT-JANNA-DOUBLE-NUN, UR-ETYMON-JANNA-KNOW]
 skills: [listening, speaking, reading]

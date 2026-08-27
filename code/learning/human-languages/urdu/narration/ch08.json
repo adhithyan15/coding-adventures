@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Four Verbs Between People",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:13d395d36ba28189",
+  "sourceHash": "fnv1a64:3bbae3fce96a39d3",
   "lessons": [
     {
       "id": "UR-C08-lena",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6cff3b5bf832d114",
+      "sourceHash": "fnv1a64:1faf5cffd27f08d5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -204,7 +204,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7a00c30578b836fa",
+      "sourceHash": "fnv1a64:688836cc7c6a1c87",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f13a27d19ff7f06",
+      "sourceHash": "fnv1a64:a226fc31644c4769",
       "notice": null,
       "blocks": [
         {
@@ -537,7 +537,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7fcec48f83565d59",
+      "sourceHash": "fnv1a64:84aaa23b89f0c160",
       "notice": {
         "modality": "sight",
         "needs": [

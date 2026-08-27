@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-MAIN, UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME]
 introduces:
   knowledge: [UR-LEX-THIK, UR-SCRIPT-THIK, UR-CROSSLINGUAL-THIK]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-MAIN, UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-LEX-THIK, UR-SCRIPT-THIK, UR-CROSSLINGUAL-THIK]
 skills: [listening, speaking, reading]

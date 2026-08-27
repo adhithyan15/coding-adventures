@@ -19,6 +19,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01]
 skills: [reading, writing]

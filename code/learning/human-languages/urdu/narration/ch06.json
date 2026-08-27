@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Five Verbs at the Core",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:522465ff1bc390d9",
+  "sourceHash": "fnv1a64:a77e1fea634ba5e1",
   "lessons": [
     {
       "id": "UR-C06-hona",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cb8964dab7062d5",
+      "sourceHash": "fnv1a64:e5482d1dd319c952",
       "notice": null,
       "blocks": [
         {
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b42ee061c919368",
+      "sourceHash": "fnv1a64:2421e5249a64d68b",
       "notice": null,
       "blocks": [
         {
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10d76ff9dab4cd22",
+      "sourceHash": "fnv1a64:459c05ad689e4c8b",
       "notice": null,
       "blocks": [
         {
@@ -448,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5737322f1a16dce1",
+      "sourceHash": "fnv1a64:0820f3fe03828c7c",
       "notice": null,
       "blocks": [
         {
@@ -600,7 +600,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2af8f0d723bc7015",
+      "sourceHash": "fnv1a64:34ae576a8b5a8ee8",
       "notice": null,
       "blocks": [
         {

@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-GARMI, UR-ETYMON-GARMI-WARM-PIE]
 introduces:
   knowledge: [UR-LEX-SARDI, UR-ETYMON-SARDI-PERSIAN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-GARMI, UR-ETYMON-GARMI-WARM-PIE, UR-LEX-SARDI, UR-ETYMON-SARDI-PERSIAN, UR-SCRIPT-HAMZA-YE, UR-SCRIPT-KAAN-NAAK-REVERSAL, UR-SCRIPT-NUN-NASAL-VOWEL, UR-LEX-BARISH, UR-LEX-DHOOP, UR-LEX-HAWA, UR-ETYMON-DIL-HEART-PIE, UR-REGISTER-TWO-ROADS-ONE-ROOT]
 skills: [listening, speaking, reading]

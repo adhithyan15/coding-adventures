@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-LAL, UR-ETYMON-LAL-PERSIAN, UR-REGISTER-TWO-ROADS-ONE-ROOT]
 introduces:
   knowledge: [UR-LEX-SAFED, UR-ETYMON-SAFED-WHITE-PIE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-LAL, UR-ETYMON-LAL-PERSIAN, UR-REGISTER-TWO-ROADS-ONE-ROOT, UR-LEX-SAFED, UR-ETYMON-SAFED-WHITE-PIE, UR-CROSSLINGUAL-THIK, UR-DIALOGUE-TAKE-LEAVE]
 skills: [listening, speaking, reading]

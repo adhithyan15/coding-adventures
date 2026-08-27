@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-NILA, UR-ETYMON-NILA-ANILINE]
 introduces:
   knowledge: [UR-LEX-QAMIZ, UR-ETYMON-QAMIZ-CHEMISE, UR-SCRIPT-QAMIZ-LETTERS]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-NILA, UR-ETYMON-NILA-ANILINE, UR-LEX-QAMIZ, UR-ETYMON-QAMIZ-CHEMISE, UR-SCRIPT-QAMIZ-LETTERS, UR-GRAMMAR-AAP-KA]
 skills: [listening, speaking, reading]
