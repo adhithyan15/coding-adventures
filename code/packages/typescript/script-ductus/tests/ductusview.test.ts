@@ -127,6 +127,8 @@ const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
 const kannadaIOutline = kannadaOutline("ಇ");
 const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
 const kannadaEOutline = kannadaOutline("ಎ");
+const KANNADA_EE = DUCTUS[ductusKey("kannada", "ಏ")];
+const kannadaEeOutline = kannadaOutline("ಏ");
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
 const malayalamEOutline = malayalamOutline("എ");
 const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
@@ -1186,6 +1188,22 @@ describe("Kannada ಎ — one loop-to-arch run", () => {
     expect(strip.frames).toHaveLength(4);
     expect(strip.penLifts).toBe(0);
     expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+});
+
+describe("Kannada ಏ — joined body, then the small upper loop", () => {
+  const steps = ductusSteps(KANNADA_EE);
+  const strip = ductusFilmstrip(KANNADA_EE, kannadaEeOutline);
+
+  it("places one lift before the small upper loop", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true]);
+  });
+
+  it("reports four movements in two strokes", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
   });
 });
 

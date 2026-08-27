@@ -15018,6 +15018,60 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: kannadaIndependentVowelSource("ಎ"),
   },
+  // Gopala Krishna A's 31-frame animation writes independent vowel ಏ in two
+  // runs. The first carries the same compact loop and joined lower body into
+  // the tall outer arch; after one lift, the second draws the small upper loop
+  // from left to right. These medians fit that order to Noto Sans Kannada.
+  [ductusKey("kannada", "ಏ")]: {
+    script: "kannada",
+    glyph: "ಏ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "turn clockwise around the compact left loop",
+            path: [
+              { x: 220, y: 185 }, { x: 240, y: 190 }, { x: 260, y: 210 },
+              { x: 260, y: 235 }, { x: 245, y: 260 }, { x: 210, y: 285 },
+              { x: 170, y: 295 }, { x: 135, y: 290 }, { x: 90, y: 270 }, { x: 65, y: 225 },
+              { x: 67, y: 165 }, { x: 100, y: 105 }, { x: 160, y: 55 },
+              { x: 230, y: 28 }, { x: 300, y: 35 }, { x: 350, y: 85 },
+              { x: 370, y: 150 }, { x: 370, y: 180 },
+            ],
+          },
+          {
+            label: "sweep through the joined lower curves and climb the right side",
+            path: [
+              { x: 370, y: 180 }, { x: 410, y: 115 }, { x: 475, y: 55 },
+              { x: 550, y: 30 }, { x: 625, y: 55 }, { x: 685, y: 125 },
+              { x: 710, y: 220 }, { x: 680, y: 320 }, { x: 610, y: 410 },
+              { x: 515, y: 460 },
+            ],
+          },
+          {
+            label: "carry the tall outer arch over and finish at the upper left",
+            path: [
+              { x: 515, y: 460 }, { x: 465, y: 480 }, { x: 420, y: 491 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "draw the small upper loop from left to right",
+            path: [
+              { x: 110, y: 565 }, { x: 112, y: 520 }, { x: 130, y: 480 },
+              { x: 165, y: 445 }, { x: 215, y: 420 }, { x: 267, y: 420 },
+              { x: 315, y: 430 }, { x: 350, y: 470 }, { x: 365, y: 525 },
+              { x: 370, y: 570 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: kannadaIndependentVowelSource("ಏ"),
+  },
   [ductusKey("telugu", "అ")]: {
     script: "telugu",
     glyph: "అ",
