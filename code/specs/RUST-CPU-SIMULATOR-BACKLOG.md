@@ -66,7 +66,7 @@ according to the current prioritization run.
 | IDs (functional / gate) | Year | Target | Functional Rust | Gate-level Rust |
 |---|---:|---|---|---|
 | RCPU-001 / RCPU-002 | 1948 | Manchester Baby (SSEM) | Complete: `manchester-baby-simulator` | Complete: `manchester-baby-gatelevel` |
-| RCPU-003 / RCPU-004 | 1954 | IBM 704 | Complete: `ibm704-simulator` | In progress: `ibm704-gatelevel` |
+| RCPU-003 / RCPU-004 | 1954 | IBM 704 | Complete: `ibm704-simulator` | Complete: `ibm704-gatelevel` |
 | RCPU-005 / RCPU-006 | 1961 | GE-225 | Audit: `ge225-simulator` | Missing |
 | RCPU-007 / RCPU-008 | 1964 | CDC 6600 | Missing | Missing |
 | RCPU-009 / RCPU-010 | 1970 | DEC PDP-11 | Missing | Missing |
@@ -91,11 +91,13 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-004**, the IBM 704 gate-level simulator. The local
-implementation covers the complete v1 instruction surface with flip-flop
-state, integer and floating gate networks, and per-clock differential tests.
-Its functional prerequisite is merged; RCPU-004 remains in progress until this
-branch is rebased onto `origin/main` and its own PR passes review and CI.
+Current selection: **RCPU-P002**, the fail-closed installed-memory and
+architectural modification-word prerequisite for the GE-225 functional audit.
+This slice removes silent address wrapping and detached X arrays, makes
+multiword and device transfers atomic, bounds card-reader input, and pins the
+manual's BRU/SPB bank and P-counter timing. RCPU-005 remains open for the
+manual-backed integer/double/shift, optional CPU and I/O, AAU, and completion
+coverage slices after this prerequisite merges.
 
 ## Cross-language wave
 
@@ -124,6 +126,7 @@ queue:
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
 | 2026-08-27 | RCPU-004 fidelity audit found that an initial floating implementation delegated FAD/FSB/FMP/FDH/FDP results to host `f64`, violating the gate-level completion contract even though simple differential tests passed. | P0, gate-level fidelity, blocks RCPU-004 | Replaced it before PR with exact bit-vector alignment, gate add/multiply/restoring divide, 53-bit round-to-nearest-even intermediates, and 512 seeded oracle comparisons including divide remainders. |
+| 2026-08-27 | RCPU-005 primary-manual audit found that `07g` explicitly scoped the implementation as an MVP, while the Rust package silently wrapped effective addresses and multiword/device transfers, kept modification words in detached host arrays instead of reserved core, partially mutated state on range errors, and covered only 7 tests. The manual also exposes deferred automatic-modification, optional central-processor, controller-I/O, and AAU families plus incorrect double-length representation in the current model. | P0 memory/correctness prerequisite, then chronological architecture completeness | Add RCPU-P002 ahead of RCPU-005 for fail-closed installed-memory and architectural X-word storage. Continue RCPU-005 in manual-backed integer/shift, optional CPU and I/O, and AAU slices; do not start RCPU-006 until all slices close. |
 | 2026-08-27 | RCPU-003 manual audit found five historical errors inherited by `07h` and the Python oracle: CAL targeted Q instead of P, HPR and DVH used transfer PCs, TNO retained a set overflow indicator, TNX was omitted, and +0240 FDH was mislabeled as +0241 FDP. | P0, architecture correctness, blocks RCPU-003 | Correct the Rust simulator and `07h` against IBM's 1955 manual, add targeted regressions, and record the Python implementation for repair during its later cross-language audit. |
 | 2026-08-27 | RCPU-003 pre-push audit found that transport decoding could allocate an oversized temporary word vector before comparing it with configured memory, and an empty load with an unbounded origin could reach an invalid slice. | P0, allocation/panic safety, blocks RCPU-003 | Validate canonical length, origin, and decoded word count before allocation or slicing; add end-of-memory and `usize::MAX` origin regressions. |
 | 2026-08-27 | RCPU-003: the repository already had a complete Python IBM 704 simulator and conformance suite. | P0, correctness aid | Use the Python implementation as the behavioral oracle while retaining the canonical Rust encoder as the transport authority; port its v1 semantics and architecture programs to Rust. |

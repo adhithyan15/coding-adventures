@@ -2,5 +2,41 @@
 
 Behavioral Rust simulator for the **GE-225 instruction repertoire**.
 
-This package mirrors the same GE-225 machine model now available in Python, Go,
-and TypeScript so we can cross-check backend behavior across implementations.
+The Rust implementation is the fidelity-first reference for the repository's
+GE-225 work. It currently covers the integer, control-flow, shift, console
+typewriter, and card-reader core inherited from the original compiler-target
+model. Its remaining documented CPU, I/O-controller, and optional Auxiliary
+Arithmetic Unit (AAU) families are tracked in
+`code/specs/RUST-CPU-SIMULATOR-BACKLOG.md`; the package must not be described as
+a complete historical simulator until those items close.
+
+The current memory model follows the machine's architectural rules:
+
+- words are 20-bit patterns and addresses are word addresses;
+- installed core is explicitly bounded to the documented 4K through 16K range;
+- modification words (X words) are reserved core locations, not detached host
+  registers;
+- a modified or direct address outside installed memory returns an error rather
+  than wrapping around;
+- multiword loads, card reads, and block moves validate their whole range before
+  mutating state; and
+- `set_program_counter` selects a checked program origin, which is useful because
+  locations 0 through 3 are the base modification-word group.
+
+The current card reader is intentionally a deterministic development abstraction,
+not a completed GE-225 controller model: callers may queue at most 64 records of
+at most 27 words each, and `RCD` transfers the next record after validating the
+whole destination range. Exact 27-word card/status rotation, alignment, ready
+indicators, and the rest of the controller instruction family remain in the
+RCPU-005 I/O slice.
+
+The primary reference is General Electric's October 1963
+[GE-225 Programming Reference Manual](https://bitsavers.org/www.computer.museum.uq.edu.au/pdf/CPB-252A%20GE-225%20Programming%20Reference%20Manual%201964.pdf).
+
+Run the package verification from `code/packages/rust`:
+
+```sh
+cargo test -p coding-adventures-ge225-simulator
+cargo clippy -p coding-adventures-ge225-simulator --all-targets -- -D warnings
+RUSTDOCFLAGS="-D warnings" cargo doc -p coding-adventures-ge225-simulator --no-deps
+```
