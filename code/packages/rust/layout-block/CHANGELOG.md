@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0] — fragmented inline formatting
+
+### Changed
+- Consecutive inline children now delegate to the reusable `layout-inline`
+  component for word fragmentation, line boxes, and baseline alignment.
+- Semantic inline wrappers are split into precise per-line geometry, allowing
+  hit-testing and decorations to follow wrapped content.
+
 ## [0.2.0] — atomic inline flow
 
 ### Added

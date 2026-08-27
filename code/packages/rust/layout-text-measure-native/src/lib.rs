@@ -21,7 +21,7 @@
 //!  text-interfaces FontMetrics ◀────────────────────┘
 //!        │
 //!        ▼
-//!  layout-ir MeasureResult { width, height, line_count }
+//!  layout-ir MeasureResult { width, height, baseline, line_count }
 //! ```
 //!
 //! ## v1 scope
@@ -59,7 +59,7 @@ use text_interfaces::{
 };
 use text_native::{NativeHandle, NativeMetrics, NativeResolver, NativeShaper};
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Cache key
@@ -144,10 +144,7 @@ impl NativeMeasurer {
 
     /// Resolve (or look up cached) handle for the given FontSpec.
     /// Returns None on a failure that has already been cached.
-    fn handle_for<'a>(
-        &'a self,
-        font: &FontSpec,
-    ) -> Option<std::cell::Ref<'a, NativeHandle>> {
+    fn handle_for<'a>(&'a self, font: &FontSpec) -> Option<std::cell::Ref<'a, NativeHandle>> {
         let key = CacheKey::from_font(font);
 
         // Fast path: cached.
@@ -168,7 +165,11 @@ impl NativeMeasurer {
             let query = FontQuery {
                 family_names: vec![key.family.clone()],
                 weight: FontWeight(key.weight),
-                style: if key.italic { FontStyle::Italic } else { FontStyle::Normal },
+                style: if key.italic {
+                    FontStyle::Italic
+                } else {
+                    FontStyle::Normal
+                },
                 stretch: FontStretch::Normal,
             };
             let resolved = self.resolver.resolve(&query);
@@ -184,10 +185,12 @@ impl NativeMeasurer {
         // above.
         let cache = self.cache.borrow();
         match cache.get(&key).unwrap() {
-            CachedHandle::Ok(_) => Some(std::cell::Ref::map(cache, |c| match c.get(&key).unwrap() {
-                CachedHandle::Ok(h) => h,
-                CachedHandle::Failed => unreachable!(),
-            })),
+            CachedHandle::Ok(_) => {
+                Some(std::cell::Ref::map(cache, |c| match c.get(&key).unwrap() {
+                    CachedHandle::Ok(h) => h,
+                    CachedHandle::Failed => unreachable!(),
+                }))
+            }
             CachedHandle::Failed => None,
         }
     }
@@ -204,12 +207,7 @@ impl Default for NativeMeasurer {
 // ═══════════════════════════════════════════════════════════════════════════
 
 impl TextMeasurer for NativeMeasurer {
-    fn measure(
-        &self,
-        text: &str,
-        font: &FontSpec,
-        max_width: Option<f64>,
-    ) -> MeasureResult {
+    fn measure(&self, text: &str, font: &FontSpec, max_width: Option<f64>) -> MeasureResult {
         if text.is_empty() {
             return empty_line_result(font);
         }
@@ -253,6 +251,7 @@ fn measure_single_line(
         // x_advance_total, not any single segment's.
         width: shape.total_advance() as f64,
         height: line_height,
+        baseline: compute_baseline(metrics, handle, font),
         line_count: 1,
     }
 }
@@ -294,6 +293,7 @@ fn measure_wrapped(
     MeasureResult {
         width: max_line_width.min(max_width),
         height: line_height * total_lines as f64,
+        baseline: compute_baseline(metrics, handle, font),
         line_count: total_lines,
     }
 }
@@ -363,11 +363,7 @@ fn greedy_wrap(
 // Shared helpers
 // ═══════════════════════════════════════════════════════════════════════════
 
-fn compute_line_height(
-    metrics: &NativeMetrics,
-    handle: &NativeHandle,
-    font: &FontSpec,
-) -> f64 {
+fn compute_line_height(metrics: &NativeMetrics, handle: &NativeHandle, font: &FontSpec) -> f64 {
     let upem = metrics.units_per_em(handle) as f64;
     let ascent = metrics.ascent(handle) as f64;
     let descent = metrics.descent(handle) as f64;
@@ -387,10 +383,19 @@ fn compute_line_height(
     raw.max(font.size) * font.line_height.max(1.0) / 1.2
 }
 
+fn compute_baseline(metrics: &NativeMetrics, handle: &NativeHandle, font: &FontSpec) -> f64 {
+    let upem = metrics.units_per_em(handle) as f64;
+    if upem <= 0.0 {
+        return font.size * 0.8;
+    }
+    metrics.ascent(handle) as f64 * font.size / upem
+}
+
 fn empty_line_result(font: &FontSpec) -> MeasureResult {
     MeasureResult {
         width: 0.0,
         height: font.size * font.line_height,
+        baseline: font.size * 0.8,
         line_count: 1,
     }
 }
@@ -403,11 +408,13 @@ fn fallback_estimate(text: &str, font: &FontSpec, max_width: Option<f64>) -> Mea
         None => MeasureResult {
             width: raw_width,
             height: line_height,
+            baseline: font.size * 0.8,
             line_count: 1,
         },
         Some(mw) if raw_width <= mw || mw <= 0.0 => MeasureResult {
             width: raw_width,
             height: line_height,
+            baseline: font.size * 0.8,
             line_count: 1,
         },
         Some(mw) => {
@@ -415,6 +422,7 @@ fn fallback_estimate(text: &str, font: &FontSpec, max_width: Option<f64>) -> Mea
             MeasureResult {
                 width: mw,
                 height: line_height * lines as f64,
+                baseline: font.size * 0.8,
                 line_count: lines,
             }
         }
@@ -465,7 +473,11 @@ mod tests {
         // "Hello world" × 20 at 16px with max_width=50 should wrap many times.
         let text = "Hello world ".repeat(20);
         let r = m().measure(&text, &font_spec("Helvetica", 16.0), Some(50.0));
-        assert!(r.line_count > 1, "expected multiple lines, got {}", r.line_count);
+        assert!(
+            r.line_count > 1,
+            "expected multiple lines, got {}",
+            r.line_count
+        );
         assert!(r.width <= 50.0 + 1e-3);
     }
 
@@ -478,7 +490,11 @@ mod tests {
 
     #[test]
     fn hard_newline_forces_a_new_line() {
-        let r = m().measure("line one\nline two", &font_spec("Helvetica", 16.0), Some(500.0));
+        let r = m().measure(
+            "line one\nline two",
+            &font_spec("Helvetica", 16.0),
+            Some(500.0),
+        );
         assert_eq!(r.line_count, 2);
     }
 
@@ -498,11 +514,7 @@ mod tests {
     #[test]
     fn height_scales_with_line_count_on_wrap() {
         let single = m().measure("Hi", &font_spec("Helvetica", 16.0), Some(500.0));
-        let wrapped = m().measure(
-            &"a ".repeat(50),
-            &font_spec("Helvetica", 16.0),
-            Some(30.0),
-        );
+        let wrapped = m().measure(&"a ".repeat(50), &font_spec("Helvetica", 16.0), Some(30.0));
         assert!(wrapped.line_count > 1);
         assert!(wrapped.height > single.height * 2.0);
     }
@@ -525,8 +537,11 @@ mod tests {
         // Minimum-plausibility check: a 16px Helvetica line is between
         // ~14 and ~24 px tall. (Helvetica typoAscender + typoDescender
         // at 1.2× multiplier is usually ~19.)
-        assert!(r.height > 14.0 && r.height < 24.0,
-                "expected 14..24, got {}", r.height);
+        assert!(
+            r.height > 14.0 && r.height < 24.0,
+            "expected 14..24, got {}",
+            r.height
+        );
     }
 
     #[test]

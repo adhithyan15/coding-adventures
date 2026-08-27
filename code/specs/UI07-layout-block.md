@@ -100,10 +100,12 @@ For each block-level child in source order:
 
 ### Inline formatting context
 
-The current executable slice implements the line-box cursor and atomic child
-placement described below. Each child is kept intact and moves to the next
-line when it does not fit. Text splitting at word boundaries, one inline box
-spanning multiple lines, and baseline alignment remain planned refinements.
+`layout-block` delegates each consecutive inline run to the reusable
+`layout-inline` component. That component fragments text at word boundaries,
+splits semantic inline wrappers into one positioned fragment per occupied
+line, preserves explicit line breaks, and aligns text/replaced content using
+the baseline supplied by `TextMeasurer`. It also honors `whiteSpace` values
+`normal`, `pre`, and `nowrap`, plus `wordBreak: break-all`.
 
 When laying out a sequence of inline children:
 
@@ -123,22 +125,25 @@ When laying out a sequence of inline children:
    - Wrap remaining words to the next line
    - The measurer is called per word or per candidate line break
 
-### `measure_inline`
+### Inline component contract
 
 ```
-measure_inline(
-  node: LayoutNode,
+layout_inline_run(
+  nodes: [LayoutNode],
   maxWidth: float,
-  measurer: TextMeasurer
-) → Size
+  measurer: TextMeasurer,
+  layoutAtomic: (LayoutNode, maxWidth) → PositionedNode
+) → InlineLayout { children, width, height, lineCount }
 ```
 
 For `TextContent` leaf:
 - `result = measurer.measure(content.value, content.font, maxWidth)`
 - Return `{ width: result.width, height: result.height }`
 
-For inline container:
-- Recursively measure its children as inline elements
+For inline containers, semantic ancestry is retained while descendants are
+formatted. A wrapper that crosses a line boundary becomes one positioned
+wrapper per line, allowing generic decoration and hit-testing consumers to use
+tight geometry without knowing the producer's semantics.
 
 ### Vertical alignment within a line box
 

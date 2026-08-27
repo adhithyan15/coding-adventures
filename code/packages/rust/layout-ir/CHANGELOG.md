@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0] — baseline measurement
+
+### Added
+- `MeasureResult.baseline` preserves the first line's baseline from text
+  measurement so reusable inline formatting engines can align mixed fonts and
+  replaced content without backend-specific guesses.
+
 ## [0.2.0]
 
 - Add explicit soft-wrap control to `TextContent`; hard newlines remain authoritative.

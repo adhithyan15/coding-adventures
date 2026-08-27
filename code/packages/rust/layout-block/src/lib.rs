@@ -44,21 +44,21 @@
 //! ### Explicit non-goals (v1)
 //!
 //! - `float` / `clear` / absolute positioning
-//! - Full CSS inline formatting: text-run fragmentation, baseline alignment,
-//!   justification, and splitting one inline box across multiple line boxes.
-//!   The bounded inline path implemented here treats each child as an atomic
-//!   inline box and wraps it as a unit.
+//! - Full CSS inline formatting: justification, UAX #14 breaking, and
+//!   edge-decoration continuation. Fragmentation and baseline alignment are
+//!   delegated to the reusable `layout-inline` crate.
 //! - RTL / bidi
 //! - CSS columns
 //!
 //! Each exclusion matches the spec's documented non-goals.
 
+use layout_inline::{layout_inline_run_with_options, InlineOptions};
 use layout_ir::{
     Constraints, Content, Edges, ExtValue, LayoutNode, MeasureResult, PositionedNode, SizeValue,
     TextContent, TextMeasurer,
 };
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Entry point
@@ -157,7 +157,7 @@ fn lay_out_any<M: TextMeasurer>(
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Container layout — block stacking plus bounded atomic inline flow
+// Container layout — block stacking plus reusable inline formatting
 // ═══════════════════════════════════════════════════════════════════════════
 
 #[allow(clippy::too_many_arguments)]
@@ -177,78 +177,49 @@ fn lay_out_container<M: TextMeasurer>(
     let outer_width = resolve_container_width(node, outer_max_width);
     let inner_max_width = (outer_width - padding_horizontal).max(0.0);
 
-    // Lay out children in source order. Nodes without display metadata retain
-    // the original block-stacking behavior. Consecutive inline-level nodes
-    // share an atomic line box and wrap as units when the next box does not fit.
-    let mut children_positioned: Vec<PositionedNode> = Vec::with_capacity(node.children.len());
+    // Lay out children in source order. Consecutive inline-level children form
+    // one inline formatting context; layout-inline may return more positioned
+    // fragments than source nodes when text or semantic wrappers cross lines.
+    let mut children_positioned: Vec<PositionedNode> = Vec::new();
     let mut cursor_y = padding.top;
-    let mut inline_cursor_x = padding.left;
-    let mut inline_line_height: f64 = 0.0;
     let mut max_inline_right = padding.left;
     let mut prev_margin_bottom: f64 = 0.0;
     let mut have_placed_block = false;
-    let mut inline_line_open = false;
+    let mut index = 0;
 
-    for child in &node.children {
+    while index < node.children.len() {
+        let child = &node.children[index];
         let child_margin = child.margin.unwrap_or_default();
         let child_display = display_value(child);
 
         if is_inline_level(child_display) || child_display == Some("line-break") {
-            if child_display == Some("line-break") {
-                let mut positioned = lay_out_any(
-                    child,
-                    unconstrained_height(inner_max_width),
-                    measurer,
-                    inline_cursor_x,
-                    cursor_y,
-                );
-                positioned.width = 0.0;
-                positioned.x = inline_cursor_x;
-                positioned.y = cursor_y;
-                let break_height = positioned.height + child_margin.top + child_margin.bottom;
-                children_positioned.push(positioned);
-                cursor_y += inline_line_height.max(break_height);
-                inline_cursor_x = padding.left;
-                inline_line_height = 0.0;
-                inline_line_open = false;
-                have_placed_block = false;
-                prev_margin_bottom = 0.0;
-                continue;
+            let start = index;
+            while index < node.children.len() {
+                let display = display_value(&node.children[index]);
+                if !is_inline_level(display) && display != Some("line-break") {
+                    break;
+                }
+                index += 1;
             }
-
-            let mut positioned = lay_out_any(
-                child,
-                unconstrained_height(inner_max_width),
+            let inline = layout_inline_run_with_options(
+                &node.children[start..index],
+                inner_max_width,
+                InlineOptions::from_node(node),
                 measurer,
-                0.0,
-                0.0,
+                |atomic, width| {
+                    lay_out_any(atomic, unconstrained_height(width), measurer, 0.0, 0.0)
+                },
             );
-            let item_width = child_margin.left + positioned.width + child_margin.right;
-            let remaining = padding.left + inner_max_width - inline_cursor_x;
-            if inline_line_open && item_width > remaining {
-                cursor_y += inline_line_height;
-                inline_cursor_x = padding.left;
-                inline_line_height = 0.0;
+            for mut fragment in inline.children {
+                fragment.x += padding.left;
+                fragment.y += cursor_y;
+                children_positioned.push(fragment);
             }
-
-            positioned.x = inline_cursor_x + child_margin.left;
-            positioned.y = cursor_y + child_margin.top;
-            inline_cursor_x += item_width;
-            inline_line_height =
-                inline_line_height.max(child_margin.top + positioned.height + child_margin.bottom);
-            max_inline_right = max_inline_right.max(inline_cursor_x);
-            inline_line_open = true;
+            cursor_y += inline.height;
+            max_inline_right = max_inline_right.max(padding.left + inline.width);
             have_placed_block = false;
             prev_margin_bottom = 0.0;
-            children_positioned.push(positioned);
             continue;
-        }
-
-        if inline_line_open {
-            cursor_y += inline_line_height;
-            inline_cursor_x = padding.left;
-            inline_line_height = 0.0;
-            inline_line_open = false;
         }
 
         // Margin collapse between adjacent block siblings.
@@ -285,10 +256,7 @@ fn lay_out_container<M: TextMeasurer>(
         prev_margin_bottom = child_margin.bottom;
         have_placed_block = true;
         children_positioned.push(positioned);
-    }
-
-    if inline_line_open {
-        cursor_y += inline_line_height;
+        index += 1;
     }
     let content_height = cursor_y + padding.bottom;
 
@@ -501,11 +469,13 @@ mod tests {
                 None => MeasureResult {
                     width: full_width,
                     height: line_h,
+                    baseline: font.size * 0.8,
                     line_count: 1,
                 },
                 Some(max) if full_width <= max || max <= 0.0 => MeasureResult {
                     width: full_width,
                     height: line_h,
+                    baseline: font.size * 0.8,
                     line_count: 1,
                 },
                 Some(max) => {
@@ -513,6 +483,7 @@ mod tests {
                     MeasureResult {
                         width: max,
                         height: lines as f64 * line_h,
+                        baseline: font.size * 0.8,
                         line_count: lines,
                     }
                 }
@@ -589,6 +560,33 @@ mod tests {
         assert_eq!(p.children[1].x, 0.0);
         assert_eq!(p.children[1].y, 12.0);
         assert_eq!(p.height, 24.0);
+    }
+
+    #[test]
+    fn fragmented_text_does_not_overlap_the_following_inline() {
+        let node = LayoutNode::container(vec![
+            inline_text("one two three", 10.0),
+            inline_text("tail", 10.0),
+        ]);
+        let p = layout_block(&node, constraints_fixed(42.0, 500.0), &MonoMeasurer::new());
+
+        let texts: Vec<_> = p
+            .children
+            .iter()
+            .filter_map(|child| match &child.content {
+                Some(Content::Text(text)) => Some((text.value.as_str(), child.x, child.y)),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(
+            texts,
+            vec![
+                ("one two", 0.0, 0.0),
+                ("three", 0.0, 12.0),
+                ("tail", 0.0, 24.0),
+            ]
+        );
+        assert_eq!(p.height, 36.0);
     }
 
     #[test]

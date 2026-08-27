@@ -17,7 +17,8 @@ Spec: [code/specs/UI02-layout-ir.md](../../../specs/UI02-layout-ir.md).
 - **Content payloads:** `TextContent`, `ImageContent`, `Content`
 - **Tree types:** `LayoutNode`, `PositionedNode`
 - **Extension bag:** `Ext` / `ExtValue` (zero-dep typed map)
-- **TextMeasurer trait + MeasureResult** — the shared measurement contract
+- **TextMeasurer trait + MeasureResult** — the shared width, height, baseline,
+  and line-count measurement contract
 - **Builder helpers** — `edges_all`, `rgb`, `font_spec`, `size_fixed`, `constraints_fixed`, `LayoutNode::leaf_text`, etc.
 
 ## Design principles (from UI02)

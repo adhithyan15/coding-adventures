@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.0] — baseline metrics
+
+### Changed
+- Native measurements now carry the resolved font ascent as the shared layout
+  baseline, with the same defensive fallback used by paint conversion.
+
 ## [0.1.0] — initial release
 
 ### Added

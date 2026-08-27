@@ -1,8 +1,9 @@
 [package]
 name = "layout-block"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "UI07 block-and-inline flow layout. Takes a LayoutNode tree + Constraints + TextMeasurer and produces a PositionedNode tree. The layout model underlying Markdown / rich-text document rendering."
 
 [dependencies]
 layout-ir = { path = "../layout-ir" }
+layout-inline = { path = "../layout-inline" }
