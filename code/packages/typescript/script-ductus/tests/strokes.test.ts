@@ -226,6 +226,8 @@ const ARABIC_FAA = DUCTUS[ductusKey("arabic", "ف")];
 const PERSIAN_FEH = DUCTUS[ductusKey("perso-arabic", "ف")];
 const URDU_FE = DUCTUS[ductusKey("urdu-nastaliq", "ف")];
 const ARABIC_QAF = DUCTUS[ductusKey("arabic", "ق")];
+const PERSIAN_QAF = DUCTUS[ductusKey("perso-arabic", "ق")];
+const URDU_QAF = DUCTUS[ductusKey("urdu-nastaliq", "ق")];
 const ARABIC_KAF = DUCTUS[ductusKey("arabic", "ك")];
 const ARABIC_LAM = DUCTUS[ductusKey("arabic", "ل")];
 const ARABIC_MEEM = DUCTUS[ductusKey("arabic", "م")];
@@ -4525,6 +4527,38 @@ describe("handwriting ductus", () => {
     expect(Math.min(...rightDot.map((point) => point.x))).toBeGreaterThan(
       Math.max(...leftDot.map((point) => point.x)),
     );
+  });
+
+  it("Persian and Urdu ق keep body-first two-dot order under script-owned provenance", () => {
+    for (const ductus of [PERSIAN_QAF, URDU_QAF]) {
+      expect(penLifts(ductus)).toBe(2);
+      expect(ductus.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+      expect(ductus.strokes.map((stroke) => stroke.segments.map((segment) => segment.path))).toEqual(
+        ARABIC_QAF.strokes.map((stroke) => stroke.segments.map((segment) => segment.path)),
+      );
+      expect(ductus.strokes[0].segments[0].path[0]).toEqual(
+        ductus.strokes[0].segments[0].path.at(-1),
+      );
+      expect(ductus.strokes[0].segments[0].path.at(-1)).toEqual(
+        ductus.strokes[0].segments[1].path[0],
+      );
+    }
+    expect(PERSIAN_QAF.script).toBe("perso-arabic");
+    expect(PERSIAN_QAF.source.citation).toMatch(/Persian Online.*ق.*02:14–02:18/i);
+    expect(PERSIAN_QAF.source.variation).toMatch(
+      /body-first.*counterclockwise.*deep bowl.*upper-right dot.*upper-left dot.*Persian-scoped/i,
+    );
+    expect(URDU_QAF.script).toBe("urdu-nastaliq");
+    expect(URDU_QAF.source.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/fe-qaf-te-dal-re/",
+    );
+    expect(URDU_QAF.source.citation).toMatch(
+      /Zer o Zabar.*independent ق.*Qāf instructions.*Northwestern/i,
+    );
+    expect(URDU_QAF.source.variation).toMatch(
+      /looped head.*deep leftward bowl.*upper-right dot.*upper-left dot.*right-to-left dot order.*Nastaliq.*Urdu-specific/i,
+    );
+    expect(new Set([ARABIC_QAF.source.url, PERSIAN_QAF.source.url, URDU_QAF.source.url]).size).toBe(3);
   });
 
   it("Arabic independent ك turns along its base before lifting for the inner arm", () => {
