@@ -1019,6 +1019,35 @@ line "Target" [35, 50, 68, 82]"##,
         write_png(&ordinal_pixels, "/tmp/mermaid_gantt_ordinal_e2e.png")
             .expect("ordinal-day PNG write failed");
         assert!(!ordinal_scene.instructions.is_empty());
+
+        let compact_weekday = parse_gantt(
+            "gantt\ntitle Compact weekday\ndateFormat dd YYYY-MM-DD\nsection Ship\nRelease :r1, Su 2026-03-01, 1d",
+        )
+        .expect("compact-weekday Mermaid Gantt parse failed");
+        let compact_weekday_layout = layout_temporal_diagram(
+            &TemporalDiagram {
+                kind: TemporalKind::Gantt,
+                title: compact_weekday.title.clone(),
+                body: TemporalBody::Gantt(compact_weekday),
+            },
+            800.0,
+        );
+        let compact_weekday_scene = diagram_to_paint_temporal(
+            &compact_weekday_layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let compact_weekday_pixels = render(&compact_weekday_scene);
+        write_png(&compact_weekday_pixels, "/tmp/mermaid_gantt_compact_weekday_e2e.png")
+            .expect("compact-weekday PNG write failed");
+        assert!(!compact_weekday_scene.instructions.is_empty());
     }
 
     #[test]

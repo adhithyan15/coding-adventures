@@ -74,7 +74,8 @@ newlines with multiline layout. Colon and compact timezone offsets compile to
 typed parts and normalize into UTC layout geometry. Gantt remains partial while
 single-component second timestamps also retain sub-minute precision through
 layout, and typed 12-hour clocks resolve meridiem markers before layout. Gantt
-also validates typed English short and long weekday names against resolved dates.
+also validates numeric plus two-letter, short, and long English weekday tokens
+against resolved dates.
 One-, two-, and three-digit fractional-second tokens retain their authored
 precision before backend-neutral temporal layout.
 Ordinal calendar-day tokens validate their numeric suffix before layout.

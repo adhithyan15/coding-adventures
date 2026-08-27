@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.31.0";
+pub const VERSION: &str = "0.32.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -237,6 +237,7 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
     let mut meridiem_is_pm = false;
     let mut timezone_offset_minutes = 0_i64;
     let mut named_weekday = None;
+    let mut numeric_weekday = None;
     for part in &format.parts {
         match part {
             GanttDateFormatPart::Literal(literal) => rest = rest.strip_prefix(literal)?,
@@ -258,6 +259,17 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
             GanttDateFormatPart::WeekdayShort => {
                 let (weekday, next) = take_letters(rest, 3, 3)?;
                 named_weekday = Some(weekday.to_ascii_lowercase());
+                rest = next;
+            }
+            GanttDateFormatPart::WeekdayMin => {
+                let (weekday, next) = take_letters(rest, 2, 2)?;
+                named_weekday = Some(weekday.to_ascii_lowercase());
+                rest = next;
+            }
+            GanttDateFormatPart::WeekdayNumber => {
+                let (weekday, next) = take_number(rest, 1, 1)?;
+                if !(0..=6).contains(&weekday) { return None; }
+                numeric_weekday = Some(weekday);
                 rest = next;
             }
             GanttDateFormatPart::WeekdayLong => {
@@ -319,6 +331,9 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
     if let Some(named_weekday) = named_weekday {
         let actual = weekday_name(civil_day);
         if actual != named_weekday && !actual.starts_with(&named_weekday) { return None; }
+    }
+    if numeric_weekday.is_some_and(|weekday| weekday != (civil_day + 4).rem_euclid(7)) {
+        return None;
     }
     let seconds = hour * 3600 + minute * 60 + second;
     Some(civil_day as f64
@@ -1028,7 +1043,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.31.0");
+        assert_eq!(crate::VERSION, "0.32.0");
     }
 
     #[test]
@@ -1300,6 +1315,26 @@ mod tests {
         let monday = date_to_days("Mon 2026-03-02", &format).expect("valid Monday");
         assert_eq!(monday - sunday, 1.0);
         assert!(date_to_days("Mon 2026-03-01", &format).is_none());
+
+        let minimum = GanttDateFormat {
+            source: "dd YYYY-MM-DD".into(),
+            parts: [GanttDateFormatPart::WeekdayMin]
+                .into_iter()
+                .chain(format.parts[1..].iter().cloned())
+                .collect(),
+        };
+        assert!(date_to_days("Su 2026-03-01", &minimum).is_some());
+        assert!(date_to_days("Mo 2026-03-01", &minimum).is_none());
+
+        let numeric = GanttDateFormat {
+            source: "d YYYY-MM-DD".into(),
+            parts: [GanttDateFormatPart::WeekdayNumber]
+                .into_iter()
+                .chain(format.parts[1..].iter().cloned())
+                .collect(),
+        };
+        assert!(date_to_days("0 2026-03-01", &numeric).is_some());
+        assert!(date_to_days("1 2026-03-01", &numeric).is_none());
     }
 
     #[test]
