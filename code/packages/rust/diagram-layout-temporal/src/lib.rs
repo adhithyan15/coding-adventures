@@ -223,6 +223,9 @@ fn wrap_journey_label(label: &str, max_width: f64, font_size: f64) -> String {
 // ── Date helpers ──────────────────────────────────────────────────────────
 
 fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
+    if let Some((year, month, day)) = take_three_digit_iso_fallback(source, format) {
+        return Some(days_from_civil(year, month, day) as f64);
+    }
     if format.parts.as_slice() == [GanttDateFormatPart::UnixSeconds] {
         return source.parse::<f64>().ok().map(|seconds| seconds / 86_400.0);
     }
@@ -349,6 +352,23 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
     Some(civil_day as f64
         + seconds as f64 / 86_400.0 + millisecond as f64 / 86_400_000.0
         - timezone_offset_minutes as f64 / 1_440.0)
+}
+
+fn take_three_digit_iso_fallback(source: &str, format: &GanttDateFormat) -> Option<(i64, i64, i64)> {
+    if format.parts != GanttDateFormat::default().parts {
+        return None;
+    }
+    let bytes = source.as_bytes();
+    if bytes.len() != 9 || bytes[3] != b'-' || bytes[6] != b'-' {
+        return None;
+    }
+    let year = source[..3].parse().ok()?;
+    let month = source[4..6].parse().ok()?;
+    let day = source[7..].parse().ok()?;
+    if !(1..=12).contains(&month) || !(1..=days_in_month(year, month)).contains(&day) {
+        return None;
+    }
+    Some((year, month, day))
 }
 
 fn take_letters(source: &str, minimum: usize, maximum: usize) -> Option<(&str, &str)> {
@@ -1280,6 +1300,15 @@ mod tests {
         assert_eq!(positive, unsigned);
         assert!(date_to_days("-1-03-01", &format).is_some());
         assert!(date_to_days("+-03-01", &format).is_none());
+    }
+
+    #[test]
+    fn gantt_layout_resolves_three_digit_year_fallback() {
+        let format = GanttDateFormat::default();
+        let start = date_to_days("202-12-01", &format).expect("valid three-digit year");
+        let end = date_to_days("202-12-08", &format).expect("valid fallback end date");
+        assert_eq!(end - start, 7.0);
+        assert!(date_to_days("202-13-01", &format).is_none());
     }
 
     #[test]

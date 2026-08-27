@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.81.0
+
+- Validate Mermaid's three-digit Gantt year fallback through PaintScene and Metal-to-PNG rendering.
+
 ## 0.80.0
 
 - Extend the pinned Gantt visual corpus with upstream parser configuration, accessibility, tag, callback, and special-ID fixtures.

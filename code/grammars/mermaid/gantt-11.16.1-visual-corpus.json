@@ -22,6 +22,7 @@
     "unpadded-time",
     "quarter-dates",
     "signed-variable-year",
+    "three-digit-year-fallback",
     "calendar-controls",
     "excludes-weekdays-and-date",
     "repeated-excludes",

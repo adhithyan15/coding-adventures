@@ -25,6 +25,7 @@
     { "id": "unpadded-time", "source": "gantt\ndateFormat YYYY-MM-DD H:m:s\nRequest :r1, 2026-03-01 4:5:6, 1s" },
     { "id": "quarter-dates", "source": "gantt\ndateFormat YYYY-Q\nPlanning :p1, 2026-2, 1d" },
     { "id": "signed-variable-year", "source": "gantt\ndateFormat Y-MM-DD\nPlanning :p1, +2026-03-01, 1d" },
+    { "id": "three-digit-year-fallback", "source": "gantt\ndateFormat YYYY-MM-DD\nVacation :trip, 202-12-01, 7d" },
     { "id": "calendar-controls", "source": "gantt\ndateFormat DD-MM-YYYY\nexcludes weekends\nexcludes 10-02-2025 11-02-2025\nincludes 12-02-2025\nweekday monday\nweekend friday" },
     { "id": "excludes-weekdays-and-date", "source": "gantt\ndateFormat yyyy-mm-dd\ntitle Adding gantt diagram functionality to mermaid\nexcludes weekdays 2019-02-01" },
     { "id": "repeated-excludes", "source": "gantt\ndateFormat DD-MM-YYYY\nexcludes weekends\n%% week 7 is winter break\nexcludes 10-02-2025 11-02-2025 12-02-2025\n%% workers holiday 1 maj\nexcludes 01-05-2025" },
@@ -62,6 +63,7 @@
     { "id": "empty-task", "source": "gantt\nTask :" },
     { "id": "unknown-after", "source": "gantt\nTask :a, after missing, 1d" },
     { "id": "cyclic-after", "source": "gantt\nA :a, after b, 1d\nB :b, after a, 1d" },
-    { "id": "bad-duration", "source": "gantt\nTask :a, 2013-01-01, 1f" }
+    { "id": "bad-duration", "source": "gantt\nTask :a, 2013-01-01, 1f" },
+    { "id": "ridiculous-year", "source": "gantt\ndateFormat YYYYMMDD\nTask :id1, 202304, 1d" }
   ]
 }

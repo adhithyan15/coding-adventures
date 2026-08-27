@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.36.0
+
+- Resolve bounded three-digit Gantt years into backend-neutral temporal geometry.
+
 ## 0.35.0
 
 - Resolve typed signed variable-width Gantt years before backend-neutral layout.
