@@ -6,6 +6,10 @@ const SIGN_BIT: i32 = 1 << 19;
 const ADDR_MASK: i32 = 0x1fff;
 const X_MASK: i32 = 0x7fff;
 const N_MASK: i32 = 0x3f;
+const DOUBLE_DATA_BITS: u32 = 38;
+const DOUBLE_WORD_BITS: u32 = 39;
+const DOUBLE_DATA_MASK: i64 = (1_i64 << DOUBLE_DATA_BITS) - 1;
+const DOUBLE_WORD_MASK: i64 = (1_i64 << DOUBLE_WORD_BITS) - 1;
 const WORD_BYTES: usize = 3;
 const MIN_MEMORY_WORDS: i32 = 4_096;
 const MAX_MEMORY_WORDS: i32 = 16_384;
@@ -289,20 +293,20 @@ fn with_sign(word: i32, sign: i32) -> i32 {
     ((sign & 1) << 19) | (word & DATA_MASK)
 }
 
-fn combine_words(high: i32, low: i32) -> i64 {
-    ((high & MASK_20) as i64) << 20 | ((low & MASK_20) as i64)
+fn to_signed_double(high: i32, low: i32) -> i64 {
+    let raw = (i64::from(high & MASK_20) << 19) | i64::from(low & DATA_MASK);
+    if (high & SIGN_BIT) != 0 {
+        raw - (1_i64 << DOUBLE_WORD_BITS)
+    } else {
+        raw
+    }
 }
 
-fn to_signed40(value: i64) -> i64 {
-    (value << 24) >> 24
-}
-
-fn split_signed40(value: i64) -> (i32, i32) {
-    let raw = value & ((1_i64 << 40) - 1);
-    (
-        ((raw >> 20) & MASK_20 as i64) as i32,
-        (raw & MASK_20 as i64) as i32,
-    )
+fn split_signed_double(value: i64) -> (i32, i32) {
+    let raw = value & DOUBLE_WORD_MASK;
+    let high = ((raw >> 19) & i64::from(MASK_20)) as i32;
+    let low = with_sign((raw & i64::from(DATA_MASK)) as i32, sign_of(high));
+    (high, low)
 }
 
 fn arith_compare(left: i32, right: i32) -> i32 {
@@ -314,9 +318,7 @@ fn arith_compare(left: i32, right: i32) -> i32 {
 }
 
 fn arith_compare_double(left_high: i32, left_low: i32, right_high: i32, right_low: i32) -> i32 {
-    match to_signed40(combine_words(left_high, left_low))
-        .cmp(&to_signed40(combine_words(right_high, right_low)))
-    {
+    match to_signed_double(left_high, left_low).cmp(&to_signed_double(right_high, right_low)) {
         std::cmp::Ordering::Less => -1,
         std::cmp::Ordering::Greater => 1,
         std::cmp::Ordering::Equal => 0,
@@ -703,28 +705,32 @@ impl Simulator {
                 }
             }
             "DAD" => {
-                let left = to_signed40(combine_words(self.a, self.q));
+                let left = to_signed_double(self.a, self.q);
                 let first = self.read_word(effective_address)?;
                 let second = if (effective_address & 1) != 0 {
                     first
                 } else {
                     self.read_word(self.following_address(effective_address)?)?
                 };
-                let total = left + to_signed40(combine_words(first, second));
-                (self.a, self.q) = split_signed40(total);
-                self.overflow = !(-(1_i64 << 39)..=((1_i64 << 39) - 1)).contains(&total);
+                let total = left + to_signed_double(first, second);
+                (self.a, self.q) = split_signed_double(total);
+                self.overflow |= !(-(1_i64 << DOUBLE_DATA_BITS)
+                    ..=((1_i64 << DOUBLE_DATA_BITS) - 1))
+                    .contains(&total);
             }
             "DSU" => {
-                let left = to_signed40(combine_words(self.a, self.q));
+                let left = to_signed_double(self.a, self.q);
                 let first = self.read_word(effective_address)?;
                 let second = if (effective_address & 1) != 0 {
                     first
                 } else {
                     self.read_word(self.following_address(effective_address)?)?
                 };
-                let total = left - to_signed40(combine_words(first, second));
-                (self.a, self.q) = split_signed40(total);
-                self.overflow = !(-(1_i64 << 39)..=((1_i64 << 39) - 1)).contains(&total);
+                let total = left - to_signed_double(first, second);
+                (self.a, self.q) = split_signed_double(total);
+                self.overflow |= !(-(1_i64 << DOUBLE_DATA_BITS)
+                    ..=((1_i64 << DOUBLE_DATA_BITS) - 1))
+                    .contains(&total);
             }
             "DST" => {
                 if (effective_address & 1) != 0 {
@@ -744,20 +750,19 @@ impl Simulator {
                 self.m = self.read_word(effective_address)?;
                 let product = i64::from(to_signed20(self.q)) * i64::from(to_signed20(self.m))
                     + i64::from(to_signed20(self.a));
-                (self.a, self.q) = split_signed40(product);
-                self.overflow = !(-(1_i64 << 39)..=((1_i64 << 39) - 1)).contains(&product);
+                (self.a, self.q) = split_signed_double(product);
+                self.overflow = !(-(1_i64 << DOUBLE_DATA_BITS)..=((1_i64 << DOUBLE_DATA_BITS) - 1))
+                    .contains(&product);
             }
             "DVD" => {
                 self.m = self.read_word(effective_address)?;
                 let divisor = i64::from(to_signed20(self.m));
-                if divisor == 0 {
-                    return Err("GE-225 divide by zero".into());
-                }
-                if i64::from(to_signed20(self.a).abs()) >= divisor.abs() {
+                self.overflow = false;
+                if divisor == 0 || i64::from(to_signed20(self.a)).abs() >= divisor.abs() {
                     self.overflow = true;
                     return Ok(());
                 }
-                let dividend = to_signed40(combine_words(self.a, self.q));
+                let dividend = to_signed_double(self.a, self.q);
                 let quotient_mag = dividend.abs() / divisor.abs();
                 let remainder_mag = dividend.abs() % divisor.abs();
                 let quotient = if (dividend < 0) ^ (divisor < 0) {
@@ -770,9 +775,12 @@ impl Simulator {
                 } else {
                     remainder_mag
                 };
+                if !(-(1_i64 << 19)..=((1_i64 << 19) - 1)).contains(&quotient) {
+                    self.overflow = true;
+                    return Ok(());
+                }
                 self.a = from_signed20(quotient as i32);
                 self.q = from_signed20(remainder as i32);
-                self.overflow = !(-(1_i64 << 19)..=((1_i64 << 19) - 1)).contains(&quotient);
             }
             "STX" => self.write_word(raw_address, self.get_x_word(modifier as usize)?)?,
             "EXT" => {
@@ -953,21 +961,13 @@ impl Simulator {
     }
 
     fn execute_shift(&mut self, mnemonic: &str, count: i32) -> Result<(), String> {
-        if count == 0 {
-            if mnemonic == "SRD" {
-                self.q = with_sign(self.q, sign_of(self.a));
-            } else if mnemonic == "SLD" {
-                self.a = with_sign(self.a, sign_of(self.q));
-            }
-            return Ok(());
-        }
         let a_sign = sign_of(self.a);
         let mut a_data = self.a & DATA_MASK;
         let q_sign = sign_of(self.q);
         let mut q_data = self.q & DATA_MASK;
         match mnemonic {
             "SRA" => self.a = from_signed20(to_signed20(self.a) >> count.min(19)),
-            "SLA" => {
+            "SLA" if count != 0 => {
                 self.overflow = (a_data >> (19 - count).max(0)) != 0;
                 self.a = with_sign((a_data << count) & DATA_MASK, a_sign);
             }
@@ -992,9 +992,15 @@ impl Simulator {
                 self.a = with_sign(combined & DATA_MASK, a_sign);
             }
             "SRD" => {
-                let value = combine_words(self.a, self.q) >> count;
-                self.a = with_sign(((value >> 20) as i32) & DATA_MASK, a_sign);
-                self.q = with_sign((value as i32) & DATA_MASK, a_sign);
+                let combined = (i64::from(a_data) << 19) | i64::from(q_data);
+                let signed = if a_sign == 1 {
+                    combined | !DOUBLE_DATA_MASK
+                } else {
+                    combined
+                };
+                let shifted = (signed >> count) & DOUBLE_DATA_MASK;
+                self.a = with_sign(((shifted >> 19) as i32) & DATA_MASK, a_sign);
+                self.q = with_sign((shifted as i32) & DATA_MASK, a_sign);
             }
             "NAQ" => {
                 let combined = ((((self.n & N_MASK) as i64) << 38)
@@ -1023,10 +1029,13 @@ impl Simulator {
                     self.q = with_sign(q_data, a_sign);
                     self.n = ((bit << 5) | (self.n >> 1)) & N_MASK;
                 }
+                self.q = with_sign(self.q, a_sign);
             }
             "SLD" => {
                 let mut combined = (((a_data & DATA_MASK) as i64) << 19) | (q_data as i64);
-                self.overflow = (combined >> (38 - count).max(0)) != 0;
+                if count != 0 {
+                    self.overflow |= (combined >> (38 - count).max(0)) != 0;
+                }
                 combined = (combined << count) & ((1_i64 << 38) - 1);
                 self.a = with_sign(((combined >> 19) as i32) & DATA_MASK, q_sign);
                 self.q = with_sign((combined as i32) & DATA_MASK, q_sign);
@@ -1044,7 +1053,7 @@ impl Simulator {
                     shifts += 1;
                 }
                 self.a = with_sign(a_data, a_sign);
-                self.set_x_word(0, count - shifts)?;
+                self.write_word(0, count - shifts)?;
             }
             "DNO" => {
                 let mut shifts = 0;
@@ -1061,7 +1070,7 @@ impl Simulator {
                 }
                 self.a = with_sign(((combined >> 19) as i32) & DATA_MASK, q_sign);
                 self.q = with_sign((combined as i32) & DATA_MASK, q_sign);
-                self.set_x_word(0, count - shifts)?;
+                self.write_word(0, count - shifts)?;
             }
             _ => {}
         }
