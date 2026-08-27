@@ -10,6 +10,8 @@ import {
   loadEverything,
   loadTrackLessons,
 } from "../../src/loader.js";
+import { measureLessonBudgets } from "../../src/lesson-budgets.js";
+import type { ParsedLesson } from "../../src/parse.js";
 import {
   MODALITY_MANIFEST_DIR,
   buildModalityManifest,
@@ -81,6 +83,60 @@ export function expectLanguageModality(language: string): void {
   const expected = serializeModalityManifest(buildModalityManifest(loadTrackLessons(language, root)));
   const actual = readFileSync(resolve(root, MODALITY_MANIFEST_DIR, `${language}.json`), "utf8");
   expect(actual, `${language} modality manifest`).toBe(expected);
+}
+
+export interface LanguageLessonBudgetExpectation {
+  /** The schema-v2 lessons owned by this track and therefore reviewable. */
+  readonly lessons: number;
+  readonly idioms: number;
+  readonly senses: number;
+  readonly cultureClaims: number;
+  /** Stable prefix for every declared unit id, for example `GE`. */
+  readonly unitPrefix: string;
+}
+
+/**
+ * Pin one track's completed lesson-content review in that track's own test.
+ *
+ * The filter is load-bearing: schema-v1 lessons have no declaration contract,
+ * so counting them as reviewed zeroes would certify debt that was never read.
+ * Keeping the expectation in `<track>.test.ts` lets six independent backfill
+ * lanes advance without editing one corpus-wide counter.
+ */
+export function expectLanguageLessonBudgets(
+  language: string,
+  expected: LanguageLessonBudgetExpectation,
+  candidates?: ParsedLesson[],
+): void {
+  const root = defaultCurriculumRoot();
+  const lessons = (candidates ?? loadTrackLessons(language, root)).filter(
+    (lesson) =>
+      lesson.language === language &&
+      (lesson.frontmatter as Record<string, unknown>).schema_version === "2",
+  );
+  const policy = loadChapterPolicy(root);
+  const report = measureLessonBudgets(lessons, {
+    idioms: policy.maxNewIdiomsPerLesson ?? 1,
+    senses: policy.maxNewSensesPerLesson ?? 1,
+    cultureClaims: policy.maxNewCultureClaimsPerLesson ?? 2,
+  });
+
+  expect(report.summary, `${language} lesson-content budget coverage`).toEqual({
+    lessons: expected.lessons,
+    measuredLessons: expected.lessons,
+    idiomMeasuredLessons: expected.lessons,
+    senseMeasuredLessons: expected.lessons,
+    cultureClaimMeasuredLessons: expected.lessons,
+    idioms: expected.idioms,
+    senses: expected.senses,
+    cultureClaims: expected.cultureClaims,
+    overBudgetLessons: 0,
+  });
+  expect(report.excesses, `${language} lesson-content budget excesses`).toEqual([]);
+  expect(
+    report.findings.every((finding) => finding.unitId.startsWith(`${expected.unitPrefix}-`)),
+    `${language} lesson-content unit ids use the track prefix`,
+  ).toBe(true);
 }
 
 export function languageWritingStages(language: string): TrackWritingStageCoverage {

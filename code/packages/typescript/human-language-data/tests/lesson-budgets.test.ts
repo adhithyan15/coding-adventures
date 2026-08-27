@@ -7,12 +7,14 @@ import {
   type LessonBudgetPolicy,
 } from "../src/lesson-budgets.js";
 import { parseLesson } from "../src/parse.js";
+import { expectLanguageLessonBudgets } from "./corpus/assert-language-corpus.js";
 
 const POLICY: LessonBudgetPolicy = { idioms: 1, senses: 1, cultureClaims: 2 };
 
 function lesson(
   id: string,
   declarations: { idioms?: string[]; senses?: string[]; cultureClaims?: string[] },
+  language = "spanish",
 ) {
   const lines = ["schema_version: 2", `id: ${id}`, "sequence: 10"];
   if (declarations.idioms) lines.push(`introduces_idioms: [${declarations.idioms.join(", ")}]`);
@@ -22,7 +24,7 @@ function lesson(
   }
   return parseLesson(
     `---\n${lines.join("\n")}\n---\n\n# Test\n\nSay it.\n`,
-    "spanish",
+    language,
     "Latin",
   );
 }
@@ -89,6 +91,24 @@ describe("lesson content budgets", () => {
     expect(report.summary.senses).toBe(0);
     expect(report.summary.cultureClaims).toBe(0);
   });
+
+  it("lets two track-owned expectations advance without a shared corpus counter", () => {
+    const candidates = [
+      lesson("GE-BUDGET", { idioms: [], senses: ["GE-SENSE-A"], cultureClaims: [] }, "german"),
+      lesson("RU-BUDGET", { idioms: ["RU-IDIOM-A"], senses: [], cultureClaims: [] }, "russian"),
+    ];
+
+    expectLanguageLessonBudgets(
+      "german",
+      { lessons: 1, idioms: 0, senses: 1, cultureClaims: 0, unitPrefix: "GE" },
+      candidates,
+    );
+    expectLanguageLessonBudgets(
+      "russian",
+      { lessons: 1, idioms: 1, senses: 0, cultureClaims: 0, unitPrefix: "RU" },
+      candidates,
+    );
+  });
 });
 
 describe("the committed corpus", () => {
@@ -100,17 +120,21 @@ describe("the committed corpus", () => {
     cultureClaims: policy.maxNewCultureClaimsPerLesson ?? 2,
   };
 
-  it("pins the policy values and the honest first measurement", () => {
+  it("pins the policy and keeps growing corpus measurements internally consistent", () => {
     expect(budgets).toEqual(POLICY);
     const report = measureLessonBudgets(lessons, budgets);
     expect(report.summary.lessons).toBeGreaterThanOrEqual(2018);
-    expect(report.summary.measuredLessons).toBe(0);
-    expect(report.summary.idiomMeasuredLessons).toBe(0);
-    expect(report.summary.senseMeasuredLessons).toBe(0);
-    expect(report.summary.cultureClaimMeasuredLessons).toBe(0);
-    expect(report.summary.idioms).toBe(0);
-    expect(report.summary.senses).toBe(0);
-    expect(report.summary.cultureClaims).toBe(0);
-    expect(report.summary.overBudgetLessons).toBe(0);
+    expect(report.summary.measuredLessons).toBeLessThanOrEqual(report.summary.lessons);
+    expect(report.summary.idiomMeasuredLessons).toBeGreaterThanOrEqual(report.summary.measuredLessons);
+    expect(report.summary.senseMeasuredLessons).toBeGreaterThanOrEqual(report.summary.measuredLessons);
+    expect(report.summary.cultureClaimMeasuredLessons).toBeGreaterThanOrEqual(
+      report.summary.measuredLessons,
+    );
+    expect(report.findings).toHaveLength(
+      report.summary.idioms + report.summary.senses + report.summary.cultureClaims,
+    );
+    expect(report.summary.overBudgetLessons).toBe(
+      new Set(report.excesses.map((item) => `${item.language}\0${item.lessonId}`)).size,
+    );
   });
 });
