@@ -1,4 +1,5 @@
 import { defineConfig } from "vitest/config";
+import { fileURLToPath } from "node:url";
 import { scriptInventoryPlugin } from "./script-inventory-plugin.ts";
 
 // The canonical script JSON lives outside this package, at
@@ -7,12 +8,14 @@ import { scriptInventoryPlugin } from "./script-inventory-plugin.ts";
 // the data the lessons teach from. Vite guards reads outside the project root,
 // so the repo root has to be declared legal, exactly as the app's config does.
 //
-// Resolved from `import.meta.url` rather than `node:path` + `__dirname` on
-// purpose: nothing this package ships touches a Node API, and importing one
-// here would classify the whole project as Node-only in the repository's
-// TypeScript portability contract. The URL form is standard and needs no types.
-const repoRoot = new URL("../../../..", import.meta.url).pathname;
-const curriculumRoot = new URL("../../../../code/learning/human-languages", import.meta.url).pathname;
+// This config runs in Node, so convert file URLs with Node's platform-aware
+// helper. URL.pathname leaves a Windows drive path as `/C:/...`; feeding that
+// string to node:path turns it into `<current drive>\C:\...` and makes the
+// shard boundary fail before Vitest can start.
+const repoRoot = fileURLToPath(new URL("../../../..", import.meta.url));
+const curriculumRoot = fileURLToPath(
+  new URL("../../../../code/learning/human-languages", import.meta.url),
+);
 
 export default defineConfig({
   plugins: [scriptInventoryPlugin({ curriculumRoot })],
