@@ -8240,7 +8240,9 @@ fn literal_nonnegative_integral_arithmetic_power_chain(
             .iter()
             .any(|token| token.effective_type_name() == "REAL_LIT" || token.value == "/")
         {
-            return None;
+            let value = literal_checked_integer_arithmetic_value(node)?;
+            return (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64)
+                .then_some(value as u32);
         }
         let value = expr_static_real_arithmetic_value_with(node, &|_| None)?;
         (value.fract() == 0.0
@@ -8534,6 +8536,79 @@ fn literal_integer_value(node: &GrammarASTNode) -> Option<i64> {
     (tokens.is_empty() && child_nodes.len() == 1)
         .then(|| literal_integer_value(child_nodes[0]))
         .flatten()
+}
+
+fn literal_checked_integer_arithmetic_value(node: &GrammarASTNode) -> Option<i64> {
+    if let Some(value) = literal_integer_value(node) {
+        return Some(value);
+    }
+
+    let sequence = pieces(node);
+    if node.rule_name == "expr_pow"
+        && sequence
+            .iter()
+            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+    {
+        if sequence.len().is_multiple_of(2) {
+            return None;
+        }
+        let mut operands = Vec::new();
+        for (index, piece) in sequence.iter().enumerate() {
+            if index.is_multiple_of(2) {
+                let Piece::Node(operand) = piece else {
+                    return None;
+                };
+                operands.push(*operand);
+            } else if !matches!(piece, Piece::Op(op) if op == "^" || op == "**") {
+                return None;
+            }
+        }
+        let (base, exponents) = operands.split_first()?;
+        let exponent = literal_nonneg_integer_power_chain(exponents)?;
+        return literal_checked_integer_arithmetic_value(base)?.checked_pow(exponent);
+    }
+    if sequence.len() == 1 {
+        return match sequence[0] {
+            Piece::Node(child) => literal_checked_integer_arithmetic_value(child),
+            Piece::Op(_) => None,
+        };
+    }
+
+    let mut index = 0;
+    let mut negate = false;
+    if let Some(Piece::Op(op)) = sequence.first() {
+        negate = match op.as_str() {
+            "+" => false,
+            "-" => true,
+            _ => return None,
+        };
+        index += 1;
+    }
+    let Piece::Node(first) = sequence.get(index)? else {
+        return None;
+    };
+    let first = literal_checked_integer_arithmetic_value(first)?;
+    let mut value = if negate { first.checked_neg()? } else { first };
+    index += 1;
+    while index < sequence.len() {
+        let Piece::Op(op) = sequence.get(index)? else {
+            return None;
+        };
+        let Piece::Node(rhs) = sequence.get(index + 1)? else {
+            return None;
+        };
+        let rhs = literal_checked_integer_arithmetic_value(rhs)?;
+        value = match op.as_str() {
+            "+" => value.checked_add(rhs)?,
+            "-" => value.checked_sub(rhs)?,
+            "*" => value.checked_mul(rhs)?,
+            "div" => value.checked_div(rhs)?,
+            "mod" => value.checked_rem(rhs)?,
+            _ => return None,
+        };
+        index += 2;
+    }
+    Some(value)
 }
 
 fn literal_numeric_unit_is_negative(node: &GrammarASTNode) -> Option<bool> {
@@ -11239,6 +11314,8 @@ mod tests {
             "choose ^ (2.0 - 1.0)",
             "choose ** ((2.0 * 2.0) / 4.0)",
             "choose ^ (3.0 - 2.0) ^ (2.0 - 1.0)",
+            "choose ^ (2 - 1)",
+            "choose ** ((6 div 3) - 1)",
             "+choose",
             "(choose)",
             "choose * (1.0)",
@@ -11334,7 +11411,7 @@ mod tests {
             "1.0 ^ choose",
             "choose ^ 2.0",
             "choose ^ (3.0 - 1.0)",
-            "choose ^ (2 - 1)",
+            "choose ^ ((9223372036854775807 + 1) - 9223372036854775807)",
             "choose - ((-0.0) ^ 0)",
             "choose + ((-0.0) ^ 2)",
         ] {
