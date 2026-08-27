@@ -472,6 +472,18 @@ describe("shared Perso-Arabic letters retain script-owned provenance", () => {
     );
   });
 
+  it("keeps Urdu ئ as a source-backed carrier-plus-hamza composition", () => {
+    const hamza = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .marks!.find((entry) => entry.mark === "ٔ")!;
+    expect(hamza.examples?.map((example) => example.combined)).toEqual(["ئ"]);
+    expect(hamza.compositionOrder?.[0]).toMatch(/tooth carrier.*right-to-left main line/i);
+    expect(hamza.compositionOrder?.[1]).toMatch(/after lifting.*hamza above/i);
+    expect(hamza.compositionSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/ain-hamza/",
+    );
+    expect(hamza.compositionSource?.variation).toMatch(/بھائی.*carrier-plus-mark/i);
+  });
+
   it("keeps Persian and Urdu پ separate while both preserve the four-stroke triangle order", () => {
     const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
       .letters.find((entry) => entry.glyph === "پ")!;

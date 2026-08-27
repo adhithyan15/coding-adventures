@@ -164,6 +164,29 @@ describe("validate", () => {
     expect(hasErrors(issues)).toBe(false);
   });
 
+  it("covers a canonical carrier through a source-backed mark composition", () => {
+    const urdu: ScriptData = {
+      script: "urdu-nastaliq", name: "Urdu", font: "f", direction: "rtl", system: "abjad",
+      letters: [],
+      marks: [{
+        mark: "ٔ",
+        sound: "vowel separator",
+        role: "other",
+        attachesAs: "above a tooth carrier",
+        examples: [{ base: "ي", combined: "ئ", sound: "vowel separator" }],
+        compositionOrder: ["write the carrier", "add hamza"],
+        compositionSource: { citation: "Source", url: "https://example.com" },
+      }],
+      complete: true,
+    };
+    const lesson = good("urdu", "UR-COMPOSED", "GREETING-HELLO", {
+      headword: "ئ",
+      romanization: "'",
+    });
+    const issues = validate({ taxonomy, lessons: [lesson], scripts: { "urdu-nastaliq": urdu } });
+    expect(issues.some((issue) => issue.code === "uncovered-glyphs")).toBe(false);
+  });
+
   it("handles a logographic script (Chinese characters + tones, no marks/forms)", () => {
     const chinese: ScriptData = {
       script: "chinese", name: "Chinese (Simplified)", font: "f", direction: "ltr", system: "logographic",
