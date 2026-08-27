@@ -1,0 +1,20 @@
+{
+  "id": "MW-PATH-011",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MW-C11-hear-hawa",
+    "MW-C11-hawa",
+    "MW-C11-hear-baadal",
+    "MW-C11-baadal",
+    "MW-C11-hear-barsaat",
+    "MW-C11-barsaat",
+    "MW-R11-weather-three",
+    "MW-C11-weather-three",
+    "MW-R11-weather-close"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-025-WEATHER-THREE"
+  ],
+  "after": []
+}

@@ -269,24 +269,16 @@ function sectionShardPath(section: ShardSection, name: string): string {
 /**
  * The tracks whose `chapters.json` has been sharded.
  *
- * NOT every track. `french`, `japanese` and `marwadi` are deliberately absent:
- * their committed `chapters.json` is hand-formatted with inline one-line arrays
- * (`"spineNodes": ["SPINE-MEET-GREET"]`), which `JSON.stringify(…, null, 2)`
- * expands over three lines. The DATA is identical either way — that was checked
- * by deep comparison, not assumed — but the BYTES are not, so those three
- * cannot be migrated without a reformatting commit that rewrites lines nobody
- * asked to change.
- *
- * HL21's rule is that a ledger which does not round-trip byte-exactly is
- * reported rather than quietly reformatted into agreement with the serialiser,
- * so those three keep their monolith and the loader's fallback keeps reading
- * them. That is precisely what the fallback is for: a migration that can be
- * done in pieces gets done, and the pieces that need a decision wait for one.
+ * Every track is present. French, Japanese, and Marwadi originally stayed on
+ * their monoliths because inline arrays did not round-trip byte-exactly through
+ * the canonical serializer. Their separate normalization commit proved the
+ * parsed data unchanged before this list was expanded to complete the migration.
  */
 const CHAPTER_SHARDED_TRACKS: readonly string[] = [
-  "arabic", "bengali", "chinese", "german", "gujarati", "hindi", "italian",
-  "kannada", "latin", "malayalam", "marathi", "persian", "portuguese",
-  "punjabi", "russian", "sanskrit", "spanish", "tamil", "telugu", "urdu",
+  "arabic", "bengali", "chinese", "french", "german", "gujarati", "hindi",
+  "italian", "japanese", "kannada", "latin", "malayalam", "marathi", "marwadi",
+  "persian", "portuguese", "punjabi", "russian", "sanskrit", "spanish", "tamil",
+  "telugu", "urdu",
 ];
 
 /**
@@ -344,15 +336,14 @@ function chaptersPlan(track: string): ShardPlan {
 /**
  * The tracks whose `curriculum.json` has been sharded.
  *
- * All but `marwadi`, whose committed file writes its `lessons` arrays inline on
- * one line and so does not round-trip through `JSON.stringify(…, null, 2)`.
- * Same call, same reason, as the three absent from `CHAPTER_SHARDED_TRACKS`.
+ * Every track is present. Marwadi was already canonical by the time the final
+ * migration was audited, so it required no normalization commit here.
  */
 const CURRICULUM_SHARDED_TRACKS: readonly string[] = [
   "arabic", "bengali", "chinese", "french", "german", "gujarati", "hindi",
-  "italian", "japanese", "kannada", "latin", "malayalam", "marathi", "persian",
-  "portuguese", "punjabi", "russian", "sanskrit", "spanish", "tamil", "telugu",
-  "urdu",
+  "italian", "japanese", "kannada", "latin", "malayalam", "marathi", "marwadi",
+  "persian", "portuguese", "punjabi", "russian", "sanskrit", "spanish", "tamil",
+  "telugu", "urdu",
 ];
 
 /**
@@ -442,9 +433,8 @@ function curriculumPlan(track: string): ShardPlan {
  *
  * That exemption was specific and is worth not generalising: this is a BUILD
  * MANIFEST, a list of `(language, chapter, output, scriptSet)` triples nobody
- * reads for meaning. The other four non-round-tripping files are hand-maintained
- * curriculum data, where whitespace churn buries real edits in review — they
- * keep their monoliths.
+ * reads for meaning. The curriculum ledgers that needed normalization were
+ * handled in a separate commit so their whitespace-only diff stayed auditable.
  */
 export const BOOK_GENERATION_PLAN: ShardPlan = {
   path: "core/book-generation.json",

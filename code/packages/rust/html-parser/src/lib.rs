@@ -7636,7 +7636,7 @@ impl HtmlParser {
                     || is_subscript_or_superscript_element(name)
                     || is_non_formatting_text_semantic_element(name)
                     || is_media_element(name)
-                    || name == "canvas";
+                    || matches!(name, "canvas" | "map");
                 self.diagnostics.push(if should_position {
                     diagnostic.at_emission(self.current_token_emission_position)
                 } else {
@@ -8417,7 +8417,7 @@ impl HtmlParser {
             || is_non_formatting_text_semantic_element(name)
             || is_media_element(name)
             || is_formatting_marker_element(name)
-            || name == "canvas"
+            || matches!(name, "canvas" | "map")
             || matches!(
                 name,
                 "button"
@@ -28253,6 +28253,14 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, "canvas", occurrence)))
     }
 
+    fn unmatched_map_end_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            "end tag `</map>` did not match an open element",
+        )
+        .at_emission(Some(end_tag_position_at(source, "map", occurrence)))
+    }
+
     fn unexpected_non_current_end_tag(
         source: &str,
         name: &str,
@@ -45088,6 +45096,96 @@ mod tests {
             },
             Token::EndTag {
                 name: "canvas".to_string(),
+            },
+            Token::Eof,
+        ] {
+            foreign_direct.process_token(token);
+        }
+        assert!(foreign_direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn positions_unmatched_map_end_tags_at_token_emission() {
+        let source = "<!doctype html></map><!--é-->\r\n</map>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert!(source.len() > source.chars().count());
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                unmatched_map_end_tag(source, 0),
+                unmatched_map_end_tag(source, 1),
+            ]
+        );
+
+        let fragment_source = "X</map>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![unmatched_map_end_tag(fragment_source, 0)]
+        );
+
+        let matched_source = "<!doctype html><map name='m'>X</map>";
+        let matched = parse_html_with_diagnostics(matched_source).unwrap();
+        assert!(matched
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html></map").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+        let foreign_source =
+            "<!doctype html><svg><foreignObject></map>X</foreignObject></svg>";
+        let foreign = parse_html_with_diagnostics(foreign_source).unwrap();
+        assert_eq!(
+            foreign.parser_diagnostics,
+            vec![
+                generic_foreign_end_tag_mismatch(foreign_source, "map"),
+                unmatched_map_end_tag(foreign_source, 0),
+            ]
+        );
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        direct.process_token(Token::EndTag {
+            name: "map".to_string(),
+        });
+        direct.process_token(Token::Eof);
+        assert_eq!(
+            direct
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .unwrap()
+                .position,
+            None
+        );
+
+        let mut foreign_direct =
+            HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "svg".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "foreignObject".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "map".to_string(),
             },
             Token::Eof,
         ] {

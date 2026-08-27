@@ -88,6 +88,8 @@ lowering and Metal-to-PNG validation. Gantt remains partial while non-English
 locale data is still outstanding.
 The pinned parser corpus includes upstream configuration, multiline
 accessibility, task-tag, callback-argument, and prototype-like ID cases.
+Three-digit years under the default date format follow Mermaid's bounded
+non-strict fallback without accepting malformed or oversized compact years.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

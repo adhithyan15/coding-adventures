@@ -1,0 +1,25 @@
+{
+  "chapter": 14,
+  "title": "Three Useful Places: Two New Signs",
+  "label": "ch:mw-places-three",
+  "canDo": "I can recognise, say, read, and write market, home, and temple after learning only ज and घ.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-R10-places-three",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Three source-attested destinations begin by ear, add two signs separately, and finish in four scored skills without pretending the location question is taught.",
+    "assesses": [
+      "MW-LEX-BAJAR-01",
+      "MW-SCRIPT-JA-01",
+      "MW-SCRIPT-BAJAR-01",
+      "MW-LEX-GHAR-01",
+      "MW-SCRIPT-GHA-01",
+      "MW-SCRIPT-GHAR-01",
+      "MW-LEX-MANDIR-01",
+      "MW-SCRIPT-MANDIR-01",
+      "MW-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01"
+    ]
+  }
+}

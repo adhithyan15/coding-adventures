@@ -1,0 +1,18 @@
+{
+  "id": "MW-EXT-013-WRITE-NAME-QUESTION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can isolate थ, क, and independent ई, then read and write थारो नाम कांई है without meeting an untaught sign.",
+  "prerequisites": [
+    "MW-EXT-012-HEAR-THARO"
+  ],
+  "lessons": [
+    "MW-W05-tha",
+    "MW-C05-tharo",
+    "MW-C05-hear-kain",
+    "MW-W05-ka",
+    "MW-W05-ii-independent",
+    "MW-C05-kain"
+  ]
+}

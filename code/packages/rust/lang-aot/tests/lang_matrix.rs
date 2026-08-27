@@ -1511,6 +1511,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("6.25512"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — finite literal-only real powers accept bounded nonnegative
+    // integral arithmetic exponent operands without runtime real formatting.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(2.0 ^ (6 div 3), 2.0 ^ (1.0 + 2.0), 2.0 ^ ((2 ^ 2) - 1)) end",
+        expect: Expect::Stdout("488"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — one signed integer-literal exponent remains bounded by the
     // existing cap. Negative powers use repeated division and still emit only
     // a frontend-computed string on every backend.
@@ -7733,6 +7742,31 @@ fn algol_static_real_integer_power_output_runs_on_every_available_standard_backe
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but static real integer-power output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_real_arithmetic_exponent_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("output(2.0 ^ (6 div 3), 2.0 ^ (1.0 + 2.0)")
+        })
+        .expect("the static real arithmetic-exponent program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static real arithmetic-exponent output did not complete"
             );
             continue;
         };

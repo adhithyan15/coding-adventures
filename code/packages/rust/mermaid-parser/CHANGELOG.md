@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.156.0
+
+- Match Mermaid's bounded fallback for three-digit years under the default Gantt date format.
+
 ## 0.155.0
 
 - Compile Mermaid Gantt `Y` signed variable-width year tokens into typed semantic date formats.

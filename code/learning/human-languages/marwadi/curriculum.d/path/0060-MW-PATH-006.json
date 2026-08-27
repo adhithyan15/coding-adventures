@@ -1,0 +1,21 @@
+{
+  "id": "MW-PATH-006",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "MW-C06-hear-question",
+    "MW-C06-question",
+    "MW-C06-hear-answer",
+    "MW-W06-uu-matra",
+    "MW-W06-ttha",
+    "MW-C06-answer",
+    "MW-C06-practice"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-015-HEAR-WELLBEING-QUESTION",
+    "MW-EXT-016-WRITE-WELLBEING-QUESTION",
+    "MW-EXT-017-BUILD-WELLBEING-ANSWER",
+    "MW-EXT-018-WELLBEING-EXCHANGE"
+  ],
+  "after": []
+}

@@ -1,0 +1,24 @@
+{
+  "chapter": 18,
+  "title": "Shop, Item, and Price: One New Vowel Mark",
+  "label": "ch:mw-shopping-three",
+  "canDo": "I can recognise, say, read, and write shop, item, and price after learning only the short-u vowel mark.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C13-shopping-three",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Three source-attested shopping words begin by ear, add one vowel mark, and finish in four separately scored skills without claiming a complete buying exchange.",
+    "assesses": [
+      "MW-LEX-DUKAN-01",
+      "MW-SCRIPT-U-MATRA-01",
+      "MW-SCRIPT-DUKAN-01",
+      "MW-LEX-VASTU-01",
+      "MW-SCRIPT-VASTU-01",
+      "MW-LEX-BHAAV-01",
+      "MW-SCRIPT-BHAAV-01",
+      "MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01"
+    ]
+  }
+}

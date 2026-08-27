@@ -20,17 +20,19 @@ template and the destination don't need to change.
 ## Pipeline
 
 ```
-forme-source-fs           Void                 → Stream<ContentSource>
-forme-parse-markdown      ContentSource        → ContentNode
-forme-render-static       Stream<ContentNode>  → Stream<RenderedPage>
-forme-emit-fs             Stream<RenderedPage> → DeployArtifact
+forme-source-fs           Void                → Stream<ContentSource>
+forme-parse-markdown      ContentSource       → ContentNode
+forme-router              Stream<ContentNode> → Stream<ContentNode>
+                                           ┌──→ forme-collect-chronological → Collection (`posts`)
+                                           └──→ forme-render-static → Stream<RenderedPage>
+                                                                  └──→ forme-emit-fs → DeployArtifact (`site`)
 ```
 
-`forme-collect-chronological` exists in the monorepo but is **not
-wired in v0** — v0's renderer derives routes from `sourcePath`
-locally, so there's nothing for the collector to feed yet. The v0.2
-router stage will fold collection routes back onto `ContentNode.route`
-and the collector will rejoin the pipeline.
+`forme-router` is the single owner of URL policy. The orchestrator
+materializes its routed-node stream once and fans it out: the renderer
+uses each canonical route for the page, while the chronological collector
+uses the same route for index/feed metadata. The build exposes both named
+sinks and verifies that their route sets match exactly.
 
 ## Local build
 
@@ -43,6 +45,8 @@ That one command discovers every `file:`-linked package, installs the local
 dependency graph from leaves to the site, clears stale output, and runs the
 full pipeline. It writes `dist/blog/*.html`. Subsequent builds can use
 `npm run build`; run `npm test` to exercise the dependency planner.
+The build also verifies that the `posts` collection is newest-first and
+contains exactly the routes present in the emitted `site` manifest.
 Each file is a self-contained HTML5 document with a classless theme
 inlined in `<style>` — no JS, no external CSS.
 
@@ -56,10 +60,9 @@ site driver runs straight from source.
 - `data/` — Markdown posts. Frontmatter is `key: value` only (the v0
   parser is grammar-restricted; see
   `code/packages/typescript/forme-parse-markdown/README.md`).
-- `forme.config.ts` — `PipelineConfig` literal wiring the four
-  stages in order. Per FM03 §2.2, IDs are inferred from `stage.name`
-  when unique.
-- `build.ts` — ~50-line driver: load config → `createOrchestrator`
+- `forme.config.ts` — `PipelineConfig` literal wiring six named stage
+  instances, including the router fan-out and two named outputs.
+- `build.ts` — driver: load config → `createOrchestrator`
   → `buildPipeline` → `runOnce` → assert success.
 - `scripts/bootstrap.mjs` — discovers and installs the complete local
   `file:` dependency graph in dependency order. This is the same bootstrap
@@ -91,7 +94,7 @@ frontmatter.
 
 ## Deploy
 
-.github/workflows/deploy-blog.yml` runs `npm run build:clean` for relevant pull
+`.github/workflows/deploy-blog.yml` runs `npm run build:clean` for relevant pull
 requests and for every push to `main` that touches this directory or a runtime
 dependency. Main-branch builds then publish `dist/blog/` to the `gh-pages`
 branch under `blog/`.
@@ -100,10 +103,10 @@ The live URL is
 
 ## What's missing (intentional v0 scope)
 
-- No index page. The collector exists but isn't wired in v0; a
-  v0.2 index-page renderer will read its `Collection` output.
-- No RSS feed. Same story — a `Stage<Collection, Feed>` will
-  produce one when the collector lands.
+- No index page. The `posts` collection is now a live pipeline output;
+  an index-page renderer still needs to consume it.
+- No RSS feed. A `Stage<Collection, Feed>` can now consume the same
+  routed, chronological collection.
 - No asset extraction. Posts that reference images today will
   link to `data/`-relative paths; an asset stage will copy + hash
   them.

@@ -14,6 +14,7 @@ import {
 } from "./constants.js";
 import type { Issue, ScriptData, Taxonomy } from "./types.js";
 import type { ParsedLesson } from "./parse.js";
+import type { SoundTagRegistry } from "./sound-tags.js";
 import { belongsToAny, SCRIPT_SYSTEMS } from "./ramp.js";
 
 export interface ValidateInput {
@@ -21,12 +22,14 @@ export interface ValidateInput {
   lessons: ParsedLesson[];
   /** Optional per-script character data, keyed by script name. */
   scripts?: Record<string, ScriptData>;
+  /** Reviewed per-track vocabulary for lesson `sounds:` frontmatter. */
+  soundTags?: SoundTagRegistry;
   /** Tracks that declare parity:complete — core coverage is enforced for these. */
   completeTracks?: Set<string>;
 }
 
 export function validate(input: ValidateInput): Issue[] {
-  const { taxonomy, lessons, scripts = {}, completeTracks = new Set() } = input;
+  const { taxonomy, lessons, scripts = {}, soundTags, completeTracks = new Set() } = input;
   const issues: Issue[] = [];
   const err = (code: string, message: string, lessonId?: string) =>
     issues.push({ level: "error", code, message, lessonId });
@@ -37,6 +40,8 @@ export function validate(input: ValidateInput): Issue[] {
 
   // Per-(language) content-concept ledger, to catch duplicate realizations.
   const seen = new Map<string, string>(); // `${lang}|${concept}` -> lessonId
+  const allowedSounds = new Map<string, Set<string>>();
+  const missingSoundTracks = new Set<string>();
 
   for (const { realization: r } of lessons) {
     const id = r.lessonId || "(no id)";
@@ -49,6 +54,37 @@ export function validate(input: ValidateInput): Issue[] {
     if (Number.isNaN(r.chapter)) err("missing-chapter", `${id}: no/invalid chapter`, id);
     if (!isContent && !isExempt) {
       warn("unknown-type", `${id}: unrecognized type '${r.type}'`, id);
+    }
+
+    // `sounds:` is a cross-lesson index, including on writing and practice
+    // lessons. Validate it before the content-only return below. Recomputing
+    // the accepted set from these same lessons would silently bless a typo.
+    if (r.sounds.length > 0) {
+      const declared = soundTags?.tracks[r.language];
+      if (!declared) {
+        if (!missingSoundTracks.has(r.language)) {
+          err(
+            "missing-sound-tag-track",
+            `${r.language}: lessons use sounds tags but core/sound-tags.json has no track`,
+          );
+          missingSoundTracks.add(r.language);
+        }
+      } else {
+        let allowed = allowedSounds.get(r.language);
+        if (!allowed) {
+          allowed = new Set(declared);
+          allowedSounds.set(r.language, allowed);
+        }
+        for (const sound of r.sounds) {
+          if (!allowed.has(sound)) {
+            err(
+              "unregistered-sound-tag",
+              `${id}: sounds tag '${sound}' is not registered for ${r.language}`,
+              id,
+            );
+          }
+        }
+      }
     }
 
     if (!isContent) continue; // only content lessons join the taxonomy

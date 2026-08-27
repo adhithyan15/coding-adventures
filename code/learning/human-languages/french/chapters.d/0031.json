@@ -1,0 +1,25 @@
+{
+  "chapter": 31,
+  "title": "Eyes, Nose, Mouth, Stomach",
+  "label": "ch:fr-eyes-nose-mouth-stomach",
+  "canDo": "I can name the eye and its irregular-looking plural yeux, the nose, the mouth and the stomach in French, extending Chapter 17's head and hand.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C31-ventre",
+    "kind": "task",
+    "summary": "Say j'ai mal au ventre, take ventriloquist apart as \"belly-speaker,\" and close the chapter's own four words (l'œil/les yeux, le nez, la bouche, le ventre) beside Chapter 17's head and hand. Reaches back past the chapter to la main's nasal -ain, contrasted with ventre's own different nasal vowel, and further back to le café, l'ami and l'œuf, one word from each of this book's four newest chapters.",
+    "assesses": [
+      "FR-LEX-VENTRE-07",
+      "FR-ETYMON-VENTRE-08",
+      "FR-LEX-BOUCHE-05",
+      "FR-LEX-NEZ-03",
+      "FR-LEX-OEIL-01",
+      "FR-SOUND-MAIN-03",
+      "FR-LEX-CAFE-01",
+      "FR-LEX-AMI-01",
+      "FR-LEX-OEUF-07"
+    ]
+  }
+}

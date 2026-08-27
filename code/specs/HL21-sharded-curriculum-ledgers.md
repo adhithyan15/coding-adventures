@@ -260,14 +260,14 @@ committed file with SHA-256
 `c230a32258b7c2f492221a22edac19b429c3e357f15cebfd2ac062f80fe19098` unchanged,
 asserted by a test over the real ledger rather than only a fixture.
 
-### 4.1a `<track>/chapters.json` — DONE for 20 of 23 tracks
+### 4.1a `<track>/chapters.json` — DONE for all 23 tracks
 
 ```text
 <track>/chapters.d/_meta.json      version, language, note
 <track>/chapters.d/<NNNN>.json     one chapter each, named for the chapter number
 ```
 
-Round-tripping is byte-exact for all twenty, verified against the real committed
+Round-tripping is byte-exact for all twenty-three, verified against the real committed
 ledgers rather than a fixture; the SHA-256 of each rebuild is recorded in the
 package CHANGELOG.
 
@@ -275,15 +275,15 @@ Three findings, all of which contradict something this spec assumed:
 
 1. **§5.1 said "no separate prefix is needed".** That is true of the *prefix*
    but not of the *padding*: the chapter number alone, unpadded, re-sorts every
-   one of the twenty tracks. Eleven chapters is enough — `10.json` and
+   one of the twenty-three tracks. Eleven chapters is enough — `10.json` and
    `11.json` both sort before `2.json`. The shard name is the chapter number
    zero-padded to four digits.
 
-2. **`french`, `japanese` and `marwadi` do not round-trip.** Their committed
-   `chapters.json` is hand-formatted with inline one-line arrays that
-   `JSON.stringify(x, null, 2)` expands. The data is identical; the bytes are
-   not. Per §8.5 they are reported rather than reformatted, and keep their
-   monoliths. This is a decision waiting for an owner, not an oversight.
+2. **`french`, `japanese` and `marwadi` originally did not round-trip.** Their
+   committed `chapters.json` files used inline one-line arrays that
+   `JSON.stringify(x, null, 2)` expanded. The files were canonicalized in a
+   separate whitespace-only commit, with parsed structures compared before and
+   after, and then migrated like the other twenty tracks.
 
 3. **The monolith could not be deleted, and §5.1 did not anticipate why.**
    See §4.3.
@@ -361,12 +361,12 @@ separate prefix is needed and no id-safety question arises.
 **Difficulty: low.** This is the cleanest of the remaining migrations and should
 go first.
 
-> **DONE for 20 of 23 tracks — see §4.1a.** Three corrections to the paragraph
+> **DONE for all 23 tracks — see §4.1a.** Three corrections to the paragraph
 > above, all found by doing it. The chapter numbers are contiguous `1..n` as
 > claimed, but "no separate prefix is needed" understates the requirement: the
 > number must be ZERO-PADDED or sorted filename order re-sorts every track in
-> the corpus. `french`, `japanese` and `marwadi` do not round-trip byte-exactly
-> and were left alone. And the monolith could not be deleted, for the reason in
+> the corpus. `french`, `japanese` and `marwadi` required a separate
+> whitespace-only normalization commit before migration. And the monolith could not be deleted, for the reason in
 > §4.3 — which is the finding that matters most here, because it governs §5.2
 > and §5.3 as well.
 
@@ -397,9 +397,9 @@ looking sequential. This is the §2.2 trap, live.
 shard mode for `spine`. That is a real but contained generalisation of
 `ShardPlan`.
 
-> **DONE for 22 of 23 tracks.** `marwadi` is left on its monolith: its `lessons`
-> arrays are written inline on one line, so the bytes do not round-trip. Data
-> identical, reported not reformatted, per §8.
+> **DONE for all 23 tracks.** A fresh audit found `marwadi/curriculum.json`
+> already canonical and byte-exact under the serializer, so it joined the shard
+> plan without a normalization diff.
 >
 > The monolith is KEPT as a generated artifact, per §4.3 — `language-ladder`
 > globs `*/curriculum.json` and a glob's key table is eager code. The conflict on
@@ -423,10 +423,10 @@ shard mode for `spine`. That is a real but contained generalisation of
 > 2. **`path`/`extensions` ordinals confirmed needed, but not universally.**
 >    Spanish diverges at index 3: authored `ES-PATH-004` against sorted
 >    `ES-PATH-003-CASA`, because a bare prefix sorts before the same prefix
->    extended. That holds for 20 of the 22 tracks — `japanese` and `urdu` happen
+>    extended. That holds for 21 of the 23 tracks — `japanese` and `urdu` happen
 >    to have both lists already in sorted order and would coincidentally survive
->    losing their ordinals. The convention still applies to all 22: those two are
->    one authored id away from joining the other twenty, and nothing would
+>    losing their ordinals. The convention still applies to all 23: those two are
+>    one authored id away from joining the other twenty-one, and nothing would
 >    announce it.
 >
 > 3. **The arrays are not last, and §2.5's refusal had to go.** Every track is
@@ -501,9 +501,9 @@ arrays, and a Spanish tranche touches only that file.
 >
 > **That exemption is narrow and should not be generalised.** This is a BUILD
 > MANIFEST — `(language, chapter, output, scriptSet)` triples nobody reads for
-> meaning — so whitespace in it is not content. The four remaining
-> non-round-tripping files are hand-maintained CURRICULUM DATA, where churn
-> buries real edits in review; they keep their monoliths. See §8.9.
+> meaning — so whitespace in it is not content. The three chapter ledgers later
+> normalized for migration kept that formatting-only work in its own commit so
+> reviewers could verify that no curriculum data changed. See §8.9.
 >
 > `tests/grouped-shards.test.ts` used to assert the file does NOT round-trip, as
 > an executable statement of the blocker. It is now **inverted**: the file must
@@ -631,8 +631,7 @@ separate script, never wired into `vitest run`.
    makes this a required field for exactly that reason.
 9. **If the committed file does not round-trip byte-exactly, stop and report
    it.** Do not reformat it into agreement with the serialiser as part of the
-   migration. Four files are in this state today and are named in §4.1a and
-   §5.2/§5.3: three `chapters.json`, `marwadi/curriculum.json`, and
-   `core/book-generation.json`. Each needs a separate, deliberate
-   normalization commit whose whole content is the reformatting, so that the
-   diff can be read as "no data changed" rather than buried inside a migration.
+   migration. The known cases have now been resolved: `core/book-generation.json`
+   and the French, Japanese, and Marwadi chapter ledgers were each normalized in
+   a separate, deliberate commit whose whole content was reformatting. That
+   keeps "no data changed" reviewable instead of burying it inside a migration.

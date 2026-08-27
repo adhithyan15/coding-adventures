@@ -217,6 +217,8 @@ const ARABIC_SHIIN = DUCTUS[ductusKey("arabic", "ش")];
 const ARABIC_SAAD = DUCTUS[ductusKey("arabic", "ص")];
 const ARABIC_DAAD = DUCTUS[ductusKey("arabic", "ض")];
 const ARABIC_TAH = DUCTUS[ductusKey("arabic", "ط")];
+const PERSIAN_TAH = DUCTUS[ductusKey("perso-arabic", "ط")];
+const URDU_TOE = DUCTUS[ductusKey("urdu-nastaliq", "ط")];
 const ARABIC_ZAH = DUCTUS[ductusKey("arabic", "ظ")];
 const PERSIAN_ZAH = DUCTUS[ductusKey("perso-arabic", "ظ")];
 const URDU_ZOE = DUCTUS[ductusKey("urdu-nastaliq", "ظ")];
@@ -4406,6 +4408,30 @@ describe("handwriting ductus", () => {
     expect(loop.at(-1)).toEqual(exit[0]);
     expect(exit.at(-1)!.x).toBeLessThan(exit[0].x);
     expect(upright[0].y).toBeGreaterThan(upright.at(-1)!.y);
+  });
+
+  it("Persian and Urdu independent ط retain scoped body-before-upright sources", () => {
+    for (const letter of [PERSIAN_TAH, URDU_TOE]) {
+      expect(penLifts(letter)).toBe(1);
+      expect(letter.strokes).toHaveLength(2);
+      expect(letter.strokes[0].segments.map((segment) => segment.path)).toEqual(
+        ARABIC_TAH.strokes[0].segments.map((segment) => segment.path),
+      );
+      expect(letter.strokes[1].segments[0].path).toEqual(
+        ARABIC_TAH.strokes[1].segments[0].path,
+      );
+    }
+    expect(PERSIAN_TAH.script).toBe("perso-arabic");
+    expect(PERSIAN_TAH.source.citation).toMatch(/Persian Online.*ط.*01:54–01:56/i);
+    expect(PERSIAN_TAH.source.variation).toMatch(
+      /body-first.*counterclockwise.*closed.*baseline.*lift once.*upright.*Persian-scoped/i,
+    );
+    expect(URDU_TOE.script).toBe("urdu-nastaliq");
+    expect(URDU_TOE.source.citation).toMatch(/Zer o Zabar.*independent ط.*To’e instructions/i);
+    expect(URDU_TOE.source.variation).toMatch(
+      /body.*leftward finish.*upright.*one lift.*Noto Naskh.*Nastaliq.*Urdu-specific/i,
+    );
+    expect(new Set([ARABIC_TAH.source.url, PERSIAN_TAH.source.url, URDU_TOE.source.url]).size).toBe(3);
   });
 
   it("Arabic independent ظ repeats ط, placing its dot before the upright", () => {

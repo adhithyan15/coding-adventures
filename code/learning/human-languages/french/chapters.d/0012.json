@@ -1,0 +1,16 @@
+{
+  "chapter": 12,
+  "title": "Numbers Eleven to Twenty",
+  "label": "ch:numbers-11-20",
+  "canDo": "I can count from eleven to twenty in French and recognize how the number forms are built.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FR-C12-nombres-17-20",
+    "kind": "task",
+    "summary": "Complete FR-C12-nombres-17-20, the canonical closing checkpoint, and demonstrate the chapter promise: count from eleven to twenty in French and recognize how the number forms are built.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 20,
+  "title": "Clothes and Expensive: One Dot Below",
+  "label": "ch:mw-shopping-seven",
+  "canDo": "I can add clothes and expensive to the shopping map after learning only the nukta that changes ड to ड़.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C15-shopping-seven",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Two source-attested shopping words begin by ear, add one dotted consonant, and join the earlier five words in four separately scored skills.",
+    "assesses": [
+      "MW-LEX-KAPDA-01",
+      "MW-SCRIPT-NUKTA-01",
+      "MW-SCRIPT-RRA-01",
+      "MW-SCRIPT-KAPDA-01",
+      "MW-LEX-MAHANGO-01",
+      "MW-SCRIPT-MAHANGO-01",
+      "MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01"
+    ]
+  }
+}

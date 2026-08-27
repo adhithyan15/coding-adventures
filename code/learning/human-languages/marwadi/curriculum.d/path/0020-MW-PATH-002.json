@@ -1,0 +1,15 @@
+{
+  "id": "MW-PATH-002",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "MW-W02-aa-independent",
+    "MW-W02-bha",
+    "MW-C02-aabhaar",
+    "MW-C02-practice"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-004-FORMAL-THANKS"
+  ],
+  "after": []
+}

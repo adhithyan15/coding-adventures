@@ -3,7 +3,7 @@
  *
  * Forme collector stage: `Stream<ContentNode>` → single `Collection`,
  * sorted by a frontmatter date field (descending — newest first), with
- * a derived URL route attached to each entry's overlay.
+ * each routed node's canonical URL copied to its collection entry.
  *
  *   consumes:    streamOf(Kinds.ContentNode)
  *   produces:    Kinds.Collection
@@ -13,12 +13,11 @@
  *
  * === Why "collector" is its own stage ===
  *
- * Parsing happens per file (and is therefore stream-shaped).  But
- * deciding "what URL does this post live at" and "what order do they
- * appear on the index page" requires looking at ALL the parsed posts
- * — exactly the boundary FM00 calls a Collector.  Splitting the
- * concern out keeps the parser pure (input file → output node) and
- * lets the collector own ordering policy.
+ * Parsing and routing happen per file (and are therefore stream-shaped).
+ * Deciding "what order do these posts appear on the index page" requires
+ * looking at ALL routed posts — exactly the boundary FM00 calls a
+ * Collector. Splitting the concern out keeps the parser and router pure
+ * while the collector owns ordering policy.
  *
  * === Sorting semantics ===
  *
@@ -42,17 +41,11 @@
  *
  * === Route assignment ===
  *
- * Each entry gets a `route` formatted from `routeTemplate` (default
- * `"/blog/{slug}.html"`).  The slug is the explicit
- * `frontmatter[slugField]` value if present and non-empty; otherwise
- * derived from `sourcePath` via `slugify()`.  The route is stored on
- * the `CollectionEntry.route` field — downstream renderers consume it
- * to know where to emit each page.
- *
- * Note: `ContentNode.route` itself remains whatever the parser
- * emitted (typically `null`).  Routes belong to *collections* — a
- * single document can appear in multiple collections under different
- * routes.  Renderers walk the collection, not the bare node.
+ * `forme-router` assigns the canonical URL on `ContentNode.route`.
+ * This collector copies that value to `CollectionEntry.route`, so the
+ * index/feed side of the DAG and the page-rendering side share one
+ * routing decision. A local `routeTemplate` derivation remains only
+ * as a compatibility fallback for older standalone callers.
  *
  * === Spec adherence ===
  *
@@ -60,8 +53,7 @@
  *
  *   - Only string-typed date frontmatter values are supported (the
  *     parser-markdown v0 only produces strings anyway).
- *   - Only `{slug}` substitution in route templates.  `{year}` /
- *     `{month}` etc. wait until a v0.2 collector.
+ *   - The compatibility route fallback only substitutes `{slug}`.
  *
  * @module index
  */
@@ -89,7 +81,7 @@ export interface CollectChronologicalConfig {
   readonly dateField?: string;
   /** Frontmatter key carrying an explicit slug.  Default `"slug"`. */
   readonly slugField?: string;
-  /** Route template string.  Default `"/blog/{slug}.html"`. */
+  /** Deprecated fallback used only when `ContentNode.route` is null. */
   readonly routeTemplate?: string;
 }
 
@@ -109,7 +101,7 @@ const collectChronological = defineStage({
   name: "@coding-adventures/forme-collect-chronological",
   version: "0.1.0",
   apiVersion: 1,
-  description: "Collect ContentNodes into a chronological Collection (newest first), assigning routes.",
+  description: "Collect routed ContentNodes into a chronological Collection (newest first).",
   consumes: streamOf(Kinds.ContentNode),
   produces: Kinds.Collection,
   capabilities: [],
@@ -150,7 +142,7 @@ const collectChronological = defineStage({
       const slug = (typeof explicitSlug === "string" && explicitSlug.length > 0)
         ? explicitSlug
         : slugify(node.sourcePath);
-      const route = formatRoute(routeTemplate, slug);
+      const route = node.route ?? formatRoute(routeTemplate, slug);
       if (!hasDate) {
         ctx.logger.warn("forme-collect-chronological: post missing date frontmatter", {
           sourcePath: node.sourcePath,

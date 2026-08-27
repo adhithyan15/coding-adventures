@@ -1,0 +1,17 @@
+{
+  "id": "MW-EXT-020-WRITE-LATER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can isolate छ, े, ि, and ल, then assemble and write पाछे मिलसू from sound.",
+  "prerequisites": [
+    "MW-EXT-019-HEAR-LATER"
+  ],
+  "lessons": [
+    "MW-W07-chha",
+    "MW-W07-e-matra",
+    "MW-W07-i-matra",
+    "MW-W07-la",
+    "MW-C07-read-later"
+  ]
+}

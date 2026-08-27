@@ -1,0 +1,23 @@
+{
+  "chapter": 8,
+  "title": "One Goodbye, Sign by Sign",
+  "label": "ch:ja-sayounara",
+  "canDo": "I can hear and say sayōnara on five morae, write its three new hiragana signs, and read and write the complete farewell independently.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "JA-C08-sayounara",
+    "kind": "dialogue",
+    "summary": "A context-dependent farewell whose sound and meaning arrive before three separately taught new signs and whose payoff scores all four skills.",
+    "assesses": [
+      "JA-LEX-SAYOUNARA",
+      "JA-SAYOUNARA-HEARD-01",
+      "JA-SCRIPT-YO-01",
+      "JA-SCRIPT-NA-01",
+      "JA-SCRIPT-RA-01",
+      "JA-SCRIPT-SAYOUNARA-READ-01",
+      "JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01"
+    ]
+  }
+}

@@ -14,6 +14,7 @@ cd ../../packages/typescript/forme-cache && npm install --silent
 cd ../../packages/typescript/forme-orchestrator && npm install --silent
 cd ../../packages/typescript/forme-source-fs && npm install --silent
 cd ../../packages/typescript/forme-parse-markdown && npm install --silent
+cd ../../packages/typescript/forme-router && npm install --silent
 cd ../../packages/typescript/forme-collect-chronological && npm install --silent
 cd ../../packages/typescript/forme-render-static && npm install --silent
 cd ../../packages/typescript/forme-emit-fs && npm install --silent

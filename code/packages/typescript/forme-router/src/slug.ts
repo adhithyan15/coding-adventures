@@ -6,9 +6,10 @@
  *   - `@coding-adventures/forme-collect-chronological/src/slug.ts`
  *   - `@coding-adventures/forme-render-static/src/slug.ts`
  *
- * Both will eventually be removed in favour of reading
- * `ContentNode.route` (populated by this stage) — see the package
- * CHANGELOG for the wiring story.
+ * Both downstream stages now read `ContentNode.route` (populated by
+ * this stage). Their copies remain temporarily for display-slug
+ * resolution and backward-compatible unrouted callers; FM-B020 tracks
+ * retiring the route-policy fallbacks.
  *
  * @module slug
  */

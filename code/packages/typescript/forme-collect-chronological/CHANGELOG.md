@@ -1,5 +1,19 @@
 # Changelog — @coding-adventures/forme-collect-chronological
 
+## Unreleased
+
+### Changed
+
+- Collection entries now copy the canonical `ContentNode.route` assigned by
+  `forme-router`, keeping page and collection branches in agreement.
+- `routeTemplate` remains as a compatibility fallback only when a node has no
+  route.
+
+### Tests
+
+- Added coverage proving the canonical node route wins over conflicting local
+  derivation settings.
+
 ## 0.1.0 — 2026-05-15
 
 Initial release. Third Forme stage of the blog v0 effort.

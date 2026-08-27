@@ -1,0 +1,17 @@
+{
+  "id": "MW-EXT-005-POLITE-AFFIRMATIVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can recognise, hear, say, and independently write हां सा as a respectful affirmative answer.",
+  "prerequisites": [
+    "MW-EXT-004-FORMAL-THANKS"
+  ],
+  "lessons": [
+    "MW-W03-ha",
+    "MW-W03-anusvara",
+    "MW-C03-haan-saa",
+    "MW-C03-listen-say",
+    "MW-C03-practice"
+  ]
+}

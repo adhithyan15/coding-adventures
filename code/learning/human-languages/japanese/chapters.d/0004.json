@@ -1,0 +1,19 @@
+{
+  "chapter": 4,
+  "title": "Polite Thanks, Three More Signs",
+  "label": "ch:ja-polite-thanks",
+  "canDo": "I can add ございます to a known thank-you, read every sign, and choose the polite form for someone outside my close circle.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "JA-C03-practice",
+    "kind": "dialogue",
+    "summary": "A short casual-versus-polite choice with every sign taught and the register decision checked independently.",
+    "assesses": [
+      "JA-LEX-ARIGATOU-GOZAIMASU",
+      "JA-REGISTER-TEINEIGO",
+      "JA-SCRIPT-GOZAIMASU-READ-01"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "MW-PATH-005",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "MW-C05-hear-mharo",
+    "MW-W05-virama",
+    "MW-W05-o-matra",
+    "MW-C05-mharo",
+    "MW-C05-hear-naam",
+    "MW-W05-na",
+    "MW-C05-naam",
+    "MW-C05-hear-hai",
+    "MW-W05-ai-matra",
+    "MW-C05-answer",
+    "MW-C05-hear-tharo",
+    "MW-W05-tha",
+    "MW-C05-tharo",
+    "MW-C05-hear-kain",
+    "MW-W05-ka",
+    "MW-W05-ii-independent",
+    "MW-C05-kain",
+    "MW-C05-practice"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-009-HEAR-MHARO",
+    "MW-EXT-010-WRITE-MHARO",
+    "MW-EXT-011-NAME-ANSWER",
+    "MW-EXT-012-HEAR-THARO",
+    "MW-EXT-013-WRITE-NAME-QUESTION",
+    "MW-EXT-014-EXCHANGE-NAMES"
+  ],
+  "after": []
+}

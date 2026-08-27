@@ -1,5 +1,15 @@
 # Changelog — @coding-adventures/forme-router
 
+## Unreleased
+
+### Integrated
+
+- The Coding Adventures blog now places the router after Markdown parsing and
+  fans its routed-node stream out to static rendering and the chronological
+  collector.
+- Both downstream stages treat `ContentNode.route` as authoritative, while
+  retaining local derivation only for backward-compatible standalone use.
+
 ## 0.1.0 — 2026-05-16
 
 Initial release. Standalone Forme route-derivation stage,

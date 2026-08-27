@@ -12,6 +12,7 @@ export * from "./assessment.js";
 export * from "./artifact-presence.js";
 export * from "./assessment-artifacts.js";
 export * from "./task-shapes.js";
+export * from "./sound-tags.js";
 export * from "./writing-stages.js";
 export { splitFrontmatter, type Frontmatter } from "./frontmatter.js";
 export {
@@ -130,6 +131,7 @@ export {
   trackScript,
   loadTaxonomy,
   loadLanguageRegistry,
+  loadSoundTagRegistry,
   loadTaskShapeInventory,
   listTaskShapeInventories,
   loadCurriculumSpine,

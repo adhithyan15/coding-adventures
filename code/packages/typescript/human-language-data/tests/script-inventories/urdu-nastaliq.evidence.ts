@@ -75,6 +75,23 @@ export const scriptInventoryEvidence = {
     expect(persianQaf.strokeOrderSource?.url).not.toBe(
       urduQaf.strokeOrderSource?.url,
     );
+    const urduToe = scripts["urdu-nastaliq"]!.letters.find(
+      (letter) => letter.glyph === "ط",
+    )!;
+    expect(urduToe.penLifts).toBe(1);
+    expect(urduToe.strokeOrder).toEqual([
+      "draw the independent to'e-series loop and its leftward finish",
+      "after one lift, draw the tall upright",
+    ]);
+    expect(urduToe.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/toe-zoe-se-zhe-ghain/",
+    );
+    const persianTah = scripts["perso-arabic"]!.letters.find(
+      (letter) => letter.glyph === "ط",
+    )!;
+    expect(persianTah.strokeOrderSource?.url).not.toBe(
+      urduToe.strokeOrderSource?.url,
+    );
     expect(urduFe.strokeOrderSource?.url).toBe(
       "https://openbooks.library.northwestern.edu/zerozabar/chapter/fe-qaf-te-dal-re/",
     );
@@ -236,5 +253,7 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ب") ?? 0).toBe(0);
     expect(missingByScript.get("urdu-nastaliq.json")?.has("ق")).toBe(false);
     expect(affected.get("ق") ?? 0).toBe(0);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("ط")).toBe(false);
+    expect(affected.get("ط") ?? 0).toBe(0);
   },
 };

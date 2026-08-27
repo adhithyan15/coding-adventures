@@ -1,0 +1,28 @@
+{
+  "id": "MW-PATH-013",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MW-C13-hear-dukan",
+    "MW-W13-u-matra",
+    "MW-C13-dukan",
+    "MW-C13-hear-vastu",
+    "MW-C13-vastu",
+    "MW-C13-hear-bhaav",
+    "MW-C13-bhaav",
+    "MW-R13-shopping-three",
+    "MW-C13-shopping-three",
+    "MW-R13-shopping-close",
+    "MW-C14-hear-sasta",
+    "MW-C14-sasta",
+    "MW-C14-hear-samaan",
+    "MW-C14-samaan",
+    "MW-R14-shopping-new-two",
+    "MW-C14-shopping-five",
+    "MW-R14-shopping-close"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-027-SHOPPING-FIVE"
+  ],
+  "after": []
+}

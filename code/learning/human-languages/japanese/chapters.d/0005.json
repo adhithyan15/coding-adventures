@@ -1,0 +1,21 @@
+{
+  "chapter": 5,
+  "title": "Nihongo, Built in Small Blocks",
+  "label": "ch:ja-nihongo-kanji",
+  "canDo": "I can write 日 and 本, assemble 語 from three practised components, and read 日本語 as nihongo.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "JA-C01-nihongo",
+    "kind": "reading",
+    "summary": "Three kanji read as one known word after the simple signs and the complex sign's components were taught separately.",
+    "assesses": [
+      "JA-LEX-NIHONGO",
+      "JA-SCRIPT-KANJI-READINGS",
+      "JA-SCRIPT-KANJI-NICHI-01",
+      "JA-SCRIPT-KANJI-HON-01",
+      "JA-SCRIPT-KANJI-GO-01"
+    ]
+  }
+}

@@ -56,6 +56,7 @@ function makeNode(opts: {
   slug?: string;
   title?: string;
   excerpt?: string;
+  route?: string | null;
   extraFrontmatter?: Record<string, string>;
 }): ContentNode {
   nodeSeq++;
@@ -70,7 +71,7 @@ function makeNode(opts: {
     revision: ("blake2b:" + "0".repeat(64)) as ContentNode["revision"],
     document: { type: "document", children: [] } as unknown as ContentNode["document"],
     frontmatter: fm,
-    route: null,
+    route: opts.route ?? null,
     assetRefs: [],
     sourcePath: opts.sourcePath,
   };
@@ -209,6 +210,18 @@ describe("collectChronological — edge cases", () => {
     ]);
     expect(c.entries[0]!.overlay.slug).toBe("custom-slug");
     expect(c.entries[0]!.route).toBe("/blog/custom-slug.html");
+  });
+
+  it("copies the canonical ContentNode route instead of re-deriving it", async () => {
+    const c = await runCollect(
+      [makeNode({
+        sourcePath: "posts/local-fallback.md",
+        date: "2026-01-01",
+        route: "/canonical/from-router.html",
+      })],
+      { routeTemplate: "/fallback/{slug}.html" },
+    );
+    expect(c.entries[0]!.route).toBe("/canonical/from-router.html");
   });
 
   it("empty title frontmatter falls back to slug", async () => {

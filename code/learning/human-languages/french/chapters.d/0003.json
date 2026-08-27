@@ -1,0 +1,18 @@
+{
+  "chapter": 3,
+  "title": "How Are You?",
+  "label": "ch:how-are-you",
+  "canDo": "I can ask how someone is in French, answer naturally, and return the question.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO",
+    "SPINE-CHECK-WELLBEING",
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FR-C03-practice",
+    "kind": "task",
+    "summary": "Complete FR-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in French, answer naturally, and return the question.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

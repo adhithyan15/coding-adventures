@@ -1,0 +1,27 @@
+{
+  "id": "MW-PATH-009",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "MW-C09-hear-nana",
+    "MW-C09-nana",
+    "MW-C09-hear-nani",
+    "MW-C09-nani",
+    "MW-C09-hear-pati",
+    "MW-W09-ta",
+    "MW-C09-pati",
+    "MW-R09-maternal-three",
+    "MW-C09-hear-patni",
+    "MW-C09-patni",
+    "MW-C09-hear-bachcha",
+    "MW-W09-cha",
+    "MW-C09-bachcha",
+    "MW-R09-family-new-five",
+    "MW-C09-family-twelve",
+    "MW-R09-script-close"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-023-FAMILY-TWELVE"
+  ],
+  "after": []
+}

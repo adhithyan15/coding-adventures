@@ -1,0 +1,26 @@
+{
+  "chapter": 10,
+  "title": "Four Family Words: Meaning First, One New Sign",
+  "label": "ch:mw-family-four",
+  "canDo": "I can recognise, say, read, and independently write four source-attested close-family labels after learning only one new Devanagari sign.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MW-C08-family-four",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Four close-family labels secured by ear before writing, with only ब added and every skill scored separately.",
+    "assesses": [
+      "MW-LEX-MAA-01",
+      "MW-LEX-BAAP-01",
+      "MW-LEX-BHAI-01",
+      "MW-LEX-BAHAN-01",
+      "MW-SCRIPT-BA-01",
+      "MW-SCRIPT-MAA-01",
+      "MW-SCRIPT-BAAP-01",
+      "MW-SCRIPT-BHAI-01",
+      "MW-SCRIPT-BAHAN-01",
+      "MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01"
+    ]
+  }
+}

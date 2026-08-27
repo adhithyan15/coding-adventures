@@ -1,0 +1,13 @@
+{
+  "id": "MW-EXT-014-EXCHANGE-NAMES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can ask what another person's name is and answer with a chosen name in listening, speaking, reading, and independent writing tasks.",
+  "prerequisites": [
+    "MW-EXT-013-WRITE-NAME-QUESTION"
+  ],
+  "lessons": [
+    "MW-C05-practice"
+  ]
+}

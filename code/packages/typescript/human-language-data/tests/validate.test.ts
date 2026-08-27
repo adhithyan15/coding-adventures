@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { parseLesson } from "../src/parse.js";
 import { validate, hasErrors, summarize } from "../src/validate.js";
+import type { SoundTagRegistry } from "../src/sound-tags.js";
 import type { ScriptData, Taxonomy } from "../src/types.js";
 
 const lesson = (fields: Record<string, string>) =>
@@ -12,6 +13,11 @@ const taxonomy: Taxonomy = {
     "GREETING-HELLO": { family: "GREETING", gloss: "hello", core: true },
     "COURTESY-THANKS": { family: "COURTESY", gloss: "thanks", core: true },
   },
+};
+
+const soundTags: SoundTagRegistry = {
+  version: 1,
+  tracks: { spanish: ["vowel-a", "written-accent"] },
 };
 
 const good = (lang: string, id: string, concept: string, extra: Record<string, string> = {}) =>
@@ -29,6 +35,37 @@ describe("validate", () => {
   it("errors on an unresolved concept tag", () => {
     const issues = validate({ taxonomy, lessons: [good("spanish", "ES1", "NOT-A-REAL-TAG-lowercase!")] });
     expect(issues.some((i) => i.code === "unresolved-concept" && i.level === "error")).toBe(true);
+  });
+
+  it("accepts registered sounds and rejects an unknown tag", () => {
+    const issues = validate({
+      taxonomy,
+      soundTags,
+      lessons: [
+        good("spanish", "ES1", "GREETING-HELLO", {
+          sounds: "[vowel-a, h-silent]",
+        }),
+      ],
+    });
+    expect(issues.some((issue) => issue.code === "unregistered-sound-tag")).toBe(true);
+    expect(issues.some((issue) => issue.message.includes("'h-silent'"))).toBe(true);
+    expect(issues.some((issue) => issue.message.includes("'vowel-a'"))).toBe(false);
+  });
+
+  it("fails closed when tagged lessons have no track registry", () => {
+    const taggedPractice = parseLesson(
+      lesson({
+        id: "ES-P1",
+        chapter: "1",
+        type: "practice-mix",
+        headword: "practice",
+        gloss: "recap",
+        sounds: "[vowel-a]",
+      }),
+      "spanish",
+    );
+    const issues = validate({ taxonomy, lessons: [taggedPractice] });
+    expect(issues.filter((issue) => issue.code === "missing-sound-tag-track")).toHaveLength(1);
   });
 
   it("rejects a concept tag that collides with an Object prototype member", () => {

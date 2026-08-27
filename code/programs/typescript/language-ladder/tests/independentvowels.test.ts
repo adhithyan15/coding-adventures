@@ -322,6 +322,20 @@ describe("shared Perso-Arabic letters retain script-owned provenance", () => {
     expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
   });
 
+  it("keeps Persian and Urdu ط body-first with independently sourced provenance", () => {
+    const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
+      .letters.find((entry) => entry.glyph === "ط")!;
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "ط")!;
+    for (const letter of [persian, urdu]) {
+      expect(letter.penLifts).toBe(1);
+      expect(letter.strokeOrder).toHaveLength(2);
+      expect(letter.strokeOrder[0]).toMatch(/loop|oval/i);
+      expect(letter.strokeOrder[1]).toMatch(/lift.*upright/i);
+    }
+    expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
+  });
+
   it("keeps Urdu ھ as one sourced two-eyed aspiration path", () => {
     const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
       .letters.find((entry) => entry.glyph === "ھ")!;

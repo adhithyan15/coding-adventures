@@ -1,0 +1,14 @@
+{
+  "id": "MW-EXT-002-WRITE-SAA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognise स, reuse the ा mark to make सा, and write it after a short delay.",
+  "prerequisites": [
+    "MW-EXT-001-WRITE-RAAM"
+  ],
+  "lessons": [
+    "MW-W01-sa",
+    "MW-W01-saa"
+  ]
+}

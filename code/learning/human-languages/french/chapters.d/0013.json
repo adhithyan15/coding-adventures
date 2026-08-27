@@ -1,0 +1,16 @@
+{
+  "chapter": 13,
+  "title": "Colours",
+  "label": "ch:colours",
+  "canDo": "I can name basic colours in French and use them to describe something.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FR-C13-rouge-bleu",
+    "kind": "task",
+    "summary": "Complete FR-C13-rouge-bleu, the canonical closing checkpoint, and demonstrate the chapter promise: name basic colours in French and use them to describe something.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

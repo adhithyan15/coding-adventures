@@ -1,0 +1,16 @@
+{
+  "id": "MW-EXT-017-BUILD-WELLBEING-ANSWER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can hear hū̃ ṭhīk hū̃, isolate ू and ठ, and write हूं ठीक हूं after a short delay.",
+  "prerequisites": [
+    "MW-EXT-016-WRITE-WELLBEING-QUESTION"
+  ],
+  "lessons": [
+    "MW-C06-hear-answer",
+    "MW-W06-uu-matra",
+    "MW-W06-ttha",
+    "MW-C06-answer"
+  ]
+}

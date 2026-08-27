@@ -48,6 +48,7 @@ function makeNode(opts: {
   sourcePath: string;
   markdown: string;
   frontmatter?: Record<string, string>;
+  route?: string | null;
 }): ContentNode {
   seq++;
   const id = `00000000-0000-7000-8000-${String(seq).padStart(12, "0")}` as ContentNode["identity"];
@@ -56,7 +57,7 @@ function makeNode(opts: {
     revision: ("blake2b:" + "0".repeat(64)) as ContentNode["revision"],
     document: parseGfm(opts.markdown) as unknown as ContentNode["document"],
     frontmatter: opts.frontmatter ?? {},
-    route: null,
+    route: opts.route ?? null,
     assetRefs: [],
     sourcePath: opts.sourcePath,
   };
@@ -142,6 +143,18 @@ describe("renderStatic — single-node rendering", () => {
       { routeTemplate: "/{slug}/index.html" },
     );
     expect(page!.route).toBe("/about/index.html");
+  });
+
+  it("prefers the canonical ContentNode route over local derivation", async () => {
+    const [page] = await runRender(
+      [makeNode({
+        sourcePath: "posts/local-fallback.md",
+        markdown: "# x\n",
+        route: "/canonical/from-router.html",
+      })],
+      { routeTemplate: "/fallback/{slug}.html" },
+    );
+    expect(page!.route).toBe("/canonical/from-router.html");
   });
 
   it("title from frontmatter wins over h1", async () => {

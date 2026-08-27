@@ -1,13 +1,12 @@
 # @coding-adventures/forme-collect-chronological
 
 Forme collector stage: `Stream<ContentNode>` → single `Collection`,
-sorted chronologically (newest first) with a derived URL route on every
-entry.
+sorted chronologically (newest first) with each routed node's canonical
+URL copied to its entry.
 
-Third Forme stage of the blog v0 effort. Sits between
-`forme-parse-markdown` (which produces a `Stream<ContentNode>`, one per
-file) and the renderer stages (which walk the collection to emit pages
-and an index).
+Collection branch of the Forme blog DAG. It receives the same routed-node
+stream as page rendering and produces chronological metadata for index and
+feed stages.
 
 ## Stage shape
 
@@ -24,13 +23,14 @@ collect.configSchema  // { name?, dateField?, slugField?, routeTemplate? }
 
 1. **Buffer** the incoming stream (a collector needs every node before it
    can sort).
-2. For each `ContentNode`, derive `{ dateStr, slug, route }`:
+2. For each `ContentNode`, resolve `{ dateStr, slug, route }`:
    - `dateStr` = `frontmatter[dateField]` (default key `"date"`), or
      the sentinel `"0000-01-01"` if absent — a warning is logged.
    - `slug` = `frontmatter[slugField]` (default key `"slug"`) if a
      non-empty string, else `slugify(sourcePath)`.
-   - `route` = `routeTemplate` with `{slug}` substituted
-     (default template `"/blog/{slug}.html"`).
+   - `route` = `ContentNode.route`, normally assigned by `forme-router`.
+     Older standalone callers retain a `routeTemplate` compatibility
+     fallback when the node route is `null`.
 3. **Sort** by `dateStr` descending; tie-break by `sourcePath`
    ascending (deterministic across runs).
 4. **Emit** one `Collection`:
@@ -86,7 +86,7 @@ interface CollectChronologicalConfig {
   name?:          string;   // collection name, default "posts"
   dateField?:     string;   // frontmatter key for date, default "date"
   slugField?:     string;   // frontmatter key for explicit slug, default "slug"
-  routeTemplate?: string;   // route template, default "/blog/{slug}.html"
+  routeTemplate?: string;   // deprecated fallback when node.route is null
 }
 ```
 
@@ -94,8 +94,8 @@ interface CollectChronologicalConfig {
 
 ## Slug derivation rules
 
-`slugify(sourcePath)` (the fallback when frontmatter doesn't supply
-one):
+`slugify(sourcePath)` resolves the entry's display slug when frontmatter
+doesn't supply one. It also supports the legacy route fallback:
 
 1. Take the basename (last path segment; splits on `/` and `\`).
 2. Strip a trailing `.md` / `.mdx` / `.markdown` (case-insensitive).
@@ -109,9 +109,8 @@ one):
 
 - Only string-typed frontmatter values are supported (the parser-markdown
   v0 only produces strings anyway).
-- Route templates only support `{slug}` substitution. `{year}` /
-  `{month}` / `{day}` / `{section}` etc. are deferred to a future
-  collector that knows about dates structurally.
+- The legacy route fallback only supports `{slug}` substitution. Routed
+  pipelines configure URL policy once in `forme-router`.
 - Single fixed `discriminant: "chronological"`. A separate collector
   variant will own per-tag / per-year discriminants.
 

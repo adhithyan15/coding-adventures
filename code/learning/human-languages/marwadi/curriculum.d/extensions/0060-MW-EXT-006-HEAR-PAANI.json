@@ -1,0 +1,13 @@
+{
+  "id": "MW-EXT-006-HEAR-PAANI",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can recognise pāṇī by ear, say it, and give its meaning before seeing its spelling.",
+  "prerequisites": [
+    "MW-EXT-005-POLITE-AFFIRMATIVE"
+  ],
+  "lessons": [
+    "MW-C04-hear-paani"
+  ]
+}
