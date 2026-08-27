@@ -12,17 +12,29 @@ on:
       - "code/packages/typescript/human-language-data/**"
       - "code/learning/human-languages/**"
       - ".github/workflows/deploy-language-ladder.yml"
+  # Curriculum data is a build input to Language Ladder. Validate the app on
+  # pull requests so a broken type, test, or bundle budget cannot reach main
+  # and fail only after the deployment workflow starts.
+  pull_request:
+    branches: [main]
+    paths:
+      - "code/programs/typescript/language-ladder/**"
+      - "code/packages/typescript/human-language-data/**"
+      - "code/learning/human-languages/**"
+      - ".github/workflows/deploy-language-ladder.yml"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: deploy-language-ladder
+  # Keep main deployments serialized without making independent curriculum PRs
+  # cancel one another's validation runs.
+  group: deploy-language-ladder-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,6 +48,31 @@ jobs:
       - name: Build and validate Language Ladder
         working-directory: code/programs/typescript/language-ladder
         run: bash BUILD
+
+      - name: Stage Language Ladder for deployment
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: language-ladder-dist
+          path: code/programs/typescript/language-ladder/dist
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore validated Language Ladder
+        uses: actions/download-artifact@v4
+        with:
+          name: language-ladder-dist
+          path: code/programs/typescript/language-ladder/dist
 
       - name: Deploy to GitHub Pages (language-ladder/ subdirectory)
         uses: peaceiris/actions-gh-pages@v4
