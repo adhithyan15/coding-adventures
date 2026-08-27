@@ -287,6 +287,7 @@ const JAPANESE_TA = DUCTUS[ductusKey("japanese", "た")];
 const JAPANESE_NE = DUCTUS[ductusKey("japanese", "ね")];
 const JAPANESE_MI = DUCTUS[ductusKey("japanese", "み")];
 const JAPANESE_SE = DUCTUS[ductusKey("japanese", "せ")];
+const JAPANESE_TE = DUCTUS[ductusKey("japanese", "て")];
 const JAPANESE_SMALL_TSU = DUCTUS[ductusKey("japanese", "っ")];
 const JAPANESE_MO = DUCTUS[ductusKey("japanese", "も")];
 
@@ -801,6 +802,20 @@ describe("handwriting ductus", () => {
       "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%9B_stroke_order_animation.gif",
     );
     expect(JAPANESE_SE.source.citation).toMatch(/Sirgazil.*せ.*33 frames.*3\.3 seconds/i);
+  });
+
+  it("Japanese て keeps its bar, return, and lower curve in one run", () => {
+    expect(penLifts(JAPANESE_TE)).toBe(0);
+    expect(JAPANESE_TE.strokes).toHaveLength(1);
+    expect(JAPANESE_TE.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "draw the high horizontal from left to right",
+      "turn back down and left through the diagonal",
+      "round the broad lower curve and sweep right to the finish",
+    ]);
+    expect(JAPANESE_TE.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%A6_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_TE.source.citation).toMatch(/Sirgazil.*て.*28 frames.*2\.8 seconds/i);
   });
 
   it("Japanese small っ scales つ's one-run movement to its own glyph", () => {
