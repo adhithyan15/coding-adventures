@@ -1,4 +1,4 @@
-# ISA Simulators -- Instruction Set Architectures from ARM to WASM
+# ISA Simulators -- Instruction Set Architectures from the Baby to WASM
 
 ## What is an ISA?
 
@@ -32,9 +32,14 @@ recompiling your software, or swap out the compiler without changing your CPU.
 
 ### The Repo's ISA Simulators
 
-This repo simulates six different instruction set architectures:
+The repository contains many simulator lanes. These packages illustrate the
+range from the first stored-program CPU through modern virtual machines:
 
 ```
+code/packages/rust/
+    manchester-baby-simulator/ -- functional SSEM model (1948)
+    manchester-baby-gatelevel/ -- gate-level SSEM model (1948)
+
 code/packages/python/
     arm-simulator/         -- ARM (1985, phones and tablets)
     riscv-simulator/       -- RISC-V (2010, open-source)
@@ -100,12 +105,39 @@ CISC approach to "increment memory[addr]":
 Pure RISC:         ARM, RISC-V
 Stack machines:    JVM, CLR, WASM, Our VM
 Accumulator:       Intel 4004
+Memory-accumulator: Manchester Baby
 ```
 
 Stack machines are a special case -- they don't fit neatly into RISC/CISC
 because they use an implicit stack instead of named registers. They are
 conceptually simple (all operands come from the stack) but their instructions
 are variable-width (like CISC).
+
+---
+
+## Manchester Baby -- The Stored-Program Starting Point
+
+The Manchester Baby, or SSEM, ran the world's first stored program in 1948.
+Program and data share just 32 words of memory. Each instruction names a store
+line, and almost all data operations pass through one 32-bit accumulator.
+
+Its control counter is a useful surprise: the machine increments CI *before*
+fetching. CI therefore resets to line 31, so the first increment wraps to line
+0. A jump writes CI rather than the address of the next fetch, which means the
+following pre-increment is part of every jump's behavior.
+
+The Rust pair demonstrates two simulator levels:
+
+```text
+functional: u32 wrapping arithmetic directly models the ISA result
+gate-level: NOT gates + ripple-carry adders produce the same result bit by bit
+```
+
+The gate-level model holds the 32×32 store, accumulator, CI, and halt latch in
+1,062 D flip-flops. Differential tests run identical programs in both models
+and compare every architectural state field and trace. That pairing separates
+two questions cleanly: “What does the instruction mean?” and “How can gates
+produce that meaning?”
 
 ---
 
@@ -651,6 +683,8 @@ explicit moves.
 
 | File | Description |
 |------|-------------|
+| `code/packages/rust/manchester-baby-simulator/src/lib.rs` | Manchester Baby functional simulator |
+| `code/packages/rust/manchester-baby-gatelevel/src/lib.rs` | Manchester Baby gate-level simulator |
 | `code/packages/python/arm-simulator/src/arm_simulator/simulator.py` | ARM simulator with condition codes |
 | `code/packages/python/riscv-simulator/src/riscv_simulator/simulator.py` | RISC-V RV32I simulator |
 | `code/packages/python/jvm-simulator/src/jvm_simulator/simulator.py` | JVM bytecode simulator |

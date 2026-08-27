@@ -65,7 +65,7 @@ according to the current prioritization run.
 
 | IDs (functional / gate) | Year | Target | Functional Rust | Gate-level Rust |
 |---|---:|---|---|---|
-| RCPU-001 / RCPU-002 | 1948 | Manchester Baby (SSEM) | Complete: `manchester-baby-simulator` | Missing |
+| RCPU-001 / RCPU-002 | 1948 | Manchester Baby (SSEM) | Complete: `manchester-baby-simulator` | Complete: `manchester-baby-gatelevel` |
 | RCPU-003 / RCPU-004 | 1954 | IBM 704 | Missing | Missing |
 | RCPU-005 / RCPU-006 | 1961 | GE-225 | Audit: `ge225-simulator` | Missing |
 | RCPU-007 / RCPU-008 | 1964 | CDC 6600 | Missing | Missing |
@@ -91,8 +91,8 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-001**, the Manchester Baby functional simulator (this
-change). RCPU-002 is next unless implementation review or CI reveals a
+Current selection: **RCPU-002**, the Manchester Baby gate-level simulator (this
+change). RCPU-003 is next unless implementation review or CI reveals a
 higher-priority blocker.
 
 ## Cross-language wave
