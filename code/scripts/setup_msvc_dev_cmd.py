@@ -127,15 +127,26 @@ def capture_developer_environment(
 ) -> dict[str, str]:
     """Call vcvarsall and return the complete resulting command environment."""
 
-    command = f'call "{vcvarsall}" {architecture} >nul && set'
+    # Invoke the batch file the same way the upstream action did: as a command
+    # in cmd.exe, not through CALL. On the Windows 2025 / Visual Studio 2026
+    # runner, CALL incorrectly propagates exit status 1 even though the same
+    # vcvarsall command is valid. The harmless leading SET also keeps the
+    # command from beginning with a quoted path, avoiding cmd.exe /c's special
+    # first-quote parsing rule.
+    command = f'set >nul && "{vcvarsall}" {architecture} >nul && set'
     result = subprocess.run(  # nosec B603 -- fixed cmd.exe and reviewed batch path
-        [str(comspec), "/d", "/s", "/c", command],
-        check=True,
+        [str(comspec), "/d", "/c", command],
+        check=False,
         capture_output=True,
         text=True,
         encoding=locale.getpreferredencoding(False),
         errors="replace",
     )
+    if result.returncode != 0:
+        detail = result.stderr.strip() or result.stdout.strip() or "no command output"
+        raise RuntimeError(
+            f"vcvarsall failed with exit code {result.returncode}: {detail[-2000:]}"
+        )
     return parse_environment(result.stdout.splitlines())
 
 

@@ -4,6 +4,8 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from subprocess import CompletedProcess
+from unittest.mock import patch
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
@@ -48,6 +50,31 @@ class EnvironmentParsingTests(unittest.TestCase):
             },
             changes,
         )
+
+    @patch("setup_msvc_dev_cmd.subprocess.run")
+    def test_invokes_vcvarsall_directly_without_call_or_cmd_s(self, run) -> None:
+        run.return_value = CompletedProcess(
+            args=[], returncode=0, stdout="Path=C:\\VC\\bin\r\n", stderr=""
+        )
+
+        environment = msvc.capture_developer_environment(
+            Path(r"C:\Program Files\Microsoft Visual Studio\18\VC\vcvarsall.bat"),
+            "x64",
+            comspec=Path(r"C:\Windows\System32\cmd.exe"),
+        )
+
+        self.assertEqual({"Path": r"C:\VC\bin"}, environment)
+        command = run.call_args.args[0]
+        self.assertEqual(
+            [
+                r"C:\Windows\System32\cmd.exe",
+                "/d",
+                "/c",
+                'set >nul && "C:\\Program Files\\Microsoft Visual Studio\\18\\VC\\vcvarsall.bat" x64 >nul && set',
+            ],
+            command,
+        )
+        self.assertNotIn("call ", command[-1].casefold())
 
 
 class GitHubEnvironmentFileTests(unittest.TestCase):
