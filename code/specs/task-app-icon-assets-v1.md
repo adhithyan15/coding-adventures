@@ -105,6 +105,31 @@ precisely. `main.tsx` computes the full `conic-gradient(...)` string
 tooltip text and every engine-projected cell already follows) and
 binds it the same way a Gantt bar's width is bound today.
 
+### Follow-up: `ring-gradient` is a web-only mechanism (#12028 item 2)
+
+The `background: slot: ring-gradient` binding above is a **React-only**
+capability — UI36's bindable-property widening lives entirely in
+`mosaic-emit-react`'s `dynamic_bound_style`; no native backend reads a
+slot-bound `background` layout prop on a plain `Box` at all. Native
+hosts previously received `ring-gradient: ""` (an always-empty string,
+since only the web host's own `main.tsx` computes the CSS gradient)
+with **no numeric fallback** to build any rendering of their own —
+"a leak in the data contract," per the epic's own framing.
+
+`slot ring-percent-value : number ;` (added to `TaskApp.mil`) closes
+that leak: every host now receives the real 0..100 percent as typed
+data, computed once in the shared `task-mosaic-app` Rust engine (the
+same value the web host previously recomputed redundantly in
+TypeScript). `ring-gradient`/`ring-percent` are unchanged and still
+drive the web backend's own CSS-trick rendering — appropriate for its
+platform, per this whole doc's philosophy.
+
+Native **rendering** of the ring from `ring-percent-value` — a real
+circular progress indicator per backend — is deliberately **not** part
+of this fix; it needs its own design decision (native determinate
+progress-ring primitive vs. a shared drawing primitive, the same
+capability #12028 item 3 already calls out) and is tracked separately.
+
 ## Wiring summary
 
 - `mosaic-emit-react`: `background` added to the bindable-property

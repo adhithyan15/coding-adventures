@@ -4,6 +4,29 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - progress ring's percent-complete now flows to every host as typed data (#12028 item 2)
+
+The workspace-progress ring's percent-complete was computed by the
+shared `task-mosaic-app` engine (used by every native host) only to
+build a `ring-gradient: ""` placeholder that never carried any real
+value — the web host redundantly recomputed the same percent itself in
+`main.tsx`, and only the web host's own recomputation ever reached the
+rendered CSS `conic-gradient(...)`. Native hosts had no numeric
+fallback to render *anything* from.
+
+New `slot ring-percent-value : number ;` (`TaskApp.mil`) carries the
+same 0..100 percent every host already needed, sourced once from
+`task-mosaic-app`'s own computation instead of being redundantly
+re-derived per host. `ring-gradient`/`ring-percent` are unchanged — web
+still renders its own CSS-trick donut from them, appropriate for its
+platform.
+
+Native rendering of the ring from this number (a real circular
+progress indicator per backend) is a deliberately separate, still-open
+follow-up — see the tracking issue linked from
+`code/specs/task-app-icon-assets-v1.md`'s "the one real gap" section.
+This change only closes the data-contract leak.
+
 ### Added - Board design-fidelity: 4th column, accent bars, count badges, critical border
 
 Closes the Board line of the design-fidelity gap backlog item.
