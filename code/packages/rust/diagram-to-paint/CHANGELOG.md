@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.79.0
+
+- Render every valid pinned Mermaid 11.16.1 Gantt fixture through backend-neutral paint and Metal-to-PNG validation.
+
 ## 0.78.0
 
 - Validate typed sub-day Gantt duration geometry through Paint instructions and native Metal-to-PNG rendering.

@@ -83,8 +83,9 @@ Unpadded 24-hour, minute, and second fields retain sub-minute precision.
 Quarter tokens resolve to the first month of the authored quarter.
 Signed variable-width year tokens retain their sign through semantic parsing
 and backend-neutral temporal layout.
-It remains partial while non-English locale data and the complete pinned visual
-corpus are still outstanding.
+Every valid pinned Gantt syntax fixture now also passes backend-neutral paint
+lowering and Metal-to-PNG validation. Gantt remains partial while non-English
+locale data is still outstanding.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:
