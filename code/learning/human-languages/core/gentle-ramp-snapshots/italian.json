@@ -15,7 +15,7 @@
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 34,
+  "forwardReferences": 32,
   "atomsTaught": 200,
   "atomsNeverRevisited": 19,
   "reinforcementWindowMisses": 282,
@@ -33,7 +33,7 @@
     {
       "language": "italian",
       "kind": "forward-language",
-      "count": 34,
+      "count": 32,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -69,7 +69,7 @@
   "next": {
     "language": "italian",
     "kind": "forward-language",
-    "count": 34,
+    "count": 32,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }

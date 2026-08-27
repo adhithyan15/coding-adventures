@@ -451,6 +451,77 @@ describe("forward references", () => {
     ]);
     expect(glued.forwardReferences).toHaveLength(0);
   });
+
+  it("does not mistake a Malayalam word's source inside an etymology block for a lexical use", () => {
+    const report = measureContinuity([
+      lesson({
+        id: "ML-C01-athe",
+        chapter: 1,
+        sequence: 10,
+        headword: "അതെ",
+        language: "malayalam",
+        body:
+          "## The word, taken apart\n\n**അതെ** grows from **അത്**.\n\n" +
+          "## Guided Practice\n\nSay **അതെ**.",
+      }),
+      lesson({
+        id: "ML-C41-that",
+        chapter: 41,
+        sequence: 20,
+        headword: "അത്",
+        language: "malayalam",
+      }),
+    ]);
+    expect(report.forwardReferences).toHaveLength(0);
+  });
+
+  it("does not mistake a Tamil bound ending in a decomposition equation for the pronoun", () => {
+    const report = measureContinuity([
+      lesson({
+        id: "TA-C33-puri",
+        chapter: 33,
+        sequence: 10,
+        headword: "புரி",
+        language: "tamil",
+        body:
+          "## Grammar Lens: the last slot\n\n" +
+          "**புரி** + **கிற்** + **அது** → **புரிகிறது**\n\n" +
+          "## Guided Practice\n\nSay **புரிகிறது**.",
+      }),
+      lesson({
+        id: "TA-C40-that",
+        chapter: 40,
+        sequence: 20,
+        headword: "அது",
+        language: "tamil",
+      }),
+    ]);
+    expect(report.forwardReferences).toHaveLength(0);
+  });
+
+  it("still reports a punctuation-adjacent Indic word in learner-facing practice", () => {
+    const report = measureContinuity([
+      lesson({
+        id: "TA-C01-preview",
+        chapter: 1,
+        sequence: 10,
+        language: "tamil",
+        body: "## Guided Practice\n\nPoint and say (**அது**).",
+      }),
+      lesson({
+        id: "TA-C40-that",
+        chapter: 40,
+        sequence: 20,
+        headword: "அது",
+        language: "tamil",
+      }),
+    ]);
+    expect(report.forwardReferences[0]).toMatchObject({
+      lessonId: "TA-C01-preview",
+      word: "அது",
+      taughtBy: "TA-C40-that",
+    });
+  });
 });
 
 describe("the real corpus", () => {

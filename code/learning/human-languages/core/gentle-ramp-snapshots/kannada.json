@@ -15,7 +15,7 @@
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 15,
+  "forwardReferences": 13,
   "atomsTaught": 282,
   "atomsNeverRevisited": 8,
   "reinforcementWindowMisses": 727,
@@ -33,7 +33,7 @@
     {
       "language": "kannada",
       "kind": "forward-language",
-      "count": 15,
+      "count": 13,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -83,7 +83,7 @@
   "next": {
     "language": "kannada",
     "kind": "forward-language",
-    "count": 15,
+    "count": 13,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }

@@ -10,8 +10,13 @@ it("keeps Tamil's opening free of future farewells and pronouns", () => {
   const references = measureContinuity(
     loadTrackLessons("tamil", defaultCurriculumRoot()),
   ).forwardReferences;
-  expect(references.length).toBeLessThanOrEqual(13);
+  expect(references.length).toBeLessThanOrEqual(7);
   expect(references.filter((reference) => /-C0[12]-/.test(reference.lessonId))).toEqual([]);
+  expect(
+    references.find(
+      (reference) => reference.lessonId === "TA-C33-puri" && reference.word === "அது",
+    ),
+  ).toBeUndefined();
 });
 
 it("keeps Tamil Chapter 7 meaning-first and below the three-glyph step budget", () => {

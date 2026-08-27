@@ -15,7 +15,7 @@
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 4,
+  "forwardReferences": 3,
   "atomsTaught": 274,
   "atomsNeverRevisited": 13,
   "reinforcementWindowMisses": 716,
@@ -33,7 +33,7 @@
     {
       "language": "sanskrit",
       "kind": "forward-language",
-      "count": 4,
+      "count": 3,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -83,7 +83,7 @@
   "next": {
     "language": "sanskrit",
     "kind": "forward-language",
-    "count": 4,
+    "count": 3,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }
