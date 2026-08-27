@@ -2,6 +2,8 @@
 
 The Scytale cipher: the ancient Spartan transposition cipher. Messages are written into a grid and read column-by-column — the key is the number of columns.
 
+The implementation follows [CR02](../../../specs/CR02-scytale-cipher.md). Grid cells and key bounds use Unicode scalar values rather than UTF-16 code units, uneven ciphertext columns are reconstructed explicitly, and only trailing U+0020 padding is removed. Brute force rejects inputs above 4096 scalars before allocating quadratic candidate output. Production code is deterministic pure computation with no OS capabilities.
+
 ## Usage
 
 ```kotlin
@@ -34,10 +36,11 @@ Output (read by columns): "HORSEST LPA LAN "
 ## Running Tests
 
 ```bash
-gradle test
+gradle test jacocoTestCoverageVerification
 ```
 
-17 tests covering encryption, decryption, roundtrip, padding, input validation, and brute force.
+The suite covers encryption, decryption, roundtrip, padding, input validation,
+and brute force, with an 80% line-coverage gate.
 
 ## Part of the Coding Adventures series
 

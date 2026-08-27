@@ -87,12 +87,7 @@ String decrypt(String text, int key) {
 List<ScytaleCandidate> bruteForce(String text) {
   final scalarLength = text.runes.length;
   if (scalarLength > maxBruteForceTextLength) {
-    throw RangeError.range(
-      scalarLength,
-      0,
-      maxBruteForceTextLength,
-      'text scalar length',
-    );
+    throw RangeError('scytale-brute-force-limit');
   }
   if (scalarLength < 4) return const [];
 

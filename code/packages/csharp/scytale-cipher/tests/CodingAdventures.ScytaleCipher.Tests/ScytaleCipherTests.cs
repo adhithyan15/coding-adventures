@@ -22,6 +22,18 @@ public sealed class ScytaleCipherTests
     }
 
     [Fact]
+    public void PortableScalarRaggedAndPaddingVectorsMatch()
+    {
+        Assert.Equal("Aé😀 B ", ScytaleCipher.Encrypt("A😀Bé", 3));
+        Assert.Equal("A😀Bé", ScytaleCipher.Decrypt("Aé😀 B ", 3));
+        Assert.Equal("ABe \u0301 ", ScytaleCipher.Encrypt("Ae\u0301B", 3));
+        Assert.Equal("Ae\u0301B", ScytaleCipher.Decrypt("ABe \u0301 ", 3));
+        Assert.Equal("ACEFBD", ScytaleCipher.Decrypt("ABCDEF", 4));
+        Assert.Equal("AB\t", ScytaleCipher.Decrypt("A\tB ", 2));
+        Assert.Equal("A\t\n\u00A0", ScytaleCipher.Decrypt("A\u00A0\t \n ", 3));
+    }
+
+    [Fact]
     public void RoundTripsAcrossValidKeys()
     {
         var text = "The quick brown fox jumps over the lazy dog!";
@@ -50,5 +62,7 @@ public sealed class ScytaleCipherTests
         Assert.Throws<ArgumentNullException>(() => ScytaleCipher.BruteForce(null!));
         Assert.Throws<ArgumentOutOfRangeException>(() => ScytaleCipher.Encrypt("HELLO", 1));
         Assert.Throws<ArgumentOutOfRangeException>(() => ScytaleCipher.Decrypt("HI", 3));
+        var oversized = new string('A', ScytaleCipher.MaxBruteForceTextLength + 1);
+        Assert.Throws<ArgumentOutOfRangeException>(() => ScytaleCipher.BruteForce(oversized));
     }
 }

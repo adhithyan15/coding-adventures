@@ -49,6 +49,8 @@ package com.codingadventures.scytalecipher
  */
 object ScytaleCipher {
 
+    const val MAX_BRUTE_FORCE_TEXT_LENGTH: Int = 4096
+
     // =========================================================================
     // Validation helper
     // =========================================================================
@@ -77,16 +79,18 @@ object ScytaleCipher {
      */
     fun encrypt(text: String, key: Int): String {
         if (text.isEmpty()) return ""
-        validateKey(key, text.length)
+        val scalars = text.codePoints().toArray()
+        validateKey(key, scalars.size)
 
-        val rows = (text.length + key - 1) / key
+        val rows = (scalars.size + key - 1) / key
         val paddedLen = rows * key
-        val padded = text.padEnd(paddedLen, ' ')
+        val padded = scalars.copyOf(paddedLen)
+        for (index in scalars.size until paddedLen) padded[index] = 0x20
 
         return buildString(paddedLen) {
             for (col in 0 until key) {
                 for (row in 0 until rows) {
-                    append(padded[row * key + col])
+                    appendCodePoint(padded[row * key + col])
                 }
             }
         }
@@ -105,23 +109,33 @@ object ScytaleCipher {
      */
     fun decrypt(text: String, key: Int): String {
         if (text.isEmpty()) return ""
-        validateKey(key, text.length)
+        val scalars = text.codePoints().toArray()
+        validateKey(key, scalars.size)
 
-        val len = text.length
+        val len = scalars.size
         val rows = (len + key - 1) / key
-        val grid = CharArray(len)
+        val remainder = len % key
+        val columnStarts = IntArray(key)
+        val columnLengths = IntArray(key)
+        var offset = 0
 
-        for (col in 0 until key) {
-            for (row in 0 until rows) {
-                val cipherIdx = col * rows + row
-                val gridIdx   = row * key  + col
-                if (cipherIdx < len && gridIdx < len) {
-                    grid[gridIdx] = text[cipherIdx]
+        for (column in 0 until key) {
+            columnStarts[column] = offset
+            columnLengths[column] = if (remainder == 0 || column < remainder) rows else rows - 1
+            offset += columnLengths[column]
+        }
+
+        val plaintext = IntArray(len)
+        var output = 0
+        for (row in 0 until rows) {
+            for (column in 0 until key) {
+                if (row < columnLengths[column]) {
+                    plaintext[output++] = scalars[columnStarts[column] + row]
                 }
             }
         }
-
-        return String(grid).trimEnd(' ')
+        while (output > 0 && plaintext[output - 1] == 0x20) output--
+        return String(plaintext, 0, output)
     }
 
     /**
@@ -133,8 +147,10 @@ object ScytaleCipher {
      * @return list of [BruteForceResult] for all valid keys
      */
     fun bruteForce(text: String): List<BruteForceResult> {
-        if (text.length < 4) return emptyList()
-        return (2..text.length / 2).map { key -> BruteForceResult(key, decrypt(text, key)) }
+        val scalarLength = text.codePointCount(0, text.length)
+        require(scalarLength <= MAX_BRUTE_FORCE_TEXT_LENGTH) { "scytale-brute-force-limit" }
+        if (scalarLength < 4) return emptyList()
+        return (2..scalarLength / 2).map { key -> BruteForceResult(key, decrypt(text, key)) }
     }
 
     // =========================================================================

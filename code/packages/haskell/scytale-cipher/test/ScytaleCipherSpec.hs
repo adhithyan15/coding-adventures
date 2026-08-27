@@ -31,6 +31,14 @@ spec = do
             decrypt "HLEOL " 3 `shouldBe` Right "HELLO"
         it "returns empty text before validating a key" $
             decrypt "" 1 `shouldBe` Right ""
+        it "matches portable Unicode, ragged, and literal-space vectors" $ do
+            encrypt "A😀Bé" 3 `shouldBe` Right "Aé😀 B "
+            decrypt "Aé😀 B " 3 `shouldBe` Right "A😀Bé"
+            encrypt "Ae\x0301\&B" 3 `shouldBe` Right "ABe \x0301\& "
+            decrypt "ABe \x0301\& " 3 `shouldBe` Right "Ae\x0301\&B"
+            decrypt "ABCDEF" 4 `shouldBe` Right "ACEFBD"
+            decrypt "A\tB " 2 `shouldBe` Right "AB\t"
+            decrypt "A\x00a0\t \n " 3 `shouldBe` Right "A\t\n\x00a0"
 
     describe "round trips" $ do
         it "round-trips all valid keys for mixed text" $ do
@@ -51,13 +59,16 @@ spec = do
     describe "bruteForce" $ do
         it "finds the original plaintext" $ do
             let Right ciphertext = encrypt "HELLO WORLD" 3
-            bruteForce ciphertext `shouldContain`
-                [BruteForceResult 3 "HELLO WORLD"]
+            bruteForce ciphertext `shouldSatisfy`
+                either (const False) (elem (BruteForceResult 3 "HELLO WORLD"))
         it "tries every key from two through half the length" $
-            map bruteForceKey (bruteForce "ABCDEFGHIJ") `shouldBe` [2, 3, 4, 5]
+            fmap (map bruteForceKey) (bruteForce "ABCDEFGHIJ") `shouldBe` Right [2, 3, 4, 5]
         it "returns no candidates for short text" $ do
-            bruteForce "AB" `shouldBe` []
-            bruteForce "ABC" `shouldBe` []
+            bruteForce "AB" `shouldBe` Right []
+            bruteForce "ABC" `shouldBe` Right []
+        it "rejects work beyond the quadratic-output limit" $
+            bruteForce (replicate (maxBruteForceTextLength + 1) 'A')
+                `shouldBe` Left "scytale-brute-force-limit"
   where
     checkRoundTrip original key = do
         let encrypted = encrypt original key

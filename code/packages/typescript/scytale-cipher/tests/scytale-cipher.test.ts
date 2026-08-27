@@ -3,7 +3,12 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { encrypt, decrypt, bruteForce } from "../src/index.js";
+import {
+  MAX_BRUTE_FORCE_TEXT_LENGTH,
+  bruteForce,
+  decrypt,
+  encrypt,
+} from "../src/index.js";
 
 describe("encrypt", () => {
   it("encrypts HELLO WORLD with key=3", () => {
@@ -37,6 +42,11 @@ describe("encrypt", () => {
   it("throws for key > text length", () => {
     expect(() => encrypt("HI", 3)).toThrow("Key must be <= text length");
   });
+
+  it("uses Unicode scalar cells including decomposed combining marks", () => {
+    expect(encrypt("A😀Bé", 3)).toBe("Aé😀 B ");
+    expect(encrypt("Ae\u0301B", 3)).toBe("ABe \u0301 ");
+  });
 });
 
 describe("decrypt", () => {
@@ -58,6 +68,14 @@ describe("decrypt", () => {
 
   it("throws for key > text length", () => {
     expect(() => decrypt("HI", 3)).toThrow("Key must be <= text length");
+  });
+
+  it("matches ragged, Unicode, and literal-space fixtures", () => {
+    expect(decrypt("Aé😀 B ", 3)).toBe("A😀Bé");
+    expect(decrypt("ABe \u0301 ", 3)).toBe("Ae\u0301B");
+    expect(decrypt("ABCDEF", 4)).toBe("ACEFBD");
+    expect(decrypt("A\tB ", 2)).toBe("AB\t");
+    expect(decrypt("A\u00a0\t \n ", 3)).toBe("A\t\n\u00a0");
   });
 });
 
@@ -119,5 +137,10 @@ describe("bruteForce", () => {
       expect(typeof r.key).toBe("number");
       expect(typeof r.text).toBe("string");
     }
+  });
+
+  it("rejects work beyond the quadratic-output limit", () => {
+    const oversized = "A".repeat(MAX_BRUTE_FORCE_TEXT_LENGTH + 1);
+    expect(() => bruteForce(oversized)).toThrow("scytale-brute-force-limit");
   });
 });

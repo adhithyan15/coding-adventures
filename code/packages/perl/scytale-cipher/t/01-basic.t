@@ -1,4 +1,5 @@
 use Test2::V0;
+use utf8;
 use CodingAdventures::ScytaleCipher qw(encrypt decrypt brute_force);
 
 # --- Encryption tests ---
@@ -29,6 +30,13 @@ subtest "decrypt" => sub {
     is(decrypt("HLWLEOODL R ", 3), "HELLO WORLD", "HELLO WORLD key=3");
     is(decrypt("ACEBDF", 2), "ABCDEF", "ACEBDF key=2");
     is(decrypt("", 2), "", "empty string");
+    is(encrypt("A😀Bé", 3), "Aé😀 B ", "Unicode scalars encrypt portably");
+    is(decrypt("Aé😀 B ", 3), "A😀Bé", "Unicode scalars decrypt portably");
+    is(encrypt("Ae\x{0301}B", 3), "ABe \x{0301} ", "combining scalar gets its own cell");
+    is(decrypt("ABe \x{0301} ", 3), "Ae\x{0301}B", "combining scalar decrypts exactly");
+    is(decrypt("ABCDEF", 4), "ACEFBD", "ragged columns reconstruct exactly");
+    is(decrypt("A\tB ", 2), "AB\t", "trailing tab remains data");
+    is(decrypt("A\x{00A0}\t \n ", 3), "A\t\n\x{00A0}", "newline and NBSP remain data");
 
     like(
         dies { decrypt("HELLO", 0) },
@@ -70,6 +78,12 @@ subtest "brute_force" => sub {
 
     my @empty = brute_force("AB");
     is(scalar(@empty), 0, "short text returns empty");
+
+    like(
+        dies { brute_force("A" x ($CodingAdventures::ScytaleCipher::MAX_BRUTE_FORCE_TEXT_LENGTH + 1)) },
+        qr/^scytale-brute-force-limit/,
+        "oversized work is rejected before candidates are built"
+    );
 };
 
 # --- Padding tests ---

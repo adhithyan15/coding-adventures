@@ -8,4 +8,4 @@
 
 pub mod cipher;
 
-pub use cipher::{brute_force, decrypt, encrypt, BruteForceResult};
+pub use cipher::{brute_force, decrypt, encrypt, BruteForceResult, MAX_BRUTE_FORCE_TEXT_LENGTH};
