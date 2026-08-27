@@ -2,6 +2,25 @@
 
 ## [Unreleased]
 
+### Added - `Path` kernel drawing primitive (#12028 item 3, UI39)
+
+- Registered `Path` as the kernel drawing primitive — the first primitive
+  that draws real geometry rather than looking a name up in a platform icon
+  catalog (`Icon`'s `FontIcon`/SF Symbols/Material Icons/CSS icon-font
+  class). Four parametric shape kinds, selected by a `kind:` prop:
+  `circle` (`cx`/`cy`/`r`), `line` (`x1`/`y1`/`x2`/`y2`), `curve`
+  (quadratic bézier: `x1`/`y1`/`cx`/`cy`/`x2`/`y2`), and `arc`
+  (`cx`/`cy`/`r`/`start-angle`/`end-angle`, specified now but not required
+  by any current backend PR). Deliberately not an arbitrary SVG path-data
+  string or a structured path-command list — see
+  `code/specs/UI39-mosaic-drawing-primitive.md` §3.1 for why both were
+  rejected. Every coordinate prop accepts the same `Number | SlotRef | Expr`
+  three-way binding every other numeric prop already has — no new grammar or
+  binding mechanism. Fill/stroke reuse the existing `background`/
+  `border-color`/`border-width` style props rather than adding new ones.
+  Kernel-contract-only: no backend renders `Path` yet (XAML lowering is the
+  immediate next PR).
+
 ### Added - HostSwitch kernel contract
 
 - Registered `HostSwitch` as the portable native on/off control, keeping

@@ -168,6 +168,12 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     // nesting, and calendar drops. See `code/specs/UI35-host-drag-drop.md`.
     "HostDraggable",
     "HostDropTarget",
+    // UI39 — the kernel drawing primitive. Four parametric shape kinds
+    // (`circle`/`line`/`curve`/`arc`) rather than an arbitrary SVG path
+    // string or a structured path-command list — see UI39 §3.1/§2 for the
+    // inclusion-criteria reasoning (every platform has a native vector-
+    // drawing surface; no CSS-only composition survives native lowering).
+    "Path",
 ];
 
 // ---------------------------------------------------------------------------
@@ -1477,6 +1483,14 @@ version = "1"
     #[test]
     fn kernel_set_covers_host_surface() {
         assert!(KERNEL_PRIMITIVES.contains(&"HostSurface"));
+    }
+
+    #[test]
+    fn kernel_set_covers_path_drawing_primitive() {
+        assert!(
+            KERNEL_PRIMITIVES.contains(&"Path"),
+            "UI39 kernel must include `Path`"
+        );
     }
 
     // ---- Test 12: package_path is absolute ----

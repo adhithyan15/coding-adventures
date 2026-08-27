@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased] - degradation plumbing for the `Path` kernel drawing primitive (#12028 item 3)
+
+Added the `("Path", ...)` arm to `collect_native_degradations`, following
+`HostSwitch`'s lifecycle exactly: unconditionally degraded (code
+`primitive.path-unimplemented`) on every native backend the moment the
+primitive is registered, since none renders it yet. As each backend lands a
+real lowering (XAML first, immediately following this), narrow the arm's
+`is_native()` guard with a `!matches!(backend, ...)` exclusion the same way
+the existing `HostSlider` arm already does. See
+`code/specs/UI39-mosaic-drawing-primitive.md`.
+
 ## [Unreleased] - gate the radio-group degradation on actual native support (#13007)
 
 `mosaic-emit-compose`/`-flutter`/`-qt` now apply real mutual-exclusion
