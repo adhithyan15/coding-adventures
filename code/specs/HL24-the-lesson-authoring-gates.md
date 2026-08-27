@@ -216,16 +216,31 @@ teach it — walk the learner through `pollo`, `polla`, `polvo`, `polvos` — is
 - **`polla`** is vulgar slang for *penis* in peninsular Spanish;
 - **`echar un polvo`** means *to have sex*.
 
+The DLE marks all of it explicitly, and the exact wording is worth keeping so nobody has to take
+this on trust:
+
+| entry | sense | DLE |
+|---|---|---|
+| `polla` | 2 | *f.* **malson.** pene |
+| `polvo` | 5 | *m.* coloq. coito. **Echar un polvo** |
+| `polvo` | 6 | heroin (*jerg.*) |
+| `pollo` | 8 | escupitajo |
+
+Note the last row: **`pollo` itself carries a coarse sense** ("gob of spit"), so the headword is
+not innocent either — only unmarked in the sense the lesson teaches.
+
 This is not a modern coincidence that a dictionary might miss. Corominas derives the obscene
-sense from `polla` "girl" and refers to it in as many words as *"la ac. obscena."*
+sense from `polla` "girl" and refers to it in as many words as *"la ac. obscena"* — read verbatim
+in the `POLLO` and `POLVO` entries, volume Mi–Ri (see §7).
 
 **The constraint, for whoever authors chapter 403:**
 
 - teach the contrast as **`pollo` vs `polvo` only**;
 - **do not inflect** either into `polla` / `pollas`;
 - **do not put `echar` anywhere near `polvo`**, in prose, in a `[YOU SAY:]` cue, or in an example;
-- **do not build a gender-contrast drill on this pair.** If the chapter needs a feminine
-  counterpart to show the *o/a* pattern, use a different word entirely;
+- **do not build a gender-contrast drill on this pair.** If the chapter needs other forms of the
+  bird, **`gallina` and `pollitos` are the safe substitutes**; if it needs a feminine counterpart
+  to show the *o/a* pattern, use a different word entirely;
 - **leave a comment in the lesson source saying why the forms are missing**, so a later editor
   does not helpfully complete the paradigm.
 
@@ -244,9 +259,95 @@ rather than in a test. The practical instruction: when a lesson teaches a minima
 inflection pattern, **write out the forms the drill will actually generate and look at that list**
 before writing the prose. It takes a minute and it is the only check there is.
 
+### 6.4 The second case, found only because the first one prompted a sweep: `verdura`
+
+`verdura` carries a DLE sense 4, **"f. obscenidad"**, and `verde` carries sense 12, *"Dicho de un
+cuento, de una comedia, de un chiste: Indecentes, eróticos."*
+
+This is a **milder** hazard than §6.2 and the difference is worth stating, because it changes what
+the author has to do. `polla` is *accidentally producible* — a normal inflection drill emits it.
+`verdura`'s obscene sense is not something a beginner will stumble into by inflecting. The
+requirement is therefore narrower but real: **do not gloss `verde` as "just the colour."** A
+lesson that says the word means only one thing has told the learner something false, and this is
+the register they will meet it in.
+
+### 6.5 The sweep, and what it did and did not establish
+
+After §6.2, an explicit scan for the DLE register marks **`malson.`, `vulg.`, `obscen.` and
+`despect.`** was run across the other twenty-eight tranche-B words. It returned **zero**.
+
+- **`recto` is clean.** It was checked specifically because Spanish `recto` has an anatomical
+  sense; that sense is clinical and unmarked, and *todo recto* is ordinary language.
+- **Two are flagged unverified rather than clean**, and the distinction is the point: **`costo`**
+  (checked on suspicion of a hashish sense — the DLE lists none, but the check could not confirm
+  the absence) and the phrase **"hacer un tren"**. Neither is cleared; both are simply not
+  established either way. **Do not treat an unconfirmed check as a pass.**
+
+**One standing note, outside this tranche's thirty but adjacent to two of its chapters:**
+**`concha` is DLE-marked `malson.` across Argentina, Bolivia, Chile, Guatemala, Paraguay, Peru and
+Uruguay.** Any beach, seaside or shopping chapter reaching for a plausible nearby noun can walk
+into it. It is recorded here rather than in a tranche note because the next author to write a
+beach lesson in any track is the person who needs it.
+
+The honest summary of the sweep: **one confirmed hazard means the check had never been run, not
+that there was exactly one.** The sweep found a second case immediately.
+
 ---
 
-## 7. Running the gates
+## 7. Sources, and the attribution boundaries that go with them
+
+Corominas's *Diccionario crítico etimológico castellano e hispánico* is readable in full text on
+archive.org, which removes the constraint that shaped this programme's first two tranches: the DLE
+could always be checked directly, while Corominas could only be reached by proxy — and `HL23` §12
+and §13 both record cases where a Wiktionary citation of Corominas turned out to misreport him.
+
+**Volumes read, and what was actually read in each:**
+
+| volume | archive.org identifier | entries read verbatim |
+|---|---|---|
+| C–F | `corominas-diccionario-critico-etimologico-castellano-c-f` | `CONCERTAR`, `COSTAR` |
+| G–Ma | `diccionario-critico-etimologico-castellano-g-ma-corominas-joan-pdf` | `GORRA` |
+| Mi–Ri | `diccionario-critico-etimologico-castellano-mi-ri-corominas-joan-pdf` | `PLAYA`, `POLLO`, `POLVO`, `PAILA` |
+| Rj–X | — | partial OCR (~222k chars), yielded nothing |
+| A–CA | — | **never loaded** |
+
+### 7.1 Words that may NOT carry a Corominas citation
+
+This list matters more than the one above. A citation is a claim about where a fact came from, and
+attaching Corominas's name to a fact reached some other way is the precise error this programme
+keeps catching in other people's sources. **Do not repeat it in our own.**
+
+- **`talla`** — the borrowing from Catalan, `tajar` as the native reflex, and the stature sense
+  from French *taille* at *Academia* 1817 are all **subagent-sourced**. The T volume was never
+  opened. State the facts without the attribution.
+- **`tren`** — the 1705 Sobrino and *Autoridades* 1739 datings are **subagent-sourced**, same
+  condition.
+- **`camisia`** — the `CAMISA` headword was **not read**; volume A–CA never loaded. What *was*
+  read is the **`CERVEZA`** entry, where Corominas lists `camisia` among *"otros celtismos."*
+  Cite it as that and claim nothing further.
+- **`helar` / `helado`** — the search returned empty. **No Corominas reading exists.** Attribute
+  nothing to him.
+- **`paella`** — it is not its own headword. The *patella* / *paella* discussion sits under
+  **`PAILA`**, and that is where it must be cited.
+
+### 7.2 Two calibrations that are about not over-swinging
+
+- **`wifi`.** "Wireless Fidelity" is a backronym, and the honest verdict is **disputed, not
+  false** — a lesson that flatly calls it a myth is as wrong as one repeating it as fact.
+  **Put no duration in the prose.** "About a year" traces to one account through a subagent and
+  was never independently verified. The wording to use: *the name came first as a Hi-Fi
+  sound-alike; "Wireless Fidelity" was attached afterward as marketing by the Alliance, and later
+  dropped.*
+- **`gorro` / `gorra`.** Corominas gives *"de origen incierto"* and hedges the `gorre` guess with
+  *quizá* / *acaso*. **Teach no etymology at all** — repeating a hedged guess as settled is exactly
+  the error being avoided. But **`gorra` is primary and `gorro` is derived from it, and that is a
+  real fact worth keeping.** Substitute the shape contrast — a `gorra` has a peak, a `gorro` is
+  round and brimless, and they are **not** a gender pair of one object — plus the idioms *de
+  gorra*, *pasar la gorra*, *gorrón*, and *estar hasta el gorro*.
+
+---
+
+## 8. Running the gates
 
 ```
 code/scripts/verify-human-languages.sh --fast    # everything except the 22-book XeLaTeX compile
