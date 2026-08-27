@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c9e6981d34ccdb65",
+  "sourceHash": "fnv1a64:3730fb210d950601",
   "lessons": [
     {
       "id": "RU-C08-semya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1ba3a46bf7cc89c",
+      "sourceHash": "fnv1a64:84a664d1e1f664cb",
       "notice": null,
       "blocks": [
         {

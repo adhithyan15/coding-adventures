@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and courtesy",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8c636a1b3ad8952f",
+  "sourceHash": "fnv1a64:9f1cf4a89c6097ba",
   "lessons": [
     {
       "id": "RU-C01-privet",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b291ddfbdb67bdb6",
+      "sourceHash": "fnv1a64:b1f12c93293138e3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -220,7 +220,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0af02edc36d6f7ac",
+      "sourceHash": "fnv1a64:1e3e3a2bd758d1ff",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -409,7 +409,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5d32d120d7313ffc",
+      "sourceHash": "fnv1a64:0544640939c4b177",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -583,7 +583,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cc1f5901dc23a480",
+      "sourceHash": "fnv1a64:f186f85469ae449f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -772,7 +772,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fe8adc7c184b920d",
+      "sourceHash": "fnv1a64:c6d34ea4dd4dfff4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -980,7 +980,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9a8fcda3e2cd042a",
+      "sourceHash": "fnv1a64:1e092e009157522a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1180,7 +1180,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ccd26dcf20e25208",
+      "sourceHash": "fnv1a64:7576070bd294d39f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1375,7 +1375,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:f5ad0c1967df1fea",
+      "sourceHash": "fnv1a64:8f60961a166976ed",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1541,7 +1541,7 @@
         "script-block",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:de071969205ce289",
+      "sourceHash": "fnv1a64:828f00087bb353f2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1709,7 +1709,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c8d3311d1cb735b9",
+      "sourceHash": "fnv1a64:cc31d81c704366f2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1876,7 +1876,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dfba12bb7e7c93ff",
+      "sourceHash": "fnv1a64:ff221b92e9b388b8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2044,7 +2044,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:db5db2c8d7ae9d47",
+      "sourceHash": "fnv1a64:d940e9c62e2cd670",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2218,7 +2218,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:cad52a8b87306e8b",
+      "sourceHash": "fnv1a64:142d80f622f3e9ca",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2296,7 +2296,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:02ab18f9f9e902d7",
+      "sourceHash": "fnv1a64:dbede5428bac6012",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2379,7 +2379,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:64ba8f34ba6c2c3e",
+      "sourceHash": "fnv1a64:5016ad26550d21b1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2478,7 +2478,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:639f850ac75f4931",
+      "sourceHash": "fnv1a64:d92a33ad6f8086dc",
       "notice": {
         "modality": "pen",
         "needs": [

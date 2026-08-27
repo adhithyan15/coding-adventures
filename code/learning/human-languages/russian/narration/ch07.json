@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Friend and Siblings",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9c5167bf6ccca64a",
+  "sourceHash": "fnv1a64:f53db69acfff78c5",
   "lessons": [
     {
       "id": "RU-C07-drug",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:979de0b5c9bef275",
+      "sourceHash": "fnv1a64:ba22124d99d3ced8",
       "notice": null,
       "blocks": [
         {
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0553eca4fe386b2",
+      "sourceHash": "fnv1a64:92a6a3599d0aefd5",
       "notice": null,
       "blocks": [
         {
@@ -292,7 +292,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b86380bc8f593e7",
+      "sourceHash": "fnv1a64:1fd0e9e69085edf6",
       "notice": null,
       "blocks": [
         {
@@ -423,7 +423,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92abfa643c1d6c0c",
+      "sourceHash": "fnv1a64:1530bfb840ef41ff",
       "notice": null,
       "blocks": [
         {

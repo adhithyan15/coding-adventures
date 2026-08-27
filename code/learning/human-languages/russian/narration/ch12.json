@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Mother and Father",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ef74b1d87089fc19",
+  "sourceHash": "fnv1a64:1279187cfd0029f5",
   "lessons": [
     {
       "id": "RU-C12-mama",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:546f4d0fc49f83d9",
+      "sourceHash": "fnv1a64:8c72b149c84054a1",
       "notice": null,
       "blocks": [
         {
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52e3fdbb23c5dcaf",
+      "sourceHash": "fnv1a64:750c6f8b011e4afb",
       "notice": null,
       "blocks": [
         {
@@ -276,7 +276,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee9f18559b6d55a7",
+      "sourceHash": "fnv1a64:dc0da10ad0d0dd7b",
       "notice": null,
       "blocks": [
         {
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14438c50ccb16532",
+      "sourceHash": "fnv1a64:f158057f63691f99",
       "notice": null,
       "blocks": [
         {

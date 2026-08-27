@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Milk, Cheese, Juice, and Soup",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:be60dc97d0b76136",
+  "sourceHash": "fnv1a64:024aa681b5022962",
   "lessons": [
     {
       "id": "RU-C13-moloko",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9ba25614bf54599",
+      "sourceHash": "fnv1a64:bb6611cfaa4dc676",
       "notice": null,
       "blocks": [
         {
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:727d159efe18e5df",
+      "sourceHash": "fnv1a64:246e2fefaf5cc61c",
       "notice": null,
       "blocks": [
         {
@@ -284,7 +284,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f552aec6f9a60d35",
+      "sourceHash": "fnv1a64:fd5d75f67d0f0bd2",
       "notice": null,
       "blocks": [
         {
@@ -419,7 +419,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:094d82b7f6aa3c65",
+      "sourceHash": "fnv1a64:5db40d9c2261c3ec",
       "notice": null,
       "blocks": [
         {
