@@ -7,12 +7,20 @@
       "title": "Two Answers, Sign by Sign",
       "label": "ch:ja-two-answers",
       "canDo": "I can write the three hiragana signs in はい and いいえ, read both answers without romanization, and say each with even mora timing.",
-      "spineNodes": ["SPINE-RESPOND-BASIC"],
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
       "payoff": {
         "lesson": "JA-C01-iie",
         "kind": "reading",
         "summary": "A yes-or-no choice using only three signs the learner has already traced, copied, recalled, and read.",
-        "assesses": ["JA-LEX-HAI", "JA-LEX-IIE", "JA-SCRIPT-I-01", "JA-SCRIPT-HA-01", "JA-SCRIPT-E-01"]
+        "assesses": [
+          "JA-LEX-HAI",
+          "JA-LEX-IIE",
+          "JA-SCRIPT-I-01",
+          "JA-SCRIPT-HA-01",
+          "JA-SCRIPT-E-01"
+        ]
       }
     },
     {
@@ -20,12 +28,23 @@
       "title": "A Daytime Greeting, One Sign at a Time",
       "label": "ch:ja-daytime-greeting",
       "canDo": "I can write the five distinct signs in こんにちは, read them in order, and remember why final は is pronounced wa.",
-      "spineNodes": ["SPINE-MEET-GREET"],
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
       "payoff": {
         "lesson": "JA-C01-konnichiwa",
         "kind": "dialogue",
         "summary": "A one-line daytime greeting whose five signs were each taught before the learner reads it.",
-        "assesses": ["JA-LEX-KONNICHIWA", "JA-PARTICLE-WA-SPELLING", "JA-SCRIPT-KONNICHIWA-READ-01", "JA-SCRIPT-KO-01", "JA-SCRIPT-N-01", "JA-SCRIPT-NI-01", "JA-SCRIPT-CHI-01", "JA-SCRIPT-WA-01"]
+        "assesses": [
+          "JA-LEX-KONNICHIWA",
+          "JA-PARTICLE-WA-SPELLING",
+          "JA-SCRIPT-KONNICHIWA-READ-01",
+          "JA-SCRIPT-KO-01",
+          "JA-SCRIPT-N-01",
+          "JA-SCRIPT-NI-01",
+          "JA-SCRIPT-CHI-01",
+          "JA-SCRIPT-WA-01"
+        ]
       }
     },
     {
@@ -33,12 +52,25 @@
       "title": "Plain Thanks, One Sign at a Time",
       "label": "ch:ja-plain-thanks",
       "canDo": "I can write and read ありがとう, build が with the dakuten, and say the five morae without swallowing the long final vowel.",
-      "spineNodes": ["SPINE-COURTESY-THANK"],
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
       "payoff": {
         "lesson": "JA-C01-arigatou",
         "kind": "dialogue",
         "summary": "A plain thank-you read only after every distinct hiragana sign and the dakuten have their own small step.",
-        "assesses": ["JA-LEX-ARIGATOU", "JA-SCRIPT-DAKUTEN", "JA-ETYMON-ARIGATASHI", "JA-SCRIPT-ARIGATOU-READ-01", "JA-SCRIPT-A-01", "JA-SCRIPT-RI-01", "JA-SCRIPT-KA-01", "JA-SCRIPT-DAKUTEN-01", "JA-SCRIPT-TO-01", "JA-SCRIPT-U-01"]
+        "assesses": [
+          "JA-LEX-ARIGATOU",
+          "JA-SCRIPT-DAKUTEN",
+          "JA-ETYMON-ARIGATASHI",
+          "JA-SCRIPT-ARIGATOU-READ-01",
+          "JA-SCRIPT-A-01",
+          "JA-SCRIPT-RI-01",
+          "JA-SCRIPT-KA-01",
+          "JA-SCRIPT-DAKUTEN-01",
+          "JA-SCRIPT-TO-01",
+          "JA-SCRIPT-U-01"
+        ]
       }
     },
     {
@@ -46,12 +78,18 @@
       "title": "Polite Thanks, Three More Signs",
       "label": "ch:ja-polite-thanks",
       "canDo": "I can add ございます to a known thank-you, read every sign, and choose the polite form for someone outside my close circle.",
-      "spineNodes": ["SPINE-COURTESY-THANK"],
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
       "payoff": {
         "lesson": "JA-C03-practice",
         "kind": "dialogue",
         "summary": "A short casual-versus-polite choice with every sign taught and the register decision checked independently.",
-        "assesses": ["JA-LEX-ARIGATOU-GOZAIMASU", "JA-REGISTER-TEINEIGO", "JA-SCRIPT-GOZAIMASU-READ-01"]
+        "assesses": [
+          "JA-LEX-ARIGATOU-GOZAIMASU",
+          "JA-REGISTER-TEINEIGO",
+          "JA-SCRIPT-GOZAIMASU-READ-01"
+        ]
       }
     },
     {
@@ -59,12 +97,20 @@
       "title": "Nihongo, Built in Small Blocks",
       "label": "ch:ja-nihongo-kanji",
       "canDo": "I can write 日 and 本, assemble 語 from three practised components, and read 日本語 as nihongo.",
-      "spineNodes": ["SPINE-MEET-GREET"],
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
       "payoff": {
         "lesson": "JA-C01-nihongo",
         "kind": "reading",
         "summary": "Three kanji read as one known word after the simple signs and the complex sign's components were taught separately.",
-        "assesses": ["JA-LEX-NIHONGO", "JA-SCRIPT-KANJI-READINGS", "JA-SCRIPT-KANJI-NICHI-01", "JA-SCRIPT-KANJI-HON-01", "JA-SCRIPT-KANJI-GO-01"]
+        "assesses": [
+          "JA-LEX-NIHONGO",
+          "JA-SCRIPT-KANJI-READINGS",
+          "JA-SCRIPT-KANJI-NICHI-01",
+          "JA-SCRIPT-KANJI-HON-01",
+          "JA-SCRIPT-KANJI-GO-01"
+        ]
       }
     },
     {
@@ -72,12 +118,20 @@
       "title": "Coffee in Katakana, Three Shapes",
       "label": "ch:ja-koohii-katakana",
       "canDo": "I can write コ, ー, and ヒ, read コーヒー as four morae, and explain that the long mark holds the preceding vowel.",
-      "spineNodes": ["SPINE-MEET-GREET"],
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
       "payoff": {
         "lesson": "JA-C01-koohii",
         "kind": "reading",
         "summary": "A borrowed word made from only three distinct katakana shapes, each taught before the full word appears.",
-        "assesses": ["JA-LEX-KOOHII", "JA-SCRIPT-KATAKANA-KO-01", "JA-SCRIPT-KATAKANA-LONG-MARK-01", "JA-SCRIPT-KATAKANA-HI-01", "JA-SCRIPT-CHOUON"]
+        "assesses": [
+          "JA-LEX-KOOHII",
+          "JA-SCRIPT-KATAKANA-KO-01",
+          "JA-SCRIPT-KATAKANA-LONG-MARK-01",
+          "JA-SCRIPT-KATAKANA-HI-01",
+          "JA-SCRIPT-CHOUON"
+        ]
       }
     },
     {
@@ -85,12 +139,23 @@
       "title": "The Doorway Exchange",
       "label": "ch:ja-doorway-exchange",
       "canDo": "I can greet, name the language, answer yes or no, and thank someone politely while listening, speaking, reading, and writing independently.",
-      "spineNodes": ["SPINE-RESPOND-BASIC", "SPINE-MEET-GREET", "SPINE-COURTESY-THANK"],
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC",
+        "SPINE-MEET-GREET",
+        "SPINE-COURTESY-THANK"
+      ],
       "payoff": {
         "lesson": "JA-C01-practice",
         "kind": "dialogue",
         "summary": "A six-line doorway exchange using only words and signs already taught in the preceding six chapters.",
-        "assesses": ["JA-LEX-KONNICHIWA", "JA-LEX-NIHONGO", "JA-LEX-HAI", "JA-LEX-IIE", "JA-LEX-ARIGATOU-GOZAIMASU", "JA-DIALOGUE-DOORWAY"]
+        "assesses": [
+          "JA-LEX-KONNICHIWA",
+          "JA-LEX-NIHONGO",
+          "JA-LEX-HAI",
+          "JA-LEX-IIE",
+          "JA-LEX-ARIGATOU-GOZAIMASU",
+          "JA-DIALOGUE-DOORWAY"
+        ]
       }
     },
     {
@@ -98,12 +163,22 @@
       "title": "One Goodbye, Sign by Sign",
       "label": "ch:ja-sayounara",
       "canDo": "I can hear and say sayōnara on five morae, write its three new hiragana signs, and read and write the complete farewell independently.",
-      "spineNodes": ["SPINE-TAKE-LEAVE"],
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
       "payoff": {
         "lesson": "JA-C08-sayounara",
         "kind": "dialogue",
         "summary": "A context-dependent farewell whose sound and meaning arrive before three separately taught new signs and whose payoff scores all four skills.",
-        "assesses": ["JA-LEX-SAYOUNARA", "JA-SAYOUNARA-HEARD-01", "JA-SCRIPT-YO-01", "JA-SCRIPT-NA-01", "JA-SCRIPT-RA-01", "JA-SCRIPT-SAYOUNARA-READ-01", "JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01"]
+        "assesses": [
+          "JA-LEX-SAYOUNARA",
+          "JA-SAYOUNARA-HEARD-01",
+          "JA-SCRIPT-YO-01",
+          "JA-SCRIPT-NA-01",
+          "JA-SCRIPT-RA-01",
+          "JA-SCRIPT-SAYOUNARA-READ-01",
+          "JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01"
+        ]
       }
     },
     {
@@ -111,12 +186,27 @@
       "title": "One More Time, Please",
       "label": "ch:ja-repeat-please",
       "canDo": "I can say that I do not understand, politely ask for one repetition, read and write the earned block もういちど, and write five new hiragana forms without a chart.",
-      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
       "payoff": {
         "lesson": "JA-C09-mou-ichido-onegaishimasu",
         "kind": "dialogue",
         "summary": "A spoken repair assembled from independently learned pieces, with decoding and dictation limited to the signs the learner has actually earned.",
-        "assesses": ["JA-LEX-SUMIMASEN", "JA-LEX-YOKU", "JA-LEX-WAKARIMASEN", "JA-LEX-MOU", "JA-LEX-ICHIDO", "JA-LEX-ONEGAI-SHIMASU", "JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU", "JA-SCRIPT-MI-01", "JA-SCRIPT-ME-01", "JA-SCRIPT-KU-01", "JA-SCRIPT-DO-01", "JA-SCRIPT-MO-01"]
+        "assesses": [
+          "JA-LEX-SUMIMASEN",
+          "JA-LEX-YOKU",
+          "JA-LEX-WAKARIMASEN",
+          "JA-LEX-MOU",
+          "JA-LEX-ICHIDO",
+          "JA-LEX-ONEGAI-SHIMASU",
+          "JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU",
+          "JA-SCRIPT-MI-01",
+          "JA-SCRIPT-ME-01",
+          "JA-SCRIPT-KU-01",
+          "JA-SCRIPT-DO-01",
+          "JA-SCRIPT-MO-01"
+        ]
       }
     },
     {
@@ -124,12 +214,27 @@
       "title": "A Little More Slowly",
       "label": "ch:ja-slower-please",
       "canDo": "I can ask for slower speech, close the repair with wakarimashita, read and write the repair lines earned in the previous chapter, and write five new hiragana signs.",
-      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
       "payoff": {
         "lesson": "JA-C10-slower-please",
         "kind": "dialogue",
         "summary": "A second repair strategy assembled from seven tiny lexical steps while independent reading and writing stay inside the learner's earned script boundary.",
-        "assesses": ["JA-LEX-SUKOSHI", "JA-LEX-YUKKURI", "JA-LEX-ITTE-KUDASAI", "JA-LEX-MOU-SUKOSHI", "JA-LEX-WAKARIMASHITA", "JA-LEX-KOKO", "JA-LEX-SLOWER-PLEASE", "JA-SCRIPT-SE-01", "JA-SCRIPT-O-01", "JA-SCRIPT-NE-01", "JA-SCRIPT-SHI-01", "JA-SCRIPT-YU-01"]
+        "assesses": [
+          "JA-LEX-SUKOSHI",
+          "JA-LEX-YUKKURI",
+          "JA-LEX-ITTE-KUDASAI",
+          "JA-LEX-MOU-SUKOSHI",
+          "JA-LEX-WAKARIMASHITA",
+          "JA-LEX-KOKO",
+          "JA-LEX-SLOWER-PLEASE",
+          "JA-SCRIPT-SE-01",
+          "JA-SCRIPT-O-01",
+          "JA-SCRIPT-NE-01",
+          "JA-SCRIPT-SHI-01",
+          "JA-SCRIPT-YU-01"
+        ]
       }
     },
     {
@@ -137,12 +242,27 @@
       "title": "Seven Body Words, No New Guessing",
       "label": "ch:ja-body-seven",
       "canDo": "I can read, write, hear, and say seven basic body words, and I can decode the repair signs that were previously only sound-first exposure.",
-      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
       "payoff": {
         "lesson": "JA-C11-body-map",
         "kind": "reading",
         "summary": "Seven concrete body labels built only from earned hiragana after four tiny lessons close every outstanding repair-script exposure.",
-        "assesses": ["JA-SCRIPT-SMALL-TSU-01", "JA-SCRIPT-TE-01", "JA-SCRIPT-TA-01", "JA-SCRIPT-DA-01", "JA-LEX-TE-HAND", "JA-LEX-MIMI", "JA-LEX-KUCHI", "JA-LEX-ASHI", "JA-LEX-HANA-NOSE", "JA-LEX-KAO", "JA-LEX-ME-EYE", "JA-PERFORMANCE-BODY-SEVEN-01"]
+        "assesses": [
+          "JA-SCRIPT-SMALL-TSU-01",
+          "JA-SCRIPT-TE-01",
+          "JA-SCRIPT-TA-01",
+          "JA-SCRIPT-DA-01",
+          "JA-LEX-TE-HAND",
+          "JA-LEX-MIMI",
+          "JA-LEX-KUCHI",
+          "JA-LEX-ASHI",
+          "JA-LEX-HANA-NOSE",
+          "JA-LEX-KAO",
+          "JA-LEX-ME-EYE",
+          "JA-PERFORMANCE-BODY-SEVEN-01"
+        ]
       }
     },
     {
@@ -150,12 +270,23 @@
       "title": "Seven More Body Words, Spaced on Purpose",
       "label": "ch:ja-body-seven-more",
       "canDo": "I can read, write, hear, and say seven more body words while retrieving older script, greeting, farewell, and repair knowledge at expanding intervals.",
-      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
       "payoff": {
         "lesson": "JA-C12-body-map-two",
         "kind": "reading",
         "summary": "Seven fully decodable body labels interleaved with measured R3 and R4 retrieval rather than taught as a single topical list.",
-        "assesses": ["JA-LEX-ATAMA", "JA-LEX-KAMI-HAIR", "JA-LEX-HA-TOOTH", "JA-LEX-KATA-SHOULDER", "JA-LEX-ONAKA", "JA-LEX-SENAKA", "JA-LEX-KOSHI", "JA-PERFORMANCE-BODY-FOURTEEN-01"]
+        "assesses": [
+          "JA-LEX-ATAMA",
+          "JA-LEX-KAMI-HAIR",
+          "JA-LEX-HA-TOOTH",
+          "JA-LEX-KATA-SHOULDER",
+          "JA-LEX-ONAKA",
+          "JA-LEX-SENAKA",
+          "JA-LEX-KOSHI",
+          "JA-PERFORMANCE-BODY-FOURTEEN-01"
+        ]
       }
     },
     {
@@ -163,12 +294,25 @@
       "title": "Nine Family Words Through One New Kana",
       "label": "ch:ja-family-nine",
       "canDo": "I can hear, say, read, and write nine immediate-family words, with listening, speaking, reading, and writing scored independently.",
-      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
       "payoff": {
         "lesson": "JA-C13-family-check",
         "kind": "dialogue",
         "summary": "Nine official Irodori Starter family words built from earned hiragana plus one separately traced, copied, and recalled full-size つ.",
-        "assesses": ["JA-LEX-CHICHI", "JA-LEX-HAHA", "JA-LEX-ANI", "JA-LEX-ANE", "JA-LEX-OTOUTO", "JA-LEX-IMOUTO", "JA-LEX-OTTO", "JA-LEX-TSUMA", "JA-LEX-KODOMO", "JA-PERFORMANCE-FAMILY-NINE-01"]
+        "assesses": [
+          "JA-LEX-CHICHI",
+          "JA-LEX-HAHA",
+          "JA-LEX-ANI",
+          "JA-LEX-ANE",
+          "JA-LEX-OTOUTO",
+          "JA-LEX-IMOUTO",
+          "JA-LEX-OTTO",
+          "JA-LEX-TSUMA",
+          "JA-LEX-KODOMO",
+          "JA-PERFORMANCE-FAMILY-NINE-01"
+        ]
       }
     }
   ]
