@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-NOS, RU-ETYMON-NOS-NOSE]
 introduces:
-  knowledge: [RU-LEX-ROT, RU-ETYMON-ROT-DIG]
+ knowledge: [RU-LEX-ROT, RU-ETYMON-ROT-DIG]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-NOS, RU-ETYMON-NOS-NOSE, RU-LEX-ROT, RU-ETYMON-ROT-DIG, RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-NOUN-GENDER-ENDING]
 skills: [listening, speaking, reading]

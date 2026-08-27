@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-GRAMMAR-TWO-VERB-FAMILIES]
 introduces:
-  knowledge: [RU-LEX-IDTI, RU-GRAMMAR-MOTION-ONE-WAY-VS-HABITUAL, RU-ETYMON-IDTI-GO-WENT]
+ knowledge: [RU-LEX-IDTI, RU-GRAMMAR-MOTION-ONE-WAY-VS-HABITUAL, RU-ETYMON-IDTI-GO-WENT]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-LEX-IDTI, RU-GRAMMAR-MOTION-ONE-WAY-VS-HABITUAL, RU-ETYMON-IDTI-GO-WENT]
 skills: [listening, speaking, reading]

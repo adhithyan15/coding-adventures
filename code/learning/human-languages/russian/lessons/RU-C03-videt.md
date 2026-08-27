@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-YA, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-LEX-GOVORIT]
 introduces:
-  knowledge: [RU-LEX-VIDET, RU-GRAMMAR-CONSONANT-SWAP-I-FORM, RU-ETYMON-VIDET-WIT]
+ knowledge: [RU-LEX-VIDET, RU-GRAMMAR-CONSONANT-SWAP-I-FORM, RU-ETYMON-VIDET-WIT]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-YA, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-LEX-VIDET, RU-GRAMMAR-CONSONANT-SWAP-I-FORM, RU-ETYMON-VIDET-WIT]
 skills: [listening, speaking, reading]

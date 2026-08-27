@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Heart",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1fd0b7f471419796",
+  "sourceHash": "fnv1a64:6144b94c8716f560",
   "lessons": [
     {
       "id": "RU-C10-serdtse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:31585d4ac754438a",
+      "sourceHash": "fnv1a64:08b4fd1fea99a80f",
       "notice": {
         "modality": "sight",
         "needs": [

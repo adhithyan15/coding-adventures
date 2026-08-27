@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-SEMYA]
 introduces:
-  knowledge: [RU-LEX-UKHO, RU-ETYMON-UKHO-EAR]
+ knowledge: [RU-LEX-UKHO, RU-ETYMON-UKHO-EAR]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-SEMYA, RU-ETYMON-SEMYA-HOME, RU-LEX-UKHO, RU-ETYMON-UKHO-EAR, RU-GRAMMAR-NOUN-GENDER-ENDING]
 skills: [listening, speaking, reading]

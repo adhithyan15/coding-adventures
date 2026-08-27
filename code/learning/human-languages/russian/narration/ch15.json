@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Two Letters You Already Knew, and Six You Did Not",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cd73455eb4b6fe7a",
+  "sourceHash": "fnv1a64:65831a88800279b4",
   "lessons": [
     {
       "id": "RU-W07-a",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9b3f03f7ef5246ea",
+      "sourceHash": "fnv1a64:94fcc50e133f8ba3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -150,7 +150,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:adc50bdfdfa7468e",
+      "sourceHash": "fnv1a64:621078e6177a2c81",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -316,7 +316,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d9ae162c44116b57",
+      "sourceHash": "fnv1a64:177c93cdc58b7cf0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -447,7 +447,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:444622f1294f8e8e",
+      "sourceHash": "fnv1a64:e0f1ff4afe022057",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -586,7 +586,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9bc90e53af46a44e",
+      "sourceHash": "fnv1a64:31f572795749f679",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -713,7 +713,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1ca4f9d2ec9421d5",
+      "sourceHash": "fnv1a64:1cf742732c0a3bf6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -849,7 +849,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8aff4e98bcba2ce4",
+      "sourceHash": "fnv1a64:4ca251cf4a108a63",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -976,7 +976,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3054826dce87f1ac",
+      "sourceHash": "fnv1a64:a13fef99a566fbc1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1122,7 +1122,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cf03ed58ffee7d69",
+      "sourceHash": "fnv1a64:a6531989a118a064",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -17,7 +17,10 @@ duration:
 requires:
   knowledge: [RU-LEX-TY-VY, RU-GRAMMAR-TY-VY-REGISTER]
 introduces:
-  knowledge: [RU-PRAGMATICS-VY-POLITENESS, RU-COMPARISON-POLITE-PRONOUNS]
+ knowledge: [RU-PRAGMATICS-VY-POLITENESS, RU-COMPARISON-POLITE-PRONOUNS]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [RU-CULTURE-VY-SOCIAL-DEFAULT-01]
 practises:
   knowledge: [RU-LEX-TY-VY, RU-GRAMMAR-TY-VY-REGISTER, RU-PRAGMATICS-VY-POLITENESS, RU-COMPARISON-POLITE-PRONOUNS]
 skills: [listening, speaking, reading]

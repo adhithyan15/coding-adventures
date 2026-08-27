@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-OTETS, RU-ETYMON-OTETS-ATTA]
 introduces:
-  knowledge: [RU-LEX-MOLOKO, RU-ETYMON-MOLOKO-MILK]
+ knowledge: [RU-LEX-MOLOKO, RU-ETYMON-MOLOKO-MILK]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-OTETS, RU-LEX-MAT, RU-GRAMMAR-NATURAL-GENDER-OVERRIDE, RU-LEX-VODA, RU-ETYMON-VODA-WATER, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-GRAMMAR-REQUEST-PATTERN, RU-LEX-MOLOKO, RU-ETYMON-MOLOKO-MILK]
 skills: [listening, speaking, reading]

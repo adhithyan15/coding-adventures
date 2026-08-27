@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [RU-LEX-VODA, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-ETYMON-VODA-WATER]
+ knowledge: [RU-LEX-VODA, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-ETYMON-VODA-WATER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-VODA, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-ETYMON-VODA-WATER]
 skills: [listening, speaking, reading]

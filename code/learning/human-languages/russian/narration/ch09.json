@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Eyes, Ears, Mouth, and Nose",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4b73bd4181d0e091",
+  "sourceHash": "fnv1a64:ef2ddf786202dd60",
   "lessons": [
     {
       "id": "RU-C09-ukho",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:313c5e254e1937a9",
+      "sourceHash": "fnv1a64:c21a790e35941454",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd46d58f9aa50ed8",
+      "sourceHash": "fnv1a64:6d8d5087eb6b3f31",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a59186369f6f6b19",
+      "sourceHash": "fnv1a64:92f72b9789882a8c",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fdb4baed4e1119d",
+      "sourceHash": "fnv1a64:4e1f88c710733afc",
       "notice": null,
       "blocks": [
         {

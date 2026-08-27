@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-SOK, RU-ETYMON-SOK-NO-COUSIN]
 introduces:
-  knowledge: [RU-LEX-SUP, RU-ETYMON-SUP-FRENCH-LOAN]
+ knowledge: [RU-LEX-SUP, RU-ETYMON-SUP-FRENCH-LOAN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-MOLOKO, RU-LEX-SYR, RU-LEX-SOK, RU-ETYMON-SOK-NO-COUSIN, RU-LEX-SUP, RU-ETYMON-SUP-FRENCH-LOAN, RU-COMPARISON-NAMING-QUESTION-FRAMES, RU-SCRIPT-YA-NOT-R]
 skills: [listening, speaking, reading]

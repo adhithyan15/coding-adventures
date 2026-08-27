@@ -17,7 +17,10 @@ duration:
 requires:
   knowledge: [RU-LEX-PRIVET]
 introduces:
-  knowledge: [RU-SCRIPT-V-01, RU-SCRIPT-R-01]
+ knowledge: [RU-SCRIPT-V-01, RU-SCRIPT-R-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-PRIVET, RU-SCRIPT-R-01, RU-SCRIPT-V-01]
 skills: [reading, writing]

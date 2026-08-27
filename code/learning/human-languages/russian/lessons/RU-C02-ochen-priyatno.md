@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-KAK-VAS-ZOVUT, RU-LEX-MENYA-ZOVUT]
 introduces:
-  knowledge: [RU-LEX-OCHEN-PRIYATNO, RU-ETYMON-PRIYATNO-FRIEND]
+ knowledge: [RU-LEX-OCHEN-PRIYATNO, RU-ETYMON-PRIYATNO-FRIEND]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-OCHEN-PRIYATNO, RU-ETYMON-PRIYATNO-FRIEND, RU-LEX-KAK-VAS-ZOVUT, RU-LEX-MENYA-ZOVUT]
 skills: [listening, speaking, reading]

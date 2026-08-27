@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-YA]
 introduces:
-  knowledge: [RU-LEX-BYT, RU-GRAMMAR-ZERO-COPULA, RU-ETYMON-BYT-BE]
+ knowledge: [RU-LEX-BYT, RU-GRAMMAR-ZERO-COPULA, RU-ETYMON-BYT-BE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-YA, RU-LEX-BYT, RU-GRAMMAR-ZERO-COPULA, RU-ETYMON-BYT-BE]
 skills: [listening, speaking, reading]

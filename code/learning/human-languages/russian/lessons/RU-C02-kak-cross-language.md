@@ -17,7 +17,10 @@ duration:
 requires:
   knowledge: [RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-NAMING-HOW-FRAME]
 introduces:
-  knowledge: [RU-COMPARISON-NAMING-QUESTION-FRAMES]
+ knowledge: [RU-COMPARISON-NAMING-QUESTION-FRAMES]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-NAMING-HOW-FRAME, RU-COMPARISON-NAMING-QUESTION-FRAMES]
 skills: [listening, speaking, reading]

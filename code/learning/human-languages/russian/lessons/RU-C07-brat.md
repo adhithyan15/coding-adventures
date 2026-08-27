@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-PODRUGA, RU-LEX-BRAT, RU-ETYMON-BRAT-BEAR]
 introduces:
-  knowledge: [RU-LEX-BRAT-NOUN, RU-ETYMON-BRAT-BROTHER]
+ knowledge: [RU-LEX-BRAT-NOUN, RU-ETYMON-BRAT-BROTHER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-PODRUGA, RU-GRAMMAR-FEMININE-SUFFIX-A, RU-LEX-BRAT-NOUN, RU-ETYMON-BRAT-BROTHER, RU-LEX-BRAT, RU-ETYMON-BRAT-BEAR, RU-GRAMMAR-SUPPLETIVE-ASPECT-PAIR, RU-GRAMMAR-NOUN-GENDER-ENDING]
 skills: [listening, speaking, reading]

@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-MOLOKO, RU-ETYMON-MOLOKO-MILK]
 introduces:
-  knowledge: [RU-LEX-SYR, RU-ETYMON-SYR-SOUR]
+ knowledge: [RU-LEX-SYR, RU-ETYMON-SYR-SOUR]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-MOLOKO, RU-ETYMON-MOLOKO-MILK, RU-LEX-KHLEB, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-LEX-SYR, RU-ETYMON-SYR-SOUR]
 skills: [listening, speaking, reading]

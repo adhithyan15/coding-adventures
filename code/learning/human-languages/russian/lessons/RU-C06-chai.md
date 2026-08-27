@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-KOFE, RU-ETYMON-KOFE-ROUTE]
 introduces:
-  knowledge: [RU-LEX-CHAI, RU-ETYMON-CHAI-ROUTE, RU-GRAMMAR-REQUEST-PATTERN]
+ knowledge: [RU-LEX-CHAI, RU-ETYMON-CHAI-ROUTE, RU-GRAMMAR-REQUEST-PATTERN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-KOFE, RU-ETYMON-KOFE-ROUTE, RU-LEX-CHAI, RU-ETYMON-CHAI-ROUTE, RU-GRAMMAR-REQUEST-PATTERN, RU-LEX-VODA, RU-GRAMMAR-NOUN-GENDER-ENDING]
 skills: [listening, speaking, reading]

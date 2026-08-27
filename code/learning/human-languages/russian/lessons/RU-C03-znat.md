@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U]
 introduces:
-  knowledge: [RU-LEX-ZNAT, RU-GRAMMAR-NE-NEGATION, RU-ETYMON-ZNAT-KNOW]
+ knowledge: [RU-LEX-ZNAT, RU-GRAMMAR-NE-NEGATION, RU-ETYMON-ZNAT-KNOW]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-LEX-ZNAT, RU-GRAMMAR-NE-NEGATION, RU-ETYMON-ZNAT-KNOW]
 skills: [listening, speaking, reading]

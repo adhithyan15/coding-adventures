@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [RU-LEX-PRIVET]
+ knowledge: [RU-LEX-PRIVET]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [RU-CULTURE-PRIVET-INFORMAL-01]
 practises:
   knowledge: [RU-LEX-PRIVET]
 skills: [listening, speaking, reading]

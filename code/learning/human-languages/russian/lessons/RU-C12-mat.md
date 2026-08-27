@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-PAPA, RU-GRAMMAR-NATURAL-GENDER-OVERRIDE]
 introduces:
-  knowledge: [RU-LEX-MAT, RU-ETYMON-MAT-MOTHER]
+ knowledge: [RU-LEX-MAT, RU-ETYMON-MAT-MOTHER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [RU-CULTURE-MAT-FORMAL-01]
 practises:
   knowledge: [RU-LEX-MAMA, RU-LEX-PAPA, RU-GRAMMAR-NATURAL-GENDER-OVERRIDE, RU-LEX-MAT, RU-ETYMON-MAT-MOTHER]
 skills: [listening, speaking, reading]

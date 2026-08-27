@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-YA]
 introduces:
-  knowledge: [RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL, RU-GRAMMAR-MENYA-OBJECT-CASE]
+ knowledge: [RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL, RU-GRAMMAR-MENYA-OBJECT-CASE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-YA, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL, RU-GRAMMAR-MENYA-OBJECT-CASE]
 skills: [listening, speaking, reading]

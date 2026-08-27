@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-YA]
 introduces:
-  knowledge: [RU-LEX-TY-VY, RU-GRAMMAR-TY-VY-REGISTER, RU-ETYMON-TY-THOU]
+ knowledge: [RU-LEX-TY-VY, RU-GRAMMAR-TY-VY-REGISTER, RU-ETYMON-TY-THOU]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-YA, RU-LEX-TY-VY, RU-GRAMMAR-TY-VY-REGISTER, RU-ETYMON-TY-THOU]
 skills: [listening, speaking, reading]

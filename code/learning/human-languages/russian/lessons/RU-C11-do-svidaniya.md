@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-SERDTSE, RU-ETYMON-SERDTSE-HEART]
 introduces:
-  knowledge: [RU-LEX-DO-SVIDANIYA, RU-ETYMON-SVIDANIYA-VIDET, RU-GRAMMAR-DO-GENITIVE]
+ knowledge: [RU-LEX-DO-SVIDANIYA, RU-ETYMON-SVIDANIYA-VIDET, RU-GRAMMAR-DO-GENITIVE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-SERDTSE, RU-ETYMON-SERDTSE-HEART, RU-LEX-VIDET, RU-ETYMON-VIDET-WIT, RU-LEX-DO-SVIDANIYA, RU-ETYMON-SVIDANIYA-VIDET, RU-GRAMMAR-DO-GENITIVE]
 skills: [listening, speaking, reading]

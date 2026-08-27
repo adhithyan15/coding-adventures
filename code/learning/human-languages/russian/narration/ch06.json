@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Water, Coffee, Tea, and Bread",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9784e03d79bcfd67",
+  "sourceHash": "fnv1a64:edd9dcc2df8d21f2",
   "lessons": [
     {
       "id": "RU-C06-voda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:407dbe74f104b11f",
+      "sourceHash": "fnv1a64:561e7ad3095037aa",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +179,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:87a38f5a0daf9d98",
+      "sourceHash": "fnv1a64:49823f761829320f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -350,7 +350,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:926af81bb2af0456",
+      "sourceHash": "fnv1a64:6c4f660af4609741",
       "notice": null,
       "blocks": [
         {
@@ -495,7 +495,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:67e68f03856c108e",
+      "sourceHash": "fnv1a64:7a7e393e0212209b",
       "notice": {
         "modality": "sight",
         "needs": [
