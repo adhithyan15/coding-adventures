@@ -129,6 +129,7 @@ import { createHash } from "node:crypto";
 import { lstatSync, readFileSync, readdirSync } from "node:fs";
 import { basename, join } from "node:path";
 import { reportableFilename } from "./constants.js";
+import { LEGACY_DOC_SHARD_SHA256 } from "./doc-shard-legacy.js";
 
 /** The suffix that turns a document path into its shard directory. */
 export const DOC_SHARD_DIR_SUFFIX = ".d";
@@ -145,6 +146,33 @@ export const DOC_SHARD_DIR_SUFFIX = ".d";
  * descending for newest-first documents and the preamble must lead either way.
  */
 export const DOC_META_SHARD = "_meta.md";
+
+/**
+ * The only valid section-shard basename.
+ *
+ * The fixed-width positive rank makes code-unit order chronological, the
+ * uppercase ASCII slug keeps the directory portable and readable, and the
+ * lowercase eight-hex digest disambiguates parallel authors. `_meta.md` is the
+ * sole reserved metadata filename and is deliberately handled separately.
+ */
+const DOC_SECTION_SHARD_NAME = /^([0-9]{5})-([A-Z0-9]+(?:-[A-Z0-9]+)*)-([0-9a-f]{8})\.md$/;
+
+/** True only for `_meta.md` or an HL22 rank/slug/digest section basename. */
+export function isValidDocShardName(name: string): boolean {
+  if (name === DOC_META_SHARD) return true;
+  const match = DOC_SECTION_SHARD_NAME.exec(name);
+  return match !== null && Number(match[1]) > 0;
+}
+
+/** The pinned digest for one pre-HL22 shard, or undefined for every new name. */
+function legacyDocShardSha256(plan: DocShardPlan, name: string): string | undefined {
+  return LEGACY_DOC_SHARD_SHA256[plan.path]?.[name];
+}
+
+/** Strict names plus the exact, content-pinned pre-gate corpus. */
+function isRecognizedDocShardName(plan: DocShardPlan, name: string): boolean {
+  return isValidDocShardName(name) || legacyDocShardSha256(plan, name) !== undefined;
+}
 
 /** How one Markdown document splits. */
 export interface DocShardPlan {
@@ -315,7 +343,7 @@ export function isDocSharded(documentPath: string): boolean {
  * silence, and a shard that disappears without a word is worse than one that
  * fails — the result still looks like a complete document.
  */
-export function listDocShardNames(documentPath: string): string[] {
+export function listDocShardNames(documentPath: string, plan: DocShardPlan): string[] {
   const dir = docShardDirectoryFor(documentPath);
   const entries = readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
@@ -334,10 +362,20 @@ export function listDocShardNames(documentPath: string): string[] {
       );
     }
   }
-  return entries
+  const names = entries
     .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
-    .map((entry) => entry.name)
-    .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+    .map((entry) => entry.name);
+  for (const name of names) {
+    if (!isRecognizedDocShardName(plan, name)) {
+      throw new Error(
+        `doc shard ${reportableFilename(name)} in '${dir}': malformed filename — ` +
+          `expected '${DOC_META_SHARD}' or a positive five-digit rank, uppercase ASCII slug, ` +
+          `and lowercase eight-hex heading digest (for example ` +
+          `'00010-ADDED-WRITING-PRACTICE-1a2b3c4d.md')`,
+      );
+    }
+  }
+  return names.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
 }
 
 /**
@@ -375,10 +413,10 @@ export function readDocumentFile(path: string): string {
 }
 
 /** Read every shard body of `X.d/`, keyed by filename, or `null` if not sharded. */
-export function readDocShards(documentPath: string): Map<string, string> | null {
+export function readDocShards(documentPath: string, plan: DocShardPlan): Map<string, string> | null {
   if (!isDocSharded(documentPath)) return null;
   const dir = docShardDirectoryFor(documentPath);
-  const names = listDocShardNames(documentPath);
+  const names = listDocShardNames(documentPath, plan);
   if (names.length === 0) {
     // "No backlog on disk" and "a backlog with no entries" are opposite facts,
     // and a loader that returns the second when it means the first hands the
@@ -394,8 +432,20 @@ export function readDocShards(documentPath: string): Map<string, string> | null 
   for (const name of names) {
     const path = join(dir, name);
     try {
-      out.set(name, readFileSync(path, "utf8"));
+      const body = readFileSync(path, "utf8");
+      const legacyDigest = legacyDocShardSha256(plan, name);
+      if (legacyDigest !== undefined) {
+        const actualDigest = createHash("sha256").update(body, "utf8").digest("hex");
+        if (actualDigest !== legacyDigest) {
+          throw new Error(
+            `doc shard ${reportableFilename(name)} in '${dir}': grandfathered content changed — ` +
+              `append a strict rank/slug/digest shard instead of rewriting history`,
+          );
+        }
+      }
+      out.set(name, body);
     } catch (cause) {
+      if (cause instanceof Error && cause.message.startsWith("doc shard ")) throw cause;
       // Same class as the symlink refusal above, lower reachability: getting
       // here needs a file that `readdirSync` listed and `readFileSync` then
       // could not open. Sanitised anyway -- the reachability argument is the
@@ -576,9 +626,6 @@ const WINDOWS_RESERVED = new Set([
   "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
 ]);
 
-/** Filenames that are safe on every filesystem this repo is cloned onto. */
-const SAFE_SHARD_NAME = /^[0-9]{5}-[A-Z0-9][A-Z0-9-]*-[0-9a-f]{8}\.md$/;
-
 /**
  * The shard files a document would produce, as a filename -> contents map.
  *
@@ -603,7 +650,7 @@ export function docShardContents(text: string, plan: DocShardPlan): Map<string, 
   sections.forEach((section, index) => {
     const rank = plan.newestFirst ? sections.length - index : index + 1;
     const name = docShardFilename(rank * ORDINAL_STRIDE, docSlug(section.heading), headingDigest(section.heading));
-    if (!SAFE_SHARD_NAME.test(name)) {
+    if (!isValidDocShardName(name) || name === DOC_META_SHARD) {
       throw new Error(`${plan.path}: section ${JSON.stringify(section.heading)} produced unsafe shard name '${name}'`);
     }
     if (WINDOWS_RESERVED.has(name.split(".")[0].toUpperCase())) {

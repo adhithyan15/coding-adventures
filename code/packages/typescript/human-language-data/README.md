@@ -49,6 +49,23 @@ npm run check:shards
 
 CI rebuilds every shard set in memory and rejects a resurrected aggregate.
 
+Shared Markdown documents use `<document>.d/` and one strict, locale-free
+filename grammar. `_meta.md` is the only metadata shard. Every section shard is
+`RRRRR-SLUG-dddddddd.md`: a positive five-digit rank, one or more uppercase
+ASCII letter/digit slug components separated by single hyphens, and the first
+eight lowercase hexadecimal digits of SHA-256 over the raw heading line. Two
+parallel fragments may deliberately share a rank; their slug and heading digest
+make the full names distinct and code-unit sorting remains deterministic.
+`npm run check:doc-shards` rejects every other new `*.md` basename before
+rendering.
+
+Eighty-five append-only history fragments predate that grammar. Their exact
+document path, basename, and full-content SHA-256 are pinned in
+`src/doc-shard-legacy.ts`; they render in place exactly once. The compatibility
+set is closed: an unknown legacy-shaped addition or any edit to a grandfathered
+body fails the check. Do not rename or reshard those files. Append a strict
+rank/slug/digest fragment instead.
+
 ## Usage
 
 ```ts
