@@ -9,9 +9,9 @@
     "ocamlformat": "0.27.0"
   },
   "actions": {
-    "checkout": "11d5960a326750d5838078e36cf38b85af677262",
+    "checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
     "setup_ocaml": "15d660006c1d3110d77c34b7faa3bddefe8b82f0",
-    "upload_artifact": "ea165f8d65b6e75b540449e92b4886f43607fa02"
+    "upload_artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
   },
   "opam_repository_commit": "ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff",
   "fixture_input_sha256": "522d91e95649b0c003d8478cdf320922a543dd097220e221b731f1cc6f382131",
