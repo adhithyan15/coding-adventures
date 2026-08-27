@@ -14,7 +14,7 @@ script closure: 646 lessons ask the reader to decode a glyph nobody taught them,
 exposure: 274 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1895 glyphs and makes 223 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 570 of 5573 atoms never revisited (10%); missed windows R1 1163, R2 4080, R3 4076, R4 2683
-forward references: 740 uses of material a later lesson teaches
+forward references: 636 uses of material a later lesson teaches
 writing stages: 13/23 tracks prove the cumulative pre-A1 ladder; 434 evidence blocks, 0 invalid; 596 missing (track, level, stage) pairs
 super-gentle ramp: 21/23 tracks carry detected or unmeasured debt; 119 named track/debt items
 writing ramp: 0 track(s) never practise writing; 6 start after lesson one
