@@ -2,11 +2,14 @@
   "name": "@coding-adventures/blog-site",
   "version": "0.1.0",
   "private": true,
-  "description": "The Coding Adventures blog — assembled from five Forme stages and deployed to /coding-adventures/blog/ on GitHub Pages.",
+  "description": "The Coding Adventures blog — assembled from four Forme stages and deployed to /coding-adventures/blog/ on GitHub Pages.",
   "type": "module",
   "scripts": {
+    "bootstrap": "node scripts/bootstrap.mjs",
     "build": "tsx build.ts",
-    "clean": "rm -rf dist"
+    "build:clean": "npm run bootstrap && npm run clean && npm run build",
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "test": "node --test scripts/bootstrap.test.mjs"
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",

@@ -634,6 +634,82 @@ const independentFehStrokes = (headLabel: string, bodyLabel: string): Stroke[] =
   },
 ];
 
+const independentQafStrokes = (
+  headLabel: string,
+  bodyLabel: string,
+  rightDotLabel: string,
+  leftDotLabel: string,
+): Stroke[] => [
+  {
+    segments: [
+      {
+        label: headLabel,
+        path: [
+          { x: 545, y: 160 },
+          { x: 520, y: 235 },
+          { x: 470, y: 285 },
+          { x: 410, y: 300 },
+          { x: 350, y: 270 },
+          { x: 305, y: 220 },
+          { x: 290, y: 165 },
+          { x: 305, y: 105 },
+          { x: 345, y: 55 },
+          { x: 405, y: 40 },
+          { x: 475, y: 55 },
+          { x: 525, y: 100 },
+          { x: 545, y: 160 },
+        ],
+      },
+      {
+        label: bodyLabel,
+        path: [
+          { x: 545, y: 160 },
+          { x: 575, y: 105 },
+          { x: 570, y: 35 },
+          { x: 545, y: -55 },
+          { x: 500, y: -130 },
+          { x: 430, y: -185 },
+          { x: 345, y: -220 },
+          { x: 260, y: -225 },
+          { x: 180, y: -205 },
+          { x: 120, y: -155 },
+          { x: 90, y: -95 },
+          { x: 90, y: -35 },
+          { x: 90, y: 35 },
+        ],
+      },
+    ],
+  },
+  {
+    segments: [
+      {
+        label: rightDotLabel,
+        path: [
+          { x: 475, y: 405 },
+          { x: 425, y: 457 },
+          { x: 475, y: 510 },
+          { x: 525, y: 457 },
+          { x: 475, y: 405 },
+        ],
+      },
+    ],
+  },
+  {
+    segments: [
+      {
+        label: leftDotLabel,
+        path: [
+          { x: 325, y: 390 },
+          { x: 275, y: 442 },
+          { x: 325, y: 495 },
+          { x: 375, y: 442 },
+          { x: 325, y: 390 },
+        ],
+      },
+    ],
+  },
+];
+
 const independentPehStrokes = (
   bowlLabel = "sweep the independent be-series bowl from right to left",
   leftDotLabel = "after one lift, place the lower-left dot nearer the main line",
@@ -11414,6 +11490,28 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ق"),
+  },
+  [ductusKey("perso-arabic", "ق")]: {
+    script: "perso-arabic",
+    glyph: "ق",
+    strokes: independentQafStrokes(
+      "loop counterclockwise around the small closed head",
+      "continue down and left through the deep bowl without lifting",
+      "lift once, then place the upper-right dot",
+      "lift again, then place the upper-left dot",
+    ),
+    source: persianAlphabetSource("ق"),
+  },
+  [ductusKey("urdu-nastaliq", "ق")]: {
+    script: "urdu-nastaliq",
+    glyph: "ق",
+    strokes: independentQafStrokes(
+      "loop clockwise around the rounded head above the main line",
+      "continue down and left through the deep bowl without lifting",
+      "after one lift, place the upper-right dot",
+      "after another lift, place the upper-left dot",
+    ),
+    source: urduAlphabetSource("ق"),
   },
   [ductusKey("arabic", "ك")]: {
     script: "arabic",

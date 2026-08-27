@@ -8,9 +8,9 @@
  *      `validateConfig`.  Throws `ConfigError` with a structured
  *      list of every violation.
  *
- *   2. **Build DAG** — kind-match consumes against produces from the
- *      most-recent compatible producer.  Throws an error if any
- *      consumer can't be wired.
+ *   2. **Build DAG** — honor explicit wires, infer unwired producers,
+ *      kind-check edges, and compute a stable topological order.
+ *      Throws if any consumer cannot be wired or the graph cycles.
  *
  * The result is a `Pipeline` carrying the original config and the
  * fully-built DAG, ready for `runOnce`.

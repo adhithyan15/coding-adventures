@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.80.0
+
+- Extend the pinned Gantt visual corpus with upstream parser configuration, accessibility, tag, callback, and special-ID fixtures.
+
 ## 0.79.0
 
 - Render every valid pinned Mermaid 11.16.1 Gantt fixture through backend-neutral paint and Metal-to-PNG validation.

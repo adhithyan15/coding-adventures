@@ -6,6 +6,7 @@
   "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
   "prerequisites": [],
   "lessons": [
-    "ES-C18-sintesis-subjuntivo"
+    "ES-C18-sintesis-subjuntivo",
+    "ES-C18-repaso-el-yo-que-viaja"
   ]
 }

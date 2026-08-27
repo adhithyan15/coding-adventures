@@ -1,5 +1,14 @@
 # Changelog — @coding-adventures/forme-pipeline-config
 
+## Unreleased
+
+### Added
+
+- `validateConfig` rejects multiple explicit wires targeting the same stage
+  input with `MULTIPLE_INPUT_WIRES`. Stage contracts expose one input, while a
+  producer may still fan out to any number of consumers.
+- Validation tests pin the error code and aggregate-error surface.
+
 ## 0.2.0 — 2026-05-16
 
 ### Added — JSON Schema validation of stage configs (FM03 §2.4 #3)

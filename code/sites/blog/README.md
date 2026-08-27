@@ -1,6 +1,6 @@
 # Coding Adventures Blog
 
-The end-to-end demo of the [Forme](../../specs/fm00-vision.md) universal
+The end-to-end demo of the [Forme](../../specs/FM00-forme-vision.md) universal
 authoring pipeline. Markdown lives in `data/`; HTML lands in
 `dist/blog/` and is deployed to
 [adhithyan15.github.io/coding-adventures/blog/](https://adhithyan15.github.io/coding-adventures/blog/)
@@ -36,11 +36,13 @@ and the collector will rejoin the pipeline.
 
 ```bash
 cd code/sites/blog
-npm install
-npx tsx build.ts        # or: npm run build
+npm run build:clean
 ```
 
-That runs the full pipeline and writes `dist/blog/*.html`.
+That one command discovers every `file:`-linked package, installs the local
+dependency graph from leaves to the site, clears stale output, and runs the
+full pipeline. It writes `dist/blog/*.html`. Subsequent builds can use
+`npm run build`; run `npm test` to exercise the dependency planner.
 Each file is a self-contained HTML5 document with a classless theme
 inlined in `<style>` — no JS, no external CSS.
 
@@ -54,13 +56,16 @@ site driver runs straight from source.
 - `data/` — Markdown posts. Frontmatter is `key: value` only (the v0
   parser is grammar-restricted; see
   `code/packages/typescript/forme-parse-markdown/README.md`).
-- `forme.config.ts` — `PipelineConfig` literal wiring the five
+- `forme.config.ts` — `PipelineConfig` literal wiring the four
   stages in order. Per FM03 §2.2, IDs are inferred from `stage.name`
   when unique.
 - `build.ts` — ~50-line driver: load config → `createOrchestrator`
   → `buildPipeline` → `runOnce` → assert success.
-- `BUILD` — chain-installs the file:dependency graph then runs the
-  pipeline. Verifies `dist/blog/` is produced.
+- `scripts/bootstrap.mjs` — discovers and installs the complete local
+  `file:` dependency graph in dependency order. This is the same bootstrap
+  path used by local builds and pull-request CI.
+- `BUILD` — monorepo build-tool entry point. It installs the same dependency
+  graph, runs the pipeline, and verifies `dist/blog/` is produced.
 - `dist/` — build output (git-ignored).
 
 ## Adding a post
@@ -86,9 +91,10 @@ frontmatter.
 
 ## Deploy
 
-`.github/workflows/deploy-blog.yml` runs the build on every push to
-`main` that touches this directory or any Forme package, then
-publishes `dist/` to the `gh-pages` branch under `coding-adventures/blog/`.
+.github/workflows/deploy-blog.yml` runs `npm run build:clean` for relevant pull
+requests and for every push to `main` that touches this directory or a runtime
+dependency. Main-branch builds then publish `dist/blog/` to the `gh-pages`
+branch under `blog/`.
 The live URL is
 [adhithyan15.github.io/coding-adventures/blog/](https://adhithyan15.github.io/coding-adventures/blog/).
 

@@ -36,19 +36,21 @@ These are deferred to follow-up packages:
 - **No parallelism.** Stages execute sequentially in topological order. `settings.maxConcurrency` is honoured at `1`.
 - **No streaming pipelining.** A `Stream<X>` producer is fully drained into memory before downstream consumers see values. Lazy streaming lands in v1 alongside parallelism.
 - **No incremental rebuild.** Every run executes every stage; the cache backend exists but isn't hit yet (FM03 §6).
-- **No reproducible-build mode.** Stages get `systemClock`, not `frozenClock` (FM03 §8).
+- **Partial reproducible-build mode.** Stages receive a frozen wall clock, but input-mtime derivation, deterministic randomness, and telemetry policy remain (FM03 §8).
 - **No watch mode.** `forme watch` lives in a future companion package (FM03 §7).
 - **No OpenTelemetry traces.** Telemetry surface is no-op by default.
 
 ## What v0 *does* implement
 
-- Topological execution honouring kind-compatibility wiring
+- Explicit `wires` with deterministic fan-out and stable topological execution;
+  unwired stages still infer the nearest compatible producer
 - Per-stage `StageContext` construction with denied-by-default capability APIs
 - `init` / `dispose` lifecycle hooks (init failure aborts before any `run`; dispose always runs)
 - Fail-fast and best-effort error handling
 - Cancellation propagation (composes a fresh token if caller doesn't supply one)
 - Per-stage timing + error counts + outcome in `StageRunSummary`
 - Named outputs from `OutputSpec` overriding sink instance ids
+- Reproducible-build frozen clocks shared across stage lifecycles
 - `buildId` derived from `computeRevisionId` over pipeline source/sink ids
 
 ## Coverage

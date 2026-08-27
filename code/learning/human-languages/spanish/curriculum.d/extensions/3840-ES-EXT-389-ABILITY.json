@@ -6,6 +6,7 @@
   "canDo": "I can say saber, and use sé or sabes before a known infinitive.",
   "prerequisites": [],
   "lessons": [
-    "ES-C389-saber"
+    "ES-C389-saber",
+    "ES-C389-repaso-se-y-puedo"
   ]
 }

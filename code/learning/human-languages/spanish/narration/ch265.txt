@@ -1,8 +1,8 @@
 Spanish, chapter 265: Hoy Como en Casa --- The Pieces That Move.
-1 lesson. All 1 can be done entirely by ear.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
+Lesson 1 of 2.
 hoy como en casa — the pieces that move.
 
 Warm-up.
@@ -45,3 +45,50 @@ Wrap-up Recall.
 Which position is the emphatic one? (The front.)
 [pause 2 seconds]
 And what makes the freedom safe? (The endings already say who is doing what.)
+
+
+Lesson 2 of 2.
+Review — what the ending carries, and what happens when it carries nothing.
+
+Warm-up.
+[pause 2 seconds]
+"We go." (Vamos.) "They go." (Van.) No pronoun needed for either.
+
+What you've built.
+The ending says who. That one fact has been paying for two things at once.
+[pause 2 seconds]
+It pays for the missing pronoun. Van is three letters and it still tells you the subject is plural and is not you. Nothing was lost when ellos went; the information was never in ellos.
+[pause 2 seconds]
+And it pays for a second reading. Hablo is "I speak" and also "I am speaking." The progressive was never required — estoy hablando is available, not obligatory.
+So vamos, vais, van each do the same double duty: a person, and a right-now.
+
+Why it's said this way.
+Now turn it around. What happens to a verb form that names no person at all?
+[pause 2 seconds]
+It stops being a verb and starts behaving like a noun.
+Comer es bueno. — Eating is good.
+Comer has no ending saying who, so nothing anchors it to a subject, and it can sit in the subject slot itself. English needs two forms here and argues about which; Spanish sends the infinitive and has never needed the argument.
+[pause 2 seconds]
+And one step further along the same road:
+comer becomes la comida.
+Take the ending off and put -ida on, and the verb becomes a noun outright — with a gender, an article, and a plural. The further a form gets from saying who, the more like a noun it behaves.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: hablo, hablas, habla — and drop every pronoun as you go]
+[pause 8 seconds for the answer]
+[your turn — say: comer, la comida — a verb, then the same verb as a thing]
+[pause 8 seconds for the answer]
+[repeat that twice]
+[question — say your answer, then pause 12 seconds]
+Say you all go, with no pronoun. Then say what tells the listener who.
+[question — say your answer, then pause 12 seconds]
+Give the two English readings of hablo.
+[question — say your answer, then pause 10 seconds]
+Say eating is good.
+[question — say your answer, then pause 10 seconds]
+Turn comer into a noun with an article.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Why can Spanish drop the subject pronoun? (The ending says who.) And what can the infinitive do that a conjugated form cannot? (Stand where a noun stands — comer es bueno.)

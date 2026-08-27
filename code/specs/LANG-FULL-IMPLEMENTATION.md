@@ -957,7 +957,8 @@ backend immediately) come before the enabler-dependent items.
   selectors also accept bounded variable-free checked integer arithmetic
   exponent operands; chains equal to one return the base directly without a
   multiply or runtime power call, and other bounded results retain the
-  integer unrolled-power path.
+  integer unrolled-power path. Checked evaluation recurses through nested
+  bounded power operands while retaining the same overflow and exponent caps.
   Finite-real selectors also accept bounded variable-free literal arithmetic
   exponent operands when each evaluates to a nonnegative integer and the
   complete chain evaluates to one on the runtime power path. Integer-only

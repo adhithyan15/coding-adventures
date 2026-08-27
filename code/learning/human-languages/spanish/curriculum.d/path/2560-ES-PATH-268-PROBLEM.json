@@ -2,9 +2,12 @@
   "id": "ES-PATH-268-PROBLEM",
   "spine_node": "SPINE-HANDLE-TRAVEL",
   "lessons": [
-    "ES-C268-problema"
+    "ES-C268-problema",
+    "ES-C268-repaso-dos-finales-dos-generos"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "ES-EXT-268-CONSOLIDATION-GENDER"
+  ],
   "after": []
 }

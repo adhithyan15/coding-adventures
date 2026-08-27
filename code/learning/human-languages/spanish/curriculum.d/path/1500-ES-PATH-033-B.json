@@ -2,9 +2,12 @@
   "id": "ES-PATH-033-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C37-levantarse"
+    "ES-C37-levantarse",
+    "ES-C37-repaso-sentado-de-pie-andando"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "ES-EXT-033-B-CONSOLIDATION-POSTURA"
+  ],
   "after": []
 }
