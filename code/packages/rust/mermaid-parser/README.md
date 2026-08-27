@@ -87,7 +87,8 @@ Every valid pinned Gantt syntax fixture now also passes backend-neutral paint
 lowering and Metal-to-PNG validation. Gantt remains partial while non-English
 locale data is still outstanding.
 The pinned parser corpus includes upstream configuration, multiline
-accessibility, task-tag, callback-argument, and prototype-like ID cases.
+accessibility, task-tag, callback-argument, prototype-like ID, millisecond,
+multi-reference dependency, and forward cross-section dependency cases.
 Three-digit years under the default date format follow Mermaid's bounded
 non-strict fallback without accepting malformed or oversized compact years.
 

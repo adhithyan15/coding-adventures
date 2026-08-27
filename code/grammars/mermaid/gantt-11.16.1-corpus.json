@@ -55,8 +55,12 @@
     { "id": "duration-minutes", "source": "gantt\nTask :id1, 2013-01-01, 2m" },
     { "id": "duration-seconds", "source": "gantt\nTask :id1, 2013-01-01, 0.1s" },
     { "id": "duration-milliseconds", "source": "gantt\ndateFormat x\nTask :id1, 0, 20ms" },
+    { "id": "milliseconds-across-sections", "source": "gantt\ndateFormat x\nsection testa1\ntest1 :id1, 0, 20ms\ntest2 :id2, after id1, 5ms\nsection testa2\ntest3 :id3, 20, 10ms\ntest4 :id4, after id3, 0.005s" },
     { "id": "generated-and-sequential", "source": "gantt\nFirst :2013-01-01, 4d\nSecond :2d" },
-    { "id": "multiple-after", "source": "gantt\nA :a, 2013-01-01, 1d\nB :b, 2013-02-01, 3d\nC :c, after a b, 1d" }
+    { "id": "multiple-after", "source": "gantt\nA :a, 2013-01-01, 1d\nB :b, 2013-02-01, 3d\nC :c, after a b, 1d" },
+    { "id": "multiple-until", "source": "gantt\nTask 1 :id1, 2013-01-01, until id2 id3 id4\nTask 2 :id2, 2013-01-11, 1d\nTask 3 :id3, 2013-02-10, 1d\nTask 4 :id4, 2013-02-12, 1d" },
+    { "id": "cross-section-forward-after", "source": "gantt\ndateFormat YYYY-MM-DD\nsection sec1\ntest1 :id1, 2013-01-01, 2w\ntest2 :id2, after id3, 1d\nsection sec2\ntest3 :id3, after id1, 2d" },
+    { "id": "cross-section-forward-until", "source": "gantt\ndateFormat YYYY-MM-DD\nsection sec1\ntask1 :id1, 2013-01-01, until id3\nsection sec2\ntask2 :id2, 2013-01-10, until id3\ntask3 :id3, 2013-02-01, 2d" }
   ],
   "invalid": [
     { "id": "missing-header", "source": "section Build\nTask :a, 2013-01-01, 1d" },
