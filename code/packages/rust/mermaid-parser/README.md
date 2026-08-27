@@ -86,6 +86,8 @@ and backend-neutral temporal layout.
 Every valid pinned Gantt syntax fixture now also passes backend-neutral paint
 lowering and Metal-to-PNG validation. Gantt remains partial while non-English
 locale data is still outstanding.
+The pinned parser corpus includes upstream configuration, multiline
+accessibility, task-tag, callback-argument, and prototype-like ID cases.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:
