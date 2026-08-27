@@ -7,10 +7,22 @@ import {
   listAssessmentContracts,
   loadAssessmentPolicy,
 } from "../../src/loader.js";
-import { expectLanguageContinuity, expectLanguageModality } from "./assert-language-corpus.js";
+import {
+  expectLanguageContinuity,
+  expectLanguageLessonBudgets,
+  expectLanguageModality,
+} from "./assert-language-corpus.js";
 
 it("pins Russian continuity", () => expectLanguageContinuity("russian"));
 it("pins Russian modality", () => expectLanguageModality("russian"));
+it("pins Russian lesson-content budgets", () =>
+  expectLanguageLessonBudgets("russian", {
+    lessons: 88,
+    idioms: 0,
+    senses: 4,
+    cultureClaims: 9,
+    unitPrefix: "RU",
+  }));
 
 it("pins Russia's project pre-A1 bridge and external A1-to-C2 TORFL targets", () => {
   const policy = loadAssessmentPolicy();

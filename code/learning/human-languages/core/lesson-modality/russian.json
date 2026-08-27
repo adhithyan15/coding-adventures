@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:e71e88122d5d120e",
+  "sourceHash": "fnv1a64:e0c0aa362f56a6f9",
   "summary": {
     "totalLessons": 88,
     "voice": 46,
@@ -324,7 +324,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b291ddfbdb67bdb6",
+      "sourceHash": "fnv1a64:b1f12c93293138e3",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -345,7 +345,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0af02edc36d6f7ac",
+      "sourceHash": "fnv1a64:1e3e3a2bd758d1ff",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -366,7 +366,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5d32d120d7313ffc",
+      "sourceHash": "fnv1a64:0544640939c4b177",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -387,7 +387,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cc1f5901dc23a480",
+      "sourceHash": "fnv1a64:f186f85469ae449f",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -408,7 +408,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fe8adc7c184b920d",
+      "sourceHash": "fnv1a64:c6d34ea4dd4dfff4",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -429,7 +429,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9a8fcda3e2cd042a",
+      "sourceHash": "fnv1a64:1e092e009157522a",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -450,7 +450,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ccd26dcf20e25208",
+      "sourceHash": "fnv1a64:7576070bd294d39f",
       "detachableSegments": [
         "Script — the four false friends, one more time",
         "Script — read them cold"
@@ -473,7 +473,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:f5ad0c1967df1fea",
+      "sourceHash": "fnv1a64:8f60961a166976ed",
       "detachableSegments": [
         "Writing — break it apart, then write it"
       ],
@@ -498,7 +498,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:de071969205ce289",
+      "sourceHash": "fnv1a64:828f00087bb353f2",
       "detachableSegments": [
         "Writing — break it apart, then write it",
         "Script — the four false friends, together"
@@ -522,7 +522,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:c8d3311d1cb735b9",
+      "sourceHash": "fnv1a64:cc31d81c704366f2",
       "detachableSegments": [
         "Script — б (\"b\") — and how it differs from в",
         "Script — д (\"d\") — the delta on little feet"
@@ -546,7 +546,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:dfba12bb7e7c93ff",
+      "sourceHash": "fnv1a64:ff221b92e9b388b8",
       "detachableSegments": [
         "Script — п (\"p\") — the Greek gate",
         "Script — и (\"ee\") — the backwards N"
@@ -571,7 +571,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:db5db2c8d7ae9d47",
+      "sourceHash": "fnv1a64:d940e9c62e2cd670",
       "detachableSegments": [
         "Script — е (\"ye\") — the honest vowel",
         "Script — т (\"t\") — Greek tau, honest too",
@@ -596,7 +596,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:cad52a8b87306e8b",
+      "sourceHash": "fnv1a64:142d80f622f3e9ca",
       "detachableSegments": [
         "Writing — observe and trace"
       ]
@@ -618,7 +618,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:02ab18f9f9e902d7",
+      "sourceHash": "fnv1a64:dbede5428bac6012",
       "detachableSegments": [
         "Writing — guided copy"
       ],
@@ -643,7 +643,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:64ba8f34ba6c2c3e",
+      "sourceHash": "fnv1a64:5016ad26550d21b1",
       "detachableSegments": [
         "Writing — delayed copy"
       ],
@@ -666,7 +666,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:639f850ac75f4931",
+      "sourceHash": "fnv1a64:d92a33ad6f8086dc",
       "detachableSegments": [
         "Writing — short dictation"
       ],
@@ -688,7 +688,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:be456798a468e226"
+      "sourceHash": "fnv1a64:08ce67b1314e3ac5"
     },
     {
       "id": "RU-C02-ty-vy",
@@ -706,7 +706,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:522d7a730d2c32c9"
+      "sourceHash": "fnv1a64:c6206776b5a4af82"
     },
     {
       "id": "RU-C02-vy-formality",
@@ -724,7 +724,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8cb35e836814f02f"
+      "sourceHash": "fnv1a64:7255fe1dd75e3714"
     },
     {
       "id": "RU-C02-menya-zovut",
@@ -742,7 +742,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d95935516cdd63d2"
+      "sourceHash": "fnv1a64:c96788680c0dcbb9"
     },
     {
       "id": "RU-C02-kak-vas-zovut",
@@ -760,7 +760,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ab5c929932a8ce45"
+      "sourceHash": "fnv1a64:357a46aef6682b82"
     },
     {
       "id": "RU-C02-kak-cross-language",
@@ -778,7 +778,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c47d172e1777208b"
+      "sourceHash": "fnv1a64:0999b4c01d30b58a"
     },
     {
       "id": "RU-C02-ochen-priyatno",
@@ -796,7 +796,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9074012a8cf85eb7"
+      "sourceHash": "fnv1a64:22181c22399bcd4e"
     },
     {
       "id": "RU-C02-practice",
@@ -814,7 +814,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:953e87b3df5651af"
+      "sourceHash": "fnv1a64:b61f4125cee98bf4"
     },
     {
       "id": "RU-C02-practice-cases",
@@ -832,7 +832,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:c7ef7209c92b3fe2"
+      "sourceHash": "fnv1a64:ef48a871bd81bce3"
     },
     {
       "id": "RU-C02-practice-zero-copula",
@@ -850,7 +850,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:30eca8ce373c454a"
+      "sourceHash": "fnv1a64:271622ee738bccc1"
     },
     {
       "id": "RU-C03-byt",
@@ -868,7 +868,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:14888e9ea4e76480"
+      "sourceHash": "fnv1a64:b7d28cf963576d95"
     },
     {
       "id": "RU-C03-zhit",
@@ -886,7 +886,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:50c788897a116d01"
+      "sourceHash": "fnv1a64:8ad910e6ea4eb000"
     },
     {
       "id": "RU-C03-znat",
@@ -904,7 +904,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:053dfd24401ef0cc"
+      "sourceHash": "fnv1a64:74f1a49b8d755583"
     },
     {
       "id": "RU-C03-govorit",
@@ -922,7 +922,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d7529203cca9d93a"
+      "sourceHash": "fnv1a64:d8dc7b5afa8dc1ff"
     },
     {
       "id": "RU-C03-videt",
@@ -940,7 +940,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b18ddd600f40a6a6"
+      "sourceHash": "fnv1a64:55a0854679689197"
     },
     {
       "id": "RU-C03-idti",
@@ -958,7 +958,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e19ec69e198f3e9d"
+      "sourceHash": "fnv1a64:54bf99fc84a5982c"
     },
     {
       "id": "RU-C04-dumat",
@@ -976,7 +976,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ab9ee93584dab9d0"
+      "sourceHash": "fnv1a64:a9c47e3367bc3bc9"
     },
     {
       "id": "RU-C04-ponimat",
@@ -994,7 +994,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fb096ddbe147f336"
+      "sourceHash": "fnv1a64:3155d0ebf76d7f27"
     },
     {
       "id": "RU-C04-chitat",
@@ -1012,7 +1012,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:81332063cdd644ec"
+      "sourceHash": "fnv1a64:4981647e965d5da7"
     },
     {
       "id": "RU-C04-pisat",
@@ -1030,7 +1030,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:02d8c14760fba4ed",
+      "sourceHash": "fnv1a64:5d28f1a31cca17e4",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1051,7 +1051,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b3f937939c7db162"
+      "sourceHash": "fnv1a64:f8990a2a1d4f6095"
     },
     {
       "id": "RU-C05-sprashivat",
@@ -1069,7 +1069,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:97afdb40f7c03d08"
+      "sourceHash": "fnv1a64:9d250f0d52348641"
     },
     {
       "id": "RU-C05-pomogat",
@@ -1087,7 +1087,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:393bb86560986f4d"
+      "sourceHash": "fnv1a64:85f08c17652ab8de"
     },
     {
       "id": "RU-C05-lyubit",
@@ -1105,7 +1105,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b1d00e319b6db2f5"
+      "sourceHash": "fnv1a64:add8e294ed020dcc"
     },
     {
       "id": "RU-C06-voda",
@@ -1123,7 +1123,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:407dbe74f104b11f"
+      "sourceHash": "fnv1a64:561e7ad3095037aa"
     },
     {
       "id": "RU-C06-kofe",
@@ -1141,7 +1141,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:87a38f5a0daf9d98",
+      "sourceHash": "fnv1a64:49823f761829320f",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1162,7 +1162,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:926af81bb2af0456"
+      "sourceHash": "fnv1a64:6c4f660af4609741"
     },
     {
       "id": "RU-C06-khleb",
@@ -1180,7 +1180,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:67e68f03856c108e",
+      "sourceHash": "fnv1a64:7a7e393e0212209b",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1201,7 +1201,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:979de0b5c9bef275"
+      "sourceHash": "fnv1a64:ba22124d99d3ced8"
     },
     {
       "id": "RU-C07-podruga",
@@ -1219,7 +1219,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c0553eca4fe386b2"
+      "sourceHash": "fnv1a64:92a6a3599d0aefd5"
     },
     {
       "id": "RU-C07-brat",
@@ -1237,7 +1237,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8b86380bc8f593e7"
+      "sourceHash": "fnv1a64:1fd0e9e69085edf6"
     },
     {
       "id": "RU-C07-sestra",
@@ -1255,7 +1255,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:92abfa643c1d6c0c"
+      "sourceHash": "fnv1a64:1530bfb840ef41ff"
     },
     {
       "id": "RU-C08-semya",
@@ -1273,7 +1273,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f1ba3a46bf7cc89c"
+      "sourceHash": "fnv1a64:84a664d1e1f664cb"
     },
     {
       "id": "RU-C09-ukho",
@@ -1291,7 +1291,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:313c5e254e1937a9"
+      "sourceHash": "fnv1a64:c21a790e35941454"
     },
     {
       "id": "RU-C09-nos",
@@ -1309,7 +1309,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cd46d58f9aa50ed8"
+      "sourceHash": "fnv1a64:6d8d5087eb6b3f31"
     },
     {
       "id": "RU-C09-rot",
@@ -1327,7 +1327,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a59186369f6f6b19"
+      "sourceHash": "fnv1a64:92f72b9789882a8c"
     },
     {
       "id": "RU-C09-glaz",
@@ -1345,7 +1345,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1fdb4baed4e1119d"
+      "sourceHash": "fnv1a64:4e1f88c710733afc"
     },
     {
       "id": "RU-C10-serdtse",
@@ -1363,7 +1363,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:31585d4ac754438a",
+      "sourceHash": "fnv1a64:08b4fd1fea99a80f",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1384,7 +1384,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:a4951296fa7da8c6"
+      "sourceHash": "fnv1a64:a481c2ed2b749dd9"
     },
     {
       "id": "RU-C11-poka",
@@ -1402,7 +1402,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3e33307ee77dbe9b"
+      "sourceHash": "fnv1a64:36bba21239f2a53e"
     },
     {
       "id": "RU-C11-do-skorogo",
@@ -1420,7 +1420,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fa5ad4db0e65f619"
+      "sourceHash": "fnv1a64:d41a7578001fb07c"
     },
     {
       "id": "RU-C11-do-zavtra",
@@ -1438,7 +1438,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:59ee75d12179ddd3"
+      "sourceHash": "fnv1a64:fcfc9d7ce83574ae"
     },
     {
       "id": "RU-C11-do-vstrechi",
@@ -1456,7 +1456,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:857b585e6522c6b9"
+      "sourceHash": "fnv1a64:b2fb4669ac08560e"
     },
     {
       "id": "RU-C11-spokoynoy-nochi",
@@ -1474,7 +1474,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ff8ce5920969e14c"
+      "sourceHash": "fnv1a64:a85d235bbf3e814d"
     },
     {
       "id": "RU-C12-mama",
@@ -1492,7 +1492,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:546f4d0fc49f83d9"
+      "sourceHash": "fnv1a64:8c72b149c84054a1"
     },
     {
       "id": "RU-C12-papa",
@@ -1510,7 +1510,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:52e3fdbb23c5dcaf"
+      "sourceHash": "fnv1a64:750c6f8b011e4afb"
     },
     {
       "id": "RU-C12-mat",
@@ -1528,7 +1528,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ee9f18559b6d55a7"
+      "sourceHash": "fnv1a64:dc0da10ad0d0dd7b"
     },
     {
       "id": "RU-C12-otets",
@@ -1546,7 +1546,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:14438c50ccb16532"
+      "sourceHash": "fnv1a64:f158057f63691f99"
     },
     {
       "id": "RU-C13-moloko",
@@ -1564,7 +1564,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e9ba25614bf54599"
+      "sourceHash": "fnv1a64:bb6611cfaa4dc676"
     },
     {
       "id": "RU-C13-syr",
@@ -1582,7 +1582,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:727d159efe18e5df"
+      "sourceHash": "fnv1a64:246e2fefaf5cc61c"
     },
     {
       "id": "RU-C13-sok",
@@ -1600,7 +1600,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f552aec6f9a60d35"
+      "sourceHash": "fnv1a64:fd5d75f67d0f0bd2"
     },
     {
       "id": "RU-C13-sup",
@@ -1618,7 +1618,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:094d82b7f6aa3c65"
+      "sourceHash": "fnv1a64:5db40d9c2261c3ec"
     },
     {
       "id": "RU-W06-u",
@@ -1637,7 +1637,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:543c07ba5efa5b12",
+      "sourceHash": "fnv1a64:80bb72c63396bc3d",
       "detachableSegments": [
         "Script"
       ],
@@ -1660,7 +1660,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b91a4db634e21266",
+      "sourceHash": "fnv1a64:c21126fdfffc1ef3",
       "detachableSegments": [
         "Script"
       ],
@@ -1683,7 +1683,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:ca5fadd06f0e0649",
+      "sourceHash": "fnv1a64:20da63f74635d4a2",
       "detachableSegments": [
         "Script"
       ],
@@ -1706,7 +1706,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:f41cfb297d3f6f50",
+      "sourceHash": "fnv1a64:209183415fd19595",
       "detachableSegments": [
         "Script"
       ],
@@ -1729,7 +1729,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:421f899b41e0512c",
+      "sourceHash": "fnv1a64:64178c5f32e8b791",
       "detachableSegments": [
         "Script"
       ],
@@ -1752,7 +1752,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:227dcb60c3fedbee",
+      "sourceHash": "fnv1a64:a1a2b26a999de7c5",
       "detachableSegments": [
         "Script"
       ],
@@ -1775,7 +1775,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:c284fdc8e95f31b3",
+      "sourceHash": "fnv1a64:eaadb5ab65f2c9d8",
       "detachableSegments": [
         "Script"
       ],
@@ -1798,7 +1798,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:7f68ff45ce84e411",
+      "sourceHash": "fnv1a64:6c1a32d4b5dd147e",
       "detachableSegments": [
         "Script"
       ],
@@ -1821,7 +1821,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:7be77c4304379cc7",
+      "sourceHash": "fnv1a64:77cd2b0fd8d51662",
       "detachableSegments": [
         "Script"
       ],
@@ -1844,7 +1844,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:6cfb64b082851a44",
+      "sourceHash": "fnv1a64:a5dcb91d5f96f75d",
       "detachableSegments": [
         "Script"
       ],
@@ -1867,7 +1867,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:c347391877845f70",
+      "sourceHash": "fnv1a64:a0c17b073918b2e3",
       "detachableSegments": [
         "Script"
       ],
@@ -1890,7 +1890,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:9b3f03f7ef5246ea",
+      "sourceHash": "fnv1a64:94fcc50e133f8ba3",
       "detachableSegments": [
         "Script"
       ],
@@ -1913,7 +1913,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:adc50bdfdfa7468e",
+      "sourceHash": "fnv1a64:621078e6177a2c81",
       "detachableSegments": [
         "Script"
       ],
@@ -1936,7 +1936,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d9ae162c44116b57",
+      "sourceHash": "fnv1a64:177c93cdc58b7cf0",
       "detachableSegments": [
         "Script"
       ],
@@ -1959,7 +1959,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:444622f1294f8e8e",
+      "sourceHash": "fnv1a64:e0f1ff4afe022057",
       "detachableSegments": [
         "Script"
       ],
@@ -1982,7 +1982,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:9bc90e53af46a44e",
+      "sourceHash": "fnv1a64:31f572795749f679",
       "detachableSegments": [
         "Script"
       ],
@@ -2005,7 +2005,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:1ca4f9d2ec9421d5",
+      "sourceHash": "fnv1a64:1cf742732c0a3bf6",
       "detachableSegments": [
         "Script"
       ],
@@ -2028,7 +2028,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:8aff4e98bcba2ce4",
+      "sourceHash": "fnv1a64:4ca251cf4a108a63",
       "detachableSegments": [
         "Script"
       ],
@@ -2051,7 +2051,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:3054826dce87f1ac",
+      "sourceHash": "fnv1a64:a13fef99a566fbc1",
       "detachableSegments": [
         "Script"
       ],
@@ -2073,7 +2073,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cf03ed58ffee7d69",
+      "sourceHash": "fnv1a64:a6531989a118a064",
       "detachableSegments": [
         "Script — the three kinds, one more time"
       ]
