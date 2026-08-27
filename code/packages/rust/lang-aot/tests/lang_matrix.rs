@@ -1429,6 +1429,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — implemented integer-valued standard functions may form a
+    // bounded variable-free exponent without becoming a dynamic power call.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer n, saved; n := 6 ^ (abs(-2) div entier(2.9)) + 36; saved := n; n := 9; output(saved + 0.5) end",
+        expect: Expect::Stdout("42.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a runtime condition may preserve assignment metadata when
     // both independently proven branches have exactly the same value. The
     // condition still lowers and executes; only the path-independent snapshot
@@ -7623,6 +7632,31 @@ fn algol_integer_arithmetic_exponent_snapshot_runs_on_every_available_standard_b
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the integer arithmetic-exponent snapshot did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_integer_function_exponent_snapshot_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("n := 6 ^ (abs(-2) div entier(2.9)) + 36; saved := n")
+        })
+        .expect("the ALGOL integer function-exponent snapshot must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the integer function-exponent snapshot did not run"
             );
             continue;
         };
