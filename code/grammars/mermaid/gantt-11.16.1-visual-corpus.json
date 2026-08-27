@@ -28,6 +28,8 @@
     "second-ticks",
     "minute-ticks",
     "hour-ticks",
+    "monday-week-ticks",
+    "calendar-month-ticks",
     "unix-millisecond-ticks",
     "custom-format-calendar-overrides",
     "weekend-exclusions",

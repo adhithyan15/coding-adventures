@@ -565,6 +565,64 @@ fn gantt_tick_days(interval: Option<&str>) -> f64 {
     }
 }
 
+fn gantt_calendar_tick_offsets(
+    t_min: f64,
+    t_range: f64,
+    interval: Option<&str>,
+    weekday: Option<&str>,
+) -> Option<Vec<f64>> {
+    let compact = interval?.trim().to_ascii_lowercase().replace(' ', "");
+    let split = compact.find(|character: char| !character.is_ascii_digit()).unwrap_or(compact.len());
+    let count = compact[..split].parse::<i64>().unwrap_or(1).max(1);
+    let unit = &compact[split..];
+    let limit = t_min + t_range;
+    let mut ticks = Vec::new();
+
+    if matches!(unit, "month" | "months") {
+        let (year, month, _) = civil_from_days(t_min.floor() as i64);
+        let mut month_index = year * 12 + month - 1;
+        if days_from_civil(year, month, 1) as f64 + f64::EPSILON < t_min {
+            month_index += 1;
+        }
+        while month_index.rem_euclid(count) != 0 { month_index += 1; }
+        while ticks.len() < 10_000 {
+            let tick = days_from_civil(month_index.div_euclid(12), month_index.rem_euclid(12) + 1, 1) as f64;
+            if tick > limit + f64::EPSILON { break; }
+            ticks.push(tick - t_min);
+            month_index += count;
+        }
+        return Some(ticks);
+    }
+
+    if matches!(unit, "year" | "years") {
+        let (mut year, _, _) = civil_from_days(t_min.floor() as i64);
+        if days_from_civil(year, 1, 1) as f64 + f64::EPSILON < t_min { year += 1; }
+        while year.rem_euclid(count) != 0 { year += 1; }
+        while ticks.len() < 10_000 {
+            let tick = days_from_civil(year, 1, 1) as f64;
+            if tick > limit + f64::EPSILON { break; }
+            ticks.push(tick - t_min);
+            year += count;
+        }
+        return Some(ticks);
+    }
+
+    if matches!(unit, "week" | "weeks") && weekday.is_some() {
+        let target = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+            .iter().position(|candidate| Some(*candidate) == weekday)? as i64;
+        let day = t_min.floor() as i64;
+        let current = (day + 3).rem_euclid(7);
+        let mut tick = day + (target - current).rem_euclid(7);
+        if tick as f64 + f64::EPSILON < t_min { tick += 7; }
+        while ticks.len() < 10_000 && tick as f64 <= limit + f64::EPSILON {
+            ticks.push(tick as f64 - t_min);
+            tick += count * 7;
+        }
+        return Some(ticks);
+    }
+    None
+}
+
 fn gantt_axis_label(timestamp: f64, format: Option<&str>, offset: f64) -> String {
     let Some(format) = format else { return format!("d{offset:.0}"); };
     let epoch_milliseconds = (timestamp * 86_400_000.0).round() as i64;
@@ -600,9 +658,22 @@ fn append_gantt_axis(
     items.push(LayoutedTemporalItem::TimeAxisSpine {
         x1: LABEL_W, y1: y, x2: LABEL_W + t_range * x_scale, y2: y,
     });
-    let mut tick_day = 0.0;
     let tick_days = gantt_tick_days(diagram.config.tick_interval.as_deref());
-    while tick_day <= t_range {
+    let tick_offsets = gantt_calendar_tick_offsets(
+        t_min,
+        t_range,
+        diagram.config.tick_interval.as_deref(),
+        diagram.config.weekday.as_deref(),
+    ).unwrap_or_else(|| {
+        let mut offsets = Vec::new();
+        let mut tick = 0.0;
+        while offsets.len() < 10_000 && tick <= t_range + f64::EPSILON {
+            offsets.push(tick);
+            tick += tick_days;
+        }
+        offsets
+    });
+    for tick_day in tick_offsets {
         items.push(LayoutedTemporalItem::TimeAxisTick {
             x: LABEL_W + tick_day * x_scale,
             y: if label_above { y } else { y + 4.0 },
@@ -613,7 +684,6 @@ fn append_gantt_axis(
             ),
             label_above,
         });
-        tick_day += tick_days;
     }
 }
 
@@ -1310,6 +1380,27 @@ mod tests {
             gantt_axis_label(timestamp, Some("%H:%M:%S.%L"), 0.0),
             "13:05:06.007"
         );
+    }
+
+    #[test]
+    fn gantt_axis_aligns_weekdays_and_calendar_months() {
+        let october_20 = date_to_days("2022-10-20", &GanttDateFormat::default()).unwrap();
+        let monthly = gantt_calendar_tick_offsets(
+            october_20,
+            50.0,
+            Some("1month"),
+            None,
+        ).unwrap();
+        assert_eq!(monthly, vec![12.0, 42.0]);
+
+        let saturday = date_to_days("2022-10-01", &GanttDateFormat::default()).unwrap();
+        let mondays = gantt_calendar_tick_offsets(
+            saturday,
+            16.0,
+            Some("1week"),
+            Some("monday"),
+        ).unwrap();
+        assert_eq!(mondays, vec![2.0, 9.0, 16.0]);
     }
 
     #[test]

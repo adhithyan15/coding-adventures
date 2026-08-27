@@ -100,6 +100,7 @@ calendar-day geometry across month-end, inclusive-end, and daylight-saving
 boundaries.
 Pinned native-render fixtures cover sub-day tick intervals and typed axis time
 fields through Metal-to-PNG validation.
+Calendar-aligned week and month fixtures gate weekday-aware native axis layout.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:
