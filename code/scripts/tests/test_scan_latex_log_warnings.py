@@ -13,6 +13,8 @@ import json
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
+from io import StringIO
 from pathlib import Path
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
@@ -385,14 +387,68 @@ class MainTests(unittest.TestCase):
                 1,
             )
 
+    def test_main_suppresses_github_commands_unless_explicitly_enabled(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            books = root / "books"
+            books.mkdir()
+            make_book(books, "latin", SAMPLE_LOG)
+            baseline = root / "baseline.json"
+            write_baseline(baseline, {"latin": {"overfull": 0}})
+            output = StringIO()
+
+            with redirect_stdout(output):
+                code = scanner.main(
+                    ["--book-root", str(books), "--baseline", str(baseline)]
+                )
+
+            self.assertEqual(code, 1)
+            self.assertNotIn("::error::", output.getvalue())
+            self.assertIn("latin: overfull=2", output.getvalue())
+
+    def test_main_emits_github_commands_when_explicitly_enabled(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            books = root / "books"
+            books.mkdir()
+            make_book(books, "latin", SAMPLE_LOG)
+            baseline = root / "baseline.json"
+            write_baseline(baseline, {"latin": {"overfull": 0}})
+            output = StringIO()
+
+            with redirect_stdout(output):
+                code = scanner.main(
+                    [
+                        "--book-root",
+                        str(books),
+                        "--baseline",
+                        str(baseline),
+                        "--github-annotations",
+                    ]
+                )
+
+            self.assertEqual(code, 1)
+            self.assertIn(
+                "::error::latin overfull rose to 2 against a baseline of 0",
+                output.getvalue(),
+            )
+
     def test_main_fails_when_the_book_root_is_absent_or_empty(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            self.assertEqual(scanner.main(["--book-root", str(root / "nope")]), 1)
-
             empty = root / "empty"
             empty.mkdir()
-            self.assertEqual(scanner.main(["--book-root", str(empty)]), 1)
+            output = StringIO()
+
+            with redirect_stdout(output), redirect_stderr(output):
+                self.assertEqual(
+                    scanner.main(["--book-root", str(root / "nope")]), 1
+                )
+                self.assertEqual(scanner.main(["--book-root", str(empty)]), 1)
+
+            self.assertNotIn("::error::", output.getvalue())
+            self.assertIn("error: book root", output.getvalue())
+            self.assertIn("error: no <track>/book/ directories", output.getvalue())
 
 
 if __name__ == "__main__":

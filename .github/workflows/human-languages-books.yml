@@ -575,6 +575,7 @@ jobs:
             --book-root code/learning/human-languages \
             --baseline code/learning/human-languages/core/latex-warning-baseline.json \
             --summary "$GITHUB_STEP_SUMMARY" \
+            --github-annotations \
             --json dist/human-languages/books/latex-warnings.json
 
       - name: Build download catalog
