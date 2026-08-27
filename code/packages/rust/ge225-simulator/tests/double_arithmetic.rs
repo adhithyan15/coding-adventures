@@ -1,5 +1,5 @@
 use coding_adventures_ge225_simulator::{
-    assemble_fixed, assemble_shift, encode_instruction, Simulator,
+    assemble_select_x_group, assemble_shift, encode_instruction, Simulator,
 };
 
 fn instruction(opcode: i32, address: i32, modifier: i32) -> i32 {
@@ -284,7 +284,7 @@ fn normalize_remainder_always_uses_absolute_location_zero() {
         .load_words(
             &[
                 instruction(0o00, 300, 0),
-                assemble_fixed("SXG").unwrap(),
+                assemble_select_x_group(1).unwrap(),
                 assemble_shift("NOR", 0).unwrap(),
             ],
             200,
