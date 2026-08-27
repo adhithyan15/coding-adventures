@@ -5,33 +5,31 @@
 //! (IBM 704, MIT, 1959).  See
 //! [`MCCARTHY-LISP-PLAN.md`](../../../specs/MCCARTHY-LISP-PLAN.md).
 //!
-//! Mirror of [`ge225-backend`] / [`intel4004-backend`] /
-//! [`armv7-backend`] / [`intel8008-backend`] / [`riscv-backend`]
+//! Mirror of `ge225-backend` / `intel4004-backend` /
+//! `armv7-backend` / `intel8008-backend` / `riscv-backend`
 //! in shape, just for the 36-bit IBM 704.
 //!
-//! ## v0.1.0 scope — minimal viable
+//! ## v0.2.0 scope — executable minimal output
 //!
-//! Per the GUIDING CONSTRAINT of the historical-arch migration
-//! and the McCarthy Lisp v0.1.0 scope decision (no CONS on
-//! historical-arch backends), this backend handles only:
+//! This backend handles only:
 //!
 //! | CIR family | Status |
 //! |------------|--------|
-//! | `const_*` (15-bit unsigned immediate, single-var case) | ✓ → `CLA n` |
+//! | `const_*` (0–32767, single-var case) | ✓ → `CLA literal_address` |
 //! | `ret_*` (value matches the last `const_*` dest) | ✓ → `HTR 0` |
 //! | `ret_void` | ✓ → `HTR 0` |
 //! | Anything else | returns `None` from `Backend::compile` |
 //!
 //! The accumulator-tracking pattern matches `intel8008-backend`'s
 //! v0.1.0 implementation: a single-tracked "current accumulator
-//! var" gets loaded by `CLA n` and read back by `HTR 0` on exit.
+//! var" gets loaded from a sign-magnitude literal pool and read back by `HTR 0` on exit.
 //! Multi-var allocation, branches, calls, and CONS are intentionally
 //! deferred to future increments.
 //!
 //! ## Wire format
 //!
-//! Each instruction is one 36-bit IBM 704 word, packed as 5 bytes
-//! (low byte first; high 4 bits of the top byte are always zero).
+//! Each instruction or literal is one 36-bit IBM 704 word, packed as five
+//! big-endian bytes (the first byte's high nibble is zero).
 //! Per-function byte streams concatenate directly — `lang-aot`
 //! writes them straight to disk.
 
@@ -66,6 +64,8 @@ pub enum BackendError {
     /// `const_*` with an immediate outside the 15-bit `CLA Y`
     /// address-field range `[0, 32767]`.
     ImmediateOutOfRange(i64),
+    /// Instructions plus literal-pool words exceed 32K-word memory.
+    ProgramTooLarge(usize),
 }
 
 impl fmt::Display for BackendError {
@@ -75,7 +75,11 @@ impl fmt::Display for BackendError {
             Self::InvalidOperand(d) => write!(f, "ibm704-backend: invalid operand: {d}"),
             Self::ImmediateOutOfRange(n) => write!(
                 f,
-                "ibm704-backend: const {n} exceeds 15-bit CLA immediate range [0, 32767]"
+                "ibm704-backend: const {n} exceeds supported sign-magnitude literal range [0, 32767]"
+            ),
+            Self::ProgramTooLarge(words) => write!(
+                f,
+                "ibm704-backend: program requires {words} words, exceeding 32768-word memory"
             ),
         }
     }
@@ -96,14 +100,21 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
         return Ok(HTR_HALT_BYTES.to_vec());
     }
 
-    let mut bytes: Vec<u8> = Vec::new();
+    #[derive(Clone, Copy)]
+    enum Operation {
+        LoadLiteral(usize),
+        Halt,
+    }
+
+    let mut operations = Vec::with_capacity(cir.len());
+    let mut literals = Vec::new();
     let mut last_const_var: Option<String> = None;
 
     for instr in cir {
         let op = instr.op.as_str();
 
         if op == "ret_void" {
-            bytes.extend_from_slice(&HTR_HALT_BYTES);
+            operations.push(Operation::Halt);
             continue;
         }
 
@@ -115,14 +126,16 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
                      multi-register allocation lands in a future increment"
                 )));
             }
-            bytes.extend_from_slice(&HTR_HALT_BYTES);
+            operations.push(Operation::Halt);
             continue;
         }
 
         if op.strip_prefix("const_").is_some() {
             let dest = require_dest(instr, op)?.to_string();
             let imm15 = encode_immediate_15(instr.srcs.first())?;
-            bytes.extend_from_slice(&pack_word(encode_cla(imm15)));
+            let literal_index = literals.len();
+            literals.push(imm15);
+            operations.push(Operation::LoadLiteral(literal_index));
             last_const_var = Some(dest);
             continue;
         }
@@ -130,9 +143,33 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
         return Err(BackendError::UnsupportedOp(op.to_string()));
     }
 
-    if bytes.is_empty() {
-        bytes.extend_from_slice(&HTR_HALT_BYTES);
+    if operations.is_empty() {
+        operations.push(Operation::Halt);
     }
+
+    let total_words = operations
+        .len()
+        .checked_add(literals.len())
+        .ok_or(BackendError::ProgramTooLarge(usize::MAX))?;
+    if total_words > ADDR_MASK as usize + 1 {
+        return Err(BackendError::ProgramTooLarge(total_words));
+    }
+
+    let literal_base = operations.len();
+    let mut bytes = Vec::with_capacity(total_words * HTR_HALT_BYTES.len());
+    for operation in operations {
+        match operation {
+            Operation::LoadLiteral(index) => {
+                let address = literal_base + index;
+                bytes.extend_from_slice(&pack_word(encode_cla(address as u16)));
+            }
+            Operation::Halt => bytes.extend_from_slice(&HTR_HALT_BYTES),
+        }
+    }
+    for literal in literals {
+        bytes.extend_from_slice(&pack_word(literal as u64));
+    }
+
     Ok(bytes)
 }
 
@@ -156,11 +193,9 @@ fn parse_var_src(instr: &CIRInstr, idx: usize, op: &str) -> Result<String, Backe
     }
 }
 
-/// 15-bit unsigned `CLA` immediate range: `[0, 32767]`.  The 704's
-/// address field is 15 bits; `CLA Y` treats `Y` as the address of a
-/// memory location holding the value to load.  For our minimal
-/// scope we treat `Y` as the immediate value itself (the linker
-/// would resolve to a memory cell holding it).
+/// Supported non-negative sign-magnitude literal range: `[0, 32767]`.
+/// `compile_single_function` places the returned value in the literal pool and
+/// addresses that word with `CLA`; the value never occupies CLA's address bits.
 fn encode_immediate_15(op: Option<&CIROperand>) -> Result<u16, BackendError> {
     let n: i64 = match op {
         Some(CIROperand::Int(n)) => *n,

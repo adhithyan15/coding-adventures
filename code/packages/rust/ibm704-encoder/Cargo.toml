@@ -1,8 +1,8 @@
 [package]
 name = "ibm704-encoder"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Pure-Rust IBM 704 instruction encoder.  Covers the subset of 704 opcodes the LANG VM ibm704-backend uses to lower CIR to 36-bit IBM 704 machine words, packed 5 bytes per word (low byte first, high 4 bits zeroed).  No IR knowledge.  Phase L4 of the McCarthy Lisp implementation — the historical-arch backend for the silicon Lisp was born on (IBM 704, MIT, 1959)."
+description = "Canonical Rust encoder for IBM 704 Type A/Type B 36-bit words and five-byte big-endian transport"
 
 [lib]
 name = "ibm704_encoder"

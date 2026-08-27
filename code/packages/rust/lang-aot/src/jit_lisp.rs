@@ -1,6 +1,6 @@
 //! # McCarthy Lisp on the universal JIT (LANG77 / McCarthy W15)
 //!
-//! The eighth and final backend. `jit-core`'s [`GenericCirJit`] is a *universal
+//! The eighth and final backend. `jit-core`'s `GenericCirJit` is a *universal
 //! bytecode JIT*: any typed-IIR language plugs in by registering its builtins as
 //! Rust callbacks. Unlike the AOT/LLVM tagged-word backends — which lower a
 //! `call_builtin "dyn_*"` to a native `call __dyn_*` into the C runtime
@@ -15,7 +15,7 @@
 //! single `u64`, so it rides inside a `Value::Int(i64)` as the bit pattern — the
 //! JIT moves it opaquely (it never does arithmetic on a lisp word; the lowered IIR
 //! boxes integer atoms as `TAG_INT` and routes all lisp ops through `call_builtin`).
-//! [`to_lv`] / [`from_lv`] convert at the builtin boundary.
+//! `to_lv` / `from_lv` convert at the builtin boundary.
 //!
 //! ## Coercions (`unbox_int` / `truthy`)
 //!
@@ -25,9 +25,9 @@
 //!
 //! ## Safety
 //!
-//! [`to_lv`] uses [`LispyValue::from_raw_bits`] (`unsafe`): the contract is that the
+//! `to_lv` uses `LispyValue::from_raw_bits` (`unsafe`): the contract is that the
 //! bits are a valid `LispyValue`. They always are here — every lisp word the JIT
-//! holds either came from [`from_lv`] (a real `LispyValue`) or from a lowered
+//! holds either came from `from_lv` (a real `LispyValue`) or from a lowered
 //! constant the McCarthy frontend emitted (`TAG_INT`/`TAG_NIL`/`TAG_SYMBOL`
 //! immediates). The frontend never fabricates a heap pointer (it performs no
 //! arithmetic on lisp values), so `car`/`cdr` only ever see a real cons cell or a

@@ -2331,8 +2331,8 @@ pub fn compile_file_to_ge225_bin(
 /// L4 of the McCarthy Lisp implementation.  Unlike the native-
 /// executable pipelines, this one does **not** link or run any
 /// toolchain — it just writes a flat `.bin` of 36-bit IBM 704
-/// instruction words, packed 5 bytes per word (low byte first,
-/// high 4 bits of the top byte zeroed).  Downstream consumers:
+/// words, packed five bytes per word in canonical big-endian order
+/// with the first byte's high nibble zeroed. Downstream consumers:
 ///
 /// * A future in-tree `ibm704-simulator` (not yet shipped).
 /// * Any IBM 704 emulator that consumes 5-byte-per-word streams.
@@ -2354,10 +2354,8 @@ pub fn compile_file_to_ge225_bin(
 ///
 /// # Wire format
 ///
-/// One 36-bit word per instruction, packed as 5 bytes per word
-/// (40 bits — 4 wasted padding bits zeroed in the top nibble of
-/// the high byte), low byte first.  Same convention `ge225-encoder`
-/// uses (20-bit words → 3 bytes) extended to 36 bits.  Per-function
+/// One 36-bit instruction or literal per five-byte big-endian word.
+/// The high nibble of the first byte is reserved and zero. Per-function
 /// byte streams are concatenated directly.
 ///
 /// # Errors

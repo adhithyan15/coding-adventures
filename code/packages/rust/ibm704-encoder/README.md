@@ -1,42 +1,36 @@
 # ibm704-encoder
 
-Pure-Rust IBM 704 instruction encoder.  Mirror of
-`ge225-encoder` / `intel4004-encoder` / `armv7-encoder` /
-`intel8008-encoder` / `riscv-encoder`.
+Canonical Rust construction and transport for IBM 704 36-bit words.
 
-L4 of the McCarthy Lisp implementation — see
-[`MCCARTHY-LISP-PLAN.md`](../../../specs/MCCARTHY-LISP-PLAN.md).
+The crate implements both historical instruction layouts:
 
-## Why the IBM 704?
+- Type A: 3-bit prefix, 15-bit decrement, 3-bit tag, 15-bit address.
+- Type B: signed operation code, required zero bits, unused field, tag, and
+  15-bit address.
 
-The IBM 704 (1954) is the vacuum-tube mainframe John McCarthy
-and his MIT students (Steve Russell, Tim Hart, Mike Levin) ran the
-**first Lisp implementation** on, in 1959.  `CAR` and `CDR` — the
-two universal Lisp accessors — were literally IBM 704 instruction
-mnemonics:
+IBM displays Type B operation codes as values such as `+0500` (CLA) and
+`-0500` (CAL). HTR is `+0000`; `+0420` is HPR, the distinct resumable halt.
 
-* **C**ontents of **A**ddress part of **R**egister
-* **C**ontents of **D**ecrement part of **R**egister
+## Transport
 
-This crate lets us round-trip McCarthy Lisp source back to the
-silicon it was born on — the symmetric counterpart of the
-Dartmouth BASIC → GE-225 round-trip the migration already
-established.
+Every word is masked to 36 bits and packed into five bytes, most-significant
+group first. The high nibble of the first byte is reserved and zero:
 
-## Word format
+```text
+word bits 35..32, 31..24, 23..16, 15..8, 7..0
+```
 
-The 704 has 36-bit words.  This encoder uses a clearly
-documented idealised layout sufficient for the minimal-viable
-McCarthy compile target:
+`unpack_word` and `unpack_words` reject a non-zero reserved nibble and partial
+words. They never guess the legacy byte order.
 
-| Word bits | Field | Notes |
-|-----------|-------|-------|
-| 35..27 (9) | Opcode | e.g. `HTR=0o420`, `CLA=0o500` |
-| 26..15 (12) | (zero) | tag + decrement + unused; not used in v0.1.0 |
-| 14..0 (15) | Address Y | 15-bit address (≤ 32 K word memory) |
+```rust
+use ibm704_encoder::{encode_cla, encode_htr, pack_word, unpack_words};
 
-## Wire format
+let bytes = [pack_word(encode_cla(2)), pack_word(encode_htr(0))].concat();
+assert_eq!(unpack_words(&bytes).unwrap(), vec![0x1_4000_0002, 0]);
+```
 
-5 bytes per 36-bit word, low byte first, high 4 bits of the
-top byte always zero.  Matches the GE-225 precedent (20-bit
-words → 3 bytes) extended to 36 bits.
+This package is the producer contract for the Rust IBM 704 backend and
+functional simulator. See
+[`ibm704-encoder.md`](../../../specs/ibm704-encoder.md) for exact fields and
+the historical source.
