@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.32.0
+
+- Validate typed numeric and two-letter Gantt weekdays before backend-neutral layout.
+
 ## 0.31.0
 
 - Resolve and validate typed Gantt ordinal days before backend-neutral temporal layout.

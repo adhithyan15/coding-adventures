@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.89.0
+
+- Represent numeric and two-letter Gantt weekdays as typed date-format parts.
+
 ## 0.88.0
 
 - Represent Gantt ordinal calendar days as a typed date-format part.

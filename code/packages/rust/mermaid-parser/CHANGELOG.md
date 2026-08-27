@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.152.0
+
+- Compile Mermaid Gantt `d` and `dd` compact-weekday tokens into typed semantic date formats.
+
 ## 0.151.0
 
 - Compile Mermaid Gantt `Do` ordinal-day tokens into typed semantic date formats.
