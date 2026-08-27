@@ -52,7 +52,7 @@ jobs:
       books: ${{ steps.changes.outputs.books }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -165,7 +165,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           # Do not leave a usable credential in `.git/config` for the steps
           # below to find. Nothing in this job talks to the API or pushes.
@@ -203,7 +203,7 @@ jobs:
             --book-root code/learning/human-languages
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "22"
 
@@ -602,7 +602,7 @@ jobs:
           test -n "$(find dist/human-languages/books -maxdepth 1 -name '*.pdf' -print -quit)"
 
       - name: Upload complete publication bundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: human-language-books
           path: dist/human-languages/books
@@ -631,7 +631,7 @@ jobs:
       contents: write
     steps:
       - name: Download the publication bundle
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: human-language-books
           path: dist/human-languages/books

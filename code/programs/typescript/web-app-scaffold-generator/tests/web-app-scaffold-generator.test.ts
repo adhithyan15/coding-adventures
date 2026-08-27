@@ -95,6 +95,8 @@ describe("generateVisualizationApp", () => {
     expect(workflow).toContain('destination_dir: code39');
     expect(workflow).toContain('code/programs/typescript/code39-visualizer/**');
     expect(workflow).toContain('code/packages/typescript/lattice-transpiler/**');
+    expect(workflow).toContain('uses: actions/checkout@v7');
+    expect(workflow).toContain('uses: actions/setup-node@v7');
   });
 });
 
@@ -123,6 +125,10 @@ describe("generateElectronWrapper", () => {
     expect(workflow).toContain(`code/programs/typescript/code39-visualizer`);
     expect(workflow).toContain(`code/programs/typescript/code39-desktop/release/*.exe`);
     expect(workflow).toContain(`tags:\n      - "code39-desktop-v*"`);
+    expect(workflow).toContain('uses: actions/checkout@v7');
+    expect(workflow).toContain('uses: actions/setup-node@v7');
+    expect(workflow).toContain('uses: actions/upload-artifact@v7');
+    expect(workflow).toContain('uses: actions/download-artifact@v8');
   });
 });
 

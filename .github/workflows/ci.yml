@@ -96,14 +96,15 @@ jobs:
       shard_count: ${{ steps.build-matrix.outputs.shard_count }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version: '1.26.1'
+          cache-dependency-path: 'code/**/go.sum'
 
       - name: Set up Rust for capability taxonomy conformance
         uses: dtolnay/rust-toolchain@stable
@@ -398,7 +399,7 @@ jobs:
           PY
 
       - name: Upload build plan
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-plan
           path: build-plan.json
@@ -412,7 +413,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Dart
         uses: dart-lang/setup-dart@v1
@@ -433,23 +434,25 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.13'
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "latest"
+          cache-dependency-glob: 'code/**/pyproject.toml'
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version: '1.26.1'
+          cache-dependency-path: 'code/**/go.sum'
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -458,7 +461,7 @@ jobs:
           bundler-cache: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -484,23 +487,25 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.13'
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "latest"
+          cache-dependency-glob: 'code/**/pyproject.toml'
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version: '1.26.1'
+          cache-dependency-path: 'code/**/go.sum'
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -509,7 +514,7 @@ jobs:
           bundler-cache: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -535,23 +540,25 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.13'
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "latest"
+          cache-dependency-glob: 'code/**/pyproject.toml'
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version: '1.26.1'
+          cache-dependency-path: 'code/**/go.sum'
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -560,7 +567,7 @@ jobs:
           bundler-cache: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -593,23 +600,25 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.13'
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "latest"
+          cache-dependency-glob: 'code/**/pyproject.toml'
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version: '1.26.1'
+          cache-dependency-path: 'code/**/go.sum'
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -618,7 +627,7 @@ jobs:
           bundler-cache: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -655,7 +664,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -689,7 +698,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
@@ -712,7 +721,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
@@ -742,7 +751,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
@@ -766,7 +775,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -801,7 +810,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -841,7 +850,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -852,13 +861,14 @@ jobs:
       # affected packages, as determined by the detect job.
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version: '1.26.1'
+          cache-dependency-path: 'code/**/go.sum'
 
       - name: Set up Python
         if: needs.detect.outputs.needs_python == 'true' || runner.os == 'Windows' || runner.os == 'macOS'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.13'
           allow-prereleases: true
@@ -874,9 +884,10 @@ jobs:
 
       - name: Install uv
         if: needs.detect.outputs.needs_python == 'true'
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "latest"
+          cache-dependency-glob: 'code/**/pyproject.toml'
 
       # ── Lua must be set up BEFORE Ruby on Windows ──────────────
       #
@@ -895,7 +906,7 @@ jobs:
       - name: Restore pinned Lua 5.4.7 cache
         id: lua-cache
         if: needs.detect.outputs.needs_lua == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .lua
           key: lua-5.4.7-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('code/scripts/setup_lua.py') }}
@@ -984,7 +995,7 @@ jobs:
 
       - name: Set up Node.js
         if: needs.detect.outputs.needs_typescript == 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
 
@@ -1198,7 +1209,7 @@ jobs:
 
       - name: Set up JDK 21
         if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -1238,10 +1249,10 @@ jobs:
 
       - name: Set up .NET
         if: needs.detect.outputs.needs_dotnet == 'true' || ((needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true') && runner.os == 'Windows')
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           # .NET 9 is the current LTS release. No platform exclusions needed —
-          # actions/setup-dotnet@v4 works identically on Ubuntu, macOS, and Windows.
+          # actions/setup-dotnet@v6 works identically on Ubuntu, macOS, and Windows.
           dotnet-version: '9.0.x'
 
       - name: Install ILAsm (real-CoreCLR assembler for the CLR-real conformance column)
@@ -1338,7 +1349,7 @@ jobs:
 
       # ── Download build plan (skip discovery in build job) ─────
       - name: Download build plan
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: build-plan
 
@@ -2000,7 +2011,7 @@ jobs:
 
       - name: Upload failed Mosaic TaskApp WinUI diagnostics
         if: failure() && runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mosaic-xaml-taskapp-diagnostics
           path: |
