@@ -215,11 +215,6 @@ fn home_directory() -> Result<PathBuf, BookmarkRepositoryError> {
         .ok_or_else(|| unavailable_message("HOME is not set"))
 }
 
-#[cfg(not(unix))]
-fn home_directory() -> Result<PathBuf, BookmarkRepositoryError> {
-    Err(unavailable_message("HOME is unavailable"))
-}
-
 #[cfg(unix)]
 fn replace_file(source: &Path, destination: &Path) -> std::io::Result<()> {
     fs::rename(source, destination)
@@ -228,7 +223,9 @@ fn replace_file(source: &Path, destination: &Path) -> std::io::Result<()> {
 #[cfg(windows)]
 fn replace_file(source: &Path, destination: &Path) -> std::io::Result<()> {
     use std::os::windows::ffi::OsStrExt;
-    use windows_sys::Win32::Storage::FileSystem::{MoveFileExW, MOVEFILE_REPLACE_EXISTING};
+    use windows_sys::Win32::Storage::FileSystem::{
+        MoveFileExW, MOVEFILE_REPLACE_EXISTING, MOVEFILE_WRITE_THROUGH,
+    };
 
     let source: Vec<u16> = source.as_os_str().encode_wide().chain(Some(0)).collect();
     let destination: Vec<u16> = destination
@@ -240,7 +237,7 @@ fn replace_file(source: &Path, destination: &Path) -> std::io::Result<()> {
         MoveFileExW(
             source.as_ptr(),
             destination.as_ptr(),
-            MOVEFILE_REPLACE_EXISTING,
+            MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH,
         )
     };
     if replaced == 0 {
