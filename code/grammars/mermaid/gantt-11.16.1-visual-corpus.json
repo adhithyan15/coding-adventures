@@ -27,6 +27,7 @@
     "custom-format-calendar-overrides",
     "weekend-exclusions",
     "friday-start-weekend",
+    "recurring-exclusions-leave-friday",
     "excludes-weekdays-and-date",
     "repeated-excludes",
     "today-marker-off",

@@ -6029,6 +6029,7 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
         sections.push(sec);
     }
     validate_gantt_dependencies(&sections)?;
+    validate_gantt_calendar(&config, &sections)?;
 
     Ok(GanttDiagram {
         title,
@@ -6038,6 +6039,43 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
         config,
         sections,
     })
+}
+
+fn validate_gantt_calendar(
+    config: &GanttConfig,
+    sections: &[GanttSection],
+) -> Result<(), ParseError> {
+    if !sections
+        .iter()
+        .flat_map(|section| &section.tasks)
+        .any(|task| task.end.is_none() && task.duration.value > 0.0)
+    {
+        return Ok(());
+    }
+
+    let mut excluded = config
+        .excludes
+        .iter()
+        .filter(|value| matches!(value.as_str(),
+            "monday" | "tuesday" | "wednesday" | "thursday" |
+            "friday" | "saturday" | "sunday"))
+        .map(String::as_str)
+        .collect::<HashSet<_>>();
+    if config.excludes.iter().any(|value| value == "weekends") {
+        if config.weekend.as_deref() == Some("friday") {
+            excluded.extend(["friday", "saturday"]);
+        } else {
+            excluded.extend(["saturday", "sunday"]);
+        }
+    }
+    if excluded.len() == 7 && config.includes.is_empty() {
+        return Err(ParseError {
+            message: "Failed to find a valid Gantt date".into(),
+            line: 1,
+            col: 1,
+        });
+    }
+    Ok(())
 }
 
 fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateFormat, ParseError> {
@@ -7122,6 +7160,16 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.config.today_marker.as_deref(), Some("off"));
         assert_eq!(diagram.config.weekday.as_deref(), Some("monday"));
         assert_eq!(diagram.config.weekend.as_deref(), Some("friday"));
+    }
+
+    #[test]
+    fn gantt_rejects_duration_schedules_that_exclude_every_weekday() {
+        let excluded = "gantt\ndateFormat YYYY-MM-DD\nexcludes weekends,monday,tuesday,wednesday,thursday,friday\nweekend saturday\nsection weekends skip test\ntest1 :id1, 2019-02-01, 7d";
+        let error = parse_gantt(excluded).unwrap_err();
+        assert!(error.message.contains("valid Gantt date"));
+
+        let valid = "gantt\ndateFormat YYYY-MM-DD\nexcludes weekends,monday,tuesday,wednesday,thursday\nweekend saturday\nsection weekends skip test\ntest1 :id1, 2019-02-01, 7d";
+        parse_gantt(valid).expect("Friday remains available");
     }
 
     #[test]
