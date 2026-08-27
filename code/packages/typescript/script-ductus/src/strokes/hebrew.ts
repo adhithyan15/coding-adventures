@@ -1,6 +1,6 @@
 // Authored hebrew ductus records. This is the stable source-ownership boundary.
 
-import type { LetterDuctus, Point, Stroke, StrokeSource } from "../strokes.ts";
+import type { StrokeSource } from "../strokes.ts";
 import type { DuctusEntry } from "./registry.ts";
 import hebrew from "../../../../../learning/human-languages/data/scripts/hebrew.json";
 

@@ -1,6 +1,6 @@
 // Authored chinese ductus records. This is the stable source-ownership boundary.
 
-import type { LetterDuctus, Point, Stroke, StrokeSource } from "../strokes.ts";
+import type { Point, Stroke, StrokeSource } from "../strokes.ts";
 import type { DuctusEntry } from "./registry.ts";
 import chinese from "../../../../../learning/human-languages/data/scripts/chinese.json";
 

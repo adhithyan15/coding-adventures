@@ -1,6 +1,5 @@
 // Authored japanese ductus records. This is the stable source-ownership boundary.
 
-import type { LetterDuctus, Point, Stroke, StrokeSource } from "../strokes.ts";
 import type { DuctusEntry } from "./registry.ts";
 import { SCRIPTS, type ScriptData } from "../scriptdata.ts";
 

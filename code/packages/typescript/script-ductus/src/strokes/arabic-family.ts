@@ -1,6 +1,6 @@
 // Authored arabic-family ductus records. This is the stable source-ownership boundary.
 
-import type { LetterDuctus, Point, Stroke, StrokeSource } from "../strokes.ts";
+import type { LetterDuctus, Stroke, StrokeSource } from "../strokes.ts";
 import type { DuctusEntry } from "./registry.ts";
 import arabic from "../../../../../learning/human-languages/data/scripts/arabic.json";
 import { SCRIPTS, type ScriptData } from "../scriptdata.ts";
