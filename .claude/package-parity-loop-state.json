@@ -17,6 +17,14 @@
     "branch": "codex/vigenere-ascii-established-lane-conformance",
     "status": "open"
   },
+  "last_ci_action": {
+    "observed_at": "2026-08-27T12:17:22Z",
+    "pr_number": 13172,
+    "run_id": 33040844478,
+    "attempt": 2,
+    "status": "focused-fix-validated",
+    "notes": "The first Windows attempt failed an unrelated ADJ timing assertion by 30 milliseconds; its rerun passed all 48 containment tests and exposed two Vigenere build-front gaps. Added the established Windows Elixir skip because CI does not install mix, and removed nested command-shell quotes from the F# artifacts path. The downloaded CI plan now builds both affected fronts successfully through the real Go build tool; the F# suite passes all 10 tests at 93.66/83.89/100 percent line/branch/method coverage."
+  },
   "last_inventory": {
     "revision": "878556189d8652d9dc6cb9c84e3d3236e7f09f54",
     "schema_version": 3,
