@@ -1,5 +1,16 @@
 # Changelog — @coding-adventures/forme-parse-markdown
 
+## Unreleased
+
+### Fixed
+
+- The standalone `BUILD` gate now compiles the package before running tests,
+  closing the gap where a passing Vitest suite could hide TypeScript errors in
+  the local `gfm-parser` dependency closure.
+- `gfm-parser` now completes its block-extension and inline-resolution phases
+  by returning new readonly Document AST trees instead of mutating readonly
+  nodes through escape casts.
+
 ## 0.1.0 — 2026-05-15
 
 Initial release.  Second Forme stage of the blog v0 effort — sits

@@ -1713,8 +1713,7 @@ export function applyGfmBlockExtensions(
     return { type: "task_item", checked, children };
   }
 
-  (document as { children: BlockNode[] }).children = transformBlocks(document.children);
-  return document;
+  return { type: "document", children: transformBlocks(document.children) };
 }
 
 function maybeTransformParagraphToTable(
