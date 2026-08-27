@@ -1,0 +1,27 @@
+{
+  "glyph": "خ",
+  "sound": "kh",
+  "role": "consonant",
+  "forms": {
+    "isolated": "خ",
+    "initial": "خـ",
+    "medial": "ـخـ",
+    "final": "ـخ"
+  },
+  "components": [
+    "hooked head and deep bowl",
+    "one dot above"
+  ],
+  "strokeOrder": [
+    "draw the short upper head from left to right",
+    "continue down and around the deep bowl without lifting",
+    "lift once, then place the dot above"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, خ demonstration at 00:49–00:54 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated خ body-first: the short upper head travels left to right, then the same pen-down run turns through the hooked descent and deep bowl. After completing the body, the writer lifts once and places the single dot above. Contextual joins reshape the head; this isolated Persian learner path fits the vendored Noto Naskh outline and retains Persian-scoped provenance rather than borrowing the separate Arabic or Urdu خ sources."
+  }
+}

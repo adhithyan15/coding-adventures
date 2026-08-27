@@ -1,0 +1,25 @@
+{
+  "glyph": "ی",
+  "sound": "y / ī",
+  "role": "letter",
+  "forms": {
+    "isolated": "ی",
+    "initial": "یـ",
+    "medial": "ـیـ",
+    "final": "ـی"
+  },
+  "components": [
+    "dotless independent S-shaped body"
+  ],
+  "strokeOrder": [
+    "start at the independent form's upper right and descend through the S curve",
+    "continue left around the below-baseline bowl and finish at its rising tip without lifting"
+  ],
+  "strokeOrderNote": "source-verified instructional animations and prose",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Chhoṭī he, do-chashmī he, chhoṭī ye, baṛī ye, and punctuation, independent ی calligraphic and handwriting animations and Chhoṭī ye instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/chhoti-he-do-chashmi-he-chhoti-ye-bari-ye/",
+    "variation": "Both independent-form animations draw one uninterrupted dotless S-shaped body: start at the upper right, descend through the upper curve, then sweep left around the below-baseline bowl and finish at its rising tip without lifting. The lesson says independent and final chhoṭī ye use this S-shaped form and make an ī sound. Initial and medial ye instead resemble a be-series tooth with two dots below the line and can represent chhoṭī or baṛī ye; those dots do not belong to the independent form. This learner path covers independent chhoṭī ye and fits the continuous zero-lift order to the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  }
+}

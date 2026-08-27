@@ -36,14 +36,12 @@ learning."
 ### Authoring sharded ledgers
 
 Every track's chapter and curriculum ledgers are conflict-resistant shards, as
-are the shared spine, book-generation manifest, and Japanese script inventory.
-Edit the owning file under `X.d/`; the chapter, curriculum, spine, and
-book-generation monoliths do not exist. Language Ladder folds their browser
-modules at build time. Japanese alone retains a generated compatibility JSON
-for the independently-built `script-ductus` package.
+are the shared spine, book-generation manifest, and Japanese, Perso-Arabic, and
+Urdu-Nastaliq script inventories. Edit the owning file under `X.d/`; their
+monoliths do not exist. Language Ladder and Script Ductus fold bounded browser
+modules from the canonical shards at build time.
 
 ```bash
-npm run unshard -- data/scripts/japanese.json
 npm run check:shards
 ```
 

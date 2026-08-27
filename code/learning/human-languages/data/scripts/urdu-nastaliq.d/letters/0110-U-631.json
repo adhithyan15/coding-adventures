@@ -1,0 +1,26 @@
+{
+  "glyph": "ر",
+  "sound": "r",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ر",
+    "initial": "ر",
+    "medial": "ـر",
+    "final": "ـر"
+  },
+  "components": [
+    "one downward line curving left"
+  ],
+  "strokeOrder": [
+    "draw the independent re downward",
+    "continue curving to the left without lifting"
+  ],
+  "strokeOrderNote": "source-verified instructional animation and prose",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Dāl, re, and wāw, independent ر handwriting animation and Re instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/dal-re-and-waw/",
+    "variation": "The independent-form animation and adjacent prose show one uninterrupted stroke: draw a downward line, then curve to the left. The final form instead drops sharply to the lower left from the preceding letter. The lesson also notes that final re rises in Naskh but not in Nastaliq. This learner path covers the independent form and fits the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  },
+  "notes": "Does not join to the following letter."
+}

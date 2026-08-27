@@ -1,4 +1,5 @@
 import { defineConfig } from "vitest/config";
+import { scriptInventoryPlugin } from "./script-inventory-plugin.ts";
 
 // The canonical script JSON lives outside this package, at
 // code/learning/human-languages/data/scripts/, and `scriptdata.ts` imports it
@@ -11,8 +12,10 @@ import { defineConfig } from "vitest/config";
 // here would classify the whole project as Node-only in the repository's
 // TypeScript portability contract. The URL form is standard and needs no types.
 const repoRoot = new URL("../../../..", import.meta.url).pathname;
+const curriculumRoot = new URL("../../../../code/learning/human-languages", import.meta.url).pathname;
 
 export default defineConfig({
+  plugins: [scriptInventoryPlugin({ curriculumRoot })],
   server: {
     fs: { allow: [repoRoot] },
   },

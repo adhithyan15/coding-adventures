@@ -1,0 +1,29 @@
+{
+  "glyph": "ف",
+  "sound": "f",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ف",
+    "initial": "فـ",
+    "medial": "ـفـ",
+    "final": "ـف"
+  },
+  "components": [
+    "rounded looped head above the main line",
+    "shallow curved leftward tail",
+    "one dot above"
+  ],
+  "strokeOrder": [
+    "loop clockwise around the rounded head above the main line",
+    "continue left through the shallow curved tail without lifting",
+    "after one lift, place the single dot above"
+  ],
+  "strokeOrderNote": "source-verified instructional animations and prose",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Fe, qāf, ṭe, ḍāl, and ṛe, independent ف calligraphic and handwriting animations and Fe instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/fe-qaf-te-dal-re/",
+    "variation": "The independent handwriting animation draws the rounded head clockwise above the main line, continues through the shallow curved tail in one uninterrupted body stroke, then lifts once to place the single dot above. The adjacent prose says handwritten fe always has a looped head; its final and independent tail is more curved than kāf but shallower than nūn, while calligraphy may use a solid head. This learner path covers the independent form and fits the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback. The provenance remains Urdu-specific rather than borrowing the separate Persian or Arabic ف sources."
+  },
+  "notes": "Fe sounds f; the independent and final tail is shallower than nūn's bowl."
+}

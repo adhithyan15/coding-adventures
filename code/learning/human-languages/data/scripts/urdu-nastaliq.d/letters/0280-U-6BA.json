@@ -1,0 +1,23 @@
+{
+  "glyph": "ں",
+  "sound": "nasalizes the preceding vowel",
+  "role": "other",
+  "forms": {
+    "isolated": "ں",
+    "final": "ـں"
+  },
+  "components": [
+    "dotless below-baseline nūn bowl"
+  ],
+  "strokeOrder": [
+    "sweep the independent dotless bowl from right to left below the baseline without lifting"
+  ],
+  "strokeOrderNote": "source-verified instructional animations and prose",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Sīn, shīn, baṛī he, nūn, and nūn-e ġhunna, independent ں calligraphic and handwriting animations and Nasalization with nūn-e ġhunna instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/sin-shin-bari-he-nun-nun-ghunna/",
+    "variation": "Both independent-form animations draw one uninterrupted right-to-left bowl below the baseline without lifting. The lesson explicitly says final and independent nūn-e ġhunna look like nūn without any dot; initial and medial forms instead look identical to regular nūn and may occasionally carry a sukūn or small semicircular diacritic. The vendored Noto Naskh U+06BA outline exactly matches the U+0646 nūn body contour with the dot removed, so this learner path reuses that verified bowl motion while preserving the positional distinction. Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  },
+  "notes": "Nūn-e ġhunna marks a nasal vowel; its final and independent forms lack the dot of ن."
+}

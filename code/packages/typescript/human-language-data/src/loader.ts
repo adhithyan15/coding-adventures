@@ -685,25 +685,42 @@ function isLedgerFile(file: string): boolean {
   return file.toLowerCase().endsWith(LEDGER_SUFFIX);
 }
 
-/** Read data/scripts/*.json (may be empty while scripts are still being authored). */
+/**
+ * Read ordinary `*.json` and shard-native `*.d/` script inventories.
+ *
+ * The logical-name set prevents a transitional monolith beside its shards from
+ * being read twice; `readMaybeSharded` then selects the canonical directory.
+ * Calling `isSharded` for a discovered `.d` also refuses symlinks and
+ * non-directories rather than silently skipping them.
+ */
 export function loadScripts(root = defaultCurriculumRoot()): Record<string, ScriptData> {
   const dir = join(root, "data", "scripts");
   const out: Record<string, ScriptData> = Object.create(null);
   if (!existsSync(dir)) return out;
-  for (const file of readdirSync(dir).sort()) {
-    if (!file.endsWith(".json")) continue;
-    // A letter ledger sits in this directory and carries the SAME `script` key
-    // as the inventory it orders, so reading both into one map would have one
-    // silently overwrite the other. Which one won would depend on filename
-    // sort order, which is not a thing to depend on.
-    if (isLedgerFile(file)) continue;
-    // Same reasoning as `loadModalityManifest`: `data/scripts/` is a plain
-    // directory of authored files, not an `X.d/`, so the enumeration stays and
-    // only the READ moves behind the guards.
+  const logicalFiles = new Set<string>();
+  for (const entry of readdirSync(dir).sort()) {
+    if (entry.endsWith(".json")) {
+      if (!isLedgerFile(entry)) logicalFiles.add(entry);
+      continue;
+    }
+    if (!entry.endsWith(".d")) continue;
+    const file = `${entry.slice(0, -".d".length)}.json`;
+    if (!isLedgerFile(file) && isSharded(join(dir, file))) logicalFiles.add(file);
+  }
+  const owners = new Map<string, string>();
+  for (const file of [...logicalFiles].sort()) {
     const sd = readMaybeSharded<ScriptData>(
       join(dir, file),
       mergeScriptInventoryShards,
     );
+    const owner = owners.get(sd.script);
+    if (owner !== undefined) {
+      throw new Error(
+        `script inventory '${file}' duplicates script id ${JSON.stringify(sd.script)} ` +
+          `already owned by '${owner}'`,
+      );
+    }
+    owners.set(sd.script, file);
     out[sd.script] = sd;
   }
   return out;

@@ -1,0 +1,25 @@
+{
+  "glyph": "ا",
+  "sound": "ā / vowel carrier",
+  "role": "letter",
+  "forms": {
+    "isolated": "ا",
+    "initial": "ا",
+    "medial": "ـا",
+    "final": "ـا"
+  },
+  "components": [
+    "one tall vertical"
+  ],
+  "strokeOrder": [
+    "draw the independent alif downward"
+  ],
+  "strokeOrderNote": "source-verified instructional animation",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Pe, gaf, alif, and lam, independent ا animation (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/pe-gaf-alif-lam/",
+    "variation": "The lesson explicitly distinguishes independent ا, drawn top-to-bottom in one continuous stroke, from final ـا, drawn bottom-to-top. This learner path covers the independent form and fits the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  },
+  "notes": "Does not join to the following letter."
+}

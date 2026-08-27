@@ -10,7 +10,7 @@
 #     so the whole block is included once and never revisited. A future lesson
 #     using a kana this chapter never touched still renders.
 #   * KANJI are open-ended. Only the ideographs that actually appear in the
-#     track are included, gathered from data/scripts/japanese.json and from
+#     track are included, gathered from data/scripts/japanese.d/ and from
 #     every japanese/ source file, so nothing an author typed can silently drop
 #     to a missing-glyph warning.
 #
@@ -54,14 +54,18 @@ fi
 
 # Whole kana block, plus every ideograph the track actually uses.
 python3 - "$WORK/jp_chars.txt" <<'PY'
-import pathlib, sys
+import json, pathlib, sys
 
-sources = [pathlib.Path("../data/scripts/japanese.json")]
-sources += sorted(pathlib.Path("../japanese").rglob("*.md"))
+sys.path.insert(0, str(pathlib.Path("../data/scripts").resolve()))
+from sharded_ledger import load_script_inventory
+
+sources = sorted(pathlib.Path("../japanese").rglob("*.md"))
 sources += sorted(pathlib.Path("../japanese").rglob("*.tex"))
 sources += sorted(pathlib.Path("../japanese").rglob("*.json"))
 
-text = "".join(p.read_text(encoding="utf8") for p in sources if p.is_file())
+inventory = load_script_inventory(pathlib.Path("..").resolve(), "japanese")
+text = json.dumps(inventory, ensure_ascii=False)
+text += "".join(p.read_text(encoding="utf8") for p in sources if p.is_file())
 
 # Closed sets: take the whole block so future kana never fall out of the subset.
 kana = {chr(c) for c in range(0x3000, 0x3100)}

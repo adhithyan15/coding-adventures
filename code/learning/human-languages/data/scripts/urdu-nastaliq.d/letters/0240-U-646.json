@@ -1,0 +1,26 @@
+{
+  "glyph": "ن",
+  "sound": "n",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ن",
+    "initial": "نـ",
+    "medial": "ـنـ",
+    "final": "ـن"
+  },
+  "components": [
+    "below-baseline bowl",
+    "one dot near the baseline"
+  ],
+  "strokeOrder": [
+    "sweep the independent bowl from right to left below the baseline",
+    "after one lift, place the dot near the baseline"
+  ],
+  "strokeOrderNote": "source-verified instructional animations and prose",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Sīn, shīn, baṛī he, nūn, and nūn-e ġhunna, independent ن calligraphic and handwriting animations and Nūn instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/sin-shin-bari-he-nun-nun-ghunna/",
+    "variation": "Both independent-form animations draw the bowl first in one uninterrupted right-to-left run, then lift once and place the dot near the baseline. The lesson says final and independent nūn use a bowl extending below the baseline with the dot near the baseline itself; initial and medial nūn instead resemble a be-series tooth with one dot above it. This learner path covers the independent form and fits the two-stroke order to the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  }
+}

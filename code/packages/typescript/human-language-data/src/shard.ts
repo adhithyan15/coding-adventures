@@ -384,6 +384,86 @@ export function readMaybeSharded<T>(
   return readLedgerFile<T>(monolithPath);
 }
 
+/** Stable code-point identity for one script glyph on every filesystem. */
+export function scriptEntryId(glyph: unknown): string {
+  if (typeof glyph !== "string" || glyph.length === 0) {
+    throw new Error(`script shard entry has no non-empty glyph: ${JSON.stringify(glyph)}`);
+  }
+  return [...glyph]
+    .map((character) => `U-${character.codePointAt(0)!.toString(16).toUpperCase()}`)
+    .join("-");
+}
+
+const SCRIPT_SECTIONS = [
+  { key: "letters", dir: "letters" },
+  { key: "marks", dir: "marks" },
+] as const;
+
+const SCRIPT_ENTRY_NAME =
+  /^(letters|marks)\/(\d{4})-(U-[0-9A-F]+(?:-U-[0-9A-F]+)*)\.json$/;
+
+function scriptEntryGlyph(kind: "letters" | "marks", value: unknown, name: string): string {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new Error(`script shard '${name}': must contain one JSON object`);
+  }
+  const field = kind === "letters" ? "glyph" : "mark";
+  const glyph = (value as Record<string, unknown>)[field];
+  if (typeof glyph !== "string" || glyph.length === 0) {
+    throw new Error(`script shard '${name}': must carry one non-empty '${field}'`);
+  }
+  return glyph;
+}
+
+/**
+ * Reassemble a script inventory while treating each filename as an identity,
+ * not merely a sorting hint. Kept in this dependency-free module so both Node
+ * loaders and Vite config-time consumers execute the exact same guards.
+ */
+export function mergeScriptInventoryShards<T = Record<string, unknown>>(shards: Shard[]): T {
+  const ordinals = new Map<string, Set<string>>([
+    ["letters", new Set<string>()],
+    ["marks", new Set<string>()],
+  ]);
+  const glyphOwners = new Map<string, string>();
+
+  for (const shard of shards) {
+    if (shard.name === META_SHARD) continue;
+    const match = SCRIPT_ENTRY_NAME.exec(shard.name);
+    if (match === null) {
+      throw new Error(
+        `script shard '${shard.name}': expected ` +
+          `letters/NNNN-U-<CODEPOINT>.json or marks/NNNN-U-<CODEPOINT>.json`,
+      );
+    }
+    const kind = match[1] as "letters" | "marks";
+    const ordinal = match[2];
+    const id = match[3];
+    const seenOrdinals = ordinals.get(kind)!;
+    if (seenOrdinals.has(ordinal)) {
+      throw new Error(`script shard '${shard.name}': duplicate ${kind} ordinal '${ordinal}'`);
+    }
+    seenOrdinals.add(ordinal);
+
+    const glyph = scriptEntryGlyph(kind, shard.value, shard.name);
+    const expected = scriptEntryId(glyph);
+    if (id !== expected) {
+      throw new Error(
+        `script shard '${shard.name}': filename id '${id}' does not match ` +
+          `${JSON.stringify(glyph)} (${expected})`,
+      );
+    }
+    const owner = glyphOwners.get(glyph);
+    if (owner !== undefined) {
+      throw new Error(
+        `script shard '${shard.name}': glyph ${JSON.stringify(glyph)} is already owned by '${owner}'`,
+      );
+    }
+    glyphOwners.set(glyph, shard.name);
+  }
+
+  return mergeSectionedShards(shards, SCRIPT_SECTIONS) as T;
+}
+
 /**
  * Refuse a path that is not a real file in the tree.
  *
@@ -1100,15 +1180,23 @@ function scrubbedCause(cause: unknown): unknown {
  * and a guard that is documented as total but is not is worse than none, because
  * the next author reads the comment instead of the code.
  *
- * Nothing in this package deep-merges these values today, so this is defence in
- * depth for the consumer that has not been written yet. See `mergeMetaAndList`
- * for why `JSON.parse` plus spread is not itself pollution.
+ * The walk is recursive because a later consumer may emit or deep-merge any
+ * nested author-controlled object. A top-level-only check left values such as
+ * `forms.__proto__` dormant until JavaScript object-literal evaluation invoked
+ * the legacy prototype setter. Parsed JSON is acyclic, but the exported helper
+ * also tolerates a caller-owned cycle rather than recursing forever.
  */
 export function rejectDangerousKeys(value: unknown, where: string): void {
-  if (typeof value !== "object" || value === null) return;
-  for (const dangerous of ["__proto__", "constructor", "prototype"]) {
-    if (Object.hasOwn(value, dangerous)) {
-      throw new Error(`${where}: must not carry '${dangerous}'`);
+  const visited = new Set<object>();
+  const visit = (candidate: unknown): void => {
+    if (typeof candidate !== "object" || candidate === null || visited.has(candidate)) return;
+    visited.add(candidate);
+    for (const key of Object.keys(candidate)) {
+      if (key === "__proto__" || key === "constructor" || key === "prototype") {
+        throw new Error(`${where}: must not carry '${key}'`);
+      }
+      visit((candidate as Record<string, unknown>)[key]);
     }
-  }
+  };
+  visit(value);
 }

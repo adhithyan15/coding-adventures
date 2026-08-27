@@ -1,0 +1,30 @@
+{
+  "glyph": "گ",
+  "sound": "g",
+  "role": "consonant",
+  "forms": {
+    "isolated": "گ",
+    "initial": "گـ",
+    "medial": "ـگـ",
+    "final": "ـگ"
+  },
+  "components": [
+    "kāf-family main-line stem, flatter bowl, and final hook",
+    "long downward slash",
+    "shorter floating slash above"
+  ],
+  "strokeOrder": [
+    "draw the independent stem downward",
+    "flow right to left through the flatter bowl and finish with the pronounced hook without lifting",
+    "after one lift, draw the long slash down from the upper right toward the stem",
+    "after another lift, draw the shorter floating slash above the first"
+  ],
+  "strokeOrderNote": "source-verified independent calligraphic and handwriting animations and prose",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Pe, gāf, alif, and lām, independent گ calligraphic and handwriting animations and Gāf instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/pe-gaf-alif-lam/",
+    "variation": "The independent-form animations write the kāf-family main-line body first, add the long downward slash after one lift, then add the shorter floating slash above after another lift: three runs separated by two pen lifts. The adjacent prose defines gāf as kāf with a second floating slash, often shorter than the first. This learner path covers the independent form and fits the body-first, three-run order to the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  },
+  "notes": "Gāf represents g and differs from kāf by the additional shorter floating slash."
+}

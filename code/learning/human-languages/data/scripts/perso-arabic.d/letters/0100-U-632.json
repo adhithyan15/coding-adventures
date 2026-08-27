@@ -1,0 +1,28 @@
+{
+  "glyph": "ز",
+  "sound": "z",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ز",
+    "initial": "ز",
+    "medial": "ـز",
+    "final": "ـز"
+  },
+  "components": [
+    "short descending stroke and leftward lower curve",
+    "one dot above"
+  ],
+  "strokeOrder": [
+    "begin at the upper tip and descend through the short stroke",
+    "without lifting, sweep left through the lower curve",
+    "lift once, then place the dot above"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, ز demonstration at 01:13–01:16 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated Persian ز body-first: begin at the upper tip, descend through the short stroke, and sweep left through the lower curve without lifting; after the complete re-series body, lift once and place the single dot above. This non-connector path fits the vendored Noto Naskh outline and records Persian-scoped provenance rather than borrowing the independently verified Arabic or Urdu ز source."
+  },
+  "notes": "Does not join to the following letter; the upper dot distinguishes it from ر."
+}

@@ -1,0 +1,27 @@
+{
+  "glyph": "و",
+  "sound": "v / u / o",
+  "role": "letter",
+  "forms": {
+    "isolated": "و",
+    "initial": "و",
+    "medial": "ـو",
+    "final": "ـو"
+  },
+  "components": [
+    "small head loop",
+    "curving tail"
+  ],
+  "strokeOrder": [
+    "shape the small head loop",
+    "flow into the leftward tail without lifting"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, و demonstration at 02:43–02:45 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated و as one continuous Naskh stroke: its small head loops before flowing into the leftward curving tail with no pen lift. This non-connector does not join to a following letter; the isolated learner path fits the vendored Noto Naskh outline."
+  },
+  "notes": "Does not join to the following letter."
+}

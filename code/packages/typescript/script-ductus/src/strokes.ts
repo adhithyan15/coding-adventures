@@ -13,12 +13,20 @@ import cyrillic from "../../../../learning/human-languages/data/scripts/cyrillic
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
 import gujarati from "../../../../learning/human-languages/data/scripts/gujarati.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
-import japanese from "../../../../learning/human-languages/data/scripts/japanese.json";
 import kannada from "../../../../learning/human-languages/data/scripts/kannada.json";
 import malayalam from "../../../../learning/human-languages/data/scripts/malayalam.json";
-import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 import telugu from "../../../../learning/human-languages/data/scripts/telugu.json";
-import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
+import { SCRIPTS, type ScriptData } from "./scriptdata.ts";
+
+const canonicalScript = (id: string): ScriptData => {
+  const inventory = SCRIPTS.find((candidate) => candidate.script === id);
+  if (inventory === undefined) throw new Error(`Script Ductus has no ${id} inventory`);
+  return inventory;
+};
+
+const japanese = canonicalScript("japanese");
+const persoArabic = canonicalScript("perso-arabic");
+const urduNastaliq = canonicalScript("urdu-nastaliq");
 //
 // The model, in one breath
 // ------------------------

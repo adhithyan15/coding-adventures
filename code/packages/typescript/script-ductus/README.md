@@ -20,9 +20,9 @@ finished letter in pale grey, with a dot where the pen is.
 ## Where it fits in the stack
 
 ```
-data/scripts/*.json  ──►  scriptdata.ts  ──┐
-  (the curriculum's                        ├──►  ductusview.ts  ──►  filmstrip
-   own script files)     strokes.ts  ──────┤        (the join)        (SvgNode
+data/scripts/*.{json,d/} ─► scriptdata.ts ─┐
+  (canonical files and                     ├──►  ductusview.ts  ──►  filmstrip
+   build-time shard fold) strokes.ts  ─────┤        (the join)        (SvgNode
                           (pen paths)      │                           tree, or
      _fonts/*.ttf  ──►  truetype.ts  ──────┘                           SVG text)
        (shipped fonts)   (real outlines)
@@ -32,7 +32,7 @@ data/scripts/*.json  ──►  scriptdata.ts  ──┐
 
 | module | what it knows |
 |---|---|
-| `scriptdata.ts` | the curriculum's canonical script files, imported directly so nothing can drift from what the lessons teach |
+| `scriptdata.ts` | the curriculum's canonical script data; ordinary JSON is imported directly and the three sharded inventories arrive through one fixed build-time virtual module |
 | `strokes.ts` | **how** a letter is written — hand-authored pen paths in labelled segments, with pen lifts and a citation |
 | `truetype.ts` | **what** the letter looks like — a zero-dependency TrueType reader pulling the real outline out of the shipped font |
 | `ductusview.ts` | the join — the filmstrip, as a tree of plain objects plus a serialiser |
@@ -49,6 +49,12 @@ check it mechanically rather than by eye —
 - the strokes together must **cover** the glyph, not trace a convenient part of it
 
 So a wrong pen path fails a test rather than shipping a plausible-looking lie.
+
+The shard-aware module is deliberately bounded: it exposes only Japanese,
+Perso-Arabic, and Urdu-Nastaliq, watches every contributing shard, and never
+places one eager browser key per glyph in the bundle. Script Ductus and Language
+Ladder install the same plugin, so their tests, development servers, and
+production builds all read the same canonical data.
 
 ## Stroke order is a citation, not an opinion
 

@@ -1,0 +1,25 @@
+{
+  "glyph": "ہ",
+  "sound": "h",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ہ",
+    "initial": "ہـ",
+    "medial": "ـہـ",
+    "final": "ـہ"
+  },
+  "components": [
+    "independent oval or teardrop"
+  ],
+  "strokeOrder": [
+    "start at the independent form's upper right",
+    "curve down and left around the base, then return up the right side and cross the top without lifting"
+  ],
+  "strokeOrderNote": "source-verified instructional animations and prose",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Chhoṭī he, do-chashmī he, chhoṭī ye, baṛī ye, and punctuation, independent ہ calligraphic and handwriting animations and Chhoṭī he instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/chhoti-he-do-chashmi-he-chhoti-ye-bari-ye/",
+    "variation": "Both independent-form animations draw one uninterrupted counterclockwise loop: start at the upper right, curve down and left around the base, then return up the right side and cross at the top without lifting. The lesson describes the independent form as an oval or teardrop. Initial and medial chhoṭī he instead dip to a small divot with a number-6-like mark below, which is occasionally omitted medially; the final form is a small curve or squiggle that goes up and then down. This learner path covers the independent form and fits the continuous zero-lift order to the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  }
+}

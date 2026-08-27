@@ -1,0 +1,11 @@
+{
+  "script": "perso-arabic",
+  "name": "Persian alphabet",
+  "font": "_fonts/NotoNaskhArabic-Static.ttf",
+  "direction": "rtl",
+  "system": "abjad",
+  "signature": "Right-to-left joined letters on a flowing baseline; most short vowels are understood rather than printed.",
+  "complete": false,
+  "combination": "Most letters join and change shape by position. Alif ا and vav و do not connect to the following letter. Short vowels are normally omitted. Persian adds پ چ ژ گ to the Arabic inventory as the course expands.",
+  "notes": "Starter inventory for the first Persian shared-spine lessons. Contextual shapes and stroke descriptions follow common Naskh handwriting; the course will grow toward the full Persian alphabet."
+}

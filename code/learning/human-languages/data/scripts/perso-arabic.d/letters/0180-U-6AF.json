@@ -1,0 +1,29 @@
+{
+  "glyph": "گ",
+  "sound": "g",
+  "role": "consonant",
+  "forms": {
+    "isolated": "گ",
+    "initial": "گـ",
+    "medial": "ـگـ",
+    "final": "ـگ"
+  },
+  "components": [
+    "main-line stem, shallow leftward bowl, and final hook",
+    "long downward slash",
+    "shorter floating slash above"
+  ],
+  "strokeOrder": [
+    "draw the independent stem downward and continue left through the shallow bowl and final hook without lifting",
+    "lift once, then draw the long slash down from the upper right toward the stem",
+    "lift again, then draw the shorter floating slash above the first"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, گ demonstration at 02:24–02:28 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated Persian گ in three pen-down runs. First the writer draws the independent stem downward and continues left through the shallow bowl and hooked finish; after one lift, the long slash descends from the upper right toward the stem; after another lift, the shorter floating slash is drawn above the first. This order fits the vendored Noto Naskh outline and retains Persian-scoped provenance rather than borrowing the independently verified Urdu گ source."
+  },
+  "notes": "Persian gāf adds a shorter floating slash above the long slash of kāf."
+}

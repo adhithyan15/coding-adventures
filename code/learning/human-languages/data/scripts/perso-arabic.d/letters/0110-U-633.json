@@ -1,0 +1,26 @@
+{
+  "glyph": "س",
+  "sound": "s",
+  "role": "consonant",
+  "forms": {
+    "isolated": "س",
+    "initial": "سـ",
+    "medial": "ـسـ",
+    "final": "ـس"
+  },
+  "components": [
+    "three teeth",
+    "final bowl"
+  ],
+  "strokeOrder": [
+    "form the three teeth from right to left",
+    "flow into the final bowl without lifting"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, س demonstration at 01:23–01:28 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The cited freehand lesson demonstrates isolated س as one continuous right-to-left Naskh movement: three teeth flow directly into the final bowl with no pen lift. Contextual joins shorten the final bowl before following letters; this isolated learner path fits the vendored Noto Naskh outline."
+  }
+}

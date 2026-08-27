@@ -1,0 +1,27 @@
+{
+  "glyph": "ٹ",
+  "sound": "ṭ",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ٹ",
+    "initial": "ٹـ",
+    "medial": "ـٹـ",
+    "final": "ـٹ"
+  },
+  "components": [
+    "be-series bowl",
+    "small to'e-shaped retroflex mark above"
+  ],
+  "strokeOrder": [
+    "sweep the independent be-series bowl from right to left",
+    "after one lift, draw the small retroflex mark downward, back upward, and down again to close its loop"
+  ],
+  "strokeOrderNote": "source-verified independent handwriting animation and prose",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Fe, qāf, ṭe, ḍāl, and ṛe, independent ٹ handwriting animation and Ṭe instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/fe-qaf-te-dal-re/",
+    "variation": "The independent-form handwriting animation writes the be-series body and the upper retroflex mark as two pen-down runs. The adjacent prose says ṭe is written like dental te but replaces its dots with a small to'e-shaped mark, drawn down, back up, and down again to form a loop. This learner path fits that body-first, one-lift order to the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback. The lesson identifies ṭe as an Urdu retroflex letter introduced for a sound absent from Persian and Arabic."
+  },
+  "notes": "Ṭe represents the voiceless retroflex stop ṭ and appears especially in Indic- and English-derived words."
+}

@@ -1,0 +1,26 @@
+{
+  "glyph": "س",
+  "sound": "s",
+  "role": "consonant",
+  "forms": {
+    "isolated": "س",
+    "initial": "سـ",
+    "medial": "ـسـ",
+    "final": "ـس"
+  },
+  "components": [
+    "three close teeth",
+    "final bowl"
+  ],
+  "strokeOrder": [
+    "shape the three close teeth from right to left",
+    "flow directly into the final bowl without lifting"
+  ],
+  "strokeOrderNote": "source-verified instructional animations and prose",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Sīn, shīn, baṛī he, nūn, and nūn-e ġhunna, independent س calligraphic and handwriting animations and Sīn instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/sin-shin-bari-he-nun-nun-ghunna/",
+    "variation": "The independent-form animations and adjacent prose show one uninterrupted stroke: shape the three close teeth from right to left, then flow directly into the final bowl without lifting. The lesson also documents an optional long gentle curve in place of the teeth, especially common in handwriting and practical for distinguishing adjacent sīns. This learner path covers the standard toothed independent form and fits the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  }
+}

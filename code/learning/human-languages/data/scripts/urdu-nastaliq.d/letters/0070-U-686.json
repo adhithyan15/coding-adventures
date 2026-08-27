@@ -1,0 +1,29 @@
+{
+  "glyph": "چ",
+  "sound": "ch",
+  "role": "consonant",
+  "forms": {
+    "isolated": "چ",
+    "initial": "چـ",
+    "medial": "ـچـ",
+    "final": "ـچ"
+  },
+  "components": [
+    "pointed hooked head and bowl",
+    "two lower dots and one lower-center dot beneath them"
+  ],
+  "strokeOrder": [
+    "sweep left through the pointed hooked head",
+    "continue down and around the bowl without lifting",
+    "after one lift, place the lower-left dot",
+    "after another lift, place the lower-right dot",
+    "after a third lift, place the lower-center dot"
+  ],
+  "strokeOrderNote": "source-verified independent calligraphic and handwriting animations and prose",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Te, mīm, jīm, che, and more diacritics, independent چ calligraphic and handwriting animations and Che instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/te-mim-jim-che/",
+    "variation": "Both independent-form animations draw the pointed hooked head, descent, and deep bowl in one uninterrupted body-first stroke, then place the lower-left dot, the lower-right dot, and finally the lower-center dot: four strokes separated by three pen lifts. The adjacent prose identifies che as the jīm-series shape with three dots below the head and gives its ch sound. This learner path covers the independent form and fits the body-first, three-dot order to the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback."
+  }
+}

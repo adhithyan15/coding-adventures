@@ -1,0 +1,26 @@
+{
+  "glyph": "ن",
+  "sound": "n",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ن",
+    "initial": "نـ",
+    "medial": "ـنـ",
+    "final": "ـن"
+  },
+  "components": [
+    "bowl",
+    "one dot above"
+  ],
+  "strokeOrder": [
+    "sweep the bowl from right to left",
+    "lift, then place the dot above"
+  ],
+  "strokeOrderNote": "source-verified freehand order",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Persian Online, How to Write Persian Characters, ن demonstration at 02:37–02:43 (Liberal Arts Instructional Technology Services, Univ. of Texas at Austin)",
+    "url": "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    "variation": "The source shows isolated ن as one continuous right-to-left Naskh bowl, followed by one lift to place the dot above. Contextual joins reshape the bowl; this isolated learner path fits the vendored Noto Naskh outline."
+  }
+}

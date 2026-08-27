@@ -329,6 +329,20 @@ describe("hostile shard contents", () => {
     expect(({} as Record<string, unknown>).polluted).toBeUndefined();
   });
 
+  it("refuses a dangerous key nested inside otherwise valid authored data", () => {
+    const monolith = join(root, "spine.json");
+    writeFileSync(
+      monolith,
+      '{ "version": 1, "items": [{ "forms": { "__proto__": { "polluted": true } } }] }\n',
+      "utf8",
+    );
+
+    expect(() => readMaybeSharded(monolith, mergeItems)).toThrow(
+      /must not carry '__proto__'/,
+    );
+    expect(Object.prototype).not.toHaveProperty("polluted");
+  });
+
   it("keeps the offending file's bytes out of the error message", () => {
     // V8 quotes the bytes it choked on straight into the message. Shards are repo
     // files and symlinks out of the tree are refused, so this is defence in

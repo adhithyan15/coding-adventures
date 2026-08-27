@@ -1,6 +1,7 @@
 import { defineConfig } from "vitest/config";
 import path from "node:path";
 import { humanLanguageLedgerPlugin } from "./human-language-ledger-plugin.ts";
+import { scriptInventoryPlugin } from "@coding-adventures/script-ductus/script-inventory-plugin.ts";
 
 // The curriculum — both the script JSON and the ~670 lesson markdown files —
 // lives outside this package, at code/learning/human-languages/. We read those
@@ -13,7 +14,10 @@ const repoRoot = path.resolve(__dirname, "../../../..");
 const curriculumRoot = path.join(repoRoot, "code", "learning", "human-languages");
 
 export default defineConfig({
-  plugins: [humanLanguageLedgerPlugin({ curriculumRoot })],
+  plugins: [
+    humanLanguageLedgerPlugin({ curriculumRoot }),
+    scriptInventoryPlugin({ curriculumRoot }),
+  ],
   server: {
     fs: { allow: [repoRoot] },
   },

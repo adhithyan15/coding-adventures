@@ -299,8 +299,8 @@ jobs:
           # Node and Python consumers use the same canonical directories. This
           # check parses and rebuilds every shard set and fails if a bad merge
           # resurrects a tracked aggregate that readers would silently ignore.
-          # Japanese's script inventory is the one generated compatibility view
-          # still checked byte-for-byte for the independently built ductus package.
+          # Japanese, Perso-Arabic, and Urdu-Nastaliq are also shard-only;
+          # Script Ductus folds its bounded browser module at build time.
           npm run check:shards
           # HL22/HL24: BACKLOG.d/ and CHANGELOG.d/ are the source of truth for
           # the Markdown histories human-languages authors touch.

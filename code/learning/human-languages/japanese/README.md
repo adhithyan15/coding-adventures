@@ -61,7 +61,7 @@ load-bearing.
   says so.
 - **“The letters in this word” spans systems.** HL01 gives a track one `script`
   id, so hiragana, katakana, and kanji share
-  [`../data/scripts/japanese.json`](../data/scripts/japanese.json). A per-sign
+  [`../data/scripts/japanese.d/`](../data/scripts/japanese.d/). A per-sign
   `role` distinguishes them.
 - **A kanji is taught as a set of readings.** 日 may be *nichi*, *jitsu*, *hi*,
   *bi*, or *ka*. Lessons teach the reading selected by the word in front of the

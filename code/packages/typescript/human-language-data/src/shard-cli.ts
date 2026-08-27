@@ -84,9 +84,8 @@ import {
  * than a defaulted one.
  *
  *   * `"generated"` — the monolith stays as a derived compatibility artifact,
- *     and `--check` compares its bytes against the rebuild. Japanese's script
- *     inventory remains in this mode for the independently-built
- *     `script-ductus` package.
+ *     and `--check` compares its bytes against the rebuild. No current plan
+ *     uses this transitional mode; it remains explicit for future migrations.
  *
  *   * `"removed"` — the monolith is deleted and `--check` fails if it comes
  *     back. This is the mode that removes the conflict.
@@ -96,7 +95,7 @@ import {
  * tranches still collides on it — the merge conflict this whole exercise exists
  * to remove survives, wearing a different hat. Sharding a hot ledger and
  * KEEPING its monolith buys nothing at all. The browser compatibility files
- * used this mode temporarily; only Japanese retains it now.
+ * used this mode temporarily. HL25 removed the final compatibility aggregate.
  *
  * So the rule is: keep the monolith only when something that cannot read a
  * directory genuinely needs it, and say which thing, in the plan, in writing.
@@ -412,30 +411,34 @@ export const BOOK_GENERATION_PLAN: ShardPlan = {
 };
 
 /**
- * Japanese is the first script inventory split at its natural ownership unit:
- * one glyph or mark per file. Code-point ids are stable across filesystems and
- * make two independent verification tranches edit different canonical files.
+ * A script inventory split at its natural ownership unit: one glyph or mark
+ * per file. Code-point ids are stable across filesystems and make two
+ * independent verification tranches edit different canonical files.
  */
-export const JAPANESE_SCRIPT_PLAN: ShardPlan = {
-  path: "data/scripts/japanese.json",
-  sections: [
-    {
-      key: "letters",
-      dir: "letters",
-      idOf: (element) => scriptEntryId((element as { glyph?: unknown }).glyph),
-    },
-    {
-      key: "marks",
-      dir: "marks",
-      idOf: (element) => scriptEntryId((element as { mark?: unknown }).mark),
-    },
-  ],
-  // Generated compatibility copy. Script Ductus statically imports this JSON,
-  // and Language Ladder discovers data/scripts/*.json in its browser bundle.
-  // #12696 owns removing that coupling. Until then authors edit only the shards
-  // and `--check` makes a stale or hand-merged monolith fail CI.
-  monolith: "generated",
-};
+function scriptInventoryPlan(name: string): ShardPlan {
+  return {
+    path: `data/scripts/${name}.json`,
+    sections: [
+      {
+        key: "letters",
+        dir: "letters",
+        idOf: (element) => scriptEntryId((element as { glyph?: unknown }).glyph),
+      },
+      {
+        key: "marks",
+        dir: "marks",
+        idOf: (element) => scriptEntryId((element as { mark?: unknown }).mark),
+      },
+    ],
+    // Script Ductus receives these through HL25's fixed build-time virtual
+    // module, so no browser consumer needs a tracked aggregate.
+    monolith: "removed",
+  };
+}
+
+export const JAPANESE_SCRIPT_PLAN = scriptInventoryPlan("japanese");
+export const PERSO_ARABIC_SCRIPT_PLAN = scriptInventoryPlan("perso-arabic");
+export const URDU_NASTALIQ_SCRIPT_PLAN = scriptInventoryPlan("urdu-nastaliq");
 
 /** Ledgers HL21 has migrated so far. Grows one entry per follow-on PR. */
 export const SHARD_PLANS: readonly ShardPlan[] = [
@@ -448,6 +451,8 @@ export const SHARD_PLANS: readonly ShardPlan[] = [
   ...CURRICULUM_SHARDED_TRACKS.map(curriculumPlan),
   BOOK_GENERATION_PLAN,
   JAPANESE_SCRIPT_PLAN,
+  PERSO_ARABIC_SCRIPT_PLAN,
+  URDU_NASTALIQ_SCRIPT_PLAN,
 ];
 
 
