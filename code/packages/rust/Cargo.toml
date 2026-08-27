@@ -1152,4 +1152,5 @@ members = [
   "chief-of-staff-channel-epoch-activation",
   "manchester-baby-simulator",
   "manchester-baby-gatelevel",
+  "ibm704-simulator",
 ]

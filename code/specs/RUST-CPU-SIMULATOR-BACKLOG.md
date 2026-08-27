@@ -66,7 +66,7 @@ according to the current prioritization run.
 | IDs (functional / gate) | Year | Target | Functional Rust | Gate-level Rust |
 |---|---:|---|---|---|
 | RCPU-001 / RCPU-002 | 1948 | Manchester Baby (SSEM) | Complete: `manchester-baby-simulator` | Complete: `manchester-baby-gatelevel` |
-| RCPU-003 / RCPU-004 | 1954 | IBM 704 | Missing | Missing |
+| RCPU-003 / RCPU-004 | 1954 | IBM 704 | Complete: `ibm704-simulator` | Missing |
 | RCPU-005 / RCPU-006 | 1961 | GE-225 | Audit: `ge225-simulator` | Missing |
 | RCPU-007 / RCPU-008 | 1964 | CDC 6600 | Missing | Missing |
 | RCPU-009 / RCPU-010 | 1970 | DEC PDP-11 | Missing | Missing |
@@ -91,11 +91,9 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-P001**, canonical IBM 704 instruction encoding and
-transport. This newly discovered prerequisite blocks RCPU-003 because the
-existing Rust encoder/backend use an idealized layout and byte order that the
-functional simulator cannot execute faithfully. RCPU-003 remains next after
-RCPU-P001 merges.
+Current selection after RCPU-003 merges: **RCPU-004**, the IBM 704 gate-level
+simulator. Its arithmetic and logical data paths will use the Rust gate and
+arithmetic primitives, with differential tests against `ibm704-simulator`.
 
 ## Cross-language wave
 
@@ -123,7 +121,10 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
-| 2026-08-27 | RCPU-P001: the Rust IBM 704 encoder shifts an idealized 9-bit opcode into bits 35–27, labels `+0420` as HTR, emits little-endian words, and the backend treats a `CLA` address as an immediate. These conflict with the 1955 IBM Type B format and `07h`'s executable big-endian transport contract. | P0, blocks RCPU-003 | Correct the encoder/spec to canonical Type A/Type B fields and big-endian packing; update the backend to emit addressable literal-pool words before implementing the simulator. |
+| 2026-08-27 | RCPU-003 manual audit found five historical errors inherited by `07h` and the Python oracle: CAL targeted Q instead of P, HPR and DVH used transfer PCs, TNO retained a set overflow indicator, TNX was omitted, and +0240 FDH was mislabeled as +0241 FDP. | P0, architecture correctness, blocks RCPU-003 | Correct the Rust simulator and `07h` against IBM's 1955 manual, add targeted regressions, and record the Python implementation for repair during its later cross-language audit. |
+| 2026-08-27 | RCPU-003 pre-push audit found that transport decoding could allocate an oversized temporary word vector before comparing it with configured memory, and an empty load with an unbounded origin could reach an invalid slice. | P0, allocation/panic safety, blocks RCPU-003 | Validate canonical length, origin, and decoded word count before allocation or slicing; add end-of-memory and `usize::MAX` origin regressions. |
+| 2026-08-27 | RCPU-003: the repository already had a complete Python IBM 704 simulator and conformance suite. | P0, correctness aid | Use the Python implementation as the behavioral oracle while retaining the canonical Rust encoder as the transport authority; port its v1 semantics and architecture programs to Rust. |
+| 2026-08-27 | RCPU-P001: the Rust IBM 704 encoder shifts an idealized 9-bit opcode into bits 35–27, labels `+0420` as HTR, emits little-endian words, and the backend treats a `CLA` address as an immediate. These conflict with the 1955 IBM Type B format and `07h`'s executable big-endian transport contract. | Resolved prerequisite | Corrected by merged PR #13234; RCPU-003 now consumes the canonical encoder and transport. |
 | 2026-08-27 | The existing C and C++ IBM 704 encoders mirror the same legacy idealized layout. | P1, non-blocking for Rust | Preserve Rust-first ordering; add these packages to the IBM 704 cross-language port/audit item after the Rust matrix is complete. |
 | 2026-08-27 | Current stable Clippy flags a collapsible ECALL condition in the already-affected `riscv-simulator`, blocking RCPU-P001's CI-equivalent graph lint. | P0, CI-blocking | Preserve behavior with a direct boolean assignment and verify the package tests in RCPU-P001. |
 | 2026-08-27 | Current stable Clippy flags two nested phase-transition conditions in the already-affected `system-board`, blocking RCPU-P001's CI-equivalent graph lint. | P0, CI-blocking | Express the conditions as match guards without changing the phase transitions, then verify the package tests and affected graph in RCPU-P001. |

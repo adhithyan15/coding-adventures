@@ -239,7 +239,7 @@ instructions (LXA, LXD, SXA, SXD, PAX, PDX, PXA) the tag is interpreted
 behaviour: a "store IRA at address Y" instruction whose destination shifted
 with IRA's value would be useless.
 
-For the Type A family (TIX, TXI, TXH, TXL) the address field is also used
+For the Type A family (TIX, TNX, TXI, TXH, TXL) the address field is also used
 directly as a transfer target — these are loop-control instructions whose
 destination is a labeled jump target, not a data address to be indexed.
 
@@ -249,14 +249,14 @@ destination is a labeled jump target, not a data address to be indexed.
 | Mnemonic | Opcode (octal) | Description |
 |----------|----------------|-------------|
 | HTR Y    | 0000           | Halt and Transfer — stop execution; PC = effective address. |
-| HPR Y    | +420           | Halt and Proceed — stop; resumable, PC = effective address. |
+| HPR      | +420           | Halt and Proceed — stop; resumable at the next sequential instruction. |
 | NOP      | +0761          | No operation. |
 
 #### Loads and Stores
 | Mnemonic | Opcode (octal) | Description |
 |----------|----------------|-------------|
 | CLA Y    | +0500          | Clear and Add — AC = M[Y] (bits 1–35 + sign). Q and P cleared. |
-| CAL Y    | -0500          | Clear and Add Logical — AC = M[Y] treating word as logical (no sign extension). |
+| CAL Y    | -0500          | Clear and Add Logical — M[Y]'s sign enters AC P, its magnitude enters AC 1–35, and AC S/Q are cleared. |
 | ADD Y    | +0400          | Add — AC = AC + M[Y], sign-magnitude rules. |
 | SUB Y    | +0402          | Subtract — AC = AC − M[Y]. |
 | ADM Y    | +0401          | Add Magnitude — AC = AC + |M[Y]| (treat operand as positive). |
@@ -282,7 +282,7 @@ destination is a labeled jump target, not a data address to be indexed.
 | TPL Y    | +0120          | Transfer on Plus — if AC sign == 0, PC = eff addr. |
 | TMI Y    | -0120          | Transfer on Minus — if AC sign == 1, PC = eff addr. |
 | TOV Y    | +0140          | Transfer on Overflow — if overflow trigger set, transfer and clear it. |
-| TNO Y    | -0140          | Transfer on No Overflow — transfer if NOT overflowed. |
+| TNO Y    | -0140          | Transfer on No Overflow — transfer if NOT overflowed; otherwise clear overflow and fall through. |
 | TQO Y    | +0161          | Transfer on MQ Overflow — clears MQ-overflow flag. |
 | TQP Y    | +0162          | Transfer on MQ Plus. |
 
@@ -297,17 +297,19 @@ destination is a labeled jump target, not a data address to be indexed.
 | PDX 0,T  | -0734          | Place Decrement in Index — IR(T) = AC.decrement (bits 3–17). |
 | PXA 0,T  | +0754          | Place Index in Address — AC = IR(T) in address position; sign and other fields cleared. |
 | TIX Y,T,D | 2 (Type A)    | Transfer on Index — if IR(T) > D, IR(T) -= D; PC = Y. Else fall through. |
+| TNX Y,T,D | -2 (Type A)   | Transfer on No Index — if IR(T) ≤ D, PC = Y unchanged. Else IR(T) -= D and fall through. |
 | TXI Y,T,D | 1 (Type A)    | Transfer with Index Incremented — IR(T) += D; PC = Y. (Always transfers.) |
 | TXH Y,T,D | 3 (Type A)    | Transfer on Index High — if IR(T) > D, PC = Y. |
 | TXL Y,T,D | -3 (Type A)   | Transfer on Index Low or Equal — if IR(T) ≤ D, PC = Y. |
 
-#### Floating-Point (v1: 4 ops)
+#### Floating-Point (v1: 5 ops)
 | Mnemonic | Opcode (octal) | Description |
 |----------|----------------|-------------|
 | FAD Y    | +0300          | Floating Add — AC,MQ = AC + M[Y] in floating-point. |
 | FSB Y    | +0302          | Floating Subtract — AC,MQ = AC − M[Y]. |
 | FMP Y    | +0260          | Floating Multiply — AC,MQ = MQ × M[Y]. |
-| FDP Y    | +0240          | Floating Divide or Proceed — quotient in MQ, remainder in AC. |
+| FDH Y    | +0240          | Floating Divide or Halt — quotient in MQ, remainder in AC; halt on divide check. |
+| FDP Y    | +0241          | Floating Divide or Proceed — quotient in MQ, remainder in AC. |
 
 Floating-point format: sign + 8-bit excess-128 exponent + 27-bit fraction.
 The fraction is normalized so its high bit is 1 (after operations the result
