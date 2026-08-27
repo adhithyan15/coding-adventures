@@ -15,7 +15,7 @@
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 52,
+  "forwardReferences": 51,
   "atomsTaught": 123,
   "atomsNeverRevisited": 33,
   "reinforcementWindowMisses": 232,
@@ -33,7 +33,7 @@
     {
       "language": "french",
       "kind": "forward-language",
-      "count": 52,
+      "count": 51,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -69,7 +69,7 @@
   "next": {
     "language": "french",
     "kind": "forward-language",
-    "count": 52,
+    "count": 51,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }

@@ -15,7 +15,7 @@
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 9,
+  "forwardReferences": 4,
   "atomsTaught": 150,
   "atomsNeverRevisited": 7,
   "reinforcementWindowMisses": 209,
@@ -33,7 +33,7 @@
     {
       "language": "persian",
       "kind": "forward-language",
-      "count": 9,
+      "count": 4,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -83,7 +83,7 @@
   "next": {
     "language": "persian",
     "kind": "forward-language",
-    "count": 9,
+    "count": 4,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }

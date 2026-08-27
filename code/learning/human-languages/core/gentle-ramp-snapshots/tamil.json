@@ -15,7 +15,7 @@
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 13,
+  "forwardReferences": 7,
   "atomsTaught": 354,
   "atomsNeverRevisited": 51,
   "reinforcementWindowMisses": 949,
@@ -33,7 +33,7 @@
     {
       "language": "tamil",
       "kind": "forward-language",
-      "count": 13,
+      "count": 7,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -76,7 +76,7 @@
   "next": {
     "language": "tamil",
     "kind": "forward-language",
-    "count": 13,
+    "count": 7,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }

@@ -483,6 +483,40 @@ export function diagnoseWholeWordSearch(
   return { ...probe, matched };
 }
 
+/**
+ * Learner-facing text that can constitute an early lexical use.
+ *
+ * Etymology blocks deliberately do not. They name roots and historical forms
+ * as EXPLANATIONS, and those obligations have their own root ledger; treating
+ * every cognate as vocabulary made Malayalam `അത്` look taught 131 lessons
+ * early merely because `അതെ` explains where it came from.
+ *
+ * A decomposition equation is likewise a statement about PARTS, not a claim
+ * that each part is a free-standing word. Tamil `புரி + கிற் + அது → புரிகிறது`
+ * is the canonical failure: `அது` is the verb's ending there, not the pronoun.
+ * The two-symbol test is intentionally narrow so an ordinary sentence that
+ * happens to contain an arrow or a plus sign remains visible.
+ */
+function forwardReferenceBody(lesson: ParsedLesson): string {
+  // Walk the LOSSLESS body rather than joining parsed block Markdown. The parser
+  // intentionally removes hl-knowledge/activity directives from block.markdown;
+  // silently dropping them here would broaden this change beyond the two teaching
+  // contexts under review and make the corpus movement harder to account for.
+  const kept: string[] = [];
+  let blockIndex = -1;
+  let inEtymology = false;
+  for (const line of lesson.body.split(/\r?\n/)) {
+    const trimmed = line.trimStart();
+    if (trimmed.startsWith("## ") && !trimmed.startsWith("### ")) {
+      blockIndex += 1;
+      inEtymology = lesson.blocks[blockIndex]?.type === "etymology";
+    }
+    if (inEtymology || (line.includes("+") && line.includes("→"))) continue;
+    kept.push(line);
+  }
+  return kept.join("\n");
+}
+
 /** Emphasised or code-spanned runs, where the corpus marks target language. */
 function emphasisedRuns(body: string): string {
   const runs: string[] = [];
@@ -735,8 +769,9 @@ export function measureContinuity(lessons: ParsedLesson[]): ContinuityReport {
     }
 
     ordered.forEach((lesson, index) => {
-      const body = lesson.body.toLowerCase();
-      const emphasised = emphasisedRuns(lesson.body);
+      const learnerBody = forwardReferenceBody(lesson);
+      const body = learnerBody.toLowerCase();
+      const emphasised = emphasisedRuns(learnerBody);
       // A lesson can never forward-reference a word sitting in its own headword —
       // `mع السلامة` contains `السلامة`, `bom dia` contains `dia`. The old strip
       // seeded these incidentally; the allowlist does not, so they are added

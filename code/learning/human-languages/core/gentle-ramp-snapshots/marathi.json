@@ -15,7 +15,7 @@
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 5,
+  "forwardReferences": 4,
   "atomsTaught": 98,
   "atomsNeverRevisited": 2,
   "reinforcementWindowMisses": 121,
@@ -33,7 +33,7 @@
     {
       "language": "marathi",
       "kind": "forward-language",
-      "count": 5,
+      "count": 4,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -76,7 +76,7 @@
   "next": {
     "language": "marathi",
     "kind": "forward-language",
-    "count": 5,
+    "count": 4,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }
