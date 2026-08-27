@@ -31,6 +31,13 @@ let base = Url::parse("http://host/a/b/c.html").unwrap();
 let resolved = base.resolve("../d.html").unwrap();
 assert_eq!(resolved.path, "/a/d.html");
 
+// Canonical identity spelling
+let canonical = Url::parse("HTTP://Example.COM:80/a/../%7euser")
+    .unwrap()
+    .canonicalize()
+    .unwrap();
+assert_eq!(canonical.to_string(), "http://example.com/~user");
+
 // Percent-encoding
 use url_parser::{percent_encode, percent_decode};
 assert_eq!(percent_encode("hello world"), "hello%20world");
@@ -44,6 +51,7 @@ assert_eq!(percent_decode("hello%20world").unwrap(), "hello world");
 - `Url::effective_port()` -- explicit port or scheme default (80/443/21)
 - `Url::authority()` -- reconstruct `[userinfo@]host[:port]`
 - `Url::to_url_string()` -- serialize back to URL string
+- `Url::canonicalize()` -- normalize case, ports, paths, and percent escapes
 - `percent_encode(input)` -- encode non-unreserved characters
 - `percent_decode(input)` -- decode `%XX` sequences
 

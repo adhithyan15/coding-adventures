@@ -18,12 +18,16 @@ HTML source
 ## API
 
 - `html_render_tree_to_layout(&BrowserRenderTree, &HtmlTheme) -> LayoutNode`
+- `html_render_tree_to_layout_with_link_state(..., is_visited) -> LayoutNode`
 - `mosaic_html_theme() -> HtmlTheme`
 
 The adapter maps parser-supplied display categories, text, headings, images,
 hidden content, stable IDs, and resolved link/resource URLs. Browser metadata
 needed after layout is retained under `LayoutNode.ext["html"]`, so positioned
 nodes still carry link targets and semantic roles for hit testing.
+The optional visited callback receives only resolved URLs. It selects theme
+colors and inherited link decoration without exposing history or persistence
+policy to this producer adapter.
 
 This bridge intentionally does not implement CSS cascade or inline layout.
 It projects display, preformatted whitespace, and producer metadata into the

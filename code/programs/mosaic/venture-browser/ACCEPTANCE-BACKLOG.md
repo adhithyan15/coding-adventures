@@ -5,6 +5,11 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P0 browser convergence — reusable visited-link state and decoration.**
+  Canonicalize document URL identity in `browser-navigation`, commit only
+  successful final response URLs in `BrowserSession`, and project blue/purple
+  underlined link styling through Layout IR and backend-neutral paint across
+  navigation, history, reload, failure, and reflow.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

@@ -501,6 +501,7 @@ mod tests {
                 b: 0,
                 a: 255,
             },
+            decoration: None,
             max_lines: None,
             wrap: true,
             text_align: TextAlign::Start,

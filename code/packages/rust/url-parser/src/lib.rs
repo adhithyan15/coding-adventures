@@ -49,7 +49,7 @@
 //! assert_eq!(url.effective_port(), Some(8080));
 //! ```
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 use std::fmt;
 
@@ -314,7 +314,9 @@ impl Url {
             if let Some(colon) = relative.find(':') {
                 let maybe_scheme = &relative[..colon];
                 if !maybe_scheme.is_empty()
-                    && maybe_scheme.chars().all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-' || c == '.')
+                    && maybe_scheme
+                        .chars()
+                        .all(|c| c.is_ascii_alphanumeric() || c == '+' || c == '-' || c == '.')
                     && maybe_scheme.chars().next().unwrap().is_ascii_alphabetic()
                 {
                     return Url::parse(relative);
@@ -408,6 +410,43 @@ impl Url {
         }
         s
     }
+
+    /// Return a canonical spelling suitable for stable URL identity.
+    ///
+    /// Canonicalization preserves the URL's meaning while lowercasing scheme
+    /// and host, removing an explicit default port, removing path dot
+    /// segments, decoding percent-encoded unreserved bytes, and uppercasing
+    /// retained percent escapes. Fragments remain present so callers can
+    /// choose whether their identity model includes them.
+    pub fn canonicalize(&self) -> Result<Url, UrlError> {
+        let mut result = self.clone();
+        result.scheme = result.scheme.to_ascii_lowercase();
+        result.host = result.host.map(|host| host.to_ascii_lowercase());
+        if result.port == default_port(&result.scheme) {
+            result.port = None;
+        }
+        result.userinfo = result
+            .userinfo
+            .as_deref()
+            .map(normalize_percent_escapes)
+            .transpose()?;
+        result.path = remove_dot_segments(&normalize_percent_escapes(&result.path)?);
+        if result.host.is_some() && result.path.is_empty() {
+            result.path = "/".to_string();
+        }
+        result.query = result
+            .query
+            .as_deref()
+            .map(normalize_percent_escapes)
+            .transpose()?;
+        result.fragment = result
+            .fragment
+            .as_deref()
+            .map(normalize_percent_escapes)
+            .transpose()?;
+        result.raw = result.to_url_string();
+        Ok(result)
+    }
 }
 
 impl fmt::Display for Url {
@@ -426,6 +465,46 @@ impl fmt::Display for Url {
 /// Plus path-safe characters: `/`
 fn is_unreserved(c: u8) -> bool {
     c.is_ascii_alphanumeric() || matches!(c, b'-' | b'_' | b'.' | b'~' | b'/')
+}
+
+fn is_canonical_unreserved(c: u8) -> bool {
+    c.is_ascii_alphanumeric() || matches!(c, b'-' | b'_' | b'.' | b'~')
+}
+
+fn normalize_percent_escapes(input: &str) -> Result<String, UrlError> {
+    let bytes = input.as_bytes();
+    let mut result = String::with_capacity(input.len());
+    let mut index = 0;
+    while index < bytes.len() {
+        if bytes[index] != b'%' {
+            let start = index;
+            while index < bytes.len() && bytes[index] != b'%' {
+                index += 1;
+            }
+            result.push_str(&input[start..index]);
+            continue;
+        }
+        if index + 2 >= bytes.len() {
+            return Err(UrlError::InvalidPercentEncoding);
+        }
+        let high = hex_value(bytes[index + 1])?;
+        let low = hex_value(bytes[index + 2])?;
+        let decoded = (high << 4) | low;
+        if is_canonical_unreserved(decoded) {
+            result.push(decoded as char);
+        } else {
+            result.push('%');
+            result.push(uppercase_hex_digit(high));
+            result.push(uppercase_hex_digit(low));
+        }
+        index += 3;
+    }
+    Ok(result)
+}
+
+fn uppercase_hex_digit(value: u8) -> char {
+    const HEX: &[u8; 16] = b"0123456789ABCDEF";
+    HEX[usize::from(value)] as char
 }
 
 /// Percent-encode a string for use in a URL path or query.
@@ -470,8 +549,8 @@ pub fn percent_decode(input: &str) -> Result<String, UrlError> {
             if i + 2 >= bytes.len() {
                 return Err(UrlError::InvalidPercentEncoding);
             }
-            let hi = hex_digit(bytes[i + 1])?;
-            let lo = hex_digit(bytes[i + 2])?;
+            let hi = hex_value(bytes[i + 1])?;
+            let lo = hex_value(bytes[i + 2])?;
             result.push((hi << 4) | lo);
             i += 3;
         } else {
@@ -484,7 +563,7 @@ pub fn percent_decode(input: &str) -> Result<String, UrlError> {
 }
 
 /// Convert a hex ASCII digit to its numeric value (0–15).
-fn hex_digit(b: u8) -> Result<u8, UrlError> {
+fn hex_value(b: u8) -> Result<u8, UrlError> {
     match b {
         b'0'..=b'9' => Ok(b - b'0'),
         b'a'..=b'f' => Ok(b - b'a' + 10),
@@ -635,10 +714,9 @@ mod tests {
 
     #[test]
     fn parse_all_components() {
-        let url = Url::parse(
-            "http://alice:secret@www.example.com:8080/docs/page.html?q=hello#section2",
-        )
-        .unwrap();
+        let url =
+            Url::parse("http://alice:secret@www.example.com:8080/docs/page.html?q=hello#section2")
+                .unwrap();
         assert_eq!(url.scheme, "http");
         assert_eq!(url.userinfo.as_deref(), Some("alice:secret"));
         assert_eq!(url.host.as_deref(), Some("www.example.com"));
@@ -726,10 +804,7 @@ mod tests {
 
     #[test]
     fn invalid_port_too_large() {
-        assert_eq!(
-            Url::parse("http://host:99999"),
-            Err(UrlError::InvalidPort)
-        );
+        assert_eq!(Url::parse("http://host:99999"), Err(UrlError::InvalidPort));
     }
 
     // ─── Percent-encoding ───────────────────────────────────────────────────
@@ -775,10 +850,7 @@ mod tests {
 
     #[test]
     fn decode_malformed_bad_hex() {
-        assert_eq!(
-            percent_decode("%GG"),
-            Err(UrlError::InvalidPercentEncoding)
-        );
+        assert_eq!(percent_decode("%GG"), Err(UrlError::InvalidPercentEncoding));
     }
 
     // ─── Relative resolution ────────────────────────────────────────────────
@@ -903,12 +975,36 @@ mod tests {
         assert_eq!(url.to_url_string(), input);
     }
 
+    #[test]
+    fn canonicalize_normalizes_identity_without_losing_fragment() {
+        let url = Url::parse("HTTP://Example.COM:80/a/../%7euser?q=%7b#part")
+            .unwrap()
+            .canonicalize()
+            .unwrap();
+        assert_eq!(url.to_url_string(), "http://example.com/~user?q=%7B#part");
+    }
+
+    #[test]
+    fn canonicalize_preserves_unicode_and_rejects_bad_percent_escapes() {
+        let url = Url::parse("http://example.com/caf\u{e9}/%E2%98%83")
+            .unwrap()
+            .canonicalize()
+            .unwrap();
+        assert_eq!(
+            url.to_url_string(),
+            "http://example.com/caf\u{e9}/%E2%98%83"
+        );
+        assert_eq!(
+            Url::parse("http://example.com/%GG").unwrap().canonicalize(),
+            Err(UrlError::InvalidPercentEncoding)
+        );
+    }
+
     // ─── Historical Mosaic-era URLs ─────────────────────────────────────────
 
     #[test]
     fn parse_cern_original_url() {
-        let url =
-            Url::parse("http://info.cern.ch/hypertext/WWW/TheProject.html").unwrap();
+        let url = Url::parse("http://info.cern.ch/hypertext/WWW/TheProject.html").unwrap();
         assert_eq!(url.scheme, "http");
         assert_eq!(url.host.as_deref(), Some("info.cern.ch"));
         assert_eq!(url.path, "/hypertext/WWW/TheProject.html");

@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0]
+
+- Paint reusable underline, overline, and line-through decorations from
+  `TextContent`, using native font underline metrics when available and
+  deterministic fallbacks otherwise.
+- Preserve decoration geometry across device-pixel ratios and shaped fallback
+  runs.
+
 ## [0.2.0]
 
 - Honor `TextContent.wrap = false` while preserving explicit hard line breaks.

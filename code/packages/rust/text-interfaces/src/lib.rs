@@ -36,7 +36,7 @@
 //! (e.g. `"coretext:Helvetica-Bold@16.0"`, `"font-parser:<hash>"`) that
 //! the paint backend routes on.
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // FontQuery — the abstract font request
@@ -228,10 +228,17 @@ impl core::fmt::Display for FontResolutionError {
         match self {
             Self::EmptyQuery => write!(f, "FontResolutionError::EmptyQuery: family_names is empty"),
             Self::NoFamilyFound => {
-                write!(f, "FontResolutionError::NoFamilyFound: no registered face matches the query")
+                write!(
+                    f,
+                    "FontResolutionError::NoFamilyFound: no registered face matches the query"
+                )
             }
             Self::InvalidWeight(w) => {
-                write!(f, "FontResolutionError::InvalidWeight({}): weight must be in 1..=1000", w)
+                write!(
+                    f,
+                    "FontResolutionError::InvalidWeight({}): weight must be in 1..=1000",
+                    w
+                )
             }
             Self::LoadFailed(msg) => write!(f, "FontResolutionError::LoadFailed: {}", msg),
         }
@@ -268,6 +275,14 @@ pub trait FontMetrics {
     fn line_gap(&self, font: &Self::Handle) -> i32;
     fn x_height(&self, font: &Self::Handle) -> Option<i32>;
     fn cap_height(&self, font: &Self::Handle) -> Option<i32>;
+    /// Signed design-unit offset from the baseline in y-down coordinates.
+    /// Positive values place an underline below the baseline.
+    fn underline_position(&self, _font: &Self::Handle) -> Option<i32> {
+        None
+    }
+    fn underline_thickness(&self, _font: &Self::Handle) -> Option<i32> {
+        None
+    }
     fn family_name(&self, font: &Self::Handle) -> String;
 }
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0
+
+- Add optional underline position and thickness metrics with defaults that
+  preserve compatibility for synthetic and non-native metric providers.
+
 All notable changes to `text-interfaces`.
 
 ## [0.1.0] — initial release

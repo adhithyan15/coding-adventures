@@ -11,9 +11,10 @@ use coding_adventures_html_parser::{BrowserRenderNode, BrowserRenderTree};
 use layout_ir::{
     color_black, edges_all, edges_xy, font_bold, font_italic, font_spec, rgb, Color, ExtValue,
     FontSpec, ImageContent, ImageFit, LayoutNode, SizeValue, TextAlign, TextContent,
+    TextDecoration,
 };
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 
 /// Fully resolved visual defaults applied before a future CSS cascade exists.
 #[derive(Clone, Debug, PartialEq)]
@@ -24,6 +25,8 @@ pub struct HtmlTheme {
     pub text_color: Color,
     pub heading_color: Color,
     pub link_color: Color,
+    pub visited_link_color: Color,
+    pub link_decoration: Option<TextDecoration>,
     pub page_background: Color,
     pub page_padding: f64,
     pub block_spacing: f64,
@@ -49,6 +52,8 @@ pub fn mosaic_html_theme() -> HtmlTheme {
         text_color: color_black(),
         heading_color: color_black(),
         link_color: rgb(0, 0, 238),
+        visited_link_color: rgb(85, 26, 139),
+        link_decoration: Some(TextDecoration::underline()),
         page_background: rgb(192, 192, 192),
         page_padding: 16.0,
         block_spacing: 12.0,
@@ -64,14 +69,31 @@ pub fn html_render_tree_to_layout(
     render_tree: &BrowserRenderTree,
     theme: &HtmlTheme,
 ) -> LayoutNode {
+    html_render_tree_to_layout_with_link_state(render_tree, theme, &never_visited)
+}
+
+/// Convert a browser render tree while resolving session-owned link state.
+///
+/// The callback is intentionally narrower than browser history: HTML layout
+/// receives only a resolved URL and a visited answer, so navigation policy and
+/// storage remain reusable and independent from layout.
+pub fn html_render_tree_to_layout_with_link_state<F>(
+    render_tree: &BrowserRenderTree,
+    theme: &HtmlTheme,
+    is_visited: &F,
+) -> LayoutNode
+where
+    F: Fn(&str) -> bool + ?Sized,
+{
     let style = InheritedStyle {
         font: theme.body_font.clone(),
         color: theme.text_color,
+        decoration: None,
     };
     let children = render_tree
         .children
         .iter()
-        .filter_map(|node| convert_node(node, theme, &style))
+        .filter_map(|node| convert_node(node, theme, &style, is_visited))
         .collect();
 
     LayoutNode::container(children)
@@ -87,23 +109,28 @@ pub fn html_render_tree_to_layout(
 struct InheritedStyle {
     font: FontSpec,
     color: Color,
+    decoration: Option<TextDecoration>,
 }
 
-fn convert_node(
+fn convert_node<F>(
     node: &BrowserRenderNode,
     theme: &HtmlTheme,
     inherited: &InheritedStyle,
-) -> Option<LayoutNode> {
+    is_visited: &F,
+) -> Option<LayoutNode>
+where
+    F: Fn(&str) -> bool + ?Sized,
+{
     if node.display == "none" || node.hidden {
         return None;
     }
 
-    let style = style_for_node(node, theme, inherited);
+    let style = style_for_node(node, theme, inherited, is_visited);
     let mut layout = match node.display.as_str() {
         "inline-text" => text_leaf(node.text.as_deref().unwrap_or_default(), &style),
         "line-break" => text_leaf("\n", &style),
         "inline-replaced" if node.role == "image" => image_leaf(node),
-        _ => container_or_fallback(node, theme, &style),
+        _ => container_or_fallback(node, theme, &style, is_visited),
     };
 
     if let Some(id) = &node.id {
@@ -116,15 +143,19 @@ fn convert_node(
     Some(layout)
 }
 
-fn container_or_fallback(
+fn container_or_fallback<F>(
     node: &BrowserRenderNode,
     theme: &HtmlTheme,
     style: &InheritedStyle,
-) -> LayoutNode {
+    is_visited: &F,
+) -> LayoutNode
+where
+    F: Fn(&str) -> bool + ?Sized,
+{
     let children: Vec<_> = node
         .children
         .iter()
-        .filter_map(|child| convert_node(child, theme, style))
+        .filter_map(|child| convert_node(child, theme, style, is_visited))
         .collect();
 
     if !children.is_empty() {
@@ -148,6 +179,7 @@ fn text_leaf(value: &str, style: &InheritedStyle) -> LayoutNode {
         value: value.to_string(),
         font: style.font.clone(),
         color: style.color,
+        decoration: style.decoration,
         max_lines: None,
         wrap: true,
         text_align: TextAlign::Start,
@@ -168,11 +200,15 @@ fn image_leaf(node: &BrowserRenderNode) -> LayoutNode {
     })
 }
 
-fn style_for_node(
+fn style_for_node<F>(
     node: &BrowserRenderNode,
     theme: &HtmlTheme,
     inherited: &InheritedStyle,
-) -> InheritedStyle {
+    is_visited: &F,
+) -> InheritedStyle
+where
+    F: Fn(&str) -> bool + ?Sized,
+{
     let mut style = inherited.clone();
     if node.role == "heading" {
         let level = node.heading_level.unwrap_or(1).clamp(1, 6);
@@ -188,9 +224,19 @@ fn style_for_node(
         _ => {}
     }
     if node.role == "link" {
-        style.color = theme.link_color;
+        let href = node.resolved_href.as_deref().or(node.href.as_deref());
+        style.color = if href.is_some_and(is_visited) {
+            theme.visited_link_color
+        } else {
+            theme.link_color
+        };
+        style.decoration = theme.link_decoration;
     }
     style
+}
+
+fn never_visited(_url: &str) -> bool {
+    false
 }
 
 fn apply_size_hints(layout: &mut LayoutNode, node: &BrowserRenderNode) {
@@ -321,7 +367,43 @@ mod tests {
         let theme = mosaic_html_theme();
         assert_eq!(theme.body_font.family, "Times New Roman");
         assert_eq!(theme.link_color, rgb(0, 0, 238));
+        assert_eq!(theme.visited_link_color, rgb(85, 26, 139));
+        assert_eq!(theme.link_decoration, Some(TextDecoration::underline()));
         assert_eq!(theme.page_background, rgb(192, 192, 192));
+    }
+
+    #[test]
+    fn link_state_colors_and_underlines_nested_text_without_leaking_policy() {
+        let render = parse_browser_render_tree(
+            "<base href='https://example.test/docs/'>\
+             <p><a href='seen'><strong>Seen</strong> page</a> and \
+             <a href='new'>new</a>.</p>",
+        )
+        .unwrap();
+        let layout =
+            html_render_tree_to_layout_with_link_state(&render, &mosaic_html_theme(), &|url| {
+                url == "https://example.test/docs/seen"
+            });
+
+        let seen = find_by_href(&layout, "https://example.test/docs/seen").unwrap();
+        let unseen = find_by_href(&layout, "https://example.test/docs/new").unwrap();
+        let seen_text = first_text(seen).unwrap();
+        assert_eq!(seen_text.color, rgb(85, 26, 139));
+        assert_eq!(seen_text.decoration, Some(TextDecoration::underline()));
+        assert_eq!(seen_text.font.weight, 700);
+        assert_eq!(first_text(unseen).unwrap().color, rgb(0, 0, 238));
+        assert_eq!(
+            first_text(unseen).unwrap().decoration,
+            Some(TextDecoration::underline())
+        );
+
+        let default_layout = html_render_tree_to_layout(&render, &mosaic_html_theme());
+        assert_eq!(
+            first_text(find_by_href(&default_layout, "https://example.test/docs/seen").unwrap())
+                .unwrap()
+                .color,
+            rgb(0, 0, 238)
+        );
     }
 
     #[test]
@@ -424,6 +506,15 @@ mod tests {
         node.children
             .iter()
             .find_map(|child| find_by_html_role(child, role))
+    }
+
+    fn find_by_href<'a>(node: &'a LayoutNode, href: &str) -> Option<&'a LayoutNode> {
+        if html_string(node, "href") == Some(href) {
+            return Some(node);
+        }
+        node.children
+            .iter()
+            .find_map(|child| find_by_href(child, href))
     }
 
     fn html_string<'a>(node: &'a LayoutNode, key: &str) -> Option<&'a str> {

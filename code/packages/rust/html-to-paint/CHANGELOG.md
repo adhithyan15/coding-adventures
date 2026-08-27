@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0
+
+- Add visited-aware HTML composition through a narrow URL-state callback while
+  retaining the existing all-unvisited entry point.
+- Carry inherited link underlines through layout fragmentation into paint
+  rectangles and backend scenes.
+
 ## 0.4.0
 
 - Preserved HTML image `alt` text in paint instruction metadata.

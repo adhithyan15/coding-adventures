@@ -54,7 +54,7 @@
 // the runtime's own, described in the module header above.
 #![allow(clippy::missing_safety_doc)]
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 // Everything below requires an Apple platform (macOS, iOS, tvOS).
 // The Objective-C runtime, Metal, CoreText, and CoreGraphics are all
@@ -577,6 +577,12 @@ extern "C" {
     pub fn CTFontGetCapHeight(font: Id) -> c_double;
 
     #[allow(non_snake_case)]
+    pub fn CTFontGetUnderlinePosition(font: Id) -> c_double;
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetUnderlineThickness(font: Id) -> c_double;
+
+    #[allow(non_snake_case)]
     pub fn CTFontGetSize(font: Id) -> c_double;
 
     /// Returns a retained CFStringRef; caller must CFRelease.
@@ -1069,7 +1075,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.1.0");
+        assert_eq!(VERSION, "0.2.0");
     }
 
     /// Verify we can look up NSObject — the root class of all Objective-C

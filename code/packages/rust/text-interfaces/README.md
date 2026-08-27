@@ -10,7 +10,7 @@ Three orthogonal traits plus one convenience function:
 
 | Item              | What it does                                                              |
 |-------------------|---------------------------------------------------------------------------|
-| `FontMetrics`     | Font-global metrics (ascent, descent, line gap, x-height, cap-height, …) |
+| `FontMetrics`     | Font-global metrics (ascent, descent, line gap, x-height, cap-height, optional underline geometry, ...) |
 | `TextShaper`      | Codepoints → positioned glyph run (cmap, GSUB, GPOS on the full path)    |
 | `measure(...)`    | Thin function that wraps a shaper + metrics to return width / bbox       |
 | `FontResolver`    | `FontQuery` → concrete backend handle                                     |

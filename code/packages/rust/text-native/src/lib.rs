@@ -197,6 +197,15 @@ mod directwrite {
             (v > 0).then_some(v)
         }
 
+        fn underline_position(&self, font: &Self::Handle) -> Option<i32> {
+            Some(metrics(font).underlinePosition as i32)
+        }
+
+        fn underline_thickness(&self, font: &Self::Handle) -> Option<i32> {
+            let value = metrics(font).underlineThickness as i32;
+            (value > 0).then_some(value)
+        }
+
         fn family_name(&self, font: &Self::Handle) -> String {
             font.family.clone()
         }
@@ -453,7 +462,7 @@ impl text_interfaces::TextShaper for UnimplementedNativeBackend {
     }
 }
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 #[cfg(test)]
 mod tests {
@@ -461,7 +470,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.1.0");
+        assert_eq!(VERSION, "0.2.0");
     }
 
     #[cfg(target_vendor = "apple")]

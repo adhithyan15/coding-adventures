@@ -692,6 +692,7 @@ mod tests {
             value: value.into(),
             font: font_spec("Mono", size),
             color: color_black(),
+            decoration: None,
             max_lines: None,
             wrap: true,
             text_align: TextAlign::Start,

@@ -8,6 +8,7 @@ resolver = "2"
 # (independent of this `members` list) and applies the documented SKIP.
 exclude = ["os-kernel"]
 members = [
+    "browser-navigation",
     "adj-lang",
     "adj-lang-cli",
     "adj-constraint-solver",
