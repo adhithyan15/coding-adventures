@@ -26,19 +26,26 @@ const ownerNames = [
 
 describe("stroke ownership migration baseline", () => {
   it("preserves the exact ordered registry and parsed data", () => {
-    const counts = Object.values(DUCTUS).reduce<Record<string, number>>((out, letter) => {
-      out[letter.script] = (out[letter.script] ?? 0) + 1;
-      return out;
-    }, {});
+    const counts = Object.values(DUCTUS).reduce<Record<string, number>>(
+      (out, letter) => {
+        out[letter.script] = (out[letter.script] ?? 0) + 1;
+        return out;
+      },
+      {},
+    );
     expect({
       keys: Object.keys(DUCTUS).length,
       keyHash: sha256(JSON.stringify(Object.keys(DUCTUS))),
       dataHash: sha256(JSON.stringify(DUCTUS)),
-      counts: Object.fromEntries(Object.entries(counts).sort(([a], [b]) => a.localeCompare(b))),
+      counts: Object.fromEntries(
+        Object.entries(counts).sort(([a], [b]) => a.localeCompare(b)),
+      ),
     }).toEqual({
       keys: 329,
-      keyHash: "7dc8d9e4b9de8771b4c5d57d36e4c53ca9ada675decd02b0e7ff8d180e24d99b",
-      dataHash: "058559ae69e653d5074d623e978dec8e3d4352d8b7d610a9a397c975d899f7ae",
+      keyHash:
+        "7dc8d9e4b9de8771b4c5d57d36e4c53ca9ada675decd02b0e7ff8d180e24d99b",
+      dataHash:
+        "058559ae69e653d5074d623e978dec8e3d4352d8b7d610a9a397c975d899f7ae",
       counts: {
         arabic: 32,
         chinese: 43,
@@ -66,7 +73,10 @@ describe("stroke ownership migration baseline", () => {
         .sort(),
     ).toEqual(ownerNames);
 
-    const compatibilitySource = readFileSync(resolve(packageRoot, "src/strokes.ts"), "utf8");
+    const compatibilitySource = readFileSync(
+      resolve(packageRoot, "src/strokes.ts"),
+      "utf8",
+    );
     expect(compatibilitySource).not.toMatch(/\[ductusKey\([^\n]+\)\]\s*:/);
     expect(compatibilitySource).not.toMatch(/^\s*["'][^"']+["']\s*:\s*\{\s*$/m);
   });
@@ -74,12 +84,19 @@ describe("stroke ownership migration baseline", () => {
   it("keeps script-specific claims out of the two shared evidence roots", () => {
     for (const name of ["strokes.test.ts", "ductusview.test.ts"]) {
       const source = readFileSync(resolve(packageRoot, "tests", name), "utf8");
-      for (const script of [
-        "Arabic", "Chinese", "Cyrillic", "Devanagari", "Gujarati", "Hebrew",
-        "Japanese", "Kannada", "Malayalam", "Tamil", "Telugu", "Urdu",
-      ]) {
-        expect(source, `${name} still owns ${script} evidence`).not.toContain(script);
-      }
+      expect(
+        source,
+        `${name} imports an owner-specific font fixture`,
+      ).not.toMatch(/from\s+["']\.\/support\/font-fixtures["']/);
+      expect(source, `${name} directly looks up an owner glyph`).not.toMatch(
+        /DUCTUS\s*\[\s*["'][^"']+["']\s*\]/,
+      );
+      expect(source, `${name} names an owner script`).not.toMatch(
+        /\b(?:arabic|chinese|cyrillic|devanagari|gujarati|hebrew|japanese|kannada|malayalam|tamil|telugu|urdu)\b/i,
+      );
+      expect(source, `${name} embeds a native owner-script glyph`).not.toMatch(
+        /[\u0400-\u052f\u0590-\u06ff\u0900-\u097f\u0a80-\u0aff\u0b80-\u0cff\u0d00-\u0d7f\u3040-\u30ff\u3400-\u9fff]/u,
+      );
     }
   });
 });

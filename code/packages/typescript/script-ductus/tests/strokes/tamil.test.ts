@@ -12,7 +12,14 @@ import {
   type LetterDuctus,
   type Point,
 } from "../../src/strokes";
-import { registerStrokeHonestyTests } from "../support/stroke-honesty";
+import {
+  distanceToPath,
+  fontForDuctus,
+  fractionOnInk,
+  inkPoints,
+  makeInInk,
+  registerStrokeHonestyTests,
+} from "../support/stroke-honesty";
 
 const TAMIL_U = DUCTUS["உ"];
 const TAMIL_UU = DUCTUS["ஊ"];
@@ -26,6 +33,28 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 
 describe("handwriting ductus", () => {
   registerStrokeHonestyTests(letters, { ஊ: 0.9 });
+
+  it("CONTROL: a Tamil stroke pushed off its glyph fails the on-ink check", () => {
+    const reference = DUCTUS["ம"];
+    const inInk = makeInInk(fontForDuctus(reference).glyphFor("ம")!.contours);
+    const shifted = penPath(reference.strokes[0]).map((point) => ({
+      x: point.x + 400,
+      y: point.y,
+    }));
+    expect(fractionOnInk(shifted, inInk)).toBeLessThan(0.9);
+  });
+
+  it("CONTROL: dropping the Tamil arch leaves much of the glyph untraced", () => {
+    const reference = DUCTUS["ம"];
+    const ink = fontForDuctus(reference).glyphFor("ம")!;
+    const points = inkPoints(ink.contours);
+    const onlyFirstTwo = {
+      segments: reference.strokes[0].segments.slice(0, 2),
+    };
+    const path = penPath(onlyFirstTwo);
+    const strayed = points.filter(([x, y]) => distanceToPath(x, y, path) > 130);
+    expect(strayed.length / points.length).toBeGreaterThan(0.1);
+  });
 
   beforeAll(() => {
     expect(verifiedLetterFont("எ", DUCTUS["எ"].source.url)).toBe(

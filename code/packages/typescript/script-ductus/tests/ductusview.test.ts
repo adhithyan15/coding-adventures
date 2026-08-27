@@ -14,11 +14,61 @@ import {
   type GlyphOutline,
   type SvgNode,
 } from "../src/ductusview";
-import { tamilOutline } from "./support/font-fixtures";
 import { byTag, collect } from "./support/svg-tree";
 
-const MA = DUCTUS["ம"];
-const outline = tamilOutline("ம");
+const REFERENCE: LetterDuctus = {
+  script: "test",
+  glyph: "*",
+  strokes: [
+    {
+      segments: [
+        {
+          label: "down the left upright",
+          path: [
+            { x: 50, y: 450 },
+            { x: 50, y: 100 },
+          ],
+        },
+        {
+          label: "along the bottom",
+          path: [
+            { x: 50, y: 100 },
+            { x: 300, y: 100 },
+          ],
+        },
+        {
+          label: "up the right side",
+          path: [
+            { x: 300, y: 100 },
+            { x: 300, y: 400 },
+          ],
+        },
+        {
+          label: "over the top",
+          path: [
+            { x: 300, y: 400 },
+            { x: 150, y: 400 },
+          ],
+        },
+        {
+          label: "down the middle",
+          path: [
+            { x: 150, y: 400 },
+            { x: 150, y: 150 },
+          ],
+        },
+      ],
+    },
+  ],
+  source: {
+    citation: "synthetic rendering fixture",
+    url: "https://example.invalid/fixture",
+  },
+};
+const REFERENCE_OUTLINE: GlyphOutline = {
+  path: "M0 0L400 0L400 500L0 500Z",
+  bounds: { x0: 0, y0: 0, x1: 400, y1: 500 },
+};
 
 describe("ductusFor — only cited letters have a ductus", () => {
   it("finds every authored identity in its own scope", () => {
@@ -35,18 +85,18 @@ describe("ductusFor — only cited letters have a ductus", () => {
   });
 
   it("does not mistake inherited Object properties for letters", () => {
-    // DUCTUS is a plain object, so `DUCTUS["toString"]` is a FUNCTION, not a
-    // letter. A naive lookup would hand that to the renderer and crash.
+    // DUCTUS is a plain object, so an inherited `toString` property is a
+    // function, not a letter. A naive lookup would hand it to the renderer.
     expect(ductusFor("toString")).toBeUndefined();
     expect(ductusFor("constructor")).toBeUndefined();
   });
 });
 
 describe("segment fractions — where each part ends along its stroke", () => {
-  const fractions = segmentEndFractions(MA.strokes[0]);
+  const fractions = segmentEndFractions(REFERENCE.strokes[0]);
 
   it("has one entry per labelled part", () => {
-    expect(fractions).toHaveLength(MA.strokes[0].segments.length);
+    expect(fractions).toHaveLength(REFERENCE.strokes[0].segments.length);
   });
 
   it("ascends and finishes at the end of the stroke", () => {
@@ -74,7 +124,7 @@ describe("segment fractions — where each part ends along its stroke", () => {
 });
 
 describe("ductusSteps — the frames, in writing order", () => {
-  const steps = ductusSteps(MA);
+  const steps = ductusSteps(REFERENCE);
 
   it("gives one step per labelled part, numbered from 1", () => {
     expect(steps).toHaveLength(5);
@@ -83,31 +133,35 @@ describe("ductusSteps — the frames, in writing order", () => {
     expect(steps[4].label).toBe("down the middle");
   });
 
-  it("marks ம as never lifting the pen", () => {
+  it("marks a one-stroke fixture as never lifting the pen", () => {
     expect(steps.every((s) => s.startsAfterLift === false)).toBe(true);
     expect(steps.every((s) => s.strokeIndex === 0)).toBe(true);
   });
 });
 
 describe("the drawn frame", () => {
-  const frame = ductusFrame(MA, outline, ductusSteps(MA)[2]);
+  const frame = ductusFrame(
+    REFERENCE,
+    REFERENCE_OUTLINE,
+    ductusSteps(REFERENCE)[2],
+  );
 
-  it("draws the FONT's outline, not a redrawn one", () => {
+  it("draws the caller-provided outline, not a redrawn one", () => {
     const glyphPath = byTag(frame, "path").find(
       (p) => p.attrs.class === "ductus__glyph",
     )!;
-    expect(glyphPath.attrs.d).toBe(outline.path);
-    // Sanity: that really is a font path — quadratics and closed contours.
+    expect(glyphPath.attrs.d).toBe(REFERENCE_OUTLINE.path);
+    // Sanity: the fixture has ordinary path commands and a closed contour.
     expect(String(glyphPath.attrs.d)).toMatch(/^M/);
     expect(String(glyphPath.attrs.d)).toContain("Z");
   });
 
   it("emits the pen path straight from penPathD at the step's fraction", () => {
-    const step = ductusSteps(MA)[2];
+    const step = ductusSteps(REFERENCE)[2];
     const pen = byTag(frame, "path").find(
       (p) => p.attrs.class === "ductus__pen",
     )!;
-    expect(pen.attrs.d).toBe(penPathD(MA.strokes[0], step.fraction));
+    expect(pen.attrs.d).toBe(penPathD(REFERENCE.strokes[0], step.fraction));
     expect(pen.attrs.fill).toBe("none");
   });
 
@@ -170,8 +224,12 @@ describe("captions wrap instead of running off the panel", () => {
   });
 
   it("makes the box taller when the captions need two lines", () => {
-    const short = viewBoxFor(MA, outline, { captionSize: 20 }).height;
-    const tall = viewBoxFor(MA, outline, { captionSize: 200 }).height;
+    const short = viewBoxFor(REFERENCE, REFERENCE_OUTLINE, {
+      captionSize: 20,
+    }).height;
+    const tall = viewBoxFor(REFERENCE, REFERENCE_OUTLINE, {
+      captionSize: 200,
+    }).height;
     expect(tall).toBeGreaterThan(short);
   });
 });
@@ -182,7 +240,11 @@ describe("captions wrap instead of running off the panel", () => {
 // are flipped together exactly once — so they cannot end up disagreeing.
 // ---------------------------------------------------------------------------
 describe("one shared y-flip", () => {
-  const frame = ductusFrame(MA, outline, ductusSteps(MA)[4]);
+  const frame = ductusFrame(
+    REFERENCE,
+    REFERENCE_OUTLINE,
+    ductusSteps(REFERENCE)[4],
+  );
 
   it("uses exactly one scale(1,-1) group", () => {
     const flips = collect(frame, (n) =>
@@ -209,8 +271,8 @@ describe("one shared y-flip", () => {
   });
 
   it("negates the vertical range in the viewBox, as the flip requires", () => {
-    const box = viewBoxFor(MA, outline);
-    const b = outline.bounds;
+    const box = viewBoxFor(REFERENCE, REFERENCE_OUTLINE);
+    const b = REFERENCE_OUTLINE.bounds;
     // Top of the letter (largest font y) becomes the SMALLEST svg y.
     expect(box.minY).toBeLessThan(0);
     expect(box.minY).toBeCloseTo(-(b.y1 + 70), 5);
@@ -220,8 +282,8 @@ describe("one shared y-flip", () => {
   });
 
   it("keeps the whole flipped glyph inside the viewBox", () => {
-    const box = viewBoxFor(MA, outline);
-    const b = outline.bounds;
+    const box = viewBoxFor(REFERENCE, REFERENCE_OUTLINE);
+    const b = REFERENCE_OUTLINE.bounds;
     // Flip every corner of the glyph box and check containment.
     for (const x of [b.x0, b.x1]) {
       for (const y of [b.y0, b.y1]) {
@@ -237,14 +299,14 @@ describe("one shared y-flip", () => {
     // If someone "simplified" the box to raw font coordinates, the flipped
     // glyph would sit at negative y and fall completely outside it. This is the
     // failure the negation prevents; assert it really is a failure.
-    const b = outline.bounds;
+    const b = REFERENCE_OUTLINE.bounds;
     const naiveTop = b.y0;
     expect(-b.y1).toBeLessThan(naiveTop);
   });
 });
 
 describe("the build-up advances", () => {
-  const strip = ductusFilmstrip(MA, outline);
+  const strip = ductusFilmstrip(REFERENCE, REFERENCE_OUTLINE);
 
   it("has one frame per step", () => {
     expect(strip.frames).toHaveLength(strip.steps.length);
@@ -252,13 +314,15 @@ describe("the build-up advances", () => {
   });
 
   it("draws strictly more of the stroke in each successive frame", () => {
-    const drawn = strip.frames.map(
-      (f) =>
-        String(
-          byTag(f, "path").find((p) => p.attrs.class === "ductus__pen")!.attrs
-            .d,
-        ).length,
-    );
+    const drawn = strip.frames.map((frame, index) => {
+      const path = String(
+        byTag(frame, "path").find((node) => node.attrs.class === "ductus__pen")!
+          .attrs.d,
+      );
+      const fraction = strip.steps[index].fraction;
+      expect(path).toBe(penPathD(REFERENCE.strokes[0], fraction));
+      return fraction;
+    });
     for (let i = 1; i < drawn.length; i++) {
       expect(drawn[i]).toBeGreaterThan(drawn[i - 1]);
     }
@@ -269,7 +333,7 @@ describe("the build-up advances", () => {
     const pen = byTag(last, "path").find(
       (p) => p.attrs.class === "ductus__pen",
     )!;
-    expect(pen.attrs.d).toBe(penPathD(MA.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(REFERENCE.strokes[0], 1));
   });
 
   it("says in words how many strokes and lifts there are", () => {
@@ -441,11 +505,13 @@ describe("a letter written in more than one stroke", () => {
 
 describe("serialising to markup", () => {
   it("produces well-formed SVG with the path data intact", () => {
-    const svg = svgMarkup(ductusFrame(MA, outline, ductusSteps(MA)[0]));
+    const svg = svgMarkup(
+      ductusFrame(REFERENCE, REFERENCE_OUTLINE, ductusSteps(REFERENCE)[0]),
+    );
     expect(svg.startsWith("<svg ")).toBe(true);
     expect(svg.endsWith("</svg>")).toBe(true);
     expect(svg).toContain('xmlns="http://www.w3.org/2000/svg"');
-    expect(svg).toContain(`d="${outline.path}"`);
+    expect(svg).toContain(`d="${REFERENCE_OUTLINE.path}"`);
     expect(svg).toContain('transform="scale(1,-1)"');
     // A DOM parser is the real test of well-formedness.
     const doc = new DOMParser().parseFromString(svg, "image/svg+xml");
