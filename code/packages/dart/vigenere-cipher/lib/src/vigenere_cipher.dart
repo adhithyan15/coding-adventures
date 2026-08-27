@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 /// Highest key length accepted by the classical-analysis helpers.
 const int maxAnalysisKeyLength = 40;
+const int _maxAnalysisScalars = 8192;
 
 /// Expected English frequencies for ASCII letters A through Z.
 const List<double> englishFrequencies = [
@@ -68,13 +69,10 @@ String decrypt(String ciphertext, String key) =>
 /// deterministic fallback when the ciphertext has insufficient ASCII signal.
 int findKeyLength(String ciphertext, {int maxLength = 20}) {
   if (maxLength > maxAnalysisKeyLength) {
-    throw RangeError.range(
-      maxLength,
-      0,
-      maxAnalysisKeyLength,
-      'maxLength',
-    );
+    throw RangeError.range(maxLength, 0, maxAnalysisKeyLength, 'maxLength');
   }
+
+  _validateAnalysisInput(ciphertext);
 
   final letters = _extractAsciiUpper(ciphertext);
   final limit = math.min(maxLength, letters.length ~/ 2);
@@ -87,10 +85,8 @@ int findKeyLength(String ciphertext, {int maxLength = 20}) {
   final bestScore = scores.map((candidate) => candidate.$2).reduce(math.max);
   if (bestScore <= 0) return 1;
 
-  // Multiples of the real key also have a strong IC. Choosing the first
-  // candidate within ten percent of the best favors the shortest period.
-  // The neutral fixture owner records this provisional historical heuristic
-  // so every established lane can later converge in one reviewed change.
+  // CR03 chooses the smallest candidate scoring at least 90% of the best and
+  // intentionally applies no divisor or multiple filtering.
   final threshold = bestScore * 0.90;
   return scores.firstWhere((candidate) => candidate.$2 >= threshold).$1;
 }
@@ -99,19 +95,22 @@ int findKeyLength(String ciphertext, {int maxLength = 20}) {
 String findKey(String ciphertext, int keyLength) {
   if (keyLength <= 0) return '';
   if (keyLength > maxAnalysisKeyLength) {
-    throw RangeError.range(
-      keyLength,
-      1,
-      maxAnalysisKeyLength,
-      'keyLength',
-    );
+    throw RangeError.range(keyLength, 1, maxAnalysisKeyLength, 'keyLength');
   }
+
+  _validateAnalysisInput(ciphertext);
 
   final letters = _extractAsciiUpper(ciphertext);
   return String.fromCharCodes([
     for (var position = 0; position < keyLength; position++)
       0x41 + _bestShift(_positionGroup(letters, keyLength, position)),
   ]);
+}
+
+void _validateAnalysisInput(String text) {
+  if (text.runes.length > _maxAnalysisScalars) {
+    throw RangeError('ciphertext exceeds analysis limit');
+  }
 }
 
 /// Estimates the key, decrypts [ciphertext], and returns both values.

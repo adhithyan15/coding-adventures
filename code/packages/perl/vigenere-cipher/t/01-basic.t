@@ -1,4 +1,5 @@
 use Test2::V0;
+use utf8;
 use CodingAdventures::VigenereCipher qw(encrypt decrypt find_key_length find_key break_cipher);
 
 # A long English text for cryptanalysis testing. Needs 200+ characters so the
@@ -127,6 +128,24 @@ subtest "edge_cases" => sub {
 
     # Key does not advance on non-alpha
     is(encrypt("A B", "AB"), "A C", "key skips spaces");
+};
+
+subtest "CR03 conformance" => sub {
+    my $plaintext = "Hello, 😀Wörld!";
+    my $ciphertext = "Rijvs, 😀Uöbpb!";
+    is(encrypt($plaintext, "kEy"), $ciphertext, "ASCII-only transform");
+    like(dies { decrypt("", "KÉY") }, qr/.+/, "rejects non-ASCII key before text");
+    is(find_key_length("AéA😀AЖAéABB", 4), 2, "ASCII-only 90 percent analysis");
+    is(find_key("Eé😀Ж", 40), "A" x 40, "preserves requested key length");
+
+    my $at_limit = "😀" x 8192;
+    my $over_limit = $at_limit . "😀";
+    is(find_key_length($at_limit, 40), 1, "accepts scalar limit");
+    like(dies { find_key_length($over_limit, 20) }, qr/.+/, "rejects oversized analysis");
+    like(dies { find_key_length($over_limit, 41) }, qr/.+/, "key-length preflight wins");
+    is(find_key($over_limit, 0), "", "nonpositive key length wins");
+    like(dies { find_key($over_limit, 1) }, qr/.+/, "find_key rejects oversized analysis");
+    like(dies { find_key($over_limit, 41) }, qr/.+/, "find_key key-length preflight wins");
 };
 
 done_testing;

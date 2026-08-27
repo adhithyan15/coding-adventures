@@ -226,4 +226,27 @@ describe("VigenereCipher", function()
             assert.equals("A C", vigenere.encrypt("A B", "AB"))
         end)
     end)
+
+    describe("CR03 conformance", function()
+        it("uses ASCII only and preserves the requested key length", function()
+            local plaintext = "Hello, 😀Wörld!"
+            local ciphertext = "Rijvs, 😀Uöbpb!"
+            assert.equals(ciphertext, vigenere.encrypt(plaintext, "kEy"))
+            assert.equals(plaintext, vigenere.decrypt(ciphertext, "kEy"))
+            assert.has_error(function() vigenere.decrypt("", "KÉY") end)
+            assert.equals(2, vigenere.find_key_length("AéA😀AЖAéABB", 4))
+            assert.equals(string.rep("A", 40), vigenere.find_key("Eé😀Ж", 40))
+        end)
+
+        it("orders scalar and key-length preflights", function()
+            local at_limit = string.rep("😀", 8192)
+            local over_limit = at_limit .. "😀"
+            assert.equals(1, vigenere.find_key_length(at_limit, 40))
+            assert.has_error(function() vigenere.find_key_length(over_limit, 20) end)
+            assert.has_error(function() vigenere.find_key_length(over_limit, 41) end)
+            assert.equals("", vigenere.find_key(over_limit, 0))
+            assert.has_error(function() vigenere.find_key(over_limit, 1) end)
+            assert.has_error(function() vigenere.find_key(over_limit, 41) end)
+        end)
+    end)
 end)

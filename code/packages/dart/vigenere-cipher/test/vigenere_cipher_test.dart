@@ -48,7 +48,7 @@ void main() {
         'KEY\u2028',
         'KÉY',
         'KEY\u0301',
-        '😀'
+        '😀',
       ]) {
         expect(() => encrypt('payload', key), throwsArgumentError);
       }
@@ -130,15 +130,23 @@ void main() {
 
     test('returns a stable result for empty and non-ASCII-only text', () {
       expect(breakCipher(''), const BreakResult(key: 'A', plaintext: ''));
-      expect(
-        breakCipher('😀é'),
-        const BreakResult(key: 'A', plaintext: '😀é'),
-      );
+      expect(breakCipher('😀é'), const BreakResult(key: 'A', plaintext: '😀é'));
     });
   });
 
   test('publishes one positive English frequency per ASCII letter', () {
     expect(englishFrequencies, hasLength(26));
     expect(englishFrequencies.every((frequency) => frequency > 0), isTrue);
+  });
+
+  test('CR03 enforces scalar limits after parameter preflight', () {
+    final atLimit = List.filled(8192, '😀').join();
+    final overLimit = '$atLimit😀';
+    expect(findKeyLength(atLimit, maxLength: 40), 1);
+    expect(() => findKeyLength(overLimit), throwsArgumentError);
+    expect(() => findKeyLength(overLimit, maxLength: 41), throwsRangeError);
+    expect(findKey(overLimit, 0), '');
+    expect(() => findKey(overLimit, 1), throwsArgumentError);
+    expect(() => findKey(overLimit, 41), throwsRangeError);
   });
 }

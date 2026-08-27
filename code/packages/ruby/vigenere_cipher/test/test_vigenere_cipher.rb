@@ -158,6 +158,27 @@ class TestVigenereCipher < Minitest::Test
     assert_equal "LEMON", VC.find_key(ciphertext, 5)
   end
 
+  def test_cr03_ascii_and_exact_key_length
+    plaintext = "Hello, 😀Wörld!"
+    ciphertext = "Rijvs, 😀Uöbpb!"
+    assert_equal ciphertext, VC.encrypt(plaintext, "kEy")
+    assert_equal plaintext, VC.decrypt(ciphertext, "kEy")
+    assert_raises(ArgumentError) { VC.decrypt("", "KÉY") }
+    assert_equal 2, VC.find_key_length("AéA😀AЖAéABB", 4)
+    assert_equal "A" * 40, VC.find_key("Eé😀Ж", 40)
+  end
+
+  def test_cr03_analysis_limits_and_ordering
+    at_limit = "😀" * 8192
+    over_limit = at_limit + "😀"
+    assert_equal 1, VC.find_key_length(at_limit, 40)
+    assert_raises(ArgumentError) { VC.find_key_length(over_limit, 20) }
+    assert_raises(ArgumentError) { VC.find_key_length(over_limit, 41) }
+    assert_equal "", VC.find_key(over_limit, 0)
+    assert_raises(ArgumentError) { VC.find_key(over_limit, 1) }
+    assert_raises(ArgumentError) { VC.find_key(over_limit, 41) }
+  end
+
   def test_break_cipher_secret
     ciphertext = VC.encrypt(LONG_ENGLISH_TEXT, "SECRET")
     key, plaintext = VC.break_cipher(ciphertext)

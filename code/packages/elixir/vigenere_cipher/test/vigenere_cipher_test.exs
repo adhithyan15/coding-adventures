@@ -6,20 +6,18 @@ defmodule CodingAdventures.VigenereCipherTest do
 
   # Long English text for cryptanalysis tests. IC analysis needs a
   # statistically significant sample to reliably detect the key length.
-  @long_english_text (
-    "The quick brown fox jumps over the lazy dog and then runs around the " <>
-    "entire neighborhood looking for more adventures to embark upon while " <>
-    "the sun slowly sets behind the distant mountains casting long shadows " <>
-    "across the valley below where the river winds its way through ancient " <>
-    "forests filled with towering oak trees and singing birds that herald " <>
-    "the coming of spring with their melodious songs echoing through the " <>
-    "canopy above where squirrels chase each other from branch to branch " <>
-    "gathering acorns and other nuts for the long winter months ahead when " <>
-    "the ground will be covered in a thick blanket of pristine white snow " <>
-    "and the children will build snowmen and throw snowballs at each other " <>
-    "laughing and playing until their parents call them inside for dinner " <>
-    "where warm soup and fresh bread await them on the old wooden table"
-  )
+  @long_english_text "The quick brown fox jumps over the lazy dog and then runs around the " <>
+                       "entire neighborhood looking for more adventures to embark upon while " <>
+                       "the sun slowly sets behind the distant mountains casting long shadows " <>
+                       "across the valley below where the river winds its way through ancient " <>
+                       "forests filled with towering oak trees and singing birds that herald " <>
+                       "the coming of spring with their melodious songs echoing through the " <>
+                       "canopy above where squirrels chase each other from branch to branch " <>
+                       "gathering acorns and other nuts for the long winter months ahead when " <>
+                       "the ground will be covered in a thick blanket of pristine white snow " <>
+                       "and the children will build snowmen and throw snowballs at each other " <>
+                       "laughing and playing until their parents call them inside for dinner " <>
+                       "where warm soup and fresh bread await them on the old wooden table"
 
   # ---------------------------------------------------------------------------
   # Encrypt tests
@@ -202,8 +200,32 @@ defmodule CodingAdventures.VigenereCipherTest do
     test "recovered plaintext is self-consistent" do
       ct = VigenereCipher.encrypt(@long_english_text, "CIPHER")
       result = VigenereCipher.break_cipher(ct)
-      rt = VigenereCipher.decrypt(VigenereCipher.encrypt(@long_english_text, result.key), result.key)
+
+      rt =
+        VigenereCipher.decrypt(VigenereCipher.encrypt(@long_english_text, result.key), result.key)
+
       assert rt == @long_english_text
+    end
+  end
+
+  describe "CR03 conformance" do
+    test "enforces scalar and key-length preflight ordering" do
+      at_limit = String.duplicate("😀", 8192)
+      over_limit = at_limit <> "😀"
+      assert VigenereCipher.find_key_length(at_limit, 40) == 1
+      assert_raise ArgumentError, fn -> VigenereCipher.find_key_length(over_limit, 20) end
+      assert_raise ArgumentError, fn -> VigenereCipher.find_key_length(over_limit, 41) end
+      assert VigenereCipher.find_key(over_limit, 0) == ""
+      assert_raise ArgumentError, fn -> VigenereCipher.find_key(over_limit, 1) end
+      assert_raise ArgumentError, fn -> VigenereCipher.find_key(over_limit, 41) end
+
+      combining_at_limit = String.duplicate("é", 4096)
+      combining_over_limit = combining_at_limit <> "e"
+      assert VigenereCipher.find_key_length(combining_at_limit, 40) in 1..40
+
+      assert_raise ArgumentError, fn ->
+        VigenereCipher.find_key_length(combining_over_limit, 20)
+      end
     end
   end
 end

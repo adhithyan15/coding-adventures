@@ -7,6 +7,7 @@
 // indéchiffrable" (the unbreakable cipher) for three centuries until Charles
 // Babbage broke it around 1854 using the index of coincidence — a method
 // rediscovered independently by Friedrich Kasiski in 1863.
+
 //
 // The key idea:
 // -------------
@@ -54,6 +55,8 @@
 //
 
 package com.codingadventures.vigenerecipher;
+
+import java.util.Locale;
 
 /**
  * The Vigenère cipher — a polyalphabetic substitution cipher.
@@ -106,15 +109,14 @@ public final class VigenereCipher {
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Key must not be empty");
         }
-        String upper = key.toUpperCase();
-        for (int i = 0; i < upper.length(); i++) {
-            char c = upper.charAt(i);
-            if (c < 'A' || c > 'Z') {
+        for (int i = 0; i < key.length(); i++) {
+            char c = key.charAt(i);
+            if (!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))) {
                 throw new IllegalArgumentException(
                     "Key must contain only letters, got: '" + key + "'");
             }
         }
-        return upper;
+        return key.toUpperCase(Locale.ROOT);
     }
 
     // =========================================================================
@@ -199,13 +201,17 @@ public final class VigenereCipher {
      * that look like Caesar-cipher ciphertext (IC ≈ 0.065) rather than random
      * text (IC ≈ 0.038).
      *
-     * <p>Returns the smallest candidate length within 5% of the best average IC.
+     * <p>Returns the smallest candidate whose average IC is at least 90% of the best.
      *
      * @param ciphertext the ciphertext (only alphabetic characters are analysed)
-     * @param maxLength  maximum key length to try (must be ≥ 2)
+     * @param maxLength  maximum key length to try; values below 2 return 1
      * @return the estimated key length
      */
     public static int findKeyLength(String ciphertext, int maxLength) {
+        if (maxLength > 40) throw new IllegalArgumentException("maximum key length exceeds 40");
+        if (ciphertext.codePointCount(0, ciphertext.length()) > 8192) {
+            throw new IllegalArgumentException("ciphertext exceeds analysis limit");
+        }
         // Extract only alphabetic characters
         StringBuilder alphaOnly = new StringBuilder();
         for (int i = 0; i < ciphertext.length(); i++) {
@@ -218,8 +224,9 @@ public final class VigenereCipher {
         int n = s.length();
 
         int limit = Math.min(maxLength, n / 2);
+        if (n < 2 || limit < 2) return 1;
         double[] avgIcs = new double[limit + 1];
-        double bestAvgIc = -1.0;
+        double bestAvgIc = 0.0;
 
         for (int L = 2; L <= limit; L++) {
             double totalIc = 0.0;
@@ -247,28 +254,14 @@ public final class VigenereCipher {
             }
         }
 
-        // Return the SMALLEST candidate within 5% of the best average IC,
-        // excluding multiples of smaller candidates that also scored well.
-        //
-        // Multiples of the true key length also score well (k, 2k, 3k all
-        // produce Caesar-cipher groups). The divisor-filtering step below
-        // prevents returning 2k or 3k when k is already a qualifying candidate.
-        double threshold = bestAvgIc * 0.95;
-
-        // Collect all qualifying key-length candidates in ascending order.
-        java.util.List<Integer> candidates = new java.util.ArrayList<>();
+        // Return the smallest candidate scoring at least 90% of the best
+        // average IC. CR03 intentionally applies no divisor filtering.
+        if (bestAvgIc <= 0.0) return 1;
+        double threshold = bestAvgIc * 0.90;
         for (int L = 2; L <= limit; L++) {
-            if (avgIcs[L] >= threshold) candidates.add(L);
+            if (avgIcs[L] >= threshold) return L;
         }
-        if (candidates.isEmpty()) return 2;
-
-        // Remove any candidate that is a multiple of a smaller candidate in
-        // the list.  The smallest residual candidate is the true key length.
-        for (int i = 0; i < candidates.size(); i++) {
-            int smaller = candidates.get(i);
-            candidates.removeIf(bigger -> bigger != smaller && bigger % smaller == 0);
-        }
-        return candidates.get(0);
+        return 1;
     }
 
     /** {@link #findKeyLength(String, int)} with default maxLength = 20. */
@@ -292,6 +285,11 @@ public final class VigenereCipher {
      * @return the recovered keyword (uppercase)
      */
     public static String findKey(String ciphertext, int keyLength) {
+        if (keyLength <= 0) return "";
+        if (keyLength > 40) throw new IllegalArgumentException("key length exceeds 40");
+        if (ciphertext.codePointCount(0, ciphertext.length()) > 8192) {
+            throw new IllegalArgumentException("ciphertext exceeds analysis limit");
+        }
         // Extract alphabetic characters only, uppercase
         StringBuilder alphaOnly = new StringBuilder();
         for (int i = 0; i < ciphertext.length(); i++) {
@@ -332,23 +330,9 @@ public final class VigenereCipher {
             keyChars[g] = (char) ('A' + bestShift);
         }
 
-        // If the recovered key has a repeating sub-period, return the minimal
-        // period.  This handles cases where the IC key-length estimator found
-        // a multiple of the true key length (e.g. 10 instead of 5 for LEMON).
-        String fullKey = new String(keyChars);
-        for (int p = 1; p <= keyLength / 2; p++) {
-            if (keyLength % p != 0) continue;
-            String base = fullKey.substring(0, p);
-            boolean repeated = true;
-            for (int i = p; i < keyLength; i++) {
-                if (fullKey.charAt(i) != fullKey.charAt(i % p)) {
-                    repeated = false;
-                    break;
-                }
-            }
-            if (repeated) return base;
-        }
-        return fullKey;
+        // CR03 requires exactly keyLength recovered characters; it does not
+        // shorten a repeated key to its minimal period.
+        return new String(keyChars);
     }
 
     // =========================================================================

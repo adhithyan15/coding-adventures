@@ -11,6 +11,9 @@ type BreakResult = {
 /// Vigenere cipher helpers and basic ciphertext-only analysis.
 [<RequireQualifiedAccess>]
 module VigenereCipher =
+    let private maxAnalysisScalars = 8192
+    let private maxAnalysisKeyLength = 40
+
     let englishFrequencies =
         [|
             0.08167; 0.01492; 0.02782; 0.04253; 0.12702; 0.02228; 0.02015
@@ -29,13 +32,11 @@ module VigenereCipher =
         if key.Length = 0 then
             invalidArg (nameof key) "Key must not be empty."
 
-        let normalized = key.ToUpperInvariant()
-
-        for ch in normalized do
-            if ch < 'A' || ch > 'Z' then
+        for ch in key do
+            if not (isAsciiLetter ch) then
                 invalidArg (nameof key) "Key must contain only ASCII letters."
 
-        normalized
+        key.ToUpperInvariant()
 
     let private transform (text: string) (key: string) direction =
         let normalizedKey = validateKey key
@@ -79,6 +80,18 @@ module VigenereCipher =
 
         builder.ToString()
 
+    let private validateAnalysisInput (text: string) =
+        let mutable scalarCount = 0
+        let mutable index = 0
+
+        while index < text.Length do
+            let rune = Rune.GetRuneAt(text, index)
+            scalarCount <- scalarCount + 1
+            index <- index + rune.Utf16SequenceLength
+
+        if scalarCount > maxAnalysisScalars then
+            invalidArg (nameof text) "Ciphertext exceeds the analysis limit."
+
     let private indexOfCoincidence (counts: int array) total =
         if total < 2 then
             0.0
@@ -92,6 +105,11 @@ module VigenereCipher =
     let findKeyLength (ciphertext: string) (maxLength: int) =
         if isNull ciphertext then
             nullArg (nameof ciphertext)
+
+        if maxLength > maxAnalysisKeyLength then
+            invalidArg (nameof maxLength) "Maximum key length exceeds 40."
+
+        validateAnalysisInput ciphertext
 
         let letters = extractAlphaUpper ciphertext
 
@@ -134,17 +152,9 @@ module VigenereCipher =
                 else
                     let threshold = bestAverageIc * 0.90
 
-                    let candidates =
-                        [ for length in 2 .. limit do
-                            if averageIcs[length] >= threshold then
-                                length ]
-                        |> ResizeArray
-
-                    for smaller in List.ofSeq candidates do
-                        candidates.RemoveAll(fun candidate -> candidate <> smaller && candidate % smaller = 0)
-                        |> ignore
-
-                    if candidates.Count = 0 then 1 else candidates[0]
+                    [ 2 .. limit ]
+                    |> List.tryFind (fun length -> averageIcs[length] >= threshold)
+                    |> Option.defaultValue 1
 
     let findKeyLengthDefault (ciphertext: string) =
         findKeyLength ciphertext 20
@@ -162,70 +172,50 @@ module VigenereCipher =
 
             sum
 
-    let private minimalPeriod (key: string) =
-        let mutable result = key
-        let mutable found = false
-        let mutable period = 1
-
-        while not found && period <= key.Length / 2 do
-            if key.Length % period = 0 then
-                let mutable repeated = true
-                let mutable index = period
-
-                while repeated && index < key.Length do
-                    if key[index] <> key[index % period] then
-                        repeated <- false
-
-                    index <- index + 1
-
-                if repeated then
-                    result <- key.Substring(0, period)
-                    found <- true
-
-            period <- period + 1
-
-        result
-
     let findKey (ciphertext: string) (keyLength: int) =
         if isNull ciphertext then
             nullArg (nameof ciphertext)
 
         if keyLength <= 0 then
-            invalidArg (nameof keyLength) "Key length must be positive."
+            ""
+        elif keyLength > maxAnalysisKeyLength then
+            invalidArg (nameof keyLength) "Key length exceeds 40."
+        else
+            validateAnalysisInput ciphertext
 
-        let letters = extractAlphaUpper ciphertext
-        let key = Array.zeroCreate<char> keyLength
+            let letters = extractAlphaUpper ciphertext
+            let key = Array.zeroCreate<char> keyLength
 
-        for group in 0 .. keyLength - 1 do
-            let groupLetters = ResizeArray<char>()
-            let mutable position = group
+            for group in 0 .. keyLength - 1 do
+                let groupLetters = ResizeArray<char>()
+                let mutable position = group
 
-            while position < letters.Length do
-                groupLetters.Add(letters[position])
-                position <- position + keyLength
+                while position < letters.Length do
+                    groupLetters.Add(letters[position])
+                    position <- position + keyLength
 
-            if groupLetters.Count = 0 then
-                key[group] <- 'A'
-            else
-                let mutable bestShift = 0
-                let mutable bestScore = Double.PositiveInfinity
+                if groupLetters.Count = 0 then
+                    key[group] <- 'A'
+                else
+                    let mutable bestShift = 0
+                    let mutable bestScore = Double.PositiveInfinity
 
-                for shift in 0 .. 25 do
-                    let counts = Array.zeroCreate<int> 26
+                    for shift in 0 .. 25 do
+                        let counts = Array.zeroCreate<int> 26
 
-                    for ch in groupLetters do
-                        let decrypted = (int ch - int 'A' + 26 - shift) % 26
-                        counts[decrypted] <- counts[decrypted] + 1
+                        for ch in groupLetters do
+                            let decrypted = (int ch - int 'A' + 26 - shift) % 26
+                            counts[decrypted] <- counts[decrypted] + 1
 
-                    let score = chiSquared counts groupLetters.Count
+                        let score = chiSquared counts groupLetters.Count
 
-                    if score < bestScore then
-                        bestScore <- score
-                        bestShift <- shift
+                        if score < bestScore then
+                            bestScore <- score
+                            bestShift <- shift
 
-                key[group] <- char (int 'A' + bestShift)
+                    key[group] <- char (int 'A' + bestShift)
 
-        new string(key) |> minimalPeriod
+            new string(key)
 
     let breakCipher (ciphertext: string) =
         if isNull ciphertext then

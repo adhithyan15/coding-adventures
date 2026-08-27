@@ -7,8 +7,8 @@
 //! Kasiski (1863) and Friedman (1920s) developed statistical attacks using
 //! the Index of Coincidence and chi-squared frequency analysis.
 
-pub mod cipher;
 pub mod analysis;
+pub mod cipher;
 
-pub use cipher::{encrypt, decrypt};
-pub use analysis::{find_key_length, find_key, break_cipher, BreakResult};
+pub use analysis::{break_cipher, find_key, find_key_length, BreakResult};
+pub use cipher::{decrypt, encrypt};

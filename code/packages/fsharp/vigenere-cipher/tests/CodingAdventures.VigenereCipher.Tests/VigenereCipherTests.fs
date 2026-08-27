@@ -53,7 +53,7 @@ type VigenereCipherTests() =
         Assert.Throws<ArgumentException>(fun () -> VigenereCipher.encrypt "hello" "key1" |> ignore) |> ignore
         Assert.Throws<ArgumentException>(fun () -> VigenereCipher.decrypt "hello" "ke y" |> ignore) |> ignore
         Assert.Throws<ArgumentNullException>(fun () -> VigenereCipher.encrypt "hello" null |> ignore) |> ignore
-        Assert.Throws<ArgumentException>(fun () -> VigenereCipher.findKey "ABC" 0 |> ignore) |> ignore
+        Assert.Equal("", VigenereCipher.findKey "ABC" 0)
 
     [<Fact>]
     member _.``Finds key lengths``() =
@@ -81,3 +81,25 @@ type VigenereCipherTests() =
         Assert.Equal(26, VigenereCipher.englishFrequencies.Length)
         Assert.InRange(Array.sum VigenereCipher.englishFrequencies, 0.99, 1.01)
         Assert.True(VigenereCipher.englishFrequencies[4] > VigenereCipher.englishFrequencies[25])
+
+    [<Fact>]
+    member _.``CR03 analysis limits and ordering``() =
+        let atLimit = String.replicate 8192 "😀"
+        let overLimit = atLimit + "😀"
+        Assert.Equal(1, VigenereCipher.findKeyLength atLimit 40)
+        Assert.Throws<ArgumentException>(fun () -> VigenereCipher.findKeyLength overLimit 20 |> ignore) |> ignore
+        Assert.Throws<ArgumentException>(fun () -> VigenereCipher.findKeyLength overLimit 41 |> ignore) |> ignore
+        Assert.Equal("", VigenereCipher.findKey overLimit 0)
+        Assert.Throws<ArgumentException>(fun () -> VigenereCipher.findKey overLimit 1 |> ignore) |> ignore
+        Assert.Throws<ArgumentException>(fun () -> VigenereCipher.findKey overLimit 41 |> ignore) |> ignore
+
+    [<Fact>]
+    member _.``CR03 uses ASCII only and preserves requested key length``() =
+        let plaintext = "Hello, 😀Wörld!"
+        let ciphertext = "Rijvs, 😀Uöbpb!"
+        Assert.Equal(ciphertext, VigenereCipher.encrypt plaintext "kEy")
+        Assert.Equal(plaintext, VigenereCipher.decrypt ciphertext "kEy")
+        Assert.Throws<ArgumentException>(fun () -> VigenereCipher.decrypt "" "KÉY" |> ignore) |> ignore
+        Assert.Throws<ArgumentException>(fun () -> VigenereCipher.decrypt "" "KſY" |> ignore) |> ignore
+        Assert.Equal(2, VigenereCipher.findKeyLength "AéA😀AЖAéABB" 4)
+        Assert.Equal(String.replicate 40 "A", VigenereCipher.findKey "Eé😀Ж" 40)
