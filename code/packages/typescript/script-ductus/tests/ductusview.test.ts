@@ -563,6 +563,8 @@ const URDU_SHIN = ductusFor("ش", "urdu-nastaliq")!;
 const urduShinOutline = naskhOutline("ش");
 const URDU_FE = ductusFor("ف", "urdu-nastaliq")!;
 const urduFeOutline = naskhOutline("ف");
+const URDU_QAF = ductusFor("ق", "urdu-nastaliq")!;
+const urduQafOutline = naskhOutline("ق");
 const URDU_BEH = ductusFor("ب", "urdu-nastaliq")!;
 const urduBehOutline = naskhOutline("ب");
 const URDU_PEH = ductusFor("پ", "urdu-nastaliq")!;
@@ -603,6 +605,8 @@ const PERSIAN_SHIN = ductusFor("ش", "perso-arabic")!;
 const persianShinOutline = naskhOutline("ش");
 const PERSIAN_FEH = ductusFor("ف", "perso-arabic")!;
 const persianFehOutline = naskhOutline("ف");
+const PERSIAN_QAF = ductusFor("ق", "perso-arabic")!;
+const persianQafOutline = naskhOutline("ق");
 const PERSIAN_LAM = DUCTUS["ل"];
 const persianLamOutline = naskhOutline("ل");
 const PERSIAN_MIM = DUCTUS["م"];
@@ -626,7 +630,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds twenty-one Tamil letters, fifteen Persian letters, eighteen Arabic letters, and sixteen Urdu letters", () => {
+  it("finds twenty-one Tamil letters, sixteen Persian letters, eighteen Arabic letters, and seventeen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -683,6 +687,8 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("س", "urdu-nastaliq")?.glyph).toBe("س");
     expect(ductusFor("ش", "urdu-nastaliq")?.glyph).toBe("ش");
     expect(ductusFor("ش", "perso-arabic")?.glyph).toBe("ش");
+    expect(ductusFor("ق", "urdu-nastaliq")?.glyph).toBe("ق");
+    expect(ductusFor("ق", "perso-arabic")?.glyph).toBe("ق");
     expect(ductusFor("ک", "urdu-nastaliq")?.glyph).toBe("ک");
     expect(ductusFor("ک", "perso-arabic")?.glyph).toBe("ک");
     expect(ductusFor("ل", "urdu-nastaliq")?.glyph).toBe("ل");
@@ -7284,6 +7290,31 @@ describe("Persian and Urdu ف — joined head and body before the upper dot", ()
       );
       expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
         penPathD(ductus.strokes[1], 1),
+      );
+    });
+  }
+});
+
+describe("Persian and Urdu ق — joined head and deep bowl before two upper dots", () => {
+  for (const [name, ductus, glyphOutline] of [
+    ["Persian", PERSIAN_QAF, persianQafOutline],
+    ["Urdu", URDU_QAF, urduQafOutline],
+  ] as const) {
+    it(`${name} renders two joined body movements before two lifted dots`, () => {
+      const steps = ductusSteps(ductus);
+      const strip = ductusFilmstrip(ductus, glyphOutline);
+      expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true]);
+      expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2]);
+      expect(strip.frames).toHaveLength(4);
+      expect(strip.penLifts).toBe(2);
+      expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+      const paths = byTag(strip.frames[3], "path");
+      expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+        glyphOutline.path,
+      );
+      expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(2);
+      expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+        penPathD(ductus.strokes[2], 1),
       );
     });
   }
