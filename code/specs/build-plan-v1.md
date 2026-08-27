@@ -319,14 +319,14 @@ normal flow.
 # Detect job: emit plan + language flags
 - run: ./build-tool -root . -diff-base $BASE -detect-languages -emit-plan build-plan.json
 
-- uses: actions/upload-artifact@v4
+- uses: actions/upload-artifact@v7
   with:
     name: build-plan
     path: build-plan.json
     retention-days: 1
 
 # Build job: consume plan
-- uses: actions/download-artifact@v4
+- uses: actions/download-artifact@v8
   with:
     name: build-plan
   continue-on-error: true

@@ -4618,7 +4618,7 @@ The security review of the latexmk hardening above found the real ranking, and i
 the one the PR started with. Closing the `latexmkrc` `eval` mattered — but the same job
 was `pull_request`-triggered with `permissions: contents: write`, ran `npm ci` (without
 `--ignore-scripts`), a TypeScript build and seven `node dist/*.js` checks, all
-pull-request-controlled, and `actions/checkout@v4` defaults to
+pull-request-controlled, and `actions/checkout@v7` defaults to
 `persist-credentials: true`, which leaves the write-scoped token in `.git/config` **inside
 the workspace latexmk `cd`s into**. Anyone who could have used the latexmk hole already
 had a dozen easier ones.
@@ -5722,7 +5722,6 @@ was **copying a tree containing junctions to somewhere it would later be recursi
 The wider point: the identity test was the right call and produced the right answer. **The
 shortcut taken to make it cheap was the dangerous part**, and it was dangerous in a way that had
 nothing to do with what was being tested.
-
 ## A TypeScript package can pass its own typecheck and fail a stricter source-importing consumer
 
 Splitting Script Ductus into owner modules passed the package's `tsc --noEmit`, but Language
