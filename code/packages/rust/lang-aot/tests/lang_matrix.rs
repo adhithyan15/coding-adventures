@@ -1520,6 +1520,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("488"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — one bounded negative integral arithmetic exponent uses the
+    // same deterministic reciprocal path as a signed literal exponent.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(2.0 ^ (1 - 4), 4.0 ^ (0.0 - 2.0), 2.0 ^ (1 - (2 ^ 2))) end",
+        expect: Expect::Stdout("0.1250.06250.125"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — one signed integer-literal exponent remains bounded by the
     // existing cap. Negative powers use repeated division and still emit only
     // a frontend-computed string on every backend.
@@ -7767,6 +7776,31 @@ fn algol_static_real_arithmetic_exponent_output_runs_on_every_available_standard
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but static real arithmetic-exponent output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_real_negative_arithmetic_exponent_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("output(2.0 ^ (1 - 4), 4.0 ^ (0.0 - 2.0)")
+        })
+        .expect("the static real negative arithmetic-exponent program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static real negative arithmetic-exponent output did not complete"
             );
             continue;
         };
