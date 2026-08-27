@@ -35,8 +35,8 @@
 -- Step 1 -- Find the key length using the Index of Coincidence (IC).
 -- For each candidate key length k, split the ciphertext into k groups
 -- (every k-th letter). Calculate the average IC across groups. English
--- text has IC ~ 0.0667; random text ~ 0.0385. The key length producing
--- the highest average IC is likely correct.
+-- text has IC ~ 0.0667; random text ~ 0.0385. Return the smallest key
+-- length whose score is at least 90% of the best.
 --
 -- Step 2 -- Find each key letter using chi-squared analysis.
 -- For each position in the key, extract the group of letters at that
@@ -216,12 +216,13 @@ end
 --     1. Split ciphertext into k groups (every k-th letter).
 --     2. Compute IC of each group.
 --     3. Average the ICs.
---   The key length with the highest average IC is most likely correct,
---   because at the correct key length each group is a simple Caesar cipher
---   of English text (IC ~ 0.0667).
+--   Return the smallest candidate whose score is at least 90% of the best,
+--   without divisor or multiple filtering.
 
 function M.find_key_length(ciphertext, max_length)
     max_length = max_length or 20
+    if max_length > 40 then error("maximum key length exceeds 40", 2) end
+    if utf8.len(ciphertext) > 8192 then error("ciphertext exceeds analysis limit", 2) end
 
     -- Extract only alphabetic characters for analysis
     local alpha_only = {}
@@ -236,12 +237,13 @@ function M.find_key_length(ciphertext, max_length)
 
     if n < 2 then return 1 end
 
-    local best_length = 1
-    local best_ic = -1
+    local best_ic = 0
+    local scores = {}
 
     for k = 2, math.min(max_length, math.floor(n / 2)) do
         -- Split into k groups: group j gets characters at positions j, j+k, j+2k, ...
         local ic_sum = 0
+        local valid_groups = 0
         for j = 1, k do
             local group = {}
             local pos = j
@@ -249,17 +251,25 @@ function M.find_key_length(ciphertext, max_length)
                 group[#group + 1] = alpha_str:sub(pos, pos)
                 pos = pos + k
             end
-            ic_sum = ic_sum + index_of_coincidence(table.concat(group))
+            if #group > 1 then
+                ic_sum = ic_sum + index_of_coincidence(table.concat(group))
+                valid_groups = valid_groups + 1
+            end
         end
 
-        local avg_ic = ic_sum / k
+        local avg_ic = valid_groups > 0 and (ic_sum / valid_groups) or 0
+        scores[#scores + 1] = {k, avg_ic}
         if avg_ic > best_ic then
             best_ic = avg_ic
-            best_length = k
         end
     end
 
-    return best_length
+    if best_ic <= 0 then return 1 end
+    local threshold = best_ic * 0.90
+    for _, score in ipairs(scores) do
+        if score[2] >= threshold then return score[1] end
+    end
+    return 1
 end
 
 -- ============================================================================
@@ -298,6 +308,9 @@ end
 --   4. The shift with the lowest chi-squared against English is the key letter.
 
 function M.find_key(ciphertext, key_length)
+    if key_length <= 0 then return "" end
+    if key_length > 40 then error("key length exceeds 40", 2) end
+    if utf8.len(ciphertext) > 8192 then error("ciphertext exceeds analysis limit", 2) end
     -- Extract only alpha characters
     local alpha_only = {}
     for i = 1, #ciphertext do

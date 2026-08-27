@@ -52,21 +52,28 @@ module CodingAdventures
       0.01974, # Y
       0.00074  # Z
     ].freeze
+    MAX_ANALYSIS_SCALARS = 8192
+    MAX_ANALYSIS_KEY_LENGTH = 40
 
     # Estimate key length using Index of Coincidence analysis.
     #
     # For each candidate length k (2..max_length), splits ciphertext into
-    # k groups and averages their IC. The k with the highest average IC
-    # is most likely the correct key length.
+    # k groups and averages their IC. Returns the smallest k whose score is at
+    # least 90% of the best, without divisor or multiple filtering.
     #
     # @param ciphertext [String] the encrypted text
     # @param max_length [Integer] maximum key length to try (default 20)
     # @return [Integer] the estimated key length
     def self.find_key_length(ciphertext, max_length = 20)
+      raise ArgumentError, "maximum key length exceeds 40" if max_length > MAX_ANALYSIS_KEY_LENGTH
+      raise ArgumentError, "ciphertext exceeds analysis limit" if ciphertext.length > MAX_ANALYSIS_SCALARS
+
       letters = ciphertext.gsub(/[^A-Za-z]/, "").upcase
+      limit = [max_length, letters.length / 2].min
+      return 1 if letters.length < 2 || limit < 2
 
       # Compute average IC for each candidate key length
-      ic_scores = (2..max_length).map do |k|
+      ic_scores = (2..limit).map do |k|
         # Split into k groups: group i gets letters at positions i, i+k, i+2k, ...
         groups = Array.new(k) { +"" }
         letters.chars.each_with_index do |ch, i|
@@ -74,18 +81,22 @@ module CodingAdventures
         end
 
         # Average IC across all groups
-        total_ic = groups.sum { |g| index_of_coincidence(g) }
-        avg_ic = total_ic / k.to_f
+        usable_groups = groups.select { |group| group.length > 1 }
+        avg_ic = if usable_groups.empty?
+                   0.0
+                 else
+                   usable_groups.sum { |group| index_of_coincidence(group) } / usable_groups.length.to_f
+                 end
         [k, avg_ic]
       end
 
       # Find the best IC value
       best_ic = ic_scores.map(&:last).max
+      return 1 if best_ic <= 0
 
-      # Among all key lengths within 5% of the best IC, choose the shortest.
-      # This avoids selecting multiples of the true key length (e.g., 12
-      # instead of 6), since multiples also produce high IC.
-      threshold = best_ic * 0.95
+      # Among all key lengths scoring at least 90% of the best IC, choose the
+      # shortest. CR03 intentionally applies no divisor or multiple filtering.
+      threshold = best_ic * 0.90
       candidates = ic_scores.select { |_, ic| ic >= threshold }
       candidates.min_by(&:first).first
     end
@@ -96,6 +107,10 @@ module CodingAdventures
     # @param key_length [Integer] the known or estimated key length
     # @return [String] the recovered key (uppercase)
     def self.find_key(ciphertext, key_length)
+      return "" if key_length <= 0
+      raise ArgumentError, "key length exceeds 40" if key_length > MAX_ANALYSIS_KEY_LENGTH
+      raise ArgumentError, "ciphertext exceeds analysis limit" if ciphertext.length > MAX_ANALYSIS_SCALARS
+
       letters = ciphertext.gsub(/[^A-Za-z]/, "").upcase
 
       key_chars = (0...key_length).map do |pos|

@@ -120,19 +120,19 @@ final class VigenereCipherTests: XCTestCase {
 
     func testFindKeyLengthSix() throws {
         let ct = try VigenereCipher.encrypt(longText, key: "SECRET")
-        let detected = VigenereCipher.findKeyLength(ct)
+        let detected = try VigenereCipher.findKeyLength(ct)
         XCTAssertEqual(detected % 6, 0, "Expected key length 6 or multiple, got \(detected)")
     }
 
     func testFindKeyLengthThree() throws {
         let ct = try VigenereCipher.encrypt(longText, key: "KEY")
-        let detected = VigenereCipher.findKeyLength(ct)
+        let detected = try VigenereCipher.findKeyLength(ct)
         XCTAssertEqual(detected % 3, 0, "Expected key length 3 or multiple, got \(detected)")
     }
 
     func testFindKeyLengthRespectsMaxLength() throws {
         let ct = try VigenereCipher.encrypt(longText, key: "SECRET")
-        let detected = VigenereCipher.findKeyLength(ct, maxLength: 4)
+        let detected = try VigenereCipher.findKeyLength(ct, maxLength: 4)
         XCTAssertTrue(detected >= 1 && detected <= 4, "Expected 1..4, got \(detected)")
     }
 
@@ -142,13 +142,13 @@ final class VigenereCipherTests: XCTestCase {
 
     func testFindKeySECRET() throws {
         let ct = try VigenereCipher.encrypt(longText, key: "SECRET")
-        let key = VigenereCipher.findKey(ct, keyLength: 6)
+        let key = try VigenereCipher.findKey(ct, keyLength: 6)
         XCTAssertEqual(key, "SECRET")
     }
 
     func testFindKeyKEY() throws {
         let ct = try VigenereCipher.encrypt(longText, key: "KEY")
-        let key = VigenereCipher.findKey(ct, keyLength: 3)
+        let key = try VigenereCipher.findKey(ct, keyLength: 3)
         XCTAssertEqual(key, "KEY")
     }
 
@@ -196,5 +196,31 @@ final class VigenereCipherTests: XCTestCase {
         // With key "AB" (shifts 0,1), spaces should not advance key
         // "A B" -> A(shift 0)=A, space, B(shift 1)=C
         XCTAssertEqual(try VigenereCipher.encrypt("A B", key: "AB"), "A C")
+    }
+
+    func testCR03Conformance() throws {
+        let plaintext = "Hello, 😀Wörld!"
+        let ciphertext = "Rijvs, 😀Uöbpb!"
+        XCTAssertEqual(try VigenereCipher.encrypt(plaintext, key: "kEy"), ciphertext)
+        XCTAssertEqual(try VigenereCipher.decrypt(ciphertext, key: "kEy"), plaintext)
+        XCTAssertThrowsError(try VigenereCipher.decrypt("", key: "KÉY"))
+        XCTAssertThrowsError(try VigenereCipher.decrypt("", key: "KſY"))
+        XCTAssertEqual(try VigenereCipher.findKeyLength("AéA😀AЖAéABB", maxLength: 4), 2)
+        let decomposed = String(repeating: "ÁB́", count: 8)
+        XCTAssertEqual(try VigenereCipher.findKeyLength(decomposed, maxLength: 4), 2)
+        XCTAssertEqual(try VigenereCipher.encrypt("éA", key: "B"), "f́B")
+        XCTAssertEqual(try VigenereCipher.decrypt("f́B", key: "B"), "éA")
+        XCTAssertEqual(try VigenereCipher.findKey("Eé😀Ж", keyLength: 40), String(repeating: "A", count: 40))
+    }
+
+    func testCR03AnalysisLimitsAndOrdering() throws {
+        let atLimit = String(repeating: "😀", count: 8192)
+        let overLimit = atLimit + "😀"
+        XCTAssertEqual(try VigenereCipher.findKeyLength(atLimit, maxLength: 40), 1)
+        XCTAssertThrowsError(try VigenereCipher.findKeyLength(overLimit, maxLength: 20))
+        XCTAssertThrowsError(try VigenereCipher.findKeyLength(overLimit, maxLength: 41))
+        XCTAssertEqual(try VigenereCipher.findKey(overLimit, keyLength: 0), "")
+        XCTAssertThrowsError(try VigenereCipher.findKey(overLimit, keyLength: 1))
+        XCTAssertThrowsError(try VigenereCipher.findKey(overLimit, keyLength: 41))
     }
 }

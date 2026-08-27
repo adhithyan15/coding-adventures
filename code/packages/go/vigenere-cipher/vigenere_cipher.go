@@ -41,8 +41,15 @@ import (
 	"fmt"
 	"math"
 	"strings"
-	"unicode"
+	"unicode/utf8"
 )
+
+const maxAnalysisScalars = 8192
+const maxAnalysisKeyLength = 40
+
+func isASCIILetter(r rune) bool {
+	return r >= 'A' && r <= 'Z' || r >= 'a' && r <= 'z'
+}
 
 // ErrInvalidKey is returned when the key is empty or contains non-alphabetic characters.
 var ErrInvalidKey = errors.New("invalid key")
@@ -88,7 +95,7 @@ func validateKey(key string) error {
 		return fmt.Errorf("%w: key must not be empty", ErrInvalidKey)
 	}
 	for _, r := range key {
-		if !unicode.IsLetter(r) {
+		if !isASCIILetter(r) {
 			return fmt.Errorf("%w: key must contain only letters, got %q", ErrInvalidKey, key)
 		}
 	}
@@ -98,9 +105,12 @@ func validateKey(key string) error {
 // keyShifts converts a key string to a slice of shift values (0-25).
 // The key is treated case-insensitively: both 'a' and 'A' give shift 0.
 func keyShifts(key string) []int {
-	shifts := make([]int, len(key))
-	for i, r := range key {
-		shifts[i] = int(unicode.ToUpper(r) - 'A')
+	shifts := make([]int, 0, len(key))
+	for _, r := range key {
+		if r >= 'a' && r <= 'z' {
+			r -= 'a' - 'A'
+		}
+		shifts = append(shifts, int(r-'A'))
 	}
 	return shifts
 }
@@ -130,10 +140,10 @@ func Encrypt(plaintext, key string) (string, error) {
 	keyIndex := 0
 
 	for _, ch := range plaintext {
-		if unicode.IsLetter(ch) {
+		if isASCIILetter(ch) {
 			// Determine the alphabetic base: 'A' for upper, 'a' for lower
 			var base rune
-			if unicode.IsUpper(ch) {
+			if ch >= 'A' && ch <= 'Z' {
 				base = 'A'
 			} else {
 				base = 'a'
@@ -175,9 +185,9 @@ func Decrypt(ciphertext, key string) (string, error) {
 	keyIndex := 0
 
 	for _, ch := range ciphertext {
-		if unicode.IsLetter(ch) {
+		if isASCIILetter(ch) {
 			var base rune
-			if unicode.IsUpper(ch) {
+			if ch >= 'A' && ch <= 'Z' {
 				base = 'A'
 			} else {
 				base = 'a'
@@ -202,8 +212,11 @@ func Decrypt(ciphertext, key string) (string, error) {
 func extractAlphaUpper(text string) string {
 	var b strings.Builder
 	for _, r := range text {
-		if unicode.IsLetter(r) {
-			b.WriteRune(unicode.ToUpper(r))
+		if isASCIILetter(r) {
+			if r >= 'a' && r <= 'z' {
+				r -= 'a' - 'A'
+			}
+			b.WriteRune(r)
 		}
 	}
 	return b.String()
@@ -263,18 +276,28 @@ func chiSquared(counts [26]int, total int) float64 {
 // k groups (every k-th letter). If k matches the actual key length, each
 // group is a Caesar cipher and its IC will be close to English (~0.0667).
 //
-// Returns the k with the highest average IC.
+// Returns the smallest k whose average IC is at least 90% of the best score.
 func FindKeyLength(ciphertext string, maxLength int) int {
+	if maxLength > maxAnalysisKeyLength {
+		panic("maximum key length exceeds 40")
+	}
+	if utf8.RuneCountInString(ciphertext) > maxAnalysisScalars {
+		panic("ciphertext exceeds analysis limit")
+	}
 	letters := extractAlphaUpper(ciphertext)
+	if len(letters) < 2 || maxLength < 2 {
+		return 1
+	}
+	limit := min(maxLength, len(letters)/2)
 
 	// Compute average IC for each candidate key length
 	type icScore struct {
 		k  int
 		ic float64
 	}
-	scores := make([]icScore, 0, maxLength-1)
+	scores := make([]icScore, 0, limit-1)
 
-	for k := 2; k <= maxLength; k++ {
+	for k := 2; k <= limit; k++ {
 		// Split into k groups
 		groups := make([]strings.Builder, k)
 		for i, ch := range letters {
@@ -283,10 +306,17 @@ func FindKeyLength(ciphertext string, maxLength int) int {
 
 		// Average IC across groups
 		totalIC := 0.0
+		validGroups := 0
 		for _, g := range groups {
-			totalIC += indexOfCoincidence(g.String())
+			if len(g.String()) > 1 {
+				totalIC += indexOfCoincidence(g.String())
+				validGroups++
+			}
 		}
-		avgIC := totalIC / float64(k)
+		avgIC := 0.0
+		if validGroups > 0 {
+			avgIC = totalIC / float64(validGroups)
+		}
 		scores = append(scores, icScore{k, avgIC})
 	}
 
@@ -298,17 +328,19 @@ func FindKeyLength(ciphertext string, maxLength int) int {
 		}
 	}
 
-	// Among all key lengths within 5% of the best IC, choose the shortest.
-	// This avoids selecting multiples of the true key length (e.g., 12
-	// instead of 6), since multiples also produce high IC.
-	threshold := bestIC * 0.95
+	// Among all key lengths scoring at least 90% of the best IC, choose the
+	// shortest. CR03 intentionally applies no divisor or multiple filtering.
+	if bestIC <= 0 {
+		return 1
+	}
+	threshold := bestIC * 0.90
 	for _, s := range scores {
 		if s.ic >= threshold {
 			return s.k
 		}
 	}
 
-	return 2
+	return 1
 }
 
 // FindKey determines each letter of the key using chi-squared analysis.
@@ -317,6 +349,15 @@ func FindKeyLength(ciphertext string, maxLength int) int {
 // position, tries all 26 shifts, and picks the shift with the lowest
 // chi-squared against English frequencies.
 func FindKey(ciphertext string, keyLength int) string {
+	if keyLength <= 0 {
+		return ""
+	}
+	if keyLength > maxAnalysisKeyLength {
+		panic("key length exceeds 40")
+	}
+	if utf8.RuneCountInString(ciphertext) > maxAnalysisScalars {
+		panic("ciphertext exceeds analysis limit")
+	}
 	letters := extractAlphaUpper(ciphertext)
 
 	keyChars := make([]byte, keyLength)

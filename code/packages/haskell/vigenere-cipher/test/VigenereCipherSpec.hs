@@ -2,6 +2,7 @@ module VigenereCipherSpec (spec) where
 
 import VigenereCipher
 import Test.Hspec
+import Control.Exception (evaluate)
 
 longEnglishText :: String
 longEnglishText =
@@ -121,6 +122,17 @@ spec = do
         it "contains one positive value per ASCII letter" $ do
             length englishFrequencies `shouldBe` 26
             englishFrequencies `shouldSatisfy` all (> 0.0)
+
+    describe "CR03 limits" $ do
+        it "orders key-length and scalar preflights" $ do
+            let atLimit = concat (replicate 8192 "😀")
+            let overLimit = atLimit ++ "😀"
+            findKeyLengthWithLimit atLimit 40 `shouldBe` 1
+            evaluate (findKeyLengthWithLimit overLimit 20) `shouldThrow` anyErrorCall
+            evaluate (findKeyLengthWithLimit overLimit 41) `shouldThrow` anyErrorCall
+            findKey overLimit 0 `shouldBe` ""
+            evaluate (findKey overLimit 1) `shouldThrow` anyErrorCall
+            evaluate (findKey overLimit 41) `shouldThrow` anyErrorCall
   where
     checkRoundTrip (text, key) =
         (encrypt text key >>= (`decrypt` key)) `shouldBe` Right text

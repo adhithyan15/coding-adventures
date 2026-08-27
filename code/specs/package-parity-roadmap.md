@@ -9293,6 +9293,49 @@ available native suites pass again, including exact limit-error assertions in
 C#, Dart, F#, Java, Kotlin, and Swift; Elixir and Perl remain delegated to the
 fresh Linux CI cycle because their reviewed Windows toolchains are absent.
 
+## Post-#13147 Refresh and Vigenere Conformance Selection
+
+Focused hardening head `28d4e018de7aa8d94af20a9e56e71be8baad52d7`
+completed all 41 reported checks: 39 successes and two expected skips, with no
+failure or pending check. GitHub reported `MERGEABLE/CLEAN`; the loop enabled
+squash auto-merge, and GitHub merged PR #13147 as
+`878556189d8652d9dc6cb9c84e3d3236e7f09f54` at
+2026-08-27T03:48:57Z without a manual merge command. The final generator uses
+bounded reads, source-safe identifiers, per-language scalar or proven literal
+encoders in all 15 lanes, and exact fixture-derived invalid-key and limit
+error identifiers.
+
+The collision-checked schema-3 inventory on exact merged `origin/main` is
+structurally unchanged: 15 established lanes, 1,373 implementation identities,
+4,582 package slots, and 1,412 all-reported identities. The four bands remain
+175/266, 123/934, 166/2,087, and 909/12,726; Rust has 720 singletons, OCaml is
+still emerging at zero packages, and collisions and unknown buckets remain
+zero. Intervening Algol, Mermaid, HTML, Mosaic, and curriculum work adds no
+package identity or eligible unowned gap. The exact post-merge state graph
+initially remains 533 owners and 792 dependency edges. The reference pass then
+records one newly discovered follow-on owner,
+`vigenere-language-neutral-fixture-established-lane-consumers`, because no
+established lane currently executes all 26 complete Vigenere fixture objects.
+That bounded generated-consumer tranche depends on behavior convergence and
+brings the graph to 534 owners and 793 edges. The later toolchain audit also
+registers `vigenere-established-lane-build-front-hardening` for the Swift
+failure-masking front, unconditional Haskell/Perl Windows skips, omitted
+TypeScript typecheck, and PATH-specific Python `uv` invocation. That separate
+owner brings the complete graph to 535 owners and 794 edges without widening
+this behavior slice.
+
+The next selected owner is
+`vigenere-ascii-established-lane-conformance` on
+`codex/vigenere-ascii-established-lane-conformance`. Its neutral CR03 contract
+is merged and it closes observable ASCII text/key, key-length inference,
+chi-squared recovery, insufficient-signal, tie-breaking, and resource-limit
+drift across the established Vigenere implementations. That direct all-lane
+conformance leverage outranks the independent DT13 fixture contract while
+remaining one bounded package family. Six live open PRs have zero exact
+overlap with its Vigenere package, CR03, classical-cipher fixture, state, or
+roadmap surfaces. After selection, state is 160 merged, 374 pending, and
+exactly one in-progress owner, with no active parity PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
