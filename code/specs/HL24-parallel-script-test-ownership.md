@@ -32,19 +32,22 @@ Nastaliq proof do not need a shared edit, review, or merge decision.
 Exact inventory evidence belongs to the inventory it proves:
 
 ```text
-tests/script-inventories/devanagari.test.ts
-tests/script-inventories/japanese.test.ts
-tests/script-inventories/kannada.test.ts
-tests/script-inventories/malayalam.test.ts
-tests/script-inventories/perso-arabic.test.ts
-tests/script-inventories/tamil.test.ts
-tests/script-inventories/telugu.test.ts
-tests/script-inventories/urdu-nastaliq.test.ts
+tests/script-inventories/devanagari.evidence.ts
+tests/script-inventories/japanese.evidence.ts
+tests/script-inventories/kannada.evidence.ts
+tests/script-inventories/malayalam.evidence.ts
+tests/script-inventories/perso-arabic.evidence.ts
+tests/script-inventories/tamil.evidence.ts
+tests/script-inventories/telugu.evidence.ts
+tests/script-inventories/urdu-nastaliq.evidence.ts
 ```
 
 `integration.test.ts` retains only genuinely cross-corpus evidence: the whole
 corpus validates, every registered track loads, shared spine/curriculum/book
-relationships close, and cross-language queries join correctly.
+relationships close, and cross-language queries join correctly. It also owns a
+stable eager glob that discovers every `*.evidence.ts` module and invokes it
+against the already-loaded corpus. Adding a script therefore never requires an
+edit to the integration gate or to a registry.
 
 An inventory file may assert a relationship with a sibling inventory when the
 same encoded glyph genuinely spans both. That is semantic coupling, not a
@@ -60,8 +63,9 @@ own glyphs. The helper returns:
 - the number of lessons affected by each missing character.
 
 It must use the production validator rather than duplicating its closure
-algorithm. Per-inventory tests may call the helper independently; correctness
-and merge ownership are more important than saving one immutable corpus load.
+algorithm. The integration gate computes it once and passes the result to each
+inventory evidence module. This preserves separate edit ownership without
+repeating the expensive `loadEverything()` corpus load for every script.
 
 ## 4. Coverage-preservation rule
 
@@ -72,18 +76,22 @@ deleted merely because the split exposes duplication.
 
 The proof is threefold:
 
-1. focused execution of every new inventory test file;
-2. the existing real-corpus integration target; and
+1. the existing real-corpus integration target, including its evidence glob;
+2. the package's `npm run validate` command, which names that target directly;
+   and
 3. the full package suite at its default timeouts.
 
-Test discovery remains ordinary Vitest `*.test.ts` discovery; no hand-maintained
-file registry may replace one shared edit with another.
+Evidence discovery uses a stable `import.meta.glob` in `integration.test.ts`.
+No hand-maintained file registry may replace one shared edit with another, and
+evidence modules are deliberately not separate `*.test.ts` files: that would
+reload and revalidate the complete corpus once per inventory.
 
 ## 5. Future inventory sharding
 
 The JSON inventories themselves remain a later conflict-removal tranche. When
-they become `X.d/` ledgers, their corresponding test filename remains stable:
-agents add an inventory entry shard and edit only that inventory's test. A
+they become `X.d/` ledgers, their corresponding evidence filename remains
+stable: agents add an inventory entry shard and edit only that inventory's
+evidence module. A
 future data-driven source/provenance schema may remove many exact assertions,
 but it must fail closed with evidence at least as strong as the assertions it
 replaces.

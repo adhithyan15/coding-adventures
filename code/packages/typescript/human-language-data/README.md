@@ -849,6 +849,13 @@ field shapes, script-glyph coverage (where script data exists), and core-concept
 coverage (enforced only for tracks that declare `parity: complete`). The
 integration test runs it against the real curriculum, so drift breaks CI.
 
+Exact script-inventory evidence is partitioned by ownership under
+`tests/script-inventories/`. A stable glob in `tests/integration.test.ts`
+discovers those evidence modules while loading the corpus once. Japanese, Urdu,
+Tamil, and other script authors add or update only their inventory's evidence
+file; the integration gate remains a cross-corpus entry point rather than a
+shared edit surface.
+
 For a lesson declaring `schema_version: 2`, `validateCurriculum()` additionally
 enforces its canonical spine node, unique per-language sequence, 1–299 second
 declared and computed duration, stable typed body sections, explicit
