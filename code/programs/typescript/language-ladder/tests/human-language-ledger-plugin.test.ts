@@ -5,8 +5,8 @@ import {
   CHAPTER_MODULE_PREFIX,
   LEDGER_INDEX_ID,
   RESOLVED_LEDGER_INDEX_ID,
-  humanLanguageLedgerPlugin,
   loadHumanLanguageLedgerModule,
+  resolveHumanLanguageLedgerId,
 } from "../human-language-ledger-plugin.ts";
 import {
   defaultCurriculumRoot,
@@ -26,12 +26,10 @@ function defaultExport(source: string): unknown {
 
 describe("the bounded human-language ledger virtual modules", () => {
   it("resolves only the public index and its safe per-track children", () => {
-    const plugin = humanLanguageLedgerPlugin({ curriculumRoot: root });
-    expect(plugin.resolveId?.call({} as never, LEDGER_INDEX_ID, undefined, {} as never))
-      .toBe(RESOLVED_LEDGER_INDEX_ID);
-    expect(plugin.resolveId?.call({} as never, `${CURRICULUM_MODULE_PREFIX}spanish`, undefined, {} as never))
+    expect(resolveHumanLanguageLedgerId(LEDGER_INDEX_ID)).toBe(RESOLVED_LEDGER_INDEX_ID);
+    expect(resolveHumanLanguageLedgerId(`${CURRICULUM_MODULE_PREFIX}spanish`))
       .toBe(`\0${CURRICULUM_MODULE_PREFIX}spanish`);
-    expect(plugin.resolveId?.call({} as never, `${CHAPTER_MODULE_PREFIX}../../etc`, undefined, {} as never))
+    expect(resolveHumanLanguageLedgerId(`${CHAPTER_MODULE_PREFIX}../../etc`))
       .toBeNull();
   });
 
@@ -74,7 +72,8 @@ describe("the bounded human-language ledger virtual modules", () => {
     const spanish = loadLanguageCurricula(root).find((plan) => plan.language === "spanish");
     expect(defaultExport(source)).toEqual(spanish);
     expect(watched.length).toBeGreaterThan(100);
-    expect(watched.every((path) => path.includes("/spanish/curriculum.d/"))).toBe(true);
+    const dir = join(root, "spanish", "curriculum.d");
+    expect(watched.every((path) => path.startsWith(`${dir}/`))).toBe(true);
   });
 
   it("assembles current authored chapter capabilities, preserving stale-book detection", () => {
@@ -87,6 +86,7 @@ describe("the bounded human-language ledger virtual modules", () => {
     const spanish = loadTrackChapters(root).find((ledger) => ledger.language === "spanish");
     expect(defaultExport(source)).toEqual(spanish);
     expect(watched.length).toBeGreaterThan(100);
-    expect(watched.every((path) => path.includes("/spanish/chapters.d/"))).toBe(true);
+    const dir = join(root, "spanish", "chapters.d");
+    expect(watched.every((path) => path.startsWith(`${dir}/`))).toBe(true);
   });
 });

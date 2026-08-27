@@ -1,5 +1,6 @@
 import { defineConfig } from "vitest/config";
 import path from "node:path";
+import { humanLanguageLedgerPlugin } from "./human-language-ledger-plugin.ts";
 
 // The curriculum — both the script JSON and the ~670 lesson markdown files —
 // lives outside this package, at code/learning/human-languages/. We read those
@@ -9,8 +10,10 @@ import path from "node:path";
 // one rule: vitest does NOT inherit vite.config.ts's server block, and without
 // this the lesson glob fails with "Denied ID".)
 const repoRoot = path.resolve(__dirname, "../../../..");
+const curriculumRoot = path.join(repoRoot, "code", "learning", "human-languages");
 
 export default defineConfig({
+  plugins: [humanLanguageLedgerPlugin({ curriculumRoot })],
   server: {
     fs: { allow: [repoRoot] },
   },
