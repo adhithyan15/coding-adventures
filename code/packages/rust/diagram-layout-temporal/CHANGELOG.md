@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.33.0
+
+- Resolve typed unpadded Gantt time fields into backend-neutral temporal geometry.
+
 ## 0.32.0
 
 - Validate typed numeric and two-letter Gantt weekdays before backend-neutral layout.

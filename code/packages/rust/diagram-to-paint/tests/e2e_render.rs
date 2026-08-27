@@ -1048,6 +1048,35 @@ line "Target" [35, 50, 68, 82]"##,
         write_png(&compact_weekday_pixels, "/tmp/mermaid_gantt_compact_weekday_e2e.png")
             .expect("compact-weekday PNG write failed");
         assert!(!compact_weekday_scene.instructions.is_empty());
+
+        let unpadded_time = parse_gantt(
+            "gantt\ntitle Unpadded timing\ndateFormat YYYY-MM-DD H:m:s\nsection Network\nRequest :r1, 2026-03-01 4:5:6, 1s",
+        )
+        .expect("unpadded-time Mermaid Gantt parse failed");
+        let unpadded_time_layout = layout_temporal_diagram(
+            &TemporalDiagram {
+                kind: TemporalKind::Gantt,
+                title: unpadded_time.title.clone(),
+                body: TemporalBody::Gantt(unpadded_time),
+            },
+            800.0,
+        );
+        let unpadded_time_scene = diagram_to_paint_temporal(
+            &unpadded_time_layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let unpadded_time_pixels = render(&unpadded_time_scene);
+        write_png(&unpadded_time_pixels, "/tmp/mermaid_gantt_unpadded_time_e2e.png")
+            .expect("unpadded-time PNG write failed");
+        assert!(!unpadded_time_scene.instructions.is_empty());
     }
 
     #[test]

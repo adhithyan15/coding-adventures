@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.32.0";
+pub const VERSION: &str = "0.33.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -280,6 +280,7 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
             GanttDateFormatPart::Day => (day, rest) = take_number(rest, 1, 2)?,
             GanttDateFormatPart::Day2 => (day, rest) = take_number(rest, 2, 2)?,
             GanttDateFormatPart::DayOrdinal => (day, rest) = take_ordinal_day(rest)?,
+            GanttDateFormatPart::Hour24Unpadded => (hour, rest) = take_number(rest, 1, 2)?,
             GanttDateFormatPart::Hour24 => (hour, rest) = take_number(rest, 2, 2)?,
             GanttDateFormatPart::Hour12 => {
                 (hour, rest) = take_number(rest, 1, 2)?;
@@ -289,7 +290,9 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
                 (hour, rest) = take_number(rest, 2, 2)?;
                 hour_is_twelve_hour = true;
             }
+            GanttDateFormatPart::MinuteUnpadded => (minute, rest) = take_number(rest, 1, 2)?,
             GanttDateFormatPart::Minute => (minute, rest) = take_number(rest, 2, 2)?,
+            GanttDateFormatPart::SecondUnpadded => (second, rest) = take_number(rest, 1, 2)?,
             GanttDateFormatPart::Second if seconds_only => {
                 (second, rest) = take_number(rest, 1, 2)?;
             }
@@ -1043,7 +1046,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.32.0");
+        assert_eq!(crate::VERSION, "0.33.0");
     }
 
     #[test]
@@ -1204,6 +1207,29 @@ mod tests {
         }).collect::<Vec<_>>();
         assert_eq!(widths.len(), 2);
         assert!((widths[0] - widths[1]).abs() < 0.01);
+    }
+
+    #[test]
+    fn gantt_layout_resolves_unpadded_time_fields() {
+        let format = GanttDateFormat {
+            source: "YYYY-MM-DD H:m:s".into(),
+            parts: vec![
+                GanttDateFormatPart::Year4,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Month2,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Day2,
+                GanttDateFormatPart::Literal(" ".into()),
+                GanttDateFormatPart::Hour24Unpadded,
+                GanttDateFormatPart::Literal(":".into()),
+                GanttDateFormatPart::MinuteUnpadded,
+                GanttDateFormatPart::Literal(":".into()),
+                GanttDateFormatPart::SecondUnpadded,
+            ],
+        };
+        let first = date_to_days("2026-03-01 4:5:6", &format).expect("valid unpadded time");
+        let second = date_to_days("2026-03-01 4:5:7", &format).expect("valid unpadded time");
+        assert!(((second - first) * 86_400.0 - 1.0).abs() < 0.000_001);
     }
 
     #[test]

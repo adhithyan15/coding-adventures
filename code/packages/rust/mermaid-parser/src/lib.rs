@@ -6071,7 +6071,10 @@ fn parse_gantt_date_format(token: &Token, source: &str) -> Result<GanttDateForma
             ("M", GanttDateFormatPart::Month), ("D", GanttDateFormatPart::Day),
             ("S", GanttDateFormatPart::Millisecond1),
             ("d", GanttDateFormatPart::WeekdayNumber),
+            ("H", GanttDateFormatPart::Hour24Unpadded),
             ("h", GanttDateFormatPart::Hour12),
+            ("m", GanttDateFormatPart::MinuteUnpadded),
+            ("s", GanttDateFormatPart::SecondUnpadded),
             ("A", GanttDateFormatPart::MeridiemUpper),
             ("a", GanttDateFormatPart::MeridiemLower),
             ("Z", GanttDateFormatPart::TimezoneOffsetColon),
@@ -6116,6 +6119,8 @@ fn gantt_date_matches_format(value: &str, format: &GanttDateFormat) -> bool {
             GanttDateFormatPart::DayOrdinal => consume_ordinal_day(rest),
             GanttDateFormatPart::Month2 | GanttDateFormatPart::Day2 | GanttDateFormatPart::Hour24
                 | GanttDateFormatPart::Minute => consume_digits(rest, 2, 2),
+            GanttDateFormatPart::Hour24Unpadded | GanttDateFormatPart::MinuteUnpadded
+                | GanttDateFormatPart::SecondUnpadded => consume_digits(rest, 1, 2),
             GanttDateFormatPart::Hour12 => consume_digits(rest, 1, 2),
             GanttDateFormatPart::Hour12Padded => consume_digits(rest, 2, 2),
             GanttDateFormatPart::Second if seconds_only => consume_digits(rest, 1, 2),
@@ -7156,6 +7161,16 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             Some(TaskEnd::Date(ref value)) if value == "03/01/2026 18:45"));
         assert!(parse_gantt("gantt\ndateFormat DD/MM/YYYY\nTask :t1, 2026-01-02, 1d")
             .unwrap_err().message.contains("does not match dateFormat"));
+    }
+
+    #[test]
+    fn gantt_compiles_unpadded_time_formats() {
+        let diagram = parse_gantt(
+            "gantt\ndateFormat YYYY-MM-DD H:m:s\nTask :t1, 2026-03-01 4:5:6, 1s",
+        ).unwrap();
+        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::Hour24Unpadded));
+        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::MinuteUnpadded));
+        assert!(diagram.date_format.parts.contains(&GanttDateFormatPart::SecondUnpadded));
     }
 
     #[test]

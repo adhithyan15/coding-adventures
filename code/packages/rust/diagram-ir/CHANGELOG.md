@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.90.0
+
+- Represent unpadded 24-hour, minute, and second Gantt fields as typed date-format parts.
+
 ## 0.89.0
 
 - Represent numeric and two-letter Gantt weekdays as typed date-format parts.
