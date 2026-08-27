@@ -18,6 +18,7 @@ import { renderStrandSummary, summarizeStrands } from "./strands.js";
 import { cellCoverage, renderCellCoverage } from "./grammar-cells.js";
 import { buildRootLedger, renderRootLedger } from "./root-ledger.js";
 import { measureInfoDump, renderInfoDump } from "./info-dump.js";
+import { measureLessonBudgets, renderLessonBudgets } from "./lesson-budgets.js";
 import { measureMetalanguage, renderMetalanguage } from "./metalanguage.js";
 import { measureLiteralMarkup, renderLiteralMarkup } from "./literal-markup.js";
 import { measureGlyphCoverage, renderGlyphCoverage } from "./glyph-coverage.js";
@@ -98,6 +99,16 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
   // out to be fine; the dumps live in paradigm tables.
   const infoDump = measureInfoDump(lessons, policy.maxRuleStatementsPerLesson ?? 1);
 
+  // HL10 sections 5.5, 7.1 and 7.2. These use explicit declarations because
+  // prose heuristics cannot distinguish a lexical item from a new sense, or a
+  // useful phrase from an idiom. Unannotated legacy lessons remain visible as
+  // unmeasured debt instead of being silently certified as clean.
+  const lessonBudgets = measureLessonBudgets(lessons, {
+    idioms: policy.maxNewIdiomsPerLesson ?? 1,
+    senses: policy.maxNewSensesPerLesson ?? 1,
+    cultureClaims: policy.maxNewCultureClaimsPerLesson ?? 2,
+  });
+
   // HL10 §7.5. The hidden prerequisite: a book that says "the first-person
   // singular present indicative" has spent six technical terms on one form.
   const metalanguage = measureMetalanguage(lessons, loadMetalanguage(options.root));
@@ -115,7 +126,7 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
   const glyphs = measureGlyphCoverage(loadBookFonts(options.root), loadMainFontCharset(options.root));
 
   const json = `${JSON.stringify(
-    { ...report, strands, grammarCells: cells, rootLedger: rootLedger.summary, infoDump: infoDump.summary, metalanguage: metalanguage.summary, literalMarkup: literalMarkup.summary, glyphCoverage: glyphs.summary },
+    { ...report, strands, grammarCells: cells, rootLedger: rootLedger.summary, infoDump: infoDump.summary, lessonBudgets: lessonBudgets.summary, metalanguage: metalanguage.summary, literalMarkup: literalMarkup.summary, glyphCoverage: glyphs.summary },
     null,
     2,
   )}\n`;
@@ -128,6 +139,8 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     renderRootLedger(rootLedger).join("\n"),
     "",
     renderInfoDump(infoDump).join("\n"),
+    "",
+    renderLessonBudgets(lessonBudgets).join("\n"),
     "",
     renderMetalanguage(metalanguage).join("\n"),
     renderLiteralMarkup(literalMarkup).join("\n"),

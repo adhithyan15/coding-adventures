@@ -54,6 +54,16 @@ export {
   type InfoDumpReport,
 } from "./info-dump.js";
 export {
+  declaredLessonBudgetUnits,
+  measureLessonBudgets,
+  renderLessonBudgets,
+  type LessonBudgetKind,
+  type LessonBudgetPolicy,
+  type LessonBudgetFinding,
+  type LessonBudgetExcess,
+  type LessonBudgetReport,
+} from "./lesson-budgets.js";
+export {
   termsUsedIn,
   measureMetalanguage,
   renderMetalanguage,
