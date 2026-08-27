@@ -493,7 +493,7 @@ pub fn probe_rgba(width: u32, height: u32, data: &[u8]) -> Result<RgbaProbe, Str
     let mut blue_pixels = 0;
     let mut magenta_pixels = 0;
     let mut cyan_pixels = 0;
-    for pixel in data.chunks_exact(4) {
+    for pixel in data.as_chunks::<4>().0 {
         let [r, g, b, a] = [pixel[0], pixel[1], pixel[2], pixel[3]];
         background_pixels += usize::from(a == 255 && r == 192 && g == 192 && b == 192);
         ink_pixels += usize::from(a > 0 && r < 96 && g < 96 && b < 96);
