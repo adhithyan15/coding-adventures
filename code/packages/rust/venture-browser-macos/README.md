@@ -51,6 +51,9 @@ translated scene through Metal. Primary-button input now hit-tests links in
 viewport coordinates, loads the resolved destination through the transactional
 browser session, updates the title, and repaints repeatedly. Native controls,
 text input, and bookmark toggles all dispatch through the shared host reducer.
+View Source dispatches through that reducer as well; the Swift adapter forwards
+the core-owned synthetic document through `VentureOpenAuxiliaryDocument` so a
+window presenter never needs to escape or parse page source itself.
 Arrow, Page Up/Down, Home/End, and Space key events now drive the same shared
 clamped viewport and Metal repaint path. Command-Left/Right reload Back/Forward
 history entries through the transactional browser session, update the title,

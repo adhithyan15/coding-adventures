@@ -174,6 +174,13 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     // inclusion-criteria reasoning (every platform has a native vector-
     // drawing surface; no CSS-only composition survives native lowering).
     "Path",
+    // #13176 — `HostProgressRing` preserves the platform's native
+    // determinate progress-ring role (`progressbar`, announced
+    // `aria-valuenow`/value-changed live region), the real
+    // accessibility surface a `Box`+`Box` CSS conic-gradient trick
+    // can't provide on native backends at all — those backends
+    // silently ignore a slot-bound `background` on a plain `Box`.
+    "HostProgressRing",
 ];
 
 // ---------------------------------------------------------------------------
@@ -1490,6 +1497,14 @@ version = "1"
         assert!(
             KERNEL_PRIMITIVES.contains(&"Path"),
             "UI39 kernel must include `Path`"
+        );
+    }
+
+    #[test]
+    fn kernel_set_covers_host_progress_ring_primitive() {
+        assert!(
+            KERNEL_PRIMITIVES.contains(&"HostProgressRing"),
+            "#13176 kernel must include `HostProgressRing`"
         );
     }
 

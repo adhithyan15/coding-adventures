@@ -66,6 +66,13 @@ style VentureChrome {
     state focused { outline-color : "#9a5b18" ; outline-width : 2 ; }
     state disabled { opacity : 0.45 ; }
   }
+  part view-source-button {
+    background : "#fffdf8" ; color : "#39342d" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#b9b09f" ;
+    state hover { background : "#f7e6c7" ; }
+    state pressed { background : "#e8c98f" ; }
+    state focused { outline-color : "#9a5b18" ; outline-width : 2 ; }
+    state disabled { opacity : 0.45 ; }
+  }
   part address-input {
     background : "#ffffff" ; color : "#211f1b" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#aaa08e" ; flex-grow : 1 ;
     state focused { border-color : "#9a5b18" ; outline-color : "#9a5b18" ; outline-width : 1 ; }

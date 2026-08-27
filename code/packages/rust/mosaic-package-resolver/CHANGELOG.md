@@ -4,6 +4,10 @@
 
 ### Added
 
+- Registered `HostProgressRing` (#13176, kernel-contract half) in
+  `KERNEL_PRIMITIVES` so `resolve` classifies it as `Resolution::Kernel`
+  rather than an unresolved component reference — mirrors `Path`'s own
+  two-registry registration below.
 - Registered `Path` (the kernel drawing primitive, #12028 item 3) in
   `KERNEL_PRIMITIVES` so `resolve` classifies it as `Resolution::Kernel`
   rather than an unresolved component reference. See

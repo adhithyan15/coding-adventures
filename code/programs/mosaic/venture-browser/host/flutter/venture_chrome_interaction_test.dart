@@ -103,6 +103,15 @@ void main() {
       await _pumpLiveVentureShell(tester, host);
       debugPrint('flutter-live-stage=shell-pumped');
 
+      await tester.tap(find.text('View Source'));
+      await tester.pumpAndSettle();
+      expect(host.lastAuxiliaryDocument?['kind'], 'view-source');
+      expect(
+        host.lastAuxiliaryDocument?['html'],
+        contains('&lt;title&gt;Flutter Start&lt;/title&gt;'),
+      );
+      debugPrint('flutter-live-stage=view-source');
+
       final input = find.byType(TextField);
       await tester.enterText(input, targetUrl);
       await tester.testTextInput.receiveAction(TextInputAction.done);

@@ -6250,10 +6250,15 @@ fn consume_signed_digits(value: &str) -> Option<usize> {
 
 fn validate_gantt_dependencies(sections: &[GanttSection]) -> Result<(), ParseError> {
     let tasks = sections.iter().flat_map(|section| section.tasks.iter()).collect::<Vec<_>>();
-    let ids = tasks.iter().map(|task| task.id.as_str()).collect::<HashSet<_>>();
-    if ids.len() != tasks.len() {
-        return Err(ParseError { message: "duplicate Gantt task id".into(), line: 1, col: 1 });
+    let mut unique_tasks = HashMap::new();
+    for task in &tasks {
+        if let Some(previous) = unique_tasks.insert(task.id.as_str(), *task) {
+            if !previous.tags.vertical || !task.tags.vertical {
+                return Err(ParseError { message: "duplicate Gantt task id".into(), line: 1, col: 1 });
+            }
+        }
     }
+    let ids = unique_tasks.keys().copied().collect::<HashSet<_>>();
     for task in &tasks {
         for dependency in &task.dependencies {
             if !ids.contains(dependency.as_str()) {
@@ -7236,6 +7241,12 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
                 ..GanttTaskTags::default()
             }
         );
+        assert!(parse_gantt(
+            "gantt\ndateFormat HH:mm\nMarker :vert, marker, 17:30, 2m\nMarker :vert, marker, 17:30, 2m\n"
+        ).is_ok());
+        assert!(parse_gantt(
+            "gantt\nTask :task, 2026-01-01, 1d\nTask :task, 2026-01-02, 1d\n"
+        ).is_err());
     }
 
     #[test]
