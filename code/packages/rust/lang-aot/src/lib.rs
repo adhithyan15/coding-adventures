@@ -2356,7 +2356,8 @@ pub fn compile_file_to_ge225_bin(
 ///
 /// One 36-bit instruction or literal per five-byte big-endian word.
 /// The high nibble of the first byte is reserved and zero. Per-function
-/// byte streams are concatenated directly.
+/// byte streams are relocated to their absolute word offsets before they are
+/// concatenated, and the complete image is limited to 32K words.
 ///
 /// # Errors
 ///
@@ -2383,10 +2384,10 @@ pub fn compile_file_to_ibm704_bin(
     let module = compile_source_to_iir(language, &source, stem)?;
 
     // L4: route through aot_core::infer + aot_core::specialise +
-    // ibm704_backend::compile per function, same pattern as the
+    // ibm704_backend::compile_at per function, same pattern as the
     // historical-arch migration's Phases 3-7.  ibm704-backend emits
-    // 5-byte-per-word output directly, so concatenation is just
-    // `extend_from_slice`.
+    // 5-byte-per-word output directly; compile_at relocates each function's
+    // absolute literal addresses and enforces the complete 32K-word bound.
     let mut bytes = Vec::new();
     let empty_params: Vec<(String, String)> = Vec::new();
     for f in &module.functions {
@@ -2397,7 +2398,8 @@ pub fn compile_file_to_ibm704_bin(
             params: &empty_params,
             return_type: f.return_type.as_str(),
         };
-        let fn_bytes = ibm704_backend::compile(&ctx, &cir)
+        let load_address = bytes.len() / ibm704_encoder::BYTES_PER_WORD;
+        let fn_bytes = ibm704_backend::compile_at(&ctx, &cir, load_address)
             .map_err(|e| LangAotError::Ibm704BackendError(format!("{e}")))?;
         bytes.extend_from_slice(&fn_bytes);
     }

@@ -7,6 +7,8 @@
 * Corrected HTR to `+0000`; added the distinct HPR `+0420` convenience.
 * Changed the producer transport to the simulator's five-byte big-endian
   contract and added strict decoding helpers.
+* Rejects prefixes that cannot architecturally identify Type A words through
+  a non-panicking typed encoder error.
 * Added field-boundary, signed-operation, invalid-transport, and round-trip
   tests.
 

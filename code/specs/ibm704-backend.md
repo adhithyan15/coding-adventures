@@ -25,12 +25,15 @@ outside this minimal historical-backend increment.
 Lowering is two-pass:
 
 1. Validate CIR and collect one machine operation per supported CIR operation.
-2. Assign each constant a literal address immediately after all instructions.
+2. Assign each constant a literal address immediately after all instructions,
+   relocated by the function's absolute load address.
 3. Emit canonical instructions followed by raw positive sign-magnitude words.
 
-The combined instruction and literal count must not exceed 32,768 words.
-Oversized output returns `BackendError::ProgramTooLarge` before narrowing any
-address to 15 bits.
+The combined module instruction and literal count must not exceed 32,768 words.
+The CIR length is bounded before it is used as an allocation capacity, and
+oversized output returns `BackendError::ProgramTooLarge` before narrowing any
+address to 15 bits. Module emitters call `compile_at` with each concatenated
+function's word offset so all `CLA` addresses remain absolute.
 
 ## Canonical output
 

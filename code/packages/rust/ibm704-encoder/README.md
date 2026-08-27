@@ -8,6 +8,10 @@ The crate implements both historical instruction layouts:
 - Type B: signed operation code, required zero bits, unused field, tag, and
   15-bit address.
 
+`encode_type_a` returns a typed error when a prefix is wider than three bits
+or has IBM bits 1–2 both zero, since either case would not identify a canonical
+Type A word.
+
 IBM displays Type B operation codes as values such as `+0500` (CLA) and
 `-0500` (CAL). HTR is `+0000`; `+0420` is HPR, the distinct resumable halt.
 

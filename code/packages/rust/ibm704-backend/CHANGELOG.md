@@ -6,6 +6,8 @@
 * Places constants in an addressable literal pool instead of treating CLA's
   address field as an immediate.
 * Rejects instruction plus literal output beyond the 32K-word address space.
+* Bounds caller-controlled CIR before allocation and supports absolute
+  per-function relocation for safe multi-function module emission.
 * Canonical `42` is now `CLA 2; HTR 0; +42` (15 bytes).
 
 ## v0.1.0 — 2026-06-11 — initial release (L4)

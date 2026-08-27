@@ -3,7 +3,7 @@
 //! Every emitted byte sequence the lang-aot IBM 704 e2e smoke test
 //! pins is asserted here as a unit-level regression invariant.
 
-use ibm704_backend::{compile, BackendError, Ibm704Backend};
+use ibm704_backend::{compile, compile_at, BackendError, Ibm704Backend, MEMORY_WORDS};
 use ibm704_encoder::{encode_cla, unpack_words};
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
@@ -160,6 +160,40 @@ fn multiple_constants_receive_distinct_literal_pool_addresses() {
     assert_eq!(
         unpack_words(&bytes).unwrap(),
         vec![encode_cla(3), encode_cla(4), 0, 1, 2]
+    );
+}
+
+#[test]
+fn nonzero_load_address_relocates_literal_pool() {
+    let cir = vec![
+        ci("const_i64", Some("v"), vec![CIROperand::Int(2)], "i64"),
+        ci("ret_i64", None, vec![CIROperand::Var("v".into())], "i64"),
+    ];
+    let bytes = compile_at(&ctx("second", &[], "i64"), &cir, 3).expect("lowering");
+
+    assert_eq!(unpack_words(&bytes).unwrap(), vec![encode_cla(5), 0, 2]);
+}
+
+#[test]
+fn relocated_function_cannot_cross_address_space_end() {
+    let cir = vec![
+        ci("const_i64", Some("v"), vec![CIROperand::Int(1)], "i64"),
+        ci("ret_i64", None, vec![CIROperand::Var("v".into())], "i64"),
+    ];
+
+    assert_eq!(
+        compile_at(&ctx("overflow", &[], "i64"), &cir, MEMORY_WORDS - 2),
+        Err(BackendError::ProgramTooLarge(MEMORY_WORDS + 1))
+    );
+}
+
+#[test]
+fn oversized_cir_is_rejected_before_capacity_allocation() {
+    let oversized = vec![ci("ret_void", None, vec![], "void"); MEMORY_WORDS + 1];
+
+    assert_eq!(
+        compile(&ctx("oversized", &[], "void"), &oversized),
+        Err(BackendError::ProgramTooLarge(MEMORY_WORDS + 1))
     );
 }
 

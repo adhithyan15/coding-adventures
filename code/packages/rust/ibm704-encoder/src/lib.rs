@@ -56,6 +56,26 @@ pub const TAG_SHIFT: u32 = 15;
 /// Raw sign-bit mask (IBM position `S`).
 pub const SIGN_BIT: u64 = 1 << 35;
 
+/// Errors raised while constructing canonical instruction words.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum EncodeError {
+    /// A Type A prefix must fit in three bits and have IBM bits 1–2 non-zero.
+    InvalidTypeAPrefix(u8),
+}
+
+impl fmt::Display for EncodeError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::InvalidTypeAPrefix(prefix) => write!(
+                f,
+                "IBM 704 Type A prefix must fit in three bits and have its low two bits non-zero, got {prefix:#05b}"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for EncodeError {}
+
 /// Errors raised while decoding canonical transport bytes.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DecodeError {
@@ -97,13 +117,23 @@ pub const fn encode_type_b(negative: bool, opcode: u16, tag: u8, address: u16) -
 /// Encode a historical Type A instruction.
 ///
 /// The prefix is IBM bits `S,1,2`; the decrement, tag, and address fields
-/// occupy the remaining 33 bits.
+/// occupy the remaining 33 bits. Prefixes wider than three bits, or whose IBM
+/// bits 1–2 are both zero, return [`EncodeError::InvalidTypeAPrefix`] because
+/// those words are architecturally Type B.
 #[inline]
-pub const fn encode_type_a(prefix: u8, decrement: u16, tag: u8, address: u16) -> u64 {
-    (((prefix as u64) & TAG_MASK) << 33)
+pub const fn encode_type_a(
+    prefix: u8,
+    decrement: u16,
+    tag: u8,
+    address: u16,
+) -> Result<u64, EncodeError> {
+    if prefix > TAG_MASK as u8 || prefix & 0b11 == 0 {
+        return Err(EncodeError::InvalidTypeAPrefix(prefix));
+    }
+    Ok(((prefix as u64) << 33)
         | (((decrement as u64) & ADDR_MASK) << DECREMENT_SHIFT)
         | (((tag as u64) & TAG_MASK) << TAG_SHIFT)
-        | ((address as u64) & ADDR_MASK)
+        | ((address as u64) & ADDR_MASK))
 }
 
 /// Encode a positive, untagged Type B instruction.

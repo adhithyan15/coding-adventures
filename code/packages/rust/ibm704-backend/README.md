@@ -15,6 +15,9 @@ historical target.
 `CLA Y` reads memory word `Y`; its address field is not an immediate. The
 backend therefore lays out instructions first and data literals second. It
 rejects output larger than the IBM 704's 32K-word address space.
+Module emitters use `compile_at` so each function's literal addresses are
+relocated to its absolute load address and the complete concatenated image
+cannot cross the 32K-word boundary.
 
 ## Canonical `42`
 

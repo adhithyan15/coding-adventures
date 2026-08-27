@@ -2152,6 +2152,34 @@ fn end_to_end_mccarthy_42_emits_ibm704_bin_via_lang_aot() {
     );
 }
 
+#[test]
+fn end_to_end_ibm704_relocates_later_function_literals() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("multi.nib");
+    let bin = dir.path().join("multi.bin");
+    std::fs::write(
+        &src,
+        b"fn foo() -> u8 { return 1; } fn main() -> u8 { return 2; }\n",
+    )
+    .unwrap();
+
+    lang_aot::compile_file_to_ibm704_bin(&src, &bin, lang_aot::Language::Nib)
+        .expect("two supported scalar functions must relocate their literal pools");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert_eq!(
+        ibm704_encoder::unpack_words(&bytes).unwrap(),
+        vec![
+            ibm704_encoder::encode_cla(2),
+            0,
+            1,
+            ibm704_encoder::encode_cla(5),
+            0,
+            2,
+        ]
+    );
+}
+
 // ===========================================================================
 // Third lane — source -> IIR -> Intel 8080 machine code (.bin) via lang-aot
 // ===========================================================================

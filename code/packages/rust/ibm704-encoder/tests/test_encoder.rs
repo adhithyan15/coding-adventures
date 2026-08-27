@@ -1,6 +1,6 @@
 use ibm704_encoder::{
     encode_cla, encode_hpr, encode_htr, encode_instruction, encode_type_a, encode_type_b,
-    pack_word, unpack_word, unpack_words, DecodeError, ADDR_MASK, BYTES_PER_WORD, CLA,
+    pack_word, unpack_word, unpack_words, DecodeError, EncodeError, ADDR_MASK, BYTES_PER_WORD, CLA,
     DECREMENT_SHIFT, HPR, HTR, HTR_HALT_BYTES, OPCODE_MASK, OPCODE_SHIFT, TAG_MASK, TAG_SHIFT,
     WORD_BITS, WORD_MASK,
 };
@@ -49,7 +49,7 @@ fn type_b_sign_bit_represents_negative_operation_code() {
 
 #[test]
 fn type_a_places_prefix_decrement_tag_and_address() {
-    let word = encode_type_a(0b110, 0x4567, 3, 0x2345);
+    let word = encode_type_a(0b110, 0x4567, 3, 0x2345).unwrap();
 
     assert_eq!((word >> 33) & 0b111, 0b110);
     assert_eq!((word >> DECREMENT_SHIFT) & ADDR_MASK, 0x4567);
@@ -64,9 +64,19 @@ fn field_builders_mask_oversized_inputs() {
         (1 << 35) | (OPCODE_MASK << OPCODE_SHIFT) | (TAG_MASK << TAG_SHIFT) | ADDR_MASK
     );
     assert_eq!(
-        encode_type_a(0xFF, 0xFFFF, 0xFF, 0xFFFF),
+        encode_type_a(0b111, 0xFFFF, 0xFF, 0xFFFF).unwrap(),
         (0b111 << 33) | (ADDR_MASK << DECREMENT_SHIFT) | (TAG_MASK << TAG_SHIFT) | ADDR_MASK
     );
+}
+
+#[test]
+fn type_a_rejects_type_b_and_oversized_prefixes() {
+    for prefix in [0b000, 0b100, 0b1000, u8::MAX] {
+        assert_eq!(
+            encode_type_a(prefix, 0, 0, 0),
+            Err(EncodeError::InvalidTypeAPrefix(prefix))
+        );
+    }
 }
 
 #[test]
@@ -89,7 +99,7 @@ fn pack_word_is_five_byte_big_endian() {
 
 #[test]
 fn unpack_word_round_trips_and_rejects_reserved_nibble() {
-    let word = encode_type_a(0b101, 0x4567, 6, 0x1234);
+    let word = encode_type_a(0b101, 0x4567, 6, 0x1234).unwrap();
     assert_eq!(unpack_word(pack_word(word)).unwrap(), word);
     assert_eq!(
         unpack_word([0x10, 0, 0, 0, 0]),

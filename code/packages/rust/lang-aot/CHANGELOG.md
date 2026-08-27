@@ -7,6 +7,9 @@ five-byte big-endian transport. Constants occupy literal-pool words, making
 Twig/McCarthy `42` an executable `CLA 2; HTR 0; +42` program rather than an
 address-as-immediate placeholder.
 
+Multi-function IBM 704 images now relocate every function's literal pool to
+absolute memory addresses and enforce the machine-wide 32K-word image limit.
+
 Also repairs stale private-item links in the JIT Lisp module so strict rustdoc
 passes for the package.
 

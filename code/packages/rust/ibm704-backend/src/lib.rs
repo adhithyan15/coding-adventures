@@ -30,14 +30,17 @@
 //!
 //! Each instruction or literal is one 36-bit IBM 704 word, packed as five
 //! big-endian bytes (the first byte's high nibble is zero).
-//! Per-function byte streams concatenate directly — `lang-aot`
-//! writes them straight to disk.
+//! Module emitters call [`compile_at`] with each function's absolute load
+//! address before concatenating the resulting byte streams.
 
 use ibm704_encoder::{encode_cla, pack_word, ADDR_MASK, HTR_HALT_BYTES};
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use std::fmt;
 use vm_core::value::Value;
+
+/// Number of addressable words in IBM 704 core memory.
+pub const MEMORY_WORDS: usize = ADDR_MASK as usize + 1;
 
 /// The IBM 704 backend.  Stateless — every call to `compile` /
 /// `compile_function` constructs a fresh per-function lowering.
@@ -57,7 +60,7 @@ impl Ibm704Backend {
 /// the message in its `Ibm704BackendError` variant.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum BackendError {
-    /// CIR op the v0.1.0 backend doesn't yet handle.
+    /// CIR op the v0.2.0 backend doesn't yet handle.
     UnsupportedOp(String),
     /// `ret` of a value that isn't the current single-tracked var.
     InvalidOperand(String),
@@ -90,10 +93,35 @@ impl std::error::Error for BackendError {}
 /// Lower a single function's CIR to IBM 704 bytes.  Top-level API
 /// `lang-aot` calls.
 pub fn compile(_ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
-    compile_single_function(cir)
+    compile_single_function(cir, 0)
 }
 
-fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
+/// Lower a function that will be loaded at an absolute IBM 704 word address.
+///
+/// Literal-pool references are relocated to `load_address`, and the function
+/// must fit in the remaining 32K-word address space. This is the entry point
+/// for module emitters that concatenate multiple functions.
+pub fn compile_at(
+    _ctx: &FunctionContext<'_>,
+    cir: &[CIRInstr],
+    load_address: usize,
+) -> Result<Vec<u8>, BackendError> {
+    compile_single_function(cir, load_address)
+}
+
+fn compile_single_function(cir: &[CIRInstr], load_address: usize) -> Result<Vec<u8>, BackendError> {
+    // Every non-empty supported CIR instruction emits at least one word. Bound
+    // the caller-controlled length before using it as a Vec capacity so an
+    // oversized input fails with a typed error instead of forcing a large
+    // allocation. Empty CIR still emits one halt word.
+    let minimum_words = cir.len().max(1);
+    let minimum_end = load_address
+        .checked_add(minimum_words)
+        .ok_or(BackendError::ProgramTooLarge(usize::MAX))?;
+    if minimum_end > MEMORY_WORDS {
+        return Err(BackendError::ProgramTooLarge(minimum_end));
+    }
+
     // Empty body → bare HTR 0.  Same fallback shape every minimal-
     // viable historical-arch backend uses.
     if cir.is_empty() {
@@ -151,8 +179,11 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
         .len()
         .checked_add(literals.len())
         .ok_or(BackendError::ProgramTooLarge(usize::MAX))?;
-    if total_words > ADDR_MASK as usize + 1 {
-        return Err(BackendError::ProgramTooLarge(total_words));
+    let program_words = load_address
+        .checked_add(total_words)
+        .ok_or(BackendError::ProgramTooLarge(usize::MAX))?;
+    if program_words > MEMORY_WORDS {
+        return Err(BackendError::ProgramTooLarge(program_words));
     }
 
     let literal_base = operations.len();
@@ -160,7 +191,7 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
     for operation in operations {
         match operation {
             Operation::LoadLiteral(index) => {
-                let address = literal_base + index;
+                let address = load_address + literal_base + index;
                 bytes.extend_from_slice(&pack_word(encode_cla(address as u16)));
             }
             Operation::Halt => bytes.extend_from_slice(&HTR_HALT_BYTES),
@@ -230,7 +261,7 @@ impl Backend for Ibm704Backend {
     }
 
     fn compile(&self, ir: &[CIRInstr]) -> Option<Vec<u8>> {
-        compile_single_function(ir).ok()
+        compile_single_function(ir, 0).ok()
     }
 
     fn compile_function(&self, _ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Option<Vec<u8>> {

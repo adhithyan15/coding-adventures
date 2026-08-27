@@ -57,8 +57,10 @@ IBM bits:  S..2       3..17       18..20       21..35
 raw bits: 35..33      32..18       17..15       14..0
 ```
 
-`encode_type_a(prefix, decrement, tag, address)` masks each field to its
-architectural width. Bits 1–2 not both zero distinguish Type A from Type B.
+`encode_type_a(prefix, decrement, tag, address)` returns a typed error when the
+prefix exceeds three bits or when bits 1–2 are both zero; the latter pattern
+architecturally identifies Type B. It masks the remaining fields to their
+architectural widths.
 
 ## Canonical transport
 
