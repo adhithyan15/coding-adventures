@@ -1560,12 +1560,62 @@ fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
 /// that produced no XAML output at all, with why. Two call sites in this
 /// function are genuine drops (see inline comments); a successful-but-
 /// approximate translation (`stretch_alignment_for`) is NOT a drop.
+/// `Margin`/`HorizontalAlignment`/`VerticalAlignment` recreating a
+/// `position: "absolute"` part's `top`/`left` offset (issue #12028 item
+/// 4), or `None` when `position` isn't authored as `"absolute"`.
+///
+/// WinUI's `Canvas.Left`/`Canvas.Top` attached properties only take
+/// effect when the immediate parent panel is a literal `<Canvas>` —
+/// but `Stack [name] { ... }` already lowers to `<Grid>`, which is
+/// itself a z-axis stacking panel (every child occupies the same cell
+/// by default). A `Margin="{left},{top},0,0"` pinned to the cell's
+/// top-left corner via `HorizontalAlignment="Left"
+/// VerticalAlignment="Top"` reproduces the same visual offset within
+/// that existing `Grid`, with no need to restructure the parent into a
+/// `Canvas` (which every enclosing container up to the nearest common
+/// ancestor would also need to become, to keep coordinates consistent
+/// — a much larger change than three overlaid children need). Missing
+/// `top`/`left` default to `0` — CSS's own default for an
+/// absolutely-positioned element with no offset authored.
+fn absolute_position_style_attrs(
+    props: &[mosstyle_compiler::StyleProp],
+) -> Option<Vec<(String, String)>> {
+    let is_absolute = props
+        .iter()
+        .any(|p| p.name == "position" && p.value.trim().trim_matches('"') == "absolute");
+    if !is_absolute {
+        return None;
+    }
+    let top = props
+        .iter()
+        .find(|p| p.name == "top")
+        .map(|p| strip_px_units(p.value.trim()))
+        .unwrap_or_else(|| "0".to_string());
+    let left = props
+        .iter()
+        .find(|p| p.name == "left")
+        .map(|p| strip_px_units(p.value.trim()))
+        .unwrap_or_else(|| "0".to_string());
+    Some(vec![
+        ("Margin".to_string(), format!("{left},{top},0,0")),
+        ("HorizontalAlignment".to_string(), "Left".to_string()),
+        ("VerticalAlignment".to_string(), "Top".to_string()),
+    ])
+}
+
 fn build_style_fragment_with_drops(
     props: &[mosstyle_compiler::StyleProp],
 ) -> (String, Vec<RawStyleDrop>) {
     let mut parts: Vec<(String, String)> = Vec::with_capacity(props.len());
     let mut drops: Vec<RawStyleDrop> = Vec::new();
+    // #12028 item 4: computed up front so the main loop below can skip
+    // `position`/`top`/`left` entirely when they're consumed here,
+    // rather than falling through to the generic "no WinUI setter" drop.
+    let absolute_attrs = absolute_position_style_attrs(props);
     for p in props {
+        if absolute_attrs.is_some() && matches!(p.name.as_str(), "position" | "top" | "left") {
+            continue;
+        }
         if let Some((key, value)) = css_side_spacing_to_xaml_attr(&p.name, &p.value) {
             upsert_style_attr(&mut parts, key, value);
             continue;
@@ -1623,6 +1673,15 @@ fn build_style_fragment_with_drops(
             }
         };
         upsert_style_attr(&mut parts, key, value);
+    }
+    // #12028 item 4: applied last so it overrides whatever Margin/
+    // alignment the normal per-property loop above may already have
+    // computed from other authored properties — `position: "absolute"`
+    // takes full control of an element's placement in CSS too.
+    if let Some(attrs) = absolute_attrs {
+        for (key, value) in attrs {
+            upsert_style_attr(&mut parts, key, value);
+        }
     }
     // X8/#12025: `escape_xaml_attr` does real XML attribute escaping
     // (`&`/`"`/`<`/`>`), not the C-string-style backslash escaping this
@@ -17136,6 +17195,93 @@ mod tests {
             value: "16".to_string(),
         }]);
         assert!(top.contains("Padding=\"0,16,0,0\""), "got:\n{top}");
+    }
+
+    // ── issue #12028 item 4: position: absolute → Margin/alignment ──
+
+    fn style_prop(name: &str, value: &str) -> StyleProp {
+        StyleProp {
+            name: name.to_string(),
+            value: value.to_string(),
+        }
+    }
+
+    /// `position: "absolute"` with `top`/`left` reproduces the CSS
+    /// offset as `Margin="{left},{top},0,0"` pinned to the top-left
+    /// corner of the (already z-axis-stacking) `Grid` cell — matching
+    /// the real `TaskApp` bridge-arc logo's authoring shape
+    /// (`brand-post-left`: `top: 11; left: 4;`).
+    #[test]
+    fn absolute_position_with_top_left_lowers_to_pinned_margin() {
+        let frag = build_style_fragment(&[
+            style_prop("position", "\"absolute\""),
+            style_prop("top", "11"),
+            style_prop("left", "4"),
+        ]);
+        assert!(frag.contains("Margin=\"4,11,0,0\""), "got:\n{frag}");
+        assert!(
+            frag.contains("HorizontalAlignment=\"Left\""),
+            "got:\n{frag}"
+        );
+        assert!(frag.contains("VerticalAlignment=\"Top\""), "got:\n{frag}");
+    }
+
+    /// Missing `top`/`left` default to `0` — CSS's own default for an
+    /// absolutely-positioned element with no offset authored.
+    #[test]
+    fn absolute_position_without_top_left_defaults_to_zero_margin() {
+        let frag = build_style_fragment(&[style_prop("position", "\"absolute\"")]);
+        assert!(frag.contains("Margin=\"0,0,0,0\""), "got:\n{frag}");
+    }
+
+    /// `position: "absolute"` overrides whatever Margin the normal
+    /// per-property loop would have computed from an authored
+    /// `margin-top` — CSS's own `position: absolute` takes full control
+    /// of placement too, so the two must not both apply.
+    #[test]
+    fn absolute_position_overrides_other_margin_properties() {
+        let frag = build_style_fragment(&[
+            style_prop("position", "\"absolute\""),
+            style_prop("top", "3"),
+            style_prop("left", "4"),
+            style_prop("margin-top", "99px"),
+        ]);
+        assert!(frag.contains("Margin=\"4,3,0,0\""), "got:\n{frag}");
+        assert!(!frag.contains("99"), "got:\n{frag}");
+    }
+
+    /// `top`/`left` with no `position: "absolute"` present are
+    /// meaningless in CSS and stay dropped exactly as before — this
+    /// fix does not turn them into a generic offset mechanism.
+    #[test]
+    fn top_left_without_absolute_position_are_still_dropped() {
+        let dropped = dropped_style_properties(&style_for_box(
+            "card",
+            vec![("top", "11"), ("left", "4")],
+        ));
+        assert_eq!(dropped.len(), 2, "got: {dropped:?}");
+        assert!(dropped.iter().any(|d| d.name == "top"));
+        assert!(dropped.iter().any(|d| d.name == "left"));
+    }
+
+    /// `position`/`top`/`left` are consumed by the side channel above
+    /// and must never surface in the #12022 dropped-properties report —
+    /// reporting them would be a false positive on a now-real feature.
+    #[test]
+    fn dropped_style_properties_excludes_consumed_absolute_position() {
+        let style = style_for_box(
+            "brand-post-left",
+            vec![
+                ("position", "\"absolute\""),
+                ("top", "11"),
+                ("left", "4"),
+            ],
+        );
+        assert!(
+            dropped_style_properties(&style).is_empty(),
+            "got: {:?}",
+            dropped_style_properties(&style)
+        );
     }
 
     #[test]
