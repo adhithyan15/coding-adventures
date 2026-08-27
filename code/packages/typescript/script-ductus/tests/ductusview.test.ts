@@ -611,6 +611,8 @@ const PERSIAN_QAF = ductusFor("ق", "perso-arabic")!;
 const persianQafOutline = naskhOutline("ق");
 const PERSIAN_TAH = ductusFor("ط", "perso-arabic")!;
 const persianTahOutline = naskhOutline("ط");
+const PERSIAN_GAF = ductusFor("گ", "perso-arabic")!;
+const persianGafOutline = naskhOutline("گ");
 const PERSIAN_LAM = DUCTUS["ل"];
 const persianLamOutline = naskhOutline("ل");
 const PERSIAN_MIM = DUCTUS["م"];
@@ -7377,6 +7379,22 @@ describe("Urdu ک — a main-line body followed by its long slash", () => {
 describe("Urdu گ — the kāf-family body followed by two slashes", () => {
   const steps = ductusSteps(URDU_GAF);
   const strip = ductusFilmstrip(URDU_GAF, urduGafOutline);
+
+  it("places lifts before the long and short slashes", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true]);
+  });
+
+  it("reports four movements in three strokes", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+});
+
+describe("Persian گ — the scoped kāf-family body followed by two slashes", () => {
+  const steps = ductusSteps(PERSIAN_GAF);
+  const strip = ductusFilmstrip(PERSIAN_GAF, persianGafOutline);
 
   it("places lifts before the long and short slashes", () => {
     expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2]);
