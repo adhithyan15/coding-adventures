@@ -29,6 +29,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"os/exec"
@@ -132,11 +133,21 @@ func (s *Server) analyzeDegradations(c Component, backend string) (*Degradations
 	}
 	defer os.RemoveAll(tmpDir) //nolint:errcheck
 
+	// packageRoot is a positional argument to mosaic-compile, derived from a
+	// directory name on disk. If that name ever began with "-"/"--" it could
+	// be misread as a flag by mosaic-compile's own arg parser instead of the
+	// intended path — the same argument-injection concern compilerArgs'
+	// legacy-form doc comment describes for a positional source path.
+	// Placing it after every flag and behind a `--` end-of-options marker
+	// (verified against cli-builder's parser, which treats everything after
+	// `--` as positional) closes that off structurally rather than relying
+	// on upstream validation of directory names.
 	cmd := exec.Command(
-		s.compilerPath, "pkg", packageRoot,
+		s.compilerPath, "pkg",
 		"--backend", backend,
 		"--output", tmpDir,
 		"--profile", "permissive",
+		"--", packageRoot,
 	)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -157,12 +168,20 @@ func (s *Server) analyzeDegradations(c Component, backend string) (*Degradations
 	}
 
 	reportPath := filepath.Join(tmpDir, backend, "mosaic-degradations.json")
-	data, err := os.ReadFile(reportPath)
+	// Read through a size-limited reader rather than os.ReadFile so an
+	// unexpectedly huge report is rejected without first buffering the
+	// whole thing in memory — os.ReadFile has no such limit.
+	f, err := os.Open(reportPath)
 	if err != nil {
 		return nil, fmt.Errorf("mosaic-compile pkg succeeded but did not write %s: %w", reportPath, err)
 	}
+	data, err := io.ReadAll(io.LimitReader(f, maxDegradationReportBytes+1))
+	f.Close() //nolint:errcheck
+	if err != nil {
+		return nil, fmt.Errorf("cannot read %s: %w", reportPath, err)
+	}
 	if len(data) > maxDegradationReportBytes {
-		return nil, fmt.Errorf("mosaic-degradations.json is unexpectedly large (%d bytes)", len(data))
+		return nil, fmt.Errorf("mosaic-degradations.json exceeds the %d byte limit", maxDegradationReportBytes)
 	}
 
 	var report degradationReport
