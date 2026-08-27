@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f2733b8f55885f54",
+  "sourceHash": "fnv1a64:12bc5d02963fddc3",
   "lessons": [
     {
       "id": "FA-C08-gereftan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9a546e685387f50",
+      "sourceHash": "fnv1a64:659977803d666143",
       "notice": null,
       "blocks": [
         {
@@ -203,7 +203,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6eb7b39548bccc46",
+      "sourceHash": "fnv1a64:ad46a07034edeb6b",
       "notice": null,
       "blocks": [
         {
@@ -394,7 +394,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ce8a795202b003b",
+      "sourceHash": "fnv1a64:1ebc8ad82ea12b16",
       "notice": null,
       "blocks": [
         {
@@ -586,7 +586,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff17c269c12b7c3f",
+      "sourceHash": "fnv1a64:b1df84ef78afd6c6",
       "notice": null,
       "blocks": [
         {

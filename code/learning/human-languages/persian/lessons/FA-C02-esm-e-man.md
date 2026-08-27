@@ -19,6 +19,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [FA-LEX-ESM-E-MAN-AST, FA-SCRIPT-ESM-MAN-AST, FA-GRAMMAR-EZAFE-OWNER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-ESM-E-MAN-AST, FA-SCRIPT-ESM-MAN-AST, FA-GRAMMAR-EZAFE-OWNER]
 skills: [listening, speaking, reading]

@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-KELID, FA-ETYMON-KELID, FA-ETYMON-BUDAN-BE]
 introduces:
   knowledge: [FA-LEX-MADAR, FA-ETYMON-MADAR]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-KELID, FA-ETYMON-KELID, FA-ETYMON-BUDAN-BE, FA-LEX-MADAR, FA-ETYMON-MADAR]
 skills: [listening, speaking, reading]

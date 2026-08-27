@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-GRAMMAR-PERSONAL-COPULA-AM]
 introduces:
   knowledge: [FA-LEX-BUDAN, FA-GRAMMAR-INFINITIVE-TAN-DAN, FA-ETYMON-BUDAN-BE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-GRAMMAR-PERSONAL-COPULA-AM, FA-LEX-BUDAN, FA-GRAMMAR-INFINITIVE-TAN-DAN, FA-ETYMON-BUDAN-BE]
 skills: [listening, speaking, reading]

@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Please: Water, Bread, Tea, Key",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:badc825e34e86a15",
+  "sourceHash": "fnv1a64:e3cffd99a97483ae",
   "lessons": [
     {
       "id": "FA-C09-ab",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ef5ebef68128dd8",
+      "sourceHash": "fnv1a64:f5406e834f29b745",
       "notice": null,
       "blocks": [
         {
@@ -193,7 +193,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f26a069106bfc347",
+      "sourceHash": "fnv1a64:d548c025ee3e97c0",
       "notice": null,
       "blocks": [
         {
@@ -355,7 +355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13e89f0266a2ee3c",
+      "sourceHash": "fnv1a64:d1e107cbfe3b09e1",
       "notice": null,
       "blocks": [
         {
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54ef214af1a63ccd",
+      "sourceHash": "fnv1a64:3b163c4b3df2b7fe",
       "notice": null,
       "blocks": [
         {

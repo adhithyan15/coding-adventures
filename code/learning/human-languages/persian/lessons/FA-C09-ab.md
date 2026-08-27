@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-DASHTAN, FA-STEM-DAR, FA-LEX-DUST-DASHTAN]
 introduces:
   knowledge: [FA-LEX-AB, FA-PHRASE-LOTFAN, FA-ETYMON-AB]
+introduces_idioms: [FA-IDIOM-LOTFAN-PLEASE-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-DASHTAN, FA-STEM-DAR, FA-LEX-DUST-DASHTAN, FA-LEX-AB, FA-PHRASE-LOTFAN, FA-ETYMON-AB]
 skills: [listening, speaking, reading]

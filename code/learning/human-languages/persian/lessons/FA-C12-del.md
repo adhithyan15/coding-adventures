@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-NAM, FA-ETYMON-NAM]
 introduces:
   knowledge: [FA-LEX-DEL, FA-ETYMON-DEL]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-NAM, FA-ETYMON-NAM, FA-LEX-DEL, FA-ETYMON-DEL, FA-LEX-DOKHTAR]
 skills: [listening, speaking, reading]

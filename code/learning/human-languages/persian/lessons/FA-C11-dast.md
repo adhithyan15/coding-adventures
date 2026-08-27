@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-CHESHM]
 introduces:
   knowledge: [FA-LEX-DAST, FA-ETYMON-DAST]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-CHESHM, FA-LEX-DAST, FA-ETYMON-DAST]
 skills: [listening, speaking, reading]

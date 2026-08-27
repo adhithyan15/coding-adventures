@@ -5,7 +5,7 @@
     {
       "language": "persian",
       "chapter": 2,
-      "sourceHash": "fnv1a64:497f80f61dd5767f",
+      "sourceHash": "fnv1a64:792c57bfd85b405e",
       "lessonIds": [
         "FA-C02-esm-e-man"
       ],
@@ -14,7 +14,7 @@
     {
       "language": "persian",
       "chapter": 3,
-      "sourceHash": "fnv1a64:83038f638b3ba424",
+      "sourceHash": "fnv1a64:bac9485102936872",
       "lessonIds": [
         "FA-C03-shoma-to",
         "FA-C03-chist",
@@ -27,7 +27,7 @@
     {
       "language": "persian",
       "chapter": 4,
-      "sourceHash": "fnv1a64:d3738d0ad5a5931b",
+      "sourceHash": "fnv1a64:f20b4d7801f31a84",
       "lessonIds": [
         "FA-C04-hal",
         "FA-C04-chetor",
@@ -41,7 +41,7 @@
     {
       "language": "persian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:697af1de4ee3a203",
+      "sourceHash": "fnv1a64:81817a249de01c5a",
       "lessonIds": [
         "FA-C05-khoda",
         "FA-C05-hafez",
@@ -53,7 +53,7 @@
     {
       "language": "persian",
       "chapter": 6,
-      "sourceHash": "fnv1a64:0a7544d35a925a9d",
+      "sourceHash": "fnv1a64:55e732bfc8570da1",
       "lessonIds": [
         "FA-C06-budan",
         "FA-C06-raftan",
@@ -66,7 +66,7 @@
     {
       "language": "persian",
       "chapter": 7,
-      "sourceHash": "fnv1a64:641660fe57bc571c",
+      "sourceHash": "fnv1a64:59de2874e35942c5",
       "lessonIds": [
         "FA-C07-fekr-kardan",
         "FA-C07-fahmidan",
@@ -78,7 +78,7 @@
     {
       "language": "persian",
       "chapter": 8,
-      "sourceHash": "fnv1a64:f176a20501ca1a86",
+      "sourceHash": "fnv1a64:4389567ec6a68bb4",
       "lessonIds": [
         "FA-C08-gereftan",
         "FA-C08-porsidan",
@@ -90,7 +90,7 @@
     {
       "language": "persian",
       "chapter": 9,
-      "sourceHash": "fnv1a64:10653b6e52e9b4a8",
+      "sourceHash": "fnv1a64:ac1c3d1443a8285a",
       "lessonIds": [
         "FA-C09-ab",
         "FA-C09-nan",
@@ -102,7 +102,7 @@
     {
       "language": "persian",
       "chapter": 10,
-      "sourceHash": "fnv1a64:5dd2317b63b9a4cd",
+      "sourceHash": "fnv1a64:38e7b87208b29472",
       "lessonIds": [
         "FA-C10-madar",
         "FA-C10-pedar",
@@ -114,7 +114,7 @@
     {
       "language": "persian",
       "chapter": 11,
-      "sourceHash": "fnv1a64:d4c57c48fbf24363",
+      "sourceHash": "fnv1a64:0c1886b4285249b5",
       "lessonIds": [
         "FA-C11-cheshm",
         "FA-C11-dast",
@@ -126,7 +126,7 @@
     {
       "language": "persian",
       "chapter": 12,
-      "sourceHash": "fnv1a64:b7dc258c97b8921c",
+      "sourceHash": "fnv1a64:ab7d6ae8e49fc066",
       "lessonIds": [
         "FA-C12-nam",
         "FA-C12-del",
@@ -138,7 +138,7 @@
     {
       "language": "persian",
       "chapter": 13,
-      "sourceHash": "fnv1a64:d4c64a5e309e20e0",
+      "sourceHash": "fnv1a64:ab6374693cdcb9c9",
       "lessonIds": [
         "FA-C13-aseman",
         "FA-C13-khorshid",
@@ -151,7 +151,7 @@
     {
       "language": "persian",
       "chapter": 14,
-      "sourceHash": "fnv1a64:ee36853a6bd77421",
+      "sourceHash": "fnv1a64:9f86de35685835cf",
       "lessonIds": [
         "FA-C14-khahar",
         "FA-C14-pesar",
@@ -164,7 +164,7 @@
     {
       "language": "persian",
       "chapter": 15,
-      "sourceHash": "fnv1a64:cf8b20df6e196af2",
+      "sourceHash": "fnv1a64:167b37d149edde4f",
       "lessonIds": [
         "FA-W15-alef",
         "FA-W15-lam",

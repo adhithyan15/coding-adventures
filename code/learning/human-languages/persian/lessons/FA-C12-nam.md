@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-ZABAN, FA-ETYMON-ZABAN, FA-LEX-ESM-E-MAN-AST]
 introduces:
   knowledge: [FA-LEX-NAM, FA-ETYMON-NAM]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-ZABAN, FA-LEX-ESM-E-MAN-AST, FA-LEX-NAM, FA-ETYMON-NAM, FA-SCRIPT-ZE]
 skills: [listening, speaking, reading]

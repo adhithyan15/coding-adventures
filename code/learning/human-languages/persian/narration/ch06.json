@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Name a Verb, Find Its Stem",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e17405c0806693fb",
+  "sourceHash": "fnv1a64:ee07c5f77f2bdce8",
   "lessons": [
     {
       "id": "FA-C06-budan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2648a2da07145fb3",
+      "sourceHash": "fnv1a64:a989aa2896e42a50",
       "notice": null,
       "blocks": [
         {
@@ -199,7 +199,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d78d4cf6acd38d82",
+      "sourceHash": "fnv1a64:376eb1189f5e19c9",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64bfc03cac398a9b",
+      "sourceHash": "fnv1a64:822cef692b4922c8",
       "notice": null,
       "blocks": [
         {
@@ -547,7 +547,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99d83661901b1619",
+      "sourceHash": "fnv1a64:a01de371da612d5e",
       "notice": null,
       "blocks": [
         {
@@ -714,7 +714,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9c77c962f6bf2cf",
+      "sourceHash": "fnv1a64:0c6f871c03de4590",
       "notice": null,
       "blocks": [
         {

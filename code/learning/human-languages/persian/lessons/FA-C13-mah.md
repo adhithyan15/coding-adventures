@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-KHORSHID, FA-ETYMON-KHORSHID]
 introduces:
   knowledge: [FA-LEX-MAH, FA-ETYMON-MAH]
+introduces_idioms: []
+introduces_senses: [FA-SENSE-MAH-MONTH-01]
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-KHORSHID, FA-ETYMON-KHORSHID, FA-LEX-MAH, FA-ETYMON-MAH]
 skills: [listening, speaking, reading]

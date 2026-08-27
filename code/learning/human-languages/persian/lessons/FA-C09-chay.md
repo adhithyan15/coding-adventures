@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-NAN, FA-PHRASE-LOTFAN]
 introduces:
   knowledge: [FA-LEX-CHAY, FA-ETYMON-CHAY]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-NAN, FA-PHRASE-LOTFAN, FA-LEX-CHAY, FA-ETYMON-CHAY]
 skills: [listening, speaking, reading]

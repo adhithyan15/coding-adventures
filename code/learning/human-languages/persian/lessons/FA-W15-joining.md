@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-SCRIPT-SIN-01, FA-SCRIPT-LAM-01, FA-SCRIPT-ALEF-01, FA-SCRIPT-MIM-01]
 introduces:
   knowledge: [FA-SCRIPT-JOINING-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-SCRIPT-JOINING-01, FA-SCRIPT-SIN-01, FA-SCRIPT-LAM-01, FA-SCRIPT-ALEF-01, FA-SCRIPT-MIM-01]
 skills: [reading, writing]
