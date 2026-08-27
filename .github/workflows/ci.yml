@@ -897,11 +897,17 @@ jobs:
 
       # MSVC on Windows serves two consumers: Lua (needs the MSVC linker) and
       # the C/C++ lane (needs `cl.exe` for the MSVC arm of the pure-ISO check).
-      # A single msvc-dev-cmd invocation covers both — invoking the action twice
-      # would double-prepend the MSVC environment.
+      # A single bootstrap invocation covers both — invoking it twice would
+      # double-prepend the MSVC environment.
+      - name: Test MSVC environment bootstrap
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: python -m unittest discover -s code/scripts/tests -p 'test_setup_msvc_dev_cmd.py'
+
       - name: Set up MSVC (Lua linker + C/C++ cl.exe + Venture browser)
         if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
+        shell: pwsh
+        run: python code/scripts/setup_msvc_dev_cmd.py --arch x64
 
       - name: Restore pinned Lua 5.4.7 cache
         id: lua-cache
@@ -1216,7 +1222,7 @@ jobs:
 
       - name: Set up Gradle
         if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6.3.0
 
       - name: Disable long-lived Gradle services on Windows CI
         if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Windows'
