@@ -221,22 +221,24 @@ Therefore every generated monolith has a `--check` that runs in CI, and:
   fails for reasons nobody can read.
 
 This is already the practice for `core/lesson-modality/`, the generated `.tex`
-chapters, and the hash ledgers. HL21 extends it to `core/spine.json` and
-(per §5) to `<track>/book/book.tex`.
+chapters, and the hash ledgers. It was also the temporary practice for the
+browser compatibility monoliths described in §4.3. Section 4.4 removes those
+monoliths now that the browser can consume the shards without enumerating every
+shard in eager application code.
 
 ---
 
 ## 4. Status: what has been migrated
 
-### 4.1 `core/spine.json` — DONE
+### 4.1 `core/spine.json` — DONE, compatibility monolith later removed
 
 ```text
 core/spine.d/_meta.json                          version, stages, strands, strandNote
 core/spine.d/NNNN-<NODE-ID>.json                 one node each (33 nodes)
 ```
 
-The shards are the source of truth. **`core/spine.json` is kept, as a generated
-artifact**, and that decision has one specific cause:
+The shards are the source of truth. **`core/spine.json` was initially kept as a
+generated artifact**, and that decision had one specific cause:
 
 ```ts
 // code/programs/typescript/language-ladder/src/curriculum.ts:5
@@ -288,7 +290,7 @@ Three findings, all of which contradict something this spec assumed:
 3. **The monolith could not be deleted, and §5.1 did not anticipate why.**
    See §4.3.
 
-### 4.3 The eager glob-table cost — why browser-read ledgers keep their monoliths
+### 4.3 The eager glob-table cost — the temporary compatibility constraint
 
 §4.1 explains `core/spine.json`'s surviving monolith as a *static import* a
 browser cannot follow. The real constraint is broader, and it decides the
@@ -321,14 +323,79 @@ capability, so a capability edited without regenerating the book reads as
 compared against would make that comparison agree with itself, and the drift it
 exists to catch would go silent.
 
-So: **a ledger the browser globs keeps its monolith as a generated artifact.**
+So, at this stage: **a ledger the browser globs keeps its monolith as a generated artifact.**
 The conflict is not removed, it is downgraded — from a hand-merge of JSON to
 "take either side, re-run `npm run unshard`", which is §3's rule and is
 mechanical. Removing it outright needs the app to stop reading authored ledgers
 at all, which is its own piece of work with its own trade to decide.
 
-This applies directly to `<track>/curriculum.json` (§5.2), which the app globs
-**eagerly** — a stricter case again.
+This applied directly to `<track>/curriculum.json` (§5.2), which the app globbed
+**eagerly** — a stricter case again. Section 4.4 supersedes the temporary
+constraint without discarding its measurements or weakening its checks.
+
+### 4.4 Bounded build-time rollups — DONE
+
+The §4.3 compromise is no longer the final state. `language-ladder` now uses a
+Vite virtual-module plugin as the filesystem/browser boundary:
+
+```text
+core/spine.d/*                     ─┐
+<track>/curriculum.d/**/*           ├─ build-time merge ─► virtual modules
+<track>/chapters.d/*               ─┘
+
+virtual:human-language-ledgers
+  spine                             eager; one small shared value
+  curriculumLoaders[<track>]        23 lazy per-track modules
+  chapterLoaders[<track>]           23 lazy per-track modules
+```
+
+The plugin runs in Node while Vite builds or serves the app, so it can use the
+same shard readers and merge projections as every validation tool. The browser
+receives ordinary JavaScript modules and never needs `readdirSync`.
+
+The important bound is the number of **tracks**, not the number of authored
+elements. The index module contains one loader per track. Adding a chapter,
+path segment, extension, or spine realization changes only that track's virtual
+module; it does not add another eager key. A new track adds exactly two lazy
+loaders. The rejected design in §4.3 added roughly 2,500 eager shard keys and
+therefore grew with daily content authoring.
+
+The plugin is installed in both `vite.config.ts` and `vitest.config.ts` because
+Vitest does not inherit the application config. Every shard used to assemble a
+module is registered with Vite's watch graph. Editing, adding, or deleting a
+shard therefore invalidates the virtual module during development rather than
+leaving a stale in-memory rollup.
+
+This preserves the book staleness check. `bookhashes.ts` recomputes the chapter
+fingerprint from the capability loaded out of the **current authored
+`chapters.d/` shards**. It still compares that value with the separately
+generated hash manifest. The capability is not copied into that generated
+manifest, so an author changing it without regenerating the book still produces
+`stale`.
+
+With that boundary in place, the compatibility files have no remaining runtime
+consumer and are deleted:
+
+- `core/spine.json`;
+- all 23 `<track>/curriculum.json` files;
+- all 23 `<track>/chapters.json` files; and
+- `core/book-generation.json` after its filesystem and Python consumers move
+  to the grouped shards.
+
+Their `ShardPlan.monolith` disposition is `"removed"`. `check:shards` now fails
+if a merge resurrects one of them. `data/scripts/japanese.json` is not part of
+this migration: it is still statically imported by the independently buildable
+`script-ductus` package and needs a package-level shard boundary rather than a
+Language Ladder-only Vite plugin.
+
+Acceptance is executable rather than inferred:
+
+1. Node loaders, book generation, and authoring scripts work with the four
+   aggregate classes absent.
+2. Language Ladder tests, typecheck, build, and the bundle gate pass.
+3. The largest eager chunk remains at or below 500 kB.
+4. Rebuilding each deleted aggregate from its shards preserves its exact parsed
+   data, and the shard check rejects a resurrected monolith.
 
 ### 4.2 Tooling
 
@@ -401,11 +468,9 @@ shard mode for `spine`. That is a real but contained generalisation of
 > already canonical and byte-exact under the serializer, so it joined the shard
 > plan without a normalization diff.
 >
-> The monolith is KEPT as a generated artifact, per §4.3 — `language-ladder`
-> globs `*/curriculum.json` and a glob's key table is eager code. The conflict on
-> `spine[<node>].segments` is downgraded to "regenerate, do not hand-merge",
-> not removed. A deliberate trade: not raising the app's 500 kB debt ceiling,
-> and not weakening the staleness check that the alternative would have cost.
+> The monolith was initially kept as a generated artifact, per §4.3. Section
+> 4.4 removes it through bounded per-track virtual modules without raising the
+> app's 500 kB debt ceiling or weakening the staleness check.
 >
 > **Three corrections to the table above, found by doing it:**
 >
@@ -518,6 +583,9 @@ arrays, and a Spanish tranche touches only that file.
 >
 > `src/book-cli.ts` now reads through `readMaybeSharded`; it was the last
 > non-loader read of any of the three ledgers in `src/`.
+>
+> Section 4.4 removes the generated monolith after the remaining Python and test
+> consumers move to the same grouped shard projection.
 
 ### 5.4 `<track>/book/book.tex` → **generated, not sharded**
 
@@ -581,7 +649,8 @@ separate script, never wired into `vitest run`.
 ## 7. What this does not do
 
 - It does not change any ledger's **content**, only its storage.
-- It does not remove `--check`ed monoliths where a browser bundle needs them.
+- It does not make a browser enumerate shard files at runtime. Browser-facing
+  rollups are assembled by the build-time boundary in §4.4.
 - It does not touch the lesson Markdown, which is already one file per lesson
   and has never been a conflict point.
 
