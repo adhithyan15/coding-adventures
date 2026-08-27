@@ -205,7 +205,7 @@ export const scriptInventoryEvidence = {
       /kāf-family main-line body first.*long downward slash.*shorter floating slash.*two pen lifts.*three-run order.*Noto Naskh.*Nastaliq/i,
     );
     expect(missingByScript.get("urdu-nastaliq.json")?.has("گ")).toBe(false);
-    expect(affected.get("گ") ?? 0).toBe(2);
+    expect(affected.get("گ") ?? 0).toBe(0);
     const urduTe = scripts["urdu-nastaliq"]!.letters.find(
       (entry) => entry.glyph === "ت",
     )!;

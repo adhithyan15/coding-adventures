@@ -16862,3 +16862,31 @@ DUCTUS[ductusKey("perso-arabic", "ک")] = {
   ],
   source: persianAlphabetSource("ک"),
 };
+
+// Persian Online independently demonstrates the same three-run گ construction
+// as Urdu: main-line body first, then the long and shorter floating slashes.
+// Share only the Noto Naskh fallback geometry, never the source provenance.
+const urduGafStrokes = DUCTUS[ductusKey("urdu-nastaliq", "گ")].strokes;
+DUCTUS[ductusKey("perso-arabic", "گ")] = {
+  script: "perso-arabic",
+  glyph: "گ",
+  strokes: [
+    {
+      segments: [
+        { ...urduGafStrokes[0].segments[0], label: "draw the independent stem downward" },
+        { ...urduGafStrokes[0].segments[1], label: "continue left through the shallow bowl and final hook without lifting" },
+      ],
+    },
+    {
+      segments: [
+        { ...urduGafStrokes[1].segments[0], label: "lift once, then draw the long slash down from the upper right toward the stem" },
+      ],
+    },
+    {
+      segments: [
+        { ...urduGafStrokes[2].segments[0], label: "lift again, then draw the shorter floating slash above the first" },
+      ],
+    },
+  ],
+  source: persianAlphabetSource("گ"),
+};

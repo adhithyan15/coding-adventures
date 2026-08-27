@@ -88,6 +88,22 @@ export const scriptInventoryEvidence = {
     expect(persianTah.strokeOrderSource?.citation).toMatch(
       /Persian Online.*ط.*01:54–01:56/i,
     );
+    const persianGaf = scripts["perso-arabic"]!.letters.find(
+      (letter) => letter.glyph === "گ",
+    )!;
+    expect(persianGaf.sound).toBe("g");
+    expect(persianGaf.penLifts).toBe(2);
+    expect(persianGaf.strokeOrder).toEqual([
+      "draw the independent stem downward and continue left through the shallow bowl and final hook without lifting",
+      "lift once, then draw the long slash down from the upper right toward the stem",
+      "lift again, then draw the shorter floating slash above the first",
+    ]);
+    expect(persianGaf.strokeOrderSource?.citation).toMatch(
+      /Persian Online.*گ.*02:24–02:28/i,
+    );
+    expect(persianGaf.strokeOrderSource?.variation).toMatch(
+      /three pen-down runs.*stem downward.*shallow bowl.*hooked finish.*lift.*long slash.*another lift.*shorter floating slash.*Persian-scoped.*Urdu/i,
+    );
     const persianHah = scripts["perso-arabic"]!.letters.find(
       (letter) => letter.glyph === "ح",
     )!;
@@ -168,5 +184,7 @@ export const scriptInventoryEvidence = {
     expect(missingByScript.get("perso-arabic.json")?.has("ق")).toBe(false);
     expect(missingByScript.get("perso-arabic.json")?.has("ط")).toBe(false);
     expect(affected.get("ط") ?? 0).toBe(0);
+    expect(missingByScript.get("perso-arabic.json")?.has("گ")).toBe(false);
+    expect(affected.get("گ") ?? 0).toBe(0);
   },
 };
