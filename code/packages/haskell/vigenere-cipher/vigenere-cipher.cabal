@@ -21,7 +21,8 @@ library
 test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
-    other-modules:    VigenereCipherSpec
+    other-modules:    GeneratedClassicalCipherFixtureSpec
+                    , VigenereCipherSpec
     hs-source-dirs:   test
     build-depends:    base >=4.14 && <5
                     , hspec == 2.*

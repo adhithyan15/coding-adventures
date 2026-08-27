@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Vigenere language-neutral fixture consumers
+
+- Added a bounded stdlib-only generator and fail-closed drift gate that turns
+  all 26 normative Vigenere objects into native tests for every established
+  implementation lane, with complete expected-object and normalized-error
+  assertions and no new production authority.
+
 ### Scytale language-neutral fixture consumers
 
 - Added a stdlib-only generator and drift gate that turns all 18 normative
