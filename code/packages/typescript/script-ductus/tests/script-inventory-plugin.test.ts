@@ -36,9 +36,9 @@ describe("script inventory virtual module", () => {
     expect(source).toContain("export const japanese = JSON.parse(");
     expect(source).not.toContain("export const japanese = {");
     expect(source).not.toContain("import.meta.glob");
-    expect(watched.some((path) => path.endsWith("japanese.d/_meta.json"))).toBe(true);
-    expect(watched.some((path) => path.endsWith("perso-arabic.d/_meta.json"))).toBe(true);
-    expect(watched.some((path) => path.endsWith("urdu-nastaliq.d/_meta.json"))).toBe(true);
+    expect(watched.some((path) => path.endsWith(join("japanese.d", "_meta.json")))).toBe(true);
+    expect(watched.some((path) => path.endsWith(join("perso-arabic.d", "_meta.json")))).toBe(true);
+    expect(watched.some((path) => path.endsWith(join("urdu-nastaliq.d", "_meta.json")))).toBe(true);
   });
 
   it("invalidates only the fixed module for selected in-root shard paths", () => {
@@ -66,7 +66,11 @@ describe("script inventory virtual module", () => {
     const root = mkdtempSync(join(tmpdir(), "script-inventory-plugin-"));
     const scripts = join(root, "data", "scripts");
     mkdirSync(scripts, { recursive: true });
-    symlinkSync(join(curriculumRoot, "data", "scripts", "japanese.d"), join(scripts, "japanese.d"));
+    symlinkSync(
+      join(curriculumRoot, "data", "scripts", "japanese.d"),
+      join(scripts, "japanese.d"),
+      process.platform === "win32" ? "junction" : "dir",
+    );
     const watched: string[] = [];
     try {
       expect(() =>
