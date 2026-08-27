@@ -824,9 +824,10 @@
     {
       "language": "spanish",
       "chapter": 81,
-      "sourceHash": "fnv1a64:c06058fbde8eccd5",
+      "sourceHash": "fnv1a64:8cbc023c73c95858",
       "lessonIds": [
-        "ES-C44-repaso-articulos"
+        "ES-C44-repaso-articulos",
+        "ES-C44-repaso-ir-ida"
       ],
       "tex": "spanish/book/chapters/ch81-review-articles.tex"
     },
@@ -1280,10 +1281,11 @@
     {
       "language": "spanish",
       "chapter": 129,
-      "sourceHash": "fnv1a64:d60304d5a27c7c06",
+      "sourceHash": "fnv1a64:08e02b05784188e9",
       "lessonIds": [
         "ES-C18-ojala",
-        "ES-C18-practice"
+        "ES-C18-practice",
+        "ES-C18-repaso-el-yo-que-viaja"
       ],
       "tex": "spanish/book/chapters/ch129-ojala.tex"
     },
@@ -1505,9 +1507,11 @@
     {
       "language": "spanish",
       "chapter": 152,
-      "sourceHash": "fnv1a64:f365d8c5e690cba7",
+      "sourceHash": "fnv1a64:9d98f716d1a49786",
       "lessonIds": [
-        "ES-C40-sintesis-describir"
+        "ES-C40-sintesis-describir",
+        "ES-C40-repaso-palabras-con-historia",
+        "ES-C40-repaso-un-sabado-de-octubre"
       ],
       "tex": "spanish/book/chapters/ch152-synthesis-describing.tex"
     },
@@ -1634,22 +1638,24 @@
     {
       "language": "spanish",
       "chapter": 166,
-      "sourceHash": "fnv1a64:978eef8849a6f77f",
+      "sourceHash": "fnv1a64:4975742e430e35f3",
       "lessonIds": [
         "ES-C37-abrir",
         "ES-C37-cerrar",
         "ES-C37-sentarse",
-        "ES-C37-levantarse"
+        "ES-C37-levantarse",
+        "ES-C37-repaso-sentado-de-pie-andando"
       ],
       "tex": "spanish/book/chapters/ch166-open-close-sit-stand.tex"
     },
     {
       "language": "spanish",
       "chapter": 167,
-      "sourceHash": "fnv1a64:c5fa48a6b46ac9d5",
+      "sourceHash": "fnv1a64:6682465863b5269c",
       "lessonIds": [
         "ES-C38-luego",
         "ES-C38-porque",
+        "ES-C38-repaso-los-tres-porques",
         "ES-C38-imperfecto",
         "ES-C38-contar"
       ],
@@ -2459,9 +2465,11 @@
     {
       "language": "spanish",
       "chapter": 256,
-      "sourceHash": "fnv1a64:432690c1e3684b76",
+      "sourceHash": "fnv1a64:0768040cb513a410",
       "lessonIds": [
-        "ES-C65-repaso-parejas"
+        "ES-C65-repaso-parejas",
+        "ES-C65-repaso-dos-pasados",
+        "ES-C65-repaso-columna-vosotros"
       ],
       "tex": "spanish/book/chapters/ch256-review-parejas.tex"
     },
@@ -2523,36 +2531,40 @@
     {
       "language": "spanish",
       "chapter": 263,
-      "sourceHash": "fnv1a64:83adf908e4bb1313",
+      "sourceHash": "fnv1a64:73caa6dc8eeed293",
       "lessonIds": [
-        "ES-C67-uno-otro"
+        "ES-C67-uno-otro",
+        "ES-C67-repaso-uno-otro-ninguno"
       ],
       "tex": "spanish/book/chapters/ch263-uno-otro.tex"
     },
     {
       "language": "spanish",
       "chapter": 264,
-      "sourceHash": "fnv1a64:1e50fc17280f8b31",
+      "sourceHash": "fnv1a64:decc9ee694a11d19",
       "lessonIds": [
-        "ES-C67-comer-es-bueno"
+        "ES-C67-comer-es-bueno",
+        "ES-C67-repaso-cuando-dos-palabras-se-tocan"
       ],
       "tex": "spanish/book/chapters/ch264-comer-es-bueno.tex"
     },
     {
       "language": "spanish",
       "chapter": 265,
-      "sourceHash": "fnv1a64:a461728139f76390",
+      "sourceHash": "fnv1a64:19e5dbe170eaf9b9",
       "lessonIds": [
-        "ES-C67-hoy-como-en-casa"
+        "ES-C67-hoy-como-en-casa",
+        "ES-C67-repaso-la-terminacion-y-el-infinitivo"
       ],
       "tex": "spanish/book/chapters/ch265-hoy-como.tex"
     },
     {
       "language": "spanish",
       "chapter": 266,
-      "sourceHash": "fnv1a64:2a3765863e94ccf5",
+      "sourceHash": "fnv1a64:32d9b4bf375283c6",
       "lessonIds": [
-        "ES-C67-repaso-a1"
+        "ES-C67-repaso-a1",
+        "ES-C67-repaso-lo-que-reemplazo-los-casos"
       ],
       "tex": "spanish/book/chapters/ch266-review-a1.tex"
     },
@@ -2572,12 +2584,14 @@
     {
       "language": "spanish",
       "chapter": 268,
-      "sourceHash": "fnv1a64:5b38cd22b3ef1b24",
+      "sourceHash": "fnv1a64:e8a33ce364b354b6",
       "lessonIds": [
         "ES-C268-donde-esta",
         "ES-C268-billete",
         "ES-C268-habitacion",
-        "ES-C268-problema"
+        "ES-C268-repaso-llegar-y-quedarse",
+        "ES-C268-problema",
+        "ES-C268-repaso-dos-finales-dos-generos"
       ],
       "tex": "spanish/book/chapters/ch268-viajar.tex"
     },
@@ -3543,13 +3557,15 @@
     {
       "language": "spanish",
       "chapter": 345,
-      "sourceHash": "fnv1a64:dee933cd5c8ea0f5",
+      "sourceHash": "fnv1a64:fc6220398230aa5b",
       "lessonIds": [
         "ES-C345-mismo",
         "ES-C345-cada",
         "ES-C345-parte",
         "ES-C345-persona",
-        "ES-C345-objeto"
+        "ES-C345-objeto",
+        "ES-C345-repaso-persona-objeto",
+        "ES-C345-repaso-cada-mismo-objeto"
       ],
       "tex": "spanish/book/chapters/ch345-cada-y-mismo.tex"
     },
@@ -4095,21 +4111,23 @@
     {
       "language": "spanish",
       "chapter": 388,
-      "sourceHash": "fnv1a64:2bf3c6dfa1ee7158",
+      "sourceHash": "fnv1a64:519242a9f22647b7",
       "lessonIds": [
         "ES-C388-empujar",
         "ES-C388-lanzar",
         "ES-C388-borrar",
-        "ES-C388-gritar"
+        "ES-C388-gritar",
+        "ES-C388-repaso-cuatro-hedges"
       ],
       "tex": "spanish/book/chapters/ch388-empujar-y-lanzar.tex"
     },
     {
       "language": "spanish",
       "chapter": 389,
-      "sourceHash": "fnv1a64:27aec3eae4717933",
+      "sourceHash": "fnv1a64:ab8d666c8e2837a6",
       "lessonIds": [
-        "ES-C389-saber"
+        "ES-C389-saber",
+        "ES-C389-repaso-se-y-puedo"
       ],
       "tex": "spanish/book/chapters/ch389-saber.tex"
     },

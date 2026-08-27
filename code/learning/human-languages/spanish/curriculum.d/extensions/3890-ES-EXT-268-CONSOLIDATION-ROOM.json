@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-268-CONSOLIDATION-ROOM",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C268-repaso-llegar-y-quedarse"
+  ]
+}

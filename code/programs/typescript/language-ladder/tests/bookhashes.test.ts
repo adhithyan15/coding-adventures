@@ -144,7 +144,15 @@ describe("generated book source hashes", () => {
     [78, 1],
     [79, 1],
     [80, 1],
-    [81, 1],
+    // 81 and 152 each gained review lessons when Spanish closed its last A1
+    // reinforcement gap (#13061): the eleven `type: review` lessons were threaded
+    // into EXISTING chapters rather than appended as new ones, so the chapter
+    // count is unchanged and only these two sampled chapters moved. 81 takes
+    // ES-C44-repaso-ir-ida beside ES-C44-repaso-articulos; 152 takes
+    // ES-C40-repaso-palabras-con-historia and -un-sabado-de-octubre beside
+    // ES-C40-sintesis-describir. No atom is taught for the first time in
+    // either; a review revisits what its chapter already introduced.
+    [81, 2],
     [82, 1],
     [83, 1],
     [84, 1],
@@ -196,7 +204,14 @@ describe("generated book source hashes", () => {
     [126, 1],
     [127, 3],
     [128, 3],
-    [129, 2],
+    // 129, 166 and 167 each gained a review lesson when Spanish closed the
+    // reinforcement gap that main's own A1 arrivals reopened (#13061). #13132 and
+    // #13144 moved DELE verbs down from A2 into A1, and their atoms brought their
+    // reinforcement debt with them; the reviews that discharge it are threaded
+    // into EXISTING chapters, so no chapter was added and only these three
+    // sampled counts moved. 129 takes the subjunctive yo-stem review, 166 the
+    // posture-and-motion review, 167 the three-porqués review.
+    [129, 3],
     [130, 1],
     [131, 1],
     [132, 1],
@@ -219,7 +234,7 @@ describe("generated book source hashes", () => {
     [149, 4],
     [150, 2],
     [151, 2],
-    [152, 1],
+    [152, 3],
     [153, 1],
     [154, 1],
     [155, 1],
@@ -233,8 +248,8 @@ describe("generated book source hashes", () => {
     [163, 1],
     [164, 1],
     [165, 4],
-    [166, 4],
-    [167, 4],
+    [166, 5],
+    [167, 5],
     [168, 1],
     [169, 1],
     [170, 1],

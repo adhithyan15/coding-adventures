@@ -1,8 +1,8 @@
 Spanish, chapter 388: Push, Throw, Rub Out, Shout.
-4 lessons. All 4 can be done entirely by ear.
+5 lessons. All 5 can be done entirely by ear.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 empujar — cousins, not the same word.
 
 Warm-up.
@@ -41,7 +41,7 @@ Wrap-up Recall.
 What does the x in old empuxar prove was inside the Latin word? (An l pressed against an s.) Are push and empujar the same word? (No — cousins; empujar carries an in- that push never had.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 lanzar — a rocket is thrown like a spear.
 
 Warm-up.
@@ -82,7 +82,7 @@ Wrap-up Recall.
 What did launch mean around 1300? (To hurl, the way a spear is hurled.) Is the boat called a launch the same word? (No — it came from Malay by way of Portuguese.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 borrar — a verb made out of wool.
 
 Warm-up.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 What was a borra? (Coarse wool — what you rubbed writing out with.) Is borrow a relative? (No — Old English, with no Latin in it.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 gritar — a story the Romans told about themselves.
 
 Warm-up.
@@ -163,3 +163,45 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Is the story about calling on the citizens of Rome the real explanation? (No — it looks like a guess the Romans made from the resemblance.) Does gritar mean weeping? (No — only shouting; English cry moved and Spanish did not.)
+
+
+Lesson 5 of 5.
+Review — four verbs, four kinds of "related".
+
+Warm-up.
+[pause 2 seconds]
+"I shout." (Grito.) "I throw." (Lanzo.)
+
+What you've built.
+Four ordinary -ar verbs. Each one sits next to an English word that looks like it — and each one is related to that English word in a different way.
+[a table of 4 rows, read aloud]
+Spanish: lanzar. English lookalike: launch. the truth: the same word.
+Spanish: gritar. English lookalike: cry. the truth: the same word, meaning moved.
+Spanish: empujar. English lookalike: push. the truth: a cousin, not the same word.
+Spanish: borrar. English lookalike: borrow. the truth: no relation at all.
+[pause 2 seconds]
+Four verbs is a small chapter. Four different answers is a whole method.
+
+Why it's said this way.
+Push misses being the same word as empujar by one piece. Both go back to Latin pulsare, but Spanish took the form with in- stuck on the front and English took the plain one. Same root, different word.
+Cry really is gritar. Latin quiritare went into French and on into English, and then English alone slid the meaning from shouting to weeping. Spanish never did — which is why gritar is not the word for tears.
+And borrar has nothing to do with borrow, which is Germanic. Borrar comes from borra, coarse wool: the pad you rubbed writing out with. A rough draft is still un borrador — the thing meant to be rubbed out.
+[pause 2 seconds]
+Now the part worth keeping. Look at how the dictionaries actually talk. The Academy writes quizá in front of empujar; Corominas writes probablemente. On lanzar they part company outright — the Academy calls its root Celtiberian, Corominas only says quizá. On borrar neither will choose between two candidates.
+A hedge is not a failure. It is a dictionary telling you exactly how much it knows, and a claim with no hedge on it has not been made more certain by leaving the hedge off.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: empujo, lanzo, borro, grito]
+[pause 8 seconds for the answer]
+[repeat that twice]
+[question — say your answer, then pause 10 seconds]
+Which of the four has no relation at all to its English lookalike?
+[question — say your answer, then pause 12 seconds]
+Why is push only a cousin of empujar?
+[question — say your answer, then pause 10 seconds]
+Cry and gritar are the same word. Which language moved the meaning?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does gritar mean to weep? (No — English moved that meaning, not Spanish.) What is un borrador? (A rough draft — a thing meant to be rubbed out.) When a dictionary writes quizá, what is it doing? (Telling you how much it knows.)

@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 256,
   "title": "Review --- Five Sets, Finished",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ab4cd15764779848",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:370df9b4ea729bb3",
   "lessons": [
     {
       "id": "ES-C65-repaso-parejas",
@@ -242,6 +242,456 @@
             {
               "kind": "speech",
               "text": "And which place word matches ese? (Ahí — the listener's side.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C65-repaso-dos-pasados",
+      "sequence": 2516,
+      "title": "Review — two pasts, both finished",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "both past tenses are finished — and the written accent turns out to be the only thing holding one of them together",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65412ac7c0e32fd5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"You all ate.\" (Comisteis.) \"We used to eat.\" (Comíamos.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two whole tenses closed, and each closed on one small thing."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The preterite ran out of gaps when a single ending, -isteis, turned out to cover every verb that is not an -ar verb — and the strong stems with it. Comisteis. Tuvisteis. One syllable, and the last hole was filled."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The imperfect closed on comíamos, and on the only three verbs that refuse the pattern: éramos, íbamos, veíamos."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Set the two imperfect sets side by side and one of them is covered in accents."
+            },
+            {
+              "kind": "speech",
+              "text": "hablábamos — one accent, in one form. comíamos — an accent on every form of the set."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a spelling habit. In comíamos the í and the a are two separate syllables, and Spanish would otherwise run them together into one. The accent is what keeps them apart — take it off and the word stops being a past tense."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And one verb sits across the line. Dar is an -ar verb, yet in the preterite it took the -er endings and went as bare as vi: di. I gave."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hablamos, hablasteis, hablaron — then comimos, comisteis, comieron",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hablamos, hablasteis, hablaron* — then *comimos, comisteis, comieron*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hablábamos, comíamos — and hear where the stress lands",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hablábamos*, *comíamos* — and hear where the stress lands]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C65-repaso-dos-pasados-isteis",
+              "prompt": "You all ate, then you all had.",
+              "assesses": [
+                "ES-GRAMMAR-ER-IR-PRETERITE-2PL",
+                "ES-GRAMMAR-STRONG-PRETERITE-2PL"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "comisteis, tuvisteis",
+                "comisteis y tuvisteis"
+              ],
+              "feedback": {
+                "correct": "The same ending on an ordinary stem and a strong one.",
+                "incorrect": "Comisteis, tuvisteis."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C65-repaso-dos-pasados-acento",
+              "prompt": "Why does comiamos need its accent?",
+              "assesses": [
+                "ES-ORTHOGRAPHY-IMPERFECT-ACCENT",
+                "ES-GRAMMAR-ER-IR-IMPERFECT-PLURAL"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "to keep the i and the a in separate syllables",
+                "otherwise they run together",
+                "to split the vowels"
+              ],
+              "feedback": {
+                "correct": "Without it the word stops being a past tense.",
+                "incorrect": "To keep the i and the a apart — otherwise Spanish runs them into one syllable."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C65-repaso-dos-pasados-di",
+              "prompt": "Dar is an -ar verb. Say I gave.",
+              "assesses": [
+                "ES-GRAMMAR-DAR-PRETERITE",
+                "ES-LEX-DAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "di",
+                "yo di"
+              ],
+              "feedback": {
+                "correct": "Di — an -ar verb wearing the -er endings.",
+                "incorrect": "Di."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C65-repaso-dos-pasados-irregulares",
+              "prompt": "We were, and we used to go.",
+              "assesses": [
+                "ES-GRAMMAR-IMPERFECT-IRREGULAR-PLURAL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "eramos, ibamos",
+                "éramos, íbamos"
+              ],
+              "feedback": {
+                "correct": "Two of the three that refuse the pattern.",
+                "incorrect": "Eramos, ibamos."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending closed the preterite for everything that is not an -ar verb? (-isteis, strong stems included.) And how many verbs break the imperfect? (Three — ser, ir, ver.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C65-repaso-columna-vosotros",
+      "sequence": 2517,
+      "title": "Review — the column that belongs to vosotros",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "one column of the verb, in three tenses, plus the possessive that belongs to it — the set of forms half the Spanish-speaking world never says",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:24f1704b5ffe3b25",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The pronoun for \"you all,\" in Spain. (Vosotros.) \"You all go.\" (Vais.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These arrived one tense at a time, chapters apart. Collected, they are one column."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Present. Vais."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Preterite, ordinary stem. Comisteis."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Preterite, strong stem. Tuvisteis."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what belongs to you all. Vuestro."
+            },
+            {
+              "kind": "speech",
+              "text": "Four forms, four different chapters, one addressee."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The pairing is what makes this cheap to hold."
+            },
+            {
+              "kind": "speech",
+              "text": "nosotros becomes nuestro., vosotros becomes vuestro."
+            },
+            {
+              "kind": "speech",
+              "text": "Same shape, same ending, same job. Once you see the first pair the second costs nothing — and with vuestro in place, the possessives have no gaps left."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Worth saying plainly: most Spanish speakers, across the Americas, do not use this column at all. They say ustedes and reach for the they forms. You are learning it because you will read and hear it constantly, not because you will be required to produce it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vais, comisteis, tuvisteis, vuestro — one addressee, four forms",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vais*, *comisteis*, *tuvisteis*, *vuestro* — one addressee, four forms]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C65-repaso-columna-vosotros-presente",
+              "prompt": "You all go.",
+              "assesses": [
+                "ES-GRAMMAR-IR-VERB-PRESENT-2PL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "vais",
+                "vosotros vais"
+              ],
+              "feedback": {
+                "correct": "Vais.",
+                "incorrect": "Vais."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C65-repaso-columna-vosotros-preterito",
+              "prompt": "You all ate, and you all had.",
+              "assesses": [
+                "ES-GRAMMAR-ER-IR-PRETERITE-2PL",
+                "ES-GRAMMAR-STRONG-PRETERITE-2PL"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "comisteis, tuvisteis",
+                "comisteis y tuvisteis"
+              ],
+              "feedback": {
+                "correct": "One ending, ordinary stem and strong stem alike.",
+                "incorrect": "Comisteis, tuvisteis."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C65-repaso-columna-vosotros-posesivo",
+              "prompt": "Nosotros gives nuestro. What does vosotros give?",
+              "assesses": [
+                "ES-GRAMMAR-POSSESSIVE-VUESTRO",
+                "ES-GRAMMAR-POSSESSIVE-COMPLETE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "vuestro",
+                "vuestro, vuestra"
+              ],
+              "feedback": {
+                "correct": "And with it the possessives are complete.",
+                "incorrect": "Vuestro."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What belongs to vosotros? (Vuestro.) \"You all had\"? (Tuvisteis.) And who says these forms? (Spain — elsewhere ustedes takes the work.)"
             }
           ]
         }

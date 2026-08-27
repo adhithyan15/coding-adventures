@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 167,
   "title": "Telling What Happened",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:cdc54eb7b746764e",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:664663cf306efa82",
   "lessons": [
     {
       "id": "ES-C38-luego",
@@ -342,6 +342,206 @@
             {
               "kind": "speech",
               "text": "What two Latin words are fused inside porque? (prō and quid.) Are Spanish que and English what parent and child, or siblings? (Siblings — Latin qu- and Germanic wh- from one root, kʷo-.) Which of the three spellings asks a question? (Por qué — two words, accent on qué.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C38-repaso-los-tres-porques",
+      "sequence": 2065,
+      "title": "Review — the accent is doing the work",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "one sound, three spellings, three jobs — and an accent that is doing grammar, not decoration",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f656c5ce2dca0e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I get up because I run.\" (Me levanto porque corro.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three spellings that a listener cannot tell apart, and a reader always can."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "written",
+                "job"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "written: porque. job: because — gives the reason.",
+                "written: por qué. job: why — asks for it.",
+                "written: el porqué. job: the reason — a thing you can own."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "¿Por qué te levantas? — Me levanto porque corro. — No entiendo el porqué."
+            },
+            {
+              "kind": "speech",
+              "text": "Ask, answer, and then name the answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The accent on qué is not there to look nice, and it is not there at random. It is the same mark that sits on every question word: qué, quién, dónde, cuándo, cómo. Spanish uses one mark, consistently, for one job — this word is the one doing the asking."
+            },
+            {
+              "kind": "speech",
+              "text": "So por qué is two words because it is literally for what, with the accent marking what as the question. And porque, fused into one word with no accent, has nothing left to ask with."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "El porqué is the odd one, and it is odd in a way that makes sense: put el in front of anything in Spanish and it becomes a thing. It keeps the accent because the question word is still inside it — the reason is, after all, the answer to a why."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿por qué?, porque, el porqué",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿por qué?* · *porque* · *el porqué*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C38-repaso-los-tres-porques-ask",
+              "prompt": "Which of the three asks for a reason?",
+              "assesses": [
+                "ES-GRAMMAR-PORQUE-THREE-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "por que",
+                "por qué",
+                "¿por qué?"
+              ],
+              "feedback": {
+                "correct": "Two words, accent on the question word.",
+                "incorrect": "Por qué — two words, with the accent."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C38-repaso-los-tres-porques-give",
+              "prompt": "Say: I get up because I run.",
+              "assesses": [
+                "ES-LEX-PORQUE-03"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "me levanto porque corro",
+                "porque corro"
+              ],
+              "feedback": {
+                "correct": "One word, no accent — nothing is being asked.",
+                "incorrect": "Me levanto porque corro."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C38-repaso-los-tres-porques-noun",
+              "prompt": "What makes el porque a thing rather than a connector?",
+              "assesses": [
+                "ES-GRAMMAR-PORQUE-THREE-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "el",
+                "the article",
+                "el porqué",
+                "putting el in front"
+              ],
+              "feedback": {
+                "correct": "El in front turns it into something you can not understand.",
+                "incorrect": "The article el."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which one carries an accent and a space? (Por qué — the one that asks.) What job does the accent do everywhere in Spanish? (Marks the word that does the asking.) Which one takes el? (El porqué, the reason itself.)"
             }
           ]
         }

@@ -2,7 +2,9 @@
   "id": "ES-PATH-A1-REVIEW-PAREJAS",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C65-repaso-parejas"
+    "ES-C65-repaso-parejas",
+    "ES-C65-repaso-dos-pasados",
+    "ES-C65-repaso-columna-vosotros"
   ],
   "before": [],
   "inline": [

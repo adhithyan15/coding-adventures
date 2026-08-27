@@ -1020,7 +1020,8 @@
       "id": "ES-PATH-003-REVIEW-ART",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C44-repaso-articulos"
+        "ES-C44-repaso-articulos",
+        "ES-C44-repaso-ir-ida"
       ],
       "before": [],
       "inline": [
@@ -1590,6 +1591,7 @@
         "ES-C18-hacer-subjuntivo",
         "ES-C18-ojala",
         "ES-C18-practice",
+        "ES-C18-repaso-el-yo-que-viaja",
         "ES-C18-sintesis-subjuntivo"
       ],
       "before": [],
@@ -1817,7 +1819,9 @@
         "ES-C32-perro",
         "ES-C33-verde",
         "ES-C33-amarillo",
-        "ES-C40-sintesis-describir"
+        "ES-C40-sintesis-describir",
+        "ES-C40-repaso-palabras-con-historia",
+        "ES-C40-repaso-un-sabado-de-octubre"
       ],
       "before": [],
       "inline": [
@@ -1963,10 +1967,13 @@
       "id": "ES-PATH-033-B",
       "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
       "lessons": [
-        "ES-C37-levantarse"
+        "ES-C37-levantarse",
+        "ES-C37-repaso-sentado-de-pie-andando"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-033-B-CONSOLIDATION-POSTURA"
+      ],
       "after": []
     },
     {
@@ -1983,10 +1990,13 @@
       "id": "ES-PATH-034-B",
       "spine_node": "SPINE-SAY-WHY",
       "lessons": [
-        "ES-C38-porque"
+        "ES-C38-porque",
+        "ES-C38-repaso-los-tres-porques"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-034-B-CONSOLIDATION-PORQUE"
+      ],
       "after": []
     },
     {
@@ -3046,7 +3056,9 @@
       "id": "ES-PATH-A1-REVIEW-PAREJAS",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C65-repaso-parejas"
+        "ES-C65-repaso-parejas",
+        "ES-C65-repaso-dos-pasados",
+        "ES-C65-repaso-columna-vosotros"
       ],
       "before": [],
       "inline": [
@@ -3131,7 +3143,8 @@
       "id": "ES-PATH-A1-DISTRIB",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C67-uno-otro"
+        "ES-C67-uno-otro",
+        "ES-C67-repaso-uno-otro-ninguno"
       ],
       "before": [],
       "inline": [
@@ -3143,7 +3156,8 @@
       "id": "ES-PATH-A1-INF-SUJETO",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C67-comer-es-bueno"
+        "ES-C67-comer-es-bueno",
+        "ES-C67-repaso-cuando-dos-palabras-se-tocan"
       ],
       "before": [],
       "inline": [
@@ -3155,7 +3169,8 @@
       "id": "ES-PATH-A1-ORDEN",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C67-hoy-como-en-casa"
+        "ES-C67-hoy-como-en-casa",
+        "ES-C67-repaso-la-terminacion-y-el-infinitivo"
       ],
       "before": [],
       "inline": [
@@ -3167,7 +3182,8 @@
       "id": "ES-PATH-A1-REVIEW-CIERRE",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
-        "ES-C67-repaso-a1"
+        "ES-C67-repaso-a1",
+        "ES-C67-repaso-lo-que-reemplazo-los-casos"
       ],
       "before": [],
       "inline": [
@@ -3215,20 +3231,26 @@
       "id": "ES-PATH-268-ROOM",
       "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
       "lessons": [
-        "ES-C268-habitacion"
+        "ES-C268-habitacion",
+        "ES-C268-repaso-llegar-y-quedarse"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-268-CONSOLIDATION-ROOM"
+      ],
       "after": []
     },
     {
       "id": "ES-PATH-268-PROBLEM",
       "spine_node": "SPINE-HANDLE-TRAVEL",
       "lessons": [
-        "ES-C268-problema"
+        "ES-C268-problema",
+        "ES-C268-repaso-dos-finales-dos-generos"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-268-CONSOLIDATION-GENDER"
+      ],
       "after": []
     },
     {
@@ -4695,7 +4717,9 @@
         "ES-C345-cada",
         "ES-C345-parte",
         "ES-C345-persona",
-        "ES-C345-objeto"
+        "ES-C345-objeto",
+        "ES-C345-repaso-persona-objeto",
+        "ES-C345-repaso-cada-mismo-objeto"
       ],
       "before": [],
       "inline": [
@@ -5375,7 +5399,8 @@
         "ES-C388-empujar",
         "ES-C388-lanzar",
         "ES-C388-borrar",
-        "ES-C388-gritar"
+        "ES-C388-gritar",
+        "ES-C388-repaso-cuatro-hedges"
       ],
       "before": [],
       "inline": [
@@ -5387,7 +5412,8 @@
       "id": "ES-PATH-389-01",
       "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
       "lessons": [
-        "ES-C389-saber"
+        "ES-C389-saber",
+        "ES-C389-repaso-se-y-puedo"
       ],
       "before": [],
       "inline": [
@@ -7249,7 +7275,8 @@
       "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C18-sintesis-subjuntivo"
+        "ES-C18-sintesis-subjuntivo",
+        "ES-C18-repaso-el-yo-que-viaja"
       ]
     },
     {
@@ -7295,7 +7322,9 @@
       "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C40-sintesis-describir"
+        "ES-C40-sintesis-describir",
+        "ES-C40-repaso-palabras-con-historia",
+        "ES-C40-repaso-un-sabado-de-octubre"
       ]
     },
     {
@@ -7514,7 +7543,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C44-repaso-articulos"
+        "ES-C44-repaso-articulos",
+        "ES-C44-repaso-ir-ida"
       ]
     },
     {
@@ -9025,7 +9055,9 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C65-repaso-parejas"
+        "ES-C65-repaso-parejas",
+        "ES-C65-repaso-dos-pasados",
+        "ES-C65-repaso-columna-vosotros"
       ]
     },
     {
@@ -9103,7 +9135,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C67-uno-otro"
+        "ES-C67-uno-otro",
+        "ES-C67-repaso-uno-otro-ninguno"
       ]
     },
     {
@@ -9114,7 +9147,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C67-comer-es-bueno"
+        "ES-C67-comer-es-bueno",
+        "ES-C67-repaso-cuando-dos-palabras-se-tocan"
       ]
     },
     {
@@ -9125,7 +9159,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C67-hoy-como-en-casa"
+        "ES-C67-hoy-como-en-casa",
+        "ES-C67-repaso-la-terminacion-y-el-infinitivo"
       ]
     },
     {
@@ -9136,7 +9171,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C67-repaso-a1"
+        "ES-C67-repaso-a1",
+        "ES-C67-repaso-lo-que-reemplazo-los-casos"
       ]
     },
     {
@@ -10285,7 +10321,9 @@
         "ES-C345-cada",
         "ES-C345-parte",
         "ES-C345-persona",
-        "ES-C345-objeto"
+        "ES-C345-objeto",
+        "ES-C345-repaso-persona-objeto",
+        "ES-C345-repaso-cada-mismo-objeto"
       ]
     },
     {
@@ -10922,7 +10960,8 @@
         "ES-C388-empujar",
         "ES-C388-lanzar",
         "ES-C388-borrar",
-        "ES-C388-gritar"
+        "ES-C388-gritar",
+        "ES-C388-repaso-cuatro-hedges"
       ]
     },
     {
@@ -10933,7 +10972,19 @@
       "canDo": "I can say saber, and use sé or sabes before a known infinitive.",
       "prerequisites": [],
       "lessons": [
-        "ES-C389-saber"
+        "ES-C389-saber",
+        "ES-C389-repaso-se-y-puedo"
+      ]
+    },
+    {
+      "id": "ES-EXT-033-B-CONSOLIDATION-POSTURA",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C37-repaso-sentado-de-pie-andando"
       ]
     },
     {
@@ -10952,6 +11003,17 @@
       ]
     },
     {
+      "id": "ES-EXT-034-B-CONSOLIDATION-PORQUE",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C38-repaso-los-tres-porques"
+      ]
+    },
+    {
       "id": "ES-EXT-391-THING",
       "stage": "A1",
       "kind": "required",
@@ -10967,6 +11029,17 @@
       ]
     },
     {
+      "id": "ES-EXT-268-CONSOLIDATION-ROOM",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C268-repaso-llegar-y-quedarse"
+      ]
+    },
+    {
       "id": "ES-EXT-392-THING",
       "stage": "A1",
       "kind": "required",
@@ -10979,6 +11052,17 @@
         "ES-C392-destino",
         "ES-C392-pasajero",
         "ES-C392-agosto"
+      ]
+    },
+    {
+      "id": "ES-EXT-268-CONSOLIDATION-GENDER",
+      "stage": "A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C268-repaso-dos-finales-dos-generos"
       ]
     },
     {

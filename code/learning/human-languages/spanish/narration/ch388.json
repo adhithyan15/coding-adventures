@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 388,
   "title": "Push, Throw, Rub Out, Shout",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:225e68930e7f91cb",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:55ec10fa80b52ce1",
   "lessons": [
     {
       "id": "ES-C388-empujar",
@@ -669,6 +669,213 @@
             {
               "kind": "speech",
               "text": "Is the story about calling on the citizens of Rome the real explanation? (No — it looks like a guess the Romans made from the resemblance.) Does gritar mean weeping? (No — only shouting; English cry moved and Spanish did not.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C388-repaso-cuatro-hedges",
+      "sequence": 8285,
+      "title": "Review — four verbs, four kinds of \"related\"",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "four verbs, four different answers to \"is that the same word as the English one?\" — and a dictionary hedging in every one of them",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89e99e00a03f9279",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I shout.\" (Grito.) \"I throw.\" (Lanzo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four ordinary -ar verbs. Each one sits next to an English word that looks like it — and each one is related to that English word in a different way."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "English lookalike",
+                "the truth"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "Spanish: lanzar. English lookalike: launch. the truth: the same word.",
+                "Spanish: gritar. English lookalike: cry. the truth: the same word, meaning moved.",
+                "Spanish: empujar. English lookalike: push. the truth: a cousin, not the same word.",
+                "Spanish: borrar. English lookalike: borrow. the truth: no relation at all."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four verbs is a small chapter. Four different answers is a whole method."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Push misses being the same word as empujar by one piece. Both go back to Latin pulsare, but Spanish took the form with in- stuck on the front and English took the plain one. Same root, different word."
+            },
+            {
+              "kind": "speech",
+              "text": "Cry really is gritar. Latin quiritare went into French and on into English, and then English alone slid the meaning from shouting to weeping. Spanish never did — which is why gritar is not the word for tears."
+            },
+            {
+              "kind": "speech",
+              "text": "And borrar has nothing to do with borrow, which is Germanic. Borrar comes from borra, coarse wool: the pad you rubbed writing out with. A rough draft is still un borrador — the thing meant to be rubbed out."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part worth keeping. Look at how the dictionaries actually talk. The Academy writes quizá in front of empujar; Corominas writes probablemente. On lanzar they part company outright — the Academy calls its root Celtiberian, Corominas only says quizá. On borrar neither will choose between two candidates."
+            },
+            {
+              "kind": "speech",
+              "text": "A hedge is not a failure. It is a dictionary telling you exactly how much it knows, and a claim with no hedge on it has not been made more certain by leaving the hedge off."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "empujo, lanzo, borro, grito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *empujo* · *lanzo* · *borro* · *grito*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C388-repaso-cuatro-hedges-norelation",
+              "prompt": "Which of the four has no relation at all to its English lookalike?",
+              "assesses": [
+                "ES-LEX-BORRAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "borrar",
+                "borrar / borrow",
+                "borrar (borrow)"
+              ],
+              "feedback": {
+                "correct": "Borrow is Germanic. Borrar is a pad of wool.",
+                "incorrect": "Borrar — borrow is Germanic and unrelated."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C388-repaso-cuatro-hedges-cousin",
+              "prompt": "Why is push only a cousin of empujar?",
+              "assesses": [
+                "ES-LEX-EMPUJAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "it lacks the in-",
+                "english took the plain pulsare",
+                "no in- on the front",
+                "it comes from plain pulsare"
+              ],
+              "feedback": {
+                "correct": "Same root, one piece different.",
+                "incorrect": "English took plain pulsare; Spanish took it with in- on the front."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C388-repaso-cuatro-hedges-moved",
+              "prompt": "Cry and gritar are the same word. Which language moved the meaning?",
+              "assesses": [
+                "ES-LEX-GRITAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "english",
+                "el ingles",
+                "inglés"
+              ],
+              "feedback": {
+                "correct": "Shouting to weeping — English alone. Gritar stayed put.",
+                "incorrect": "English — it slid from shouting to weeping."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does gritar mean to weep? (No — English moved that meaning, not Spanish.) What is un borrador? (A rough draft — a thing meant to be rubbed out.) When a dictionary writes quizá, what is it doing? (Telling you how much it knows.)"
             }
           ]
         }

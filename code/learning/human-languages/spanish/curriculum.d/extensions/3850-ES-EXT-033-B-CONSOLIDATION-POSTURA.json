@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-033-B-CONSOLIDATION-POSTURA",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C37-repaso-sentado-de-pie-andando"
+  ]
+}
