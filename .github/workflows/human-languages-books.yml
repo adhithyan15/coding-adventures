@@ -243,6 +243,14 @@ jobs:
           set -euo pipefail
           python3 code/learning/human-languages/data/scripts/test_generate_syllabary.py -v
 
+      # Legacy authoring/report scripts now write canonical shards directly.
+      # Keep their no-follow, root-confinement, and identity checks executable
+      # in CI so a later helper cleanup cannot reopen an out-of-tree write.
+      - name: Test the Python shard boundary
+        run: |
+          set -euo pipefail
+          python3 code/learning/human-languages/data/scripts/test_sharded_ledger.py -v
+
       - name: Build curriculum gap report
         working-directory: code/packages/typescript/human-language-data
         run: |
@@ -286,21 +294,13 @@ jobs:
           npm run check:narration
           # HL21: every sharded ledger is checked here, in one of two directions.
           #
-          # core/spine.d/ is the source of truth and core/spine.json is GENERATED
-          # from it. That monolith survives only because language-ladder's
-          # browser bundle statically imports it and a browser cannot read a
-          # directory. A derived file nothing verifies is worse than no file, so
-          # a stale monolith fails here rather than quietly serving the app an
-          # old spine. Regenerate with `npm run unshard`.
-          #
-          # <track>/chapters.d/ is checked for the OPPOSITE thing: those twenty
-          # monoliths were DELETED by the migration, because a chapters ledger
-          # that is regenerated on every append would still collide on every
-          # append and the sharding would have bought nothing. So the check
-          # fails if `<track>/chapters.json` comes back — which is what a bad
-          # merge does when one side of the history still has it. The loader
-          # prefers `.d/`, so a resurrected monolith is not merely redundant: it
-          # is edited, committed, and silently ignored.
+          # The spine, all chapter/curriculum ledgers, and book-generation are
+          # shard-only. Language Ladder folds its browser values at build time;
+          # Node and Python consumers use the same canonical directories. This
+          # check parses and rebuilds every shard set and fails if a bad merge
+          # resurrects a tracked aggregate that readers would silently ignore.
+          # Japanese's script inventory is the one generated compatibility view
+          # still checked byte-for-byte for the independently built ductus package.
           npm run check:shards
           # HL22/HL24: BACKLOG.d/ and CHANGELOG.d/ are the source of truth for
           # the Markdown histories human-languages authors touch.

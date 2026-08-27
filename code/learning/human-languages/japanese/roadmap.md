@@ -61,8 +61,8 @@ only when reading, listening, writing, and speaking all pass independently.
 
 The durable artifacts are:
 
-- [`chapters.json`](./chapters.json) for authored chapter can-dos and payoffs;
-- [`curriculum.json`](./curriculum.json) for lesson order and shared-spine
+- [`chapters.d/`](./chapters.d/) for authored chapter can-dos and payoffs;
+- [`curriculum.d/`](./curriculum.d/) for lesson order and shared-spine
   dependencies;
 - [`session-map.md`](./session-map.md) for the current one-lesson-per-session map;
 - [`assessment-spec.md`](./assessment-spec.md) and

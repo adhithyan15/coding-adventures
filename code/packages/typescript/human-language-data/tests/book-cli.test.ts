@@ -14,6 +14,7 @@ import {
   assertHandwrittenLessonCoverage,
   generatedBookOutputs,
   handwrittenBookChapters,
+  loadBookGenerationConfig,
   runBookGeneration,
 } from "../src/book-cli.js";
 import { defaultCurriculumRoot, loadTrackChapters } from "../src/loader.js";
@@ -495,9 +496,7 @@ describe("handwritten schema-v2 lesson coverage", () => {
 describe("hand-written chapters", () => {
   const root = defaultCurriculumRoot();
   const handwritten = handwrittenBookChapters(root);
-  const config = JSON.parse(
-    readFileSync(join(root, "core", "book-generation.json"), "utf8"),
-  ) as {
+  const config = loadBookGenerationConfig(root) as {
     targets: { language: string; chapter: number; output: string }[];
     handwritten?: Array<{
       language: string;
@@ -626,9 +625,10 @@ describe("hand-written chapters", () => {
   });
 
   it("keeps title and label ownership out of every manifest chapter declaration", () => {
-    const raw = JSON.parse(
-      readFileSync(join(root, "core", "book-generation.json"), "utf8"),
-    ) as { targets: Record<string, unknown>[]; handwritten?: Record<string, unknown>[] };
+    const raw = loadBookGenerationConfig(root) as {
+      targets: Record<string, unknown>[];
+      handwritten?: Record<string, unknown>[];
+    };
     for (const entry of [...raw.targets, ...(raw.handwritten ?? [])]) {
       expect(entry).not.toHaveProperty("title");
       expect(entry).not.toHaveProperty("label");
@@ -773,9 +773,7 @@ describe("subject-index coverage", () => {
 // ---------------------------------------------------------------------------
 describe("the manifest covers the corpus", () => {
   const root = defaultCurriculumRoot();
-  const config = JSON.parse(
-    readFileSync(join(root, "core", "book-generation.json"), "utf8"),
-  ) as {
+  const config = loadBookGenerationConfig(root) as {
     targets: { language: string; chapter: number; output: string }[];
     handwritten: { language: string; chapter: number; output: string }[];
   };

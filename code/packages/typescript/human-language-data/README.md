@@ -22,10 +22,10 @@ only the marked track table in `code/learning/human-languages/README.md`; CI run
 book chapters cannot leave its counts stale.
 
 ```
-lessons/*.md frontmatter  ─┐
-<track>/curriculum.json    ─┼─►  Dataset + local realization paths
-concepts/taxonomy.json     ─┤         + validate() / validateCurriculum()
-data/scripts/*.json        ─┘         + independent frontier planning
+lessons/*.md frontmatter    ─┐
+<track>/curriculum.d/**/*   ─┼─►  Dataset + local realization paths
+concepts/taxonomy.json      ─┤         + validate() / validateCurriculum()
+data/scripts/*.json         ─┘         + independent frontier planning
 ```
 
 The core is the **concept**: a language-independent idea (`GREETING-HELLO`). Each
@@ -36,22 +36,18 @@ learning."
 ### Authoring sharded ledgers
 
 Every track's chapter and curriculum ledgers are conflict-resistant shards, as
-is the Japanese script inventory. Edit `<track>/chapters.d/`,
-`<track>/curriculum.d/`, or `data/scripts/japanese.d/`, then regenerate the
-single-file browser views; do not hand-edit or hand-merge those generated JSON
-files. Japanese entry filenames use stable Unicode code-point ids and each
-glyph keeps its writing evidence in its own shard.
+are the shared spine, book-generation manifest, and Japanese script inventory.
+Edit the owning file under `X.d/`; the chapter, curriculum, spine, and
+book-generation monoliths do not exist. Language Ladder folds their browser
+modules at build time. Japanese alone retains a generated compatibility JSON
+for the independently-built `script-ductus` package.
 
 ```bash
-npm run unshard -- <track>/chapters.json
-npm run unshard -- <track>/curriculum.json
 npm run unshard -- data/scripts/japanese.json
 npm run check:shards
 ```
 
-If an older tool changed a monolith, run `npm run shard -- <path>` instead to
-project that edit into shards before regenerating. CI requires every generated
-monolith to match its shard source byte for byte.
+CI rebuilds every shard set in memory and rejects a resurrected aggregate.
 
 ## Usage
 
@@ -818,16 +814,16 @@ npm run generate:progress
 npm run check:progress
 ```
 
-`core/book-generation.json` declares each generated chapter's language, number,
+`core/book-generation.d/<language>.json` declares each generated chapter's language, number,
 output path, and script-rendering options. Its title and label come only from that
-track's `chapters.json` capability ledger; the config is rejected if it tries to
+track's `chapters.d/` capability ledger; the config is rejected if it tries to
 repeat either field, and a declaration without canonical chapter metadata fails
 closed. The generator orders schema-v2 lessons by `sequence`, writes the LaTeX
 chapter, and records a stable FNV-1a fingerprint in
 `core/generated-book-hashes/<language>.json`. The fingerprint covers the chapter's lessons
 **and the capability fields the book prints** (`title`, `label`, `canDo`, and
 `payoff.summary`), so an
-edit to `chapters.json` moves it. It does not cover `payoff.note`, which the book
+edit to a chapter shard moves it. It does not cover `payoff.note`, which the book
 deliberately does not print — a fingerprint covers what the artifact SHOWS. It
 detects drift between book and app inputs; it is not a security hash.
 The config's `sourceBaseUrl` gives every lesson a stable canonical URL, so

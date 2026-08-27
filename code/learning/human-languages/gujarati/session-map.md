@@ -3,7 +3,7 @@
 This is the contributor-facing inventory of the canonical Gujarati reading
 order. Every session is a lesson designed for five minutes or less. The
 authoritative sequence numbers live in lesson frontmatter; chapter titles and
-payoffs live in [`chapters.json`](./chapters.json). A corpus test compares the
+payoffs live in [`chapters.d/`](./chapters.d/). A corpus test compares the
 ordered IDs below with those sources so this map cannot silently fall behind.
 
 The ramp is deliberately uneven in quantity but gentle in difficulty:

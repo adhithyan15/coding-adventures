@@ -30,9 +30,10 @@ And a label is matched against the lesson id's TAIL, exactly, never with
 matched `HI-W04-ra-sa-mera-naam`, pairing a lesson with someone else's prose.
 """
 
-import json
 import os
 import re
+
+from sharded_ledger import load_book_generation
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -121,7 +122,7 @@ def to_markdown(text):
 
 
 def carry(track, chapter, apply=False):
-    config = json.load(open(os.path.join(HL, "core/book-generation.json"), encoding="utf-8"))
+    config = load_book_generation(HL)
     entry = next((e for e in config["handwritten"]
                   if e["language"] == track and e["chapter"] == chapter), None)
     if entry is None:

@@ -285,12 +285,9 @@ export function listTaskShapeInventories(root = defaultCurriculumRoot()): Array<
  * The shared can-do spine, from `core/spine.d/` if it exists and `core/spine.json`
  * if it does not (HL21).
  *
- * Both forms are supported on purpose and indefinitely. `core/spine.json` is
- * still statically imported by language-ladder's browser bundle, which cannot
- * read a directory, so the monolith survives as a GENERATED artifact gated by
- * `shard-cli --check`. Every filesystem-side consumer comes through here and so
- * sees the shards — which are the source of truth — whether or not the monolith
- * happens to be current.
+ * The fallback remains for fixtures and unmigrated ledgers. In the real corpus
+ * the monolith is absent: Language Ladder's build-time virtual module uses this
+ * same shard projection before browser code is emitted.
  */
 export function loadCurriculumSpine(root = defaultCurriculumRoot()): CurriculumSpine {
   return readMaybeSharded<CurriculumSpine>(

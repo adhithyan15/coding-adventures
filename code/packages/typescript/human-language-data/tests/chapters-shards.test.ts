@@ -49,19 +49,12 @@ describe("the chapters.d migration covers what it claims to", () => {
   });
 
   it.each(CHAPTER_PLANS.map((plan) => plan.path))(
-    "%s: the monolith survives, and matches the shards byte for byte",
+    "%s: the compatibility monolith is absent",
     (path) => {
-      // The monolith is kept as a GENERATED artifact rather than deleted,
-      // because language-ladder reads these ledgers through `import.meta.glob`
-      // and a glob's key table is eager: sharding took it from 23 entries to
-      // ~1,020 and grew the app's eager chunk by 191 kB, through a hard budget.
-      // See the note on `chaptersPlan` for why the obvious dodges are worse.
-      //
-      // A derived file nothing verifies is worse than no file, so the bytes are
-      // asserted here as well as by `--check`.
-      expect(existsSync(join(root, path))).toBe(true);
       const plan = SHARD_PLANS.find((p) => p.path === path)!;
-      expect(readFileSync(join(root, path), "utf8")).toBe(unshardContents(root, plan));
+      expect(plan.monolith).toBe("removed");
+      expect(existsSync(join(root, path))).toBe(false);
+      expect(() => JSON.parse(unshardContents(root, plan))).not.toThrow();
     },
   );
 
@@ -153,15 +146,8 @@ describe("the loader sees the sharded tracks", () => {
   });
 });
 
-describe("the drift message does not walk an author into destroying their work", () => {
-  it("names BOTH recovery directions, not just unshard", () => {
-    // The message used to say only "run 'npm run unshard'". That was correct
-    // while core/spine.json was the only sharded ledger, because its monolith
-    // is purely derived. It is not correct for an AUTHORED ledger:
-    // <track>/chapters.json is rewritten wholesale by the Python authoring
-    // scripts in learning/human-languages/data/scripts/, and an author who
-    // appends a chapter that way and then follows a bare "unshard" overwrites
-    // the monolith from shards that never saw their chapter.
+describe("a resurrected compatibility monolith is rejected", () => {
+  it("explains that edits in it are dead and must move to shards", () => {
     const root = mkdtempSync(join(tmpdir(), "hl-drift-msg-"));
     try {
       mkdirSync(join(root, "spanish", "chapters.d"), { recursive: true });
@@ -175,7 +161,7 @@ describe("the drift message does not walk an author into destroying their work",
         `${JSON.stringify({ chapter: 1 }, null, 2)}\n`,
         "utf8",
       );
-      // A monolith that disagrees — the shape an author's direct edit leaves.
+      // A stale path restored by a bad merge.
       writeFileSync(join(root, "spanish", "chapters.json"), "{}\n", "utf8");
 
       const errors: string[] = [];
@@ -191,24 +177,18 @@ describe("the drift message does not walk an author into destroying their work",
       }
 
       const message = errors.join("");
-      expect(message).toMatch(/npm run unshard spanish\/chapters\.json/);
-      expect(message).toMatch(/npm run shard spanish\/chapters\.json/);
-      expect(message).toMatch(/If you edited the monolith/);
-      expect(message).toMatch(/Do not hand-merge/);
+      expect(message).toMatch(/monolith is present again/);
+      expect(message).toMatch(/silently dead/);
+      expect(message).toMatch(/delete the file/);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
   });
 });
 
-describe("the shards are the source of truth and the monolith is derived", () => {
-  it("--unshard reproduces the committed monolith without changing it", () => {
-    // Idempotence of the generator, which is what makes "on a conflict, take
-    // either side and re-run the generator" a safe instruction rather than a
-    // hopeful one.
+describe("the shards are the only source of truth", () => {
+  it("refuses --unshard because it would recreate a dead aggregate", () => {
     const plan = CHAPTER_PLANS.find((p) => p.path === "spanish/chapters.json")!;
-    const before = readFileSync(join(root, plan.path), "utf8");
-    expect(unshardLedger(root, plan)).toBe(before);
-    expect(readFileSync(join(root, plan.path), "utf8")).toBe(before);
+    expect(() => unshardLedger(root, plan)).toThrow(/monolith was removed/);
   });
 });

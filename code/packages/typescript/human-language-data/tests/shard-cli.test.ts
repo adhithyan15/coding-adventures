@@ -19,14 +19,12 @@ import { listShardNames } from "../src/shard.js";
 
 const SPINE = SHARD_PLANS.find((plan) => plan.path === "core/spine.json")!;
 
-describe("the real core/spine.json round trip", () => {
-  // The proof the whole PR rests on. If this is not byte-exact, the shards and
-  // the generated monolith cannot both be trusted and `--check` becomes noise
-  // people learn to ignore.
-  it("rebuilds the committed monolith byte for byte", () => {
+describe("the real core/spine.d shard set", () => {
+  it("keeps its compatibility monolith absent and rebuilds valid JSON", () => {
     const root = defaultCurriculumRoot();
-    const onDisk = readFileSync(join(root, "core", "spine.json"), "utf8");
-    expect(unshardContents(root, SPINE)).toBe(onDisk);
+    expect(SPINE.monolith).toBe("removed");
+    expect(existsSync(join(root, "core", "spine.json"))).toBe(false);
+    expect(() => JSON.parse(unshardContents(root, SPINE))).not.toThrow();
   });
 
   it("passes its own --check", () => {
@@ -64,8 +62,8 @@ describe("shard/unshard on a scratch ledger", () => {
     path: "core/toy.json",
     sections: [{ key: "nodes", idOf: (element) => (element as { id?: unknown }).id as string }],
     // These fixtures exercise the shard/unshard round trip itself, so they keep
-    // the monolith the way `core/spine.json` does. The `"removed"` disposition
-    // has its own suite in chapters-shards.test.ts.
+    // the monolith to exercise the generated-artifact branch. The real spine
+    // and chapter ledgers use the `"removed"` branch.
     monolith: "generated",
   };
 

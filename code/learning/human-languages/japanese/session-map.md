@@ -6,8 +6,8 @@ Reviews may be added when due, but two new signs are never fused into one larger
 lesson merely to shorten the schedule.
 
 The exact order is derived from lesson frontmatter: chapter, then `sequence`,
-then lesson id as a stable tie-breaker. [`curriculum.json`](./curriculum.json)
-and [`chapters.json`](./chapters.json) are authoritative; this learner-facing map
+then lesson id as a stable tie-breaker. [`curriculum.d/`](./curriculum.d/)
+and [`chapters.d/`](./chapters.d/) are authoritative; this learner-facing map
 summarises them instead of maintaining a second 100-row ordering by hand.
 
 ## Current sessions

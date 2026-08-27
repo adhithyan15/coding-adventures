@@ -21,7 +21,7 @@
 // and asserts it STAYS canonical — so a hand-edit reintroducing stray
 // indentation, the same way the first one arrived, fails here immediately.
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
@@ -62,8 +62,7 @@ function roundTrip(document: Record<string, unknown>): {
   };
 }
 
-const committed = readFileSync(join(root, "core", "book-generation.json"), "utf8");
-const document = JSON.parse(committed) as Record<string, unknown>;
+const document = JSON.parse(unshardContents(root, BOOK_GENERATION_PLAN)) as Record<string, unknown>;
 
 describe("the grouped split of the real core/book-generation.json", () => {
   it("writes one file per language plus _meta.json", () => {
@@ -201,9 +200,10 @@ describe("the plan is enabled and the ledger is sharded on disk", () => {
     for (const name of names) expect(name).not.toContain("/");
   });
 
-  it("rebuilds the committed monolith byte for byte", () => {
+  it("keeps the compatibility monolith absent", () => {
     const plan = SHARD_PLANS.find((p) => p.path === "core/book-generation.json")!;
-    expect(unshardContents(root, plan)).toBe(committed);
+    expect(plan.monolith).toBe("removed");
+    expect(existsSync(join(root, plan.path))).toBe(false);
   });
 
   it("gives a Spanish tranche exactly one file to touch", () => {
@@ -236,6 +236,6 @@ describe("the plan is enabled and the ledger is sharded on disk", () => {
     // indentation — the same way the first one arrived, through a merge nobody
     // looked at closely — now fails here immediately, rather than surfacing
     // months later as a `--check` failure nobody can account for.
-    expect(committed).toBe(serialize(document));
+    expect(unshardContents(root, BOOK_GENERATION_PLAN)).toBe(serialize(document));
   });
 });

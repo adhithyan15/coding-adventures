@@ -61,10 +61,12 @@ describe("the curriculum.d migration covers what it claims to", () => {
   });
 
   it.each(CURRICULUM_PLANS.map((p) => p.path))(
-    "%s: the generated monolith matches the shards byte for byte",
+    "%s: the compatibility monolith is absent",
     (path) => {
       const plan = SHARD_PLANS.find((p) => p.path === path)!;
-      expect(readFileSync(join(root, path), "utf8")).toBe(unshardContents(root, plan));
+      expect(plan.monolith).toBe("removed");
+      expect(existsSync(join(root, path))).toBe(false);
+      expect(() => JSON.parse(unshardContents(root, plan))).not.toThrow();
     },
   );
 
@@ -333,8 +335,8 @@ describe("_keys must be a permutation, not an arbitrary subset", () => {
   // The rebuild emits only the keys `_keys` names, so a short list silently
   // truncates the document. `--check` catches that today only by luck — every
   // plan is `monolith: "generated"`, so the rebuild is byte-compared against a
-  // committed file. A `"removed"` ledger has no such file, which makes this a
-  // trap laid for the next migration rather than a hypothetical.
+  // committed file. These ledgers are now `"removed"`, so this validation is
+  // what prevents a malformed shard set from truncating data silently.
   const shard = { name: "0010-ALPHA.json", path: "x", value: { id: "ALPHA" } };
 
   it("refuses _keys that omits a document key", () => {
@@ -380,7 +382,7 @@ describe("the loader sees the sharded curricula", () => {
     expect(loaded).toHaveLength(23);
   });
 
-  it("reads the same document the generated monolith holds", () => {
+  it("reads the same document the canonical shards rebuild", () => {
     // The loader and `--unshard` must not have two ideas of what these files
     // mean; `--check` only compares the monolith against `unshardContents`, so a
     // divergent loader would go unreported.
