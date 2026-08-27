@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.92.0
+
+- Represent Gantt signed variable-width years as a typed date-format part.
+
 ## 0.91.0
 
 - Represent Gantt quarter dates as a typed date-format part.

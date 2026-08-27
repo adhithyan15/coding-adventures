@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.35.0
+
+- Resolve typed signed variable-width Gantt years before backend-neutral layout.
+
 ## 0.34.0
 
 - Resolve typed Gantt quarter dates to their first month before backend-neutral layout.

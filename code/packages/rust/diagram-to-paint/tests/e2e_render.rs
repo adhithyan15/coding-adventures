@@ -1106,6 +1106,35 @@ line "Target" [35, 50, 68, 82]"##,
         write_png(&quarter_pixels, "/tmp/mermaid_gantt_quarter_e2e.png")
             .expect("quarter-date PNG write failed");
         assert!(!quarter_scene.instructions.is_empty());
+
+        let signed_year = parse_gantt(
+            "gantt\ntitle Signed year\ndateFormat Y-MM-DD\nsection Plan\nPlanning :p1, +2026-03-01, 1d",
+        )
+        .expect("signed-year Mermaid Gantt parse failed");
+        let signed_year_layout = layout_temporal_diagram(
+            &TemporalDiagram {
+                kind: TemporalKind::Gantt,
+                title: signed_year.title.clone(),
+                body: TemporalBody::Gantt(signed_year),
+            },
+            800.0,
+        );
+        let signed_year_scene = diagram_to_paint_temporal(
+            &signed_year_layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let signed_year_pixels = render(&signed_year_scene);
+        write_png(&signed_year_pixels, "/tmp/mermaid_gantt_signed_year_e2e.png")
+            .expect("signed-year PNG write failed");
+        assert!(!signed_year_scene.instructions.is_empty());
     }
 
     #[test]

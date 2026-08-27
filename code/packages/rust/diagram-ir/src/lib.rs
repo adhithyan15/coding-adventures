@@ -1140,6 +1140,7 @@ pub struct GanttConfig {
 #[derive(Clone, Debug, PartialEq)]
 pub enum GanttDateFormatPart {
     Literal(String),
+    YearSigned,
     Year4,
     Year2,
     Quarter,
