@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:afe1707b583d7627",
+  "sourceHash": "fnv1a64:d13a12da0615440b",
   "summary": {
     "totalLessons": 1034,
     "voice": 974,
@@ -25351,7 +25351,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fcd9625dba984081"
+      "sourceHash": "fnv1a64:7c540887751faaed"
     },
     {
       "id": "ES-C394-actividad",
@@ -25387,7 +25387,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d4e5cc14bc28f444"
+      "sourceHash": "fnv1a64:211f867e03b65536"
     },
     {
       "id": "ES-C394-medico",
@@ -25405,7 +25405,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3c0f47fdc4817b4a"
+      "sourceHash": "fnv1a64:79e3fde34e24b912"
     },
     {
       "id": "ES-C395-entrar",

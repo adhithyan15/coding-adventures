@@ -6134,7 +6134,7 @@
     {
       "language": "spanish",
       "chapter": 394,
-      "sourceHash": "fnv1a64:3f98b1df8acdfe51",
+      "sourceHash": "fnv1a64:311831f04a0b6b35",
       "lessonIds": [
         "ES-C394-universidad",
         "ES-C394-trabajo",
@@ -6147,7 +6147,7 @@
       "text": "spanish/narration/ch394.txt",
       "json": "spanish/narration/ch394.json",
       "textHash": "fnv1a64:5b65dbe6729377b6",
-      "jsonHash": "fnv1a64:d740b09bd56aed94"
+      "jsonHash": "fnv1a64:c5a2f03d1023ca3a"
     },
     {
       "language": "spanish",

@@ -4,7 +4,7 @@
   "chapter": 394,
   "title": "Five Places and Things in a Week",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3f98b1df8acdfe51",
+  "sourceHash": "fnv1a64:311831f04a0b6b35",
   "lessons": [
     {
       "id": "ES-C394-universidad",
@@ -187,7 +187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcd9625dba984081",
+      "sourceHash": "fnv1a64:7c540887751faaed",
       "notice": null,
       "blocks": [
         {
@@ -558,7 +558,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4e5cc14bc28f444",
+      "sourceHash": "fnv1a64:211f867e03b65536",
       "notice": null,
       "blocks": [
         {
@@ -726,7 +726,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c0f47fdc4817b4a",
+      "sourceHash": "fnv1a64:79e3fde34e24b912",
       "notice": null,
       "blocks": [
         {
