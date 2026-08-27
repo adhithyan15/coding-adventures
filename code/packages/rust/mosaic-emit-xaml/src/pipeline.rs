@@ -2739,6 +2739,12 @@ fn emit_xaml_node(
         "Spacer" => emit_spacer(node, indent, part_styles),
         "Divider" => emit_divider(node, indent, part_styles),
         "Icon" => emit_icon(node, indent, part_styles, ctx),
+        // UI39: the kernel drawing primitive. `circle`/`line`/`curve` land
+        // here; `arc` is a stretch goal not yet implemented (falls through
+        // to the "not yet supported" error inside emit_path itself, not the
+        // generic UnsupportedPrimitive fallback below, so the message names
+        // the kind specifically).
+        "Path" => emit_path(node, indent, part_styles),
 
         // PR-2: For lowering.
         "For" => emit_for(node, indent, part_styles, ctx),
@@ -3862,6 +3868,149 @@ fn semantic_glyph_xaml_element(name: &str) -> Option<&'static str> {
     match name {
         "spinner" => Some("ProgressRing IsActive=\"True\""),
         _ => None,
+    }
+}
+
+/// `Path`'s `.msl` paint properties — `Fill`/`Stroke`/`StrokeThickness`,
+/// remapped from the same `background`/`border-color`/`border-width` every
+/// other primitive already authors (UI39 §3.2: deliberately zero new style
+/// properties).
+///
+/// `part_style_attr` cannot be reused directly here: it splices
+/// `base_fragment` verbatim, and `css_property_to_xaml_setter` maps those
+/// three CSS properties to `Background`/`BorderBrush`/`BorderThickness` —
+/// real dependency properties on `Border`/`Panel`/`Control`, but `Ellipse`/
+/// `Line`/`Path` are `Shape`-derived and have none of the three; XamlCompiler
+/// would reject the attribute outright. This mirrors
+/// `content_control_style_attr`'s selective-remap pattern (that one renames
+/// a single setter, `TextAlignment` → `HorizontalContentAlignment`; this one
+/// renames three) rather than `part_style_attr`'s splice-everything-through.
+///
+/// Anything else present in the fragment (an authored `width`/`height`, say —
+/// unusual on a `Path` part, since its size comes from geometry props in the
+/// `.mll`, not style, but nothing stops an author from adding one) is
+/// intentionally dropped here rather than spliced through unremapped, since
+/// splicing an unrelated setter onto a shape element risks a duplicate
+/// attribute with the geometry-computed `Margin`/`Width`/`Height` `emit_path`
+/// itself emits — silently ignored is the deliberate tradeoff for this one
+/// primitive's unusual style surface, not the general policy.
+fn path_paint_attr(node: &LayoutNode, part_styles: &PartStyleMap) -> String {
+    let Some(fragment) = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(|entry| entry.base_fragment.as_str())
+    else {
+        return String::new();
+    };
+    parse_style_fragment(fragment)
+        .into_iter()
+        .filter_map(|(setter, value)| {
+            let remapped = match setter.as_str() {
+                "Background" => "Fill",
+                "BorderBrush" => "Stroke",
+                "BorderThickness" => "StrokeThickness",
+                _ => return None,
+            };
+            Some(format!(" {remapped}=\"{value}\""))
+        })
+        .collect()
+}
+
+/// Read a required `Number`-valued prop, e.g. `cx`/`cy`/`r`. `Path`'s
+/// geometry props don't yet support the `SlotRef`/`Expr` bindings every
+/// other numeric prop in the kernel has (UI39 §3.1 documents that as a
+/// kernel-level capability; wiring it through to real `x:Bind` XAML is
+/// XAML's own not-yet-landed UI36 work, tracked separately) — a bound
+/// coordinate is therefore a clear compile error here, not a silent 0.
+fn required_path_number(node: &LayoutNode, prop_name: &str) -> Result<f64, PipelineEmitError> {
+    match find_prop_value(node, prop_name) {
+        Some(LayoutPropValue::Number(n)) => Ok(*n),
+        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_)) => {
+            Err(PipelineEmitError::UnsupportedPrimitive(format!(
+                "Path prop '{prop_name}' is bound to a slot or expression, but the WinUI 3 / XAML emitter only supports a literal number for Path geometry props today"
+            )))
+        }
+        _ => Err(PipelineEmitError::UnsupportedPrimitive(format!(
+            "Path missing required numeric prop '{prop_name}:'"
+        ))),
+    }
+}
+
+/// `Path [name] (kind: circle|line|curve, ...)` → real WinUI vector
+/// geometry. UI39 §3.1's four shape kinds; `arc` is a stretch goal not
+/// implemented in this PR (falls through to a named "not yet supported"
+/// error below, same posture `Icon`'s glyph lowering already has for
+/// unrecognized semantic names).
+///
+/// Every kind places its element as a direct `<Grid>`/`<Stack>` child using
+/// `Margin`/`HorizontalAlignment="Left"`/`VerticalAlignment="Top"` rather
+/// than `Canvas.Left`/`Canvas.Top` — `Stack` lowers to `<Grid>`
+/// (`emit_stack`), not `<Canvas>`, and `Canvas.*` attached properties are
+/// inert outside an actual `Canvas` parent, where `Margin`-based
+/// positioning already works in any panel (the same mechanism
+/// `absolute_position_style_attrs`, #12028 item 4, established for
+/// `position: absolute`). Verified empirically via a real `dotnet build`
+/// probe project before writing this function — two overlapping `Ellipse`s
+/// positioned this way inside a plain `<Grid>` render as the intended
+/// crescent-moon shape, matching UI39 §3's worked example.
+fn emit_path(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let paint = path_paint_attr(node, part_styles);
+    let kind = find_prop_keyword(node, "kind").ok_or_else(|| {
+        PipelineEmitError::UnsupportedPrimitive("Path missing required prop 'kind:'".to_string())
+    })?;
+
+    match kind {
+        "circle" => {
+            let cx = required_path_number(node, "cx")?;
+            let cy = required_path_number(node, "cy")?;
+            let r = required_path_number(node, "r")?;
+            let d = 2.0 * r;
+            let (left, top) = (cx - r, cy - r);
+            Ok(format!(
+                "{pad}<Ellipse Width=\"{d}\" Height=\"{d}\" Margin=\"{left},{top},0,0\" HorizontalAlignment=\"Left\" VerticalAlignment=\"Top\"{paint}/>\n"
+            ))
+        }
+        "line" => {
+            let x1 = required_path_number(node, "x1")?;
+            let y1 = required_path_number(node, "y1")?;
+            let x2 = required_path_number(node, "x2")?;
+            let y2 = required_path_number(node, "y2")?;
+            Ok(format!(
+                "{pad}<Line X1=\"{x1}\" Y1=\"{y1}\" X2=\"{x2}\" Y2=\"{y2}\" HorizontalAlignment=\"Left\" VerticalAlignment=\"Top\"{paint}/>\n"
+            ))
+        }
+        "curve" => {
+            let x1 = required_path_number(node, "x1")?;
+            let y1 = required_path_number(node, "y1")?;
+            let cx = required_path_number(node, "cx")?;
+            let cy = required_path_number(node, "cy")?;
+            let x2 = required_path_number(node, "x2")?;
+            let y2 = required_path_number(node, "y2")?;
+            let inner_pad = " ".repeat(indent + 4);
+            Ok(format!(
+                "{pad}<Path HorizontalAlignment=\"Left\" VerticalAlignment=\"Top\"{paint}>\n\
+                 {inner_pad}<Path.Data>\n\
+                 {inner_pad}    <PathGeometry>\n\
+                 {inner_pad}        <PathFigure StartPoint=\"{x1},{y1}\">\n\
+                 {inner_pad}            <QuadraticBezierSegment Point1=\"{cx},{cy}\" Point2=\"{x2},{y2}\"/>\n\
+                 {inner_pad}        </PathFigure>\n\
+                 {inner_pad}    </PathGeometry>\n\
+                 {inner_pad}</Path.Data>\n\
+                 {pad}</Path>\n"
+            ))
+        }
+        "arc" => Err(PipelineEmitError::UnsupportedPrimitive(
+            "Path kind 'arc' is not yet supported by the WinUI 3 / XAML emitter (deferred per spec PR sequence)".to_string(),
+        )),
+        other => Err(PipelineEmitError::UnsupportedPrimitive(format!(
+            "Path kind '{other}' is not a recognized shape kind (expected circle, line, curve, or arc)"
+        ))),
     }
 }
 
@@ -11853,6 +12002,198 @@ mod tests {
             r.xaml.contains("Glyph=\"{x:Bind GlyphName, Mode=OneWay}\""),
             "expected x:Bind passthrough, got:\n{}",
             r.xaml
+        );
+    }
+
+    // â”€â”€ UI39: Path kernel drawing primitive â”€â”€
+
+    fn path_node(part: &str, kind: &str, coords: &[(&str, f64)]) -> LayoutNode {
+        let mut props = vec![LayoutProp {
+            name: "kind".to_string(),
+            value: LayoutPropValue::Keyword(kind.to_string()),
+        }];
+        for (name, value) in coords {
+            props.push(LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Number(*value),
+            });
+        }
+        LayoutNode {
+            tag: "Path".to_string(),
+            part_name: Some(part.to_string()),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn path_circle_emits_ellipse_with_margin_offset() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node("moon-disc", "circle", &[("cx", 17.0), ("cy", 17.0), ("r", 17.0)]),
+        );
+        let s = style_for_box(
+            "moon-disc",
+            vec![("background", "#b3a99c"), ("border-color", "#1a1714"), ("border-width", "1")],
+        );
+        let r = compile(&c, &l, &s);
+        assert!(r.xaml.contains("<Ellipse"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Width=\"34\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Height=\"34\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Margin=\"0,0,0,0\""), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml.contains("HorizontalAlignment=\"Left\"") && r.xaml.contains("VerticalAlignment=\"Top\""),
+            "got:\n{}",
+            r.xaml
+        );
+        // Fill/Stroke/StrokeThickness, remapped from background/border-color/
+        // border-width -- NOT Background/BorderBrush/BorderThickness, which
+        // Ellipse has no dependency property for.
+        assert!(r.xaml.contains("Fill=\"#b3a99c\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Stroke=\"#1a1714\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("StrokeThickness=\"1\""), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("Background="), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("BorderBrush="), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn path_circle_offset_center_computes_margin_from_radius() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node("moon-bite", "circle", &[("cx", 22.0), ("cy", 12.0), ("r", 17.0)]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        // left = cx - r = 5, top = cy - r = -5
+        assert!(r.xaml.contains("Margin=\"5,-5,0,0\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn path_line_emits_line_element() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node("bar-icon-1", "line", &[("x1", 0.0), ("y1", 4.0), ("x2", 12.0), ("y2", 4.0)]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<Line"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("X1=\"0\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Y1=\"4\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("X2=\"12\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Y2=\"4\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn path_curve_emits_quadratic_bezier_geometry() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node(
+                "dependency-arrow",
+                "curve",
+                &[("x1", 0.0), ("y1", 0.0), ("cx", 10.0), ("cy", -8.0), ("x2", 20.0), ("y2", 0.0)],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("<Path.Data>"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("<PathGeometry>"), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml.contains("<PathFigure StartPoint=\"0,0\">"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<QuadraticBezierSegment Point1=\"10,-8\" Point2=\"20,0\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn path_missing_kind_is_a_clear_error() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Path".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("kind")),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn path_missing_coordinate_is_a_clear_error_not_a_default() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node("moon-disc", "circle", &[("cx", 17.0), ("cy", 17.0)]), // no r
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains('r')),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn path_slot_bound_coordinate_is_a_clear_error_not_a_silent_drop() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Path".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "kind".to_string(),
+                        value: LayoutPropValue::Keyword("circle".to_string()),
+                    },
+                    LayoutProp {
+                        name: "cx".to_string(),
+                        value: LayoutPropValue::SlotRef("moon-x".to_string()),
+                    },
+                    LayoutProp {
+                        name: "cy".to_string(),
+                        value: LayoutPropValue::Number(17.0),
+                    },
+                    LayoutProp {
+                        name: "r".to_string(),
+                        value: LayoutPropValue::Number(17.0),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("cx") && t.contains("literal")),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn path_arc_kind_is_a_named_stretch_goal_not_a_generic_error() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            path_node(
+                "ring-segment",
+                "arc",
+                &[("cx", 10.0), ("cy", 10.0), ("r", 8.0), ("start-angle", 0.0), ("end-angle", 90.0)],
+            ),
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("arc") && t.contains("not yet supported")),
+            "{err:?}"
         );
     }
 
