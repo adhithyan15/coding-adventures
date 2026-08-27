@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased] - narrow the `Path` degradation to exclude XAML (#12028 item 3, UI39)
+
+XAML now lowers `Path`'s `circle`/`line`/`curve` kinds to real vector
+geometry (`mosaic-emit-xaml`). Narrowed the `("Path", ...)` arm in
+`collect_native_degradations` with `backend != Backend::Xaml`, matching
+`HostSlider`'s per-backend narrowing pattern exactly. This is a
+primitive-level flag, not per-kind — a real build using the
+not-yet-implemented `arc` kind on XAML still hard-errors from the
+emitter itself with a named message, it just isn't reflected as a
+separate degradation code (matching how `HostSlider`'s own arm doesn't
+distinguish authored prop combinations either).
+
 ## [Unreleased] - degradation plumbing for the `Path` kernel drawing primitive (#12028 item 3)
 
 Added the `("Path", ...)` arm to `collect_native_degradations`, following

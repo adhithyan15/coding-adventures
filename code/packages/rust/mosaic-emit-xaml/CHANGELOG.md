@@ -1,5 +1,65 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — lower `Path` to real WinUI vector geometry (#12028 item 3, UI39)
+
+XAML is the first backend to render the new kernel drawing primitive
+(`Path`, registered in the prior PR). `circle`/`line`/`curve` are
+implemented; `arc` is a stretch goal not included here — a real build
+using `kind: arc` still hard-errors with a named "not yet supported"
+message, same posture any other unimplemented shape kind gets.
+
+New `emit_path`, dispatched from the primitive-tag match alongside every
+other leaf primitive:
+- `circle` → `<Ellipse Width="{2r}" Height="{2r}" Margin="{cx-r},{cy-r},0,0" HorizontalAlignment="Left" VerticalAlignment="Top" .../>`.
+- `line` → `<Line X1="{x1}" Y1="{y1}" X2="{x2}" Y2="{y2}" .../>`.
+- `curve` → `<Path><Path.Data><PathGeometry><PathFigure StartPoint="{x1},{y1}"><QuadraticBezierSegment Point1="{cx},{cy}" Point2="{x2},{y2}"/></PathFigure></PathGeometry></Path.Data></Path>`.
+
+Positioning uses `Margin`/`HorizontalAlignment="Left"`/
+`VerticalAlignment="Top"`, not `Canvas.Left`/`Canvas.Top` — `Stack`
+lowers to `<Grid>` (`emit_stack`), not `<Canvas>`, and `Canvas.*`
+attached properties are inert outside an actual `Canvas` parent. This
+is the same mechanism `absolute_position_style_attrs` (#12028 item 4)
+already established for `position: absolute`, and was verified
+empirically via a real `dotnet build` probe project — confirmed
+overlapping `Ellipse`s inside a plain `<Grid>` render as the intended
+crescent-moon shape — before writing `emit_path`, catching that the
+plan's original `Canvas.Left`/`Canvas.Top` assumption was wrong before
+any code was written on it.
+
+New `path_paint_attr`: `Fill`/`Stroke`/`StrokeThickness`, remapped from
+the same `background`/`border-color`/`border-width` every other
+primitive already authors (UI39 §3.2's zero-new-style-properties design).
+Deliberately does NOT reuse `part_style_attr` — that splices
+`Background`/`BorderBrush`/`BorderThickness` verbatim (real dependency
+properties on `Border`/`Panel`/`Control`, but `Ellipse`/`Line`/`Path`
+are `Shape`-derived and have none of the three; XamlCompiler would
+reject the attribute). Mirrors `content_control_style_attr`'s
+selective-remap pattern instead.
+
+Coordinate props (`cx`/`cy`/`r`/`x1`/`y1`/etc.) accept only a literal
+`Number` for now — `SlotRef`/`Expr` produce a clear compile error
+naming the unsupported prop, not a silent 0 or a dropped binding.
+Kernel-level bindability (UI39 §3.1) is real, but wiring it to actual
+`x:Bind` XAML is XAML's own not-yet-landed UI36 (data-driven sizing)
+work, tracked separately — implementing a one-off binding path just for
+`Path` ahead of that would duplicate work UI36 already owns.
+
+`mosaic-package-artifact-builder`'s `("Path", ...)` degradation arm
+narrowed to exclude `Backend::Xaml` (`HostSlider`'s per-backend
+narrowing pattern). SwiftUI/Qt/Flutter/Compose remain fully degraded.
+
+Verified against the real toolchain: the exact XAML syntax above was
+confirmed via a throwaway `dotnet build` probe project *before* writing
+`emit_path` (catching the `Canvas.Left` mistake, see above); a real
+`mosaic-compile pkg --backend xaml` build of a package authoring the
+actual crescent-moon shape (two overlapping `Path` circles) produces
+`nativeComplete: true, degradations: []`; a real `--emit-project` +
+`dotnet build` + launch of that same package succeeds cleanly (0
+errors, 0 warnings) and the window stays running. (Along the way, found
+and filed #13184 — the `--emit-project` scaffold breaks for a component
+with zero declared `emit`s, unrelated to `Path`, sidestepped in this
+verification by adding one unused `emit`.)
+
 ## [Unreleased] — lower `box-shadow` to a `ThemeShadow` elevation token (#12028 item 1)
 
 30 `box-shadow` declarations across `task-app`'s stylesheet — its

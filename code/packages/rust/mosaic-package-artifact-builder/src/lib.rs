@@ -1201,11 +1201,15 @@ fn collect_native_degradations(
             "primitive.switch-unimplemented",
             "the backend does not yet lower HostSwitch to its native on/off control",
         )),
-        // UI39 — the kernel drawing primitive. Unconditionally degraded on
-        // every native backend until each lands a real lowering (XAML
-        // first); narrow the exclusion list the same way HostSlider's arm
-        // above does as each backend's PR merges.
-        "Path" if backend.is_native() => Some((
+        // UI39 — the kernel drawing primitive. XAML lowers `circle`/`line`/
+        // `curve` (not yet `arc` — a real build attempting `kind: arc` on
+        // XAML still hard-errors with a named "not yet supported" message
+        // from the emitter itself, same as any other unimplemented shape
+        // kind would; this coarse per-primitive flag doesn't distinguish
+        // kinds, matching how HostSlider's arm below doesn't distinguish
+        // authored prop combinations either). Narrow further as each
+        // remaining backend's PR merges.
+        "Path" if backend.is_native() && backend != Backend::Xaml => Some((
             "primitive.path-unimplemented",
             "the backend does not yet lower Path to real vector geometry",
         )),
@@ -4974,12 +4978,14 @@ layout MoonIcon {
         )
         .unwrap();
 
+        // XAML lands its Path lowering (circle/line/curve) immediately
+        // after this test's own PR — see path_xaml_now_has_a_native_lowering
+        // below. The remaining four still have no lowering at all.
         for backend in [
             Backend::Compose,
             Backend::Flutter,
             Backend::Qt,
             Backend::SwiftUI,
-            Backend::Xaml,
         ] {
             let out = TempDir::new().unwrap();
             let report = analyze_package_degradations(
@@ -5004,6 +5010,43 @@ layout MoonIcon {
             assert_eq!(report.degradations[0].layout_path, "root");
             assert_eq!(report.degradations[0].primitive.as_deref(), Some("Path"));
         }
+    }
+
+    #[test]
+    fn path_xaml_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-icons-xaml", &["MoonIcon"]);
+        fs::write(
+            pkg.path().join("src/MoonIcon.mll"),
+            r#"
+layout MoonIcon {
+  Path [ root ] (
+    kind: circle,
+    cx: 17,
+    cy: 17,
+    r: 17
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Xaml,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("XAML Path capability analysis");
+        assert!(
+            report.native_complete,
+            "XAML now has a native Path (circle/line/curve) lowering: {:?}",
+            report.degradations
+        );
     }
 
     #[test]

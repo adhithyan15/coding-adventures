@@ -1,7 +1,7 @@
 # UI39 — `Path`, a kernel drawing primitive
 
-**Status:** kernel contract only — no backend renders it yet. XAML is the
-first backend targeted (this session, immediately following this spec).
+**Status:** XAML implemented (`circle`/`line`/`curve`); SwiftUI/Qt/Flutter/
+Compose/react/html/webcomponent not yet — see §6.
 **Kernel surface:** one new primitive, `Path`, added to the 33-entry kernel
 list `moslayout-compiler::PRIMITIVES` (UI29 §2.1) and its mirror,
 `mosaic-package-resolver::KERNEL_PRIMITIVES`.
@@ -153,8 +153,8 @@ plumbing + a round-trip fixture — no rendering), then one PR per backend.
 
 | Backend | Status |
 |---|---|
-| XAML | **this session, immediately following the kernel-contract PR** — `circle`/`line`/`curve` targeted; `arc` is a stretch goal, tracked separately if it slips |
-| SwiftUI, Qt, Flutter, Compose | not yet — tracked as follow-up issues once XAML lands |
+| XAML | **implemented** — `circle`/`line`/`curve` lower to real `<Ellipse>`/`<Line>`/`<Path><PathGeometry>...` geometry (`mosaic-emit-xaml::emit_path`). `arc` did not make it into this PR — it hard-errors with a named "not yet supported" message rather than silently rendering nothing; tracked as a follow-up. Coordinate props accept a literal `Number` only; `SlotRef`/`Expr` are a clear compile error, not silently dropped — full binding needs XAML's own not-yet-landed UI36 work. Verified against the real toolchain: a `dotnet build` probe confirmed the exact syntax before implementation, and a real `mosaic-compile pkg --backend xaml --emit-project` build + launch of the crescent-moon shape (two overlapping `Path` circles) succeeds cleanly. |
+| SwiftUI, Qt, Flutter, Compose | not yet — tracked as follow-up issues |
 | react, html, webcomponent | not yet — no backend, native or web, renders `Path` until its own PR lands. (`HostSlider`'s rollout never reached the three web backends either; not repeating that gap silently — each remains an open, explicitly tracked issue rather than an assumed no-op.) |
 
 Until a backend implements `Path`, an author using it renders nothing (a
