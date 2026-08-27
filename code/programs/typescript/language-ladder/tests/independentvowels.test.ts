@@ -383,6 +383,22 @@ describe("shared Perso-Arabic letters retain script-owned provenance", () => {
     );
   });
 
+  it("keeps Japanese な as a source-backed four-run hiragana path", () => {
+    const japanese = SCRIPTS.find((script) => script.script === "japanese")!
+      .letters.find((entry) => entry.glyph === "な")!;
+    expect(japanese.sound).toBe("na");
+    expect(japanese.role).toBe("hiragana");
+    expect(japanese.penLifts).toBe(3);
+    expect(japanese.strokeOrder).toHaveLength(4);
+    expect(japanese.strokeOrder[0]).toMatch(/upper-left horizontal.*left to right/i);
+    expect(japanese.strokeOrder[1]).toMatch(/crossing left-falling stem/i);
+    expect(japanese.strokeOrder[2]).toMatch(/upper-right diagonal.*down and right/i);
+    expect(japanese.strokeOrder[3]).toMatch(/lower-right stem.*loop.*right/i);
+    expect(japanese.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%AA_stroke_order_animation.gif",
+    );
+  });
+
   it("keeps Persian and Urdu پ separate while both preserve the four-stroke triangle order", () => {
     const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
       .letters.find((entry) => entry.glyph === "پ")!;

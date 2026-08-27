@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Japanese te", () => {
+  it("keeps the cross-script closure queue measured after Japanese na", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -1139,6 +1139,24 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("japanese.json")?.has("て")).toBe(false);
     expect(affected.get("て") ?? 0).toBe(0);
+    const japaneseNa = scripts.japanese!.letters.find((entry) => entry.glyph === "な")!;
+    expect(japaneseNa.sound).toBe("na");
+    expect(japaneseNa.role).toBe("hiragana");
+    expect(japaneseNa.penLifts).toBe(3);
+    expect(japaneseNa.strokeOrder).toEqual([
+      "draw the upper-left horizontal from left to right",
+      "lift and descend through the crossing left-falling stem",
+      "lift and draw the short upper-right diagonal down and right",
+      "lift, descend through the lower-right stem, turn around the loop, and sweep right to the finish",
+    ]);
+    expect(japaneseNa.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*な.*32 frames.*3\.2 seconds.*Wikimedia Commons.*1 October 2009/i,
+    );
+    expect(japaneseNa.strokeOrderSource?.variation).toMatch(
+      /four pen-down runs.*three lifts.*upper-left horizontal.*left-falling stem.*upper-right diagonal.*lower-right stem.*loop.*right.*Noto Sans JP.*four-run order/i,
+    );
+    expect(missingByScript.get("japanese.json")?.has("な")).toBe(false);
+    expect(affected.get("な") ?? 0).toBe(0);
     const japaneseMo = scripts.japanese!.letters.find((entry) => entry.glyph === "も")!;
     expect(japaneseMo.sound).toBe("mo");
     expect(japaneseMo.role).toBe("hiragana");
@@ -1255,7 +1273,7 @@ describe("real curriculum", () => {
     expect(affected.get("ب") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["な", 3]);
+    ).toEqual(["ಏ", 3]);
   });
 
   it("loaded every track (17+ and growing)", () => {
