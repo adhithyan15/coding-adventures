@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Load the shared bookmark catalog from the native Venture profile, persist
+  toggle commands atomically, and exercise add/remove through the generated
+  SwiftUI toolbar in direct app acceptance.
 - Delegate generated-host browser state and interaction behavior to the shared
   `venture-browser-core::BrowserHostController`, retaining only native page
   composition and Metal presentation in this adapter.

@@ -2,8 +2,8 @@
 
 This package is the shared Mosaic source of truth for Venture's native browser
 chrome. It authors the title, Back, Forward, Home, Reload, address input, Go
-action, status line, disabled states, and dispatch contract once in MIL, MLL,
-and MSL.
+action, bookmark toggle, status line, disabled states, and dispatch contract
+once in MIL, MLL, and MSL.
 
 The package intentionally does not draw a web page. `venture-browser-core`
 owns navigation and the URL-to-paint pipeline. The `content-surface` node slot
@@ -15,9 +15,11 @@ recreating the surrounding chrome in backend-specific UI code.
 
 ## Contract
 
-- Slots carry the current address, page title, status text, and host-derived
-  disabled flags; the host supplies the native page renderer as a node slot.
-- Emits carry Back, Forward, Home, Reload, address edits, and Navigate.
+- Slots carry the current address, page title, status text, bookmark label, and
+  host-derived disabled flags; the host supplies the native page renderer as a
+  node slot.
+- Emits carry Back, Forward, Home, Reload, address edits, Navigate, and the
+  storage-neutral bookmark toggle command.
 - `venture-browser-core::BrowserChromeController` is the shared reducer and
   slot projection for that exact contract.
 - `venture-browser-core::BrowserHostController` owns the native-host state
@@ -108,9 +110,10 @@ JavaScript syntax checks plus one shared package-owned jsdom interaction gate;
 SwiftUI, Qt, XAML, Flutter, and Compose invoke their native toolchains. React
 and Electron also run the same package-owned DOM
 interaction gate against their shared generated renderer, covering disabled
-controls, address editing, Return, Go, and host-driven prop refresh. The
+controls, address editing, Return, Go, bookmark toggling, and host-driven prop
+refresh. The
 HTML/Web Component gate drives each target's real host runtime, including
-disabled dispatch suppression, node-slot mounting, Return, Go, and
+disabled dispatch suppression, node-slot mounting, Return, Go, bookmarks, and
 `mosaic-host-ready` refresh. The Flutter gate builds the shared Rust/Cairo
 bridge and pumps the emitted `MosaicApp` against deterministic HTTP pages. It
 requires live page pixels and drives the generated address field, Back/Forward
@@ -180,7 +183,10 @@ cargo test -p venture-browser-windows
 
 These gates launch the generated window, render the host surface, edit and
 navigate the native address control, and invoke the Mosaic-authored Back,
-Forward, Reload, and Home controls. They then focus the emitted native content
+Forward, Reload, Home, and bookmark controls. Bookmark acceptance requires the
+native control to persist an add, reproject "Remove Bookmark", persist the
+removal, and reproject "Bookmark" before navigation continues. They then focus
+the emitted native content
 surface. After the Go-button path returns Home, the gates edit the address
 again and send native Return/Enter input, requiring Mosaic's shared
 `HostInput onCommit` lowering to dispatch `onNavigate` before they return Home

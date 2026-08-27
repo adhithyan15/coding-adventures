@@ -530,6 +530,8 @@ QVariantMap MosaicHost::normalizeProps(const QVariantMap &props)
     {QStringLiteral("status-text"), QStringLiteral("statusText")},
     {QStringLiteral("back-disabled"), QStringLiteral("backDisabled")},
     {QStringLiteral("forward-disabled"), QStringLiteral("forwardDisabled")},
+    {QStringLiteral("bookmark-label"), QStringLiteral("bookmarkLabel")},
+    {QStringLiteral("bookmark-disabled"), QStringLiteral("bookmarkDisabled")},
     {QStringLiteral("navigation-disabled"), QStringLiteral("navigationDisabled")},
     {QStringLiteral("content-surface"), QStringLiteral("contentSurface")},
   };

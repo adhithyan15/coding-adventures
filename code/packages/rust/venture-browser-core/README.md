@@ -28,6 +28,13 @@ Forward, Home, Reload, and redirect replacement. The same package owns
 default ports, percent escapes, dot segments, and fragments independently of
 the page pipeline.
 
+Bookmarks are re-exported from the storage-neutral `browser-bookmarks`
+package. `BrowserSession` owns the active catalog and applies add/remove
+commands with save-before-commit transaction semantics, while native hosts
+inject either the durable `browser-bookmarks-file` adapter or an isolated
+in-memory repository for tests. Bookmark URL identity deliberately retains
+fragments so separate document anchors can be saved independently.
+
 `ScrollState` clamps vertical offsets against content and viewport geometry,
 performs scroll-aware link hit-testing, and feeds `scrolled_viewport_scene`.
 That function preserves the document scene beneath a group translated by the
@@ -49,15 +56,15 @@ reload, Back, and Forward all project the retained state into blue/purple link
 styling without coupling browser history to HTML layout.
 
 `BrowserChromeController` is the matching host-neutral reducer for the shared
-Mosaic `VentureChrome` package. It preserves address edits as a draft, maps the
-six MIL events to `BrowserNavigation`, synchronizes redirects only after a
-successful load, and projects one coherent `BrowserChromeProps` snapshot for
-the six MIL slots. Generated Mosaic shells now expose the native node seam on
-all registered backends. The first concrete adapter connects this reducer and
-the live Metal page renderer to the generated SwiftUI shell, and the matching
-WinUI adapter mounts Direct2D pixels. Platform-native integration gates now
-build and directly launch both generated projects through those adapters; UI
-interaction acceptance and the remaining native hosts are still incomplete.
+Mosaic `VentureChrome` package. It preserves address edits as a draft, maps
+navigation and bookmark events to host-neutral commands, synchronizes redirects
+only after a successful load, and projects one coherent `BrowserChromeProps`
+snapshot for the eight MIL slots. Generated Mosaic shells expose the native
+node seam on all registered backends. The SwiftUI adapter connects this reducer
+to the live Metal renderer, WinUI mounts Direct2D pixels, and Qt, Flutter, and
+Compose share the Cairo bridge. Platform-native integration gates exercise the
+generated shells through those adapters rather than reimplementing browser
+state in each toolkit.
 
 ## Development
 

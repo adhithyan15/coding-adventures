@@ -1,0 +1,8 @@
+[package]
+name = "browser-bookmarks"
+version = "0.1.0"
+edition = "2021"
+description = "Storage-neutral bookmark model and transactional repository contract for browsers."
+
+[dependencies]
+url-parser = { path = "../url-parser" }

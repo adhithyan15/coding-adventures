@@ -12,6 +12,12 @@
 
 ### Added
 
+- Add the shared Mosaic bookmark control and event contract across all nine
+  generated backends, including disabled-state suppression and host-driven
+  label refresh in DOM acceptance.
+- Integrate native Venture hosts with the reusable bookmark repository and
+  crash-safe versioned file adapter; direct SwiftUI acceptance exercises the
+  real toolbar toggle and Cairo acceptance proves persistence across restart.
 - Extract the Qt/Flutter/Compose browser controller and Cairo C ABI into the
   backend-neutral `venture-browser-cairo` package. The generated hosts retain
   their stable library and symbol names as thin compatibility surfaces.

@@ -496,15 +496,105 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         to: markerPath)
       return
     }
-    guard performNativeButtonClick(identifier: "reload-button") else {
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let bookmarkLabel = props?["bookmark-label"] as? String ?? ""
+    let bookmarkDisabled = props?["bookmark-disabled"] as? Bool
+    guard bookmarkLabel == "Bookmark", bookmarkDisabled == false else {
       writeInteractionResult(
-        ["backend": "swiftui", "status": "error", "error": "reload-button not found"],
+        [
+          "backend": "swiftui", "status": "error", "bookmarkLabel": bookmarkLabel,
+          "error": "initial native bookmark control state did not match",
+        ],
         to: markerPath)
       return
     }
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
-      self?.verifyReload(
-        startURL: startURL, targetURL: targetURL, markerPath: markerPath, remaining: 50)
+    let bookmarkEventCount = chromeEventCounts["onToggleBookmark", default: 0]
+    guard performNativeButtonClick(identifier: "bookmark-button") else {
+      writeInteractionResult(
+        ["backend": "swiftui", "status": "error", "error": "bookmark-button not found"],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+      self?.verifyBookmarkAdded(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: bookmarkEventCount, remaining: 50)
+    }
+  }
+
+  private func verifyBookmarkAdded(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let bookmarkLabel = props?["bookmark-label"] as? String ?? ""
+    let bookmarkEvents = chromeEventCounts["onToggleBookmark", default: 0]
+    if bookmarkLabel == "Remove Bookmark", bookmarkEvents == eventCount + 1 {
+      guard performNativeButtonClick(identifier: "bookmark-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "bookmark-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyBookmarkRemoved(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: eventCount, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "bookmarkLabel": bookmarkLabel,
+          "bookmarkEvents": String(bookmarkEvents),
+          "error": "native bookmark add state did not update",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyBookmarkAdded(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyBookmarkRemoved(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let bookmarkLabel = props?["bookmark-label"] as? String ?? ""
+    let bookmarkEvents = chromeEventCounts["onToggleBookmark", default: 0]
+    if bookmarkLabel == "Bookmark", bookmarkEvents == eventCount + 2 {
+      guard performNativeButtonClick(identifier: "reload-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "reload-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+        self?.verifyReload(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "bookmarkLabel": bookmarkLabel,
+          "bookmarkEvents": String(bookmarkEvents),
+          "error": "native bookmark removal state did not update",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyBookmarkRemoved(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
     }
   }
 
@@ -959,7 +1049,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       writeInteractionResult(
         [
           "backend": "swiftui", "status": "interacted",
-          "controls": "back-forward-reload-home", "addressCommit": "native-return",
+          "controls": "back-forward-reload-home-bookmark", "addressCommit": "native-return",
+          "bookmarkPersistence": "native-toggle",
           "navigationState": "native-disabled-transitions",
           "failedNavigation": "transaction-retained", "failureStatus": statusText,
           "failureAddress": failureURL,
@@ -1010,10 +1101,11 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private func nativeToolbarPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let position: CGFloat
     switch identifier {
-    case "back-button": position = 0.12
-    case "forward-button": position = 0.34
-    case "home-button": position = 0.56
-    case "reload-button": position = 0.78
+    case "back-button": position = 0.10
+    case "forward-button": position = 0.30
+    case "home-button": position = 0.50
+    case "reload-button": position = 0.70
+    case "bookmark-button": position = 0.90
     default: return nil
     }
     var visited = Set<ObjectIdentifier>()

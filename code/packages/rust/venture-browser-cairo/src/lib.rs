@@ -6,14 +6,16 @@
 //! shared page pipeline and exposes one Cairo-rendered RGBA session through
 //! thin Qt, Flutter, and Compose compatibility ABIs.
 
+use browser_bookmarks_file::{default_bookmark_path, FileBookmarkRepository};
 use html_to_layout::mosaic_html_theme;
 use html_to_paint::HtmlPaintViewport;
 use layout_text_measure_native::NativeMeasurer;
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
-    BrowserChromeEvent, BrowserChromeProps, BrowserFetchResponse, BrowserHostController,
-    BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
-    BrowserScrollCommand, BrowserScrollMetrics, BrowserSession, HttpBrowserFetcher,
+    BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
+    BrowserFetchResponse, BrowserHostController, BrowserLoadError, BrowserNavigation,
+    BrowserPagePipeline, BrowserResourceFetcher, BrowserScrollCommand, BrowserScrollMetrics,
+    BrowserSession, HttpBrowserFetcher, MemoryBookmarkRepository,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -58,18 +60,21 @@ impl BrowserResourceFetcher for OwnedFetcher {
 /// One browser session shared by generated Mosaic chrome and native surfaces.
 pub struct CairoBrowserHost {
     controller: BrowserHostController,
+    bookmarks: Box<dyn BookmarkRepository>,
     fetcher: OwnedFetcher,
     width: f64,
     height: f64,
 }
 
 impl CairoBrowserHost {
-    pub fn new(start_url: &str, width: f64, height: f64) -> Result<Self, BrowserLoadError> {
-        Self::new_with_fetcher(
+    pub fn new(start_url: &str, width: f64, height: f64) -> Result<Self, BrowserCommandError> {
+        let path = default_bookmark_path()?;
+        Self::new_with_fetcher_and_bookmarks(
             start_url,
             width,
             height,
             Box::new(HttpBrowserFetcher::default()),
+            Box::new(FileBookmarkRepository::new(path)),
         )
     }
 
@@ -92,6 +97,36 @@ impl CairoBrowserHost {
         )?;
         Ok(Self {
             controller: BrowserHostController::new(session),
+            bookmarks: Box::new(MemoryBookmarkRepository::default()),
+            fetcher,
+            width,
+            height,
+        })
+    }
+
+    pub fn new_with_fetcher_and_bookmarks(
+        start_url: &str,
+        width: f64,
+        height: f64,
+        fetcher: Box<dyn BrowserResourceFetcher>,
+        mut bookmarks: Box<dyn BookmarkRepository>,
+    ) -> Result<Self, BrowserCommandError> {
+        let width = finite_positive_or(width, DEFAULT_VIEWPORT_WIDTH);
+        let height = finite_positive_or(height, DEFAULT_VIEWPORT_HEIGHT);
+        let fetcher = OwnedFetcher(fetcher);
+        let catalog = bookmarks.load()?;
+        let mut session = BrowserSession::new(start_url, height);
+        execute_navigation(
+            &mut session,
+            BrowserNavigation::Navigate(start_url.to_string()),
+            width,
+            height,
+            &fetcher,
+        )?;
+        session.replace_bookmarks(catalog);
+        Ok(Self {
+            controller: BrowserHostController::new(session),
+            bookmarks,
             fetcher,
             width,
             height,
@@ -102,13 +137,14 @@ impl CairoBrowserHost {
         self.controller.props()
     }
 
-    pub fn handle_event(&mut self, event: BrowserChromeEvent) -> Result<bool, BrowserLoadError> {
+    pub fn handle_event(&mut self, event: BrowserChromeEvent) -> Result<bool, BrowserCommandError> {
         let width = self.width;
         let height = self.height;
         let fetcher = &self.fetcher;
-        self.controller.handle_event(event, |session, navigation| {
-            execute_navigation(session, navigation, width, height, fetcher)
-        })
+        self.controller
+            .handle_event(event, self.bookmarks.as_mut(), |session, navigation| {
+                execute_navigation(session, navigation, width, height, fetcher)
+            })
     }
 
     pub fn scroll_by(&mut self, delta_y: f64) -> bool {
@@ -228,12 +264,14 @@ mod ffi {
             .map(|message| format!(",\"error\":{}", json_string(message)))
             .unwrap_or_default();
         let value = format!(
-            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"navigation-disabled\":false}}{error}}}",
+            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"navigation-disabled\":false}}{error}}}",
             json_string(&props.address),
             json_string(&props.page_title),
             json_string(&props.status_text),
             props.back_disabled,
             props.forward_disabled,
+            json_string(&props.bookmark_label),
+            props.bookmark_disabled,
         );
         CString::new(value)
             .expect("JSON response contains no NUL")
@@ -290,6 +328,7 @@ mod ffi {
             "onForward" => Some(BrowserChromeEvent::Forward),
             "onHome" => Some(BrowserChromeEvent::Home),
             "onReload" => Some(BrowserChromeEvent::Reload),
+            "onToggleBookmark" => Some(BrowserChromeEvent::ToggleBookmark),
             "onNavigate" => Some(BrowserChromeEvent::Navigate),
             "onAddressChange" => string_arg(value).map(BrowserChromeEvent::AddressChange),
             _ => None,
@@ -663,6 +702,8 @@ fn finite_positive_or(value: f64, fallback: f64) -> f64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs;
+    use std::time::{SystemTime, UNIX_EPOCH};
 
     fn page(url: &str, title: &str, body: &str) -> BrowserFetchResponse {
         BrowserFetchResponse::new(
@@ -712,5 +753,59 @@ mod tests {
         assert!(host.resize(240.0, 120.0));
         let (width, height, _) = host.render_rgba().expect("resized page renders");
         assert_eq!((width, height), (240, 120));
+    }
+
+    #[test]
+    fn bookmark_event_survives_a_native_host_restart() {
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let root = std::env::temp_dir().join(format!(
+            "venture-cairo-bookmarks-{}-{nonce}",
+            std::process::id()
+        ));
+        fs::create_dir(&root).unwrap();
+        let path = root.join("profile").join("bookmarks.json");
+        let start_url = "http://example.test/#chapter";
+        let make_fetcher = || {
+            Box::new(move |url: &str| Ok(page(url, "Persistent chapter", "bookmark me")))
+                as Box<dyn BrowserResourceFetcher>
+        };
+
+        {
+            let mut host = CairoBrowserHost::new_with_fetcher_and_bookmarks(
+                start_url,
+                320.0,
+                180.0,
+                make_fetcher(),
+                Box::new(FileBookmarkRepository::new(&path)),
+            )
+            .expect("first native host should load");
+            assert_eq!(host.props().bookmark_label, "Bookmark");
+            assert!(host
+                .handle_event(BrowserChromeEvent::ToggleBookmark)
+                .expect("bookmark should persist"));
+            assert_eq!(host.props().bookmark_label, "Remove Bookmark");
+        }
+
+        let restored = CairoBrowserHost::new_with_fetcher_and_bookmarks(
+            start_url,
+            320.0,
+            180.0,
+            make_fetcher(),
+            Box::new(FileBookmarkRepository::new(&path)),
+        )
+        .expect("restarted native host should load");
+        assert_eq!(restored.props().bookmark_label, "Remove Bookmark");
+        assert!(restored
+            .controller
+            .session()
+            .bookmarks()
+            .contains(start_url));
+        assert!(fs::read_to_string(&path)
+            .unwrap()
+            .contains("Persistent chapter"));
+        fs::remove_dir_all(root).unwrap();
     }
 }

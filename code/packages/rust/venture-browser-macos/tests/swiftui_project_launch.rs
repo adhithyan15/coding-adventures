@@ -222,6 +222,7 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
         .current_dir(&project)
         .env("VENTURE_START_URL", &start_url)
         .env("VENTURE_BROWSER_LIBRARY", &library)
+        .env("VENTURE_BOOKMARKS_PATH", output.join("bookmarks.json"))
         .env("VENTURE_BROWSER_ACCEPTANCE_PATH", &marker)
         .env("VENTURE_BROWSER_INTERACTION_URL", &target_url)
         .env("VENTURE_BROWSER_INTERACTION_LINK_URL", &link_url)
@@ -256,7 +257,8 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
         interaction.contains("\"status\":\"interacted\""),
         "SwiftUI interaction failed: {interaction}"
     );
-    assert!(interaction.contains("\"controls\":\"back-forward-reload-home\""));
+    assert!(interaction.contains("\"controls\":\"back-forward-reload-home-bookmark\""));
+    assert!(interaction.contains("\"bookmarkPersistence\":\"native-toggle\""));
     assert!(interaction.contains("\"addressCommit\":\"native-return\""));
     assert!(interaction.contains("\"navigationState\":\"native-disabled-transitions\""));
     assert!(interaction.contains("\"failedNavigation\":\"transaction-retained\""));

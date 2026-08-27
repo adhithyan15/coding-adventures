@@ -8,6 +8,7 @@ description = "Runnable AppKit, CoreText, and Metal host for the Venture browser
 crate-type = ["rlib", "cdylib"]
 
 [dependencies]
+browser-bookmarks-file = { path = "../browser-bookmarks-file" }
 html-to-layout = { path = "../html-to-layout" }
 html-to-paint = { path = "../html-to-paint" }
 layout-text-measure-native = { path = "../layout-text-measure-native" }

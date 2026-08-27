@@ -4,6 +4,11 @@
 //! final paint backend. This crate composes the shared network, HTML, layout,
 //! paint, and image-resource seams into one synchronous page load.
 
+use browser_bookmarks::transact as transact_bookmarks;
+pub use browser_bookmarks::{
+    Bookmark, BookmarkCatalog, BookmarkChange, BookmarkRepository, BookmarkRepositoryError,
+    BookmarkUrl, MemoryBookmarkRepository,
+};
 pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
 use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTree};
 use html_to_layout::HtmlTheme;
@@ -18,15 +23,17 @@ use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintScene};
 use std::fmt;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
-pub const VERSION: &str = "0.7.0";
+pub const VERSION: &str = "0.8.0";
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 6] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 8] = [
     "address",
     "page-title",
     "status-text",
     "back-disabled",
     "forward-disabled",
+    "bookmark-label",
+    "bookmark-disabled",
     "navigation-disabled",
 ];
 
@@ -34,11 +41,12 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 6] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 6] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 7] = [
     "onBack",
     "onForward",
     "onHome",
     "onReload",
+    "onToggleBookmark",
     "onAddressChange",
     "onNavigate",
 ];
@@ -358,6 +366,13 @@ pub enum BrowserNavigation {
     Reload,
 }
 
+/// A host-neutral command emitted by Venture's shared browser chrome.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum BrowserChromeAction {
+    Navigate(BrowserNavigation),
+    ToggleCurrentBookmark,
+}
+
 /// An event emitted by the shared Mosaic `VentureChrome` component.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum BrowserChromeEvent {
@@ -365,6 +380,7 @@ pub enum BrowserChromeEvent {
     Forward,
     Home,
     Reload,
+    ToggleBookmark,
     AddressChange(String),
     Navigate,
 }
@@ -376,6 +392,7 @@ impl BrowserChromeEvent {
             Self::Forward => "onForward",
             Self::Home => "onHome",
             Self::Reload => "onReload",
+            Self::ToggleBookmark => "onToggleBookmark",
             Self::AddressChange(_) => "onAddressChange",
             Self::Navigate => "onNavigate",
         }
@@ -390,6 +407,8 @@ pub struct BrowserChromeProps {
     pub status_text: String,
     pub back_disabled: bool,
     pub forward_disabled: bool,
+    pub bookmark_label: String,
+    pub bookmark_disabled: bool,
     pub navigation_disabled: bool,
 }
 
@@ -431,7 +450,7 @@ impl BrowserChromeController {
         event: BrowserChromeEvent,
         session: &BrowserSession,
         navigation_disabled: bool,
-    ) -> Option<BrowserNavigation> {
+    ) -> Option<BrowserChromeAction> {
         if navigation_disabled {
             return None;
         }
@@ -443,21 +462,29 @@ impl BrowserChromeController {
             }
             BrowserChromeEvent::Navigate => {
                 let address = self.address_draft.trim();
-                (!address.is_empty()).then(|| BrowserNavigation::Navigate(address.to_string()))
+                (!address.is_empty()).then(|| {
+                    BrowserChromeAction::Navigate(BrowserNavigation::Navigate(address.to_string()))
+                })
             }
             BrowserChromeEvent::Back if session.history().can_go_back() => {
-                Some(BrowserNavigation::Back)
+                Some(BrowserChromeAction::Navigate(BrowserNavigation::Back))
             }
             BrowserChromeEvent::Forward if session.history().can_go_forward() => {
-                Some(BrowserNavigation::Forward)
+                Some(BrowserChromeAction::Navigate(BrowserNavigation::Forward))
             }
-            BrowserChromeEvent::Home => Some(BrowserNavigation::Home),
+            BrowserChromeEvent::Home => {
+                Some(BrowserChromeAction::Navigate(BrowserNavigation::Home))
+            }
             BrowserChromeEvent::Reload if session.history().current_url().is_some() => {
-                Some(BrowserNavigation::Reload)
+                Some(BrowserChromeAction::Navigate(BrowserNavigation::Reload))
+            }
+            BrowserChromeEvent::ToggleBookmark if session.history().current_url().is_some() => {
+                Some(BrowserChromeAction::ToggleCurrentBookmark)
             }
             BrowserChromeEvent::Back | BrowserChromeEvent::Forward | BrowserChromeEvent::Reload => {
                 None
             }
+            BrowserChromeEvent::ToggleBookmark => None,
         }
     }
 
@@ -482,6 +509,13 @@ impl BrowserChromeController {
             status_text: status_text.into(),
             back_disabled: navigation_disabled || !session.history().can_go_back(),
             forward_disabled: navigation_disabled || !session.history().can_go_forward(),
+            bookmark_label: if session.current_is_bookmarked() {
+                "Remove Bookmark"
+            } else {
+                "Bookmark"
+            }
+            .to_string(),
+            bookmark_disabled: navigation_disabled || session.history().current_url().is_none(),
             navigation_disabled,
         }
     }
@@ -537,16 +571,34 @@ impl BrowserHostController {
     pub fn handle_event<F>(
         &mut self,
         event: BrowserChromeEvent,
+        bookmarks: &mut dyn BookmarkRepository,
         execute: F,
-    ) -> Result<bool, BrowserLoadError>
+    ) -> Result<bool, BrowserCommandError>
     where
         F: FnOnce(&mut BrowserSession, BrowserNavigation) -> Result<bool, BrowserLoadError>,
     {
         self.hovered_link_url = None;
-        let Some(navigation) = self.chrome.handle_event(event, &self.session, false) else {
+        let Some(action) = self.chrome.handle_event(event, &self.session, false) else {
             return Ok(false);
         };
-        self.execute_navigation(navigation, execute)
+        match action {
+            BrowserChromeAction::Navigate(navigation) => self
+                .execute_navigation(navigation, execute)
+                .map_err(BrowserCommandError::Load),
+            BrowserChromeAction::ToggleCurrentBookmark => {
+                self.status_text = "Saving bookmark".to_string();
+                match self.session.toggle_current_bookmark(bookmarks) {
+                    Ok(change) => {
+                        self.status_text = "Ready".to_string();
+                        Ok(change.changed())
+                    }
+                    Err(error) => {
+                        self.status_text = format!("Bookmark failed: {error}");
+                        Err(BrowserCommandError::Bookmark(error))
+                    }
+                }
+            }
+        }
     }
 
     pub fn scroll_by(&mut self, delta_y: f64) -> bool {
@@ -657,6 +709,7 @@ impl BrowserHostController {
 pub struct BrowserSession {
     history: NavigationHistory,
     visited_links: VisitedLinks,
+    bookmarks: BookmarkCatalog,
     viewport: Option<BrowserViewport>,
     viewport_height: f64,
 }
@@ -666,6 +719,7 @@ impl BrowserSession {
         Self {
             history: NavigationHistory::new(home_url),
             visited_links: VisitedLinks::new(),
+            bookmarks: BookmarkCatalog::new(),
             viewport: None,
             viewport_height: finite_non_negative(viewport_height),
         }
@@ -677,6 +731,41 @@ impl BrowserSession {
 
     pub fn visited_links(&self) -> &VisitedLinks {
         &self.visited_links
+    }
+
+    pub fn bookmarks(&self) -> &BookmarkCatalog {
+        &self.bookmarks
+    }
+
+    pub fn replace_bookmarks(&mut self, bookmarks: BookmarkCatalog) {
+        self.bookmarks = bookmarks;
+    }
+
+    pub fn current_is_bookmarked(&self) -> bool {
+        self.history
+            .current_url()
+            .is_some_and(|url| self.bookmarks.contains(url))
+    }
+
+    /// Toggle the current final URL and commit memory only after persistence.
+    pub fn toggle_current_bookmark(
+        &mut self,
+        repository: &mut dyn BookmarkRepository,
+    ) -> Result<BookmarkChange, BookmarkRepositoryError> {
+        let Some(url) = self.history.current_url().map(str::to_owned) else {
+            return Ok(BookmarkChange::Unchanged);
+        };
+        let title = self
+            .viewport
+            .as_ref()
+            .and_then(|viewport| viewport.page().document.title.as_deref())
+            .map(str::trim)
+            .filter(|title| !title.is_empty())
+            .unwrap_or(&url)
+            .to_string();
+        transact_bookmarks(&mut self.bookmarks, repository, |candidate| {
+            candidate.toggle(&url, title)
+        })
     }
 
     pub fn viewport(&self) -> Option<&BrowserViewport> {
@@ -831,6 +920,36 @@ impl fmt::Display for BrowserLoadError {
 }
 
 impl std::error::Error for BrowserLoadError {}
+
+/// Failure while executing a browser command through a native host.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum BrowserCommandError {
+    Load(BrowserLoadError),
+    Bookmark(BookmarkRepositoryError),
+}
+
+impl fmt::Display for BrowserCommandError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Load(error) => error.fmt(formatter),
+            Self::Bookmark(error) => error.fmt(formatter),
+        }
+    }
+}
+
+impl std::error::Error for BrowserCommandError {}
+
+impl From<BrowserLoadError> for BrowserCommandError {
+    fn from(error: BrowserLoadError) -> Self {
+        Self::Load(error)
+    }
+}
+
+impl From<BookmarkRepositoryError> for BrowserCommandError {
+    fn from(error: BookmarkRepositoryError) -> Self {
+        Self::Bookmark(error)
+    }
+}
 
 /// Reusable layout and font services for loading pages into paint scenes.
 pub struct BrowserPagePipeline<'a, M, S, FM, R> {
@@ -1092,6 +1211,8 @@ mod tests {
                 status_text: "Ready".into(),
                 back_disabled: true,
                 forward_disabled: true,
+                bookmark_label: "Bookmark".into(),
+                bookmark_disabled: true,
                 navigation_disabled: false,
             }
         );
@@ -1118,10 +1239,16 @@ mod tests {
             ),
             None
         );
-        let navigation = chrome
+        let action = chrome
             .handle_event(BrowserChromeEvent::Navigate, &session, false)
             .expect("non-empty address should navigate");
-        assert_eq!(navigation, BrowserNavigation::Navigate(page_url.into()));
+        assert_eq!(
+            action,
+            BrowserChromeAction::Navigate(BrowserNavigation::Navigate(page_url.into()))
+        );
+        let BrowserChromeAction::Navigate(navigation) = action else {
+            unreachable!("Navigate should reduce to navigation")
+        };
         session
             .execute(navigation, &pipeline, &fetcher)
             .expect("chrome navigation should load")
@@ -1136,12 +1263,14 @@ mod tests {
                 status_text: "Status: 200".into(),
                 back_disabled: false,
                 forward_disabled: true,
+                bookmark_label: "Bookmark".into(),
+                bookmark_disabled: false,
                 navigation_disabled: false,
             }
         );
         assert_eq!(
             chrome.handle_event(BrowserChromeEvent::Back, &session, false),
-            Some(BrowserNavigation::Back)
+            Some(BrowserChromeAction::Navigate(BrowserNavigation::Back))
         );
 
         chrome.handle_event(
@@ -1158,6 +1287,7 @@ mod tests {
         let disabled = chrome.props(&session, "Loading", true);
         assert!(disabled.back_disabled);
         assert!(disabled.forward_disabled);
+        assert!(disabled.bookmark_disabled);
         assert!(disabled.navigation_disabled);
     }
 
@@ -1168,6 +1298,7 @@ mod tests {
             BrowserChromeEvent::Forward,
             BrowserChromeEvent::Home,
             BrowserChromeEvent::Reload,
+            BrowserChromeEvent::ToggleBookmark,
             BrowserChromeEvent::AddressChange(String::new()),
             BrowserChromeEvent::Navigate,
         ];
@@ -1216,6 +1347,7 @@ mod tests {
             .execute(BrowserNavigation::Home, &pipeline, &fetcher)
             .expect("home should load");
         let mut host = BrowserHostController::new(session);
+        let mut bookmarks = MemoryBookmarkRepository::default();
 
         assert_eq!(host.props().page_title, "Home");
         let link = host.session().viewport().unwrap().page().paint.links[0].clone();
@@ -1234,18 +1366,78 @@ mod tests {
         assert!(!host
             .handle_event(
                 BrowserChromeEvent::AddressChange("http://missing.test/".into()),
+                &mut bookmarks,
                 |_, _| unreachable!("address edits do not execute navigation"),
             )
             .unwrap());
         let error = host
-            .handle_event(BrowserChromeEvent::Navigate, |session, navigation| {
-                Ok(session.execute(navigation, &pipeline, &fetcher)?.is_some())
-            })
+            .handle_event(
+                BrowserChromeEvent::Navigate,
+                &mut bookmarks,
+                |session, navigation| {
+                    Ok(session.execute(navigation, &pipeline, &fetcher)?.is_some())
+                },
+            )
             .expect_err("missing page should fail transactionally");
-        assert!(matches!(error, BrowserLoadError::Fetch { .. }));
+        assert!(matches!(
+            error,
+            BrowserCommandError::Load(BrowserLoadError::Fetch { .. })
+        ));
         assert_eq!(host.session().history().current_url(), Some(next_url));
         assert_eq!(host.props().address, "http://missing.test/");
         assert!(host.props().status_text.starts_with("Load failed:"));
+    }
+
+    #[test]
+    fn bookmark_command_persists_before_chrome_state_changes() {
+        let url = "http://example.test/guide#chapter";
+        let fetcher = |requested: &str| {
+            Ok(BrowserFetchResponse::new(
+                requested,
+                200,
+                Some("text/html".into()),
+                b"<title>Guide chapter</title><p>Ready</p>".to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(220.0, 80.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(url, 40.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        let mut host = BrowserHostController::new(session);
+        let mut repository = MemoryBookmarkRepository::default();
+
+        assert_eq!(host.props().bookmark_label, "Bookmark");
+        assert!(host
+            .handle_event(
+                BrowserChromeEvent::ToggleBookmark,
+                &mut repository,
+                |_, _| unreachable!("bookmark action does not navigate"),
+            )
+            .unwrap());
+        assert_eq!(host.props().bookmark_label, "Remove Bookmark");
+        assert_eq!(repository.stored().entries()[0].title(), "Guide chapter");
+        assert_eq!(repository.stored().entries()[0].url().as_str(), url);
+
+        repository.fail_saves_with("disk full");
+        let error = host
+            .handle_event(
+                BrowserChromeEvent::ToggleBookmark,
+                &mut repository,
+                |_, _| unreachable!("bookmark action does not navigate"),
+            )
+            .unwrap_err();
+        assert!(matches!(error, BrowserCommandError::Bookmark(_)));
+        assert_eq!(host.props().bookmark_label, "Remove Bookmark");
+        assert!(host.props().status_text.starts_with("Bookmark failed:"));
     }
 
     #[test]

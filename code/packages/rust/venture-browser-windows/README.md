@@ -5,6 +5,10 @@ This crate is Venture's native Windows content bridge. It reuses
 scrolling, and link hit-testing, then renders the current viewport through
 `paint-vm-direct2d` as BGRA8 pixels for WinUI's `WriteableBitmap`.
 
+The bridge loads the shared versioned bookmark catalog from
+`%LOCALAPPDATA%\Venture\bookmarks.json` and persists generated chrome toggle
+commands atomically. Set `VENTURE_BOOKMARKS_PATH` to use an isolated profile.
+
 It does not create browser chrome or a handwritten Win32 window. The shared
 `programs/mosaic/venture-browser` MIL/MLL/MSL package emits the WinUI controls
 and installs its package-owned `host/xaml/MosaicHost.cs` adapter into the
