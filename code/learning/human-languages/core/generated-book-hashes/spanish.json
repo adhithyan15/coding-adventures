@@ -488,7 +488,7 @@
     {
       "language": "spanish",
       "chapter": 47,
-      "sourceHash": "fnv1a64:3aefc40e124e38b6",
+      "sourceHash": "fnv1a64:7fa634f2ac2a6a4e",
       "lessonIds": [
         "ES-C08-numeros-1-5",
         "ES-C08-numeros-6-10",
@@ -706,7 +706,7 @@
     {
       "language": "spanish",
       "chapter": 69,
-      "sourceHash": "fnv1a64:fe3069f08e957835",
+      "sourceHash": "fnv1a64:93326fd1f95c2b93",
       "lessonIds": [
         "ES-C11-querer",
         "ES-C11-poder",
@@ -4103,6 +4103,15 @@
         "ES-C388-gritar"
       ],
       "tex": "spanish/book/chapters/ch388-empujar-y-lanzar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 389,
+      "sourceHash": "fnv1a64:27aec3eae4717933",
+      "lessonIds": [
+        "ES-C389-saber"
+      ],
+      "tex": "spanish/book/chapters/ch389-saber.tex"
     }
   ]
 }

@@ -234,7 +234,7 @@
     },
     {
       "id": "GE-PATH-018",
-      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
       "lessons": [
         "GE-C14-haben"
       ],
@@ -587,11 +587,19 @@
       ],
       "relocates": {}
     },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [
+        "GE-PATH-018"
+      ],
+      "omits": [
+        "VERB-CAN"
+      ],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "GE-PATH-011",
         "GE-PATH-014",
-        "GE-PATH-018",
         "GE-PATH-021",
         "GE-PATH-027",
         "GE-PATH-028",
@@ -606,7 +614,6 @@
         "VERB-SPEAK",
         "VERB-SEE",
         "VERB-KNOW",
-        "VERB-CAN",
         "VERB-BRING",
         "VERB-GET",
         "VERB-EAT",

@@ -550,6 +550,15 @@
       ],
       "relocates": {}
     },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-CAN"
+      ],
+      "relocates": {
+        "VERB-HAVE": "SPINE-EXCHANGE-NAMES"
+      }
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "IT-PATH-011",
@@ -568,7 +577,6 @@
         "VERB-HEAR",
         "VERB-KNOW",
         "VERB-LEARN",
-        "VERB-CAN",
         "VERB-EAT",
         "VERB-SLEEP",
         "VERB-WALK",
@@ -577,7 +585,6 @@
         "VERB-STAND"
       ],
       "relocates": {
-        "VERB-HAVE": "SPINE-EXCHANGE-NAMES",
         "VERB-GO": "SPINE-ASK-LOCATION",
         "VERB-BE": "SPINE-ASK-LOCATION"
       }

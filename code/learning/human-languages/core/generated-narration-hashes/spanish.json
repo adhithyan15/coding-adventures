@@ -719,7 +719,7 @@
     {
       "language": "spanish",
       "chapter": 47,
-      "sourceHash": "fnv1a64:b33c7a468def117f",
+      "sourceHash": "fnv1a64:4a815a21c8ab118b",
       "lessonIds": [
         "ES-C08-numeros-1-5",
         "ES-C08-numeros-6-10",
@@ -732,7 +732,7 @@
       "text": "spanish/narration/ch47.txt",
       "json": "spanish/narration/ch47.json",
       "textHash": "fnv1a64:217611fac406e7b6",
-      "jsonHash": "fnv1a64:dba41831e4c0c544"
+      "jsonHash": "fnv1a64:804eb82acff17534"
     },
     {
       "language": "spanish",
@@ -1047,7 +1047,7 @@
     {
       "language": "spanish",
       "chapter": 69,
-      "sourceHash": "fnv1a64:181e62db77b22916",
+      "sourceHash": "fnv1a64:b50b20396d3cd9cb",
       "lessonIds": [
         "ES-C11-querer",
         "ES-C11-poder",
@@ -1060,7 +1060,7 @@
       "text": "spanish/narration/ch69.txt",
       "json": "spanish/narration/ch69.json",
       "textHash": "fnv1a64:1c60aadd8704b9d5",
-      "jsonHash": "fnv1a64:994f9d150de1c91d"
+      "jsonHash": "fnv1a64:7b0c908efa25c39e"
     },
     {
       "language": "spanish",
@@ -6044,6 +6044,20 @@
       "json": "spanish/narration/ch388.json",
       "textHash": "fnv1a64:5bd01678fc42188f",
       "jsonHash": "fnv1a64:ac6c391bd01b7971"
+    },
+    {
+      "language": "spanish",
+      "chapter": 389,
+      "sourceHash": "fnv1a64:e9fee42926b27ca1",
+      "lessonIds": [
+        "ES-C389-saber"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch389.txt",
+      "json": "spanish/narration/ch389.json",
+      "textHash": "fnv1a64:249f5f98d5129d8e",
+      "jsonHash": "fnv1a64:68f6d3fa8bd3e41b"
     }
   ],
   "findings": []

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C11-poder
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO
 sequence: 1070
 chapter: 69
 type: word

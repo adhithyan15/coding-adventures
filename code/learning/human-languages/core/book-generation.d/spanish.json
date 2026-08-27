@@ -1965,6 +1965,11 @@
       "language": "spanish",
       "chapter": 388,
       "output": "spanish/book/chapters/ch388-empujar-y-lanzar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 389,
+      "output": "spanish/book/chapters/ch389-saber.tex"
     }
   ]
 }

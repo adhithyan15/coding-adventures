@@ -1,0 +1,27 @@
+{
+  "segments": [
+    "FR-PATH-010",
+    "FR-PATH-014",
+    "FR-PATH-016",
+    "FR-PATH-017",
+    "FR-PATH-023",
+    "FR-PATH-024"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-COME",
+    "VERB-SAY",
+    "VERB-SEE",
+    "VERB-KNOW",
+    "VERB-LEARN",
+    "VERB-BRING",
+    "VERB-GET",
+    "VERB-EAT",
+    "VERB-PLAY",
+    "VERB-WAIT",
+    "VERB-ANSWER",
+    "VERB-MEET"
+  ],
+  "relocates": {}
+}

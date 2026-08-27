@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-030-ABILITY-CH11",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "lessons": [
+    "ES-C11-poder"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-030-ABILITY-CH11"
+  ],
+  "after": []
+}

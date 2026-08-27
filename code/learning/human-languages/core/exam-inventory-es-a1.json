@@ -966,15 +966,19 @@
       "id": "A1-F2-16",
       "category": "Expresar opiniones, actitudes y conocimientos",
       "label": "ask about ability to do something",
-      "probe": null,
-      "note": "The source's A1 exponent is saber plus a noun or infinitive. The corpus teaches no se only as a fixed repair phrase and never introduces saber as a verb, so the ability question is unbuilt."
+      "probe": [
+        "ES-LEX-SABER",
+        "ES-GRAMMAR-SABER-INFINITIVO"
+      ]
     },
     {
       "id": "A1-F2-17",
       "category": "Expresar opiniones, actitudes y conocimientos",
       "label": "express ability to do something",
-      "probe": null,
-      "note": "As above: the source asks for saber plus an infinitive. The corpus teaches poder for capability but never saber as a verb, and substituting it would be a different structure."
+      "probe": [
+        "ES-LEX-SABER",
+        "ES-GRAMMAR-SABER-INFINITIVO"
+      ]
     },
     {
       "id": "A1-F3-01",

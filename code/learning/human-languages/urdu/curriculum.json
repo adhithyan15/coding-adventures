@@ -403,6 +403,14 @@
       ],
       "relocates": {}
     },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-HAVE",
+        "VERB-CAN"
+      ],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "UR-PATH-007",
@@ -412,12 +420,10 @@
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-HAVE",
         "VERB-SAY",
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-LEARN",
-        "VERB-CAN",
         "VERB-BRING",
         "VERB-GET",
         "VERB-EAT",
