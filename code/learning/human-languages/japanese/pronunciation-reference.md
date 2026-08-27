@@ -55,7 +55,7 @@ there, which is the wall HL00 exists to remove.
 
 It does not claim a stroke count as a prerequisite. Stroke order for kana and
 kanji is real and taught, and it lives in
-[Japanese script reference](../data/scripts/japanese.json) beside each
+[Japanese script reference](../data/scripts/japanese.d/) beside each
 sign, to be consulted when a hand is free.
 
 ## Sources
