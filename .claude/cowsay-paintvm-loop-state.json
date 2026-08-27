@@ -107,7 +107,8 @@
       "id": "lua-cowsay",
       "title": "Lua cowsay: build paint-instructions AND paint-vm-ascii from scratch, then cowsay",
       "depends_on": [],
-      "status": "in-progress",
+      "status": "pr-open",
+      "pr_number": 13312,
       "priority": 9,
       "backend_work": "CORRECTION on start: both code/packages/lua/paint_instructions and code/packages/lua/paint_vm_ascii already exist on main (added in PR #817/#1227) but are rect-only, same situation perl-cowsay and haskell-cowsay were in -- not built from scratch. Extending both additively to the full P2D02 contract (rect w/ stroke, line, glyph_run, group, clip, layer) plus the hardening from dart/swift (geometry validation, scene-size caps, saturating coordinate conversion, 64-level nesting cap, glyph safety filter, Bresenham error seeded to deltaCol - deltaRow from the start), then cowsay on top.",
       "notes": "Most work of the 8 remaining items -- neither prerequisite package exists yet. Prior attempt at Lua cowsay (PR #1535, closed) was destructive; must be additive-only."
