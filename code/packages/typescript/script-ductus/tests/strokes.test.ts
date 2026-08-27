@@ -263,6 +263,7 @@ const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const KANNADA_AA = DUCTUS[ductusKey("kannada", "ಆ")];
 const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
 const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
+const KANNADA_EE = DUCTUS[ductusKey("kannada", "ಏ")];
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
@@ -1008,6 +1009,20 @@ describe("handwriting ductus", () => {
     ]);
     expect(KANNADA_E.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ae.gif",
+    );
+  });
+
+  it("Kannada ಏ adds its small upper loop after one lift", () => {
+    expect(penLifts(KANNADA_EE)).toBe(1);
+    expect(KANNADA_EE.strokes).toHaveLength(2);
+    expect(KANNADA_EE.strokes.flatMap((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      "turn clockwise around the compact left loop",
+      "sweep through the joined lower curves and climb the right side",
+      "carry the tall outer arch over and finish at the upper left",
+      "draw the small upper loop from left to right",
+    ]);
+    expect(KANNADA_EE.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-aee.gif",
     );
   });
 
