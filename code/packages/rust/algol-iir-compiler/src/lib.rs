@@ -2406,7 +2406,7 @@ impl Compiler {
         widen_tracked_integers: bool,
     ) -> Option<f64> {
         expr_static_real_arithmetic_value_with(node, &|call| {
-            self.static_standard_real_value(call)
+            self.static_standard_real_value_with_widen(call, widen_tracked_integers)
                 .or_else(|| self.static_tracked_numeric_value(call, widen_tracked_integers))
         })
     }
@@ -2696,7 +2696,11 @@ impl Compiler {
     /// to canonical inputs whose Report-defined result is exactly zero or one.
     /// Integer-valued `sign` and `entier` results are represented as f64 only
     /// while they remain in the exact binary64 integer range.
-    fn static_standard_real_value(&self, node: &GrammarASTNode) -> Option<f64> {
+    fn static_standard_real_value_with_widen(
+        &self,
+        node: &GrammarASTNode,
+        widen_tracked_integers: bool,
+    ) -> Option<f64> {
         if node.rule_name != "proc_call" {
             return None;
         }
@@ -2713,7 +2717,8 @@ impl Compiler {
         if actuals.len() != 1 {
             return None;
         }
-        let operand = self.static_real_arithmetic_value(actuals[0])?;
+        let operand = self
+            .static_real_arithmetic_value_with_widen(actuals[0], widen_tracked_integers)?;
         let value = match target_name.as_str() {
             "abs" => operand.abs(),
             "sqrt" if operand >= 0.0 => {
@@ -10203,6 +10208,21 @@ mod tests {
             "test",
         )
         .expect("an exact integer exponent may contribute to real snapshot metadata");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+    }
+
+    #[test]
+    fn al4_tracks_integer_function_exponents_for_real_snapshot_metadata_only() {
+        let module = compile_source(
+            "begin integer exponent; real saved; exponent := -2; saved := 6.0 ^ abs(exponent) + 6.0; exponent := 3; output(saved + 0.5) end",
+            "test",
+        )
+        .expect("a tracked integer may feed a bounded standard-function exponent");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
         assert!(main.instructions.iter().any(|instr| {
