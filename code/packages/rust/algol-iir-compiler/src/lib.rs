@@ -8589,7 +8589,8 @@ fn literal_checked_integer_arithmetic_value(node: &GrammarASTNode) -> Option<i64
             }
         }
         let (base, exponents) = operands.split_first()?;
-        let exponent = literal_nonneg_integer_power_chain(exponents)?;
+        let exponent =
+            literal_nonnegative_checked_integer_arithmetic_power_chain(exponents)?;
         return literal_checked_integer_arithmetic_value(base)?.checked_pow(exponent);
     }
     if sequence.len() == 1 {
@@ -11168,6 +11169,7 @@ mod tests {
             "choose ^ (2 - 1)",
             "choose ** ((6 div 3) - 1)",
             "choose ^ (3 - 2) ^ (2 - 1)",
+            "choose ^ ((2 ^ (2 - 1)) div 2)",
             "+choose",
             "+choose + 0 - 0",
             "(choose)",
@@ -15357,6 +15359,16 @@ mod tests {
         assert_eq!(
             run_i64("begin integer result; result := 7 ^ ((6 div 3) - 1) end"),
             7
+        );
+    }
+
+    /// Checked arithmetic also applies recursively inside bounded power
+    /// operands, without widening the outer integer power to `real`.
+    #[test]
+    fn integer_power_nested_checked_arithmetic_exponent() {
+        assert_eq!(
+            run_i64("begin integer result; result := 9 ^ ((2 ^ (2 - 1)) div 2) end"),
+            9
         );
     }
 
