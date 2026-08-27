@@ -72,19 +72,21 @@ func TestFormatReportMixed(t *testing.T) {
 		"python/pkg-b": {PackageName: "python/pkg-b", Status: "skipped"},
 		"python/pkg-c": {PackageName: "python/pkg-c", Status: "failed", Duration: 0.5},
 		"python/pkg-d": {PackageName: "python/pkg-d", Status: "dep-skipped"},
+		"elixir/pkg-e": {PackageName: "elixir/pkg-e", Status: "unsupported", ReasonCode: "ELIXIR_WINDOWS_NATIVE_UNAVAILABLE"},
+		"elixir/pkg-f": {PackageName: "elixir/pkg-f", Status: "dep-unsupported", ReasonCode: "DEPENDENCY_UNSUPPORTED"},
 	}
 	report := FormatReport(results)
 
 	// Check all statuses appear.
-	for _, expected := range []string{"BUILT", "SKIPPED", "FAILED", "DEP-SKIP"} {
+	for _, expected := range []string{"BUILT", "SKIPPED", "FAILED", "DEP-SKIP", "UNSUPPORTED", "DEP-UNSUPPORTED"} {
 		if !strings.Contains(report, expected) {
 			t.Errorf("expected %s in report", expected)
 		}
 	}
 
 	// Check summary.
-	if !strings.Contains(report, "Total: 4 packages") {
-		t.Error("expected 'Total: 4 packages' in summary")
+	if !strings.Contains(report, "Total: 6 packages") {
+		t.Error("expected 'Total: 6 packages' in summary")
 	}
 	if !strings.Contains(report, "1 built") {
 		t.Error("expected '1 built' in summary")
@@ -97,6 +99,15 @@ func TestFormatReportMixed(t *testing.T) {
 	}
 	if !strings.Contains(report, "1 dep-skipped") {
 		t.Error("expected '1 dep-skipped' in summary")
+	}
+	if !strings.Contains(report, "1 unsupported") {
+		t.Error("expected '1 unsupported' in summary")
+	}
+	if !strings.Contains(report, "1 dep-unsupported") {
+		t.Error("expected '1 dep-unsupported' in summary")
+	}
+	if !strings.Contains(report, "ELIXIR_WINDOWS_NATIVE_UNAVAILABLE") {
+		t.Error("expected stable unsupported reason code in report")
 	}
 }
 

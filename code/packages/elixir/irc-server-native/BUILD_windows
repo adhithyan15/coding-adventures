@@ -1,6 +1,2 @@
-# BUILD_windows — coding_adventures_irc_server_native
-#
-# Windows NIF support is not yet wired up (the BEAM links against erts.dll in a
-# way that needs explicit import-library linkage). Skip this package on Windows,
-# matching the Elixir conduit package.
-echo "skipped (NIF not yet supported on Windows)"
+# build-tool: unsupported=ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE
+echo BUILD_TOOL_UNSUPPORTED:ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE -- skipped
