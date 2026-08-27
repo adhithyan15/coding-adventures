@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Return core-owned View Source auxiliary documents through the WinUI bridge
+  response while preserving platform ownership of window presentation.
+
 - Load and atomically persist the shared bookmark catalog through the native
   Venture profile while exposing bookmark state and commands to generated
   WinUI chrome.

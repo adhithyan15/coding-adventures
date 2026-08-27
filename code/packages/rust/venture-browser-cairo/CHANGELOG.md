@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Serialize shared View Source auxiliary-document effects for Qt, Flutter, and
+  Compose hosts without moving source construction into toolkit adapters.
+
 - Load and atomically persist the shared bookmark catalog for generated Qt,
   Flutter, and Compose hosts, with durable restart acceptance in the common
   Cairo bridge.

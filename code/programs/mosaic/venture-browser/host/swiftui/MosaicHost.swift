@@ -135,6 +135,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var surfaceRenderBaseline: CGSize?
   private var lastSurfaceRenderSize: CGSize?
   private var chromeEventCounts: [String: Int] = [:]
+  private(set) var lastAuxiliaryDocument: NSDictionary?
 
   required override init() {
     let native = VentureNativeLibrary()
@@ -165,7 +166,21 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       return native.handleEvent(browser, eventName, nil)
     }
     contentView?.renderPage()
-    return native.decode(response)
+    let decoded = native.decode(response)
+    consumeEffect(decoded)
+    return decoded
+  }
+
+  private func consumeEffect(_ response: NSDictionary?) {
+    guard let effect = response?["effect"] as? NSDictionary,
+      effect["type"] as? String == "open-auxiliary-document",
+      let document = effect["document"] as? NSDictionary
+    else { return }
+    lastAuxiliaryDocument = document
+    NotificationCenter.default.post(
+      name: Notification.Name("VentureOpenAuxiliaryDocument"),
+      object: self,
+      userInfo: ["document": document])
   }
 
   func node(named name: NSString) -> NSObject? {
@@ -569,15 +584,17 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let bookmarkLabel = props?["bookmark-label"] as? String ?? ""
     let bookmarkEvents = chromeEventCounts["onToggleBookmark", default: 0]
     if bookmarkLabel == "Bookmark", bookmarkEvents == eventCount + 2 {
-      guard performNativeButtonClick(identifier: "reload-button") else {
+      let viewSourceEvents = chromeEventCounts["onViewSource", default: 0]
+      guard performNativeButtonClick(identifier: "view-source-button") else {
         writeInteractionResult(
-          ["backend": "swiftui", "status": "error", "error": "reload-button not found"],
+          ["backend": "swiftui", "status": "error", "error": "view-source-button not found"],
           to: markerPath)
         return
       }
-      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
-        self?.verifyReload(
-          startURL: startURL, targetURL: targetURL, markerPath: markerPath, remaining: 50)
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyViewSource(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: viewSourceEvents, remaining: 50)
       }
       return
     }
@@ -593,6 +610,44 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
       self?.verifyBookmarkRemoved(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyViewSource(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let viewSourceEvents = chromeEventCounts["onViewSource", default: 0]
+    let address = lastAuxiliaryDocument?["address"] as? String ?? ""
+    let html = lastAuxiliaryDocument?["html"] as? String ?? ""
+    if viewSourceEvents == eventCount + 1, address == "view-source:\(targetURL)",
+      html.contains("&lt;title&gt;Venture interaction acceptance&lt;/title&gt;")
+    {
+      guard performNativeButtonClick(identifier: "reload-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "reload-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+        self?.verifyReload(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "viewSourceEvents": String(viewSourceEvents),
+          "error": "native View Source effect did not preserve retained source",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyViewSource(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
     }
@@ -1101,11 +1156,12 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private func nativeToolbarPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let position: CGFloat
     switch identifier {
-    case "back-button": position = 0.10
-    case "forward-button": position = 0.30
-    case "home-button": position = 0.50
-    case "reload-button": position = 0.70
-    case "bookmark-button": position = 0.90
+    case "back-button": position = 0.06
+    case "forward-button": position = 0.21
+    case "home-button": position = 0.36
+    case "reload-button": position = 0.51
+    case "bookmark-button": position = 0.68
+    case "view-source-button": position = 0.88
     default: return nil
     }
     var visited = Set<ObjectIdentifier>()
@@ -1360,6 +1416,11 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     propsChangedHandler?()
   }
 
+  fileprivate func requestViewSource() {
+    _ = handleEvent([:], name: "onViewSource")
+    propsChangedHandler?()
+  }
+
   fileprivate func activateLink(at point: NSPoint) {
     lastSurfacePointerPoint = point
     guard let native, let browser, native.activateLink(browser, point.x, point.y) != 0 else {
@@ -1523,6 +1584,9 @@ private final class VentureContentView: NSView {
       && modifiers.intersection([.control, .option, .shift]).isEmpty
     {
       switch event.keyCode {
+      case 32:
+        host?.requestViewSource()
+        return
       case 123:
         host?.navigateHistory(eventName: "onBack")
         return

@@ -32,6 +32,8 @@ public static class MosaicHost
     private static VentureContentSurface? contentSurface;
     private static int acceptanceReported;
     private static int interactionAcceptanceStarted;
+    public static JsonElement? LastAuxiliaryDocument { get; private set; }
+    public static event Action<JsonElement>? AuxiliaryDocumentRequested;
     private const uint WmKeyDown = 0x0100;
     private const uint WmKeyUp = 0x0101;
     private const int EnterKeyDownLParam = 0x001C0001;
@@ -79,9 +81,25 @@ public static class MosaicHost
             ? addressChange.Value
             : null;
         var response = Native.Decode(Native.HandleEvent(browser, ev.MosaicName, value));
+        ConsumeEffect(response);
         var status = ApplyResponse(component, response);
         contentSurface?.Refresh();
         return status;
+    }
+
+    private static void ConsumeEffect(JsonDocument? response)
+    {
+        if (response is null
+            || !response.RootElement.TryGetProperty("effect", out var effect)
+            || !effect.TryGetProperty("type", out var type)
+            || type.GetString() != "open-auxiliary-document"
+            || !effect.TryGetProperty("document", out var document))
+        {
+            return;
+        }
+        var retained = document.Clone();
+        LastAuxiliaryDocument = retained;
+        AuxiliaryDocumentRequested?.Invoke(retained);
     }
 
     public static void RunInteractionAcceptance(Window window, VentureChrome component)
@@ -116,12 +134,15 @@ public static class MosaicHost
                 var homeButton = await FindAutomationElementAsync<Button>(component, "home-button");
                 var reloadButton = await FindAutomationElementAsync<Button>(
                     component, "reload-button");
+                var viewSourceButton = await FindAutomationElementAsync<Button>(
+                    component, "view-source-button");
                 var goButton = await FindAutomationElementAsync<Button>(component, "go-button");
                 if (addressInput is null
                     || backButton is null
                     || forwardButton is null
                     || homeButton is null
                     || reloadButton is null
+                    || viewSourceButton is null
                     || goButton is null)
                 {
                     WriteInteractionResult(markerPath, new
@@ -205,6 +226,26 @@ public static class MosaicHost
                         backend = "xaml",
                         status = "error",
                         error = "native navigation controls did not update after navigation",
+                    });
+                    return;
+                }
+                var viewSourceProvider = new ButtonAutomationPeer(viewSourceButton)
+                    as IInvokeProvider;
+                viewSourceProvider?.Invoke();
+                if (viewSourceProvider is null
+                    || !await WaitForControlStateAsync(
+                        () => LastAuxiliaryDocument is { } document
+                            && document.GetProperty("address").GetString()
+                                == $"view-source:{targetUrl}"
+                            && document.GetProperty("html").GetString()?.Contains(
+                                "&lt;title&gt;Venture interaction acceptance&lt;/title&gt;",
+                                StringComparison.Ordinal) == true))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native View Source effect did not preserve retained source",
                     });
                     return;
                 }
@@ -768,6 +809,7 @@ public static class MosaicHost
             SetIfChanged(component.BookmarkLabel, props.GetProperty("bookmark-label").GetString(),
                 value => component.BookmarkLabel = value);
             component.BookmarkDisabled = props.GetProperty("bookmark-disabled").GetBoolean();
+            component.ViewSourceDisabled = props.GetProperty("view-source-disabled").GetBoolean();
             component.NavigationDisabled = props.GetProperty("navigation-disabled").GetBoolean();
 
             if (root.TryGetProperty("error", out var error))
@@ -928,7 +970,9 @@ public static class MosaicHost
         {
             var shift = (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift)
                 & CoreVirtualKeyStates.Down) != 0;
-            if (HandleKey(e.Key, e.KeyStatus.IsMenuKeyDown, shift, out _))
+            var control = (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Control)
+                & CoreVirtualKeyStates.Down) != 0;
+            if (HandleKey(e.Key, e.KeyStatus.IsMenuKeyDown, control, shift, out _))
             {
                 e.Handled = true;
             }
@@ -937,7 +981,7 @@ public static class MosaicHost
         internal bool RunKeyboardAcceptance()
         {
             _ = Focus(FocusState.Programmatic);
-            return HandleKey(VirtualKey.End, false, false, out var changed) && changed;
+            return HandleKey(VirtualKey.End, false, false, false, out var changed) && changed;
         }
 
         internal bool RunFocusAcceptance()
@@ -974,7 +1018,7 @@ public static class MosaicHost
         internal bool RunHistoryKeyboardAcceptance(VirtualKey key)
         {
             _ = Focus(FocusState.Programmatic);
-            return HandleKey(key, true, false, out var changed) && changed;
+            return HandleKey(key, true, false, false, out var changed) && changed;
         }
 
         private bool ScrollByWheelDelta(int delta)
@@ -1038,7 +1082,7 @@ public static class MosaicHost
         internal bool RunHoverAcceptance(string linkUrl)
         {
             _ = Focus(FocusState.Programmatic);
-            return HandleKey(VirtualKey.Home, false, false, out var changed)
+            return HandleKey(VirtualKey.Home, false, false, false, out var changed)
                 && changed
                 && UpdateHoverAt(new Windows.Foundation.Point(32, 26))
                 && hoverUsesHandCursor
@@ -1083,10 +1127,19 @@ public static class MosaicHost
         private bool HandleKey(
             VirtualKey key,
             bool menuKeyDown,
+            bool controlKeyDown,
             bool shift,
             out bool changed)
         {
             changed = false;
+            if (controlKeyDown && key == VirtualKey.U)
+            {
+                var response = Native.Decode(Native.HandleEvent(browser, "onViewSource", null));
+                ConsumeEffect(response);
+                _ = ApplyResponse(component, response);
+                changed = true;
+                return true;
+            }
             if (menuKeyDown)
             {
                 var historyEvent = key switch

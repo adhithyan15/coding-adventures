@@ -146,6 +146,12 @@ void VentureContentSurface::wheelEvent(QWheelEvent *event)
 
 void VentureContentSurface::keyPressEvent(QKeyEvent *event)
 {
+  if (host_ && event->key() == Qt::Key_U
+      && event->modifiers() == Qt::ControlModifier
+      && host_->requestViewSource()) {
+    event->accept();
+    return;
+  }
   const QByteArray command = keyCommand(event);
   if (host_ && !command.isEmpty() && host_->scrollCommand(command)) {
     update();
@@ -153,6 +159,13 @@ void VentureContentSurface::keyPressEvent(QKeyEvent *event)
     return;
   }
   QQuickPaintedItem::keyPressEvent(event);
+}
+
+bool MosaicHost::requestViewSource()
+{
+  QVariantMap event;
+  event.insert(QStringLiteral("event"), QStringLiteral("onViewSource"));
+  return handleEvent(event).value(QStringLiteral("error")).isNull();
 }
 
 MosaicHost::MosaicHost(QObject *parent) : QObject(parent)
@@ -207,7 +220,9 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
   }
   const QByteArray name = event.value(QStringLiteral("event")).toString().toUtf8();
   const QByteArray value = event.value(QStringLiteral("value")).toString().toUtf8();
-  return withContentSurface(response(handleEvent_(browser_, name.constData(), value.constData())));
+  auto result = response(handleEvent_(browser_, name.constData(), value.constData()));
+  consumeEffect(result);
+  return withContentSurface(result);
 }
 
 bool MosaicHost::render(QImage *image)
@@ -523,6 +538,15 @@ QVariantMap MosaicHost::withContentSurface(QVariantMap response) const
   return response;
 }
 
+void MosaicHost::consumeEffect(const QVariantMap &response)
+{
+  const QVariantMap effect = response.value(QStringLiteral("effect")).toMap();
+  if (effect.value(QStringLiteral("type")).toString()
+      == QStringLiteral("open-auxiliary-document")) {
+    emit auxiliaryDocumentRequested(effect.value(QStringLiteral("document")).toMap());
+  }
+}
+
 QVariantMap MosaicHost::normalizeProps(const QVariantMap &props)
 {
   static const QHash<QString, QString> names = {
@@ -532,6 +556,7 @@ QVariantMap MosaicHost::normalizeProps(const QVariantMap &props)
     {QStringLiteral("forward-disabled"), QStringLiteral("forwardDisabled")},
     {QStringLiteral("bookmark-label"), QStringLiteral("bookmarkLabel")},
     {QStringLiteral("bookmark-disabled"), QStringLiteral("bookmarkDisabled")},
+    {QStringLiteral("view-source-disabled"), QStringLiteral("viewSourceDisabled")},
     {QStringLiteral("navigation-disabled"), QStringLiteral("navigationDisabled")},
     {QStringLiteral("content-surface"), QStringLiteral("contentSurface")},
   };
