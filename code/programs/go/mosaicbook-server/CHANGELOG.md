@@ -4,6 +4,36 @@
 
 ### Security
 
+- **Bounded-memory subprocess output capture** (#13179, filed alongside
+  #13178 during #12027's drop-panel security review). Both `compile()`
+  (`compiler.go`, pre-existing) and `analyzeDegradations()`
+  (`degradations.go`) used `cmd.CombinedOutput()`, which reads a
+  subprocess's *entire* stdout+stderr into memory before `maxCompilerOutputBytes`
+  (1 MiB) ever gets checked — the cap only truncated what got *returned*,
+  not what the server had already allocated to hold it. Combined with
+  #13178 (a page could otherwise trigger repeated `/api/degradations/`
+  requests), a misbehaving or pathological subprocess invocation had no
+  actual memory bound.
+
+  New `cappedWriter` (`compiler.go`) is an `io.Writer` that keeps at most
+  `limit` bytes and silently discards anything beyond that *as it
+  arrives*, wired in as `cmd.Stdout`/`cmd.Stderr` in place of
+  `CombinedOutput()`. `Write` always reports success for the full input
+  (never short, never an error) so the subprocess's pipe never sees a
+  short write and gets killed mid-stream merely for exceeding a
+  diagnostic-message size limit — this bounds what the server *holds
+  onto*, not how much the subprocess produces or how long it runs (a
+  wall-clock/CPU bound is a separate, unfiled concern, not part of this
+  fix). Both call sites' truncation-marker behavior on the final message
+  is unchanged.
+
+  Verified: `cappedWriter`'s own unit tests (single write under/at/past the
+  limit, 1000 small writes — the actual shape a subprocess's pipe-copying
+  produces, not one big write — staying capped, and the truncation marker
+  only appearing when input actually exceeded the limit), plus real
+  end-to-end runs against the actual `mosaic-compile` binary confirming
+  both `/api/degradations/` and `/preview/` still succeed identically.
+
 - **Origin/Host validation on every route** (#13178, filed during #12027's
   drop-panel security review). Binding to `localhost` alone doesn't stop a
   page open in the developer's own browser from reaching this port — nor

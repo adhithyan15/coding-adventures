@@ -159,8 +159,13 @@ func (s *Server) analyzeDegradations(c Component, backend string) (*Degradations
 		"--profile", "permissive",
 		"--", packageRoot,
 	)
-	out, err := cmd.CombinedOutput()
-	if err != nil {
+	// cappedWriter (compiler.go, #13179) bounds memory use as output arrives
+	// rather than after the fact — cmd.CombinedOutput() would buffer the
+	// subprocess's entire stdout+stderr before any size check could run.
+	out := &cappedWriter{limit: maxCompilerOutputBytes}
+	cmd.Stdout = out
+	cmd.Stderr = out
+	if err := cmd.Run(); err != nil {
 		if isNotFound(err) {
 			return nil, fmt.Errorf(
 				"mosaic-compile binary %q not found on PATH; "+
@@ -168,11 +173,8 @@ func (s *Server) analyzeDegradations(c Component, backend string) (*Degradations
 				s.compilerPath,
 			)
 		}
-		if len(out) > maxCompilerOutputBytes {
-			out = append(out[:maxCompilerOutputBytes], []byte("\n...(output truncated)")...)
-		}
-		if len(out) > 0 {
-			return nil, fmt.Errorf("mosaic-compile pkg failed: %s", string(out))
+		if out.written > 0 {
+			return nil, fmt.Errorf("mosaic-compile pkg failed: %s", out.String())
 		}
 		return nil, fmt.Errorf("mosaic-compile pkg exited with error: %w", err)
 	}

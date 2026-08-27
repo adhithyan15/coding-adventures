@@ -30,28 +30,68 @@ import (
 	"os/exec"
 )
 
-// maxCompilerOutputBytes is the maximum number of bytes we read from the
+// maxCompilerOutputBytes is the maximum number of bytes we retain from the
 // compiler's combined stdout+stderr.  Bounding this prevents a misbehaving
 // compiler from filling server memory with error output.
 const maxCompilerOutputBytes = 1 << 20 // 1 MiB
+
+// cappedWriter is an io.Writer that keeps at most limit bytes, silently
+// discarding anything beyond that rather than growing without bound.
+//
+// This is used in place of cmd.CombinedOutput(), which reads a subprocess's
+// entire stdout+stderr into memory before any size check can run — a
+// misbehaving or hostile subprocess invocation could make the server
+// allocate an unbounded amount of memory before a post-hoc truncation ever
+// applies (#13179). Capping the buffer as bytes arrive, rather than after
+// the fact, is what actually bounds memory use.
+//
+// Write always reports success for the full input — it never returns fewer
+// bytes written than were given, and never errors — so the subprocess's
+// stdout/stderr pipe never sees a short write and the subprocess is never
+// killed mid-stream merely for exceeding a diagnostic-message size limit.
+// This only bounds what the server holds onto, not how much the subprocess
+// is allowed to produce or how long it keeps running.
+type cappedWriter struct {
+	buf     []byte
+	limit   int
+	written int // total bytes offered, including any discarded past limit
+}
+
+func (c *cappedWriter) Write(p []byte) (int, error) {
+	c.written += len(p)
+	if room := c.limit - len(c.buf); room > 0 {
+		if room > len(p) {
+			room = len(p)
+		}
+		c.buf = append(c.buf, p[:room]...)
+	}
+	return len(p), nil
+}
+
+// String returns the captured output, with a truncation marker appended if
+// the subprocess wrote more than limit bytes.
+func (c *cappedWriter) String() string {
+	if c.written > len(c.buf) {
+		return string(c.buf) + "\n...(output truncated)"
+	}
+	return string(c.buf)
+}
 
 // compile invokes the external mosaic-compile binary to compile a component to
 // the given backend, writing output to outputPath.
 //
 // Returns a descriptive error if the binary is not found or exits non-zero.
 // Compiler output captured for error messages is capped at maxCompilerOutputBytes
-// to avoid holding unbounded buffers in memory.
+// (via cappedWriter) to avoid holding unbounded buffers in memory.
 func (s *Server) compile(c Component, backend string, outputPath string) error {
 	cmd := exec.Command(s.compilerPath, compilerArgs(c, backend, outputPath)...)
 
 	// Capture combined stdout+stderr so we can surface compiler errors in the
 	// preview HTML page rather than just logging them server-side.
-	out, err := cmd.CombinedOutput()
-
-	// Cap the captured output to avoid reflecting large blobs into error pages.
-	if len(out) > maxCompilerOutputBytes {
-		out = append(out[:maxCompilerOutputBytes], []byte("\n...(output truncated)")...)
-	}
+	out := &cappedWriter{limit: maxCompilerOutputBytes}
+	cmd.Stdout = out
+	cmd.Stderr = out
+	err := cmd.Run()
 
 	if err != nil {
 		// Distinguish "binary not found" from "compilation failed" — the former
@@ -63,8 +103,8 @@ func (s *Server) compile(c Component, backend string, outputPath string) error {
 				s.compilerPath,
 			)
 		}
-		if len(out) > 0 {
-			return fmt.Errorf("mosaic-compile failed: %s", string(out))
+		if out.written > 0 {
+			return fmt.Errorf("mosaic-compile failed: %s", out.String())
 		}
 		return fmt.Errorf("mosaic-compile exited with error: %w", err)
 	}
