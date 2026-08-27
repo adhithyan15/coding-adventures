@@ -4417,8 +4417,8 @@
     "totalLessons": 4386,
     "byLevel": {
       "pre-A1": 2844,
-      "A1": 850,
-      "A2": 549,
+      "A1": 861,
+      "A2": 538,
       "B1": 40,
       "B2": 17,
       "C1": 10,
@@ -4477,8 +4477,8 @@
         "lessonCount": 122,
         "byLevel": {
           "pre-A1": 46,
-          "A1": 33,
-          "A2": 29,
+          "A1": 35,
+          "A2": 27,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4492,8 +4492,8 @@
         "lessonCount": 107,
         "byLevel": {
           "pre-A1": 48,
-          "A1": 20,
-          "A2": 24,
+          "A1": 23,
+          "A2": 21,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4522,8 +4522,8 @@
         "lessonCount": 273,
         "byLevel": {
           "pre-A1": 205,
-          "A1": 45,
-          "A2": 23,
+          "A1": 46,
+          "A2": 22,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4537,8 +4537,8 @@
         "lessonCount": 89,
         "byLevel": {
           "pre-A1": 50,
-          "A1": 20,
-          "A2": 18,
+          "A1": 21,
+          "A2": 17,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -4717,8 +4717,8 @@
         "lessonCount": 998,
         "byLevel": {
           "pre-A1": 354,
-          "A1": 402,
-          "A2": 157,
+          "A1": 406,
+          "A2": 153,
           "B1": 40,
           "B2": 17,
           "C1": 10,
@@ -87728,7 +87728,7 @@
         "blockers": [
           {
             "criterion": "reinforcement",
-            "detail": "60 atom(s) at or below A1 are revisited fewer than twice (107 etymology hook(s) waived)",
+            "detail": "60 atom(s) at or below A1 are revisited fewer than twice (113 etymology hook(s) waived)",
             "shortfall": 60
           }
         ],
@@ -104799,7 +104799,7 @@
         "nodeId": "SPINE-SAY-WHAT-I-DO",
         "stage": "A2",
         "strand": "GRAMMAR",
-        "concepts": 39,
+        "concepts": 35,
         "target": 6,
         "ceiling": 12,
         "severity": "over-ceiling"
@@ -104821,12 +104821,21 @@
         "target": 6,
         "ceiling": 12,
         "severity": "over-target"
+      },
+      {
+        "nodeId": "SPINE-NAME-EVERYDAY-ACTIONS",
+        "stage": "A1",
+        "strand": "LEXICON",
+        "concepts": 7,
+        "target": 6,
+        "ceiling": 12,
+        "severity": "over-target"
       }
     ],
     "totalNodes": 34,
     "largestNode": {
       "nodeId": "SPINE-SAY-WHAT-I-DO",
-      "concepts": 39
+      "concepts": 35
     }
   },
   "grammarCells": {

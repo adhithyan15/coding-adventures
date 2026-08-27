@@ -6,7 +6,7 @@ Human Languages curriculum gap report
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 14 mixed, 9 version-2 schema tracks
 3657 drivable lessons (83% of the corpus)
-levels: 2844 pre-A1, 850 A1, 549 A2, 40 B1, 17 B2, 10 C1, 18 C2; 58 unmapped (99% placed)
+levels: 2844 pre-A1, 861 A1, 538 A2, 40 B1, 17 B2, 10 C1, 18 C2; 58 unmapped (99% placed)
 ramp: 40 lessons above 3 new atoms (400 unmeasurable, 91% measurable); 23 chapters above 12
 script ramp: 39 lessons above 3 new glyphs; 0 opening more than 1 writing system at once; steepest RU-C01-privet at 14
 cousin layer: 217 lessons show another script (max 26 glyphs) — context, never charged to the budget
@@ -81,8 +81,8 @@ Modality findings (report-only): 0
 
 strands: 34 nodes across 8 strands -- FUNCTION 14, GRAMMAR 7, LEXICON 3, SOUND 0, ETYMOLOGY 0, CULTURE 3, IDIOM 0, TEXT 7
   strands with no nodes: SOUND, ETYMOLOGY, IDIOM (declared as ladders, not yet climbed)
-  nodes above the chapter atom ceiling: 1 (worst SPINE-SAY-WHAT-I-DO at 39 concepts) -- no single chapter can realize these
-  nodes above the 6-concept design target: 2
+  nodes above the chapter atom ceiling: 1 (worst SPINE-SAY-WHAT-I-DO at 35 concepts) -- no single chapter can realize these
+  nodes above the 6-concept design target: 3
 
 grammar cells (spanish): 18 of 231 regular cells taught (8%), against 231 universal slots
   next unstarted cells in dependency order: ES-CELL-IND-PRET-1SG-CONJ1, ES-CELL-IND-PRET-1SG-CONJ2, ES-CELL-IND-PRET-1SG-CONJ3
