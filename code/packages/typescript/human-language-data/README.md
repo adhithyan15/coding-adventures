@@ -62,7 +62,7 @@ import {
   validateCurriculum,
 } from "@coding-adventures/human-language-data";
 
-const { curricula, dataset, lessons, registry, scripts, spine, taxonomy } = loadEverything();
+const { curricula, dataset, lessons, registry, scripts, soundTags, spine, taxonomy } = loadEverything();
 
 // Typed activities compile directly from block metadata, never from prose.
 const activities = compileLessonActivities(lessons[0].blocks);
@@ -73,7 +73,7 @@ languagesForConcept(dataset, "GREETING-HELLO");
 
 // The consistency gate:
 const issues = [
-  ...validate({ taxonomy, lessons, scripts }),
+  ...validate({ taxonomy, lessons, scripts, soundTags }),
   ...validateCurriculum({ curricula, lessons, registry, spine, taxonomy }),
 ];
 
