@@ -1,8 +1,14 @@
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { defaultCurriculumRoot, loadScripts } from "../src/loader.js";
-import { JAPANESE_SCRIPT_PLAN, runShardCli } from "../src/shard-cli.js";
+import {
+  JAPANESE_SCRIPT_PLAN,
+  PERSO_ARABIC_SCRIPT_PLAN,
+  URDU_NASTALIQ_SCRIPT_PLAN,
+  runShardCli,
+} from "../src/shard-cli.js";
 import { mergeScriptInventoryShards, scriptEntryId } from "../src/script-shards.js";
 import { readShards, type Shard } from "../src/shard.js";
 
@@ -33,6 +39,30 @@ const mark = (glyph: string) => ({
   role: "other",
   attachesAs: "after a kana",
 });
+
+const INVENTORIES = [
+  {
+    name: "japanese",
+    plan: JAPANESE_SCRIPT_PLAN,
+    letters: 46,
+    marks: 3,
+    digest: "1b65688867c0f378984dcaf47cbeb6d24f3806d240263adf8484de9a4b995ad6",
+  },
+  {
+    name: "perso-arabic",
+    plan: PERSO_ARABIC_SCRIPT_PLAN,
+    letters: 24,
+    marks: 1,
+    digest: "a4c339e47e75ffdd1aa7111d1cde5017ad6d70c9a9499b91694c6a3384d63d19",
+  },
+  {
+    name: "urdu-nastaliq",
+    plan: URDU_NASTALIQ_SCRIPT_PLAN,
+    letters: 29,
+    marks: 2,
+    digest: "75c5ff2a3b74a1681036ccacbd3355951a00c2dd8b199e92be69dcbaf580c342",
+  },
+] as const;
 
 describe("Japanese script inventory shards", () => {
   it("uses stable code-point ids instead of filesystem-dependent glyph names", () => {
@@ -98,5 +128,28 @@ describe("Japanese script inventory shards", () => {
       meta,
       shard("marks/0010-U-309B.json", { sound: "voicing" }),
     ])).toThrow(/non-empty 'mark'/);
+  });
+});
+
+describe("shard-native script inventories", () => {
+  it.each(INVENTORIES)("reconstructs $name exactly and forbids its aggregate", ({
+    name,
+    plan,
+    letters,
+    marks,
+    digest,
+  }) => {
+    const root = defaultCurriculumRoot();
+    const monolithPath = join(root, "data", "scripts", `${name}.json`);
+    const monolith = JSON.parse(readFileSync(monolithPath, "utf8")) as unknown;
+    const shards = readShards(monolithPath);
+    expect(shards).not.toBeNull();
+    const assembled = mergeScriptInventoryShards(shards!);
+    expect(assembled).toEqual(monolith);
+    expect(assembled.letters).toHaveLength(letters);
+    expect(assembled.marks).toHaveLength(marks);
+    expect(createHash("sha256").update(JSON.stringify(assembled)).digest("hex")).toBe(digest);
+    expect(loadScripts(root)[name]).toEqual(monolith);
+    expect(plan.monolith).toBe("removed");
   });
 });

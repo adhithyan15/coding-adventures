@@ -4,7 +4,12 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from sharded_ledger import load_curriculum, write_chapters, write_curriculum
+from sharded_ledger import (
+    load_curriculum,
+    load_script_inventory,
+    write_chapters,
+    write_curriculum,
+)
 
 
 def write_json(path, value):
@@ -39,6 +44,22 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
         write_json(directory / "path" / "0010-ES-PATH-001.json", {"id": "ES-PATH-001"})
         write_json(directory / "spine" / "0010-SPINE-ONE.json", {"segments": []})
         (directory / "extensions").mkdir()
+        return directory
+
+    def script_tree(self):
+        directory = self.root / "data" / "scripts" / "japanese.d"
+        write_json(
+            directory / "_meta.json",
+            {
+                "script": "japanese",
+                "name": "Japanese",
+                "font": "font.ttf",
+                "direction": "ltr",
+                "system": "mixed",
+            },
+        )
+        write_json(directory / "letters" / "0010-U-3042.json", {"glyph": "あ"})
+        write_json(directory / "marks" / "0010-U-309B.json", {"mark": "゛"})
         return directory
 
     def test_dangling_shard_symlink_cannot_create_its_target(self):
@@ -102,6 +123,25 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
             json.loads((directory / "path" / "0010-ES-PATH-001.json").read_text()),
             {"id": "ES-PATH-001"},
         )
+
+    def test_script_inventory_reconstructs_sections_in_filename_order(self):
+        self.script_tree()
+        inventory = load_script_inventory(self.root, "japanese")
+        self.assertEqual(inventory["script"], "japanese")
+        self.assertEqual(inventory["letters"], [{"glyph": "あ"}])
+        self.assertEqual(inventory["marks"], [{"mark": "゛"}])
+
+    def test_script_inventory_rejects_filename_identity_mismatch(self):
+        directory = self.script_tree()
+        write_json(directory / "letters" / "0020-U-3044.json", {"glyph": "う"})
+        with self.assertRaisesRegex(ValueError, "identity does not match shard name"):
+            load_script_inventory(self.root, "japanese")
+
+    def test_script_inventory_rejects_duplicate_ordinals_across_one_section(self):
+        directory = self.script_tree()
+        write_json(directory / "letters" / "0010-U-3044.json", {"glyph": "い"})
+        with self.assertRaisesRegex(ValueError, "duplicate letters ordinal"):
+            load_script_inventory(self.root, "japanese")
 
 
 if __name__ == "__main__":
