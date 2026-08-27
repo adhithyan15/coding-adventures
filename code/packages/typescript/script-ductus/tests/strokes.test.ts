@@ -264,6 +264,7 @@ const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
 const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const KANNADA_AA = DUCTUS[ductusKey("kannada", "ಆ")];
 const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
+const KANNADA_U = DUCTUS[ductusKey("kannada", "ಉ")];
 const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
 const KANNADA_EE = DUCTUS[ductusKey("kannada", "ಏ")];
 const KANNADA_O = DUCTUS[ductusKey("kannada", "ಒ")];
@@ -1039,6 +1040,20 @@ describe("handwriting ductus", () => {
       "descend through the broad outer curve and turn left along the base",
       "close the lower loop and sweep out to the right",
     ]);
+  });
+
+  it("Kannada ಉ carries both bowls through the tall arch without lifting", () => {
+    expect(penLifts(KANNADA_U)).toBe(0);
+    expect(KANNADA_U.strokes).toHaveLength(1);
+    expect(KANNADA_U.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "turn counterclockwise around the compact upper-left loop",
+      "descend through the left shoulder and sweep around the broad lower-left bowl",
+      "climb over the tall middle arch and descend into the lower-right bowl",
+      "sweep around the outer-right curve and finish at the open upper terminal",
+    ]);
+    expect(KANNADA_U.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-u.gif",
+    );
   });
 
   it("Kannada ಎ carries both lower curves into the tall arch without lifting", () => {

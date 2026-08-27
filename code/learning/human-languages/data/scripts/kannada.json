@@ -5522,10 +5522,24 @@
       "sound": "u",
       "role": "vowel",
       "components": [
-        "ಉ  u — independent vowel (word-initial)"
+        "a compact upper-left loop",
+        "a broad lower-left bowl",
+        "a tall middle arch descending into the lower-right bowl",
+        "an outer-right curve ending at the open upper terminal"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn counterclockwise around the compact upper-left loop",
+        "without lifting, descend through the left shoulder and sweep around the broad lower-left bowl",
+        "without lifting, climb over the tall middle arch and descend into the lower-right bowl",
+        "without lifting, sweep around the outer-right curve and finish at the open upper terminal"
+      ],
+      "strokeOrderNote": "Four visible movements in one continuous pen-down run: the upper-left loop flows through the lower-left bowl, tall middle arch, lower-right bowl, and open upper terminal.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-u.gif, animation of Kannada independent vowel ಉ, 35 frames, 3.5 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-u.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಉ in one uninterrupted run: turn around the compact upper-left loop, descend through the left shoulder and broad lower-left bowl, climb over the tall middle arch into the lower-right bowl, then sweep around the outer-right curve and finish at the open upper terminal. The path is fitted to the bundled Noto Sans Kannada outline; handwritten loop width, bowl depth, arch height, and terminal angle vary, but the zero-lift order remains the same."
+      }
     },
     {
       "glyph": "ಊ",
