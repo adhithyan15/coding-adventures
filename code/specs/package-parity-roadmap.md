@@ -9389,30 +9389,31 @@ from exact `origin/main` `580e1a1710452f1133eae07cc5252961920cac57`.
 
 ## Pre-publication Rebase and Manchester Baby Classification
 
-Before publication, the selected branch rebased conflict-free onto exact
-`origin/main` `4085e0c00031fc254973810d20930a809279e324`. The intervening
-Mermaid, Algol, Manchester Baby, Spanish, human-language, and blog changes have
-no exact overlap with this tranche's 57 Vigenere, fixture-generator, state,
-roadmap, CI, and changelog paths.
+Before publication, the selected branch rebased conflict-free twice, finally
+onto exact `origin/main` `063d4d725df6dd8f854ef6c3a74a6459d8322e3b`. The
+intervening Mermaid, Algol, two Manchester Baby, Spanish, human-language,
+HTML-parser, and blog changes have no exact overlap with this tranche's 57
+Vigenere, fixture-generator, state, roadmap, CI, and changelog paths.
 
-The required collision-checked schema-3 refresh records 15 established lanes,
-1,374 implementation identities, 4,584 package slots, and 1,413 all-reported
-identities. The four bands are now 175/266, 123/934, 167/2,100, and 909/12,726;
-Rust retains 721 singletons, canonical collisions and unknown buckets remain
-zero, and OCaml remains emerging at zero packages. Merged PR #13198 added the
-Rust `manchester-baby-simulator` beside its existing TypeScript package. It
-therefore adds one slot without adding an identity, moving that package from
-the singleton band into the two-to-four-lane band rather than creating a new
-Rust singleton.
+The final required collision-checked schema-3 refresh records 15 established
+lanes, 1,375 implementation identities, 4,585 package slots, and 1,414
+all-reported identities. The four bands are now 175/266, 123/934, 167/2,100,
+and 910/12,740; Rust has 722 singletons, canonical collisions and unknown
+buckets remain zero, and OCaml remains emerging at zero packages. Merged PR
+#13198 added the Rust `manchester-baby-simulator` beside its existing
+TypeScript package. It therefore added one slot without adding an identity,
+moving that package from the singleton band into the two-to-four-lane band.
+Merged PR #13218 then added the independently named Rust-only
+`manchester-baby-gatelevel`, contributing one identity, one slot, and one Rust
+singleton.
 
 New pending owner `manchester-baby-simulator-two-lane-classification` records
-that newly exposed thirteen-lane classification gap before publication. It
-will compare the pure CPU-state, instruction, stepping, diagnostic, and
-resource-limit behavior, then define a neutral contract and dependency-shaped
-applicable-lane rollout or a reviewed target-specific exception. Separately
-named gate-level simulator work remains outside this owner. The resulting
-complete acyclic graph has 538 owners and 795 dependency edges: 161 merged,
-376 pending, and exactly one in-progress owner, with no active parity PR.
+the higher-level simulator's thirteen-lane classification gap. Separate new
+pending owner `manchester-baby-gatelevel-singleton-classification` records the
+gate-level package's transistor, netlist, clock, machine-state, diagnostic,
+resource-limit, portability, and applicability review. The resulting complete
+acyclic graph has 539 owners and 795 dependency edges: 161 merged, 377 pending,
+and exactly one in-progress owner, with no active parity PR.
 
 ## Autonomous Loop Protocol
 
