@@ -1,0 +1,13 @@
+{
+  "id": "MW-EXT-009-HEAR-MHARO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can recognise mhāro by ear and use it as my before a masculine name word.",
+  "prerequisites": [
+    "MW-EXT-008-RETRIEVE-PAANI"
+  ],
+  "lessons": [
+    "MW-C05-hear-mharo"
+  ]
+}

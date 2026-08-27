@@ -1,0 +1,17 @@
+{
+  "segments": [
+    "MW-PATH-004",
+    "MW-PATH-010",
+    "MW-PATH-011",
+    "MW-PATH-012",
+    "MW-PATH-013",
+    "MW-PATH-014",
+    "MW-PATH-015",
+    "MW-PATH-016"
+  ],
+  "omits": [
+    "COURTESY-PLEASE",
+    "COURTESY-SORRY"
+  ],
+  "relocates": {}
+}

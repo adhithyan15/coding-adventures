@@ -1,0 +1,24 @@
+{
+  "chapter": 2,
+  "title": "A Daytime Greeting, One Sign at a Time",
+  "label": "ch:ja-daytime-greeting",
+  "canDo": "I can write the five distinct signs in こんにちは, read them in order, and remember why final は is pronounced wa.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "JA-C01-konnichiwa",
+    "kind": "dialogue",
+    "summary": "A one-line daytime greeting whose five signs were each taught before the learner reads it.",
+    "assesses": [
+      "JA-LEX-KONNICHIWA",
+      "JA-PARTICLE-WA-SPELLING",
+      "JA-SCRIPT-KONNICHIWA-READ-01",
+      "JA-SCRIPT-KO-01",
+      "JA-SCRIPT-N-01",
+      "JA-SCRIPT-NI-01",
+      "JA-SCRIPT-CHI-01",
+      "JA-SCRIPT-WA-01"
+    ]
+  }
+}

@@ -33,6 +33,23 @@ language's word for it is a **realization** (Spanish *hola*, Telugu *నమస�
 That join is what lets a study app say "here is *hello* in every language you're
 learning."
 
+### Authoring sharded ledgers
+
+Every track's chapter and curriculum ledgers are conflict-resistant shards.
+Edit `<track>/chapters.d/` and `<track>/curriculum.d/`, then regenerate the
+single-file browser views; do not hand-edit or hand-merge those generated JSON
+files.
+
+```bash
+npm run unshard -- <track>/chapters.json
+npm run unshard -- <track>/curriculum.json
+npm run check:shards
+```
+
+If an older tool changed a monolith, run `npm run shard -- <path>` instead to
+project that edit into shards before regenerating. CI requires every generated
+monolith to match its shard source byte for byte.
+
 ## Usage
 
 ```ts

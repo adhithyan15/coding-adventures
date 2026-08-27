@@ -1,0 +1,21 @@
+{
+  "id": "MW-EXT-029-TRANSPORT-THREE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve bus, vehicle, and cart in listening, speaking, reading, and writing using only previously taught Devanagari signs.",
+  "prerequisites": [
+    "MW-EXT-028-SHOPPING-SEVEN"
+  ],
+  "lessons": [
+    "MW-C16-hear-bas",
+    "MW-C16-bas",
+    "MW-C16-hear-gaadi",
+    "MW-C16-gaadi",
+    "MW-C16-hear-thela",
+    "MW-C16-thela",
+    "MW-R16-transport-three",
+    "MW-C16-transport-three",
+    "MW-R16-transport-close"
+  ]
+}

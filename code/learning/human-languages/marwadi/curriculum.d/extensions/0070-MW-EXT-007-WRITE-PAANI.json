@@ -1,0 +1,16 @@
+{
+  "id": "MW-EXT-007-WRITE-PAANI",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognise and form प, ण, and ी, reuse ा, and assemble पाणी without substituting Hindi न.",
+  "prerequisites": [
+    "MW-EXT-006-HEAR-PAANI"
+  ],
+  "lessons": [
+    "MW-W04-pa",
+    "MW-W04-nna",
+    "MW-W04-ii-matra",
+    "MW-C04-paani"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 30,
+  "title": "Cheese, Butter, Salt, Egg",
+  "label": "ch:fr-cheese-butter-salt-egg",
+  "canDo": "I can ask for cheese, butter, salt or an egg in French, and say why un œuf keeps its final f while les œufs drops it.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "FR-C30-oeuf",
+    "kind": "task",
+    "summary": "Ask for an egg, hold un œuf's pronounced f against les œufs' silent one, and place œuf beside English egg as genuine cousins rather than a borrowing. Reaches back past the chapter to le sel, le beurre and le fromage, and to Chapter 29's elision rule, which l'œuf needs exactly as l'ami did.",
+    "assesses": [
+      "FR-LEX-OEUF-07",
+      "FR-ETYMON-OEUF-08",
+      "FR-LEX-SEL-05",
+      "FR-LEX-BEURRE-03",
+      "FR-LEX-FROMAGE-01",
+      "FR-GRAMMAR-ELISION-ARTICLE-02"
+    ]
+  }
+}

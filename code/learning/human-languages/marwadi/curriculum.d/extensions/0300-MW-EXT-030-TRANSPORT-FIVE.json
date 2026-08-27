@@ -1,0 +1,20 @@
+{
+  "id": "MW-EXT-030-TRANSPORT-FIVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can add rickshaw and horse to a five-word transport map in four separately scored skills after learning only श.",
+  "prerequisites": [
+    "MW-EXT-029-TRANSPORT-THREE"
+  ],
+  "lessons": [
+    "MW-C17-hear-riksha",
+    "MW-W17-sha",
+    "MW-C17-riksha",
+    "MW-C17-hear-ghodo",
+    "MW-C17-ghodo",
+    "MW-R17-transport-new-two",
+    "MW-C17-transport-five",
+    "MW-R17-script-close"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "chapter": 1,
+  "title": "Ram-Ram Sa: A Greeting the Hand Can Make",
+  "label": "ch:mw-ram-ram-sa",
+  "canDo": "I can recognise, read, say, copy, and write the respectful Marwadi greeting राम-राम सा, and answer it with the same greeting.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "MW-C01-practice",
+    "kind": "dialogue",
+    "summary": "A two-line authentic greeting exchange followed by independent written recall, using only signs and language taught in the chapter.",
+    "assesses": [
+      "MW-SCRIPT-RA-01",
+      "MW-SCRIPT-AA-MATRA-01",
+      "MW-SCRIPT-MA-01",
+      "MW-SCRIPT-RAAM-01",
+      "MW-LEX-RAAM-01",
+      "MW-SCRIPT-SA-01",
+      "MW-SCRIPT-SAA-01",
+      "MW-LEX-RAAM-RAAM-SAA",
+      "MW-REGISTER-SAA",
+      "MW-DIALOGUE-GREETING-01"
+    ]
+  }
+}

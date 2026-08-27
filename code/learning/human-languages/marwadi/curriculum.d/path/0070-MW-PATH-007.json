@@ -1,0 +1,20 @@
+{
+  "id": "MW-PATH-007",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "MW-C07-hear-later",
+    "MW-W07-chha",
+    "MW-W07-e-matra",
+    "MW-W07-i-matra",
+    "MW-W07-la",
+    "MW-C07-read-later",
+    "MW-C07-practice"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-019-HEAR-LATER",
+    "MW-EXT-020-WRITE-LATER",
+    "MW-EXT-021-FAREWELL-LATER"
+  ],
+  "after": []
+}

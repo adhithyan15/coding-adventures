@@ -1,0 +1,16 @@
+{
+  "chapter": 8,
+  "title": "Telling the Time",
+  "label": "ch:time",
+  "canDo": "I can ask for and tell the time in French.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FR-C08-midi-minuit",
+    "kind": "task",
+    "summary": "Complete FR-C08-midi-minuit, the canonical closing checkpoint, and demonstrate the chapter promise: ask for and tell the time in French.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

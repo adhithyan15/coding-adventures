@@ -1,0 +1,16 @@
+{
+  "chapter": 15,
+  "title": "The Compound Past",
+  "label": "ch:passe-compose",
+  "canDo": "I can build the chapter's conversational past tense in French and say what happened.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "FR-C15-passe-simple",
+    "kind": "task",
+    "summary": "Complete FR-C15-passe-simple, the canonical closing checkpoint, and demonstrate the chapter promise: build the chapter's conversational past tense in French and say what happened.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "MW-EXT-011-NAME-ANSWER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can hear, say, read, and independently write म्हारो नाम राम है and substitute a chosen name in speech.",
+  "prerequisites": [
+    "MW-EXT-010-WRITE-MHARO"
+  ],
+  "lessons": [
+    "MW-C05-hear-naam",
+    "MW-W05-na",
+    "MW-C05-naam",
+    "MW-C05-hear-hai",
+    "MW-W05-ai-matra",
+    "MW-C05-answer"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "chapter": 12,
+  "title": "Seven More Body Words, Spaced on Purpose",
+  "label": "ch:ja-body-seven-more",
+  "canDo": "I can read, write, hear, and say seven more body words while retrieving older script, greeting, farewell, and repair knowledge at expanding intervals.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "JA-C12-body-map-two",
+    "kind": "reading",
+    "summary": "Seven fully decodable body labels interleaved with measured R3 and R4 retrieval rather than taught as a single topical list.",
+    "assesses": [
+      "JA-LEX-ATAMA",
+      "JA-LEX-KAMI-HAIR",
+      "JA-LEX-HA-TOOTH",
+      "JA-LEX-KATA-SHOULDER",
+      "JA-LEX-ONAKA",
+      "JA-LEX-SENAKA",
+      "JA-LEX-KOSHI",
+      "JA-PERFORMANCE-BODY-FOURTEEN-01"
+    ]
+  }
+}

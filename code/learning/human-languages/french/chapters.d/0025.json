@@ -1,0 +1,26 @@
+{
+  "chapter": 25,
+  "title": "Verbs of the Mind",
+  "label": "ch:fr-verbs-of-the-mind",
+  "canDo": "I can say what I understand, think, read and write in French, and take comprendre apart into com- plus prendre — so understanding, in French, is grasping.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "FR-C25-ecrire",
+    "kind": "task",
+    "summary": "Say the chapter's four with je — je comprends, je pense, je lis, j'écris — and take écrire apart into scrībere 'to scratch' plus the propped-up é- that also made école and étoile. Reaches back past the chapter to la main and manus from Chapter 17, which meet écrire inside the single word manuscript, and to prendre and aimer from Chapter 24.",
+    "assesses": [
+      "FR-LEX-COMPRENDRE-01",
+      "FR-LEX-PENSER-04",
+      "FR-LEX-LIRE-06",
+      "FR-ETYMON-LIRE-07",
+      "FR-LEX-ECRIRE-08",
+      "FR-ETYMON-ECRIRE-09",
+      "FR-LEX-MAIN-02",
+      "FR-ETYMON-MAIN-04",
+      "FR-LEX-PRENDRE-01",
+      "FR-LEX-AIMER-09"
+    ]
+  }
+}

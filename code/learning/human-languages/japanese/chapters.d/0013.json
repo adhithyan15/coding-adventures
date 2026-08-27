@@ -1,0 +1,26 @@
+{
+  "chapter": 13,
+  "title": "Nine Family Words Through One New Kana",
+  "label": "ch:ja-family-nine",
+  "canDo": "I can hear, say, read, and write nine immediate-family words, with listening, speaking, reading, and writing scored independently.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "JA-C13-family-check",
+    "kind": "dialogue",
+    "summary": "Nine official Irodori Starter family words built from earned hiragana plus one separately traced, copied, and recalled full-size つ.",
+    "assesses": [
+      "JA-LEX-CHICHI",
+      "JA-LEX-HAHA",
+      "JA-LEX-ANI",
+      "JA-LEX-ANE",
+      "JA-LEX-OTOUTO",
+      "JA-LEX-IMOUTO",
+      "JA-LEX-OTTO",
+      "JA-LEX-TSUMA",
+      "JA-LEX-KODOMO",
+      "JA-PERFORMANCE-FAMILY-NINE-01"
+    ]
+  }
+}

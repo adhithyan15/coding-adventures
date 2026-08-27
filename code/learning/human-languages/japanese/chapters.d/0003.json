@@ -1,0 +1,26 @@
+{
+  "chapter": 3,
+  "title": "Plain Thanks, One Sign at a Time",
+  "label": "ch:ja-plain-thanks",
+  "canDo": "I can write and read ありがとう, build が with the dakuten, and say the five morae without swallowing the long final vowel.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "JA-C01-arigatou",
+    "kind": "dialogue",
+    "summary": "A plain thank-you read only after every distinct hiragana sign and the dakuten have their own small step.",
+    "assesses": [
+      "JA-LEX-ARIGATOU",
+      "JA-SCRIPT-DAKUTEN",
+      "JA-ETYMON-ARIGATASHI",
+      "JA-SCRIPT-ARIGATOU-READ-01",
+      "JA-SCRIPT-A-01",
+      "JA-SCRIPT-RI-01",
+      "JA-SCRIPT-KA-01",
+      "JA-SCRIPT-DAKUTEN-01",
+      "JA-SCRIPT-TO-01",
+      "JA-SCRIPT-U-01"
+    ]
+  }
+}

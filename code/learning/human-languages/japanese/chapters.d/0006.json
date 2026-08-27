@@ -1,0 +1,21 @@
+{
+  "chapter": 6,
+  "title": "Coffee in Katakana, Three Shapes",
+  "label": "ch:ja-koohii-katakana",
+  "canDo": "I can write コ, ー, and ヒ, read コーヒー as four morae, and explain that the long mark holds the preceding vowel.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "JA-C01-koohii",
+    "kind": "reading",
+    "summary": "A borrowed word made from only three distinct katakana shapes, each taught before the full word appears.",
+    "assesses": [
+      "JA-LEX-KOOHII",
+      "JA-SCRIPT-KATAKANA-KO-01",
+      "JA-SCRIPT-KATAKANA-LONG-MARK-01",
+      "JA-SCRIPT-KATAKANA-HI-01",
+      "JA-SCRIPT-CHOUON"
+    ]
+  }
+}

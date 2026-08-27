@@ -1,0 +1,16 @@
+{
+  "chapter": 6,
+  "title": "Numbers One to Ten",
+  "label": "ch:numbers-1-10",
+  "canDo": "I can count from one to ten in French and use the numbers in a short exchange.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FR-C06-nombres-6-10",
+    "kind": "task",
+    "summary": "Complete FR-C06-nombres-6-10, the canonical closing checkpoint, and demonstrate the chapter promise: count from one to ten in French and use the numbers in a short exchange.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

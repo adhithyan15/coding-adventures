@@ -1,0 +1,21 @@
+{
+  "chapter": 17,
+  "title": "Head and Hand",
+  "label": "ch:fr-head-and-hand",
+  "canDo": "I can name the head and the hand in French with the right article, and point out the Latin manus hiding inside English manual, manufacture and maintain.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C17-main",
+    "kind": "production",
+    "summary": "Say la main with its nasal -ain, then run the manus family out loud — manual, manuscript, maintenir — and land on manufacture, 'made by hand', now the name for the opposite.",
+    "assesses": [
+      "FR-LEX-MAIN-02",
+      "FR-SOUND-MAIN-03",
+      "FR-ETYMON-MAIN-04",
+      "FR-ETYMON-MAINTENIR-05"
+    ],
+    "note": "Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence; it exercises the main half of the chapter but not the tête half."
+  }
+}

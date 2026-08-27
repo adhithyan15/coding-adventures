@@ -1,0 +1,16 @@
+{
+  "segments": [
+    "MW-PATH-005",
+    "MW-PATH-008",
+    "MW-PATH-009"
+  ],
+  "omits": [
+    "PRONOUN-I",
+    "PRONOUN-ME",
+    "PRONOUN-YOU",
+    "WORD-IS",
+    "INTRO-WHATS-YOUR-NAME",
+    "INTRO-NICE-TO-MEET-YOU"
+  ],
+  "relocates": {}
+}

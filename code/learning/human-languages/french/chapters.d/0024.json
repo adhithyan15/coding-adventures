@@ -1,0 +1,27 @@
+{
+  "chapter": 24,
+  "title": "Taking, Asking, Helping, Loving",
+  "label": "ch:fr-taking-asking-helping-loving",
+  "canDo": "I can say that I take, ask, help and like or love in French, break prendre's stem the way its plural requires, and know that je t'aime bien is weaker than je t'aime rather than stronger.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "FR-C24-aimer",
+    "kind": "task",
+    "summary": "Run the chapter's four verbs together with je — je prends, je demande, j'aide, j'aime — then turn aimer over: one verb covers like and love, the thing named decides which, and adding bien downgrades it. Reaches back past the chapter to re-say le chien and le chat from Chapter 22, le vert from Chapter 23, and the s'il vous plaît request from Chapter 19.",
+    "assesses": [
+      "FR-LEX-PRENDRE-01",
+      "FR-LEX-DEMANDER-04",
+      "FR-LEX-AIDER-07",
+      "FR-ETYMON-AIDER-08",
+      "FR-LEX-AIMER-09",
+      "FR-ETYMON-AIMER-10",
+      "FR-PRAGMATICS-AIMER-BIEN-11",
+      "FR-LEX-CHIEN-02",
+      "FR-LEX-CHAT-04",
+      "FR-LEX-VERT-02",
+      "FR-LEX-PLEASE-02"
+    ]
+  }
+}

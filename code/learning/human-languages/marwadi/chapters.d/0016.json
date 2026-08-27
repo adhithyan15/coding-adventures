@@ -1,0 +1,23 @@
+{
+  "chapter": 16,
+  "title": "Wind, Cloud, and Rain: No New Signs",
+  "label": "ch:mw-weather-three",
+  "canDo": "I can recognise, say, read, and write wind, cloud, and rain using only signs already secured in earlier chapters.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C11-weather-three",
+    "kind": "four-skill-vocabulary-map",
+    "summary": "Three source-attested weather nouns begin by ear, reuse the established script inventory, and finish in four separately scored skills without claiming a weather conversation is complete.",
+    "assesses": [
+      "MW-LEX-HAWA-01",
+      "MW-SCRIPT-HAWA-01",
+      "MW-LEX-BAADAL-01",
+      "MW-SCRIPT-BAADAL-01",
+      "MW-LEX-BARSAAT-01",
+      "MW-SCRIPT-BARSAAT-01",
+      "MW-PERFORMANCE-WEATHER-THREE-FOUR-SKILL-01"
+    ]
+  }
+}

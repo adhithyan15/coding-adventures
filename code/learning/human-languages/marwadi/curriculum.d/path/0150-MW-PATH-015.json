@@ -1,0 +1,20 @@
+{
+  "id": "MW-PATH-015",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "MW-C16-hear-bas",
+    "MW-C16-bas",
+    "MW-C16-hear-gaadi",
+    "MW-C16-gaadi",
+    "MW-C16-hear-thela",
+    "MW-C16-thela",
+    "MW-R16-transport-three",
+    "MW-C16-transport-three",
+    "MW-R16-transport-close"
+  ],
+  "before": [],
+  "inline": [
+    "MW-EXT-029-TRANSPORT-THREE"
+  ],
+  "after": []
+}

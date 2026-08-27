@@ -1,0 +1,25 @@
+{
+  "id": "MW-EXT-026-WEATHER-SIX",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can add weather, heat, and cold to the earlier wind-cloud-rain map in four separately scored skills after learning only the au mark, ग, and ड.",
+  "prerequisites": [
+    "MW-EXT-025-WEATHER-THREE"
+  ],
+  "lessons": [
+    "MW-C12-hear-mausam",
+    "MW-W12-au-matra",
+    "MW-C12-mausam",
+    "MW-C12-hear-garmi",
+    "MW-W12-ga",
+    "MW-C12-garmi",
+    "MW-R12-weather-first-two",
+    "MW-C12-hear-thandi",
+    "MW-W12-dda",
+    "MW-C12-thandi",
+    "MW-R12-weather-new-three",
+    "MW-C12-weather-six",
+    "MW-R12-script-close"
+  ]
+}

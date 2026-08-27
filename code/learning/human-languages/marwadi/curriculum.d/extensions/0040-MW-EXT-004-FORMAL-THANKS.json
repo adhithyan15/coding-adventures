@@ -1,0 +1,16 @@
+{
+  "id": "MW-EXT-004-FORMAL-THANKS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can recognise, hear, say, and independently write आभार as a short formal gratitude response.",
+  "prerequisites": [
+    "MW-EXT-003-RESPECTFUL-GREETING"
+  ],
+  "lessons": [
+    "MW-W02-aa-independent",
+    "MW-W02-bha",
+    "MW-C02-aabhaar",
+    "MW-C02-practice"
+  ]
+}

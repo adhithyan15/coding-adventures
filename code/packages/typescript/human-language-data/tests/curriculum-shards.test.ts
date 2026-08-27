@@ -34,29 +34,26 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { SHARD_PLANS, runShardCli, shardContents, unshardContents } from "../src/shard-cli.js";
-import { defaultCurriculumRoot, loadCurriculumSpine, loadLanguageCurricula } from "../src/loader.js";
+import {
+  defaultCurriculumRoot,
+  loadCurriculumSpine,
+  loadLanguageCurricula,
+  loadLanguageRegistry,
+} from "../src/loader.js";
 import { listShardNames, mergeSectionedShards } from "../src/shard.js";
 
 const root = defaultCurriculumRoot();
 const CURRICULUM_PLANS = SHARD_PLANS.filter((plan) => plan.path.endsWith("/curriculum.json"));
 
-/**
- * The one track left on its monolith.
- *
- * `marwadi/curriculum.json` writes its `lessons` arrays inline on one line, so
- * `JSON.stringify(…, null, 2)` does not reproduce its bytes. Data identical,
- * bytes not — reported rather than reformatted, per HL21 §8.9.
- */
-const UNMIGRATED = "marwadi";
-
 const codeUnit = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
 
 describe("the curriculum.d migration covers what it claims to", () => {
-  it("sharded 22 tracks and left the one that does not round-trip", () => {
-    expect(CURRICULUM_PLANS).toHaveLength(22);
-    expect(CURRICULUM_PLANS.some((p) => p.path === `${UNMIGRATED}/curriculum.json`)).toBe(false);
-    expect(existsSync(join(root, UNMIGRATED, "curriculum.json"))).toBe(true);
-    expect(existsSync(join(root, UNMIGRATED, "curriculum.d"))).toBe(false);
+  it("shards all twenty-three tracks", () => {
+    expect(CURRICULUM_PLANS).toHaveLength(23);
+    const expected = loadLanguageRegistry(root).languages
+      .map((track) => `${track.id}/curriculum.json`)
+      .sort(codeUnit);
+    expect(CURRICULUM_PLANS.map((plan) => plan.path).sort(codeUnit)).toEqual(expected);
   });
 
   it("passes --check for every sharded ledger", () => {
