@@ -8,6 +8,11 @@ const X_MASK: i32 = 0x7fff;
 const MODIFIER_SHIFT: i32 = 13;
 const MODIFIER_MASK: i32 = 0x03 << MODIFIER_SHIFT;
 const N_MASK: i32 = 0x3f;
+const DECIMAL_FLAG_BIT: i32 = 1 << 18;
+const CLOCK_DAY_SIXTHS: i32 = 24 * 60 * 60 * 6;
+const CLOCK_WORD_MODULUS: u64 = 1 << 19;
+const DECIMAL_SINGLE_MODULUS: i32 = 1_000;
+const DECIMAL_DOUBLE_MODULUS: i64 = 1_000_000;
 const SXG_BASE: i32 = 0o2506003;
 const SXG_GROUP_SHIFT: i32 = 3;
 const SXG_GROUP_MASK: i32 = 0x1f << SXG_GROUP_SHIFT;
@@ -41,7 +46,7 @@ const OP_EXT: i32 = 0o20;
 const OP_CAB: i32 = 0o21;
 const OP_DCB: i32 = 0o22;
 const OP_ORY: i32 = 0o23;
-const OP_MOY: i32 = 0o24;
+const OP_MOV: i32 = 0o24;
 const OP_RCD: i32 = 0o25;
 const OP_BRU: i32 = 0o26;
 const OP_STO: i32 = 0o27;
@@ -67,7 +72,9 @@ pub struct State {
     pub overflow: bool,
     pub parity_error: bool,
     pub decimal_mode: bool,
+    pub decimal_carry: i32,
     pub automatic_interrupt_mode: bool,
+    pub clock_sixths: i32,
     pub selected_x_group: usize,
     pub n_ready: bool,
     pub typewriter_power: bool,
@@ -121,7 +128,7 @@ fn base_opcode_name(opcode: i32) -> Option<&'static str> {
         OP_CAB => "CAB",
         OP_DCB => "DCB",
         OP_ORY => "ORY",
-        OP_MOY => "MOY",
+        OP_MOV => "MOV",
         OP_RCD => "RCD",
         OP_BRU => "BRU",
         OP_STO => "STO",
@@ -149,6 +156,8 @@ fn fixed_word(mnemonic: &str) -> Option<i32> {
         "MAQ" => 0o2504006,
         "ADO" => 0o2504032,
         "SBO" => 0o2504112,
+        "LAC" => 0o2504202,
+        "LCA" => 0o2504210,
         "SET_DECMODE" => 0o2506011,
         "SET_BINMODE" => 0o2506012,
         "SET_PST" => 0o2506015,
@@ -189,6 +198,8 @@ fn fixed_name(word: i32) -> Option<&'static str> {
         0o2504006 => "MAQ",
         0o2504032 => "ADO",
         0o2504112 => "SBO",
+        0o2504202 => "LAC",
+        0o2504210 => "LCA",
         0o2506011 => "SET_DECMODE",
         0o2506012 => "SET_BINMODE",
         0o2506015 => "SET_PST",
@@ -286,6 +297,163 @@ fn to_signed20(value: i32) -> i32 {
 fn from_signed20(value: i32) -> i32 {
     value & MASK_20
 }
+
+fn decimal_digits(word: i32) -> Result<i32, String> {
+    let hundreds = (word >> 12) & 0x0f;
+    let tens = (word >> 6) & 0x0f;
+    let ones = word & 0x0f;
+    if hundreds > 9 || tens > 9 || ones > 9 {
+        return Err(format!(
+            "invalid GE-225 BCD digits in word {:07o}: {hundreds}{tens}{ones}",
+            word & MASK_20
+        ));
+    }
+    Ok(hundreds * 100 + tens * 10 + ones)
+}
+
+fn encode_decimal_word(digits: i32, negative: bool, flagged: bool) -> i32 {
+    let hundreds = digits / 100;
+    let tens = (digits / 10) % 10;
+    let ones = digits % 10;
+    (if negative { SIGN_BIT } else { 0 })
+        | (if flagged { DECIMAL_FLAG_BIT } else { 0 })
+        | (hundreds << 12)
+        | (tens << 6)
+        | ones
+}
+
+fn signed_decimal(raw: i64, negative: bool, modulus: i64) -> i64 {
+    if negative && raw != 0 {
+        raw - modulus
+    } else {
+        raw
+    }
+}
+
+fn wrap_flagged_decimal(total: i64, modulus: i64) -> (i64, bool, bool) {
+    let overflow = !(-(modulus - 1)..=(modulus - 1)).contains(&total);
+    let negative = if total >= modulus {
+        true
+    } else if total <= -modulus {
+        false
+    } else {
+        total < 0
+    };
+    (total.rem_euclid(modulus), negative, overflow)
+}
+
+fn decimal_word_operation(
+    accumulator: i32,
+    operand: i32,
+    subtract: bool,
+    carry: i32,
+) -> Result<(i32, i32, bool), String> {
+    let left_raw = decimal_digits(accumulator)?;
+    let right_raw = decimal_digits(operand)?;
+    let accumulator_flagged = (accumulator & DECIMAL_FLAG_BIT) != 0;
+    if (operand & DECIMAL_FLAG_BIT) != 0 && !accumulator_flagged {
+        return Err("GE-225 decimal operand is flagged while A is unflagged".into());
+    }
+
+    if accumulator_flagged {
+        let left = signed_decimal(
+            i64::from(left_raw),
+            (accumulator & SIGN_BIT) != 0,
+            i64::from(DECIMAL_SINGLE_MODULUS),
+        );
+        let right = signed_decimal(
+            i64::from(right_raw),
+            (operand & SIGN_BIT) != 0,
+            i64::from(DECIMAL_SINGLE_MODULUS),
+        );
+        let total = left + if subtract { -right } else { right } + i64::from(carry);
+        let (digits, negative, overflow) =
+            wrap_flagged_decimal(total, i64::from(DECIMAL_SINGLE_MODULUS));
+        return Ok((
+            encode_decimal_word(digits as i32, negative, true),
+            0,
+            overflow,
+        ));
+    }
+
+    let total = left_raw + if subtract { -right_raw } else { right_raw } + carry;
+    let next_carry = if total >= DECIMAL_SINGLE_MODULUS {
+        1
+    } else if total < 0 {
+        -1
+    } else {
+        0
+    };
+    Ok((
+        encode_decimal_word(total.rem_euclid(DECIMAL_SINGLE_MODULUS), false, false),
+        next_carry,
+        false,
+    ))
+}
+
+fn decimal_pair_operation(
+    a: i32,
+    q: i32,
+    high_operand: i32,
+    low_operand: i32,
+    subtract: bool,
+    carry: i32,
+) -> Result<(i32, i32, i32, bool), String> {
+    let a_high = decimal_digits(a)?;
+    let a_low = decimal_digits(q)?;
+    let operand_high = decimal_digits(high_operand)?;
+    let operand_low = decimal_digits(low_operand)?;
+    let accumulator_flagged = (a & DECIMAL_FLAG_BIT) != 0;
+    if (high_operand & DECIMAL_FLAG_BIT) != 0 && !accumulator_flagged {
+        return Err("GE-225 double-decimal operand is flagged while A is unflagged".into());
+    }
+
+    let left_raw = i64::from(a_high * DECIMAL_SINGLE_MODULUS + a_low);
+    let right_raw = i64::from(operand_high * DECIMAL_SINGLE_MODULUS + operand_low);
+    if accumulator_flagged {
+        let left = signed_decimal(left_raw, (a & SIGN_BIT) != 0, DECIMAL_DOUBLE_MODULUS);
+        let right = signed_decimal(
+            right_raw,
+            (high_operand & SIGN_BIT) != 0,
+            DECIMAL_DOUBLE_MODULUS,
+        );
+        let total = left + if subtract { -right } else { right } + i64::from(carry);
+        let (raw, negative, overflow) = wrap_flagged_decimal(total, DECIMAL_DOUBLE_MODULUS);
+        let high = (raw / i64::from(DECIMAL_SINGLE_MODULUS)) as i32;
+        let low = (raw % i64::from(DECIMAL_SINGLE_MODULUS)) as i32;
+        return Ok((
+            encode_decimal_word(high, negative, true),
+            encode_decimal_word(low, false, false),
+            0,
+            overflow,
+        ));
+    }
+
+    let total = left_raw + if subtract { -right_raw } else { right_raw } + i64::from(carry);
+    let next_carry = if total >= DECIMAL_DOUBLE_MODULUS {
+        1
+    } else if total < 0 {
+        -1
+    } else {
+        0
+    };
+    let raw = total.rem_euclid(DECIMAL_DOUBLE_MODULUS);
+    Ok((
+        encode_decimal_word(
+            (raw / i64::from(DECIMAL_SINGLE_MODULUS)) as i32,
+            false,
+            false,
+        ),
+        encode_decimal_word(
+            (raw % i64::from(DECIMAL_SINGLE_MODULUS)) as i32,
+            false,
+            false,
+        ),
+        next_carry,
+        false,
+    ))
+}
+
 fn sign_of(word: i32) -> i32 {
     if (word & SIGN_BIT) != 0 {
         1
@@ -429,7 +597,9 @@ pub struct Simulator {
     overflow: bool,
     parity_error: bool,
     decimal_mode: bool,
+    decimal_carry: i32,
     automatic_interrupt_mode: bool,
+    clock_sixths: i32,
     selected_x_group: usize,
     n_ready: bool,
     typewriter_power: bool,
@@ -458,7 +628,9 @@ impl Simulator {
             overflow: false,
             parity_error: false,
             decimal_mode: false,
+            decimal_carry: 0,
             automatic_interrupt_mode: false,
+            clock_sixths: 0,
             selected_x_group: 0,
             n_ready: true,
             typewriter_power: false,
@@ -478,7 +650,9 @@ impl Simulator {
         self.overflow = false;
         self.parity_error = false;
         self.decimal_mode = false;
+        self.decimal_carry = 0;
         self.automatic_interrupt_mode = false;
+        self.clock_sixths = 0;
         self.selected_x_group = 0;
         self.n_ready = true;
         self.typewriter_power = false;
@@ -505,7 +679,9 @@ impl Simulator {
             overflow: self.overflow,
             parity_error: self.parity_error,
             decimal_mode: self.decimal_mode,
+            decimal_carry: self.decimal_carry,
             automatic_interrupt_mode: self.automatic_interrupt_mode,
+            clock_sixths: self.clock_sixths,
             selected_x_group: self.selected_x_group,
             n_ready: self.n_ready,
             typewriter_power: self.typewriter_power,
@@ -520,6 +696,35 @@ impl Simulator {
 
     pub fn set_control_switches(&mut self, value: i32) {
         self.control_switches = value & MASK_20;
+    }
+
+    pub fn set_clock_sixths(&mut self, value: i32) -> Result<(), String> {
+        if !(0..=DATA_MASK).contains(&value) {
+            return Err(format!(
+                "GE-225 clock must fit its 19-bit C register, got {value}"
+            ));
+        }
+        self.clock_sixths = value;
+        Ok(())
+    }
+
+    pub fn advance_clock_sixths(&mut self, ticks: u64) {
+        let day = CLOCK_DAY_SIXTHS as u64;
+        let current = self.clock_sixths as u64;
+        self.clock_sixths = if current < day {
+            ((current + ticks % day) % day) as i32
+        } else {
+            let ticks_to_word_wrap = CLOCK_WORD_MODULUS - current;
+            if ticks < ticks_to_word_wrap {
+                (current + ticks) as i32
+            } else {
+                ((ticks - ticks_to_word_wrap) % day) as i32
+            }
+        };
+    }
+
+    pub fn clear_decimal_carry(&mut self) {
+        self.decimal_carry = 0;
     }
     pub fn set_program_counter(&mut self, address: i32) -> Result<(), String> {
         self.set_pc(address)
@@ -658,7 +863,7 @@ impl Simulator {
                 });
             } else if !matches!(
                 execution_decoded.mnemonic,
-                "BXL" | "BXH" | "LDX" | "SPB" | "INX" | "STX" | "MOY"
+                "BXL" | "BXH" | "LDX" | "SPB" | "INX" | "STX" | "MOV"
             ) {
                 effective_address = Some(self.resolve_effective_address(address, modifier)?);
             }
@@ -668,6 +873,7 @@ impl Simulator {
                 }
             }
         }
+        self.preflight_decimal(&execution_decoded, effective_address)?;
         self.ir = ir_word;
         self.pc = sequential_pc;
         let a_before = self.a;
@@ -733,6 +939,65 @@ impl Simulator {
         self.write_word(self.x_address(slot)?, value)
     }
 
+    fn preflight_decimal(
+        &self,
+        decoded: &DecodedInstruction,
+        effective_address: Option<i32>,
+    ) -> Result<(), String> {
+        if !self.decimal_mode {
+            return Ok(());
+        }
+        match decoded.mnemonic {
+            "ADD" | "SUB" => {
+                let address = effective_address.ok_or_else(|| {
+                    format!(
+                        "GE-225 {} decoder omitted its effective address",
+                        decoded.mnemonic
+                    )
+                })?;
+                let operand = self.read_word(address)?;
+                decimal_word_operation(
+                    self.a,
+                    operand,
+                    decoded.mnemonic == "SUB",
+                    self.decimal_carry,
+                )?;
+            }
+            "DAD" | "DSU" => {
+                let address = effective_address.ok_or_else(|| {
+                    format!(
+                        "GE-225 {} decoder omitted its effective address",
+                        decoded.mnemonic
+                    )
+                })?;
+                let first = self.read_word(address)?;
+                let second = if (address & 1) != 0 {
+                    first
+                } else {
+                    self.read_word(self.following_address(address)?)?
+                };
+                decimal_pair_operation(
+                    self.a,
+                    self.q,
+                    first,
+                    second,
+                    decoded.mnemonic == "DSU",
+                    self.decimal_carry,
+                )?;
+            }
+            "ADO" | "SBO" => {
+                decimal_word_operation(
+                    self.a,
+                    encode_decimal_word(1, false, false),
+                    decoded.mnemonic == "SBO",
+                    self.decimal_carry,
+                )?;
+            }
+            _ => {}
+        }
+        Ok(())
+    }
+
     fn execute_memory_reference(
         &mut self,
         mnemonic: &str,
@@ -748,16 +1013,36 @@ impl Simulator {
                 self.a = self.m;
             }
             "ADD" => {
-                self.m = self.read_word(effective_address)?;
-                let total = to_signed20(self.a) + to_signed20(self.m);
-                self.a = from_signed20(total);
-                self.overflow |= !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+                let operand = self.read_word(effective_address)?;
+                if self.decimal_mode {
+                    let (result, carry, overflow) =
+                        decimal_word_operation(self.a, operand, false, self.decimal_carry)?;
+                    self.m = operand;
+                    self.a = result;
+                    self.decimal_carry = carry;
+                    self.overflow |= overflow;
+                } else {
+                    self.m = operand;
+                    let total = to_signed20(self.a) + to_signed20(self.m);
+                    self.a = from_signed20(total);
+                    self.overflow |= !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+                }
             }
             "SUB" => {
-                self.m = self.read_word(effective_address)?;
-                let total = to_signed20(self.a) - to_signed20(self.m);
-                self.a = from_signed20(total);
-                self.overflow |= !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+                let operand = self.read_word(effective_address)?;
+                if self.decimal_mode {
+                    let (result, carry, overflow) =
+                        decimal_word_operation(self.a, operand, true, self.decimal_carry)?;
+                    self.m = operand;
+                    self.a = result;
+                    self.decimal_carry = carry;
+                    self.overflow |= overflow;
+                } else {
+                    self.m = operand;
+                    let total = to_signed20(self.a) - to_signed20(self.m);
+                    self.a = from_signed20(total);
+                    self.overflow |= !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+                }
             }
             "STA" => self.write_word(effective_address, self.a)?,
             "BXL" => {
@@ -793,32 +1078,60 @@ impl Simulator {
                 }
             }
             "DAD" => {
-                let left = to_signed_double(self.a, self.q);
                 let first = self.read_word(effective_address)?;
                 let second = if (effective_address & 1) != 0 {
                     first
                 } else {
                     self.read_word(self.following_address(effective_address)?)?
                 };
-                let total = left + to_signed_double(first, second);
-                (self.a, self.q) = split_signed_double(total);
-                self.overflow |= !(-(1_i64 << DOUBLE_DATA_BITS)
-                    ..=((1_i64 << DOUBLE_DATA_BITS) - 1))
-                    .contains(&total);
+                if self.decimal_mode {
+                    let (a, q, carry, overflow) = decimal_pair_operation(
+                        self.a,
+                        self.q,
+                        first,
+                        second,
+                        false,
+                        self.decimal_carry,
+                    )?;
+                    self.a = a;
+                    self.q = q;
+                    self.decimal_carry = carry;
+                    self.overflow |= overflow;
+                } else {
+                    let total = to_signed_double(self.a, self.q) + to_signed_double(first, second);
+                    (self.a, self.q) = split_signed_double(total);
+                    self.overflow |= !(-(1_i64 << DOUBLE_DATA_BITS)
+                        ..=((1_i64 << DOUBLE_DATA_BITS) - 1))
+                        .contains(&total);
+                }
             }
             "DSU" => {
-                let left = to_signed_double(self.a, self.q);
                 let first = self.read_word(effective_address)?;
                 let second = if (effective_address & 1) != 0 {
                     first
                 } else {
                     self.read_word(self.following_address(effective_address)?)?
                 };
-                let total = left - to_signed_double(first, second);
-                (self.a, self.q) = split_signed_double(total);
-                self.overflow |= !(-(1_i64 << DOUBLE_DATA_BITS)
-                    ..=((1_i64 << DOUBLE_DATA_BITS) - 1))
-                    .contains(&total);
+                if self.decimal_mode {
+                    let (a, q, carry, overflow) = decimal_pair_operation(
+                        self.a,
+                        self.q,
+                        first,
+                        second,
+                        true,
+                        self.decimal_carry,
+                    )?;
+                    self.a = a;
+                    self.q = q;
+                    self.decimal_carry = carry;
+                    self.overflow |= overflow;
+                } else {
+                    let total = to_signed_double(self.a, self.q) - to_signed_double(first, second);
+                    (self.a, self.q) = split_signed_double(total);
+                    self.overflow |= !(-(1_i64 << DOUBLE_DATA_BITS)
+                        ..=((1_i64 << DOUBLE_DATA_BITS) - 1))
+                        .contains(&total);
+                }
             }
             "DST" => {
                 if (effective_address & 1) != 0 {
@@ -900,9 +1213,9 @@ impl Simulator {
                 let word = self.read_word(effective_address)?;
                 self.write_word(effective_address, word | self.a)?;
             }
-            "MOY" => {
+            "MOV" => {
                 let word_count = usize::try_from((-to_signed20(self.q)).max(0))
-                    .map_err(|_| "GE-225 MOY word count overflow".to_string())?;
+                    .map_err(|_| "GE-225 MOV word count overflow".to_string())?;
                 let destination = self.a & X_MASK;
                 let source_range = self.checked_range(raw_address, word_count)?;
                 let destination_range = self.checked_range(destination, word_count)?;
@@ -991,15 +1304,35 @@ impl Simulator {
                 self.a = 0;
             }
             "ADO" => {
-                let total = to_signed20(self.a) + 1;
-                self.a = from_signed20(total);
-                self.overflow |= !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+                if self.decimal_mode {
+                    let one = encode_decimal_word(1, false, false);
+                    let (result, carry, overflow) =
+                        decimal_word_operation(self.a, one, false, self.decimal_carry)?;
+                    self.a = result;
+                    self.decimal_carry = carry;
+                    self.overflow |= overflow;
+                } else {
+                    let total = to_signed20(self.a) + 1;
+                    self.a = from_signed20(total);
+                    self.overflow |= !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+                }
             }
             "SBO" => {
-                let total = to_signed20(self.a) - 1;
-                self.a = from_signed20(total);
-                self.overflow |= !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+                if self.decimal_mode {
+                    let one = encode_decimal_word(1, false, false);
+                    let (result, carry, overflow) =
+                        decimal_word_operation(self.a, one, true, self.decimal_carry)?;
+                    self.a = result;
+                    self.decimal_carry = carry;
+                    self.overflow |= overflow;
+                } else {
+                    let total = to_signed20(self.a) - 1;
+                    self.a = from_signed20(total);
+                    self.overflow |= !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+                }
             }
+            "LAC" => self.a = self.clock_sixths & DATA_MASK,
+            "LCA" => self.clock_sixths = self.a & DATA_MASK,
             "SET_DECMODE" => self.decimal_mode = true,
             "SET_BINMODE" => self.decimal_mode = false,
             "SXG" => {
@@ -1380,7 +1713,7 @@ mod tests {
     }
 
     #[test]
-    fn moy_moves_blocks() {
+    fn mov_moves_blocks() {
         let mut sim = Simulator::new(4096).unwrap();
         sim.write_word(20, 0x11111).unwrap();
         sim.write_word(21, 0x22222).unwrap();
