@@ -293,6 +293,7 @@ const MALAYALAM_CHILLU_RR = DUCTUS[ductusKey("malayalam", "ർ")];
 const MALAYALAM_ZHA = DUCTUS[ductusKey("malayalam", "ഴ")];
 const TAMIL_U = DUCTUS["உ"];
 const TAMIL_NGA = DUCTUS["ங"];
+const TAMIL_NYA = DUCTUS["ஞ"];
 const JAPANESE_SHI = DUCTUS[ductusKey("japanese", "し")];
 const JAPANESE_KU = DUCTUS[ductusKey("japanese", "く")];
 const JAPANESE_TA = DUCTUS[ductusKey("japanese", "た")];
@@ -729,6 +730,14 @@ describe("handwriting ductus", () => {
       "carry the low bar to the right",
       "return left and finish up the inner stem",
     ]);
+  });
+
+  it("Tamil ஞ groups Frame 8's eight movements into four runs", () => {
+    expect(penLifts(TAMIL_NYA)).toBe(3);
+    expect(TAMIL_NYA.strokes).toHaveLength(4);
+    expect(TAMIL_NYA.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 2, 3]);
+    expect(TAMIL_NYA.source.citation).toMatch(/Tamil Script Learners Manual.*Frame 8.*ஞ.*p\. 194/i);
+    expect(TAMIL_NYA.source.variation).toMatch(/1–2.*left inner loop.*3.*top bar.*4–5.*central descent.*6–8.*outer bowl.*four-run order.*Noto Sans Tamil/i);
   });
 
   it("Japanese し descends and sweeps upward right without lifting", () => {
@@ -7292,6 +7301,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
     expect(src.citation).toMatch(/Appendix I.*Frame 2.*ங.*p\. 191/i);
     expect(src.variation).toMatch(/detached descending upright.*five joined movements.*detached upright on the right.*two-run order/i);
+  });
+
+  it("ஞ's four-run order traces to Appendix I Frame 8", () => {
+    const src = DUCTUS["ஞ"].source;
+    expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
+    expect(src.citation).toMatch(/Appendix I.*Frame 8.*ஞ.*p\. 194/i);
+    expect(src.variation).toMatch(/eight movements.*1–2.*left inner loop.*3.*top bar.*4–5.*central descent.*6–8.*outer bowl.*varies by school.*four-run order.*Noto Sans Tamil/i);
   });
 
   it("வ's stroke order traces to Frame 9's first row", () => {

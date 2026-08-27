@@ -124,6 +124,14 @@ export const scriptInventoryEvidence = {
     expect(tamilNga.strokeOrderSource?.variation).toMatch(
       /detached descending upright.*five joined movements.*Noto Sans Tamil.*detached upright on the right.*varies by school.*two-run order/i,
     );
+    const tamilNya = scripts.tamil!.letters.find((entry) => entry.glyph === "ஞ")!;
+    expect(tamilNya.sound).toBe("ña");
+    expect(tamilNya.role).toBe("consonant");
+    expect(tamilNya.penLifts).toBe(3);
+    expect(tamilNya.strokeOrder).toHaveLength(8);
+    expect(tamilNya.strokeOrderNote).toMatch(/four strokes.*1–2.*inner loop.*3.*top bar.*4–5.*central descent.*6–8.*outer bowl/i);
+    expect(tamilNya.strokeOrderSource?.citation).toMatch(/Tamil Script Learners Manual.*Appendix I.*Frame 8.*ஞ.*University of Texas at Austin.*p\. 194/i);
+    expect(tamilNya.strokeOrderSource?.variation).toMatch(/eight movements.*1–2.*left inner loop.*3.*top bar.*4–5.*central descent.*6–8.*outer bowl.*varies by school.*four-run order.*Noto Sans Tamil/i);
     const tamilRetroflexLa = scripts.tamil!.letters.find(
       (entry) => entry.glyph === "ள",
     )!;
@@ -347,5 +355,7 @@ export const scriptInventoryEvidence = {
     expect(affected.get("உ") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ங")).toBe(false);
     expect(affected.get("ங") ?? 0).toBe(0);
+    expect(missingByScript.get("tamil.json")?.has("ஞ")).toBe(false);
+    expect(affected.get("ஞ") ?? 0).toBe(0);
   },
 };

@@ -7,7 +7,7 @@
   "signature": "Curvy and loopy with flat top-bars on many letters, repeated arches, and no continuous head-line.",
   "complete": false,
   "combination": "A consonant carries an inherent 'a' (க = ka). A vowel sign replaces that vowel (க + ா → கா = kā). The puḷḷi ் — a DOT above the letter — removes the vowel entirely (க் = k). Unlike Devanagari, Tamil does NOT fuse the bare consonant into a conjunct: the dot stays visible and both letters keep their full shape. (A handful of Sanskrit-borrowed ligatures are the exception — க்ஷ kṣa and ஸ்ரீ śrī.)",
-  "notes": "Used by Tamil in this curriculum. The inventory below covers the greeting and self-introduction vocabulary of Chapters 1–2 and grows from there; it is deliberately not the full 247-character grid. Stroke orders are the common handwriting convention, not a standard — Tamil is taught with regional and school-to-school variation. IMPORTANT for authors: a `strokeOrder` list names the PARTS of a letter in writing order; it does NOT by itself say where the pen lifts. All twenty-one letters in this starter inventory have authored, font-checked pen paths (`DUCTUS` in language-ladder's `strokes.ts`). அ, ஆ, இ, எ, ச, ண, and ன each have two pen-down runs with one verified lift; எ keeps its first six movements joined before the separate right upright, ஆ continues from its upright into the long-vowel loop, இ joins its outer-left climb to the final arch, ச joins its upper-frame movements before the separate lower-left bowl, and ண and ன join their loop-and-arch bodies to the top bar before the separate right upright. க, ந, ர, ற, ள, and ழ each use three pen-down runs with two verified lifts, while த uses four runs with three verified lifts. உ, ட, ப, ம, ய, வ, and ல are each a single unbroken stroke even though their parts have separate names. There are no unverified letters in this starter inventory. Component descriptions name the pieces a learner can see in the vendored Noto Sans Tamil face; several letters share a straight top bar and are best learned as a family (ச/க, ண/ன, ந, ர, ற).",
+  "notes": "Used by Tamil in this curriculum. The inventory below covers the greeting and self-introduction vocabulary of Chapters 1–2 and grows from there; it is deliberately not the full 247-character grid. Stroke orders are the common handwriting convention, not a standard — Tamil is taught with regional and school-to-school variation. IMPORTANT for authors: a `strokeOrder` list names the PARTS of a letter in writing order; it does NOT by itself say where the pen lifts. All twenty-two letters in this starter inventory have authored, font-checked pen paths (`DUCTUS` in language-ladder's `strokes.ts`). அ, ஆ, இ, எ, ச, ண, and ன each have two pen-down runs with one verified lift; எ keeps its first six movements joined before the separate right upright, ஆ continues from its upright into the long-vowel loop, இ joins its outer-left climb to the final arch, ச joins its upper-frame movements before the separate lower-left bowl, and ண and ன join their loop-and-arch bodies to the top bar before the separate right upright. க, ந, ர, ற, ள, and ழ each use three pen-down runs with two verified lifts, while த and ஞ use four runs with three verified lifts. உ, ட, ப, ம, ய, வ, and ல are each a single unbroken stroke even though their parts have separate names. There are no unverified letters in this starter inventory. Component descriptions name the pieces a learner can see in the vendored Noto Sans Tamil face; several letters share a straight top bar and are best learned as a family (ச/க, ண/ன, ந, ர, ற).",
   "letters": [
     {
       "glyph": "அ",
@@ -183,6 +183,31 @@
         "variation": "Frame 3 numbers the three joined upper-frame movements before the separate fourth movement turns around ச's lower-left bowl. Tamil handwriting varies by school; this is one attested two-run order fitted to the bundled Noto Sans Tamil outline."
       },
       "notes": "Ca is the simpler sibling of க: both begin with the same upper frame, but ச keeps only the rounded lower-left bowl and lets the middle bar project to the right. The final movement closes that bowl back at the crossing. The numbered movements form two pen-down runs, not four separate strokes."
+    },
+    {
+      "glyph": "ஞ",
+      "sound": "ña",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": ["a compact left inner loop", "a long top bar", "a central descent with a right shoulder", "a broad outer bowl returning up the left"],
+      "strokeOrder": [
+        "start inside the compact left body and curve down into its inner turn",
+        "without lifting, circle around the left inner loop and return toward its upper-left edge — then lift once",
+        "set the pen at the left end of the long top bar and carry it straight to the right — then lift a second time",
+        "set the pen at the upper-right shoulder and curve left toward the central upright",
+        "without lifting, descend the central upright to its lower end — then lift a third time",
+        "set the pen on the upper-right side and sweep around the broad outer-right curve",
+        "without lifting, continue around the bottom bowl toward the far left",
+        "without lifting, return up the outer-left side and finish below the top bar"
+      ],
+      "strokeOrderNote": "four strokes — movements 1–2 form the left inner loop, movement 3 is the detached top bar, movements 4–5 form the shoulder and central descent, and movements 6–8 form the broad outer bowl; cited to Radhakrishnan, Tamil Script Learners Manual, Appendix I, Frame 8, ஞ",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 8, ஞ (University of Texas at Austin), p. 194",
+        "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+        "variation": "Appendix I Frame 8 numbers eight movements: 1–2 build the left inner loop, 3 draws the top bar, 4–5 form the shoulder and central descent, and 6–8 sweep around the broad outer bowl. Tamil handwriting varies by school; this is one attested four-run order fitted to the bundled Noto Sans Tamil outline."
+      },
+      "notes": "Ña is the palatal nasal heard in combinations such as ஞ்ச. Frame 8's eight numbered movements resolve into four pen-down runs in this font fit: inner loop, top bar, central shoulder-and-descent, and outer bowl."
     },
     {
       "glyph": "ப",
