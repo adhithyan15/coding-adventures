@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Taking, Thinking, Helping, Loving",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dc3e5450b3065b85",
+  "sourceHash": "fnv1a64:50bfbe0a5a2b3534",
   "lessons": [
     {
       "id": "AR-C32-akhadha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ba58f2589a487984",
+      "sourceHash": "fnv1a64:1dc9e5ab79008815",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c78324b8fddadc52",
+      "sourceHash": "fnv1a64:0920dc9c960f0e97",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -374,7 +374,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:76c015b2e8c3825c",
+      "sourceHash": "fnv1a64:89c7eb58178e49e3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -552,7 +552,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:88bbb0888c85b0a7",
+      "sourceHash": "fnv1a64:c2fe789512d75d1a",
       "notice": {
         "modality": "sight",
         "needs": [

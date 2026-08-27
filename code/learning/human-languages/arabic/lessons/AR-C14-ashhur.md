@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-C14-ASHHUR-01, AR-CONCEPT-C14-ASHHUR-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [AR-CULTURE-CIVIL-MONTH-NAMES-REGIONAL-01, AR-CULTURE-HIJRI-CALENDAR-USE-02]
 practises:
   knowledge: [AR-CONCEPT-C14-ASHHUR-01, AR-CONCEPT-C14-ASHHUR-02]
 skills: [listening, speaking, reading]

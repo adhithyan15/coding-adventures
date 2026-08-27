@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-C23-AFWAN-01, AR-CONCEPT-C23-AFWAN-02]
+introduces_idioms: []
+introduces_senses: [AR-SENSE-AFWAN-COURTESY-REPAIR-01]
+introduces_culture_claims: [AR-CULTURE-AFUWW-DIVINE-NAME-01]
 practises:
   knowledge: [AR-CONCEPT-C23-AFWAN-01, AR-CONCEPT-C23-AFWAN-02]
 skills: [listening, speaking, reading]

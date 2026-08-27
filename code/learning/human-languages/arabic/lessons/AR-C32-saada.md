@@ -19,6 +19,9 @@ requires:
   knowledge: [AR-CONCEPT-C32-FAKKARA-01, AR-CONCEPT-C32-FAKKARA-02]
 introduces:
   knowledge: [AR-CONCEPT-C32-SAADA-01, AR-CONCEPT-C32-SAADA-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C32-SAADA-01, AR-CONCEPT-C32-SAADA-02, AR-CONCEPT-C32-FAKKARA-01, AR-CONCEPT-C32-FAKKARA-02, AR-CONCEPT-C32-AKHADHA-01, AR-CONCEPT-C30-ARAFA-01]
 skills: [listening, speaking, reading]

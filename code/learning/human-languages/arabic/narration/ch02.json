@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6ab19f4d7131734d",
+  "sourceHash": "fnv1a64:31a51f2caf5ae843",
   "lessons": [
     {
       "id": "AR-C02-ism",
@@ -1441,7 +1441,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:5be0d04de4f8d163",
+      "sourceHash": "fnv1a64:d99aa8c25c46a3b6",
       "notice": {
         "modality": "pen",
         "needs": [

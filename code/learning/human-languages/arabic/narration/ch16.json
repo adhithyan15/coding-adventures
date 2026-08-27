@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:413f30a56fea9570",
+  "sourceHash": "fnv1a64:de05917a5cadb4ba",
   "lessons": [
     {
       "id": "AR-C16-al-saa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42a178bd1fb74be6",
+      "sourceHash": "fnv1a64:08a66f753bded728",
       "notice": null,
       "blocks": [
         {

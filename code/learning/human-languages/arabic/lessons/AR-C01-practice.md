@@ -17,6 +17,9 @@ requires:
   knowledge: [AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-04, AR-SCRIPT-RA-HA-05, AR-SCRIPT-BA-FAMILY-06, AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-FULL-GREETING-09]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-04, AR-SCRIPT-RA-HA-05, AR-SCRIPT-BA-FAMILY-06, AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-FULL-GREETING-09]
 skills: [listening, speaking, reading, writing]

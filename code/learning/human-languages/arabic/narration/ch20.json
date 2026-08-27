@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:02fe68e22e87631c",
+  "sourceHash": "fnv1a64:c6e95160d5da7587",
   "lessons": [
     {
       "id": "AR-C20-ahada-ashar-ishrun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e829f5fd5ea8d75",
+      "sourceHash": "fnv1a64:d2531c72ae5075f8",
       "notice": null,
       "blocks": [
         {

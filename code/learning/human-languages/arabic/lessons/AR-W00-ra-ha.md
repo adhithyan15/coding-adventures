@@ -17,6 +17,9 @@ requires:
   knowledge: [AR-C01-MARHABA-04]
 introduces:
   knowledge: [AR-SCRIPT-RA-HA-05]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-C01-MARHABA-04, AR-SCRIPT-RA-HA-05]
 skills: [reading, writing]

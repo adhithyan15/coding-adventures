@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:f664b442e766a7eb",
+  "sourceHash": "fnv1a64:1ea0742914c9fb44",
   "summary": {
     "totalLessons": 108,
     "voice": 47,
@@ -628,7 +628,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6a36c8df576540f0",
+      "sourceHash": "fnv1a64:f43bc8f239ca29d9",
       "detachableSegments": [
         "Writing — first microstep"
       ]
@@ -651,7 +651,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:8183e294b0c9840b",
+      "sourceHash": "fnv1a64:48398a48761a6dc0",
       "detachableSegments": [
         "Script — recall sīn and add lām",
         "Writing — trace, then recall"
@@ -675,7 +675,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:48bee2dd55aefe69",
+      "sourceHash": "fnv1a64:1f0ce9bff579b36a",
       "detachableSegments": [
         "Script — observe two new shapes",
         "Writing — guided copy, then delayed copy"
@@ -697,7 +697,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b856a38826ac85f3"
+      "sourceHash": "fnv1a64:78fcb59cf537010c"
     },
     {
       "id": "AR-W00-ra-ha",
@@ -716,7 +716,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:7f866a3742cef536",
+      "sourceHash": "fnv1a64:6749fb2c7b4dfeb3",
       "detachableSegments": [
         "Script — observe rāʾ and ḥāʾ"
       ]
@@ -739,7 +739,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:1e9f2729aa20a317",
+      "sourceHash": "fnv1a64:e5d397833c65615c",
       "detachableSegments": [
         "Script — one skeleton, three letters",
         "Writing — guided copy, then delayed copy"
@@ -782,7 +782,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e06a7cce98b601f1"
+      "sourceHash": "fnv1a64:5992b7ae4d873471"
     },
     {
       "id": "AR-W00-ayn-ya",
@@ -801,7 +801,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:5b4d2d841746677d",
+      "sourceHash": "fnv1a64:c25ddf85b0b67fca",
       "detachableSegments": [
         "Script — observe ʿayn and yāʾ"
       ]
@@ -824,7 +824,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:3f3f294e2cf38289",
+      "sourceHash": "fnv1a64:0c21e02f82fea71e",
       "detachableSegments": [
         "Script — observe two new shapes",
         "Writing — guided copy, then delayed copy"
@@ -847,7 +847,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d30562ce6eec0d04",
+      "sourceHash": "fnv1a64:efa83f12b63ebc4b",
       "detachableSegments": [
         "Writing — dictation and repair"
       ]
@@ -931,7 +931,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b8468db8e3642fb9"
+      "sourceHash": "fnv1a64:8dfb926307c902fa"
     },
     {
       "id": "AR-W01-direction-and-alif",
@@ -1276,7 +1276,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:5be0d04de4f8d163",
+      "sourceHash": "fnv1a64:d99aa8c25c46a3b6",
       "detachableSegments": [
         "Script — Three marks, three instructions"
       ]
@@ -1316,7 +1316,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:bd49196de3cd0a4a",
+      "sourceHash": "fnv1a64:033b3143ac074409",
       "detachableSegments": [
         "Script — The hook-and-tail family",
         "Script — Draw them",
@@ -1340,7 +1340,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:12066b9d81273cbe",
+      "sourceHash": "fnv1a64:04487ef90e2dd6d7",
       "detachableSegments": [
         "Script — ك (kāf) — the angular k",
         "Script — ر (rā) — the little downward curve that breaks"
@@ -1363,7 +1363,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:ff8640e312fa8991",
+      "sourceHash": "fnv1a64:51150a65ec1d038e",
       "detachableSegments": [
         "Script — Assemble خير — right to left",
         "Script — Then بخير — \"(I'm) well\""
@@ -1385,7 +1385,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4d4f0429a815bfd9"
+      "sourceHash": "fnv1a64:73038833f9bf8888"
     },
     {
       "id": "AR-C03-hal",
@@ -1403,7 +1403,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:017e0b4e62ce2300"
+      "sourceHash": "fnv1a64:4e18d4422368b989"
     },
     {
       "id": "AR-C03-kayfa-haluka",
@@ -1421,7 +1421,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:ebca6f2afdb7274d"
+      "sourceHash": "fnv1a64:a25e4ef4183d839a"
     },
     {
       "id": "AR-C03-bi-khayr",
@@ -1439,7 +1439,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f3c11bb981abda92"
+      "sourceHash": "fnv1a64:815804bc30614305"
     },
     {
       "id": "AR-C03-al-hamdu-lillah",
@@ -1457,7 +1457,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fb4eafd54d45244e"
+      "sourceHash": "fnv1a64:56fb56016c78c612"
     },
     {
       "id": "AR-C03-practice",
@@ -1475,7 +1475,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:ba0898bc3feaa45b"
+      "sourceHash": "fnv1a64:d9581a608a683218"
     },
     {
       "id": "AR-W10-ayn",
@@ -1494,7 +1494,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:41b676bb74266c30",
+      "sourceHash": "fnv1a64:4fe833a181bf8395",
       "detachableSegments": [
         "Script — Draw it",
         "Script — A third dots-family",
@@ -1519,7 +1519,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:849de7ad76378728",
+      "sourceHash": "fnv1a64:8d771cbb144bec87",
       "detachableSegments": [
         "Script — ه (hāʾ) — the loop that never looks the same",
         "Script — ة (tāʾ marbūṭa) — the \"tied tāʾ\""
@@ -1542,7 +1542,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:44b336c3ea8b6fcb",
+      "sourceHash": "fnv1a64:05b37c3821332dd2",
       "detachableSegments": [
         "Script — Part 1 — مع (maʿa, \"with\")",
         "Script — Part 2 — السلامة (as-salāma, \"the safety\")",
@@ -1566,7 +1566,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4d6223a8157e97d3"
+      "sourceHash": "fnv1a64:3306f2422bf5157e"
     },
     {
       "id": "AR-C04-al-salama",
@@ -1584,7 +1584,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e310a26b87a53a68"
+      "sourceHash": "fnv1a64:4c15b2deaf663947"
     },
     {
       "id": "AR-C04-maa-salama",
@@ -1602,7 +1602,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b227719d446dd21a"
+      "sourceHash": "fnv1a64:4fe7ab7d1b0254f7"
     },
     {
       "id": "AR-C04-ila-liqaa",
@@ -1620,7 +1620,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e69d598f6d1990e8"
+      "sourceHash": "fnv1a64:c5f37317280287d1"
     },
     {
       "id": "AR-C04-practice",
@@ -1638,7 +1638,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:dc8602c69aa3d525"
+      "sourceHash": "fnv1a64:bef796c5f5af3150"
     },
     {
       "id": "AR-C05-naam",
@@ -1656,7 +1656,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8c749ad301412efe"
+      "sourceHash": "fnv1a64:d66cfac582b14269"
     },
     {
       "id": "AR-C05-la",
@@ -1674,7 +1674,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c044132d30f8a721"
+      "sourceHash": "fnv1a64:8711e53f0d973bba"
     },
     {
       "id": "AR-C06-min-fadlik",
@@ -1692,7 +1692,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e17fff0e577f02ce"
+      "sourceHash": "fnv1a64:94603795ffef9b7a"
     },
     {
       "id": "AR-C07-asif",
@@ -1710,7 +1710,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2eb595b74e4f9df5"
+      "sourceHash": "fnv1a64:0fc3b5ec45f56f6c"
     },
     {
       "id": "AR-C08-al-ahad-al-khamis",
@@ -1728,7 +1728,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:256f75fd5f1f3c3f"
+      "sourceHash": "fnv1a64:7da7ae9cb09d8dfc"
     },
     {
       "id": "AR-C08-al-jumua-as-sabt",
@@ -1746,7 +1746,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:35460220b0154ce3"
+      "sourceHash": "fnv1a64:91a910d35af6add4"
     },
     {
       "id": "AR-C09-aswad-abyad",
@@ -1764,7 +1764,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c0e830442ac228b5"
+      "sourceHash": "fnv1a64:b2af2b65ce7922c0"
     },
     {
       "id": "AR-C09-ahmar-azraq",
@@ -1782,7 +1782,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:326e9d5629639cf6"
+      "sourceHash": "fnv1a64:e33b9bca561d0a05"
     },
     {
       "id": "AR-C10-ab-umm",
@@ -1800,7 +1800,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7ac8641f61451bd9"
+      "sourceHash": "fnv1a64:9edbfa9dc7bd8772"
     },
     {
       "id": "AR-C10-akh-ukht",
@@ -1818,7 +1818,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:46c7c50078e64335"
+      "sourceHash": "fnv1a64:8d433a986f1d7f5c"
     },
     {
       "id": "AR-C11-ras",
@@ -1836,7 +1836,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:47bcf37ed366effd"
+      "sourceHash": "fnv1a64:292a1ee7bb8af3e2"
     },
     {
       "id": "AR-C11-yad",
@@ -1854,7 +1854,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e0adf54a63f55e87"
+      "sourceHash": "fnv1a64:b0d7323fd36c4fb4"
     },
     {
       "id": "AR-C12-al-fusul",
@@ -1872,7 +1872,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2f49159243716b70"
+      "sourceHash": "fnv1a64:71e2d8f01567dcc3"
     },
     {
       "id": "AR-C13-maa-khubz",
@@ -1890,7 +1890,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:08dfd74ec767791d"
+      "sourceHash": "fnv1a64:e7d6db2b37cdc4fe"
     },
     {
       "id": "AR-C14-ashhur",
@@ -1908,7 +1908,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e5051d5567cd25da"
+      "sourceHash": "fnv1a64:ea17f2007056922e"
     },
     {
       "id": "AR-C15-ad-duhr-muntasaf-al-layl",
@@ -1926,7 +1926,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0411a0cb0f4f7c11"
+      "sourceHash": "fnv1a64:86bf1195fc44b2d1"
     },
     {
       "id": "AR-C16-al-saa",
@@ -1944,7 +1944,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:42a178bd1fb74be6"
+      "sourceHash": "fnv1a64:08a66f753bded728"
     },
     {
       "id": "AR-C17-kam-umruka",
@@ -1962,7 +1962,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8f69cf2d5f5d07d1"
+      "sourceHash": "fnv1a64:e8d12b6c0accf21a"
     },
     {
       "id": "AR-C18-al-taqs",
@@ -1980,7 +1980,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:25835c3671e986bc"
+      "sourceHash": "fnv1a64:93f13cebf55ff849"
     },
     {
       "id": "AR-C19-wahid-khamsa",
@@ -1998,7 +1998,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:194e70a900faede5"
+      "sourceHash": "fnv1a64:0eb7a9cdc220901c"
     },
     {
       "id": "AR-C20-ahada-ashar-ishrun",
@@ -2016,7 +2016,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7e829f5fd5ea8d75"
+      "sourceHash": "fnv1a64:d2531c72ae5075f8"
     },
     {
       "id": "AR-C21-kalb-qitt",
@@ -2034,7 +2034,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5c58ecb89a42a062"
+      "sourceHash": "fnv1a64:8a59ae9aec12cf31"
     },
     {
       "id": "AR-C22-akhdar-asfar",
@@ -2052,7 +2052,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c39f01d4603699e5"
+      "sourceHash": "fnv1a64:ec774fd58f3703bc"
     },
     {
       "id": "AR-C23-afwan",
@@ -2070,7 +2070,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:649e7fa3ce3a0668"
+      "sourceHash": "fnv1a64:49aae7d8cb564dcf"
     },
     {
       "id": "AR-C24-ila-al-ghad",
@@ -2088,7 +2088,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bbf0d19361870582"
+      "sourceHash": "fnv1a64:608eaf5bda0588b7"
     },
     {
       "id": "AR-C25-yawm",
@@ -2106,7 +2106,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0de5d8903cefad89"
+      "sourceHash": "fnv1a64:85de22eaa26254ee"
     },
     {
       "id": "AR-C26-layl",
@@ -2124,7 +2124,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dcd7b1cc0fd5a4bc"
+      "sourceHash": "fnv1a64:c103551f6178cf57"
     },
     {
       "id": "AR-C27-tusbih-ala-khayr",
@@ -2142,7 +2142,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2df88df161fba6d1"
+      "sourceHash": "fnv1a64:36d59f6a17fa74bf"
     },
     {
       "id": "AR-C28-dhahaba",
@@ -2160,7 +2160,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:20ee1b4f18263d8d"
+      "sourceHash": "fnv1a64:2151630b765fc8cc"
     },
     {
       "id": "AR-C28-jaa",
@@ -2178,7 +2178,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:eb37703b0c5a237f"
+      "sourceHash": "fnv1a64:1a4865032340188a"
     },
     {
       "id": "AR-C29-qala",
@@ -2196,7 +2196,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ce20844fd21afc59"
+      "sourceHash": "fnv1a64:396e669ee87451cc"
     },
     {
       "id": "AR-C29-raa",
@@ -2214,7 +2214,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fef39f3ff85a08c5"
+      "sourceHash": "fnv1a64:c6508ebdb058ef96"
     },
     {
       "id": "AR-C30-arafa",
@@ -2232,7 +2232,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8ce3988b76cd6848"
+      "sourceHash": "fnv1a64:84ad40fca3e2cd89"
     },
     {
       "id": "AR-C30-akala",
@@ -2250,7 +2250,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7474171579a55797"
+      "sourceHash": "fnv1a64:d498fb9f4efba396"
     },
     {
       "id": "AR-C31-fahima",
@@ -2268,7 +2268,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9a1c0dfa08fc8d85",
+      "sourceHash": "fnv1a64:738b4d53dba30b82",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2289,7 +2289,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a6c623bef5913c4a",
+      "sourceHash": "fnv1a64:95a2ed237b209731",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2310,7 +2310,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e2d6c52642cbb69e",
+      "sourceHash": "fnv1a64:47ae9c9d94e9033f",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2331,7 +2331,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4d30131d8755ccb9",
+      "sourceHash": "fnv1a64:8547e4f46f446aaa",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2352,7 +2352,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ba58f2589a487984",
+      "sourceHash": "fnv1a64:1dc9e5ab79008815",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2373,7 +2373,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c78324b8fddadc52",
+      "sourceHash": "fnv1a64:0920dc9c960f0e97",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2394,7 +2394,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:76c015b2e8c3825c",
+      "sourceHash": "fnv1a64:89c7eb58178e49e3",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2415,7 +2415,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:88bbb0888c85b0a7",
+      "sourceHash": "fnv1a64:c2fe789512d75d1a",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2436,7 +2436,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d386b81660d43aa0",
+      "sourceHash": "fnv1a64:b0c9bb3a0fc4fb71",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2457,7 +2457,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:28e14939b0409873",
+      "sourceHash": "fnv1a64:b8b0762737b151ec",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2478,7 +2478,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:db0d13a9953e0c80",
+      "sourceHash": "fnv1a64:ed73d776b8b8ee89",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2499,7 +2499,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:537116d3714fb966",
+      "sourceHash": "fnv1a64:2e1b0191f766aa53",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2520,7 +2520,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0f5ea9c24ee5e175",
+      "sourceHash": "fnv1a64:159b460cc4fe0068",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2541,7 +2541,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fc6790ceb65f68c5",
+      "sourceHash": "fnv1a64:12f17bdf25c20d6c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2562,7 +2562,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:23468191710d0fc0",
+      "sourceHash": "fnv1a64:908d5b39d1839fbf",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2583,7 +2583,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4a7d4b03514270ed",
+      "sourceHash": "fnv1a64:82b37b1cea17c422",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2604,7 +2604,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c3b5d894189ce2e2",
+      "sourceHash": "fnv1a64:acd7df624ae1ea0f",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2625,7 +2625,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e34369727aec4468",
+      "sourceHash": "fnv1a64:2bb0e643c6c47499",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2646,7 +2646,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:59ffe28814224473",
+      "sourceHash": "fnv1a64:1aaa2b05d067e9c0",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2667,7 +2667,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:389576737b14f3e0",
+      "sourceHash": "fnv1a64:c88f3fe2184c007d",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2688,7 +2688,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:51a3d21b81556a2a",
+      "sourceHash": "fnv1a64:a11ed389634636a3",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2709,7 +2709,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c79df8d04f7b28f9",
+      "sourceHash": "fnv1a64:007aef0af0773d58",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -2730,7 +2730,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:001d3e7108432439",
+      "sourceHash": "fnv1a64:68d94efb8bdb66bc",
       "detachableSegments": [
         "The letters in this word"
       ]

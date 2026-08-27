@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a9e69996866b996b",
+  "sourceHash": "fnv1a64:7275327a382c2588",
   "lessons": [
     {
       "id": "AR-C10-ab-umm",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ac8641f61451bd9",
+      "sourceHash": "fnv1a64:9edbfa9dc7bd8772",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46c7c50078e64335",
+      "sourceHash": "fnv1a64:8d433a986f1d7f5c",
       "notice": null,
       "blocks": [
         {

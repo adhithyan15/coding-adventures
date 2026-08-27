@@ -17,6 +17,9 @@ requires:
   knowledge: [AR-C01-SALAM-01, AR-SCRIPT-WRITE-SALAM-03]
 introduces:
   knowledge: [AR-C01-MARHABA-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [AR-CULTURE-MARHABA-INFORMAL-01]
 practises:
   knowledge: [AR-C01-SALAM-01, AR-C01-MARHABA-04]
 skills: [listening, speaking]

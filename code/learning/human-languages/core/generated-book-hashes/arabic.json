@@ -5,7 +5,7 @@
     {
       "language": "arabic",
       "chapter": 3,
-      "sourceHash": "fnv1a64:6c8b8bdf2e102d1c",
+      "sourceHash": "fnv1a64:5e130c10585446e6",
       "lessonIds": [
         "AR-W07-hook-family-ha-kha",
         "AR-W08-kaf-and-ra",
@@ -22,7 +22,7 @@
     {
       "language": "arabic",
       "chapter": 4,
-      "sourceHash": "fnv1a64:f8cee96db1f38174",
+      "sourceHash": "fnv1a64:e0cc4614e20283a2",
       "lessonIds": [
         "AR-W10-ayn",
         "AR-W11-ha-and-ta-marbuta",
@@ -38,7 +38,7 @@
     {
       "language": "arabic",
       "chapter": 5,
-      "sourceHash": "fnv1a64:fea7c1f1420ed47f",
+      "sourceHash": "fnv1a64:4d5c7c628cccdf90",
       "lessonIds": [
         "AR-C05-naam",
         "AR-C05-la"
@@ -48,7 +48,7 @@
     {
       "language": "arabic",
       "chapter": 6,
-      "sourceHash": "fnv1a64:a4e1c57cc5301853",
+      "sourceHash": "fnv1a64:2e18fdd09ab56f4e",
       "lessonIds": [
         "AR-C06-min-fadlik"
       ],
@@ -57,7 +57,7 @@
     {
       "language": "arabic",
       "chapter": 7,
-      "sourceHash": "fnv1a64:c4e081f30289ec84",
+      "sourceHash": "fnv1a64:ce2502359d438661",
       "lessonIds": [
         "AR-C07-asif"
       ],
@@ -66,7 +66,7 @@
     {
       "language": "arabic",
       "chapter": 8,
-      "sourceHash": "fnv1a64:7c4dbd3aea43fbae",
+      "sourceHash": "fnv1a64:544ce3a8dd2bd464",
       "lessonIds": [
         "AR-C08-al-ahad-al-khamis",
         "AR-C08-al-jumua-as-sabt"
@@ -76,7 +76,7 @@
     {
       "language": "arabic",
       "chapter": 9,
-      "sourceHash": "fnv1a64:f7ffa05f860657cc",
+      "sourceHash": "fnv1a64:9a0d7cbcf413d852",
       "lessonIds": [
         "AR-C09-aswad-abyad",
         "AR-C09-ahmar-azraq"
@@ -86,7 +86,7 @@
     {
       "language": "arabic",
       "chapter": 10,
-      "sourceHash": "fnv1a64:58a6594ffe8c047d",
+      "sourceHash": "fnv1a64:2cfb9ad1025fc84a",
       "lessonIds": [
         "AR-C10-ab-umm",
         "AR-C10-akh-ukht"
@@ -96,7 +96,7 @@
     {
       "language": "arabic",
       "chapter": 11,
-      "sourceHash": "fnv1a64:4dde69d597b4a460",
+      "sourceHash": "fnv1a64:3811cc7c13520f1b",
       "lessonIds": [
         "AR-C11-ras",
         "AR-C11-yad"
@@ -106,7 +106,7 @@
     {
       "language": "arabic",
       "chapter": 12,
-      "sourceHash": "fnv1a64:7303edb41a901707",
+      "sourceHash": "fnv1a64:33062ead15da7c8a",
       "lessonIds": [
         "AR-C12-al-fusul"
       ],
@@ -115,7 +115,7 @@
     {
       "language": "arabic",
       "chapter": 13,
-      "sourceHash": "fnv1a64:2a9b22696acf89d6",
+      "sourceHash": "fnv1a64:d9f8c2b1904f82be",
       "lessonIds": [
         "AR-C13-maa-khubz"
       ],
@@ -124,7 +124,7 @@
     {
       "language": "arabic",
       "chapter": 14,
-      "sourceHash": "fnv1a64:9c41c25c611b7a3d",
+      "sourceHash": "fnv1a64:8c29ec7ad6f57198",
       "lessonIds": [
         "AR-C14-ashhur"
       ],
@@ -133,7 +133,7 @@
     {
       "language": "arabic",
       "chapter": 15,
-      "sourceHash": "fnv1a64:44d8f455443c6c85",
+      "sourceHash": "fnv1a64:dfeb6670b572e395",
       "lessonIds": [
         "AR-C15-ad-duhr-muntasaf-al-layl"
       ],
@@ -142,7 +142,7 @@
     {
       "language": "arabic",
       "chapter": 16,
-      "sourceHash": "fnv1a64:cf98719829d4f23e",
+      "sourceHash": "fnv1a64:89c2466a8cf7ea82",
       "lessonIds": [
         "AR-C16-al-saa"
       ],
@@ -151,7 +151,7 @@
     {
       "language": "arabic",
       "chapter": 17,
-      "sourceHash": "fnv1a64:b03f89d282ef4d43",
+      "sourceHash": "fnv1a64:f9f05e7a018d9add",
       "lessonIds": [
         "AR-C17-kam-umruka"
       ],
@@ -160,7 +160,7 @@
     {
       "language": "arabic",
       "chapter": 18,
-      "sourceHash": "fnv1a64:15ae4bfc2e5cab37",
+      "sourceHash": "fnv1a64:4535aec40b7fd225",
       "lessonIds": [
         "AR-C18-al-taqs"
       ],
@@ -169,7 +169,7 @@
     {
       "language": "arabic",
       "chapter": 19,
-      "sourceHash": "fnv1a64:2f3d8c680ad0414d",
+      "sourceHash": "fnv1a64:b7d6e86d01b603e6",
       "lessonIds": [
         "AR-C19-wahid-khamsa"
       ],
@@ -178,7 +178,7 @@
     {
       "language": "arabic",
       "chapter": 20,
-      "sourceHash": "fnv1a64:b013adc627683066",
+      "sourceHash": "fnv1a64:54df56030ab60379",
       "lessonIds": [
         "AR-C20-ahada-ashar-ishrun"
       ],
@@ -187,7 +187,7 @@
     {
       "language": "arabic",
       "chapter": 21,
-      "sourceHash": "fnv1a64:e0adac08be4fcecf",
+      "sourceHash": "fnv1a64:5e53a134ad41830e",
       "lessonIds": [
         "AR-C21-kalb-qitt"
       ],
@@ -196,7 +196,7 @@
     {
       "language": "arabic",
       "chapter": 22,
-      "sourceHash": "fnv1a64:7e9bf937528d9c87",
+      "sourceHash": "fnv1a64:bf2b6ef8bc255a81",
       "lessonIds": [
         "AR-C22-akhdar-asfar"
       ],
@@ -205,7 +205,7 @@
     {
       "language": "arabic",
       "chapter": 23,
-      "sourceHash": "fnv1a64:68078e2519bed6d0",
+      "sourceHash": "fnv1a64:02c856b67179a26f",
       "lessonIds": [
         "AR-C23-afwan"
       ],
@@ -214,7 +214,7 @@
     {
       "language": "arabic",
       "chapter": 24,
-      "sourceHash": "fnv1a64:73d612792cd8c201",
+      "sourceHash": "fnv1a64:6b94f4ef18972f6c",
       "lessonIds": [
         "AR-C24-ila-al-ghad"
       ],
@@ -223,7 +223,7 @@
     {
       "language": "arabic",
       "chapter": 25,
-      "sourceHash": "fnv1a64:f9e1e414d4fab4e3",
+      "sourceHash": "fnv1a64:8c2a3fafa186b9ee",
       "lessonIds": [
         "AR-C25-yawm"
       ],
@@ -232,7 +232,7 @@
     {
       "language": "arabic",
       "chapter": 26,
-      "sourceHash": "fnv1a64:d1264efe75f986b2",
+      "sourceHash": "fnv1a64:ec95f0c693518afd",
       "lessonIds": [
         "AR-C26-layl"
       ],
@@ -241,7 +241,7 @@
     {
       "language": "arabic",
       "chapter": 27,
-      "sourceHash": "fnv1a64:62de5997151894eb",
+      "sourceHash": "fnv1a64:8934633f739c7a1f",
       "lessonIds": [
         "AR-C27-tusbih-ala-khayr"
       ],
@@ -250,7 +250,7 @@
     {
       "language": "arabic",
       "chapter": 28,
-      "sourceHash": "fnv1a64:d82bfc12d887a536",
+      "sourceHash": "fnv1a64:effc9d3dcafecae2",
       "lessonIds": [
         "AR-C28-dhahaba",
         "AR-C28-jaa"
@@ -260,7 +260,7 @@
     {
       "language": "arabic",
       "chapter": 29,
-      "sourceHash": "fnv1a64:a725c3ac6949e347",
+      "sourceHash": "fnv1a64:075932e407092784",
       "lessonIds": [
         "AR-C29-qala",
         "AR-C29-raa"
@@ -270,7 +270,7 @@
     {
       "language": "arabic",
       "chapter": 30,
-      "sourceHash": "fnv1a64:d20db8be1c593997",
+      "sourceHash": "fnv1a64:272831e06c04bb39",
       "lessonIds": [
         "AR-C30-arafa",
         "AR-C30-akala"
@@ -280,7 +280,7 @@
     {
       "language": "arabic",
       "chapter": 31,
-      "sourceHash": "fnv1a64:e6bdf5ae63c202b4",
+      "sourceHash": "fnv1a64:756b8ebf2bae353f",
       "lessonIds": [
         "AR-C31-fahima",
         "AR-C31-qaraa",
@@ -292,7 +292,7 @@
     {
       "language": "arabic",
       "chapter": 32,
-      "sourceHash": "fnv1a64:913e62eb1f5a42df",
+      "sourceHash": "fnv1a64:5bc25a01441f6821",
       "lessonIds": [
         "AR-C32-akhadha",
         "AR-C32-fakkara",
@@ -304,7 +304,7 @@
     {
       "language": "arabic",
       "chapter": 33,
-      "sourceHash": "fnv1a64:a42c05efde3fc112",
+      "sourceHash": "fnv1a64:de697af6bd1c8647",
       "lessonIds": [
         "AR-C33-shay",
         "AR-C33-halib",
@@ -316,7 +316,7 @@
     {
       "language": "arabic",
       "chapter": 34,
-      "sourceHash": "fnv1a64:c5bf814ebdf52bdc",
+      "sourceHash": "fnv1a64:7686a9ba811d62c6",
       "lessonIds": [
         "AR-C34-milh",
         "AR-C34-lahm",
@@ -328,7 +328,7 @@
     {
       "language": "arabic",
       "chapter": 35,
-      "sourceHash": "fnv1a64:c0bb5781a4d0742f",
+      "sourceHash": "fnv1a64:05477d145c95356d",
       "lessonIds": [
         "AR-C35-jar",
         "AR-C35-ibn-bint",
@@ -339,7 +339,7 @@
     {
       "language": "arabic",
       "chapter": 36,
-      "sourceHash": "fnv1a64:a708491936a6ccb6",
+      "sourceHash": "fnv1a64:ad5a733afa7ca6d7",
       "lessonIds": [
         "AR-C36-zayt",
         "AR-C36-kub",

@@ -3,11 +3,20 @@ import { defaultCurriculumRoot, loadChapterPolicy, loadTrackLessons } from "../.
 import { buildRootLedger } from "../../src/root-ledger.js";
 import {
   expectLanguageContinuity,
+  expectLanguageLessonBudgets,
   expectLanguageModality,
   languageWritingStages,
 } from "./assert-language-corpus.js";
 it("pins Arabic continuity", () => expectLanguageContinuity("arabic"));
 it("pins Arabic modality", () => expectLanguageModality("arabic"));
+it("pins Arabic lesson-content budgets", () =>
+  expectLanguageLessonBudgets("arabic", {
+    lessons: 86,
+    idioms: 2,
+    senses: 3,
+    cultureClaims: 11,
+    unitPrefix: "AR",
+  }));
 it("pins Arabic's complete pre-A1 writing ramp", () => {
   const arabic = languageWritingStages("arabic");
   expect(arabic.defects).toEqual([]);

@@ -19,6 +19,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-01, AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-02]
+introduces_idioms: [AR-IDIOM-TUSBIH-ALA-KHAYR-01]
+introduces_senses: []
+introduces_culture_claims: [AR-CULTURE-GOOD-NIGHT-POINTS-TO-MORNING-01]
 practises:
   knowledge: [AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-01, AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-02]
 skills: [listening, speaking, reading]

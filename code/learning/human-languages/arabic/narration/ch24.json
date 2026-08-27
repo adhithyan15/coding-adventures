@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "See You Tomorrow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c1fe02cf7cf4d33b",
+  "sourceHash": "fnv1a64:90b11a35af7be781",
   "lessons": [
     {
       "id": "AR-C24-ila-al-ghad",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbf0d19361870582",
+      "sourceHash": "fnv1a64:608eaf5bda0588b7",
       "notice": null,
       "blocks": [
         {

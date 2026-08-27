@@ -17,6 +17,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-W09-KHAYR-BIKHAYR-01, AR-CONCEPT-W09-KHAYR-BIKHAYR-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-W09-KHAYR-BIKHAYR-01, AR-CONCEPT-W09-KHAYR-BIKHAYR-02]
 skills: [speaking, reading, writing]

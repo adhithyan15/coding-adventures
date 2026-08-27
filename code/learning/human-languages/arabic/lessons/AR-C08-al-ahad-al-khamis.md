@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-01, AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [AR-CULTURE-WEEK-STARTS-SUNDAY-01]
 practises:
   knowledge: [AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-01, AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-02]
 skills: [listening, speaking, reading]

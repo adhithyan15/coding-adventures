@@ -17,6 +17,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03]
 skills: [speaking, reading, writing]

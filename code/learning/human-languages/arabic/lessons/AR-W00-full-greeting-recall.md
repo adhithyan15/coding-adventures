@@ -17,6 +17,9 @@ requires:
   knowledge: [AR-C01-FULL-GREETING-07, AR-SCRIPT-AYN-YA-08, AR-SCRIPT-WRITE-FULL-GREETING-09]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-C01-FULL-GREETING-07, AR-SCRIPT-WRITE-FULL-GREETING-09]
 skills: [listening, reading, writing]

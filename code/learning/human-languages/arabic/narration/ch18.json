@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Weather",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:28f3803b1a2eb944",
+  "sourceHash": "fnv1a64:34da59aa4d024b17",
   "lessons": [
     {
       "id": "AR-C18-al-taqs",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25835c3671e986bc",
+      "sourceHash": "fnv1a64:93f13cebf55ff849",
       "notice": null,
       "blocks": [
         {

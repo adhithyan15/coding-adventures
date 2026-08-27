@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Green and Yellow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ef18ebdf4ff568e8",
+  "sourceHash": "fnv1a64:40963c413843c8b4",
   "lessons": [
     {
       "id": "AR-C22-akhdar-asfar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c39f01d4603699e5",
+      "sourceHash": "fnv1a64:ec774fd58f3703bc",
       "notice": null,
       "blocks": [
         {

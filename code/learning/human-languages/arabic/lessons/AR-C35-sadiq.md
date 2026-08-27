@@ -19,6 +19,9 @@ requires:
   knowledge: [AR-CONCEPT-C35-IBN-BINT-02]
 introduces:
   knowledge: [AR-CONCEPT-C35-SADIQ-01, AR-CONCEPT-C35-SADIQ-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C35-SADIQ-01, AR-CONCEPT-C35-SADIQ-02, AR-CONCEPT-C35-IBN-BINT-01, AR-CONCEPT-C35-IBN-BINT-02, AR-CONCEPT-C35-JAR-02, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C31-KATABA-02, AR-CONCEPT-C10-AKH-UKHT-01, AR-CONCEPT-C10-AB-UMM-01, AR-CONCEPT-C04-AL-SALAMA-01, AR-CONCEPT-C35-JAR-01]
 skills: [listening, speaking, reading]

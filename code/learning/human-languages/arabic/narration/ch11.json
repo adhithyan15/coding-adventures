@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6bb129866c740e2c",
+  "sourceHash": "fnv1a64:899dcb54c9d9adc2",
   "lessons": [
     {
       "id": "AR-C11-ras",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47bcf37ed366effd",
+      "sourceHash": "fnv1a64:292a1ee7bb8af3e2",
       "notice": null,
       "blocks": [
         {
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0adf54a63f55e87",
+      "sourceHash": "fnv1a64:b0d7323fd36c4fb4",
       "notice": null,
       "blocks": [
         {

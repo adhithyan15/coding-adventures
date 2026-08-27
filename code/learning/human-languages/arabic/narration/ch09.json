@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Four Core Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:929771dbb8260ffd",
+  "sourceHash": "fnv1a64:a7f2c436d12b1d2a",
   "lessons": [
     {
       "id": "AR-C09-aswad-abyad",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0e830442ac228b5",
+      "sourceHash": "fnv1a64:b2af2b65ce7922c0",
       "notice": null,
       "blocks": [
         {
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:326e9d5629639cf6",
+      "sourceHash": "fnv1a64:e33b9bca561d0a05",
       "notice": null,
       "blocks": [
         {

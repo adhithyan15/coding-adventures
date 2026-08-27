@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:39b23a5f466d7f67",
+  "sourceHash": "fnv1a64:1c873f2be952dad1",
   "lessons": [
     {
       "id": "AR-C27-tusbih-ala-khayr",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2df88df161fba6d1",
+      "sourceHash": "fnv1a64:36d59f6a17fa74bf",
       "notice": null,
       "blocks": [
         {

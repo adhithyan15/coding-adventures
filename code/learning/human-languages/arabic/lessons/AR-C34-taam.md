@@ -19,6 +19,9 @@ requires:
   knowledge: [AR-CONCEPT-C34-JUBN-02]
 introduces:
   knowledge: [AR-CONCEPT-C34-TAAM-01, AR-CONCEPT-C34-TAAM-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C34-TAAM-01, AR-CONCEPT-C34-TAAM-02, AR-CONCEPT-C34-JUBN-01, AR-CONCEPT-C34-JUBN-02, AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C31-KATABA-02, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C13-MAA-KHUBZ-01, AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C34-LAHM-01]
 skills: [listening, speaking, reading]

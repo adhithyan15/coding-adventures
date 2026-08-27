@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ad8cc04c63058934",
+  "sourceHash": "fnv1a64:e783c269a62befac",
   "lessons": [
     {
       "id": "AR-C05-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c749ad301412efe",
+      "sourceHash": "fnv1a64:d66cfac582b14269",
       "notice": null,
       "blocks": [
         {
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c044132d30f8a721",
+      "sourceHash": "fnv1a64:8711e53f0d973bba",
       "notice": null,
       "blocks": [
         {

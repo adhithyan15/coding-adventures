@@ -17,6 +17,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-W12-MAA-SALAMA-01, AR-CONCEPT-W12-MAA-SALAMA-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-W12-MAA-SALAMA-01, AR-CONCEPT-W12-MAA-SALAMA-02]
 skills: [speaking, reading, writing]

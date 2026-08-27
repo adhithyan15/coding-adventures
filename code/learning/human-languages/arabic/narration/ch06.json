@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cc54a0c91344c3bf",
+  "sourceHash": "fnv1a64:0fc7430f7fb91f9b",
   "lessons": [
     {
       "id": "AR-C06-min-fadlik",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e17fff0e577f02ce",
+      "sourceHash": "fnv1a64:94603795ffef9b7a",
       "notice": null,
       "blocks": [
         {

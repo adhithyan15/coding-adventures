@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bb46ab609d4a7b53",
+  "sourceHash": "fnv1a64:685d47977773683f",
   "lessons": [
     {
       "id": "AR-C14-ashhur",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5051d5567cd25da",
+      "sourceHash": "fnv1a64:ea17f2007056922e",
       "notice": null,
       "blocks": [
         {

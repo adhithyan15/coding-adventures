@@ -19,6 +19,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-C03-AL-HAMDU-LILLAH-01, AR-CONCEPT-C03-AL-HAMDU-LILLAH-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [AR-CULTURE-HAMDU-WELLBEING-ANSWER-01, AR-CULTURE-HAMDU-ACROSS-CIRCUMSTANCES-02]
 practises:
   knowledge: [AR-CONCEPT-C03-AL-HAMDU-LILLAH-01, AR-CONCEPT-C03-AL-HAMDU-LILLAH-02]
 skills: [listening, speaking, reading]
