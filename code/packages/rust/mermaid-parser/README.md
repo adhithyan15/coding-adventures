@@ -93,6 +93,8 @@ Three-digit years under the default date format follow Mermaid's bounded
 non-strict fallback without accepting malformed or oversized compact years.
 Explicit calendar includes and excludes retain their authored values in typed IR
 and resolve through the configured date format during temporal layout.
+Duration schedules whose recurring exclusions cover every weekday fail semantic
+validation instead of producing unbounded fallback geometry.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

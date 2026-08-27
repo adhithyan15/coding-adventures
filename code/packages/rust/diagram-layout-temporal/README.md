@@ -33,5 +33,7 @@ selects the earliest dependency start. Time axis scaled to canvas width.
 Weekend, weekday, and explicit-date exclusions extend duration geometry, while
 explicit includes override exclusions. Calendar dates are interpreted with the
 diagram's authored `dateFormat` before backend-neutral layout.
+The parser rejects duration schedules with no recurring valid weekday before
+they can enter the otherwise infallible temporal layout API.
 
 **Git**: Branch lanes (horizontal rows), commits as circles on lanes, merges as bezier arcs.
