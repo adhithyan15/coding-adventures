@@ -41,12 +41,22 @@ import (
 // SwiftUI/Qt/Flutter/Compose-style) lowering and can therefore drop style or
 // capability properties a Tier-1 (html/webcomponent/react) backend never
 // would. Degradation analysis is only meaningful for these.
-var nativeBackends = map[string]bool{
-	"xaml":    true,
-	"swiftui": true,
-	"qt":      true,
-	"flutter": true,
-	"compose": true,
+//
+// Maps to the same string rather than just `true`: looking a request-derived
+// backend name up in this map and using the *returned* value (not the
+// original request string) for the subprocess --backend flag and the
+// mosaic-degradations.json path is what lets a static analyzer (this map
+// literal is a fixed, fully-enumerated set of constants) see the taint from
+// the HTTP request as fully replaced rather than merely gated by an
+// `if !ok` check next to it — CodeQL's Go path-injection query flagged the
+// latter shape even though nativeBackends[backend] already made every path
+// reachable here one of these five literals.
+var nativeBackends = map[string]string{
+	"xaml":    "xaml",
+	"swiftui": "swiftui",
+	"qt":      "qt",
+	"flutter": "flutter",
+	"compose": "compose",
 }
 
 // maxDegradationReportBytes bounds how much of mosaic-degradations.json we
@@ -237,11 +247,17 @@ func (s *Server) handleAPIDegradations(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "invalid path; expected /api/degradations/{backend}/{component_id}", http.StatusBadRequest)
 		return
 	}
-	backend := parts[0]
+	requestedBackend := parts[0]
 	componentID := parts[1]
 
-	if !nativeBackends[backend] {
-		http.Error(w, fmt.Sprintf("unknown native backend %q; supported: xaml, swiftui, qt, flutter, compose", backend), http.StatusBadRequest)
+	// Look up the canonical value rather than branching on a boolean: using
+	// backend (below) rather than requestedBackend for every downstream path/
+	// argument use is what severs the taint from the raw request path
+	// segment, not just the presence of this check — see nativeBackends' doc
+	// comment.
+	backend, ok := nativeBackends[requestedBackend]
+	if !ok {
+		http.Error(w, fmt.Sprintf("unknown native backend %q; supported: xaml, swiftui, qt, flutter, compose", requestedBackend), http.StatusBadRequest)
 		return
 	}
 
