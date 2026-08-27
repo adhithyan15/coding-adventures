@@ -5,6 +5,14 @@ All notable changes to the ge225-simulator Rust package will be documented in th
 ## [Unreleased]
 
 ### Changed
+- Implement the optional AAU as separate 40-bit AX/BX/QX/IX state with fixed,
+  normalized floating, and unnormalized floating calculation modes; exact
+  `FLD`/`FST`/`FAD`/`FSU`/`FMP`/`FDV` formats; deterministic integer
+  mantissa/exponent arithmetic; CPU modification; and fail-closed address,
+  readiness, and mode preflight.
+- Decode all AAU general and plug-7 `BAR` words, including internal register
+  transfers, `NOX`, transient overflow/underflow, persistent hold alerts, and
+  the documented status-branch skip and hold-reset behavior.
 - Decode `SEL P,X` and both `BCS` status senses, deliver the two opaque command
   words without CPU execution, model selector busy/error/alert behavior, and
   preserve fixed plug priority through a deterministic generic controller
@@ -69,6 +77,10 @@ All notable changes to the ge225-simulator Rust package will be documented in th
   warning-free rustdoc.
 
 ### Added
+- Public AAU mode/state inspection, exact AAU assembly and 40-bit packing
+  helpers, deterministic readiness and clear-alert controls, and 13
+  manual-backed AAU regressions. The completed functional core has 88.81% line
+  coverage (2,152/2,423).
 - Public controller status/command records, bounded command capture, explicit
   selector and controller completion events, API masks and pending state, and
   14 manual-backed controller/API regressions, raising core line coverage to

@@ -50,6 +50,32 @@ const CARD_FULL_WORDS: usize = 80;
 const CARD_DECIMAL_SYNC: i32 = 0o2606077;
 const CARD_BINARY_SYNC: i32 = 0o2001777;
 const CARD_FULL_SYNC: i32 = 0o2007777;
+const AAU_WORD_MASK: u64 = (1_u64 << 40) - 1;
+const AAU_FIXED_DATA_BITS: u32 = 38;
+const AAU_FIXED_WORD_BITS: u32 = 39;
+const AAU_FIXED_DATA_MASK: i64 = (1_i64 << AAU_FIXED_DATA_BITS) - 1;
+const AAU_FIXED_WORD_MASK: i64 = (1_i64 << AAU_FIXED_WORD_BITS) - 1;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AauMode {
+    FixedPoint,
+    NormalizedFloatingPoint,
+    UnnormalizedFloatingPoint,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct AauState {
+    pub mode: Option<AauMode>,
+    pub ready: bool,
+    pub ax: u64,
+    pub bx: u64,
+    pub qx: u64,
+    pub ix: u64,
+    pub overflow: bool,
+    pub underflow: bool,
+    pub overflow_hold: bool,
+    pub underflow_hold: bool,
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CardFormat {
@@ -167,6 +193,12 @@ const OP_MOV: i32 = 0o24;
 const OP_RCD: i32 = 0o25;
 const OP_BRU: i32 = 0o26;
 const OP_STO: i32 = 0o27;
+const OP_FLD: i32 = 0o30;
+const OP_FAD: i32 = 0o31;
+const OP_FSU: i32 = 0o32;
+const OP_FST: i32 = 0o33;
+const OP_FMP: i32 = 0o35;
+const OP_FDV: i32 = 0o36;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Indicators {
@@ -220,6 +252,7 @@ pub struct State {
     pub x_words: Vec<i32>,
     pub halted: bool,
     pub memory: Vec<i32>,
+    pub aau: AauState,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -274,6 +307,90 @@ fn base_opcode_name(opcode: i32) -> Option<&'static str> {
         OP_RCD => "RCD",
         OP_BRU => "BRU",
         OP_STO => "STO",
+        OP_FLD => "FLD",
+        OP_FAD => "FAD",
+        OP_FSU => "FSU",
+        OP_FST => "FST",
+        OP_FMP => "FMP",
+        OP_FDV => "FDV",
+        _ => return None,
+    })
+}
+
+fn aau_general_word(mnemonic: &str) -> Option<i32> {
+    Some(match mnemonic {
+        "SET_FIXPOINT" => 0o3500010,
+        "SET_NFLPOINT" => 0o3100010,
+        "SET_UFLPOINT" => 0o3200010,
+        "LAQ" => 0o3600002,
+        "LQA" => 0o3200002,
+        "MAQ" => 0o3100002,
+        "XAQ" => 0o3500002,
+        "ROV" => 0o3100004,
+        "RUN" => 0o3200004,
+        "RIN" => 0o3500004,
+        "NOX" => 0o3100005,
+        _ => return None,
+    })
+}
+
+fn aau_general_name(word: i32) -> Option<&'static str> {
+    Some(match word {
+        0o3500010 => "AAU_SET_FIXPOINT",
+        0o3100010 => "AAU_SET_NFLPOINT",
+        0o3200010 => "AAU_SET_UFLPOINT",
+        0o3600002 => "AAU_LAQ",
+        0o3200002 => "AAU_LQA",
+        0o3100002 => "AAU_MAQ",
+        0o3500002 => "AAU_XAQ",
+        0o3100004 => "AAU_ROV",
+        0o3200004 => "AAU_RUN",
+        0o3500004 => "AAU_RIN",
+        0o3100005 => "AAU_NOX",
+        _ => return None,
+    })
+}
+
+fn aau_branch_word(mnemonic: &str) -> Option<i32> {
+    Some(match mnemonic {
+        "BAR" => 0o2514720,
+        "BAN" => 0o2516720,
+        "BMI" => 0o2514721,
+        "BPL" => 0o2516721,
+        "BZE" => 0o2514722,
+        "BNZ" => 0o2516722,
+        "BOV" => 0o2514723,
+        "BNO" => 0o2516723,
+        "BUF" => 0o2514724,
+        "BNU" => 0o2516724,
+        "BOO" => 0o2514725,
+        "BON" => 0o2516725,
+        "BUO" => 0o2514726,
+        "BUN" => 0o2516726,
+        "BER" => 0o2514727,
+        "BNE" => 0o2516727,
+        _ => return None,
+    })
+}
+
+fn aau_branch_name(word: i32) -> Option<&'static str> {
+    Some(match word {
+        0o2514720 => "AAU_BAR",
+        0o2516720 => "AAU_BAN",
+        0o2514721 => "AAU_BMI",
+        0o2516721 => "AAU_BPL",
+        0o2514722 => "AAU_BZE",
+        0o2516722 => "AAU_BNZ",
+        0o2514723 => "AAU_BOV",
+        0o2516723 => "AAU_BNO",
+        0o2514724 => "AAU_BUF",
+        0o2516724 => "AAU_BNU",
+        0o2514725 => "AAU_BOO",
+        0o2516725 => "AAU_BON",
+        0o2514726 => "AAU_BUO",
+        0o2516726 => "AAU_BUN",
+        0o2514727 => "AAU_BER",
+        0o2516727 => "AAU_BNE",
         _ => return None,
     })
 }
@@ -636,6 +753,138 @@ fn split_signed_double(value: i64) -> (i32, i32) {
     (high, low)
 }
 
+fn aau_fixed_value(raw: u64) -> i64 {
+    let (high, low) = unpack_aau_words(raw);
+    let bits = (i64::from(high) << 19) | i64::from(low & DATA_MASK);
+    if (high & SIGN_BIT) != 0 {
+        bits - (1_i64 << AAU_FIXED_WORD_BITS)
+    } else {
+        bits
+    }
+}
+
+fn aau_fixed_raw(value: i64) -> u64 {
+    let bits = value & AAU_FIXED_WORD_MASK;
+    let high = ((bits >> 19) & i64::from(MASK_20)) as i32;
+    let low = with_sign((bits & i64::from(DATA_MASK)) as i32, sign_of(high));
+    pack_aau_words(high, low)
+}
+
+fn aau_fixed_pair_value(ax: u64, qx: u64) -> i128 {
+    let ax_bits = aau_fixed_value(ax) as i128 & ((1_i128 << AAU_FIXED_WORD_BITS) - 1);
+    let qx_data = aau_fixed_value(qx) as i128 & ((1_i128 << AAU_FIXED_DATA_BITS) - 1);
+    let bits = (ax_bits << AAU_FIXED_DATA_BITS) | qx_data;
+    if (bits & (1_i128 << (AAU_FIXED_WORD_BITS + AAU_FIXED_DATA_BITS - 1))) != 0 {
+        bits - (1_i128 << (AAU_FIXED_WORD_BITS + AAU_FIXED_DATA_BITS))
+    } else {
+        bits
+    }
+}
+
+fn split_aau_fixed_pair(value: i128) -> (u64, u64) {
+    const PAIR_BITS: u32 = AAU_FIXED_WORD_BITS + AAU_FIXED_DATA_BITS;
+    let bits = value & ((1_i128 << PAIR_BITS) - 1);
+    let ax_bits = (bits >> AAU_FIXED_DATA_BITS) as i64;
+    let qx_data = (bits & ((1_i128 << AAU_FIXED_DATA_BITS) - 1)) as i64;
+    let ax = aau_fixed_raw(ax_bits);
+    let qx = aau_fixed_raw(if (ax_bits & (1_i64 << (AAU_FIXED_WORD_BITS - 1))) != 0 {
+        qx_data | !AAU_FIXED_DATA_MASK
+    } else {
+        qx_data
+    });
+    (ax, qx)
+}
+
+fn sign_extend_i64(value: i64, bits: u32) -> i64 {
+    let sign = 1_i64 << (bits - 1);
+    let mask = (1_i64 << bits) - 1;
+    let narrowed = value & mask;
+    if narrowed & sign != 0 {
+        narrowed - (1_i64 << bits)
+    } else {
+        narrowed
+    }
+}
+
+fn aau_float_parts(raw: u64) -> (i32, i64) {
+    let exponent_bits = ((raw >> 31) & 0x1ff) as i32;
+    let exponent_magnitude = exponent_bits & 0xff;
+    let exponent = if exponent_bits & 0x100 == 0 {
+        exponent_magnitude
+    } else if exponent_magnitude == 0 {
+        -256
+    } else {
+        -exponent_magnitude
+    };
+    let sign = ((raw >> 19) & 1) as i64;
+    let upper = ((raw >> 20) & 0x7ff) as i64;
+    let lower = (raw & DATA_MASK as u64) as i64;
+    let mantissa = sign_extend_i64((sign << 30) | (upper << 19) | lower, 31);
+    (exponent, mantissa)
+}
+
+fn aau_float_raw(exponent: i32, mantissa: i64) -> u64 {
+    let exponent_bits = if (0..=255).contains(&exponent) {
+        exponent
+    } else if (-256..=-1).contains(&exponent) {
+        0x100 | (-exponent & 0xff)
+    } else if exponent < -256 {
+        (-exponent) & 0xff
+    } else {
+        0x100 | ((exponent - 256) & 0xff)
+    };
+    let mantissa_bits = mantissa & ((1_i64 << 31) - 1);
+    let sign = (mantissa_bits >> 30) & 1;
+    let upper = (mantissa_bits >> 19) & 0x7ff;
+    let lower = mantissa_bits & i64::from(DATA_MASK);
+    (((exponent_bits as u64) << 31) | ((upper as u64) << 20) | ((sign as u64) << 19) | lower as u64)
+        & AAU_WORD_MASK
+}
+
+fn aau_float_pair_parts(ax: u64, qx: u64) -> (i32, i128) {
+    let (exponent, ax_mantissa) = aau_float_parts(ax);
+    let (_, qx_mantissa) = aau_float_parts(qx);
+    let ax_bits = i128::from(ax_mantissa) & ((1_i128 << 31) - 1);
+    let qx_data = i128::from(qx_mantissa) & ((1_i128 << 30) - 1);
+    let bits = (ax_bits << 30) | qx_data;
+    let mantissa = if bits & (1_i128 << 60) != 0 {
+        bits - (1_i128 << 61)
+    } else {
+        bits
+    };
+    (exponent, mantissa)
+}
+
+fn aau_float_pair_raw(exponent: i32, mantissa: i128) -> (u64, u64) {
+    let bits = mantissa & ((1_i128 << 61) - 1);
+    let ax_bits = (bits >> 30) as i64;
+    let qx_data = (bits & ((1_i128 << 30) - 1)) as i64;
+    let ax = aau_float_raw(exponent, sign_extend_i64(ax_bits, 31));
+    let qx_sign = if bits & (1_i128 << 60) != 0 {
+        1_i64 << 30
+    } else {
+        0
+    };
+    let qx = aau_float_raw(exponent - 30, qx_sign | qx_data);
+    (ax, qx)
+}
+
+fn arithmetic_shift_right(value: i128, count: u32) -> i128 {
+    if count >= 127 {
+        if value < 0 {
+            -1
+        } else {
+            0
+        }
+    } else {
+        value >> count
+    }
+}
+
+fn align_aau_float(value: i128, exponent: i32, target_exponent: i32) -> i128 {
+    arithmetic_shift_right(value, (target_exponent - exponent).max(0) as u32)
+}
+
 fn arith_compare(left: i32, right: i32) -> i32 {
     match to_signed20(left).cmp(&to_signed20(right)) {
         std::cmp::Ordering::Less => -1,
@@ -732,6 +981,40 @@ pub fn assemble_controller_status(
         CONTROLLER_STATUS_CLEAR_BASE
     };
     Ok(base | (plug << 6) | condition)
+}
+
+pub fn assemble_aau_general(mnemonic: &str) -> Result<i32, String> {
+    aau_general_word(mnemonic)
+        .ok_or_else(|| format!("unknown GE-225 AAU general instruction: {mnemonic}"))
+}
+
+pub fn assemble_aau_memory(mnemonic: &str, address: i32, modifier: i32) -> Result<i32, String> {
+    let opcode = match mnemonic {
+        "FLD" => OP_FLD,
+        "FAD" => OP_FAD,
+        "FSU" => OP_FSU,
+        "FST" => OP_FST,
+        "FMP" => OP_FMP,
+        "FDV" => OP_FDV,
+        _ => return Err(format!("unknown GE-225 AAU memory instruction: {mnemonic}")),
+    };
+    encode_instruction(opcode, modifier, address)
+}
+
+pub fn assemble_aau_branch(mnemonic: &str) -> Result<i32, String> {
+    aau_branch_word(mnemonic)
+        .ok_or_else(|| format!("unknown GE-225 AAU branch instruction: {mnemonic}"))
+}
+
+pub fn pack_aau_words(first: i32, second: i32) -> u64 {
+    ((first as u64 & MASK_20 as u64) << 20) | (second as u64 & MASK_20 as u64)
+}
+
+pub fn unpack_aau_words(value: u64) -> (i32, i32) {
+    (
+        ((value >> 20) & MASK_20 as u64) as i32,
+        (value & MASK_20 as u64) as i32,
+    )
 }
 
 pub fn assemble_shift(mnemonic: &str, count: i32) -> Result<i32, String> {
@@ -846,6 +1129,16 @@ pub struct Simulator {
     n_overrun: bool,
     stop_on_parity_alarm: bool,
     control_switches: i32,
+    aau_mode: Option<AauMode>,
+    aau_ready: bool,
+    aau_ax: u64,
+    aau_bx: u64,
+    aau_qx: u64,
+    aau_ix: u64,
+    aau_overflow: bool,
+    aau_underflow: bool,
+    aau_overflow_hold: bool,
+    aau_underflow_hold: bool,
     halted: bool,
 }
 
@@ -910,6 +1203,16 @@ impl Simulator {
             n_overrun: false,
             stop_on_parity_alarm: false,
             control_switches: 0,
+            aau_mode: None,
+            aau_ready: true,
+            aau_ax: 0,
+            aau_bx: 0,
+            aau_qx: 0,
+            aau_ix: 0,
+            aau_overflow: false,
+            aau_underflow: false,
+            aau_overflow_hold: false,
+            aau_underflow_hold: false,
             halted: false,
         })
     }
@@ -966,6 +1269,16 @@ impl Simulator {
         self.card_punch_alarm = false;
         self.priority_alarm = false;
         self.control_switches = 0;
+        self.aau_mode = None;
+        self.aau_ready = true;
+        self.aau_ax = 0;
+        self.aau_bx = 0;
+        self.aau_qx = 0;
+        self.aau_ix = 0;
+        self.aau_overflow = false;
+        self.aau_underflow = false;
+        self.aau_overflow_hold = false;
+        self.aau_underflow_hold = false;
         self.halted = false;
     }
 
@@ -1020,11 +1333,34 @@ impl Simulator {
                 .collect(),
             halted: self.halted,
             memory: self.memory.clone(),
+            aau: AauState {
+                mode: self.aau_mode,
+                ready: self.aau_ready,
+                ax: self.aau_ax,
+                bx: self.aau_bx,
+                qx: self.aau_qx,
+                ix: self.aau_ix,
+                overflow: self.aau_overflow,
+                underflow: self.aau_underflow,
+                overflow_hold: self.aau_overflow_hold,
+                underflow_hold: self.aau_underflow_hold,
+            },
         }
     }
 
     pub fn set_control_switches(&mut self, value: i32) {
         self.control_switches = value & MASK_20;
+    }
+
+    pub fn set_aau_ready(&mut self, ready: bool) {
+        self.aau_ready = ready;
+    }
+
+    pub fn clear_aau_alerts(&mut self) {
+        self.aau_overflow = false;
+        self.aau_underflow = false;
+        self.aau_overflow_hold = false;
+        self.aau_underflow_hold = false;
     }
 
     pub fn set_clock_sixths(&mut self, value: i32) -> Result<(), String> {
@@ -1425,6 +1761,12 @@ impl Simulator {
                 format!("SXG {group}")
             } else if let Some(count) = decoded.count {
                 format!("{} {count}{suffix}", decoded.mnemonic)
+            } else if let Some(name) = decoded.mnemonic.strip_prefix("AAU_") {
+                if aau_branch_word(name).is_some() {
+                    format!("BAR {name}")
+                } else {
+                    name.to_string()
+                }
             } else {
                 format!("{}{suffix}", decoded.mnemonic)
             });
@@ -1541,6 +1883,7 @@ impl Simulator {
         self.preflight_direct_io(&execution_decoded, effective_address)?;
         self.preflight_controller(&execution_decoded, sequential_pc)?;
         self.preflight_decimal(&execution_decoded, effective_address)?;
+        self.preflight_aau(&execution_decoded, effective_address, sequential_pc)?;
         self.ir = ir_word;
         self.pc = sequential_pc;
         let a_before = self.a;
@@ -2083,6 +2426,375 @@ impl Simulator {
         Ok(())
     }
 
+    fn preflight_aau(
+        &self,
+        decoded: &DecodedInstruction,
+        effective_address: Option<i32>,
+        sequential_pc: i32,
+    ) -> Result<(), String> {
+        let memory_instruction = matches!(
+            decoded.mnemonic,
+            "FLD" | "FAD" | "FSU" | "FST" | "FMP" | "FDV"
+        );
+        let general_instruction = decoded.mnemonic.starts_with("AAU_")
+            && aau_branch_word(decoded.mnemonic.trim_start_matches("AAU_")).is_none();
+        if (memory_instruction || general_instruction) && !self.aau_ready {
+            return Err(format!(
+                "GE-225 AAU is not ready for {}",
+                decoded.mnemonic.trim_start_matches("AAU_")
+            ));
+        }
+        if let Some(branch) = decoded
+            .mnemonic
+            .strip_prefix("AAU_")
+            .filter(|name| aau_branch_word(name).is_some())
+        {
+            if !self.aau_branch_condition(branch) {
+                let target = sequential_pc
+                    .checked_add(1)
+                    .ok_or_else(|| "GE-225 AAU status skip overflows P".to_string())?;
+                self.check_address(target)?;
+            }
+            return Ok(());
+        }
+        if !memory_instruction {
+            return Ok(());
+        }
+        let raw_address = decoded
+            .address
+            .ok_or_else(|| format!("GE-225 {} decoder omitted its address", decoded.mnemonic))?;
+        let modifier = decoded.modifier.unwrap_or(0);
+        if modifier == 0 && raw_address <= 0o17 {
+            return Err(format!(
+                "GE-225 AAU {} requires an unmodified address greater than 15: {raw_address:o}",
+                decoded.mnemonic
+            ));
+        }
+        if matches!(decoded.mnemonic, "FAD" | "FSU" | "FMP" | "FDV") && self.aau_mode.is_none() {
+            return Err(format!(
+                "GE-225 AAU {} requires a calculation mode",
+                decoded.mnemonic
+            ));
+        }
+        let address = effective_address.ok_or_else(|| {
+            format!(
+                "GE-225 {} decoder omitted its effective address",
+                decoded.mnemonic
+            )
+        })?;
+        if address & 1 == 0 {
+            self.following_address(address)?;
+        }
+        Ok(())
+    }
+
+    fn read_aau_operand(&mut self, address: i32) -> Result<u64, String> {
+        let first = self.read_word(address)?;
+        let second = if address & 1 == 0 {
+            self.read_word(self.following_address(address)?)?
+        } else {
+            first
+        };
+        self.m = second;
+        Ok(pack_aau_words(first, second))
+    }
+
+    fn write_aau_operand(&mut self, address: i32, value: u64) -> Result<(), String> {
+        let (first, second) = unpack_aau_words(value);
+        if address & 1 == 0 {
+            let following = self.following_address(address)?;
+            self.write_word(address, first)?;
+            self.write_word(following, second)?;
+        } else {
+            self.write_word(address, second)?;
+        }
+        self.m = second;
+        Ok(())
+    }
+
+    fn accept_aau_instruction(&mut self) {
+        self.aau_overflow = false;
+        self.aau_underflow = false;
+    }
+
+    fn set_aau_overflow(&mut self) {
+        self.aau_overflow = true;
+        self.aau_overflow_hold = true;
+    }
+
+    fn set_aau_underflow(&mut self) {
+        self.aau_underflow = true;
+        self.aau_underflow_hold = true;
+    }
+
+    fn finish_aau_float_pair(&mut self, mut exponent: i32, mut mantissa: i128, normalize: bool) {
+        if mantissa == 0 {
+            self.aau_ax = 0;
+            self.aau_qx = 0;
+            return;
+        }
+        let maximum = (1_i128 << 60) - 1;
+        let minimum = -(1_i128 << 60);
+        while mantissa > maximum || mantissa < minimum {
+            mantissa >>= 1;
+            exponent += 1;
+        }
+        if normalize {
+            while mantissa.unsigned_abs() < (1_u128 << 59) {
+                mantissa <<= 1;
+                exponent -= 1;
+            }
+        }
+        if exponent > 255 {
+            self.set_aau_overflow();
+        } else if exponent < -256 {
+            self.set_aau_underflow();
+            self.aau_ax = 0;
+            self.aau_qx = 0;
+            return;
+        }
+        (self.aau_ax, self.aau_qx) = aau_float_pair_raw(exponent, mantissa);
+    }
+
+    fn normalize_aau_pair(&mut self) -> Result<(), String> {
+        let (exponent, mantissa) = aau_float_pair_parts(self.aau_ax, self.aau_qx);
+        self.finish_aau_float_pair(exponent, mantissa, true);
+        Ok(())
+    }
+
+    fn execute_aau_floating(&mut self, mnemonic: &str, address: i32) -> Result<(), String> {
+        let normalized = self.aau_mode == Some(AauMode::NormalizedFloatingPoint);
+        self.aau_bx = self.read_aau_operand(address)?;
+        let (bx_exponent, bx_mantissa) = aau_float_parts(self.aau_bx);
+        match mnemonic {
+            "FAD" | "FSU" => {
+                let (ax_exponent, ax_mantissa) = aau_float_parts(self.aau_ax);
+                let target_exponent = ax_exponent.max(bx_exponent);
+                let left =
+                    align_aau_float(i128::from(ax_mantissa) << 30, ax_exponent, target_exponent);
+                let right =
+                    align_aau_float(i128::from(bx_mantissa) << 30, bx_exponent, target_exponent);
+                let result = if mnemonic == "FAD" {
+                    left + right
+                } else {
+                    left - right
+                };
+                self.finish_aau_float_pair(target_exponent, result, normalized);
+            }
+            "FMP" => {
+                let (qx_exponent, qx_mantissa) = aau_float_parts(self.aau_qx);
+                let product = i128::from(qx_mantissa) * i128::from(bx_mantissa);
+                self.finish_aau_float_pair(qx_exponent + bx_exponent, product, normalized);
+            }
+            "FDV" => {
+                let (mut ax_exponent, dividend) = aau_float_pair_parts(self.aau_ax, self.aau_qx);
+                if bx_mantissa == 0 {
+                    if dividend < 0 {
+                        (self.aau_ax, self.aau_qx) =
+                            aau_float_pair_raw(ax_exponent, dividend.abs());
+                    }
+                    self.set_aau_overflow();
+                    return Ok(());
+                }
+                if dividend == 0 {
+                    self.aau_ax = 0;
+                    self.aau_qx = 0;
+                    return Ok(());
+                }
+                let dividend_negative = dividend < 0;
+                let divisor_negative = bx_mantissa < 0;
+                let mut dividend_magnitude = dividend.abs();
+                let divisor_magnitude = i128::from(bx_mantissa).abs();
+                if (dividend_magnitude >> 30) >= divisor_magnitude {
+                    dividend_magnitude >>= 1;
+                    ax_exponent += 1;
+                    if (dividend_magnitude >> 30) >= divisor_magnitude {
+                        (self.aau_ax, self.aau_qx) =
+                            aau_float_pair_raw(ax_exponent, dividend_magnitude);
+                        self.set_aau_overflow();
+                        return Ok(());
+                    }
+                }
+                let mut quotient_exponent = ax_exponent - bx_exponent;
+                let quotient_magnitude = dividend_magnitude / divisor_magnitude;
+                let mut quotient = if dividend_negative ^ divisor_negative {
+                    -quotient_magnitude
+                } else {
+                    quotient_magnitude
+                };
+                while !(-(1_i128 << 30)..=(1_i128 << 30) - 1).contains(&quotient) {
+                    quotient >>= 1;
+                    quotient_exponent += 1;
+                }
+                if normalized {
+                    while quotient != 0 && quotient.unsigned_abs() < (1_u128 << 29) {
+                        quotient <<= 1;
+                        quotient_exponent -= 1;
+                    }
+                }
+                if quotient_exponent > 255 {
+                    self.set_aau_overflow();
+                } else if quotient_exponent < -256 {
+                    self.set_aau_underflow();
+                    self.aau_ax = 0;
+                    self.aau_qx = 0;
+                } else {
+                    let remainder_magnitude = dividend_magnitude % divisor_magnitude;
+                    let remainder = if dividend_negative {
+                        -remainder_magnitude
+                    } else {
+                        remainder_magnitude
+                    };
+                    self.aau_ax = aau_float_raw(quotient_exponent, quotient as i64);
+                    self.aau_qx = aau_float_raw(
+                        quotient_exponent - 30,
+                        remainder.clamp(-(1_i128 << 30), (1_i128 << 30) - 1) as i64,
+                    );
+                }
+            }
+            _ => {
+                return Err(format!(
+                    "unimplemented GE-225 AAU floating instruction: {mnemonic}"
+                ))
+            }
+        }
+        Ok(())
+    }
+
+    fn execute_aau_memory(&mut self, mnemonic: &str, address: i32) -> Result<(), String> {
+        self.aau_ix = self.ir as u64;
+        self.accept_aau_instruction();
+        match mnemonic {
+            "FLD" => self.aau_ax = self.read_aau_operand(address)?,
+            "FST" => self.write_aau_operand(address, self.aau_ax)?,
+            "FAD" | "FSU" if self.aau_mode == Some(AauMode::FixedPoint) => {
+                self.aau_bx = self.read_aau_operand(address)?;
+                let left = aau_fixed_value(self.aau_ax);
+                let right = aau_fixed_value(self.aau_bx);
+                let total = if mnemonic == "FAD" {
+                    i128::from(left) + i128::from(right)
+                } else {
+                    i128::from(left) - i128::from(right)
+                };
+                let maximum = (1_i128 << AAU_FIXED_DATA_BITS) - 1;
+                let minimum = -(1_i128 << AAU_FIXED_DATA_BITS);
+                if total > maximum {
+                    self.set_aau_overflow();
+                } else if total < minimum {
+                    self.set_aau_underflow();
+                }
+                self.aau_ax = aau_fixed_raw(total as i64);
+            }
+            "FMP" if self.aau_mode == Some(AauMode::FixedPoint) => {
+                self.aau_bx = self.read_aau_operand(address)?;
+                let product = i128::from(aau_fixed_value(self.aau_qx))
+                    * i128::from(aau_fixed_value(self.aau_bx));
+                (self.aau_ax, self.aau_qx) = split_aau_fixed_pair(product);
+            }
+            "FDV" if self.aau_mode == Some(AauMode::FixedPoint) => {
+                self.aau_bx = self.read_aau_operand(address)?;
+                let divisor = i128::from(aau_fixed_value(self.aau_bx));
+                let dividend = aau_fixed_pair_value(self.aau_ax, self.aau_qx);
+                let high = i128::from(aau_fixed_value(self.aau_ax));
+                if divisor == 0 || high.abs() >= divisor.abs() {
+                    if dividend < 0 {
+                        (self.aau_ax, self.aau_qx) = split_aau_fixed_pair(-dividend);
+                    }
+                    self.set_aau_overflow();
+                } else if dividend != 0 {
+                    let quotient = dividend / divisor;
+                    let remainder = dividend % divisor;
+                    self.aau_ax = aau_fixed_raw(quotient as i64);
+                    self.aau_qx = aau_fixed_raw(remainder as i64);
+                }
+            }
+            "FAD" | "FSU" | "FMP" | "FDV" => {
+                self.execute_aau_floating(mnemonic, address)?;
+            }
+            _ => return Err(format!("unimplemented GE-225 AAU instruction: {mnemonic}")),
+        }
+        Ok(())
+    }
+
+    fn execute_aau_fixed(&mut self, mnemonic: &str) -> Result<(), String> {
+        self.aau_ix = self.ir as u64;
+        if let Some(branch) = mnemonic
+            .strip_prefix("AAU_")
+            .filter(|name| aau_branch_word(name).is_some())
+        {
+            let condition = self.aau_branch_condition(branch);
+            if matches!(branch, "BOO" | "BON") && self.aau_overflow_hold {
+                self.aau_overflow_hold = false;
+            }
+            if matches!(branch, "BUO" | "BUN") && self.aau_underflow_hold {
+                self.aau_underflow_hold = false;
+            }
+            if !condition {
+                self.advance_pc(1)?;
+            }
+            return Ok(());
+        }
+
+        self.accept_aau_instruction();
+        match mnemonic {
+            "AAU_SET_FIXPOINT" => self.aau_mode = Some(AauMode::FixedPoint),
+            "AAU_SET_NFLPOINT" => self.aau_mode = Some(AauMode::NormalizedFloatingPoint),
+            "AAU_SET_UFLPOINT" => self.aau_mode = Some(AauMode::UnnormalizedFloatingPoint),
+            "AAU_LAQ" => self.aau_ax = self.aau_qx,
+            "AAU_LQA" => self.aau_qx = self.aau_ax,
+            "AAU_MAQ" => {
+                self.aau_qx = self.aau_ax;
+                self.aau_ax = 0;
+            }
+            "AAU_XAQ" => std::mem::swap(&mut self.aau_ax, &mut self.aau_qx),
+            "AAU_ROV" => self.aau_overflow_hold = false,
+            "AAU_RUN" => self.aau_underflow_hold = false,
+            "AAU_RIN" => {
+                self.aau_overflow_hold = false;
+                self.aau_underflow_hold = false;
+            }
+            "AAU_NOX" => self.normalize_aau_pair()?,
+            _ => {
+                return Err(format!(
+                    "unimplemented GE-225 AAU general instruction: {mnemonic}"
+                ))
+            }
+        }
+        Ok(())
+    }
+
+    fn aau_branch_condition(&self, branch: &str) -> bool {
+        let floating = matches!(
+            self.aau_mode,
+            Some(AauMode::NormalizedFloatingPoint | AauMode::UnnormalizedFloatingPoint)
+        );
+        let (first, second) = unpack_aau_words(self.aau_ax);
+        let minus = if floating {
+            (second & SIGN_BIT) != 0
+        } else {
+            (first & SIGN_BIT) != 0
+        };
+        match branch {
+            "BAR" => self.aau_ready,
+            "BAN" => !self.aau_ready,
+            "BMI" => minus,
+            "BPL" => !minus,
+            "BZE" => self.aau_ax == 0,
+            "BNZ" => self.aau_ax != 0,
+            "BOV" => self.aau_overflow,
+            "BNO" => !self.aau_overflow,
+            "BUF" => self.aau_underflow,
+            "BNU" => !self.aau_underflow,
+            "BOO" => self.aau_overflow_hold,
+            "BON" => !self.aau_overflow_hold,
+            "BUO" => self.aau_underflow_hold,
+            "BUN" => !self.aau_underflow_hold,
+            "BER" => self.aau_overflow || self.aau_underflow,
+            "BNE" => !self.aau_overflow && !self.aau_underflow,
+            _ => false,
+        }
+    }
+
     fn execute_memory_reference(
         &mut self,
         mnemonic: &str,
@@ -2093,6 +2805,9 @@ impl Simulator {
     ) -> Result<(), String> {
         let effective_address = effective_or_raw_address;
         match mnemonic {
+            "FLD" | "FAD" | "FSU" | "FST" | "FMP" | "FDV" => {
+                self.execute_aau_memory(mnemonic, effective_address)?;
+            }
             "LDA" => {
                 self.m = self.read_word(effective_address)?;
                 self.a = self.m;
@@ -2401,6 +3116,9 @@ impl Simulator {
     fn execute_fixed(&mut self, decoded: &DecodedInstruction) -> Result<(), String> {
         let mnemonic = decoded.mnemonic;
         let count = decoded.count.unwrap_or(0);
+        if mnemonic.starts_with("AAU_") {
+            return self.execute_aau_fixed(mnemonic);
+        }
         match mnemonic {
             "HCR" => self.card_reader_continuous = None,
             "OFF" => {
@@ -2712,6 +3430,34 @@ impl Simulator {
         let normalized = word & MASK_20;
         let (opcode, modifier, address) = decode_instruction(normalized);
         let canonical = normalized & !MODIFIER_MASK;
+        if let Some(name) = aau_general_name(normalized) {
+            return Ok(DecodedInstruction {
+                mnemonic: name,
+                modifier: Some(0),
+                address: None,
+                count: None,
+                sxg_group: None,
+                card_format: None,
+                controller_plug: None,
+                controller_condition: None,
+                controller_branch_when_set: false,
+                fixed_word: true,
+            });
+        }
+        if let Some(name) = aau_branch_name(normalized) {
+            return Ok(DecodedInstruction {
+                mnemonic: name,
+                modifier: Some(0),
+                address: None,
+                count: None,
+                sxg_group: None,
+                card_format: None,
+                controller_plug: None,
+                controller_condition: None,
+                controller_branch_when_set: false,
+                fixed_word: true,
+            });
+        }
         if canonical == 0o2500006 {
             let mnemonic = match self.n_device {
                 NRegisterDevice::Typewriter => "TYP",

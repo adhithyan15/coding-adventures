@@ -2,13 +2,13 @@
 
 Behavioral Rust simulator for the **GE-225 instruction repertoire**.
 
-The Rust implementation is the fidelity-first reference for the repository's
-GE-225 work. It currently covers the integer, control-flow, shift, console
-typewriter, and card-reader core inherited from the original compiler-target
-model. Its remaining documented CPU, I/O-controller, and optional Auxiliary
-Arithmetic Unit (AAU) families are tracked in
-`code/specs/RUST-CPU-SIMULATOR-BACKLOG.md`; the package must not be described as
-a complete historical simulator until those items close.
+The Rust implementation is the fidelity-first functional reference for the
+repository's GE-225 work. It covers the documented central processor,
+direct-I/O, controller selector, Automatic Program Interrupt, and optional
+Auxiliary Arithmetic Unit (AAU) instruction families. Cycle-accurate core
+timing, the complete historical peripheral catalog, and DTSS remain outside
+this CPU simulator's scope; the separate gate-level partner is tracked in
+`code/specs/RUST-CPU-SIMULATOR-BACKLOG.md`.
 
 The current memory model follows the machine's architectural rules:
 
@@ -39,9 +39,10 @@ operand field before execution, with modified shift counts rejected above the
 architectural 31-place limit. Overflow from single-length arithmetic and left
 shifts remains latched until `BOV` or `BNO` tests it. A shared pre-execution
 check validates pair operands, raw and X-word addresses, `MOV` ranges, branch
-targets, and exact decision skips before I, P, or operand state changes. The
-current core has 87.45% line coverage (1,680/1,921); the floor is rechecked after
-the remaining optional AAU instruction family lands.
+targets, and exact CPU/controller/AAU decision skips before I, P, hold, or
+operand state changes. The
+completed core has 88.81% line coverage (2,152/2,423), above the Rust
+completion floor after the optional AAU instruction family.
 
 The optional central-processor arithmetic path models decimal words as the
 manual's three BCD digits plus sign and end-of-field flag. In decimal mode,
@@ -91,12 +92,25 @@ X word and restores the interrupted X group; an intervening `SET PBK` returns
 with interrupts disabled. The target of a `BRU` is never interrupted, matching
 the manual's explicitly uninterruptible branch rule.
 
+The optional AAU is modeled as separate 40-bit AX, BX, QX, and IX registers.
+Exact general words select fixed-point, normalized floating-point, or
+unnormalized floating-point operation; transfer and reset instructions preserve
+the unit's distinct transient overflow/underflow indicators and persistent hold
+indicators. `FLD`, `FST`, `FAD`, `FSU`, `FMP`, and `FDV` use the manual's paired
+memory-word formats, including odd-address behavior and CPU X-word
+modification. Floating arithmetic uses integer mantissa/exponent operations,
+not host `f64`, so normalization, exponent alerts, minor results, and `NOX` are
+deterministic. Plug-7 `BAR` words expose readiness, sign, zero, transient alert,
+hold-alert, and combined-error tests with the documented skip rule.
+
 The primary reference is General Electric's corrected 1966 printing of the
 [GE-225 Programming Reference Manual](https://www.bitsavers.org/www.computer.museum.uq.edu.au/pdf/CPB-252A%20GE-225%20Programming%20Reference%20Manual%201966.pdf),
 which resolves the earlier printing's inconsistent SXG opcode as `2506YY3`.
 Direct peripheral behavior is checked against General Electric's
 [GE-200 Series Punched Card Subsystems Reference Manual](https://ftpmirror.your.org/pub/misc/bitsavers/www.computer.museum.uq.edu.au/pdf/GE-200%20Series%20Punched%20Card%20Subsystems%20Reference%20Manual.pdf)
 and [GE-225 Paper Tape Subsystem Reference Manual](https://ftpmirror.your.org/pub/misc/bitsavers/www.computer.museum.uq.edu.au/pdf/GE-225%20Paper%20Tape%20Subsystem.pdf).
+The optional arithmetic-unit contract follows General Electric's
+[GE-225 Auxiliary Arithmetic Unit manual](https://www.bitsavers.org/www.computer.museum.uq.edu.au/pdf/CPB-325A%20GE225%20Auxiluary%20Arithmetic%20Unit.pdf).
 
 Run the package verification from `code/packages/rust`:
 
