@@ -5,7 +5,12 @@ const DATA_MASK: i32 = (1 << 19) - 1;
 const SIGN_BIT: i32 = 1 << 19;
 const ADDR_MASK: i32 = 0x1fff;
 const X_MASK: i32 = 0x7fff;
+const MODIFIER_SHIFT: i32 = 13;
+const MODIFIER_MASK: i32 = 0x03 << MODIFIER_SHIFT;
 const N_MASK: i32 = 0x3f;
+const SXG_BASE: i32 = 0o2506003;
+const SXG_GROUP_SHIFT: i32 = 3;
+const SXG_GROUP_MASK: i32 = 0x1f << SXG_GROUP_SHIFT;
 const DOUBLE_DATA_BITS: u32 = 38;
 const DOUBLE_WORD_BITS: u32 = 39;
 const DOUBLE_DATA_MASK: i64 = (1_i64 << DOUBLE_DATA_BITS) - 1;
@@ -90,6 +95,7 @@ struct DecodedInstruction {
     modifier: Option<i32>,
     address: Option<i32>,
     count: Option<i32>,
+    sxg_group: Option<usize>,
     fixed_word: bool,
 }
 
@@ -145,7 +151,6 @@ fn fixed_word(mnemonic: &str) -> Option<i32> {
         "SBO" => 0o2504112,
         "SET_DECMODE" => 0o2506011,
         "SET_BINMODE" => 0o2506012,
-        "SXG" => 0o2506013,
         "SET_PST" => 0o2506015,
         "SET_PBK" => 0o2506016,
         "BOD" => 0o2514000,
@@ -186,7 +191,6 @@ fn fixed_name(word: i32) -> Option<&'static str> {
         0o2504112 => "SBO",
         0o2506011 => "SET_DECMODE",
         0o2506012 => "SET_BINMODE",
-        0o2506013 => "SXG",
         0o2506015 => "SET_PST",
         0o2506016 => "SET_PBK",
         0o2514000 => "BOD",
@@ -348,16 +352,40 @@ pub fn decode_instruction(word: i32) -> (i32, i32, i32) {
 }
 
 pub fn assemble_fixed(mnemonic: &str) -> Result<i32, String> {
+    if mnemonic == "SXG" {
+        return Err("SXG requires a group; use assemble_select_x_group".into());
+    }
     fixed_word(mnemonic).ok_or_else(|| format!("unknown fixed GE-225 instruction: {mnemonic}"))
 }
 
 pub fn assemble_shift(mnemonic: &str, count: i32) -> Result<i32, String> {
+    assemble_shift_modified(mnemonic, count, 0)
+}
+
+pub fn assemble_fixed_modified(mnemonic: &str, modifier: i32) -> Result<i32, String> {
+    if !(0..=3).contains(&modifier) {
+        return Err(format!("modifier out of range: {modifier}"));
+    }
+    Ok(assemble_fixed(mnemonic)? | (modifier << MODIFIER_SHIFT))
+}
+
+pub fn assemble_shift_modified(mnemonic: &str, count: i32, modifier: i32) -> Result<i32, String> {
     if !(0..=0o37).contains(&count) {
         return Err(format!("shift count out of range: {count}"));
     }
+    if !(0..=3).contains(&modifier) {
+        return Err(format!("modifier out of range: {modifier}"));
+    }
     shift_base(mnemonic)
-        .map(|base| base | count)
+        .map(|base| base | count | (modifier << MODIFIER_SHIFT))
         .ok_or_else(|| format!("unknown GE-225 shift instruction: {mnemonic}"))
+}
+
+pub fn assemble_select_x_group(group: i32) -> Result<i32, String> {
+    if !(0..=31).contains(&group) {
+        return Err(format!("X register group out of range: {group}"));
+    }
+    Ok(SXG_BASE | (group << SXG_GROUP_SHIFT))
 }
 
 pub fn pack_words(words: &[i32]) -> Vec<u8> {
@@ -535,9 +563,18 @@ impl Simulator {
     pub fn disassemble_word(&self, word: i32) -> Result<String, String> {
         let decoded = self.decode_word(word)?;
         if decoded.fixed_word {
-            return Ok(match decoded.count {
-                Some(count) => format!("{} {count}", decoded.mnemonic),
-                None => decoded.mnemonic.to_string(),
+            let modifier = decoded.modifier.unwrap_or(0);
+            let suffix = if modifier == 0 {
+                String::new()
+            } else {
+                format!(",X{modifier}")
+            };
+            return Ok(if let Some(group) = decoded.sxg_group {
+                format!("SXG {group}")
+            } else if let Some(count) = decoded.count {
+                format!("{} {count}{suffix}", decoded.mnemonic)
+            } else {
+                format!("{}{suffix}", decoded.mnemonic)
             });
         }
         let address = decoded
@@ -559,6 +596,44 @@ impl Simulator {
         let pc_before = self.pc;
         let instruction_word = self.read_word(pc_before)?;
         let decoded = self.decode_word(instruction_word)?;
+        let mut execution_decoded = decoded.clone();
+        let mut ir_word = instruction_word;
+        if decoded.fixed_word {
+            let modifier = decoded.modifier.unwrap_or(0);
+            if modifier != 0 {
+                if decoded.sxg_group.is_some() {
+                    return Err("SXG cannot be automatically modified".into());
+                }
+                let (_, _, operand) = decode_instruction(instruction_word);
+                let increment = self.get_x_word(modifier as usize)? & ADDR_MASK;
+                let modified_operand = (operand + increment) & ADDR_MASK;
+                ir_word = (instruction_word & !ADDR_MASK) | modified_operand;
+                if let Some(count) = decoded.count {
+                    let modified_count = count + increment;
+                    if modified_count > 31 {
+                        return Err(format!(
+                            "modified GE-225 shift count exceeds 31: {count} + {increment}"
+                        ));
+                    }
+                    execution_decoded.count = Some(modified_count);
+                    execution_decoded.modifier = Some(0);
+                } else {
+                    let modified_word = (OP_RCD << 15) | modified_operand;
+                    execution_decoded = self.decode_word(modified_word)?;
+                    if !execution_decoded.fixed_word {
+                        return Err(format!(
+                            "automatic modification produced a non-fixed GE-225 instruction: {modified_word:07o}"
+                        ));
+                    }
+                }
+            }
+            if matches!(execution_decoded.mnemonic, "SNA" | "NAQ" | "ANQ") && !self.n_ready {
+                return Err(format!(
+                    "{} requires the GE-225 N register to be ready",
+                    execution_decoded.mnemonic
+                ));
+            }
+        }
         let sequential_pc = pc_before
             .checked_add(1)
             .ok_or_else(|| "GE-225 P counter overflow".to_string())?;
@@ -567,39 +642,52 @@ impl Simulator {
                 "GE-225 sequential P counter leaves installed memory: {sequential_pc}"
             ));
         }
-        self.ir = instruction_word;
-        self.pc = sequential_pc;
-        let a_before = self.a;
-        let q_before = self.q;
         let mut effective_address = None;
-        if !decoded.fixed_word {
-            let address = decoded
+        if !execution_decoded.fixed_word {
+            let address = execution_decoded
                 .address
                 .ok_or_else(|| "GE-225 decoder omitted a memory-reference address".to_string())?;
-            let modifier = decoded
+            let modifier = execution_decoded
                 .modifier
                 .ok_or_else(|| "GE-225 decoder omitted a memory-reference modifier".to_string())?;
-            if decoded.mnemonic == "BRU" {
+            if execution_decoded.mnemonic == "BRU" {
                 effective_address = Some(if modifier == 0 {
                     self.direct_branch_target(sequential_pc, address)?
                 } else {
                     self.resolve_effective_address(address, modifier)?
                 });
             } else if !matches!(
-                decoded.mnemonic,
+                execution_decoded.mnemonic,
                 "BXL" | "BXH" | "LDX" | "SPB" | "INX" | "STX" | "MOY"
             ) {
                 effective_address = Some(self.resolve_effective_address(address, modifier)?);
             }
+            if modifier != 0 {
+                if let Some(address) = effective_address {
+                    ir_word = (instruction_word & !ADDR_MASK) | (address & ADDR_MASK);
+                }
+            }
+        }
+        self.ir = ir_word;
+        self.pc = sequential_pc;
+        let a_before = self.a;
+        let q_before = self.q;
+        if !execution_decoded.fixed_word {
+            let address = execution_decoded
+                .address
+                .ok_or_else(|| "GE-225 decoder omitted a memory-reference address".to_string())?;
+            let modifier = execution_decoded
+                .modifier
+                .ok_or_else(|| "GE-225 decoder omitted a memory-reference modifier".to_string())?;
             self.execute_memory_reference(
-                decoded.mnemonic,
+                execution_decoded.mnemonic,
                 modifier,
                 effective_address.unwrap_or(address),
                 address,
                 pc_before,
             )?;
         } else {
-            self.execute_fixed(&decoded)?;
+            self.execute_fixed(&execution_decoded)?;
         }
         self.check_address(self.pc)?;
         Ok(Trace {
@@ -663,13 +751,13 @@ impl Simulator {
                 self.m = self.read_word(effective_address)?;
                 let total = to_signed20(self.a) + to_signed20(self.m);
                 self.a = from_signed20(total);
-                self.overflow = !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+                self.overflow |= !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
             }
             "SUB" => {
                 self.m = self.read_word(effective_address)?;
                 let total = to_signed20(self.a) - to_signed20(self.m);
                 self.a = from_signed20(total);
-                self.overflow = !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+                self.overflow |= !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
             }
             "STA" => self.write_word(effective_address, self.a)?,
             "BXL" => {
@@ -891,7 +979,7 @@ impl Simulator {
             "NEG" => {
                 let before = to_signed20(self.a);
                 self.a = from_signed20(-before);
-                self.overflow = before == -(1 << 19);
+                self.overflow |= before == -(1 << 19);
             }
             "CHS" => self.a ^= SIGN_BIT,
             "NOP" => {}
@@ -905,16 +993,20 @@ impl Simulator {
             "ADO" => {
                 let total = to_signed20(self.a) + 1;
                 self.a = from_signed20(total);
-                self.overflow = !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+                self.overflow |= !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
             }
             "SBO" => {
                 let total = to_signed20(self.a) - 1;
                 self.a = from_signed20(total);
-                self.overflow = !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+                self.overflow |= !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
             }
             "SET_DECMODE" => self.decimal_mode = true,
             "SET_BINMODE" => self.decimal_mode = false,
-            "SXG" => self.selected_x_group = (self.a & 0x1f) as usize,
+            "SXG" => {
+                self.selected_x_group = decoded
+                    .sxg_group
+                    .ok_or_else(|| "GE-225 SXG decoder omitted its group".to_string())?;
+            }
             "SET_PST" => self.automatic_interrupt_mode = true,
             "SET_PBK" => self.automatic_interrupt_mode = false,
             "BOD" | "BEV" | "BMI" | "BPL" | "BZE" | "BNZ" | "BOV" | "BNO" | "BPE" | "BPC"
@@ -968,7 +1060,7 @@ impl Simulator {
         match mnemonic {
             "SRA" => self.a = from_signed20(to_signed20(self.a) >> count.min(19)),
             "SLA" if count != 0 => {
-                self.overflow = (a_data >> (19 - count).max(0)) != 0;
+                self.overflow |= (a_data >> (19 - count).max(0)) != 0;
                 self.a = with_sign((a_data << count) & DATA_MASK, a_sign);
             }
             "SCA" => {
@@ -1079,12 +1171,25 @@ impl Simulator {
 
     fn decode_word(&self, word: i32) -> Result<DecodedInstruction, String> {
         let normalized = word & MASK_20;
-        if let Some(name) = fixed_name(normalized) {
+        let (opcode, modifier, address) = decode_instruction(normalized);
+        let canonical = normalized & !MODIFIER_MASK;
+        if let Some(name) = fixed_name(canonical) {
             return Ok(DecodedInstruction {
                 mnemonic: name,
-                modifier: None,
+                modifier: Some(modifier),
                 address: None,
                 count: None,
+                sxg_group: None,
+                fixed_word: true,
+            });
+        }
+        if (canonical & !SXG_GROUP_MASK) == SXG_BASE {
+            return Ok(DecodedInstruction {
+                mnemonic: "SXG",
+                modifier: Some(modifier),
+                address: None,
+                count: None,
+                sxg_group: Some(((canonical & SXG_GROUP_MASK) >> SXG_GROUP_SHIFT) as usize),
                 fixed_word: true,
             });
         }
@@ -1092,18 +1197,18 @@ impl Simulator {
             "SRA", "SNA", "SCA", "SAN", "SRD", "NAQ", "SCD", "ANQ", "SLA", "SLD", "NOR", "DNO",
         ] {
             if let Some(base) = shift_base(name) {
-                if (normalized & !0o37) == base {
+                if (canonical & !0o37) == base {
                     return Ok(DecodedInstruction {
                         mnemonic: name,
-                        modifier: None,
+                        modifier: Some(modifier),
                         address: None,
-                        count: Some(normalized & 0o37),
+                        count: Some(canonical & 0o37),
+                        sxg_group: None,
                         fixed_word: true,
                     });
                 }
             }
         }
-        let (opcode, modifier, address) = decode_instruction(normalized);
         let mnemonic = base_opcode_name(opcode)
             .ok_or_else(|| format!("unknown GE-225 opcode field {opcode:o}"))?;
         Ok(DecodedInstruction {
@@ -1111,6 +1216,7 @@ impl Simulator {
             modifier: Some(modifier),
             address: Some(address),
             count: None,
+            sxg_group: None,
             fixed_word: false,
         })
     }

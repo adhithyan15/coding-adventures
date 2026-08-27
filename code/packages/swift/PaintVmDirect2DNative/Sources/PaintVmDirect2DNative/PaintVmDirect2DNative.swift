@@ -17,13 +17,20 @@ private func toCColor(_ color: PaintColorRGBA8) -> paint_rgba8_color_t {
 public enum PaintVmDirect2DNative {
     public static func render(_ scene: PaintScene) throws -> PixelContainer {
         #if os(Windows)
-        let rects = scene.instructions.map { instruction in
-            paint_rect_instruction_t(
-                x: UInt32(instruction.x),
-                y: UInt32(instruction.y),
-                width: UInt32(instruction.width),
-                height: UInt32(instruction.height),
-                fill: toCColor(parsePaintColor(instruction.fill))
+        // This backend only ever rendered rects (PaintInstruction was a
+        // typealias for PaintRectInstruction before the P2D02
+        // line/glyph_run/group/clip/layer contract was added). Non-rect
+        // instructions are silently skipped, preserving this native
+        // renderer's existing rect-only behavior for every scene it has
+        // ever been asked to draw.
+        let rects = scene.instructions.compactMap { instruction -> paint_rect_instruction_t? in
+            guard case .rect(let r) = instruction else { return nil }
+            return paint_rect_instruction_t(
+                x: UInt32(r.x),
+                y: UInt32(r.y),
+                width: UInt32(r.width),
+                height: UInt32(r.height),
+                fill: toCColor(parsePaintColor(r.fill))
             )
         }
 

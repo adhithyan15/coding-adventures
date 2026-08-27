@@ -687,10 +687,11 @@ fn append_gantt_axis(
     }
 }
 
-fn today_marker_style(source: Option<&str>) -> (String, f64, Option<Vec<f64>>) {
+fn today_marker_style(source: Option<&str>) -> (String, f64, Option<Vec<f64>>, f64) {
     let mut stroke = "#ef4444".to_string();
     let mut stroke_width = 2.0;
     let mut stroke_dash = Some(vec![6.0, 3.0]);
+    let mut opacity = 1.0;
     if let Some(source) = source {
         for declaration in source.split([',', ';']) {
             let Some((name, value)) = declaration.split_once(':') else { continue };
@@ -706,11 +707,16 @@ fn today_marker_style(source: Option<&str>) -> (String, f64, Option<Vec<f64>>) {
                     let dash = value.split_whitespace().filter_map(|part| part.parse().ok()).collect::<Vec<_>>();
                     if !dash.is_empty() { stroke_dash = Some(dash); }
                 }
+                "opacity" => {
+                    if let Ok(value) = value.trim().parse::<f64>() {
+                        opacity = value.clamp(0.0, 1.0);
+                    }
+                }
                 _ => {}
             }
         }
     }
-    (stroke, stroke_width, stroke_dash)
+    (stroke, stroke_width, stroke_dash, opacity)
 }
 
 fn current_epoch_day() -> i64 {
@@ -880,7 +886,7 @@ fn layout_gantt(
     if diagram.config.today_marker.as_deref() != Some("off") {
         let today = current_epoch_day() as f64;
         if (t_min..=t_max).contains(&today) {
-            let (stroke, stroke_width, stroke_dash) =
+            let (stroke, stroke_width, stroke_dash, opacity) =
                 today_marker_style(diagram.config.today_marker.as_deref());
             items.push(LayoutedTemporalItem::TodayMarker {
                 x: LABEL_W + (today - t_min) * x_scale,
@@ -889,6 +895,7 @@ fn layout_gantt(
                 stroke,
                 stroke_width,
                 stroke_dash,
+                opacity,
             });
         }
     }
@@ -1732,12 +1739,17 @@ mod tests {
         gantt.sections[0].tasks.truncate(1);
         gantt.sections[0].tasks[0].start = TaskStart::Date(iso(today - 1));
         gantt.sections[0].tasks[0].end = Some(TaskEnd::Date(iso(today + 1)));
-        gantt.config.today_marker = Some("stroke:#00aa44,stroke-width:5px,stroke-dasharray:none".into());
+        gantt.config.today_marker = Some(
+            "stroke:#00aa44,stroke-width:5px,stroke-dasharray:none,opacity:0.5".into(),
+        );
         let layout = layout_temporal_diagram(&diagram, 800.0);
         assert!(layout.items.iter().any(|item| matches!(
             item,
-            LayoutedTemporalItem::TodayMarker { stroke, stroke_width, stroke_dash, .. }
-                if stroke == "#00aa44" && *stroke_width == 5.0 && stroke_dash.is_none()
+            LayoutedTemporalItem::TodayMarker { stroke, stroke_width, stroke_dash, opacity, .. }
+                if stroke == "#00aa44"
+                    && *stroke_width == 5.0
+                    && stroke_dash.is_none()
+                    && *opacity == 0.5
         )));
     }
 

@@ -2,6 +2,17 @@ import XCTest
 @testable import Barcode2D
 import PaintInstructions
 
+/// Extracts the `PaintRectInstruction` payload from a `PaintInstruction`,
+/// failing the test loudly if it isn't a rect. `layout()` only ever emits
+/// rects today, so every test in this file expects one.
+private func rectOf(_ instruction: PaintInstruction, file: StaticString = #filePath, line: UInt = #line) -> PaintRectInstruction {
+    guard case .rect(let r) = instruction else {
+        XCTFail("expected a .rect instruction, got \(instruction)", file: file, line: line)
+        return PaintRectInstruction(x: 0, y: 0, width: 0, height: 0)
+    }
+    return r
+}
+
 // =============================================================================
 // Barcode2DTests
 // =============================================================================
@@ -167,7 +178,7 @@ final class Barcode2DTests: XCTestCase {
         let grid = makeModuleGrid(rows: 3, cols: 3)
         let scene = try layout(grid: grid)
         XCTAssertFalse(scene.instructions.isEmpty)
-        let bg = scene.instructions[0]
+        let bg = rectOf(scene.instructions[0])
         XCTAssertEqual(bg.x, 0)
         XCTAssertEqual(bg.y, 0)
         XCTAssertEqual(bg.fill, "#ffffff")
@@ -179,7 +190,7 @@ final class Barcode2DTests: XCTestCase {
         let scene = try layout(grid: grid, config: config)
         // totalWidth = (6 + 2*2) * 8 = 80
         // totalHeight = (4 + 2*2) * 8 = 64
-        let bg = scene.instructions[0]
+        let bg = rectOf(scene.instructions[0])
         XCTAssertEqual(bg.width, 80)
         XCTAssertEqual(bg.height, 64)
     }
@@ -208,7 +219,7 @@ final class Barcode2DTests: XCTestCase {
         var grid = makeModuleGrid(rows: 5, cols: 5)
         grid = try setModule(grid: grid, row: 0, col: 0, dark: true)
         let scene = try layout(grid: grid)
-        let darkRect = scene.instructions[1]
+        let darkRect = rectOf(scene.instructions[1])
         XCTAssertEqual(darkRect.x, 40)
         XCTAssertEqual(darkRect.y, 40)
         XCTAssertEqual(darkRect.width, 10)
@@ -221,7 +232,7 @@ final class Barcode2DTests: XCTestCase {
         var grid = makeModuleGrid(rows: 5, cols: 5)
         grid = try setModule(grid: grid, row: 2, col: 3, dark: true)
         let scene = try layout(grid: grid)
-        let darkRect = scene.instructions[1]
+        let darkRect = rectOf(scene.instructions[1])
         XCTAssertEqual(darkRect.x, 70)
         XCTAssertEqual(darkRect.y, 60)
     }
@@ -240,7 +251,7 @@ final class Barcode2DTests: XCTestCase {
         XCTAssertEqual(scene.width, 20)
         XCTAssertEqual(scene.height, 20)
         XCTAssertEqual(scene.background, "#00ff00")
-        XCTAssertEqual(scene.instructions[0].fill, "#00ff00")
+        XCTAssertEqual(rectOf(scene.instructions[0]).fill, "#00ff00")
     }
 
     func testLayout_square_zeroQuietZone() throws {
@@ -258,7 +269,7 @@ final class Barcode2DTests: XCTestCase {
         grid = try setModule(grid: grid, row: 0, col: 0, dark: true)
         let config = Barcode2DLayoutConfig(foreground: "#123456")
         let scene = try layout(grid: grid, config: config)
-        let darkRect = scene.instructions[1]
+        let darkRect = rectOf(scene.instructions[1])
         XCTAssertEqual(darkRect.fill, "#123456")
     }
 
@@ -287,7 +298,7 @@ final class Barcode2DTests: XCTestCase {
     func testLayout_square_backgroundRect_fillsScene() throws {
         let grid = makeModuleGrid(rows: 21, cols: 21)
         let scene = try layout(grid: grid)
-        let bg = scene.instructions[0]
+        let bg = rectOf(scene.instructions[0])
         XCTAssertEqual(bg.width, scene.width)
         XCTAssertEqual(bg.height, scene.height)
     }
@@ -351,8 +362,8 @@ final class Barcode2DTests: XCTestCase {
         )
         let scene = try layout(grid: grid, config: config)
         // instructions[0] = background, [1] = row 0 col 0, [2] = row 1 col 0
-        let row0x = scene.instructions[1].x
-        let row1x = scene.instructions[2].x
+        let row0x = rectOf(scene.instructions[1]).x
+        let row1x = rectOf(scene.instructions[2]).x
         XCTAssertGreaterThan(row1x, row0x)
     }
 
@@ -540,7 +551,7 @@ final class Barcode2DTests: XCTestCase {
         // background + 7*7 = 50 instructions
         XCTAssertEqual(scene.instructions.count, 50)
         // First dark rect is at (0, 0) since quietZoneModules=0
-        let first = scene.instructions[1]
+        let first = rectOf(scene.instructions[1])
         XCTAssertEqual(first.x, 0)
         XCTAssertEqual(first.y, 0)
     }

@@ -2843,21 +2843,27 @@ where
                 stroke,
                 stroke_width,
                 stroke_dash,
+                opacity,
             } => {
-                instructions.push(PaintInstruction::Path(PaintPath {
+                instructions.push(PaintInstruction::Group(PaintGroup {
                     base: PaintBase::default(),
-                    commands: vec![
-                        PathCommand::MoveTo { x: *x, y: *y1 },
-                        PathCommand::LineTo { x: *x, y: *y2 },
-                    ],
-                    fill: Some("none".into()),
-                    fill_rule: None,
-                    stroke: Some(stroke.clone()),
-                    stroke_width: Some(*stroke_width),
-                    stroke_cap: None,
-                    stroke_join: None,
-                    stroke_dash: stroke_dash.clone(),
-                    stroke_dash_offset: None,
+                    children: vec![PaintInstruction::Path(PaintPath {
+                        base: PaintBase::default(),
+                        commands: vec![
+                            PathCommand::MoveTo { x: *x, y: *y1 },
+                            PathCommand::LineTo { x: *x, y: *y2 },
+                        ],
+                        fill: Some("none".into()),
+                        fill_rule: None,
+                        stroke: Some(stroke.clone()),
+                        stroke_width: Some(*stroke_width),
+                        stroke_cap: None,
+                        stroke_join: None,
+                        stroke_dash: stroke_dash.clone(),
+                        stroke_dash_offset: None,
+                    })],
+                    transform: None,
+                    opacity: Some(*opacity),
                 }));
             }
             LayoutedTemporalItem::BranchLane {
@@ -4055,15 +4061,18 @@ mod tests {
                 stroke: "#00aa44".into(),
                 stroke_width: 5.0,
                 stroke_dash: None,
+                opacity: 0.5,
             }],
         };
         let scene = diagram_to_paint_temporal(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
-            PaintInstruction::Path(path)
-                if path.stroke.as_deref() == Some("#00aa44")
-                    && path.stroke_width == Some(5.0)
-                    && path.stroke_dash.is_none()
+            PaintInstruction::Group(group)
+                if group.opacity == Some(0.5)
+                    && matches!(group.children.as_slice(), [PaintInstruction::Path(path)]
+                        if path.stroke.as_deref() == Some("#00aa44")
+                            && path.stroke_width == Some(5.0)
+                            && path.stroke_dash.is_none())
         )));
     }
 
