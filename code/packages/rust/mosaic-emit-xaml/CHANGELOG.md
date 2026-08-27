@@ -1,5 +1,39 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — lower `HostProgressRing` to native `ProgressRing` (#13176)
+
+XAML is the first backend to render the new kernel primitive
+(`HostProgressRing`, registered in the prior kernel-contract PR). Lowers
+to WinUI 3's native `ProgressRing` in its determinate mode
+(`IsActive="True" IsIndeterminate="False" Minimum="0" Maximum="100"
+Value="..."`) — the real accessible `progressbar` role, announced
+value, and native visuals a `Box`+`Box` CSS conic-gradient trick can't
+provide.
+
+New `emit_host_progress_ring`, dispatched from the primitive-tag match.
+Unlike `HostSlider` (which needs a component-scoped `local:
+{component}MosaicSlider` subclass for its change/commit events),
+`HostProgressRing` is display-only and lowers directly to the plain
+control — no subclass, no generated event handlers. Reuses
+`host_slider_number_attr_value` for the `value` prop's `Number`/
+`SlotRef`/`Expr` handling (the same three-way binding `HostSlider`
+already has), and the same `a11y-label` → `AutomationProperties.Name`
+pattern. `value` is required — a missing prop is a clear compile error
+(`PipelineEmitError::UnsupportedPrimitive`), not a silent default.
+
+Narrows `mosaic-package-artifact-builder`'s `("HostProgressRing", ...)`
+degradation arm to exclude `Backend::Xaml`.
+
+Verified against the real toolchain before writing the emitter: a
+`dotnet build` probe with both a literal `Value="42"` and an
+`x:Bind`-bound `Value`/`AutomationProperties.Name` compiled cleanly.
+After implementation, a real `mosaic-compile pkg --backend xaml
+--profile native-complete` build of a `HostProgressRing` bound to a
+`ring-percent-value` slot produces `nativeComplete: true` with zero
+degradations, and the generated `Ring` UserControl — mounted in a real
+WinUI window with `RingPercentValue` set to 42 — compiles and launches
+cleanly with no crash.
+
 ## [Unreleased] — lower `Path` to real WinUI vector geometry (#12028 item 3, UI39)
 
 XAML is the first backend to render the new kernel drawing primitive
