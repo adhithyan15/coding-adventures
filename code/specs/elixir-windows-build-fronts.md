@@ -109,4 +109,3 @@ parity-metadata CI gate. A delivery also runs:
 4. the Windows platform plan and affected closure; and
 5. diff, formatting, lint, coverage, dependency, and security checks required
    by the repository workflow.
-

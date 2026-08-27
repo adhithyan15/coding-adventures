@@ -15,4 +15,3 @@ Validate the contract and live repository with:
 python -m unittest discover -s code/scripts/tests -p 'test_elixir_windows_build_fronts.py'
 python code/scripts/validate_elixir_windows_build_fronts.py --format json
 ```
-

@@ -21,6 +21,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Replaced inherited POSIX-only `http1` and `zip` fronts with native CMD-safe
   Windows overrides, and removed temporary Atbash, Scytale, and Vigenere skips
   now that CI runs their real Mix tests.
+- Fixed platform-plan change detection so deleting a selected platform override
+  schedules the package on that platform and validates its canonical fallback.
 
 ### Atbash language-neutral fixture consumers
 

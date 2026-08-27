@@ -92,7 +92,9 @@ platform-only work cannot disappear from the matrix. Each build runner then
 selects only its own graph and affected set. A Windows-only native prerequisite
 is therefore installed and ordered on Windows without causing unrelated Unix
 packages to build. Older v1 plans without platform overrides continue to use
-the top-level graph and affected set.
+the top-level graph and affected set. Deleting a selected platform override is
+also a platform-scoped change: that runner schedules the package so the newly
+selected canonical fallback cannot escape validation.
 
 ### Machine-readable platform exceptions
 

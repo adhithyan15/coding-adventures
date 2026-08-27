@@ -8,6 +8,7 @@ import hashlib
 import json
 import re
 import shutil
+
 # The only child process is a fixed, argv-only, shell-free git visibility query.
 import subprocess  # nosec B404
 import sys

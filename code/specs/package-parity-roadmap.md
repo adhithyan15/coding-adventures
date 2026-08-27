@@ -9539,7 +9539,20 @@ The same audit discovers three tracked Mix projects outside BUILD discovery:
 `activation_functions`, `matrix`, and `perceptron`. New pending owner
 `elixir-activation-matrix-perceptron-build-front-coverage` depends on this
 toolchain tranche and requires missing tests before those roots become honest
-cross-platform build evidence. With that work registered, the selected graph
+cross-platform build evidence.
+
+Before publication the branch rebased conflict-free onto exact `origin/main`
+`c831260c0ac475fc6c300b8daddee27c04293bf2`. The refreshed inventory is
+topology-identical to the selected report and a fresh open-PR path audit finds
+zero overlap. Real Windows plan emission found one additional build-tool edge
+case: deleting the three temporary cipher overrides initially failed to select
+their canonical fallbacks. Platform change detection now treats deletion of a
+selected override as a platform-scoped package change. The regenerated closure
+contains all three ciphers and completed 16 native builds, seven exact
+unsupported results, one dependency-unsupported result, and 261 unaffected
+skips with no failure.
+
+With that work registered, the selected graph
 contains 545 owners and 798 dependency edges: 163 merged, 381 pending, and
 exactly one in-progress owner, with no active parity PR.
 

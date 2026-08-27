@@ -15,6 +15,10 @@ All notable changes to the Go build tool will be documented in this file.
   `DEPENDENCY_UNSUPPORTED`; dry runs preserve the same classification. Mixed,
   malformed, lowercase, or shell-chained lookalikes remain ordinary commands
   and cannot acquire exception authority.
+- **Deleting a platform BUILD override now schedules its fallback on that
+  platform.** Platform-plan detection recognizes that an absent
+  `BUILD_windows`, `BUILD_mac`, `BUILD_linux`, or `BUILD_mac_and_linux` changed
+  the selected front, while retaining platform isolation for unrelated lanes.
 
 - **A package can now declare an extra CI toolchain it needs beyond the
   one its own path-bucket language infers.** `inferLanguage` buckets a
