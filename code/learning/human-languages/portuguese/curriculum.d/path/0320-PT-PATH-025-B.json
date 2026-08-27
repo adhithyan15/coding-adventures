@@ -1,0 +1,12 @@
+{
+  "id": "PT-PATH-025-B",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "PT-C21-conseguir"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-025-LANGUAGE-SPECIFIC-B"
+  ],
+  "after": []
+}

@@ -115,7 +115,7 @@
     {
       "language": "bengali",
       "chapter": 7,
-      "sourceHash": "fnv1a64:38b195962d6a8ad2",
+      "sourceHash": "fnv1a64:1d694b233788553e",
       "lessonIds": [
         "BN-C07-howa",
         "BN-C07-jaowa",
@@ -129,12 +129,12 @@
       "text": "bengali/narration/ch07.txt",
       "json": "bengali/narration/ch07.json",
       "textHash": "fnv1a64:8e59b8d0aca4bfed",
-      "jsonHash": "fnv1a64:acbe7cc961dd2f52"
+      "jsonHash": "fnv1a64:7cb57a472d3aefe2"
     },
     {
       "language": "bengali",
       "chapter": 8,
-      "sourceHash": "fnv1a64:db0e24b2e41cd84b",
+      "sourceHash": "fnv1a64:57a1eb4abdd47e77",
       "lessonIds": [
         "BN-C08-bhaba",
         "BN-C08-bojha",
@@ -146,12 +146,12 @@
       "text": "bengali/narration/ch08.txt",
       "json": "bengali/narration/ch08.json",
       "textHash": "fnv1a64:b82b6ec3905b4ac3",
-      "jsonHash": "fnv1a64:436c312f61d57d06"
+      "jsonHash": "fnv1a64:02380d21707dd1ec"
     },
     {
       "language": "bengali",
       "chapter": 9,
-      "sourceHash": "fnv1a64:87c66f64ea563bde",
+      "sourceHash": "fnv1a64:4767c103fcf56411",
       "lessonIds": [
         "BN-C09-neowa",
         "BN-C09-jijnasa-kora",
@@ -163,7 +163,7 @@
       "text": "bengali/narration/ch09.txt",
       "json": "bengali/narration/ch09.json",
       "textHash": "fnv1a64:ebf1670e1f25eeb0",
-      "jsonHash": "fnv1a64:09eb129fb72c95b7"
+      "jsonHash": "fnv1a64:0a32bb5bbbc70216"
     },
     {
       "language": "bengali",

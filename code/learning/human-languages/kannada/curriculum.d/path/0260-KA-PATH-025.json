@@ -3,11 +3,7 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "KA-C32-iru",
-    "KA-C32-hoogu",
-    "KA-C32-baa",
-    "KA-C32-tinnu",
-    "KA-C32-noodu",
-    "KA-C32-gottu"
+    "KA-C32-hoogu"
   ],
   "before": [],
   "inline": [

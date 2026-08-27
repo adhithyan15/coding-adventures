@@ -1,0 +1,27 @@
+{
+  "segments": [
+    "PA-PATH-011",
+    "PA-PATH-011-C",
+    "PA-PATH-012",
+    "PA-PATH-013",
+    "PA-PATH-013-C"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-SAY",
+    "VERB-SPEAK",
+    "VERB-HEAR",
+    "VERB-LEARN",
+    "VERB-GET",
+    "VERB-SLEEP",
+    "VERB-LIVE",
+    "VERB-WORK",
+    "VERB-PLAY",
+    "VERB-RUN",
+    "VERB-SIT",
+    "VERB-ANSWER",
+    "VERB-MEET"
+  ],
+  "relocates": {}
+}

@@ -4,7 +4,7 @@
   "chapter": 155,
   "title": "Leer — Reading Is Gathering",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:68005124fe936f4b",
+  "sourceHash": "fnv1a64:66f787527ef81ae7",
   "lessons": [
     {
       "id": "ES-C34-leer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ff7b92af8600aa1",
+      "sourceHash": "fnv1a64:4fcfe01c3a5315aa",
       "notice": null,
       "blocks": [
         {

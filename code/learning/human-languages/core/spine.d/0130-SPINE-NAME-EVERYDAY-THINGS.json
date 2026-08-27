@@ -1,0 +1,13 @@
+{
+  "id": "SPINE-NAME-EVERYDAY-THINGS",
+  "stage": "A1",
+  "strand": "LEXICON",
+  "canDo": "I can name common everyday things.",
+  "prerequisites": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "core": true,
+  "concepts": [
+    "LODGING-ROOM"
+  ]
+}

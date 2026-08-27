@@ -1,0 +1,11 @@
+{
+  "id": "IT-PATH-022-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "IT-C18-leggere",
+    "IT-C18-scrivere"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

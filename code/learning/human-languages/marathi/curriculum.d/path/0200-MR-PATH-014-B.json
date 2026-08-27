@@ -1,0 +1,12 @@
+{
+  "id": "MR-PATH-014-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "MR-C09-vicharne"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-014-DOING-VERBS-B"
+  ],
+  "after": []
+}

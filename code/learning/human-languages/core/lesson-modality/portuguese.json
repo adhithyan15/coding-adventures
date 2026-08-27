@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:a971433ddac39bd4",
+  "sourceHash": "fnv1a64:adbaa96d99a507c5",
   "summary": {
     "totalLessons": 97,
     "voice": 86,
@@ -1668,7 +1668,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c8624c9aea28f2ed"
+      "sourceHash": "fnv1a64:421e6ad4cbc0253e"
     },
     {
       "id": "PT-C18-dizer",
@@ -1776,7 +1776,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bcda58e3866b4830"
+      "sourceHash": "fnv1a64:7cb73323fccfa24f"
     },
     {
       "id": "PT-C19-escrever",
@@ -1794,7 +1794,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:331c29072a3b115c"
+      "sourceHash": "fnv1a64:83015b006049d677"
     },
     {
       "id": "PT-C20-tomar-pegar",
@@ -1830,7 +1830,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b1ae2563d664e109"
+      "sourceHash": "fnv1a64:9426bcac3e9a9c3a"
     },
     {
       "id": "PT-C20-ajudar",
@@ -1866,7 +1866,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:346e56012ffc6875"
+      "sourceHash": "fnv1a64:e5de9b118953fe17"
     },
     {
       "id": "PT-C21-trazer",
@@ -1884,7 +1884,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a083064bbf497d45"
+      "sourceHash": "fnv1a64:7b14d556604d719e"
     },
     {
       "id": "PT-C21-conseguir",
@@ -1920,7 +1920,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e90690e37c51c555"
+      "sourceHash": "fnv1a64:31120d6c1e64d76a"
     },
     {
       "id": "PT-C21-comprar",

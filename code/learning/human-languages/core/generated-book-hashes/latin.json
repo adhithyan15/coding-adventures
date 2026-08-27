@@ -353,7 +353,7 @@
     {
       "language": "latin",
       "chapter": 37,
-      "sourceHash": "fnv1a64:d72756d8789e0fa1",
+      "sourceHash": "fnv1a64:fb16ae120ceaee90",
       "lessonIds": [
         "LA-C37-sum",
         "LA-C37-habeo",
@@ -369,7 +369,7 @@
     {
       "language": "latin",
       "chapter": 38,
-      "sourceHash": "fnv1a64:33cab19bb614e30f",
+      "sourceHash": "fnv1a64:d3d8200ac451dca3",
       "lessonIds": [
         "LA-C38-cogito",
         "LA-C38-lego",
@@ -381,7 +381,7 @@
     {
       "language": "latin",
       "chapter": 39,
-      "sourceHash": "fnv1a64:996aa95464dd2ac9",
+      "sourceHash": "fnv1a64:f3a31f85b19baf49",
       "lessonIds": [
         "LA-C39-capio",
         "LA-C39-rogo",
@@ -393,7 +393,7 @@
     {
       "language": "latin",
       "chapter": 40,
-      "sourceHash": "fnv1a64:b2d6c1d4e6a56be0",
+      "sourceHash": "fnv1a64:b23c69a208f10cf0",
       "lessonIds": [
         "LA-C40-audio",
         "LA-C40-dormio",
@@ -405,7 +405,7 @@
     {
       "language": "latin",
       "chapter": 41,
-      "sourceHash": "fnv1a64:d6806402a5b7d256",
+      "sourceHash": "fnv1a64:554cde9ce238f426",
       "lessonIds": [
         "LA-C41-ambulo",
         "LA-C41-curro",
@@ -417,7 +417,7 @@
     {
       "language": "latin",
       "chapter": 42,
-      "sourceHash": "fnv1a64:2bdb3e3c619cafa2",
+      "sourceHash": "fnv1a64:16bebc5b7c62db22",
       "lessonIds": [
         "LA-C42-fero",
         "LA-C42-accipio",

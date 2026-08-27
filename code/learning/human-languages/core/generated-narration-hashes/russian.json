@@ -77,7 +77,7 @@
     {
       "language": "russian",
       "chapter": 4,
-      "sourceHash": "fnv1a64:03746f089990b63b",
+      "sourceHash": "fnv1a64:cdb3a07b83731971",
       "lessonIds": [
         "RU-C04-dumat",
         "RU-C04-ponimat",
@@ -89,12 +89,12 @@
       "text": "russian/narration/ch04.txt",
       "json": "russian/narration/ch04.json",
       "textHash": "fnv1a64:ec4f9cfd7ee5cd80",
-      "jsonHash": "fnv1a64:257b58784d37742e"
+      "jsonHash": "fnv1a64:d6685b0abe2e785b"
     },
     {
       "language": "russian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:48c27977fdd918fe",
+      "sourceHash": "fnv1a64:dbdde7a90a1a58d0",
       "lessonIds": [
         "RU-C05-brat",
         "RU-C05-sprashivat",
@@ -106,7 +106,7 @@
       "text": "russian/narration/ch05.txt",
       "json": "russian/narration/ch05.json",
       "textHash": "fnv1a64:b4a3dd6676ba148c",
-      "jsonHash": "fnv1a64:bf4410dac8203265"
+      "jsonHash": "fnv1a64:1ea17d3658ca2eb9"
     },
     {
       "language": "russian",

@@ -1,0 +1,11 @@
+{
+  "id": "RU-EXT-009-HAND-VERBS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say I take, ask, help and love in Russian, put any verb I own after люблю, and tell a suppletive aspect pair from an ordinary one.",
+  "prerequisites": [],
+  "lessons": [
+    "RU-C05-brat"
+  ]
+}

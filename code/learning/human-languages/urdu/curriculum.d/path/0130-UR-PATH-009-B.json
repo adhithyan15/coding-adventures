@@ -1,0 +1,12 @@
+{
+  "id": "UR-PATH-009-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "UR-C08-puchhna"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-019-SOCIAL-VERBS-B"
+  ],
+  "after": []
+}

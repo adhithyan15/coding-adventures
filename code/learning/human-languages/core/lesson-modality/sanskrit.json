@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:8d657c99c9b1d702",
+  "sourceHash": "fnv1a64:310c8a95fd72ac82",
   "summary": {
     "totalLessons": 266,
     "voice": 215,
@@ -1737,7 +1737,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e8accb66197c17c2"
+      "sourceHash": "fnv1a64:17453d0de2125281"
     },
     {
       "id": "SA-C07-khadati",
@@ -1845,7 +1845,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2c09b3f70c86c7cf"
+      "sourceHash": "fnv1a64:aa49332607fc470a"
     },
     {
       "id": "SA-C08-likhati",
@@ -1863,7 +1863,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ce24506e6dea766d"
+      "sourceHash": "fnv1a64:cc4e998fa5735026"
     },
     {
       "id": "SA-S01-letter-ma",
@@ -1949,7 +1949,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5489939a906c5366"
+      "sourceHash": "fnv1a64:3991546af057fc9d"
     },
     {
       "id": "SA-C09-sahayyam-karoti",
@@ -1985,7 +1985,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f64ad93b34c76775"
+      "sourceHash": "fnv1a64:40cf7e91615b9b8f"
     },
     {
       "id": "SA-S02-letter-na",

@@ -545,7 +545,7 @@
     {
       "language": "tamil",
       "chapter": 32,
-      "sourceHash": "fnv1a64:35b9dc9110e4130e",
+      "sourceHash": "fnv1a64:0994c431d8c26685",
       "lessonIds": [
         "TA-C32-iru",
         "TA-C32-po",
@@ -559,12 +559,12 @@
       "text": "tamil/narration/ch32.txt",
       "json": "tamil/narration/ch32.json",
       "textHash": "fnv1a64:38557cf06f796458",
-      "jsonHash": "fnv1a64:112f898956e47fc7"
+      "jsonHash": "fnv1a64:1d0053645aaa3d3e"
     },
     {
       "language": "tamil",
       "chapter": 33,
-      "sourceHash": "fnv1a64:d442d66ccc91878e",
+      "sourceHash": "fnv1a64:8e3be5a629b0a0be",
       "lessonIds": [
         "TA-C33-ninai",
         "TA-C33-puri",
@@ -577,12 +577,12 @@
       "text": "tamil/narration/ch33.txt",
       "json": "tamil/narration/ch33.json",
       "textHash": "fnv1a64:4afca61efbc345fb",
-      "jsonHash": "fnv1a64:c81de2b280170ecd"
+      "jsonHash": "fnv1a64:fc2c9706273a9c0a"
     },
     {
       "language": "tamil",
       "chapter": 34,
-      "sourceHash": "fnv1a64:7389731691de483a",
+      "sourceHash": "fnv1a64:56d8a698540deca8",
       "lessonIds": [
         "TA-C34-edu",
         "TA-C34-kel",
@@ -595,7 +595,7 @@
       "text": "tamil/narration/ch34.txt",
       "json": "tamil/narration/ch34.json",
       "textHash": "fnv1a64:df1589ac7e6aa906",
-      "jsonHash": "fnv1a64:f2f3abc0dc06540e"
+      "jsonHash": "fnv1a64:d93100f4905b1d9c"
     },
     {
       "language": "tamil",

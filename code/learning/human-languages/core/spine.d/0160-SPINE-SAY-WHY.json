@@ -1,0 +1,13 @@
+{
+  "id": "SPINE-SAY-WHY",
+  "stage": "A1",
+  "strand": "FUNCTION",
+  "canDo": "I can give one reason for something.",
+  "prerequisites": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "core": true,
+  "concepts": [
+    "CONNECTIVE-BECAUSE"
+  ]
+}

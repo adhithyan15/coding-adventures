@@ -255,13 +255,18 @@ describe("the committed corpus", () => {
     // is not an action either, so absorbing them would have meant a `canDo`
     // covering naming AND possession AND ability — the compound, unchosen
     // capability statement HL23 §5 exists to refuse.
-    expect(summary.totalNodes).toBe(35);
+    // 35 -> 38. HL23 §11 mints three more A1 rungs, each a single honest capability
+    // rather than one widened node: SPINE-NAME-EVERYDAY-THINGS (LEXICON), 
+    // SPINE-SAY-WHAT-I-LIKE (FUNCTION) and SPINE-SAY-WHY (FUNCTION). gustar got its
+    // own rung rather than being absorbed by the everyday-action node, and porque
+    // got its own rather than dragging B1 SPINE-GIVE-REASONS wording down to A1.
+    expect(summary.totalNodes).toBe(38);
 
     const byStrand = Object.fromEntries(summary.strands.map((s) => [s.strand, s.nodes]));
     expect(byStrand).toEqual({
-      FUNCTION: 15,
+      FUNCTION: 17,
       GRAMMAR: 7,
-      LEXICON: 3,
+      LEXICON: 4,
       SOUND: 0,
       ETYMOLOGY: 0,
       CULTURE: 3,
@@ -299,12 +304,23 @@ describe("the committed corpus", () => {
     // `over-ceiling` node, so a pin that gets raised to let a change through
     // would be measuring nothing at all. 33 is still nearly 3x the chapter atom
     // ceiling, so the node stays the worst offender and stays pinned below.
-    expect(summary.largestNode).toEqual({ nodeId: "SPINE-SAY-WHAT-I-DO", concepts: 33 });
+    // 33 -> 24. Eight everyday-action verbs move to SPINE-NAME-EVERYDAY-ACTIONS with
+    // NO canDo change, and gustar to its own rung. This number may only ever FALL.
+    expect(summary.largestNode).toEqual({ nodeId: "SPINE-SAY-WHAT-I-DO", concepts: 24 });
 
     // Recorded debt, report-only: HL-C81 splits these. Until then the count is
     // pinned so it cannot grow quietly.
     const overCeiling = summary.nodeSizeDefects.filter((d) => d.severity === "over-ceiling");
-    expect(overCeiling.map((d) => d.nodeId)).toEqual(["SPINE-SAY-WHAT-I-DO"]);
+    // SPINE-NAME-EVERYDAY-ACTIONS joins the list at 15 concepts. Stated rather than
+    // absorbed: nine concepts left a 33-concept node for a 7-concept one and the
+    // destination crossed the 12 ceiling, so over-ceiling concepts went 33 -> 39.
+    // The debt REDISTRIBUTED and also grew; the alternative was leaving eight
+    // everyday-action verbs at A2 where the exam cannot reach them. HL-C81 splits
+    // both nodes, which is the real fix.
+    expect(overCeiling.map((d) => d.nodeId).sort()).toEqual([
+      "SPINE-NAME-EVERYDAY-ACTIONS",
+      "SPINE-SAY-WHAT-I-DO",
+    ]);
   });
 });
 

@@ -105,8 +105,26 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "FA-C06-budan",
-        "FA-C06-raftan",
-        "FA-C06-amadan",
+        "FA-C06-raftan"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FA-PATH-007-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "FA-C06-amadan"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FA-PATH-007-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
         "FA-C06-goftan",
         "FA-C06-danestan"
       ],
@@ -119,7 +137,16 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "FA-C07-fekr-kardan",
-        "FA-C07-fahmidan",
+        "FA-C07-fahmidan"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FA-PATH-008-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "FA-C07-khandan",
         "FA-C07-neveshtan"
       ],
@@ -131,9 +158,36 @@
       "id": "FA-PATH-009",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "FA-C08-gereftan",
-        "FA-C08-porsidan",
-        "FA-C08-komak-kardan",
+        "FA-C08-gereftan"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FA-PATH-009-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "FA-C08-porsidan"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FA-PATH-009-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "FA-C08-komak-kardan"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FA-PATH-009-C-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
         "FA-C08-dust-dashtan"
       ],
       "before": [],
@@ -375,7 +429,11 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "FA-PATH-007-B",
+        "FA-PATH-008-B",
+        "FA-PATH-009-B"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
@@ -383,7 +441,18 @@
         "VERB-DO-MAKE",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-CLOSE",
+        "VERB-STAND",
+        "VERB-WAIT",
+        "VERB-BRING",
+        "VERB-WALK"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
       ],
       "relocates": {}
     },
@@ -395,11 +464,34 @@
       ],
       "relocates": {}
     },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "FA-PATH-009-C-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "FA-PATH-007",
+        "FA-PATH-007-C",
         "FA-PATH-008",
-        "FA-PATH-009"
+        "FA-PATH-009",
+        "FA-PATH-009-C"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -408,18 +500,14 @@
         "VERB-SEE",
         "VERB-HEAR",
         "VERB-LEARN",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-EAT",
         "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
-        "VERB-STAND",
-        "VERB-WAIT",
         "VERB-ANSWER",
         "VERB-MEET"
       ],
@@ -430,13 +518,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -459,7 +540,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -479,7 +559,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}

@@ -1,0 +1,14 @@
+{
+  "id": "KA-PATH-025-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "KA-C32-tinnu",
+    "KA-C32-noodu",
+    "KA-C32-gottu"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-025-CORE-VERBS-C"
+  ],
+  "after": []
+}

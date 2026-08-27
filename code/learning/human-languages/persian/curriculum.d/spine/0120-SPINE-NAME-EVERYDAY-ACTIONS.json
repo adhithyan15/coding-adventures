@@ -1,5 +1,9 @@
 {
-  "segments": [],
+  "segments": [
+    "FA-PATH-007-B",
+    "FA-PATH-008-B",
+    "FA-PATH-009-B"
+  ],
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",
@@ -7,7 +11,11 @@
     "VERB-DO-MAKE",
     "VERB-BUY",
     "VERB-OPEN",
-    "VERB-CLOSE"
+    "VERB-CLOSE",
+    "VERB-STAND",
+    "VERB-WAIT",
+    "VERB-BRING",
+    "VERB-WALK"
   ],
   "relocates": {}
 }

@@ -1,0 +1,14 @@
+{
+  "id": "UR-EXT-017-CORE-VERBS-C",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name five everyday Urdu verbs by their -nā ending, strip that ending for the stem, and say what I do with the participle agreeing for gender while the copula agrees for person.",
+  "prerequisites": [
+    "UR-EXT-016-TAKE-LEAVE-CONSOLIDATION"
+  ],
+  "lessons": [
+    "UR-C06-bolna",
+    "UR-C06-janna"
+  ]
+}

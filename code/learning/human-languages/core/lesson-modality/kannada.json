@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:6aa4cfb7dca97371",
+  "sourceHash": "fnv1a64:3264ce8b03d7ea3a",
   "summary": {
     "totalLessons": 242,
     "voice": 187,
@@ -3011,7 +3011,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:43af55183ade57ca"
+      "sourceHash": "fnv1a64:c2eafbee0d63279d"
     },
     {
       "id": "KA-C32-tinnu",
@@ -3119,7 +3119,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:34fd767aa7d17da1"
+      "sourceHash": "fnv1a64:14be8e91fb548c10"
     },
     {
       "id": "KA-C33-bare",
@@ -3137,7 +3137,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:35c3f21bb2c8ecf8"
+      "sourceHash": "fnv1a64:dfc0cabb77ae6e25"
     },
     {
       "id": "KA-C34-tegeduko",
@@ -3173,7 +3173,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d78f84abda939af4"
+      "sourceHash": "fnv1a64:4ef27f7104452219"
     },
     {
       "id": "KA-C34-sahaya-maadu",
@@ -3209,7 +3209,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fdd0ec6159882e0b"
+      "sourceHash": "fnv1a64:5329c7743b9841b9"
     },
     {
       "id": "KA-S125-letter-oo",

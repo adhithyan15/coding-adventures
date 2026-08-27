@@ -201,11 +201,7 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "MR-C07-asne",
-        "MR-C07-jane",
-        "MR-C07-yene",
-        "MR-C07-khane",
-        "MR-C07-pahne",
-        "MR-C07-mahit-asne"
+        "MR-C07-jane"
       ],
       "before": [],
       "inline": [
@@ -214,13 +210,37 @@
       "after": []
     },
     {
+      "id": "MR-PATH-012-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "MR-C07-yene"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-012-CORE-VERBS-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "MR-PATH-012-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "MR-C07-khane",
+        "MR-C07-pahne",
+        "MR-C07-mahit-asne"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-012-CORE-VERBS-C"
+      ],
+      "after": []
+    },
+    {
       "id": "MR-PATH-013",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "MR-C08-vichar-karne",
-        "MR-C08-samajne",
-        "MR-C08-vachne",
-        "MR-C08-lihine"
+        "MR-C08-samajne"
       ],
       "before": [],
       "inline": [
@@ -229,17 +249,63 @@
       "after": []
     },
     {
+      "id": "MR-PATH-013-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "MR-C08-vachne",
+        "MR-C08-lihine"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-013-MIND-VERBS-B"
+      ],
+      "after": []
+    },
+    {
       "id": "MR-PATH-014",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "MR-C09-ghene",
-        "MR-C09-vicharne",
-        "MR-C09-madat-karne",
-        "MR-C09-avadne"
+        "MR-C09-ghene"
       ],
       "before": [],
       "inline": [
         "MR-EXT-014-DOING-VERBS"
+      ],
+      "after": []
+    },
+    {
+      "id": "MR-PATH-014-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "MR-C09-vicharne"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-014-DOING-VERBS-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "MR-PATH-014-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "MR-C09-madat-karne"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-014-DOING-VERBS-C"
+      ],
+      "after": []
+    },
+    {
+      "id": "MR-PATH-014-C-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
+        "MR-C09-avadne"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-014-DOING-VERBS-D"
       ],
       "after": []
     },
@@ -450,7 +516,11 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "MR-PATH-012-B",
+        "MR-PATH-013-B",
+        "MR-PATH-014-B"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
@@ -458,7 +528,18 @@
         "VERB-DO-MAKE",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-CLOSE",
+        "VERB-STAND",
+        "VERB-WAIT",
+        "VERB-BRING",
+        "VERB-WALK"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
       ],
       "relocates": {}
     },
@@ -470,12 +551,35 @@
       ],
       "relocates": {}
     },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "MR-PATH-014-C-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "MR-PATH-019",
         "MR-PATH-012",
+        "MR-PATH-012-C",
         "MR-PATH-013",
-        "MR-PATH-014"
+        "MR-PATH-014",
+        "MR-PATH-014-C"
       ],
       "omits": [
         "VERB-INFINITIVE",
@@ -484,17 +588,13 @@
         "VERB-SPEAK",
         "VERB-HEAR",
         "VERB-LEARN",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-SLEEP",
         "VERB-LIVE",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
-        "VERB-STAND",
-        "VERB-WAIT",
         "VERB-ANSWER",
         "VERB-MEET"
       ],
@@ -505,13 +605,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -534,7 +627,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -554,7 +646,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}
@@ -755,8 +846,28 @@
       "prerequisites": [],
       "lessons": [
         "MR-C07-asne",
-        "MR-C07-jane",
-        "MR-C07-yene",
+        "MR-C07-jane"
+      ]
+    },
+    {
+      "id": "MR-EXT-012-CORE-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use six everyday Marathi verbs, choose the present-tense ending that agrees with my subject's gender, close every sentence on the verb, and say that I know something the way Marathi actually says it.",
+      "prerequisites": [],
+      "lessons": [
+        "MR-C07-yene"
+      ]
+    },
+    {
+      "id": "MR-EXT-012-CORE-VERBS-C",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can use six everyday Marathi verbs, choose the present-tense ending that agrees with my subject's gender, close every sentence on the verb, and say that I know something the way Marathi actually says it.",
+      "prerequisites": [],
+      "lessons": [
         "MR-C07-khane",
         "MR-C07-pahne",
         "MR-C07-mahit-asne"
@@ -771,7 +882,17 @@
       "prerequisites": [],
       "lessons": [
         "MR-C08-vichar-karne",
-        "MR-C08-samajne",
+        "MR-C08-samajne"
+      ]
+    },
+    {
+      "id": "MR-EXT-013-MIND-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say that I think, understand, read and write in Marathi, and tell which of those four Marathi treats as something that happens to me rather than something I do.",
+      "prerequisites": [],
+      "lessons": [
         "MR-C08-vachne",
         "MR-C08-lihine"
       ]
@@ -784,9 +905,39 @@
       "canDo": "I can take, ask, help and say what I like and what I love in Marathi, build a new verb by putting करणे behind a noun, and say why liking puts me in the dative while loving does not.",
       "prerequisites": [],
       "lessons": [
-        "MR-C09-ghene",
-        "MR-C09-vicharne",
-        "MR-C09-madat-karne",
+        "MR-C09-ghene"
+      ]
+    },
+    {
+      "id": "MR-EXT-014-DOING-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask, help and say what I like and what I love in Marathi, build a new verb by putting करणे behind a noun, and say why liking puts me in the dative while loving does not.",
+      "prerequisites": [],
+      "lessons": [
+        "MR-C09-vicharne"
+      ]
+    },
+    {
+      "id": "MR-EXT-014-DOING-VERBS-C",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask, help and say what I like and what I love in Marathi, build a new verb by putting करणे behind a noun, and say why liking puts me in the dative while loving does not.",
+      "prerequisites": [],
+      "lessons": [
+        "MR-C09-madat-karne"
+      ]
+    },
+    {
+      "id": "MR-EXT-014-DOING-VERBS-D",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can take, ask, help and say what I like and what I love in Marathi, build a new verb by putting करणे behind a noun, and say why liking puts me in the dative while loving does not.",
+      "prerequisites": [],
+      "lessons": [
         "MR-C09-avadne"
       ]
     },

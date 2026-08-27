@@ -1,0 +1,10 @@
+{
+  "id": "PT-EXT-024-LANGUAGE-SPECIFIC-C",
+  "stage": "A2",
+  "kind": "required",
+  "canDo": "I can say that I take, ask, help and like in Portuguese, choose between its two verbs for taking, and keep de attached to gostar.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-C20-ajudar"
+  ]
+}

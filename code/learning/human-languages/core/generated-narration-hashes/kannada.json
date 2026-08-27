@@ -492,7 +492,7 @@
     {
       "language": "kannada",
       "chapter": 32,
-      "sourceHash": "fnv1a64:2c308c4cc3cdd31a",
+      "sourceHash": "fnv1a64:9b73a820c8d2e3bc",
       "lessonIds": [
         "KA-C32-iru",
         "KA-C32-hoogu",
@@ -506,12 +506,12 @@
       "text": "kannada/narration/ch32.txt",
       "json": "kannada/narration/ch32.json",
       "textHash": "fnv1a64:f50bf1cf674b2725",
-      "jsonHash": "fnv1a64:950214a506c25e67"
+      "jsonHash": "fnv1a64:14625311b9d1a0ef"
     },
     {
       "language": "kannada",
       "chapter": 33,
-      "sourceHash": "fnv1a64:d64825d81777f48f",
+      "sourceHash": "fnv1a64:278bc949cf5aecc2",
       "lessonIds": [
         "KA-C33-yocisu",
         "KA-C33-artha-maadiko",
@@ -523,12 +523,12 @@
       "text": "kannada/narration/ch33.txt",
       "json": "kannada/narration/ch33.json",
       "textHash": "fnv1a64:41bdfc6bacaa1735",
-      "jsonHash": "fnv1a64:74ac8a3121b49b6c"
+      "jsonHash": "fnv1a64:e99d7a99c8cdd6ae"
     },
     {
       "language": "kannada",
       "chapter": 34,
-      "sourceHash": "fnv1a64:b5119a84010e759f",
+      "sourceHash": "fnv1a64:999218b42070c45f",
       "lessonIds": [
         "KA-C34-tegeduko",
         "KA-C34-keelu",
@@ -541,7 +541,7 @@
       "text": "kannada/narration/ch34.txt",
       "json": "kannada/narration/ch34.json",
       "textHash": "fnv1a64:bd9cd2c99c745828",
-      "jsonHash": "fnv1a64:dfd09abd392f11ae"
+      "jsonHash": "fnv1a64:4071d9c7383f9d9f"
     },
     {
       "language": "kannada",

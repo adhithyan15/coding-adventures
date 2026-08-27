@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e0da55ea0ca21897",
+  "sourceHash": "fnv1a64:5bbd061e447e39b8",
   "lessons": [
     {
       "id": "PT-C20-tomar-pegar",
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1ae2563d664e109",
+      "sourceHash": "fnv1a64:9426bcac3e9a9c3a",
       "notice": null,
       "blocks": [
         {
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:346e56012ffc6875",
+      "sourceHash": "fnv1a64:e5de9b118953fe17",
       "notice": null,
       "blocks": [
         {

@@ -1,0 +1,12 @@
+{
+  "id": "KA-PATH-026-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "KA-C34-tegeduko"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-027-SOCIAL-VERBS"
+  ],
+  "after": []
+}

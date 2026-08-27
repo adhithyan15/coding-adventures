@@ -1,0 +1,12 @@
+{
+  "id": "BN-EXT-012-MIND-AND-PAGE-B",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say that I think, understand, read and write in Bengali, raise the stem vowel when the -i ending arrives, and read the flapped ড় that Sanskrit never needed.",
+  "prerequisites": [],
+  "lessons": [
+    "BN-C08-pora",
+    "BN-C08-lekha"
+  ]
+}

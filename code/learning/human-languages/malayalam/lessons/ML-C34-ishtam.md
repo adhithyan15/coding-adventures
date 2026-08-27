@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ML-C34-ishtam
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 780
 chapter: 34
 type: phrase

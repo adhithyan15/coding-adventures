@@ -1355,7 +1355,6 @@ describe("real curriculum", () => {
     expect(a2.map((node) => node.id).sort()).toEqual([
       "SPINE-NEGATE-AND-ASK",
       "SPINE-SAY-WHAT-I-DO",
-      "SPINE-SAY-WHAT-I-WANT",
       "SPINE-TALK-ABOUT-FUTURE",
       "SPINE-TALK-ABOUT-PAST",
     ]);

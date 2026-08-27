@@ -1,0 +1,14 @@
+{
+  "id": "AR-PATH-028-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "AR-C31-qaraa",
+    "AR-C31-saala",
+    "AR-C31-kataba"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-028-LANGUAGE-SPECIFIC-B"
+  ],
+  "after": []
+}

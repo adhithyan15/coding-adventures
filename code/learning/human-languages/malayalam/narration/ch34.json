@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ca58cd193100f052",
+  "sourceHash": "fnv1a64:5c2e3b9af0c67ac5",
   "lessons": [
     {
       "id": "ML-C34-edukkuka",
@@ -219,7 +219,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:569391079123b945",
+      "sourceHash": "fnv1a64:b138ee6aeac87846",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -595,7 +595,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:57160fe267d6d5e7",
+      "sourceHash": "fnv1a64:b9c8722fb448c1e1",
       "notice": {
         "modality": "sight",
         "needs": [

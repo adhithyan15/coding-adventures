@@ -1,0 +1,13 @@
+{
+  "id": "UR-PATH-008",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "UR-C07-sochna",
+    "UR-C07-samajhna"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-018-MIND-VERBS"
+  ],
+  "after": []
+}

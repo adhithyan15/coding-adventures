@@ -1,0 +1,12 @@
+{
+  "id": "KA-PATH-026-E-B",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "lessons": [
+    "KA-C34-ishta"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-027-SOCIAL-VERBS-D"
+  ],
+  "after": []
+}

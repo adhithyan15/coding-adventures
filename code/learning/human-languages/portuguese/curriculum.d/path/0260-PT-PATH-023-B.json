@@ -1,0 +1,13 @@
+{
+  "id": "PT-PATH-023-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "PT-C19-ler",
+    "PT-C19-escrever"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-023-LANGUAGE-SPECIFIC-B"
+  ],
+  "after": []
+}

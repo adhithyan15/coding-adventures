@@ -1,0 +1,12 @@
+{
+  "id": "UR-PATH-009",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "UR-C08-lena"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-019-SOCIAL-VERBS"
+  ],
+  "after": []
+}

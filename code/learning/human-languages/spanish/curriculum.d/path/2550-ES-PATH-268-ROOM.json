@@ -1,0 +1,10 @@
+{
+  "id": "ES-PATH-268-ROOM",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C268-habitacion"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

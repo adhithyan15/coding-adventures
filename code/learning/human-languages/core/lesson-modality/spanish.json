@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:fa33f6ff45e8cfe7",
+  "sourceHash": "fnv1a64:fde1c9bea2f5aa6d",
   "summary": {
     "totalLessons": 999,
     "voice": 942,
@@ -9851,7 +9851,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f649391e32be7920"
+      "sourceHash": "fnv1a64:683259af9c3ac24f"
     },
     {
       "id": "ES-C13-venir",
@@ -9869,7 +9869,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:02530e9cb86e3c0b"
+      "sourceHash": "fnv1a64:65a5634bead4b4ae"
     },
     {
       "id": "ES-C13-repaso-yo-go",
@@ -12155,7 +12155,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6ff7b92af8600aa1"
+      "sourceHash": "fnv1a64:4fcfe01c3a5315aa"
     },
     {
       "id": "ES-C34-escribir",
@@ -12173,7 +12173,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4c3ccd129854069c"
+      "sourceHash": "fnv1a64:90e0e3ab8f68d64f"
     },
     {
       "id": "ES-C34-repaso-mente",
@@ -12245,7 +12245,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3eded86a3d685389"
+      "sourceHash": "fnv1a64:46dbf1fe437998bc"
     },
     {
       "id": "ES-C35-ayudar",
@@ -12299,7 +12299,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:80d44bfad46b848a"
+      "sourceHash": "fnv1a64:65b7713f1cd78670"
     },
     {
       "id": "ES-C35-sintesis-gustar",
@@ -12371,7 +12371,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:40947dac2b8d42a1"
+      "sourceHash": "fnv1a64:e2cb8d593d903438"
     },
     {
       "id": "ES-C36-correr",
@@ -12461,7 +12461,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f2e0dcc76daedaa6"
+      "sourceHash": "fnv1a64:381b0960979d7ac3"
     },
     {
       "id": "ES-C38-luego",
@@ -12497,7 +12497,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:406bd077a92cf411"
+      "sourceHash": "fnv1a64:7a72f2a4e6f000a0"
     },
     {
       "id": "ES-C38-imperfecto",
@@ -12551,7 +12551,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:92f6bdee3e2b2447"
+      "sourceHash": "fnv1a64:3f41ff7d130500ca"
     },
     {
       "id": "ES-C39-conseguir",
@@ -12659,7 +12659,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dc641fcec9ee265c"
+      "sourceHash": "fnv1a64:f3f8101c781772ad"
     },
     {
       "id": "ES-C40-contestar",
@@ -14639,7 +14639,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:40e9e80eab92001b"
+      "sourceHash": "fnv1a64:4c4ec6caf162e20f"
     },
     {
       "id": "ES-C268-problema",

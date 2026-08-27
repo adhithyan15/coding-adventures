@@ -1,0 +1,13 @@
+{
+  "id": "MR-PATH-013",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "MR-C08-vichar-karne",
+    "MR-C08-samajne"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-013-MIND-VERBS"
+  ],
+  "after": []
+}

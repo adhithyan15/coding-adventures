@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:78c8a48b5713a827",
+  "sourceHash": "fnv1a64:487c29a010c585d7",
   "lessons": [
     {
       "id": "LA-C39-capio",
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fb29952282581ed",
+      "sourceHash": "fnv1a64:7269d5ea646cd36c",
       "notice": null,
       "blocks": [
         {
@@ -508,7 +508,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c051a21f677da1d1",
+      "sourceHash": "fnv1a64:9cfbd4ef496130cf",
       "notice": null,
       "blocks": [
         {

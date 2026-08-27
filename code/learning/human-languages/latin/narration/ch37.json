@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Eight Verbs at the Core",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:7cce21a37232012a",
+  "sourceHash": "fnv1a64:83d4326c264a1aaa",
   "lessons": [
     {
       "id": "LA-C37-sum",
@@ -500,7 +500,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90c7781508ce6776",
+      "sourceHash": "fnv1a64:9526c8bb7d17bc1d",
       "notice": null,
       "blocks": [
         {

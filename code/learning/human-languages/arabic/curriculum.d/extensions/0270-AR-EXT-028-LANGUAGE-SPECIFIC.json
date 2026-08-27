@@ -1,0 +1,11 @@
+{
+  "id": "AR-EXT-028-LANGUAGE-SPECIFIC",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can build a family of Arabic nouns out of a verb's three-consonant root using the doer, done-to and ma- place shapes I already know.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-C31-fahima"
+  ]
+}

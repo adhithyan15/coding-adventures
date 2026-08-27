@@ -1,0 +1,12 @@
+{
+  "id": "LA-PATH-029",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "LA-C41-ambulo"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-029-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

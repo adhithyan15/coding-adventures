@@ -1,0 +1,26 @@
+{
+  "segments": [
+    "PT-PATH-022",
+    "PT-PATH-022-C",
+    "PT-PATH-023",
+    "PT-PATH-024",
+    "PT-PATH-024-C",
+    "PT-PATH-025-B",
+    "PT-PATH-025-D",
+    "PT-PATH-026"
+  ],
+  "omits": [
+    "VERB-INFINITIVE",
+    "VERB-PRESENT-HABITUAL",
+    "VERB-SPEAK",
+    "VERB-HEAR",
+    "VERB-LEARN",
+    "VERB-EAT",
+    "VERB-SLEEP",
+    "VERB-LIVE",
+    "VERB-WORK",
+    "VERB-RUN",
+    "VERB-SIT"
+  ],
+  "relocates": {}
+}

@@ -287,7 +287,7 @@
     {
       "language": "portuguese",
       "chapter": 18,
-      "sourceHash": "fnv1a64:0d898ecaffb6d412",
+      "sourceHash": "fnv1a64:4c8c2a31c3bfd7fb",
       "lessonIds": [
         "PT-C18-ser-estar",
         "PT-C18-ter-haver",
@@ -302,12 +302,12 @@
       "text": "portuguese/narration/ch18.txt",
       "json": "portuguese/narration/ch18.json",
       "textHash": "fnv1a64:85dca2af99bf97a3",
-      "jsonHash": "fnv1a64:fdd755c82574998f"
+      "jsonHash": "fnv1a64:39a9bb0353a17ac1"
     },
     {
       "language": "portuguese",
       "chapter": 19,
-      "sourceHash": "fnv1a64:930f414ccf731f3e",
+      "sourceHash": "fnv1a64:b049ba0d513a814b",
       "lessonIds": [
         "PT-C19-pensar",
         "PT-C19-entender-compreender",
@@ -319,12 +319,12 @@
       "text": "portuguese/narration/ch19.txt",
       "json": "portuguese/narration/ch19.json",
       "textHash": "fnv1a64:409033480eafdf08",
-      "jsonHash": "fnv1a64:4e903ab5ee1f1c96"
+      "jsonHash": "fnv1a64:a3fe5752f63aadca"
     },
     {
       "language": "portuguese",
       "chapter": 20,
-      "sourceHash": "fnv1a64:e0da55ea0ca21897",
+      "sourceHash": "fnv1a64:5bbd061e447e39b8",
       "lessonIds": [
         "PT-C20-tomar-pegar",
         "PT-C20-perguntar",
@@ -336,12 +336,12 @@
       "text": "portuguese/narration/ch20.txt",
       "json": "portuguese/narration/ch20.json",
       "textHash": "fnv1a64:1efac2aced68056f",
-      "jsonHash": "fnv1a64:dc90cc1ac8b193fe"
+      "jsonHash": "fnv1a64:86c28cdcef4b511b"
     },
     {
       "language": "portuguese",
       "chapter": 21,
-      "sourceHash": "fnv1a64:0620ada581adf034",
+      "sourceHash": "fnv1a64:befd3a1bdd4a02e8",
       "lessonIds": [
         "PT-C21-trazer",
         "PT-C21-conseguir",
@@ -353,7 +353,7 @@
       "text": "portuguese/narration/ch21.txt",
       "json": "portuguese/narration/ch21.json",
       "textHash": "fnv1a64:acbc571e5de794f8",
-      "jsonHash": "fnv1a64:25cf5ee06a696e14"
+      "jsonHash": "fnv1a64:9df463fe46c00400"
     },
     {
       "language": "portuguese",

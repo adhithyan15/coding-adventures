@@ -303,12 +303,57 @@
       "id": "FR-PATH-023",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "FR-C24-prendre",
-        "FR-C24-demander",
-        "FR-C24-aider",
-        "FR-C24-aimer",
+        "FR-C24-prendre"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-023-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "FR-C24-demander"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-023-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "FR-C24-aider"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-023-C-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
+        "FR-C24-aimer"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-023-C-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
         "FR-C25-comprendre",
-        "FR-C25-penser",
+        "FR-C25-penser"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-023-D",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "FR-C25-lire",
         "FR-C25-ecrire"
       ],
@@ -321,10 +366,37 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "FR-C26-entendre",
-        "FR-C26-dormir",
-        "FR-C26-marcher",
+        "FR-C26-dormir"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-024-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "FR-C26-marcher"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-024-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
         "FR-C26-courir",
-        "FR-C27-sasseoir",
+        "FR-C27-sasseoir"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "FR-PATH-024-D",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
         "FR-C27-se-lever"
       ],
       "before": [],
@@ -554,6 +626,10 @@
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
       "segments": [
+        "FR-PATH-023-B",
+        "FR-PATH-023-D",
+        "FR-PATH-024-B",
+        "FR-PATH-024-D",
         "FR-PATH-A1-OUVRIR-FERMER"
       ],
       "omits": [
@@ -561,7 +637,17 @@
         "VERB-GIVE",
         "VERB-PUT",
         "VERB-DO-MAKE",
-        "VERB-BUY"
+        "VERB-BUY",
+        "VERB-WAIT",
+        "VERB-BRING",
+        "VERB-COME"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
       ],
       "relocates": {}
     },
@@ -574,6 +660,27 @@
         "VERB-CAN": "SPINE-SAY-WHAT-I-WANT"
       }
     },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "FR-PATH-023-C-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [
+        "FR-PATH-031"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "FR-PATH-010",
@@ -581,21 +688,21 @@
         "FR-PATH-016",
         "FR-PATH-017",
         "FR-PATH-023",
-        "FR-PATH-024"
+        "FR-PATH-023-C",
+        "FR-PATH-023-C-C",
+        "FR-PATH-024",
+        "FR-PATH-024-C"
       ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-COME",
         "VERB-SAY",
         "VERB-SEE",
         "VERB-KNOW",
         "VERB-LEARN",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-EAT",
         "VERB-PLAY",
-        "VERB-WAIT",
         "VERB-ANSWER",
         "VERB-MEET"
       ],
@@ -607,13 +714,6 @@
         "VERB-NEGATE",
         "QUESTION-POLAR"
       ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [
-        "FR-PATH-031"
-      ],
-      "omits": [],
       "relocates": {}
     },
     "SPINE-TALK-ABOUT-PAST": {
@@ -635,7 +735,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -655,7 +754,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}

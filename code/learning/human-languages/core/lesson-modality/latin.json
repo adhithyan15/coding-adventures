@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:e03499fd4b5b6bc8",
+  "sourceHash": "fnv1a64:361409b11ea54452",
   "summary": {
     "totalLessons": 111,
     "voice": 104,
@@ -2013,7 +2013,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:90c7781508ce6776"
+      "sourceHash": "fnv1a64:9526c8bb7d17bc1d"
     },
     {
       "id": "LA-C37-dico",
@@ -2121,7 +2121,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b5511be9ba3c46d1"
+      "sourceHash": "fnv1a64:d6fc78a0bb1d658a"
     },
     {
       "id": "LA-C38-intellego",
@@ -2157,7 +2157,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a0c57712692fe5f1"
+      "sourceHash": "fnv1a64:091501c7e567324a"
     },
     {
       "id": "LA-C39-capio",
@@ -2193,7 +2193,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1fb29952282581ed"
+      "sourceHash": "fnv1a64:7269d5ea646cd36c"
     },
     {
       "id": "LA-C39-adiuvo",
@@ -2229,7 +2229,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c051a21f677da1d1"
+      "sourceHash": "fnv1a64:9cfbd4ef496130cf"
     },
     {
       "id": "LA-C40-audio",
@@ -2301,7 +2301,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a9e7c0df7dfd7fca"
+      "sourceHash": "fnv1a64:11aff5424855e441"
     },
     {
       "id": "LA-C41-ambulo",
@@ -2319,7 +2319,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d622fafe7bc4956d"
+      "sourceHash": "fnv1a64:4e126460ce776ff0"
     },
     {
       "id": "LA-C41-curro",
@@ -2391,7 +2391,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:289d6ac0b78c65fc"
+      "sourceHash": "fnv1a64:8c3ff0413083e69f"
     },
     {
       "id": "LA-C42-accipio",
@@ -2445,7 +2445,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a5147ba22da679a7"
+      "sourceHash": "fnv1a64:59f2f1577cadbc50"
     },
     {
       "id": "LA-C43-respondeo",

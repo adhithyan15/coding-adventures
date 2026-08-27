@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ML-C34-codikkuka
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 760
 chapter: 34
 type: word

@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "The Mind and the Palm Leaf",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8d76e533819aeb44",
+  "sourceHash": "fnv1a64:a86dba7b2338d610",
   "lessons": [
     {
       "id": "SA-C08-cintayati",
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c09b3f70c86c7cf",
+      "sourceHash": "fnv1a64:aa49332607fc470a",
       "notice": null,
       "blocks": [
         {
@@ -499,7 +499,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce24506e6dea766d",
+      "sourceHash": "fnv1a64:cc4e998fa5735026",
       "notice": null,
       "blocks": [
         {

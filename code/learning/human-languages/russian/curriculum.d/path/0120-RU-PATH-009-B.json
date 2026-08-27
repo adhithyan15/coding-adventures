@@ -1,0 +1,12 @@
+{
+  "id": "RU-PATH-009-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "RU-C05-sprashivat"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-009-HAND-VERBS-B"
+  ],
+  "after": []
+}

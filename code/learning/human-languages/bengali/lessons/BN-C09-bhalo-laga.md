@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: BN-C09-bhalo-laga
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 630
 chapter: 9
 type: word

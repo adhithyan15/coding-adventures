@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: GE-C25-fragen
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 760
 chapter: 25
 type: word

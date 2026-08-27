@@ -16,7 +16,7 @@
     {
       "language": "sanskrit",
       "chapter": 7,
-      "sourceHash": "fnv1a64:d4eafde861175c94",
+      "sourceHash": "fnv1a64:1a112f303bf320d9",
       "lessonIds": [
         "SA-C07-asti",
         "SA-C07-gacchati",
@@ -30,7 +30,7 @@
     {
       "language": "sanskrit",
       "chapter": 8,
-      "sourceHash": "fnv1a64:8a2bdd2f7c347634",
+      "sourceHash": "fnv1a64:d29e76a1e4216d59",
       "lessonIds": [
         "SA-C08-cintayati",
         "SA-C08-avagacchati",
@@ -44,7 +44,7 @@
     {
       "language": "sanskrit",
       "chapter": 9,
-      "sourceHash": "fnv1a64:b4334b0b657e8817",
+      "sourceHash": "fnv1a64:ed90353392dad147",
       "lessonIds": [
         "SA-C09-grhnati",
         "SA-C09-prcchati",

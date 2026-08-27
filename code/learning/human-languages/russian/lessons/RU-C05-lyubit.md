@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: RU-C05-lyubit
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 270
 chapter: 5
 type: word

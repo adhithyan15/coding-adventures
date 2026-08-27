@@ -1,0 +1,11 @@
+{
+  "id": "FR-PATH-023-C-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "FR-C25-comprendre",
+    "FR-C25-penser"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

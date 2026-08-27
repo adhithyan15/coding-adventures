@@ -436,7 +436,7 @@
     {
       "language": "arabic",
       "chapter": 28,
-      "sourceHash": "fnv1a64:c7782c0d45492fde",
+      "sourceHash": "fnv1a64:fa1d86f2b8989532",
       "lessonIds": [
         "AR-C28-dhahaba",
         "AR-C28-jaa"
@@ -446,7 +446,7 @@
       "text": "arabic/narration/ch28.txt",
       "json": "arabic/narration/ch28.json",
       "textHash": "fnv1a64:e23945113da0309d",
-      "jsonHash": "fnv1a64:3120b315941544a0"
+      "jsonHash": "fnv1a64:842eaa8a33f5432d"
     },
     {
       "language": "arabic",
@@ -481,7 +481,7 @@
     {
       "language": "arabic",
       "chapter": 31,
-      "sourceHash": "fnv1a64:7df7901c43337a1a",
+      "sourceHash": "fnv1a64:476f8086d3634dae",
       "lessonIds": [
         "AR-C31-fahima",
         "AR-C31-qaraa",
@@ -493,12 +493,12 @@
       "text": "arabic/narration/ch31.txt",
       "json": "arabic/narration/ch31.json",
       "textHash": "fnv1a64:bdcaceaef3e7a7d8",
-      "jsonHash": "fnv1a64:bb16e528e936f72c"
+      "jsonHash": "fnv1a64:c5686173930993ff"
     },
     {
       "language": "arabic",
       "chapter": 32,
-      "sourceHash": "fnv1a64:464a60e7d5db73b8",
+      "sourceHash": "fnv1a64:dc3e5450b3065b85",
       "lessonIds": [
         "AR-C32-akhadha",
         "AR-C32-fakkara",
@@ -510,7 +510,7 @@
       "text": "arabic/narration/ch32.txt",
       "json": "arabic/narration/ch32.json",
       "textHash": "fnv1a64:3ca7e79f4affb56d",
-      "jsonHash": "fnv1a64:5fbad3ebf5b3dc89"
+      "jsonHash": "fnv1a64:2a478eb3c5395ba4"
     },
     {
       "language": "arabic",

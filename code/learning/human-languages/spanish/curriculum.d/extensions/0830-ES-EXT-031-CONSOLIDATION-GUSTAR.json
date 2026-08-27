@@ -6,7 +6,6 @@
   "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
   "prerequisites": [],
   "lessons": [
-    "ES-C35-repaso-tres",
-    "ES-C35-sintesis-gustar"
+    "ES-C35-repaso-tres"
   ]
 }

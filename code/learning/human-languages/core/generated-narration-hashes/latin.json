@@ -534,7 +534,7 @@
     {
       "language": "latin",
       "chapter": 37,
-      "sourceHash": "fnv1a64:7cce21a37232012a",
+      "sourceHash": "fnv1a64:83d4326c264a1aaa",
       "lessonIds": [
         "LA-C37-sum",
         "LA-C37-habeo",
@@ -550,12 +550,12 @@
       "text": "latin/narration/ch37.txt",
       "json": "latin/narration/ch37.json",
       "textHash": "fnv1a64:ac5df0103ad7b98a",
-      "jsonHash": "fnv1a64:c632e9c78086afbd"
+      "jsonHash": "fnv1a64:c1afa17f579b199a"
     },
     {
       "language": "latin",
       "chapter": 38,
-      "sourceHash": "fnv1a64:95ac6bc0b02c0abd",
+      "sourceHash": "fnv1a64:2dd5ca8497d6aa7e",
       "lessonIds": [
         "LA-C38-cogito",
         "LA-C38-lego",
@@ -567,12 +567,12 @@
       "text": "latin/narration/ch38.txt",
       "json": "latin/narration/ch38.json",
       "textHash": "fnv1a64:14a6092186419df1",
-      "jsonHash": "fnv1a64:958b34e2d8ddc389"
+      "jsonHash": "fnv1a64:f7f1e498688a10f0"
     },
     {
       "language": "latin",
       "chapter": 39,
-      "sourceHash": "fnv1a64:78c8a48b5713a827",
+      "sourceHash": "fnv1a64:487c29a010c585d7",
       "lessonIds": [
         "LA-C39-capio",
         "LA-C39-rogo",
@@ -584,12 +584,12 @@
       "text": "latin/narration/ch39.txt",
       "json": "latin/narration/ch39.json",
       "textHash": "fnv1a64:38a30115dc150212",
-      "jsonHash": "fnv1a64:14e45d70f6ad1110"
+      "jsonHash": "fnv1a64:12b29b065c9fd228"
     },
     {
       "language": "latin",
       "chapter": 40,
-      "sourceHash": "fnv1a64:589faaaa00fe0564",
+      "sourceHash": "fnv1a64:cea80cdbe6828083",
       "lessonIds": [
         "LA-C40-audio",
         "LA-C40-dormio",
@@ -601,12 +601,12 @@
       "text": "latin/narration/ch40.txt",
       "json": "latin/narration/ch40.json",
       "textHash": "fnv1a64:691cfbbf8bc541ee",
-      "jsonHash": "fnv1a64:be91e019ba87388c"
+      "jsonHash": "fnv1a64:35547045352fc963"
     },
     {
       "language": "latin",
       "chapter": 41,
-      "sourceHash": "fnv1a64:fe69dc2b788501fe",
+      "sourceHash": "fnv1a64:3c0a3047e99d7026",
       "lessonIds": [
         "LA-C41-ambulo",
         "LA-C41-curro",
@@ -618,12 +618,12 @@
       "text": "latin/narration/ch41.txt",
       "json": "latin/narration/ch41.json",
       "textHash": "fnv1a64:789a7ac18d00e297",
-      "jsonHash": "fnv1a64:a650ca85c6e504a4"
+      "jsonHash": "fnv1a64:1695cbed59a01968"
     },
     {
       "language": "latin",
       "chapter": 42,
-      "sourceHash": "fnv1a64:4dbf15871e17fae6",
+      "sourceHash": "fnv1a64:fc771c52c879041e",
       "lessonIds": [
         "LA-C42-fero",
         "LA-C42-accipio",
@@ -635,7 +635,7 @@
       "text": "latin/narration/ch42.txt",
       "json": "latin/narration/ch42.json",
       "textHash": "fnv1a64:d683fa407a37fa30",
-      "jsonHash": "fnv1a64:07d5e2e31f76219f"
+      "jsonHash": "fnv1a64:88537d1b44b9784f"
     },
     {
       "language": "latin",

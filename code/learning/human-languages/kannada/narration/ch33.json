@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Four Verbs of Mind and Page",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d64825d81777f48f",
+  "sourceHash": "fnv1a64:278bc949cf5aecc2",
   "lessons": [
     {
       "id": "KA-C33-yocisu",
@@ -389,7 +389,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34fd767aa7d17da1",
+      "sourceHash": "fnv1a64:14be8e91fb548c10",
       "notice": null,
       "blocks": [
         {
@@ -557,7 +557,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35c3f21bb2c8ecf8",
+      "sourceHash": "fnv1a64:dfc0cabb77ae6e25",
       "notice": null,
       "blocks": [
         {

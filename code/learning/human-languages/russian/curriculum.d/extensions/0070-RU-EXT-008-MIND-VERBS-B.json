@@ -1,0 +1,12 @@
+{
+  "id": "RU-EXT-008-MIND-VERBS-B",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say what I think, understand, read and write in Russian, and name the finished partner every one of those verbs travels with.",
+  "prerequisites": [],
+  "lessons": [
+    "RU-C04-chitat",
+    "RU-C04-pisat"
+  ]
+}

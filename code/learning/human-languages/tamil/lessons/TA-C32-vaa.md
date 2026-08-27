@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: TA-C32-vaa
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 900
 chapter: 32
 type: word

@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-013-DOING-VERBS-B",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can take, ask, help and say what I like in Punjabi, build a fresh verb by putting a noun in front of ਕਰਨਾ, and say why ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ has no room for me as its subject.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-C09-puchhna"
+  ]
+}

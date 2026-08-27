@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: FR-C24-aimer
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 740
 chapter: 24
 type: word

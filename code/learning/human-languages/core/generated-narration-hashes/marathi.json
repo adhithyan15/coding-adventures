@@ -188,7 +188,7 @@
     {
       "language": "marathi",
       "chapter": 10,
-      "sourceHash": "fnv1a64:2635c0b8af24f6d0",
+      "sourceHash": "fnv1a64:fbae7286d1b5efed",
       "lessonIds": [
         "MR-C07-asne",
         "MR-C07-jane",
@@ -202,12 +202,12 @@
       "text": "marathi/narration/ch10.txt",
       "json": "marathi/narration/ch10.json",
       "textHash": "fnv1a64:96c4ed7320c2e03b",
-      "jsonHash": "fnv1a64:10fb06c36741cafc"
+      "jsonHash": "fnv1a64:74619847ff8ec1a2"
     },
     {
       "language": "marathi",
       "chapter": 11,
-      "sourceHash": "fnv1a64:a7b84192e69ef6e1",
+      "sourceHash": "fnv1a64:16016b68a89a5f45",
       "lessonIds": [
         "MR-C08-vichar-karne",
         "MR-C08-samajne",
@@ -219,12 +219,12 @@
       "text": "marathi/narration/ch11.txt",
       "json": "marathi/narration/ch11.json",
       "textHash": "fnv1a64:a3ec1bf7cc2dc66b",
-      "jsonHash": "fnv1a64:147b347d8bc9a04d"
+      "jsonHash": "fnv1a64:d12e7c79a3883faf"
     },
     {
       "language": "marathi",
       "chapter": 12,
-      "sourceHash": "fnv1a64:7b05e9b5958ef3bc",
+      "sourceHash": "fnv1a64:8e1edded36eafd9b",
       "lessonIds": [
         "MR-C09-ghene",
         "MR-C09-vicharne",
@@ -236,7 +236,7 @@
       "text": "marathi/narration/ch12.txt",
       "json": "marathi/narration/ch12.json",
       "textHash": "fnv1a64:330d538828f25c5d",
-      "jsonHash": "fnv1a64:b9d07b0b20c04ec5"
+      "jsonHash": "fnv1a64:2cb30213bfa80290"
     },
     {
       "language": "marathi",

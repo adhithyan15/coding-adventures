@@ -740,7 +740,7 @@
     {
       "language": "spanish",
       "chapter": 72,
-      "sourceHash": "fnv1a64:e283243ae1e0aa13",
+      "sourceHash": "fnv1a64:01e5474739d211e2",
       "lessonIds": [
         "ES-C13-salir"
       ],
@@ -749,7 +749,7 @@
     {
       "language": "spanish",
       "chapter": 73,
-      "sourceHash": "fnv1a64:cbac5e1903978910",
+      "sourceHash": "fnv1a64:08f826e3744b4eb6",
       "lessonIds": [
         "ES-C13-venir"
       ],
@@ -1532,7 +1532,7 @@
     {
       "language": "spanish",
       "chapter": 155,
-      "sourceHash": "fnv1a64:1a2b8f6d379a4c05",
+      "sourceHash": "fnv1a64:9d25514eac7b0379",
       "lessonIds": [
         "ES-C34-leer"
       ],
@@ -1541,7 +1541,7 @@
     {
       "language": "spanish",
       "chapter": 156,
-      "sourceHash": "fnv1a64:08740d0c3d97a7b8",
+      "sourceHash": "fnv1a64:fec63c10dd0398ae",
       "lessonIds": [
         "ES-C34-escribir"
       ],
@@ -1577,7 +1577,7 @@
     {
       "language": "spanish",
       "chapter": 160,
-      "sourceHash": "fnv1a64:b019b15c18cf0dc6",
+      "sourceHash": "fnv1a64:56127370816e5f26",
       "lessonIds": [
         "ES-C35-preguntar"
       ],
@@ -1604,7 +1604,7 @@
     {
       "language": "spanish",
       "chapter": 163,
-      "sourceHash": "fnv1a64:20dd2cfa8b827ffd",
+      "sourceHash": "fnv1a64:baa91b7442aef277",
       "lessonIds": [
         "ES-C35-gustar"
       ],
@@ -1622,7 +1622,7 @@
     {
       "language": "spanish",
       "chapter": 165,
-      "sourceHash": "fnv1a64:b2e739ee8ae7bff0",
+      "sourceHash": "fnv1a64:ed8761aa054e8bbf",
       "lessonIds": [
         "ES-C36-oir",
         "ES-C36-dormir",
@@ -1634,7 +1634,7 @@
     {
       "language": "spanish",
       "chapter": 166,
-      "sourceHash": "fnv1a64:9bd6b5263ecbc7c2",
+      "sourceHash": "fnv1a64:978eef8849a6f77f",
       "lessonIds": [
         "ES-C37-abrir",
         "ES-C37-cerrar",
@@ -1646,7 +1646,7 @@
     {
       "language": "spanish",
       "chapter": 167,
-      "sourceHash": "fnv1a64:77f00a329f2bf9cc",
+      "sourceHash": "fnv1a64:c5fa48a6b46ac9d5",
       "lessonIds": [
         "ES-C38-luego",
         "ES-C38-porque",
@@ -1658,7 +1658,7 @@
     {
       "language": "spanish",
       "chapter": 168,
-      "sourceHash": "fnv1a64:0806c2f658576770",
+      "sourceHash": "fnv1a64:adf9adaa19b6700c",
       "lessonIds": [
         "ES-C39-traer"
       ],
@@ -1712,7 +1712,7 @@
     {
       "language": "spanish",
       "chapter": 174,
-      "sourceHash": "fnv1a64:bc7ba51d27e6e4a8",
+      "sourceHash": "fnv1a64:a2d2b9a24e0f6838",
       "lessonIds": [
         "ES-C40-esperar",
         "ES-C40-contestar",
@@ -2572,7 +2572,7 @@
     {
       "language": "spanish",
       "chapter": 268,
-      "sourceHash": "fnv1a64:85e24f9287dcf7a9",
+      "sourceHash": "fnv1a64:5b38cd22b3ef1b24",
       "lessonIds": [
         "ES-C268-donde-esta",
         "ES-C268-billete",

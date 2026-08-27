@@ -1,0 +1,12 @@
+{
+  "id": "PA-PATH-013-B",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "PA-C09-puchhna"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-013-DOING-VERBS-B"
+  ],
+  "after": []
+}

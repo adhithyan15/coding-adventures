@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: AR-C31-saala
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 800
 chapter: 31
 type: word

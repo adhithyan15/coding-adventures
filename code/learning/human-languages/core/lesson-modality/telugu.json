@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:5e3ea7f5e27ceca3",
+  "sourceHash": "fnv1a64:223b85b862129b5a",
   "summary": {
     "totalLessons": 276,
     "voice": 213,
@@ -3173,7 +3173,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6260299ebab73314"
+      "sourceHash": "fnv1a64:51834ca11921f22b"
     },
     {
       "id": "TE-C32-tinu",
@@ -3287,7 +3287,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6757e4c82de7d30f",
+      "sourceHash": "fnv1a64:1790610cd5a5577a",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -3308,7 +3308,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9f9f505382786bc6",
+      "sourceHash": "fnv1a64:63e6d833dbf74823",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -3350,7 +3350,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:64c137e432a2802e",
+      "sourceHash": "fnv1a64:2dbdab84ef82da99",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -3392,7 +3392,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:43e769d702413130",
+      "sourceHash": "fnv1a64:8b12a37d475b8c1e",
       "detachableSegments": [
         "The letters in this word"
       ]

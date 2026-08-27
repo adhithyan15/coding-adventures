@@ -1,6 +1,10 @@
 {
   "segments": [
-    "IT-PATH-A1-COMPRARE"
+    "IT-PATH-022-B",
+    "IT-PATH-023-B",
+    "IT-PATH-024",
+    "IT-PATH-A1-COMPRARE",
+    "IT-PATH-024-B"
   ],
   "omits": [
     "VERB-DRINK",
@@ -8,7 +12,10 @@
     "VERB-PUT",
     "VERB-DO-MAKE",
     "VERB-OPEN",
-    "VERB-CLOSE"
+    "VERB-CLOSE",
+    "VERB-STAND",
+    "VERB-COME",
+    "VERB-WALK"
   ],
   "relocates": {}
 }

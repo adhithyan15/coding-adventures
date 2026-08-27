@@ -135,9 +135,7 @@
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "RU-C04-dumat",
-        "RU-C04-ponimat",
-        "RU-C04-chitat",
-        "RU-C04-pisat"
+        "RU-C04-ponimat"
       ],
       "before": [],
       "inline": [
@@ -146,17 +144,63 @@
       "after": []
     },
     {
+      "id": "RU-PATH-008-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "RU-C04-chitat",
+        "RU-C04-pisat"
+      ],
+      "before": [],
+      "inline": [
+        "RU-EXT-008-MIND-VERBS-B"
+      ],
+      "after": []
+    },
+    {
       "id": "RU-PATH-009",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "RU-C05-brat",
-        "RU-C05-sprashivat",
-        "RU-C05-pomogat",
-        "RU-C05-lyubit"
+        "RU-C05-brat"
       ],
       "before": [],
       "inline": [
         "RU-EXT-009-HAND-VERBS"
+      ],
+      "after": []
+    },
+    {
+      "id": "RU-PATH-009-B",
+      "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+      "lessons": [
+        "RU-C05-sprashivat"
+      ],
+      "before": [],
+      "inline": [
+        "RU-EXT-009-HAND-VERBS-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "RU-PATH-009-C",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "RU-C05-pomogat"
+      ],
+      "before": [],
+      "inline": [
+        "RU-EXT-009-HAND-VERBS-C"
+      ],
+      "after": []
+    },
+    {
+      "id": "RU-PATH-009-C-B",
+      "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+      "lessons": [
+        "RU-C05-lyubit"
+      ],
+      "before": [],
+      "inline": [
+        "RU-EXT-009-HAND-VERBS-D"
       ],
       "after": []
     },
@@ -392,7 +436,10 @@
       "relocates": {}
     },
     "SPINE-NAME-EVERYDAY-ACTIONS": {
-      "segments": [],
+      "segments": [
+        "RU-PATH-008-B",
+        "RU-PATH-009-B"
+      ],
       "omits": [
         "VERB-DRINK",
         "VERB-GIVE",
@@ -400,7 +447,19 @@
         "VERB-DO-MAKE",
         "VERB-BUY",
         "VERB-OPEN",
-        "VERB-CLOSE"
+        "VERB-CLOSE",
+        "VERB-STAND",
+        "VERB-WAIT",
+        "VERB-BRING",
+        "VERB-COME",
+        "VERB-WALK"
+      ],
+      "relocates": {}
+    },
+    "SPINE-NAME-EVERYDAY-THINGS": {
+      "segments": [],
+      "omits": [
+        "LODGING-ROOM"
       ],
       "relocates": {}
     },
@@ -412,30 +471,47 @@
       ],
       "relocates": {}
     },
+    "SPINE-SAY-WHAT-I-LIKE": {
+      "segments": [
+        "RU-PATH-009-C-B"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHY": {
+      "segments": [],
+      "omits": [
+        "CONNECTIVE-BECAUSE"
+      ],
+      "relocates": {}
+    },
+    "SPINE-SAY-WHAT-I-WANT": {
+      "segments": [],
+      "omits": [
+        "VERB-WANT"
+      ],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "RU-PATH-007",
         "RU-PATH-008",
-        "RU-PATH-009"
+        "RU-PATH-009",
+        "RU-PATH-009-C"
       ],
       "omits": [
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
-        "VERB-COME",
         "VERB-SAY",
         "VERB-HEAR",
         "VERB-LEARN",
-        "VERB-BRING",
         "VERB-GET",
         "VERB-EAT",
         "VERB-SLEEP",
         "VERB-WORK",
         "VERB-PLAY",
-        "VERB-WALK",
         "VERB-RUN",
         "VERB-SIT",
-        "VERB-STAND",
-        "VERB-WAIT",
         "VERB-ANSWER",
         "VERB-MEET"
       ],
@@ -446,13 +522,6 @@
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
-      ],
-      "relocates": {}
-    },
-    "SPINE-SAY-WHAT-I-WANT": {
-      "segments": [],
-      "omits": [
-        "VERB-WANT"
       ],
       "relocates": {}
     },
@@ -475,7 +544,6 @@
       "omits": [
         "NARRATIVE-SEQUENCE",
         "CONNECTIVE-THEN",
-        "CONNECTIVE-BECAUSE",
         "ASPECT-ONGOING-PAST"
       ],
       "relocates": {}
@@ -495,7 +563,6 @@
       "omits": [
         "DIRECTION-ASK",
         "TRANSPORT-TICKET",
-        "LODGING-ROOM",
         "PROBLEM-REPORT"
       ],
       "relocates": {}
@@ -722,7 +789,17 @@
       "prerequisites": [],
       "lessons": [
         "RU-C04-dumat",
-        "RU-C04-ponimat",
+        "RU-C04-ponimat"
+      ]
+    },
+    {
+      "id": "RU-EXT-008-MIND-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say what I think, understand, read and write in Russian, and name the finished partner every one of those verbs travels with.",
+      "prerequisites": [],
+      "lessons": [
         "RU-C04-chitat",
         "RU-C04-pisat"
       ]
@@ -735,9 +812,39 @@
       "canDo": "I can say I take, ask, help and love in Russian, put any verb I own after люблю, and tell a suppletive aspect pair from an ordinary one.",
       "prerequisites": [],
       "lessons": [
-        "RU-C05-brat",
-        "RU-C05-sprashivat",
-        "RU-C05-pomogat",
+        "RU-C05-brat"
+      ]
+    },
+    {
+      "id": "RU-EXT-009-HAND-VERBS-B",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say I take, ask, help and love in Russian, put any verb I own after люблю, and tell a suppletive aspect pair from an ordinary one.",
+      "prerequisites": [],
+      "lessons": [
+        "RU-C05-sprashivat"
+      ]
+    },
+    {
+      "id": "RU-EXT-009-HAND-VERBS-C",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say I take, ask, help and love in Russian, put any verb I own after люблю, and tell a suppletive aspect pair from an ordinary one.",
+      "prerequisites": [],
+      "lessons": [
+        "RU-C05-pomogat"
+      ]
+    },
+    {
+      "id": "RU-EXT-009-HAND-VERBS-D",
+      "stage": "A2",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say I take, ask, help and love in Russian, put any verb I own after люблю, and tell a suppletive aspect pair from an ordinary one.",
+      "prerequisites": [],
+      "lessons": [
         "RU-C05-lyubit"
       ]
     },

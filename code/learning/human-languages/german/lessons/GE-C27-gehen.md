@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: GE-C27-gehen
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 830
 chapter: 27
 type: word

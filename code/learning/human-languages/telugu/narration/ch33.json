@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f8ab9a281e43682e",
+  "sourceHash": "fnv1a64:791f531f16275b91",
   "lessons": [
     {
       "id": "TE-C33-anuko",
@@ -395,7 +395,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6757e4c82de7d30f",
+      "sourceHash": "fnv1a64:1790610cd5a5577a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -581,7 +581,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9f9f505382786bc6",
+      "sourceHash": "fnv1a64:63e6d833dbf74823",
       "notice": {
         "modality": "sight",
         "needs": [

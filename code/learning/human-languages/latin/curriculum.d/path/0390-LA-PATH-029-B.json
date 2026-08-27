@@ -1,0 +1,14 @@
+{
+  "id": "LA-PATH-029-B",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "LA-C41-curro",
+    "LA-C41-aperio",
+    "LA-C41-claudo"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-029-LANGUAGE-SPECIFIC-B"
+  ],
+  "after": []
+}

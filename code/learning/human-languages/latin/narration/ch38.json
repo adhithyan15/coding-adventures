@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Thinking, Reading, Writing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:95ac6bc0b02c0abd",
+  "sourceHash": "fnv1a64:2dd5ca8497d6aa7e",
   "lessons": [
     {
       "id": "LA-C38-cogito",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5511be9ba3c46d1",
+      "sourceHash": "fnv1a64:d6fc78a0bb1d658a",
       "notice": null,
       "blocks": [
         {
@@ -524,7 +524,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0c57712692fe5f1",
+      "sourceHash": "fnv1a64:091501c7e567324a",
       "notice": null,
       "blocks": [
         {

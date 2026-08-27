@@ -1,0 +1,10 @@
+{
+  "id": "SA-PATH-012-C",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "SA-C09-sahayyam-karoti"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

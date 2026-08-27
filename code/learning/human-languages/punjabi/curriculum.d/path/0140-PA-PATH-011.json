@@ -3,16 +3,9 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "PA-C07-hona",
-    "PA-C07-jana",
-    "PA-C07-auna",
-    "PA-C07-khana",
-    "PA-C07-vekhna",
-    "PA-R07-wellbeing-r3",
-    "PA-C07-janna"
+    "PA-C07-jana"
   ],
   "before": [],
-  "inline": [
-    "PA-EXT-022-WELLBEING-R3"
-  ],
+  "inline": [],
   "after": []
 }

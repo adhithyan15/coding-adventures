@@ -382,7 +382,7 @@
     {
       "language": "german",
       "chapter": 24,
-      "sourceHash": "fnv1a64:a6259dd9fea16afd",
+      "sourceHash": "fnv1a64:6e4c9c2332ab32bb",
       "lessonIds": [
         "GE-C24-denken",
         "GE-C24-verstehen",
@@ -394,12 +394,12 @@
       "text": "german/narration/ch24.txt",
       "json": "german/narration/ch24.json",
       "textHash": "fnv1a64:ac105e0ff17b46e8",
-      "jsonHash": "fnv1a64:4b10f1455657247f"
+      "jsonHash": "fnv1a64:f18c08c5b772a039"
     },
     {
       "language": "german",
       "chapter": 25,
-      "sourceHash": "fnv1a64:eb085c89028cb9aa",
+      "sourceHash": "fnv1a64:aadd35c97d644082",
       "lessonIds": [
         "GE-C25-nehmen",
         "GE-C25-fragen",
@@ -411,12 +411,12 @@
       "text": "german/narration/ch25.txt",
       "json": "german/narration/ch25.json",
       "textHash": "fnv1a64:88ef7d723c403055",
-      "jsonHash": "fnv1a64:fa064ee00e23a7ba"
+      "jsonHash": "fnv1a64:7ae1c15c355eee23"
     },
     {
       "language": "german",
       "chapter": 26,
-      "sourceHash": "fnv1a64:9f1e817b7beec48a",
+      "sourceHash": "fnv1a64:0c8ea134c853cf3a",
       "lessonIds": [
         "GE-C26-sitzen",
         "GE-C26-stehen",
@@ -428,12 +428,12 @@
       "text": "german/narration/ch26.txt",
       "json": "german/narration/ch26.json",
       "textHash": "fnv1a64:85ffccdf04545476",
-      "jsonHash": "fnv1a64:2987171e016b5ded"
+      "jsonHash": "fnv1a64:15262fc63ade9092"
     },
     {
       "language": "german",
       "chapter": 27,
-      "sourceHash": "fnv1a64:f0750333b7cb5b57",
+      "sourceHash": "fnv1a64:8e3a06fb3371a95a",
       "lessonIds": [
         "GE-C27-gehen",
         "GE-C27-laufen",
@@ -445,7 +445,7 @@
       "text": "german/narration/ch27.txt",
       "json": "german/narration/ch27.json",
       "textHash": "fnv1a64:70899409818d857b",
-      "jsonHash": "fnv1a64:59615005ce8594f3"
+      "jsonHash": "fnv1a64:c2e5fdce8a5a519b"
     },
     {
       "language": "german",

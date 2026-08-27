@@ -1,0 +1,12 @@
+{
+  "id": "LA-EXT-030-LANGUAGE-SPECIFIC-B",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can produce the present-tense forms of the four Latin verbs of bringing, getting, playing and waiting, and say whether a verb is welded from two roots, built from a prefix on an older verb, or of unknown ancestry.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C42-accipio",
+    "LA-C42-ludo"
+  ]
+}

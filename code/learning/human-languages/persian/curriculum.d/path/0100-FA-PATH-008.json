@@ -1,0 +1,11 @@
+{
+  "id": "FA-PATH-008",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "FA-C07-fekr-kardan",
+    "FA-C07-fahmidan"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}
