@@ -37,5 +37,7 @@ The parser rejects duration schedules with no recurring valid weekday before
 they can enter the otherwise infallible temporal layout API.
 Civil-day arithmetic remains backend-neutral across month and daylight-saving
 boundaries; source section/task order is retained during row layout.
+Axis ticks preserve millisecond, second, minute, hour, day, week, month, and year
+interval units, with time fields formatted before Paint lowering.
 
 **Git**: Branch lanes (horizontal rows), commits as circles on lanes, merges as bezier arcs.

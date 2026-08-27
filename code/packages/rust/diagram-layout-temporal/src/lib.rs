@@ -553,6 +553,10 @@ fn gantt_tick_days(interval: Option<&str>) -> f64 {
     let split = compact.find(|character: char| !character.is_ascii_digit()).unwrap_or(compact.len());
     let count = compact[..split].parse::<f64>().unwrap_or(1.0).max(1.0);
     match &compact[split..] {
+        "millisecond" | "milliseconds" => count / 86_400_000.0,
+        "second" | "seconds" => count / 86_400.0,
+        "minute" | "minutes" => count / 1_440.0,
+        "hour" | "hours" => count / 24.0,
         "day" | "days" => count,
         "week" | "weeks" => count * 7.0,
         "month" | "months" => count * 30.0,
@@ -561,8 +565,15 @@ fn gantt_tick_days(interval: Option<&str>) -> f64 {
     }
 }
 
-fn gantt_axis_label(day: i64, format: Option<&str>, offset: f64) -> String {
+fn gantt_axis_label(timestamp: f64, format: Option<&str>, offset: f64) -> String {
     let Some(format) = format else { return format!("d{offset:.0}"); };
+    let epoch_milliseconds = (timestamp * 86_400_000.0).round() as i64;
+    let day = epoch_milliseconds.div_euclid(86_400_000);
+    let milliseconds_in_day = epoch_milliseconds.rem_euclid(86_400_000);
+    let hour = milliseconds_in_day / 3_600_000;
+    let minute = milliseconds_in_day / 60_000 % 60;
+    let second = milliseconds_in_day / 1_000 % 60;
+    let millisecond = milliseconds_in_day % 1_000;
     let (year, month, date) = civil_from_days(day);
     const MONTHS: [&str; 12] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     format
@@ -570,6 +581,11 @@ fn gantt_axis_label(day: i64, format: Option<&str>, offset: f64) -> String {
         .replace("%m", &format!("{month:02}"))
         .replace("%d", &format!("{date:02}"))
         .replace("%b", MONTHS[(month - 1) as usize])
+        .replace("%H", &format!("{hour:02}"))
+        .replace("%M", &format!("{minute:02}"))
+        .replace("%S", &format!("{second:02}"))
+        .replace("%L", &format!("{millisecond:03}"))
+        .replace("%s", &epoch_milliseconds.div_euclid(1_000).to_string())
 }
 
 fn append_gantt_axis(
@@ -591,7 +607,7 @@ fn append_gantt_axis(
             x: LABEL_W + tick_day * x_scale,
             y: if label_above { y } else { y + 4.0 },
             label: gantt_axis_label(
-                (t_min + tick_day) as i64,
+                t_min + tick_day,
                 diagram.config.axis_format.as_deref(),
                 tick_day,
             ),
@@ -1279,6 +1295,21 @@ mod tests {
         }).collect::<Vec<_>>();
         assert!(labels.len() > 2);
         assert!(labels[0].contains('/'));
+    }
+
+    #[test]
+    fn gantt_axis_supports_sub_day_intervals_and_time_fields() {
+        assert_eq!(gantt_tick_days(Some("2millisecond")), 2.0 / 86_400_000.0);
+        assert_eq!(gantt_tick_days(Some("2seconds")), 2.0 / 86_400.0);
+        assert_eq!(gantt_tick_days(Some("15minute")), 15.0 / 1_440.0);
+        assert_eq!(gantt_tick_days(Some("6hours")), 0.25);
+
+        let timestamp = 13.0 / 24.0 + 5.0 / 1_440.0 + 6.0 / 86_400.0
+            + 7.0 / 86_400_000.0;
+        assert_eq!(
+            gantt_axis_label(timestamp, Some("%H:%M:%S.%L"), 0.0),
+            "13:05:06.007"
+        );
     }
 
     #[test]
