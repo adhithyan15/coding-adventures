@@ -1201,6 +1201,14 @@ fn collect_native_degradations(
             "primitive.switch-unimplemented",
             "the backend does not yet lower HostSwitch to its native on/off control",
         )),
+        // UI39 — the kernel drawing primitive. Unconditionally degraded on
+        // every native backend until each lands a real lowering (XAML
+        // first); narrow the exclusion list the same way HostSlider's arm
+        // above does as each backend's PR merges.
+        "Path" if backend.is_native() => Some((
+            "primitive.path-unimplemented",
+            "the backend does not yet lower Path to real vector geometry",
+        )),
         "HostLink" if backend == Backend::Flutter && flutter_link_requires_url_host(node) => Some((
             "effect.url-host-missing",
             "the Flutter emitter cannot open URLs without an application-supplied effect host",
@@ -4945,6 +4953,56 @@ layout Settings {
                 report.degradations[0].primitive.as_deref(),
                 Some("HostSwitch")
             );
+        }
+    }
+
+    #[test]
+    fn path_is_explicitly_incomplete_until_native_lowerings_land() {
+        let pkg = make_package("mosaic-pkg-icons", &["MoonIcon"]);
+        fs::write(
+            pkg.path().join("src/MoonIcon.mll"),
+            r#"
+layout MoonIcon {
+  Path [ root ] (
+    kind: circle,
+    cx: 17,
+    cy: 17,
+    r: 17
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        for backend in [
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("Path capability analysis");
+
+            assert!(!report.native_complete, "{backend:?} must remain honest");
+            assert_eq!(
+                report.degradations.len(),
+                1,
+                "unexpected {backend:?} report"
+            );
+            assert_eq!(report.degradations[0].code, "primitive.path-unimplemented");
+            assert_eq!(report.degradations[0].layout_path, "root");
+            assert_eq!(report.degradations[0].primitive.as_deref(), Some("Path"));
         }
     }
 

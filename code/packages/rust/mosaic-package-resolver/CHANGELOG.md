@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added
+
+- Registered `Path` (the kernel drawing primitive, #12028 item 3) in
+  `KERNEL_PRIMITIVES` so `resolve` classifies it as `Resolution::Kernel`
+  rather than an unresolved component reference. See
+  `code/specs/UI39-mosaic-drawing-primitive.md`.
+
 ### Fixed
 
 - Preserve default `text`, `number`, and `bool` MIL slot values while inlining
