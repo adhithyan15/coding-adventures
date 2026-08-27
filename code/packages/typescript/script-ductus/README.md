@@ -22,8 +22,8 @@ finished letter in pale grey, with a dot where the pen is.
 ```
 data/scripts/*.{json,d/} ─► scriptdata.ts ─┐
   (canonical files and                     ├──►  ductusview.ts  ──►  filmstrip
-   build-time shard fold) strokes.ts  ─────┤        (the join)        (SvgNode
-                          (pen paths)      │                           tree, or
+   build-time shard fold) strokes/*.ts ────┤        (the join)        (SvgNode
+                          (owned paths)    │                           tree, or
      _fonts/*.ttf  ──►  truetype.ts  ──────┘                           SVG text)
        (shipped fonts)   (real outlines)
                                             consumers:  language-ladder (live SVG)
@@ -33,7 +33,7 @@ data/scripts/*.{json,d/} ─► scriptdata.ts ─┐
 | module | what it knows |
 |---|---|
 | `scriptdata.ts` | the curriculum's canonical script data; ordinary JSON is imported directly and the three sharded inventories arrive through one fixed build-time virtual module |
-| `strokes.ts` | **how** a letter is written — hand-authored pen paths in labelled segments, with pen lifts and a citation |
+| `strokes.ts` + `strokes/*.ts` | **how** a letter is written — a fixed public registry assembled from writing-system-owned pen-path modules |
 | `truetype.ts` | **what** the letter looks like — a zero-dependency TrueType reader pulling the real outline out of the shipped font |
 | `ductusview.ts` | the join — the filmstrip, as a tree of plain objects plus a serialiser |
 
@@ -59,8 +59,8 @@ production builds all read the same canonical data.
 ## Stroke order is a citation, not an opinion
 
 A stroke *order* cannot be verified against a font — the font knows the shape and
-nothing about the hand. So every letter in `strokes.ts` carries a
-`strokeOrderSource`, and the rule the curriculum applies (HL11 §5) is:
+nothing about the hand. So every letter in its `strokes/<owner>.ts` module carries
+a `strokeOrderSource`, and the rule the curriculum applies (HL11 §5) is:
 
 > **No citation → no pen path → no figure.**
 
@@ -108,7 +108,13 @@ book pipeline can take the serialised string instead."* Now it can.
 npm install && npx vitest run
 ```
 
-845 tests. `jsdom` is a devDependency for exactly two of them: the SVG
+Authored paths and their exact geometry/filmstrip evidence use the same owner
+name under `src/strokes/`, `tests/strokes/`, and `tests/ductusview/`. Adding an
+ordinary glyph changes only those owner files; `strokes.ts` remains the bounded
+public facade and duplicate-rejecting assembly point.
+
+More than 2,200 tests cover the registry, paths, font fit, provenance, and
+rendering. `jsdom` is a devDependency for exactly two of them: the SVG
 serialiser's escaping is checked by handing its output to a **real** parser and
 asserting that a hostile caption cannot break out of an attribute or smuggle in a
 `<script>`. A string comparison would pass on markup no browser accepts, which is
