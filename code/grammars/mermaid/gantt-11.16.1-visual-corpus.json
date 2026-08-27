@@ -61,6 +61,10 @@
     "multiple-after",
     "multiple-until",
     "cross-section-forward-after",
-    "cross-section-forward-until"
+    "cross-section-forward-until",
+    "task-order-across-sections",
+    "month-end-rollover",
+    "daylight-saving-calendar-day",
+    "inclusive-task-ends"
   ]
 }

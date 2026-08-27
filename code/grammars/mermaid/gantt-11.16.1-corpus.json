@@ -64,7 +64,11 @@
     { "id": "multiple-after", "source": "gantt\nA :a, 2013-01-01, 1d\nB :b, 2013-02-01, 3d\nC :c, after a b, 1d" },
     { "id": "multiple-until", "source": "gantt\nTask 1 :id1, 2013-01-01, until id2 id3 id4\nTask 2 :id2, 2013-01-11, 1d\nTask 3 :id3, 2013-02-10, 1d\nTask 4 :id4, 2013-02-12, 1d" },
     { "id": "cross-section-forward-after", "source": "gantt\ndateFormat YYYY-MM-DD\nsection sec1\ntest1 :id1, 2013-01-01, 2w\ntest2 :id2, after id3, 1d\nsection sec2\ntest3 :id3, after id1, 2d" },
-    { "id": "cross-section-forward-until", "source": "gantt\ndateFormat YYYY-MM-DD\nsection sec1\ntask1 :id1, 2013-01-01, until id3\nsection sec2\ntask2 :id2, 2013-01-10, until id3\ntask3 :id3, 2013-02-01, 2d" }
+    { "id": "cross-section-forward-until", "source": "gantt\ndateFormat YYYY-MM-DD\nsection sec1\ntask1 :id1, 2013-01-01, until id3\nsection sec2\ntask2 :id2, 2013-01-10, until id3\ntask3 :id3, 2013-02-01, 2d" },
+    { "id": "task-order-across-sections", "source": "gantt\ndateFormat YYYY-MM-DD\nsection A section\nCompleted task :done, des1, 2014-01-06, 2014-01-08\nActive task :active, des2, 2014-01-09, 3d\nFuture task :des3, after des2, 5d\nFuture task2 :des4, after des3, 5d\nsection Critical tasks\nCompleted critical :crit, done, 2014-01-06, 24h\nImplement parser :crit, done, after des1, 2d\nCreate parser tests :crit, active, 3d\nFuture critical :crit, 5d\nCreate renderer tests :2d\nAdd to mermaid :1d\nsection Documentation\nDescribe syntax :active, a1, after des1, 3d\nAdd demo page :after a1, 20h\nAdd another demo :doc1, after a1, 48h\nsection Last section\nDescribe syntax again :after doc1, 3d\nAdd final demo :20h\nAdd final diagram :48h" },
+    { "id": "month-end-rollover", "source": "gantt\ndateFormat YYYY-MM-DD\nsection Task endTime is on the 31st day of the month\ntest1 :id1, 2019-09-30, 11d\ntest2 :id2, after id1, 20d" },
+    { "id": "daylight-saving-calendar-day", "source": "gantt\ndateFormat YYYY-MM-DD\nsection Task handles 25 hour day\ndaylight savings day :id1, 2020-11-01, 1d" },
+    { "id": "inclusive-task-ends", "source": "gantt\ndateFormat YYYY-MM-DD\ninclusiveEndDates\ntest1 :id1, 2019-02-01, 1d\ntest2 :id2, 2019-02-01, 2019-02-03" }
   ],
   "invalid": [
     { "id": "missing-header", "source": "section Build\nTask :a, 2013-01-01, 1d" },
