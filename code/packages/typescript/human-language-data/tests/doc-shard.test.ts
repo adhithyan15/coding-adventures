@@ -489,7 +489,7 @@ describe("the real documents", () => {
       );
 
       expect(fromShards).toEqual(fromMonolith);
-      expect(fromShards.length).toBeGreaterThan(100); // both documents are well past the "10 < 2" threshold
+      expect(fromShards.length).toBeGreaterThan(100); // every document is well past the "10 < 2" threshold
     });
 
     it(`${plan.path}: every file in the shard directory is a *.md shard`, () => {

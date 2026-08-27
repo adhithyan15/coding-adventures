@@ -342,3 +342,32 @@ HL21 §8, with the prose-specific steps substituted:
    byte-identical **against the real document**, not only a fixture.
 7. Land it when the file is quiet. Reshaping a file underneath an open branch
    breaks that branch.
+
+---
+
+## 7. Language Ladder changelog extension
+
+Issue #13211 adds a third measured conflict point to this convention:
+
+```text
+code/programs/typescript/language-ladder/CHANGELOG.d/
+```
+
+The pre-migration file was touched by 34 commits after PR #12968. It is pure
+prose: no runtime, package, or release script reads the tracked monolith. Its
+shards are therefore the committed source of truth and `CHANGELOG.md` is an
+ignored local rendered view, matching the current BACKLOG and data-package
+changelog policy.
+
+This document splits at level 2 and is newest-first. The recent history had 23
+top-level entries accidentally written as `### Added` beneath the preceding
+`## Unreleased` entry. The migration promotes only those entry headings to
+level 2 before sharding; their body bytes and ordering do not change. Historical
+`###` subsections under version headings stay inside their owning version shard.
+
+The existing document sharder, real-document round-trip tests, append-only
+deletion guard, ignored-monolith guard, and human-language path detector all
+extend to this third plan. New Language Ladder entries are one uniquely named
+level-2 shard above the current maximum rank. Future glyph changes edit that
+fragment plus their script-owned evidence module and do not edit either shared
+aggregate.

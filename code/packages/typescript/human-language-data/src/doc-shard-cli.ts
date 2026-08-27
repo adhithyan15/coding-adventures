@@ -106,12 +106,14 @@ export function defaultRepoRoot(): string {
 /**
  * The Markdown documents HL22 has migrated. Grows one entry per follow-on PR.
  *
- * These two were chosen by measurement, not by size. Of the last 200
+ * These documents were chosen by measurement, not by size. Of the last 200
  * human-languages commits on `main`, `BACKLOG.md` was touched by 100 and this
  * package's `CHANGELOG.md` by 75, while the per-language `<track>/CHANGELOG.md`
- * files were touched 4-11 times each. The per-language changelogs are already
- * partitioned by track and are deliberately left alone: sharding a file that
- * does not conflict buys nothing and costs a directory.
+ * files were touched 4-11 times each. A later post-#12968 measurement found 34
+ * touches to Language Ladder's changelog, so #13211 added that third plan. The
+ * per-language changelogs are already partitioned by track and are deliberately
+ * left alone: sharding a file that does not conflict buys nothing and costs a
+ * directory.
  */
 export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
   {
@@ -131,6 +133,14 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     // finding at the bottom of this file for the state they are in.
     path: "code/packages/typescript/human-language-data/CHANGELOG.md",
     headingLevel: 3,
+    newestFirst: true,
+  },
+  {
+    // Language Ladder's consumer-side glyph log is also newest-first. It uses
+    // level-2 entry/version headings; historical level-3 subsections remain
+    // attached to their owning version shard.
+    path: "code/programs/typescript/language-ladder/CHANGELOG.md",
+    headingLevel: 2,
     newestFirst: true,
   },
 ];

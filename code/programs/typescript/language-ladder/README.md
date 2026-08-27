@@ -1373,6 +1373,12 @@ read-only — `letters` / `isSyllabary` / the matrix untouched).
 
 ## Develop
 
+Glyph provenance tests are sharded by owner under
+[`tests/glyph-evidence/`](tests/glyph-evidence/README.md). Future glyph PRs edit
+only the owning `*.evidence.ts` file and add one uniquely named level-2 fragment
+under `CHANGELOG.d/`; the stable aggregator and ignored rendered
+`CHANGELOG.md` are not authoring surfaces.
+
 ```sh
 npm install
 npm run dev        # local dev server
