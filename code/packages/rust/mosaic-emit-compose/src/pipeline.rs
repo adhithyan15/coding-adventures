@@ -117,9 +117,22 @@ pub fn from_pipeline(
         || layout_contains_tag(&layout.root, "HostDropTarget");
     let uses_checkbox_indeterminate = layout_has_checkbox_indeterminate(&layout.root);
     let uses_radio_group = layout_has_radio_group(&layout.root);
+    // UI39 — `Path`'s `circle` kind reuses `.background`/`.border` with a
+    // `CircleShape`; `line`/`curve` need a `Canvas` + Compose's own
+    // `graphics.Path`/`Stroke` classes, gated separately so a
+    // circle-only tree (the common case — the crescent moon) doesn't
+    // pay for the Canvas imports it never uses.
+    let uses_path = layout_contains_tag(&layout.root, "Path");
+    let uses_path_canvas = uses_path && tree_needs_path_canvas(&layout.root);
 
     writeln!(out, "import androidx.compose.foundation.background").unwrap();
     writeln!(out, "import androidx.compose.foundation.border").unwrap();
+    if uses_path_canvas {
+        writeln!(out, "import androidx.compose.foundation.Canvas").unwrap();
+    }
+    if uses_path {
+        writeln!(out, "import androidx.compose.foundation.shape.CircleShape").unwrap();
+    }
     if uses_drag {
         writeln!(
             out,
@@ -163,6 +176,10 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.foundation.layout.height").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.padding").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.width").unwrap();
+    if uses_path {
+        writeln!(out, "import androidx.compose.foundation.layout.offset").unwrap();
+        writeln!(out, "import androidx.compose.foundation.layout.size").unwrap();
+    }
     writeln!(
         out,
         "import androidx.compose.foundation.text.BasicTextField"
@@ -291,6 +308,10 @@ pub fn from_pipeline(
     .unwrap();
     writeln!(out, "import androidx.compose.ui.platform.testTag").unwrap();
     writeln!(out, "import androidx.compose.ui.graphics.Color").unwrap();
+    if uses_path_canvas {
+        writeln!(out, "import androidx.compose.ui.graphics.Path").unwrap();
+        writeln!(out, "import androidx.compose.ui.graphics.drawscope.Stroke").unwrap();
+    }
     writeln!(out, "import androidx.compose.ui.text.TextStyle").unwrap();
     writeln!(out, "import androidx.compose.ui.text.font.FontFamily").unwrap();
     writeln!(out, "import androidx.compose.ui.text.input.ImeAction").unwrap();
@@ -1741,6 +1762,232 @@ fn compose_color_value(v: &str) -> String {
     }
 }
 
+// =====================================================================
+// UI39 — `Path`, a kernel drawing primitive (#12028 item 3)
+// =====================================================================
+
+/// `Path`'s resolved `.msl` paint props — `background`/`border-color`/
+/// `border-width` (UI39 §3.2's zero-new-style-properties design: `Path`
+/// reuses these three rather than inventing a fill/stroke vocabulary).
+/// `fill`/`stroke` are `None` when the author didn't set the
+/// corresponding prop, rather than defaulting to a colour — mirrors the
+/// XAML/Qt/Flutter lowerings, where an unset fill/stroke renders
+/// nothing rather than a surprise colour.
+struct PathPaint {
+    fill: Option<String>,
+    stroke: Option<String>,
+    stroke_width: String,
+}
+
+fn path_paint(node: &LayoutNode, part_styles: &PartStyleMap) -> PathPaint {
+    let props: &[StyleProp] = node
+        .part_name
+        .as_deref()
+        .and_then(|p| part_styles.get(p))
+        .map(Vec::as_slice)
+        .unwrap_or(&[]);
+    let mut fill = None;
+    let mut stroke = None;
+    let mut stroke_width = "0".to_string();
+    for p in props {
+        match p.name.as_str() {
+            "background" | "background-color" => fill = Some(compose_color_value(&p.value)),
+            "border-color" => stroke = Some(compose_color_value(&p.value)),
+            "border-width" => {
+                let stripped = strip_css_px(&p.value);
+                if !stripped.is_empty()
+                    && stripped
+                        .chars()
+                        .all(|c| c.is_ascii_digit() || c == '.' || c == '-')
+                {
+                    stroke_width = stripped.to_string();
+                }
+            }
+            _ => {}
+        }
+    }
+    PathPaint {
+        fill,
+        stroke,
+        stroke_width,
+    }
+}
+
+/// A `Canvas`'s `Modifier.size(...)` hint, bounding the given
+/// coordinates. `line`/`curve` coordinates are absolute — Compose's
+/// `Canvas` does not clip drawn content to its declared size by
+/// default — so this is purely an implicit sizing hint for layout, not
+/// a correctness requirement for the drawn geometry itself. Mirrors
+/// Qt's `qml_shape_bounding_box_lines` and Flutter's
+/// `path_bounding_size`.
+fn path_bounding_size(xs: &[f64], ys: &[f64]) -> (f64, f64) {
+    let w = xs.iter().copied().fold(0.0_f64, f64::max);
+    let h = ys.iter().copied().fold(0.0_f64, f64::max);
+    (w, h)
+}
+
+/// True when any `Path` node in the tree has a `kind` other than
+/// `circle` (i.e. needs a `Canvas` + Compose's own `graphics.Path`/
+/// `Stroke` — `circle` draws via `.background`/`.border` +
+/// `CircleShape` instead, no `Canvas` involved). Mirrors Qt's
+/// `tree_needs_shapes_import`.
+fn tree_needs_path_canvas(node: &LayoutNode) -> bool {
+    if node.tag == "Path" && find_keyword_prop(node, "kind").as_deref() != Some("circle") {
+        return true;
+    }
+    node.children.iter().any(tree_needs_path_canvas)
+}
+
+/// Read a required `Number`-valued prop, e.g. `cx`/`cy`/`r`. `Path`'s
+/// geometry props don't yet support the `SlotRef`/`Expr` bindings every
+/// other numeric prop in the kernel has (UI39 §3.1 documents that as a
+/// kernel-level capability); wiring it through to a real Compose
+/// `remember`/state binding is future work, the same not-yet-landed
+/// gap the XAML, Qt, and Flutter lowerings all note — a bound
+/// coordinate is therefore a clear compile error here, not a silent 0.
+fn required_path_number(node: &LayoutNode, prop_name: &str) -> Result<f64, PipelineEmitError> {
+    match find_prop_value(node, prop_name) {
+        Some(LayoutPropValue::Number(n)) => Ok(*n),
+        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_)) => {
+            Err(PipelineEmitError::UnknownPrimitive(format!(
+                "Path prop '{prop_name}' is bound to a slot or expression, but the Compose emitter only supports a literal number for Path geometry props today"
+            )))
+        }
+        _ => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path missing required numeric prop '{prop_name}:'"
+        ))),
+    }
+}
+
+/// `Path [name] (kind: circle|line|curve, ...)` → a native Compose
+/// lowering. UI39 §3.1's four shape kinds; `arc` is a stretch goal not
+/// implemented in this PR — falls through to a named "not yet
+/// supported" error, matching the XAML/Qt/Flutter lowerings' posture
+/// for the same gap.
+///
+/// `circle` reuses `Modifier.background(color, CircleShape)` +
+/// `Modifier.border(width, color, CircleShape)` directly — Compose's
+/// `CircleShape` plus the ALREADY-unconditionally-imported
+/// `.background`/`.border` modifiers match `background`/
+/// `border-color`+`border-width` 1:1, the same reuse Qt's `Rectangle`
+/// and Flutter's `BoxDecoration(shape: BoxShape.circle)` lowerings made
+/// for the same shape. `line`/`curve` have no equivalent native
+/// declarative widget, so they lower to a `Canvas` drawing a Compose
+/// `graphics.Path` built via `moveTo`/`lineTo`/`quadraticBezierTo`,
+/// using absolute, un-offset canvas coordinates — mirrors Qt's
+/// `ShapePath` and Flutter's `CustomPaint` painters.
+///
+/// Positioning `circle`'s authored center is notably SIMPLER than the
+/// Flutter lowering's `Positioned`/`direct_stack_child` dance: Compose's
+/// `Modifier.offset(x, y)` shifts a composable's painted position
+/// relative to wherever normal layout would place it and is legal on
+/// ANY composable regardless of its parent's type — unlike Flutter's
+/// `Positioned`, which only type-checks (and only avoids a runtime
+/// panic) as a *direct* `Stack` child. So `circle` always emits
+/// `Modifier.offset(x = (cx - r).dp, y = (cy - r).dp)` unconditionally;
+/// inside a `Box` (`Stack`'s Compose lowering — see the `"Box" | "Stack"`
+/// arm in `emit_compose_tree`, whose children default to
+/// `Alignment.TopStart`), that offset lands at the exact authored
+/// pixel center, the same absolute-positioning outcome XAML's `Margin`
+/// and Qt's implicit-`Item` `x`/`y` give in any panel.
+fn emit_path(
+    node: &LayoutNode,
+    depth: usize,
+    part_styles: &PartStyleMap,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ";
+    let paint = path_paint(node, part_styles);
+    let kind = find_keyword_prop(node, "kind").ok_or_else(|| {
+        PipelineEmitError::UnknownPrimitive("Path missing required prop 'kind:'".to_string())
+    })?;
+
+    match kind.as_str() {
+        "circle" => {
+            let cx = required_path_number(node, "cx")?;
+            let cy = required_path_number(node, "cy")?;
+            let r = required_path_number(node, "r")?;
+            let d = 2.0 * r;
+            let (left, top) = (cx - r, cy - r);
+            let mut modifier = format!(
+                "Modifier\n{pad}{inner}.offset(x = {left}.dp, y = {top}.dp)\n{pad}{inner}.size({d}.dp)"
+            );
+            if let Some(fill) = &paint.fill {
+                modifier.push_str(&format!("\n{pad}{inner}.background({fill}, CircleShape)"));
+            }
+            if let Some(stroke) = &paint.stroke {
+                modifier.push_str(&format!(
+                    "\n{pad}{inner}.border({}.dp, {stroke}, CircleShape)",
+                    paint.stroke_width
+                ));
+            }
+            Ok(format!("{pad}Box(modifier = {modifier})\n"))
+        }
+        "line" => {
+            let x1 = required_path_number(node, "x1")?;
+            let y1 = required_path_number(node, "y1")?;
+            let x2 = required_path_number(node, "x2")?;
+            let y2 = required_path_number(node, "y2")?;
+            let (w, h) = path_bounding_size(&[x1, x2], &[y1, y2]);
+            let mut out = format!(
+                "{pad}Canvas(modifier = Modifier.size({w}.dp, {h}.dp)) {{\n\
+                 {pad}{inner}val path = Path().apply {{\n\
+                 {pad}{inner}{inner}moveTo({x1}f, {y1}f)\n\
+                 {pad}{inner}{inner}lineTo({x2}f, {y2}f)\n\
+                 {pad}{inner}}}\n"
+            );
+            if let Some(fill) = &paint.fill {
+                out.push_str(&format!(
+                    "{pad}{inner}drawPath(path = path, color = {fill})\n"
+                ));
+            }
+            if let Some(stroke) = &paint.stroke {
+                out.push_str(&format!(
+                    "{pad}{inner}drawPath(path = path, color = {stroke}, style = Stroke(width = {}f))\n",
+                    paint.stroke_width
+                ));
+            }
+            out.push_str(&format!("{pad}}}\n"));
+            Ok(out)
+        }
+        "curve" => {
+            let x1 = required_path_number(node, "x1")?;
+            let y1 = required_path_number(node, "y1")?;
+            let cx = required_path_number(node, "cx")?;
+            let cy = required_path_number(node, "cy")?;
+            let x2 = required_path_number(node, "x2")?;
+            let y2 = required_path_number(node, "y2")?;
+            let (w, h) = path_bounding_size(&[x1, cx, x2], &[y1, cy, y2]);
+            let mut out = format!(
+                "{pad}Canvas(modifier = Modifier.size({w}.dp, {h}.dp)) {{\n\
+                 {pad}{inner}val path = Path().apply {{\n\
+                 {pad}{inner}{inner}moveTo({x1}f, {y1}f)\n\
+                 {pad}{inner}{inner}quadraticBezierTo({cx}f, {cy}f, {x2}f, {y2}f)\n\
+                 {pad}{inner}}}\n"
+            );
+            if let Some(fill) = &paint.fill {
+                out.push_str(&format!(
+                    "{pad}{inner}drawPath(path = path, color = {fill})\n"
+                ));
+            }
+            if let Some(stroke) = &paint.stroke {
+                out.push_str(&format!(
+                    "{pad}{inner}drawPath(path = path, color = {stroke}, style = Stroke(width = {}f))\n",
+                    paint.stroke_width
+                ));
+            }
+            out.push_str(&format!("{pad}}}\n"));
+            Ok(out)
+        }
+        "arc" => Err(PipelineEmitError::UnknownPrimitive(
+            "Path kind 'arc' is not yet supported by the Compose emitter (deferred per spec PR sequence)".to_string(),
+        )),
+        other => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path kind '{other}' is not a recognized shape kind (expected circle, line, curve, or arc)"
+        ))),
+    }
+}
+
 /// Per-property "bucket" — collects the base value and per-state
 /// overrides for one logical mosstyle property.  `state_values[i]`
 /// holds the lowered Kotlin value (or `None`) for `state_layers[i]`.
@@ -2326,6 +2573,7 @@ fn emit_compose_tree(
         }
         "Text" => emit_text(node, depth, text_ctx, for_payload),
         "Icon" => emit_icon_compose(node, depth, part_styles, text_ctx),
+        "Path" => emit_path(node, depth, part_styles),
         "Spacer" => Ok(format!("{pad}Spacer(modifier = Modifier.weight(1f))\n")),
         // `Input` is the pre-UI29 spelling retained for capabilities such as
         // multiline editing that were not present on the first HostInput
@@ -7689,6 +7937,279 @@ mod tests {
         assert!(
             plain.contains("Text(text = ( v ))") && !plain.contains("color ="),
             "styleless Text should stay labelled with no color, got:\n{plain}"
+        );
+    }
+
+    // ========================================================================
+    // UI39 — `Path` drawing primitive (#12028 item 3)
+    // ========================================================================
+
+    fn path_node(part: &str, kind: &str, coords: &[(&str, f64)]) -> LayoutNode {
+        let mut props = vec![LayoutProp {
+            name: "kind".to_string(),
+            value: LayoutPropValue::Keyword(kind.to_string()),
+        }];
+        for (name, value) in coords {
+            props.push(LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Number(*value),
+            });
+        }
+        LayoutNode {
+            tag: "Path".into(),
+            part_name: Some(part.to_string()),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn path_circle_lowers_to_box_with_circle_shape() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node(
+                "Stack",
+                vec![],
+                vec![path_node(
+                    "moon-disc",
+                    "circle",
+                    &[("cx", 17.0), ("cy", 17.0), ("r", 17.0)],
+                )],
+            ),
+        );
+        let s = style_def(
+            "X",
+            vec![part(
+                "moon-disc",
+                vec![
+                    sprop("background", "#b3a99c"),
+                    sprop("border-color", "#1a1714"),
+                    sprop("border-width", "2px"),
+                ],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains(".offset(x = 0.dp, y = 0.dp)"),
+            "got:\n{out}"
+        );
+        assert!(out.contains(".size(34.dp)"), "got:\n{out}");
+        assert!(
+            out.contains(".background(Color(0xFFB3A99C), CircleShape)"),
+            "got:\n{out}"
+        );
+        assert!(
+            out.contains(".border(2.dp, Color(0xFF1A1714), CircleShape)"),
+            "got:\n{out}"
+        );
+        assert!(out.contains("import androidx.compose.foundation.shape.CircleShape"));
+        assert!(!out.contains("import androidx.compose.foundation.Canvas"));
+    }
+
+    #[test]
+    fn path_circle_offset_center_computes_position_from_radius() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node(
+                "Stack",
+                vec![],
+                vec![path_node(
+                    "moon-bite",
+                    "circle",
+                    &[("cx", 22.0), ("cy", 12.0), ("r", 17.0)],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains(".offset(x = 5.dp, y = -5.dp)"),
+            "offset must be cx-r/cy-r, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn path_line_lowers_to_canvas_with_graphics_path() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node(
+                "Stack",
+                vec![],
+                vec![path_node(
+                    "tick",
+                    "line",
+                    &[("x1", 4.0), ("y1", 4.0), ("x2", 12.0), ("y2", 12.0)],
+                )],
+            ),
+        );
+        let s = style_def(
+            "X",
+            vec![part(
+                "tick",
+                vec![
+                    sprop("border-color", "#ffffff"),
+                    sprop("border-width", "2px"),
+                ],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains("Canvas(modifier = Modifier.size(12.dp, 12.dp)) {"),
+            "got:\n{out}"
+        );
+        assert!(out.contains("moveTo(4f, 4f)"), "got:\n{out}");
+        assert!(out.contains("lineTo(12f, 12f)"), "got:\n{out}");
+        assert!(
+            out.contains("drawPath(path = path, color = Color(0xFFFFFFFF), style = Stroke(width = 2f))"),
+            "got:\n{out}"
+        );
+        assert!(out.contains("import androidx.compose.foundation.Canvas"));
+        assert!(out.contains("import androidx.compose.ui.graphics.Path"));
+        assert!(out.contains("import androidx.compose.ui.graphics.drawscope.Stroke"));
+    }
+
+    #[test]
+    fn path_curve_lowers_to_canvas_with_quadratic_bezier() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node(
+                "Stack",
+                vec![],
+                vec![path_node(
+                    "arrow",
+                    "curve",
+                    &[
+                        ("x1", 0.0),
+                        ("y1", 0.0),
+                        ("cx", 10.0),
+                        ("cy", -5.0),
+                        ("x2", 20.0),
+                        ("y2", 0.0),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("moveTo(0f, 0f)"), "got:\n{out}");
+        assert!(
+            out.contains("quadraticBezierTo(10f, -5f, 20f, 0f)"),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("drawPath(path = path, color = Color"));
+    }
+
+    #[test]
+    fn path_helpers_import_only_fires_for_canvas_kinds() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node(
+                "Stack",
+                vec![],
+                vec![path_node(
+                    "dot",
+                    "circle",
+                    &[("cx", 4.0), ("cy", 4.0), ("r", 4.0)],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            !out.contains("import androidx.compose.foundation.Canvas"),
+            "a circle-only tree must not pay for the Canvas import, got:\n{out}"
+        );
+
+        let m2 = component("Y", vec![], vec![]);
+        let l2 = layout("Y", node("Box", vec![], vec![]));
+        let out2 = from_pipeline(&m2, &l2, &empty_style("Y")).unwrap().output;
+        assert!(
+            !out2.contains("CircleShape") && !out2.contains("Canvas"),
+            "a layout with no Path must not pay for either import, got:\n{out2}"
+        );
+    }
+
+    #[test]
+    fn path_missing_kind_is_a_clear_error() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", node("Path", vec![], vec![]));
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("kind")));
+    }
+
+    #[test]
+    fn path_missing_coordinate_is_a_clear_error_not_a_default() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node(
+                "Path",
+                vec![LayoutProp {
+                    name: "kind".to_string(),
+                    value: LayoutPropValue::Keyword("circle".to_string()),
+                }],
+                vec![],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("cx")));
+    }
+
+    #[test]
+    fn path_slot_bound_coordinate_is_a_clear_error_not_a_silent_drop() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node(
+                "Path",
+                vec![
+                    LayoutProp {
+                        name: "kind".to_string(),
+                        value: LayoutPropValue::Keyword("circle".to_string()),
+                    },
+                    LayoutProp {
+                        name: "cx".to_string(),
+                        value: LayoutPropValue::SlotRef("radius".to_string()),
+                    },
+                    LayoutProp {
+                        name: "cy".to_string(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                    LayoutProp {
+                        name: "r".to_string(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("bound to a slot"))
+        );
+    }
+
+    #[test]
+    fn path_arc_kind_is_a_named_stretch_goal_not_a_generic_error() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node(
+                "Path",
+                vec![LayoutProp {
+                    name: "kind".to_string(),
+                    value: LayoutPropValue::Keyword("arc".to_string()),
+                }],
+                vec![],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("not yet supported"))
         );
     }
 }
