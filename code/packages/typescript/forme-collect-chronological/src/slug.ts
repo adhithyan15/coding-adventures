@@ -1,8 +1,10 @@
 /**
  * slug.ts — derive a URL-safe slug from a source path.
  *
- * Used as the fallback when frontmatter doesn't supply an explicit
- * `slug:` field.  Rules (kept intentionally tiny — Jekyll-style):
+ * Used for collection overlay metadata when frontmatter doesn't supply
+ * an explicit `slug:` field, and temporarily by the compatibility route
+ * fallback for unrouted standalone callers. Rules (kept intentionally
+ * tiny — Jekyll-style):
  *
  *   1. Take the basename (last path segment).
  *   2. Strip the trailing markdown extension if present

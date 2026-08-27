@@ -2,7 +2,7 @@
 # Deploy Coding Adventures Blog to GitHub Pages
 # ================================================================
 #
-# Builds the Forme pipeline (4 stages, FM00 §5 demo) and deploys the
+# Builds the Forme pipeline (6 stages, FM00 §5 demo) and deploys the
 # generated dist/blog/ tree to the gh-pages branch under blog/,
 # preserving other content on Pages.
 #
@@ -18,8 +18,10 @@
 # Pipeline shape (see code/sites/blog/forme.config.ts):
 #   forme-source-fs          Stream<ContentSource>
 #   forme-parse-markdown     ContentSource → ContentNode
-#   forme-render-static      Stream<ContentNode> → Stream<RenderedPage>
-#   forme-emit-fs            Stream<RenderedPage> → DeployArtifact
+#   forme-router             Stream<ContentNode> → Stream<ContentNode>
+#                               ├→ forme-collect-chronological → Collection
+#                               └→ forme-render-static → Stream<RenderedPage>
+#                                                    └→ forme-emit-fs → DeployArtifact
 #
 # `npm run build:clean` is the canonical clean-checkout entry point. Its
 # bootstrap script discovers the `file:`-linked dependency graph recursively,
@@ -41,6 +43,8 @@ on:
       - "code/packages/typescript/forme-orchestrator/**"
       - "code/packages/typescript/forme-source-fs/**"
       - "code/packages/typescript/forme-parse-markdown/**"
+      - "code/packages/typescript/forme-router/**"
+      - "code/packages/typescript/forme-collect-chronological/**"
       - "code/packages/typescript/forme-render-static/**"
       - "code/packages/typescript/forme-emit-fs/**"
       - "code/packages/typescript/document-ast/**"
@@ -64,6 +68,8 @@ on:
       - "code/packages/typescript/forme-orchestrator/**"
       - "code/packages/typescript/forme-source-fs/**"
       - "code/packages/typescript/forme-parse-markdown/**"
+      - "code/packages/typescript/forme-router/**"
+      - "code/packages/typescript/forme-collect-chronological/**"
       - "code/packages/typescript/forme-render-static/**"
       - "code/packages/typescript/forme-emit-fs/**"
       - "code/packages/typescript/document-ast/**"

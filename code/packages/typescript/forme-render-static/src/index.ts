@@ -12,25 +12,12 @@
  *
  * === Why this is a stream-to-stream stage ===
  *
- * The "purest" topology would have the collector emit a single
- * `Collection` and the renderer consume it (so routes derived by the
- * collector flow into the renderer directly).  For v0 we take the
- * simpler shape: render each `ContentNode` as it arrives, derive the
- * route locally from `sourcePath` using the same `slugify` +
- * `formatRoute` helpers the collector uses.
- *
- * Trade-off: the renderer duplicates ~30 lines of slug logic.  Win:
- * the rendering stage doesn't have to consume a different Kind from
- * what the parser emits — every Markdown-handling pipeline today
- * looks like `source → parse → render → emit` (no collector in the
- * critical path for individual pages).  v0.2 will introduce a router
- * stage that folds collection-side routes back onto
- * `ContentNode.route` so the renderer can read it directly.
- *
- * The duplication is called out explicitly in `slug.ts` and in the
- * README; do NOT extract a shared package for it until a *third*
- * stage needs the same helper (FM02 plugin packaging will give us
- * that excuse cleanly).
+ * A router stage upstream owns canonical URL policy and records its
+ * decision on `ContentNode.route`.  The renderer consumes that route
+ * directly.  A local `sourcePath` derivation remains only as a
+ * compatibility fallback for older standalone pipelines that have
+ * not inserted `forme-router` yet; product pipelines should configure
+ * routes once, at the router.
  *
  * === RenderedPage shape ===
  *
@@ -52,7 +39,8 @@
  * No deliberate divergences from FM00 / FM01.  v0 simplifications:
  *
  *   - Single hard-coded theme (no Style IR).
- *   - Routes derived locally from `sourcePath` (no router stage).
+ *   - A deprecated local route fallback remains for pipelines that do
+ *     not yet supply `ContentNode.route`.
  *   - `usedStyle` / `usedIslands` / `usedAssets` empty.
  *   - `meta.description`, `meta.openGraph`, `meta.structured`,
  *     `meta.canonicalUrl` left empty/null (richer head metadata is a
@@ -78,7 +66,7 @@ import { deriveTitle } from "./title.js";
 export interface RenderStaticConfig {
   /** Site title for the page header.  Empty/undefined → no header. */
   readonly siteTitle?: string;
-  /** Route template — must contain `{slug}`.  Default `/blog/{slug}.html`. */
+  /** Deprecated fallback used only when `ContentNode.route` is null. */
   readonly routeTemplate?: string;
 }
 
@@ -109,11 +97,11 @@ const renderStatic = defineStage({
     for await (const node of stream) {
       ctx.cancellation.throwIfCancelled();
 
-      // Derive the route from sourcePath using the same rules the
-      // collector uses, so both produce identical routes for the
-      // same input (until the v0.2 router stage lands).
+      // Canonical routes are assigned once by forme-router. Keep the
+      // sourcePath derivation only as a compatibility fallback for
+      // standalone render-stage callers that have not migrated yet.
       const slug = slugify(node.sourcePath);
-      const route = formatRoute(routeTemplate, slug);
+      const route = node.route ?? formatRoute(routeTemplate, slug);
 
       // Render the document body via the wrapped renderer.  Note we
       // do NOT pass `sanitize: true` — v0 trusts authored Markdown
