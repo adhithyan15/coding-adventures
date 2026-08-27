@@ -1,0 +1,15 @@
+{
+  "glyph": "ご",
+  "sound": "go",
+  "role": "hiragana",
+  "components": [
+    "こ",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "こ in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Opens ございます."
+}

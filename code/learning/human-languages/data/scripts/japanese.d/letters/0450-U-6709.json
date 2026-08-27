@@ -1,0 +1,15 @@
+{
+  "glyph": "有",
+  "sound": "yuu / a(ru)",
+  "role": "logograph",
+  "components": [
+    "a left-falling top",
+    "月 (moon/flesh) below"
+  ],
+  "strokeOrder": [
+    "top strokes",
+    "月"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "To exist, to have. The 有 of 有り難う, ありがとう."
+}

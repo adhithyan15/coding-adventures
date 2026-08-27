@@ -1,0 +1,15 @@
+{
+  "glyph": "バ",
+  "sound": "ba",
+  "role": "katakana",
+  "components": [
+    "ハ",
+    "the dakuten ゛"
+  ],
+  "strokeOrder": [
+    "ハ in full",
+    "two short strokes at the upper right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "The dakuten works identically in katakana."
+}

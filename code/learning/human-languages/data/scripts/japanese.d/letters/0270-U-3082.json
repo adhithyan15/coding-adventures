@@ -1,0 +1,23 @@
+{
+  "glyph": "も",
+  "sound": "mo",
+  "role": "hiragana",
+  "components": [
+    "a long stem curving around the lower bowl",
+    "an upper horizontal",
+    "a lower horizontal"
+  ],
+  "strokeOrder": [
+    "descend from the top and turn around the broad lower bowl to the rising right tip",
+    "lift, then draw the upper horizontal from left to right across the stem",
+    "lift again and draw the lower horizontal from left to right across the stem"
+  ],
+  "strokeOrderNote": "Sirgazil's 28-frame animation shows three separate pen-down runs: the stem and bowl, upper bar, then lower bar.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%82_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana も stroke order animation.gif, hiragana も, 28 frames, 2.8 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws も in three pen-down runs with two lifts: the descending stem and broad lower bowl, then the upper and lower bars from left to right. The path is fitted to the bundled Noto Sans JP subset; handwritten bar length and bowl curvature vary, but the three-run order remains the same."
+  },
+  "notes": "The mo of も, also; one mora, pronounced as a short, even beat."
+}

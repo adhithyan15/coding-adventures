@@ -1,0 +1,21 @@
+{
+  "glyph": "ゆ",
+  "sound": "yu",
+  "role": "hiragana",
+  "components": [
+    "a left stem turning into a broad loop",
+    "a central descending stroke"
+  ],
+  "strokeOrder": [
+    "descend through the left stem, turn up and right across the high shoulder, then continue clockwise around the broad loop and curve left to the inner finish",
+    "lift, begin high above the loop, descend through its center, and curve down and left to the finish"
+  ],
+  "strokeOrderNote": "Sirgazil's 30-frame animation writes ゆ in two separate pen-down runs: the left stem and broad clockwise loop first, then the central descending curve.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%86_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana ゆ stroke order animation.gif, hiragana ゆ, 30 frames, 3.0 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws ゆ in two pen-down runs with one lift: descend through the left stem, turn up and right across the high shoulder, continue clockwise around the broad loop to its inner finish, then restart above the loop and descend through its center into the down-left curve. The learner path is fitted to the bundled Noto Sans JP subset; handwritten loop width and final curve depth vary, but the two-run order remains the same."
+  },
+  "notes": "The yu of ゆっくり; one mora, pronounced as a short, even beat."
+}

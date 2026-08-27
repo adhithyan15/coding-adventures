@@ -1,0 +1,21 @@
+{
+  "glyph": "み",
+  "sound": "mi",
+  "role": "hiragana",
+  "components": [
+    "a top bar descending into a lower-left loop and middle sweep",
+    "a high right stroke curving down and left"
+  ],
+  "strokeOrder": [
+    "draw the top bar left to right, descend diagonally, continue around the lower-left loop, and sweep out through the middle",
+    "lift, begin high on the right, and curve down and left before turning upward at the finish"
+  ],
+  "strokeOrderNote": "Sirgazil's 29-frame animation writes み in two separate pen-down runs: the top bar, lower-left loop, and middle sweep first, then the high-right descending curve.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%BF_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana み stroke order animation.gif, hiragana み, 29 frames, 2.9 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws み in two pen-down runs with one lift: carry the top bar left to right, descend diagonally into the lower-left loop, sweep right through the middle, then restart high on the right and curve down and left before turning upward at the finish. The learner path is fitted to the bundled Noto Sans JP subset; handwritten loop size and final curve height vary, but the two-run order remains the same."
+  },
+  "notes": "The mi of すみません and みみ; one mora, pronounced as a short, even beat."
+}

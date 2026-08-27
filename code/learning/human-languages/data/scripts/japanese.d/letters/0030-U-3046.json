@@ -1,0 +1,15 @@
+{
+  "glyph": "う",
+  "sound": "u",
+  "role": "hiragana",
+  "components": [
+    "a short top tick",
+    "a wide curve"
+  ],
+  "strokeOrder": [
+    "top tick",
+    "curve"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "After と it writes a long o, as in ありがとう."
+}

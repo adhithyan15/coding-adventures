@@ -1,0 +1,15 @@
+{
+  "glyph": "り",
+  "sound": "ri",
+  "role": "hiragana",
+  "components": [
+    "a short left stroke",
+    "a long right descender"
+  ],
+  "strokeOrder": [
+    "left stroke",
+    "right descender"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Second sign of ありがとう. The r is a light tap, near a Spanish r."
+}

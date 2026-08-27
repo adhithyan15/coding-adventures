@@ -69,6 +69,7 @@ import { basename, dirname, isAbsolute, join, normalize, relative as pathRelativ
 import { pathToFileURL } from "node:url";
 import { defaultCurriculumRoot } from "./loader.js";
 import { assertRelativeManifestPath } from "./manifest-path.js";
+import { scriptEntryId } from "./script-shards.js";
 import {
   BOOK_GENERATION_GROUPED_KEYS,
   KEY_ORDER_FIELD,
@@ -449,6 +450,32 @@ export const BOOK_GENERATION_PLAN: ShardPlan = {
   monolith: "generated",
 };
 
+/**
+ * Japanese is the first script inventory split at its natural ownership unit:
+ * one glyph or mark per file. Code-point ids are stable across filesystems and
+ * make two independent verification tranches edit different canonical files.
+ */
+export const JAPANESE_SCRIPT_PLAN: ShardPlan = {
+  path: "data/scripts/japanese.json",
+  sections: [
+    {
+      key: "letters",
+      dir: "letters",
+      idOf: (element) => scriptEntryId((element as { glyph?: unknown }).glyph),
+    },
+    {
+      key: "marks",
+      dir: "marks",
+      idOf: (element) => scriptEntryId((element as { mark?: unknown }).mark),
+    },
+  ],
+  // Generated compatibility copy. Script Ductus statically imports this JSON,
+  // and Language Ladder discovers data/scripts/*.json in its browser bundle.
+  // #12696 owns removing that coupling. Until then authors edit only the shards
+  // and `--check` makes a stale or hand-merged monolith fail CI.
+  monolith: "generated",
+};
+
 /** Ledgers HL21 has migrated so far. Grows one entry per follow-on PR. */
 export const SHARD_PLANS: readonly ShardPlan[] = [
   {
@@ -461,6 +488,7 @@ export const SHARD_PLANS: readonly ShardPlan[] = [
   ...CHAPTER_SHARDED_TRACKS.map(chaptersPlan),
   ...CURRICULUM_SHARDED_TRACKS.map(curriculumPlan),
   BOOK_GENERATION_PLAN,
+  JAPANESE_SCRIPT_PLAN,
 ];
 
 

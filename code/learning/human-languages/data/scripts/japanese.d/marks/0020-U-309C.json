@@ -1,0 +1,11 @@
+{
+  "mark": "゜",
+  "sound": "p-series",
+  "role": "diacritic",
+  "attachesAs": "a small circle at the upper right of an h-row kana",
+  "example": {
+    "base": "は",
+    "combined": "ぱ",
+    "sound": "ha to pa"
+  }
+}

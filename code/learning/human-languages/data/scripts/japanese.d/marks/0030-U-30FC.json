@@ -1,0 +1,11 @@
+{
+  "mark": "ー",
+  "sound": "one more beat of the preceding vowel",
+  "role": "other",
+  "attachesAs": "a full-width bar written after a katakana sign",
+  "example": {
+    "base": "コ",
+    "combined": "コー",
+    "sound": "ko to koo"
+  }
+}

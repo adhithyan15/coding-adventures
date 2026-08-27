@@ -1,0 +1,17 @@
+{
+  "glyph": "は",
+  "sound": "ha (wa as the topic particle)",
+  "role": "hiragana",
+  "components": [
+    "a left vertical",
+    "a horizontal",
+    "a right loop"
+  ],
+  "strokeOrder": [
+    "vertical",
+    "horizontal",
+    "loop"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Read ha inside a word (はい) and wa when it works as the topic particle (こんにちは) — a spelling kept from before the 1946 reform."
+}

@@ -1,0 +1,11 @@
+{
+  "script": "japanese",
+  "name": "Japanese (hiragana + katakana + kanji)",
+  "font": "_fonts/NotoSansJP-Subset.ttf",
+  "direction": "ltr",
+  "system": "mixed",
+  "signature": "Three systems on one line: rounded, flowing hiragana for grammar; angular, straight-edged katakana for borrowed words; and dense square kanji for the content words in between.",
+  "complete": false,
+  "combination": "Japanese does not have one writing system, it runs three at once, and an ordinary sentence uses all of them. HIRAGANA and KATAKANA are twin SYLLABARIES (more precisely moraic): one sign is one beat, normally a consonant plus a vowel already fused, and the two sets cover exactly the same beats with different shapes. Hiragana came from whole Chinese characters written in cursive; katakana from fragments of characters used as reading aids, which is why pairs like こ and コ still resemble each other. KANJI are LOGOGRAPHS borrowed from Chinese: each carries a meaning, and each carries a SET of readings rather than a sound, so the same character is nichi, jitsu, hi, bi, or ka depending on the word around it. Two diacritics modify kana: the dakuten ゛voices a consonant (か ka to が ga, さ sa to ざ za) and the handakuten ゜turns the h-row into p. Long vowels are written twice in hiragana (いいえ) but with the bar ー in katakana (コーヒー).",
+  "notes": "One file, three co-functioning systems. HL01 gives a track exactly one `script` id and validates a headword's characters against exactly one inventory, so splitting hiragana, katakana, and kanji into three files would leave two of them unreachable from the Japanese track. Roles distinguish them instead: `hiragana`, `katakana`, `length-mark`, and `logograph`. The kanji inventory is the set the authored lessons use and grows with the track; `complete` stays false until the kana are exhaustive. The font is a fontTools subset of NotoSansJP covering the full kana blocks plus every ideograph used here (see _fonts/subset-jp.sh)."
+}

@@ -1,0 +1,17 @@
+{
+  "glyph": "か",
+  "sound": "ka",
+  "role": "hiragana",
+  "components": [
+    "a hooked left stroke",
+    "a short vertical",
+    "a right dot"
+  ],
+  "strokeOrder": [
+    "hooked stroke",
+    "vertical",
+    "dot"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Base of が; the dakuten voices it."
+}

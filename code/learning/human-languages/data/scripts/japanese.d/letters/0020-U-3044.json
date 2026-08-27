@@ -1,0 +1,15 @@
+{
+  "glyph": "い",
+  "sound": "i",
+  "role": "hiragana",
+  "components": [
+    "a tall left curve",
+    "a short right tick"
+  ],
+  "strokeOrder": [
+    "left curve",
+    "right tick"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Second sign of はい; doubled in いいえ to write a long i."
+}

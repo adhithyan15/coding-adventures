@@ -1,0 +1,15 @@
+{
+  "glyph": "す",
+  "sound": "su",
+  "role": "hiragana",
+  "components": [
+    "a horizontal",
+    "a vertical with a loop"
+  ],
+  "strokeOrder": [
+    "horizontal",
+    "looping vertical"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Ends ございます; the u is often barely voiced."
+}

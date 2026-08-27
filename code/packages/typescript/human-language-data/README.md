@@ -35,14 +35,17 @@ learning."
 
 ### Authoring sharded ledgers
 
-Every track's chapter and curriculum ledgers are conflict-resistant shards.
-Edit `<track>/chapters.d/` and `<track>/curriculum.d/`, then regenerate the
+Every track's chapter and curriculum ledgers are conflict-resistant shards, as
+is the Japanese script inventory. Edit `<track>/chapters.d/`,
+`<track>/curriculum.d/`, or `data/scripts/japanese.d/`, then regenerate the
 single-file browser views; do not hand-edit or hand-merge those generated JSON
-files.
+files. Japanese entry filenames use stable Unicode code-point ids and each
+glyph keeps its writing evidence in its own shard.
 
 ```bash
 npm run unshard -- <track>/chapters.json
 npm run unshard -- <track>/curriculum.json
+npm run unshard -- data/scripts/japanese.json
 npm run check:shards
 ```
 

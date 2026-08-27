@@ -1,0 +1,25 @@
+{
+  "glyph": "た",
+  "sound": "ta",
+  "role": "hiragana",
+  "components": [
+    "an upper horizontal",
+    "a long left-falling stem",
+    "a short right horizontal",
+    "a lower-right bowl"
+  ],
+  "strokeOrder": [
+    "draw the upper horizontal from left to right",
+    "lift and descend through the crossing stem, curving left at the foot",
+    "lift and draw the short right horizontal from left to right",
+    "lift and descend into the lower-right bowl, then sweep right along its base"
+  ],
+  "strokeOrderNote": "Sirgazil's 31-frame animation writes four separate pen-down runs: upper horizontal, falling stem, short right horizontal, then lower bowl.",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%9F_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana た stroke order animation.gif, hiragana た, 31 frames, 3.1 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws た in four pen-down runs with three lifts: the upper horizontal, crossing left-falling stem, short right horizontal, and lower-right bowl. The path is fitted to the bundled Noto Sans JP subset; handwritten stem curvature and bowl width vary, but the four-run order remains the same."
+  },
+  "notes": "The ta of たべます; one mora, pronounced as a short, even beat."
+}

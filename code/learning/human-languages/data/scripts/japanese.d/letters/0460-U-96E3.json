@@ -1,0 +1,15 @@
+{
+  "glyph": "難",
+  "sound": "nan / kata(i) / muzuka(shii)",
+  "role": "logograph",
+  "components": [
+    "a left element",
+    "隹 (short-tailed bird) on the right"
+  ],
+  "strokeOrder": [
+    "left element",
+    "隹"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Difficult. 有り難し, hard to exist, therefore rare, therefore precious — the origin of thanks."
+}

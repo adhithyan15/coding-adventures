@@ -1,0 +1,15 @@
+{
+  "glyph": "コ",
+  "sound": "ko",
+  "role": "katakana",
+  "components": [
+    "a top-and-right corner",
+    "a base horizontal"
+  ],
+  "strokeOrder": [
+    "corner",
+    "base"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Opens コーヒー. Traces to the same character as hiragana こ."
+}

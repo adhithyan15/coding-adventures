@@ -1,0 +1,23 @@
+{
+  "glyph": "せ",
+  "sound": "se",
+  "role": "hiragana",
+  "components": [
+    "a long crossing horizontal",
+    "a left stem curving right along the base",
+    "a right stem hooking left"
+  ],
+  "strokeOrder": [
+    "draw the long crossing horizontal from left to right",
+    "lift, begin above the left crossing, descend through it, and curve right along the base",
+    "lift again, begin above the right crossing, descend through it, and hook left at the finish"
+  ],
+  "strokeOrderNote": "Sirgazil's 33-frame animation writes せ in three separate pen-down runs: the long horizontal, the left descending stem and base curve, then the right descending stem and leftward hook.",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%9B_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana せ stroke order animation.gif, hiragana せ, 33 frames, 3.3 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws せ in three pen-down runs with two lifts: the long horizontal from left to right, the left stem descending through it and curving right along the base, then the right stem descending through it and hooking left. The learner path is fitted to the bundled Noto Sans JP subset; handwritten stem spacing and hook depth vary, but the three-run order remains the same."
+  },
+  "notes": "The se of せなか; one mora, pronounced as a short, even beat."
+}

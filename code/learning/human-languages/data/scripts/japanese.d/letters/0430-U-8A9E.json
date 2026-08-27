@@ -1,0 +1,16 @@
+{
+  "glyph": "語",
+  "sound": "go / kata(ru)",
+  "role": "logograph",
+  "components": [
+    "言 (speech)",
+    "五 (five)",
+    "口 (mouth)"
+  ],
+  "strokeOrder": [
+    "言 on the left",
+    "五 above 口 on the right"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Language, word. Japanese kept the full traditional form; simplified Chinese writes the same character with a reduced speech radical."
+}

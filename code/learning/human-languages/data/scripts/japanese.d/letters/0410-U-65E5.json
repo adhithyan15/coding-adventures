@@ -1,0 +1,17 @@
+{
+  "glyph": "日",
+  "sound": "nichi / jitsu / hi / bi / ka",
+  "role": "logograph",
+  "components": [
+    "口 (box)",
+    "a middle horizontal"
+  ],
+  "strokeOrder": [
+    "left vertical",
+    "top and right corner",
+    "middle bar",
+    "bottom bar"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Sun, day. Read ni in 日本, nichi in 今日, hi standing alone — the clearest case of a kanji having a set of readings rather than a sound."
+}

@@ -1,0 +1,15 @@
+{
+  "glyph": "本",
+  "sound": "hon / moto",
+  "role": "logograph",
+  "components": [
+    "木 (tree)",
+    "a short horizontal across the trunk"
+  ],
+  "strokeOrder": [
+    "木 in full",
+    "the marking horizontal"
+  ],
+  "strokeOrderNote": "authoritative",
+  "notes": "Origin, root, and by extension book. 日本 is sun-origin: Japan."
+}
