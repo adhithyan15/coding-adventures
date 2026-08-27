@@ -1157,4 +1157,5 @@ members = [
   "manchester-baby-gatelevel",
   "ibm704-simulator",
   "ibm704-gatelevel",
+  "ge225-gatelevel",
 ]

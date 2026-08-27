@@ -1,0 +1,13 @@
+[package]
+name = "ge225-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "Gate-level GE-225 simulator"
+license = "MIT"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+arithmetic = { path = "../arithmetic" }
+
+[dev-dependencies]
+coding-adventures-ge225-simulator = { path = "../ge225-simulator" }
