@@ -66,7 +66,7 @@
 //!   placeholder so the output type-checks. The package-resolver
 //!   integration is a follow-up.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Write as _;
 
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
@@ -1637,6 +1637,92 @@ class _MosaicDropTargetState extends State<_MosaicDropTarget> {
 /// `dispatch` field (always present, matches React's required prop),
 /// a const constructor with named-required parameters, and the
 /// `build` method returning the widget tree.
+/// One member of a synthesized radio group (`#13007`): the Dart boolean
+/// expression that is `true` while this member is the selected one, and
+/// the Dart expression for the value it represents.
+struct RadioGroupMember {
+    checked_expr: String,
+    value_expr: String,
+}
+
+/// Walks the whole component tree bucketing `HostRadio` nodes by their
+/// literal `group: "..."` value (`#13007`). A member is only included
+/// when its `checked:` prop resolves to a real boolean expression (via
+/// [`bool_prop_expression`]) — without that, there's no way to know
+/// which member should be selected in the synthesized `groupValue`
+/// chain, so such a radio is silently excluded from grouping and keeps
+/// the pre-#13007 per-radio-independent behavior. A `slot:`-bound
+/// `group` can't be bucketed at compile time and is never collected
+/// here either.
+fn collect_radio_group_members(
+    node: &LayoutNode,
+    groups: &mut HashMap<String, Vec<RadioGroupMember>>,
+) -> Result<(), PipelineEmitError> {
+    if node.tag == "HostRadio" {
+        if let Some(key) = find_string_prop(node, "group") {
+            if let Some(checked_expr) = bool_prop_expression(node, "checked")? {
+                let value_expr = if let Some(s) = find_string_prop(node, "value") {
+                    format!("\"{}\"", escape_dart_string(s))
+                } else if let Some(slot) = find_slot_ref_prop(node, "value") {
+                    let camel = to_camel_case_first_lower(slot);
+                    validate_slot_or_field_name(&camel)?;
+                    camel
+                } else {
+                    "\"\"".to_string()
+                };
+                groups
+                    .entry(key.to_string())
+                    .or_default()
+                    .push(RadioGroupMember {
+                        checked_expr,
+                        value_expr,
+                    });
+            }
+        }
+    }
+    for child in &node.children {
+        collect_radio_group_members(child, groups)?;
+    }
+    Ok(())
+}
+
+/// The shared `groupValue` Dart expression for a synthesized radio
+/// group (`#13007`): a nested ternary resolving to whichever member's
+/// `checked_expr` is true, `null` if none are. Flutter's `Radio<T>`
+/// computes its own checked state as `value == groupValue` — every
+/// member of the group emits this SAME expression, so only one can ever
+/// compare equal, giving real native mutual exclusion without any
+/// ancestor widget or ceremony beyond what `Radio<T>` already supports
+/// on the repo's currently-pinned Flutter SDK floor (the newer
+/// `RadioGroup<T>` ancestor widget needs Flutter 3.35+; this achieves
+/// the same exclusivity guarantee using the classic, still-fully-
+/// supported `groupValue`/`onChanged` API).
+fn radio_group_value_chain(members: &[RadioGroupMember]) -> String {
+    members.iter().rev().fold("null".to_string(), |acc, m| {
+        format!("{} ? {} : ({})", m.checked_expr, m.value_expr, acc)
+    })
+}
+
+/// The set of literal `group:` values that get a synthesized shared
+/// `groupValue` anywhere in this component (`#13007`) — i.e. every key
+/// with 2+ resolvable members per [`collect_radio_group_members`].
+/// Package capability analysis calls this so strict-profile reporting
+/// cannot drift from `emit_host_radio`'s actual lowering. Errors from
+/// an unsafe identifier propagate as "no groups" here rather than
+/// failing the analysis outright — the same error surfaces (and does
+/// fail the build) when the component is actually emitted.
+pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> {
+    let mut groups: HashMap<String, Vec<RadioGroupMember>> = HashMap::new();
+    if collect_radio_group_members(root, &mut groups).is_err() {
+        return HashSet::new();
+    }
+    groups
+        .into_iter()
+        .filter(|(_, members)| members.len() >= 2)
+        .map(|(group, _)| group)
+        .collect()
+}
+
 fn emit_widget_class(
     component: &str,
     slots: &[SlotDecl],
@@ -1678,13 +1764,23 @@ fn emit_widget_class(
     writeln!(out, "    required this.dispatch,").unwrap();
     writeln!(out, "  }});").unwrap();
 
+    // #13007: collect radio-group membership once, up front, so
+    // `emit_host_radio` (deep in the recursive walk) can synthesize a
+    // shared `groupValue` for any group with 2+ resolvable members.
+    let mut radio_groups: HashMap<String, Vec<RadioGroupMember>> = HashMap::new();
+    collect_radio_group_members(layout_root, &mut radio_groups)?;
+    radio_groups.retain(|_, members| members.len() >= 2);
+
     let mut tree = emit_widget_tree(
         layout_root,
         6,
         part_styles,
         component,
         emits,
-        TableCtx::default(),
+        TableCtx {
+            radio_group_members: Some(&radio_groups),
+            ..TableCtx::default()
+        },
     )?;
 
     if layout_contains_tag(layout_root, "HostDraggable")
@@ -1781,6 +1877,12 @@ struct TableCtx<'a> {
     /// `Row`. Flutter text fields require a finite horizontal constraint,
     /// so direct row inputs lower through `Expanded`.
     direct_row_child: bool,
+    /// Whole-component radio-group membership (`#13007`), computed once
+    /// in `emit_widget_class` via [`collect_radio_group_members`] and
+    /// threaded unchanged through every recursive call — `emit_host_radio`
+    /// looks up its own node's `group:` value here to decide whether to
+    /// synthesize a shared `groupValue`.
+    radio_group_members: Option<&'a HashMap<String, Vec<RadioGroupMember>>>,
 }
 
 /// Scan a `HostTable`'s children for the
@@ -1947,7 +2049,7 @@ fn emit_widget_tree(
         return emit_host_checkbox(node, indent, part_styles, component, emits);
     }
     if node.tag == "HostRadio" {
-        return emit_host_radio(node, indent, part_styles, component, emits);
+        return emit_host_radio(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostSlider" {
         return emit_host_slider(node, indent, component, emits);
@@ -3581,15 +3683,34 @@ fn host_checkbox_event_args(emit: &EmitDecl) -> Result<String, PipelineEmitError
         .map(|parts| parts.join(", "))
 }
 
-/// `HostRadio` → `Radio<String>`. Group coordination via `groupValue`
-/// matches HTML's shared-`name` pattern; the host owns the
-/// currently-selected value.
+/// `HostRadio` → `Radio<String>`.
+///
+/// ## Group coordination (`#13007`)
+///
+/// A literal `group: "..."` shared by 2+ resolvable `HostRadio`s
+/// anywhere in the component (see [`collect_radio_group_members`]) gets
+/// a synthesized shared `groupValue` — the SAME nested-ternary
+/// expression emitted at every member's own call site (see
+/// [`radio_group_value_chain`]). Flutter's `Radio<T>` computes its
+/// checked state as `value == groupValue`, so sharing one reactive
+/// expression across siblings gives real native mutual exclusion with
+/// zero restructuring of the widget tree — no ancestor wrapper, no
+/// change to `onChanged` (each radio still dispatches its own
+/// `onSelect` independently; exclusivity comes entirely from
+/// `groupValue`, not from a shared handler).
+///
+/// A `slot:`-bound group, or a literal value with no qualifying peer,
+/// keeps the pre-#13007 behavior: the radio's own `group` slot (if any)
+/// becomes `groupValue` directly, otherwise `groupValue` is `null` and
+/// the radio always renders unselected — a real pre-existing gap this
+/// fix does not attempt to paper over for the ungroupable cases.
 fn emit_host_radio(
     node: &LayoutNode,
     indent: usize,
     _part_styles: &HashMap<String, String>,
     component: &str,
     emits: &[EmitDecl],
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let value_expr: String = if let Some(s) = find_string_prop(node, "value") {
@@ -3601,22 +3722,21 @@ fn emit_host_radio(
     } else {
         "\"\"".to_string()
     };
-    // For v1 we use the radio's own `checked` slot as the groupValue
-    // wherever the group prop isn't bound. Real radio-group
-    // coordination is a follow-up (mirrors the SwiftUI backend's v1
-    // caveat).
-    let group_value_expr: String = if let Some(slot) = find_slot_ref_prop(node, "group") {
+    let synthesized_group_value = find_string_prop(node, "group").and_then(|g| {
+        ctx.radio_group_members
+            .and_then(|groups| groups.get(g))
+            .map(|members| radio_group_value_chain(members))
+    });
+    let group_value_expr: String = if let Some(chain) = synthesized_group_value {
+        chain
+    } else if let Some(slot) = find_slot_ref_prop(node, "group") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel)?;
         camel
-    } else if let Some(s) = find_string_prop(node, "group") {
-        // Static group name — every radio in the group still needs a
-        // shared *value*, not just a shared name. The host pushes the
-        // currently-selected value via a slot. We default to `null`
-        // (Radio renders unselected).
-        let _ = s;
-        "null".to_string()
     } else {
+        // Either no `group:` authored, or a literal value with no
+        // qualifying peer (see doc comment) — `null` renders unselected,
+        // matching the pre-#13007 behavior for these cases exactly.
         "null".to_string()
     };
 
@@ -4513,6 +4633,7 @@ fn emit_host_table(
         sheet_font_family: sheet_font_family.as_deref(),
         sheet_font_size: sheet_font_size.as_deref(),
         direct_row_child: false,
+        radio_group_members: parent_ctx.radio_group_members,
     };
 
     let table_body = if let Some(shape) = flutter_data_table_shape(node) {
@@ -6454,6 +6575,127 @@ mod tests {
             r.output.contains("Radio<String>(value: \"vanilla\""),
             "expected `Radio<String>(value: \"vanilla\"`, got:\n{}",
             r.output
+        );
+    }
+
+    fn radio_node(checked_slot: &str, value: &str, group: &str) -> LayoutNode {
+        node_with(
+            "HostRadio",
+            vec![
+                LayoutProp {
+                    name: "checked".into(),
+                    value: LayoutPropValue::SlotRef(checked_slot.into()),
+                },
+                LayoutProp {
+                    name: "value".into(),
+                    value: LayoutPropValue::String(value.into()),
+                },
+                LayoutProp {
+                    name: "group".into(),
+                    value: LayoutPropValue::String(group.into()),
+                },
+            ],
+            vec![],
+        )
+    }
+
+    /// #13007 — 2 `HostRadio`s sharing a literal `group:` value get a
+    /// synthesized shared `groupValue` chain: real native mutual
+    /// exclusion via Flutter's `value == groupValue` semantics, no
+    /// ancestor widget or SDK bump needed.
+    #[test]
+    fn host_radio_shared_group_synthesizes_group_value_chain() {
+        let m = component(
+            "X",
+            vec![
+                slot("suspend-selected", SlotType::Bool, true),
+                slot("tag-only-selected", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let radio1 = radio_node("suspend-selected", "suspend", "leech-action");
+        let radio2 = radio_node("tag-only-selected", "tag-only", "leech-action");
+        let l = layout("X", node_with("Row", vec![], vec![radio1, radio2]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        let expected_chain = "_mosaicTruthy(suspendSelected) ? \"suspend\" : (_mosaicTruthy(tagOnlySelected) ? \"tag-only\" : (null))";
+        assert_eq!(
+            out.matches(&format!("groupValue: {expected_chain}")).count(),
+            2,
+            "expected both radios to share the same groupValue chain, got:\n{out}"
+        );
+    }
+
+    /// #13007 — a lone `HostRadio` (no same-group sibling) keeps the
+    /// pre-#13007 `groupValue: null` behavior — nothing to be
+    /// exclusive with.
+    #[test]
+    fn host_radio_lone_group_member_keeps_null_group_value() {
+        let m = component("X", vec![slot("selected", SlotType::Bool, true)], vec![]);
+        let radio = radio_node("selected", "only", "leech-action");
+        let l = layout("X", node_with("Row", vec![], vec![radio]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("groupValue: null"),
+            "expected the pre-#13007 null groupValue for a lone radio, got:\n{out}"
+        );
+    }
+
+    /// #13007 — a `slot:`-bound group can't be bucketed at compile
+    /// time, so it keeps the pre-#13007 direct-passthrough behavior
+    /// even with a sibling present.
+    #[test]
+    fn host_radio_slot_bound_group_keeps_direct_passthrough() {
+        let m = component(
+            "X",
+            vec![
+                slot("a-selected", SlotType::Bool, true),
+                slot("b-selected", SlotType::Bool, true),
+                slot("shared-group", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let radio1 = node_with(
+            "HostRadio",
+            vec![
+                LayoutProp {
+                    name: "checked".into(),
+                    value: LayoutPropValue::SlotRef("a-selected".into()),
+                },
+                LayoutProp {
+                    name: "value".into(),
+                    value: LayoutPropValue::String("a".into()),
+                },
+                LayoutProp {
+                    name: "group".into(),
+                    value: LayoutPropValue::SlotRef("shared-group".into()),
+                },
+            ],
+            vec![],
+        );
+        let radio2 = node_with(
+            "HostRadio",
+            vec![
+                LayoutProp {
+                    name: "checked".into(),
+                    value: LayoutPropValue::SlotRef("b-selected".into()),
+                },
+                LayoutProp {
+                    name: "value".into(),
+                    value: LayoutPropValue::String("b".into()),
+                },
+                LayoutProp {
+                    name: "group".into(),
+                    value: LayoutPropValue::SlotRef("shared-group".into()),
+                },
+            ],
+            vec![],
+        );
+        let l = layout("X", node_with("Row", vec![], vec![radio1, radio2]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert_eq!(
+            out.matches("groupValue: sharedGroup").count(),
+            2,
+            "expected the slot passed through directly for both radios, got:\n{out}"
         );
     }
 

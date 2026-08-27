@@ -1,5 +1,29 @@
 # Changelog
 
+## [Unreleased] - gate the radio-group degradation on actual native support (#13007)
+
+`mosaic-emit-compose`/`-flutter`/`-qt` now apply real mutual-exclusion
+wiring (`selectableGroup`/synthesized `groupValue`/`ButtonGroup`) for a
+literal `HostRadio.group` value shared by 2+ resolvable siblings.
+Changed the `("HostRadio", "group")` match arm in
+`ignored_native_property` to check a new `native_radio_groups:
+&HashSet<String>` parameter — the set of literal group values that get
+real wiring on the current backend — computed once per component (from
+the whole layout tree, since the recursive degradation walk only ever
+sees one node at a time and can't discover a node's siblings on its
+own) via each backend's new `radio_groups_with_native_semantics`, and
+threaded through `collect_native_degradations`'s recursion alongside
+the existing `backend`/`component`/`variant` parameters. SwiftUI has no
+idiomatic ancestor-grouping widget for N independently-bound `Toggle`s
+and is deliberately excluded from this gating — it stays unconditionally
+degraded (tracked as a follow-up). A `slot:`-bound group, or a literal
+value with no qualifying peer, still reports the degradation on every
+backend exactly as before.
+
+Added `literal_radio_group_with_two_siblings_is_native_on_compose_flutter_qt_not_swiftui`,
+covering the real `mosaic-pkg-deck-options`-shaped fixture (2 sibling
+radios, one shared literal group) across all 5 backends.
+
 ## [Unreleased] - gate the checkbox-indeterminate degradation on actual native support (#13006)
 
 `mosaic-emit-compose`/`-flutter`/`-swiftui` now lower `HostCheckbox`'s

@@ -1057,6 +1057,28 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                 &package_search_paths,
                 &style_options,
             )?;
+            // #13007: the set of literal HostRadio `group:` values that
+            // get real native mutual-exclusion wiring on this backend
+            // (ButtonGroup/selectableGroup/synthesized groupValue).
+            // Computed once per component from the whole tree, since
+            // the recursive degradation walk only ever sees one node
+            // at a time and can't discover siblings on its own.
+            let native_radio_groups: HashSet<String> = match opts.backend {
+                Backend::Qt => mosaic_emit_qt::pipeline::radio_groups_with_native_semantics(
+                    &composed.layout.def.root,
+                ),
+                Backend::Compose => {
+                    mosaic_emit_compose::pipeline::radio_groups_with_native_semantics(
+                        &composed.layout.def.root,
+                    )
+                }
+                Backend::Flutter => {
+                    mosaic_emit_flutter::pipeline::radio_groups_with_native_semantics(
+                        &composed.layout.def.root,
+                    )
+                }
+                _ => HashSet::new(),
+            };
             collect_native_degradations(
                 opts.backend,
                 component,
@@ -1064,6 +1086,7 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                 &composed.layout.def.root,
                 "root",
                 &mut degradations,
+                &native_radio_groups,
             );
             // issue #12022: style-property drops, XAML only for now (see
             // `DegradationReport::style_degradations` doc comment for why
@@ -1112,6 +1135,7 @@ fn collect_native_degradations(
     node: &LayoutNode,
     path: &str,
     degradations: &mut Vec<Degradation>,
+    native_radio_groups: &HashSet<String>,
 ) {
     let backend_name = backend.dir_name();
     let reason = match node.tag.as_str() {
@@ -1196,7 +1220,9 @@ fn collect_native_degradations(
     }
 
     for (index, prop) in node.props.iter().enumerate() {
-        if let Some((code, reason)) = ignored_native_property(backend, node, prop) {
+        if let Some((code, reason)) =
+            ignored_native_property(backend, node, prop, native_radio_groups)
+        {
             degradations.push(Degradation {
                 code: code.to_string(),
                 backend: backend_name.to_string(),
@@ -1218,6 +1244,7 @@ fn collect_native_degradations(
             child,
             &child_path,
             degradations,
+            native_radio_groups,
         );
     }
 }
@@ -1226,6 +1253,7 @@ fn ignored_native_property(
     backend: Backend,
     node: &LayoutNode,
     property: &LayoutProp,
+    native_radio_groups: &HashSet<String>,
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
         ("Text", "a11y-label")
@@ -1338,11 +1366,21 @@ fn ignored_native_property(
                 "the backend lowers HostCheckbox to a two-state control and ignores the authored indeterminate state",
             ))
         }
+        // #13007 — Compose/Flutter/Qt now apply real mutual-exclusion
+        // wiring (selectableGroup/ButtonGroup/synthesized groupValue)
+        // for a literal `group:` value shared by 2+ resolvable
+        // siblings — see each backend's `radio_groups_with_native_
+        // semantics`. SwiftUI has no idiomatic ancestor-grouping
+        // widget for N independently-bound Toggles and stays
+        // unconditionally degraded (tracked separately). A `slot:`-
+        // bound group, or a literal value with no qualifying peer,
+        // still can't be resolved at compile time on any backend and
+        // keeps reporting the degradation.
         ("HostRadio", "group")
             if matches!(
                 backend,
                 Backend::Compose | Backend::Flutter | Backend::Qt | Backend::SwiftUI
-            ) =>
+            ) && !matches!(&property.value, LayoutPropValue::String(group) if native_radio_groups.contains(group)) =>
         {
             Some((
                 "property.radio-group-ignored",
@@ -5063,6 +5101,75 @@ layout Controls {
             .join("compose/mosaic-degradations.json")
             .exists());
         assert!(!strict_out.path().join("compose/Controls.kt").exists());
+    }
+
+    /// #13007 — a literal `group:` value shared by 2 real sibling
+    /// `HostRadio`s (matching `mosaic-pkg-deck-options`'s actual
+    /// authoring shape) gets real native mutual-exclusion wiring on
+    /// Compose/Flutter/Qt, so the degradation disappears there.
+    /// SwiftUI has no idiomatic ancestor-grouping widget and keeps
+    /// reporting it.
+    #[test]
+    fn literal_radio_group_with_two_siblings_is_native_on_compose_flutter_qt_not_swiftui() {
+        let pkg = make_package("mosaic-pkg-leech-action", &["LeechAction"]);
+        fs::write(
+            pkg.path().join("src/LeechAction.mil"),
+            "component LeechAction { slot suspend-selected : bool ; slot tag-only-selected : bool ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/LeechAction.mll"),
+            r#"
+layout LeechAction {
+  Row [ root ] {
+    HostRadio [ suspend ] (
+      checked : slot: suspend-selected,
+      value : "suspend",
+      group : "leech-action"
+    )
+    HostRadio [ tag-only ] (
+      checked : slot: tag-only-selected,
+      value : "tag-only",
+      group : "leech-action"
+    )
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        for (backend, expected) in [
+            (Backend::Compose, vec![]),
+            (Backend::Flutter, vec![]),
+            (Backend::Qt, vec![]),
+            (
+                Backend::SwiftUI,
+                vec![
+                    ("property.radio-group-ignored", "root.children[0].props[2]"),
+                    ("property.radio-group-ignored", "root.children[1].props[2]"),
+                ],
+            ),
+            (Backend::Xaml, vec![]),
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("radio group analysis");
+            let actual = report
+                .degradations
+                .iter()
+                .map(|entry| (entry.code.as_str(), entry.layout_path.as_str()))
+                .collect::<Vec<_>>();
+            assert_eq!(actual, expected, "unexpected {backend:?} inventory");
+        }
     }
 
     #[test]
