@@ -33,4 +33,18 @@ export default [
       expect(nya.strokeOrderSource?.citation).toMatch(/Frame 8.*ஞ.*p\. 194/i);
     },
   },
+  {
+    suite: "Tamil independent vowels in the starter inventory",
+    suiteOrder: 40,
+    caseOrder: 30,
+    name: "constructs long ஊ from familiar உ and ள",
+    verify: ({ SCRIPTS }) => {
+      const tamil = SCRIPTS.find((script) => script.script === "tamil")!;
+      const longU = tamil.letters.find((entry) => entry.glyph === "ஊ")!;
+      expect(longU.sound).toBe("ū");
+      expect(longU.penLifts).toBe(3);
+      expect(longU.strokeOrder).toHaveLength(9);
+      expect(longU.strokeOrderSource?.url).toContain("frame-17");
+    },
+  },
 ] satisfies readonly GlyphEvidence[];

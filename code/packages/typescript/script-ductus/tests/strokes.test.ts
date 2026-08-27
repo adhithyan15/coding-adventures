@@ -292,6 +292,7 @@ const MALAYALAM_CHILLU_LL = DUCTUS[ductusKey("malayalam", "ൾ")];
 const MALAYALAM_CHILLU_RR = DUCTUS[ductusKey("malayalam", "ർ")];
 const MALAYALAM_ZHA = DUCTUS[ductusKey("malayalam", "ഴ")];
 const TAMIL_U = DUCTUS["உ"];
+const TAMIL_UU = DUCTUS["ஊ"];
 const TAMIL_NGA = DUCTUS["ங"];
 const TAMIL_NYA = DUCTUS["ஞ"];
 const JAPANESE_SHI = DUCTUS[ductusKey("japanese", "し")];
@@ -655,7 +656,8 @@ describe("handwriting ductus", () => {
           // lower-loop return, plus Kannada ಆ's loop-to-bowl and loop-to-bar
           // joins, while Malayalam ആ circles its right loop and descender in
           // one uninterrupted run across Noto's separated print contours.
-          // Japanese ね and わ likewise keep each source's continuous second
+          // Tamil ஊ preserves Module 17's compositional உ-then-ள order across
+          // Noto's separated printed contours. Japanese ね and わ likewise keep each source's continuous second
           // run as it crosses Noto's separated bar, diagonal return, and loop
           // shapes.
           // Permit only those documented bridges; every other authored path
@@ -672,6 +674,8 @@ describe("handwriting ductus", () => {
                 ? 0.89
               : letter.script === "kannada" && letter.glyph === "ಆ"
                 ? 0.92
+              : letter.script === "tamil" && letter.glyph === "ஊ"
+                ? 0.90
               : letter.script === "japanese" && ["ね", "わ"].includes(letter.glyph)
                 ? 0.88
               : 0.97;
@@ -718,6 +722,14 @@ describe("handwriting ductus", () => {
       "descend through the broad outer curve and turn left onto the baseline",
       "carry the long baseline straight to the right",
     ]);
+  });
+
+  it("Tamil ஊ writes familiar உ before the three-run ள overlay", () => {
+    expect(penLifts(TAMIL_UU)).toBe(3);
+    expect(TAMIL_UU.strokes).toHaveLength(4);
+    expect(TAMIL_UU.strokes.map((stroke) => stroke.segments.length)).toEqual([3, 3, 2, 1]);
+    expect(TAMIL_UU.source.citation).toMatch(/Module 17.*ஊ.*Frames 17, 16, and 12.*pp\. 195–196/i);
+    expect(TAMIL_UU.source.variation).toMatch(/write உ first.*then write ள over it.*Frame 16.*three movements joined.*Frame 12.*six movements.*three pen-down runs.*four-run learner order.*Noto Sans Tamil/i);
   });
 
   it("Tamil ங keeps Frame 2's detached upright and joined body separate", () => {
@@ -7308,6 +7320,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
     expect(src.citation).toMatch(/Appendix I.*Frame 8.*ஞ.*p\. 194/i);
     expect(src.variation).toMatch(/eight movements.*1–2.*left inner loop.*3.*top bar.*4–5.*central descent.*6–8.*outer bowl.*varies by school.*four-run order.*Noto Sans Tamil/i);
+  });
+
+  it("ஊ's compositional order traces to Module 17 and its familiar components", () => {
+    const src = DUCTUS["ஊ"].source;
+    expect(src.url).toBe("https://sites.la.utexas.edu/tamilscript/frame-17/92");
+    expect(src.citation).toMatch(/Module 17.*ஊ.*Frames 17, 16, and 12.*pp\. 195–196/i);
+    expect(src.variation).toMatch(/long ū.*write உ first.*then write ள over it.*four-run learner order.*Noto Sans Tamil.*varies by school/i);
   });
 
   it("வ's stroke order traces to Frame 9's first row", () => {

@@ -4,7 +4,9 @@
  * These files predate the rank/slug/heading-digest grammar. Their paths are
  * append-only history, so #13273 preserves them in place and pins their full
  * SHA-256 content instead of renaming or silently accepting a legacy pattern.
- * New entries must never be added here; every new shard uses the strict grammar.
+ * The Tamil ஞ closure merged during that gate's CI window, so its three shards
+ * are the final content-pinned additions. Every later shard uses the strict
+ * grammar.
  */
 export const LEGACY_DOC_SHARD_SHA256: Readonly<
   Record<string, Readonly<Record<string, string>>>
@@ -48,6 +50,7 @@ export const LEGACY_DOC_SHARD_SHA256: Readonly<
     "01740-HL-C134-PERSIAN-GAF-CLOSES-THE-SHORT-SLASH-GAP.md": "9142f7c7f753e623527f94904a69de8f396188c67d7accd658befab1b82f71b0",
     "01740-HL23-TRANCHE-B-PRE-AUTHORING-CONSTRAINTS.md": "e948b29debdab8e5369d39bcbb4c8bf1e7c304d1e4813578d1fabf1459ea95c3",
     "01750-HL-C135-PERSIAN-AND-URDU-ZAY-CLOSE-THE-BODY-AND-DOT-GAP.md": "8dcc882040b0d1337075ce4f450c0a875a83c908c5e4c46b6172530abbe772cc",
+    "01760-HL-C136-TAMIL-NYA-CLOSES-THE-FOUR-RUN-GAP.md": "c6ccfccefa582b7017b00e612d5843e27a15f549bf26b5ee74b666e9e922aa3f",
   },
   "code/packages/typescript/human-language-data/CHANGELOG.md": {
     "04830-ADDED-CHINESE-LANGUAGE-COUNTRY-PAYOFF.md": "b51e3d555ec27f32d4f7355978a622e38ba08278d6adfc36ede4e1124670bfed",
@@ -95,9 +98,11 @@ export const LEGACY_DOC_SHARD_SHA256: Readonly<
     "05240-ADDED-LESSON-CONTENT-BUDGETS.md": "1ad278a5f9474f6733c46c59bb2f7cf137e4e9c0335d4ddf4f9705cac9e731b0",
     "05250-CHANGED-SHARD-ONLY-CURRICULUM-LEDGERS.md": "357891e03cebb94ef5ac8c217902d4aed62b620e0a6600f45690c8bc0a37e03b",
     "05250-FIXED-CONTINUITY-EXPLANATION-MATCHES.md": "9ed2ea67c6939095a2aacefb569b2f63de337d1c819f5f8eea104214a2d72df3",
+    "05260-ADDED-SOURCE-VERIFIED-TAMIL-NYA.md": "4c1b42fa40c32564cce75cabea8f6cb59ea495d7d4818778300c5a81b5c052ce",
   },
   "code/programs/typescript/language-ladder/CHANGELOG.md": {
     "01270-UNRELEASED-SOURCE-VERIFIED-PERSIAN-AND-URDU-ZAY.md": "6688f65f534ceef6025bec85b4028c152056f9b3e25f81c358d8f3915c993143",
     "01280-CHANGED-BUILD-TIME-SHARD-ROLLUPS.md": "09a680b23d2c38bb50bda146b5f1fda64b6bcf1c784a6d590fbfc5313203fc26",
+    "01280-UNRELEASED-SOURCE-VERIFIED-TAMIL-NYA.md": "ad710adeae062a792dee6588763f422b062bd546338fc25cf661a3c7cd854e2a",
   },
 };

@@ -107,6 +107,8 @@ const I = DUCTUS["இ"];
 const iOutline = tamilOutline("இ");
 const TAMIL_U = DUCTUS["உ"];
 const tamilUOutline = tamilOutline("உ");
+const TAMIL_UU = DUCTUS["ஊ"];
+const tamilUuOutline = tamilOutline("ஊ");
 const TAMIL_E = DUCTUS["எ"];
 const tamilEOutline = tamilOutline("எ");
 const TAMIL_ZHA = DUCTUS["ழ"];
@@ -642,11 +644,12 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds twenty-two Tamil letters, seventeen Persian letters, eighteen Arabic letters, and eighteen Urdu letters", () => {
+  it("finds twenty-three Tamil letters, seventeen Persian letters, eighteen Arabic letters, and eighteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
     expect(ductusFor("இ")?.glyph).toBe("இ");
+    expect(ductusFor("ஊ")?.glyph).toBe("ஊ");
     expect(ductusFor("எ")?.glyph).toBe("எ");
     expect(ductusFor("க")?.glyph).toBe("க");
     expect(ductusFor("ங")?.glyph).toBe("ங");
@@ -1539,6 +1542,23 @@ describe("Tamil உ — one joined spiral, outer descent, and baseline", () => {
     const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
     expect(done).toHaveLength(0);
     expect(pen.attrs.d).toBe(penPathD(TAMIL_U.strokes[0], 1));
+  });
+});
+
+describe("Tamil ஊ — familiar உ followed by the three-run ள overlay", () => {
+  const steps = ductusSteps(TAMIL_UU);
+  const strip = ductusFilmstrip(TAMIL_UU, tamilUuOutline);
+
+  it("places three lifts only after உ and between ள's familiar runs", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 1, 1, 2, 2, 3]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true, false, false, true, false, true]);
+  });
+
+  it("reports nine movements in four strokes", () => {
+    expect(strip.frames).toHaveLength(9);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 9 movements");
+    expect(TAMIL_UU.source.url).toContain("frame-17");
   });
 });
 
