@@ -5,6 +5,18 @@ All notable changes to the ge225-simulator Rust package will be documented in th
 ## [Unreleased]
 
 ### Changed
+- Decode the card subsystem's aligned `RCD`, `RCB`, `RCF`, optional `RCM`,
+  `WCD`, `WCB`, and `WCF` forms instead of treating every opcode-25 word as a
+  generic memory-reference `RCD`.
+- Model continuous card-buffer rotation, exact synchronization/status words,
+  `HCR`, reader/punch readiness branches, not-ready alarms, and bounded punch
+  output while preserving atomic host-input consumption.
+- Select the shared `2500006` N-register command as `TYP`, `RPT`, or `WPT`
+  from explicit `TON`/`RON`/`PON` device state; make `OFF`, `HPT`, and N-input
+  shifts apply their documented readiness transitions.
+- Stream deterministic paper-tape and optional typewriter-keyboard input events,
+  including paper-tape parity, stop-on-parity behavior, and N-register overrun
+  latches, with bounded host input and output queues.
 - Execute `ADD`, `SUB`, `DAD`, `DSU`, `ADO`, and `SBO` as three-digit BCD
   arithmetic while decimal mode is selected, including ten's-complement signs,
   end-of-field overflow, and carried or borrowed lower fields.
@@ -49,6 +61,13 @@ All notable changes to the ge225-simulator Rust package will be documented in th
   warning-free rustdoc.
 
 ### Added
+- Public card-format/status records, exact card-I/O assembly, punch-output
+  capture, N-device state, decoded paper-tape frames, and deterministic service
+  methods for continuous card, paper-tape, and typewriter input.
+- Manual-backed direct-I/O regressions covering all read/punch layouts, rotating
+  continuous buffers, sync/status words, ready branches, alarms, shared-command
+  selection, automatic modification, paper-tape parity/overrun, and keyboard
+  input, retaining 83.49% core line coverage (1,254/1,502).
 - Deterministic 19-bit real-time-clock state and sixth-second host controls,
   with optional `LAC` and `LCA` instruction support and 24-hour wrapping.
 - Corrected-manual vectors for positive and ten's-complement single/double

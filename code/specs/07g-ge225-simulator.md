@@ -54,12 +54,23 @@ Until all seven slices pass the Rust completion contract in
 `RUST-CPU-SIMULATOR-BACKLOG.md`, GE225/Core remains a useful compiler target but
 must not be presented as a complete historical GE-225 implementation.
 
-During the first slice, card input remains a bounded host-side abstraction: a
-queued record contains at most 27 words and `RCD` copies it atomically to a
-checked destination range. That contract is intentionally narrower than the
-manual's aligned 27-word card/status rotation and controller-ready behavior,
-which belong to the fifth slice above; controller-selector devices belong to
-the sixth.
+The fifth slice replaces the original queued-record shortcut with the direct
+subsystem contract: aligned and automatically modified card DMA, all decimal,
+10-row, 12-row, and mixed read modes, all punch modes, synchronization/status
+words, continuous-buffer rotation, ready branches, and alarms. The shared
+N-register command is selected by explicit typewriter/paper-tape power state;
+bounded deterministic service events expose tape and optional keyboard input,
+overrun, parity, output, and readiness without host-clock sleeps. Devices
+reached through the controller selector remain in the sixth slice.
+
+The sixth slice also completes the optional Automatic Program Interrupt path.
+It models the selector's eight priority plugs, busy alert halt, controller-error
+reset, opaque delivery of the two words following `SEL`, controller-specific
+`BCS` status tests, and deterministic service events. API-enabled ready
+transitions are latched even while interrupts are off. At an instruction
+boundary they select X-group 32, save the main-program continuation at octal
+0201, vector to octal 0204, and enter priority mode with further interrupts
+disabled until the documented `SET PST` and modified-branch return sequence.
 
 ## Layer Position
 

@@ -91,14 +91,15 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-P005A**, the GE-225 optional central-processor slice.
-It makes decimal mode execute the manual's BCD `ADD`, `SUB`, `DAD`, `DSU`,
-`ADO`, and `SBO` semantics with carried lower fields and flagged-field
-overflow; adds deterministic real-time-clock state for `LAC` and `LCA`; and
-corrects opcode 24's mnemonic from `MOY` to canonical `MOV`. RCPU-005 remains
-open for direct I/O (RCPU-P005B), controller-selector I/O (RCPU-P005C), AAU,
-and a final completion-coverage audit after those families land. Current core
-coverage is 83.44% (902/1,081), above the 80% completion floor.
+Current selection: **RCPU-P005B**, the GE-225 direct-I/O slice. It replaces the
+compiler-target card shortcut with the programming-visible card reader/punch,
+paper-tape, and typewriter contracts: exact aligned card layouts and status
+words, continuous-read events, readiness branches and alarms, shared
+N-register device selection, bounded deterministic streams, parity, overrun,
+and optional keyboard input. RCPU-005 remains open for controller-selector I/O
+(RCPU-P005C), AAU, and a final completion-coverage audit after those families
+land. Current core coverage is 83.49% (1,254/1,502), above the 80% completion
+floor.
 
 ## Cross-language wave
 
@@ -126,6 +127,7 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-27 | The primary manual makes RCPU-P005C a controller-selector **and API** slice, not just a generic device bus. The selector has eight fixed-priority plugs (0 highest), must alert-halt if `SEL P,X` (`2500P20`) is issued while busy, transmits the following two words without CPU execution, leaves P at the third sequential word, and clears controller errors on selection. `BCS` conditions are controller-specific. Optional API must remember enabled devices' not-ready-to-ready transitions even while interrupts are disabled, interrupt only at instruction boundaries, select X-group 32, store the main-program continuation at octal 0201, branch to octal 0204, enter priority mode with interrupts disabled, and require `SET PST` plus a modified branch to leave priority mode; card reader and punch participate, while typewriter and paper tape do not. | P0, architecture/control-flow correctness, blocks RCPU-005 | Make selection/busy/error behavior, opaque two-word command delivery, per-plug priority and readiness, controller-specific `BCS` predicates, API masks/latches/modes, exact group-32 save/vector behavior, deferred interrupts, and card ready transitions the acceptance boundary of RCPU-P005C. Keep controller timing deterministic through explicit service events and expose a public generic controller adapter before adding device-specific controller manuals. |
 | 2026-08-27 | The GE-200 punched-card and GE-225 paper-tape subsystem manuals make RCPU-P005B larger and more exact than the current host-record abstraction. Cards require `RCD`/`RCB` continuous modes, `RCF` single-card mode, `HCR`, `WCD`/`WCB`/`WCF`, reader/punch ready branches, fixed data and synchronization-word layouts, and fail-closed not-ready behavior. Paper tape is a streaming N-register peripheral: `RON`/`PON` select mutually exclusive power paths, `RPT` streams frames and asserts N-ready, `HPT` stops motion, `WPT` emits one frame, and `OFF` powers the path down; unread frames can overrun N. The same `2500006` word means `TYP`, `RPT`, or `WPT` according to the powered N-register device, and `HPT` also enables the optional typewriter keyboard-input path. | P0, architecture and peripheral correctness, blocks RCPU-005 | Make those public contracts the acceptance boundary of RCPU-P005B. Preserve deterministic bounded host queues and output capture, decode the shared command from explicit device-selection state, model timing as explicit readiness/events rather than wall-clock sleeps, and pin all six card data layouts plus synchronization/status words, power switching, readiness branches, atomic memory failures, paper-tape overrun, typewriter input, and output bounds before selecting RCPU-P005C. |
 | 2026-08-27 | The RCPU-P005A reprioritization audit found that the corrected programming manual treats direct M/N-register devices separately from controller-selector peripherals, delegates full punched-card and paper-tape behavior to subsystem manuals, and gives controller operations their own selection, three-word command, status, and interrupt model. A single combined I/O item would conceal two independently testable public contracts. | P0, scope clarity, blocks RCPU-005 | Split the remaining I/O work chronologically into RCPU-P005B for deterministic direct card/paper-tape/typewriter contracts and RCPU-P005C for controller-selector selection, status, command-block, interrupt, and generic device-controller contracts. Keep both ahead of AAU and the final functional audit. |
 | 2026-08-27 | RCPU-P005A audit found that `SET DECMODE` only toggled exposed state: `ADD`, `SUB`, `DAD`, `DSU`, `ADO`, and `SBO` continued to execute binary arithmetic. The optional real-time-clock `LAC`/`LCA` instructions were absent, and opcode 24 was exposed as noncanonical `MOY` despite the corrected manual's `MOV` definition. | P0, architecture correctness, blocks RCPU-005 | Implement the documented three-digit-per-word BCD layout, ten's-complement signed fields, end-of-field overflow and carried lower fields; expose bounded deterministic clock control with exact `LAC`/`LCA` transfers; rename opcode 24 and its diagnostics to `MOV`; pin the manual's single/double arithmetic and clock examples. |

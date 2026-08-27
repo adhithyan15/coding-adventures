@@ -38,7 +38,7 @@ or shift instruction carrying an X selector adds the selected X word to its
 operand field before execution, with modified shift counts rejected above the
 architectural 31-place limit. Overflow from single-length arithmetic and left
 shifts remains latched until `BOV` or `BNO` tests it. The current core has
-83.44% line coverage (902/1,081); the completion floor must be rechecked after
+83.49% line coverage (1,254/1,502); the completion floor must be rechecked after
 the remaining optional CPU, controller, and AAU instruction families land.
 
 The optional central-processor arithmetic path models decimal words as the
@@ -51,16 +51,32 @@ host-advanced in deterministic sixth-second ticks; `LAC` and `LCA` implement
 the documented C-register transfers and 24-hour wrap. Opcode 24 is spelled
 `MOV`, matching the corrected manual.
 
-The current card reader is intentionally a deterministic development abstraction,
-not a completed GE-225 controller model: callers may queue at most 64 records of
-at most 27 words each, and `RCD` transfers the next record after validating the
-whole destination range. Exact 27-word card/status rotation, alignment, ready
-indicators, and the rest of the controller instruction family remain in the
-RCPU-005 I/O slice.
+The direct-I/O path follows the separate card and paper-tape subsystem manuals.
+Card starting addresses are restricted to the hardware's 128-word boundaries
+below location 2048. `RCD` and `RCB` rotate through their documented four- and
+two-area continuous buffers; `RCF` and optional `RCM` read one 80-column card;
+all modes write their synchronization word and status bits. `HCR`, the three
+punch modes, reader/punch ready branches, not-ready alarms, and automatic
+address modification are modeled explicitly. Host card queues and punch output
+remain bounded, and failed validation cannot partially consume a card or change
+memory.
+
+The N-register device selector makes octal `2500006` mean `TYP`, `RPT`, or
+`WPT` according to whether `TON`, `RON`, or `PON` selected the typewriter,
+paper-tape reader, or paper-tape punch. Reader and keyboard input advance
+through deterministic host events, making N-ready transitions and unread-frame
+overrun reproducible without wall-clock sleeps. Paper-tape parity is latched in
+the architectural parity indicator and can honor the console's stop-on-parity
+setting; `HPT` stops tape or enables optional
+keyboard input, and `OFF` disconnects all three devices. Input and output queues
+have explicit limits.
 
 The primary reference is General Electric's corrected 1966 printing of the
 [GE-225 Programming Reference Manual](https://www.bitsavers.org/www.computer.museum.uq.edu.au/pdf/CPB-252A%20GE-225%20Programming%20Reference%20Manual%201966.pdf),
 which resolves the earlier printing's inconsistent SXG opcode as `2506YY3`.
+Direct peripheral behavior is checked against General Electric's
+[GE-200 Series Punched Card Subsystems Reference Manual](https://ftpmirror.your.org/pub/misc/bitsavers/www.computer.museum.uq.edu.au/pdf/GE-200%20Series%20Punched%20Card%20Subsystems%20Reference%20Manual.pdf)
+and [GE-225 Paper Tape Subsystem Reference Manual](https://ftpmirror.your.org/pub/misc/bitsavers/www.computer.museum.uq.edu.au/pdf/GE-225%20Paper%20Tape%20Subsystem.pdf).
 
 Run the package verification from `code/packages/rust`:
 
