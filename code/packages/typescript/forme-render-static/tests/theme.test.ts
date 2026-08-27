@@ -82,6 +82,18 @@ describe("renderHtmlDocument", () => {
     expect(html).toContain(`<header><a href="/">Joe &amp; &quot;Friends&quot;</a></header>`);
   });
 
+  it("supports a project-page-safe header URL and trusted head tags", () => {
+    const html = renderHtmlDocument({
+      title: "T",
+      siteTitle: "My Blog",
+      siteHref: "https://example.com/project/blog/index.html?a=1&b=2",
+      headHtml: '<link rel="canonical" href="https://example.com/project/blog/post.html">',
+      bodyHtml: "",
+    });
+    expect(html).toContain('href="https://example.com/project/blog/index.html?a=1&amp;b=2"');
+    expect(html).toContain('<link rel="canonical" href="https://example.com/project/blog/post.html">\n<style>');
+  });
+
   it("includes responsive viewport meta + UTF-8 charset", () => {
     const html = renderHtmlDocument({ title: "T", siteTitle: "", bodyHtml: "" });
     expect(html).toContain(`<meta charset="utf-8">`);

@@ -15,7 +15,9 @@
     "@coding-adventures/forme-types": "file:../forme-types",
     "@coding-adventures/forme-stage": "file:../forme-stage",
     "@coding-adventures/document-ast-to-html": "file:../document-ast-to-html",
-    "@coding-adventures/document-ast": "file:../document-ast"
+    "@coding-adventures/document-ast": "file:../document-ast",
+    "@coding-adventures/forme-aot-meta-link-tags": "file:../forme-aot-meta-link-tags",
+    "@coding-adventures/forme-aot-rss-discovery-link": "file:../forme-aot-rss-discovery-link"
   },
   "devDependencies": {
     "@coding-adventures/gfm-parser": "file:../gfm-parser",

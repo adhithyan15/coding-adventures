@@ -8,7 +8,8 @@
  *   consumes:    streamOf(Kinds.ContentNode)
  *   produces:    streamOf(Kinds.RenderedPage)
  *   capabilities: []                ← pure transform
- *   configSchema: { siteTitle?: string; routeTemplate?: string }
+ *   configSchema: { siteTitle?, routeTemplate?, siteUrl?, siteHomeRoute?,
+ *                   rssRoute?, atomRoute? }
  *
  * === Why this is a stream-to-stream stage ===
  *
@@ -42,9 +43,9 @@
  *   - A deprecated local route fallback remains for pipelines that do
  *     not yet supply `ContentNode.route`.
  *   - `usedStyle` / `usedIslands` / `usedAssets` empty.
- *   - `meta.description`, `meta.openGraph`, `meta.structured`,
- *     `meta.canonicalUrl` left empty/null (richer head metadata is a
- *     later concern).
+ *   - OpenGraph and structured data remain empty; canonical URLs,
+ *     descriptions, and feed discovery are emitted when `siteUrl`
+ *     is configured.
  *
  * @module index
  */
@@ -58,6 +59,8 @@ import {
 } from "@coding-adventures/forme-types";
 import { defineStage } from "@coding-adventures/forme-stage";
 import { toHtml } from "@coding-adventures/document-ast-to-html";
+import { generateMetaLinkTags } from "@coding-adventures/forme-aot-meta-link-tags";
+import { generateFeedDiscoveryLinks } from "@coding-adventures/forme-aot-rss-discovery-link";
 import { slugify, formatRoute } from "./slug.js";
 import { renderHtmlDocument } from "./theme.js";
 import { deriveTitle } from "./title.js";
@@ -68,6 +71,14 @@ export interface RenderStaticConfig {
   readonly siteTitle?: string;
   /** Deprecated fallback used only when `ContentNode.route` is null. */
   readonly routeTemplate?: string;
+  /** Public deployment base, including a project-page prefix when present. */
+  readonly siteUrl?: string;
+  /** Canonical route used by the site-title link. */
+  readonly siteHomeRoute?: string;
+  /** Canonical RSS route advertised in article heads. */
+  readonly rssRoute?: string;
+  /** Canonical Atom route advertised in article heads. */
+  readonly atomRoute?: string;
 }
 
 const DEFAULT_ROUTE_TEMPLATE = "/blog/{slug}.html";
@@ -86,6 +97,10 @@ const renderStatic = defineStage({
     properties: {
       siteTitle:     { type: "string" },
       routeTemplate: { type: "string" },
+      siteUrl:       { type: "string" },
+      siteHomeRoute: { type: "string" },
+      rssRoute:      { type: "string" },
+      atomRoute:     { type: "string" },
     },
   },
   async *run(rawInput, rawConfig, ctx) {
@@ -113,13 +128,49 @@ const renderStatic = defineStage({
       // Title derivation: frontmatter.title → first H1 → slug.
       const title = deriveTitle(node, slug);
 
+      const description = stringFromFrontmatter(node.frontmatter, "excerpt");
+      const canonicalUrl = config.siteUrl === undefined
+        ? null
+        : publicUrl(config.siteUrl, route);
+      const headParts: string[] = [];
+      if (canonicalUrl !== null || description !== null) {
+        headParts.push(generateMetaLinkTags({
+          ...(canonicalUrl === null ? {} : { canonical: canonicalUrl }),
+          ...(description === null ? {} : {
+            meta: [{ name: "description", content: description }],
+          }),
+        }));
+      }
+      if (config.siteUrl !== undefined && (config.rssRoute !== undefined || config.atomRoute !== undefined)) {
+        headParts.push(generateFeedDiscoveryLinks([
+          ...(config.rssRoute === undefined ? [] : [{
+            href: publicUrl(config.siteUrl, config.rssRoute),
+            type: "application/rss+xml" as const,
+            title: `${siteTitle || title} RSS`,
+          }]),
+          ...(config.atomRoute === undefined ? [] : [{
+            href: publicUrl(config.siteUrl, config.atomRoute),
+            type: "application/atom+xml" as const,
+            title: `${siteTitle || title} Atom`,
+          }]),
+        ]));
+      }
+
       // Wrap in the full HTML5 document with the classless theme.
-      const html = renderHtmlDocument({ title, siteTitle, bodyHtml });
+      const html = renderHtmlDocument({
+        title,
+        siteTitle,
+        bodyHtml,
+        siteHref: config.siteUrl === undefined
+          ? "/"
+          : publicUrl(config.siteUrl, config.siteHomeRoute ?? "/"),
+        headHtml: headParts.filter(Boolean).join("\n"),
+      });
 
       const meta: PageMeta = {
         title,
-        description: null,
-        canonicalUrl: null,
+        description,
+        canonicalUrl,
         openGraph: {},
         structured: [],
         extra: {},
@@ -140,6 +191,21 @@ const renderStatic = defineStage({
     ctx.logger.debug("forme-render-static: stream complete");
   },
 });
+
+function stringFromFrontmatter(
+  frontmatter: ContentNode["frontmatter"],
+  key: string,
+): string | null {
+  const value = frontmatter[key];
+  return typeof value === "string" && value.length > 0 ? value : null;
+}
+
+/** Compose a portable route with its deployment base without URL resetting. */
+export function publicUrl(siteUrl: string, route: string): string {
+  const base = siteUrl.replace(/\/+$/, "");
+  const path = route.startsWith("/") ? route : `/${route}`;
+  return `${base}${path}`;
+}
 
 export default renderStatic;
 export { renderStatic, slugify, formatRoute, deriveTitle, renderHtmlDocument };

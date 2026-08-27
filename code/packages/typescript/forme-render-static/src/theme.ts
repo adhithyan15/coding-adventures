@@ -16,9 +16,8 @@
  *     plain Markdown; the renderer emits plain HTML; the CSS styles
  *     plain HTML.  No `class="prose"` magic; the source survives a
  *     view-source check unchanged.
- *   - **Light-mode-only for v0.**  Dark mode adds a `prefers-color-
- *     scheme` block — out of scope here, the v0 goal is "is the
- *     pipeline working", not "is the design beautiful".
+ *   - **Light-mode-only for v0.**  Dark mode arrives with Style IR;
+ *     this fallback stays deliberately small and deterministic.
  *
  * @module theme
  */
@@ -56,6 +55,11 @@ header, footer {
 header { margin-bottom: 2rem; }
 footer { margin-top: 4rem; border-top: 1px solid #d0d7de; padding-top: 1rem; }
 header a, footer a { color: inherit; }
+.forme-index { list-style: none; padding: 0; }
+.forme-index li { padding: 1rem 0; border-bottom: 1px solid #d8dee4; }
+.forme-index a { font-size: 1.1rem; font-weight: 600; }
+.forme-index time { display: block; color: #57606a; font-size: 0.85rem; }
+.forme-index .summary { margin: 0.35rem 0 0; color: #57606a; }
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.25;
   margin: 2rem 0 1rem;
@@ -140,6 +144,10 @@ export interface RenderPageOptions {
   readonly title: string;
   /** Site title for the header; falsy → no header. */
   readonly siteTitle: string;
+  /** Link target for the site header. Defaults to `/`. */
+  readonly siteHref?: string;
+  /** Trusted, already-escaped tags to append to `<head>`. */
+  readonly headHtml?: string;
   /** Already-rendered body HTML (output of document-ast-to-html). */
   readonly bodyHtml: string;
 }
@@ -147,9 +155,11 @@ export interface RenderPageOptions {
 export function renderHtmlDocument(opts: RenderPageOptions): string {
   const titleEscaped = escapeHtml(opts.title);
   const siteTitleEscaped = opts.siteTitle ? escapeHtml(opts.siteTitle) : "";
+  const siteHrefEscaped = escapeHtml(opts.siteHref ?? "/");
   const header = opts.siteTitle
-    ? `<header><a href="/">${siteTitleEscaped}</a></header>\n`
+    ? `<header><a href="${siteHrefEscaped}">${siteTitleEscaped}</a></header>\n`
     : "";
+  const extraHead = opts.headHtml ? `${opts.headHtml}\n` : "";
   // Year is rendered without a current-time read — that lives on the
   // clock facility in StageContext, but for v0 we keep theme.ts pure
   // (deterministic) and let the caller pass the year in via opts if
@@ -161,7 +171,7 @@ export function renderHtmlDocument(opts: RenderPageOptions): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${titleEscaped}</title>
-<style>
+${extraHead}<style>
 ${CLASSLESS_CSS}</style>
 </head>
 <body>

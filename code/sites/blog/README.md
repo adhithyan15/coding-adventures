@@ -1,7 +1,7 @@
 # Coding Adventures Blog
 
 The end-to-end demo of the [Forme](../../specs/FM00-forme-vision.md) universal
-authoring pipeline. Markdown lives in `data/`; HTML lands in
+authoring pipeline. Markdown lives in `data/`; a complete static blog lands in
 `dist/blog/` and is deployed to
 [adhithyan15.github.io/coding-adventures/blog/](https://adhithyan15.github.io/coding-adventures/blog/)
 by `.github/workflows/deploy-blog.yml`.
@@ -23,16 +23,17 @@ template and the destination don't need to change.
 forme-source-fs           Void                → Stream<ContentSource>
 forme-parse-markdown      ContentSource       → ContentNode
 forme-router              Stream<ContentNode> → Stream<ContentNode>
-                                           ┌──→ forme-collect-chronological → Collection (`posts`)
-                                           └──→ forme-render-static → Stream<RenderedPage>
-                                                                  └──→ forme-emit-fs → DeployArtifact (`site`)
+                         ├→ forme-render-static → forme-emit-fs (`articles`)
+                         └→ forme-collect-chronological
+                              → blog-surface → forme-emit-fs (`surface`)
 ```
 
 `forme-router` is the single owner of URL policy. The orchestrator
-materializes its routed-node stream once and fans it out: the renderer
-uses each canonical route for the page, while the chronological collector
-uses the same route for index/feed metadata. The build exposes both named
-sinks and verifies that their route sets match exactly.
+materializes its routed-node stream once and fans it out: the article renderer
+uses each canonical route, while the chronological collector feeds an aggregate
+surface stage built from the existing Forme index, RSS, Atom, sitemap, metadata,
+and feed-discovery generators. Two named deploy sinks write disjoint route sets
+to the same `dist/` tree.
 
 ## Local build
 
@@ -43,11 +44,11 @@ npm run build:clean
 
 That one command discovers every `file:`-linked package, installs the local
 dependency graph from leaves to the site, clears stale output, and runs the
-full pipeline. It writes `dist/blog/*.html`. Subsequent builds can use
-`npm run build`; run `npm test` to exercise the dependency planner.
-The build also verifies that the `posts` collection is newest-first and
-contains exactly the routes present in the emitted `site` manifest.
-Each file is a self-contained HTML5 document with a classless theme
+full pipeline. It writes article pages plus `index.html`, `rss.xml`, `atom.xml`,
+and `sitemap.xml` under `dist/blog/`. Subsequent builds can use `npm run build`;
+run `npm test` to exercise both the dependency planner and collection-derived
+surface. The build verifies both named deploy manifests and the exact aggregate
+route set. HTML files are self-contained documents with a classless theme
 inlined in `<style>` — no JS, no external CSS.
 
 `tsx` is a devDependency — it strips TypeScript types at execution
@@ -60,8 +61,10 @@ site driver runs straight from source.
 - `data/` — Markdown posts. Frontmatter is `key: value` only (the v0
   parser is grammar-restricted; see
   `code/packages/typescript/forme-parse-markdown/README.md`).
-- `forme.config.ts` — `PipelineConfig` literal wiring six named stage
-  instances, including the router fan-out and two named outputs.
+- `forme.config.ts` — `PipelineConfig` literal wiring eight named stage
+  instances, including two fan-outs and two deploy outputs.
+- `surface-stage.ts` — collection adapter that composes the reusable Forme
+  index/feed/sitemap/head generators into deployable pages.
 - `build.ts` — driver: load config → `createOrchestrator`
   → `buildPipeline` → `runOnce` → assert success.
 - `scripts/bootstrap.mjs` — discovers and installs the complete local
@@ -103,14 +106,12 @@ The live URL is
 
 ## What's missing (intentional v0 scope)
 
-- No index page. The `posts` collection is now a live pipeline output;
-  an index-page renderer still needs to consume it.
-- No RSS feed. A `Stage<Collection, Feed>` can now consume the same
-  routed, chronological collection.
 - No asset extraction. Posts that reference images today will
   link to `data/`-relative paths; an asset stage will copy + hash
   them.
 - No dark mode. The classless theme is light-only for v0.
+- Aggregate artifacts currently carry a synthetic single source ID because
+  `RenderedPage.source` cannot yet represent collection provenance.
 
-Every one of these is a follow-up *stage*, not a rewrite of any
-existing stage. That's the bet.
+These are tracked in the
+[Forme completion roadmap](../../specs/FM00-forme-completion-roadmap.md).
