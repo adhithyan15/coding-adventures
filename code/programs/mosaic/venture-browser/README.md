@@ -2,7 +2,7 @@
 
 This package is the shared Mosaic source of truth for Venture's native browser
 chrome. It authors the title, Back, Forward, Home, Reload, address input, Go
-action, bookmark toggle, status line, disabled states, and dispatch contract
+action, bookmark and View Source controls, status line, disabled states, and dispatch contract
 once in MIL, MLL, and MSL.
 
 The package intentionally does not draw a web page. `venture-browser-core`
@@ -18,8 +18,9 @@ recreating the surrounding chrome in backend-specific UI code.
 - Slots carry the current address, page title, status text, bookmark label, and
   host-derived disabled flags; the host supplies the native page renderer as a
   node slot.
-- Emits carry Back, Forward, Home, Reload, address edits, Navigate, and the
-  storage-neutral bookmark toggle command.
+- Emits carry Back, Forward, Home, Reload, address edits, Navigate, the
+  storage-neutral bookmark toggle command, and a host-neutral View Source
+  request.
 - `venture-browser-core::BrowserChromeController` is the shared reducer and
   slot projection for that exact contract.
 - `venture-browser-core::BrowserHostController` owns the native-host state
@@ -27,6 +28,11 @@ recreating the surrounding chrome in backend-specific UI code.
   scrolling, native scrollbar offsets, link activation, and hover projection
   are shared by the macOS and Windows bridges. Platform crates supply only
   their text/page composition and final paint backends.
+- View Source never refetches the page. The core escapes the exact retained
+  response text into a synthetic `<pre>` HTML document and emits one typed
+  `open-auxiliary-document` effect. SwiftUI, WinUI, Qt, Flutter, and Compose
+  adapters forward or retain that effect for their platform window presenter;
+  toolkit code does not parse, escape, or reconstruct source.
 - Both themes expose the same parts and interaction states.
 - `tests/package_compiles.rs` guards the package contract; the package artifact
   builder compiles these exact sources, emits project shells, and verifies a
@@ -110,10 +116,10 @@ JavaScript syntax checks plus one shared package-owned jsdom interaction gate;
 SwiftUI, Qt, XAML, Flutter, and Compose invoke their native toolchains. React
 and Electron also run the same package-owned DOM
 interaction gate against their shared generated renderer, covering disabled
-controls, address editing, Return, Go, bookmark toggling, and host-driven prop
+controls, address editing, Return, Go, bookmark and View Source dispatch, and host-driven prop
 refresh. The
 HTML/Web Component gate drives each target's real host runtime, including
-disabled dispatch suppression, node-slot mounting, Return, Go, bookmarks, and
+disabled dispatch suppression, node-slot mounting, Return, Go, bookmarks, View Source, and
 `mosaic-host-ready` refresh. The Flutter gate builds the shared Rust/Cairo
 bridge and pumps the emitted `MosaicApp` against deterministic HTTP pages. It
 requires live page pixels and drives the generated address field, Back/Forward

@@ -15,10 +15,12 @@ cross-platform proving application. Items are ordered by risk and dependency.
   bounded versioned native-profile file adapter with atomic replacement, route
   one shared Mosaic bookmark command through every host, and cover rollback,
   restart, generated DOM, and direct SwiftUI toolbar behavior.
-- [ ] **P1 browser convergence — host-neutral View Source.** Project the
+- [x] **P1 browser convergence — host-neutral View Source.** Project the
   already-retained response source into a synthetic preformatted browser page
   through a reusable core command before adding toolkit-specific windows or
-  menus.
+  menus. Completed with escaped synthetic `<pre>` documents, a typed auxiliary
+  window effect, shared generated chrome, native host forwarding, and live
+  Flutter/Compose plus DOM/Qt acceptance without navigation or refetch.
 - [ ] **P1 browser convergence — deterministic real-page visuals.** Ratchet
   representative Mosaic-era pages with screenshot and geometry fixtures for
   mixed inline content, preformatted text, images, wrapped links, and scrolling.

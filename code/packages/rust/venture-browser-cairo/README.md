@@ -10,6 +10,11 @@ library. They therefore share navigation, chrome projection, scrolling, hover,
 link activation, retained-page reflow, and rendering behavior without placing
 cross-platform browser ownership in a toolkit-specific package.
 
+View Source follows that same boundary: the shared core creates the synthetic
+preformatted document and the C ABI serializes one `open-auxiliary-document`
+effect. Qt emits the request to its window layer, while Flutter and Compose
+retain it for their presenters and direct acceptance; none reparses source.
+
 The bridge also loads and atomically persists the shared versioned bookmark
 catalog. Linux follows `$XDG_DATA_HOME/venture/bookmarks.json` (falling back to
 `~/.local/share/venture/bookmarks.json`); every platform can override the path

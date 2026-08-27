@@ -230,6 +230,7 @@ class MosaicHost {
   late final Widget _contentSurface;
   void Function()? _propsChangedHandler;
   bool _disposed = false;
+  Map<String, Object?>? lastAuxiliaryDocument;
 
   FutureOr<Map<String, Object?>?> props() {
     return _decorate(_decodeResponse(_bindings.props(_host)));
@@ -239,9 +240,11 @@ class MosaicHost {
     final name = _NativeString(event['event']?.toString() ?? '');
     final value = _NativeString(event['value']?.toString() ?? '');
     try {
-      final response = _decorate(
-        _decodeResponse(_bindings.event(_host, name.pointer, value.pointer)),
+      final decoded = _decodeResponse(
+        _bindings.event(_host, name.pointer, value.pointer),
       );
+      _consumeEffect(decoded);
+      final response = _decorate(decoded);
       _surfaceChanged();
       return response;
     } finally {
@@ -368,6 +371,16 @@ class MosaicHost {
     );
     props['content-surface'] = _contentSurface;
     return <String, Object?>{...response, 'props': props};
+  }
+
+  void _consumeEffect(Map<String, Object?> response) {
+    final effect = response['effect'];
+    if (effect is Map && effect['type'] == 'open-auxiliary-document') {
+      final document = effect['document'];
+      if (document is Map) {
+        lastAuxiliaryDocument = Map<String, Object?>.from(document);
+      }
+    }
   }
 
   void _surfaceChanged() {

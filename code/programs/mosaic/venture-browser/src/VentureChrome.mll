@@ -36,6 +36,12 @@ layout VentureChrome {
         state-when-disabled : slot: bookmark-disabled ,
         onClick : emit: onToggleBookmark
       )
+      HostButton [ view-source-button ] (
+        label : "View Source" ,
+        disabled : slot: view-source-disabled ,
+        state-when-disabled : slot: view-source-disabled ,
+        onClick : emit: onViewSource
+      )
       HostInput [ address-input ] (
         value : slot: address ,
         placeholder : "Enter a URL" ,

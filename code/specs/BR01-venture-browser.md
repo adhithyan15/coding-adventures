@@ -118,16 +118,13 @@ Completed convergence foundations: exact zero-missing HTML tokenizer/tree
 construction ratchets; native generated-host interaction gates; shared
 scrollbars, hover status, and cursors; and reusable fragmented inline layout.
 
-1. **P1 — View Source.** Retain fetched source bytes/text in the loaded-page
-   model and expose a source document through a host-neutral command instead
-   of adding platform-specific windows first.
-2. **P1 — real-page visual acceptance.** Add deterministic screenshot and
+1. **P1 — real-page visual acceptance.** Add deterministic screenshot and
    geometry fixtures for representative 1993-era pages, including wrapped
    links, mixed fonts, preformatted text, images, and scrolling.
-3. **P2 — international inline convergence.** Replace whitespace-only break
+2. **P2 — international inline convergence.** Replace whitespace-only break
    opportunities with a reusable UAX #14 component, then add bidi/RTL as a
    separate shaping/layout phase rather than embedding either in HTML.
-4. **P2 — richer inline box edges.** Preserve padding, margins, borders, and
+3. **P2 — richer inline box edges.** Preserve padding, margins, borders, and
    decoration continuation policy across semantic wrapper fragments before
    expanding the supported CSS surface.
 
@@ -536,6 +533,9 @@ system window color and felt "native."
 - Implementation: wrap the raw HTML in a synthetic `<pre>` document and run it
   through the same rendering pipeline. The "source" window is just another
   Venture window with a fabricated document.
+- The shared core performs escaping from the retained response text and emits
+  a typed `open-auxiliary-document` effect. Hosts own window presentation but
+  must not refetch, reinterpret, or toolkit-parse the source payload.
 
 ### Dependencies (Cargo.toml)
 

@@ -79,6 +79,14 @@ class VentureChromeInteractionTest {
             val surface = rule.onNodeWithTag("venture-content-surface").assertExists()
             println("compose-live-stage=shell-mounted")
 
+            rule.onNodeWithTag("view-source-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) { host.lastAuxiliaryDocument != null }
+            val sourceDocument = assertNotNull(host.lastAuxiliaryDocument)
+            assertEquals("view-source", sourceDocument["kind"])
+            assertTrue(sourceDocument["address"].toString().startsWith("view-source:"))
+            assertTrue(sourceDocument["html"].toString().contains("&lt;title&gt;Compose Start&lt;/title&gt;"))
+            println("compose-live-stage=view-source")
+
             rule.onNodeWithTag("back-button").assertIsNotEnabled()
             rule.onNodeWithTag("forward-button").assertIsNotEnabled()
 

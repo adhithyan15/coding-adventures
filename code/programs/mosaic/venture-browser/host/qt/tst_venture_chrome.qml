@@ -50,6 +50,7 @@ TestCase {
                 "statusText": "Ready",
                 "backDisabled": disabled,
                 "forwardDisabled": disabled,
+                "viewSourceDisabled": disabled,
                 "navigationDisabled": disabled
             }
         })
@@ -68,6 +69,7 @@ TestCase {
         verify(!nativeControl("back-button").enabled)
         verify(!nativeControl("forward-button").enabled)
         verify(!nativeControl("reload-button").enabled)
+        verify(!nativeControl("view-source-button").enabled)
         verify(nativeControl("address-input").readOnly)
         verify(!nativeControl("go-button").enabled)
         verify(nativeControl("mosaic-host-surface") !== null)
@@ -77,6 +79,7 @@ TestCase {
         mouseClick(nativeControl("back-button"))
         mouseClick(nativeControl("forward-button"))
         mouseClick(nativeControl("reload-button"))
+        mouseClick(nativeControl("view-source-button"))
         mouseClick(nativeControl("go-button"))
         compare(recordingHost.events.length, 0)
     }
@@ -112,5 +115,14 @@ TestCase {
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onNavigate")
         compare(chrome.statusText, "Navigated through MosaicHost")
+    }
+
+    function test_view_source_crosses_the_mosaic_host_seam() {
+        hydrate(false)
+        recordingHost.reset()
+        mouseClick(nativeControl("view-source-button"))
+        wait(0)
+        compare(recordingHost.events.length, 1)
+        compare(recordingHost.events[0].event, "onViewSource")
     }
 }

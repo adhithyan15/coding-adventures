@@ -82,6 +82,8 @@ class MosaicHost private constructor(
     private val surfaceRevision = mutableIntStateOf(0)
     private var propsChangedHandler: (() -> Unit)? = null
     private var closed = false
+    var lastAuxiliaryDocument: Map<String, Any?>? = null
+        private set
     val renderedFrameCount = AtomicInteger(0)
 
     private val contentSurface: @Composable () -> Unit = { VentureContentSurface(this) }
@@ -89,15 +91,15 @@ class MosaicHost private constructor(
     override fun props(): Map<String, Any?> = decorate(decodeResponse(native.venture_browser_compose_apply_props(handle)))
 
     override fun handleEvent(event: Map<String, Any?>): Map<String, Any?> {
-        val response = decorate(
-            decodeResponse(
+        val decoded = decodeResponse(
                 native.venture_browser_compose_handle_event(
                     handle,
                     event["event"]?.toString().orEmpty(),
                     event["value"]?.toString().orEmpty(),
                 ),
-            ),
-        )
+            )
+        consumeEffect(decoded)
+        val response = decorate(decoded)
         surfaceChanged()
         return response
     }
@@ -184,6 +186,14 @@ class MosaicHost private constructor(
         val props = propsMap(response).toMutableMap()
         props["content-surface"] = contentSurface
         return response + ("props" to props)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun consumeEffect(response: Map<String, Any?>) {
+        val effect = response["effect"] as? Map<String, Any?> ?: return
+        if (effect["type"] == "open-auxiliary-document") {
+            lastAuxiliaryDocument = effect["document"] as? Map<String, Any?>
+        }
     }
 
     private fun surfaceChanged() {
