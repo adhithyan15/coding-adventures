@@ -465,10 +465,19 @@ fn weekday_name(days: i64) -> &'static str {
     WEEKDAYS[(days + 3).rem_euclid(7) as usize]
 }
 
+fn gantt_calendar_contains_day(
+    values: &[String],
+    day: i64,
+    format: &GanttDateFormat,
+) -> bool {
+    values.iter().any(|value| {
+        date_to_days(value, format)
+            .is_some_and(|resolved| resolved.floor() as i64 == day)
+    })
+}
+
 fn gantt_date_is_excluded(day: i64, diagram: &diagram_ir::GanttDiagram) -> bool {
-    let (year, month, date) = civil_from_days(day);
-    let iso_date = format!("{year:04}-{month:02}-{date:02}");
-    if diagram.config.includes.iter().any(|value| value == &iso_date) {
+    if gantt_calendar_contains_day(&diagram.config.includes, day, &diagram.date_format) {
         return false;
     }
     let weekday = weekday_name(day);
@@ -478,8 +487,9 @@ fn gantt_date_is_excluded(day: i64, diagram: &diagram_ir::GanttDiagram) -> bool 
         _ => matches!(weekday, "saturday" | "sunday"),
     };
     diagram.config.excludes.iter().any(|value| {
-        value == &iso_date || value == weekday || (value == "weekends" && is_weekend)
+        value == weekday || (value == "weekends" && is_weekend)
     })
+        || gantt_calendar_contains_day(&diagram.config.excludes, day, &diagram.date_format)
 }
 
 fn gantt_elapsed_duration(start: f64, duration: f64, diagram: &diagram_ir::GanttDiagram) -> f64 {
@@ -1203,6 +1213,43 @@ mod tests {
         assert_eq!(bars.len(), 2);
         assert!(bars[0].1 > bars[1].1 / second_duration * 2.0);
         assert!((bars[1].0 - (bars[0].0 + bars[0].1)).abs() < 0.01);
+    }
+
+    #[test]
+    fn gantt_calendar_dates_use_the_authored_date_format() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.date_format = GanttDateFormat {
+            source: "DD-MM-YYYY".into(),
+            parts: vec![
+                GanttDateFormatPart::Day2,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Month2,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Year4,
+            ],
+        };
+        gantt.config.excludes = vec!["10-02-2025".into()];
+        let sunday = date_to_days("09-02-2025", &gantt.date_format).unwrap();
+        assert_eq!(gantt_elapsed_duration(sunday, 1.0, gantt), 2.0);
+
+        gantt.config.excludes = vec!["weekends".into()];
+        gantt.config.includes = vec!["09-02-2025".into()];
+        let friday = date_to_days("07-02-2025", &gantt.date_format).unwrap();
+        assert_eq!(gantt_elapsed_duration(friday, 1.0, gantt), 2.0);
+    }
+
+    #[test]
+    fn gantt_weekend_start_matches_upstream_calendar_geometry() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.config.excludes = vec!["weekends".into()];
+        let friday = date_to_days("2019-02-01", &gantt.date_format).unwrap();
+        assert_eq!(gantt_elapsed_duration(friday, 1.0, gantt), 3.0);
+
+        gantt.config.weekend = Some("friday".into());
+        let wednesday = date_to_days("2024-02-28", &gantt.date_format).unwrap();
+        assert_eq!(gantt_elapsed_duration(wednesday, 3.0, gantt), 5.0);
     }
 
     #[test]
