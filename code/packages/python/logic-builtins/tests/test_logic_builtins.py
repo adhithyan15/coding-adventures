@@ -262,7 +262,7 @@ class TestFileTextBuiltins:
 
     def test_read_file_to_stringo_reads_utf8_text(self, tmp_path: Path) -> None:
         source_path = tmp_path / "data.txt"
-        source_path.write_text("tea\ncake", encoding="utf-8")
+        source_path.write_text("tea\ncake", encoding="utf-8", newline="")
         contents = var("Contents")
 
         assert solve_all(
@@ -273,7 +273,7 @@ class TestFileTextBuiltins:
 
     def test_read_file_to_codeso_reads_code_points(self, tmp_path: Path) -> None:
         source_path = tmp_path / "data.txt"
-        source_path.write_text("A\n", encoding="utf-8")
+        source_path.write_text("A\n", encoding="utf-8", newline="")
         codes = var("Codes")
 
         assert solve_all(
@@ -362,7 +362,7 @@ class TestFileTextBuiltins:
         source_path = tmp_path / "draft.txt"
         renamed_path = tmp_path / "final.txt"
         created_directory = tmp_path / "created"
-        source_path.write_text("draft\n", encoding="utf-8")
+        source_path.write_text("draft\n", encoding="utf-8", newline="")
         old_cwd = Path.cwd()
 
         entries = var("Entries")
@@ -429,7 +429,7 @@ class TestFileTextBuiltins:
                 eq(atom("ok"), atom("ok")),
             ),
         ) == [atom("ok")]
-        source_path.write_text("alpha\n", encoding="utf-8")
+        source_path.write_text("alpha\n", encoding="utf-8", newline="")
 
         answers = solve_all(
             program(),
@@ -454,7 +454,7 @@ class TestFileTextBuiltins:
 
     def test_file_stream_read_facade_tracks_cursor(self, tmp_path: Path) -> None:
         source_path = tmp_path / "stream.txt"
-        source_path.write_text("first\nsecond", encoding="utf-8")
+        source_path.write_text("first\nsecond", encoding="utf-8", newline="")
         stream = var("Stream")
         first_line = var("FirstLine")
         first_char = var("FirstChar")
@@ -613,7 +613,7 @@ class TestFileTextBuiltins:
     def test_file_stream_character_and_code_io(self, tmp_path: Path) -> None:
         input_path = tmp_path / "chars-input.txt"
         output_path = tmp_path / "chars-output.txt"
-        input_path.write_text("Az\n", encoding="utf-8")
+        input_path.write_text("Az\n", encoding="utf-8", newline="")
         input_stream = var("InputStream")
         output_stream = var("OutputStream")
         peeked = var("Peeked")

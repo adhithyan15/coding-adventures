@@ -72,7 +72,10 @@ func findRepoRoot(start string) string {
 
 	for {
 		gitDir := filepath.Join(current, ".git")
-		if info, err := os.Stat(gitDir); err == nil && info.IsDir() {
+		// .git is a directory in a normal checkout, but a file (pointing at
+		// the main repo's gitdir) inside a git worktree — accept either so
+		// repo-root detection works when running from a worktree.
+		if _, err := os.Stat(gitDir); err == nil {
 			return current
 		}
 
