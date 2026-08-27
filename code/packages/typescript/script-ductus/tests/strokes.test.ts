@@ -249,6 +249,7 @@ const URDU_WAW = DUCTUS[ductusKey("urdu-nastaliq", "و")];
 const URDU_SIN = DUCTUS[ductusKey("urdu-nastaliq", "س")];
 const URDU_SHIN = DUCTUS[ductusKey("urdu-nastaliq", "ش")];
 const URDU_KAF = DUCTUS[ductusKey("urdu-nastaliq", "ک")];
+const URDU_GAF = DUCTUS[ductusKey("urdu-nastaliq", "گ")];
 const PERSIAN_KAF = DUCTUS[ductusKey("perso-arabic", "ک")];
 const URDU_LAM = DUCTUS[ductusKey("urdu-nastaliq", "ل")];
 const URDU_MIM = DUCTUS[ductusKey("urdu-nastaliq", "م")];
@@ -3967,6 +3968,19 @@ describe("handwriting ductus", () => {
     expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
     expect(slash[0].x).toBeGreaterThan(slash.at(-1)!.x);
     expect(slash[0].y).toBeGreaterThan(slash.at(-1)!.y);
+  });
+
+  it("Urdu independent گ adds a shorter floating slash above the kāf construction", () => {
+    expect(URDU_GAF.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_GAF)).toBe(2);
+    expect(URDU_GAF.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+    expect(URDU_GAF.strokes[2].segments[0].label).toMatch(/shorter floating slash above/i);
+    const longSlash = URDU_GAF.strokes[1].segments[0].path;
+    const shortSlash = URDU_GAF.strokes[2].segments[0].path;
+    expect(shortSlash[0].y).toBeGreaterThan(longSlash[0].y);
+    expect(URDU_GAF.source.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/pe-gaf-alif-lam/",
+    );
   });
 
   it("Persian independent ک keeps its scoped body-first two-run source", () => {

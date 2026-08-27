@@ -12106,6 +12106,58 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: urduAlphabetSource("ک"),
   },
+  // Zer o Zabar's independent animations build گ from the same kāf-family
+  // body and long slash, then add the shorter floating slash above it.
+  [ductusKey("urdu-nastaliq", "گ")]: {
+    script: "urdu-nastaliq",
+    glyph: "گ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the independent stem downward",
+            path: [
+              { x: 620, y: 250 }, { x: 622, y: 200 }, { x: 620, y: 150 },
+            ],
+          },
+          {
+            label: "flow right to left through the flatter bowl and finish with the hook without lifting",
+            path: [
+              { x: 620, y: 150 }, { x: 570, y: 100 }, { x: 500, y: 65 },
+              { x: 400, y: 40 }, { x: 300, y: 35 }, { x: 210, y: 50 },
+              { x: 140, y: 85 }, { x: 95, y: 125 }, { x: 95, y: 185 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "after one lift, draw the long slash down from the upper right toward the stem",
+            path: [
+              { x: 680, y: 625 }, { x: 600, y: 590 }, { x: 520, y: 550 },
+              { x: 440, y: 510 }, { x: 365, y: 470 }, { x: 335, y: 425 },
+              { x: 355, y: 400 }, { x: 390, y: 380 }, { x: 425, y: 360 },
+              { x: 460, y: 340 }, { x: 480, y: 320 }, { x: 520, y: 300 },
+              { x: 540, y: 280 }, { x: 560, y: 260 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "after another lift, draw the shorter floating slash above the first",
+            path: [
+              { x: 650, y: 705 }, { x: 575, y: 670 }, { x: 500, y: 635 },
+              { x: 425, y: 600 }, { x: 350, y: 565 }, { x: 300, y: 540 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("گ"),
+  },
   [ductusKey("urdu-nastaliq", "ل")]: {
     script: "urdu-nastaliq",
     glyph: "ل",

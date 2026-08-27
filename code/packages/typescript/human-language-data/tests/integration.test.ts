@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Kannada o", () => {
+  it("keeps the cross-script closure queue measured after Urdu gaf", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -1242,6 +1242,23 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("kannada.json")?.has("ಒ")).toBe(false);
     expect(affected.get("ಒ") ?? 0).toBe(0);
+    const urduGaf = scripts["urdu-nastaliq"]!.letters.find((entry) => entry.glyph === "گ")!;
+    expect(urduGaf.sound).toBe("g");
+    expect(urduGaf.penLifts).toBe(2);
+    expect(urduGaf.strokeOrder).toEqual([
+      "draw the independent stem downward",
+      "flow right to left through the flatter bowl and finish with the pronounced hook without lifting",
+      "after one lift, draw the long slash down from the upper right toward the stem",
+      "after another lift, draw the shorter floating slash above the first",
+    ]);
+    expect(urduGaf.strokeOrderSource?.citation).toMatch(
+      /Zer o Zabar.*independent گ.*calligraphic and handwriting animations.*Gāf instructions.*Northwestern/i,
+    );
+    expect(urduGaf.strokeOrderSource?.variation).toMatch(
+      /kāf-family main-line body first.*long downward slash.*shorter floating slash.*two pen lifts.*three-run order.*Noto Naskh.*Nastaliq/i,
+    );
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("گ")).toBe(false);
+    expect(affected.get("گ") ?? 0).toBe(2);
     const kannadaAa = scripts.kannada!.independentVowels!.find((entry) => entry.glyph === "ಆ")!;
     expect(kannadaAa.sound).toBe("ā");
     expect(kannadaAa.penLifts).toBe(1);
@@ -1307,7 +1324,7 @@ describe("real curriculum", () => {
     expect(affected.get("ب") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["گ", 3]);
+    ).toEqual(["ت", 3]);
   });
 
   it("loaded every track (17+ and growing)", () => {

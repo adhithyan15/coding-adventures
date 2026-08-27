@@ -441,6 +441,21 @@ describe("shared Perso-Arabic letters retain script-owned provenance", () => {
     );
   });
 
+  it("keeps Urdu گ as a source-backed three-run kāf-family letter", () => {
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "گ")!;
+    expect(urdu.sound).toBe("g");
+    expect(urdu.role).toBe("consonant");
+    expect(urdu.penLifts).toBe(2);
+    expect(urdu.strokeOrder).toHaveLength(4);
+    expect(urdu.strokeOrder[1]).toMatch(/right to left.*flatter bowl.*hook/i);
+    expect(urdu.strokeOrder[2]).toMatch(/one lift.*long slash/i);
+    expect(urdu.strokeOrder[3]).toMatch(/another lift.*shorter floating slash/i);
+    expect(urdu.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/pe-gaf-alif-lam/",
+    );
+  });
+
   it("keeps Persian and Urdu پ separate while both preserve the four-stroke triangle order", () => {
     const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
       .letters.find((entry) => entry.glyph === "پ")!;
