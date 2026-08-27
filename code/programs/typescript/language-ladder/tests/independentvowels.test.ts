@@ -425,6 +425,20 @@ describe("shared Perso-Arabic letters retain script-owned provenance", () => {
     );
   });
 
+  it("keeps Japanese ゆ as a source-backed two-run hiragana path", () => {
+    const japanese = SCRIPTS.find((script) => script.script === "japanese")!
+      .letters.find((entry) => entry.glyph === "ゆ")!;
+    expect(japanese.sound).toBe("yu");
+    expect(japanese.role).toBe("hiragana");
+    expect(japanese.penLifts).toBe(1);
+    expect(japanese.strokeOrder).toHaveLength(2);
+    expect(japanese.strokeOrder[0]).toMatch(/left stem.*high shoulder.*clockwise.*broad loop.*inner finish/i);
+    expect(japanese.strokeOrder[1]).toMatch(/high above.*center.*down and left/i);
+    expect(japanese.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%86_stroke_order_animation.gif",
+    );
+  });
+
   it("keeps Kannada ಏ as a source-backed two-run independent vowel", () => {
     const kannada = SCRIPTS.find((script) => script.script === "kannada")!
       .independentVowels!.find((entry) => entry.glyph === "ಏ")!;
