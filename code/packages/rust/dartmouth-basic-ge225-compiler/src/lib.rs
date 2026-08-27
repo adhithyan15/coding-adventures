@@ -190,11 +190,12 @@ pub fn run_basic_with_options(
         .map_err(|e| BasicError(e.to_string()))?;
 
     // ── Stage 3: GE-225 backend ──────────────────────────────────────────────
-    let ge225_result = compile_to_ge225(&ir_result.program)
-        .map_err(|e| BasicError(e.to_string()))?;
+    let ge225_result =
+        compile_to_ge225(&ir_result.program).map_err(|e| BasicError(e.to_string()))?;
 
     // ── Stage 4: simulation ──────────────────────────────────────────────────
-    let mut sim = Simulator::new(memory_words);
+    let mut sim = Simulator::new(memory_words)
+        .map_err(|error| BasicError(format!("runtime error: {error}")))?;
 
     // The binary is packed 3 bytes per 20-bit word; unpack before loading.
     let words = unpack_words(&ge225_result.binary)
@@ -212,7 +213,8 @@ pub fn run_basic_with_options(
                  (possible infinite loop)"
             )));
         }
-        let trace = sim.step()
+        let trace = sim
+            .step()
             .map_err(|e| BasicError(format!("runtime error: {e}")))?;
         steps += 1;
         if trace.address == halt_addr {
@@ -262,7 +264,9 @@ mod tests {
     // ── Helpers ────────────────────────────────────────────────────────────
 
     fn output(source: &str) -> String {
-        run_basic(source).expect("compilation/run should succeed").output
+        run_basic(source)
+            .expect("compilation/run should succeed")
+            .output
     }
 
     fn result(source: &str) -> RunResult {
@@ -338,16 +342,16 @@ mod tests {
 
     #[test]
     fn test_hello_world() {
-        assert_eq!(output("10 PRINT \"HELLO WORLD\"\n20 END\n"), "HELLO WORLD\n");
+        assert_eq!(
+            output("10 PRINT \"HELLO WORLD\"\n20 END\n"),
+            "HELLO WORLD\n"
+        );
     }
 
     #[test]
     fn test_print_appends_newline() {
         // Each PRINT ends with GE-225 carriage return → converted to \n
-        assert_eq!(
-            output("10 PRINT \"A\"\n20 PRINT \"B\"\n30 END\n"),
-            "A\nB\n"
-        );
+        assert_eq!(output("10 PRINT \"A\"\n20 PRINT \"B\"\n30 END\n"), "A\nB\n");
     }
 
     #[test]
@@ -526,7 +530,10 @@ mod tests {
         let err = run_basic_with_options("10 GOTO 10\n", 4096, 500);
         assert!(err.is_err(), "infinite loop should exceed max_steps");
         let msg = err.unwrap_err().0;
-        assert!(msg.contains("500") || msg.contains("infinite"), "error should mention limit");
+        assert!(
+            msg.contains("500") || msg.contains("infinite"),
+            "error should mention limit"
+        );
     }
 
     // ── RunResult fields ───────────────────────────────────────────────────

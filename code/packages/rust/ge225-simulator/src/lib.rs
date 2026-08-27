@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 const MASK_20: i32 = (1 << 20) - 1;
 const DATA_MASK: i32 = (1 << 19) - 1;
 const SIGN_BIT: i32 = 1 << 19;
@@ -5,7 +7,10 @@ const ADDR_MASK: i32 = 0x1fff;
 const X_MASK: i32 = 0x7fff;
 const N_MASK: i32 = 0x3f;
 const WORD_BYTES: usize = 3;
-const MAX_X_GROUPS: usize = 32;
+const MIN_MEMORY_WORDS: i32 = 4_096;
+const MAX_MEMORY_WORDS: i32 = 16_384;
+const MAX_CARD_RECORD_WORDS: usize = 27;
+const MAX_CARD_QUEUE_DEPTH: usize = 64;
 
 const OP_LDA: i32 = 0o00;
 const OP_ADD: i32 = 0o01;
@@ -216,25 +221,73 @@ fn shift_base(mnemonic: &str) -> Option<i32> {
 
 fn typewriter_char(code: i32) -> Option<&'static str> {
     Some(match code {
-        0o00 => "0", 0o01 => "1", 0o02 => "2", 0o03 => "3", 0o04 => "4", 0o05 => "5",
-        0o06 => "6", 0o07 => "7", 0o10 => "8", 0o11 => "9", 0o13 => "/", 0o21 => "A",
-        0o22 => "B", 0o23 => "C", 0o24 => "D", 0o25 => "E", 0o26 => "F", 0o27 => "G",
-        0o30 => "H", 0o31 => "I", 0o33 => "-", 0o40 => ".", 0o41 => "J", 0o42 => "K",
-        0o43 => "L", 0o44 => "M", 0o45 => "N", 0o46 => "O", 0o47 => "P", 0o50 => "Q",
-        0o51 => "R", 0o53 => "$", 0o60 => " ", 0o62 => "S", 0o63 => "T", 0o64 => "U",
-        0o65 => "V", 0o66 => "W", 0o67 => "X", 0o70 => "Y", 0o71 => "Z",
+        0o00 => "0",
+        0o01 => "1",
+        0o02 => "2",
+        0o03 => "3",
+        0o04 => "4",
+        0o05 => "5",
+        0o06 => "6",
+        0o07 => "7",
+        0o10 => "8",
+        0o11 => "9",
+        0o13 => "/",
+        0o21 => "A",
+        0o22 => "B",
+        0o23 => "C",
+        0o24 => "D",
+        0o25 => "E",
+        0o26 => "F",
+        0o27 => "G",
+        0o30 => "H",
+        0o31 => "I",
+        0o33 => "-",
+        0o40 => ".",
+        0o41 => "J",
+        0o42 => "K",
+        0o43 => "L",
+        0o44 => "M",
+        0o45 => "N",
+        0o46 => "O",
+        0o47 => "P",
+        0o50 => "Q",
+        0o51 => "R",
+        0o53 => "$",
+        0o60 => " ",
+        0o62 => "S",
+        0o63 => "T",
+        0o64 => "U",
+        0o65 => "V",
+        0o66 => "W",
+        0o67 => "X",
+        0o70 => "Y",
+        0o71 => "Z",
         _ => return None,
     })
 }
 
 fn to_signed20(value: i32) -> i32 {
     let word = value & MASK_20;
-    if (word & SIGN_BIT) != 0 { word - (1 << 20) } else { word }
+    if (word & SIGN_BIT) != 0 {
+        word - (1 << 20)
+    } else {
+        word
+    }
 }
 
-fn from_signed20(value: i32) -> i32 { value & MASK_20 }
-fn sign_of(word: i32) -> i32 { if (word & SIGN_BIT) != 0 { 1 } else { 0 } }
-fn with_sign(word: i32, sign: i32) -> i32 { ((sign & 1) << 19) | (word & DATA_MASK) }
+fn from_signed20(value: i32) -> i32 {
+    value & MASK_20
+}
+fn sign_of(word: i32) -> i32 {
+    if (word & SIGN_BIT) != 0 {
+        1
+    } else {
+        0
+    }
+}
+fn with_sign(word: i32, sign: i32) -> i32 {
+    ((sign & 1) << 19) | (word & DATA_MASK)
+}
 
 fn combine_words(high: i32, low: i32) -> i64 {
     ((high & MASK_20) as i64) << 20 | ((low & MASK_20) as i64)
@@ -246,7 +299,10 @@ fn to_signed40(value: i64) -> i64 {
 
 fn split_signed40(value: i64) -> (i32, i32) {
     let raw = value & ((1_i64 << 40) - 1);
-    (((raw >> 20) & MASK_20 as i64) as i32, (raw & MASK_20 as i64) as i32)
+    (
+        ((raw >> 20) & MASK_20 as i64) as i32,
+        (raw & MASK_20 as i64) as i32,
+    )
 }
 
 fn arith_compare(left: i32, right: i32) -> i32 {
@@ -258,7 +314,9 @@ fn arith_compare(left: i32, right: i32) -> i32 {
 }
 
 fn arith_compare_double(left_high: i32, left_low: i32, right_high: i32, right_low: i32) -> i32 {
-    match to_signed40(combine_words(left_high, left_low)).cmp(&to_signed40(combine_words(right_high, right_low))) {
+    match to_signed40(combine_words(left_high, left_low))
+        .cmp(&to_signed40(combine_words(right_high, right_low)))
+    {
         std::cmp::Ordering::Less => -1,
         std::cmp::Ordering::Greater => 1,
         std::cmp::Ordering::Equal => 0,
@@ -266,15 +324,25 @@ fn arith_compare_double(left_high: i32, left_low: i32, right_high: i32, right_lo
 }
 
 pub fn encode_instruction(opcode: i32, modifier: i32, address: i32) -> Result<i32, String> {
-    if !(0..=0o37).contains(&opcode) { return Err(format!("opcode out of range: {opcode}")); }
-    if !(0..=0o3).contains(&modifier) { return Err(format!("modifier out of range: {modifier}")); }
-    if !(0..=ADDR_MASK).contains(&address) { return Err(format!("address out of range: {address}")); }
+    if !(0..=0o37).contains(&opcode) {
+        return Err(format!("opcode out of range: {opcode}"));
+    }
+    if !(0..=0o3).contains(&modifier) {
+        return Err(format!("modifier out of range: {modifier}"));
+    }
+    if !(0..=ADDR_MASK).contains(&address) {
+        return Err(format!("address out of range: {address}"));
+    }
     Ok(((opcode & 0x1f) << 15) | ((modifier & 0x03) << 13) | (address & ADDR_MASK))
 }
 
 pub fn decode_instruction(word: i32) -> (i32, i32, i32) {
     let normalized = word & MASK_20;
-    ((normalized >> 15) & 0x1f, (normalized >> 13) & 0x03, normalized & ADDR_MASK)
+    (
+        (normalized >> 15) & 0x1f,
+        (normalized >> 13) & 0x03,
+        normalized & ADDR_MASK,
+    )
 }
 
 pub fn assemble_fixed(mnemonic: &str) -> Result<i32, String> {
@@ -282,7 +350,9 @@ pub fn assemble_fixed(mnemonic: &str) -> Result<i32, String> {
 }
 
 pub fn assemble_shift(mnemonic: &str, count: i32) -> Result<i32, String> {
-    if !(0..=0o37).contains(&count) { return Err(format!("shift count out of range: {count}")); }
+    if !(0..=0o37).contains(&count) {
+        return Err(format!("shift count out of range: {count}"));
+    }
     shift_base(mnemonic)
         .map(|base| base | count)
         .ok_or_else(|| format!("unknown GE-225 shift instruction: {mnemonic}"))
@@ -301,18 +371,25 @@ pub fn pack_words(words: &[i32]) -> Vec<u8> {
 
 pub fn unpack_words(program: &[u8]) -> Result<Vec<i32>, String> {
     if !program.len().is_multiple_of(WORD_BYTES) {
-        return Err(format!("GE-225 byte stream must be a multiple of {WORD_BYTES} bytes, got {}", program.len()));
+        return Err(format!(
+            "GE-225 byte stream must be a multiple of {WORD_BYTES} bytes, got {}",
+            program.len()
+        ));
     }
     Ok(program
-        .as_chunks::<WORD_BYTES>().0.iter()
-        .map(|chunk| (((chunk[0] as i32) << 16) | ((chunk[1] as i32) << 8) | chunk[2] as i32) & MASK_20)
+        .as_chunks::<WORD_BYTES>()
+        .0
+        .iter()
+        .map(|chunk| {
+            (((chunk[0] as i32) << 16) | ((chunk[1] as i32) << 8) | chunk[2] as i32) & MASK_20
+        })
         .collect())
 }
 
 pub struct Simulator {
     memory_size: i32,
     memory: Vec<i32>,
-    card_reader_queue: Vec<Vec<i32>>,
+    card_reader_queue: VecDeque<Vec<i32>>,
     a: i32,
     q: i32,
     m: i32,
@@ -329,49 +406,118 @@ pub struct Simulator {
     typewriter_output: Vec<String>,
     control_switches: i32,
     halted: bool,
-    x_groups: [[i32; 4]; MAX_X_GROUPS],
 }
 
 impl Simulator {
-    pub fn new(memory_words: i32) -> Self {
-        assert!(memory_words > 0, "memory_words must be positive");
-        Self {
+    pub fn new(memory_words: i32) -> Result<Self, String> {
+        if !(MIN_MEMORY_WORDS..=MAX_MEMORY_WORDS).contains(&memory_words) {
+            return Err(format!(
+                "memory_words must be between {MIN_MEMORY_WORDS} and {MAX_MEMORY_WORDS}, got {memory_words}"
+            ));
+        }
+        Ok(Self {
             memory_size: memory_words,
             memory: vec![0; memory_words as usize],
-            card_reader_queue: vec![],
-            a: 0, q: 0, m: 0, n: 0, pc: 0, ir: 0,
-            overflow: false, parity_error: false, decimal_mode: false, automatic_interrupt_mode: false,
-            selected_x_group: 0, n_ready: true, typewriter_power: false, typewriter_output: vec![],
-            control_switches: 0, halted: false, x_groups: [[0; 4]; MAX_X_GROUPS],
-        }
+            card_reader_queue: VecDeque::new(),
+            a: 0,
+            q: 0,
+            m: 0,
+            n: 0,
+            pc: 0,
+            ir: 0,
+            overflow: false,
+            parity_error: false,
+            decimal_mode: false,
+            automatic_interrupt_mode: false,
+            selected_x_group: 0,
+            n_ready: true,
+            typewriter_power: false,
+            typewriter_output: vec![],
+            control_switches: 0,
+            halted: false,
+        })
     }
 
     pub fn reset(&mut self) {
-        self.a = 0; self.q = 0; self.m = 0; self.n = 0; self.pc = 0; self.ir = 0;
-        self.overflow = false; self.parity_error = false; self.decimal_mode = false; self.automatic_interrupt_mode = false;
-        self.selected_x_group = 0; self.n_ready = true; self.typewriter_power = false; self.typewriter_output.clear();
-        self.control_switches = 0; self.halted = false; self.x_groups = [[0; 4]; MAX_X_GROUPS];
+        self.a = 0;
+        self.q = 0;
+        self.m = 0;
+        self.n = 0;
+        self.pc = 0;
+        self.ir = 0;
+        self.overflow = false;
+        self.parity_error = false;
+        self.decimal_mode = false;
+        self.automatic_interrupt_mode = false;
+        self.selected_x_group = 0;
+        self.n_ready = true;
+        self.typewriter_power = false;
+        self.typewriter_output.clear();
+        self.control_switches = 0;
+        self.halted = false;
     }
 
     pub fn get_state(&self) -> State {
         State {
-            a: self.a, q: self.q, m: self.m, n: self.n, pc: self.pc, ir: self.ir,
+            a: self.a,
+            q: self.q,
+            m: self.m,
+            n: self.n,
+            pc: self.pc,
+            ir: self.ir,
             indicators: Indicators {
-                carry: self.overflow, zero: self.a == 0, negative: (self.a & SIGN_BIT) != 0,
-                overflow: self.overflow, parity_error: self.parity_error,
+                carry: self.overflow,
+                zero: self.a == 0,
+                negative: (self.a & SIGN_BIT) != 0,
+                overflow: self.overflow,
+                parity_error: self.parity_error,
             },
-            overflow: self.overflow, parity_error: self.parity_error, decimal_mode: self.decimal_mode,
-            automatic_interrupt_mode: self.automatic_interrupt_mode, selected_x_group: self.selected_x_group,
-            n_ready: self.n_ready, typewriter_power: self.typewriter_power, control_switches: self.control_switches,
-            x_words: self.x_groups[self.selected_x_group].to_vec(), halted: self.halted, memory: self.memory.clone(),
+            overflow: self.overflow,
+            parity_error: self.parity_error,
+            decimal_mode: self.decimal_mode,
+            automatic_interrupt_mode: self.automatic_interrupt_mode,
+            selected_x_group: self.selected_x_group,
+            n_ready: self.n_ready,
+            typewriter_power: self.typewriter_power,
+            control_switches: self.control_switches,
+            x_words: (0..4)
+                .map(|slot| self.memory[self.selected_x_group * 4 + slot] & MASK_20)
+                .collect(),
+            halted: self.halted,
+            memory: self.memory.clone(),
         }
     }
 
-    pub fn set_control_switches(&mut self, value: i32) { self.control_switches = value & MASK_20; }
-    pub fn queue_card_reader_record(&mut self, words: &[i32]) { self.card_reader_queue.push(words.iter().map(|w| w & MASK_20).collect()); }
-    pub fn get_typewriter_output(&self) -> String { self.typewriter_output.join("") }
+    pub fn set_control_switches(&mut self, value: i32) {
+        self.control_switches = value & MASK_20;
+    }
+    pub fn set_program_counter(&mut self, address: i32) -> Result<(), String> {
+        self.set_pc(address)
+    }
+    pub fn queue_card_reader_record(&mut self, words: &[i32]) -> Result<(), String> {
+        if words.len() > MAX_CARD_RECORD_WORDS {
+            return Err(format!(
+                "GE-225 card-reader record exceeds {MAX_CARD_RECORD_WORDS} words: {}",
+                words.len()
+            ));
+        }
+        if self.card_reader_queue.len() >= MAX_CARD_QUEUE_DEPTH {
+            return Err(format!(
+                "GE-225 card-reader queue is full at {MAX_CARD_QUEUE_DEPTH} records"
+            ));
+        }
+        self.card_reader_queue
+            .push_back(words.iter().map(|w| w & MASK_20).collect());
+        Ok(())
+    }
+    pub fn get_typewriter_output(&self) -> String {
+        self.typewriter_output.join("")
+    }
     pub fn load_words(&mut self, words: &[i32], start_address: i32) -> Result<(), String> {
-        for (offset, word) in words.iter().enumerate() { self.write_word(start_address + offset as i32, *word)?; }
+        let range = self.checked_range(start_address, words.len())?;
+        for (destination, word) in range.zip(words) {
+            self.memory[destination] = word & MASK_20;
+        }
         Ok(())
     }
     pub fn read_word(&self, address: i32) -> Result<i32, String> {
@@ -387,33 +533,77 @@ impl Simulator {
     pub fn disassemble_word(&self, word: i32) -> Result<String, String> {
         let decoded = self.decode_word(word)?;
         if decoded.fixed_word {
-            return Ok(match decoded.count { Some(count) => format!("{} {count}", decoded.mnemonic), None => decoded.mnemonic.to_string() });
+            return Ok(match decoded.count {
+                Some(count) => format!("{} {count}", decoded.mnemonic),
+                None => decoded.mnemonic.to_string(),
+            });
         }
-        Ok(format!("{} 0x{:03X},X{}", decoded.mnemonic, decoded.address.unwrap(), decoded.modifier.unwrap()))
+        let address = decoded
+            .address
+            .ok_or_else(|| "GE-225 decoder omitted a memory-reference address".to_string())?;
+        let modifier = decoded
+            .modifier
+            .ok_or_else(|| "GE-225 decoder omitted a memory-reference modifier".to_string())?;
+        Ok(format!(
+            "{} 0x{:03X},X{}",
+            decoded.mnemonic, address, modifier
+        ))
     }
 
     pub fn step(&mut self) -> Result<Trace, String> {
-        if self.halted { return Err("cannot step a halted GE-225 simulator".into()); }
+        if self.halted {
+            return Err("cannot step a halted GE-225 simulator".into());
+        }
         let pc_before = self.pc;
-        self.ir = self.read_word(self.pc)?;
-        self.pc = (self.pc + 1) % self.memory_size;
-        let decoded = self.decode_word(self.ir)?;
+        let instruction_word = self.read_word(pc_before)?;
+        let decoded = self.decode_word(instruction_word)?;
+        let sequential_pc = pc_before
+            .checked_add(1)
+            .ok_or_else(|| "GE-225 P counter overflow".to_string())?;
+        if sequential_pc >= self.memory_size && !matches!(decoded.mnemonic, "BRU" | "SPB") {
+            return Err(format!(
+                "GE-225 sequential P counter leaves installed memory: {sequential_pc}"
+            ));
+        }
+        self.ir = instruction_word;
+        self.pc = sequential_pc;
         let a_before = self.a;
         let q_before = self.q;
         let mut effective_address = None;
         if !decoded.fixed_word {
-            let address = decoded.address.unwrap();
-            if !matches!(decoded.mnemonic, "BXL" | "BXH" | "LDX" | "SPB" | "INX" | "STX" | "MOY") {
-                effective_address = Some(self.resolve_effective_address(address, decoded.modifier.unwrap()));
+            let address = decoded
+                .address
+                .ok_or_else(|| "GE-225 decoder omitted a memory-reference address".to_string())?;
+            let modifier = decoded
+                .modifier
+                .ok_or_else(|| "GE-225 decoder omitted a memory-reference modifier".to_string())?;
+            if decoded.mnemonic == "BRU" {
+                effective_address = Some(if modifier == 0 {
+                    self.direct_branch_target(sequential_pc, address)?
+                } else {
+                    self.resolve_effective_address(address, modifier)?
+                });
+            } else if !matches!(
+                decoded.mnemonic,
+                "BXL" | "BXH" | "LDX" | "SPB" | "INX" | "STX" | "MOY"
+            ) {
+                effective_address = Some(self.resolve_effective_address(address, modifier)?);
             }
-            self.execute_memory_reference(decoded.mnemonic, decoded.modifier.unwrap(), effective_address.unwrap_or(address), address, pc_before)?;
+            self.execute_memory_reference(
+                decoded.mnemonic,
+                modifier,
+                effective_address.unwrap_or(address),
+                address,
+                pc_before,
+            )?;
         } else {
             self.execute_fixed(&decoded)?;
         }
+        self.check_address(self.pc)?;
         Ok(Trace {
             address: pc_before,
-            instruction_word: self.ir,
-            mnemonic: self.disassemble_word(self.ir)?,
+            instruction_word,
+            mnemonic: self.disassemble_word(instruction_word)?,
             a_before,
             a_after: self.a,
             q_before,
@@ -425,35 +615,101 @@ impl Simulator {
     pub fn run(&mut self, max_steps: usize) -> Result<Vec<Trace>, String> {
         let mut traces = vec![];
         for _ in 0..max_steps {
-            if self.halted { break; }
+            if self.halted {
+                break;
+            }
             traces.push(self.step()?);
         }
         Ok(traces)
     }
 
-    fn get_x_word(&self, slot: usize) -> i32 { self.x_groups[self.selected_x_group][slot] & X_MASK }
-    fn set_x_word(&mut self, slot: usize, value: i32) { self.x_groups[self.selected_x_group][slot] = value & X_MASK; }
+    fn x_address(&self, slot: usize) -> Result<i32, String> {
+        if slot >= 4 {
+            return Err(format!("GE-225 X-word slot out of range: {slot}"));
+        }
+        let address = self
+            .selected_x_group
+            .checked_mul(4)
+            .and_then(|base| base.checked_add(slot))
+            .ok_or_else(|| "GE-225 X-word address overflow".to_string())?;
+        i32::try_from(address).map_err(|_| "GE-225 X-word address overflow".to_string())
+    }
 
-    fn execute_memory_reference(&mut self, mnemonic: &str, modifier: i32, effective_or_raw_address: i32, raw_address: i32, pc_before: i32) -> Result<(), String> {
-        let effective_address = effective_or_raw_address % self.memory_size;
+    fn get_x_word(&self, slot: usize) -> Result<i32, String> {
+        self.read_word(self.x_address(slot)?)
+    }
+
+    fn set_x_word(&mut self, slot: usize, value: i32) -> Result<(), String> {
+        self.write_word(self.x_address(slot)?, value)
+    }
+
+    fn execute_memory_reference(
+        &mut self,
+        mnemonic: &str,
+        modifier: i32,
+        effective_or_raw_address: i32,
+        raw_address: i32,
+        pc_before: i32,
+    ) -> Result<(), String> {
+        let effective_address = effective_or_raw_address;
         match mnemonic {
-            "LDA" => { self.m = self.read_word(effective_address)?; self.a = self.m; }
-            "ADD" => { self.m = self.read_word(effective_address)?; let total = to_signed20(self.a) + to_signed20(self.m); self.a = from_signed20(total); self.overflow = !(-(1 << 19)..=(1 << 19) - 1).contains(&total); }
-            "SUB" => { self.m = self.read_word(effective_address)?; let total = to_signed20(self.a) - to_signed20(self.m); self.a = from_signed20(total); self.overflow = !(-(1 << 19)..=(1 << 19) - 1).contains(&total); }
+            "LDA" => {
+                self.m = self.read_word(effective_address)?;
+                self.a = self.m;
+            }
+            "ADD" => {
+                self.m = self.read_word(effective_address)?;
+                let total = to_signed20(self.a) + to_signed20(self.m);
+                self.a = from_signed20(total);
+                self.overflow = !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+            }
+            "SUB" => {
+                self.m = self.read_word(effective_address)?;
+                let total = to_signed20(self.a) - to_signed20(self.m);
+                self.a = from_signed20(total);
+                self.overflow = !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+            }
             "STA" => self.write_word(effective_address, self.a)?,
-            "BXL" => if (self.get_x_word(modifier as usize) & ADDR_MASK) >= raw_address { self.pc = (self.pc + 1) % self.memory_size; },
-            "BXH" => if (self.get_x_word(modifier as usize) & ADDR_MASK) < raw_address { self.pc = (self.pc + 1) % self.memory_size; },
-            "LDX" => { let word = self.read_word(raw_address % self.memory_size)?; self.set_x_word(modifier as usize, word); }
-            "SPB" => { self.set_x_word(modifier as usize, pc_before); self.pc = raw_address % self.memory_size; }
+            "BXL" => {
+                if (self.get_x_word(modifier as usize)? & ADDR_MASK) >= raw_address {
+                    self.advance_pc(1)?;
+                }
+            }
+            "BXH" => {
+                if (self.get_x_word(modifier as usize)? & ADDR_MASK) < raw_address {
+                    self.advance_pc(1)?;
+                }
+            }
+            "LDX" => {
+                let word = self.read_word(raw_address)?;
+                self.set_x_word(modifier as usize, word)?;
+            }
+            "SPB" => {
+                let target = self.direct_branch_target(pc_before, raw_address)?;
+                let x_address = self.x_address(modifier as usize)?;
+                self.check_address(x_address)?;
+                self.memory[x_address as usize] = pc_before & MASK_20;
+                self.pc = target;
+            }
             "DLD" => {
                 let first = self.read_word(effective_address)?;
-                if (effective_address & 1) != 0 { self.a = first; self.q = first; }
-                else { self.a = first; self.q = self.read_word((effective_address + 1) % self.memory_size)?; }
+                if (effective_address & 1) != 0 {
+                    self.a = first;
+                    self.q = first;
+                } else {
+                    let second = self.read_word(self.following_address(effective_address)?)?;
+                    self.a = first;
+                    self.q = second;
+                }
             }
             "DAD" => {
                 let left = to_signed40(combine_words(self.a, self.q));
                 let first = self.read_word(effective_address)?;
-                let second = if (effective_address & 1) != 0 { first } else { self.read_word((effective_address + 1) % self.memory_size)? };
+                let second = if (effective_address & 1) != 0 {
+                    first
+                } else {
+                    self.read_word(self.following_address(effective_address)?)?
+                };
                 let total = left + to_signed40(combine_words(first, second));
                 (self.a, self.q) = split_signed40(total);
                 self.overflow = !(-(1_i64 << 39)..=((1_i64 << 39) - 1)).contains(&total);
@@ -461,52 +717,86 @@ impl Simulator {
             "DSU" => {
                 let left = to_signed40(combine_words(self.a, self.q));
                 let first = self.read_word(effective_address)?;
-                let second = if (effective_address & 1) != 0 { first } else { self.read_word((effective_address + 1) % self.memory_size)? };
+                let second = if (effective_address & 1) != 0 {
+                    first
+                } else {
+                    self.read_word(self.following_address(effective_address)?)?
+                };
                 let total = left - to_signed40(combine_words(first, second));
                 (self.a, self.q) = split_signed40(total);
                 self.overflow = !(-(1_i64 << 39)..=((1_i64 << 39) - 1)).contains(&total);
             }
             "DST" => {
-                if (effective_address & 1) != 0 { self.write_word(effective_address, self.q)?; }
-                else { self.write_word(effective_address, self.a)?; self.write_word((effective_address + 1) % self.memory_size, self.q)?; }
+                if (effective_address & 1) != 0 {
+                    self.write_word(effective_address, self.q)?;
+                } else {
+                    let second = self.following_address(effective_address)?;
+                    self.write_word(effective_address, self.a)?;
+                    self.write_word(second, self.q)?;
+                }
             }
-            "INX" => self.set_x_word(modifier as usize, (self.get_x_word(modifier as usize) + raw_address) & X_MASK),
+            "INX" => {
+                let current = self.get_x_word(modifier as usize)?;
+                let incremented = (current & !X_MASK) | ((current + raw_address) & X_MASK);
+                self.set_x_word(modifier as usize, incremented)?;
+            }
             "MPY" => {
                 self.m = self.read_word(effective_address)?;
-                let product = i64::from(to_signed20(self.q)) * i64::from(to_signed20(self.m)) + i64::from(to_signed20(self.a));
+                let product = i64::from(to_signed20(self.q)) * i64::from(to_signed20(self.m))
+                    + i64::from(to_signed20(self.a));
                 (self.a, self.q) = split_signed40(product);
                 self.overflow = !(-(1_i64 << 39)..=((1_i64 << 39) - 1)).contains(&product);
             }
             "DVD" => {
                 self.m = self.read_word(effective_address)?;
                 let divisor = i64::from(to_signed20(self.m));
-                if divisor == 0 { return Err("GE-225 divide by zero".into()); }
-                if i64::from(to_signed20(self.a).abs()) >= divisor.abs() { self.overflow = true; return Ok(()); }
+                if divisor == 0 {
+                    return Err("GE-225 divide by zero".into());
+                }
+                if i64::from(to_signed20(self.a).abs()) >= divisor.abs() {
+                    self.overflow = true;
+                    return Ok(());
+                }
                 let dividend = to_signed40(combine_words(self.a, self.q));
                 let quotient_mag = dividend.abs() / divisor.abs();
                 let remainder_mag = dividend.abs() % divisor.abs();
-                let quotient = if (dividend < 0) ^ (divisor < 0) { -quotient_mag } else { quotient_mag };
-                let remainder = if quotient < 0 { -remainder_mag } else { remainder_mag };
+                let quotient = if (dividend < 0) ^ (divisor < 0) {
+                    -quotient_mag
+                } else {
+                    quotient_mag
+                };
+                let remainder = if quotient < 0 {
+                    -remainder_mag
+                } else {
+                    remainder_mag
+                };
                 self.a = from_signed20(quotient as i32);
                 self.q = from_signed20(remainder as i32);
                 self.overflow = !(-(1_i64 << 19)..=((1_i64 << 19) - 1)).contains(&quotient);
             }
-            "STX" => self.write_word(raw_address % self.memory_size, self.get_x_word(modifier as usize))?,
-            "EXT" => { self.m = self.read_word(effective_address)?; self.a &= (!self.m) & MASK_20; }
+            "STX" => self.write_word(raw_address, self.get_x_word(modifier as usize)?)?,
+            "EXT" => {
+                self.m = self.read_word(effective_address)?;
+                self.a &= (!self.m) & MASK_20;
+            }
             "CAB" => {
                 self.m = self.read_word(effective_address)?;
                 match arith_compare(self.m, self.a) {
-                    0 => self.pc = (self.pc + 1) % self.memory_size,
-                    x if x < 0 => self.pc = (self.pc + 2) % self.memory_size,
+                    0 => self.advance_pc(1)?,
+                    x if x < 0 => self.advance_pc(2)?,
                     _ => {}
                 }
             }
             "DCB" => {
                 let first = self.read_word(effective_address)?;
-                let second = if (effective_address & 1) != 0 { first } else { self.read_word((effective_address + 1) % self.memory_size)? };
+                let second = if (effective_address & 1) != 0 {
+                    first
+                } else {
+                    self.read_word(self.following_address(effective_address)?)?
+                };
                 match arith_compare_double(first, second, self.a, self.q) {
-                    0 => self.pc = (self.pc + 1) % self.memory_size,
-                    x if x < 0 => self.pc = (self.pc + 2) % self.memory_size,
+                    0 => self.advance_pc(1)?,
+                    x if x < 0 => self.advance_pc(2)?,
                     _ => {}
                 }
             }
@@ -515,23 +805,45 @@ impl Simulator {
                 self.write_word(effective_address, word | self.a)?;
             }
             "MOY" => {
-                let word_count = (-to_signed20(self.q)).max(0);
+                let word_count = usize::try_from((-to_signed20(self.q)).max(0))
+                    .map_err(|_| "GE-225 MOY word count overflow".to_string())?;
                 let destination = self.a & X_MASK;
-                for offset in 0..word_count { let word = self.read_word((raw_address + offset) % self.memory_size)?; self.write_word((destination + offset) % self.memory_size, word)?; }
-                self.set_x_word(0, self.pc);
+                let source_range = self.checked_range(raw_address, word_count)?;
+                let destination_range = self.checked_range(destination, word_count)?;
+                let moved: Vec<i32> = source_range.map(|address| self.memory[address]).collect();
+                for (address, word) in destination_range.zip(moved) {
+                    self.memory[address] = word;
+                }
+                self.set_x_word(0, self.pc)?;
                 self.a = 0;
             }
             "RCD" => {
-                if self.card_reader_queue.is_empty() { return Err("RCD executed with no queued card-reader record".into()); }
-                let record = self.card_reader_queue.remove(0);
-                for (offset, word) in record.iter().enumerate() { self.write_word((effective_address + offset as i32) % self.memory_size, *word)?; }
+                if self.card_reader_queue.is_empty() {
+                    return Err("RCD executed with no queued card-reader record".into());
+                }
+                let record_len = self.card_reader_queue.front().map_or(0, Vec::len);
+                let range = self.checked_range(effective_address, record_len)?;
+                let record = self
+                    .card_reader_queue
+                    .pop_front()
+                    .ok_or_else(|| "RCD executed with no queued card-reader record".to_string())?;
+                for (address, word) in range.zip(record) {
+                    self.memory[address] = word;
+                }
             }
-            "BRU" => self.pc = effective_address,
+            "BRU" => self.set_pc(effective_address)?,
             "STO" => {
                 let existing = self.read_word(effective_address)?;
-                self.write_word(effective_address, (existing & !ADDR_MASK) | (self.a & ADDR_MASK))?;
+                self.write_word(
+                    effective_address,
+                    (existing & !ADDR_MASK) | (self.a & ADDR_MASK),
+                )?;
             }
-            _ => return Err(format!("unimplemented GE-225 memory-reference instruction: {mnemonic}")),
+            _ => {
+                return Err(format!(
+                    "unimplemented GE-225 memory-reference instruction: {mnemonic}"
+                ))
+            }
         }
         Ok(())
     }
@@ -540,14 +852,23 @@ impl Simulator {
         let mnemonic = decoded.mnemonic;
         let count = decoded.count.unwrap_or(0);
         match mnemonic {
-            "OFF" => { self.typewriter_power = false; self.n_ready = true; }
+            "OFF" => {
+                self.typewriter_power = false;
+                self.n_ready = true;
+            }
             "TYP" => {
-                if !self.typewriter_power { self.n_ready = false; return Ok(()); }
+                if !self.typewriter_power {
+                    self.n_ready = false;
+                    return Ok(());
+                }
                 let code = self.n & N_MASK;
-                if code == 0o37 { self.typewriter_output.push("\r".into()); }
-                else if code == 0o76 { self.typewriter_output.push("\t".into()); }
-                else if code != 0o72 && code != 0o75 {
-                    let ch = typewriter_char(code).ok_or_else(|| "invalid typewriter code".to_string())?;
+                if code == 0o37 {
+                    self.typewriter_output.push("\r".into());
+                } else if code == 0o76 {
+                    self.typewriter_output.push("\t".into());
+                } else if code != 0o72 && code != 0o75 {
+                    let ch = typewriter_char(code)
+                        .ok_or_else(|| "invalid typewriter code".to_string())?;
                     self.typewriter_output.push(ch.into());
                 }
                 self.n_ready = true;
@@ -559,30 +880,51 @@ impl Simulator {
             "LDO" => self.a = 1,
             "LMO" => self.a = MASK_20,
             "CPL" => self.a = (!self.a) & MASK_20,
-            "NEG" => { let before = to_signed20(self.a); self.a = from_signed20(-before); self.overflow = before == -(1 << 19); }
+            "NEG" => {
+                let before = to_signed20(self.a);
+                self.a = from_signed20(-before);
+                self.overflow = before == -(1 << 19);
+            }
             "CHS" => self.a ^= SIGN_BIT,
             "NOP" => {}
             "LAQ" => self.a = self.q,
             "LQA" => self.q = self.a,
             "XAQ" => std::mem::swap(&mut self.a, &mut self.q),
-            "MAQ" => { self.q = self.a; self.a = 0; }
-            "ADO" => { let total = to_signed20(self.a) + 1; self.a = from_signed20(total); self.overflow = !(-(1 << 19)..=(1 << 19) - 1).contains(&total); }
-            "SBO" => { let total = to_signed20(self.a) - 1; self.a = from_signed20(total); self.overflow = !(-(1 << 19)..=(1 << 19) - 1).contains(&total); }
+            "MAQ" => {
+                self.q = self.a;
+                self.a = 0;
+            }
+            "ADO" => {
+                let total = to_signed20(self.a) + 1;
+                self.a = from_signed20(total);
+                self.overflow = !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+            }
+            "SBO" => {
+                let total = to_signed20(self.a) - 1;
+                self.a = from_signed20(total);
+                self.overflow = !(-(1 << 19)..=(1 << 19) - 1).contains(&total);
+            }
             "SET_DECMODE" => self.decimal_mode = true,
             "SET_BINMODE" => self.decimal_mode = false,
             "SXG" => self.selected_x_group = (self.a & 0x1f) as usize,
             "SET_PST" => self.automatic_interrupt_mode = true,
             "SET_PBK" => self.automatic_interrupt_mode = false,
-            "BOD" | "BEV" | "BMI" | "BPL" | "BZE" | "BNZ" | "BOV" | "BNO" | "BPE" | "BPC" | "BNR" | "BNN" => self.execute_branch_test(mnemonic),
+            "BOD" | "BEV" | "BMI" | "BPL" | "BZE" | "BNZ" | "BOV" | "BNO" | "BPE" | "BPC"
+            | "BNR" | "BNN" => self.execute_branch_test(mnemonic)?,
             _ => {
-                if shift_base(mnemonic).is_some() { self.execute_shift(mnemonic, count); }
-                else { return Err(format!("unimplemented GE-225 fixed instruction: {mnemonic}")); }
+                if shift_base(mnemonic).is_some() {
+                    self.execute_shift(mnemonic, count)?;
+                } else {
+                    return Err(format!(
+                        "unimplemented GE-225 fixed instruction: {mnemonic}"
+                    ));
+                }
             }
         }
         Ok(())
     }
 
-    fn execute_branch_test(&mut self, mnemonic: &str) {
+    fn execute_branch_test(&mut self, mnemonic: &str) -> Result<(), String> {
         let cond = match mnemonic {
             "BOD" => (self.a & 1) != 0,
             "BEV" => (self.a & 1) == 0,
@@ -598,16 +940,26 @@ impl Simulator {
             "BNN" => !self.n_ready,
             _ => false,
         };
-        if matches!(mnemonic, "BOV" | "BNO") { self.overflow = false; }
-        if matches!(mnemonic, "BPE" | "BPC") { self.parity_error = false; }
-        if !cond { self.pc = (self.pc + 1) % self.memory_size; }
+        if !cond {
+            self.advance_pc(1)?;
+        }
+        if matches!(mnemonic, "BOV" | "BNO") {
+            self.overflow = false;
+        }
+        if matches!(mnemonic, "BPE" | "BPC") {
+            self.parity_error = false;
+        }
+        Ok(())
     }
 
-    fn execute_shift(&mut self, mnemonic: &str, count: i32) {
+    fn execute_shift(&mut self, mnemonic: &str, count: i32) -> Result<(), String> {
         if count == 0 {
-            if mnemonic == "SRD" { self.q = with_sign(self.q, sign_of(self.a)); }
-            else if mnemonic == "SLD" { self.a = with_sign(self.a, sign_of(self.q)); }
-            return;
+            if mnemonic == "SRD" {
+                self.q = with_sign(self.q, sign_of(self.a));
+            } else if mnemonic == "SLD" {
+                self.a = with_sign(self.a, sign_of(self.q));
+            }
+            return Ok(());
         }
         let a_sign = sign_of(self.a);
         let mut a_data = self.a & DATA_MASK;
@@ -615,14 +967,24 @@ impl Simulator {
         let mut q_data = self.q & DATA_MASK;
         match mnemonic {
             "SRA" => self.a = from_signed20(to_signed20(self.a) >> count.min(19)),
-            "SLA" => { self.overflow = (a_data >> (19 - count).max(0)) != 0; self.a = with_sign((a_data << count) & DATA_MASK, a_sign); }
-            "SCA" => { let rotation = count % 19; if rotation != 0 { a_data = ((a_data >> rotation) | (a_data << (19 - rotation))) & DATA_MASK; } self.a = with_sign(a_data, a_sign); }
+            "SLA" => {
+                self.overflow = (a_data >> (19 - count).max(0)) != 0;
+                self.a = with_sign((a_data << count) & DATA_MASK, a_sign);
+            }
+            "SCA" => {
+                let rotation = count % 19;
+                if rotation != 0 {
+                    a_data = ((a_data >> rotation) | (a_data << (19 - rotation))) & DATA_MASK;
+                }
+                self.a = with_sign(a_data, a_sign);
+            }
             "SAN" => {
-                let fill = if a_sign == 1 { (1 << count) - 1 } else { 0 };
-                let mut combined = ((a_data & DATA_MASK) << 6) | (self.n & N_MASK);
+                let fill = if a_sign == 1 { (1_i64 << count) - 1 } else { 0 };
+                let mut combined =
+                    (((a_data & DATA_MASK) as i64) << 6) | i64::from(self.n & N_MASK);
                 combined = ((fill << 25) | combined) >> count;
-                self.a = with_sign((combined >> 6) & DATA_MASK, a_sign);
-                self.n = combined & N_MASK;
+                self.a = with_sign(((combined >> 6) as i32) & DATA_MASK, a_sign);
+                self.n = (combined as i32) & N_MASK;
             }
             "SNA" => {
                 let combined = (((self.n & N_MASK) << 19) | a_data) >> count;
@@ -635,7 +997,10 @@ impl Simulator {
                 self.q = with_sign((value as i32) & DATA_MASK, a_sign);
             }
             "NAQ" => {
-                let combined = ((((self.n & N_MASK) as i64) << 38) | (((a_data & DATA_MASK) as i64) << 19) | (q_data as i64)) >> count;
+                let combined = ((((self.n & N_MASK) as i64) << 38)
+                    | (((a_data & DATA_MASK) as i64) << 19)
+                    | (q_data as i64))
+                    >> count;
                 self.n = ((combined >> 38) as i32) & N_MASK;
                 self.a = with_sign(((combined >> 19) as i32) & DATA_MASK, a_sign);
                 self.q = with_sign((combined as i32) & DATA_MASK, a_sign);
@@ -643,7 +1008,10 @@ impl Simulator {
             "SCD" => {
                 let rotation = count % 38;
                 let mut combined = (((a_data & DATA_MASK) as i64) << 19) | (q_data as i64);
-                if rotation != 0 { combined = ((combined >> rotation) | (combined << (38 - rotation))) & ((1_i64 << 38) - 1); }
+                if rotation != 0 {
+                    combined = ((combined >> rotation) | (combined << (38 - rotation)))
+                        & ((1_i64 << 38) - 1);
+                }
                 self.a = with_sign(((combined >> 19) as i32) & DATA_MASK, a_sign);
                 self.q = with_sign((combined as i32) & DATA_MASK, a_sign);
             }
@@ -668,13 +1036,15 @@ impl Simulator {
                 let target_bit = if a_sign == 0 { 0 } else { 1 };
                 while shifts < count {
                     let lead = (a_data >> 18) & 1;
-                    if lead != target_bit { break; }
+                    if lead != target_bit {
+                        break;
+                    }
                     self.overflow |= lead == 1;
                     a_data = (a_data << 1) & DATA_MASK;
                     shifts += 1;
                 }
                 self.a = with_sign(a_data, a_sign);
-                self.set_x_word(0, count - shifts);
+                self.set_x_word(0, count - shifts)?;
             }
             "DNO" => {
                 let mut shifts = 0;
@@ -682,44 +1052,123 @@ impl Simulator {
                 let mut combined = (((a_data & DATA_MASK) as i64) << 19) | (q_data as i64);
                 while shifts < count {
                     let lead = (combined >> 37) & 1_i64;
-                    if lead != target_bit { break; }
+                    if lead != target_bit {
+                        break;
+                    }
                     self.overflow |= lead == 1;
                     combined = (combined << 1) & ((1_i64 << 38) - 1);
                     shifts += 1;
                 }
                 self.a = with_sign(((combined >> 19) as i32) & DATA_MASK, q_sign);
                 self.q = with_sign((combined as i32) & DATA_MASK, q_sign);
-                self.set_x_word(0, count - shifts);
+                self.set_x_word(0, count - shifts)?;
             }
             _ => {}
         }
+        Ok(())
     }
 
     fn decode_word(&self, word: i32) -> Result<DecodedInstruction, String> {
         let normalized = word & MASK_20;
         if let Some(name) = fixed_name(normalized) {
-            return Ok(DecodedInstruction { mnemonic: name, modifier: None, address: None, count: None, fixed_word: true });
+            return Ok(DecodedInstruction {
+                mnemonic: name,
+                modifier: None,
+                address: None,
+                count: None,
+                fixed_word: true,
+            });
         }
-        for name in ["SRA", "SNA", "SCA", "SAN", "SRD", "NAQ", "SCD", "ANQ", "SLA", "SLD", "NOR", "DNO"] {
+        for name in [
+            "SRA", "SNA", "SCA", "SAN", "SRD", "NAQ", "SCD", "ANQ", "SLA", "SLD", "NOR", "DNO",
+        ] {
             if let Some(base) = shift_base(name) {
                 if (normalized & !0o37) == base {
-                    return Ok(DecodedInstruction { mnemonic: name, modifier: None, address: None, count: Some(normalized & 0o37), fixed_word: true });
+                    return Ok(DecodedInstruction {
+                        mnemonic: name,
+                        modifier: None,
+                        address: None,
+                        count: Some(normalized & 0o37),
+                        fixed_word: true,
+                    });
                 }
             }
         }
         let (opcode, modifier, address) = decode_instruction(normalized);
-        let mnemonic = base_opcode_name(opcode).ok_or_else(|| format!("unknown GE-225 opcode field {opcode:o}"))?;
-        Ok(DecodedInstruction { mnemonic, modifier: Some(modifier), address: Some(address), count: None, fixed_word: false })
+        let mnemonic = base_opcode_name(opcode)
+            .ok_or_else(|| format!("unknown GE-225 opcode field {opcode:o}"))?;
+        Ok(DecodedInstruction {
+            mnemonic,
+            modifier: Some(modifier),
+            address: Some(address),
+            count: None,
+            fixed_word: false,
+        })
     }
 
-    fn resolve_effective_address(&self, address: i32, modifier: i32) -> i32 {
-        let base = address % self.memory_size;
-        if modifier == 0 { return base; }
-        (base + (self.get_x_word(modifier as usize) % self.memory_size)) % self.memory_size
+    fn resolve_effective_address(&self, address: i32, modifier: i32) -> Result<i32, String> {
+        let effective = if modifier == 0 {
+            address
+        } else {
+            (address + self.get_x_word(modifier as usize)?) & X_MASK
+        };
+        self.check_address(effective)?;
+        Ok(effective)
+    }
+
+    fn direct_branch_target(&self, instruction_address: i32, address: i32) -> Result<i32, String> {
+        let target = (instruction_address & !ADDR_MASK) | address;
+        self.check_address(target)?;
+        Ok(target)
+    }
+
+    fn checked_range(
+        &self,
+        start_address: i32,
+        word_count: usize,
+    ) -> Result<std::ops::Range<usize>, String> {
+        let start = usize::try_from(start_address)
+            .map_err(|_| format!("address out of range: {start_address}"))?;
+        let end = start.checked_add(word_count).ok_or_else(|| {
+            format!("address range overflows: start={start_address}, words={word_count}")
+        })?;
+        if end > self.memory.len() {
+            return Err(format!(
+                "address range out of range: start={start_address}, words={word_count}, memory_words={}",
+                self.memory.len()
+            ));
+        }
+        Ok(start..end)
+    }
+
+    fn following_address(&self, address: i32) -> Result<i32, String> {
+        let next = address
+            .checked_add(1)
+            .ok_or_else(|| format!("address overflow after {address}"))?;
+        self.check_address(next)?;
+        Ok(next)
+    }
+
+    fn set_pc(&mut self, address: i32) -> Result<(), String> {
+        self.check_address(address)?;
+        self.pc = address;
+        Ok(())
+    }
+
+    fn advance_pc(&mut self, count: i32) -> Result<(), String> {
+        let address = self
+            .pc
+            .checked_add(count)
+            .ok_or_else(|| "GE-225 P counter overflow".to_string())?;
+        self.set_pc(address)
     }
 
     fn check_address(&self, address: i32) -> Result<(), String> {
-        if address < 0 || address >= self.memory_size { Err(format!("address out of range: {address}")) } else { Ok(()) }
+        if address < 0 || address >= self.memory_size {
+            Err(format!("address out of range: {address}"))
+        } else {
+            Ok(())
+        }
     }
 }
 
@@ -735,13 +1184,34 @@ mod tests {
     fn encode_decode_round_trip() {
         let word = ins(0o01, 0x1234 & 0x1fff, 0o2);
         assert_eq!(decode_instruction(word), (0o01, 0o2, 0x1234 & 0x1fff));
-        assert_eq!(unpack_words(&pack_words(&[word, assemble_fixed("NOP").unwrap()])).unwrap(), vec![word, assemble_fixed("NOP").unwrap()]);
+        assert_eq!(
+            unpack_words(&pack_words(&[word, assemble_fixed("NOP").unwrap()])).unwrap(),
+            vec![word, assemble_fixed("NOP").unwrap()]
+        );
     }
 
     #[test]
     fn lda_add_sta_program() {
-        let mut sim = Simulator::new(4096);
-        sim.load_words(&[ins(0o00, 10, 0), ins(0o01, 11, 0), ins(0o03, 12, 0), assemble_fixed("NOP").unwrap(), 0, 0, 0, 0, 0, 0, 1, 2, 0], 0).unwrap();
+        let mut sim = Simulator::new(4096).unwrap();
+        sim.load_words(
+            &[
+                ins(0o00, 10, 0),
+                ins(0o01, 11, 0),
+                ins(0o03, 12, 0),
+                assemble_fixed("NOP").unwrap(),
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                2,
+                0,
+            ],
+            0,
+        )
+        .unwrap();
         sim.run(4).unwrap();
         let state = sim.get_state();
         assert_eq!(state.a, 3);
@@ -749,9 +1219,25 @@ mod tests {
     }
 
     #[test]
-    fn spb_stores_p() {
-        let mut sim = Simulator::new(4096);
-        sim.load_words(&[ins(0o07, 4, 2), assemble_fixed("NOP").unwrap(), assemble_fixed("NOP").unwrap(), assemble_fixed("NOP").unwrap(), ins(0o00, 10, 0), assemble_fixed("NOP").unwrap(), 0, 0, 0, 0, 0x12345], 0).unwrap();
+    fn spb_stores_instruction_address() {
+        let mut sim = Simulator::new(4096).unwrap();
+        sim.load_words(
+            &[
+                ins(0o07, 4, 2),
+                assemble_fixed("NOP").unwrap(),
+                assemble_fixed("NOP").unwrap(),
+                assemble_fixed("NOP").unwrap(),
+                ins(0o00, 10, 0),
+                assemble_fixed("NOP").unwrap(),
+                0,
+                0,
+                0,
+                0,
+                0x12345,
+            ],
+            0,
+        )
+        .unwrap();
         sim.run(3).unwrap();
         let state = sim.get_state();
         assert_eq!(state.x_words[2], 0);
@@ -760,9 +1246,17 @@ mod tests {
 
     #[test]
     fn odd_address_double_ops() {
-        let mut sim = Simulator::new(4096);
+        let mut sim = Simulator::new(4096).unwrap();
         sim.write_word(11, 0x13579).unwrap();
-        sim.load_words(&[ins(0o10, 11, 0), ins(0o13, 13, 0), assemble_fixed("NOP").unwrap()], 0).unwrap();
+        sim.load_words(
+            &[
+                ins(0o10, 11, 0),
+                ins(0o13, 13, 0),
+                assemble_fixed("NOP").unwrap(),
+            ],
+            0,
+        )
+        .unwrap();
         sim.run(3).unwrap();
         let state = sim.get_state();
         assert_eq!(state.a, 0x13579);
@@ -772,12 +1266,23 @@ mod tests {
 
     #[test]
     fn moy_moves_blocks() {
-        let mut sim = Simulator::new(4096);
+        let mut sim = Simulator::new(4096).unwrap();
         sim.write_word(20, 0x11111).unwrap();
         sim.write_word(21, 0x22222).unwrap();
         sim.write_word(30, 40).unwrap();
         sim.write_word(31, (1 << 20) - 2).unwrap();
-        sim.load_words(&[ins(0o00, 30, 0), assemble_fixed("LQA").unwrap(), ins(0o00, 31, 0), assemble_fixed("XAQ").unwrap(), ins(0o24, 20, 0), assemble_fixed("NOP").unwrap()], 0).unwrap();
+        sim.load_words(
+            &[
+                ins(0o00, 30, 0),
+                assemble_fixed("LQA").unwrap(),
+                ins(0o00, 31, 0),
+                assemble_fixed("XAQ").unwrap(),
+                ins(0o24, 20, 0),
+                assemble_fixed("NOP").unwrap(),
+            ],
+            0,
+        )
+        .unwrap();
         sim.run(6).unwrap();
         let state = sim.get_state();
         assert_eq!(state.a, 0);
@@ -787,9 +1292,19 @@ mod tests {
 
     #[test]
     fn console_typewriter_path() {
-        let mut sim = Simulator::new(4096);
+        let mut sim = Simulator::new(4096).unwrap();
         sim.set_control_switches(0o1633);
-        sim.load_words(&[assemble_fixed("RCS").unwrap(), assemble_fixed("TON").unwrap(), assemble_shift("SAN", 6).unwrap(), assemble_fixed("TYP").unwrap(), assemble_fixed("NOP").unwrap()], 0).unwrap();
+        sim.load_words(
+            &[
+                assemble_fixed("RCS").unwrap(),
+                assemble_fixed("TON").unwrap(),
+                assemble_shift("SAN", 6).unwrap(),
+                assemble_fixed("TYP").unwrap(),
+                assemble_fixed("NOP").unwrap(),
+            ],
+            0,
+        )
+        .unwrap();
         sim.run(5).unwrap();
         assert_eq!(sim.get_typewriter_output(), "-");
         assert!(sim.get_state().typewriter_power);
@@ -797,9 +1312,10 @@ mod tests {
 
     #[test]
     fn rcd_loads_queued_record() {
-        let mut sim = Simulator::new(4096);
-        sim.queue_card_reader_record(&[0x11111, 0x22222]);
-        sim.load_words(&[ins(0o25, 10, 0), assemble_fixed("NOP").unwrap()], 0).unwrap();
+        let mut sim = Simulator::new(4096).unwrap();
+        sim.queue_card_reader_record(&[0x11111, 0x22222]).unwrap();
+        sim.load_words(&[ins(0o25, 10, 0), assemble_fixed("NOP").unwrap()], 0)
+            .unwrap();
         sim.run(2).unwrap();
         let state = sim.get_state();
         assert_eq!(state.memory[10], 0x11111);

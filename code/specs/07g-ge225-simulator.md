@@ -24,6 +24,35 @@ to load words into memory, execute a practical subset of the instruction set,
 branch, read/write memory, and halt. Full historical fidelity is a future
 extension.
 
+### Fidelity completion status
+
+The preceding paragraph records the package's original compiler-MVP scope; it
+is not the final completion target. The Rust CPU simulator wave now requires a
+manual-backed functional simulator before a gate-level partner can be considered
+complete. The October 1963 GE-225 Programming Reference Manual is the primary
+authority for that work.
+
+The remaining functional work is deliberately split into auditable slices:
+
+1. exact installed-memory bounds, reserved-core modification words, atomic
+   multiword/device transfers, and checked control flow;
+2. exact single- and double-length integer, compare, shift, normalization,
+   indicator, and automatic-modification semantics;
+3. the documented central-processor optional instructions and complete direct
+   I/O/controller instruction decode and deterministic device contracts; and
+4. the optional Auxiliary Arithmetic Unit, including fixed, normalized
+   floating-point, and unnormalized floating-point modes.
+
+Until all four slices pass the Rust completion contract in
+`RUST-CPU-SIMULATOR-BACKLOG.md`, GE225/Core remains a useful compiler target but
+must not be presented as a complete historical GE-225 implementation.
+
+During the first slice, card input remains a bounded host-side abstraction: a
+queued record contains at most 27 words and `RCD` copies it atomically to a
+checked destination range. That contract is intentionally narrower than the
+manual's aligned 27-word card/status rotation and controller-ready behavior,
+which belong to the third slice above.
+
 ## Layer Position
 
 ```

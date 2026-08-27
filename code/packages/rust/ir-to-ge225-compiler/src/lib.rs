@@ -94,8 +94,10 @@
 
 use std::collections::HashMap;
 
+use coding_adventures_ge225_simulator::{
+    assemble_fixed, assemble_shift, encode_instruction, pack_words,
+};
 use compiler_ir::{IrInstruction, IrOp, IrOperand, IrProgram};
-use coding_adventures_ge225_simulator::{assemble_fixed, assemble_shift, encode_instruction, pack_words};
 
 pub mod codegen;
 
@@ -250,10 +252,7 @@ pub fn validate_for_ge225(program: &IrProgram) -> Vec<String> {
 
         // Rule 1: opcode must be in the V1 supported set.
         if !is_supported_opcode(op) {
-            errors.push(format!(
-                "unsupported opcode {} in V1 GE-225 backend",
-                op
-            ));
+            errors.push(format!("unsupported opcode {} in V1 GE-225 backend", op));
             continue; // no point checking operands of an unsupported opcode
         }
 
@@ -277,7 +276,11 @@ pub fn validate_for_ge225(program: &IrProgram) -> Vec<String> {
             IrOp::Syscall => {
                 let bad = instr.operands.iter().find_map(|o| {
                     if let IrOperand::Immediate(v) = o {
-                        if *v != 1 { Some(*v) } else { None }
+                        if *v != 1 {
+                            Some(*v)
+                        } else {
+                            None
+                        }
                     } else {
                         None
                     }
@@ -561,7 +564,11 @@ impl<'a> CodeGen<'a> {
             //   other     →  add const: LDA src; ADD c; STA  (3 words)
             IrOp::AddImm => {
                 let imm = self.get_imm(instr)?;
-                if imm == 0 { 2 } else { 3 }
+                if imm == 0 {
+                    2
+                } else {
+                    3
+                }
             }
 
             // LDA a; ADD/SUB b; STA dst  (3 words)
@@ -633,21 +640,21 @@ impl<'a> CodeGen<'a> {
         // Pre-assemble fixed-word constants from the GE-225 manual.
         // These mnemonics are all documented; `assemble_fixed` only fails for
         // unknown mnemonics, so unwrap is safe here.
-        let w_ton  = assemble_fixed("TON").unwrap();
-        let w_nop  = assemble_fixed("NOP").unwrap();
-        let w_ldz  = assemble_fixed("LDZ").unwrap();
-        let w_ldo  = assemble_fixed("LDO").unwrap();
-        let w_lqa  = assemble_fixed("LQA").unwrap(); // Q ← A (kept for future MUL/DIV)
-        let w_laq  = assemble_fixed("LAQ").unwrap(); // A ← Q (kept for future MUL/DIV)
-        let w_ado  = assemble_fixed("ADO").unwrap();
-        let w_sbo  = assemble_fixed("SBO").unwrap();
-        let w_bmi  = assemble_fixed("BMI").unwrap();
-        let w_bpl  = assemble_fixed("BPL").unwrap();
-        let w_bze  = assemble_fixed("BZE").unwrap();
-        let w_bnz  = assemble_fixed("BNZ").unwrap();
-        let w_bod  = assemble_fixed("BOD").unwrap();
+        let w_ton = assemble_fixed("TON").unwrap();
+        let w_nop = assemble_fixed("NOP").unwrap();
+        let w_ldz = assemble_fixed("LDZ").unwrap();
+        let w_ldo = assemble_fixed("LDO").unwrap();
+        let w_lqa = assemble_fixed("LQA").unwrap(); // Q ← A (kept for future MUL/DIV)
+        let w_laq = assemble_fixed("LAQ").unwrap(); // A ← Q (kept for future MUL/DIV)
+        let w_ado = assemble_fixed("ADO").unwrap();
+        let w_sbo = assemble_fixed("SBO").unwrap();
+        let w_bmi = assemble_fixed("BMI").unwrap();
+        let w_bpl = assemble_fixed("BPL").unwrap();
+        let w_bze = assemble_fixed("BZE").unwrap();
+        let w_bnz = assemble_fixed("BNZ").unwrap();
+        let w_bod = assemble_fixed("BOD").unwrap();
         let w_san6 = assemble_shift("SAN", 6).unwrap();
-        let w_typ  = assemble_fixed("TYP").unwrap();
+        let w_typ = assemble_fixed("TYP").unwrap();
         // BPL (branch on plus/non-negative) is assembled but replaced by BMI for
         // signed comparisons — suppress the unused-variable warning.
         let _ = w_bpl;
@@ -657,12 +664,8 @@ impl<'a> CodeGen<'a> {
 
         for instr in &self.program.instructions {
             let new_words = self.emit(
-                instr,
-                emit_addr,
-                w_nop, w_ldz, w_ldo,
-                w_ado, w_sbo, w_bmi, w_bze,
-                w_bnz, w_bod, w_san6, w_typ,
-                w_lqa, w_laq,
+                instr, emit_addr, w_nop, w_ldz, w_ldo, w_ado, w_sbo, w_bmi, w_bze, w_bnz, w_bod,
+                w_san6, w_typ, w_lqa, w_laq,
             )?;
             emit_addr += new_words.len();
             words.extend(new_words);
@@ -703,10 +706,19 @@ impl<'a> CodeGen<'a> {
         &self,
         instr: &IrInstruction,
         start_addr: usize,
-        w_nop: i32, w_ldz: i32, w_ldo: i32,
-        w_ado: i32, w_sbo: i32, w_bmi: i32, w_bze: i32,
-        w_bnz: i32, w_bod: i32, w_san6: i32, w_typ: i32,
-        w_lqa: i32, w_laq: i32,
+        w_nop: i32,
+        w_ldz: i32,
+        w_ldo: i32,
+        w_ado: i32,
+        w_sbo: i32,
+        w_bmi: i32,
+        w_bze: i32,
+        w_bnz: i32,
+        w_bod: i32,
+        w_san6: i32,
+        w_typ: i32,
+        w_lqa: i32,
+        w_laq: i32,
     ) -> Result<Vec<i32>, CodeGenError> {
         Ok(match instr.opcode {
             IrOp::Label | IrOp::Comment => vec![],
@@ -722,8 +734,12 @@ impl<'a> CodeGen<'a> {
             IrOp::Mul => self.emit_mul(instr, w_lqa, w_laq, w_ldz)?,
             IrOp::Div => self.emit_div(instr, w_lqa, w_ldz)?,
             IrOp::AndImm => self.emit_and_imm(instr, start_addr, w_bod, w_ldz, w_ldo)?,
-            IrOp::CmpEq => self.emit_cmp(instr, start_addr, true, false, w_bze, w_bnz, w_ldz, w_ldo)?,
-            IrOp::CmpNe => self.emit_cmp(instr, start_addr, true, true, w_bze, w_bnz, w_ldz, w_ldo)?,
+            IrOp::CmpEq => {
+                self.emit_cmp(instr, start_addr, true, false, w_bze, w_bnz, w_ldz, w_ldo)?
+            }
+            IrOp::CmpNe => {
+                self.emit_cmp(instr, start_addr, true, true, w_bze, w_bnz, w_ldz, w_ldo)?
+            }
             IrOp::CmpLt => self.emit_cmp_signed(instr, start_addr, false, w_bmi, w_ldz, w_ldo)?,
             IrOp::CmpGt => self.emit_cmp_signed(instr, start_addr, true, w_bmi, w_ldz, w_ldo)?,
             IrOp::Jump => self.emit_jump(instr)?,
@@ -766,7 +782,10 @@ impl<'a> CodeGen<'a> {
     /// The ADD-constant path requires the immediate to have been interned in
     /// the constants table during pass 0.
     fn emit_add_imm(
-        &self, instr: &IrInstruction, w_ado: i32, w_sbo: i32,
+        &self,
+        instr: &IrInstruction,
+        w_ado: i32,
+        w_sbo: i32,
     ) -> Result<Vec<i32>, CodeGenError> {
         let dst = self.reg(instr, 0)?;
         let src = self.reg(instr, 1)?;
@@ -776,10 +795,10 @@ impl<'a> CodeGen<'a> {
         let sta = self.sta(self.spill(dst));
 
         Ok(match imm {
-            0  => vec![lda, sta],
-            1  => vec![lda, w_ado, sta],
+            0 => vec![lda, sta],
+            1 => vec![lda, w_ado, sta],
             -1 => vec![lda, w_sbo, sta],
-            _  => vec![lda, self.add(self.const_addr(imm)), sta],
+            _ => vec![lda, self.add(self.const_addr(imm)), sta],
         })
     }
 
@@ -787,7 +806,7 @@ impl<'a> CodeGen<'a> {
     ///
     /// Same pattern for `SUB` — just swap `OP_ADD` for `OP_SUB`.
     fn emit_binop(&self, ge225_op: i32, instr: &IrInstruction) -> Result<Vec<i32>, CodeGenError> {
-        let dst   = self.reg(instr, 0)?;
+        let dst = self.reg(instr, 0)?;
         let reg_a = self.reg(instr, 1)?;
         let reg_b = self.reg(instr, 2)?;
         Ok(vec![
@@ -816,18 +835,20 @@ impl<'a> CodeGen<'a> {
     fn emit_mul(
         &self,
         instr: &IrInstruction,
-        w_lqa: i32, w_laq: i32, w_ldz: i32,
+        w_lqa: i32,
+        w_laq: i32,
+        w_ldz: i32,
     ) -> Result<Vec<i32>, CodeGenError> {
-        let dst   = self.reg(instr, 0)?;
+        let dst = self.reg(instr, 0)?;
         let reg_a = self.reg(instr, 1)?;
         let reg_b = self.reg(instr, 2)?;
         Ok(vec![
-            self.lda(self.spill(reg_a)),  // A = vA
-            w_lqa,                         // Q = A = vA
-            w_ldz,                         // A = 0
-            self.mpy(self.spill(reg_b)),  // A,Q = vA * vB
-            w_laq,                         // A = Q  (lower 20 bits of product)
-            self.sta(self.spill(dst)),    // spill(vDst) = A
+            self.lda(self.spill(reg_a)), // A = vA
+            w_lqa,                       // Q = A = vA
+            w_ldz,                       // A = 0
+            self.mpy(self.spill(reg_b)), // A,Q = vA * vB
+            w_laq,                       // A = Q  (lower 20 bits of product)
+            self.sta(self.spill(dst)),   // spill(vDst) = A
         ])
     }
 
@@ -849,17 +870,18 @@ impl<'a> CodeGen<'a> {
     fn emit_div(
         &self,
         instr: &IrInstruction,
-        w_lqa: i32, w_ldz: i32,
+        w_lqa: i32,
+        w_ldz: i32,
     ) -> Result<Vec<i32>, CodeGenError> {
-        let dst   = self.reg(instr, 0)?;
+        let dst = self.reg(instr, 0)?;
         let reg_a = self.reg(instr, 1)?;
         let reg_b = self.reg(instr, 2)?;
         Ok(vec![
-            self.lda(self.spill(reg_a)),  // A = vA
-            w_lqa,                         // Q = A = vA  (dividend in Q)
-            w_ldz,                         // A = 0       (high word = 0)
-            self.dvd(self.spill(reg_b)),  // A = quotient
-            self.sta(self.spill(dst)),    // spill(vDst) = quotient
+            self.lda(self.spill(reg_a)), // A = vA
+            w_lqa,                       // Q = A = vA  (dividend in Q)
+            w_ldz,                       // A = 0       (high word = 0)
+            self.dvd(self.spill(reg_b)), // A = quotient
+            self.sta(self.spill(dst)),   // spill(vDst) = quotient
         ])
     }
 
@@ -892,8 +914,12 @@ impl<'a> CodeGen<'a> {
     /// addr+6:  STA  spill(vDst)
     /// ```
     fn emit_and_imm(
-        &self, instr: &IrInstruction, start_addr: usize,
-        w_bod: i32, w_ldz: i32, w_ldo: i32,
+        &self,
+        instr: &IrInstruction,
+        start_addr: usize,
+        w_bod: i32,
+        w_ldz: i32,
+        w_ldo: i32,
     ) -> Result<Vec<i32>, CodeGenError> {
         let dst = self.reg(instr, 0)?;
         let src = self.reg(instr, 1)?;
@@ -907,16 +933,16 @@ impl<'a> CodeGen<'a> {
         // BOD skips when A is EVEN (inhibit = odd).
         // Even path: BOD skips +2 → falls to LDZ (result=0) at +3.
         // Odd  path: BOD does NOT skip → executes BRU to LDO (result=1) at +5.
-        let ldo_addr  = start_addr + 5; // LDO (result=1) for ODD inputs
+        let ldo_addr = start_addr + 5; // LDO (result=1) for ODD inputs
         let done_addr = start_addr + 6; // STA
         Ok(vec![
             self.lda(self.spill(src)), // +0: load source
-            w_bod,                      // +1: BOD — skip +2 when A is EVEN
-            self.bru(ldo_addr),         // +2: A is ODD (not skipped) → jump to LDO
-            w_ldz,                      // +3: A is EVEN (BOD skipped +2) → A=0
-            self.bru(done_addr),        // +4: jump to STA
-            w_ldo,                      // +5: A is ODD → A=1
-            self.sta(self.spill(dst)),  // +6: store result
+            w_bod,                     // +1: BOD — skip +2 when A is EVEN
+            self.bru(ldo_addr),        // +2: A is ODD (not skipped) → jump to LDO
+            w_ldz,                     // +3: A is EVEN (BOD skipped +2) → A=0
+            self.bru(done_addr),       // +4: jump to STA
+            w_ldo,                     // +5: A is ODD → A=1
+            self.sta(self.spill(dst)), // +6: store result
         ])
     }
 
@@ -949,11 +975,17 @@ impl<'a> CodeGen<'a> {
     // compare flags; passing them individually keeps the emit logic explicit.
     #[allow(clippy::too_many_arguments)]
     fn emit_cmp(
-        &self, instr: &IrInstruction, start_addr: usize,
-        eq: bool, negate: bool,
-        w_bze: i32, w_bnz: i32, w_ldz: i32, w_ldo: i32,
+        &self,
+        instr: &IrInstruction,
+        start_addr: usize,
+        eq: bool,
+        negate: bool,
+        w_bze: i32,
+        w_bnz: i32,
+        w_ldz: i32,
+        w_ldo: i32,
     ) -> Result<Vec<i32>, CodeGenError> {
-        let dst   = self.reg(instr, 0)?;
+        let dst = self.reg(instr, 0)?;
         let reg_a = self.reg(instr, 1)?;
         let reg_b = self.reg(instr, 2)?;
 
@@ -970,16 +1002,16 @@ impl<'a> CodeGen<'a> {
         // zero_word = result when A==0 after SUB
         // one_word  = result when A!=0 after SUB
         let zero_word = if negate { w_ldo } else { w_ldz };
-        let one_word  = if negate { w_ldz } else { w_ldo };
+        let one_word = if negate { w_ldz } else { w_ldo };
 
         Ok(vec![
             self.lda(self.spill(reg_a)), // +0
             self.sub(self.spill(reg_b)), // +1
-            skip_word,                    // +2: conditional skip
-            self.bru(true_addr),          // +3: jump to non-zero branch
-            zero_word,                    // +4: result for A==0
-            self.bru(done_addr),          // +5: jump past non-zero branch
-            one_word,                     // +6: result for A!=0  [__true]
+            skip_word,                   // +2: conditional skip
+            self.bru(true_addr),         // +3: jump to non-zero branch
+            zero_word,                   // +4: result for A==0
+            self.bru(done_addr),         // +5: jump past non-zero branch
+            one_word,                    // +6: result for A!=0  [__true]
             self.sta(self.spill(dst)),   // +7  [__done]
         ])
     }
@@ -1011,10 +1043,15 @@ impl<'a> CodeGen<'a> {
     ///
     /// For `CMP_GT` (vA > vB): swap vA and vB (vA > vB iff vB < vA).
     fn emit_cmp_signed(
-        &self, instr: &IrInstruction, start_addr: usize,
-        gt_mode: bool, w_bmi: i32, w_ldz: i32, w_ldo: i32,
+        &self,
+        instr: &IrInstruction,
+        start_addr: usize,
+        gt_mode: bool,
+        w_bmi: i32,
+        w_ldz: i32,
+        w_ldo: i32,
     ) -> Result<Vec<i32>, CodeGenError> {
-        let dst   = self.reg(instr, 0)?;
+        let dst = self.reg(instr, 0)?;
         let reg_a = self.reg(instr, 1)?;
         let reg_b = self.reg(instr, 2)?;
 
@@ -1032,11 +1069,11 @@ impl<'a> CodeGen<'a> {
         Ok(vec![
             self.lda(self.spill(lhs)), // +0
             self.sub(self.spill(rhs)), // +1
-            w_bmi,                      // +2: BMI — skip when A≥0 (not less)
-            self.bru(true_addr),        // +3: A<0 → jump to LDO
-            w_ldz,                      // +4: A≥0 → result 0
-            self.bru(done_addr),        // +5
-            w_ldo,                      // +6: A<0 → result 1  [__true]
+            w_bmi,                     // +2: BMI — skip when A≥0 (not less)
+            self.bru(true_addr),       // +3: A<0 → jump to LDO
+            w_ldz,                     // +4: A≥0 → result 0
+            self.bru(done_addr),       // +5
+            w_ldo,                     // +6: A<0 → result 1  [__true]
             self.sta(self.spill(dst)), // +7  [__done]
         ])
     }
@@ -1071,9 +1108,13 @@ impl<'a> CodeGen<'a> {
     ///
     /// For `BRANCH_NZ` (jump when A≠0), swap `BZE → BNZ`.
     fn emit_branch(
-        &self, instr: &IrInstruction, zero: bool, w_bze: i32, w_bnz: i32,
+        &self,
+        instr: &IrInstruction,
+        zero: bool,
+        w_bze: i32,
+        w_bnz: i32,
     ) -> Result<Vec<i32>, CodeGenError> {
-        let reg_n  = self.reg(instr, 0)?;
+        let reg_n = self.reg(instr, 0)?;
         let target = self.resolve_label(instr, 1)?;
         // BRANCH_Z (jump when A==0): BZE — inhibited by zero → BRU executes when A==0.
         // BRANCH_NZ (jump when A≠0): BNZ — inhibited by non-zero → BRU executes when A≠0.
@@ -1097,12 +1138,19 @@ impl<'a> CodeGen<'a> {
     /// TYP               ; print the character whose code is in N
     /// ```
     fn emit_syscall(
-        &self, instr: &IrInstruction, w_san6: i32, w_typ: i32,
+        &self,
+        instr: &IrInstruction,
+        w_san6: i32,
+        w_typ: i32,
     ) -> Result<Vec<i32>, CodeGenError> {
         // Verify syscall number is 1 (pre-flight should have caught it, but
         // belt-and-suspenders check).
         let num = instr.operands.iter().find_map(|o| {
-            if let IrOperand::Immediate(v) = o { Some(*v) } else { None }
+            if let IrOperand::Immediate(v) = o {
+                Some(*v)
+            } else {
+                None
+            }
         });
         if let Some(n) = num {
             if n != 1 {
@@ -1140,14 +1188,23 @@ impl<'a> CodeGen<'a> {
 
     /// Extract the integer value from the last `IrOperand::Immediate` operand.
     fn get_imm(&self, instr: &IrInstruction) -> Result<i64, CodeGenError> {
-        instr.operands.iter().rev().find_map(|o| {
-            if let IrOperand::Immediate(v) = o { Some(Ok(*v)) } else { None }
-        }).unwrap_or_else(|| {
-            Err(CodeGenError(format!(
-                "no Immediate operand in {} instruction",
-                instr.opcode
-            )))
-        })
+        instr
+            .operands
+            .iter()
+            .rev()
+            .find_map(|o| {
+                if let IrOperand::Immediate(v) = o {
+                    Some(Ok(*v))
+                } else {
+                    None
+                }
+            })
+            .unwrap_or_else(|| {
+                Err(CodeGenError(format!(
+                    "no Immediate operand in {} instruction",
+                    instr.opcode
+                )))
+            })
     }
 
     /// Resolve a label operand to its absolute code address.
@@ -1156,11 +1213,11 @@ impl<'a> CodeGen<'a> {
     /// (undefined forward reference).
     fn resolve_label(&self, instr: &IrInstruction, idx: usize) -> Result<usize, CodeGenError> {
         match instr.operands.get(idx) {
-            Some(IrOperand::Label(name)) => {
-                self.label_map.get(name).copied().ok_or_else(|| {
-                    CodeGenError(format!("undefined label: {:?}", name))
-                })
-            }
+            Some(IrOperand::Label(name)) => self
+                .label_map
+                .get(name)
+                .copied()
+                .ok_or_else(|| CodeGenError(format!("undefined label: {:?}", name))),
             Some(other) => Err(CodeGenError(format!(
                 "expected Label at operand {} of {}, got {:?}",
                 idx, instr.opcode, other
@@ -1218,11 +1275,14 @@ mod tests {
     #[test]
     fn test_validate_rejects_unsupported_opcode() {
         // LOAD_BYTE is not in the V1 GE-225 supported set.
-        let prog = with(base_prog(), IrInstruction::new(
-            IrOp::LoadByte,
-            vec![IrOperand::Register(0), IrOperand::Register(1)],
-            2,
-        ));
+        let prog = with(
+            base_prog(),
+            IrInstruction::new(
+                IrOp::LoadByte,
+                vec![IrOperand::Register(0), IrOperand::Register(1)],
+                2,
+            ),
+        );
         let errors = validate_for_ge225(&prog);
         assert!(!errors.is_empty());
         assert!(errors[0].contains("LOAD_BYTE") || errors[0].contains("unsupported opcode"));
@@ -1231,11 +1291,14 @@ mod tests {
     #[test]
     fn test_validate_rejects_constant_overflow() {
         // 1_000_000 exceeds GE225_WORD_MAX (524_287).
-        let prog = with(base_prog(), IrInstruction::new(
-            IrOp::LoadImm,
-            vec![IrOperand::Register(0), IrOperand::Immediate(1_000_000)],
-            2,
-        ));
+        let prog = with(
+            base_prog(),
+            IrInstruction::new(
+                IrOp::LoadImm,
+                vec![IrOperand::Register(0), IrOperand::Immediate(1_000_000)],
+                2,
+            ),
+        );
         let errors = validate_for_ge225(&prog);
         assert!(!errors.is_empty());
         assert!(errors[0].contains("overflow") || errors[0].contains("overflow"));
@@ -1244,22 +1307,28 @@ mod tests {
     #[test]
     fn test_validate_rejects_negative_overflow() {
         // -600_000 is below GE225_WORD_MIN (-524_288).
-        let prog = with(base_prog(), IrInstruction::new(
-            IrOp::LoadImm,
-            vec![IrOperand::Register(0), IrOperand::Immediate(-600_000)],
-            2,
-        ));
+        let prog = with(
+            base_prog(),
+            IrInstruction::new(
+                IrOp::LoadImm,
+                vec![IrOperand::Register(0), IrOperand::Immediate(-600_000)],
+                2,
+            ),
+        );
         let errors = validate_for_ge225(&prog);
         assert!(!errors.is_empty());
     }
 
     #[test]
     fn test_validate_rejects_syscall_not_1() {
-        let prog = with(base_prog(), IrInstruction::new(
-            IrOp::Syscall,
-            vec![IrOperand::Register(0), IrOperand::Immediate(2)],
-            2,
-        ));
+        let prog = with(
+            base_prog(),
+            IrInstruction::new(
+                IrOp::Syscall,
+                vec![IrOperand::Register(0), IrOperand::Immediate(2)],
+                2,
+            ),
+        );
         let errors = validate_for_ge225(&prog);
         assert!(!errors.is_empty());
         assert!(errors[0].contains("SYSCALL 2") || errors[0].contains("unsupported SYSCALL"));
@@ -1267,25 +1336,31 @@ mod tests {
 
     #[test]
     fn test_validate_allows_syscall_1() {
-        let prog = with(base_prog(), IrInstruction::new(
-            IrOp::Syscall,
-            vec![IrOperand::Register(0), IrOperand::Immediate(1)],
-            2,
-        ));
+        let prog = with(
+            base_prog(),
+            IrInstruction::new(
+                IrOp::Syscall,
+                vec![IrOperand::Register(0), IrOperand::Immediate(1)],
+                2,
+            ),
+        );
         assert!(validate_for_ge225(&prog).is_empty());
     }
 
     #[test]
     fn test_validate_rejects_and_imm_not_1() {
-        let prog = with(base_prog(), IrInstruction::new(
-            IrOp::AndImm,
-            vec![
-                IrOperand::Register(0),
-                IrOperand::Register(1),
-                IrOperand::Immediate(3), // only 1 is allowed
-            ],
-            2,
-        ));
+        let prog = with(
+            base_prog(),
+            IrInstruction::new(
+                IrOp::AndImm,
+                vec![
+                    IrOperand::Register(0),
+                    IrOperand::Register(1),
+                    IrOperand::Immediate(3), // only 1 is allowed
+                ],
+                2,
+            ),
+        );
         let errors = validate_for_ge225(&prog);
         assert!(!errors.is_empty());
         assert!(errors[0].contains("AND_IMM"));
@@ -1293,15 +1368,18 @@ mod tests {
 
     #[test]
     fn test_validate_allows_and_imm_1() {
-        let prog = with(base_prog(), IrInstruction::new(
-            IrOp::AndImm,
-            vec![
-                IrOperand::Register(0),
-                IrOperand::Register(1),
-                IrOperand::Immediate(1),
-            ],
-            2,
-        ));
+        let prog = with(
+            base_prog(),
+            IrInstruction::new(
+                IrOp::AndImm,
+                vec![
+                    IrOperand::Register(0),
+                    IrOperand::Register(1),
+                    IrOperand::Immediate(1),
+                ],
+                2,
+            ),
+        );
         assert!(validate_for_ge225(&prog).is_empty());
     }
 
@@ -1355,9 +1433,7 @@ mod tests {
     #[test]
     fn test_nop_is_one_word() {
         let r1 = compile_to_ge225(&base_prog()).unwrap();
-        let r2 = compile_to_ge225(&prog_with(
-            IrInstruction::new(IrOp::Nop, vec![], 2),
-        )).unwrap();
+        let r2 = compile_to_ge225(&prog_with(IrInstruction::new(IrOp::Nop, vec![], 2))).unwrap();
         let words1 = r1.binary.len() / 3;
         let words2 = r2.binary.len() / 3;
         // NOP adds 1 word to the code section
@@ -1367,13 +1443,12 @@ mod tests {
     #[test]
     fn test_load_imm_is_two_words() {
         let r1 = compile_to_ge225(&base_prog()).unwrap();
-        let r2 = compile_to_ge225(&prog_with(
-            IrInstruction::new(
-                IrOp::LoadImm,
-                vec![IrOperand::Register(0), IrOperand::Immediate(99)],
-                2,
-            ),
-        )).unwrap();
+        let r2 = compile_to_ge225(&prog_with(IrInstruction::new(
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(99)],
+            2,
+        )))
+        .unwrap();
         assert_eq!(r2.binary.len() / 3 - r1.binary.len() / 3, 3);
         // 2 code words + 1 constant slot in data section
         // Actually the binary is code + data, so total words increase by 3 (2 code + 1 const)
@@ -1386,7 +1461,9 @@ mod tests {
         // We need v0 and v1, so first define them with LOAD_IMM.
         let mut p = IrProgram::new("_start");
         p.add_instruction(IrInstruction::new(
-            IrOp::Label, vec![IrOperand::Label("_start".to_string())], -1,
+            IrOp::Label,
+            vec![IrOperand::Label("_start".to_string())],
+            -1,
         ));
         p.add_instruction(IrInstruction::new(
             IrOp::LoadImm,
@@ -1400,7 +1477,11 @@ mod tests {
         };
         p.add_instruction(IrInstruction::new(
             IrOp::AddImm,
-            vec![IrOperand::Register(1), IrOperand::Register(0), IrOperand::Immediate(0)],
+            vec![
+                IrOperand::Register(1),
+                IrOperand::Register(0),
+                IrOperand::Immediate(0),
+            ],
             2,
         ));
         p.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 99));
@@ -1408,10 +1489,7 @@ mod tests {
         let r_with_copy = compile_to_ge225(&p).unwrap();
         // The copy instruction adds 2 code words and 0 constants (imm=0 not interned)
         // halt_only has halt_address N; r_with_copy has halt_address N+2
-        assert_eq!(
-            r_with_copy.halt_address - r_halt_only.halt_address,
-            2
-        );
+        assert_eq!(r_with_copy.halt_address - r_halt_only.halt_address, 2);
         let _ = r1;
     }
 
@@ -1419,7 +1497,9 @@ mod tests {
     fn test_add_imm_plus_one_is_three_words() {
         let mut p = IrProgram::new("_start");
         p.add_instruction(IrInstruction::new(
-            IrOp::Label, vec![IrOperand::Label("_start".to_string())], -1,
+            IrOp::Label,
+            vec![IrOperand::Label("_start".to_string())],
+            -1,
         ));
         p.add_instruction(IrInstruction::new(
             IrOp::LoadImm,
@@ -1433,7 +1513,11 @@ mod tests {
         };
         p.add_instruction(IrInstruction::new(
             IrOp::AddImm,
-            vec![IrOperand::Register(1), IrOperand::Register(0), IrOperand::Immediate(1)],
+            vec![
+                IrOperand::Register(1),
+                IrOperand::Register(0),
+                IrOperand::Immediate(1),
+            ],
             2,
         ));
         p.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 99));
@@ -1446,13 +1530,19 @@ mod tests {
     fn test_add_is_three_words() {
         let mut p = IrProgram::new("_start");
         p.add_instruction(IrInstruction::new(
-            IrOp::Label, vec![IrOperand::Label("_start".to_string())], -1,
+            IrOp::Label,
+            vec![IrOperand::Label("_start".to_string())],
+            -1,
         ));
         p.add_instruction(IrInstruction::new(
-            IrOp::LoadImm, vec![IrOperand::Register(0), IrOperand::Immediate(1)], 1,
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(1)],
+            1,
         ));
         p.add_instruction(IrInstruction::new(
-            IrOp::LoadImm, vec![IrOperand::Register(1), IrOperand::Immediate(2)], 2,
+            IrOp::LoadImm,
+            vec![IrOperand::Register(1), IrOperand::Immediate(2)],
+            2,
         ));
         let halt_only = {
             let mut p2 = p.clone();
@@ -1461,7 +1551,11 @@ mod tests {
         };
         p.add_instruction(IrInstruction::new(
             IrOp::Add,
-            vec![IrOperand::Register(2), IrOperand::Register(0), IrOperand::Register(1)],
+            vec![
+                IrOperand::Register(2),
+                IrOperand::Register(0),
+                IrOperand::Register(1),
+            ],
             3,
         ));
         p.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 99));
@@ -1474,10 +1568,14 @@ mod tests {
     fn test_and_imm_is_seven_words() {
         let mut p = IrProgram::new("_start");
         p.add_instruction(IrInstruction::new(
-            IrOp::Label, vec![IrOperand::Label("_start".to_string())], -1,
+            IrOp::Label,
+            vec![IrOperand::Label("_start".to_string())],
+            -1,
         ));
         p.add_instruction(IrInstruction::new(
-            IrOp::LoadImm, vec![IrOperand::Register(0), IrOperand::Immediate(7)], 1,
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(7)],
+            1,
         ));
         let halt_only = {
             let mut p2 = p.clone();
@@ -1486,7 +1584,11 @@ mod tests {
         };
         p.add_instruction(IrInstruction::new(
             IrOp::AndImm,
-            vec![IrOperand::Register(1), IrOperand::Register(0), IrOperand::Immediate(1)],
+            vec![
+                IrOperand::Register(1),
+                IrOperand::Register(0),
+                IrOperand::Immediate(1),
+            ],
             2,
         ));
         p.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 99));
@@ -1499,13 +1601,19 @@ mod tests {
     fn test_cmp_eq_is_eight_words() {
         let mut p = IrProgram::new("_start");
         p.add_instruction(IrInstruction::new(
-            IrOp::Label, vec![IrOperand::Label("_start".to_string())], -1,
+            IrOp::Label,
+            vec![IrOperand::Label("_start".to_string())],
+            -1,
         ));
         p.add_instruction(IrInstruction::new(
-            IrOp::LoadImm, vec![IrOperand::Register(0), IrOperand::Immediate(5)], 1,
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(5)],
+            1,
         ));
         p.add_instruction(IrInstruction::new(
-            IrOp::LoadImm, vec![IrOperand::Register(1), IrOperand::Immediate(5)], 2,
+            IrOp::LoadImm,
+            vec![IrOperand::Register(1), IrOperand::Immediate(5)],
+            2,
         ));
         let halt_only = {
             let mut p2 = p.clone();
@@ -1514,7 +1622,11 @@ mod tests {
         };
         p.add_instruction(IrInstruction::new(
             IrOp::CmpEq,
-            vec![IrOperand::Register(2), IrOperand::Register(0), IrOperand::Register(1)],
+            vec![
+                IrOperand::Register(2),
+                IrOperand::Register(0),
+                IrOperand::Register(1),
+            ],
             3,
         ));
         p.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 99));
@@ -1527,10 +1639,14 @@ mod tests {
     fn test_branch_z_is_three_words() {
         let mut p = IrProgram::new("_start");
         p.add_instruction(IrInstruction::new(
-            IrOp::Label, vec![IrOperand::Label("_start".to_string())], -1,
+            IrOp::Label,
+            vec![IrOperand::Label("_start".to_string())],
+            -1,
         ));
         p.add_instruction(IrInstruction::new(
-            IrOp::LoadImm, vec![IrOperand::Register(0), IrOperand::Immediate(0)], 1,
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(0)],
+            1,
         ));
         let halt_only = {
             let mut p2 = p.clone();
@@ -1539,7 +1655,10 @@ mod tests {
         };
         p.add_instruction(IrInstruction::new(
             IrOp::BranchZ,
-            vec![IrOperand::Register(0), IrOperand::Label("_start".to_string())],
+            vec![
+                IrOperand::Register(0),
+                IrOperand::Label("_start".to_string()),
+            ],
             2,
         ));
         p.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 99));
@@ -1552,10 +1671,14 @@ mod tests {
     fn test_syscall_is_three_words() {
         let mut p = IrProgram::new("_start");
         p.add_instruction(IrInstruction::new(
-            IrOp::Label, vec![IrOperand::Label("_start".to_string())], -1,
+            IrOp::Label,
+            vec![IrOperand::Label("_start".to_string())],
+            -1,
         ));
         p.add_instruction(IrInstruction::new(
-            IrOp::LoadImm, vec![IrOperand::Register(0), IrOperand::Immediate(65)], 1,
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(65)],
+            1,
         ));
         let halt_only = {
             let mut p2 = p.clone();
@@ -1579,32 +1702,41 @@ mod tests {
 
     #[test]
     fn test_compile_fails_on_unsupported_opcode() {
-        let prog = with(base_prog(), IrInstruction::new(
-            IrOp::LoadByte,
-            vec![IrOperand::Register(0), IrOperand::Register(1)],
-            2,
-        ));
+        let prog = with(
+            base_prog(),
+            IrInstruction::new(
+                IrOp::LoadByte,
+                vec![IrOperand::Register(0), IrOperand::Register(1)],
+                2,
+            ),
+        );
         assert!(compile_to_ge225(&prog).is_err());
     }
 
     #[test]
     fn test_compile_fails_on_constant_overflow() {
-        let prog = with(base_prog(), IrInstruction::new(
-            IrOp::LoadImm,
-            vec![IrOperand::Register(0), IrOperand::Immediate(600_000)],
-            2,
-        ));
+        let prog = with(
+            base_prog(),
+            IrInstruction::new(
+                IrOp::LoadImm,
+                vec![IrOperand::Register(0), IrOperand::Immediate(600_000)],
+                2,
+            ),
+        );
         assert!(compile_to_ge225(&prog).is_err());
     }
 
     #[test]
     fn test_compile_fails_on_undefined_label() {
         // JUMP to a label that doesn't exist in the program.
-        let prog = with(base_prog(), IrInstruction::new(
-            IrOp::Jump,
-            vec![IrOperand::Label("nonexistent".to_string())],
-            2,
-        ));
+        let prog = with(
+            base_prog(),
+            IrInstruction::new(
+                IrOp::Jump,
+                vec![IrOperand::Label("nonexistent".to_string())],
+                2,
+            ),
+        );
         // Note: validate_for_ge225 won't catch this (it only checks opcodes/immediates).
         // The error will surface during pass 2.
         assert!(compile_to_ge225(&prog).is_err());
@@ -1620,7 +1752,9 @@ mod tests {
 
         let mut p = IrProgram::new("_start");
         p.add_instruction(IrInstruction::new(
-            IrOp::Label, vec![IrOperand::Label("_start".to_string())], -1,
+            IrOp::Label,
+            vec![IrOperand::Label("_start".to_string())],
+            -1,
         ));
         p.add_instruction(IrInstruction::new(
             IrOp::LoadImm,
@@ -1631,11 +1765,12 @@ mod tests {
 
         let result = compile_to_ge225(&p).unwrap();
 
-        let mut sim = Simulator::new(4096);
+        let mut sim = Simulator::new(4096).unwrap();
         sim.load_words(
             &coding_adventures_ge225_simulator::unpack_words(&result.binary).unwrap(),
             0,
-        ).unwrap();
+        )
+        .unwrap();
 
         // Run until we hit the halt stub (self-loop).
         let halt = result.halt_address as i32;
@@ -1655,31 +1790,43 @@ mod tests {
         // Compute 3 + 4 = 7 and store in v2; read v2's spill slot.
         let mut p = IrProgram::new("_start");
         p.add_instruction(IrInstruction::new(
-            IrOp::Label, vec![IrOperand::Label("_start".to_string())], -1,
+            IrOp::Label,
+            vec![IrOperand::Label("_start".to_string())],
+            -1,
         ));
         p.add_instruction(IrInstruction::new(
-            IrOp::LoadImm, vec![IrOperand::Register(0), IrOperand::Immediate(3)], 1,
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(3)],
+            1,
         ));
         p.add_instruction(IrInstruction::new(
-            IrOp::LoadImm, vec![IrOperand::Register(1), IrOperand::Immediate(4)], 2,
+            IrOp::LoadImm,
+            vec![IrOperand::Register(1), IrOperand::Immediate(4)],
+            2,
         ));
         p.add_instruction(IrInstruction::new(
             IrOp::Add,
-            vec![IrOperand::Register(2), IrOperand::Register(0), IrOperand::Register(1)],
+            vec![
+                IrOperand::Register(2),
+                IrOperand::Register(0),
+                IrOperand::Register(1),
+            ],
             3,
         ));
         p.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 4));
 
         let result = compile_to_ge225(&p).unwrap();
 
-        let mut sim = Simulator::new(4096);
+        let mut sim = Simulator::new(4096).unwrap();
         let words = coding_adventures_ge225_simulator::unpack_words(&result.binary).unwrap();
         sim.load_words(&words, 0).unwrap();
 
         let halt = result.halt_address as i32;
         for _ in 0..1000 {
             let trace = sim.step().unwrap();
-            if trace.address == halt { break; }
+            if trace.address == halt {
+                break;
+            }
         }
 
         // v2 spill slot = data_base + 2

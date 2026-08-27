@@ -28,7 +28,7 @@
 use codegen_core::CodeGenerator;
 use compiler_ir::IrProgram;
 
-use crate::{CompileResult, compile_to_ge225, validate_for_ge225};
+use crate::{compile_to_ge225, validate_for_ge225, CompileResult};
 
 /// `CodeGenerator` adapter for the GE-225 backend.
 ///
@@ -65,7 +65,7 @@ impl CodeGenerator<IrProgram, CompileResult> for GE225CodeGenerator {
     fn generate(&self, ir: &IrProgram) -> CompileResult {
         compile_to_ge225(ir).expect(
             "GE225CodeGenerator::generate called on an invalid IrProgram; \
-             call validate() first"
+             call validate() first",
         )
     }
 }
