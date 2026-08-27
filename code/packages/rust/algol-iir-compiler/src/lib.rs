@@ -2576,7 +2576,8 @@ impl Compiler {
                 }
             }
             let (base, exponents) = operands.split_first()?;
-            let exponent = literal_nonneg_integer_power_chain(exponents)?;
+            let exponent =
+                literal_nonnegative_checked_integer_arithmetic_power_chain(exponents)?;
             return self
                 .static_integer_scalar_value(base)?
                 .checked_pow(exponent);
@@ -9826,6 +9827,20 @@ mod tests {
             "test",
         )
         .expect("checked integer powers participate in static snapshots");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+    }
+
+    #[test]
+    fn al4_print_static_integer_arithmetic_exponent_snapshot_in_real_expression() {
+        let module = compile_source(
+            "begin integer n, saved; n := 6 ^ ((2 ^ (2 - 1)) div 2) + 36; saved := n; n := 9; output(saved + 0.5) end",
+            "test",
+        )
+        .expect("checked arithmetic exponents participate in integer snapshots");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "str_const"

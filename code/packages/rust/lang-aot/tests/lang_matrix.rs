@@ -1420,6 +1420,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — straight-line integer snapshots retain bounded powers whose
+    // exponent operands are variable-free checked integer arithmetic.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer n, saved; n := 6 ^ ((2 ^ (2 - 1)) div 2) + 36; saved := n; n := 9; output(saved + 0.5) end",
+        expect: Expect::Stdout("42.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a runtime condition may preserve assignment metadata when
     // both independently proven branches have exactly the same value. The
     // condition still lowers and executes; only the path-independent snapshot
@@ -7589,6 +7598,31 @@ fn algol_static_integer_functions_widening_runs_on_every_available_standard_back
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but static integer-function output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_integer_arithmetic_exponent_snapshot_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("n := 6 ^ ((2 ^ (2 - 1)) div 2) + 36; saved := n")
+        })
+        .expect("the ALGOL integer arithmetic-exponent snapshot must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the integer arithmetic-exponent snapshot did not run"
             );
             continue;
         };
