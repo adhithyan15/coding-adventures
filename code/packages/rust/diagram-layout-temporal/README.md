@@ -35,5 +35,7 @@ explicit includes override exclusions. Calendar dates are interpreted with the
 diagram's authored `dateFormat` before backend-neutral layout.
 The parser rejects duration schedules with no recurring valid weekday before
 they can enter the otherwise infallible temporal layout API.
+Civil-day arithmetic remains backend-neutral across month and daylight-saving
+boundaries; source section/task order is retained during row layout.
 
 **Git**: Branch lanes (horizontal rows), commits as circles on lanes, merges as bezier arcs.
