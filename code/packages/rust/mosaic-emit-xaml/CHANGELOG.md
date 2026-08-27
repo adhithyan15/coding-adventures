@@ -1,5 +1,39 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — lower `box-shadow` to a `ThemeShadow` elevation token (#12028 item 1)
+
+30 `box-shadow` declarations across `task-app`'s stylesheet — its
+entire elevation system — were silently dropped, the single largest
+contributor to the flat, unfinished look the epic's original writeup
+flagged.
+
+New `part_wants_theme_shadow`: a non-`inset` `box-shadow` (any value)
+now gets `Translation="0,0,4"` plus a `<{Element}.Shadow><ThemeShadow/>
+</{Element}.Shadow>` child — WinUI's own consistent elevation
+treatment. Deliberately does NOT attempt to reproduce the authored
+blur/spread/color/opacity: `ThemeShadow` is a fixed, system-composited
+shadow with no CSS-shaped parameters, so every qualifying value
+collapses to the same one Z-depth (Microsoft's own "Cards: 4–8px"
+guidance) — a value an author might reasonably expect to vary in
+*intensity* can't, on this platform, regardless of what this emitter
+does. Applies uniformly to `emit_container`'s `Border`/`Grid`/
+`StackPanel` shapes and `emit_host_button`'s `<Button>` (which
+self-closes unless a `Shadow` child forces the open/close form).
+
+An `inset` value (the crescent-moon/status-dot drawing hack, item 3 —
+a shape cutout, not elevation) is a fundamentally different technique
+and stays a genuine, reported drop.
+
+Verified empirically against the real WinUI3 `dotnet build` toolchain
+before implementing (confirming `<Border.Shadow>`/`Translation="0,0,N"`
+both compile as direct XAML, despite `Translation` not being settable
+via `<Setter>`), then against a real regenerated `task-app` XAML
+project: 9 real elements (the brand-mark icon, every "active" pill/
+segmented-switch button) now carry `ThemeShadow`, the degradation
+report's only remaining `box-shadow` entry is the one genuinely-
+unsupported `inset` moon hack, and `dotnet build` succeeds with 0
+errors (same 98 pre-existing, unrelated warnings).
+
 ## [Unreleased] — recognize mosstyle's `align: "center-vertical"` (#13164)
 
 Found while auditing TaskApp's remaining `styleDegradations` after
