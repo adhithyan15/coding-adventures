@@ -8229,6 +8229,29 @@ fn literal_integral_real_exponent(node: &GrammarASTNode) -> Option<i32> {
     Some(value as i32)
 }
 
+/// Evaluate one variable-free integral exponent within the power-unroll cap.
+fn literal_bounded_integral_arithmetic_exponent(node: &GrammarASTNode) -> Option<i32> {
+    if let Some(value) = literal_signed_integer_exponent(node)
+        .or_else(|| literal_integral_real_exponent(node))
+    {
+        return Some(value);
+    }
+    if !recursive_tokens(node)
+        .iter()
+        .any(|token| token.effective_type_name() == "REAL_LIT" || token.value == "/")
+    {
+        let value = literal_checked_integer_arithmetic_value(node)?;
+        return (-(MAX_POW_UNROLL_EXPONENT as i64)..=MAX_POW_UNROLL_EXPONENT as i64)
+            .contains(&value)
+            .then_some(value as i32);
+    }
+    let value = expr_static_real_arithmetic_value_with(node, &|_| None)?;
+    (value.fract() == 0.0
+        && value >= -(MAX_POW_UNROLL_EXPONENT as f64)
+        && value <= MAX_POW_UNROLL_EXPONENT as f64)
+        .then_some(value as i32)
+}
+
 fn literal_nonnegative_integral_power_chain(nodes: &[&GrammarASTNode]) -> Option<u32> {
     let (last, prefix) = nodes.split_last()?;
     let exponent_value = |node: &GrammarASTNode| {
@@ -8255,25 +8278,8 @@ fn literal_nonnegative_integral_arithmetic_power_chain(
 ) -> Option<u32> {
     let (last, prefix) = nodes.split_last()?;
     let exponent_value = |node: &GrammarASTNode| {
-        if let Some(value) = literal_nonneg_integer_exponent(node) {
-            return Some(value);
-        }
-        if let Some(value) = literal_integral_real_exponent(node) {
-            return (value >= 0).then_some(value as u32);
-        }
-        if !recursive_tokens(node)
-            .iter()
-            .any(|token| token.effective_type_name() == "REAL_LIT" || token.value == "/")
-        {
-            let value = literal_checked_integer_arithmetic_value(node)?;
-            return (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64)
-                .then_some(value as u32);
-        }
-        let value = expr_static_real_arithmetic_value_with(node, &|_| None)?;
-        (value.fract() == 0.0
-            && value >= 0.0
-            && value <= MAX_POW_UNROLL_EXPONENT as f64)
-            .then_some(value as u32)
+        let value = literal_bounded_integral_arithmetic_exponent(node)?;
+        (value >= 0).then_some(value as u32)
     };
     let mut value = exponent_value(last)? as u64;
 
@@ -8392,8 +8398,7 @@ where
             .map(|value| value as i32)
             .or_else(|| {
                 if exponents.len() == 1 {
-                    literal_signed_integer_exponent(exponents[0])
-                        .or_else(|| literal_integral_real_exponent(exponents[0]))
+                    literal_bounded_integral_arithmetic_exponent(exponents[0])
                 } else {
                     None
                 }
@@ -10118,6 +10123,41 @@ mod tests {
         ] {
             let err = compile_source(source, "test")
                 .expect_err("unsafe arithmetic exponents must require runtime formatting");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_print_static_real_negative_arithmetic_exponents() {
+        let module = compile_source(
+            "begin print(2.0 ^ (1 - 4), 4.0 ^ (0.0 - 2.0), 2.0 ^ (1 - (2 ^ 2))) end",
+            "test",
+        )
+        .expect("static negative integral arithmetic exponents compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["0.125", "0.0625", "0.125"]);
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+    }
+
+    #[test]
+    fn al4_print_static_real_negative_arithmetic_exponents_fail_closed() {
+        for source in [
+            "begin print(2.0 ^ (0.0 - 0.5)) end",
+            "begin print(2.0 ^ (0 - 65)) end",
+            "begin print(2.0 ^ (0 - 9223372036854775807 - 2)) end",
+            "begin print(0.0 ^ (0 - 1)) end",
+            "begin integer n; n := 3; print(2.0 ^ (0 - n)) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("unsafe negative arithmetic exponents must require runtime formatting");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }
