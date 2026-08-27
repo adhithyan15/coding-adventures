@@ -2391,6 +2391,9 @@ impl Compiler {
         if let Some(literal) = expr_real_literal_text(node) {
             return Some(literal);
         }
+        if self.conditional_expression_parts(node).is_some() {
+            return None;
+        }
         let value = self.static_real_arithmetic_value(node)?;
         value.is_finite().then(|| value.to_string())
     }
@@ -2405,10 +2408,44 @@ impl Compiler {
         node: &GrammarASTNode,
         widen_tracked_integers: bool,
     ) -> Option<f64> {
-        expr_static_real_arithmetic_value_with(node, &|call| {
-            self.static_standard_real_value_with_widen(call, widen_tracked_integers)
-                .or_else(|| self.static_tracked_numeric_value(call, widen_tracked_integers))
+        expr_static_real_arithmetic_value_with(node, &|candidate| {
+            self.static_conditional_real_value_with_widen(
+                candidate,
+                widen_tracked_integers,
+            )
+                .or_else(|| {
+                    self.static_standard_real_value_with_widen(
+                        candidate,
+                        widen_tracked_integers,
+                    )
+                })
+                .or_else(|| {
+                    self.static_tracked_numeric_value(candidate, widen_tracked_integers)
+                })
         })
+    }
+
+    fn static_conditional_real_value_with_widen(
+        &self,
+        node: &GrammarASTNode,
+        widen_tracked_integers: bool,
+    ) -> Option<f64> {
+        let (condition, then_node, else_node) = self.conditional_expression_parts(node)?;
+        match self.static_boolean_value(condition) {
+            Some(true) => {
+                self.static_real_arithmetic_value_with_widen(then_node, widen_tracked_integers)
+            }
+            Some(false) => {
+                self.static_real_arithmetic_value_with_widen(else_node, widen_tracked_integers)
+            }
+            None => {
+                let then_value = self
+                    .static_real_arithmetic_value_with_widen(then_node, widen_tracked_integers)?;
+                let else_value = self
+                    .static_real_arithmetic_value_with_widen(else_node, widen_tracked_integers)?;
+                (then_value.to_bits() == else_value.to_bits()).then_some(then_value)
+            }
+        }
     }
 
     fn static_assigned_real_value(&self, node: &GrammarASTNode) -> Option<f64> {
@@ -10229,6 +10266,32 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
         }));
+    }
+
+    #[test]
+    fn al4_tracks_path_independent_conditional_exponents_for_real_metadata() {
+        let module = compile_source(
+            "begin integer gate, exponent; real saved; exponent := 2; saved := 6.0 ^ (if gate = 0 then exponent else exponent) + 6.0; exponent := 3; output(saved + 0.5) end",
+            "test",
+        )
+        .expect("equal conditional exponent branches may contribute to real metadata");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+    }
+
+    #[test]
+    fn al4_conditional_exponent_metadata_rejects_path_dependent_values() {
+        let err = compile_source(
+            "begin integer gate; real saved; saved := 6.0 ^ (if gate = 0 then 2 else 3); output(saved + 0.5) end",
+            "test",
+        )
+        .expect_err("different runtime-selected exponents must remain dynamic");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
