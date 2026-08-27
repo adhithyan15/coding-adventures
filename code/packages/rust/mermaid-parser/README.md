@@ -95,6 +95,9 @@ Explicit calendar includes and excludes retain their authored values in typed IR
 and resolve through the configured date format during temporal layout.
 Duration schedules whose recurring exclusions cover every weekday fail semantic
 validation instead of producing unbounded fallback geometry.
+The pinned DB corpus also preserves authored task order across sections and
+calendar-day geometry across month-end, inclusive-end, and daylight-saving
+boundaries.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

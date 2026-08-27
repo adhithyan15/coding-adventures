@@ -1253,6 +1253,20 @@ mod tests {
     }
 
     #[test]
+    fn gantt_calendar_days_cross_month_and_dst_boundaries_neutrally() {
+        let format = GanttDateFormat::default();
+        let september_30 = date_to_days("2019-09-30", &format).unwrap();
+        let october_11 = date_to_days("2019-10-11", &format).unwrap();
+        let october_31 = date_to_days("2019-10-31", &format).unwrap();
+        assert_eq!(october_11 - september_30, 11.0);
+        assert_eq!(october_31 - october_11, 20.0);
+
+        let dst_start = date_to_days("2020-11-01", &format).unwrap();
+        let dst_end = date_to_days("2020-11-02", &format).unwrap();
+        assert_eq!(dst_end - dst_start, 1.0);
+    }
+
+    #[test]
     fn gantt_axis_uses_configured_format_and_interval() {
         let mut diagram = simple_gantt();
         let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
