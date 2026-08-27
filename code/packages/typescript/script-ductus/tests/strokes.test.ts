@@ -7329,6 +7329,14 @@ describe("handwriting ductus", () => {
     expect(src.variation).toMatch(/long ū.*write உ first.*then write ள over it.*four-run learner order.*Noto Sans Tamil.*varies by school/i);
   });
 
+  it("ஒ's two-run order traces to Module 14 and Appendix I Frame 14", () => {
+    const src = DUCTUS["ஒ"].source;
+    expect(src.url).toContain("module-14");
+    expect(src.citation).toMatch(/Module 14.*ஒ.*Appendix I.*Frame 14.*p\. 195/i);
+    expect(src.variation).toMatch(/short o.*three movements.*left loop.*large right loop.*joined.*separate lower bowl.*one lift.*two-run.*Noto Sans Tamil.*varies by school/i);
+    expect(penLifts(DUCTUS["ஒ"])).toBe(1);
+  });
+
   it("வ's stroke order traces to Frame 9's first row", () => {
     const src = DUCTUS["வ"].source;
     expect(src.url).toContain("tamilscript");

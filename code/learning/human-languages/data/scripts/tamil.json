@@ -7,7 +7,7 @@
   "signature": "Curvy and loopy with flat top-bars on many letters, repeated arches, and no continuous head-line.",
   "complete": false,
   "combination": "A consonant carries an inherent 'a' (க = ka). A vowel sign replaces that vowel (க + ா → கா = kā). The puḷḷi ் — a DOT above the letter — removes the vowel entirely (க் = k). Unlike Devanagari, Tamil does NOT fuse the bare consonant into a conjunct: the dot stays visible and both letters keep their full shape. (A handful of Sanskrit-borrowed ligatures are the exception — க்ஷ kṣa and ஸ்ரீ śrī.)",
-  "notes": "Used by Tamil in this curriculum. The inventory below covers the greeting and self-introduction vocabulary of Chapters 1–2 and grows from there; it is deliberately not the full 247-character grid. Stroke orders are the common handwriting convention, not a standard — Tamil is taught with regional and school-to-school variation. IMPORTANT for authors: a `strokeOrder` list names the PARTS of a letter in writing order; it does NOT by itself say where the pen lifts. All twenty-three letters in this starter inventory have authored, font-checked pen paths (`DUCTUS` in language-ladder's `strokes.ts`). அ, ஆ, இ, எ, ச, ண, and ன each have two pen-down runs with one verified lift; எ keeps its first six movements joined before the separate right upright, ஆ continues from its upright into the long-vowel loop, இ joins its outer-left climb to the final arch, ச joins its upper-frame movements before the separate lower-left bowl, and ண and ன join their loop-and-arch bodies to the top bar before the separate right upright. க, ந, ர, ற, ள, and ழ each use three pen-down runs with two verified lifts, while ஊ, த, and ஞ use four runs with three verified lifts. உ, ட, ப, ம, ய, வ, and ல are each a single unbroken stroke even though their parts have separate names. There are no unverified letters in this starter inventory. Component descriptions name the pieces a learner can see in the vendored Noto Sans Tamil face; several letters share a straight top bar and are best learned as a family (ச/க, ண/ன, ந, ர, ற).",
+  "notes": "Used by Tamil in this curriculum. The inventory below covers the greeting and self-introduction vocabulary of Chapters 1–2 and grows from there; it is deliberately not the full 247-character grid. Stroke orders are the common handwriting convention, not a standard — Tamil is taught with regional and school-to-school variation. IMPORTANT for authors: a `strokeOrder` list names the PARTS of a letter in writing order; it does NOT by itself say where the pen lifts. All twenty-four letters in this starter inventory have authored, font-checked pen paths (`DUCTUS` in language-ladder's `strokes.ts`). அ, ஆ, இ, எ, ஒ, ச, ண, and ன each have two pen-down runs with one verified lift; எ keeps its first six movements joined before the separate right upright, ஒ keeps its first two loop movements joined before the separate lower bowl, ஆ continues from its upright into the long-vowel loop, இ joins its outer-left climb to the final arch, ச joins its upper-frame movements before the separate lower-left bowl, and ண and ன join their loop-and-arch bodies to the top bar before the separate right upright. க, ந, ர, ற, ள, and ழ each use three pen-down runs with two verified lifts, while ஊ, த, and ஞ use four runs with three verified lifts. உ, ட, ப, ம, ய, வ, and ல are each a single unbroken stroke even though their parts have separate names. There are no unverified letters in this starter inventory. Component descriptions name the pieces a learner can see in the vendored Noto Sans Tamil face; several letters share a straight top bar and are best learned as a family (ச/க, ண/ன, ந, ர, ற).",
   "letters": [
     {
       "glyph": "அ",
@@ -118,6 +118,25 @@
         "variation": "Module 17 identifies ஊ as long ū and explicitly constructs it from two familiar letters: write உ first, then write ள over it. Appendix I Frame 16 keeps உ's three movements joined, while Frame 12 groups ள's six movements into three pen-down runs. The resulting four-run learner order is fitted to the bundled Noto Sans Tamil ஊ outline; Tamil handwriting varies by school."
       },
       "notes": "Independent long ū opens words such as ஊர் (ūr, native place) and ஊசி (ūsi, needle). The manual teaches the letter compositionally: write short உ first, then overlay the already learned ள form."
+    },
+    {
+      "glyph": "ஒ",
+      "sound": "o",
+      "role": "independent-vowel",
+      "components": ["a small left loop rising into the crown", "a large right loop curling inward", "a separate lower bowl"],
+      "strokeOrder": [
+        "circle the small left loop and climb into the crown",
+        "without lifting, sweep through the large right loop and curl inward — then lift once",
+        "set the pen at the right of the separate lower bowl, draw it down and around, and return left"
+      ],
+      "strokeOrderNote": "two strokes — two joined upper-loop movements, one pen lift, then the separate lower bowl; cited to Radhakrishnan, Tamil Script Learners Manual, Module 14 and Appendix I Frame 14, ஒ",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Module 14, ஒ, with Appendix I: Hand-movements, Frame 14 (University of Texas at Austin), p. 195",
+        "url": "https://sites.la.utexas.edu/tamilscript/category/3-moduals/module-14",
+        "variation": "Module 14 identifies ஒ as short o. Appendix I Frame 14 numbers three movements: the left loop and large right loop stay joined, followed by the separate lower bowl after one lift. This two-run learner order is fitted to the bundled Noto Sans Tamil outline; Tamil handwriting varies by school."
+      },
+      "notes": "Independent short o begins words such as ஒன்று (oṉṟu, one). Frame 14's first two numbered movements form the connected upper body; the lower bowl begins after the single lift."
     },
     {
       "glyph": "எ",
