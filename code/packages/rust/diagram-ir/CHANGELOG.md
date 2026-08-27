@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.91.0
+
+- Represent Gantt quarter dates as a typed date-format part.
+
 ## 0.90.0
 
 - Represent unpadded 24-hour, minute, and second Gantt fields as typed date-format parts.

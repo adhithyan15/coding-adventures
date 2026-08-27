@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.33.0";
+pub const VERSION: &str = "0.34.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -245,6 +245,12 @@ fn date_to_days(source: &str, format: &GanttDateFormat) -> Option<f64> {
             GanttDateFormatPart::Year2 => {
                 let (short_year, next) = take_number(rest, 2, 2)?;
                 year = if short_year <= 68 { 2000 + short_year } else { 1900 + short_year };
+                rest = next;
+            }
+            GanttDateFormatPart::Quarter => {
+                let (quarter, next) = take_number(rest, 1, 1)?;
+                if !(1..=4).contains(&quarter) { return None; }
+                month = (quarter - 1) * 3 + 1;
                 rest = next;
             }
             GanttDateFormatPart::Month => (month, rest) = take_number(rest, 1, 2)?,
@@ -1046,7 +1052,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.33.0");
+        assert_eq!(crate::VERSION, "0.34.0");
     }
 
     #[test]
@@ -1230,6 +1236,22 @@ mod tests {
         let first = date_to_days("2026-03-01 4:5:6", &format).expect("valid unpadded time");
         let second = date_to_days("2026-03-01 4:5:7", &format).expect("valid unpadded time");
         assert!(((second - first) * 86_400.0 - 1.0).abs() < 0.000_001);
+    }
+
+    #[test]
+    fn gantt_layout_resolves_quarter_dates() {
+        let format = GanttDateFormat {
+            source: "YYYY-Q".into(),
+            parts: vec![
+                GanttDateFormatPart::Year4,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Quarter,
+            ],
+        };
+        let q1 = date_to_days("2026-1", &format).expect("valid first quarter");
+        let q2 = date_to_days("2026-2", &format).expect("valid second quarter");
+        assert_eq!(q2 - q1, 90.0);
+        assert!(date_to_days("2026-5", &format).is_none());
     }
 
     #[test]
