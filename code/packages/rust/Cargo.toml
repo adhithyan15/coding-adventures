@@ -1148,4 +1148,5 @@ members = [
   "vault-pm-agent-protocol",
   "vault-pm-agent-host",
   "chief-of-staff-channel-epoch-activation",
+  "manchester-baby-simulator",
 ]

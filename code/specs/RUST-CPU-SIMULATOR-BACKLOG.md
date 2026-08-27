@@ -64,7 +64,7 @@ according to the current prioritization run.
 
 | IDs (functional / gate) | Year | Target | Functional Rust | Gate-level Rust |
 |---|---:|---|---|---|
-| RCPU-001 / RCPU-002 | 1948 | Manchester Baby (SSEM) | Missing | Missing |
+| RCPU-001 / RCPU-002 | 1948 | Manchester Baby (SSEM) | Complete: `manchester-baby-simulator` | Missing |
 | RCPU-003 / RCPU-004 | 1954 | IBM 704 | Missing | Missing |
 | RCPU-005 / RCPU-006 | 1961 | GE-225 | Audit: `ge225-simulator` | Missing |
 | RCPU-007 / RCPU-008 | 1964 | CDC 6600 | Missing | Missing |
@@ -90,9 +90,9 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-001**, the Manchester Baby functional simulator.
-RCPU-002 is next unless the implementation or CI reveals a higher-priority
-blocker.
+Current selection: **RCPU-001**, the Manchester Baby functional simulator (this
+change). RCPU-002 is next unless implementation review or CI reveals a
+higher-priority blocker.
 
 ## Cross-language wave
 
@@ -123,4 +123,3 @@ queue:
 | 2026-08-27 | Existing Rust simulator APIs are not yet unified by a Rust equivalent of SIM00. | P1, non-blocking | Add an API-convergence design/audit before the cross-language golden-vector freeze; new crates meanwhile expose the five common lifecycle operations. |
 | 2026-08-27 | The older CPU roadmap records Python completion, not Rust pair completion, and its gate-level list is stale. | P1, non-blocking | This file is the canonical Rust wave ledger; link it from the older roadmap in RCPU-001. |
 | 2026-08-27 | Several existing Rust functional crates openly implement subsets (notably 07b ARMv7 and the x86-64 runtime lane). | P1 | Preserve their audit status and create precise follow-ups during their chronological audit items. |
-
