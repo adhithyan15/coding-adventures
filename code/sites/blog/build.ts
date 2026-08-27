@@ -19,6 +19,7 @@ import {
   createOrchestrator,
 } from "@coding-adventures/forme-orchestrator";
 import { consoleLogger } from "@coding-adventures/forme-stage";
+import type { Collection, DeployArtifact } from "@coding-adventures/forme-types";
 import config from "./forme.config.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -46,11 +47,41 @@ try {
     process.exit(1);
   }
 
+  const posts = result.outputs.posts as Collection | undefined;
+  const site = result.outputs.site as DeployArtifact | undefined;
+  if (!posts || !site) {
+    throw new Error("Blog pipeline must expose both named sinks: posts and site");
+  }
+
+  const collectionRoutes = posts.entries.map((entry) => {
+    if (entry.route === null) {
+      throw new Error(`Collection entry ${entry.identity} has no canonical route`);
+    }
+    return entry.route;
+  });
+  const emittedRoutes = site.manifest.routes.map((route) => route.pattern);
+  const sortedCollectionRoutes = [...collectionRoutes].sort();
+  const sortedEmittedRoutes = [...emittedRoutes].sort();
+  if (JSON.stringify(sortedCollectionRoutes) !== JSON.stringify(sortedEmittedRoutes)) {
+    throw new Error("Collection routes must match the emitted page routes exactly");
+  }
+
+  const chronologicalDates = posts.entries.map((entry) => {
+    if (entry.orderKey.kind !== "date") {
+      throw new Error(`Collection entry ${entry.identity} is not date-ordered`);
+    }
+    return entry.orderKey.value;
+  });
+  if (chronologicalDates.some((date, index) => index > 0 && chronologicalDates[index - 1]! < date)) {
+    throw new Error("Posts collection must be ordered newest first");
+  }
+
   logger.info("Build complete", {
     outcome: result.outcome,
     elapsedMs: result.elapsedMs,
     buildId: result.buildId,
     stages: result.stages.length,
+    posts: posts.entries.length,
   });
 
   // Print a short summary of what got emitted.

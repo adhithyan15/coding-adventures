@@ -21,10 +21,9 @@ source-fs → parse-markdown → router → collect-chronological
                                     └→ render-static
 ```
 
-Both downstream stages can now read `ContentNode.route` directly
-instead of re-deriving it. When `forme-render-static` is updated to
-prefer `node.route` over its own derivation, the `slug.ts`
-duplications in the two downstream packages will be deleted.
+Both downstream stages now read `ContentNode.route` directly instead of
+re-deriving routing policy. Their local slug helpers remain only for display
+slug resolution and compatibility with older standalone pipelines.
 
 ## API
 
@@ -58,10 +57,8 @@ In priority order:
    - trim leading/trailing `-`
    - fall back to `"untitled"` if everything is stripped
 
-These rules match `forme-collect-chronological/src/slug.ts` and
-`forme-render-static/src/slug.ts` byte-for-byte — running this
-stage produces the same routes those stages used to derive
-inline.
+These rules match the compatibility fallbacks retained by
+`forme-collect-chronological` and `forme-render-static`.
 
 ## Route template
 
@@ -71,9 +68,9 @@ need them.
 
 ## Status
 
-v0.1.0 — solo stage, no downstream consumers updated yet. Wiring
-this into the hello-world demo and updating `forme-render-static`
-to read `node.route` are follow-up PRs.
+Integrated in the Coding Adventures blog DAG. Its materialized output fans
+out to `forme-render-static` and `forme-collect-chronological`, which both
+treat `node.route` as authoritative.
 
 ## See also
 

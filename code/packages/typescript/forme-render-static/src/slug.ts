@@ -1,21 +1,10 @@
 /**
  * slug.ts — derive a URL-safe slug from a source path.
  *
- * **DRY violation accepted in v0.** This logic is duplicated from
- * `@coding-adventures/forme-collect-chronological/src/slug.ts`.  The
- * "right" answer is a tiny shared utility package (e.g.
- * `@coding-adventures/forme-text-utils`), but standing one up costs
- * more in monorepo wiring (BUILD chains, lockfile drift, peer-dep
- * graphs) than the ~30 lines saves at this size.  When the third
- * stage needs `slugify` we'll extract it.
- *
- * The render stage needs its own slug derivation because — in v0 —
- * `ContentNode.route` is `null` (the collector emits routes on
- * `Collection.entries`, not on the node).  A future v0.2 router stage
- * will fold collection-side routes back onto the node; until then,
- * each renderer derives the route from `sourcePath` independently
- * using the same rules as the collector (so both produce identical
- * routes for the same input).
+ * Routed pipelines read canonical URL policy from `ContentNode.route`.
+ * This helper remains for title fallback and for backward-compatible
+ * standalone callers whose nodes are still unrouted. FM-B020 tracks
+ * migrating the final demo and retiring duplicated route formatting.
  *
  * @module slug
  */

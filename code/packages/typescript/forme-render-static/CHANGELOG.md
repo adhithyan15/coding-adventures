@@ -1,5 +1,19 @@
 # Changelog — @coding-adventures/forme-render-static
 
+## Unreleased
+
+### Changed
+
+- `ContentNode.route` is now authoritative. The renderer copies the route
+  assigned by `forme-router` instead of independently re-deriving a URL.
+- `routeTemplate` remains as a compatibility fallback only when
+  `ContentNode.route` is `null`.
+
+### Tests
+
+- Added coverage proving an upstream canonical route wins even when the
+  source path and fallback route template disagree.
+
 ## 0.1.0 — 2026-05-15
 
 Initial release. Fourth Forme stage of the blog v0 effort.

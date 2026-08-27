@@ -4,8 +4,8 @@ Forme render stage: `Stream<ContentNode>` → `Stream<RenderedPage>`.
 Wraps [`@coding-adventures/document-ast-to-html`](../document-ast-to-html)
 and injects a minimal classless HTML5 theme.
 
-Fourth Forme stage of the blog v0 effort. Sits between the parsers
-and the `forme-emit-fs` writer.
+Page-rendering branch of the Forme blog DAG. It consumes routed nodes
+and feeds the `forme-emit-fs` writer.
 
 ## Stage shape
 
@@ -22,9 +22,9 @@ render.configSchema  // { type: "object", properties: { siteTitle?, routeTemplat
 
 For each input `ContentNode`:
 
-1. **Derive route** from `sourcePath` via `slugify` + `formatRoute`
-   (same rules as `forme-collect-chronological`, so both produce
-   identical routes for the same input).
+1. **Use the canonical route** from `ContentNode.route`, normally set
+   upstream by `forme-router`. Older standalone callers without a router
+   retain a compatibility fallback through `slugify` + `formatRoute`.
 2. **Render body** by calling `toHtml(node.document)` from
    `document-ast-to-html`.
 3. **Derive title** via the three-step fallback:
@@ -34,29 +34,26 @@ For each input `ContentNode`:
 5. **Emit** a `RenderedPage` carrying the route, full HTML, derived
    title, and a `source` reference back to the input node's identity.
 
-## Why routes are re-derived here
+## Routing contract
 
-The "purest" topology has the collector emit a `Collection` whose
-entries carry pre-assigned routes, and the renderer reads them.  But
-that would force the renderer to consume a different `Kind` than the
-parser emits, breaking the natural `parse → render → emit` shape.
+The renderer does not own URL policy. A routed product pipeline uses:
 
-For v0 the renderer derives routes locally from `sourcePath` using the
-same `slugify` helper the collector uses (duplicated in `src/slug.ts`).
-**v0.2 will introduce a router stage** that folds collection routes
-back onto `ContentNode.route` so the renderer reads them directly; at
-that point the duplicated slug helper goes away.
+```text
+parse → router ┬→ render → emit
+               └→ collector
+```
 
-The duplication is called out explicitly in the source — do NOT
-extract it into a shared package until a third stage needs it (FM02
-plugin packaging will be the right excuse).
+Both branches read the same `ContentNode.route`. `routeTemplate` remains in
+the renderer config only for compatibility with pre-router standalone
+pipelines and should not be set in new product configurations.
 
 ## v0 simplifications (documented)
 
 - **Single hard-coded classless theme.** Replaced when FM04 (Style IR)
   lands and a `forme-render-themed` sibling stage starts consuming a
   `StyleDocument`.
-- **Routes derived locally**, not from collection routing (see above).
+- **Local route fallback retained for compatibility.** New pipelines route
+  upstream and treat `ContentNode.route` as authoritative.
 - **`usedStyle` / `usedIslands` / `usedAssets` all empty.** Driving the
   AOT bundler's smallest-artifact decisions (FM06) needs all three;
   static rendering doesn't have the inputs yet.
@@ -99,7 +96,7 @@ request — important for first-paint on cold caches.
 ```ts
 interface RenderStaticConfig {
   siteTitle?:     string;   // header anchor text; empty → no header
-  routeTemplate?: string;   // default "/blog/{slug}.html"
+  routeTemplate?: string;   // deprecated fallback when node.route is null
 }
 ```
 
