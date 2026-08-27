@@ -4,11 +4,13 @@
 //! final paint backend. This crate composes the shared network, HTML, layout,
 //! paint, and image-resource seams into one synchronous page load.
 
+pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
 use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTree};
 use html_to_layout::HtmlTheme;
 use html_to_paint::{
-    hit_test_link, html_render_tree_to_paint, resolve_scene_image_resources_with_mosaic_fallback,
-    FetchedImage, HtmlImageResourceError, HtmlPaintOutput, HtmlPaintViewport, LinkRegion,
+    hit_test_link, html_render_tree_to_paint_with_link_state,
+    resolve_scene_image_resources_with_mosaic_fallback, FetchedImage, HtmlImageResourceError,
+    HtmlPaintOutput, HtmlPaintViewport, LinkRegion,
 };
 use http1_client::HttpClient;
 use layout_ir::TextMeasurer;
@@ -16,7 +18,7 @@ use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintScene};
 use std::fmt;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
-pub const VERSION: &str = "0.6.0";
+pub const VERSION: &str = "0.7.0";
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
 pub const VENTURE_CHROME_SLOT_NAMES: [&str; 6] = [
@@ -85,98 +87,6 @@ impl BrowserScrollCommand {
             Self::DocumentStart => "document-start",
             Self::DocumentEnd => "document-end",
         }
-    }
-}
-
-/// In-memory browser navigation state.
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct NavigationHistory {
-    home_url: String,
-    back_stack: Vec<String>,
-    current_url: Option<String>,
-    forward_stack: Vec<String>,
-}
-
-impl NavigationHistory {
-    pub fn new(home_url: impl Into<String>) -> Self {
-        Self {
-            home_url: home_url.into(),
-            back_stack: Vec::new(),
-            current_url: None,
-            forward_stack: Vec::new(),
-        }
-    }
-
-    pub fn with_current(home_url: impl Into<String>, current_url: impl Into<String>) -> Self {
-        let mut history = Self::new(home_url);
-        history.current_url = Some(current_url.into());
-        history
-    }
-
-    pub fn home_url(&self) -> &str {
-        &self.home_url
-    }
-
-    pub fn current_url(&self) -> Option<&str> {
-        self.current_url.as_deref()
-    }
-
-    pub fn back_stack(&self) -> &[String] {
-        &self.back_stack
-    }
-
-    pub fn forward_stack(&self) -> &[String] {
-        &self.forward_stack
-    }
-
-    pub fn can_go_back(&self) -> bool {
-        !self.back_stack.is_empty()
-    }
-
-    pub fn can_go_forward(&self) -> bool {
-        !self.forward_stack.is_empty()
-    }
-
-    /// Record a new navigation and clear stale forward history.
-    pub fn navigate(&mut self, url: impl Into<String>) -> &str {
-        if let Some(current) = self.current_url.take() {
-            self.back_stack.push(current);
-        }
-        self.current_url = Some(url.into());
-        self.forward_stack.clear();
-        self.current_url.as_deref().unwrap_or("")
-    }
-
-    pub fn back(&mut self) -> Option<&str> {
-        let previous = self.back_stack.pop()?;
-        if let Some(current) = self.current_url.replace(previous) {
-            self.forward_stack.push(current);
-        }
-        self.current_url()
-    }
-
-    pub fn forward(&mut self) -> Option<&str> {
-        let next = self.forward_stack.pop()?;
-        if let Some(current) = self.current_url.replace(next) {
-            self.back_stack.push(current);
-        }
-        self.current_url()
-    }
-
-    pub fn home(&mut self) -> &str {
-        self.navigate(self.home_url.clone())
-    }
-
-    /// Return the URL that a host should fetch again without changing history.
-    pub fn reload(&self) -> Option<&str> {
-        self.current_url()
-    }
-
-    /// Replace the current entry after a redirect without creating history.
-    pub fn replace_current(&mut self, final_url: impl Into<String>) -> Option<&str> {
-        self.current_url.as_ref()?;
-        self.current_url = Some(final_url.into());
-        self.current_url()
     }
 }
 
@@ -746,6 +656,7 @@ impl BrowserHostController {
 #[derive(Clone, Debug, PartialEq)]
 pub struct BrowserSession {
     history: NavigationHistory,
+    visited_links: VisitedLinks,
     viewport: Option<BrowserViewport>,
     viewport_height: f64,
 }
@@ -754,6 +665,7 @@ impl BrowserSession {
     pub fn new(home_url: impl Into<String>, viewport_height: f64) -> Self {
         Self {
             history: NavigationHistory::new(home_url),
+            visited_links: VisitedLinks::new(),
             viewport: None,
             viewport_height: finite_non_negative(viewport_height),
         }
@@ -761,6 +673,10 @@ impl BrowserSession {
 
     pub fn history(&self) -> &NavigationHistory {
         &self.history
+    }
+
+    pub fn visited_links(&self) -> &VisitedLinks {
+        &self.visited_links
     }
 
     pub fn viewport(&self) -> Option<&BrowserViewport> {
@@ -816,7 +732,11 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let page = pipeline.reflow(self.viewport.as_ref()?.page(), fetcher);
+        let page = pipeline.reflow_with_visited(
+            self.viewport.as_ref()?.page(),
+            fetcher,
+            &self.visited_links,
+        );
         self.viewport_height = finite_non_negative(viewport_height);
         self.viewport
             .as_mut()?
@@ -849,7 +769,9 @@ impl BrowserSession {
             return Ok(None);
         };
 
-        let page = pipeline.load(&requested_url, fetcher)?;
+        let page = pipeline.load_with_visited(&requested_url, fetcher, &self.visited_links)?;
+        let mut visited_links = self.visited_links.clone();
+        let _ = visited_links.record(&page.final_url);
         history.replace_current(page.final_url.clone());
         if let Some(viewport) = self.viewport.as_mut() {
             viewport.replace_page(page);
@@ -857,6 +779,7 @@ impl BrowserSession {
             self.viewport = Some(BrowserViewport::new(page, self.viewport_height));
         }
         self.history = history;
+        self.visited_links = visited_links;
         Ok(self.viewport.as_ref())
     }
 
@@ -953,6 +876,22 @@ where
     where
         F: BrowserResourceFetcher,
     {
+        self.load_with_visited(requested_url, fetcher, &VisitedLinks::new())
+    }
+
+    /// Fetch and compose one HTML page against existing session link state.
+    /// The final response URL is included prospectively for self-links, but
+    /// the caller's set is never mutated; `BrowserSession` commits it only
+    /// after the complete page load succeeds.
+    pub fn load_with_visited<F>(
+        &self,
+        requested_url: &str,
+        fetcher: &F,
+        visited_links: &VisitedLinks,
+    ) -> Result<BrowserPage, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+    {
         let response = fetcher
             .fetch(requested_url)
             .map_err(|message| BrowserLoadError::Fetch {
@@ -970,7 +909,9 @@ where
         let document = BrowserDocument::from_document(&parsed);
         let render_tree =
             BrowserRenderTree::from_document_with_document_url(&parsed, &response.final_url);
-        let (paint, image_failures) = self.compose(&render_tree, fetcher);
+        let mut prospective_visited = visited_links.clone();
+        let _ = prospective_visited.record(&response.final_url);
+        let (paint, image_failures) = self.compose(&render_tree, fetcher, &prospective_visited);
 
         Ok(BrowserPage {
             requested_url: requested_url.to_string(),
@@ -991,7 +932,19 @@ where
     where
         F: BrowserResourceFetcher,
     {
-        let (paint, image_failures) = self.compose(&page.render_tree, fetcher);
+        self.reflow_with_visited(page, fetcher, &VisitedLinks::new())
+    }
+
+    pub fn reflow_with_visited<F>(
+        &self,
+        page: &BrowserPage,
+        fetcher: &F,
+        visited_links: &VisitedLinks,
+    ) -> BrowserPage
+    where
+        F: BrowserResourceFetcher,
+    {
+        let (paint, image_failures) = self.compose(&page.render_tree, fetcher, visited_links);
         let mut reflowed = page.clone();
         reflowed.paint = paint;
         reflowed.image_failures = image_failures;
@@ -1002,13 +955,15 @@ where
         &self,
         render_tree: &BrowserRenderTree,
         fetcher: &F,
+        visited_links: &VisitedLinks,
     ) -> (HtmlPaintOutput, Vec<HtmlImageResourceError>)
     where
         F: BrowserResourceFetcher,
     {
-        let mut paint = html_render_tree_to_paint(
+        let mut paint = html_render_tree_to_paint_with_link_state(
             render_tree,
             self.theme,
+            &|url| visited_links.contains(url),
             self.viewport,
             self.measurer,
             self.shaper,
@@ -1355,6 +1310,8 @@ mod tests {
             .expect("initial navigation should load")
             .expect("initial navigation should create a viewport");
         assert_eq!(session.history().current_url(), Some(first_page));
+        assert!(session.visited_links().contains(first_page));
+        assert_eq!(session.visited_links().len(), 1);
         assert_eq!(
             session
                 .viewport()
@@ -1382,6 +1339,8 @@ mod tests {
             .expect("link activation should replace the viewport");
         assert_eq!(session.history().current_url(), Some(next_page));
         assert_eq!(session.history().back_stack(), &[first_page.to_string()]);
+        assert!(session.visited_links().contains(next_page));
+        assert_eq!(session.visited_links().len(), 2);
 
         session
             .viewport_mut()
@@ -1428,6 +1387,7 @@ mod tests {
             .expect("Reload should load")
             .expect("Reload should replace the viewport");
         assert_eq!(session.history(), &history_before_reload);
+        assert_eq!(session.visited_links().len(), 3);
 
         assert_eq!(
             fetched_urls.into_inner(),
@@ -1441,6 +1401,123 @@ mod tests {
                 home_page,
             ]
         );
+    }
+
+    #[test]
+    fn visited_links_follow_final_urls_and_repaint_across_history_and_reflow() {
+        let requested = "http://example.test/start";
+        let first = "http://example.test:80/guide/../index.html#intro";
+        let next_request = "http://example.test/next";
+        let next = "http://example.test/next#top";
+        let broken = "http://example.test/broken";
+        let fetcher = |url: &str| match url {
+            "http://example.test/start" => Ok(BrowserFetchResponse::new(
+                first,
+                200,
+                Some("text/html".into()),
+                b"<p><a href='/index.html#details'>Self</a> \
+                    <a href='/next'>Next</a></p>"
+                    .to_vec(),
+            )),
+            "http://example.test:80/guide/../index.html#intro" => Ok(BrowserFetchResponse::new(
+                first,
+                200,
+                Some("text/html".into()),
+                b"<p><a href='/index.html#details'>Self</a> \
+                        <a href='/next'>Next</a></p>"
+                    .to_vec(),
+            )),
+            "http://example.test/next" => Ok(BrowserFetchResponse::new(
+                next,
+                200,
+                Some("text/html".into()),
+                b"<p><a href='/index.html'>First</a> \
+                    <a href='/next#other'>Self</a></p>"
+                    .to_vec(),
+            )),
+            "http://example.test/next#top" => Ok(BrowserFetchResponse::new(
+                next,
+                200,
+                Some("text/html".into()),
+                b"<p><a href='/index.html'>First</a> \
+                    <a href='/next#other'>Self</a></p>"
+                    .to_vec(),
+            )),
+            "http://example.test/broken" => Err("offline".into()),
+            _ => Err(format!("unexpected URL {url}")),
+        };
+        let theme = mosaic_html_theme();
+        let wide = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(240.0, 80.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(requested, 80.0);
+
+        session
+            .execute(
+                BrowserNavigation::Navigate(requested.into()),
+                &wide,
+                &fetcher,
+            )
+            .expect("redirected page should load");
+        assert_eq!(session.history().current_url(), Some(first));
+        assert_eq!(session.visited_links().len(), 1);
+        assert!(session
+            .visited_links()
+            .contains("http://example.test/index.html#another"));
+        assert!(!session.visited_links().contains(requested));
+        assert_scene_has_fill(session.viewport().unwrap(), "rgb(85, 26, 139)");
+        assert_scene_has_fill(session.viewport().unwrap(), "rgb(0, 0, 238)");
+
+        session
+            .execute(
+                BrowserNavigation::Navigate(next_request.into()),
+                &wide,
+                &fetcher,
+            )
+            .expect("next page should load");
+        assert_eq!(session.visited_links().len(), 2);
+        assert!(session
+            .visited_links()
+            .contains("http://example.test/next#different"));
+        assert_eq!(
+            scene_fill_count(session.viewport().unwrap(), "rgb(0, 0, 238)"),
+            0
+        );
+
+        session
+            .execute(BrowserNavigation::Back, &wide, &fetcher)
+            .expect("back should reload the first page");
+        assert_eq!(session.visited_links().len(), 2);
+        assert_eq!(
+            scene_fill_count(session.viewport().unwrap(), "rgb(0, 0, 238)"),
+            0
+        );
+
+        let narrow = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(90.0, 80.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        session.reflow(&narrow, &fetcher, 80.0);
+        assert_eq!(session.visited_links().len(), 2);
+        assert_eq!(
+            scene_fill_count(session.viewport().unwrap(), "rgb(0, 0, 238)"),
+            0
+        );
+
+        let before_failure = session.clone();
+        assert!(session
+            .execute(BrowserNavigation::Navigate(broken.into()), &wide, &fetcher)
+            .is_err());
+        assert_eq!(session, before_failure);
     }
 
     #[test]
@@ -1794,6 +1871,28 @@ mod tests {
                 url: "http://example.test/logo.gif".into(),
                 media_type: "image/gif".into(),
             })
+        );
+    }
+
+    fn scene_fill_count(viewport: &BrowserViewport, fill: &str) -> usize {
+        viewport
+            .page()
+            .paint
+            .scene
+            .instructions
+            .iter()
+            .filter(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => run.fill.as_deref() == Some(fill),
+                PaintInstruction::Rect(rect) => rect.fill.as_deref() == Some(fill),
+                _ => false,
+            })
+            .count()
+    }
+
+    fn assert_scene_has_fill(viewport: &BrowserViewport, fill: &str) {
+        assert!(
+            scene_fill_count(viewport, fill) > 0,
+            "expected scene to contain {fill}"
         );
     }
 

@@ -31,12 +31,15 @@ associated type constraint.
 | `ext["paint"]["backgroundColor"]`   | `PaintRect` with fill                                          |
 | `ext["paint"]["borderWidth"]` > 0   | `PaintRect` with stroke + stroke_width (same rect as above)    |
 | `ext["paint"]["cornerRadius"]`      | `corner_radius` field on the rect                              |
-| `Content::Text(tc)`                 | One `PaintGlyphRun` per wrapped line; alignment (Start/Center/End) via `TextContent.text_align` |
+| `Content::Text(tc)`                 | One `PaintGlyphRun` per wrapped line plus decoration `PaintRect`s; alignment (Start/Center/End) via `TextContent.text_align` |
 | `Content::Image(ic)`                | `PaintImage` with `src` unchanged                              |
 
 All coordinates in the output `PaintScene` are in **device pixels**
 (scaled by `device_pixel_ratio`). Colors are CSS `rgb()` / `rgba()`
 strings.
+Underline geometry uses optional native font metrics when available and a
+device-pixel-safe fallback otherwise. Decorations therefore render consistently
+through every paint backend without teaching the backends about text styling.
 
 ## v1 simplifications (documented in source, not hidden)
 
@@ -61,7 +64,7 @@ strings.
 
 ## Test plan
 
-14 unit tests pass, covering:
+Unit tests cover:
 - Empty container; background color → Rect; text content →
   PaintGlyphRun with correct ID / baseline / advance math.
 - Hard newline → multiple glyph runs with increasing baseline.
@@ -76,3 +79,4 @@ strings.
 - Font fallback: shaper producing multiple `ShapedRun`s emits one `PaintGlyphRun`
   per segment with correct font_ref and monotonically increasing x positions.
 - Deep tree (1000 levels) does not stack-overflow (iterative walk).
+- Underline width follows shaped advance and thickness respects device pixels.

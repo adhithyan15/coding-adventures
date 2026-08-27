@@ -1,0 +1,8 @@
+[package]
+name = "browser-navigation"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable in-memory browser navigation history and canonical visited-link state."
+
+[dependencies]
+url-parser = { path = "../url-parser" }

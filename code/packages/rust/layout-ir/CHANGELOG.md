@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0] — reusable text decoration
+
+### Added
+- `TextDecoration`, composable decoration lines, and a paint-independent
+  decoration style on `TextContent` so semantic inline formatting survives
+  fragmentation and backend selection.
+
 ## [0.3.0] — baseline measurement
 
 ### Added

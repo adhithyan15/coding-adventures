@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- CoreText underline position and thickness bindings for backend-independent
+  text-decoration paint.
 - Typed `msg_bool!`, including one-argument calls, and architecture-correct
   `msg_f64!` Objective-C message dispatch helpers for native event translation.
 

@@ -2,7 +2,7 @@
 //! instruction stages without coupling any of them to a platform host.
 
 use coding_adventures_html_parser::BrowserRenderTree;
-use html_to_layout::{html_render_tree_to_layout, HtmlTheme};
+use html_to_layout::{html_render_tree_to_layout_with_link_state, HtmlTheme};
 use image_codec_gif::decode_gif;
 use image_codec_jpeg::decode_jpeg;
 use layout_block::layout_block;
@@ -14,7 +14,7 @@ use paint_instructions::{
 };
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 const HTML_IMAGE_ALT_METADATA: &str = "html.alt";
 
@@ -224,9 +224,40 @@ where
     FM: FontMetrics<Handle = S::Handle>,
     R: FontResolver<Handle = S::Handle>,
 {
+    html_render_tree_to_paint_with_link_state(
+        render_tree,
+        theme,
+        &never_visited,
+        viewport,
+        measurer,
+        shaper,
+        metrics,
+        resolver,
+    )
+}
+
+/// Compose HTML while resolving visited state through a host-neutral callback.
+#[allow(clippy::too_many_arguments)]
+pub fn html_render_tree_to_paint_with_link_state<M, S, FM, R, F>(
+    render_tree: &BrowserRenderTree,
+    theme: &HtmlTheme,
+    is_visited: &F,
+    viewport: HtmlPaintViewport,
+    measurer: &M,
+    shaper: &S,
+    metrics: &FM,
+    resolver: &R,
+) -> HtmlPaintOutput
+where
+    M: TextMeasurer,
+    S: TextShaper,
+    FM: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+    F: Fn(&str) -> bool + ?Sized,
+{
     let width = finite_non_negative(viewport.width);
     let viewport_height = finite_non_negative(viewport.height);
-    let layout = html_render_tree_to_layout(render_tree, theme);
+    let layout = html_render_tree_to_layout_with_link_state(render_tree, theme, is_visited);
     let positioned = layout_block(
         &layout,
         Constraints {
@@ -256,6 +287,10 @@ where
         links,
         scene,
     }
+}
+
+fn never_visited(_url: &str) -> bool {
+    false
 }
 
 /// Extract resolved link rectangles while accumulating parent-relative layout
@@ -764,6 +799,47 @@ mod tests {
             Some(&output.links[0])
         );
         assert!(positioned_texts(&output.positioned).contains(&"connected"));
+    }
+
+    #[test]
+    fn visited_link_state_reaches_glyphs_and_underlines() {
+        let render = parse_browser_render_tree(
+            "<base href='https://example.test/'><p>\
+             <a href='seen'>seen link</a> <a href='new'>new link</a></p>",
+        )
+        .unwrap();
+        let theme = mosaic_html_theme();
+        let output = html_render_tree_to_paint_with_link_state(
+            &render,
+            &theme,
+            &|url| url == "https://example.test/seen",
+            HtmlPaintViewport::new(240.0, 40.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let visited = color_css(theme.visited_link_color);
+        let unvisited = color_css(theme.link_color);
+
+        assert!(output.scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some(visited.as_str())
+        )));
+        assert!(output.scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some(unvisited.as_str())
+        )));
+        assert!(output.scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some(visited.as_str()) && rect.height > 0.0
+        )));
+        assert!(output.scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some(unvisited.as_str()) && rect.height > 0.0
+        )));
     }
 
     #[test]

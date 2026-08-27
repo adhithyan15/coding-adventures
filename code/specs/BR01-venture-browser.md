@@ -117,24 +117,29 @@ Completed convergence foundations: exact zero-missing HTML tokenizer/tree
 construction ratchets; native generated-host interaction gates; shared
 scrollbars, hover status, and cursors; and reusable fragmented inline layout.
 
-1. **P0 — visited-link state and rendering.** Add URL-normalized visited state
-   to `BrowserSession`, project it into render styling without coupling layout
-   to browser history, and cover navigation/reload/history behavior.
-2. **P1 — bookmarks as a reusable persistence component.** Define a small
+1. **P1 — bookmarks as a reusable persistence component.** Define a small
    storage-neutral bookmark model and repository interface, then add native
    persistence adapters and generated Mosaic chrome commands.
-3. **P1 — View Source.** Retain fetched source bytes/text in the loaded-page
+2. **P1 — View Source.** Retain fetched source bytes/text in the loaded-page
    model and expose a source document through a host-neutral command instead
    of adding platform-specific windows first.
-4. **P1 — real-page visual acceptance.** Add deterministic screenshot and
+3. **P1 — real-page visual acceptance.** Add deterministic screenshot and
    geometry fixtures for representative 1993-era pages, including wrapped
    links, mixed fonts, preformatted text, images, and scrolling.
-5. **P2 — international inline convergence.** Replace whitespace-only break
+4. **P2 — international inline convergence.** Replace whitespace-only break
    opportunities with a reusable UAX #14 component, then add bidi/RTL as a
    separate shaping/layout phase rather than embedding either in HTML.
-6. **P2 — richer inline box edges.** Preserve padding, margins, borders, and
+5. **P2 — richer inline box edges.** Preserve padding, margins, borders, and
    decoration continuation policy across semantic wrapper fragments before
    expanding the supported CSS surface.
+
+Completed in the visited-link convergence phase: `browser-navigation` owns
+canonical, fragment-insensitive URL membership and reusable history;
+`BrowserSession` commits only successful final response URLs transactionally;
+HTML styling consumes a narrow visited callback; and Layout IR carries inherited
+text decoration into shaped-width underline paint using CoreText/DirectWrite
+metrics or a device-pixel-safe fallback. Redirect, failure, reload, history,
+reflow, layout, and paint tests cover the complete seam.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do
@@ -270,8 +275,9 @@ On mouse click:
 4. If no region matches → do nothing
 
 `extract_link_regions` and `hit_test_link` implement these geometry steps.
-Navigation history, visited-link policy, and host event dispatch remain the
-browser shell's responsibility.
+The reusable `browser-navigation` package owns history and canonical visited
+identity; host event dispatch and persistence policy remain browser-shell
+responsibilities.
 
 ### Scrolling
 

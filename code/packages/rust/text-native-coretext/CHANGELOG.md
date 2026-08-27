@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.0]
+
+### Added
+- CoreText-backed underline position and thickness metrics, normalized to the
+  shared y-down design-unit contract.
+
 ## [0.1.0] — initial release
 
 ### Added

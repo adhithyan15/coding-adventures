@@ -21,8 +21,12 @@ The default `HttpBrowserFetcher` adapts `http1-client`, but tests and platform
 hosts can inject any transport. Font measurement, shaping, metrics, resolution,
 and the final paint backend also remain caller-owned.
 
-`NavigationHistory` implements the BR01 in-memory navigation model: navigate,
-Back, Forward, Home, Reload, and redirect replacement.
+`NavigationHistory` is re-exported from the reusable `browser-navigation`
+package and implements the BR01 in-memory navigation model: navigate, Back,
+Forward, Home, Reload, and redirect replacement. The same package owns
+`VisitedLinks`, whose canonical document identity normalizes schemes, hosts,
+default ports, percent escapes, dot segments, and fragments independently of
+the page pipeline.
 
 `ScrollState` clamps vertical offsets against content and viewport geometry,
 performs scroll-aware link hit-testing, and feeds `scrolled_viewport_scene`.
@@ -38,7 +42,11 @@ replacement resets scroll while preserving the current viewport height.
 dispatches Navigate, Back, Forward, Home, and Reload through the page pipeline,
 replaces redirect history with the final URL, and updates the viewport only
 after a successful load. Pointer activation uses viewport coordinates and
-follows the resolved link through the same transactional path.
+follows the resolved link through the same transactional path. Successful
+final URLs are committed to session visited state only after full composition;
+failed loads preserve history, viewport, and visited state together. Reflow,
+reload, Back, and Forward all project the retained state into blue/purple link
+styling without coupling browser history to HTML layout.
 
 `BrowserChromeController` is the matching host-neutral reducer for the shared
 Mosaic `VentureChrome` package. It preserves address edits as a draft, maps the

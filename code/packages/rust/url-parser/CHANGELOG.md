@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-08-27
+
+### Added
+
+- `Url::canonicalize()` for stable URL identity across scheme/host case,
+  default ports, path dot segments, and equivalent percent escapes.
+- Canonicalization validates malformed percent escapes while preserving
+  Unicode source text and URL fragments.
+
 ## [0.1.0] - 2026-04-12
 
 ### Added

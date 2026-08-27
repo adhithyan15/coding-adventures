@@ -56,7 +56,9 @@
 
 use std::collections::HashMap;
 
-use layout_ir::{Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent};
+use layout_ir::{
+    Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent, TextDecorationLines,
+};
 use paint_instructions::{
     GlyphPosition, ImageSrc, PaintBase, PaintGlyphRun, PaintImage, PaintInstruction, PaintRect,
     PaintScene,
@@ -66,7 +68,7 @@ use text_interfaces::{
     ShapedText, TextShaper,
 };
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.3.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Options
@@ -358,8 +360,85 @@ fn emit_text_content<S, M, R>(
             };
 
             emit_glyph_runs_from_shaped(&shaped, size_dpr, baseline_x, baseline_y, &fill_css, out);
+            emit_text_decorations(
+                tc,
+                handle,
+                options.metrics,
+                &shaped,
+                size_dpr,
+                baseline_x,
+                baseline_y,
+                ascent_dpr,
+                dpr,
+                out,
+            );
             baseline_y += line_height_dpr;
         }
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn emit_text_decorations<M>(
+    tc: &TextContent,
+    handle: &M::Handle,
+    metrics: &M,
+    shaped: &ShapedText,
+    size: f32,
+    x: f64,
+    baseline_y: f64,
+    ascent: f64,
+    dpr: f64,
+    out: &mut Vec<PaintInstruction>,
+) where
+    M: FontMetrics,
+{
+    let Some(decoration) = tc.decoration else {
+        return;
+    };
+    let width = shaped.total_advance() as f64;
+    if width <= 0.0 {
+        return;
+    }
+
+    let units_per_em = f64::from(metrics.units_per_em(handle).max(1));
+    let scale = f64::from(size) / units_per_em;
+    let thickness = metrics
+        .underline_thickness(handle)
+        .map(|value| f64::from(value.max(1)) * scale)
+        .unwrap_or_else(|| (f64::from(size) * 0.05).max(dpr));
+    let color = color_to_css(decoration.color.unwrap_or(tc.color));
+    let mut emit_line = |y: f64| {
+        out.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x,
+            y,
+            width,
+            height: thickness,
+            fill: Some(color.clone()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+    };
+
+    if decoration.lines.contains(TextDecorationLines::UNDERLINE) {
+        let position = metrics
+            .underline_position(handle)
+            .map(|value| f64::from(value) * scale)
+            .unwrap_or_else(|| f64::from(size) * 0.08);
+        emit_line(baseline_y + position);
+    }
+    if decoration.lines.contains(TextDecorationLines::OVERLINE) {
+        emit_line(baseline_y - ascent);
+    }
+    if decoration.lines.contains(TextDecorationLines::LINE_THROUGH) {
+        let x_height = metrics
+            .x_height(handle)
+            .map(|value| f64::from(value) * scale)
+            .unwrap_or(ascent * 0.5);
+        emit_line(baseline_y - x_height * 0.5);
     }
 }
 
@@ -597,7 +676,9 @@ fn color_to_css(c: Color) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use layout_ir::{color_black, color_white, font_spec, rgb, TextAlign, TextContent};
+    use layout_ir::{
+        color_black, color_white, font_spec, rgb, TextAlign, TextContent, TextDecoration,
+    };
     use text_interfaces::{
         Direction, FontResolutionError, Glyph, ShapedRun, ShapedText, ShapingError,
     };
@@ -781,6 +862,7 @@ mod tests {
             value: value.into(),
             font: font_spec("Test", 16.0),
             color: color_black(),
+            decoration: None,
             max_lines: None,
             wrap: true,
             text_align: TextAlign::Start,
@@ -826,6 +908,47 @@ mod tests {
         assert_eq!(scene.width, 800.0);
         assert_eq!(scene.height, 600.0);
         assert!(scene.instructions.is_empty());
+    }
+
+    #[test]
+    fn underline_uses_shaped_width_color_and_device_pixel_floor() {
+        let mut text = text_content("link");
+        text.color = rgb(85, 26, 139);
+        text.decoration = Some(TextDecoration::underline());
+        let root = positioned_leaf(text, 3.0, 4.0, 200.0, 30.0);
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let mut options = make_options(&shaper, &metrics, &resolver);
+        options.device_pixel_ratio = 2.0;
+
+        let scene = layout_to_paint(&root, &options);
+        let glyph = scene
+            .instructions
+            .iter()
+            .find_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => Some(run),
+                _ => None,
+            })
+            .expect("decorated text should still emit glyphs");
+        let underline = scene
+            .instructions
+            .iter()
+            .find_map(|instruction| match instruction {
+                PaintInstruction::Rect(rect)
+                    if rect.fill.as_deref() == Some("rgb(85, 26, 139)") =>
+                {
+                    Some(rect)
+                }
+                _ => None,
+            })
+            .expect("underline should be a backend-independent paint rectangle");
+
+        assert_eq!(glyph.fill.as_deref(), Some("rgb(85, 26, 139)"));
+        assert_eq!(underline.x, 6.0);
+        assert_eq!(underline.width, 64.0);
+        assert_eq!(underline.height, 2.0);
+        assert!(underline.y > glyph.glyphs[0].y);
     }
 
     #[test]
@@ -951,7 +1074,7 @@ mod tests {
         assert_eq!(glyph_runs.len(), 2);
         assert_eq!(glyph_runs[0].glyphs.len(), 8); // "line one"
         assert_eq!(glyph_runs[1].glyphs.len(), 8); // "line two"
-        // Second line's baseline should be strictly greater than the first.
+                                                   // Second line's baseline should be strictly greater than the first.
         assert!(glyph_runs[1].glyphs[0].y > glyph_runs[0].glyphs[0].y);
     }
 
@@ -1267,6 +1390,7 @@ mod tests {
             value: "a → b".into(),
             font: font_spec("Test", 10.0),
             color: color_black(),
+            decoration: None,
             max_lines: None,
             wrap: true,
             text_align: TextAlign::Start,

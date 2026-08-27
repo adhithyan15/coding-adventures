@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.4.0] - 2026-08-27
+
+### Added
+
+- Add a narrow visited-link resolver seam that selects final link presentation
+  without coupling HTML layout to browser history or storage.
+- Add Mosaic-era purple visited links and inherited link underlines through
+  reusable Layout IR text decoration.
+
 ## [0.3.0] - 2026-08-27
 
 ### Added

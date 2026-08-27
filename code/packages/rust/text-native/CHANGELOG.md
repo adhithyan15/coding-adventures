@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.0]
+
+### Added
+- Native underline position and thickness metrics through CoreText and
+  DirectWrite for shared text-decoration paint.
+
 ## [0.1.0] — initial release
 
 ### Added

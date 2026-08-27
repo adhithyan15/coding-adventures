@@ -52,12 +52,13 @@ use objc_bridge::{
     CFDictionaryGetValue, CFRange, CFRelease, CFStringGetCString, CFStringGetLength, CGPoint,
     CGSize, CTFontCopyFamilyName, CTFontCopyPostScriptName, CTFontCreateCopyWithAttributes,
     CTFontCreateWithName, CTFontGetAscent, CTFontGetCapHeight, CTFontGetDescent, CTFontGetLeading,
-    CTFontGetSize, CTFontGetUnitsPerEm, CTFontGetXHeight, CTLineCreateWithAttributedString,
-    CTLineGetGlyphRuns, CTRunGetAdvances, CTRunGetAttributes, CTRunGetGlyphCount, CTRunGetGlyphs,
-    CTRunGetPositions, CTRunGetStringIndices, Id, K_CF_STRING_ENCODING_UTF8, NIL,
+    CTFontGetSize, CTFontGetUnderlinePosition, CTFontGetUnderlineThickness, CTFontGetUnitsPerEm,
+    CTFontGetXHeight, CTLineCreateWithAttributedString, CTLineGetGlyphRuns, CTRunGetAdvances,
+    CTRunGetAttributes, CTRunGetGlyphCount, CTRunGetGlyphs, CTRunGetPositions,
+    CTRunGetStringIndices, Id, K_CF_STRING_ENCODING_UTF8, NIL,
 };
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CoreTextHandle — retained CTFontRef with automatic Drop-based release
@@ -274,6 +275,18 @@ impl FontMetrics for CoreTextMetrics {
         } else {
             Some((v * upem / font.size as f64).round() as i32)
         }
+    }
+
+    fn underline_position(&self, font: &Self::Handle) -> Option<i32> {
+        let upem = self.units_per_em(font) as f64;
+        let value = unsafe { CTFontGetUnderlinePosition(font.raw()) };
+        Some((-value * upem / font.size as f64).round() as i32)
+    }
+
+    fn underline_thickness(&self, font: &Self::Handle) -> Option<i32> {
+        let upem = self.units_per_em(font) as f64;
+        let value = unsafe { CTFontGetUnderlineThickness(font.raw()) };
+        (value > 0.0).then_some((value * upem / font.size as f64).round() as i32)
     }
 
     fn family_name(&self, font: &Self::Handle) -> String {
@@ -698,6 +711,8 @@ mod tests {
         assert!(m.units_per_em(&h) > 0);
         assert!(m.ascent(&h) > 0);
         assert!(m.descent(&h) >= 0);
+        assert!(m.underline_position(&h).is_some_and(|value| value > 0));
+        assert!(m.underline_thickness(&h).is_some_and(|value| value > 0));
         // x-height < cap-height < ascent for a reasonable Latin font
         if let (Some(x), Some(c)) = (m.x_height(&h), m.cap_height(&h)) {
             assert!(x < c, "x_height {} should be < cap_height {}", x, c);

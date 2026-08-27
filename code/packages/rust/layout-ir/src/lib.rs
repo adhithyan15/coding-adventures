@@ -33,7 +33,7 @@
 
 use std::collections::HashMap;
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Size values
@@ -189,6 +189,50 @@ pub enum TextAlign {
     End,
 }
 
+/// A composable set of text-decoration lines.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub struct TextDecorationLines(u8);
+
+impl TextDecorationLines {
+    pub const NONE: Self = Self(0);
+    pub const UNDERLINE: Self = Self(1 << 0);
+    pub const OVERLINE: Self = Self(1 << 1);
+    pub const LINE_THROUGH: Self = Self(1 << 2);
+
+    pub const fn contains(self, other: Self) -> bool {
+        self.0 & other.0 == other.0
+    }
+
+    pub const fn union(self, other: Self) -> Self {
+        Self(self.0 | other.0)
+    }
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+pub enum TextDecorationStyle {
+    #[default]
+    Solid,
+}
+
+/// Paint-independent text decoration inherited by inline text descendants.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct TextDecoration {
+    pub lines: TextDecorationLines,
+    pub style: TextDecorationStyle,
+    /// `None` means use the text foreground color.
+    pub color: Option<Color>,
+}
+
+impl TextDecoration {
+    pub const fn underline() -> Self {
+        Self {
+            lines: TextDecorationLines::UNDERLINE,
+            style: TextDecorationStyle::Solid,
+            color: None,
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ImageFit {
     Contain,
@@ -206,6 +250,7 @@ pub struct TextContent {
     pub value: String,
     pub font: FontSpec,
     pub color: Color,
+    pub decoration: Option<TextDecoration>,
     /// None = unlimited; wraps at the containing width until this many
     /// lines are reached, then truncates.
     pub max_lines: Option<u32>,
@@ -551,6 +596,7 @@ mod tests {
             value: "hello".into(),
             font: font_spec("Helvetica", 16.0),
             color: color_black(),
+            decoration: None,
             max_lines: None,
             wrap: true,
             text_align: TextAlign::Start,

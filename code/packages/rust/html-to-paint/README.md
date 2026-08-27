@@ -34,6 +34,10 @@ pub fn html_render_tree_to_paint<M, S, FM, R>(
 ) -> HtmlPaintOutput
 ```
 
+`html_render_tree_to_paint_with_link_state` accepts the same inputs plus a
+resolved-URL visited callback. Link color and underline decoration flow through
+Layout IR into backend-neutral glyph and rectangle paint instructions.
+
 The returned positioned tree retains preserved `html` metadata, while `links`
 contains resolved link rectangles in logical document-content coordinates.
 `hit_test_link` converts viewport coordinates using the current vertical scroll
@@ -61,12 +65,14 @@ HTML `alt` text, and returns the failures for host diagnostics.
 - Resource transport remains host-owned behind `HtmlImageFetcher`.
 - GIF and baseline JPEG decoding convert fetched bytes into shared pixels.
 - Mosaic broken-image borders and alt text recover fetch/decode failures.
-- Host navigation and visited-link policy remain follow-up work.
+- Host navigation remains outside this package; visited membership is supplied
+  as a narrow callback rather than imported browser state.
 - Paint backends consume the returned `PaintScene`; Cairo acceptance proves
   both text-only and inline-image HTML reaches RGBA pixels, while host backend
   selection remains outside this package.
 
-Nine tests cover viewport normalization, end-to-end canned HTML paint output,
+Tests cover viewport normalization, end-to-end canned HTML paint output,
 absolute link-region extraction, empty-box filtering, scroll-aware hit testing,
-half-open boundary behavior, atomic image resolution, GIF/JPEG decoding, and
-real Cairo rasterization of decoded and broken-image fallback pixels.
+half-open boundary behavior, visited/unvisited glyph and underline paint,
+atomic image resolution, GIF/JPEG decoding, and real Cairo rasterization of
+decoded and broken-image fallback pixels.

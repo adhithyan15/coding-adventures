@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Move navigation stacks into reusable `browser-navigation` while preserving
+  the existing public re-export.
+- Add canonical, session-scoped visited-link state and project it into page
+  composition transactionally across redirects, failures, reload, history,
+  and retained-document reflow.
+
 - Add a host-neutral `BrowserHostController` that keeps Mosaic event handling,
   transactional chrome/status synchronization, scrolling, link activation,
   and hover projection identical across native platform adapters.
