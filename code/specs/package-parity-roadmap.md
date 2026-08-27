@@ -9473,14 +9473,24 @@ its `url-parser` dependency order, and the need for neutral fixtures before an
 applicable-lane rollout. Browser fetch, storage, rendering, windows, and native
 paint remain outside that owner.
 
+PR #13252's first hosted-Windows diff build then exposed an operational gap:
+the workflow intentionally does not install Erlang/Elixir on newer Windows
+runner images, but Elixir Atbash lacked a `BUILD_windows` override and invoked
+the fallback Mix command. The focused repair records the same truthful Windows
+platform skip used by Scytale and Vigenere while retaining real native Mix
+evidence on Linux and supported local hosts. New pending owner
+`elixir-windows-build-front-toolchain-classification` audits the wider build
+front, pins supported-platform semantics, and requires either a validated
+Windows toolchain or consistent narrow fail-closed exceptions.
+
 The strategic OCaml process-free substrate still has every declared dependency
 merged but remains collision-unsafe while open PR #12149 owns the required Go
 validator and entry-point paths. Native Dart and JVM build tools remain blocked
 behind the pending execution-semantics and trusted-platform isolation chain.
-After reconciliation and selection, the complete acyclic graph has 541 owners
-and 796 dependency edges: 162 merged, 378 pending, and exactly one in-progress
-owner, with no active parity PR. The fresh worktree and branch start from exact
-`origin/main` `0302e4e8f35a6e79d7bd385ae91fde710176a53c`.
+After reconciliation and selection, the complete acyclic graph has 542 owners
+and 797 dependency edges: 162 merged, 379 pending, and exactly one pr-open
+owner, with active parity PR #13252. The fresh worktree and branch start from
+exact `origin/main` `0302e4e8f35a6e79d7bd385ae91fde710176a53c`.
 
 ## Autonomous Loop Protocol
 

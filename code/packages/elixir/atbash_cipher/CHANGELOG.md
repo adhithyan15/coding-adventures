@@ -6,6 +6,8 @@
 
 - Execute all six normative `classical-ciphers-v1` Atbash objects in generated,
   dependency-free native tests pinned to the corpus digest and case roster.
+- Declare the hosted-Windows build exception explicitly while that runner does
+  not install Erlang/Elixir; Linux and direct native suites still execute Mix.
 
 All notable changes to this package will be documented in this file.
 
