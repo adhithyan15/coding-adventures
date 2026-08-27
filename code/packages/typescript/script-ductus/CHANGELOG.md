@@ -1,5 +1,11 @@
 # Changelog
 
+### Added — source-verified Tamil nya
+
+- Add Tamil **ஞ** from Appendix I Frame 8 of the UT Austin learner manual.
+- Preserve eight movements as four pen-down runs with three lifts.
+- Fit the attested order to the bundled Noto Sans Tamil outline.
+
 ### Added — source-verified Persian and Urdu zay
 
 - Add script-scoped Persian and Urdu **ز** ductus from independently cited

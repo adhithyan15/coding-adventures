@@ -19,4 +19,18 @@ export default [
       );
     },
   },
+  {
+    suite: "Tamil consonants in the starter inventory",
+    suiteOrder: 40,
+    caseOrder: 20,
+    name: "keeps ஞ sourced as four Frame 8 runs",
+    verify: ({ SCRIPTS }) => {
+      const tamil = SCRIPTS.find((script) => script.script === "tamil")!;
+      const nya = tamil.letters.find((entry) => entry.glyph === "ஞ")!;
+      expect(nya.sound).toBe("ña");
+      expect(nya.penLifts).toBe(3);
+      expect(nya.strokeOrder).toHaveLength(8);
+      expect(nya.strokeOrderSource?.citation).toMatch(/Frame 8.*ஞ.*p\. 194/i);
+    },
+  },
 ] satisfies readonly GlyphEvidence[];

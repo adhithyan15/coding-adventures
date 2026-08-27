@@ -157,6 +157,8 @@ const KA = DUCTUS["க"];
 const kaOutline = tamilOutline("க");
 const NGA = DUCTUS["ங"];
 const ngaOutline = tamilOutline("ங");
+const NYA = DUCTUS["ஞ"];
+const nyaOutline = tamilOutline("ஞ");
 const JAPANESE_SHI = DUCTUS[ductusKey("japanese", "し")];
 const japaneseShiOutline = japaneseOutline("し");
 const JAPANESE_KU = DUCTUS[ductusKey("japanese", "く")];
@@ -640,7 +642,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds twenty-one Tamil letters, seventeen Persian letters, eighteen Arabic letters, and eighteen Urdu letters", () => {
+  it("finds twenty-two Tamil letters, seventeen Persian letters, eighteen Arabic letters, and eighteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -648,6 +650,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("எ")?.glyph).toBe("எ");
     expect(ductusFor("க")?.glyph).toBe("க");
     expect(ductusFor("ங")?.glyph).toBe("ங");
+    expect(ductusFor("ஞ")?.glyph).toBe("ஞ");
     expect(ductusFor("ச")?.glyph).toBe("ச");
     expect(ductusFor("ட")?.glyph).toBe("ட");
     expect(ductusFor("வ")?.glyph).toBe("வ");
@@ -1661,6 +1664,23 @@ describe("ங — a detached upright followed by one joined body", () => {
     const pen = byTag(last, "path").find((node) => node.attrs.class === "ductus__pen")!;
     expect(done.map((path) => path.attrs.d)).toEqual([penPathD(NGA.strokes[0], 1)]);
     expect(pen.attrs.d).toBe(penPathD(NGA.strokes[1], 1));
+  });
+});
+
+describe("ஞ — four source-verified runs across eight movements", () => {
+  const steps = ductusSteps(NYA);
+  const strip = ductusFilmstrip(NYA, nyaOutline);
+
+  it("places lifts before the top bar, central descent, and outer bowl", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2, 2, 3, 3, 3]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true, false, true, false, false]);
+  });
+
+  it("reports eight movements in four strokes", () => {
+    expect(strip.frames).toHaveLength(8);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 8 movements");
+    expect(NYA.source.citation).toMatch(/Frame 8.*ஞ.*p\. 194/i);
   });
 });
 
