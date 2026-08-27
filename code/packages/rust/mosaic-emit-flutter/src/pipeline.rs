@@ -1124,6 +1124,7 @@ pub fn from_pipeline(
     let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget");
     let uses_dialog = layout_contains_native_dialog(&layout.root);
+    let uses_path = layout_contains_tag(&layout.root, "Path");
     if uses_radio {
         writeln!(out, "// ignore_for_file: deprecated_member_use").unwrap();
     }
@@ -1187,6 +1188,10 @@ pub fn from_pipeline(
     }
     if uses_dialog {
         out.push_str(&emit_dialog_helper());
+        writeln!(out).unwrap();
+    }
+    if uses_path {
+        out.push_str(&emit_path_helpers());
         writeln!(out).unwrap();
     }
 
@@ -1883,6 +1888,14 @@ struct TableCtx<'a> {
     /// looks up its own node's `group:` value here to decide whether to
     /// synthesize a shared `groupValue`.
     radio_group_members: Option<&'a HashMap<String, Vec<RadioGroupMember>>>,
+    /// True only while emitting a widget that is a direct child of a
+    /// `Stack`. UI39's `Path` `kind: circle` needs this to decide
+    /// whether wrapping itself in `Positioned(left:, top:, ...)` is
+    /// legal — `Positioned` only type-checks as a direct `Stack` child
+    /// in Flutter, unlike WinUI's `Margin`-based offset (valid in any
+    /// panel) or QML's implicit-`Item` `x`/`y` (valid in any non-Layout
+    /// parent). Mirrors `direct_row_child`'s existing threading shape.
+    direct_stack_child: bool,
 }
 
 /// Scan a `HostTable`'s children for the
@@ -2097,6 +2110,9 @@ fn emit_widget_tree(
     if node.tag == "Divider" {
         return Ok(format!("{pad}const Divider()\n"));
     }
+    if node.tag == "Path" {
+        return emit_path(node, indent, part_styles, ctx.direct_stack_child);
+    }
     if node.tag == "Icon" {
         // X5 (Flutter analog): semantic-glyph lowering before the
         // default `Icon(Icons.<source>)` path.  When the glyph is a
@@ -2262,6 +2278,7 @@ fn emit_container(
     let inner_pad = " ".repeat(indent + 2);
     let child_ctx = TableCtx {
         direct_row_child: widget == "Row",
+        direct_stack_child: widget == "Stack",
         ..ctx
     };
 
@@ -4633,6 +4650,7 @@ fn emit_host_table(
         sheet_font_family: sheet_font_family.as_deref(),
         sheet_font_size: sheet_font_size.as_deref(),
         direct_row_child: false,
+        direct_stack_child: false,
         radio_group_members: parent_ctx.radio_group_members,
     };
 
@@ -5556,6 +5574,289 @@ fn find_number_prop(node: &LayoutNode, name: &str) -> Option<f64> {
         }
         None
     })
+}
+
+// =====================================================================
+// UI39 — `Path`, a kernel drawing primitive (#12028 item 3)
+// =====================================================================
+
+/// `Path`'s resolved `.msl` paint props — `background`/`border-color`/
+/// `border-width` (UI39 §3.2's zero-new-style-properties design: `Path`
+/// reuses these three rather than inventing a fill/stroke vocabulary).
+/// `fill`/`stroke` are `None` when the author didn't set the
+/// corresponding prop, rather than defaulting to a colour — mirrors the
+/// XAML lowering, where an unset `Fill`/`Stroke` renders nothing rather
+/// than a surprise colour.
+struct PathPaint {
+    fill: Option<String>,
+    stroke: Option<String>,
+    stroke_width: f64,
+}
+
+fn path_paint(node: &LayoutNode, part_styles: &HashMap<String, String>) -> PathPaint {
+    let style_props = node
+        .part_name
+        .as_deref()
+        .and_then(|p| part_styles.get(p).map(String::as_str))
+        .unwrap_or("");
+    let m = parse_style_props(style_props);
+    let fill = m.get("background").and_then(|v| css_color_to_dart(v));
+    let stroke = m.get("border-color").and_then(|v| css_color_to_dart(v));
+    let stroke_width = m
+        .get("border-width")
+        .and_then(|v| parse_pixel_value(v).parse::<f64>().ok())
+        .unwrap_or(0.0);
+    PathPaint {
+        fill,
+        stroke,
+        stroke_width,
+    }
+}
+
+/// A `CustomPaint`'s `size:` hint, bounding the given coordinates.
+/// `line`/`curve` coordinates are absolute — no offset is applied (see
+/// `emit_path`) — and Flutter's `CustomPaint` does not clip painted
+/// content to its declared `size` by default, so this is purely an
+/// implicit sizing hint for `Stack` layout, not a correctness
+/// requirement for the drawn geometry itself. Mirrors Qt's
+/// `qml_shape_bounding_box_lines`.
+fn path_bounding_size(xs: &[f64], ys: &[f64]) -> (f64, f64) {
+    let w = xs.iter().copied().fold(0.0_f64, f64::max);
+    let h = ys.iter().copied().fold(0.0_f64, f64::max);
+    (w, h)
+}
+
+/// Read a required `Number`-valued prop, e.g. `cx`/`cy`/`r`. `Path`'s
+/// geometry props don't yet support the `SlotRef`/`Expr` bindings every
+/// other numeric prop in the kernel has (UI39 §3.1 documents that as a
+/// kernel-level capability); wiring it through to a real Dart
+/// field/`setState` binding is future work, the same not-yet-landed gap
+/// the XAML and Qt lowerings both note — a bound coordinate is
+/// therefore a clear compile error here, not a silent 0.
+fn required_path_number(node: &LayoutNode, prop_name: &str) -> Result<f64, PipelineEmitError> {
+    match find_prop_value(node, prop_name) {
+        Some(LayoutPropValue::Number(n)) => Ok(*n),
+        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Expr(_)) => {
+            Err(PipelineEmitError::UnknownPrimitive(format!(
+                "Path prop '{prop_name}' is bound to a slot or expression, but the Flutter emitter only supports a literal number for Path geometry props today"
+            )))
+        }
+        _ => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path missing required numeric prop '{prop_name}:'"
+        ))),
+    }
+}
+
+/// `Path [name] (kind: circle|line|curve, ...)` → a native Flutter
+/// lowering. UI39 §3.1's four shape kinds; `arc` is a stretch goal not
+/// implemented in this PR — falls through to a named "not yet
+/// supported" error, matching the XAML and Qt lowerings' posture for
+/// the same gap.
+///
+/// `circle` reuses `Container(decoration: BoxDecoration(shape:
+/// BoxShape.circle, ...))` directly — `BoxDecoration` already has
+/// native `color`/`border` properties matching `background`/
+/// `border-color`+`border-width` 1:1, the same reuse Qt's `Rectangle`
+/// lowering made for the same shape. `line`/`curve` have no equivalent
+/// native declarative widget, so they lower to a `CustomPaint` backed
+/// by one of two small painter classes emitted once per file when
+/// `Path` is present anywhere in the tree (see `emit_path_helpers`),
+/// using absolute, un-offset canvas coordinates — mirrors Qt's
+/// `ShapePath`, whose `startX`/`startY`/`PathLine`/`PathQuad` points
+/// are also the literal authored coordinates with no origin shift,
+/// since the containing canvas already sits at the `Stack`'s own
+/// `(0, 0)`.
+///
+/// Only `circle` needs explicit placement: a `Container` always draws
+/// from its OWN top-left corner, so two overlapping circles (the
+/// crescent moon) need `Positioned(left: cx - r, top: cy - r, ...)` to
+/// land at their authored centers instead of collapsing onto Flutter
+/// `Stack`'s default top-left-aligned, un-positioned-child placement.
+/// Unlike WinUI's `Margin` (valid in any panel) or QML's implicit-`Item`
+/// positioning (valid in any non-Layout parent), `Positioned` only
+/// type-checks as a *direct* `Stack` child, so this wraps in
+/// `Positioned` only when `direct_stack_child` (threaded via
+/// `TableCtx`, mirroring `direct_row_child`) confirms the immediate
+/// parent actually is one — a standalone circle (no `Stack` parent)
+/// renders unwrapped, sized to its own `2r × 2r` box, since `Positioned`
+/// would otherwise panic at runtime outside a `Stack`. `line`/`curve`
+/// never need this: their own drawn geometry already encodes the
+/// correct offset from `(0, 0)`, and an un-positioned `Stack` child
+/// already renders at `(0, 0)` by default (`Stack`'s own `alignment`
+/// default is top-left).
+fn emit_path(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    direct_stack_child: bool,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let paint = path_paint(node, part_styles);
+    let kind = find_keyword_prop(node, "kind").ok_or_else(|| {
+        PipelineEmitError::UnknownPrimitive("Path missing required prop 'kind:'".to_string())
+    })?;
+
+    match kind {
+        "circle" => {
+            let cx = required_path_number(node, "cx")?;
+            let cy = required_path_number(node, "cy")?;
+            let r = required_path_number(node, "r")?;
+            let d = 2.0 * r;
+            let fill = paint.fill.as_deref().unwrap_or("null");
+            let border = match &paint.stroke {
+                Some(stroke) => format!(
+                    "Border.all(color: {stroke}, width: {width})",
+                    width = paint.stroke_width
+                ),
+                None => "null".to_string(),
+            };
+            let container = format!(
+                "Container(width: {d}, height: {d}, decoration: BoxDecoration(shape: BoxShape.circle, color: {fill}, border: {border}))"
+            );
+            if direct_stack_child {
+                Ok(format!(
+                    "{pad}Positioned(left: {left}, top: {top}, child: {container})\n",
+                    left = cx - r,
+                    top = cy - r,
+                ))
+            } else {
+                Ok(format!("{pad}{container}\n"))
+            }
+        }
+        "line" => {
+            let x1 = required_path_number(node, "x1")?;
+            let y1 = required_path_number(node, "y1")?;
+            let x2 = required_path_number(node, "x2")?;
+            let y2 = required_path_number(node, "y2")?;
+            let (w, h) = path_bounding_size(&[x1, x2], &[y1, y2]);
+            let fill = paint.fill.as_deref().unwrap_or("null");
+            let stroke = paint.stroke.as_deref().unwrap_or("null");
+            Ok(format!(
+                "{pad}CustomPaint(size: const Size({w}, {h}), painter: _MosaicLinePainter(start: const Offset({x1}, {y1}), end: const Offset({x2}, {y2}), fill: {fill}, stroke: {stroke}, strokeWidth: {sw}))\n",
+                sw = paint.stroke_width,
+            ))
+        }
+        "curve" => {
+            let x1 = required_path_number(node, "x1")?;
+            let y1 = required_path_number(node, "y1")?;
+            let cx = required_path_number(node, "cx")?;
+            let cy = required_path_number(node, "cy")?;
+            let x2 = required_path_number(node, "x2")?;
+            let y2 = required_path_number(node, "y2")?;
+            let (w, h) = path_bounding_size(&[x1, cx, x2], &[y1, cy, y2]);
+            let fill = paint.fill.as_deref().unwrap_or("null");
+            let stroke = paint.stroke.as_deref().unwrap_or("null");
+            Ok(format!(
+                "{pad}CustomPaint(size: const Size({w}, {h}), painter: _MosaicCurvePainter(start: const Offset({x1}, {y1}), control: const Offset({cx}, {cy}), end: const Offset({x2}, {y2}), fill: {fill}, stroke: {stroke}, strokeWidth: {sw}))\n",
+                sw = paint.stroke_width,
+            ))
+        }
+        "arc" => Err(PipelineEmitError::UnknownPrimitive(
+            "Path kind 'arc' is not yet supported by the Flutter emitter (deferred per spec PR sequence)".to_string(),
+        )),
+        other => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path kind '{other}' is not a recognized shape kind (expected circle, line, curve, or arc)"
+        ))),
+    }
+}
+
+/// UI39 `Path`'s `line`/`curve` painter classes, emitted once per file
+/// when `Path` is present anywhere in the tree (gated by `uses_path` in
+/// `from_pipeline`, mirroring `emit_drag_helpers`/`emit_dialog_helper`'s
+/// existing "shared top-level helper, emitted once" pattern). `circle`
+/// needs no painter class — it lowers directly to `Container` +
+/// `BoxDecoration(shape: BoxShape.circle)` in `emit_path`.
+fn emit_path_helpers() -> String {
+    r#"class _MosaicLinePainter extends CustomPainter {
+  const _MosaicLinePainter({
+    required this.start,
+    required this.end,
+    this.fill,
+    this.stroke,
+    this.strokeWidth = 0,
+  });
+
+  final Offset start;
+  final Offset end;
+  final Color? fill;
+  final Color? stroke;
+  final double strokeWidth;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()
+      ..moveTo(start.dx, start.dy)
+      ..lineTo(end.dx, end.dy);
+    if (fill != null) {
+      canvas.drawPath(path, Paint()..color = fill!..style = PaintingStyle.fill);
+    }
+    if (stroke != null) {
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color = stroke!
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = strokeWidth,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _MosaicLinePainter oldDelegate) =>
+      oldDelegate.start != start ||
+      oldDelegate.end != end ||
+      oldDelegate.fill != fill ||
+      oldDelegate.stroke != stroke ||
+      oldDelegate.strokeWidth != strokeWidth;
+}
+
+class _MosaicCurvePainter extends CustomPainter {
+  const _MosaicCurvePainter({
+    required this.start,
+    required this.control,
+    required this.end,
+    this.fill,
+    this.stroke,
+    this.strokeWidth = 0,
+  });
+
+  final Offset start;
+  final Offset control;
+  final Offset end;
+  final Color? fill;
+  final Color? stroke;
+  final double strokeWidth;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()
+      ..moveTo(start.dx, start.dy)
+      ..quadraticBezierTo(control.dx, control.dy, end.dx, end.dy);
+    if (fill != null) {
+      canvas.drawPath(path, Paint()..color = fill!..style = PaintingStyle.fill);
+    }
+    if (stroke != null) {
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color = stroke!
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = strokeWidth,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _MosaicCurvePainter oldDelegate) =>
+      oldDelegate.start != start ||
+      oldDelegate.control != control ||
+      oldDelegate.end != end ||
+      oldDelegate.fill != fill ||
+      oldDelegate.stroke != stroke ||
+      oldDelegate.strokeWidth != strokeWidth;
+}
+"#
+    .to_string()
 }
 
 // Suppress unused-warning for LayoutProp import — the helpers above
@@ -9741,6 +10042,325 @@ mod tests {
         assert!(
             !out2.contains("_MosaicDialogHost"),
             "a layout with no HostDialog must not pay for the helper, got:\n{out2}"
+        );
+    }
+
+    // ====================================================================
+    // UI39 — `Path` drawing primitive (#12028 item 3)
+    // ====================================================================
+
+    fn path_node(part: &str, kind: &str, coords: &[(&str, f64)]) -> LayoutNode {
+        let mut props = vec![LayoutProp {
+            name: "kind".to_string(),
+            value: LayoutPropValue::Keyword(kind.to_string()),
+        }];
+        for (name, value) in coords {
+            props.push(LayoutProp {
+                name: name.to_string(),
+                value: LayoutPropValue::Number(*value),
+            });
+        }
+        LayoutNode {
+            tag: "Path".into(),
+            part_name: Some(part.to_string()),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    fn style_with_part(component: &str, part: &str, props: Vec<StyleProp>) -> StyleDef {
+        StyleDef {
+            component_name: component.to_string(),
+            parts: vec![PartStyle {
+                name: part.to_string(),
+                base: props,
+                transitions: vec![],
+                states: vec![],
+            }],
+        }
+    }
+
+    #[test]
+    fn path_circle_lowers_to_container_with_box_shape_circle() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Stack",
+                vec![],
+                vec![path_node(
+                    "moon-disc",
+                    "circle",
+                    &[("cx", 17.0), ("cy", 17.0), ("r", 17.0)],
+                )],
+            ),
+        );
+        let s = style_with_part(
+            "X",
+            "moon-disc",
+            vec![
+                StyleProp {
+                    name: "background".into(),
+                    value: "#b3a99c".into(),
+                },
+                StyleProp {
+                    name: "border-color".into(),
+                    value: "#1a1714".into(),
+                },
+                StyleProp {
+                    name: "border-width".into(),
+                    value: "2px".into(),
+                },
+            ],
+        );
+        let r = from_pipeline(&m, &l, &s).expect("ok");
+        assert!(
+            r.output.contains(
+                "BoxDecoration(shape: BoxShape.circle, color: const Color(0xFFB3A99C), border: Border.all(color: const Color(0xFF1A1714), width: 2))"
+            ),
+            "got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output
+                .contains("Positioned(left: 0, top: 0, child: Container(width: 34, height: 34,"),
+            "circle inside a Stack must be Positioned at cx-r/cy-r, got:\n{}",
+            r.output
+        );
+    }
+
+    #[test]
+    fn path_circle_offset_center_computes_position_from_radius() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Stack",
+                vec![],
+                vec![path_node(
+                    "moon-bite",
+                    "circle",
+                    &[("cx", 22.0), ("cy", 12.0), ("r", 17.0)],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        assert!(
+            r.output.contains("Positioned(left: 5, top: -5,"),
+            "left/top must be cx-r/cy-r, got:\n{}",
+            r.output
+        );
+    }
+
+    /// `Positioned` panics at runtime unless it's a direct `Stack`
+    /// child — a bare status-dot `Path` with no siblings must render
+    /// unwrapped, not crash.
+    #[test]
+    fn path_circle_outside_stack_renders_unwrapped() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Box",
+                vec![],
+                vec![path_node("dot", "circle", &[("cx", 4.0), ("cy", 4.0), ("r", 4.0)])],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        assert!(
+            !r.output.contains("Positioned("),
+            "Positioned outside a Stack would panic at runtime; got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("Container(width: 8, height: 8,"),
+            "got:\n{}",
+            r.output
+        );
+    }
+
+    #[test]
+    fn path_line_lowers_to_custom_paint_with_line_painter() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Stack",
+                vec![],
+                vec![path_node(
+                    "tick",
+                    "line",
+                    &[("x1", 4.0), ("y1", 4.0), ("x2", 12.0), ("y2", 12.0)],
+                )],
+            ),
+        );
+        let s = style_with_part(
+            "X",
+            "tick",
+            vec![
+                StyleProp {
+                    name: "border-color".into(),
+                    value: "#ffffff".into(),
+                },
+                StyleProp {
+                    name: "border-width".into(),
+                    value: "2px".into(),
+                },
+            ],
+        );
+        let r = from_pipeline(&m, &l, &s).expect("ok");
+        assert!(
+            r.output.contains(
+                "_MosaicLinePainter(start: const Offset(4, 4), end: const Offset(12, 12), fill: null, stroke: const Color(0xFFFFFFFF), strokeWidth: 2))"
+            ),
+            "got:\n{}",
+            r.output
+        );
+        assert!(r.output.contains("class _MosaicLinePainter extends CustomPainter"));
+    }
+
+    #[test]
+    fn path_curve_lowers_to_custom_paint_with_curve_painter() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Stack",
+                vec![],
+                vec![path_node(
+                    "arrow",
+                    "curve",
+                    &[
+                        ("x1", 0.0),
+                        ("y1", 0.0),
+                        ("cx", 10.0),
+                        ("cy", -5.0),
+                        ("x2", 20.0),
+                        ("y2", 0.0),
+                    ],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
+        assert!(
+            r.output.contains(
+                "_MosaicCurvePainter(start: const Offset(0, 0), control: const Offset(10, -5), end: const Offset(20, 0), fill: null, stroke: null, strokeWidth: 0))"
+            ),
+            "got:\n{}",
+            r.output
+        );
+        assert!(r.output.contains("class _MosaicCurvePainter extends CustomPainter"));
+    }
+
+    #[test]
+    fn path_helpers_are_emitted_exactly_once_and_only_when_used() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Stack",
+                vec![],
+                vec![
+                    path_node("a", "line", &[("x1", 0.0), ("y1", 0.0), ("x2", 1.0), ("y2", 1.0)]),
+                    path_node("b", "line", &[("x1", 2.0), ("y1", 2.0), ("x2", 3.0), ("y2", 3.0)]),
+                ],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        let count = out
+            .matches("class _MosaicLinePainter extends CustomPainter")
+            .count();
+        assert_eq!(
+            count, 1,
+            "expected the shared painter class exactly once, got {count}:\n{out}"
+        );
+
+        let m2 = component("Y", vec![], vec![]);
+        let l2 = layout("Y", node_with("Box", vec![], vec![]));
+        let out2 = from_pipeline(&m2, &l2, &empty_style("Y")).unwrap().output;
+        assert!(
+            !out2.contains("_MosaicLinePainter") && !out2.contains("_MosaicCurvePainter"),
+            "a layout with no Path must not pay for the painter helpers, got:\n{out2}"
+        );
+    }
+
+    #[test]
+    fn path_missing_kind_is_a_clear_error() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", node_with("Path", vec![], vec![]));
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("kind")));
+    }
+
+    #[test]
+    fn path_missing_coordinate_is_a_clear_error_not_a_default() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Path",
+                vec![LayoutProp {
+                    name: "kind".to_string(),
+                    value: LayoutPropValue::Keyword("circle".to_string()),
+                }],
+                vec![],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("cx")));
+    }
+
+    #[test]
+    fn path_slot_bound_coordinate_is_a_clear_error_not_a_silent_drop() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Path",
+                vec![
+                    LayoutProp {
+                        name: "kind".to_string(),
+                        value: LayoutPropValue::Keyword("circle".to_string()),
+                    },
+                    LayoutProp {
+                        name: "cx".to_string(),
+                        value: LayoutPropValue::SlotRef("radius".to_string()),
+                    },
+                    LayoutProp {
+                        name: "cy".to_string(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                    LayoutProp {
+                        name: "r".to_string(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("bound to a slot"))
+        );
+    }
+
+    #[test]
+    fn path_arc_kind_is_a_named_stretch_goal_not_a_generic_error() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Path",
+                vec![LayoutProp {
+                    name: "kind".to_string(),
+                    value: LayoutPropValue::Keyword("arc".to_string()),
+                }],
+                vec![],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("not yet supported"))
         );
     }
 }

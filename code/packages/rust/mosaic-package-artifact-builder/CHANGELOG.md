@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased] - narrow the `Path` degradation to also exclude Flutter (#12028 item 3, UI39)
+
+Flutter now lowers `Path`'s `circle`/`line`/`curve` kinds to real Dart
+widget/`CustomPaint` geometry (`mosaic-emit-flutter`). Narrowed the
+`("Path", ...)` arm in `collect_native_degradations` from
+`!matches!(backend, Backend::Xaml | Backend::Qt)` to
+`!matches!(backend, Backend::Xaml | Backend::Qt | Backend::Flutter)`,
+matching `HostSlider`'s per-backend narrowing pattern. Same
+primitive-level (not per-kind) caveat as the XAML/Qt narrowings: a real
+build using `kind: arc` on Flutter still hard-errors from the emitter
+itself.
+
 ## [Unreleased] - narrow the `Path` degradation to also exclude Qt (#12028 item 3, UI39)
 
 Qt now lowers `Path`'s `circle`/`line`/`curve` kinds to real QML vector
