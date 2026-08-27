@@ -2,6 +2,14 @@
 
 All notable changes to this crate are documented here.
 
+## [Unreleased]
+
+### Fixed
+
+- Make the BEAM-runtime integration test portable to Windows: probe Erlang
+  with a bounded no-shell halt instead of the interactive `erl -h` command,
+  and normalize the temporary BEAM path before embedding it in Erlang source.
+
 ## [0.1.0] — 2026-05-11
 
 ### Added

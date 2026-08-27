@@ -5747,3 +5747,14 @@ gates for stable structure — discovered identities, order, counts, duplicate r
 mutable exact-data hashes beside the smallest owner they prove. During the migration, independently
 compare the assembled whole object before and after; after it lands, do not require unrelated
 owners to coordinate on one expected digest.
+
+## An Erlang availability probe must not use `erl -h` on Windows
+
+Provisioning BEAM on the Windows build lane exposed a latent hang in
+`twig-to-beam`: its runtime integration test used `erl -h` to decide whether
+Erlang was installed. On Windows, that command starts an interactive shell and
+does not exit, so the repository build remained stuck until the 150-minute CI
+step timeout. Use a bounded no-shell command such as
+`erl -noshell -eval "halt()."` for availability checks, and normalize Windows
+backslashes to forward slashes before embedding a filesystem path in an Erlang
+string literal.

@@ -18,12 +18,12 @@
     "status": "open"
   },
   "last_ci_action": {
-    "observed_at": "2026-08-27T20:36:36Z",
+    "observed_at": "2026-08-28T03:11:00Z",
     "pr_number": 13287,
-    "run_id": 33114158937,
+    "run_id": 33114267618,
     "attempt": 1,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #13287 is non-draft and MERGEABLE, but required checks from the push and pull-request runs are queued or in progress and mergeStateStatus is BLOCKED. Per the parity loop, auto-merge remains disabled and the next run is monitor-only while checks are pending."
+    "status": "conflict-rebase-validated",
+    "notes": "All 41 replacement checks completed successfully, but main advanced again and GitHub reported a merge conflict. Rebased onto exact origin/main 42fd823bace6896dcba08a570a1a1ee52a3a60f1; the only conflict was the setup-beam explanatory comment in ci.yml, resolved by preserving the new Windows 2025 / VS 2026 pin evidence and this tranche's narrow machine-reported NIF and Metal exception contract. Prior conflict rebases passed all 38 twig-to-beam tests/doc-tests, clippy, Go build-tool tests and vet, the 12-test Elixir Windows audit suite, the 285-root fail-closed validator, actionlint, JSON parsing, and diff checks. Auto-merge remains disabled until the newest replacement checks pass."
   },
   "last_inventory": {
     "revision": "0f22582f5a0ddaceaae4f8f6ba56f3b2d5a4fd30",
