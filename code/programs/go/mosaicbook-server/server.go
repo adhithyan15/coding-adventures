@@ -80,10 +80,30 @@ func newServer(root string, compilerPath string) *Server {
 	// Preview endpoint — subtree match so component IDs with slashes work.
 	s.mux.HandleFunc("GET /preview/", s.handlePreview)
 
+	// Native-backend degradation ("what got dropped") panel — see
+	// degradations.go and spec UI19-mosaicbook.md §13.
+	s.mux.HandleFunc("GET /api/degradations/", s.handleAPIDegradations)
+
 	// SSE hot-reload stream.
 	s.mux.HandleFunc("GET /events", s.handleSSE)
 
 	return s
+}
+
+// findComponent looks up a component by ID in the current catalogue, or nil
+// if none matches. Shared by handlePreview and handleAPIDegradations so the
+// two endpoints can't drift on how a component ID resolves.
+func (s *Server) findComponent(id string) *Component {
+	s.mu.Lock()
+	components := s.components
+	s.mu.Unlock()
+
+	for i := range components {
+		if components[i].ID == id {
+			return &components[i]
+		}
+	}
+	return nil
 }
 
 // handleRoot serves the browser shell SPA (static/index.html).
@@ -129,29 +149,39 @@ func (s *Server) handleAPIStories(w http.ResponseWriter, r *http.Request) {
 
 // handleAPIBackends returns the list of backends and their availability.
 //
-// Phase 1 only supports Tier 1 (browser-native) backends.  Qt is listed but
-// marked unavailable so the UI can show it greyed-out.
+// Tier 1 (browser-native) backends render live in the preview iframe. Tier 3
+// (native) backends have no render daemon yet — see UI19-mosaicbook.md §13 —
+// so Rendered is false for all five, but degradation Analysis is available
+// for all five via GET /api/degradations/{backend}/{component_id}, since
+// that needs no daemon or platform runtime.
 //
 // Response schema:
 //
-//	{ "backends": [ { "id": "html", "tier": 1, "available": true }, … ] }
+//	{ "backends": [ { "id": "html", "tier": 1, "rendered": true, "analysis": false }, … ] }
 func (s *Server) handleAPIBackends(w http.ResponseWriter, r *http.Request) {
 	type backend struct {
-		ID        string `json:"id"`
-		Tier      int    `json:"tier"`
-		Available bool   `json:"available"`
-		Reason    string `json:"reason,omitempty"`
+		ID       string `json:"id"`
+		Tier     int    `json:"tier"`
+		Rendered bool   `json:"rendered"`
+		Analysis bool   `json:"analysis"`
+		Reason   string `json:"reason,omitempty"`
 	}
 	type response struct {
 		Backends []backend `json:"backends"`
 	}
 
+	const noDaemon = "no render daemon yet — see UI19-mosaicbook.md §13; degradation analysis is available without one"
+
 	resp := response{
 		Backends: []backend{
-			{ID: "html", Tier: 1, Available: true},
-			{ID: "webcomponent", Tier: 1, Available: true},
-			{ID: "react", Tier: 1, Available: true},
-			{ID: "qt", Tier: 3, Available: false, Reason: "Qt daemon not running (Phase 3)"},
+			{ID: "html", Tier: 1, Rendered: true, Analysis: false},
+			{ID: "webcomponent", Tier: 1, Rendered: true, Analysis: false},
+			{ID: "react", Tier: 1, Rendered: true, Analysis: false},
+			{ID: "xaml", Tier: 3, Rendered: false, Analysis: true, Reason: noDaemon},
+			{ID: "swiftui", Tier: 3, Rendered: false, Analysis: true, Reason: noDaemon},
+			{ID: "qt", Tier: 3, Rendered: false, Analysis: true, Reason: noDaemon},
+			{ID: "flutter", Tier: 3, Rendered: false, Analysis: true, Reason: noDaemon},
+			{ID: "compose", Tier: 3, Rendered: false, Analysis: true, Reason: noDaemon},
 		},
 	}
 	writeJSON(w, resp)

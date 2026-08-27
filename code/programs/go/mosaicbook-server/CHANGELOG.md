@@ -4,6 +4,44 @@
 
 ### Added
 
+- **Native-backend drop panel** (#12027, part 1 of 2 — see
+  `code/specs/UI19-mosaicbook.md` §13). Five new backend tabs (`xaml`,
+  `swiftui`, `qt`, `flutter`, `compose`). None has a render daemon yet — no
+  daemon binary exists in the repo for any of them, `qt` included — so
+  selecting one shows a "what got dropped" panel instead of the iframe,
+  sourced from a new `GET /api/degradations/{backend}/{component_id}`
+  endpoint. This needs no platform runtime: it shells out to
+  `mosaic-compile pkg <package_root> --backend <backend> --output <tmp>
+  --profile permissive`, reads back the `mosaic-degradations.json` that
+  invocation always writes, and filters `degradations`/`styleDegradations`
+  down to the selected component. Works for all five native backends on any
+  development machine today, independent of and ahead of the render-daemon
+  half of #12027.
+  - `component.ManifestPath == ""` (no owning `mosaic-package.toml`) returns
+    `{"available": false, "reason": "..."}` without invoking the compiler —
+    `mosaic-compile pkg` needs a real package root, and a standalone
+    component has none.
+  - `nativeComplete` in the response reflects the *selected component's*
+    filtered lists, not the whole package's — the Rust
+    `DegradationReport.nativeComplete` field is package-wide (any
+    degradation anywhere in the package makes it `false`), which would make
+    an actually-clean component read as "incomplete" whenever a sibling
+    component in the same package has a drop.
+  - Verified against the real toolchain: real `cargo build --release -p
+    mosaic-compile`, a real `mosaicbook-server` pointed at
+    `mosaic-pkg-toolkit`, and a real browser session exercising the Qt tab
+    against `Radio` (a real, currently-allowlisted
+    `property.radio-group-ignored` degradation — see
+    `mosaic-pkg-toolkit/tests/native_complete_gate.rs`) and against `Button`
+    (genuinely clean, renders "NATIVE COMPLETE"). Confirmed switching back
+    to a Tier-1 tab (`html`) restores the iframe unaffected.
+- `handleAPIBackends`'s response schema changed from a single `available`
+  boolean to separate `rendered`/`analysis` booleans, since a native backend
+  can now be analysis-available (true, no daemon needed) while still not
+  rendered (no daemon exists) — a distinction the old single boolean
+  couldn't express. Nothing in the frontend consumed this endpoint before
+  this change (tabs were static markup, not built from it), so this is not
+  a behavior change for the browser shell.
 - **Three-file (UI29) component discovery.** MosaicBook previously discovered
   only `.mosaic` files. There are none left anywhere in this repo — every
   component (19 packages, 23 toolkit atoms) is authored as separate

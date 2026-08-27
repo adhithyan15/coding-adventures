@@ -87,17 +87,7 @@ func (s *Server) handlePreview(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Look up the component in our catalogue.
-	s.mu.Lock()
-	components := s.components
-	s.mu.Unlock()
-
-	var found *Component
-	for i := range components {
-		if components[i].ID == componentID {
-			found = &components[i]
-			break
-		}
-	}
+	found := s.findComponent(componentID)
 	if found == nil {
 		http.Error(w, fmt.Sprintf("component %q not found", componentID), http.StatusNotFound)
 		return
