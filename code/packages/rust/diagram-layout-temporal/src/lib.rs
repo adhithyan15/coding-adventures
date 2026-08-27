@@ -803,6 +803,7 @@ fn layout_gantt(
     let marker_top = y;
 
     let mut vertical_markers = Vec::new();
+    let mut vertical_marker_ids = BTreeSet::new();
     // Sections and tasks.
     for section in &diagram.sections {
         if let Some(ref lbl) = section.label {
@@ -819,14 +820,16 @@ fn layout_gantt(
             let elapsed_duration = gantt_task_elapsed_duration(t_min + start_day, task, diagram, &starts);
             let bw = (elapsed_duration * x_scale).max(4.0);
             if task.tags.vertical {
-                vertical_markers.push((
-                    bx,
-                    task.id.clone(),
-                    task.label.clone(),
-                    task.link.clone(),
-                    task.callback.clone(),
-                    task.callback_args.clone(),
-                ));
+                if vertical_marker_ids.insert(task.id.clone()) {
+                    vertical_markers.push((
+                        bx,
+                        task.id.clone(),
+                        task.label.clone(),
+                        task.link.clone(),
+                        task.callback.clone(),
+                        task.callback_args.clone(),
+                    ));
+                }
                 continue;
             }
             if task.tags.milestone {
@@ -1821,6 +1824,8 @@ mod tests {
             ..GanttTaskTags::default()
         };
         gantt.sections[0].tasks[1].tags.vertical = true;
+        let duplicate_marker = gantt.sections[0].tasks[1].clone();
+        gantt.sections[0].tasks.push(duplicate_marker);
 
         let layout = layout_temporal_diagram(&diagram, 800.0);
         assert!(layout.items.iter().any(|item| matches!(
@@ -1833,6 +1838,9 @@ mod tests {
             LayoutedTemporalItem::VerticalMarker { y1, y2, label, .. }
                 if y2 > y1 && label == "Build"
         )));
+        assert_eq!(layout.items.iter().filter(|item| matches!(
+            item, LayoutedTemporalItem::VerticalMarker { .. }
+        )).count(), 1);
         assert_eq!(layout.items.iter().filter(|item| matches!(
             item,
             LayoutedTemporalItem::TaskBar { .. }

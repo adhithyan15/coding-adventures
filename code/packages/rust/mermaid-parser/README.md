@@ -102,6 +102,7 @@ Pinned native-render fixtures cover sub-day tick intervals and typed axis time
 fields through Metal-to-PNG validation.
 Calendar-aligned week and month fixtures gate weekday-aware native axis layout.
 Pinned styled-marker fixtures preserve Mermaid `todayMarker` opacity through paint lowering.
+Pinned repeated-vertical-marker fixtures gate row-free semantic marker lowering.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:
