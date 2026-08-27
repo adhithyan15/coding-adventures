@@ -220,6 +220,33 @@ Target: ≥ 95% line coverage.
 
 ---
 
+## Rust tranche (RCPU-001)
+
+The first item in the Rust CPU simulator wave adds
+`code/packages/rust/manchester-baby-simulator`. Its public API mirrors the five
+portable SIM00 lifecycle operations used by this architecture:
+
+- `reset()` clears the store and registers and restores CI to 31.
+- `load(program, origin)` loads complete little-endian words without crossing
+  the 32-word store.
+- `step()` executes exactly one instruction and returns a trace record.
+- `execute(program, max_steps)` resets, loads, and runs with a mandatory step
+  bound.
+- `get_state()` returns an owned, immutable snapshot of all architectural state.
+
+Rust arithmetic uses explicit wrapping operations so debug and release builds
+have identical 32-bit behavior. Loading rejects an origin outside the store,
+ignores an incomplete trailing word, and never allocates from a guest-provided
+size. Stepping a halted machine and exhausting `max_steps` return typed errors.
+Tests cover every opcode spelling (including both SUB encodings), CI wrapping,
+self-modifying code, load boundaries, arithmetic wraparound, and bounded loops.
+
+The gate-level companion is tracked separately as RCPU-002 in
+`RUST-CPU-SIMULATOR-BACKLOG.md`; it will use this functional package as its
+differential-test oracle.
+
+---
+
 ## Relation to Spec CPU-SIMULATOR-ROADMAP
 
 This is Layer 07l in the alternating tik-tok sequence:

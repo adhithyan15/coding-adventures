@@ -1,0 +1,8 @@
+[package]
+name = "manchester-baby-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Manchester Baby (SSEM) functional simulator"
+license = "MIT"
+
+[dependencies]

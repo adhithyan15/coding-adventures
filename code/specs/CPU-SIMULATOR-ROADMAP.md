@@ -1,5 +1,9 @@
 # CPU Simulator Roadmap
 
+> This document records the original Python 07-series. The active Rust-first
+> functional + gate-level completion queue lives in
+> [`RUST-CPU-SIMULATOR-BACKLOG.md`](RUST-CPU-SIMULATOR-BACKLOG.md).
+
 **Goal**: Build a complete suite of behavioral simulators covering every major instruction
 set architecture from 1948 mainframes through modern mobile processors — so that any ISA
 back-end can be developed, tested, and debugged without owning the physical hardware.
