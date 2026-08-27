@@ -100,8 +100,10 @@ shape laid out in the FM00 spec:</p>
 <code>ContentSource</code>.</li>
 <li><strong><code>forme-parse-markdown</code></strong> split off the frontmatter you see above,
 parsed the body as GFM, and emitted a <code>ContentNode</code>.</li>
+<li><strong><code>forme-router</code></strong> assigned one canonical route, then fanned the
+routed node out to the page and collection branches.</li>
 <li><strong><code>forme-collect-chronological</code></strong> sorted this and the other posts
-by date and assigned a route.</li>
+by date while preserving that canonical route.</li>
 <li><strong><code>forme-render-static</code></strong> wrapped the rendered body in a minimal
 classless HTML5 theme and emitted a <code>RenderedPage</code>.</li>
 <li><strong><code>forme-emit-fs</code></strong> wrote the result to <code>dist/</code> and emitted a
@@ -110,13 +112,12 @@ classless HTML5 theme and emitted a <code>RenderedPage</code>.</li>
 <p>The point isn't the post — it's that everything between the parser
 and the deployer is <em>plug-compatible</em>. Want a different theme?
 Replace <code>forme-render-static</code>. Want to ship to S3 instead of disk?
-Replace <code>forme-emit-fs</code>. The other four stages don't change.</p>
+Replace <code>forme-emit-fs</code>. The other five stages don't change.</p>
 <blockquote>
 <p>One pipeline, many surfaces. That's the Forme bet.</p>
 </blockquote>
 <p>The next few posts will work through what the kernel + orchestrator
-gives you, and where the v0.2 router stage will fold the collector
-back into the renderer cleanly.</p>
+gives you, and how collection outputs grow into indexes and feeds.</p>
 </main>
 </body>
 </html>
