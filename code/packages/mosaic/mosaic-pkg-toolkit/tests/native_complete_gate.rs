@@ -18,12 +18,14 @@
 //!
 //! ## The allowlist
 //!
-//! The toolkit is NOT degradation-clean today: 9 pre-existing capability
-//! gaps exist across all five native backends, none introduced by this
-//! test. Each is real native-UI feature work (native indeterminate
-//! checkbox state, native radio-group mutual exclusion, a real Flutter
-//! dialog), not something fixable as a side effect of wiring this gate —
-//! see the linked issues. `ALLOWED_DEGRADATIONS` is the explicit,
+//! The toolkit is NOT degradation-clean today: 5 pre-existing capability
+//! gaps exist across the native backends, none introduced by this
+//! test. Each is real native-UI feature work (native radio-group mutual
+//! exclusion, XAML's inherent `ContentDialog` open-host requirement),
+//! not something fixable as a side effect of wiring this gate — see the
+//! linked issues. (#13006's native indeterminate checkbox state landed
+//! on all three affected backends and no longer needs an entry here.)
+//! `ALLOWED_DEGRADATIONS` is the explicit,
 //! reviewed list of what's tolerated for now; anything else — on any
 //! component, existing or new — fails this test immediately. Remove an
 //! entry the moment its issue is fixed; do not add new entries without a
@@ -45,10 +47,6 @@ fn package_root() -> PathBuf {
 /// (backend, component, degradation code) — every entry must reference
 /// its tracking issue in the comment beside it.
 const ALLOWED_DEGRADATIONS: &[(Backend, &str, &str)] = &[
-    // #13006 — native indeterminate checkbox state not implemented.
-    (Backend::SwiftUI, "Checkbox", "property.checkbox-indeterminate-ignored"),
-    (Backend::Flutter, "Checkbox", "property.checkbox-indeterminate-ignored"),
-    (Backend::Compose, "Checkbox", "property.checkbox-indeterminate-ignored"),
     // #13007 — native radio-group mutual exclusion not implemented.
     (Backend::SwiftUI, "Radio", "property.radio-group-ignored"),
     (Backend::Qt, "Radio", "property.radio-group-ignored"),

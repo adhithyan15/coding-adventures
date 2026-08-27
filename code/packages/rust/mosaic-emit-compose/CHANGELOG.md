@@ -5,6 +5,30 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Native indeterminate checkbox state (#13006). `emit_host_checkbox` had
+  no code path for `indeterminate:` at all. When authored as anything
+  other than a literal `Keyword("false")`, the emitter now swaps the
+  plain `Checkbox` for Compose's own `TriStateCheckbox(state:
+  ToggleableState, onClick: () -> Unit)`, with `state` computed from
+  `indeterminate`/`checked` (`_mosaicTruthy`-wrapped for `slot:`/`Expr`
+  values, matching `bool_prop_expr`'s existing convention) and the
+  `TriStateCheckbox.material` and `androidx.compose.ui.state.ToggleableState`
+  imports added conditionally (new `layout_has_checkbox_indeterminate`
+  walk). `TriStateCheckbox.onClick` takes no argument — unlike
+  `Checkbox.onCheckedChange`'s `checked` lambda parameter — so the
+  dispatched "new checked" value is computed inline from the same
+  `ToggleableState` expression used for `state =`: clicking always
+  resolves *out of* Indeterminate, toggling towards `On` unless already
+  `On`. New `pub fn host_checkbox_has_native_semantics` lets
+  `mosaic-package-artifact-builder`'s degradation analyzer stop
+  reporting `property.checkbox-indeterminate-ignored` for Compose
+  wherever this lowering actually applies. Verified against a real
+  regenerated `mosaic-pkg-toolkit` project: `gradle compileKotlin` —
+  `BUILD SUCCESSFUL` — on the whole Compose Desktop package, including
+  the real `Checkbox.kt` this change touches.
+
 ### Security
 
 - Validate `HostLink.href`'s URI scheme, literal and slot-bound (#13052).

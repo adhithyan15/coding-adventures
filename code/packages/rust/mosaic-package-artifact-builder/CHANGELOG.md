@@ -1,5 +1,25 @@
 # Changelog
 
+## [Unreleased] - gate the checkbox-indeterminate degradation on actual native support (#13006)
+
+`mosaic-emit-compose`/`-flutter`/`-swiftui` now lower `HostCheckbox`'s
+`indeterminate:` to real native tri-state controls (#13006). Changed
+the `("HostCheckbox", "indeterminate")` match arm in
+`ignored_native_property` to call each backend's new
+`host_checkbox_has_native_semantics` predicate (mirroring the existing
+`host_table_has_native_semantics`/`host_dialog_has_native_semantics`
+pattern), so `property.checkbox-indeterminate-ignored` is only reported
+when the authored value is a shape none of the three emitters actually
+act on (in practice, never — the toolkit's `Checkbox` component only
+ever authors a `slot:`-bound value) rather than unconditionally for
+every non-`false` `indeterminate` on these three backends.
+
+Updated `native_degradation_analysis_reports_ignored_checkbox_and_radio_properties`'s
+expected-degradations matrix: Compose/Flutter/SwiftUI now collapse to
+just the still-open `property.radio-group-ignored` entry (#13007),
+matching Qt's existing shape, and the strict-mode `degradation_count`
+assertion for Compose drops from 2 to 1.
+
 ## [Unreleased] - gate Flutter's HostDialog degradation on the actual gap (#13010)
 
 `mosaic-emit-flutter` now implements a real native dialog for `HostDialog`'s

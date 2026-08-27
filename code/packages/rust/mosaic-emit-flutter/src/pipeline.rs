@@ -3460,10 +3460,15 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
     }
 }
 
-/// `HostCheckbox` → `Checkbox`. Two-state for v1; the `indeterminate`
-/// slot is accepted but ignored (Flutter `Checkbox` has a
-/// `tristate: true` mode, but the visual is a dash — close enough for
-/// a follow-up).
+/// `HostCheckbox` → `Checkbox`. `indeterminate:` (`#13006`) lowers to
+/// Flutter's own tri-state mode: `tristate: true` plus a nullable
+/// `value` expression (`null` renders the dash). See
+/// `checkbox_indeterminate_expr` for how the condition is derived.
+///
+/// The `onChanged` callback needs no special-casing for tri-state:
+/// `Checkbox.onChanged` is always `void Function(bool?)` even in
+/// two-state mode, and `host_checkbox_event_args` already treats its
+/// `v` parameter as nullable (`v ?? false`).
 fn emit_host_checkbox(
     node: &LayoutNode,
     indent: usize,
@@ -3510,14 +3515,52 @@ fn emit_host_checkbox(
     } else {
         "/* no onToggle bound */".to_string()
     };
+    let (value_expr, tristate_attr) = match checkbox_indeterminate_expr(node)? {
+        Some(cond) => (format!("{cond} ? null : {checked_expr}"), "tristate: true, "),
+        None => (checked_expr, ""),
+    };
     let body = format!(
-        "material.Checkbox(value: {checked_expr}, onChanged: (v) {{ {on_changed_body}; }})"
+        "material.Checkbox(value: {value_expr}, {tristate_attr}onChanged: (v) {{ {on_changed_body}; }})"
     );
     let inner = match label {
         Some(l) => format!("Row(children: [{body}, {l}])"),
         None => body,
     };
     Ok(format!("{pad}{inner}\n"))
+}
+
+/// Whether `indeterminate:` is authored in a form the emitter can act
+/// on, and if so, the Dart boolean expression that is `true` while the
+/// checkbox should render mixed (`null` value). Mirrors XAML's
+/// `IsThreeState` treatment: a `SlotRef`/`Expr` value can't be
+/// evaluated at compile time, so its *presence* unconditionally routes
+/// to `tristate: true` — the runtime value decides whether `null` (the
+/// mixed dash) is actually shown.
+fn checkbox_indeterminate_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, "indeterminate") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => Ok(Some("true".to_string())),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel)?;
+            Ok(Some(camel))
+        }
+        Some(LayoutPropValue::Expr(expr)) => Ok(Some(format!("({expr})"))),
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::String(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => Ok(None),
+    }
+}
+
+/// Returns whether a HostCheckbox's authored `indeterminate:` value (if
+/// any) lowers to real tri-state rendering (`#13006`).
+///
+/// Package capability analysis calls this same predicate so strict-
+/// profile reporting cannot drift from `emit_host_checkbox`'s actual
+/// lowering.
+pub fn host_checkbox_has_native_semantics(node: &LayoutNode) -> bool {
+    matches!(checkbox_indeterminate_expr(node), Ok(Some(_)))
 }
 
 fn host_checkbox_event_args(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
@@ -6295,6 +6338,101 @@ mod tests {
         assert!(out.contains("as material show Checkbox;"));
         assert!(out.contains("material.Checkbox(value: checked"));
         assert!(out.contains("dispatch(CheckboxEventChange(checked: v ?? false))"));
+    }
+
+    /// #13006 — `indeterminate: true` enables `tristate: true` and the
+    /// checkbox's `value` collapses to a literal `null`.
+    #[test]
+    fn host_checkbox_indeterminate_true_emits_tristate_null_value() {
+        let m = component("X", vec![slot("agreed", SlotType::Bool, true)], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("agreed".into()),
+                    },
+                    LayoutProp {
+                        name: "indeterminate".into(),
+                        value: LayoutPropValue::Keyword("true".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("Checkbox(value: true ? null : agreed, tristate: true, onChanged:"),
+            "expected tristate null-collapsing value, got:\n{out}"
+        );
+    }
+
+    /// #13006 — `indeterminate: slot: mixed` also enables tristate, with
+    /// the runtime slot deciding whether `value` resolves to `null`.
+    #[test]
+    fn host_checkbox_indeterminate_slot_emits_tristate_conditional_value() {
+        let m = component(
+            "X",
+            vec![
+                slot("agreed", SlotType::Bool, true),
+                slot("mixed", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let l = layout(
+            "X",
+            node_with(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("agreed".into()),
+                    },
+                    LayoutProp {
+                        name: "indeterminate".into(),
+                        value: LayoutPropValue::SlotRef("mixed".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("Checkbox(value: mixed ? null : agreed, tristate: true, onChanged:"),
+            "expected tristate conditional value, got:\n{out}"
+        );
+    }
+
+    /// #13006 — `indeterminate: false` (the explicit opt-out) keeps the
+    /// plain two-state `Checkbox` unchanged — no `tristate:` attribute.
+    #[test]
+    fn host_checkbox_indeterminate_false_keeps_plain_two_state() {
+        let m = component("X", vec![slot("agreed", SlotType::Bool, true)], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("agreed".into()),
+                    },
+                    LayoutProp {
+                        name: "indeterminate".into(),
+                        value: LayoutPropValue::Keyword("false".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("Checkbox(value: agreed, onChanged:"),
+            "expected the plain two-state Checkbox to survive `indeterminate: false`, got:\n{out}"
+        );
+        assert!(!out.contains("tristate"), "expected no tristate attribute, got:\n{out}");
     }
 
     #[test]
