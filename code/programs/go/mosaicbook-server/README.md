@@ -64,6 +64,23 @@ Then open `http://localhost:7331` in your browser.
 | `--root`     | `.` (cwd)        | Directory to scan for Mosaic components        |
 | `--compiler` | `mosaic-compile` | Path (or name on PATH) to the compiler binary   |
 
+### Security
+
+The server binds to `localhost` only, and every request is additionally
+checked against the real `Host`/`Origin`/`Sec-Fetch-Site` headers it
+receives (`security.go`) — binding alone doesn't stop a page open in your
+browser from a *different* site from reaching this port, nor DNS rebinding.
+A request whose `Host` isn't `localhost`/`127.0.0.1`/`::1`, whose `Origin`
+(when present) isn't either, or whose `Sec-Fetch-Site` says `cross-site`,
+gets a 403 before any route runs. The `Sec-Fetch-Site` check matters
+specifically because `GET /preview/...` is loaded via `<iframe src=...>` by
+this tool's own browser shell — and a cross-origin iframe *navigation*
+carries no `Origin` header at all, so `Sec-Fetch-Site` is what actually
+catches a hostile page embedding that same URL. This matters more than it
+might for a typical local dev server since `GET /api/degradations` and
+`GET /preview/...` each spawn a real `mosaic-compile` subprocess per
+request.
+
 ## REST API
 
 All endpoints return JSON unless noted.
@@ -210,6 +227,7 @@ stories.go    — component discovery (three-file + legacy .mosaic),
 compiler.go   — mosaic-compile subprocess invocation (single-component mode)
 preview.go    — /preview/* handler, backend-specific HTML wrapping
 degradations.go — /api/degradations/* handler (mosaic-compile pkg mode)
+security.go   — requireLocalOrigin middleware, wrapping the whole mux
 watcher.go    — 1-second polling file watcher
 static.go     — embed.FS declaration for static/index.html
 static/

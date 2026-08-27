@@ -570,7 +570,20 @@ Deliverables:
 ## 11. Security Considerations
 
 - The MosaicBook server binds to `localhost` only and is not exposed to the
-  network.
+  network. Binding alone doesn't stop a page open in the developer's own
+  browser — from any site, if it can reach this port — from issuing
+  requests here, nor DNS rebinding; `requireLocalOrigin`
+  (`code/programs/go/mosaicbook-server/security.go`, #13178) wraps the
+  whole server and rejects any request whose `Host`, and — when present —
+  `Origin`, don't name `localhost`/`127.0.0.1`/`::1`, and rejects
+  `Sec-Fetch-Site: cross-site` unconditionally — needed because
+  `GET /preview/...` (§4) is designed to be loaded via `<iframe src=...>`,
+  and a cross-origin iframe *navigation* carries no `Origin` header at all,
+  so `Sec-Fetch-Site` (sent by every modern browser on every request type,
+  unlike `Origin`) is what actually catches a hostile page embedding that
+  URL. This matters more than it would for a typical local-only tool since
+  §13's `GET /api/degradations` and `GET /preview/...` each spawn a real
+  `mosaic-compile` subprocess per request.
 - Story fixture values from `.stories.json` and the fixture editor are
   HTML-escaped by the backend renderers before embedding in HTML/JSX output.
 - The daemon socket is mode `0600` and accessible only to the current user.
