@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-SITZEN-02, GE-ETYMON-SITZEN-03, GE-LEX-VERSTEHEN-05, GE-ETYMON-VERSTEHEN-06]
 introduces:
   knowledge: [GE-LEX-STEHEN-04, GE-ETYMON-STEHEN-05]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-STEHEN-04, GE-ETYMON-STEHEN-05, GE-LEX-SITZEN-02, GE-ETYMON-SITZEN-03, GE-LEX-VERSTEHEN-05, GE-ETYMON-VERSTEHEN-06]
 skills: [listening, speaking, reading]

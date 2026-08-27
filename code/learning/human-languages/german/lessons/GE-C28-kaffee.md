@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03, GE-LEX-SCHLIESSEN-10, GE-ETYMON-SCHLIESSEN-11]
 introduces:
   knowledge: [GE-LEX-KAFFEE-02, GE-SOUND-KAFFEE-03, GE-ETYMON-KAFFEE-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-KAFFEE-02, GE-SOUND-KAFFEE-03, GE-ETYMON-KAFFEE-04, GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03, GE-LEX-SCHLIESSEN-10, GE-ETYMON-SCHLIESSEN-11]
 skills: [listening, speaking, reading]

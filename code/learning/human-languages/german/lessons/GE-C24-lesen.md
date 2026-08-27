@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-VERSTEHEN-05, GE-ETYMON-VERSTEHEN-06, GE-ETYMON-GRUEN-03]
 introduces:
   knowledge: [GE-LEX-LESEN-07, GE-ETYMON-LESEN-08, GE-GRAMMAR-STRONG-VOWEL-09]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-DENKEN-02, GE-LEX-VERSTEHEN-05, GE-ETYMON-VERSTEHEN-06, GE-ETYMON-GRUEN-03, GE-LEX-LESEN-07, GE-ETYMON-LESEN-08, GE-GRAMMAR-STRONG-VOWEL-09]
 skills: [listening, speaking, reading]

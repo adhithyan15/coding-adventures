@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-HAUPT-02, GE-ETYMON-HAUPT-03, GE-SOUND-GRIMMS-LAW-04, GE-CULTURE-HEAD-CONTAINERS-05]
 introduces:
   knowledge: [GE-LEX-HAND-02, GE-SOUND-HAND-03, GE-ETYMON-HAND-04, GE-ETYMON-HAND-MANUS-05]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-HAND-02, GE-SOUND-HAND-03, GE-ETYMON-HAND-04, GE-ETYMON-HAND-MANUS-05]
 skills: [listening, speaking, reading]

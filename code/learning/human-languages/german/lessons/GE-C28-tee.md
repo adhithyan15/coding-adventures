@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-KAFFEE-02, GE-SOUND-KAFFEE-03, GE-ETYMON-KAFFEE-04]
 introduces:
   knowledge: [GE-LEX-TEE-02, GE-SOUND-TEE-03, GE-ETYMON-TEE-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-TEE-02, GE-SOUND-TEE-03, GE-ETYMON-TEE-04, GE-LEX-KAFFEE-02, GE-SOUND-KAFFEE-03, GE-ETYMON-KAFFEE-04]
 skills: [listening, speaking, reading]

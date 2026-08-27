@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-MUND-02, GE-SOUND-MUND-03, GE-ETYMON-MUND-04, GE-LEX-HAND-02]
 introduces:
   knowledge: [GE-LEX-NASE-02, GE-SOUND-NASE-03, GE-ETYMON-NASE-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-NASE-02, GE-SOUND-NASE-03, GE-ETYMON-NASE-04, GE-LEX-AUGE-02, GE-SOUND-AUGE-03, GE-ETYMON-AUGE-04, GE-LEX-OHR-02, GE-SOUND-OHR-03, GE-ETYMON-OHR-04, GE-LEX-MUND-02, GE-SOUND-MUND-03, GE-ETYMON-MUND-04, GE-LEX-KOPF-02, GE-LEX-HAND-02]
 skills: [listening, speaking, reading]

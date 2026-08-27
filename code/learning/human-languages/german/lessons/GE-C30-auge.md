@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-FAMILIE-02, GE-SOUND-FAMILIE-03, GE-ETYMON-FAMILIE-04, GE-LEX-KOPF-02]
 introduces:
   knowledge: [GE-LEX-AUGE-02, GE-SOUND-AUGE-03, GE-ETYMON-AUGE-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-AUGE-02, GE-SOUND-AUGE-03, GE-ETYMON-AUGE-04, GE-LEX-FAMILIE-02, GE-LEX-KOPF-02]
 skills: [listening, speaking, reading]

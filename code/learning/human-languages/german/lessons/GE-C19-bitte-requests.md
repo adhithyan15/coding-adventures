@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03, GE-ETYMON-BITTE-04]
+introduces_idioms: []
+introduces_senses: [GE-SENSE-BITTE-PLEASE-01]
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03, GE-ETYMON-BITTE-04]
 skills: [listening, speaking, reading]

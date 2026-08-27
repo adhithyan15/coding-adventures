@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-KOPF-02, GE-SOUND-KOPF-03, GE-COMPOUND-KOPFSCHMERZEN-04, GE-ETYMON-KOPF-05]
 introduces:
   knowledge: [GE-LEX-HAUPT-02, GE-ETYMON-HAUPT-03, GE-SOUND-GRIMMS-LAW-04, GE-CULTURE-HEAD-CONTAINERS-05]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [GE-CULTURE-HEAD-CONTAINERS-05]
 practises:
   knowledge: [GE-LEX-HAUPT-02, GE-ETYMON-HAUPT-03, GE-SOUND-GRIMMS-LAW-04, GE-CULTURE-HEAD-CONTAINERS-05]
 skills: [listening, speaking, reading]

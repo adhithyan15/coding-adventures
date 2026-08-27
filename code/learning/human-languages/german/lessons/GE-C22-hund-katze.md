@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [GE-LEX-HUND-02, GE-ETYMON-HUND-03, GE-LEX-KATZE-04, GE-ETYMON-KATZE-05, GE-EVIDENCE-CAT-WORDS-06]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-HUND-02, GE-ETYMON-HUND-03, GE-LEX-KATZE-04, GE-ETYMON-KATZE-05, GE-EVIDENCE-CAT-WORDS-06]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-SOUND-GRIMMS-LAW-04, GE-LEX-WETTER-02, GE-GRAMMAR-WEATHER-SEIN-04]
 introduces:
   knowledge: [GE-LEX-DENKEN-02, GE-ETYMON-DENKEN-03, GE-FALSEFRIEND-ALSO-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-SOUND-GRIMMS-LAW-04, GE-LEX-WETTER-02, GE-GRAMMAR-WEATHER-SEIN-04, GE-LEX-DENKEN-02, GE-ETYMON-DENKEN-03, GE-FALSEFRIEND-ALSO-04]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-LAUFEN-04, GE-LEX-RENNEN-06, GE-LEX-GEHEN-02, GE-ETYMON-HELFEN-08, GE-LEX-HAND-02, GE-SOUND-HAND-03]
 introduces:
   knowledge: [GE-LEX-OEFFNEN-07, GE-ETYMON-OFFEN-08, GE-GRAMMAR-SEPARABLE-09]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-OEFFNEN-07, GE-ETYMON-OFFEN-08, GE-GRAMMAR-SEPARABLE-09, GE-LEX-LAUFEN-04, GE-LEX-RENNEN-06, GE-LEX-GEHEN-02, GE-ETYMON-HELFEN-08, GE-LEX-HAND-02, GE-SOUND-HAND-03]
 skills: [listening, speaking, reading]

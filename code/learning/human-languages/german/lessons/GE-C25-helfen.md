@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-FRAGEN-05, GE-ETYMON-FRAGEN-06, GE-LEX-NEHMEN-02, GE-GRAMMAR-STRONG-VOWEL-09, GE-SOUND-GRIMMS-LAW-04, GE-LEX-BITTE-PLEASE-02]
 introduces:
   knowledge: [GE-LEX-HELFEN-07, GE-ETYMON-HELFEN-08]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-HELFEN-07, GE-ETYMON-HELFEN-08, GE-LEX-FRAGEN-05, GE-ETYMON-FRAGEN-06, GE-LEX-NEHMEN-02, GE-GRAMMAR-STRONG-VOWEL-09, GE-SOUND-GRIMMS-LAW-04, GE-LEX-BITTE-PLEASE-02]
 skills: [listening, speaking, reading]

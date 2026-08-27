@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-TEE-02, GE-SOUND-TEE-03, GE-ETYMON-TEE-04, GE-LEX-BITTE-PLEASE-02]
 introduces:
   knowledge: [GE-LEX-MILCH-02, GE-SOUND-MILCH-03, GE-ETYMON-MILCH-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-MILCH-02, GE-SOUND-MILCH-03, GE-ETYMON-MILCH-04, GE-LEX-KAFFEE-02, GE-SOUND-KAFFEE-03, GE-ETYMON-KAFFEE-04, GE-LEX-TEE-02, GE-SOUND-TEE-03, GE-ETYMON-TEE-04, GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03]
 skills: [listening, speaking, reading]

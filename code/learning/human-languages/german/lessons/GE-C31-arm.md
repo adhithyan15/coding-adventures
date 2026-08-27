@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-NASE-02, GE-SOUND-NASE-03, GE-ETYMON-NASE-04, GE-LEX-HAND-02]
 introduces:
   knowledge: [GE-LEX-ARM-02, GE-SOUND-ARM-03, GE-ETYMON-ARM-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-ARM-02, GE-SOUND-ARM-03, GE-ETYMON-ARM-04, GE-LEX-NASE-02, GE-LEX-HAND-02]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-NEHMEN-02, GE-LEX-LESEN-07, GE-GRAMMAR-STRONG-VOWEL-09, GE-LEX-JA-02, GE-LEX-NEIN-02, GE-PRAGMATICS-DOCH-05]
 introduces:
   knowledge: [GE-LEX-FRAGEN-05, GE-ETYMON-FRAGEN-06]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-FRAGEN-05, GE-ETYMON-FRAGEN-06, GE-LEX-NEHMEN-02, GE-ETYMON-NEHMEN-03, GE-LEX-LESEN-07, GE-GRAMMAR-STRONG-VOWEL-09, GE-LEX-JA-02, GE-LEX-NEIN-02, GE-PRAGMATICS-DOCH-05]
 skills: [listening, speaking, reading]
