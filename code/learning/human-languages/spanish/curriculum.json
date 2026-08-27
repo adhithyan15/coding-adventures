@@ -459,10 +459,19 @@
       "after": []
     },
     {
-      "id": "ES-PATH-030-TENER",
+      "id": "ES-PATH-A1-TENER",
+      "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+      "lessons": [
+        "ES-C08-tener"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030-TENER-PLURAL",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "ES-C08-tener",
         "ES-C08-tenemos",
         "ES-C08-tienen"
       ],
@@ -800,7 +809,7 @@
     },
     {
       "id": "ES-PATH-030-ABILITY-CH11",
-      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
       "lessons": [
         "ES-C11-poder"
       ],
@@ -5243,6 +5252,18 @@
         "ES-EXT-388-VERB"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-389-01",
+      "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+      "lessons": [
+        "ES-C389-saber"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-389-ABILITY"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -5582,6 +5603,15 @@
         "VERB-PUT": "SPINE-SAY-WHAT-I-DO"
       }
     },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [
+        "ES-PATH-A1-TENER",
+        "ES-PATH-030-ABILITY-CH11",
+        "ES-PATH-389-01"
+      ],
+      "omits": [],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "ES-PATH-028-CION",
@@ -5595,7 +5625,7 @@
         "ES-PATH-028-SYNTH-LAWS",
         "ES-PATH-028",
         "ES-PATH-029",
-        "ES-PATH-030-TENER",
+        "ES-PATH-030-TENER-PLURAL",
         "ES-PATH-030-SER",
         "ES-PATH-030-PROFESOR",
         "ES-PATH-030-ESTUDIANTE",
@@ -5610,7 +5640,6 @@
         "ES-PATH-030-REVIEW-OCHO",
         "ES-PATH-030-SYNTH-OCHO",
         "ES-PATH-030-FALSE-FRIENDS",
-        "ES-PATH-030-ABILITY-CH11",
         "ES-PATH-030-DECIR-CH12",
         "ES-PATH-030-YO-GO-CH12",
         "ES-PATH-030-CONSOLIDATION-CH12",
@@ -6322,7 +6351,7 @@
     },
     {
       "id": "ES-EXT-030-ABILITY-CH11",
-      "stage": "A2",
+      "stage": "A1",
       "kind": "required",
       "category": "grammar",
       "canDo": "I can use the three learned singular forms of poder before a known infinitive.",
@@ -10603,6 +10632,17 @@
         "ES-C388-lanzar",
         "ES-C388-borrar",
         "ES-C388-gritar"
+      ]
+    },
+    {
+      "id": "ES-EXT-389-ABILITY",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say saber, and use sé or sabes before a known infinitive.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C389-saber"
       ]
     }
   ],

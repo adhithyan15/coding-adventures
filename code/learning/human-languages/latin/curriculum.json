@@ -595,6 +595,15 @@
         "VERB-BUY": "SPINE-SAY-WHAT-I-DO"
       }
     },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-CAN"
+      ],
+      "relocates": {
+        "VERB-HAVE": "SPINE-SAY-WHAT-I-DO"
+      }
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "LA-PATH-025",
@@ -610,7 +619,6 @@
         "VERB-PRESENT-HABITUAL",
         "VERB-SPEAK",
         "VERB-LEARN",
-        "VERB-CAN",
         "VERB-EAT",
         "VERB-LIVE",
         "VERB-WORK"

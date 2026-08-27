@@ -1,0 +1,9 @@
+{
+  "segments": [],
+  "omits": [
+    "VERB-CAN"
+  ],
+  "relocates": {
+    "VERB-HAVE": "SPINE-SAY-WHAT-I-DO"
+  }
+}

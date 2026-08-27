@@ -604,6 +604,14 @@
       ],
       "relocates": {}
     },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [],
+      "omits": [
+        "VERB-HAVE",
+        "VERB-CAN"
+      ],
+      "relocates": {}
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "AR-PATH-027",
@@ -614,11 +622,9 @@
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
         "VERB-BE",
-        "VERB-HAVE",
         "VERB-SPEAK",
         "VERB-HEAR",
         "VERB-LEARN",
-        "VERB-CAN",
         "VERB-BRING",
         "VERB-GET",
         "VERB-SLEEP",

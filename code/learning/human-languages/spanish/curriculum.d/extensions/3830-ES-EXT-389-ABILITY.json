@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-389-ABILITY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say saber, and use sé or sabes before a known infinitive.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C389-saber"
+  ]
+}

@@ -243,11 +243,23 @@ describe("the committed corpus", () => {
     // `SPINE-SAY-WHAT-I-DO` — the first slice of HL09 §11 item 5. The pin moves
     // because the spine gained a commitment, which is exactly what it is here to
     // report; it is not loosened.
-    expect(summary.totalNodes).toBe(34);
+    //
+    // 34 -> 35, and FUNCTION 14 -> 15: HL23 §10 adds
+    // `SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO`, an A1 FUNCTION node carrying
+    // `VERB-HAVE` and `VERB-CAN`. It is FUNCTION rather than LEXICON because it
+    // exists to close two enumerated PCIC A1 function points — `A1-F2-16` (ask
+    // about ability) and `A1-F2-17` (express ability) — that stood unmapped in
+    // `exam-inventory-es-a1.json`, and not to give two verbs somewhere to live.
+    // The node was minted rather than `SPINE-NAME-EVERYDAY-ACTIONS` being
+    // widened: having a thing is not an everyday action and being able to do one
+    // is not an action either, so absorbing them would have meant a `canDo`
+    // covering naming AND possession AND ability — the compound, unchosen
+    // capability statement HL23 §5 exists to refuse.
+    expect(summary.totalNodes).toBe(35);
 
     const byStrand = Object.fromEntries(summary.strands.map((s) => [s.strand, s.nodes]));
     expect(byStrand).toEqual({
-      FUNCTION: 14,
+      FUNCTION: 15,
       GRAMMAR: 7,
       LEXICON: 3,
       SOUND: 0,
@@ -279,11 +291,15 @@ describe("the committed corpus", () => {
     // slice therefore cost 11 lesson migrations across 5 tracks to release 4
     // concepts.
     //
+    // 35 -> 33. HL23 §10's third slice moved VERB-HAVE and VERB-CAN onto the new
+    // A1 `SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO`, because the DELE A1 sitting found
+    // `tener` its most-missed verb of all and `poder` its fourth.
+    //
     // This number may only ever FALL. It measures the corpus's worst
     // `over-ceiling` node, so a pin that gets raised to let a change through
-    // would be measuring nothing at all. 35 is still nearly 3x the chapter atom
+    // would be measuring nothing at all. 33 is still nearly 3x the chapter atom
     // ceiling, so the node stays the worst offender and stays pinned below.
-    expect(summary.largestNode).toEqual({ nodeId: "SPINE-SAY-WHAT-I-DO", concepts: 35 });
+    expect(summary.largestNode).toEqual({ nodeId: "SPINE-SAY-WHAT-I-DO", concepts: 33 });
 
     // Recorded debt, report-only: HL-C81 splits these. Until then the count is
     // pinned so it cannot grow quietly.

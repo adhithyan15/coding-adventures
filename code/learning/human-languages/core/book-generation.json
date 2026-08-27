@@ -5833,6 +5833,11 @@
       "output": "spanish/book/chapters/ch388-empujar-y-lanzar.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 389,
+      "output": "spanish/book/chapters/ch389-saber.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

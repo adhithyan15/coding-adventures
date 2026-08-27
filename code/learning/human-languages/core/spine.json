@@ -218,6 +218,20 @@
       ]
     },
     {
+      "id": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+      "stage": "A1",
+      "strand": "FUNCTION",
+      "canDo": "I can say what I have and what I am able to do.",
+      "prerequisites": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "core": true,
+      "concepts": [
+        "VERB-HAVE",
+        "VERB-CAN"
+      ]
+    },
+    {
       "id": "SPINE-SAY-WHAT-I-DO",
       "stage": "A2",
       "strand": "GRAMMAR",
@@ -230,7 +244,6 @@
         "VERB-INFINITIVE",
         "VERB-PRESENT-HABITUAL",
         "VERB-BE",
-        "VERB-HAVE",
         "VERB-GO",
         "VERB-COME",
         "VERB-SAY",
@@ -243,7 +256,6 @@
         "VERB-LEARN",
         "VERB-READ",
         "VERB-WRITE",
-        "VERB-CAN",
         "VERB-TAKE",
         "VERB-BRING",
         "VERB-GET",

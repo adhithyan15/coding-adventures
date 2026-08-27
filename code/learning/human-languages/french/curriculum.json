@@ -204,10 +204,19 @@
       "after": []
     },
     {
+      "id": "FR-PATH-A1-AVOIR",
+      "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+      "lessons": [
+        "FR-C14-avoir"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
       "id": "FR-PATH-016",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
-        "FR-C14-avoir",
         "FR-C14-age"
       ],
       "before": [],
@@ -556,6 +565,15 @@
       ],
       "relocates": {}
     },
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO": {
+      "segments": [
+        "FR-PATH-A1-AVOIR"
+      ],
+      "omits": [],
+      "relocates": {
+        "VERB-CAN": "SPINE-SAY-WHAT-I-WANT"
+      }
+    },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
         "FR-PATH-010",
@@ -581,9 +599,7 @@
         "VERB-ANSWER",
         "VERB-MEET"
       ],
-      "relocates": {
-        "VERB-CAN": "SPINE-SAY-WHAT-I-WANT"
-      }
+      "relocates": {}
     },
     "SPINE-NEGATE-AND-ASK": {
       "segments": [],

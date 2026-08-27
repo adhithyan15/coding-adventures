@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-389-01",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "lessons": [
+    "ES-C389-saber"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-389-ABILITY"
+  ],
+  "after": []
+}

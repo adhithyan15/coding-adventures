@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7149a2448c636eb0",
+  "sourceHash": "fnv1a64:fa33f6ff45e8cfe7",
   "summary": {
-    "totalLessons": 998,
-    "voice": 941,
+    "totalLessons": 999,
+    "voice": 942,
     "sight": 43,
     "pen": 14,
-    "drivableLessons": 941,
+    "drivableLessons": 942,
     "drivablePercent": 94,
     "trackCount": 1,
-    "chapterCount": 388,
-    "drivablePrefixTotal": 916,
-    "fullyDrivableChapters": 341,
+    "chapterCount": 389,
+    "drivablePrefixTotal": 917,
+    "fullyDrivableChapters": 342,
     "unstartableChapters": 36,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "spanish",
-      "lessonCount": 998,
-      "voice": 941,
+      "lessonCount": 999,
+      "voice": 942,
       "sight": 43,
       "pen": 14,
       "drivablePercent": 94,
-      "drivablePrefixTotal": 916,
+      "drivablePrefixTotal": 917,
       "modalities": [
         "voice",
         "sight",
@@ -6760,6 +6760,22 @@
             "ES-C388-borrar",
             "ES-C388-gritar"
           ]
+        },
+        {
+          "chapter": 389,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C389-saber"
+          ]
         }
       ]
     }
@@ -8933,7 +8949,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a8e75e5eb3a06940"
+      "sourceHash": "fnv1a64:9c3aba8ed8135762"
     },
     {
       "id": "ES-C08-cuantos-anos",
@@ -9673,7 +9689,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b8c1cd2f8b84fe19"
+      "sourceHash": "fnv1a64:4bf7adb0fa0c98c9"
     },
     {
       "id": "ES-C11-stem-changes",
@@ -24786,6 +24802,24 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:181273442b7170dc"
+    },
+    {
+      "id": "ES-C389-saber",
+      "language": "spanish",
+      "chapter": 389,
+      "sequence": 8290,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:38807c573fdaca92"
     }
   ],
   "findings": []
