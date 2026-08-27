@@ -5,6 +5,14 @@ All notable changes to the ge225-simulator Rust package will be documented in th
 ## [Unreleased]
 
 ### Changed
+- Model A/Q double-length numbers as the documented one sign plus 38 data bits,
+  with Q's sign duplicated or ignored according to the instruction, instead of
+  treating the registers as a conventional 40-bit host integer.
+- Correct `DAD`, `DSU`, `DCB`, `MPY`, `DVD`, `SRD`, and zero-count double-shift
+  behavior against the October 1963 manual, including non-mutating divide
+  overflow for zero and oversized divisors.
+- Make `NOR` and `DNO` store their remainder in absolute memory location 0000
+  regardless of the selected modification-word group.
 - Store GE-225 modification words in their documented reserved core locations.
 - Reject modified, branch, multiword, card-reader, and block-move ranges outside
   installed memory instead of silently wrapping them.
@@ -26,6 +34,9 @@ All notable changes to the ge225-simulator Rust package will be documented in th
   warning-free rustdoc.
 
 ### Added
+- Manual example vectors for double add/subtract, multiply/divide, and
+  double-register shifts, plus overflow, duplicated-sign, normalization, and
+  zero-count regressions.
 - Integration regressions for X-word addressing, out-of-range effective
   addresses and branches, atomic loader/card/double-word behavior, `SPB`, and
   overlapping `MOY` copies.

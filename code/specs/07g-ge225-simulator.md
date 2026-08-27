@@ -35,15 +35,17 @@ authority for that work.
 The remaining functional work is deliberately split into auditable slices:
 
 1. exact installed-memory bounds, reserved-core modification words, atomic
-   multiword/device transfers, and checked control flow;
-2. exact single- and double-length integer, compare, shift, normalization,
-   indicator, and automatic-modification semantics;
-3. the documented central-processor optional instructions and complete direct
+   multiword/device transfers, and checked control flow (RCPU-P002);
+2. the one-sign-plus-38-data-bit A/Q representation and its double arithmetic,
+   compare, multiply/divide, shift, and normalization paths (RCPU-P003);
+3. exact remaining single-length compare, shift, normalization, indicator, and
+   automatic-modification semantics;
+4. the documented central-processor optional instructions and complete direct
    I/O/controller instruction decode and deterministic device contracts; and
-4. the optional Auxiliary Arithmetic Unit, including fixed, normalized
+5. the optional Auxiliary Arithmetic Unit, including fixed, normalized
    floating-point, and unnormalized floating-point modes.
 
-Until all four slices pass the Rust completion contract in
+Until all five slices pass the Rust completion contract in
 `RUST-CPU-SIMULATOR-BACKLOG.md`, GE225/Core remains a useful compiler target but
 must not be presented as a complete historical GE-225 implementation.
 
@@ -51,7 +53,7 @@ During the first slice, card input remains a bounded host-side abstraction: a
 queued record contains at most 27 words and `RCD` copies it atomically to a
 checked destination range. That contract is intentionally narrower than the
 manual's aligned 27-word card/status rotation and controller-ready behavior,
-which belong to the third slice above.
+which belong to the fourth slice above.
 
 ## Layer Position
 

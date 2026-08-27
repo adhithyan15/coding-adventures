@@ -91,13 +91,12 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-P002**, the fail-closed installed-memory and
-architectural modification-word prerequisite for the GE-225 functional audit.
-This slice removes silent address wrapping and detached X arrays, makes
-multiword and device transfers atomic, bounds card-reader input, and pins the
-manual's BRU/SPB bank and P-counter timing. RCPU-005 remains open for the
-manual-backed integer/double/shift, optional CPU and I/O, AAU, and completion
-coverage slices after this prerequisite merges.
+Current selection: **RCPU-P003**, the GE-225 double-length numeric and A/Q
+arithmetic prerequisite. The machine uses one sign plus 38 data bits rather
+than a conventional 40-bit integer; the slice covers DAD/DSU/DCB, MPY/DVD,
+double shifts and normalization, exact overflow, and manual example vectors.
+RCPU-005 remains open for the remaining single-word/automatic-modification,
+optional CPU and I/O, AAU, and completion-coverage slices.
 
 ## Cross-language wave
 
@@ -125,6 +124,7 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-27 | RCPU-P003 manual audit found that A/Q was combined as a conventional signed 40-bit integer even though the GE-225 uses one sign plus two 19-bit data fields and ignores or replaces Q's duplicated sign. This corrupted DAD, DSU, DCB, MPY, DVD, and SRD; zero-count double shifts skipped required sign transfers; NOR/DNO wrote their remainder into the selected X group instead of absolute location 0000. | P0, architecture correctness, blocks RCPU-005 | Implement the 39-bit architectural conversion, correct arithmetic/divide-overflow and A/Q shift/normalize semantics, and pin the manual's published octal examples before continuing the remaining integer/automatic-modification audit. |
 | 2026-08-27 | RCPU-004 fidelity audit found that an initial floating implementation delegated FAD/FSB/FMP/FDH/FDP results to host `f64`, violating the gate-level completion contract even though simple differential tests passed. | P0, gate-level fidelity, blocks RCPU-004 | Replaced it before PR with exact bit-vector alignment, gate add/multiply/restoring divide, 53-bit round-to-nearest-even intermediates, and 512 seeded oracle comparisons including divide remainders. |
 | 2026-08-27 | RCPU-005 primary-manual audit found that `07g` explicitly scoped the implementation as an MVP, while the Rust package silently wrapped effective addresses and multiword/device transfers, kept modification words in detached host arrays instead of reserved core, partially mutated state on range errors, and covered only 7 tests. The manual also exposes deferred automatic-modification, optional central-processor, controller-I/O, and AAU families plus incorrect double-length representation in the current model. | P0 memory/correctness prerequisite, then chronological architecture completeness | Add RCPU-P002 ahead of RCPU-005 for fail-closed installed-memory and architectural X-word storage. Continue RCPU-005 in manual-backed integer/shift, optional CPU and I/O, and AAU slices; do not start RCPU-006 until all slices close. |
 | 2026-08-27 | RCPU-003 manual audit found five historical errors inherited by `07h` and the Python oracle: CAL targeted Q instead of P, HPR and DVH used transfer PCs, TNO retained a set overflow indicator, TNX was omitted, and +0240 FDH was mislabeled as +0241 FDP. | P0, architecture correctness, blocks RCPU-003 | Correct the Rust simulator and `07h` against IBM's 1955 manual, add targeted regressions, and record the Python implementation for repair during its later cross-language audit. |

@@ -23,6 +23,14 @@ The current memory model follows the machine's architectural rules:
 - `set_program_counter` selects a checked program origin, which is useful because
   locations 0 through 3 are the base modification-word group.
 
+The central-processor double-length path also follows the manual's unusual
+numeric layout: A supplies one sign and 19 high data bits, Q supplies 19 low
+data bits, and Q's sign is duplicated or ignored as specified by each
+instruction. `DAD`, `DSU`, `DCB`, `MPY`, `DVD`, and the double-register shifts
+therefore operate on one sign plus 38 data bits rather than a host-style 40-bit
+integer. The manual's published arithmetic and shift examples are executable
+regression vectors.
+
 The current card reader is intentionally a deterministic development abstraction,
 not a completed GE-225 controller model: callers may queue at most 64 records of
 at most 27 words each, and `RCD` transfers the next record after validating the
