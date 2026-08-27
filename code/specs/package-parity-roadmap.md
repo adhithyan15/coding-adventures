@@ -9566,8 +9566,12 @@ modernization and PR #12149 edits the Go entry point for a Swift native-dep
 validator path; their current hunks are line-distinct from this tranche, but the
 loop must recheck conflicts if either merges first. With the new owners
 registered, the selected graph contains 547 owners and 799 dependency edges:
-163 merged, 383 pending, and exactly one in-progress owner, with no active
-parity PR.
+163 merged, 383 pending, and exactly one pr-open owner. Ready-for-review PR
+#13287 was opened from validated head
+`b17e72130edc097b7f0cbe2483431513408b91f5`; it is the sole active parity PR.
+GitHub reports it non-draft and mergeable, while required checks are still
+queued or in progress, so auto-merge remains disabled until all checks are
+terminal and acceptable and the branch is conflict-free.
 
 ## Autonomous Loop Protocol
 
