@@ -2109,14 +2109,15 @@ fn end_to_end_twig_42_emits_ibm704_bin_via_lang_aot() {
     std::fs::write(&src, b"42\n").unwrap();
 
     lang_aot::compile_file_to_ibm704_bin(&src, &bin, lang_aot::Language::Twig)
-        .expect("Twig `42` must compile through the ibm704-backend v0.1.0 minimal-viable scope");
+        .expect("Twig `42` must compile through the executable IBM 704 minimal scope");
 
     let bytes = std::fs::read(&bin).expect("read .bin");
     assert_eq!(
         bytes,
         vec![
-            0x2A, 0x00, 0x00, 0x00, 0x0A, // CLA 42         word = 0xA_0000_002A
-            0x00, 0x00, 0x00, 0x80, 0x08, // HTR  0 (halt)  word = 0x8_8000_0000
+            0x01, 0x40, 0x00, 0x00, 0x02, // CLA 2
+            0x00, 0x00, 0x00, 0x00, 0x00, // HTR 0
+            0x00, 0x00, 0x00, 0x00, 0x2A, // +42 literal
         ],
         "Twig 42 -> IBM 704 byte sequence is the migration-pinned regression invariant for L4 \
          (CAR/CDR were literal 704 instruction-field mnemonics; this is the round-trip to that silicon)"
@@ -2134,7 +2135,7 @@ fn end_to_end_mccarthy_42_emits_ibm704_bin_via_lang_aot() {
     std::fs::write(&src, b"42\n").unwrap();
 
     lang_aot::compile_file_to_ibm704_bin(&src, &bin, lang_aot::Language::McCarthyLisp)
-        .expect("McCarthy `42` must compile through the ibm704-backend v0.1.0 minimal-viable scope");
+        .expect("McCarthy `42` must compile through the executable IBM 704 minimal scope");
 
     let bytes = std::fs::read(&bin).expect("read .bin");
     // McCarthy `42` and Twig `42` both lower to `const_i64 v=42; ret_i64 v`
@@ -2143,10 +2144,39 @@ fn end_to_end_mccarthy_42_emits_ibm704_bin_via_lang_aot() {
     assert_eq!(
         bytes,
         vec![
-            0x2A, 0x00, 0x00, 0x00, 0x0A, // CLA 42
-            0x00, 0x00, 0x00, 0x80, 0x08, // HTR  0 (halt)
+            0x01, 0x40, 0x00, 0x00, 0x02, // CLA 2
+            0x00, 0x00, 0x00, 0x00, 0x00, // HTR 0
+            0x00, 0x00, 0x00, 0x00, 0x2A, // +42 literal
         ],
         "McCarthy Lisp `42` -> IBM 704: the CAR/CDR-birthplace round-trip is now closed end-to-end."
+    );
+}
+
+#[test]
+fn end_to_end_ibm704_relocates_later_function_literals() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("multi.nib");
+    let bin = dir.path().join("multi.bin");
+    std::fs::write(
+        &src,
+        b"fn foo() -> u8 { return 1; } fn main() -> u8 { return 2; }\n",
+    )
+    .unwrap();
+
+    lang_aot::compile_file_to_ibm704_bin(&src, &bin, lang_aot::Language::Nib)
+        .expect("two supported scalar functions must relocate their literal pools");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert_eq!(
+        ibm704_encoder::unpack_words(&bytes).unwrap(),
+        vec![
+            ibm704_encoder::encode_cla(2),
+            0,
+            1,
+            ibm704_encoder::encode_cla(5),
+            0,
+            2,
+        ]
     );
 }
 

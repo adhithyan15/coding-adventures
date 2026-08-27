@@ -233,18 +233,16 @@ impl SystemBoard {
     fn detect_phase_transition(&mut self) {
         let pc = self.cpu.as_ref().unwrap().pc as u32;
         match self.current_phase {
-            BootPhase::Bios => {
-                if (BOOTLOADER_BASE..BOOTLOADER_BASE + 0x10000).contains(&pc) {
+            BootPhase::Bios
+                if (BOOTLOADER_BASE..BOOTLOADER_BASE + 0x10000).contains(&pc) => {
                     self.current_phase = BootPhase::Bootloader;
                     self.trace.add_event(BootPhase::Bootloader, self.cycle, "Bootloader executing");
-                }
             }
-            BootPhase::Bootloader => {
-                if (KERNEL_BASE..KERNEL_BASE + 0x10000).contains(&pc) {
+            BootPhase::Bootloader
+                if (KERNEL_BASE..KERNEL_BASE + 0x10000).contains(&pc) => {
                     self.current_phase = BootPhase::KernelInit;
                     self.trace.add_event(BootPhase::KernelInit, self.cycle, "Kernel entry reached");
                     self.initialize_kernel();
-                }
             }
             BootPhase::KernelInit
                 if (USER_PROCESS_BASE..USER_PROCESS_BASE + 0x10000).contains(&pc) => {

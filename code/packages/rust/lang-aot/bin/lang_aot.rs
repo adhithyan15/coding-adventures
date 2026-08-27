@@ -131,9 +131,9 @@ enum EmitMode {
     /// decoder.  The GE-225 (1959) was the mainframe at Dartmouth
     /// College where Dartmouth BASIC was DESIGNED in 1964.
     Ge225Bin,
-    /// Flat `.bin` of 36-bit IBM 704 instruction words, packed as
-    /// 5 bytes per word (low byte first, high 4 bits of the top
-    /// byte always zero).  Cross-platform.  Downstream consumers:
+    /// Flat `.bin` of 36-bit IBM 704 instruction/literal words,
+    /// packed as five big-endian bytes with the first byte's high
+    /// nibble zero. Cross-platform. Downstream consumers:
     /// any IBM 704 emulator, period scholarship, replica hardware.
     /// The IBM 704 (1954) is the vacuum-tube mainframe McCarthy's
     /// students ran the FIRST LISP implementation on at MIT in
@@ -380,8 +380,8 @@ Options:
                              ibm704 | ibm-704 | 704
                                               → flat .bin of 36-bit IBM 704 instruction
                                                 words via ibm704-backend (packed 5 bytes
-                                                per word, low byte first, top 4 bits of
-                                                the high byte zero); cross-platform; the
+                                                per word, big-endian, first-byte high
+                                                nibble zero); cross-platform; the
                                                 silicon Lisp was BORN on at MIT in 1959
                                                 — the birthplace round-trip (CAR/CDR
                                                 are literal 704 instruction-field
@@ -533,8 +533,8 @@ fn dispatch(
             .map_err(|e| format!("{e}"));
     }
     // IBM 704 .bin emission is also cross-platform — write each
-    // 36-bit instruction word as 5 bytes (low byte first, high 4
-    // bits of the top byte zero) as ibm704-backend emits them.
+    // 36-bit instruction or literal word as five big-endian bytes
+    // (first-byte high nibble zero) as ibm704-backend emits them.
     // The IBM 704 (1954) is the silicon Lisp was BORN on at MIT
     // in 1959; CAR/CDR are literal 704 instruction-field
     // mnemonics.  Downstream is always an emulator or replica.

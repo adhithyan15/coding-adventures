@@ -144,9 +144,7 @@ impl RiscVISADecoder {
                 token.is_branch = true;
             }
             "ecall" => {
-                if self.csr.read(CSR_MTVEC) == 0 {
-                    token.is_halt = true;
-                }
+                token.is_halt = self.csr.read(CSR_MTVEC) == 0;
             }
             "csrrw" | "csrrs" | "csrrc" => {
                 token.reg_write = true;

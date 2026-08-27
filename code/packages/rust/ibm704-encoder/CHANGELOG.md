@@ -1,5 +1,17 @@
 # Changelog — ibm704-encoder
 
+## v0.2.0 — 2026-08-27 — canonical IBM 704 words
+
+* Replaced the idealized word layout with the historical Type A and Type B
+  fields from the 1955 IBM manual.
+* Corrected HTR to `+0000`; added the distinct HPR `+0420` convenience.
+* Changed the producer transport to the simulator's five-byte big-endian
+  contract and added strict decoding helpers.
+* Rejects prefixes that cannot architecturally identify Type A words through
+  a non-panicking typed encoder error.
+* Added field-boundary, signed-operation, invalid-transport, and round-trip
+  tests.
+
 ## v0.1.0 — 2026-06-11 — initial release (L4)
 
 Phase L4 of the McCarthy Lisp implementation.

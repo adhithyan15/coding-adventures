@@ -1,9 +1,10 @@
-//! Byte-pinning tests for `ibm704-backend` v0.1.0.
+//! Byte-pinning tests for `ibm704-backend` v0.2.0.
 //!
 //! Every emitted byte sequence the lang-aot IBM 704 e2e smoke test
 //! pins is asserted here as a unit-level regression invariant.
 
-use ibm704_backend::{compile, BackendError, Ibm704Backend};
+use ibm704_backend::{compile, compile_at, BackendError, Ibm704Backend, MEMORY_WORDS};
+use ibm704_encoder::{encode_cla, unpack_words};
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 
@@ -23,7 +24,7 @@ fn ci(op: &str, dest: Option<&str>, srcs: Vec<CIROperand>, ty: &str) -> CIRInstr
 fn empty_cir_emits_canonical_halt() {
     // Empty body falls through to a bare `HTR 0` halt sentinel.
     let bytes = compile(&ctx("empty", &[], "void"), &[]).expect("lowering");
-    assert_eq!(bytes, vec![0x00, 0x00, 0x00, 0x80, 0x08]);
+    assert_eq!(bytes, vec![0; 5]);
 }
 
 #[test]
@@ -37,12 +38,8 @@ fn backend_run_panics_per_spec() {
     Ibm704Backend.run(&[], &[]);
 }
 
-/// Twig `42` canonical:
-///   CLA 42   ; 0xA_0000_002A → [0x2A, 0x00, 0x00, 0x00, 0x0A]
-///   HTR  0   ; 0x8_8000_0000 → [0x00, 0x00, 0x00, 0x80, 0x08]
-///
-/// 10 bytes total.  This is the migration-pinned regression
-/// invariant for L4.
+/// Twig `42` canonical: `CLA 2; HTR 0; +42`. The last word is a literal-pool
+/// entry because CLA's operand is an address, not an immediate.
 #[test]
 fn canonical_const_42_then_ret_twig_42() {
     let cir = vec![
@@ -53,10 +50,12 @@ fn canonical_const_42_then_ret_twig_42() {
     assert_eq!(
         bytes,
         vec![
-            0x2A, 0x00, 0x00, 0x00, 0x0A, // CLA 42
-            0x00, 0x00, 0x00, 0x80, 0x08, // HTR 0  (halt)
+            0x01, 0x40, 0x00, 0x00, 0x02, // CLA 2
+            0x00, 0x00, 0x00, 0x00, 0x00, // HTR 0
+            0x00, 0x00, 0x00, 0x00, 0x2A, // +42 literal
         ]
     );
+    assert_eq!(unpack_words(&bytes).unwrap(), vec![encode_cla(2), 0, 42]);
 }
 
 #[test]
@@ -66,31 +65,22 @@ fn const_zero_then_ret() {
         ci("ret_i64", None, vec![CIROperand::Var("v".into())], "i64"),
     ];
     let bytes = compile(&ctx("zero", &[], "i64"), &cir).expect("lowering");
-    // CLA 0 = 0xA_0000_0000 → [0x00, 0x00, 0x00, 0x00, 0x0A]
-    assert_eq!(
-        bytes,
-        vec![
-            0x00, 0x00, 0x00, 0x00, 0x0A,
-            0x00, 0x00, 0x00, 0x80, 0x08,
-        ]
-    );
+    assert_eq!(unpack_words(&bytes).unwrap(), vec![encode_cla(2), 0, 0]);
 }
 
 #[test]
 fn const_bool_true_acts_as_imm_one() {
     let cir = vec![
-        ci("const_bool", Some("b"), vec![CIROperand::Bool(true)], "bool"),
+        ci(
+            "const_bool",
+            Some("b"),
+            vec![CIROperand::Bool(true)],
+            "bool",
+        ),
         ci("ret_bool", None, vec![CIROperand::Var("b".into())], "bool"),
     ];
     let bytes = compile(&ctx("btrue", &[], "bool"), &cir).expect("lowering");
-    // CLA 1 = 0xA_0000_0001 → [0x01, 0x00, 0x00, 0x00, 0x0A]
-    assert_eq!(
-        bytes,
-        vec![
-            0x01, 0x00, 0x00, 0x00, 0x0A,
-            0x00, 0x00, 0x00, 0x80, 0x08,
-        ]
-    );
+    assert_eq!(unpack_words(&bytes).unwrap(), vec![encode_cla(2), 0, 1]);
 }
 
 #[test]
@@ -100,14 +90,7 @@ fn const_max_15bit_is_accepted() {
         ci("ret_i64", None, vec![CIROperand::Var("v".into())], "i64"),
     ];
     let bytes = compile(&ctx("max", &[], "i64"), &cir).expect("lowering");
-    // CLA 0x7FFF = 0xA_0000_7FFF → [0xFF, 0x7F, 0x00, 0x00, 0x0A]
-    assert_eq!(
-        bytes,
-        vec![
-            0xFF, 0x7F, 0x00, 0x00, 0x0A,
-            0x00, 0x00, 0x00, 0x80, 0x08,
-        ]
-    );
+    assert_eq!(unpack_words(&bytes).unwrap(), vec![encode_cla(2), 0, 32767]);
 }
 
 #[test]
@@ -117,8 +100,7 @@ fn const_out_of_range_errors() {
         ci("const_i64", Some("v"), vec![CIROperand::Int(32768)], "i64"),
         ci("ret_void", None, vec![], "void"),
     ];
-    let err = compile(&ctx("big", &[], "void"), &cir)
-        .expect_err("32768 overflows 15-bit CLA imm");
+    let err = compile(&ctx("big", &[], "void"), &cir).expect_err("32768 overflows 15-bit CLA imm");
     assert!(matches!(err, BackendError::ImmediateOutOfRange(32768)));
 }
 
@@ -136,7 +118,7 @@ fn negative_const_errors() {
 fn ret_void_alone_emits_just_halt() {
     let cir = vec![ci("ret_void", None, vec![], "void")];
     let bytes = compile(&ctx("noop", &[], "void"), &cir).expect("lowering");
-    assert_eq!(bytes, vec![0x00, 0x00, 0x00, 0x80, 0x08]);
+    assert_eq!(bytes, vec![0; 5]);
 }
 
 #[test]
@@ -161,7 +143,75 @@ fn multi_const_ret_first_falls_through_to_unsupported() {
         ci("const_i64", Some("b"), vec![CIROperand::Int(2)], "i64"),
         ci("ret_i64", None, vec![CIROperand::Var("a".into())], "i64"),
     ];
-    let err = compile(&ctx("multi", &[], "i64"), &cir)
-        .expect_err("multi-var ret should fall through");
+    let err =
+        compile(&ctx("multi", &[], "i64"), &cir).expect_err("multi-var ret should fall through");
     assert!(matches!(err, BackendError::UnsupportedOp(_)));
+}
+
+#[test]
+fn multiple_constants_receive_distinct_literal_pool_addresses() {
+    let cir = vec![
+        ci("const_i64", Some("a"), vec![CIROperand::Int(1)], "i64"),
+        ci("const_i64", Some("b"), vec![CIROperand::Int(2)], "i64"),
+        ci("ret_i64", None, vec![CIROperand::Var("b".into())], "i64"),
+    ];
+    let bytes = compile(&ctx("multi", &[], "i64"), &cir).expect("lowering");
+
+    assert_eq!(
+        unpack_words(&bytes).unwrap(),
+        vec![encode_cla(3), encode_cla(4), 0, 1, 2]
+    );
+}
+
+#[test]
+fn nonzero_load_address_relocates_literal_pool() {
+    let cir = vec![
+        ci("const_i64", Some("v"), vec![CIROperand::Int(2)], "i64"),
+        ci("ret_i64", None, vec![CIROperand::Var("v".into())], "i64"),
+    ];
+    let bytes = compile_at(&ctx("second", &[], "i64"), &cir, 3).expect("lowering");
+
+    assert_eq!(unpack_words(&bytes).unwrap(), vec![encode_cla(5), 0, 2]);
+}
+
+#[test]
+fn relocated_function_cannot_cross_address_space_end() {
+    let cir = vec![
+        ci("const_i64", Some("v"), vec![CIROperand::Int(1)], "i64"),
+        ci("ret_i64", None, vec![CIROperand::Var("v".into())], "i64"),
+    ];
+
+    assert_eq!(
+        compile_at(&ctx("overflow", &[], "i64"), &cir, MEMORY_WORDS - 2),
+        Err(BackendError::ProgramTooLarge(MEMORY_WORDS + 1))
+    );
+}
+
+#[test]
+fn oversized_cir_is_rejected_before_capacity_allocation() {
+    let oversized = vec![ci("ret_void", None, vec![], "void"); MEMORY_WORDS + 1];
+
+    assert_eq!(
+        compile(&ctx("oversized", &[], "void"), &oversized),
+        Err(BackendError::ProgramTooLarge(MEMORY_WORDS + 1))
+    );
+}
+
+#[test]
+fn literal_pool_cannot_wrap_the_15_bit_address_space() {
+    let mut cir = Vec::with_capacity(16_386);
+    for _ in 0..16_385 {
+        cir.push(ci("const_i64", Some("v"), vec![CIROperand::Int(1)], "i64"));
+    }
+    cir.push(ci(
+        "ret_i64",
+        None,
+        vec![CIROperand::Var("v".into())],
+        "i64",
+    ));
+
+    assert_eq!(
+        compile(&ctx("too_large", &[], "i64"), &cir),
+        Err(BackendError::ProgramTooLarge(32_771))
+    );
 }

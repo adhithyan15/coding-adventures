@@ -1,8 +1,8 @@
 [package]
 name = "ibm704-backend"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "IBM 704 backend for jit-core / aot-core.  Lowers Vec<CIRInstr> to 36-bit IBM 704 machine words via ibm704-encoder, packed 5 bytes per word.  Phase L4 of the McCarthy Lisp implementation — closes the round-trip from McCarthy Lisp source back to the silicon Lisp was born on (IBM 704, MIT, 1959)."
+description = "IBM 704 backend emitting canonical instructions and addressable sign-magnitude literal pools"
 
 [lib]
 name = "ibm704_backend"

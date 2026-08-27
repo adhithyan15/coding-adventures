@@ -91,9 +91,11 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-002**, the Manchester Baby gate-level simulator (this
-change). RCPU-003 is next unless implementation review or CI reveals a
-higher-priority blocker.
+Current selection: **RCPU-P001**, canonical IBM 704 instruction encoding and
+transport. This newly discovered prerequisite blocks RCPU-003 because the
+existing Rust encoder/backend use an idealized layout and byte order that the
+functional simulator cannot execute faithfully. RCPU-003 remains next after
+RCPU-P001 merges.
 
 ## Cross-language wave
 
@@ -121,6 +123,13 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-27 | RCPU-P001: the Rust IBM 704 encoder shifts an idealized 9-bit opcode into bits 35–27, labels `+0420` as HTR, emits little-endian words, and the backend treats a `CLA` address as an immediate. These conflict with the 1955 IBM Type B format and `07h`'s executable big-endian transport contract. | P0, blocks RCPU-003 | Correct the encoder/spec to canonical Type A/Type B fields and big-endian packing; update the backend to emit addressable literal-pool words before implementing the simulator. |
+| 2026-08-27 | The existing C and C++ IBM 704 encoders mirror the same legacy idealized layout. | P1, non-blocking for Rust | Preserve Rust-first ordering; add these packages to the IBM 704 cross-language port/audit item after the Rust matrix is complete. |
+| 2026-08-27 | Current stable Clippy flags a collapsible ECALL condition in the already-affected `riscv-simulator`, blocking RCPU-P001's CI-equivalent graph lint. | P0, CI-blocking | Preserve behavior with a direct boolean assignment and verify the package tests in RCPU-P001. |
+| 2026-08-27 | Current stable Clippy flags two nested phase-transition conditions in the already-affected `system-board`, blocking RCPU-P001's CI-equivalent graph lint. | P0, CI-blocking | Express the conditions as match guards without changing the phase transitions, then verify the package tests and affected graph in RCPU-P001. |
+| 2026-08-27 | Pre-push security review found that independently compiled IBM 704 functions used function-local literal addresses after concatenation and did not enforce a module-wide 32K bound. | P0, correctness/data-corruption, blocks RCPU-P001 | Add absolute load-address relocation to the backend, enforce the remaining address space per function, and pin a two-function `lang-aot` regression test. |
+| 2026-08-27 | Pre-push security review found that the Type A encoder could silently create Type B-discriminated words for prefixes `000` and `100`. | P0, encoding correctness, blocks RCPU-P001 | Reject non-Type-A and oversized prefixes through a typed, non-panicking encoder error and add boundary tests. |
+| 2026-08-27 | Pre-push security review found that the backend applied its 32K guard only after using caller-controlled CIR length for allocation. | P0, allocation safety, blocks RCPU-P001 | Bound the minimum emitted word count before allocation and retain the exact post-lowering bound check. |
 | 2026-08-27 | Existing Rust simulator APIs are not yet unified by a Rust equivalent of SIM00. | P1, non-blocking | Add an API-convergence design/audit before the cross-language golden-vector freeze; new crates meanwhile expose the five common lifecycle operations. |
 | 2026-08-27 | The older CPU roadmap records Python completion, not Rust pair completion, and its gate-level list is stale. | P1, non-blocking | This file is the canonical Rust wave ledger; link it from the older roadmap in RCPU-001. |
 | 2026-08-27 | Several existing Rust functional crates openly implement subsets (notably 07b ARMv7 and the x86-64 runtime lane). | P1 | Preserve their audit status and create precise follow-ups during their chronological audit items. |

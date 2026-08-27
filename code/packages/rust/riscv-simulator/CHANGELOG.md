@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Kept ECALL halt-token classification warning-free under the current stable
+  Clippy without changing trap behavior.
 - Added the standard RV32M `mul`, `mulhu`, `div`, `divu`, `rem`, and `remu`
   instructions to both simulator execution paths and the test encoder,
   including RISC-V-defined division-by-zero and signed-overflow results.
