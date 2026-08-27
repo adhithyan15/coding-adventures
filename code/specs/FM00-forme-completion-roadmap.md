@@ -134,6 +134,7 @@ work.
 | 2026-08-27 | The web-app scaffolder still generated the same retired action majors, so newly created workflows would reintroduce Node runtime warnings. | Resolved in FM-B022 by updating both generated workflow templates and adding output assertions. |
 | 2026-08-27 | Workflow lint found two Intel release jobs pinned to the retired `macos-13` hosted runner. | Resolved in FM-B022 by preserving their x86_64 intent on `macos-15-intel`. |
 | 2026-08-27 | OCAML03's fail-closed workflow contract separately pins its reviewed action commits, so a repository-wide action upgrade must update that manifest and validator allowlist together. | Resolved in FM-B022 after PR CI exposed the stale allowlist; the OCAML03 repository validator and all 46 contract tests now cover the upgraded commits. |
+| 2026-08-27 | CodeQL still provisioned Go 1.23 even though the shared build tool now requires Go 1.26.1, so its language-detection job could not compile the detector. | Resolved in FM-B022 by aligning both CodeQL Go setup steps with CI's Go 1.26.1 pin. |
 
 ## Loop protocol
 
