@@ -38,6 +38,7 @@
     "excludes-weekdays-and-date",
     "repeated-excludes",
     "today-marker-off",
+    "styled-today-marker",
     "weekday-monday",
     "weekday-tuesday",
     "weekday-wednesday",
