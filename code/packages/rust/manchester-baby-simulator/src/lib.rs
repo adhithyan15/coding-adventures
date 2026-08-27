@@ -165,13 +165,9 @@ impl BabySimulator {
         }
 
         let mut loaded = 0;
-        for (offset, bytes) in program
-            .chunks_exact(4)
-            .take(STORE_WORDS - origin)
-            .enumerate()
-        {
-            self.store[origin + offset] =
-                u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]);
+        let (complete_words, _trailing_bytes) = program.as_chunks::<4>();
+        for (offset, bytes) in complete_words.iter().take(STORE_WORDS - origin).enumerate() {
+            self.store[origin + offset] = u32::from_le_bytes(*bytes);
             loaded += 1;
         }
         Ok(loaded)
