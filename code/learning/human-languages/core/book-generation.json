@@ -6822,11 +6822,10 @@
       "language": "german",
       "chapter": 1,
       "output": "german/book/chapters/ch01-greetings.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "GE-C01-hallo",
         "GE-W01-hallo-guided-copy"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "german",
@@ -6907,11 +6906,10 @@
       "language": "italian",
       "chapter": 1,
       "output": "italian/book/chapters/ch01-greetings.tex",
-      "omittedLessonIds": [
+      "embeddedLessonIds": [
         "IT-C01-ciao",
         "IT-W01-ciao-guided-copy"
-      ],
-      "omissionIssue": 13117
+      ]
     },
     {
       "language": "kannada",

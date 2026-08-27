@@ -543,27 +543,11 @@ describe("hand-written chapters", () => {
     }
   });
 
-  it("pins today's omission debt to dependency-linked issue 13117", () => {
+  it("keeps dependency-linked issue 13117 omission debt fully retired", () => {
     const debt = (config.handwritten ?? []).filter(
       (entry) => (entry.omittedLessonIds?.length ?? 0) > 0,
     );
-    expect(debt.every((entry) => entry.omissionIssue === 13117)).toBe(true);
-    expect(debt.reduce((total, entry) => total + entry.omittedLessonIds!.length, 0)).toBe(4);
-    expect(
-      Object.fromEntries(
-        [...new Set(debt.map((entry) => entry.language))]
-          .sort()
-          .map((language) => [
-            language,
-            debt
-              .filter((entry) => entry.language === language)
-              .reduce((total, entry) => total + entry.omittedLessonIds!.length, 0),
-          ]),
-      ),
-    ).toEqual({
-      german: 2,
-      italian: 2,
-    });
+    expect(debt).toEqual([]);
   });
 
   it("keeps the generator's claim honest against the committed files themselves", () => {
