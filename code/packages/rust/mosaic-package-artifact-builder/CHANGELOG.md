@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - degradation plumbing for `HostProgressRing` (#13176)
+
+New `("HostProgressRing", ...)` arm in `collect_native_degradations`:
+unconditionally degraded (`primitive.progress-ring-unimplemented`) on
+every native backend at registration, exactly matching `HostSwitch`'s
+current state and `Path`'s own starting state. Narrow per backend as
+each lowering PR lands (XAML first, per the rollout sequence in
+#13176 — Flutter, Compose, then Qt last, since Qt has no off-the-shelf
+circular determinate control and needs its own research spike).
+
 ## [Unreleased] - narrow the `Path` degradation to also exclude Compose (#12028 item 3, UI39)
 
 Compose now lowers `Path`'s `circle`/`line`/`curve` kinds to real

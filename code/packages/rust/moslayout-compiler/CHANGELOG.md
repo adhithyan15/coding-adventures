@@ -2,6 +2,21 @@
 
 ## [Unreleased]
 
+### Added - `HostProgressRing` kernel-contract registration (#13176)
+
+- Registered `HostProgressRing` in `PRIMITIVES` — a leaf primitive (no
+  children, like `Icon`/`HostSlider`) preserving the platform's native
+  determinate progress-ring accessibility role (`progressbar`,
+  announced `aria-valuenow`/value-changed live region) that a
+  `Box`+`Box` CSS conic-gradient trick can't provide on native
+  backends at all (those backends silently ignore a slot-bound
+  `background` on a plain `Box` — the exact gap TaskApp's workspace-
+  progress ring hit). One required `value` prop (`Number | SlotRef |
+  Expr`, the 0..100 percent) — no new grammar, reuses the same
+  three-way numeric binding every other prop already has. This PR is
+  kernel-contract only (no backend rendering yet); see #13176 for the
+  rollout sequence.
+
 ### Added - `Path` kernel drawing primitive (#12028 item 3, UI39)
 
 - Registered `Path` as the kernel drawing primitive — the first primitive

@@ -204,6 +204,15 @@ const PRIMITIVES: &[&str] = &[
     // `background`/`border-color`/`border-width` style props for
     // fill/stroke rather than adding new ones (UI39 §3.2).
     "Path",
+    // #13176 — `HostProgressRing` preserves the platform's native
+    // determinate progress-ring role (`progressbar`, announced
+    // `aria-valuenow`/value-changed live region), the real
+    // accessibility surface a `Box`+`Box` CSS conic-gradient trick
+    // (the web-only donut TaskApp's ring used before this) can't
+    // provide on native backends at all — those backends silently
+    // ignore a slot-bound `background` on a plain `Box`. Leaf
+    // primitive, no children, like `Icon`/`HostSlider`.
+    "HostProgressRing",
 ];
 
 #[allow(dead_code)] // retained as API surface / scaffolding
@@ -2965,6 +2974,47 @@ layout Connector {
 "#;
         compile(source, Some(&interface.descriptor_json))
             .expect("Path curve must accept slot-bound coordinate props");
+    }
+
+    #[test]
+    fn host_progress_ring_registered_as_a_kernel_primitive() {
+        assert!(
+            PRIMITIVES.contains(&"HostProgressRing"),
+            "#13176 registered HostProgressRing as a kernel primitive"
+        );
+    }
+
+    #[test]
+    fn host_progress_ring_with_slot_bound_value_compiles() {
+        let interface = mosmodel_compiler::compile(
+            "component Ring { slot ring-percent-value : number ; }",
+        )
+        .expect("compile interface");
+        let source = r#"
+layout Ring {
+  HostProgressRing [ ring-circle ] (
+    value: slot: ring-percent-value
+  )
+}
+"#;
+        let output = compile(source, Some(&interface.descriptor_json))
+            .expect("HostProgressRing must accept a slot-bound value prop");
+        assert_eq!(output.def.root.tag, "HostProgressRing");
+        assert_eq!(output.def.root.props.len(), 1);
+    }
+
+    #[test]
+    fn host_progress_ring_with_literal_value_compiles() {
+        let source = r#"
+layout Ring {
+  HostProgressRing [ ring-circle ] (
+    value: 42
+  )
+}
+"#;
+        let output =
+            compile(source, None).expect("HostProgressRing must accept a literal value prop");
+        assert_eq!(output.def.root.tag, "HostProgressRing");
     }
 
     #[test]
