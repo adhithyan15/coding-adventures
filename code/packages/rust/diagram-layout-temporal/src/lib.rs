@@ -1559,41 +1559,42 @@ mod tests {
     }
 
     #[test]
-    fn gantt_resolves_multi_source_after_and_until_ranges() {
+    fn gantt_resolves_forward_cross_section_after_and_until_ranges() {
         let mut diagram = simple_gantt();
         let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
         gantt.sections[0].tasks[0].start = TaskStart::Date("2026-01-01".into());
         gantt.sections[0].tasks[0].duration = GanttDuration { value: 5.0, unit: GanttDurationUnit::Days };
         gantt.sections[0].tasks[1].start = TaskStart::Date("2026-01-03".into());
         gantt.sections[0].tasks[1].duration = GanttDuration { value: 4.0, unit: GanttDurationUnit::Days };
-        gantt.sections[0].tasks.push(GanttTask {
+        gantt.sections.push(GanttSection { label: Some("Delivery".into()), tasks: Vec::new() });
+        gantt.sections[1].tasks.push(GanttTask {
             id: "t3".into(), label: "Integrate".into(),
             start: TaskStart::After(vec!["t1".into(), "t2".into()]),
             duration: GanttDuration { value: 2.0, unit: GanttDurationUnit::Days }, end: None, tags: GanttTaskTags::default(),
             dependencies: vec!["t1".into(), "t2".into()], link: None,
             callback: None, callback_args: None,
         });
-        gantt.sections[0].tasks.push(GanttTask {
+        gantt.sections[1].tasks.push(GanttTask {
             id: "window".into(), label: "Window".into(),
             start: TaskStart::Date("2025-12-29".into()), duration: GanttDuration::default(),
             end: Some(TaskEnd::Until(vec!["t1".into(), "t2".into()])),
             tags: GanttTaskTags::default(), dependencies: Vec::new(), link: None,
             callback: None, callback_args: None,
         });
-        gantt.sections[0].tasks.push(GanttTask {
+        gantt.sections[1].tasks.push(GanttTask {
             id: "gate".into(), label: "Gate".into(),
             start: TaskStart::Date("2025-12-30".into()), duration: GanttDuration::default(),
             end: Some(TaskEnd::Until(vec!["late".into()])),
             tags: GanttTaskTags::default(), dependencies: Vec::new(), link: None,
             callback: None, callback_args: None,
         });
-        gantt.sections[0].tasks.push(GanttTask {
+        gantt.sections[1].tasks.push(GanttTask {
             id: "consumer".into(), label: "Consumer".into(),
             start: TaskStart::After(vec!["gate".into()]), duration: GanttDuration { value: 1.0, unit: GanttDurationUnit::Days },
             end: None, tags: GanttTaskTags::default(), dependencies: vec!["gate".into()], link: None,
             callback: None, callback_args: None,
         });
-        gantt.sections[0].tasks.push(GanttTask {
+        gantt.sections[1].tasks.push(GanttTask {
             id: "late".into(), label: "Late".into(),
             start: TaskStart::After(vec!["t3".into()]), duration: GanttDuration { value: 1.0, unit: GanttDurationUnit::Days },
             end: None, tags: GanttTaskTags::default(), dependencies: vec!["t3".into()], link: None,

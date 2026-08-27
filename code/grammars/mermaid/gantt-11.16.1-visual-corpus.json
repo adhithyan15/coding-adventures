@@ -52,7 +52,11 @@
     "duration-minutes",
     "duration-seconds",
     "duration-milliseconds",
+    "milliseconds-across-sections",
     "generated-and-sequential",
-    "multiple-after"
+    "multiple-after",
+    "multiple-until",
+    "cross-section-forward-after",
+    "cross-section-forward-until"
   ]
 }
