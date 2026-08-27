@@ -1514,6 +1514,84 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: japanese.letters.find((letter) => letter.glyph === "も")!.strokeOrderSource!,
   },
+  // Sirgazil's 30-frame animation writes わ in two pen-down runs: the long
+  // left vertical first, then the crossing sweep, down-left hook, central
+  // return, and broad right loop. These medians preserve that one-lift order
+  // while fitting the bundled Noto Sans JP print outline.
+  [ductusKey("japanese", "わ")]: {
+    script: "japanese",
+    glyph: "わ",
+    strokes: [
+      {
+        segments: [{
+          label: "descend through the long left vertical",
+          path: [
+            { x: 340, y: 780 },
+            { x: 338, y: 690 },
+            { x: 334, y: 590 },
+            { x: 330, y: 480 },
+            { x: 326, y: 365 },
+            { x: 322, y: 250 },
+            { x: 320, y: 135 },
+            { x: 320, y: 25 },
+          ],
+        }],
+      },
+      {
+        segments: [
+          {
+            label: "sweep right from the upper left across the vertical",
+            path: [
+              { x: 95, y: 565 },
+              { x: 160, y: 570 },
+              { x: 225, y: 578 },
+              { x: 285, y: 586 },
+              { x: 330, y: 594 },
+              { x: 360, y: 600 },
+            ],
+          },
+          {
+            label: "hook down and left, then return through the central crossing",
+            path: [
+              { x: 360, y: 600 },
+              { x: 330, y: 525 },
+              { x: 290, y: 440 },
+              { x: 245, y: 355 },
+              { x: 195, y: 275 },
+              { x: 145, y: 200 },
+              { x: 95, y: 130 },
+              { x: 145, y: 200 },
+              { x: 195, y: 275 },
+              { x: 245, y: 350 },
+              { x: 285, y: 410 },
+              { x: 315, y: 400 },
+            ],
+          },
+          {
+            label: "continue clockwise around the broad right loop",
+            path: [
+              { x: 315, y: 400 },
+              { x: 395, y: 460 },
+              { x: 490, y: 510 },
+              { x: 590, y: 545 },
+              { x: 685, y: 560 },
+              { x: 770, y: 535 },
+              { x: 840, y: 485 },
+              { x: 880, y: 415 },
+              { x: 888, y: 340 },
+              { x: 875, y: 270 },
+              { x: 840, y: 210 },
+              { x: 785, y: 155 },
+              { x: 715, y: 110 },
+              { x: 635, y: 75 },
+              { x: 550, y: 35 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: japanese.letters.find((letter) => letter.glyph === "わ")!.strokeOrderSource!,
+  },
   // Hanzi Writer Data's ordered medians draw 人 with the left-falling stroke
   // first, then restart at the central junction for the right-falling stroke.
   // The source's Arphic-derived proportions are fitted to the vendored Noto
