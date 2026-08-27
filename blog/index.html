@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hello, Forme</title>
-<meta name="description" content="The first post written through the Forme pipeline end-to-end.">
-<link rel="canonical" href="https://adhithyan15.github.io/coding-adventures/blog/2026-05-15-hello-forme.html">
+<title>Coding Adventures</title>
+<meta name="description" content="Small systems, built from first principles.">
+<link rel="canonical" href="https://adhithyan15.github.io/coding-adventures/blog/index.html">
 <link rel="alternate" type="application/rss+xml" title="Coding Adventures RSS" href="https://adhithyan15.github.io/coding-adventures/blog/rss.xml">
 <link rel="alternate" type="application/atom+xml" title="Coding Adventures Atom" href="https://adhithyan15.github.io/coding-adventures/blog/atom.xml">
 <style>
@@ -96,37 +96,12 @@ th { background: #f6f8fa; }
 <body>
 <header><a href="https://adhithyan15.github.io/coding-adventures/blog/index.html">Coding Adventures</a></header>
 <main>
-<h1>Hello, Forme</h1>
-<p>This is the inaugural post of the <strong>Coding Adventures blog</strong>, and the
-first piece of content shipped end-to-end through the
-<a href="https://github.com/adhithyan15/coding-adventures">Forme</a> universal
-authoring pipeline.</p>
-<p>The path it took from <code>data/2026-05-15-hello-forme.md</code> to
-<code>/coding-adventures/blog/2026-05-15-hello-forme.html</code> is exactly the
-shape laid out in the FM00 spec:</p>
-<ol>
-<li><strong><code>forme-source-fs</code></strong> walked <code>data/</code>, found this file, and emitted a
-<code>ContentSource</code>.</li>
-<li><strong><code>forme-parse-markdown</code></strong> split off the frontmatter you see above,
-parsed the body as GFM, and emitted a <code>ContentNode</code>.</li>
-<li><strong><code>forme-router</code></strong> assigned one canonical route, then fanned the
-routed node out to the page and collection branches.</li>
-<li><strong><code>forme-collect-chronological</code></strong> sorted this and the other posts
-by date while preserving that canonical route.</li>
-<li><strong><code>forme-render-static</code></strong> wrapped the rendered body in a minimal
-classless HTML5 theme and emitted a <code>RenderedPage</code>.</li>
-<li><strong><code>forme-emit-fs</code></strong> wrote the result to <code>dist/</code> and emitted a
-<code>DeployArtifact</code>.</li>
-</ol>
-<p>The point isn't the post — it's that everything between the parser
-and the deployer is <em>plug-compatible</em>. Want a different theme?
-Replace <code>forme-render-static</code>. Want to ship to S3 instead of disk?
-Replace <code>forme-emit-fs</code>. The other five stages don't change.</p>
-<blockquote>
-<p>One pipeline, many surfaces. That's the Forme bet.</p>
-</blockquote>
-<p>The next few posts will work through what the kernel + orchestrator
-gives you, and how collection outputs grow into indexes and feeds.</p>
-</main>
+<h1>Coding Adventures</h1>
+<p>Small systems, built from first principles.</p>
+<ul class="forme-index">
+  <li><a href="https://adhithyan15.github.io/coding-adventures/blog/2026-05-15-hello-forme.html">Hello, Forme</a> <time datetime="2026-05-15">2026-05-15</time> <p class="summary">The first post written through the Forme pipeline end-to-end.</p></li>
+  <li><a href="https://adhithyan15.github.io/coding-adventures/blog/2026-05-12-why-forme.html">Why Forme?</a> <time datetime="2026-05-12">2026-05-12</time> <p class="summary">A capability-typed pipeline of small stages is a better blog generator than a 100k-line framework.</p></li>
+  <li><a href="https://adhithyan15.github.io/coding-adventures/blog/2026-05-08-capability-typed-stages.html">Capability-typed stages</a> <time datetime="2026-05-08">2026-05-08</time> <p class="summary">Why every Forme stage declares the capabilities it needs — and why the orchestrator refuses to grant them by default.</p></li>
+</ul></main>
 </body>
 </html>

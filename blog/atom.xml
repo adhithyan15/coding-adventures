@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>https://adhithyan15.github.io/coding-adventures/blog/atom.xml</id>
+  <title>Coding Adventures</title>
+  <updated>2026-05-15T00:00:00Z</updated>
+  <link rel="self" href="https://adhithyan15.github.io/coding-adventures/blog/atom.xml"/>
+  <subtitle>Small systems, built from first principles.</subtitle>
+  <entry>
+    <id>https://adhithyan15.github.io/coding-adventures/blog/2026-05-15-hello-forme.html</id>
+    <title>Hello, Forme</title>
+    <link href="https://adhithyan15.github.io/coding-adventures/blog/2026-05-15-hello-forme.html"/>
+    <updated>2026-05-15T00:00:00Z</updated>
+    <summary>The first post written through the Forme pipeline end-to-end.</summary>
+    <content type="text">The first post written through the Forme pipeline end-to-end.</content>
+  </entry>
+  <entry>
+    <id>https://adhithyan15.github.io/coding-adventures/blog/2026-05-12-why-forme.html</id>
+    <title>Why Forme?</title>
+    <link href="https://adhithyan15.github.io/coding-adventures/blog/2026-05-12-why-forme.html"/>
+    <updated>2026-05-12T00:00:00Z</updated>
+    <summary>A capability-typed pipeline of small stages is a better blog generator than a 100k-line framework.</summary>
+    <content type="text">A capability-typed pipeline of small stages is a better blog generator than a 100k-line framework.</content>
+  </entry>
+  <entry>
+    <id>https://adhithyan15.github.io/coding-adventures/blog/2026-05-08-capability-typed-stages.html</id>
+    <title>Capability-typed stages</title>
+    <link href="https://adhithyan15.github.io/coding-adventures/blog/2026-05-08-capability-typed-stages.html"/>
+    <updated>2026-05-08T00:00:00Z</updated>
+    <summary>Why every Forme stage declares the capabilities it needs — and why the orchestrator refuses to grant them by default.</summary>
+    <content type="text">Why every Forme stage declares the capabilities it needs — and why the orchestrator refuses to grant them by default.</content>
+  </entry>
+</feed>

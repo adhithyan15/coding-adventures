@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Coding Adventures</title>
+    <link>https://adhithyan15.github.io/coding-adventures/blog/index.html</link>
+    <description>Small systems, built from first principles.</description>
+    <language>en-US</language>
+    <lastBuildDate>Fri, 15 May 2026 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Hello, Forme</title>
+      <link>https://adhithyan15.github.io/coding-adventures/blog/2026-05-15-hello-forme.html</link>
+      <guid isPermaLink="true">https://adhithyan15.github.io/coding-adventures/blog/2026-05-15-hello-forme.html</guid>
+      <description>The first post written through the Forme pipeline end-to-end.</description>
+      <pubDate>Fri, 15 May 2026 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Why Forme?</title>
+      <link>https://adhithyan15.github.io/coding-adventures/blog/2026-05-12-why-forme.html</link>
+      <guid isPermaLink="true">https://adhithyan15.github.io/coding-adventures/blog/2026-05-12-why-forme.html</guid>
+      <description>A capability-typed pipeline of small stages is a better blog generator than a 100k-line framework.</description>
+      <pubDate>Tue, 12 May 2026 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Capability-typed stages</title>
+      <link>https://adhithyan15.github.io/coding-adventures/blog/2026-05-08-capability-typed-stages.html</link>
+      <guid isPermaLink="true">https://adhithyan15.github.io/coding-adventures/blog/2026-05-08-capability-typed-stages.html</guid>
+      <description>Why every Forme stage declares the capabilities it needs — and why the orchestrator refuses to grant them by default.</description>
+      <pubDate>Fri, 08 May 2026 00:00:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>
