@@ -290,6 +290,43 @@ Real usage: `mosaic/programs/task-app`'s bridge-arc brand mark
 absolutely positioned inside one `Stack`) and its inline status-dot
 icon compositions.
 
+### 3.4 `box-shadow` → `ThemeShadow` elevation (issue #12028 item 1)
+
+A non-`inset` `box-shadow` (any value) signals the author wants
+elevation. Unlike every other property translation in this file, this
+does not attempt to reproduce the authored numbers — WinUI's
+`ThemeShadow` is a fixed, system-composited shadow with no CSS-shaped
+blur/spread/color/opacity controls; Microsoft's own guidance
+([learn.microsoft.com/windows/apps/develop/ui/shadows](https://learn.microsoft.com/en-us/windows/apps/develop/ui/shadows))
+is a Z-*depth* value, not shadow parameters. `part_wants_theme_shadow`
+recognizes "this element should look raised" and every qualifying
+element gets the identical treatment: `Translation="0,0,4"` (4
+effective pixels — Microsoft's own "Cards: 4–8px" guidance) on the
+opening tag, plus a `<{Element}.Shadow><ThemeShadow/></{Element}.Shadow>`
+child forcing an open/close tag even for elements (`Button`) that
+would otherwise self-close. `Shadow`/`Translation` work on any
+`UIElement`, so this applies uniformly across `emit_container`'s three
+element kinds (`Border`/`Grid`/`StackPanel`) and `emit_host_button`'s
+`<Button>` — verified empirically with a real `dotnet build` (both
+`<Border.Shadow>` and `<Button.Shadow>` compile with zero errors under
+the pinned Windows App SDK; `Translation` is settable as a direct XAML
+attribute despite not being a `DependencyProperty` settable via
+`<Setter>`).
+
+A value containing `inset` (e.g. `"5px -5px 0 0 #f1ebe1 inset"`) is a
+fundamentally different technique — a shape cutout used to fake a
+crescent-moon icon or a status dot (issue #12028 item 3, a kernel
+drawing primitive) — and is deliberately excluded, staying a genuine
+drop with its own specific reason text.
+
+Real usage: `task-app`'s brand-mark icon and every "active" pill/
+segmented-switch button (`project-on`, `seg-tl-on`, `seg-board-on`,
+…) — 9 elements in the real app. TaskApp's authored shadows vary by
+opacity/color between light/dark themes and one "stronger" tier, none
+of which `ThemeShadow` can express anyway, so collapsing every
+non-inset value to one fixed treatment loses no distinction the
+platform could show in the first place.
+
 ## 4. Host* primitives
 
 ### 4.1 `HostInput`

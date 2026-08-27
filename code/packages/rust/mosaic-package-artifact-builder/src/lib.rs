@@ -6346,10 +6346,15 @@ layout NativeEvents {
     /// `DegradationReport::style_degradations` doc comment for why.
     #[test]
     fn xaml_style_drop_is_reported_but_not_gating() {
+        // #12028 item 1: a non-inset box-shadow is no longer an
+        // unexpressible property — it now lowers to a real ThemeShadow
+        // (see mosaic-emit-xaml's `part_wants_theme_shadow`). An
+        // `inset` value (the moon/status-dot drawing hack, item 3)
+        // stays genuinely dropped and keeps testing this mechanism.
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
         fs::write(
             pkg.path().join("src/Card.msl"),
-            "style Card { part root { box-shadow: \"0 1px 2px #000\" ; } }\n",
+            "style Card { part root { box-shadow: \"5px -5px 0 0 #000 inset\" ; } }\n",
         )
         .unwrap();
         let out = TempDir::new().unwrap();
