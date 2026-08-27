@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-396-01",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C396-aprender",
+    "ES-C396-cocinar",
+    "ES-C396-preferir",
+    "ES-C396-funcionar",
+    "ES-C396-reparar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-396-VERB"
+  ],
+  "after": []
+}

@@ -37,7 +37,7 @@ Algorithm:
        i, i+k, i+2k, ...)
     2. Compute IC of each group
     3. Average the ICs
-  Return the k with the highest average IC.
+  Return the smallest k whose average IC is at least 90% of the best score.
 
 Phase 2: Find Each Key Letter (Chi-Squared Test)
 -------------------------------------------------
@@ -101,6 +101,13 @@ ENGLISH_FREQUENCIES: list[float] = [
     0.01974,  # Y
     0.00074,  # Z -- rarest letter
 ]
+MAX_ANALYSIS_SCALARS = 8192
+MAX_ANALYSIS_KEY_LENGTH = 40
+
+
+def _validate_analysis_input(text: str) -> None:
+    if len(text) > MAX_ANALYSIS_SCALARS:
+        raise ValueError("ciphertext exceeds analysis limit")
 
 
 def _index_of_coincidence(text: str) -> float:
@@ -177,7 +184,7 @@ def _extract_alpha_upper(text: str) -> str:
     Returns:
         A string containing only uppercase letters.
     """
-    return "".join(ch.upper() for ch in text if ch.isalpha())
+    return "".join(ch.upper() for ch in text if ch.isascii() and ch.isalpha())
 
 
 def find_key_length(ciphertext: str, max_length: int = 20) -> int:
@@ -193,19 +200,25 @@ def find_key_length(ciphertext: str, max_length: int = 20) -> int:
         max_length: Maximum key length to try (default 20).
 
     Returns:
-        The estimated key length (the k with highest average IC).
+        The smallest key length whose average IC is at least 90% of the best.
 
     Examples:
         >>> # Text encrypted with key "SECRET" (length 6)
         >>> find_key_length(long_ciphertext)
         6
     """
+    if max_length > MAX_ANALYSIS_KEY_LENGTH:
+        raise ValueError("maximum key length exceeds 40")
+    _validate_analysis_input(ciphertext)
     letters = _extract_alpha_upper(ciphertext)
+    limit = min(max_length, len(letters) // 2)
+    if len(letters) < 2 or limit < 2:
+        return 1
 
     # Compute average IC for each candidate key length
     ic_scores: list[tuple[int, float]] = []
 
-    for k in range(2, max_length + 1):
+    for k in range(2, limit + 1):
         # Split into k groups: group i contains letters at positions
         # i, i+k, i+2k, i+3k, ...
         #
@@ -218,18 +231,23 @@ def find_key_length(ciphertext: str, max_length: int = 20) -> int:
             groups[i % k] += ch
 
         # Average IC across all groups
-        total_ic = sum(_index_of_coincidence(g) for g in groups)
-        avg_ic = total_ic / k
+        usable_groups = [group for group in groups if len(group) > 1]
+        avg_ic = (
+            sum(_index_of_coincidence(group) for group in usable_groups)
+            / len(usable_groups)
+            if usable_groups
+            else 0.0
+        )
         ic_scores.append((k, avg_ic))
 
     # Find the best IC value
     best_ic = max(ic for _, ic in ic_scores)
+    if best_ic <= 0:
+        return 1
 
-    # Among all key lengths whose IC is within 5% of the best,
-    # choose the SHORTEST. This avoids selecting multiples of the
-    # true key length (e.g., 12 or 18 instead of 6), since multiples
-    # also produce high IC because each sub-group remains monoalphabetic.
-    threshold = best_ic * 0.95
+    # Among all key lengths scoring at least 90% of the best IC, choose the
+    # shortest. CR03 intentionally applies no divisor or multiple filtering.
+    threshold = best_ic * 0.90
     candidates = [(k, ic) for k, ic in ic_scores if ic >= threshold]
     candidates.sort(key=lambda x: x[0])  # Sort by length ascending
 
@@ -255,6 +273,11 @@ def find_key(ciphertext: str, key_length: int) -> str:
         >>> find_key(long_ciphertext, 6)
         'SECRET'
     """
+    if key_length <= 0:
+        return ""
+    if key_length > MAX_ANALYSIS_KEY_LENGTH:
+        raise ValueError("key length exceeds 40")
+    _validate_analysis_input(ciphertext)
     letters = _extract_alpha_upper(ciphertext)
 
     key_chars: list[str] = []

@@ -51,11 +51,35 @@ defmodule CodingAdventures.VigenereCipher do
   # English letter frequencies (A-Z), used for chi-squared analysis.
   # E (~12.7%) is the most common letter, Z (~0.07%) the rarest.
   @english_frequencies [
-    0.08167, 0.01492, 0.02782, 0.04253, 0.12702, 0.02228, 0.02015,
-    0.06094, 0.06966, 0.00153, 0.00772, 0.04025, 0.02406, 0.06749,
-    0.07507, 0.01929, 0.00095, 0.05987, 0.06327, 0.09056, 0.02758,
-    0.00978, 0.02360, 0.00150, 0.01974, 0.00074
+    0.08167,
+    0.01492,
+    0.02782,
+    0.04253,
+    0.12702,
+    0.02228,
+    0.02015,
+    0.06094,
+    0.06966,
+    0.00153,
+    0.00772,
+    0.04025,
+    0.02406,
+    0.06749,
+    0.07507,
+    0.01929,
+    0.00095,
+    0.05987,
+    0.06327,
+    0.09056,
+    0.02758,
+    0.00978,
+    0.02360,
+    0.00150,
+    0.01974,
+    0.00074
   ]
+  @max_analysis_scalars 8192
+  @max_analysis_key_length 40
 
   # ---------------------------------------------------------------------------
   # Encrypt
@@ -165,13 +189,18 @@ defmodule CodingAdventures.VigenereCipher do
 
   For each candidate key length k, splits the ciphertext into k groups
   and calculates the average IC. The correct key length produces groups
-  that are each a Caesar cipher on English (IC ~0.0667). To avoid
-  selecting multiples of the true key length, picks the smallest k
-  whose IC is within 90% of the best.
+  that are each a Caesar cipher on English (IC ~0.0667). Returns the
+  smallest k whose IC is at least 90% of the best, without divisor or
+  multiple filtering.
 
   """
-  @spec find_key_length(String.t(), pos_integer()) :: pos_integer()
+  @spec find_key_length(String.t(), integer()) :: pos_integer()
   def find_key_length(ciphertext, max_len \\ 20) do
+    if max_len > @max_analysis_key_length do
+      raise ArgumentError, "maximum key length exceeds 40"
+    end
+
+    validate_analysis_input!(ciphertext)
     letters = extract_alpha_upper(ciphertext)
     n = length(letters)
 
@@ -230,8 +259,22 @@ defmodule CodingAdventures.VigenereCipher do
   against English letter frequencies.
 
   """
-  @spec find_key(String.t(), pos_integer()) :: String.t()
+  @spec find_key(String.t(), integer()) :: String.t()
   def find_key(ciphertext, key_length) do
+    cond do
+      key_length <= 0 ->
+        ""
+
+      key_length > @max_analysis_key_length ->
+        raise ArgumentError, "key length exceeds 40"
+
+      true ->
+        validate_analysis_input!(ciphertext)
+        do_find_key(ciphertext, key_length)
+    end
+  end
+
+  defp do_find_key(ciphertext, key_length) do
     letters = extract_alpha_upper(ciphertext)
 
     0..(key_length - 1)//1
@@ -318,6 +361,19 @@ defmodule CodingAdventures.VigenereCipher do
     |> Enum.map(fn ch ->
       if ch >= ?a and ch <= ?z, do: ch - 32, else: ch
     end)
+  end
+
+  defp validate_analysis_input!(text), do: count_analysis_scalars!(text, 0)
+
+  defp count_analysis_scalars!("", _count), do: :ok
+
+  defp count_analysis_scalars!(_text, @max_analysis_scalars) do
+    raise ArgumentError, "ciphertext exceeds analysis limit"
+  end
+
+  defp count_analysis_scalars!(text, count) do
+    {_codepoint, rest} = String.next_codepoint(text)
+    count_analysis_scalars!(rest, count + 1)
   end
 
   # Calculate the Index of Coincidence for a charlist of uppercase letters.

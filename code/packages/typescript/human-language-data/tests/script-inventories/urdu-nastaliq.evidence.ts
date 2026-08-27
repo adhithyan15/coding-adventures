@@ -56,6 +56,25 @@ export const scriptInventoryEvidence = {
       "after one lift, place the single dot above",
     ]);
     expect(urduFe.penLifts).toBe(1);
+    const urduQaf = scripts["urdu-nastaliq"]!.letters.find(
+      (letter) => letter.glyph === "ق",
+    )!;
+    expect(urduQaf.penLifts).toBe(2);
+    expect(urduQaf.strokeOrder).toEqual([
+      "loop clockwise around the rounded head above the main line",
+      "continue down and left through the deep bowl without lifting",
+      "after one lift, place the upper-right dot",
+      "after another lift, place the upper-left dot",
+    ]);
+    expect(urduQaf.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/fe-qaf-te-dal-re/",
+    );
+    const persianQaf = scripts["perso-arabic"]!.letters.find(
+      (letter) => letter.glyph === "ق",
+    )!;
+    expect(persianQaf.strokeOrderSource?.url).not.toBe(
+      urduQaf.strokeOrderSource?.url,
+    );
     expect(urduFe.strokeOrderSource?.url).toBe(
       "https://openbooks.library.northwestern.edu/zerozabar/chapter/fe-qaf-te-dal-re/",
     );
@@ -215,5 +234,7 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ظ") ?? 0).toBe(0);
     expect(missingByScript.get("urdu-nastaliq.json")?.has("ب")).toBe(false);
     expect(affected.get("ب") ?? 0).toBe(0);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("ق")).toBe(false);
+    expect(affected.get("ق") ?? 0).toBe(0);
   },
 };

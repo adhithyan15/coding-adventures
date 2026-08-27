@@ -1,0 +1,21 @@
+{
+  "chapter": 390,
+  "title": "Five Parts of a Building",
+  "label": "ch:la-terraza-y-la-sala",
+  "canDo": "I can say la terraza, la sala, la planta, el ascensor and la piscina, and name five parts of a building.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C390-piscina",
+    "kind": "production",
+    "summary": "Complete ES-C390-piscina: name five parts of a building, and say one thing about each.",
+    "assesses": [
+      "ES-LEX-TERRAZA",
+      "ES-LEX-SALA",
+      "ES-LEX-PLANTA",
+      "ES-LEX-ASCENSOR",
+      "ES-LEX-PISCINA"
+    ]
+  }
+}

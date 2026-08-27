@@ -73,7 +73,7 @@ def _validate_key(key: str) -> None:
     if not key:
         msg = "Key must not be empty"
         raise ValueError(msg)
-    if not key.isalpha():
+    if not all(ch.isascii() and ch.isalpha() for ch in key):
         msg = f"Key must contain only letters, got {key!r}"
         raise ValueError(msg)
 
@@ -112,7 +112,7 @@ def encrypt(plaintext: str, key: str) -> str:
     key_index = 0  # Tracks our position in the keyword
 
     for char in plaintext:
-        if char.isalpha():
+        if char.isascii() and char.isalpha():
             # Determine the base: 'A' for uppercase, 'a' for lowercase
             base = ord("A") if char.isupper() else ord("a")
 
@@ -162,7 +162,7 @@ def decrypt(ciphertext: str, key: str) -> str:
     key_index = 0
 
     for char in ciphertext:
-        if char.isalpha():
+        if char.isascii() and char.isalpha():
             base = ord("A") if char.isupper() else ord("a")
 
             # Decrypt: subtract instead of add. The +26 ensures we never

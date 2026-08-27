@@ -56,7 +56,7 @@ public sealed class VigenereCipherTests
         Assert.Throws<ArgumentException>(() => VigenereCipher.Encrypt("hello", "key1"));
         Assert.Throws<ArgumentException>(() => VigenereCipher.Decrypt("hello", "ke y"));
         Assert.Throws<ArgumentNullException>(() => VigenereCipher.Encrypt("hello", null!));
-        Assert.Throws<ArgumentOutOfRangeException>(() => VigenereCipher.FindKey("ABC", 0));
+        Assert.Equal(string.Empty, VigenereCipher.FindKey("ABC", 0));
     }
 
     [Fact]
@@ -93,5 +93,32 @@ public sealed class VigenereCipherTests
         Assert.Equal(26, VigenereCipher.EnglishFrequencies.Count);
         Assert.InRange(VigenereCipher.EnglishFrequencies.Sum(), 0.99, 1.01);
         Assert.True(VigenereCipher.EnglishFrequencies[4] > VigenereCipher.EnglishFrequencies[25]);
+    }
+
+    [Fact]
+    public void Cr03AnalysisLimitsAndOrdering()
+    {
+        var atLimit = string.Concat(Enumerable.Repeat("😀", 8192));
+        var overLimit = atLimit + "😀";
+
+        Assert.Equal(1, VigenereCipher.FindKeyLength(atLimit, 40));
+        Assert.Throws<ArgumentException>(() => VigenereCipher.FindKeyLength(overLimit, 20));
+        Assert.Throws<ArgumentOutOfRangeException>(() => VigenereCipher.FindKeyLength(overLimit, 41));
+        Assert.Equal(string.Empty, VigenereCipher.FindKey(overLimit, 0));
+        Assert.Throws<ArgumentException>(() => VigenereCipher.FindKey(overLimit, 1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => VigenereCipher.FindKey(overLimit, 41));
+    }
+
+    [Fact]
+    public void Cr03UsesAsciiOnlyAndPreservesRequestedKeyLength()
+    {
+        const string plaintext = "Hello, 😀Wörld!";
+        const string ciphertext = "Rijvs, 😀Uöbpb!";
+        Assert.Equal(ciphertext, VigenereCipher.Encrypt(plaintext, "kEy"));
+        Assert.Equal(plaintext, VigenereCipher.Decrypt(ciphertext, "kEy"));
+        Assert.Throws<ArgumentException>(() => VigenereCipher.Decrypt("", "KÉY"));
+        Assert.Throws<ArgumentException>(() => VigenereCipher.Decrypt("", "KſY"));
+        Assert.Equal(2, VigenereCipher.FindKeyLength("AéA😀AЖAéABB", 4));
+        Assert.Equal(new string('A', 40), VigenereCipher.FindKey("Eé😀Ж", 40));
     }
 }

@@ -1,0 +1,21 @@
+{
+  "chapter": 395,
+  "title": "Five Everyday Actions",
+  "label": "ch:entrar-y-volver",
+  "canDo": "I can say entrar, volver, llegar, perder and necesitar, and name five everyday actions.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C395-necesitar",
+    "kind": "production",
+    "summary": "Complete ES-C395-necesitar: name five everyday actions, and say one thing about each.",
+    "assesses": [
+      "ES-LEX-ENTRAR",
+      "ES-LEX-VOLVER",
+      "ES-LEX-LLEGAR",
+      "ES-LEX-PERDER",
+      "ES-LEX-NECESITAR"
+    ]
+  }
+}

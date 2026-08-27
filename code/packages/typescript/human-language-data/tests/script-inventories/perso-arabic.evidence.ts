@@ -64,6 +64,19 @@ export const scriptInventoryEvidence = {
     expect(persianFeh.strokeOrderSource?.variation).toMatch(
       /body-first.*clockwise.*closed head.*broad bowl.*lift once.*dot.*Persian-scoped/i,
     );
+    const persianQaf = scripts["perso-arabic"]!.letters.find(
+      (letter) => letter.glyph === "ق",
+    )!;
+    expect(persianQaf.penLifts).toBe(2);
+    expect(persianQaf.strokeOrder).toEqual([
+      "loop counterclockwise around the small closed head",
+      "continue down and left through the deep bowl without lifting",
+      "lift once, then place the upper-right dot",
+      "lift again, then place the upper-left dot",
+    ]);
+    expect(persianQaf.strokeOrderSource?.citation).toMatch(
+      /Persian Online.*ق.*02:14–02:18/i,
+    );
     const persianHah = scripts["perso-arabic"]!.letters.find(
       (letter) => letter.glyph === "ح",
     )!;
@@ -141,5 +154,6 @@ export const scriptInventoryEvidence = {
     expect(missingByScript.get("perso-arabic.json")?.has("ظ")).toBe(false);
     expect(missingByScript.get("perso-arabic.json")?.has("ک")).toBe(false);
     expect(affected.get("ک") ?? 0).toBe(0);
+    expect(missingByScript.get("perso-arabic.json")?.has("ق")).toBe(false);
   },
 };

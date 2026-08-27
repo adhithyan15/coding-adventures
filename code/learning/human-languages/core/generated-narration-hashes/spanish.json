@@ -6058,6 +6058,132 @@
       "json": "spanish/narration/ch389.json",
       "textHash": "fnv1a64:249f5f98d5129d8e",
       "jsonHash": "fnv1a64:68f6d3fa8bd3e41b"
+    },
+    {
+      "language": "spanish",
+      "chapter": 390,
+      "sourceHash": "fnv1a64:65b592a1cf1658bb",
+      "lessonIds": [
+        "ES-C390-terraza",
+        "ES-C390-sala",
+        "ES-C390-planta",
+        "ES-C390-ascensor",
+        "ES-C390-piscina"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch390.txt",
+      "json": "spanish/narration/ch390.json",
+      "textHash": "fnv1a64:2571f55009f4e4d8",
+      "jsonHash": "fnv1a64:99cc09c85c1d30c4"
+    },
+    {
+      "language": "spanish",
+      "chapter": 391,
+      "sourceHash": "fnv1a64:ba37f05254e1c500",
+      "lessonIds": [
+        "ES-C391-menu",
+        "ES-C391-camarero",
+        "ES-C391-postre",
+        "ES-C391-supermercado",
+        "ES-C391-euro"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch391.txt",
+      "json": "spanish/narration/ch391.json",
+      "textHash": "fnv1a64:3065c9c6694dc661",
+      "jsonHash": "fnv1a64:68dd2a8c2f7716fe"
+    },
+    {
+      "language": "spanish",
+      "chapter": 392,
+      "sourceHash": "fnv1a64:3bab282c2c3969a4",
+      "lessonIds": [
+        "ES-C392-aeropuerto",
+        "ES-C392-vacaciones",
+        "ES-C392-destino",
+        "ES-C392-pasajero",
+        "ES-C392-agosto"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch392.txt",
+      "json": "spanish/narration/ch392.json",
+      "textHash": "fnv1a64:62b756e84a0ae6cf",
+      "jsonHash": "fnv1a64:a3d646898a493cb5"
+    },
+    {
+      "language": "spanish",
+      "chapter": 393,
+      "sourceHash": "fnv1a64:5971bcb035880453",
+      "lessonIds": [
+        "ES-C393-ordenador",
+        "ES-C393-internet",
+        "ES-C393-correo-electronico",
+        "ES-C393-direccion",
+        "ES-C393-nacionalidad"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 3,
+      "text": "spanish/narration/ch393.txt",
+      "json": "spanish/narration/ch393.json",
+      "textHash": "fnv1a64:f496717da614ced2",
+      "jsonHash": "fnv1a64:f5fcf2ac49ec93b0"
+    },
+    {
+      "language": "spanish",
+      "chapter": 394,
+      "sourceHash": "fnv1a64:311831f04a0b6b35",
+      "lessonIds": [
+        "ES-C394-universidad",
+        "ES-C394-trabajo",
+        "ES-C394-actividad",
+        "ES-C394-guitarra",
+        "ES-C394-medico"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 2,
+      "text": "spanish/narration/ch394.txt",
+      "json": "spanish/narration/ch394.json",
+      "textHash": "fnv1a64:5b65dbe6729377b6",
+      "jsonHash": "fnv1a64:c5a2f03d1023ca3a"
+    },
+    {
+      "language": "spanish",
+      "chapter": 395,
+      "sourceHash": "fnv1a64:5167fd1d0e1dc1f7",
+      "lessonIds": [
+        "ES-C395-entrar",
+        "ES-C395-volver",
+        "ES-C395-llegar",
+        "ES-C395-perder",
+        "ES-C395-necesitar"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch395.txt",
+      "json": "spanish/narration/ch395.json",
+      "textHash": "fnv1a64:0e6a567c617ba607",
+      "jsonHash": "fnv1a64:29f02244ab48cc59"
+    },
+    {
+      "language": "spanish",
+      "chapter": 396,
+      "sourceHash": "fnv1a64:d9655a1b4e9fc11b",
+      "lessonIds": [
+        "ES-C396-aprender",
+        "ES-C396-cocinar",
+        "ES-C396-preferir",
+        "ES-C396-funcionar",
+        "ES-C396-reparar"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 3,
+      "text": "spanish/narration/ch396.txt",
+      "json": "spanish/narration/ch396.json",
+      "textHash": "fnv1a64:5e5c064adcee2905",
+      "jsonHash": "fnv1a64:22cfc71fe5840765"
     }
   ],
   "findings": []

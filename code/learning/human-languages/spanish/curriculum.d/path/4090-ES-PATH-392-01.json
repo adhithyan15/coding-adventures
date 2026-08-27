@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-392-01",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C392-aeropuerto",
+    "ES-C392-vacaciones",
+    "ES-C392-destino",
+    "ES-C392-pasajero",
+    "ES-C392-agosto"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-392-THING"
+  ],
+  "after": []
+}

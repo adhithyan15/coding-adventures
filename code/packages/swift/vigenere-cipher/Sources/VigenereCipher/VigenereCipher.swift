@@ -41,6 +41,8 @@
 public enum VigenereCipherError: Error {
     case emptyKey
     case nonAlphabeticKey(String)
+    case analysisLimit
+    case keyLengthLimit
 }
 
 // ============================================================================
@@ -59,14 +61,14 @@ private let englishFreq: [Double] = [
 ]
 
 // ============================================================================
-// Helper: Convert a Character to its 0-25 alphabet index
+// Helper: Convert an ASCII Unicode scalar to its 0-25 alphabet index
 // ============================================================================
 
-private func alphaIndex(_ ch: Character) -> Int? {
-    if ch.isUppercase, let ascii = ch.asciiValue {
-        return Int(ascii) - 65
-    } else if ch.isLowercase, let ascii = ch.asciiValue {
-        return Int(ascii) - 97
+private func alphaIndex(_ scalar: Unicode.Scalar) -> Int? {
+    if scalar.value >= 65, scalar.value <= 90 {
+        return Int(scalar.value) - 65
+    } else if scalar.value >= 97, scalar.value <= 122 {
+        return Int(scalar.value) - 97
     }
     return nil
 }
@@ -78,8 +80,8 @@ private func alphaIndex(_ ch: Character) -> Int? {
 private func validateKey(_ key: String) throws -> [Int] {
     guard !key.isEmpty else { throw VigenereCipherError.emptyKey }
     var shifts: [Int] = []
-    for ch in key {
-        guard let idx = alphaIndex(ch) else {
+    for scalar in key.unicodeScalars {
+        guard let idx = alphaIndex(scalar) else {
             throw VigenereCipherError.nonAlphabeticKey(key)
         }
         shifts.append(idx)
@@ -110,21 +112,21 @@ public func encrypt(_ plaintext: String, key: String) throws -> String {
     var result = ""
     result.reserveCapacity(plaintext.count)
 
-    for ch in plaintext {
-        if let idx = alphaIndex(ch) {
+    for scalar in plaintext.unicodeScalars {
+        if let idx = alphaIndex(scalar) {
             let shift = shifts[keyIdx % keyLen]
             let shifted = (idx + shift) % 26
 
             // Preserve the original case
-            if ch.isUppercase {
-                result.append(Character(UnicodeScalar(shifted + 65)!))
+            if scalar.value <= 90 {
+                result.unicodeScalars.append(UnicodeScalar(shifted + 65)!)
             } else {
-                result.append(Character(UnicodeScalar(shifted + 97)!))
+                result.unicodeScalars.append(UnicodeScalar(shifted + 97)!)
             }
             keyIdx += 1
         } else {
             // Non-alpha passes through; key does NOT advance
-            result.append(ch)
+            result.unicodeScalars.append(scalar)
         }
     }
 
@@ -148,20 +150,20 @@ public func decrypt(_ ciphertext: String, key: String) throws -> String {
     var result = ""
     result.reserveCapacity(ciphertext.count)
 
-    for ch in ciphertext {
-        if let idx = alphaIndex(ch) {
+    for scalar in ciphertext.unicodeScalars {
+        if let idx = alphaIndex(scalar) {
             let shift = shifts[keyIdx % keyLen]
             // Shift backward, add 26 to avoid negative modulo
             let shifted = (idx - shift + 26) % 26
 
-            if ch.isUppercase {
-                result.append(Character(UnicodeScalar(shifted + 65)!))
+            if scalar.value <= 90 {
+                result.unicodeScalars.append(UnicodeScalar(shifted + 65)!)
             } else {
-                result.append(Character(UnicodeScalar(shifted + 97)!))
+                result.unicodeScalars.append(UnicodeScalar(shifted + 97)!)
             }
             keyIdx += 1
         } else {
-            result.append(ch)
+            result.unicodeScalars.append(scalar)
         }
     }
 
@@ -181,8 +183,8 @@ private func indexOfCoincidence(_ text: String) -> Double {
     var counts = [Int](repeating: 0, count: 26)
     var total = 0
 
-    for ch in text {
-        if let idx = alphaIndex(ch) {
+    for scalar in text.unicodeScalars {
+        if let idx = alphaIndex(scalar) {
             counts[idx] += 1
             total += 1
         }
@@ -209,42 +211,45 @@ private func indexOfCoincidence(_ text: String) -> Double {
 //   1. Split ciphertext into k groups (every k-th letter).
 //   2. Compute IC of each group.
 //   3. Average the ICs.
-// The key length with the highest average IC is most likely correct.
+// Return the smallest key length whose average IC is at least 90% of the best.
 
-public func findKeyLength(_ ciphertext: String, maxLength: Int = 20) -> Int {
-    // Extract only alphabetic characters
-    let alphaOnly = Array(ciphertext.filter { $0.isLetter })
+public func findKeyLength(_ ciphertext: String, maxLength: Int = 20) throws -> Int {
+    if maxLength > 40 { throw VigenereCipherError.keyLengthLimit }
+    if ciphertext.unicodeScalars.count > 8192 { throw VigenereCipherError.analysisLimit }
+    let alphaOnly = ciphertext.unicodeScalars.compactMap(alphaIndex)
     let n = alphaOnly.count
 
-    if n < 2 { return 1 }
-
-    var bestLength = 1
-    var bestIC: Double = -1.0
-
     let limit = min(maxLength, n / 2)
+    if n < 2 || limit < 2 { return 1 }
+    var scores: [(Int, Double)] = []
+    var bestIC = 0.0
 
     for k in 2...limit {
         var icSum: Double = 0.0
+        var validGroups = 0
 
         for j in 0..<k {
-            // Build group: every k-th character starting at position j
-            var group = ""
+            var group: [Int] = []
             var pos = j
             while pos < n {
                 group.append(alphaOnly[pos])
                 pos += k
             }
-            icSum += indexOfCoincidence(group)
+            if group.count > 1 {
+                let text = String(group.map { Character(UnicodeScalar($0 + 65)!) })
+                icSum += indexOfCoincidence(text)
+                validGroups += 1
+            }
         }
 
-        let avgIC = icSum / Double(k)
-        if avgIC > bestIC {
-            bestIC = avgIC
-            bestLength = k
-        }
+        let avgIC = validGroups > 0 ? icSum / Double(validGroups) : 0.0
+        scores.append((k, avgIC))
+        bestIC = max(bestIC, avgIC)
     }
 
-    return bestLength
+    if bestIC <= 0 { return 1 }
+    let threshold = bestIC * 0.90
+    return scores.first { $0.1 >= threshold }?.0 ?? 1
 }
 
 // ============================================================================
@@ -278,11 +283,14 @@ private func chiSquared(_ counts: [Int], total: Int) -> Double {
 //   2. Try all 26 possible shifts.
 //   3. The shift with the lowest chi-squared is the key letter.
 
-public func findKey(_ ciphertext: String, keyLength: Int) -> String {
+public func findKey(_ ciphertext: String, keyLength: Int) throws -> String {
+    if keyLength <= 0 { return "" }
+    if keyLength > 40 { throw VigenereCipherError.keyLengthLimit }
+    if ciphertext.unicodeScalars.count > 8192 { throw VigenereCipherError.analysisLimit }
     // Extract only alpha characters as 0-25 indices
     var alphaIndices: [Int] = []
-    for ch in ciphertext {
-        if let idx = alphaIndex(ch) {
+    for scalar in ciphertext.unicodeScalars {
+        if let idx = alphaIndex(scalar) {
             alphaIndices.append(idx)
         }
     }
@@ -337,8 +345,8 @@ public func findKey(_ ciphertext: String, keyLength: Int) -> String {
 // to recover the key and plaintext without any prior knowledge.
 
 public func breakCipher(_ ciphertext: String) throws -> (key: String, plaintext: String) {
-    let keyLength = findKeyLength(ciphertext)
-    let key = findKey(ciphertext, keyLength: keyLength)
+    let keyLength = try findKeyLength(ciphertext)
+    let key = try findKey(ciphertext, keyLength: keyLength)
     let plaintext = try decrypt(ciphertext, key: key)
     return (key: key, plaintext: plaintext)
 }

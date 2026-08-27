@@ -7707,6 +7707,153 @@
         ],
         "note": "The payoff retrieves both Chapter-389 atoms and deliberately leaves the plural persons, the preterite supo, and saber's noun sabor for later lessons."
       }
+    },
+    {
+      "chapter": 390,
+      "title": "Five Parts of a Building",
+      "label": "ch:la-terraza-y-la-sala",
+      "canDo": "I can say la terraza, la sala, la planta, el ascensor and la piscina, and name five parts of a building.",
+      "spineNodes": [
+        "SPINE-NAME-EVERYDAY-THINGS"
+      ],
+      "payoff": {
+        "lesson": "ES-C390-piscina",
+        "kind": "production",
+        "summary": "Complete ES-C390-piscina: name five parts of a building, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-TERRAZA",
+          "ES-LEX-SALA",
+          "ES-LEX-PLANTA",
+          "ES-LEX-ASCENSOR",
+          "ES-LEX-PISCINA"
+        ]
+      }
+    },
+    {
+      "chapter": 391,
+      "title": "Five Words for Eating Out",
+      "label": "ch:el-menu-y-el-camarero",
+      "canDo": "I can say el menú, el camarero, el postre, el supermercado and el euro, and name five things I meet when I eat out.",
+      "spineNodes": [
+        "SPINE-NAME-EVERYDAY-THINGS"
+      ],
+      "payoff": {
+        "lesson": "ES-C391-euro",
+        "kind": "production",
+        "summary": "Complete ES-C391-euro: name five things I meet when I eat out, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-MENU",
+          "ES-LEX-CAMARERO",
+          "ES-LEX-POSTRE",
+          "ES-LEX-SUPERMERCADO",
+          "ES-LEX-EURO"
+        ]
+      }
+    },
+    {
+      "chapter": 392,
+      "title": "Five Words for a Journey",
+      "label": "ch:el-aeropuerto-y-las-vacaciones",
+      "canDo": "I can say el aeropuerto, las vacaciones, el destino, el pasajero and agosto, and name five things about a journey.",
+      "spineNodes": [
+        "SPINE-NAME-EVERYDAY-THINGS"
+      ],
+      "payoff": {
+        "lesson": "ES-C392-agosto",
+        "kind": "production",
+        "summary": "Complete ES-C392-agosto: name five things about a journey, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-AEROPUERTO",
+          "ES-LEX-VACACIONES",
+          "ES-LEX-DESTINO",
+          "ES-LEX-PASAJERO",
+          "ES-LEX-AGOSTO"
+        ]
+      }
+    },
+    {
+      "chapter": 393,
+      "title": "Five Things a Form Asks For",
+      "label": "ch:el-ordenador-y-el-correo-electronico",
+      "canDo": "I can say el ordenador, internet, el correo electrónico, la dirección and la nacionalidad, and name five things I need to fill in a form online.",
+      "spineNodes": [
+        "SPINE-NAME-EVERYDAY-THINGS"
+      ],
+      "payoff": {
+        "lesson": "ES-C393-nacionalidad",
+        "kind": "production",
+        "summary": "Complete ES-C393-nacionalidad: name five things I need to fill in a form online, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-ORDENADOR",
+          "ES-LEX-INTERNET",
+          "ES-LEX-CORREO-ELECTRONICO",
+          "ES-LEX-DIRECCION",
+          "ES-LEX-NACIONALIDAD"
+        ]
+      }
+    },
+    {
+      "chapter": 394,
+      "title": "Five Places and Things in a Week",
+      "label": "ch:la-universidad-y-el-trabajo",
+      "canDo": "I can say la universidad, el trabajo, la actividad, la guitarra and el médico, and name five places I go or things I do in a week.",
+      "spineNodes": [
+        "SPINE-NAME-EVERYDAY-THINGS"
+      ],
+      "payoff": {
+        "lesson": "ES-C394-medico",
+        "kind": "production",
+        "summary": "Complete ES-C394-medico: name five places I go or things I do in a week, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-UNIVERSIDAD",
+          "ES-LEX-TRABAJO",
+          "ES-LEX-ACTIVIDAD",
+          "ES-LEX-GUITARRA",
+          "ES-LEX-MEDICO"
+        ]
+      }
+    },
+    {
+      "chapter": 395,
+      "title": "Five Everyday Actions",
+      "label": "ch:entrar-y-volver",
+      "canDo": "I can say entrar, volver, llegar, perder and necesitar, and name five everyday actions.",
+      "spineNodes": [
+        "SPINE-NAME-EVERYDAY-ACTIONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C395-necesitar",
+        "kind": "production",
+        "summary": "Complete ES-C395-necesitar: name five everyday actions, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-ENTRAR",
+          "ES-LEX-VOLVER",
+          "ES-LEX-LLEGAR",
+          "ES-LEX-PERDER",
+          "ES-LEX-NECESITAR"
+        ]
+      }
+    },
+    {
+      "chapter": 396,
+      "title": "Five More Everyday Actions",
+      "label": "ch:aprender-y-cocinar",
+      "canDo": "I can say aprender, cocinar, preferir, funcionar and reparar, and name five everyday actions.",
+      "spineNodes": [
+        "SPINE-NAME-EVERYDAY-ACTIONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C396-reparar",
+        "kind": "production",
+        "summary": "Complete ES-C396-reparar: name five everyday actions, and say one thing about each.",
+        "assesses": [
+          "ES-LEX-APRENDER",
+          "ES-LEX-COCINAR",
+          "ES-LEX-PREFERIR",
+          "ES-LEX-FUNCIONAR",
+          "ES-LEX-REPARAR"
+        ]
+      }
     }
   ]
 }

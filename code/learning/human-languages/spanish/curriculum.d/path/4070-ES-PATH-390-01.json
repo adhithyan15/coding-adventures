@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-390-01",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C390-terraza",
+    "ES-C390-sala",
+    "ES-C390-planta",
+    "ES-C390-ascensor",
+    "ES-C390-piscina"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-390-THING"
+  ],
+  "after": []
+}

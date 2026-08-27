@@ -1,6 +1,8 @@
 package vigenerecipher
 
 import (
+	"errors"
+	"strings"
 	"testing"
 )
 
@@ -293,4 +295,47 @@ func TestOnlyNonAlpha(t *testing.T) {
 	if got != "123 !@# $%^" {
 		t.Errorf("non-alpha only = %q, want unchanged", got)
 	}
+}
+
+func TestCR03Conformance(t *testing.T) {
+	const plaintext = "Hello, 😀Wörld!"
+	const ciphertext = "Rijvs, 😀Uöbpb!"
+	got, err := Encrypt(plaintext, "kEy")
+	if err != nil || got != ciphertext {
+		t.Fatalf("Encrypt() = %q, %v", got, err)
+	}
+	if _, err := Decrypt("", "KÉY"); !errors.Is(err, ErrInvalidKey) {
+		t.Fatalf("Decrypt invalid key error = %v", err)
+	}
+	if got := FindKeyLength("AéA😀AЖAéABB", 4); got != 2 {
+		t.Fatalf("FindKeyLength() = %d, want 2", got)
+	}
+	if got := FindKey("Eé😀Ж", 40); got != strings.Repeat("A", 40) {
+		t.Fatalf("FindKey() = %q", got)
+	}
+}
+
+func TestCR03AnalysisLimitsAndOrdering(t *testing.T) {
+	atLimit := strings.Repeat("😀", 8192)
+	overLimit := atLimit + "😀"
+	if got := FindKeyLength(atLimit, 40); got != 1 {
+		t.Fatalf("FindKeyLength(at limit) = %d", got)
+	}
+	assertPanics(t, func() { FindKeyLength(overLimit, 20) })
+	assertPanics(t, func() { FindKeyLength(overLimit, 41) })
+	if got := FindKey(overLimit, 0); got != "" {
+		t.Fatalf("FindKey(non-positive) = %q", got)
+	}
+	assertPanics(t, func() { FindKey(overLimit, 1) })
+	assertPanics(t, func() { FindKey(overLimit, 41) })
+}
+
+func assertPanics(t *testing.T, action func()) {
+	t.Helper()
+	defer func() {
+		if recover() == nil {
+			t.Fatal("expected panic")
+		}
+	}()
+	action()
 }

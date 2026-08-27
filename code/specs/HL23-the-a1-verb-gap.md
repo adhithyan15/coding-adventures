@@ -1087,3 +1087,115 @@ between them lift both of its tareas out of band 0.
 
 Grupo 1 is still less than half the bar. The ~103 authored lexemes are what close
 it, and the bundle table says they close it exactly.
+
+---
+
+## 12. Amendment — two decisions the bundle proof forced *(added at the first authoring tranche)*
+
+§11.5 ended "The ~103 authored lexemes are what close it, and the bundle table says they
+close it exactly." The bundle proof run at the head of the first authoring tranche
+**reproduces that result and then finds two conditions on it that §11 does not state.**
+Both were escalated and both were decided; this section records the decisions and, more
+importantly, why neither is a reversal of an earlier judgement.
+
+### 12.1 The measurement
+
+Harness as §10.6, byte-identical, mocks and keys untouched. Baseline reproduces §11.5
+exactly — mock 1 Grupo 1 **12,33**, mock 2 **7,17**, 78 objective items failed.
+
+| granted | mock 1 G1 | mock 2 G1 | |
+|---|---|---|---|
+| all 103 | **31,33** | **32,33** | **APTO** |
+| 103 + the three §11.4 left behind | 32,33 | **33,33** | APTO |
+| 103 − the ten that fail the confusability screen | 30,33 | **28,33** | **NO APTO** |
+| 103 − the pure adjectives | 30,33 | **26,33** | **NO APTO** |
+
+§11's 33,33 / 33,33 reconciles exactly: the gap is `cansado`, `estudiante` and `lado`, and
+restoring them returns mock 2 to 33,33 and mock 1 to one objective item short — the
+documented §10.6 residual on mock 1 *lectura*. **The plan is arithmetically sound and was
+never in doubt. What was missing is that it assumed all 103 are authorable, and ten are
+not on this document's own rules.**
+
+### 12.2 Decision one — build an A1 rung for qualities
+
+`barato`, `gratis`, `mayor`, `importante`, `favorito`, `caro`, `menor` are adjectives. The
+A1 spine carries `SPINE-NAME-EVERYDAY-THINGS` and `SPINE-NAME-EVERYDAY-ACTIONS` and nothing
+that hosts a quality.
+
+The measured cost of that hole: of the fourteen mock-2 reading items still failing after a
+complete noun-and-verb tranche, **seven are blocked by an adjective and nothing else** —
+`caro` (items 2 and 3), `barato` (8), `importante` (10), `mayor` (15 and 22), `gratis` (6),
+`adulto` (11). A greedy search over the *entire* clean noun/verb pool plateaus mock 2's
+Grupo 1 at **20,33** against a 30,00 bar. **No quantity of noun authoring passes mock 2.**
+
+**This is not a reversal of §11.4, and the distinction matters.** §11.4 declined to mint an
+adjectives rung, and was right to: it was offered a rung with no honest canonical content,
+holding three namespaced lessons, minted to give three words somewhere to live. That is the
+widening this document exists to refuse, and the refusal stands on its own facts.
+
+**The premise has since changed in two independent ways.** First, the content is now
+exam-derived rather than convenient — every candidate is on the list because a measured item
+requires it. Second, and decisively, the syllabus itself asks for the rung:
+`exam-inventory-es-a1.json` enumerates **`A1-NG6-03`** (*attractiveness: guapo, feo,
+bonito*), **`A1-NG6-08`** (*interest*) and **`A1-NG6-10`** (*ease and difficulty*) as A1
+points, and all three are `probe: null` — **unmapped**. That is the same test §10.1 applied
+to the ability rung, which was justified by `A1-F2-16`/`A1-F2-17` rather than by needing
+somewhere to put `poder`. A rung the source enumerates is justified by the source.
+
+Its `canDo` must be a single honest capability about describing what something is like, and
+it must not become a grab bag — the test §10.1 states is not "one clause" but whether a
+later concept could be filed under it for convenience.
+
+**What is explicitly refused:** tranche 6's option of filing adjectives under
+`SPINE-COUNT-ONE-TO-FIVE` (*"the cardinal numbers one through five"*). It is available, it
+is cheap, and it is precisely the mis-filing this programme exists to undo. Recorded here so
+that the next tranche does not rediscover it as a shortcut.
+
+### 12.3 Decision two — the confusability screen disambiguates; it does not drop
+
+Tranche 6 derived the rule — *a same-length pair differing in one position is a drop only
+when the differing position is not the first* — and could afford it, because it screened
+roughly a hundred candidates to place thirty-five.
+
+Ten of the 103 flag: `costar`/`contar`, `caro`/`cero`+`cara`, `tren`/`tres`, `gorro`/`gordo`,
+`mayo`/`mano`+`malo`, `menor`/`menos`, `playa`/`plaza`, `pollo`/`polvo`, `recto`/`resto`,
+`amigo`/`amiga`. Dropping all ten costs the exam.
+
+**The rule did not change; the pool did.** On an exam-derived list every entry is
+load-bearing, so a drop forfeits an item rather than selecting between interchangeable
+candidates. Refusing to teach `tren` because `tres` exists is not a defensible A1
+curriculum, and it teaches around a difficulty the learner will meet anyway.
+
+So the screen's verdict is **context-dependent, and that is now part of the rule**:
+
+- **drop** when the candidate pool has surplus;
+- **disambiguate** when the candidate is required.
+
+`tren`/`tres`, `pollo`/`polvo`, `playa`/`plaza`, `costar`/`contar` are minimal pairs, and
+presenting the pair and making the contrast the lesson is the standard way to teach
+discrimination. That converts all ten liabilities into assets.
+
+**The general form, and it is the reusable half:** a screen calibrated against an abundant
+candidate pool encodes an unstated assumption that substitutes exist. **A screen that always
+drops silently shrinks the curriculum toward whatever is easy to teach**, and never reports
+that it has made a curricular decision. Re-derive a filter's *action* — not its criterion —
+whenever the pool stops being abundant.
+
+### 12.4 A fifth duplicate miss-mode, and two indexes rather than one
+
+The four already-owned traps on record — `llevar`, `andar`, `dar`, `llover` — are each
+invisible to a headword-only screen. **`amigo` is a fifth kind: it is owned by
+`ES-C09-falsos-amigos`, whose headword is the two-word term of art *falsos amigos*, at A2.**
+No headword screen, atom-id screen or root ledger finds it; only a screen that decomposes
+multiword headwords into component words does.
+
+It is also the case where "already owned" is arguably the wrong answer, since the corpus
+teaches the metalinguistic term *false friends* and not the word *friend* — so whether it is
+a duplicate or a genuine gap is a judgement no ledger records.
+
+And the decomposition that catches it must **not** be reused for confusability. The two
+questions need two indexes: *is this already taught?* takes the **wide** index, where a
+fragment counts as ownership; *will a learner conflate this?* takes the **narrow** index of
+whole displayed headword forms, because a fragment was never presented as a word. Conflating
+them produced a false drop on `menor` against `mejor`, which occurs only inside the idiom
+*pasar a mejor vida*.

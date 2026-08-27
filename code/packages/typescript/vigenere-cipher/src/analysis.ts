@@ -31,7 +31,7 @@
  *     - Split ciphertext letters into k groups (every k-th letter)
  *     - Calculate IC of each group
  *     - Average the ICs
- *   - The k with the highest average IC is our best guess
+ *   - Return the smallest k scoring at least 90% of the best average IC
  *
  * Step 2: Find each key letter
  *   - For position i = 0, 1, ..., k-1:
@@ -92,6 +92,18 @@ const ENGLISH_FREQUENCIES: readonly number[] = [
  * approximately 0.0667.
  */
 const ENGLISH_IC = 0.0667;
+const MAX_ANALYSIS_SCALARS = 8192;
+const MAX_ANALYSIS_KEY_LENGTH = 40;
+
+function validateAnalysisInput(text: string): void {
+  let scalarCount = 0;
+  for (const _scalar of text) {
+    scalarCount++;
+    if (scalarCount > MAX_ANALYSIS_SCALARS) {
+      throw new RangeError("ciphertext exceeds analysis limit");
+    }
+  }
+}
 
 /**
  * Calculate the Index of Coincidence for a string of letters.
@@ -185,6 +197,10 @@ export function findKeyLength(
   ciphertext: string,
   maxLength: number = 20,
 ): number {
+  if (maxLength > MAX_ANALYSIS_KEY_LENGTH) {
+    throw new RangeError("maximum key length exceeds 40");
+  }
+  validateAnalysisInput(ciphertext);
   const letters = extractAlphaUpper(ciphertext);
 
   if (letters.length < 2) {
@@ -193,6 +209,9 @@ export function findKeyLength(
 
   // Calculate average IC for each candidate key length
   const limit = Math.min(maxLength, Math.floor(letters.length / 2));
+  if (limit < 2) {
+    return 1;
+  }
   const avgICs: number[] = new Array(limit + 1).fill(0);
 
   for (let k = 2; k <= limit; k++) {
@@ -215,32 +234,22 @@ export function findKeyLength(
     avgICs[k] = groupCount > 0 ? totalIC / groupCount : 0;
   }
 
-  // Find the key length with the highest average IC.
-  let bestLength = 1;
+  // Find the highest average IC before applying the 90% threshold.
   let bestIC = 0;
 
   for (let k = 2; k <= limit; k++) {
     if (avgICs[k] > bestIC) {
       bestIC = avgICs[k];
-      bestLength = k;
     }
   }
 
-  // Multiples of the true key length also produce high IC values.
-  // To find the true (smallest) key length, we use chi-squared
-  // validation: try the key at each candidate length that is a
-  // divisor of the best length and check which actually recovers
-  // a valid key. If a divisor produces a substantially worse
-  // chi-squared fit, the true key is longer.
-  //
-  // Simpler approach: among all k values with IC >= 90% of the best
-  // IC, pick the smallest that is NOT a proper divisor of a k with
-  // even higher IC (unless that smaller k has IC very close to the
-  // larger k). In practice, the true key length and its multiples
-  // have similar IC, but the true length's IC is typically slightly
-  // lower than the best multiple. We pick the smallest k whose IC
-  // is within 90% of the best.
+  // CR03 chooses the smallest k scoring at least 90% of the best and applies
+  // no divisor or multiple filtering.
   const icThreshold = bestIC * 0.9;
+
+  if (bestIC <= 0) {
+    return 1;
+  }
 
   for (let k = 2; k <= limit; k++) {
     if (avgICs[k] >= icThreshold) {
@@ -248,7 +257,7 @@ export function findKeyLength(
     }
   }
 
-  return bestLength;
+  return 1;
 }
 
 /**
@@ -269,6 +278,13 @@ export function findKeyLength(
  * @returns The recovered key as an uppercase string.
  */
 export function findKey(ciphertext: string, keyLength: number): string {
+  if (keyLength <= 0) {
+    return "";
+  }
+  if (keyLength > MAX_ANALYSIS_KEY_LENGTH) {
+    throw new RangeError("key length exceeds 40");
+  }
+  validateAnalysisInput(ciphertext);
   const letters = extractAlphaUpper(ciphertext);
   let key = "";
 

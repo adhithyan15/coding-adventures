@@ -1,5 +1,9 @@
 # vigenere-cipher — Java
 
+## CR03 conformance
+
+This implementation follows [CR03](../../../specs/CR03-vigenere-cipher.md): keys and cipher transforms use ASCII letters only, analysis ignores non-ASCII letters, and non-ASCII Unicode scalars pass through without advancing the key. Analysis accepts at most 8,192 Unicode scalars and key-length bounds up to 40, uses the smallest candidate within 90% of the best index-of-coincidence score, preserves the exact requested recovered-key length, and resolves score ties toward the smallest shift.
+
 The Vigenère cipher: the "unbreakable" polyalphabetic substitution cipher that
 stumped cryptanalysts for three centuries. Also includes a full automatic
 ciphertext-only attack using the Index of Coincidence and chi-squared analysis.
@@ -55,9 +59,8 @@ Formula:
    a Caesar-cipher ciphertext; the shift minimising chi-squared against English
    letter frequencies gives the key letter for that position.
 
-3. **Minimal period** — After recovering the full key, the implementation checks
-   whether it has a shorter repeating sub-period and returns that, so that even
-   if the IC analysis returns `2k` instead of `k`, the correct key is produced.
+3. **Exact requested length** — Key recovery returns exactly the requested
+   number of characters. It does not shorten repeated periods.
 
 ## Running Tests
 
@@ -65,9 +68,9 @@ Formula:
 gradle test
 ```
 
-22 tests covering encryption, decryption, roundtrip, non-alpha handling, input
-validation, IC key-length detection, chi-squared key recovery, and the full
-end-to-end break.
+The suite covers encryption, decryption, roundtrip, non-alpha handling, input
+validation, IC key-length detection, chi-squared key recovery, CR03 edge cases,
+and the full end-to-end break.
 
 ## Part of the Coding Adventures series
 

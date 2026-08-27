@@ -1,0 +1,225 @@
+Spanish, chapter 393: Five Things a Form Asks For.
+5 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 5.
+el ordenador — the word stayed, the meaning arrived.
+
+Warm-up.
+[pause 2 seconds]
+Say the passenger, then August. (El pasajero; agosto.)
+
+You'll want to know first.
+escribir — what you do at one.
+la oficina — where you will most often see one.
+
+Sounds you'll need.
+or-de-na-DOR, four beats with the weight on the last. Both ds are soft, closer to the th of English this than to a hard d, because a vowel runs into each of them. The two rs are single taps, not rolls. see pronunciation reference.
+
+The word, taken apart.
+el ordenador — a computer.
+Latin ōrdinātor was an agent noun — a -tor word, the one who does the thing — built on ōrdināre, and behind that on ōrdō, ōrdinem: a rank, a row, things put in their proper places. So the word says the one who puts in order, and English carries the same Latin in ordain, ordinal, order, coordinate and subordinate.
+Now the careful part, because two different things happened at two different times and running them together is the mistake.
+The word ordenador, "one who orders or arranges", is old in Spanish and came down from that Latin.
+The computing sense was taken from French ordinateur.
+Spanish already owned the shape and imported only the meaning. Nothing was borrowed letter by letter, and nothing was translated piece by piece; a sense moved across and settled into a word that was standing there waiting.
+The French side has two dates, both defensible, so say which one you mean. The coinage appears in a letter of 16 April 1955, written for IBM France, who thought calculateur too narrow for the machine. The CNRTL dates the computing sense to 1956 — the first use actually recorded.
+One caution before you take it travelling. The Academy's dictionary marks the computing sense Esp., for Spain. Across much of Latin America the machine goes by computadora or computador, so ordenador names it in Madrid and marks you as speaking Peninsular Spanish in Lima.
+el ordenador nuevo — the new computer.
+
+What you've built.
+You can name the machine you fill forms in on: el ordenador. And you can tell a borrowed word from a borrowed meaning.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: el ordenador]
+[pause 8 seconds for the answer]
+[your turn — say: un ordenador nuevo]
+[pause 8 seconds for the answer]
+[your turn — say: el pasajero tiene un ordenador]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did ōrdinātor name in Latin? (The one who puts things in order.) And which of the two — the word or the machine sense — came from French? (The machine sense; the word was already Spanish.)
+
+
+Lesson 2 of 5.
+internet — the same letters, a different beat.
+
+Warm-up.
+[pause 2 seconds]
+Say August, then the computer. (Agosto; el ordenador.)
+
+You'll want to know first.
+el ordenador — what you reach it from.
+el teléfono — the other thing you reach it from.
+
+Sounds you'll need.
+in-ter-NET, three beats with the weight on the last. The ts are dental, the tongue touching the back of the top teeth rather than the ridge behind them. The r is one tap. see pronunciation reference.
+
+The word, taken apart.
+internet — the internet.
+It came into Spanish out of English with nothing changed on the page. The English word is a hybrid, and the two halves come from opposite ends of Europe:
+inter- is Latin inter, "between" — the same piece inside international and intervene;
+net is Germanic, Old English nett, a mesh of knotted cord.
+A Latin prefix welded to a Germanic noun, in a coinage of the last century.
+The page is unchanged; the sound is not, and this is the thing worth carrying away. English puts the weight at the front: ÍN-ter-net. Spanish puts it at the back: in-ter-NET. The Academy's Diccionario panhispánico de dudas spells this out. An English speaker who keeps the English beat will be understood and will sound foreign for exactly one syllable's worth of reason.
+The same dictionary is candid about the article, which is unsettled. Both el internet and la internet are recorded, and the feminine is the more frequent of the two — the pull coming from red, the Spanish word for a net, which is feminine. So the word is drifting toward the gender of its own translation.
+Two more things it records. Written with a capital when it names the one global network; written small when the word works as an ordinary noun. And the shape resists two temptations: no internete with a vowel tacked on to make it comfortable, and no tilde anywhere on it.
+todo está en internet — it is all on the internet.
+
+What you've built.
+You can say internet with the Spanish beat, and you know why the article wobbles.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: internet]
+[pause 8 seconds for the answer]
+[your turn — say: el ordenador tiene internet]
+[pause 8 seconds for the answer]
+[your turn — say: en agosto no tengo internet]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which syllable carries the weight in Spanish? (The last: in-ter-NET.) And which article does the Academy record as the more frequent, and why? (The feminine, pulled there by red, which is feminine.)
+
+
+Lesson 3 of 5.
+el correo electrónico — the messenger who only looks like a runner.
+
+Warm-up.
+[pause 2 seconds]
+Say the computer, then the internet. (El ordenador; internet.)
+
+You'll want to know first.
+la carta — what it replaced.
+internet — what it travels over.
+
+Sounds you'll need.
+co-RRE-o e-lec-TRÓ-ni-co. The rr is rolled, held longer than a single tap. Every c here comes out as a hard k, each standing before an o or a consonant. Correo takes its weight on the middle beat; the written accent marks where electrónico takes its own. see pronunciation reference.
+
+The word, taken apart.
+el correo electrónico — email.
+Correo sits one letter from correr, "to run", and a messenger runs, so the story writes itself. The story is wrong, and that is the point of this word.
+The Academy's dictionary gives the road. Spanish correo comes from Catalan correu, and Catalan took it from Old French corlieu, "a messenger" — a compound of a verb meaning to run plus lieu, "place". Catalan then reshaped it under the pull of its own córrer.
+So Latin currere, "to run", really is the ancestor of that first element. But correo was not built in Spanish out of correr, and part of the resemblance is a later tidying-up rather than descent. Right about the ancestor, wrong about the route.
+Now the best thing in the word. That same Old French courlieu gave English a bird: the curlew. Etymonline says the bird's name imitates its cry — and that it was "apparently assimilated with corliu, 'runner, messenger'". Two unrelated ancestries, a call heard on a marsh and a word for a courier, walked into Old French and came out wearing one shape.
+From currere, English keeps current, courier, course, corridor, occur and excursion.
+The second half is far younger. Electrónico is electrón plus -ico, and electrón goes back to Ancient Greek ēlektron, "amber". A modern international scientific word, passed between languages rather than handed down inside one.
+Put the halves together and you have a loan translation of English electronic mail, element for element. The Academy recommends the full form and turns down correo-e.
+One ambiguity to expect: correo alone now carries the email sense in ordinary speech, so it can mean the post or the inbox.
+
+What you've built.
+You can name the thing a form asks for: el correo electrónico.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: el correo electrónico]
+[pause 8 seconds for the answer]
+[your turn — say: mi correo electrónico]
+[pause 8 seconds for the answer]
+[your turn — say: leo el correo electrónico en el ordenador]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Did correo grow out of correr? (No — it came through Catalan correu from Old French corlieu, a messenger, and córrer only reshaped it afterwards.) Which English bird shares that word? (The curlew.)
+
+
+Lesson 4 of 5.
+la dirección — the word for where you live.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Say the internet, then email. (Internet; el correo electrónico.)
+
+You'll want to know first.
+la calle — the first line of one.
+el número — the second line of one.
+
+Sounds you'll need.
+di-rec-CIÓN, three beats with the weight on the last, where the written accent puts it. The double cc is two different sounds in a row: a hard k, then a soft c before the i, an s across the Americas and a th across much of Spain. The r is a single tap. see pronunciation reference.
+
+The word, taken apart.
+la dirección — an address.
+Behind it is Latin dīrēctiō, dīrēctiōnem. What is worth seeing is that this word did not come down to Spanish through everyday speech; it was lifted out of written Latin, later and deliberately. You do not have to take that on trust, because Spanish kept both outcomes side by side, twice over.
+Look at what happened to Latin dīrēctus:
+derecho — "right, straight";
+directo — "direct".
+And at what happened to Latin ratiōnem:
+razón — "reason";
+ración — "a ration, a portion".
+Each pair is one Latin word arriving twice. In each pair, one member has been handled by generations of speakers and shows it, and the other still looks close to the Latin it was copied from. Now put our word beside them. Where derecho melted its Latin c away into -ch-, dirección still shows that c. And it ends -ción, as ración does, rather than -zón, as razón does. It stands with the copies, not with the worn ones.
+The real trap here is the meaning. Spanish dirección covers three things:
+the address where you live or receive post;
+the management or leadership of a company or a school;
+direction, the way something points.
+English direction has only the third. A Spaniard who trabaja en la dirección works in management, not in a compass. On a form, the first sense is the one being asked for.
+English holds the same Latin in direction, direct, dress, address and redress.
+¿Cuál es tu dirección? — What is your address?
+
+What you've built.
+You can give the line of a form that asks where you live: la dirección.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: la dirección]
+[pause 8 seconds for the answer]
+[your turn — say: mi dirección y mi correo electrónico]
+[pause 8 seconds for the answer]
+[your turn — say: busco la dirección en internet]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of derecho and directo does dirección resemble, and which of razón and ración? (Directo, and ración.) What does dirección mean on a form? (The address where you live.)
+
+
+Lesson 5 of 5.
+la nacionalidad — a word built at home on a borrowed floor.
+
+Warm-up.
+[pause 2 seconds]
+Say email, then the address. (El correo electrónico; la dirección.)
+
+You'll want to know first.
+el país — what it names you by.
+el apellido — the line above it on the form.
+
+Sounds you'll need.
+na-cio-na-li-DAD, five beats with the weight on the last. The c before i is soft — an s across the Americas, a th across much of Spain — and cio is one beat, the i gliding into the o. Both ds are soft, the final one barely there. see pronunciation reference.
+
+The word, taken apart.
+la nacionalidad — nationality.
+Assembled in Spanish rather than imported: nacional plus -idad, the ending that turns a description into the quality itself.
+The borrowing sits one floor down, in nación. That came from Latin nātiō, nātiōnem: a birth, then the place of birth, then a people. Corominas dates nación to the fifteenth century — late, and lateness is the tell for a word taken from books rather than speakers.
+Set it beside razón, "reason", which came down the long way, through mouths. Both Latin ancestors ended alike; the two Spanish words do not. Razón has been worn smooth. Nación still has its Latin face on.
+There is a limit to what can be claimed for the modern political sense. Etymonline notes that English nationality is "in some usages perhaps from French nationalité", and nineteenth-century French influence on the Spanish sense is plausible — and unsettled. Hold it loosely at the top, firmly at the root.
+English relatives run wide: nation, native, nature, innate, and further back genus and genesis.
+One more sense exists. In Spain, nacionalidad also names an autonomous community whose statute recognises a special historical and cultural identity.
+¿Cuál es tu nacionalidad? — What is your nationality?
+
+What you've built.
+You can fill in a form online end to end: the machine, the network, the address that reaches you, the address you live at, and where you are from.
+
+Guided Practice.
+[pause 1 second]
+Name the five things you need to fill in a form online, and say one thing about each.
+[your turn — say: el ordenador — el ordenador es nuevo]
+[pause 8 seconds for the answer]
+[your turn — say: internet — el ordenador tiene internet]
+[pause 8 seconds for the answer]
+[your turn — say: el correo electrónico — mi correo electrónico es corto]
+[pause 8 seconds for the answer]
+[your turn — say: la dirección — mi dirección está en esta calle]
+[pause 8 seconds for the answer]
+[your turn — say: la nacionalidad — mi nacionalidad está en el pasaporte]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Was nacionalidad borrowed, or built? (Built in Spanish, from nacional plus -idad; the borrowing is nación underneath it.) And which word shows the other road out of Latin? (Razón — worn down by speech, where nación was copied from the page.)
