@@ -79,7 +79,8 @@ jobs:
             deleted_doc_shards=$(git diff --diff-filter=D --name-only \
               "$PR_BASE_SHA...$PR_HEAD_SHA" -- \
               'code/learning/human-languages/BACKLOG.d/*.md' \
-              'code/packages/typescript/human-language-data/CHANGELOG.d/*.md')
+              'code/packages/typescript/human-language-data/CHANGELOG.d/*.md' \
+              'code/programs/typescript/language-ladder/CHANGELOG.d/*.md')
             if [ -n "$deleted_doc_shards" ]; then
               echo "::error::Markdown history shards are append-only; restore these deleted files:"
               printf '%s\n' "$deleted_doc_shards"
@@ -88,10 +89,11 @@ jobs:
           fi
 
           # These paths are render targets, not repository content. Refuse a
-          # future merge that accidentally recreates either shared hot spot.
+          # future merge that accidentally recreates any shared hot spot.
           tracked_doc_monoliths=$(git ls-files -- \
             code/learning/human-languages/BACKLOG.md \
-            code/packages/typescript/human-language-data/CHANGELOG.md)
+            code/packages/typescript/human-language-data/CHANGELOG.md \
+            code/programs/typescript/language-ladder/CHANGELOG.md)
           if [ -n "$tracked_doc_monoliths" ]; then
             echo "::error::Generated Markdown aggregates must remain untracked:"
             printf '%s\n' "$tracked_doc_monoliths"
@@ -108,6 +110,7 @@ jobs:
           git diff --quiet "$PR_BASE_SHA...$PR_HEAD_SHA" -- \
             code/learning/human-languages \
             code/packages/typescript/human-language-data \
+            code/programs/typescript/language-ladder/CHANGELOG.d \
             code/scripts/build_human_language_book_catalog.py \
             code/scripts/scan_latex_log_warnings.py \
             code/scripts/check-book-compile.sh \
@@ -297,8 +300,8 @@ jobs:
           # prefers `.d/`, so a resurrected monolith is not merely redundant: it
           # is edited, committed, and silently ignored.
           npm run check:shards
-          # HL22/HL23: BACKLOG.d/ and CHANGELOG.d/ are the source of truth for
-          # the two Markdown histories every human-languages author touches.
+          # HL22/HL24: BACKLOG.d/ and CHANGELOG.d/ are the source of truth for
+          # the Markdown histories human-languages authors touch.
           # Their generated monoliths are deliberately untracked; this validates
           # shard shape/order and any optional local rendered view. The detect
           # job separately forbids shard deletion and tracked render targets.

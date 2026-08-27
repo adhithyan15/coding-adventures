@@ -359,7 +359,7 @@ shards are therefore the committed source of truth and `CHANGELOG.md` is an
 ignored local rendered view, matching the current BACKLOG and data-package
 changelog policy.
 
-This document splits at level 2 and is newest-first. The recent history had 24
+This document splits at level 2 and is newest-first. The recent history had 23
 top-level entries accidentally written as `### Added` beneath the preceding
 `## Unreleased` entry. The migration promotes only those entry headings to
 level 2 before sharding; their body bytes and ordering do not change. Historical

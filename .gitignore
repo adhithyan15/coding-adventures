@@ -86,6 +86,7 @@ build_output.txt
 # recreates the merge hot spots that sharding exists to remove.
 /code/learning/human-languages/BACKLOG.md
 /code/packages/typescript/human-language-data/CHANGELOG.md
+/code/programs/typescript/language-ladder/CHANGELOG.md
 
 # IDE
 .vscode/
