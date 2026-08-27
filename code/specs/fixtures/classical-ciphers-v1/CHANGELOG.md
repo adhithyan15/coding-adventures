@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.4 - 2026-08-27
+
+- Add dependency-free generated Atbash consumers for every established lane.
+- Bind all 15 native consumers to the exact corpus digest and the six complete
+  `atbash-transform` objects with fail-closed roster and output drift checks.
+
 ## 1.0.3 - 2026-08-27
 
 - Add dependency-free generated Vigenere consumers for every established lane.

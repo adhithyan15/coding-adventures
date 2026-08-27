@@ -43,3 +43,9 @@ gradle test
 ## Part of the Coding Adventures series
 
 Java counterpart to the Python, Rust, Go, TypeScript, and Kotlin implementations.
+## Language-neutral conformance
+
+The test suite executes all six normative `atbash-transform` objects from the
+`classical-ciphers-v1` fixture. Generated dependency-free test source pins the
+corpus digest and exact case roster; production code does not read the fixture
+or gain filesystem or JSON-parser authority.

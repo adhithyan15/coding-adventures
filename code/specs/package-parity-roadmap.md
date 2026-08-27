@@ -9415,6 +9415,54 @@ resource-limit, portability, and applicability review. The resulting complete
 acyclic graph has 539 owners and 795 dependency edges: 161 merged, 377 pending,
 and exactly one in-progress owner, with no active parity PR.
 
+## Post-#13224 Refresh and Atbash Fixture-Consumer Selection
+
+Final state-recording head `b7e1dcd82e980fd5e441eb487ce3f97e6060d015`
+completed all 41 reported checks: 39 succeeded and two were expected skips,
+with no failure or pending check. GitHub reported `MERGEABLE/CLEAN`; the loop
+enabled squash auto-merge, and GitHub merged PR #13224 as
+`0302e4e8f35a6e79d7bd385ae91fde710176a53c` at
+2026-08-27T16:18:19Z without a manual merge command.
+
+The collision-checked schema-3 inventory on exact merged `origin/main` is
+topology-identical to the pre-publication report: 15 established lanes, 1,375
+implementation identities, 4,585 package slots, and 1,414 all-reported
+identities. The four bands remain 175/266, 123/934, 167/2,100, and 910/12,740;
+Rust has 722 singletons, OCaml remains emerging at zero packages, and canonical
+collisions and unknown buckets remain zero. No package-directory addition,
+removal, lane move, or normalized-identity change creates a new inventory-
+driven owner.
+
+The late-main review does make the roadmap's broad TypeScript-led Forme family
+actionable as a narrower pending owner,
+`forme-portable-core-family-classification`. It must separate deterministic
+graph, routing, content-model, and rendering kernels from browser, Vite,
+filesystem, and UI hosts before any port. Live PR #13244 owns overlapping Forme
+blog paths, so the owner is registered but not selected. The Vigenere BUILD-
+front owner now explicitly depends on the merged neutral-consumer tranche: its
+five false-green or incomplete front doors remain a bounded operational sibling.
+
+The dependency/leverage pass selects
+`atbash-language-neutral-fixture-established-lane-consumers` on branch
+`codex/atbash-neutral-fixture-consumers`. Its sole neutral-contract dependency
+is merged; six complete CR01 objects exist; all 15 established Atbash packages
+exist; and none executes the full corpus. Reusing the strict bounded,
+dependency-free generated-consumer and digest/ID drift-gate pattern proven by
+Scytale and Vigenere closes executable all-lane evidence without adding
+production filesystem, JSON, process, environment, or network authority. A
+live open-PR scan found zero exact overlap with Atbash packages, CR01, the
+classical-cipher fixture, generator and CI surfaces, state, roadmap, or the root
+changelog.
+
+The strategic OCaml process-free substrate still has every declared dependency
+merged but remains collision-unsafe while open PR #12149 owns the required Go
+validator and entry-point paths. Native Dart and JVM build tools remain blocked
+behind the pending execution-semantics and trusted-platform isolation chain.
+After reconciliation and selection, the complete acyclic graph has 540 owners
+and 796 dependency edges: 162 merged, 377 pending, and exactly one in-progress
+owner, with no active parity PR. The fresh worktree and branch start from exact
+`origin/main` `0302e4e8f35a6e79d7bd385ae91fde710176a53c`.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

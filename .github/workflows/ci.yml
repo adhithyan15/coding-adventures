@@ -119,6 +119,8 @@ jobs:
           python3 code/scripts/generate_scytale_fixture_consumers.py --check
           python3 -m unittest discover -s code/scripts/tests -p 'test_generate_vigenere_fixture_consumers.py'
           python3 code/scripts/generate_vigenere_fixture_consumers.py --check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_generate_atbash_fixture_consumers.py'
+          python3 code/scripts/generate_atbash_fixture_consumers.py --check
           python3 -m unittest discover -s code/scripts/tests -p 'test_zip_raw_rfc1951_portable_coverage.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_image_codec_png_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_typescript_tsconfig_portability.py'

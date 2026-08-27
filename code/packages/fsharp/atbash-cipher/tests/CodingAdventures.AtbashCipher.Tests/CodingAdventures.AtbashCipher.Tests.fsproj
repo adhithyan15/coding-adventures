@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../CodingAdventures.AtbashCipher.fsproj" />
+    <Compile Include="GeneratedClassicalCipherFixtureTests.fs" />
     <Compile Include="AtbashCipherTests.fs" />
   </ItemGroup>
 </Project>
