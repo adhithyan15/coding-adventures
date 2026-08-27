@@ -49,10 +49,12 @@ upstream cases at zero. The `html-to-layout` package now provides the first
 executable browser seam from `BrowserRenderTree` to the shared Layout IR and
 `layout-block`.
 
-That does not make Venture complete. The current layout path places atomic
-inline boxes on shared lines; text-run fragmentation and baseline alignment
-remain. The `html-to-paint` composition package now carries canned HTML
-through shared layout into a backend-neutral `PaintScene`, extracts clickable
+That does not make Venture complete. The shared layout path now uses the
+producer-neutral `layout-inline` component for word fragmentation, measured
+baseline alignment, explicit/preformatted line handling, and per-line semantic
+wrapper geometry. Wrapped links therefore expose tight hit regions instead of
+one oversized atomic box. The `html-to-paint` composition package carries
+canned HTML through shared layout into a backend-neutral `PaintScene`, extracts clickable
 link regions, resolves host-fetched GIF/JPEG image bytes into shared pixels,
 and proves text and inline-image scenes rasterize to RGBA pixels with Cairo.
 Fetch/decode failures now render clipped bordered HTML `alt` text. The concrete
@@ -111,24 +113,28 @@ complete.
 
 ### Prioritized Browser Completion Backlog
 
-1. **P0 — link-hover status and cursor acceptance (completed).** Resolve the hovered link
-   through `BrowserSession`, project its URL through the existing Mosaic
-   `status-text` slot, and let the generated SwiftUI and WinUI content surfaces
-   select their native pointing-hand cursor. Gate the same behavior through
-   direct generated-app interaction tests on macOS and Windows.
-2. **P1 — native scrollbar projection (completed).** Expose the shared viewport offset and
-   extent as target-neutral state, then bind generated native scrollbars to the
-   same Mosaic-hosted content surface without recreating browser chrome in
-   AppKit or Win32.
-3. **P2 — generated-host interaction gates (completed).**
-   Flutter now hydrates the emitted shell through an injected Mosaic host and
-   directly drives native disabled controls, address editing, Return, Go, and
-   host-response refresh. Qt Quick now exercises the same contract through
-   part-backed native controls and a package-owned QML test. Compose,
-   React/Electron, HTML, and Web Components now drive the same shared contract
-   through their generated host seams. The authoritative package entry points
-   run that matrix and additionally launch the generated SwiftUI or WinUI app
-   on its native host.
+Completed convergence foundations: exact zero-missing HTML tokenizer/tree
+construction ratchets; native generated-host interaction gates; shared
+scrollbars, hover status, and cursors; and reusable fragmented inline layout.
+
+1. **P0 — visited-link state and rendering.** Add URL-normalized visited state
+   to `BrowserSession`, project it into render styling without coupling layout
+   to browser history, and cover navigation/reload/history behavior.
+2. **P1 — bookmarks as a reusable persistence component.** Define a small
+   storage-neutral bookmark model and repository interface, then add native
+   persistence adapters and generated Mosaic chrome commands.
+3. **P1 — View Source.** Retain fetched source bytes/text in the loaded-page
+   model and expose a source document through a host-neutral command instead
+   of adding platform-specific windows first.
+4. **P1 — real-page visual acceptance.** Add deterministic screenshot and
+   geometry fixtures for representative 1993-era pages, including wrapped
+   links, mixed fonts, preformatted text, images, and scrolling.
+5. **P2 — international inline convergence.** Replace whitespace-only break
+   opportunities with a reusable UAX #14 component, then add bidi/RTL as a
+   separate shaping/layout phase rather than embedding either in HTML.
+6. **P2 — richer inline box edges.** Preserve padding, margins, borders, and
+   decoration continuation policy across semantic wrapper fragments before
+   expanding the supported CSS surface.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do

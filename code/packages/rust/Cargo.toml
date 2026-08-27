@@ -839,6 +839,7 @@ members = [
     "text-native",
     "text-native-coretext",
     "layout-ir",
+    "layout-inline",
     "layout-block",
     "layout-text-measure-native",
     "layout-to-paint",

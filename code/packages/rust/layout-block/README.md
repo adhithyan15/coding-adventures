@@ -14,9 +14,8 @@ Spec: [code/specs/UI07-layout-block.md](../../../specs/UI07-layout-block.md).
 Handles:
 - Block containers — stack children vertically with margin collapsing
   between adjacent siblings.
-- Atomic inline flow — consecutive `inline`, `inline-text`, and
-  `inline-replaced` children share line boxes, wrap as units, and honor
-  explicit `line-break` nodes.
+- Inline flow delegates to `layout-inline` for word fragmentation, semantic
+  wrapper splitting, measured baseline alignment, and explicit line breaks.
 - Nested containers with padding on both outer and inner sides.
 - Text leaves — width/height resolved by the supplied measurer with
   wrap-at-max-width semantics.
@@ -25,9 +24,8 @@ Handles:
   / `min_height` / `max_height` clamping.
 
 Out of scope for v1 (per UI07):
-- Text-run fragmentation at word boundaries and splitting one inline box
-  across multiple line boxes.
-- Baseline and `vertical-align` alignment within line boxes.
+- Unicode UAX #14 line-breaking and bidirectional text.
+- Full CSS inline edge-decoration continuation across fragments.
 - `float` / `clear` / absolute positioning.
 - RTL / bidirectional text.
 - CSS columns.

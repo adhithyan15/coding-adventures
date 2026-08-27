@@ -24,6 +24,8 @@ shaping will use.
   once and is reused.
 - Word-boundary wrap when `max_width` is Some. Hard newlines in the
   input produce separate line segments.
+- Native font ascent is preserved as `MeasureResult.baseline` for shared
+  inline line-box alignment.
 - Empty font family (`""`) remaps to the platform-default face
   (`Helvetica` on Apple). Since `document_default_theme()` uses `""`,
   this is the normal path.
