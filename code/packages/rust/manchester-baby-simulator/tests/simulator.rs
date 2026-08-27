@@ -243,6 +243,20 @@ fn present_instruction_reads_the_word_at_ci() {
 }
 
 #[test]
+fn manually_constructed_state_cannot_index_outside_the_store() {
+    let mut store = [0; STORE_WORDS];
+    store[31] = 0x1234_5678;
+    let state = manchester_baby_simulator::BabyState {
+        store,
+        accumulator: 0,
+        ci: u8::MAX,
+        halted: false,
+    };
+
+    assert_eq!(state.present_instruction(), 0x1234_5678);
+}
+
+#[test]
 fn countdown_program_exercises_a_backward_loop() {
     let mut store = [0; STORE_WORDS];
     store[0] = instruction(Function::LoadNegative, 28);

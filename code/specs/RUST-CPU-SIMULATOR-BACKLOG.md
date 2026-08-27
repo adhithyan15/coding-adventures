@@ -1,8 +1,9 @@
 # Rust CPU Simulator Backlog
 
-**Status:** active  
+**Status:** active
+
 **Scope:** functional and gate-level Rust simulators for every CPU target in the
-07-series, followed by a complete cross-language port wave  
+07-series, followed by a complete cross-language port wave
 **Last reprioritized:** 2026-08-27
 
 ## Definition of the matrix

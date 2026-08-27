@@ -71,7 +71,7 @@ impl BabyState {
 
     /// Return the word at the current control-instruction line.
     pub fn present_instruction(&self) -> u32 {
-        self.store[self.ci as usize]
+        self.store[(self.ci & CI_MASK) as usize]
     }
 }
 
