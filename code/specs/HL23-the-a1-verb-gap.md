@@ -1377,4 +1377,10 @@ before the prose was written. Mock 2's Grupo 1 moves **+4,00**, the largest sing
 on that paper in the series, which is what §12.2 meant by *"no quantity of noun authoring passes
 mock 2."*
 
-Tranches B and C — the remaining 56 lexemes — are what close the rest.
+Tranches B and C — the remaining **61** lexemes — are what close the rest.
+
+That figure is 68 authorable minus the **seven** exam-derived qualities this tranche shipped, not
+minus the twelve lessons it wrote: `interesante`, `fácil`, `difícil`, `bonito` and `guapo` were
+never in the 68, because no mock item requires them. They are there to discharge §13.5's inventory
+points. Measured rather than inferred, the harness now reports **69** still-missing lexemes, of
+which **8** are the already-owned entries of §12.4 — 61 authorable, and the two roads agree.
