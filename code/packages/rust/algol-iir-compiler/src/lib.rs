@@ -8388,7 +8388,7 @@ where
             }
         }
         let (base, exponents) = operands.split_first()?;
-        let exponent = literal_nonnegative_integral_power_chain(exponents)
+        let exponent = literal_nonnegative_integral_arithmetic_power_chain(exponents)
             .map(|value| value as i32)
             .or_else(|| {
                 if exponents.len() == 1 {
@@ -10085,6 +10085,41 @@ mod tests {
             .collect();
         assert_eq!(literals, vec!["6.25", "512"]);
         assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+    }
+
+    #[test]
+    fn al4_print_static_real_arithmetic_exponents() {
+        let module = compile_source(
+            "begin print(2.0 ^ (6 div 3), 2.0 ^ (1.0 + 2.0), 2.0 ^ ((2 ^ 2) - 1)) end",
+            "test",
+        )
+        .expect("static nonnegative integral arithmetic exponents compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["4", "8", "8"]);
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+    }
+
+    #[test]
+    fn al4_print_static_real_arithmetic_exponents_fail_closed() {
+        for source in [
+            "begin print(2.0 ^ (1.0 / 2.0)) end",
+            "begin print(2.0 ^ (1 div 0)) end",
+            "begin print(2.0 ^ (9223372036854775807 + 1)) end",
+            "begin print(2.0 ^ (64 + 1)) end",
+            "begin integer n; n := 2; print(2.0 ^ n) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("unsafe arithmetic exponents must require runtime formatting");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
     }
 
     #[test]
