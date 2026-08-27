@@ -384,6 +384,25 @@ describe("validateConfig — wires", () => {
       { stage: makeStage("a", Kinds.Void, Kinds.ContentSource), id: "a" },
     ], { wires: [{ from: { id: "a" }, to: { id: "ghost" } }] }))).toThrow(ConfigError);
   });
+
+  it("rejects multiple wires targeting a stage's single input", () => {
+    try {
+      validateConfig(config([
+        { stage: makeStage("a", Kinds.Void, Kinds.ContentSource), id: "a" },
+        { stage: makeStage("b", Kinds.Void, Kinds.ContentSource), id: "b" },
+        { stage: makeStage("consumer", Kinds.ContentSource, Kinds.ContentNode), id: "consumer" },
+      ], { wires: [
+        { from: { id: "a" }, to: { id: "consumer" } },
+        { from: { id: "b" }, to: { id: "consumer" } },
+      ] }));
+      throw new Error("expected validateConfig to reject multiple incoming wires");
+    } catch (error) {
+      expect(error).toBeInstanceOf(ConfigError);
+      expect((error as ConfigError).errors).toEqual(expect.arrayContaining([
+        expect.objectContaining({ code: CONFIG_ERROR_CODES.MULTIPLE_INPUT_WIRES }),
+      ]));
+    }
+  });
 });
 
 describe("validateConfig — outputs & multiple terminals", () => {

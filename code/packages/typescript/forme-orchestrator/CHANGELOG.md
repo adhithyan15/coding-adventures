@@ -1,5 +1,24 @@
 # Changelog — @coding-adventures/forme-orchestrator
 
+## Unreleased
+
+### Added
+
+- `buildDag` now honors explicit `PipelineConfig.wires`. Explicit edges may
+  point forward in declaration order and override inferred producers.
+- One producer may feed multiple consumers. A stable topological sort executes
+  each materialized stream once and makes it available to every branch.
+- Explicit edges are kind-checked after stream-promotion semantics are applied;
+  incompatible edges, incoming wires to sources, and cycles fail before run.
+- `@types/node` is now a direct development dependency, so `npm run build`
+  covers Node APIs imported through source-linked dependencies.
+
+### Tests
+
+- Integration coverage pins explicit-over-inferred selection, forward wires,
+  incompatible wires, cycle rejection, true sink discovery, and a stream
+  fanning out to per-item and collector consumers.
+
 ## 0.2.0 — 2026-05-16
 
 ### Added — reproducible-build mode (FM03 §8 — partial)
@@ -106,7 +125,7 @@ package of the FM03 orchestrator stack.
 
 ### What works
 
-- Linear and fan-out-1 pipelines (source → transform... → sink)
+- Linear pipelines (source → transform... → sink)
 - Stream producers feeding single-input consumers (executor iterates)
 - init / dispose lifecycle (init failure → abort + dispose initialized)
 - Fail-fast (default) and best-effort error handling
