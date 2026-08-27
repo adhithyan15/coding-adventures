@@ -1,5 +1,23 @@
 # Changelog
 
+### Added — source-verified Urdu hamza-ye composition
+
+- Teach Urdu **ئ** as Zer o Zabar's tooth carrier plus lifted hamza mark,
+  preserving its vowel-separator role in **بھائی** and the accepted diagonal
+  squiggle handwriting variant.
+- Close all 3 canonically decomposed **ي**/**ٔ** realizations without
+  conflating Urdu **ی** (U+06CC) with Arabic **ي** (U+064A); Japanese **わ**
+  now leads the measured queue at 2.
+
+### Added — source-verified Urdu te
+
+- Teach Urdu **ت** from Zer o Zabar's independent handwriting animation and
+  prose: write the be-series bowl, lift for the left upper dot, then lift for
+  the right upper dot beside it.
+- Close all 3 affected realizations while preserving the explicit two-dot form,
+  canonical Noto Naskh fallback, and separate Nastaliq presentation face;
+  Arabic **ي** is next at 3.
+
 ### Added — source-verified Urdu gaf
 
 - Teach Urdu **گ** from Zer o Zabar's independent calligraphic and handwriting

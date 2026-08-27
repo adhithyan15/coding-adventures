@@ -7,6 +7,24 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Native radio-group mutual exclusion (#13007). `group:` was never read
+  anywhere in `emit_host_radio`. A container physically holding 2+
+  `HostRadio` siblings sharing a literal `group:` value now gets
+  `Modifier.selectableGroup()` on its own modifier chain (new
+  `container_needs_radio_group_semantics` + `host_radio_literal_group_key`,
+  wired into both `emit_container` and the root-splitting
+  `emit_container_frame` path) — purely additive a11y semantics; each
+  `RadioButton`'s own `selected`/`onClick` stays entirely local to its
+  own `checked`/`onSelect` props, unchanged. The
+  `androidx.compose.foundation.selection.selectableGroup` import is
+  added conditionally via a new whole-tree `layout_has_radio_group`
+  walk. New `pub fn radio_groups_with_native_semantics` lets
+  `mosaic-package-artifact-builder`'s degradation analyzer stop
+  reporting `property.radio-group-ignored` wherever this lowering
+  actually applies. Verified against a real regenerated
+  `mosaic-pkg-deck-options` project (the real multi-radio usage this
+  targets): `gradle compileKotlin` — `BUILD SUCCESSFUL`.
+
 - Native indeterminate checkbox state (#13006). `emit_host_checkbox` had
   no code path for `indeterminate:` at all. When authored as anything
   other than a literal `Keyword("false")`, the emitter now swaps the

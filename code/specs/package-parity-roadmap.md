@@ -9204,6 +9204,95 @@ acceptable and GitHub reports no conflict. State is now 158 merged, 374
 pending, and exactly one `pr-open` owner across the complete acyclic
 533-owner/792-edge graph.
 
+PR #13128's replacement head `b6fe5f60a09c50b24e4753ab33d3975de7f1c495`
+completed all 41 reported checks acceptably after a focused Windows build-front
+repair for the intentionally absent Elixir toolchain. GitHub reported the
+branch `MERGEABLE/CLEAN`; the loop enabled squash auto-merge, and GitHub merged
+the PR as `0ce595048edcd1e9d9c41e6b2249d19ef3567224` at
+2026-08-27T00:37:58Z without a manual merge command. The clean successor setup
+removed the exact reviewed-head worktree and preserved every dirty, detached,
+open-PR, and ambiguous worktree.
+
+Before successor selection, `origin/main` advanced through disjoint Mosaic
+Flutter work to exact `0a1a5902fccf90f9cabe572c60a7c461768a4bee`.
+The regenerated schema-3 report remains collision-clean at 15 established
+lanes, 1,373 implementation identities, 4,582 slots, and 1,412 all-reported
+identities. The four bands remain 175/266, 123/934, 166/2,087, and
+909/12,726; Rust has 720 singletons, OCaml is still emerging at zero packages,
+and collisions and unknown buckets remain zero. Neither merge added an
+identity, so no new unowned eligible gap was registered.
+
+The next selected owner is
+`scytale-language-neutral-fixture-established-lane-consumers` on
+`codex/scytale-neutral-fixture-consumers`. Its sole dependency is now merged,
+and it closes the explicitly registered residual debt: all 15 established
+packages test CR02 semantics directly, but none executes every one of the 18
+normative Scytale fixture objects and compares the complete expected record.
+Dependency-free generated test adapters plus a corpus-drift gate keep the
+slice bounded and production capability profiles unchanged. Seven live PRs
+have zero exact overlap with the package, CR02, fixture, drift-gate, state,
+roadmap, or CI surfaces. The tranche deliberately avoids Go build-tool source
+owned by open PRs #12149 and #12162.
+
+Implementation is now complete in the successor worktree. One bounded
+stdlib-only generator validates the exact fixture profile, resource limits,
+raw digest, strict JSON subset, unique IDs, and all 18 Scytale cases before
+emitting a native complete-record test for every established lane. Its
+six-test regression suite covers roster and digest drift, every-ID presence,
+duplicate and non-finite input, malformed Unicode, nesting and size bounds,
+and stale or missing outputs. CI runs those tests and the generator's
+`--check` gate immediately after the independent classical-cipher oracle.
+Production sources, dependency manifests, capability profiles, and BUILD
+recipes remain unchanged.
+
+Direct native validation passes on the 13 locally executable lanes: C#, Dart,
+F#, Go, Haskell, Java, Kotlin, Lua, Python, Ruby, Rust, Swift, and TypeScript.
+Elixir and Perl keep their reviewed Windows no-toolchain skips and will execute
+their generated consumers in Linux CI. The Go build tool passes its complete
+test, coverage, vet, module-verification, and trimpath gates; the exact diff
+plan evaluates 45 Starlark files, discovers 5,089 packages, preserves the five
+reviewed orphan exemptions, selects exactly the 15 established Scytale
+packages in every platform override, and executes all 15 Windows BUILD fronts
+successfully across the full run plus isolated Python and Lua toolchain
+reruns. Formatting, lint, build-file, fixture, diff, dependency, and security
+gates are clean. The dependency-free Rust package has no lockfile for
+`cargo audit`; its empty dependency table and cargo metadata provide the
+applicable dependency evidence.
+
+The branch rebased without conflict onto exact `origin/main`
+`b46fbb583bf06ccbdc499980c78afb62eff12afd` after four disjoint curriculum and
+Mermaid commits. The refreshed schema-3 report is unchanged at 15 established
+lanes, 1,373 implementation identities, 4,582 slots, 1,412 all-reported
+identities, zero collisions, and zero unknown buckets.
+
+Ready-for-review PR #13147 publishes the validated implementation from
+pre-state head `78d2166ca172c2e9c6135078d4ad31e589aaf2fc` on exact `origin/main`
+`b46fbb583bf06ccbdc499980c78afb62eff12afd` after a normal first push. GitHub
+is calculating checks and mergeability, so auto-merge remains disabled until
+every required check is terminal and acceptable and the PR is conflict-free.
+The state graph now has 159 merged, 373 pending, and exactly one `pr-open`
+owner across 533 owners and 792 dependency edges.
+
+The initial PR head later completed every reported check successfully without a
+merge conflict, but the final independent exact-diff security audit found four
+in-scope generator gaps. Fixture text could be emitted into interpolation-aware
+source literals, file reads were not bounded before allocation, the limit case
+duplicated its scalar and count instead of consuming the fixture descriptor,
+and six lanes accepted only a broad exception class instead of the normalized
+`scytale-brute-force-limit` failure. Auto-merge was deliberately withheld while
+the same branch received the focused repair.
+
+The repaired generator now admits only source-safe case and error identifiers,
+uses escaped Dart literals or Unicode-scalar constructors for Elixir, Kotlin,
+Perl, and Ruby, bounds fixture and generated-output reads before allocation,
+and derives every lane's limit scalar, count, and normalized failure from the
+fixture. Eleven generator regressions cover the new boundaries, including
+hostile control, quote, backslash, and interpolation scalars in all 15 lanes,
+plus fixture-owned limit and invalid-key error identifiers. All 13 locally
+available native suites pass again, including exact limit-error assertions in
+C#, Dart, F#, Java, Kotlin, and Swift; Elixir and Perl remain delegated to the
+fresh Linux CI cycle because their reviewed Windows toolchains are absent.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

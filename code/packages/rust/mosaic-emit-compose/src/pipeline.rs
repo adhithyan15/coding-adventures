@@ -1,6 +1,6 @@
 //! Jetpack Compose backend pipeline emitter.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Write;
 
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
@@ -116,6 +116,7 @@ pub fn from_pipeline(
     let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget");
     let uses_checkbox_indeterminate = layout_has_checkbox_indeterminate(&layout.root);
+    let uses_radio_group = layout_has_radio_group(&layout.root);
 
     writeln!(out, "import androidx.compose.foundation.background").unwrap();
     writeln!(out, "import androidx.compose.foundation.border").unwrap();
@@ -143,6 +144,13 @@ pub fn from_pipeline(
         "import androidx.compose.foundation.rememberBasicTooltipState"
     )
     .unwrap();
+    if uses_radio_group {
+        writeln!(
+            out,
+            "import androidx.compose.foundation.selection.selectableGroup"
+        )
+        .unwrap();
+    }
     writeln!(out, "import androidx.compose.foundation.layout.Box").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Column").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Row").unwrap();
@@ -2676,7 +2684,13 @@ fn emit_container_frame(
         .map(|s| !s.modifier.is_empty())
         .unwrap_or(false);
     let semantic_modifier = table_semantics_modifier(node, table_ctx);
-    let has_chain = has_style_chain || semantic_modifier.is_some();
+    let radio_group_modifier: Option<String> = if container_needs_radio_group_semantics(node) {
+        Some("selectableGroup()".to_string())
+    } else {
+        None
+    };
+    let has_chain =
+        has_style_chain || semantic_modifier.is_some() || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
     let child_text: Option<TextStyleCtx> = match &style {
         Some(s) => {
@@ -2696,6 +2710,9 @@ fn emit_container_frame(
             write!(opener, "{modifier_pad}modifier = Modifier.fillMaxWidth()").unwrap();
         }
         if let Some(semantics) = &semantic_modifier {
+            write!(opener, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
+        }
+        if let Some(semantics) = &radio_group_modifier {
             write!(opener, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
         }
         writeln!(opener, ",").unwrap();
@@ -2734,6 +2751,77 @@ fn emit_container_frame(
         opener,
         closer: format!("{pad}}}\n"),
         child_text,
+    }
+}
+
+/// A `HostRadio` child's literal `group: "..."` value, if authored.
+///
+/// Only a literal `String` is synthesizable into a shared container-
+/// level a11y grouping (`#13007`) — a `slot:`-bound group can't be
+/// bucketed into a fixed set of containers at compile time, so those
+/// radios are left exactly as before (ungrouped, matching the
+/// pre-#13007 behavior for every `LayoutPropValue` shape).
+fn host_radio_literal_group_key(node: &LayoutNode) -> Option<&str> {
+    if node.tag != "HostRadio" {
+        return None;
+    }
+    match find_prop_value(node, "group") {
+        Some(LayoutPropValue::String(s)) => Some(s.as_str()),
+        _ => None,
+    }
+}
+
+/// Whether a container's direct children include 2+ `HostRadio` nodes
+/// sharing the same literal `group:` value (`#13007`). Compose Material
+/// has no dedicated "RadioGroup" composable — mutual-exclusion grouping
+/// is purely the `Modifier.selectableGroup()` a11y convention layered
+/// onto whichever container physically holds the options, so this is
+/// additive: it changes nothing about how each `RadioButton`'s own
+/// `selected`/`onClick` is computed (still entirely local to its own
+/// `checked`/`onSelect` props), only the ancestor's semantics.
+fn container_needs_radio_group_semantics(node: &LayoutNode) -> bool {
+    let mut counts: HashMap<&str, usize> = HashMap::new();
+    for child in &node.children {
+        if let Some(key) = host_radio_literal_group_key(child) {
+            *counts.entry(key).or_insert(0) += 1;
+        }
+    }
+    counts.values().any(|&count| count >= 2)
+}
+
+/// Whether ANY container anywhere in the layout needs
+/// `.selectableGroup()` (`#13007`) — gates the one-time
+/// `androidx.compose.foundation.selection.selectableGroup` import.
+fn layout_has_radio_group(node: &LayoutNode) -> bool {
+    container_needs_radio_group_semantics(node) || node.children.iter().any(layout_has_radio_group)
+}
+
+/// The set of literal `group:` values that get real
+/// `.selectableGroup()` semantics anywhere in this component
+/// (`#13007`) — i.e. every key with 2+ direct-sibling members under
+/// some container, per [`container_needs_radio_group_semantics`].
+/// Package capability analysis calls this so strict-profile reporting
+/// cannot drift from `emit_container`'s actual lowering.
+pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> {
+    let mut result = HashSet::new();
+    collect_grouped_radio_keys(root, &mut result);
+    result
+}
+
+fn collect_grouped_radio_keys(node: &LayoutNode, out: &mut HashSet<String>) {
+    let mut counts: HashMap<&str, usize> = HashMap::new();
+    for child in &node.children {
+        if let Some(key) = host_radio_literal_group_key(child) {
+            *counts.entry(key).or_insert(0) += 1;
+        }
+    }
+    for (key, count) in &counts {
+        if *count >= 2 {
+            out.insert(key.to_string());
+        }
+    }
+    for child in &node.children {
+        collect_grouped_radio_keys(child, out);
     }
 }
 
@@ -2794,7 +2882,17 @@ fn emit_container(
         .map(|s| !s.modifier.is_empty())
         .unwrap_or(false);
     let semantic_modifier = table_semantics_modifier(node, table_ctx);
-    let has_chain = has_style_chain || semantic_modifier.is_some();
+    // #13007: a container physically holding 2+ same-group HostRadio
+    // siblings gets `.selectableGroup()` for native mutual-exclusion
+    // a11y semantics — purely additive, doesn't touch each radio's own
+    // selected/onClick wiring.
+    let radio_group_modifier: Option<String> = if container_needs_radio_group_semantics(node) {
+        Some("selectableGroup()".to_string())
+    } else {
+        None
+    };
+    let has_chain =
+        has_style_chain || semantic_modifier.is_some() || radio_group_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
 
     // The text style children inherit: a styled Box may override the
@@ -2819,6 +2917,9 @@ fn emit_container(
             write!(out, "{modifier_pad}modifier = Modifier.fillMaxWidth()").unwrap();
         }
         if let Some(semantics) = &semantic_modifier {
+            write!(out, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
+        }
+        if let Some(semantics) = &radio_group_modifier {
             write!(out, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
         }
         writeln!(out, ",").unwrap();
@@ -6369,6 +6470,118 @@ mod tests {
             .contains("onClick = { dispatch(DeckOptionsEvent.LeechActionChange(\"suspend\")) },"));
         assert!(out.contains("enabled = true,"));
         assert!(out.contains("Text(text = suspendLabel)"));
+    }
+
+    fn radio_prop(part: &str, group: &str, checked_slot: &str, value: &str) -> LayoutNode {
+        styled_node(
+            "HostRadio",
+            part,
+            vec![
+                LayoutProp {
+                    name: "checked".into(),
+                    value: LayoutPropValue::SlotRef(checked_slot.into()),
+                },
+                LayoutProp {
+                    name: "value".into(),
+                    value: LayoutPropValue::String(value.into()),
+                },
+                LayoutProp {
+                    name: "group".into(),
+                    value: LayoutPropValue::String(group.into()),
+                },
+            ],
+            vec![],
+        )
+    }
+
+    /// #13007 — a `Row` holding 2+ `HostRadio` siblings sharing a
+    /// literal `group:` value gets `.selectableGroup()` on its own
+    /// modifier chain, matching real usage
+    /// (`mosaic-pkg-deck-options`'s leech-action radios).
+    #[test]
+    fn container_with_shared_radio_group_gets_selectable_group_modifier() {
+        let m = component(
+            "X",
+            vec![
+                slot("suspend-selected", SlotType::Bool, true),
+                slot("tag-only-selected", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let radio1 = radio_prop("suspend", "leech-action", "suspend-selected", "suspend");
+        let radio2 = radio_prop("tag-only", "leech-action", "tag-only-selected", "tag-only");
+        let l = layout("X", node("Row", vec![], vec![radio1, radio2]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains(".selectableGroup()"),
+            "expected .selectableGroup() on the shared container, got:\n{out}"
+        );
+        assert!(
+            out.contains("import androidx.compose.foundation.selection.selectableGroup"),
+            "expected the selectableGroup import, got:\n{out}"
+        );
+    }
+
+    /// #13007 — the fix also applies when radios are nested one level
+    /// deeper than the layout root (Column > Row > HostRadio×2),
+    /// matching the real `mosaic-pkg-deck-options` shape exactly (a
+    /// root-level Row/Column with >1 children takes a different,
+    /// root-splitting code path than a nested one — both need the fix).
+    #[test]
+    fn nested_shared_radio_group_gets_selectable_group_modifier() {
+        let m = component(
+            "X",
+            vec![
+                slot("suspend-selected", SlotType::Bool, true),
+                slot("tag-only-selected", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let radio1 = radio_prop("suspend", "leech-action", "suspend-selected", "suspend");
+        let radio2 = radio_prop("tag-only", "leech-action", "tag-only-selected", "tag-only");
+        let inner_row = node("Row", vec![], vec![radio1, radio2]);
+        let l = layout("X", node("Column", vec![], vec![inner_row]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains(".selectableGroup()"),
+            "expected .selectableGroup() on the nested shared container, got:\n{out}"
+        );
+    }
+
+    /// #13007 — a single `HostRadio` (no same-group sibling) never gets
+    /// `.selectableGroup()` — there's nothing to group.
+    #[test]
+    fn container_with_lone_radio_gets_no_selectable_group_modifier() {
+        let m = component("X", vec![slot("selected", SlotType::Bool, true)], vec![]);
+        let radio = radio_prop("only", "leech-action", "selected", "only");
+        let l = layout("X", node("Row", vec![], vec![radio]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            !out.contains("selectableGroup"),
+            "expected no selectableGroup (or its import) for a lone radio, got:\n{out}"
+        );
+    }
+
+    /// #13007 — two radios with *different* literal `group:` values in
+    /// the same container are NOT treated as one shared group.
+    #[test]
+    fn container_with_two_distinct_radio_groups_gets_no_selectable_group_modifier() {
+        let m = component(
+            "X",
+            vec![
+                slot("a-selected", SlotType::Bool, true),
+                slot("b-selected", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let radio1 = radio_prop("a", "group-a", "a-selected", "a");
+        let radio2 = radio_prop("b", "group-b", "b-selected", "b");
+        let l = layout("X", node("Row", vec![], vec![radio1, radio2]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            !out.contains("selectableGroup"),
+            "expected no selectableGroup across two distinct groups, got:\n{out}"
+        );
     }
 
     #[test]

@@ -561,6 +561,8 @@ const URDU_BEH = ductusFor("ب", "urdu-nastaliq")!;
 const urduBehOutline = naskhOutline("ب");
 const URDU_PEH = ductusFor("پ", "urdu-nastaliq")!;
 const urduPehOutline = naskhOutline("پ");
+const URDU_TE = ductusFor("ت", "urdu-nastaliq")!;
+const urduTeOutline = naskhOutline("ت");
 const URDU_KAF = ductusFor("ک", "urdu-nastaliq")!;
 const urduKafOutline = naskhOutline("ک");
 const URDU_GAF = ductusFor("گ", "urdu-nastaliq")!;
@@ -7619,6 +7621,29 @@ describe("Urdu پ — the independent be-series bowl followed by its dot triangl
       penPathD(URDU_PEH.strokes[3], 1),
     );
     expect(URDU_PEH.source.url).not.toBe(PERSIAN_PEH.source.url);
+  });
+});
+
+describe("Urdu ت — the independent be-series bowl followed by two upper dots", () => {
+  const steps = ductusSteps(URDU_TE);
+  const strip = ductusFilmstrip(URDU_TE, urduTeOutline);
+
+  it("keeps the bowl in one run, then preserves both sourced dot lifts", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2]);
+    expect(URDU_TE.strokes[1].segments[0].path[0].x).toBeLessThan(
+      URDU_TE.strokes[2].segments[0].path[0].x,
+    );
+  });
+
+  it("draws the Noto Naskh outline across three source-backed frames", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      urduTeOutline.path,
+    );
   });
 });
 

@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Urdu gaf", () => {
+  it("keeps the cross-script closure queue measured after Urdu te", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -1259,6 +1259,39 @@ describe("real curriculum", () => {
     );
     expect(missingByScript.get("urdu-nastaliq.json")?.has("گ")).toBe(false);
     expect(affected.get("گ") ?? 0).toBe(2);
+    const urduTe = scripts["urdu-nastaliq"]!.letters.find((entry) => entry.glyph === "ت")!;
+    expect(urduTe.sound).toBe("t");
+    expect(urduTe.penLifts).toBe(2);
+    expect(urduTe.strokeOrder).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, place the left dot above the main line",
+      "after another lift, place the right dot beside it",
+    ]);
+    expect(urduTe.strokeOrderSource?.citation).toMatch(
+      /Zer o Zabar.*independent ت.*handwriting animation.*Te instructions.*Northwestern/i,
+    );
+    expect(urduTe.strokeOrderSource?.variation).toMatch(
+      /be-series bowl first.*right-to-left.*left dot.*right dot.*two pen lifts.*two dots side by side.*squiggle or horizontal line.*Noto Naskh.*Nastaliq.*Urdu-specific/i,
+    );
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("ت")).toBe(false);
+    expect(affected.get("ت") ?? 0).toBe(0);
+    const urduHamzaAbove = scripts["urdu-nastaliq"]!.marks!.find(
+      (entry) => entry.mark === "ٔ",
+    )!;
+    expect(urduHamzaAbove.examples?.map((example) => example.combined)).toEqual(["ئ"]);
+    expect(urduHamzaAbove.compositionOrder).toEqual([
+      "write the tooth carrier as part of the word's right-to-left main line",
+      "after lifting, add the small hamza above the carrier as its ain-head shape or accepted diagonal squiggle",
+    ]);
+    expect(urduHamzaAbove.compositionSource?.citation).toMatch(
+      /Zer o Zabar.*Ain and hamza.*initial and medial ئ handwriting animations.*Northwestern/i,
+    );
+    expect(urduHamzaAbove.compositionSource?.variation).toMatch(
+      /vowel-separator.*بھائی.*carrier-plus-mark.*U\+0626.*U\+064A.*U\+0654.*U\+06CC/i,
+    );
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("ي")).toBe(false);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("ٔ")).toBe(false);
+    expect(affected.get("ي") ?? 0).toBe(0);
     const kannadaAa = scripts.kannada!.independentVowels!.find((entry) => entry.glyph === "ಆ")!;
     expect(kannadaAa.sound).toBe("ā");
     expect(kannadaAa.penLifts).toBe(1);
@@ -1324,7 +1357,7 @@ describe("real curriculum", () => {
     expect(affected.get("ب") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ت", 3]);
+    ).toEqual(["わ", 2]);
   });
 
   it("loaded every track (17+ and growing)", () => {

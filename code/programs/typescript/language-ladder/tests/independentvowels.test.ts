@@ -456,6 +456,34 @@ describe("shared Perso-Arabic letters retain script-owned provenance", () => {
     );
   });
 
+  it("keeps Urdu ت as a source-backed bowl-and-two-dots letter", () => {
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "ت")!;
+    expect(urdu.sound).toBe("t");
+    expect(urdu.role).toBe("consonant");
+    expect(urdu.penLifts).toBe(2);
+    expect(urdu.strokeOrder).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, place the left dot above the main line",
+      "after another lift, place the right dot beside it",
+    ]);
+    expect(urdu.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/te-mim-jim-che/",
+    );
+  });
+
+  it("keeps Urdu ئ as a source-backed carrier-plus-hamza composition", () => {
+    const hamza = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .marks!.find((entry) => entry.mark === "ٔ")!;
+    expect(hamza.examples?.map((example) => example.combined)).toEqual(["ئ"]);
+    expect(hamza.compositionOrder?.[0]).toMatch(/tooth carrier.*right-to-left main line/i);
+    expect(hamza.compositionOrder?.[1]).toMatch(/after lifting.*hamza above/i);
+    expect(hamza.compositionSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/ain-hamza/",
+    );
+    expect(hamza.compositionSource?.variation).toMatch(/بھائی.*carrier-plus-mark/i);
+  });
+
   it("keeps Persian and Urdu پ separate while both preserve the four-stroke triangle order", () => {
     const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
       .letters.find((entry) => entry.glyph === "پ")!;

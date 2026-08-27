@@ -1,5 +1,18 @@
 # Changelog — mosaic-pkg-toolkit
 
+## [Unreleased] — clarify why the radio-group allowlist entries survive #13007
+
+`mosaic-emit-compose`/`-flutter`/`-qt` now apply real native mutual-
+exclusion wiring for a literal `HostRadio.group` shared by 2+ resolvable
+siblings (#13007) — but the toolkit's own `Radio` component
+(`Radio.mll`) is a 1:1 `HostRadio` wrapper with no sibling of its own,
+so it never qualifies and the `property.radio-group-ignored` allowlist
+entries for Compose/Flutter/Qt/SwiftUI in
+`tests/native_complete_gate.rs` all stay — updated the comment above
+them to explain why, so a future reader doesn't mistake this for an
+oversight. No test behavior change; re-verified the gate still passes
+with no drift in either direction.
+
 ## [Unreleased] — remove the 3 fixed checkbox-indeterminate allowlist entries (#13006)
 
 `mosaic-emit-compose`/`-flutter`/`-swiftui` now lower `Checkbox`'s

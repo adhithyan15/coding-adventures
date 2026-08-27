@@ -238,6 +238,7 @@ const ARABIC_LAM_ALIF = DUCTUS[ductusKey("arabic", "لا")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_BEH = DUCTUS[ductusKey("urdu-nastaliq", "ب")];
 const URDU_PEH = DUCTUS[ductusKey("urdu-nastaliq", "پ")];
+const URDU_TE = DUCTUS[ductusKey("urdu-nastaliq", "ت")];
 const URDU_TTE = DUCTUS[ductusKey("urdu-nastaliq", "ٹ")];
 const PERSIAN_CHE = DUCTUS[ductusKey("perso-arabic", "چ")];
 const PERSIAN_SHIN = DUCTUS[ductusKey("perso-arabic", "ش")];
@@ -3822,6 +3823,25 @@ describe("handwriting ductus", () => {
     );
     expect(URDU_PEH.source.citation).toMatch(/Zer o Zabar.*independent پ.*Pe instructions/i);
     expect(DUCTUS["پ"].source.url).not.toBe(URDU_PEH.source.url);
+  });
+
+  it("Urdu independent ت draws its bowl before two upper dots", () => {
+    expect(URDU_TE.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_TE)).toBe(2);
+    expect(URDU_TE.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1]);
+    expect(URDU_TE.strokes.map((stroke) => stroke.segments[0].label)).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, place the left dot above the main line",
+      "after another lift, place the right dot beside it",
+    ]);
+    const left = URDU_TE.strokes[1].segments[0].path;
+    const right = URDU_TE.strokes[2].segments[0].path;
+    expect(left[0].x).toBeLessThan(right[0].x);
+    expect(URDU_TE.source.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/te-mim-jim-che/",
+    );
+    expect(URDU_TE.source.url).not.toBe(ARABIC_TAA.source.url);
+    expect(URDU_TE.source.url).not.toBe(DUCTUS["ت"].source.url);
   });
 
   it("Urdu independent ٹ draws its bowl before the lifted retroflex mark", () => {

@@ -4,6 +4,8 @@ A pure Dart implementation of the historical [CR02 Scytale cipher](../../../spec
 It writes Unicode scalar values across a fixed-width grid and reads the grid by
 columns.
 
+The native test suite includes a generated, dependency-free consumer for all 18 normative Scytale cases in `classical-ciphers-v1`; `generate_scytale_fixture_consumers.py --check` prevents fixture or language-roster drift.
+
 ## Usage
 
 ```dart

@@ -548,7 +548,7 @@ describe("hand-written chapters", () => {
       (entry) => (entry.omittedLessonIds?.length ?? 0) > 0,
     );
     expect(debt.every((entry) => entry.omissionIssue === 13117)).toBe(true);
-    expect(debt.reduce((total, entry) => total + entry.omittedLessonIds!.length, 0)).toBe(13);
+    expect(debt.reduce((total, entry) => total + entry.omittedLessonIds!.length, 0)).toBe(9);
     expect(
       Object.fromEntries(
         [...new Set(debt.map((entry) => entry.language))]
@@ -561,7 +561,6 @@ describe("hand-written chapters", () => {
           ]),
       ),
     ).toEqual({
-      french: 4,
       german: 2,
       italian: 2,
       persian: 3,

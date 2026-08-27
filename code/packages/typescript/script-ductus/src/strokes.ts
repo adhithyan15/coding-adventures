@@ -722,6 +722,37 @@ const independentUrduBehStrokes = (): Stroke[] => {
   ];
 };
 
+const independentUrduTeStrokes = (): Stroke[] => {
+  const [bowl] = independentPehStrokes();
+  return [
+    bowl,
+    {
+      segments: [
+        {
+          label: "after one lift, place the left dot above the main line",
+          path: [
+            { x: 247, y: 374 },
+            { x: 284, y: 412 },
+            { x: 319, y: 379 },
+          ],
+        },
+      ],
+    },
+    {
+      segments: [
+        {
+          label: "after another lift, place the right dot beside it",
+          path: [
+            { x: 395, y: 389 },
+            { x: 434, y: 430 },
+            { x: 470, y: 395 },
+          ],
+        },
+      ],
+    },
+  ];
+};
+
 const independentUrduTteStrokes = (): Stroke[] => {
   const [bowl] = independentPehStrokes();
   return [
@@ -12561,6 +12592,16 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     glyph: "پ",
     strokes: independentPehStrokes(),
     source: urduAlphabetSource("پ"),
+  },
+  // Zer o Zabar demonstrates the independent be-series bowl first, followed
+  // by two separately placed dots side by side above the main line. Share only
+  // the checked Noto fallback geometry; the scoped key keeps Urdu provenance
+  // separate from the independently verified Arabic and Persian ت records.
+  [ductusKey("urdu-nastaliq", "ت")]: {
+    script: "urdu-nastaliq",
+    glyph: "ت",
+    strokes: independentUrduTeStrokes(),
+    source: urduAlphabetSource("ت"),
   },
   // Zer o Zabar demonstrates the independent be-series bowl first, followed
   // after one lift by the small to'e-shaped retroflex mark above it. Share the
