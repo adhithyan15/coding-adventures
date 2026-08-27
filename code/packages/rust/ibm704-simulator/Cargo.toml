@@ -1,0 +1,9 @@
+[package]
+name = "ibm704-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "IBM 704 functional simulator"
+license = "MIT"
+
+[dependencies]
+ibm704-encoder = { path = "../ibm704-encoder" }
