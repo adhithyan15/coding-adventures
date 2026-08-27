@@ -56,6 +56,11 @@ places one eager browser key per glyph in the bundle. Script Ductus and Language
 Ladder install the same plugin, so their tests, development servers, and
 production builds all read the same canonical data.
 
+Release notes follow the same ownership rule. Add one strict
+`CHANGELOG.d/NNNNN-HEADING-SLUG-<digest>.md` fragment with a level-3 heading;
+do not edit or commit `CHANGELOG.md`. Run `npm run unshard:docs` only when a
+local aggregate is useful, and `npm run check:doc-shards` before committing.
+
 ## Stroke order is a citation, not an opinion
 
 A stroke *order* cannot be verified against a font — the font knows the shape and
