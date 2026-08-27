@@ -9,8 +9,14 @@ import { entries as devanagariEntries } from "./strokes/devanagari.ts";
 import { entries as cyrillicEntries } from "./strokes/cyrillic.ts";
 import { entries as gujaratiEntries } from "./strokes/gujarati.ts";
 import { entries as hebrewEntries } from "./strokes/hebrew.ts";
-import { mainEntries as arabicFamilyMainEntries, tailEntries as arabicFamilyTailEntries } from "./strokes/arabic-family.ts";
-import { mainEntries as tamilMainEntries, tailEntries as tamilTailEntries } from "./strokes/tamil.ts";
+import {
+  mainEntries as arabicFamilyMainEntries,
+  tailEntries as arabicFamilyTailEntries,
+} from "./strokes/arabic-family.ts";
+import {
+  mainEntries as tamilMainEntries,
+  tailEntries as tamilTailEntries,
+} from "./strokes/tamil.ts";
 import { entries as kannadaEntries } from "./strokes/kannada.ts";
 import { entries as teluguEntries } from "./strokes/telugu.ts";
 import { entries as malayalamEntries } from "./strokes/malayalam.ts";
@@ -159,11 +165,16 @@ export function penPathD(stroke: Stroke, fraction = 1): string {
   if (pts.length === 0) return "";
   const drawn = truncateToFraction(pts, clamp01(fraction));
   const f = (n: number) => Math.round(n * 10) / 10;
-  return drawn.map((p, i) => `${i === 0 ? "M" : "L"}${f(p.x)} ${f(p.y)}`).join(" ");
+  return drawn
+    .map((p, i) => `${i === 0 ? "M" : "L"}${f(p.x)} ${f(p.y)}`)
+    .join(" ");
 }
 
 /** The pen's position and direction at a given fraction along the stroke. */
-export function penTip(stroke: Stroke, fraction: number): { at: Point; dir: Point } {
+export function penTip(
+  stroke: Stroke,
+  fraction: number,
+): { at: Point; dir: Point } {
   const pts = penPath(stroke);
   const drawn = truncateToFraction(pts, clamp01(fraction));
   const at = drawn[drawn.length - 1] ?? { x: 0, y: 0 };
@@ -178,7 +189,10 @@ function truncateToFraction(pts: Point[], fraction: number): Point[] {
   if (pts.length <= 1 || fraction >= 1) return pts;
   const lengths: number[] = [0];
   for (let i = 1; i < pts.length; i++) {
-    lengths.push(lengths[i - 1] + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y));
+    lengths.push(
+      lengths[i - 1] +
+        Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y),
+    );
   }
   const target = lengths[lengths.length - 1] * fraction;
   const out: Point[] = [pts[0]];
@@ -188,7 +202,10 @@ function truncateToFraction(pts: Point[], fraction: number): Point[] {
     } else {
       const seg = lengths[i] - lengths[i - 1];
       const t = seg === 0 ? 0 : (target - lengths[i - 1]) / seg;
-      out.push({ x: pts[i - 1].x + t * (pts[i].x - pts[i - 1].x), y: pts[i - 1].y + t * (pts[i].y - pts[i - 1].y) });
+      out.push({
+        x: pts[i - 1].x + t * (pts[i].x - pts[i - 1].x),
+        y: pts[i - 1].y + t * (pts[i].y - pts[i - 1].y),
+      });
       break;
     }
   }
@@ -198,7 +215,8 @@ function truncateToFraction(pts: Point[], fraction: number): Point[] {
 const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 
 /** Collision-safe key for a glyph whose Unicode character is shared by scripts. */
-export const ductusKey = (script: string, glyph: string): string => `${script}:${glyph}`;
+export const ductusKey = (script: string, glyph: string): string =>
+  `${script}:${glyph}`;
 
 // Tamil எ and the eight derived Arabic-family identities were historically
 // appended after later owner blocks. The two bounded main/tail splits preserve

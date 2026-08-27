@@ -13,7 +13,12 @@ import { bandChunkNameForModuleId } from "./lesson-bands.mjs";
 // can never drift from the curriculum. They live outside this package's folder,
 // so the dev server must be told the repo root is a legal place to read from.
 const repoRoot = path.resolve(__dirname, "../../../..");
-const curriculumRoot = path.join(repoRoot, "code", "learning", "human-languages");
+const curriculumRoot = path.join(
+  repoRoot,
+  "code",
+  "learning",
+  "human-languages",
+);
 
 export default defineConfig({
   plugins: [
@@ -134,7 +139,10 @@ export default defineConfig({
               // shared half-megabyte blob on every corpus commit.
               name(moduleId) {
                 const normalized = moduleId.replaceAll("\\", "/");
-                const match = /human-language-ledger\/curriculum\/([^/]+)$/.exec(normalized);
+                const match =
+                  /human-language-ledger\/curriculum\/([^/]+)$/.exec(
+                    normalized,
+                  );
                 return match?.[1] ? `curriculum-${match[1]}` : null;
               },
             },
@@ -152,8 +160,7 @@ export default defineConfig({
               // `scriptdata` is NOT in this chunk: the app's shell needs
               // SCRIPTS on first paint, while the pen paths and font parser are
               // only needed once a learner opens a handwriting view.
-              test:
-                /script-ductus[\\/]src[\\/](?:strokes(?:[\\/][^/\\]+)?|ductusview|truetype)\.ts$/,
+              test: /script-ductus[\\/]src[\\/](?:strokes(?:[\\/][^/\\]+)?|ductusview|truetype)\.ts$/,
             },
           ],
         },

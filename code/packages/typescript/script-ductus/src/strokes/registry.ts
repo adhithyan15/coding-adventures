@@ -8,7 +8,9 @@ export interface DuctusOwner {
 }
 
 /** Assemble fixed owner sequences without allowing a later shard to win silently. */
-export function assembleDuctusRegistry(owners: readonly DuctusOwner[]): Record<string, LetterDuctus> {
+export function assembleDuctusRegistry(
+  owners: readonly DuctusOwner[],
+): Record<string, LetterDuctus> {
   const registry: Record<string, LetterDuctus> = {};
   const claimedBy = new Map<string, string>();
 
