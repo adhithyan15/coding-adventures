@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-DRUG, RU-ETYMON-DRUG-ACCOMPANY]
 introduces:
-  knowledge: [RU-LEX-PODRUGA, RU-GRAMMAR-FEMININE-SUFFIX-A]
+ knowledge: [RU-LEX-PODRUGA, RU-GRAMMAR-FEMININE-SUFFIX-A]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-DRUG, RU-ETYMON-DRUG-ACCOMPANY, RU-LEX-PODRUGA, RU-GRAMMAR-FEMININE-SUFFIX-A, RU-GRAMMAR-NOUN-GENDER-ENDING]
 skills: [listening, speaking, reading]

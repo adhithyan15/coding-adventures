@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-LEX-ZNAT]
 introduces:
-  knowledge: [RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-ETYMON-GOVORIT-NOT-GOVERN]
+ knowledge: [RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-ETYMON-GOVORIT-NOT-GOVERN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-LEX-ZNAT, RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-ETYMON-GOVORIT-NOT-GOVERN]
 skills: [listening, speaking, reading]

@@ -1,6 +1,6 @@
 ### Changed — sharded Script Ductus source and evidence ownership
 
-- Split the 329-entry stroke registry across eleven script-owner modules while
+- Split the 330-entry stroke registry across eleven script-owner modules while
   preserving its exact key order, serialized data, counts, public API, and
   Arabic-family shared geometry identities.
 - Give every source owner matching stroke and ductus-view evidence suites, keep

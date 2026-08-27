@@ -11,10 +11,13 @@ use layout_text_measure_native::NativeMeasurer;
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
     BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
-    BrowserFetchResponse, BrowserHostController, BrowserLoadError, BrowserNavigation,
-    BrowserPagePipeline, BrowserResourceFetcher, BrowserScrollCommand, BrowserScrollMetrics,
-    BrowserSession, HttpBrowserFetcher, MemoryBookmarkRepository,
+    BrowserFetchResponse, BrowserHostController, BrowserHostEventOutcome, BrowserLoadError,
+    BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher, BrowserScrollCommand,
+    BrowserScrollMetrics, BrowserSession, HttpBrowserFetcher, MemoryBookmarkRepository,
 };
+
+#[cfg(any(target_os = "windows", test))]
+use venture_browser_core::BrowserHostEffect;
 
 pub const VERSION: &str = "0.1.0";
 pub const DEFAULT_START_URL: &str = "http://info.cern.ch/";
@@ -132,13 +135,21 @@ impl WindowsBrowserHost {
     }
 
     pub fn handle_event(&mut self, event: BrowserChromeEvent) -> Result<bool, BrowserCommandError> {
+        Ok(self.handle_event_with_effect(event)?.changed)
+    }
+
+    pub fn handle_event_with_effect(
+        &mut self,
+        event: BrowserChromeEvent,
+    ) -> Result<BrowserHostEventOutcome, BrowserCommandError> {
         let width = self.width;
         let height = self.height;
         let fetcher = &self.fetcher;
-        self.controller
-            .handle_event(event, self.bookmarks.as_mut(), |session, navigation| {
-                execute_navigation(session, navigation, width, height, fetcher)
-            })
+        self.controller.handle_event_with_effect(
+            event,
+            self.bookmarks.as_mut(),
+            |session, navigation| execute_navigation(session, navigation, width, height, fetcher),
+        )
     }
 
     pub fn scroll_by(&mut self, delta_y: f64) -> bool {
@@ -250,13 +261,32 @@ mod ffi {
         out
     }
 
-    fn response(host: &WindowsBrowserHost, error: Option<&str>) -> *mut c_char {
+    fn effect_json(effect: &BrowserHostEffect) -> String {
+        match effect {
+            BrowserHostEffect::OpenAuxiliaryDocument(document) => format!(
+                "{{\"type\":\"open-auxiliary-document\",\"document\":{{\"kind\":{},\"address\":{},\"title\":{},\"html\":{}}}}}",
+                json_string(document.kind.name()),
+                json_string(&document.address),
+                json_string(&document.title),
+                json_string(&document.html),
+            ),
+        }
+    }
+
+    fn response(
+        host: &WindowsBrowserHost,
+        effect: Option<&BrowserHostEffect>,
+        error: Option<&str>,
+    ) -> *mut c_char {
         let props = host.props();
+        let effect = effect
+            .map(|effect| format!(",\"effect\":{}", effect_json(effect)))
+            .unwrap_or_default();
         let error = error
             .map(|message| format!(",\"error\":{}", json_string(message)))
             .unwrap_or_default();
         let value = format!(
-            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"navigation-disabled\":false}}{error}}}",
+            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"view-source-disabled\":{},\"navigation-disabled\":false}}{effect}{error}}}",
             json_string(&props.address),
             json_string(&props.page_title),
             json_string(&props.status_text),
@@ -264,6 +294,7 @@ mod ffi {
             props.forward_disabled,
             json_string(&props.bookmark_label),
             props.bookmark_disabled,
+            props.view_source_disabled,
         );
         CString::new(value)
             .expect("JSON response contains no NUL")
@@ -299,7 +330,7 @@ mod ffi {
         host: *mut WindowsBrowserHost,
     ) -> *mut c_char {
         host.as_ref()
-            .map(|host| response(host, None))
+            .map(|host| response(host, None, None))
             .unwrap_or(std::ptr::null_mut())
     }
 
@@ -313,7 +344,7 @@ mod ffi {
             return std::ptr::null_mut();
         };
         let Some(name) = string_arg(name) else {
-            return response(host, Some("missing Mosaic event name"));
+            return response(host, None, Some("missing Mosaic event name"));
         };
         let event = match name.as_str() {
             "onBack" => Some(BrowserChromeEvent::Back),
@@ -321,17 +352,18 @@ mod ffi {
             "onHome" => Some(BrowserChromeEvent::Home),
             "onReload" => Some(BrowserChromeEvent::Reload),
             "onToggleBookmark" => Some(BrowserChromeEvent::ToggleBookmark),
+            "onViewSource" => Some(BrowserChromeEvent::ViewSource),
             "onNavigate" => Some(BrowserChromeEvent::Navigate),
             "onAddressChange" => string_arg(value).map(BrowserChromeEvent::AddressChange),
             _ => None,
         };
         let Some(event) = event else {
-            return response(host, Some("unknown or malformed Mosaic event"));
+            return response(host, None, Some("unknown or malformed Mosaic event"));
         };
-        match catch_unwind(AssertUnwindSafe(|| host.handle_event(event))) {
-            Ok(Ok(_)) => response(host, None),
-            Ok(Err(error)) => response(host, Some(&error.to_string())),
-            Err(_) => response(host, Some("Venture event handler panicked")),
+        match catch_unwind(AssertUnwindSafe(|| host.handle_event_with_effect(event))) {
+            Ok(Ok(outcome)) => response(host, outcome.effect.as_ref(), None),
+            Ok(Err(error)) => response(host, None, Some(&error.to_string())),
+            Err(_) => response(host, None, Some("Venture event handler panicked")),
         }
     }
 
@@ -528,6 +560,13 @@ mod tests {
         .expect("initial page loads");
 
         assert_eq!(host.props().page_title, "Home");
+        let source = host
+            .handle_event_with_effect(BrowserChromeEvent::ViewSource)
+            .expect("view source succeeds");
+        let Some(BrowserHostEffect::OpenAuxiliaryDocument(document)) = source.effect else {
+            panic!("view source must request an auxiliary document");
+        };
+        assert!(document.html.contains("&lt;title&gt;Home&lt;/title&gt;"));
         let link = host
             .controller
             .session()

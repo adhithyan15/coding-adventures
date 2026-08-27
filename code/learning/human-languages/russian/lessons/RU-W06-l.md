@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-SCRIPT-U-01, RU-SCRIPT-Z-01, RU-SCRIPT-K-01]
 introduces:
-  knowledge: [RU-SCRIPT-L-01]
+ knowledge: [RU-SCRIPT-L-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-SCRIPT-U-01, RU-SCRIPT-Z-01, RU-SCRIPT-K-01, RU-SCRIPT-L-01]
 skills: [reading, writing]

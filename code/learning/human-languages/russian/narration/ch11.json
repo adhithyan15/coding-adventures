@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Parting Words",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f16abf772894f126",
+  "sourceHash": "fnv1a64:8b8703fb2674f7b1",
   "lessons": [
     {
       "id": "RU-C11-do-svidaniya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a4951296fa7da8c6",
+      "sourceHash": "fnv1a64:a481c2ed2b749dd9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e33307ee77dbe9b",
+      "sourceHash": "fnv1a64:36bba21239f2a53e",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa5ad4db0e65f619",
+      "sourceHash": "fnv1a64:d41a7578001fb07c",
       "notice": null,
       "blocks": [
         {
@@ -434,7 +434,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59ee75d12179ddd3",
+      "sourceHash": "fnv1a64:fcfc9d7ce83574ae",
       "notice": null,
       "blocks": [
         {
@@ -565,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:857b585e6522c6b9",
+      "sourceHash": "fnv1a64:b2fb4669ac08560e",
       "notice": null,
       "blocks": [
         {
@@ -696,7 +696,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff8ce5920969e14c",
+      "sourceHash": "fnv1a64:a85d235bbf3e814d",
       "notice": null,
       "blocks": [
         {

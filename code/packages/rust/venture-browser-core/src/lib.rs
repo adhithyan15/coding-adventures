@@ -26,7 +26,7 @@ use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 pub const VERSION: &str = "0.8.0";
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 8] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 9] = [
     "address",
     "page-title",
     "status-text",
@@ -34,6 +34,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 8] = [
     "forward-disabled",
     "bookmark-label",
     "bookmark-disabled",
+    "view-source-disabled",
     "navigation-disabled",
 ];
 
@@ -41,12 +42,13 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 8] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 7] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 8] = [
     "onBack",
     "onForward",
     "onHome",
     "onReload",
     "onToggleBookmark",
+    "onViewSource",
     "onAddressChange",
     "onNavigate",
 ];
@@ -287,6 +289,83 @@ pub struct BrowserPage {
     pub image_failures: Vec<HtmlImageResourceError>,
 }
 
+/// A synthetic browser document that a host presents outside the primary
+/// navigation session.
+///
+/// The core owns the document bytes and escaping policy. Platform shells only
+/// decide how to present the requested auxiliary window, so no toolkit needs
+/// to parse or reconstruct source text independently.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserAuxiliaryDocument {
+    pub kind: BrowserAuxiliaryDocumentKind,
+    pub address: String,
+    pub title: String,
+    pub html: String,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum BrowserAuxiliaryDocumentKind {
+    ViewSource,
+}
+
+impl BrowserAuxiliaryDocumentKind {
+    pub const fn name(self) -> &'static str {
+        match self {
+            Self::ViewSource => "view-source",
+        }
+    }
+}
+
+impl BrowserAuxiliaryDocument {
+    /// Build a preformatted source document from an already-loaded page.
+    ///
+    /// This is deliberately pure: it never invokes the resource fetcher and
+    /// therefore reflects the exact response text used by the current page.
+    pub fn view_source(page: &BrowserPage) -> Self {
+        let title = format!("Source: {}", page.final_url);
+        let html = format!(
+            "<!doctype html><html><head><title>{}</title></head><body><pre>{}</pre></body></html>",
+            escape_html_text(&title),
+            escape_html_text(&page.source),
+        );
+        Self {
+            kind: BrowserAuxiliaryDocumentKind::ViewSource,
+            address: format!("view-source:{}", page.final_url),
+            title,
+            html,
+        }
+    }
+}
+
+/// An operation the platform shell owns after shared browser state reduction.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum BrowserHostEffect {
+    OpenAuxiliaryDocument(BrowserAuxiliaryDocument),
+}
+
+/// Complete result of dispatching one shared chrome event.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct BrowserHostEventOutcome {
+    pub changed: bool,
+    pub effect: Option<BrowserHostEffect>,
+}
+
+impl BrowserHostEventOutcome {
+    pub const fn changed(changed: bool) -> Self {
+        Self {
+            changed,
+            effect: None,
+        }
+    }
+
+    pub fn effect(effect: BrowserHostEffect) -> Self {
+        Self {
+            changed: false,
+            effect: Some(effect),
+        }
+    }
+}
+
 /// The current loaded page and its viewport interaction state.
 ///
 /// This is the value a native content-area host keeps between input and paint
@@ -371,6 +450,7 @@ pub enum BrowserNavigation {
 pub enum BrowserChromeAction {
     Navigate(BrowserNavigation),
     ToggleCurrentBookmark,
+    ViewSource,
 }
 
 /// An event emitted by the shared Mosaic `VentureChrome` component.
@@ -381,6 +461,7 @@ pub enum BrowserChromeEvent {
     Home,
     Reload,
     ToggleBookmark,
+    ViewSource,
     AddressChange(String),
     Navigate,
 }
@@ -393,6 +474,7 @@ impl BrowserChromeEvent {
             Self::Home => "onHome",
             Self::Reload => "onReload",
             Self::ToggleBookmark => "onToggleBookmark",
+            Self::ViewSource => "onViewSource",
             Self::AddressChange(_) => "onAddressChange",
             Self::Navigate => "onNavigate",
         }
@@ -409,6 +491,7 @@ pub struct BrowserChromeProps {
     pub forward_disabled: bool,
     pub bookmark_label: String,
     pub bookmark_disabled: bool,
+    pub view_source_disabled: bool,
     pub navigation_disabled: bool,
 }
 
@@ -481,10 +564,13 @@ impl BrowserChromeController {
             BrowserChromeEvent::ToggleBookmark if session.history().current_url().is_some() => {
                 Some(BrowserChromeAction::ToggleCurrentBookmark)
             }
+            BrowserChromeEvent::ViewSource if session.viewport().is_some() => {
+                Some(BrowserChromeAction::ViewSource)
+            }
             BrowserChromeEvent::Back | BrowserChromeEvent::Forward | BrowserChromeEvent::Reload => {
                 None
             }
-            BrowserChromeEvent::ToggleBookmark => None,
+            BrowserChromeEvent::ToggleBookmark | BrowserChromeEvent::ViewSource => None,
         }
     }
 
@@ -516,6 +602,7 @@ impl BrowserChromeController {
             }
             .to_string(),
             bookmark_disabled: navigation_disabled || session.history().current_url().is_none(),
+            view_source_disabled: navigation_disabled || session.viewport().is_none(),
             navigation_disabled,
         }
     }
@@ -577,26 +664,55 @@ impl BrowserHostController {
     where
         F: FnOnce(&mut BrowserSession, BrowserNavigation) -> Result<bool, BrowserLoadError>,
     {
+        Ok(self
+            .handle_event_with_effect(event, bookmarks, execute)?
+            .changed)
+    }
+
+    /// Dispatch an event while preserving any platform-owned presentation
+    /// effect produced by the shared state machine.
+    pub fn handle_event_with_effect<F>(
+        &mut self,
+        event: BrowserChromeEvent,
+        bookmarks: &mut dyn BookmarkRepository,
+        execute: F,
+    ) -> Result<BrowserHostEventOutcome, BrowserCommandError>
+    where
+        F: FnOnce(&mut BrowserSession, BrowserNavigation) -> Result<bool, BrowserLoadError>,
+    {
         self.hovered_link_url = None;
         let Some(action) = self.chrome.handle_event(event, &self.session, false) else {
-            return Ok(false);
+            return Ok(BrowserHostEventOutcome::default());
         };
         match action {
             BrowserChromeAction::Navigate(navigation) => self
                 .execute_navigation(navigation, execute)
+                .map(BrowserHostEventOutcome::changed)
                 .map_err(BrowserCommandError::Load),
             BrowserChromeAction::ToggleCurrentBookmark => {
                 self.status_text = "Saving bookmark".to_string();
                 match self.session.toggle_current_bookmark(bookmarks) {
                     Ok(change) => {
                         self.status_text = "Ready".to_string();
-                        Ok(change.changed())
+                        Ok(BrowserHostEventOutcome::changed(change.changed()))
                     }
                     Err(error) => {
                         self.status_text = format!("Bookmark failed: {error}");
                         Err(BrowserCommandError::Bookmark(error))
                     }
                 }
+            }
+            BrowserChromeAction::ViewSource => {
+                let page = self
+                    .session
+                    .viewport()
+                    .expect("view-source action requires a retained viewport")
+                    .page();
+                Ok(BrowserHostEventOutcome::effect(
+                    BrowserHostEffect::OpenAuxiliaryDocument(
+                        BrowserAuxiliaryDocument::view_source(page),
+                    ),
+                ))
             }
         }
     }
@@ -998,6 +1114,38 @@ where
         self.load_with_visited(requested_url, fetcher, &VisitedLinks::new())
     }
 
+    /// Compose a core-owned synthetic document without network access.
+    pub fn compose_auxiliary_document(
+        &self,
+        auxiliary: &BrowserAuxiliaryDocument,
+    ) -> Result<BrowserPage, BrowserLoadError> {
+        let parsed = parse_html(&auxiliary.html).map_err(|error| BrowserLoadError::Parse {
+            url: auxiliary.address.clone(),
+            message: error.to_string(),
+        })?;
+        let document = BrowserDocument::from_document(&parsed);
+        let render_tree =
+            BrowserRenderTree::from_document_with_document_url(&parsed, &auxiliary.address);
+        let unavailable = |url: &str| -> Result<BrowserFetchResponse, String> {
+            Err(format!(
+                "synthetic auxiliary documents cannot fetch resource {url}"
+            ))
+        };
+        let (paint, image_failures) =
+            self.compose(&render_tree, &unavailable, &VisitedLinks::new());
+
+        Ok(BrowserPage {
+            requested_url: auxiliary.address.clone(),
+            final_url: auxiliary.address.clone(),
+            status: 200,
+            source: auxiliary.html.clone(),
+            document,
+            render_tree,
+            paint,
+            image_failures,
+        })
+    }
+
     /// Fetch and compose one HTML page against existing session link state.
     /// The final response URL is included prospectively for self-links, but
     /// the caller's set is never mutated; `BrowserSession` commits it only
@@ -1125,6 +1273,21 @@ fn finite_non_negative(value: f64) -> f64 {
     }
 }
 
+fn escape_html_text(value: &str) -> String {
+    let mut escaped = String::with_capacity(value.len());
+    for character in value.chars() {
+        match character {
+            '&' => escaped.push_str("&amp;"),
+            '<' => escaped.push_str("&lt;"),
+            '>' => escaped.push_str("&gt;"),
+            '"' => escaped.push_str("&quot;"),
+            '\'' => escaped.push_str("&#39;"),
+            character => escaped.push(character),
+        }
+    }
+    escaped
+}
+
 fn ensure_html_media_type(response: &BrowserFetchResponse) -> Result<(), BrowserLoadError> {
     let Some(media_type) = response.media_type.as_deref() else {
         return Ok(());
@@ -1213,6 +1376,7 @@ mod tests {
                 forward_disabled: true,
                 bookmark_label: "Bookmark".into(),
                 bookmark_disabled: true,
+                view_source_disabled: true,
                 navigation_disabled: false,
             }
         );
@@ -1265,6 +1429,7 @@ mod tests {
                 forward_disabled: true,
                 bookmark_label: "Bookmark".into(),
                 bookmark_disabled: false,
+                view_source_disabled: false,
                 navigation_disabled: false,
             }
         );
@@ -1288,6 +1453,7 @@ mod tests {
         assert!(disabled.back_disabled);
         assert!(disabled.forward_disabled);
         assert!(disabled.bookmark_disabled);
+        assert!(disabled.view_source_disabled);
         assert!(disabled.navigation_disabled);
     }
 
@@ -1299,6 +1465,7 @@ mod tests {
             BrowserChromeEvent::Home,
             BrowserChromeEvent::Reload,
             BrowserChromeEvent::ToggleBookmark,
+            BrowserChromeEvent::ViewSource,
             BrowserChromeEvent::AddressChange(String::new()),
             BrowserChromeEvent::Navigate,
         ];
@@ -1386,6 +1553,68 @@ mod tests {
         assert_eq!(host.session().history().current_url(), Some(next_url));
         assert_eq!(host.props().address, "http://missing.test/");
         assert!(host.props().status_text.starts_with("Load failed:"));
+    }
+
+    #[test]
+    fn view_source_emits_a_network_free_preformatted_auxiliary_document() {
+        let url = "http://example.test/source?mode=raw&lang=html";
+        let raw_source = "<title>Source test</title>\n<pre>&lt;already escaped&gt;</pre>\n<p data-note=\"'quoted'\">Ready & waiting</p>";
+        let fetcher = |requested: &str| {
+            Ok(BrowserFetchResponse::new(
+                requested,
+                200,
+                Some("text/html".into()),
+                raw_source.as_bytes().to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(640.0, 480.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(url, 480.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        let mut host = BrowserHostController::new(session);
+        let mut bookmarks = MemoryBookmarkRepository::default();
+
+        let outcome = host
+            .handle_event_with_effect(BrowserChromeEvent::ViewSource, &mut bookmarks, |_, _| {
+                unreachable!("view source must not navigate or refetch")
+            })
+            .unwrap();
+        assert!(!outcome.changed);
+        let BrowserHostEffect::OpenAuxiliaryDocument(auxiliary) = outcome.effect.unwrap();
+        assert_eq!(auxiliary.kind, BrowserAuxiliaryDocumentKind::ViewSource);
+        assert_eq!(
+            auxiliary.address,
+            "view-source:http://example.test/source?mode=raw&lang=html"
+        );
+        assert_eq!(auxiliary.title, format!("Source: {url}"));
+        assert!(auxiliary.html.contains("<body><pre>"));
+        assert!(auxiliary
+            .html
+            .contains("&lt;title&gt;Source test&lt;/title&gt;"));
+        assert!(auxiliary.html.contains("&amp;lt;already escaped&amp;gt;"));
+
+        let source_page = pipeline.compose_auxiliary_document(&auxiliary).unwrap();
+        assert_eq!(source_page.final_url, auxiliary.address);
+        assert_eq!(
+            source_page.document.title.as_deref(),
+            Some(auxiliary.title.as_str())
+        );
+        assert_eq!(
+            source_page.document.body_text,
+            raw_source.replace('\n', " ")
+        );
+        assert!(source_page.image_failures.is_empty());
+        assert_eq!(host.session().history().current_url(), Some(url));
+        assert_eq!(host.session().viewport().unwrap().page().source, raw_source);
     }
 
     #[test]

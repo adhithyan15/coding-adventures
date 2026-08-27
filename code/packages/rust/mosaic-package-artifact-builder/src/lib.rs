@@ -1221,6 +1221,17 @@ fn collect_native_degradations(
                 "the backend does not yet lower Path to real vector geometry",
             ))
         }
+        // #13176 — a native determinate progress ring for TaskApp's
+        // workspace-progress display (and any future percent-complete
+        // UI). Unconditionally degraded on every native backend at
+        // registration, exactly like HostSwitch above; narrow as each
+        // backend's PR lands (XAML, then Flutter, then Compose, then
+        // Qt last — Qt has no off-the-shelf circular determinate
+        // control and needs its own spike).
+        "HostProgressRing" if backend.is_native() => Some((
+            "primitive.progress-ring-unimplemented",
+            "the backend does not yet lower HostProgressRing to its native determinate progress control",
+        )),
         "HostLink" if backend == Backend::Flutter && flutter_link_requires_url_host(node) => Some((
             "effect.url-host-missing",
             "the Flutter emitter cannot open URLs without an application-supplied effect host",
@@ -4964,6 +4975,59 @@ layout Settings {
             assert_eq!(
                 report.degradations[0].primitive.as_deref(),
                 Some("HostSwitch")
+            );
+        }
+    }
+
+    #[test]
+    fn host_progress_ring_is_explicitly_incomplete_until_native_lowerings_land() {
+        let pkg = make_package("mosaic-pkg-ring", &["Ring"]);
+        fs::write(
+            pkg.path().join("src/Ring.mll"),
+            r#"
+layout Ring {
+  HostProgressRing [ root ] (
+    value: 42
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        for backend in [
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("progress ring capability analysis");
+
+            assert!(!report.native_complete, "{backend:?} must remain honest");
+            assert_eq!(
+                report.degradations.len(),
+                1,
+                "unexpected {backend:?} report"
+            );
+            assert_eq!(
+                report.degradations[0].code,
+                "primitive.progress-ring-unimplemented"
+            );
+            assert_eq!(report.degradations[0].layout_path, "root");
+            assert_eq!(
+                report.degradations[0].primitive.as_deref(),
+                Some("HostProgressRing")
             );
         }
     }

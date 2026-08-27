@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-SYR, RU-ETYMON-SYR-SOUR]
 introduces:
-  knowledge: [RU-LEX-SOK, RU-ETYMON-SOK-NO-COUSIN]
+ knowledge: [RU-LEX-SOK, RU-ETYMON-SOK-NO-COUSIN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-MOLOKO, RU-LEX-SYR, RU-ETYMON-SYR-SOUR, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-LEX-SOK, RU-ETYMON-SOK-NO-COUSIN]
 skills: [listening, speaking, reading]

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Forward core-owned View Source auxiliary documents through the generated
+  SwiftUI host response without refetching the current page.
+
 - Load the shared bookmark catalog from the native Venture profile, persist
   toggle commands atomically, and exercise add/remove through the generated
   SwiftUI toolbar in direct app acceptance.

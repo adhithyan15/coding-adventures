@@ -50,7 +50,11 @@ public:
   bool scrollCommand(const QByteArray &command);
   bool activateLink(double x, double y);
   bool updateHover(double x, double y);
+  bool requestViewSource();
   void publishProps();
+
+signals:
+  void auxiliaryDocumentRequested(const QVariantMap &document);
 
 private:
   using NewFn = void *(*)(const char *, double, double);
@@ -74,6 +78,7 @@ private:
   QVariantMap response(char *json) const;
   QVariantMap withContentSurface(QVariantMap response) const;
   static QVariantMap normalizeProps(const QVariantMap &props);
+  void consumeEffect(const QVariantMap &response);
 
   static MosaicHost *active_;
   QLibrary library_;

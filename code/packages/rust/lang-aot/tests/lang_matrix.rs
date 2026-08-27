@@ -1456,6 +1456,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — equal branches of a runtime conditional may provide a
+    // bounded exponent to metadata while the branch and f64_pow still lower.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer gate, exponent; real saved; exponent := 2; saved := 6.0 ^ (if gate = 0 then exponent else exponent) + 6.0; exponent := 3; output(saved + 0.5) end",
+        expect: Expect::Stdout("42.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a runtime condition may preserve assignment metadata when
     // both independently proven branches have exactly the same value. The
     // condition still lowers and executes; only the path-independent snapshot
@@ -7725,6 +7734,31 @@ fn algol_tracked_function_exponent_metadata_runs_on_every_available_standard_bac
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but tracked function-exponent metadata did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_exponent_metadata_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("if gate = 0 then exponent else exponent")
+        })
+        .expect("the ALGOL conditional-exponent program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional exponent metadata did not run"
             );
             continue;
         };

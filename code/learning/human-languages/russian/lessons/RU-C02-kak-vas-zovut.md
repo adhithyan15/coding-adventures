@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-TY-VY, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-MENYA-OBJECT-CASE]
 introduces:
-  knowledge: [RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-OBJECT-PRONOUNS, RU-GRAMMAR-NAMING-HOW-FRAME]
+ knowledge: [RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-OBJECT-PRONOUNS, RU-GRAMMAR-NAMING-HOW-FRAME]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-TY-VY, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-MENYA-OBJECT-CASE, RU-LEX-KAK-VAS-ZOVUT, RU-GRAMMAR-OBJECT-PRONOUNS, RU-GRAMMAR-NAMING-HOW-FRAME]
 skills: [listening, speaking, reading]

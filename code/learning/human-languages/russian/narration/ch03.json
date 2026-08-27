@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Six Verbs, and the One You Never Say",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:e7a986b496556437",
+  "sourceHash": "fnv1a64:5c87a0cda45a7676",
   "lessons": [
     {
       "id": "RU-C03-byt",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14888e9ea4e76480",
+      "sourceHash": "fnv1a64:b7d28cf963576d95",
       "notice": null,
       "blocks": [
         {
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50c788897a116d01",
+      "sourceHash": "fnv1a64:8ad910e6ea4eb000",
       "notice": null,
       "blocks": [
         {
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:053dfd24401ef0cc",
+      "sourceHash": "fnv1a64:74f1a49b8d755583",
       "notice": null,
       "blocks": [
         {
@@ -509,7 +509,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7529203cca9d93a",
+      "sourceHash": "fnv1a64:d8dc7b5afa8dc1ff",
       "notice": null,
       "blocks": [
         {
@@ -671,7 +671,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b18ddd600f40a6a6",
+      "sourceHash": "fnv1a64:55a0854679689197",
       "notice": null,
       "blocks": [
         {
@@ -853,7 +853,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e19ec69e198f3e9d",
+      "sourceHash": "fnv1a64:54bf99fc84a5982c",
       "notice": null,
       "blocks": [
         {

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add reusable synthetic View Source documents and typed auxiliary-document
+  host effects over retained response text, with no navigation or network
+  access and shared Mosaic event/disabled-state projection.
+
 - Move navigation stacks into reusable `browser-navigation` while preserving
   the existing public re-export.
 - Add canonical, session-scoped visited-link state and project it into page

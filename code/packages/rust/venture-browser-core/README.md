@@ -57,9 +57,12 @@ styling without coupling browser history to HTML layout.
 
 `BrowserChromeController` is the matching host-neutral reducer for the shared
 Mosaic `VentureChrome` package. It preserves address edits as a draft, maps
-navigation and bookmark events to host-neutral commands, synchronizes redirects
+navigation, bookmark, and View Source events to host-neutral commands, synchronizes redirects
 only after a successful load, and projects one coherent `BrowserChromeProps`
-snapshot for the eight MIL slots. Generated Mosaic shells expose the native
+snapshot for the nine MIL slots. `BrowserAuxiliaryDocument::view_source`
+escapes the already-retained response text into synthetic preformatted HTML,
+and `BrowserHostEventOutcome` carries the resulting platform-owned window
+effect without navigation, history mutation, or a network fetch. Generated Mosaic shells expose the native
 node seam on all registered backends. The SwiftUI adapter connects this reducer
 to the live Metal renderer, WinUI mounts Direct2D pixels, and Qt, Flutter, and
 Compose share the Cairo bridge. Platform-native integration gates exercise the

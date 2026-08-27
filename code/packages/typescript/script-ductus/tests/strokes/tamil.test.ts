@@ -96,6 +96,18 @@ describe("handwriting ductus", () => {
     );
   });
 
+  it("ஒ's two-run order traces to Module 14 and Appendix I Frame 14", () => {
+    const source = DUCTUS["ஒ"].source;
+    expect(source.url).toContain("module-14");
+    expect(source.citation).toMatch(
+      /Module 14.*ஒ.*Appendix I.*Frame 14.*p\. 195/i,
+    );
+    expect(source.variation).toMatch(
+      /short o.*three movements.*left loop.*large right loop.*joined.*separate lower bowl.*one lift.*two-run.*Noto Sans Tamil.*varies by school/i,
+    );
+    expect(penLifts(DUCTUS["ஒ"])).toBe(1);
+  });
+
   it("Tamil ங keeps Frame 2's detached upright and joined body separate", () => {
     expect(penLifts(TAMIL_NGA)).toBe(1);
     expect(TAMIL_NGA.strokes).toHaveLength(2);

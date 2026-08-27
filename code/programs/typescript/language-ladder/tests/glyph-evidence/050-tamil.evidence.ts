@@ -47,4 +47,18 @@ export default [
       expect(longU.strokeOrderSource?.url).toContain("frame-17");
     },
   },
+  {
+    suite: "Tamil independent vowels in the starter inventory",
+    suiteOrder: 40,
+    caseOrder: 40,
+    name: "keeps short ஒ sourced as two Frame 14 runs",
+    verify: ({ SCRIPTS }) => {
+      const tamil = SCRIPTS.find((script) => script.script === "tamil")!;
+      const shortO = tamil.letters.find((entry) => entry.glyph === "ஒ")!;
+      expect(shortO.sound).toBe("o");
+      expect(shortO.penLifts).toBe(1);
+      expect(shortO.strokeOrder).toHaveLength(3);
+      expect(shortO.strokeOrderSource?.citation).toMatch(/Module 14.*Frame 14/i);
+    },
+  },
 ] satisfies readonly GlyphEvidence[];

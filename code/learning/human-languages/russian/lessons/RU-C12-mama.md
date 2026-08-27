@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-SPOKOYNOY-NOCHI, RU-ETYMON-NOCH-NIGHT]
 introduces:
-  knowledge: [RU-LEX-MAMA, RU-ETYMON-MAMA-BABBLING]
+ knowledge: [RU-LEX-MAMA, RU-ETYMON-MAMA-BABBLING]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [RU-CULTURE-MAMA-AFFECTIONATE-01]
 practises:
   knowledge: [RU-LEX-SPOKOYNOY-NOCHI, RU-LEX-DO-VSTRECHI, RU-LEX-SEMYA, RU-ETYMON-SEMYA-HOME, RU-LEX-MAMA, RU-ETYMON-MAMA-BABBLING, RU-GRAMMAR-NOUN-GENDER-ENDING]
 skills: [listening, speaking, reading]

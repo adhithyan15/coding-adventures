@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-PRIVET]
 introduces:
-  knowledge: [RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER]
+ knowledge: [RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [RU-CULTURE-ZDRAVSTVUYTE-FORMAL-01]
 practises:
   knowledge: [RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER]
 skills: [listening, speaking, reading]

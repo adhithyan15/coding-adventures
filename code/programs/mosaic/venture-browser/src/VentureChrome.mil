@@ -12,6 +12,7 @@ component VentureChrome {
   slot forward-disabled    : bool ;
   slot bookmark-label      : text ;
   slot bookmark-disabled   : bool ;
+  slot view-source-disabled : bool ;
   slot navigation-disabled : bool ;
   slot content-surface     : node ;
 
@@ -20,6 +21,7 @@ component VentureChrome {
   emit onHome ;
   emit onReload ;
   emit onToggleBookmark ;
+  emit onViewSource ;
   emit onAddressChange ( value : text ) ;
   emit onNavigate ;
 }

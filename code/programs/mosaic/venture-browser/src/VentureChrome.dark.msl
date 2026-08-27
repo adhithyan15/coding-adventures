@@ -26,6 +26,10 @@ style VentureChrome {
     background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
     state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
   }
+  part view-source-button {
+    background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
+    state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
+  }
   part address-input { background : "#171512" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; flex-grow : 1 ; state focused { border-color : "#e1a45d" ; outline-color : "#e1a45d" ; outline-width : 1 ; } }
   part go-button {
     background : "#b36f26" ; color : "#ffffff" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#d18b3d" ;

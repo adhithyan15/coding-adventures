@@ -5,6 +5,11 @@ All notable changes to the ge225-simulator Rust package will be documented in th
 ## [Unreleased]
 
 ### Changed
+- Execute `ADD`, `SUB`, `DAD`, `DSU`, `ADO`, and `SBO` as three-digit BCD
+  arithmetic while decimal mode is selected, including ten's-complement signs,
+  end-of-field overflow, and carried or borrowed lower fields.
+- Use the corrected manual's canonical `MOV` mnemonic for opcode 24 instead of
+  the inherited `MOY` spelling.
 - Decode `SXG` as the corrected `2506YY3` instruction and select its encoded
   five-bit Y group instead of deriving a group from A.
 - Apply core-resident X words to fixed and shift instruction operands, reject
@@ -44,6 +49,12 @@ All notable changes to the ge225-simulator Rust package will be documented in th
   warning-free rustdoc.
 
 ### Added
+- Deterministic 19-bit real-time-clock state and sixth-second host controls,
+  with optional `LAC` and `LCA` instruction support and 24-hour wrapping.
+- Corrected-manual vectors for positive and ten's-complement single/double
+  decimal arithmetic, carry propagation, flagged-field overflow, invalid BCD,
+  and real-time-clock transfer behavior, raising line coverage to 83.44%
+  (902/1,081) after the new instruction families.
 - Corrected-manual vectors for SXG group 27, fixed and shift automatic
   modification, the shift limit, single overflow latching, compare skips, and
   N-register readiness, bringing core line coverage to 82.64% (719/870).
@@ -52,7 +63,7 @@ All notable changes to the ge225-simulator Rust package will be documented in th
   zero-count regressions.
 - Integration regressions for X-word addressing, out-of-range effective
   addresses and branches, atomic loader/card/double-word behavior, `SPB`, and
-  overlapping `MOY` copies.
+  overlapping `MOV` copies.
 
 ## [0.1.0] - 2026-04-15
 

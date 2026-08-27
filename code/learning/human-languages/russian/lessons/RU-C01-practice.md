@@ -16,7 +16,10 @@ duration:
 requires:
   knowledge: [RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA]
 introduces:
-  knowledge: [RU-DIALOGUE-COURTESY-01]
+ knowledge: [RU-DIALOGUE-COURTESY-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-DIALOGUE-COURTESY-01, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA, RU-LEX-PRIVET, RU-LEX-SPASIBO, RU-LEX-ZDRAVSTVUYTE]
 skills: [listening, speaking, reading]

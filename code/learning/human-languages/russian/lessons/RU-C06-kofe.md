@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-VODA, RU-GRAMMAR-NOUN-GENDER-ENDING]
 introduces:
-  knowledge: [RU-LEX-KOFE, RU-SCRIPT-FE, RU-ETYMON-KOFE-ROUTE]
+ knowledge: [RU-LEX-KOFE, RU-SCRIPT-FE, RU-ETYMON-KOFE-ROUTE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [RU-CULTURE-KOFE-GENDER-VARIATION-01]
 practises:
   knowledge: [RU-LEX-VODA, RU-GRAMMAR-NOUN-GENDER-ENDING, RU-LEX-KOFE, RU-SCRIPT-FE, RU-ETYMON-KOFE-ROUTE, RU-LEX-LYUBIT, RU-ETYMON-LYUBIT-LOVE]
 skills: [listening, speaking, reading]

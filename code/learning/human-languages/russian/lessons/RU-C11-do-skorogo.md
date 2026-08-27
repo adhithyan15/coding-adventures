@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-POKA, RU-ETYMON-POKA-KAKOI]
 introduces:
-  knowledge: [RU-LEX-DO-SKOROGO, RU-ETYMON-SKORYI-HURRY]
+ knowledge: [RU-LEX-DO-SKOROGO, RU-ETYMON-SKORYI-HURRY]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-DO-SVIDANIYA, RU-GRAMMAR-DO-GENITIVE, RU-LEX-POKA, RU-ETYMON-POKA-KAKOI, RU-SCRIPT-TSE, RU-LEX-DO-SKOROGO, RU-ETYMON-SKORYI-HURRY]
 skills: [listening, speaking, reading]

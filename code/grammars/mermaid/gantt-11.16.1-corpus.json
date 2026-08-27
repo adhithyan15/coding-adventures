@@ -52,6 +52,7 @@
     { "id": "fixed-dates", "source": "gantt\ndateFormat YYYY-MM-DD\nsection Documentation\nDesign grammar :des1, 2014-01-01, 2014-01-04" },
     { "id": "relative-ranges", "source": "gantt\nA :a, 2024-01-27, 2024-01-28\nB :b, after a, 2024-01-30\nC :c, 2024-01-20, until a\nD :d, after c, until b" },
     { "id": "combined-tags", "source": "gantt\nTask :crit, milestone, done, task, 2014-01-01, 2014-01-04" },
+    { "id": "repeated-vertical-markers", "source": "gantt\ntitle Vertical markers\ndateFormat HH:mm\naxisFormat %H:%M\nInitial vert :vert, v1, 17:30, 2m\nInitial vert :vert, v1, 17:30, 2m\nTask A :3m\nMiddle vert :vert, v2, 17:45, 2m\nMiddle vert :vert, v2, 17:45, 2m\nTask B :8m\nFinal vert :vert, v3, 17:58, 4m\nFinal vert :vert, v3, 17:58, 4m" },
     { "id": "milestone-tag", "source": "gantt\nTask :milestone, 2014-01-01, 2014-01-04" },
     { "id": "done-tag", "source": "gantt\nTask :done, 2014-01-01, 2014-01-04" },
     { "id": "critical-tag", "source": "gantt\nTask :crit, 2014-01-01, 2014-01-04" },

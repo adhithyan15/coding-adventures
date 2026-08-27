@@ -239,7 +239,7 @@ fn card_read_is_atomic_and_keeps_the_record_after_a_range_error() {
 }
 
 #[test]
-fn overlapping_moy_reads_the_complete_source_before_writing() {
+fn overlapping_mov_reads_the_complete_source_before_writing() {
     let mut simulator = Simulator::new(4096).unwrap();
     simulator.write_word(20, 0x11111).unwrap();
     simulator.write_word(21, 0x22222).unwrap();

@@ -18,7 +18,10 @@ duration:
 requires:
   knowledge: [RU-LEX-ZDRAVSTVUYTE]
 introduces:
-  knowledge: [RU-LEX-DA]
+ knowledge: [RU-LEX-DA]
+introduces_idioms: []
+introduces_senses: [RU-SENSE-DA-DISCOURSE-01]
+introduces_culture_claims: []
 practises:
   knowledge: [RU-LEX-DA, RU-LEX-ZDRAVSTVUYTE]
 skills: [listening, speaking, reading]
