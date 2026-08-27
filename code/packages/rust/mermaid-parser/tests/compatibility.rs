@@ -1,3 +1,5 @@
+use std::collections::BTreeSet;
+
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_quadrant_chart, parse_requirement_diagram, parse_sankey, parse_xychart,
@@ -41,6 +43,10 @@ const GANTT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/gantt-11.16.1-corpus.json"
 ));
+const GANTT_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/gantt-11.16.1-visual-corpus.json"
+));
 
 #[test]
 fn pinned_gantt_supported_corpus_matches_upstream_acceptance() {
@@ -57,6 +63,28 @@ fn pinned_gantt_supported_corpus_matches_upstream_acceptance() {
         let source = fixture["source"].as_str().expect("fixture source");
         assert!(parse_gantt(source).is_err(), "invalid upstream fixture {id} unexpectedly parsed");
     }
+}
+
+#[test]
+fn pinned_gantt_visual_corpus_covers_every_valid_fixture() {
+    let syntax: Value = serde_json::from_str(GANTT_CORPUS).expect("Gantt corpus must be JSON");
+    let visual: Value =
+        serde_json::from_str(GANTT_VISUAL_CORPUS).expect("Gantt visual corpus must be JSON");
+    assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+    let valid = syntax["valid"].as_array().expect("valid corpus array");
+    let expected = valid
+        .iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let actual = visual["fixtures"]
+        .as_array()
+        .expect("visual fixture array")
+        .iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(actual, expected);
+    assert_eq!(actual.len(), valid.len(), "visual fixture ids must be unique");
 }
 
 #[test]
