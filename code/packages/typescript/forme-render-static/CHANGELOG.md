@@ -1,5 +1,12 @@
 # Changelog — @coding-adventures/forme-render-static
 
+## Unreleased
+
+### Added
+
+- Resolved image references now render as `forme-asset:` placeholders and
+  populate `RenderedPage.usedAssets` without mutating the authored AST.
+
 ## 0.2.0 — 2026-08-27
 
 ### Changed

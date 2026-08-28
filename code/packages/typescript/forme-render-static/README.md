@@ -59,8 +59,9 @@ to `forme-router`.
   a `StyleDocument` with non-null `theme` is rejected rather than guessed.
 - **Routed input is required.** This keeps one canonical URL decision across
   all product branches.
-- **`usedIslands` / `usedAssets` remain empty.** Interactivity and asset
-  extraction are separate roadmap items.
+- **`usedIslands` remains empty.** Resolved `AssetRef` images render as
+  collision-free `forme-asset:` placeholders and populate `usedAssets`; the
+  asset-aware emitter replaces those placeholders with fingerprinted paths.
 - **OpenGraph / structured metadata still empty.** Description and canonical
   URL are populated when configured; social cards and structured data remain
   later work.

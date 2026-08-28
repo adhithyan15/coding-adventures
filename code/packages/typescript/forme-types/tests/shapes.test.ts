@@ -97,6 +97,8 @@ describe("ContentNode", () => {
       id: "01952c0d-7e63-7000-8000-000000000111" as LogicalId,
       nodePath: [0, 2, 1],
       role: "image",
+      sourcePath: "images/example.png",
+      urlSuffix: "?v=2#preview",
     };
     const node: ContentNode = {
       identity: SAMPLE_ID,
@@ -109,6 +111,8 @@ describe("ContentNode", () => {
     };
     expect(node.assetRefs[0]?.role).toBe("image");
     expect(node.assetRefs[0]?.nodePath).toEqual([0, 2, 1]);
+    expect(node.assetRefs[0]?.sourcePath).toBe("images/example.png");
+    expect(node.assetRefs[0]?.urlSuffix).toBe("?v=2#preview");
   });
 });
 

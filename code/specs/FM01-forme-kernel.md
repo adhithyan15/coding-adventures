@@ -211,6 +211,13 @@ export interface AssetRef {
   readonly nodePath: readonly number[];
   /** The intended role (image, embed, font, …). */
   readonly role: AssetRole;
+  /**
+   * Normalized, storage-root-relative source path after reference resolution.
+   * Optional during migration; filesystem asset loaders require it.
+   */
+  readonly sourcePath?: string;
+  /** Authored query/fragment suffix, including the leading delimiter. */
+  readonly urlSuffix?: string;
 }
 
 export type AssetRole =
@@ -221,6 +228,19 @@ export type AssetRole =
   | "embed"
   | "binary";
 ```
+
+Asset reference resolution is a distinct transform after parsing. Local
+destinations are normalized beneath the configured storage root, assigned a
+logical identity, and recorded with `sourcePath`; external, data, and
+fragment-only URLs remain authored URLs and do not become `AssetRef` values.
+Renderers may replace a resolved node with the reserved
+`forme-asset:<logical-id><query-or-fragment>` placeholder while recording the id in
+`RenderedPage.usedAssets`. Asset-aware emitters are solely responsible for
+replacing those placeholders with fingerprinted public paths. This keeps
+filesystem policy out of parsers and public-path policy out of renderers.
+Query strings and fragments are preserved in `urlSuffix`, but do not
+participate in filesystem source identity; this retains SVG fragment targets
+and authored cache parameters after the emitter substitutes the public path.
 
 #### 2.3.3 `Collection`
 

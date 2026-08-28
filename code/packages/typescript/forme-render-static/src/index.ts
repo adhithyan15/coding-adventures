@@ -24,8 +24,8 @@
  *     { route, html, usedStyle, usedIslands, usedAssets, meta, provenance }
  *
  * `usedStyle` records rules matched in source order, while `usedIslands: []`
- * (no interactivity) and
- * `usedAssets: []` (no asset-extraction stage yet). `provenance` records the
+ * (no interactivity). Resolved assets become collision-free emitter
+ * placeholders and populate `usedAssets`. `provenance` records the
  * input node's logical and revision IDs; `source` remains as a temporary
  * compatibility hint for consumers of the v1.0 kind.
  *
@@ -37,7 +37,7 @@
  * No deliberate divergences from FM00 / FM01. Current simplifications:
  *
  *   - Themes must be resolved before they reach this stage.
- *   - `usedIslands` / `usedAssets` remain empty.
+ *   - `usedIslands` remains empty.
  *   - OpenGraph and structured data remain empty; canonical URLs,
  *     descriptions, and feed discovery are emitted when `siteUrl`
  *     is configured.
@@ -63,6 +63,7 @@ import {
   type StyleDocument,
 } from "@coding-adventures/forme-style-ir";
 import { slicePerPage } from "@coding-adventures/forme-aot-css-slicer";
+import { rewriteAssetReferences } from "./asset-references.js";
 import { slugify } from "./slug.js";
 import { renderHtmlDocument } from "./theme.js";
 import { deriveTitle } from "./title.js";
@@ -146,7 +147,8 @@ const renderStatic = defineStage({
       // (this is your own blog, you wrote the posts).  Real
       // multi-tenant systems should wire the sanitizer in between
       // parser and renderer; documented in README.
-      const bodyHtml = toHtml(node.document);
+      const renderDocument = rewriteAssetReferences(node.document, node.assetRefs);
+      const bodyHtml = toHtml(renderDocument);
 
       // Title derivation: frontmatter.title → first H1 → slug.
       const title = deriveTitle(node, slug);
@@ -222,7 +224,7 @@ const renderStatic = defineStage({
         html,
         usedStyle,
         usedIslands: [],
-        usedAssets: [],
+        usedAssets: [...new Set(node.assetRefs.filter(ref => ref.role === "image").map(ref => ref.id))],
         meta,
         provenance: createOutputProvenance([node]),
         source: node.identity,

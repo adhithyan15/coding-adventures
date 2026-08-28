@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/forme-resolve-asset-refs-fs",
+  "version": "0.1.0",
+  "description": "Resolve local Document AST image references to source-safe Forme AssetRef values.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast",
+    "@coding-adventures/forme-types": "file:../forme-types",
+    "@coding-adventures/forme-identity": "file:../forme-identity",
+    "@coding-adventures/forme-stage": "file:../forme-stage"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

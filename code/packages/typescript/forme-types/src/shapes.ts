@@ -54,6 +54,16 @@ export interface AssetRef {
   readonly id: LogicalId;
   readonly nodePath: readonly number[];
   readonly role: AssetRole;
+  /**
+   * Normalized, storage-root-relative source path after reference resolution.
+   * Older producers may omit it; filesystem asset loaders require it.
+   */
+  readonly sourcePath?: string;
+  /**
+   * Authored query string and/or fragment, including the leading delimiter.
+   * It does not participate in source identity and is restored after emission.
+   */
+  readonly urlSuffix?: string;
 }
 
 // ─── ContentSource ────────────────────────────────────────────────────────
