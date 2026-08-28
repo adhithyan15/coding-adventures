@@ -13,7 +13,12 @@ import { bandChunkNameForModuleId } from "./lesson-bands.mjs";
 // can never drift from the curriculum. They live outside this package's folder,
 // so the dev server must be told the repo root is a legal place to read from.
 const repoRoot = path.resolve(__dirname, "../../../..");
-const curriculumRoot = path.join(repoRoot, "code", "learning", "human-languages");
+const curriculumRoot = path.join(
+  repoRoot,
+  "code",
+  "learning",
+  "human-languages",
+);
 
 export default defineConfig({
   plugins: [
@@ -134,7 +139,10 @@ export default defineConfig({
               // shared half-megabyte blob on every corpus commit.
               name(moduleId) {
                 const normalized = moduleId.replaceAll("\\", "/");
-                const match = /human-language-ledger\/curriculum\/([^/]+)$/.exec(normalized);
+                const match =
+                  /human-language-ledger\/curriculum\/([^/]+)$/.exec(
+                    normalized,
+                  );
                 return match?.[1] ? `curriculum-${match[1]}` : null;
               },
             },
@@ -147,13 +155,12 @@ export default defineConfig({
               // renderer, and font parser out of the interactive shell so
               // later source-backed letters do not consume shell headroom.
               name: "handwriting-tools",
-              // The three modules moved into @coding-adventures/script-ductus,
-              // so the path they are matched by changed with them. `scriptdata`
-              // is NOT in this chunk: the app's shell needs SCRIPTS on first
-              // paint, while the pen paths and the font parser are only needed
-              // once a learner opens a letter's handwriting view.
-              test:
-                /script-ductus[\\/]src[\\/](?:strokes|ductusview|truetype)\.ts$/,
+              // The modules moved into @coding-adventures/script-ductus, and
+              // authored paths are now split below `strokes/` by owner.
+              // `scriptdata` is NOT in this chunk: the app's shell needs
+              // SCRIPTS on first paint, while the pen paths and font parser are
+              // only needed once a learner opens a handwriting view.
+              test: /script-ductus[\\/]src[\\/](?:strokes(?:[\\/][^/\\]+)?|ductusview|truetype)\.ts$/,
             },
           ],
         },
