@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6fc771adb72bf7be",
+  "sourceHash": "fnv1a64:7522bedf77975d54",
   "lessons": [
     {
       "id": "LA-C29-nox",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:898bf6278c0472bf",
+      "sourceHash": "fnv1a64:ab310c2db3d60270",
       "notice": null,
       "blocks": [
         {

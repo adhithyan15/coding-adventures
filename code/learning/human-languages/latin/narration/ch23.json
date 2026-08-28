@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "You're Welcome",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5a51c5425280c9de",
+  "sourceHash": "fnv1a64:f4ea2a1f68282166",
   "lessons": [
     {
       "id": "LA-C23-nihil-est",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0c78397121bbbbb",
+      "sourceHash": "fnv1a64:1dbbf1f5b3ea3d04",
       "notice": null,
       "blocks": [
         {

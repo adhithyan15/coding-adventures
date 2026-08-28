@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 36,
-  "sourceHash": "fnv1a64:467e8562c765f453",
+  "sourceHash": "fnv1a64:8990a52eb4eb0186",
   "lessonIds": [
     "LA-C36-salve-post-meridiem",
     "LA-C36-timeless-salve",
@@ -12,6 +12,6 @@
   "text": "latin/narration/ch36.txt",
   "json": "latin/narration/ch36.json",
   "textHash": "fnv1a64:9ed12563ee1ef64f",
-  "jsonHash": "fnv1a64:42ffdf2a61c18a39",
+  "jsonHash": "fnv1a64:782a470c065883db",
   "findings": []
 }

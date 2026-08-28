@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01]
 introduces:
   knowledge: [LA-PRAGMATICS-MEETING-PHRASE-CONTEXT-01, LA-PRAGMATICS-MEETING-PHRASE-CONTEXT-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [LA-CULTURE-CONVENISSE-ENCOUNTER-CONTEXT-01]
 practises:
   knowledge: [LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01, LA-PRAGMATICS-MEETING-PHRASE-CONTEXT-01, LA-PRAGMATICS-MEETING-PHRASE-CONTEXT-02]
 skills: [listening, speaking, reading]

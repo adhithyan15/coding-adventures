@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-C46-NIGHT-01]
 introduces:
   knowledge: [LA-LEX-C46-NIGHT-02]
+introduces_idioms: []
+introduces_senses: [LA-SENSE-UMBRA-SHADOW-01]
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-C46-NIGHT-01, LA-LEX-C46-NIGHT-02]
 skills: [listening, speaking, reading]

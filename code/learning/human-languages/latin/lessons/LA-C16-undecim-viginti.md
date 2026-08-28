@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02]
 introduces:
   knowledge: [LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04]
 skills: [listening, speaking, reading]

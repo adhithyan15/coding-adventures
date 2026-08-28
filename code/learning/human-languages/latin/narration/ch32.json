@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Good Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:34fa2e1f92230d90",
+  "sourceHash": "fnv1a64:74a6328d47e43358",
   "lessons": [
     {
       "id": "LA-C32-bonum-mane",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8b15665b17ab142",
+      "sourceHash": "fnv1a64:6dafdd74091a9bde",
       "notice": null,
       "blocks": [
         {

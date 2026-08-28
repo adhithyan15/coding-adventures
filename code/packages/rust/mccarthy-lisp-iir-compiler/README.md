@@ -1,12 +1,14 @@
 # mccarthy-lisp-iir-compiler
 
 Lowers a **McCarthy 1960 Lisp** (Lisp 1.0) AST into an **IIRModule** —
-the architecture-independent IR that every backend in the chain
-consumes (the McCarthy VM, the JIT, wasm/jvm/clr/beam, the
-historical-arch encoders).
+the architecture-independent IR consumed by every applicable LANG backend:
+the dedicated McCarthy VM, native AOT, JIT, WASM, JVM, CLR, BEAM, and LLVM.
 
-This is **L2a** of the McCarthy Lisp implementation — see
-[`MCCARTHY-LISP-PLAN.md`](../../../specs/MCCARTHY-LISP-PLAN.md).
+Frontend lowering is complete through **L2c-3c**, and the L3 backend campaign
+is complete through **W16**. See the implementation history in
+[`MCCARTHY-LISP-PLAN.md`](../../../specs/MCCARTHY-LISP-PLAN.md) and the
+authoritative completed backend matrix in
+[`MCCARTHY-LISP-PLATFORM-MATRIX.md`](../../../specs/MCCARTHY-LISP-PLATFORM-MATRIX.md).
 
 ## What it does
 
@@ -113,9 +115,15 @@ closure. A bare (unquoted) symbol in value position is an *unbound variable*
 unless it is a parameter of the enclosing function **or captured from an
 enclosing scope** — a clean `CompileError`, never a silent mis-lowering.
 
-The next phase (**L3**, tracked in the plan) wires `mccarthy-lisp` into
-`lang-aot` so the same IIR lights up all 10 backends (AOT / VM / JIT /
-WASM / JVM / CLR / BEAM / LLVM / historical archs).
+## Backend campaign complete (L3 / W16)
+
+`lang-aot` now runs the same McCarthy IIR across all eight applicable
+backends: the dedicated VM, native AOT, JIT, WASM, JVM, CLR, BEAM, and LLVM.
+The W16 conformance suite executes the same 19 programs on every backend and
+checks one uniform result, covering scalars, cons/car/cdr, `ATOM`, `EQ`,
+`COND`, symbols, `LAMBDA`/`LABEL`, capture, and recursion. There is no open
+McCarthy core/backend item; the completed worklist and proof live in
+[`MCCARTHY-LISP-PLATFORM-MATRIX.md`](../../../specs/MCCARTHY-LISP-PLATFORM-MATRIX.md).
 
 ## API
 

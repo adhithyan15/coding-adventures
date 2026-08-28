@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-VALEO-FAMILY-01]
 introduces:
   knowledge: [LA-LEX-SUM-01, LA-ETYMON-SUM-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-VALEO-FAMILY-01, LA-LEX-SUM-01, LA-ETYMON-SUM-02]
 skills: [listening, speaking, reading]

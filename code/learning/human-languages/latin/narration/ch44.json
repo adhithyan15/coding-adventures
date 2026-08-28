@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "The House, and Who Is Inside It",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9c7be8656e2aff79",
+  "sourceHash": "fnv1a64:05c646f6bc9674d8",
   "lessons": [
     {
       "id": "LA-C44-domus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a1d394dea1da0f6",
+      "sourceHash": "fnv1a64:1399cfeb6bd8169b",
       "notice": null,
       "blocks": [
         {
@@ -129,7 +129,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f48291c37c30469b",
+      "sourceHash": "fnv1a64:3b64bb442b164357",
       "notice": null,
       "blocks": [
         {
@@ -239,7 +239,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f293198eda513fc",
+      "sourceHash": "fnv1a64:ce13638e51457519",
       "notice": null,
       "blocks": [
         {
@@ -345,7 +345,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8667945c171bcfb",
+      "sourceHash": "fnv1a64:15cead6b4e57ffac",
       "notice": null,
       "blocks": [
         {
@@ -455,7 +455,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c22cdc72cbf5528",
+      "sourceHash": "fnv1a64:5e376be1aec15bdd",
       "notice": null,
       "blocks": [
         {

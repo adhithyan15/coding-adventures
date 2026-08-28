@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Answering, Meeting, Buying",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:71453eda34ec1745",
+  "sourceHash": "fnv1a64:dae23f946e30a652",
   "lessons": [
     {
       "id": "LA-C43-respondeo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a793ac86a308a8fc",
+      "sourceHash": "fnv1a64:7cb2d397789cb7c3",
       "notice": null,
       "blocks": [
         {
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47b717c63651b2dd",
+      "sourceHash": "fnv1a64:0a9424c56ea02218",
       "notice": null,
       "blocks": [
         {
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:567a2a36c09be502",
+      "sourceHash": "fnv1a64:c34c605aaf1896c1",
       "notice": null,
       "blocks": [
         {

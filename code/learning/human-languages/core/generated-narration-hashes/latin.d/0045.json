@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 45,
-  "sourceHash": "fnv1a64:c85cdf80ed10d7e1",
+  "sourceHash": "fnv1a64:ea23c8266cbb6626",
   "lessonIds": [
     "LA-C45-terra",
     "LA-C45-ignis",
@@ -14,6 +14,6 @@
   "text": "latin/narration/ch45.txt",
   "json": "latin/narration/ch45.json",
   "textHash": "fnv1a64:5fbee0118f05ea7c",
-  "jsonHash": "fnv1a64:5c9bb42c9a368000",
+  "jsonHash": "fnv1a64:818546538406d17a",
   "findings": []
 }

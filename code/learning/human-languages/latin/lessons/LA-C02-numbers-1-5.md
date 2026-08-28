@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03]
 introduces:
   knowledge: [LA-LEX-NUMBERS-1-5-01, LA-ETYMON-NUMBERS-1-5-02, LA-GRAMMAR-NUMBERS-1-5-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-LEX-NUMBERS-1-5-01, LA-ETYMON-NUMBERS-1-5-02, LA-GRAMMAR-NUMBERS-1-5-03]
 skills: [listening, speaking, reading]

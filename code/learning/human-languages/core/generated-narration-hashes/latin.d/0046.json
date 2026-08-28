@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 46,
-  "sourceHash": "fnv1a64:a3b9c2e3a75c56aa",
+  "sourceHash": "fnv1a64:4edabf19a98b9c4f",
   "lessonIds": [
     "LA-C46-lux",
     "LA-C46-umbra",
@@ -14,6 +14,6 @@
   "text": "latin/narration/ch46.txt",
   "json": "latin/narration/ch46.json",
   "textHash": "fnv1a64:bd62670f677bda9a",
-  "jsonHash": "fnv1a64:8c1a7306d58b6eb1",
+  "jsonHash": "fnv1a64:b5415d4740a78801",
   "findings": []
 }

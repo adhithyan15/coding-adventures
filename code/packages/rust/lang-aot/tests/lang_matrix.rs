@@ -1456,6 +1456,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — checked integer arithmetic over exact tracked snapshots is
+    // side-effect-free and retains bounded real multiplication lowering.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer exponent; real saved; exponent := -2; saved := 6.0 ^ (0 - exponent) + 6.0; exponent := 3; output(saved + 0.5) end",
+        expect: Expect::Stdout("42.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an implemented standard function may consume a tracked
     // integer and provide a bounded exponent to exact real snapshot metadata.
     Prog {
@@ -7791,6 +7800,33 @@ fn algol_signed_tracked_real_power_exponents_run_on_every_available_standard_bac
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the signed tracked real-power exponent did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_tracked_arithmetic_real_power_exponents_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("saved := 6.0 ^ (0 - exponent) + 6.0; exponent := 3")
+        })
+        .expect(
+            "the ALGOL tracked-arithmetic real-power exponent program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but tracked-arithmetic real-power exponent did not run"
             );
             continue;
         };

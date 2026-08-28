@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c3e1e79882a479ae",
+  "sourceHash": "fnv1a64:c9f482ca4f02dbe6",
   "lessons": [
     {
       "id": "LA-C15-tempestas-pluit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ca5b037de5908b4",
+      "sourceHash": "fnv1a64:b2f719ae296e0d24",
       "notice": null,
       "blocks": [
         {
@@ -117,7 +117,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:752b86d076a6bedf",
+      "sourceHash": "fnv1a64:a0d1cb342d4ae890",
       "notice": null,
       "blocks": [
         {

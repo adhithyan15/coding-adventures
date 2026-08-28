@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-CRAS-TE-VIDEBO-01, LA-ETYMON-CRAS-TE-VIDEBO-02, LA-PRAGMATICS-CRAS-TE-VIDEBO-03]
 introduces:
   knowledge: [LA-GRAMMAR-MANE-01, LA-ETYMON-MANE-02]
+introduces_idioms: []
+introduces_senses: [LA-SENSE-MANE-EARLY-01]
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-CRAS-TE-VIDEBO-01, LA-ETYMON-CRAS-TE-VIDEBO-02, LA-PRAGMATICS-CRAS-TE-VIDEBO-03, LA-GRAMMAR-MANE-01, LA-ETYMON-MANE-02]
 skills: [listening, speaking, reading]

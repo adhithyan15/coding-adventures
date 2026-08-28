@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Water, Wine, and Bread",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c5cf4ddfd577bd3b",
+  "sourceHash": "fnv1a64:3d7d0a5a4374dd30",
   "lessons": [
     {
       "id": "LA-C10-aqua-vinum",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1418f185aaaaac2",
+      "sourceHash": "fnv1a64:368dc0bf5388d81f",
       "notice": null,
       "blocks": [
         {
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:462d31404139af7b",
+      "sourceHash": "fnv1a64:8668663644ecd8ca",
       "notice": null,
       "blocks": [
         {

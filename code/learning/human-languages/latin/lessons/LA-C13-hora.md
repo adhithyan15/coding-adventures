@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02]
 introduces:
   knowledge: [LA-LEX-HORA-01, LA-PRAGMATICS-HORA-02, LA-ETYMON-HORA-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [LA-CULTURE-ROMAN-SEASONAL-HOURS-01]
 practises:
   knowledge: [LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02, LA-LEX-HORA-01, LA-PRAGMATICS-HORA-02, LA-ETYMON-HORA-03]
 skills: [listening, speaking, reading]

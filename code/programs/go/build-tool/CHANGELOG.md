@@ -6,6 +6,15 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- **OCaml now has a process-free build substrate.** Discovery retains package
+  and program identities, field-aware opam and Dune parsing resolves local
+  dependency edges without execution, source hashing excludes generated
+  `_build` trees, shards account for the pinned toolchain, standalone BUILD
+  validation requires explicit prerequisites, and CI emits `needs_ocaml`.
+  Discovery also rejects Dune `_build` package decoys. A language-neutral
+  fixture pins the resolver boundary. This does not execute builds or claim a
+  native OCaml build-tool implementation.
+
 - **Platform exceptions now produce machine-readable `UNSUPPORTED` results
   instead of false `BUILT` successes.** A selected BUILD front may consist of
   exactly `echo BUILD_TOOL_UNSUPPORTED:CODE -- skipped`, where `CODE` is a

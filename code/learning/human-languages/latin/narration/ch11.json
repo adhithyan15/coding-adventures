@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ed09806a42bd4829",
+  "sourceHash": "fnv1a64:b82b119102d6b430",
   "lessons": [
     {
       "id": "LA-C11-menses",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:767b2688a9fef140",
+      "sourceHash": "fnv1a64:314bab5d80af52a8",
       "notice": null,
       "blocks": [
         {

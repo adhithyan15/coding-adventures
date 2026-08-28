@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 16,
-  "sourceHash": "fnv1a64:b99e5996a77b8d8d",
+  "sourceHash": "fnv1a64:46456eeadc6c835a",
   "lessonIds": [
     "LA-C16-undecim-viginti"
   ],
@@ -10,6 +10,6 @@
   "text": "latin/narration/ch16.txt",
   "json": "latin/narration/ch16.json",
   "textHash": "fnv1a64:b4797c23d5486031",
-  "jsonHash": "fnv1a64:31991976e8d7570e",
+  "jsonHash": "fnv1a64:79bb2bd9ddd2473f",
   "findings": []
 }

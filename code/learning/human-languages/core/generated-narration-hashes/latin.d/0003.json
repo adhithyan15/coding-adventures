@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 3,
-  "sourceHash": "fnv1a64:3662fdf3d0d3281d",
+  "sourceHash": "fnv1a64:d65f76b1c950745c",
   "lessonIds": [
     "LA-C03-quaeso"
   ],
@@ -10,6 +10,6 @@
   "text": "latin/narration/ch03.txt",
   "json": "latin/narration/ch03.json",
   "textHash": "fnv1a64:3da1a781e9bad36b",
-  "jsonHash": "fnv1a64:c1a1f02b86579ac7",
+  "jsonHash": "fnv1a64:d4e8dedba225ee0f",
   "findings": []
 }

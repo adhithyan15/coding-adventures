@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Salt, Honey, Milk, Egg, Fish",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:db74b8bc2bef4201",
+  "sourceHash": "fnv1a64:d676959c2c77b678",
   "lessons": [
     {
       "id": "LA-C47-sal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7be2e789b89a63a4",
+      "sourceHash": "fnv1a64:cd57ac68fdb0ccdd",
       "notice": null,
       "blocks": [
         {
@@ -125,7 +125,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:241ac997ca81a5cc",
+      "sourceHash": "fnv1a64:4f704c50010021cb",
       "notice": null,
       "blocks": [
         {
@@ -235,7 +235,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b9215d07f877ceb",
+      "sourceHash": "fnv1a64:4f41b6a86a8d26be",
       "notice": null,
       "blocks": [
         {
@@ -345,7 +345,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75abfbfa387832b5",
+      "sourceHash": "fnv1a64:57f87d84020fac4a",
       "notice": null,
       "blocks": [
         {
@@ -455,7 +455,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7582cd633bb90d22",
+      "sourceHash": "fnv1a64:8184ab94cfe23de1",
       "notice": null,
       "blocks": [
         {

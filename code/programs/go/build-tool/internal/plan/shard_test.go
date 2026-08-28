@@ -55,3 +55,30 @@ func TestComputePlatformShardsFallsBackForOldPlan(t *testing.T) {
 		t.Fatalf("old-plan fallback differs: got=%#v want=%#v", got, want)
 	}
 }
+
+func TestComputeShardsUsesOCamlToolchainCostAndPrerequisiteClosure(t *testing.T) {
+	bp := &BuildPlan{
+		Packages: []PackageEntry{
+			{Name: "ocaml/graph", Language: "ocaml", BuildCommands: []string{"dune build", "dune runtest"}},
+			{Name: "ocaml/app", Language: "ocaml", BuildCommands: []string{"dune build"}},
+		},
+		DependencyEdges:  [][2]string{{"ocaml/graph", "ocaml/app"}},
+		AffectedPackages: []string{"ocaml/app"},
+	}
+
+	shards := ComputeShards(bp, 1)
+	if len(shards) != 1 {
+		t.Fatalf("expected one shard, got %#v", shards)
+	}
+	shard := shards[0]
+	if !shard.LanguagesNeeded["ocaml"] {
+		t.Fatalf("expected OCaml toolchain in shard: %#v", shard.LanguagesNeeded)
+	}
+	if len(shard.PackageNames) != 2 || shard.PackageNames[0] != "ocaml/app" || shard.PackageNames[1] != "ocaml/graph" {
+		t.Fatalf("expected dependent and prerequisite closure, got %#v", shard.PackageNames)
+	}
+	// OCaml uses compiler/package-manager weight 4: graph 1+2+4, app 1+1+4.
+	if shard.EstimatedCost != 13 {
+		t.Fatalf("unexpected OCaml shard cost: got %d want 13", shard.EstimatedCost)
+	}
+}

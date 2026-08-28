@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-PRAGMATICS-SALVE-POST-MERIDIEM-01]
 introduces:
   knowledge: [LA-PRAGMATICS-TIMELESS-SALVE-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [LA-CULTURE-SALVE-TIMELESS-GREETING-01]
 practises:
   knowledge: [LA-PRAGMATICS-SALVE-POST-MERIDIEM-01, LA-PRAGMATICS-TIMELESS-SALVE-01]
 skills: [listening, speaking, reading]

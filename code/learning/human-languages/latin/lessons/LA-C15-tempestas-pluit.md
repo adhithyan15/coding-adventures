@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02]
 introduces:
   knowledge: [LA-LEX-TEMPESTAS-PLUIT-01]
+introduces_idioms: []
+introduces_senses: [LA-SENSE-TEMPESTAS-STORM-01]
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02, LA-LEX-TEMPESTAS-PLUIT-01]
 skills: [listening, speaking, reading]

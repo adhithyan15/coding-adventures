@@ -66,6 +66,10 @@
         "content_utf8": "echo ocaml\n"
       },
       {
+        "path": "code/packages/ocaml/generated/_build/decoy/BUILD",
+        "content_utf8": "echo generated-dune-output\n"
+      },
+      {
         "path": "code/packages/starlark/demo-starlark/BUILD",
         "content_utf8": "echo starlark\n"
       },
@@ -104,6 +108,10 @@
       {
         "path": "code/programs/kotlin/demo-kotlin/BUILD",
         "content_utf8": "echo kotlin program\n"
+      },
+      {
+        "path": "code/programs/ocaml/demo-ocaml/BUILD",
+        "content_utf8": "echo ocaml program\n"
       },
       {
         "path": "code/programs/rust/closurec/BUILD",
@@ -257,6 +265,13 @@
           "language": "ocaml",
           "name": "ocaml/demo-ocaml",
           "rel_path": "code/packages/ocaml/demo-ocaml"
+        },
+        {
+          "build_file": "code/programs/ocaml/demo-ocaml/BUILD",
+          "is_starlark": false,
+          "language": "ocaml",
+          "name": "ocaml/programs/demo-ocaml",
+          "rel_path": "code/programs/ocaml/demo-ocaml"
         },
         {
           "build_file": "code/programs/rust/closurec/BUILD",

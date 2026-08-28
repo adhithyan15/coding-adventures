@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [LA-LEX-C47-TABLE-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-C47-TABLE-01]
 skills: [listening, speaking, reading]

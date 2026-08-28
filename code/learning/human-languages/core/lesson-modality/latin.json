@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:361409b11ea54452",
+  "sourceHash": "fnv1a64:9db174a30a290caf",
   "summary": {
-    "totalLessons": 111,
-    "voice": 104,
+    "totalLessons": 112,
+    "voice": 105,
     "sight": 3,
     "pen": 4,
-    "drivableLessons": 104,
+    "drivableLessons": 105,
     "drivablePercent": 94,
     "trackCount": 1,
     "chapterCount": 47,
-    "drivablePrefixTotal": 98,
+    "drivablePrefixTotal": 99,
     "fullyDrivableChapters": 44,
     "unstartableChapters": 3,
     "overriddenLessons": 0,
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "latin",
-      "lessonCount": 111,
-      "voice": 104,
+      "lessonCount": 112,
+      "voice": 105,
       "sight": 3,
       "pen": 4,
       "drivablePercent": 94,
-      "drivablePrefixTotal": 98,
+      "drivablePrefixTotal": 99,
       "modalities": [
         "voice",
         "sight",
@@ -330,18 +330,19 @@
         },
         {
           "chapter": 19,
-          "lessonCount": 3,
-          "voice": 3,
+          "lessonCount": 4,
+          "voice": 4,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 3,
+          "drivablePrefix": 4,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
             "LA-C19-quid-agis",
+            "LA-C19-ut-vales",
             "LA-C19-valeo-family",
             "LA-C19-practice"
           ]
@@ -861,7 +862,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9dda29aae05f0453",
+      "sourceHash": "fnv1a64:5c761263c9e7dfc4",
       "detachableSegments": [
         "Writing — follow one greeting you can see"
       ]
@@ -883,7 +884,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:10dd2485d465e053",
+      "sourceHash": "fnv1a64:6239e406e5cd4c36",
       "detachableSegments": [
         "Writing — one guided copy"
       ]
@@ -906,7 +907,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:1ea7f1dbdc9b1e64",
+      "sourceHash": "fnv1a64:84b7fa3d31f3bb53",
       "detachableSegments": [
         "Writing — delayed copy"
       ]
@@ -928,7 +929,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:cfaae76e20935341",
+      "sourceHash": "fnv1a64:7821bbef4f280a42",
       "detachableSegments": [
         "Writing — dictation and transcription"
       ]
@@ -949,7 +950,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3ec59e713292cf0c"
+      "sourceHash": "fnv1a64:41aa314194bfcf7b"
     },
     {
       "id": "LA-C01-vale",
@@ -967,7 +968,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6c79087ce3c2b815"
+      "sourceHash": "fnv1a64:f679d775cd6e1a52"
     },
     {
       "id": "LA-C01-gratias",
@@ -985,7 +986,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:aa2584c6cf114f91"
+      "sourceHash": "fnv1a64:574ae9fd19f3d699"
     },
     {
       "id": "LA-C01-ita-non",
@@ -1003,7 +1004,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d231bd9e9b21af64"
+      "sourceHash": "fnv1a64:496857b345c870eb"
     },
     {
       "id": "LA-C01-practice",
@@ -1021,7 +1022,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4b96f24670e6e04f"
+      "sourceHash": "fnv1a64:5c79e3844fce2766"
     },
     {
       "id": "LA-C02-numbers-1-5",
@@ -1041,7 +1042,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d29f71d351fbc066"
+      "sourceHash": "fnv1a64:1f8b12e2be2f2683"
     },
     {
       "id": "LA-C02-numbers-6-10",
@@ -1059,7 +1060,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:21ca6fade810615a"
+      "sourceHash": "fnv1a64:9a16b4e9ec856c5b"
     },
     {
       "id": "LA-C03-quaeso",
@@ -1077,7 +1078,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c27a461435c37855"
+      "sourceHash": "fnv1a64:544b9c4ef6c34cbe"
     },
     {
       "id": "LA-C04-ignosce-mihi",
@@ -1095,7 +1096,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e1a8a89e50819218"
+      "sourceHash": "fnv1a64:c0ac8b3666a58f78"
     },
     {
       "id": "LA-C05-dies-lunae-veneris",
@@ -1113,7 +1114,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:daa7b2028c9eb763"
+      "sourceHash": "fnv1a64:8622b4ada164edc7"
     },
     {
       "id": "LA-C05-saturni-solis",
@@ -1131,7 +1132,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f2deb3662d1d66b5"
+      "sourceHash": "fnv1a64:dfb87c91f25f87b4"
     },
     {
       "id": "LA-C06-niger-albus",
@@ -1149,7 +1150,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8c1374e8b4fd28a5"
+      "sourceHash": "fnv1a64:a3b169e6f6ff32ac"
     },
     {
       "id": "LA-C06-ruber-caeruleus",
@@ -1167,7 +1168,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:469d49d7467b0bd0"
+      "sourceHash": "fnv1a64:03c468b3aa630497"
     },
     {
       "id": "LA-C07-pater-mater",
@@ -1185,7 +1186,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e2eb931af67e5883"
+      "sourceHash": "fnv1a64:0b284c1a248b58b2"
     },
     {
       "id": "LA-C07-frater-soror",
@@ -1203,7 +1204,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f740e6f8c7ea0bce"
+      "sourceHash": "fnv1a64:4226a374129e51eb"
     },
     {
       "id": "LA-C08-caput",
@@ -1221,7 +1222,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b0d70f698ae3f763"
+      "sourceHash": "fnv1a64:c06ab9c5756dca48"
     },
     {
       "id": "LA-C08-manus",
@@ -1239,7 +1240,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:219a83524eb2f5c6"
+      "sourceHash": "fnv1a64:67c6939540fb01cd"
     },
     {
       "id": "LA-C09-anni-tempora",
@@ -1257,7 +1258,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:01584ac09d4f269c"
+      "sourceHash": "fnv1a64:9bcbf395c2d4e8ff"
     },
     {
       "id": "LA-C10-aqua-vinum",
@@ -1275,7 +1276,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b1418f185aaaaac2"
+      "sourceHash": "fnv1a64:368dc0bf5388d81f"
     },
     {
       "id": "LA-C10-panis",
@@ -1293,7 +1294,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:462d31404139af7b"
+      "sourceHash": "fnv1a64:8668663644ecd8ca"
     },
     {
       "id": "LA-C11-menses",
@@ -1311,7 +1312,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:767b2688a9fef140"
+      "sourceHash": "fnv1a64:314bab5d80af52a8"
     },
     {
       "id": "LA-C12-medius-dies-nox",
@@ -1329,7 +1330,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f34f23b9caa3f5f3"
+      "sourceHash": "fnv1a64:43ea00f1f2c7cfec"
     },
     {
       "id": "LA-C13-hora",
@@ -1347,7 +1348,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2bedf7362612ade1"
+      "sourceHash": "fnv1a64:59b3e6b1c0db64ab"
     },
     {
       "id": "LA-C14-annos-natus",
@@ -1365,7 +1366,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c83e9ce7f7f6024d"
+      "sourceHash": "fnv1a64:2236be9e8847f3d4"
     },
     {
       "id": "LA-C15-tempestas-pluit",
@@ -1383,7 +1384,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3ca5b037de5908b4"
+      "sourceHash": "fnv1a64:b2f719ae296e0d24"
     },
     {
       "id": "LA-C15-weather-verbs",
@@ -1401,7 +1402,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:752b86d076a6bedf"
+      "sourceHash": "fnv1a64:a0d1cb342d4ae890"
     },
     {
       "id": "LA-C16-undecim-viginti",
@@ -1419,7 +1420,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:08a18400508f061f"
+      "sourceHash": "fnv1a64:4c4f4d0a6fbd5266"
     },
     {
       "id": "LA-C17-canis-feles-cattus",
@@ -1437,7 +1438,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fe54b20d871f468e"
+      "sourceHash": "fnv1a64:4d68948574001385"
     },
     {
       "id": "LA-C18-viridis-flavus",
@@ -1455,7 +1456,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cf10924d8df0911e"
+      "sourceHash": "fnv1a64:3b0e5b6aba668d67"
     },
     {
       "id": "LA-C19-quid-agis",
@@ -1473,7 +1474,25 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3eb2b3813eaf89bf"
+      "sourceHash": "fnv1a64:c0a346474c2a0cc4"
+    },
+    {
+      "id": "LA-C19-ut-vales",
+      "language": "latin",
+      "chapter": 19,
+      "sequence": 405,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6172d20f27b46741"
     },
     {
       "id": "LA-C19-valeo-family",
@@ -1491,7 +1510,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9f0465f604011809"
+      "sourceHash": "fnv1a64:1738d8b68a13a750"
     },
     {
       "id": "LA-C19-practice",
@@ -1509,7 +1528,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:81aeafc0622aef52"
+      "sourceHash": "fnv1a64:7affb16c58bc8278"
     },
     {
       "id": "LA-C20-quid-tibi-nomen",
@@ -1527,7 +1546,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9dd4a51e3b64720c"
+      "sourceHash": "fnv1a64:d4545a13a924ca00"
     },
     {
       "id": "LA-C20-name-case-variation",
@@ -1545,7 +1564,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:25752f46deb4c04b"
+      "sourceHash": "fnv1a64:afdc353ab82c07e7"
     },
     {
       "id": "LA-C21-volup-est-convenisse",
@@ -1563,7 +1582,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e7fa4ed193474c2c"
+      "sourceHash": "fnv1a64:604581a8cf803a05"
     },
     {
       "id": "LA-C21-meeting-phrase-context",
@@ -1581,7 +1600,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:11d5e61c195c5fb4"
+      "sourceHash": "fnv1a64:9e2db87292cf8109"
     },
     {
       "id": "LA-C21-practice",
@@ -1599,7 +1618,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1ecece80fdd47b3c"
+      "sourceHash": "fnv1a64:9134d1ebb0ee8cc7"
     },
     {
       "id": "LA-C22-tu-vos",
@@ -1617,7 +1636,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:58b50d89a5634ac8"
+      "sourceHash": "fnv1a64:bdfbcd2804a1d72c"
     },
     {
       "id": "LA-C23-nihil-est",
@@ -1635,7 +1654,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d0c78397121bbbbb"
+      "sourceHash": "fnv1a64:1dbbf1f5b3ea3d04"
     },
     {
       "id": "LA-C24-propediem-te-videbo",
@@ -1653,7 +1672,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fd20f29edbdaba21"
+      "sourceHash": "fnv1a64:59770f9c3cd8e6b7"
     },
     {
       "id": "LA-C25-cras-te-videbo",
@@ -1671,7 +1690,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:191337c0bbe191b6"
+      "sourceHash": "fnv1a64:4c4db08d8d84b636"
     },
     {
       "id": "LA-C26-quomodo",
@@ -1689,7 +1708,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:37381c4bde4b1c99"
+      "sourceHash": "fnv1a64:b8c4664ec3562c00"
     },
     {
       "id": "LA-C27-bene",
@@ -1707,7 +1726,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7e365929d7622073"
+      "sourceHash": "fnv1a64:73fe26f145769b20"
     },
     {
       "id": "LA-C28-dies",
@@ -1725,7 +1744,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d347115db770b2b1"
+      "sourceHash": "fnv1a64:cecdc6bf919baf34"
     },
     {
       "id": "LA-C29-nox",
@@ -1743,7 +1762,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:898bf6278c0472bf"
+      "sourceHash": "fnv1a64:ab310c2db3d60270"
     },
     {
       "id": "LA-C30-bonam-noctem",
@@ -1761,7 +1780,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:227678274c9d90e1"
+      "sourceHash": "fnv1a64:6a1699f47b14ad16"
     },
     {
       "id": "LA-C31-mane",
@@ -1779,7 +1798,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c3ed059fad5a5a94"
+      "sourceHash": "fnv1a64:b27899492d745177"
     },
     {
       "id": "LA-C32-bonum-mane",
@@ -1797,7 +1816,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b8b15665b17ab142"
+      "sourceHash": "fnv1a64:6dafdd74091a9bde"
     },
     {
       "id": "LA-C33-vesper",
@@ -1815,7 +1834,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a219fd42b0916452"
+      "sourceHash": "fnv1a64:2ec5d9f1d830d9f7"
     },
     {
       "id": "LA-C33-vesper-afterlives",
@@ -1833,7 +1852,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:00242fd2dcaeda95"
+      "sourceHash": "fnv1a64:7310ce5f2eee5856"
     },
     {
       "id": "LA-C33-practice",
@@ -1851,7 +1870,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b6d7a6121f9b4bbc"
+      "sourceHash": "fnv1a64:6edba26550a2b055"
     },
     {
       "id": "LA-C34-bonum-vesperum",
@@ -1869,7 +1888,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8a44722fca6b01fc"
+      "sourceHash": "fnv1a64:4cc8c62ed3d21426"
     },
     {
       "id": "LA-C35-meridies",
@@ -1887,7 +1906,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c506be6271eb4353"
+      "sourceHash": "fnv1a64:7f284e317d6fb1ee"
     },
     {
       "id": "LA-C36-salve-post-meridiem",
@@ -1905,7 +1924,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1679ce5fe3160f66"
+      "sourceHash": "fnv1a64:54bd5206bf66695e"
     },
     {
       "id": "LA-C36-timeless-salve",
@@ -1923,7 +1942,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3738faa18f82389e"
+      "sourceHash": "fnv1a64:4da6150d00e5b3a8"
     },
     {
       "id": "LA-C36-practice",
@@ -1941,7 +1960,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b953d8c26b573452"
+      "sourceHash": "fnv1a64:e9f0755dce2b356b"
     },
     {
       "id": "LA-C37-sum",
@@ -1959,7 +1978,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e0ff6bb656fe9f58"
+      "sourceHash": "fnv1a64:75aadd5df7401b1b"
     },
     {
       "id": "LA-C37-habeo",
@@ -1977,7 +1996,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d12f0c2d1c2338a2"
+      "sourceHash": "fnv1a64:f92cae1d694c771b"
     },
     {
       "id": "LA-C37-eo",
@@ -1995,7 +2014,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:742adb95f89d57d9"
+      "sourceHash": "fnv1a64:8f92d9021d717c82"
     },
     {
       "id": "LA-C37-venio",
@@ -2013,7 +2032,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9526c8bb7d17bc1d"
+      "sourceHash": "fnv1a64:892693f13604948a"
     },
     {
       "id": "LA-C37-dico",
@@ -2031,7 +2050,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c9d41fbe1f17b046"
+      "sourceHash": "fnv1a64:c5690363fcaa4061"
     },
     {
       "id": "LA-C37-video",
@@ -2049,7 +2068,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:52164a1c1090035b"
+      "sourceHash": "fnv1a64:34340ef92c678dac"
     },
     {
       "id": "LA-C37-scio",
@@ -2067,7 +2086,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2b762d17dcef21c2"
+      "sourceHash": "fnv1a64:b2741a84d0000bc7"
     },
     {
       "id": "LA-C37-do",
@@ -2085,7 +2104,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:051856f3e9c81534"
+      "sourceHash": "fnv1a64:c54ebb9e15c17f85"
     },
     {
       "id": "LA-C38-cogito",
@@ -2103,7 +2122,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8f212bec0682b367"
+      "sourceHash": "fnv1a64:58c09d900e83da9e"
     },
     {
       "id": "LA-C38-lego",
@@ -2121,7 +2140,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d6fc78a0bb1d658a"
+      "sourceHash": "fnv1a64:1198ae7b9d7a39e9"
     },
     {
       "id": "LA-C38-intellego",
@@ -2139,7 +2158,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:825bf0ef0ce282f8"
+      "sourceHash": "fnv1a64:076b04509356b80b"
     },
     {
       "id": "LA-C38-scribo",
@@ -2157,7 +2176,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:091501c7e567324a"
+      "sourceHash": "fnv1a64:ce780778c64347a3"
     },
     {
       "id": "LA-C39-capio",
@@ -2175,7 +2194,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4d8ae3b70ae202db"
+      "sourceHash": "fnv1a64:2c37b55f2c970878"
     },
     {
       "id": "LA-C39-rogo",
@@ -2193,7 +2212,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7269d5ea646cd36c"
+      "sourceHash": "fnv1a64:f6822b3b635b2697"
     },
     {
       "id": "LA-C39-adiuvo",
@@ -2211,7 +2230,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:257e966cc6befa30"
+      "sourceHash": "fnv1a64:a324f3fa9ce45835"
     },
     {
       "id": "LA-C39-amo",
@@ -2229,7 +2248,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9cfbd4ef496130cf"
+      "sourceHash": "fnv1a64:7d214c62675f9668"
     },
     {
       "id": "LA-C40-audio",
@@ -2247,7 +2266,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7857a70e4ef5dbec"
+      "sourceHash": "fnv1a64:b6eb5fb0a8bd4875"
     },
     {
       "id": "LA-C40-dormio",
@@ -2265,7 +2284,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3478cf58bd29876f"
+      "sourceHash": "fnv1a64:2a12024cd03b4e5c"
     },
     {
       "id": "LA-C40-sedeo",
@@ -2283,7 +2302,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2c914ecc8a3dc3bf"
+      "sourceHash": "fnv1a64:045d5c96743c23de"
     },
     {
       "id": "LA-C40-sto",
@@ -2301,7 +2320,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:11aff5424855e441"
+      "sourceHash": "fnv1a64:f6ef0e82e22db7f2"
     },
     {
       "id": "LA-C41-ambulo",
@@ -2319,7 +2338,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4e126460ce776ff0"
+      "sourceHash": "fnv1a64:a3cc9dcddcf6ca77"
     },
     {
       "id": "LA-C41-curro",
@@ -2337,7 +2356,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bc6edcf40433f26f"
+      "sourceHash": "fnv1a64:95c22fa1512d377e"
     },
     {
       "id": "LA-C41-aperio",
@@ -2355,7 +2374,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:06626b6294c4415e"
+      "sourceHash": "fnv1a64:0a7baa17c369f671"
     },
     {
       "id": "LA-C41-claudo",
@@ -2373,7 +2392,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e7fda89b85277a5e"
+      "sourceHash": "fnv1a64:2e8775b9724ed8cf"
     },
     {
       "id": "LA-C42-fero",
@@ -2391,7 +2410,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8c3ff0413083e69f"
+      "sourceHash": "fnv1a64:1c26fe101840de7f"
     },
     {
       "id": "LA-C42-accipio",
@@ -2409,7 +2428,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:693bd25529f49ec4"
+      "sourceHash": "fnv1a64:fd153055087caccb"
     },
     {
       "id": "LA-C42-ludo",
@@ -2427,7 +2446,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e1becf4360cbec2c"
+      "sourceHash": "fnv1a64:8fb229a68f6c19f5"
     },
     {
       "id": "LA-C42-exspecto",
@@ -2445,7 +2464,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:59f2f1577cadbc50"
+      "sourceHash": "fnv1a64:3d226967b39ef2fb"
     },
     {
       "id": "LA-C43-respondeo",
@@ -2463,7 +2482,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a793ac86a308a8fc"
+      "sourceHash": "fnv1a64:7cb2d397789cb7c3"
     },
     {
       "id": "LA-C43-convenio",
@@ -2481,7 +2500,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:47b717c63651b2dd"
+      "sourceHash": "fnv1a64:0a9424c56ea02218"
     },
     {
       "id": "LA-C43-emo",
@@ -2499,7 +2518,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:567a2a36c09be502"
+      "sourceHash": "fnv1a64:c34c605aaf1896c1"
     },
     {
       "id": "LA-C44-domus",
@@ -2517,7 +2536,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8a1d394dea1da0f6"
+      "sourceHash": "fnv1a64:1399cfeb6bd8169b"
     },
     {
       "id": "LA-C44-porta",
@@ -2535,7 +2554,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f48291c37c30469b"
+      "sourceHash": "fnv1a64:3b64bb442b164357"
     },
     {
       "id": "LA-C44-murus",
@@ -2553,7 +2572,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5f293198eda513fc"
+      "sourceHash": "fnv1a64:ce13638e51457519"
     },
     {
       "id": "LA-C44-hortus",
@@ -2571,7 +2590,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d8667945c171bcfb"
+      "sourceHash": "fnv1a64:15cead6b4e57ffac"
     },
     {
       "id": "LA-C44-focus",
@@ -2589,7 +2608,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6c22cdc72cbf5528"
+      "sourceHash": "fnv1a64:5e376be1aec15bdd"
     },
     {
       "id": "LA-C45-terra",
@@ -2607,7 +2626,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d8d61fa9874c457e"
+      "sourceHash": "fnv1a64:014758c96ae79b5b"
     },
     {
       "id": "LA-C45-ignis",
@@ -2625,7 +2644,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:073e7b593d9f2027"
+      "sourceHash": "fnv1a64:486ae1d3ccfca908"
     },
     {
       "id": "LA-C45-ventus",
@@ -2643,7 +2662,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f37dfe5ca2837348"
+      "sourceHash": "fnv1a64:134bfcd9eca418b1"
     },
     {
       "id": "LA-C45-caelum",
@@ -2661,7 +2680,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c0d21c673c9bd992"
+      "sourceHash": "fnv1a64:5182ea860ca46c0e"
     },
     {
       "id": "LA-C45-mare",
@@ -2679,7 +2698,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:72b4e93751a84036"
+      "sourceHash": "fnv1a64:5eeeb23160ec0a33"
     },
     {
       "id": "LA-C46-lux",
@@ -2697,7 +2716,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8294d626f2149a26"
+      "sourceHash": "fnv1a64:86bef742ec83a927"
     },
     {
       "id": "LA-C46-umbra",
@@ -2715,7 +2734,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:05f65daeb4c2b3c9"
+      "sourceHash": "fnv1a64:25da0637a356efdf"
     },
     {
       "id": "LA-C46-stella",
@@ -2733,7 +2752,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d2a8de54a1d02cde"
+      "sourceHash": "fnv1a64:bafd844a7c3a4fe7"
     },
     {
       "id": "LA-C46-luna",
@@ -2751,7 +2770,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4d7d31930e31509f"
+      "sourceHash": "fnv1a64:5c421350aad26ef4"
     },
     {
       "id": "LA-C46-somnus",
@@ -2769,7 +2788,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3ee66fd60dff580c"
+      "sourceHash": "fnv1a64:79215c5a47c83d7f"
     },
     {
       "id": "LA-C47-sal",
@@ -2787,7 +2806,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7be2e789b89a63a4"
+      "sourceHash": "fnv1a64:cd57ac68fdb0ccdd"
     },
     {
       "id": "LA-C47-mel",
@@ -2805,7 +2824,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:241ac997ca81a5cc"
+      "sourceHash": "fnv1a64:4f704c50010021cb"
     },
     {
       "id": "LA-C47-lac",
@@ -2823,7 +2842,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4b9215d07f877ceb"
+      "sourceHash": "fnv1a64:4f41b6a86a8d26be"
     },
     {
       "id": "LA-C47-ovum",
@@ -2841,7 +2860,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:75abfbfa387832b5"
+      "sourceHash": "fnv1a64:57f87d84020fac4a"
     },
     {
       "id": "LA-C47-piscis",
@@ -2859,7 +2878,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7582cd633bb90d22"
+      "sourceHash": "fnv1a64:8184ab94cfe23de1"
     }
   ],
   "findings": []

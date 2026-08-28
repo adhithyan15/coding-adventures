@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Noon and Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:efb6b7c9fb361a59",
+  "sourceHash": "fnv1a64:b902bde41ee2452a",
   "lessons": [
     {
       "id": "LA-C35-meridies",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c506be6271eb4353",
+      "sourceHash": "fnv1a64:7f284e317d6fb1ee",
       "notice": null,
       "blocks": [
         {

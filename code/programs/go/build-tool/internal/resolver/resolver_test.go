@@ -657,6 +657,76 @@ name = "avl-tree-wasm"
 	}
 }
 
+func TestResolveDependenciesConsumesOCamlFieldAwareFixture(t *testing.T) {
+	fixture := loadResolutionFixture(t, "resolution-ocaml-field-aware.json")
+	root, packages := materializeResolutionFixture(t, fixture)
+	_ = root
+	graph := mustResolveDependencies(t, packages)
+
+	for _, edge := range fixture.Expected.Result.Edges {
+		if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+			t.Fatalf("expected OCaml edge %v", edge)
+		}
+	}
+	if graph.HasEdge("ocaml/alpha", "ocaml/alpha") {
+		t.Fatal("OCaml self references must not create a self-edge")
+	}
+	if graph.HasEdge("ocaml/gamma", "ocaml/alpha") {
+		t.Fatal("comments, prose, build fields, and Dune strings must not create edges")
+	}
+	if graph.HasEdge("ocaml/beta", "ocaml/ambiguous") || graph.HasEdge("ocaml/delta", "ocaml/ambiguous") {
+		t.Fatal("multiple root opam manifests must contribute no dependency edges")
+	}
+}
+
+func TestOpamDependencyNamesIgnoresQuotedConstraintValues(t *testing.T) {
+	got := opamDependencyNames(`
+  "coding-adventures-alpha" {>= "0.1.0" & os = "linux"}
+  ("coding-adventures-beta" | "coding-adventures-gamma")
+`)
+	want := []string{"coding-adventures-alpha", "coding-adventures-beta", "coding-adventures-gamma"}
+	if strings.Join(got, ",") != strings.Join(want, ",") {
+		t.Fatalf("opam dependency names = %v, want %v", got, want)
+	}
+}
+
+func TestResolveDependenciesOCamlPrefersPackageAliasOverProgram(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"packages/ocaml/graph/coding-adventures-graph.opam": "opam-version: \"2.0\"\nname: \"coding-adventures-graph\"\n",
+		"programs/ocaml/graph/coding-adventures-graph.opam": "opam-version: \"2.0\"\nname: \"coding-adventures-graph\"\n",
+		"programs/ocaml/app/coding-adventures-app.opam":     "opam-version: \"2.0\"\nname: \"coding-adventures-app\"\ndepends: [\"coding-adventures-graph\"]\n",
+	})
+	packages := []discovery.Package{
+		{Name: "ocaml/graph", Path: filepath.Join(root, "packages", "ocaml", "graph"), Language: "ocaml"},
+		{Name: "ocaml/programs/graph", Path: filepath.Join(root, "programs", "ocaml", "graph"), Language: "ocaml"},
+		{Name: "ocaml/programs/app", Path: filepath.Join(root, "programs", "ocaml", "app"), Language: "ocaml"},
+	}
+	graph := mustResolveDependencies(t, packages)
+	if !graph.HasEdge("ocaml/graph", "ocaml/programs/app") {
+		t.Fatal("package alias should be authoritative over same-named OCaml program")
+	}
+	if graph.HasEdge("ocaml/programs/graph", "ocaml/programs/app") {
+		t.Fatal("same-named OCaml program must not shadow the package alias")
+	}
+}
+
+func TestResolveDependenciesOCamlRejectsAmbiguousPackageAlias(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"first/first.opam":   "opam-version: \"2.0\"\nname: \"shared-name\"\n",
+		"second/second.opam": "opam-version: \"2.0\"\nname: \"shared-name\"\n",
+		"app/app.opam":       "opam-version: \"2.0\"\nname: \"app\"\ndepends: [\"shared-name\"]\n",
+	})
+	packages := []discovery.Package{
+		{Name: "ocaml/first", Path: filepath.Join(root, "first"), Language: "ocaml"},
+		{Name: "ocaml/second", Path: filepath.Join(root, "second"), Language: "ocaml"},
+		{Name: "ocaml/app", Path: filepath.Join(root, "app"), Language: "ocaml"},
+	}
+	graph := mustResolveDependencies(t, packages)
+	if graph.HasEdge("ocaml/first", "ocaml/app") || graph.HasEdge("ocaml/second", "ocaml/app") {
+		t.Fatalf("ambiguous OCaml package alias must not resolve, got %v", graph.Edges())
+	}
+}
+
 func TestResolveDependenciesDotnetScopeSupportsCrossLanguageProjectReferences(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"csharp-graph/CodingAdventures.Graph.csproj": `<Project Sdk="Microsoft.NET.Sdk">

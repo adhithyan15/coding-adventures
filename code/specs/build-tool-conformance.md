@@ -405,6 +405,21 @@ descriptive metadata, source directories, compiler options, and every other
 field. A new stanza may introduce another `build-depends:` field; reaching a
 sibling field or stanza ends the current field before scanning continues.
 
+For OCaml packages, directory aliases are the lower-case root basename, its
+`coding-adventures-` opam form, and its underscore-normalized
+`coding_adventures_` Dune form. Exactly one regular root `.opam` manifest may add its
+filename stem and top-level `name:` string as aliases and quoted dependency
+candidates from the top-level `depends: [ ... ]` field; multiple manifests are
+ambiguous and contribute neither manifest aliases nor manifest dependencies.
+Resolvers union those candidates with direct atoms or quoted names from
+`(libraries ...)` fields in only the regular files `dune`, `src/dune`, `bin/dune`, and
+`test/dune`. They ignore comments, constraints, filters, pins, build commands,
+other opam fields, other Dune forms or files, nested expressions, variables,
+external names, and self references. Package aliases take priority over a
+same-named program, two packages claiming one declared alias make it unusable,
+and duplicate candidates collapse to one edge. OCAML04 is the normative
+detailed contract for this emerging lane.
+
 For Python `pyproject.toml` manifests, dependency candidates come only from the
 PEP 621 `[project]` table's `dependencies = [...]` array. Resolvers ignore
 package identity and descriptive metadata, `[build-system]`,
@@ -488,6 +503,8 @@ Required behavior:
 - sort normalized relative paths before hashing;
 - exclude generated, dependency, VCS, cache, and temporary directories;
 - include applicable BUILD and manifest files;
+- include OCaml `.ml`, `.mli`, and `.opam` sources plus exact `dune`,
+  `dune-project`, and `.ocamlformat` metadata names;
 - hash source and manifest contents as raw bytes without decoding them through
   the host locale, and encode normalized relative paths explicitly as UTF-8;
 - when a subprocess supplies the digest primitive, write its standard input in
@@ -670,6 +687,9 @@ shard filtering. It MUST:
 - return a complete, sorted boolean map for the supported registry.
 
 OCaml enters this registry before its build-tool implementation is promoted.
+Its process-free registry key and CI output are `ocaml`; its execution setup
+remains owned by the separate OCAML03 workflow until the execution-coupled
+substrate is reviewed.
 
 ### 12. CLI and reporting
 

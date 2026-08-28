@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Earth, Fire, Wind, Sky, Sea",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c85cdf80ed10d7e1",
+  "sourceHash": "fnv1a64:ea23c8266cbb6626",
   "lessons": [
     {
       "id": "LA-C45-terra",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8d61fa9874c457e",
+      "sourceHash": "fnv1a64:014758c96ae79b5b",
       "notice": null,
       "blocks": [
         {
@@ -129,7 +129,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:073e7b593d9f2027",
+      "sourceHash": "fnv1a64:486ae1d3ccfca908",
       "notice": null,
       "blocks": [
         {
@@ -243,7 +243,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f37dfe5ca2837348",
+      "sourceHash": "fnv1a64:134bfcd9eca418b1",
       "notice": null,
       "blocks": [
         {
@@ -353,7 +353,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0d21c673c9bd992",
+      "sourceHash": "fnv1a64:5182ea860ca46c0e",
       "notice": null,
       "blocks": [
         {
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72b4e93751a84036",
+      "sourceHash": "fnv1a64:5eeeb23160ec0a33",
       "notice": null,
       "blocks": [
         {

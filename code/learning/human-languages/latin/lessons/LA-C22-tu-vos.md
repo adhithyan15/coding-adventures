@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02]
 introduces:
   knowledge: [LA-LEX-TU-VOS-01, LA-LEX-TU-VOS-02, LA-PRAGMATICS-TU-VOS-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [LA-CULTURE-TU-VOS-POLITENESS-HISTORY-01]
 practises:
   knowledge: [LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02, LA-LEX-TU-VOS-01, LA-LEX-TU-VOS-02, LA-PRAGMATICS-TU-VOS-03]
 skills: [listening, speaking, reading]

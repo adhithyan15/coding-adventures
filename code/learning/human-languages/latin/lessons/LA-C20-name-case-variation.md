@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-QUID-TIBI-NOMEN-01, LA-LEX-QUID-TIBI-NOMEN-02]
 introduces:
   knowledge: [LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [LA-CULTURE-ROMAN-NAME-CASE-VARIATION-01]
 practises:
   knowledge: [LA-LEX-QUID-TIBI-NOMEN-01, LA-LEX-QUID-TIBI-NOMEN-02, LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02]
 skills: [listening, speaking, reading]

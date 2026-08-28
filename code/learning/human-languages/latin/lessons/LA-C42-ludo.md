@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-ACCIPIO-01, LA-LEX-OBTINEO-02, LA-ETYMON-ACCIPIO-OBTINEO-03, LA-LEX-LEGO-01, LA-ETYMON-LEGO-02, LA-LEX-SCRIBO-01, LA-ETYMON-SCRIBO-02]
 introduces:
   knowledge: [LA-LEX-LUDO-01, LA-ETYMON-LUDO-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-ACCIPIO-01, LA-LEX-OBTINEO-02, LA-ETYMON-ACCIPIO-OBTINEO-03, LA-LEX-LEGO-01, LA-ETYMON-LEGO-02, LA-LEX-SCRIBO-01, LA-ETYMON-SCRIBO-02, LA-LEX-LUDO-01, LA-ETYMON-LUDO-02]
 skills: [listening, speaking, reading]

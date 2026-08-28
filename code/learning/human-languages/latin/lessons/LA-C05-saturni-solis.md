@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02]
 introduces:
   knowledge: [LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [LA-CULTURE-WEEKEND-CHRISTIAN-RENAMING-01]
 practises:
   knowledge: [LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02, LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02]
 skills: [listening, speaking, reading]

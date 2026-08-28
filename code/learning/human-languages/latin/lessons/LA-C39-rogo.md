@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-CAPIO-01, LA-LEX-DICO-01]
 introduces:
   knowledge: [LA-LEX-ROGO-01, LA-ETYMON-ROGO-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-CAPIO-01, LA-LEX-DICO-01, LA-LEX-ROGO-01, LA-ETYMON-ROGO-02]
 skills: [listening, speaking, reading]

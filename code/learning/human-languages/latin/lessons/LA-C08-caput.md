@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-ETYMON-FRATER-SOROR-01, LA-ETYMON-FRATER-SOROR-02, LA-PRAGMATICS-FRATER-SOROR-03]
 introduces:
   knowledge: [LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-ETYMON-FRATER-SOROR-01, LA-ETYMON-FRATER-SOROR-02, LA-PRAGMATICS-FRATER-SOROR-03, LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02]
 skills: [listening, speaking, reading]

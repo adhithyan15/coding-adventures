@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 35,
-  "sourceHash": "fnv1a64:efb6b7c9fb361a59",
+  "sourceHash": "fnv1a64:b902bde41ee2452a",
   "lessonIds": [
     "LA-C35-meridies"
   ],
@@ -10,6 +10,6 @@
   "text": "latin/narration/ch35.txt",
   "json": "latin/narration/ch35.json",
   "textHash": "fnv1a64:e2c71fb04c0a2a73",
-  "jsonHash": "fnv1a64:f2d1a72b40d03928",
+  "jsonHash": "fnv1a64:38aab7f5169126a7",
   "findings": []
 }
