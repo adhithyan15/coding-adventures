@@ -28,3 +28,12 @@ All notable changes to the GE-225 gate-level Rust package are documented here.
 - Thirteen controller/API conformance tests, including functional-oracle
   lockstep and fail-closed command/skip boundaries; the 46 combined tests cover
   84.92% of core lines (1,650/1,943).
+- RCPU-P006C 167 DFF-backed AAU bits for separate 40-bit AX/BX/QX/IX registers,
+  mode/readiness and transient/hold alerts; exact memory, general, and status
+  decode; gate-vector fixed and floating arithmetic, partial-product multiply,
+  widened-remainder restoring divide, and normalization.
+- Fourteen AAU conformance tests covering functional lockstep, signed and
+  exponent edges, all status/hold semantics, modified IX capture, odd/even
+  transfers, reset, bounded arithmetic, and full-state atomic failures. The 60
+  combined tests complete the GE-225 gate-level instruction-family audit with
+  85.61% core line coverage (2,190/2,558).
