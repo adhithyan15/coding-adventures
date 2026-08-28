@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added `GpuImageResolver` and `plan_scene_with_image_resolver` so host-owned
+  resource pipelines can lower URI-backed images without moving fetch or codec
+  policy into a GPU backend.
 - Added `GpuPaintPlan`, `GpuCommand`, mesh, image-upload, text, and glyph-run
   plan types.
 - Added PaintScene lowering for rects, lines, ellipses, flattened paths, clips,

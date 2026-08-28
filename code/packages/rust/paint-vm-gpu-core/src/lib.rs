@@ -20,6 +20,24 @@ use paint_instructions::{
     IDENTITY_TRANSFORM,
 };
 
+/// Host-owned boundary for resolving URI-backed paint images.
+///
+/// GPU backends should not fetch network resources or impose a URI policy.
+/// Browser sessions, native hosts, and tests can instead supply the pixels
+/// they have already loaded through this small reusable seam.
+pub trait GpuImageResolver {
+    fn resolve(&self, uri: &str) -> Result<paint_instructions::PixelContainer, String>;
+}
+
+impl<F> GpuImageResolver for F
+where
+    F: Fn(&str) -> Result<paint_instructions::PixelContainer, String>,
+{
+    fn resolve(&self, uri: &str) -> Result<paint_instructions::PixelContainer, String> {
+        self(uri)
+    }
+}
+
 pub const VERSION: &str = "0.1.0";
 const GRADIENT_RAMP_WIDTH: u32 = 1024;
 const RADIAL_GRADIENT_TEXTURE_SIZE: u32 = 256;
@@ -247,7 +265,15 @@ impl Default for GpuPlanOptions {
 }
 
 pub fn plan_scene(scene: &PaintScene) -> GpuPaintPlan {
-    plan_scene_with_options(scene, GpuPlanOptions::default())
+    plan_scene_with_options_and_image_resolver(scene, GpuPlanOptions::default(), None)
+}
+
+/// Lower a scene while resolving [`ImageSrc::Uri`] values through host policy.
+pub fn plan_scene_with_image_resolver(
+    scene: &PaintScene,
+    resolver: &dyn GpuImageResolver,
+) -> GpuPaintPlan {
+    plan_scene_with_options_and_image_resolver(scene, GpuPlanOptions::default(), Some(resolver))
 }
 
 pub fn unsupported_plan_features(
@@ -310,9 +336,19 @@ fn push_unique(features: &mut Vec<&'static str>, feature: &'static str) {
 }
 
 pub fn plan_scene_with_options(scene: &PaintScene, options: GpuPlanOptions) -> GpuPaintPlan {
+    plan_scene_with_options_and_image_resolver(scene, options, None)
+}
+
+/// Lower a scene with explicit tessellation options and optional URI policy.
+pub fn plan_scene_with_options_and_image_resolver(
+    scene: &PaintScene,
+    options: GpuPlanOptions,
+    image_resolver: Option<&dyn GpuImageResolver>,
+) -> GpuPaintPlan {
     let mut builder = PlanBuilder {
         options,
         gradients: collect_gradients(&scene.instructions),
+        image_resolver,
         plan: GpuPaintPlan {
             width: scene.width.max(0.0).ceil() as u32,
             height: scene.height.max(0.0).ceil() as u32,
@@ -327,9 +363,10 @@ pub fn plan_scene_with_options(scene: &PaintScene, options: GpuPlanOptions) -> G
     builder.plan
 }
 
-struct PlanBuilder {
+struct PlanBuilder<'a> {
     options: GpuPlanOptions,
     gradients: HashMap<String, PaintGradient>,
+    image_resolver: Option<&'a dyn GpuImageResolver>,
     plan: GpuPaintPlan,
 }
 
@@ -388,7 +425,7 @@ impl PaintBrush {
     }
 }
 
-impl PlanBuilder {
+impl PlanBuilder<'_> {
     fn plan_instructions(
         &mut self,
         instructions: &[PaintInstruction],
@@ -725,13 +762,31 @@ impl PlanBuilder {
     }
 
     fn plan_image(&mut self, image: &PaintImage, transform: Transform2D, opacity: f32) {
-        let ImageSrc::Pixels(pixels) = &image.src else {
-            self.diagnostic(
-                GpuPlanSeverity::Unsupported,
-                "image.uri",
-                "GPU core cannot decode ImageSrc::Uri; pass decoded pixels first",
-            );
-            return;
+        let resolved;
+        let pixels = match &image.src {
+            ImageSrc::Pixels(pixels) => pixels,
+            ImageSrc::Uri(uri) => {
+                let Some(resolver) = self.image_resolver else {
+                    self.diagnostic(
+                        GpuPlanSeverity::Unsupported,
+                        "image.uri",
+                        "GPU core requires a host image resolver for ImageSrc::Uri",
+                    );
+                    return;
+                };
+                resolved = match resolver.resolve(uri) {
+                    Ok(pixels) => pixels,
+                    Err(message) => {
+                        self.diagnostic(
+                            GpuPlanSeverity::Unsupported,
+                            "image.uri",
+                            format!("could not resolve {uri:?}: {message}"),
+                        );
+                        return;
+                    }
+                };
+                &resolved
+            }
         };
         if pixels.width == 0 || pixels.height == 0 {
             return;
@@ -3386,6 +3441,67 @@ mod tests {
             ]
         );
         assert!(unsupported.is_empty());
+    }
+
+    #[test]
+    fn uri_images_use_the_host_resolver_and_keep_command_order() {
+        let mut scene = PaintScene::new(12.0, 8.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 12.0, 8.0, "#ff0000",
+            )));
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 2.0,
+            y: 2.0,
+            width: 8.0,
+            height: 4.0,
+            src: ImageSrc::Uri("fixture://logo".to_string()),
+            opacity: Some(0.5),
+        }));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                5.0, 0.0, 2.0, 8.0, "#0000ff",
+            )));
+
+        let resolver = |uri: &str| {
+            assert_eq!(uri, "fixture://logo");
+            Ok(PixelContainer::from_data(1, 1, vec![0, 255, 0, 255]))
+        };
+        let plan = plan_scene_with_image_resolver(&scene, &resolver);
+
+        assert_eq!(plan.images.len(), 1);
+        assert_eq!(plan.images[0].data, vec![0, 255, 0, 255]);
+        assert_eq!(plan.commands.len(), 3);
+        let image_mesh = match plan.commands[1] {
+            GpuCommand::DrawMesh { mesh_id } => &plan.meshes[mesh_id],
+            ref other => panic!("expected image draw between rectangles, got {other:?}"),
+        };
+        assert_eq!(image_mesh.texture_id, Some(0));
+        assert_eq!(image_mesh.vertices[0].color.a, 0.5);
+        assert!(plan.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn unresolved_uri_images_report_a_host_boundary_diagnostic() {
+        let mut scene = PaintScene::new(1.0, 1.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 1.0,
+            height: 1.0,
+            src: ImageSrc::Uri("fixture://missing".to_string()),
+            opacity: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert!(plan.commands.is_empty());
+        assert_eq!(plan.diagnostics[0].feature, "image.uri");
+        assert_eq!(plan.diagnostics[0].severity, GpuPlanSeverity::Unsupported);
     }
 
     #[test]

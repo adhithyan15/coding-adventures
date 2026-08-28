@@ -18,9 +18,9 @@
 //! | `PaintPath`       | Implemented — fan fill + segment stroke + Bézier approx     |
 //! | `PaintText`       | Implemented — CoreText CTLine overlay into CG bitmap        |
 //! | `PaintGlyphRun`   | Implemented — CoreText CTFontDrawGlyphs overlay             |
-//! | `PaintLayer`      | Planned — offscreen texture + compose                       |
-//! | `PaintGradient`   | Planned — MSL gradient shader                               |
-//! | `PaintImage`      | Decoded pixels composited with transforms, clips, opacity   |
+//! | `PaintLayer`      | Flattened normal layers; filtered/blended isolation planned |
+//! | `PaintGradient`   | Shared GPU-plan texture ramps                               |
+//! | `PaintImage`      | Ordered GPU textures with transforms, clips, and opacity    |
 //!
 //! ## Metal pipeline
 //!
@@ -29,15 +29,12 @@
 //!   │
 //!   ├── 1. Create Metal device (MTLCreateSystemDefaultDevice)
 //!   ├── 2. Create offscreen RGBA8 texture (width × height)
-//!   ├── 3. Compile rect shader (solid-color triangles)
-//!   ├── 4. Build render pipeline state
-//!   ├── 5. Collect PaintRect / PaintLine / PaintEllipse / PaintPath → triangle vertex buffers
-//!   │       (PaintText collected separately for CoreText overlay)
-//!   ├── 6. Encode render commands into command buffer
+//!   ├── 3. Lower through paint-vm-gpu-core's ordered render plan
+//!   ├── 4. Upload mesh and image/gradient textures
+//!   ├── 5. Rasterize CoreText glyph runs into transient ordered textures
+//!   ├── 6. Encode ordered mesh, image, glyph, and scissor commands
 //!   ├── 7. Commit and wait for GPU completion
-//!   ├── 8. Read back RGBA8 pixels → PixelContainer
-//!   ├── 9. Composite decoded PaintImage pixels over the Metal surface
-//!   └── 10. CoreText overlay: draw PaintGlyphRun via CTFontDrawGlyphs
+//!   └── 8. Read back RGBA8 pixels → PixelContainer
 //! ```
 //!
 //! ## Coordinate system
@@ -76,9 +73,10 @@
 // Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
 #![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.7.0";
 
 pub use paint_instructions::PixelContainer;
+pub use paint_vm_gpu_core::GpuImageResolver;
 
 #[cfg(not(target_vendor = "apple"))]
 pub fn render(_scene: &paint_instructions::PaintScene) -> PixelContainer {
@@ -93,8 +91,15 @@ compile_error!("paint-metal requires arm64 Apple Silicon. Intel macOS is not sup
 
 #[cfg(target_vendor = "apple")]
 use objc_bridge::*;
+use paint_instructions::PaintScene;
+#[cfg(test)]
 use paint_instructions::{
-    PaintEllipse, PaintInstruction, PaintLine, PaintPath, PaintRect, PaintScene, PathCommand,
+    PaintEllipse, PaintInstruction, PaintLine, PaintPath, PaintRect, PathCommand,
+};
+#[cfg(target_vendor = "apple")]
+use paint_vm_gpu_core::{
+    plan_scene, plan_scene_with_image_resolver, GpuColor, GpuCommand, GpuImageUpload, GpuMesh,
+    GpuPaintPlan, GpuPoint, GpuRect, GpuTextureFilter, GpuVertex,
 };
 #[allow(unused_imports)]
 use std::ffi::{c_int, c_ulong};
@@ -112,32 +117,34 @@ use std::ptr;
 // (processes one vertex at a time) and a fragment function (computes one
 // pixel at a time after the rasteriser interpolates between vertices).
 
-/// MSL shader source for rendering solid-colour triangles (rects, ellipses, paths).
+/// MSL shader source for ordered solid and textured triangles.
 ///
 /// ## Data flow
 ///
 /// ```text
-/// CPU → vertex buffer:       [position(float2), color(float4)] per vertex
-/// GPU vertex shader:         pixel_coords → NDC, pass color through
+/// CPU → vertex buffer:       [position(float2), uv(float2), color(float4)]
+/// GPU vertex shader:         pixel_coords → NDC, pass UV/color through
 /// GPU rasteriser:            interpolates (position, color) across triangle
-/// GPU fragment shader:       emits interpolated color as the pixel output
+/// GPU fragment shader:       samples image/gradient texture × vertex color
 /// ```
-const RECT_SHADER_SOURCE: &str = r#"
+const TEXTURED_SHADER_SOURCE: &str = r#"
 #include <metal_stdlib>
 using namespace metal;
 
-struct RectVertexOut {
+struct PaintVertexOut {
     float4 position [[position]];
+    float2 uv;
     float4 color;
 };
 
-vertex RectVertexOut rect_vertex(
+vertex PaintVertexOut paint_vertex(
     uint vid [[vertex_id]],
     const device float2* positions [[buffer(0)]],
-    const device float4* colors    [[buffer(1)]],
-    constant float2& viewport      [[buffer(2)]]
+    const device float2* uvs       [[buffer(1)]],
+    const device float4* colors    [[buffer(2)]],
+    constant float2& viewport      [[buffer(3)]]
 ) {
-    RectVertexOut out;
+    PaintVertexOut out;
     float2 px = positions[vid];
     out.position = float4(
         (px.x / viewport.x) * 2.0 - 1.0,
@@ -145,12 +152,17 @@ vertex RectVertexOut rect_vertex(
         0.0,
         1.0
     );
+    out.uv = uvs[vid];
     out.color = colors[vid];
     return out;
 }
 
-fragment float4 rect_fragment(RectVertexOut in [[stage_in]]) {
-    return in.color;
+fragment float4 paint_fragment(
+    PaintVertexOut in [[stage_in]],
+    texture2d<float> image [[texture(0)]],
+    sampler image_sampler [[sampler(0)]]
+) {
+    return image.sample(image_sampler, in.uv) * in.color;
 }
 "#;
 
@@ -167,6 +179,7 @@ fragment float4 rect_fragment(RectVertexOut in [[stage_in]]) {
 /// - `"transparent"` / anything else → (0.0, 0.0, 0.0, 0.0)
 ///
 /// Returns `(0.0, 0.0, 0.0, 1.0)` for unrecognised non-transparent input.
+#[cfg(test)]
 fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
     let s = s.trim();
     if s == "transparent" {
@@ -207,6 +220,7 @@ fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
     (r, g, b, a)
 }
 
+#[cfg(test)]
 fn css_named_color(name: &str) -> Option<&'static str> {
     Some(match name.to_ascii_lowercase().as_str() {
         "aqua" => "#00ffff",
@@ -234,6 +248,7 @@ fn css_named_color(name: &str) -> Option<&'static str> {
 /// `rgb(...)` / `rgba(...)` CSS string. r/g/b are 0..=255 decimal, a
 /// is 0..=1 decimal. Missing / malformed components clamp gracefully
 /// toward opaque black.
+#[cfg(test)]
 fn parse_rgb_components(inner: &str, has_alpha: bool) -> (f64, f64, f64, f64) {
     let parts: Vec<&str> = inner.split(',').map(|s| s.trim()).collect();
     if parts.len() < 3 {
@@ -275,6 +290,7 @@ fn parse_rgb_components(inner: &str, has_alpha: bool) -> (f64, f64, f64, f64) {
 /// - Layer and Gradient are deferred to P2D08; Image is composited after readback.
 ///
 /// `depth` must be 0 on the initial call; it is incremented for each recursive Group/Clip.
+#[cfg(test)]
 fn collect_geometry(
     instructions: &[PaintInstruction],
     positions: &mut Vec<f32>,
@@ -335,6 +351,7 @@ fn collect_geometry(
 /// Triangle 1: top-left, top-right, bottom-left
 /// Triangle 2: top-right, bottom-right, bottom-left
 /// ```
+#[cfg(test)]
 fn add_rect_vertices(rect: &PaintRect, positions: &mut Vec<f32>, colors: &mut Vec<f32>) {
     let fill = rect.fill.as_deref().unwrap_or("transparent");
     let (r, g, b, a) = parse_hex_color(fill);
@@ -376,6 +393,7 @@ fn add_rect_vertices(rect: &PaintRect, positions: &mut Vec<f32>, colors: &mut Ve
 
 /// Emit a filled axis-aligned rectangle as two triangles (helper).
 #[allow(clippy::too_many_arguments)] // geometry + color + buffers; signature kept as-is
+#[cfg(test)]
 fn emit_filled_rect(
     x: f32,
     y: f32,
@@ -404,6 +422,7 @@ fn emit_filled_rect(
 ///  │   actual line   │
 /// p1 ─────────────── p3     ← offset by -nx,-ny from the line
 /// ```
+#[cfg(test)]
 fn add_line_vertices(line: &PaintLine, positions: &mut Vec<f32>, colors: &mut Vec<f32>) {
     let (r, g, b, a) = parse_hex_color(&line.stroke);
     if a == 0.0 {
@@ -465,8 +484,10 @@ fn add_line_vertices(line: &PaintLine, positions: &mut Vec<f32>, colors: &mut Ve
 ///
 /// A ring quad is the trapezoid between outer point `p_out[i]`
 /// and inner point `p_in[i]` at `(rx - sw)`, `(ry - sw)`.
+#[cfg(test)]
 const ELLIPSE_SEGMENTS: usize = 64;
 
+#[cfg(test)]
 fn add_ellipse_vertices(ellipse: &PaintEllipse, positions: &mut Vec<f32>, colors: &mut Vec<f32>) {
     use std::f64::consts::TAU;
     let cx = ellipse.cx as f32;
@@ -529,6 +550,7 @@ fn add_ellipse_vertices(ellipse: &PaintEllipse, positions: &mut Vec<f32>, colors
     }
 }
 
+#[cfg(test)]
 fn add_path_stroke_quad(
     start: (f32, f32),
     end: (f32, f32),
@@ -579,6 +601,7 @@ fn add_path_stroke_quad(
 /// `QuadTo` is approximated with 8 linear segments via de Casteljau.
 /// `CubicTo` is approximated with 8 linear segments via de Casteljau.
 /// `ArcTo` is not yet tessellated — it is silently skipped.
+#[cfg(test)]
 fn add_path_vertices(path: &PaintPath, positions: &mut Vec<f32>, colors: &mut Vec<f32>) {
     // Guard: each CubicTo/QuadTo expands to 8 points; cap total to prevent OOM.
     const MAX_PATH_COMMANDS: usize = 10_000;
@@ -805,17 +828,41 @@ fn add_path_vertices(path: &PaintPath, positions: &mut Vec<f32>, colors: &mut Ve
 /// 9. Return the pixels as a `PixelContainer`
 #[cfg(target_vendor = "apple")]
 pub fn render(scene: &PaintScene) -> PixelContainer {
-    let mut pixels = unsafe { render_unsafe(scene) };
-
-    image_overlay::overlay_decoded_images(scene, &mut pixels);
-
-    // Render PaintGlyphRun instructions via CoreText glyph drawing.
-    unsafe {
-        glyph_run_overlay::overlay_coretext_glyph_runs(scene, &mut pixels);
-    }
-    pixels
+    validate_scene_dimensions(scene);
+    unsafe { render_plan_unsafe(plan_scene(scene)) }
 }
 
+/// Render a scene while delegating URI-backed image loading to the host.
+///
+/// The resolver owns fetch, cache, security, and codec policy. Metal only
+/// receives decoded RGBA pixels, matching the browser pipeline's resource
+/// boundary and keeping network behavior out of the renderer.
+#[cfg(target_vendor = "apple")]
+pub fn render_with_image_resolver(
+    scene: &PaintScene,
+    resolver: &dyn GpuImageResolver,
+) -> PixelContainer {
+    validate_scene_dimensions(scene);
+    unsafe { render_plan_unsafe(plan_scene_with_image_resolver(scene, resolver)) }
+}
+
+#[cfg(target_vendor = "apple")]
+fn validate_scene_dimensions(scene: &PaintScene) {
+    const MAX_DIMENSION: f64 = 16_384.0;
+    if !scene.width.is_finite()
+        || !scene.height.is_finite()
+        || scene.width > MAX_DIMENSION
+        || scene.height > MAX_DIMENSION
+    {
+        panic!(
+            "Scene dimensions {}x{} are non-finite or exceed maximum {}x{}",
+            scene.width, scene.height, MAX_DIMENSION, MAX_DIMENSION
+        );
+    }
+}
+
+#[cfg(test)]
+#[allow(dead_code)]
 mod image_overlay {
     use paint_instructions::{ImageSrc, PaintImage, PaintInstruction, PaintScene, PixelContainer};
 
@@ -1039,6 +1086,396 @@ mod image_overlay {
 }
 
 #[cfg(target_vendor = "apple")]
+#[derive(Clone, Copy)]
+struct PreparedTexture {
+    texture: Id,
+    sampler: Id,
+}
+
+#[cfg(target_vendor = "apple")]
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct MetalScissorRect {
+    x: usize,
+    y: usize,
+    width: usize,
+    height: usize,
+}
+
+#[cfg(target_vendor = "apple")]
+unsafe fn render_plan_unsafe(plan: GpuPaintPlan) -> PixelContainer {
+    const MAX_DIMENSION: u32 = 16_384;
+    if plan.width > MAX_DIMENSION || plan.height > MAX_DIMENSION {
+        panic!(
+            "Scene dimensions {}x{} exceed maximum {}x{}",
+            plan.width, plan.height, MAX_DIMENSION, MAX_DIMENSION
+        );
+    }
+    if plan.width == 0 || plan.height == 0 {
+        return PixelContainer::new(plan.width, plan.height);
+    }
+
+    let device = MTLCreateSystemDefaultDevice();
+    assert!(!device.is_null(), "No Metal-capable GPU found");
+    let command_queue = msg_send_id(device, "newCommandQueue");
+    assert!(!command_queue.is_null(), "Failed to create command queue");
+    let target = create_offscreen_texture(device, plan.width, plan.height);
+    let pipeline = create_rect_pipeline(device);
+
+    let white_upload = GpuImageUpload {
+        width: 1,
+        height: 1,
+        data: vec![255, 255, 255, 255],
+        filter: GpuTextureFilter::Nearest,
+        kind: paint_vm_gpu_core::GpuTextureKind::Image,
+    };
+    let white = prepare_texture(device, &white_upload);
+    let mut textures: Vec<PreparedTexture> = plan
+        .images
+        .iter()
+        .map(|upload| prepare_texture(device, upload))
+        .collect();
+
+    let pass_desc_class = class("MTLRenderPassDescriptor");
+    let pass_desc: Id = msg_send_class(pass_desc_class, "renderPassDescriptor");
+    let color_attachments = msg_send_id(pass_desc, "colorAttachments");
+    let attachment0: Id = msg!(color_attachments, "objectAtIndexedSubscript:", 0usize);
+    msg!(attachment0, "setTexture:", target);
+    msg!(
+        attachment0,
+        "setLoadAction:",
+        MTL_LOAD_ACTION_CLEAR as usize
+    );
+    msg!(
+        attachment0,
+        "setStoreAction:",
+        MTL_STORE_ACTION_STORE as usize
+    );
+    let clear_color = MTLClearColor {
+        red: plan.background.r as f64,
+        green: plan.background.g as f64,
+        blue: plan.background.b as f64,
+        alpha: plan.background.a as f64,
+    };
+    let set_clear_color: unsafe extern "C" fn(Id, Sel, MTLClearColor) =
+        std::mem::transmute(objc_msgSend as *const ());
+    set_clear_color(attachment0, sel("setClearColor:"), clear_color);
+
+    let command_buffer = msg_send_id(command_queue, "commandBuffer");
+    let encoder: Id = msg!(
+        command_buffer,
+        "renderCommandEncoderWithDescriptor:",
+        pass_desc
+    );
+    msg!(encoder, "setRenderPipelineState:", pipeline);
+
+    let viewport = [plan.width as f32, plan.height as f32];
+    let full_clip = GpuRect {
+        x: 0.0,
+        y: 0.0,
+        width: plan.width as f32,
+        height: plan.height as f32,
+    };
+    let mut clip_stack = vec![full_clip];
+    set_scissor(encoder, full_clip, plan.width, plan.height);
+
+    for command in &plan.commands {
+        match command {
+            GpuCommand::DrawMesh { mesh_id } => {
+                if clip_stack
+                    .last()
+                    .is_some_and(|clip| clip.width <= 0.0 || clip.height <= 0.0)
+                {
+                    continue;
+                }
+                if let Some(mesh) = plan.meshes.get(*mesh_id) {
+                    let prepared = mesh
+                        .texture_id
+                        .and_then(|texture_id| textures.get(texture_id))
+                        .copied()
+                        .unwrap_or(white);
+                    encode_mesh(encoder, device, mesh, prepared, viewport);
+                }
+            }
+            GpuCommand::DrawGlyphRun(run) => {
+                if clip_stack
+                    .last()
+                    .is_some_and(|clip| clip.width <= 0.0 || clip.height <= 0.0)
+                {
+                    continue;
+                }
+                if let Some(rasterized) =
+                    glyph_run_overlay::rasterize_gpu_glyph_run(run, plan.width, plan.height)
+                {
+                    let upload = GpuImageUpload {
+                        width: rasterized.pixels.width,
+                        height: rasterized.pixels.height,
+                        data: rasterized.pixels.data,
+                        filter: GpuTextureFilter::Nearest,
+                        kind: paint_vm_gpu_core::GpuTextureKind::Image,
+                    };
+                    let prepared = prepare_texture(device, &upload);
+                    textures.push(prepared);
+                    let mesh =
+                        textured_rect_mesh(rasterized.x, rasterized.y, upload.width, upload.height);
+                    encode_mesh(encoder, device, &mesh, prepared, viewport);
+                }
+            }
+            GpuCommand::PushClip { rect } => {
+                let clipped = intersect_gpu_rect(*clip_stack.last().unwrap(), *rect);
+                clip_stack.push(clipped);
+                set_scissor(encoder, clipped, plan.width, plan.height);
+            }
+            GpuCommand::PopClip => {
+                if clip_stack.len() > 1 {
+                    clip_stack.pop();
+                }
+                set_scissor(
+                    encoder,
+                    *clip_stack.last().unwrap(),
+                    plan.width,
+                    plan.height,
+                );
+            }
+            // PaintText requires shaping before it can become a GPU command.
+            // Layout-backed browser scenes emit GlyphRun, which is ordered above.
+            GpuCommand::DrawText(_) => {}
+        }
+    }
+
+    msg!(encoder, "endEncoding");
+    msg!(command_buffer, "commit");
+    msg!(command_buffer, "waitUntilCompleted");
+    let pixels = read_back_pixels(target, plan.width, plan.height);
+
+    for prepared in textures {
+        release(prepared.texture);
+        release(prepared.sampler);
+    }
+    release(white.texture);
+    release(white.sampler);
+    release(target);
+    release(pipeline);
+    release(command_queue);
+    release(device);
+    pixels
+}
+
+#[cfg(target_vendor = "apple")]
+fn textured_rect_mesh(x: f32, y: f32, width: u32, height: u32) -> GpuMesh {
+    let white = GpuColor {
+        r: 1.0,
+        g: 1.0,
+        b: 1.0,
+        a: 1.0,
+    };
+    GpuMesh {
+        vertices: vec![
+            GpuVertex {
+                position: GpuPoint { x, y },
+                uv: [0.0, 0.0],
+                color: white,
+            },
+            GpuVertex {
+                position: GpuPoint {
+                    x: x + width as f32,
+                    y,
+                },
+                uv: [1.0, 0.0],
+                color: white,
+            },
+            GpuVertex {
+                position: GpuPoint {
+                    x: x + width as f32,
+                    y: y + height as f32,
+                },
+                uv: [1.0, 1.0],
+                color: white,
+            },
+            GpuVertex {
+                position: GpuPoint {
+                    x,
+                    y: y + height as f32,
+                },
+                uv: [0.0, 1.0],
+                color: white,
+            },
+        ],
+        indices: vec![0, 1, 2, 0, 2, 3],
+        texture_id: None,
+        label: "coretext-glyph-run",
+    }
+}
+
+#[cfg(target_vendor = "apple")]
+fn intersect_gpu_rect(left: GpuRect, right: GpuRect) -> GpuRect {
+    let x = left.x.max(right.x);
+    let y = left.y.max(right.y);
+    let right_edge = (left.x + left.width).min(right.x + right.width);
+    let bottom_edge = (left.y + left.height).min(right.y + right.height);
+    GpuRect {
+        x,
+        y,
+        width: (right_edge - x).max(0.0),
+        height: (bottom_edge - y).max(0.0),
+    }
+}
+
+#[cfg(target_vendor = "apple")]
+unsafe fn set_scissor(encoder: Id, rect: GpuRect, width: u32, height: u32) {
+    let x = rect.x.floor().clamp(0.0, width as f32) as usize;
+    let y = rect.y.floor().clamp(0.0, height as f32) as usize;
+    let right = (rect.x + rect.width).ceil().clamp(x as f32, width as f32) as usize;
+    let bottom = (rect.y + rect.height).ceil().clamp(y as f32, height as f32) as usize;
+    let scissor = MetalScissorRect {
+        x,
+        y,
+        width: right - x,
+        height: bottom - y,
+    };
+    let set_scissor: unsafe extern "C" fn(Id, Sel, MetalScissorRect) =
+        std::mem::transmute(objc_msgSend as *const ());
+    set_scissor(encoder, sel("setScissorRect:"), scissor);
+}
+
+#[cfg(target_vendor = "apple")]
+unsafe fn encode_mesh(
+    encoder: Id,
+    device: Id,
+    mesh: &GpuMesh,
+    texture: PreparedTexture,
+    viewport: [f32; 2],
+) {
+    let mut positions = Vec::with_capacity(mesh.indices.len() * 2);
+    let mut uvs = Vec::with_capacity(mesh.indices.len() * 2);
+    let mut colors = Vec::with_capacity(mesh.indices.len() * 4);
+    for index in &mesh.indices {
+        let Some(vertex) = mesh.vertices.get(*index as usize) else {
+            continue;
+        };
+        positions.extend_from_slice(&[vertex.position.x, vertex.position.y]);
+        uvs.extend_from_slice(&vertex.uv);
+        colors.extend_from_slice(&[
+            vertex.color.r,
+            vertex.color.g,
+            vertex.color.b,
+            vertex.color.a,
+        ]);
+    }
+    if positions.is_empty() {
+        return;
+    }
+
+    let position_buffer = create_buffer(device, &positions);
+    let uv_buffer = create_buffer(device, &uvs);
+    let color_buffer = create_buffer(device, &colors);
+    msg!(
+        encoder,
+        "setVertexBuffer:offset:atIndex:",
+        position_buffer,
+        0usize,
+        0usize
+    );
+    msg!(
+        encoder,
+        "setVertexBuffer:offset:atIndex:",
+        uv_buffer,
+        0usize,
+        1usize
+    );
+    msg!(
+        encoder,
+        "setVertexBuffer:offset:atIndex:",
+        color_buffer,
+        0usize,
+        2usize
+    );
+    msg!(
+        encoder,
+        "setVertexBytes:length:atIndex:",
+        viewport.as_ptr() as Id,
+        std::mem::size_of_val(&viewport),
+        3usize
+    );
+    msg!(
+        encoder,
+        "setFragmentTexture:atIndex:",
+        texture.texture,
+        0usize
+    );
+    msg!(
+        encoder,
+        "setFragmentSamplerState:atIndex:",
+        texture.sampler,
+        0usize
+    );
+    msg!(
+        encoder,
+        "drawPrimitives:vertexStart:vertexCount:",
+        MTL_PRIMITIVE_TYPE_TRIANGLE as usize,
+        0usize,
+        positions.len() / 2
+    );
+    release(position_buffer);
+    release(uv_buffer);
+    release(color_buffer);
+}
+
+#[cfg(target_vendor = "apple")]
+unsafe fn prepare_texture(device: Id, upload: &GpuImageUpload) -> PreparedTexture {
+    assert_eq!(
+        upload.data.len(),
+        upload.width as usize * upload.height as usize * 4,
+        "GPU texture upload must contain tightly packed RGBA8 pixels"
+    );
+    let desc = alloc_init("MTLTextureDescriptor");
+    msg!(
+        desc,
+        "setPixelFormat:",
+        MTL_PIXEL_FORMAT_RGBA8_UNORM as usize
+    );
+    msg!(desc, "setWidth:", upload.width as usize);
+    msg!(desc, "setHeight:", upload.height as usize);
+    msg!(desc, "setTextureType:", MTL_TEXTURE_TYPE_2D as usize);
+    msg!(desc, "setUsage:", MTL_TEXTURE_USAGE_SHADER_READ as usize);
+    let texture: Id = msg!(device, "newTextureWithDescriptor:", desc);
+    release(desc);
+    assert!(!texture.is_null(), "Failed to create image texture");
+
+    let region = MTLRegion {
+        origin: MTLOrigin { x: 0, y: 0, z: 0 },
+        size: MTLSize {
+            width: upload.width as c_ulong,
+            height: upload.height as c_ulong,
+            depth: 1,
+        },
+    };
+    let replace: unsafe extern "C" fn(Id, Sel, MTLRegion, usize, *const std::ffi::c_void, usize) =
+        std::mem::transmute(objc_msgSend as *const ());
+    replace(
+        texture,
+        sel("replaceRegion:mipmapLevel:withBytes:bytesPerRow:"),
+        region,
+        0,
+        upload.data.as_ptr() as *const std::ffi::c_void,
+        upload.width as usize * 4,
+    );
+
+    let sampler_desc = alloc_init("MTLSamplerDescriptor");
+    let filter = match upload.filter {
+        GpuTextureFilter::Nearest => 0usize,
+        GpuTextureFilter::Linear => 1usize,
+    };
+    msg!(sampler_desc, "setMinFilter:", filter);
+    msg!(sampler_desc, "setMagFilter:", filter);
+    let sampler: Id = msg!(device, "newSamplerStateWithDescriptor:", sampler_desc);
+    release(sampler_desc);
+    assert!(!sampler.is_null(), "Failed to create image sampler");
+    PreparedTexture { texture, sampler }
+}
+
+#[cfg(all(test, target_vendor = "apple"))]
+#[allow(dead_code)]
 unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
     // Guard against NaN/Inf before casting — `f64::INFINITY as u32` saturates to
     // u32::MAX on Rust (4 294 967 295), which would bypass the zero-size check and
@@ -1231,17 +1668,17 @@ unsafe fn compile_shader_library(device: Id, source: &str) -> Id {
 
 #[cfg(target_vendor = "apple")]
 unsafe fn create_rect_pipeline(device: Id) -> Id {
-    let library = compile_shader_library(device, RECT_SHADER_SOURCE);
+    let library = compile_shader_library(device, TEXTURED_SHADER_SOURCE);
 
-    let vname = nsstring("rect_vertex");
-    let fname = nsstring("rect_fragment");
+    let vname = nsstring("paint_vertex");
+    let fname = nsstring("paint_fragment");
     let vertex_fn: Id = msg!(library, "newFunctionWithName:", vname);
     let fragment_fn: Id = msg!(library, "newFunctionWithName:", fname);
     CFRelease(vname);
     CFRelease(fname);
 
-    assert!(!vertex_fn.is_null(), "rect_vertex shader not found");
-    assert!(!fragment_fn.is_null(), "rect_fragment shader not found");
+    assert!(!vertex_fn.is_null(), "paint_vertex shader not found");
+    assert!(!fragment_fn.is_null(), "paint_fragment shader not found");
 
     let desc = alloc_init("MTLRenderPipelineDescriptor");
     msg!(desc, "setVertexFunction:", vertex_fn);
@@ -1366,7 +1803,106 @@ mod glyph_run_overlay {
         CGPoint, CTFontCreateWithName, CTFontDrawGlyphs, Id, K_CG_BITMAP_BYTE_ORDER_32_LITTLE,
         K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST, NIL,
     };
-    use paint_instructions::{PaintGlyphRun, PaintInstruction, PaintScene, PixelContainer};
+    use paint_instructions::{
+        GlyphPosition, PaintBase, PaintGlyphRun, PaintInstruction, PaintScene, PixelContainer,
+    };
+    use paint_vm_gpu_core::GpuGlyphRun;
+
+    pub(super) struct RasterizedGlyphRun {
+        pub pixels: PixelContainer,
+        pub x: f32,
+        pub y: f32,
+    }
+
+    pub(super) unsafe fn rasterize_gpu_glyph_run(
+        run: &GpuGlyphRun,
+        width: u32,
+        height: u32,
+    ) -> Option<RasterizedGlyphRun> {
+        if width == 0
+            || height == 0
+            || run.glyphs.is_empty()
+            || !run.font_ref.starts_with("coretext:")
+        {
+            return None;
+        }
+        let margin = run.font_size.max(1.0) * 2.0;
+        let min_x = run
+            .glyphs
+            .iter()
+            .map(|glyph| glyph.x)
+            .fold(f32::INFINITY, f32::min);
+        let max_x = run
+            .glyphs
+            .iter()
+            .map(|glyph| glyph.x)
+            .fold(f32::NEG_INFINITY, f32::max);
+        let min_y = run
+            .glyphs
+            .iter()
+            .map(|glyph| glyph.y)
+            .fold(f32::INFINITY, f32::min);
+        let max_y = run
+            .glyphs
+            .iter()
+            .map(|glyph| glyph.y)
+            .fold(f32::NEG_INFINITY, f32::max);
+        let x = (min_x - margin).floor().clamp(0.0, width as f32);
+        let y = (min_y - margin).floor().clamp(0.0, height as f32);
+        let right = (max_x + margin).ceil().clamp(x, width as f32);
+        let bottom = (max_y + margin).ceil().clamp(y, height as f32);
+        let texture_width = (right - x) as u32;
+        let texture_height = (bottom - y) as u32;
+        if texture_width == 0 || texture_height == 0 {
+            return None;
+        }
+        let mut pixels = PixelContainer::new(texture_width, texture_height);
+        let glyph_run = PaintGlyphRun {
+            base: PaintBase::default(),
+            glyphs: run
+                .glyphs
+                .iter()
+                .map(|glyph| GlyphPosition {
+                    glyph_id: glyph.glyph_id,
+                    x: (glyph.x - x) as f64,
+                    y: (glyph.y - y) as f64,
+                })
+                .collect(),
+            font_ref: run.font_ref.clone(),
+            font_size: run.font_size as f64,
+            fill: Some(format!(
+                "rgba({}, {}, {}, {})",
+                (run.color.r.clamp(0.0, 1.0) * 255.0).round() as u8,
+                (run.color.g.clamp(0.0, 1.0) * 255.0).round() as u8,
+                (run.color.b.clamp(0.0, 1.0) * 255.0).round() as u8,
+                run.color.a.clamp(0.0, 1.0)
+            )),
+        };
+        let scene = PaintScene {
+            width: texture_width as f64,
+            height: texture_height as f64,
+            background: "transparent".to_string(),
+            instructions: vec![PaintInstruction::GlyphRun(glyph_run)],
+            id: None,
+            metadata: None,
+        };
+        overlay_coretext_glyph_runs(&scene, &mut pixels);
+        unpremultiply_rgba(&mut pixels.data);
+        Some(RasterizedGlyphRun { pixels, x, y })
+    }
+
+    fn unpremultiply_rgba(data: &mut [u8]) {
+        for pixel in data.chunks_exact_mut(4) {
+            let alpha = u32::from(pixel[3]);
+            if alpha == 0 {
+                pixel[..3].fill(0);
+                continue;
+            }
+            for channel in &mut pixel[..3] {
+                *channel = ((u32::from(*channel) * 255 + alpha / 2) / alpha).min(255) as u8;
+            }
+        }
+    }
 
     pub(super) unsafe fn overlay_coretext_glyph_runs(
         scene: &PaintScene,
@@ -1620,6 +2156,13 @@ mod glyph_run_overlay {
         }
 
         #[test]
+        fn ordered_glyph_texture_converts_premultiplied_bytes_to_straight_alpha() {
+            let mut rgba = vec![64, 32, 16, 128, 9, 8, 7, 0];
+            unpremultiply_rgba(&mut rgba);
+            assert_eq!(rgba, vec![128, 64, 32, 128, 0, 0, 0, 0]);
+        }
+
+        #[test]
         fn parse_css_color_malformed_returns_black() {
             let (r, g, b, a) = parse_css_color("not-a-color");
             assert_eq!((r, g, b, a), (0.0, 0.0, 0.0, 1.0));
@@ -1662,6 +2205,18 @@ pub fn render_to_metal_layer(
     metal_layer: objc_bridge::Id,
 ) -> Result<(), PaintMetalError> {
     let pixels = render(scene);
+    unsafe { live_present::present_pixels_to_layer(metal_layer, &pixels) }
+}
+
+/// Present a scene whose URI-backed images are supplied by host resource policy.
+#[allow(clippy::not_unsafe_ptr_arg_deref)]
+#[cfg(target_vendor = "apple")]
+pub fn render_to_metal_layer_with_image_resolver(
+    scene: &PaintScene,
+    metal_layer: objc_bridge::Id,
+    resolver: &dyn GpuImageResolver,
+) -> Result<(), PaintMetalError> {
+    let pixels = render_with_image_resolver(scene, resolver);
     unsafe { live_present::present_pixels_to_layer(metal_layer, &pixels) }
 }
 
@@ -1784,13 +2339,13 @@ mod live_present {
 mod tests {
     use super::*;
     use paint_instructions::{
-        ImageSrc, PaintBase, PaintEllipse, PaintImage, PaintInstruction, PaintPath, PaintRect,
-        PaintScene, PathCommand,
+        GradientKind, GradientStop, ImageSrc, PaintBase, PaintEllipse, PaintGradient, PaintImage,
+        PaintInstruction, PaintPath, PaintRect, PaintScene, PathCommand,
     };
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.4.0");
+        assert_eq!(VERSION, "0.7.0");
     }
 
     // ─── Color parser tests ──────────────────────────────────────────────────
@@ -2070,6 +2625,155 @@ mod tests {
         assert_eq!(pixels.pixel_at(4, 4), (255, 0, 255, 255));
         assert_eq!(pixels.pixel_at(15, 4), (0, 255, 255, 255));
         assert_eq!(pixels.pixel_at(0, 0), (255, 255, 255, 255));
+    }
+
+    #[test]
+    fn images_follow_mixed_painter_order_on_the_gpu() {
+        let green = PixelContainer::from_data(1, 1, vec![0, 255, 0, 255]);
+        let mut scene = PaintScene::new(12.0, 8.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 12.0, 8.0, "#ff0000",
+            )));
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 2.0,
+            y: 1.0,
+            width: 8.0,
+            height: 6.0,
+            src: ImageSrc::Pixels(green),
+            opacity: None,
+        }));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                5.0, 0.0, 2.0, 8.0, "#0000ff",
+            )));
+
+        let pixels = render(&scene);
+
+        assert_eq!(pixels.pixel_at(1, 4), (255, 0, 0, 255));
+        assert_eq!(pixels.pixel_at(3, 4), (0, 255, 0, 255));
+        assert_eq!(pixels.pixel_at(6, 4), (0, 0, 255, 255));
+    }
+
+    #[test]
+    fn ordered_images_inherit_affine_clip_and_opacity() {
+        use paint_instructions::{PaintClip, PaintGroup};
+
+        let magenta = PixelContainer::from_data(1, 1, vec![255, 0, 255, 255]);
+        let image = PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 8.0,
+            height: 6.0,
+            src: ImageSrc::Pixels(magenta),
+            opacity: None,
+        });
+        let mut scene = PaintScene::new(16.0, 10.0);
+        scene.background = "#000000".to_string();
+        scene.instructions.push(PaintInstruction::Group(PaintGroup {
+            base: PaintBase::default(),
+            children: vec![PaintInstruction::Clip(PaintClip {
+                base: PaintBase::default(),
+                x: 2.0,
+                y: 1.0,
+                width: 4.0,
+                height: 4.0,
+                children: vec![image],
+            })],
+            transform: Some([1.0, 0.0, 0.0, 1.0, 4.0, 2.0]),
+            opacity: Some(0.5),
+        }));
+
+        let pixels = render(&scene);
+
+        assert_eq!(pixels.pixel_at(5, 4), (0, 0, 0, 255));
+        let blended = pixels.pixel_at(7, 4);
+        assert!(blended.0 >= 127 && blended.0 <= 128);
+        assert_eq!(blended.1, 0);
+        assert!(blended.2 >= 127 && blended.2 <= 128);
+        assert_eq!(pixels.pixel_at(11, 4), (0, 0, 0, 255));
+    }
+
+    #[test]
+    fn host_resolver_supplies_uri_pixels_without_backend_fetching() {
+        let mut scene = PaintScene::new(6.0, 4.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 1.0,
+            y: 1.0,
+            width: 4.0,
+            height: 2.0,
+            src: ImageSrc::Uri("fixture://cyan".to_string()),
+            opacity: None,
+        }));
+        let resolver = |uri: &str| {
+            assert_eq!(uri, "fixture://cyan");
+            Ok(PixelContainer::from_data(1, 1, vec![0, 255, 255, 255]))
+        };
+
+        let pixels = render_with_image_resolver(&scene, &resolver);
+
+        assert_eq!(pixels.pixel_at(3, 2), (0, 255, 255, 255));
+        assert_eq!(pixels.pixel_at(0, 0), (255, 255, 255, 255));
+    }
+
+    #[test]
+    fn shared_linear_gradient_plan_renders_as_a_metal_texture() {
+        let mut scene = PaintScene::new(16.0, 4.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("spectrum".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 16.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#ff0000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#0000ff".to_string(),
+                    },
+                ],
+            }));
+        scene.instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: 0.0,
+            y: 0.0,
+            width: 16.0,
+            height: 4.0,
+            fill: Some("url(#spectrum)".to_string()),
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+        let left = pixels.pixel_at(1, 2);
+        let right = pixels.pixel_at(14, 2);
+
+        assert!(
+            left.0 > left.2,
+            "left gradient edge should be red: {left:?}"
+        );
+        assert!(
+            right.2 > right.0,
+            "right gradient edge should be blue: {right:?}"
+        );
     }
 
     /// Render a blue filled ellipse and verify the centre pixel is blue.
