@@ -252,5 +252,22 @@ export const scriptInventoryEvidence = {
     );
     expect(missingByScript.get("japanese.json")?.has("よ")).toBe(false);
     expect(affected.get("よ") ?? 0).toBe(0);
+    const japaneseMe = scripts.japanese!.letters.find(
+      (entry) => entry.glyph === "め",
+    )!;
+    expect(japaneseMe.sound).toBe("me");
+    expect(japaneseMe.penLifts).toBe(1);
+    expect(japaneseMe.strokeOrder).toEqual([
+      "descend from the upper left and curve down and right to the central finish",
+      "lift, begin high near the center, descend diagonally left through the first stroke, loop around the lower left, sweep upward across the top, then continue clockwise around the broad right curve to the lower finish",
+    ]);
+    expect(japaneseMe.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*め.*32 frames.*3\.2 seconds.*Wikimedia Commons.*1 October 2009/i,
+    );
+    expect(japaneseMe.strokeOrderSource?.variation).toMatch(
+      /CC0.*two pen-down runs.*one lift.*left descending curve.*high central restart.*crosses the first stroke.*lower left.*across the top.*clockwise.*broad right curve.*lower finish.*Noto Sans JP.*two-run order/i,
+    );
+    expect(missingByScript.get("japanese.json")?.has("め")).toBe(false);
+    expect(affected.get("め") ?? 0).toBe(0);
   },
 };

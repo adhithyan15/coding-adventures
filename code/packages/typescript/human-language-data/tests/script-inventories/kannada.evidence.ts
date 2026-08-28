@@ -197,6 +197,6 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ಆ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["め", 1]);
+    ).toEqual(["つ", 1]);
   },
 };

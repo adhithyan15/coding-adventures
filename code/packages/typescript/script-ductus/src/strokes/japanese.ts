@@ -934,4 +934,62 @@ export const entries: DuctusEntry[] = [
         .strokeOrderSource!,
     },
   ],
+  // Sirgazil's 32-frame animation writes め in two runs: the short left
+  // descending curve, then the crossing diagonal and continuous paired loop.
+  // These medians preserve that one-lift order in the bundled Noto Sans JP
+  // subset.
+  [
+    "japanese:め",
+    {
+      script: "japanese",
+      glyph: "め",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "descend from the upper left and curve down and right",
+              path: [
+                { x: 220, y: 690 }, { x: 235, y: 610 }, { x: 265, y: 520 },
+                { x: 305, y: 425 }, { x: 350, y: 335 }, { x: 405, y: 240 },
+                { x: 470, y: 135 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "descend diagonally left through the first stroke",
+              path: [
+                { x: 625, y: 745 }, { x: 610, y: 665 }, { x: 585, y: 575 },
+                { x: 555, y: 485 }, { x: 515, y: 390 }, { x: 470, y: 300 },
+                { x: 420, y: 220 }, { x: 365, y: 155 },
+              ],
+            },
+            {
+              label: "loop around the lower left and sweep upward across the top",
+              path: [
+                { x: 365, y: 155 }, { x: 305, y: 100 }, { x: 245, y: 70 },
+                { x: 190, y: 80 }, { x: 145, y: 125 }, { x: 120, y: 195 },
+                { x: 125, y: 275 }, { x: 155, y: 350 }, { x: 205, y: 420 },
+                { x: 275, y: 480 }, { x: 355, y: 530 }, { x: 445, y: 575 },
+                { x: 545, y: 595 }, { x: 640, y: 580 },
+              ],
+            },
+            {
+              label: "continue clockwise around the broad right curve to the lower finish",
+              path: [
+                { x: 640, y: 580 }, { x: 725, y: 545 }, { x: 790, y: 490 },
+                { x: 835, y: 420 }, { x: 855, y: 340 }, { x: 850, y: 255 },
+                { x: 820, y: 180 }, { x: 770, y: 115 }, { x: 705, y: 70 },
+                { x: 630, y: 35 }, { x: 550, y: 5 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: japanese.letters.find((letter) => letter.glyph === "め")!
+        .strokeOrderSource!,
+    },
+  ],
 ];
