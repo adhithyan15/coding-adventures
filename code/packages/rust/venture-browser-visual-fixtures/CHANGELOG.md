@@ -8,6 +8,9 @@
 
 ## Unreleased
 
+- Extend the real-page router and reverse-completion capture with an external
+  author stylesheet so every available backend exercises retained-page
+  restyling through the shared scheduler and computed cascade.
 - Add document-first and reverse-completion image lifecycle capture with
   scheduler diagnostics and converged visual assertions.
 - Added a reusable isolated GPU layer scene and pixel oracle covering overlap

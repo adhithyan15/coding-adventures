@@ -1,5 +1,13 @@
 # Changelog
 
+## External stylesheets and computed cascade
+
+- Added typed stylesheet requests to the shared subresource lifecycle with
+  ordered blocking, media/failure fallback, navigation cancellation, and
+  retained-page restyle.
+- Added grammar-validated author/UA computed styles and external-CSS real-page
+  acceptance shared by Cairo, Metal, Direct2D, and generated host gates.
+
 ## Asynchronous subresource lifecycle
 
 - Added document-first image scheduling with deterministic requests,

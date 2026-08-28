@@ -11,9 +11,9 @@ pub use browser_bookmarks::{
 };
 pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
 use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTree};
-use html_to_layout::HtmlTheme;
+use html_to_layout::{HtmlAuthorStylesheet, HtmlStyleContext, HtmlTheme};
 use html_to_paint::{
-    decode_image_resource, hit_test_link, html_render_tree_to_paint_with_link_state,
+    decode_image_resource, hit_test_link, html_render_tree_to_paint_with_style_context,
     resolve_scene_image_resources_incrementally, scene_image_resource_uris, FetchedImage,
     HtmlImageResolver, HtmlImageResource, HtmlImageResourceError, HtmlPaintOutput,
     HtmlPaintViewport, LinkRegion,
@@ -23,6 +23,7 @@ use layout_ir::TextMeasurer;
 use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintScene, PixelContainer};
 use std::fmt;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
+use url_parser::Url;
 
 pub const VERSION: &str = "0.8.0";
 
@@ -289,6 +290,8 @@ pub struct BrowserPage {
     pub paint: HtmlPaintOutput,
     pub image_failures: Vec<HtmlImageResourceError>,
     pub image_resources: Vec<BrowserImageResource>,
+    pub stylesheet_failures: Vec<BrowserStylesheetError>,
+    pub stylesheet_resources: Vec<BrowserStylesheetResource>,
 }
 
 impl BrowserPage {
@@ -314,10 +317,79 @@ pub enum BrowserImageResourceState {
     Failed(HtmlImageResourceError),
 }
 
+/// Retained author stylesheet in parser-defined document order.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserStylesheetResource {
+    pub url: Option<String>,
+    pub media: Option<String>,
+    pub render_blocking: bool,
+    pub state: BrowserStylesheetResourceState,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum BrowserStylesheetResourceState {
+    Ready(String),
+    Pending,
+    Failed(BrowserStylesheetError),
+    Inactive,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum BrowserStylesheetError {
+    Fetch {
+        url: String,
+        message: String,
+    },
+    HttpStatus {
+        url: String,
+        status: u16,
+    },
+    UnsupportedMediaType {
+        url: String,
+        media_type: String,
+    },
+    Parse {
+        url: Option<String>,
+        message: String,
+    },
+}
+
+impl fmt::Display for BrowserStylesheetError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Fetch { url, message } => {
+                write!(formatter, "failed to fetch stylesheet {url}: {message}")
+            }
+            Self::HttpStatus { url, status } => {
+                write!(formatter, "stylesheet {url} returned HTTP {status}")
+            }
+            Self::UnsupportedMediaType { url, media_type } => {
+                write!(
+                    formatter,
+                    "stylesheet {url} used unsupported media type {media_type}"
+                )
+            }
+            Self::Parse { url, message } => match url {
+                Some(url) => write!(formatter, "failed to parse stylesheet {url}: {message}"),
+                None => write!(formatter, "failed to parse inline stylesheet: {message}"),
+            },
+        }
+    }
+}
+
+impl std::error::Error for BrowserStylesheetError {}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum BrowserSubresourceKind {
+    Stylesheet,
+    Image,
+}
+
 /// One scheduler request belonging to a particular committed navigation.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct BrowserSubresourceRequest {
     pub navigation_id: u64,
+    pub kind: BrowserSubresourceKind,
     pub ordinal: usize,
     pub url: String,
 }
@@ -326,7 +398,19 @@ pub struct BrowserSubresourceRequest {
 #[derive(Clone, Debug, PartialEq)]
 pub struct BrowserSubresourceCompletion {
     pub request: BrowserSubresourceRequest,
-    pub result: Result<PixelContainer, HtmlImageResourceError>,
+    pub result: Result<BrowserSubresourcePayload, BrowserSubresourceError>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum BrowserSubresourcePayload {
+    Stylesheet(String),
+    Image(PixelContainer),
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum BrowserSubresourceError {
+    Stylesheet(BrowserStylesheetError),
+    Image(HtmlImageResourceError),
 }
 
 impl BrowserSubresourceRequest {
@@ -337,7 +421,14 @@ impl BrowserSubresourceRequest {
     {
         BrowserSubresourceCompletion {
             request: self.clone(),
-            result: fetch_and_decode_browser_image(&self.url, fetcher),
+            result: match self.kind {
+                BrowserSubresourceKind::Stylesheet => fetch_browser_stylesheet(&self.url, fetcher)
+                    .map(BrowserSubresourcePayload::Stylesheet)
+                    .map_err(BrowserSubresourceError::Stylesheet),
+                BrowserSubresourceKind::Image => fetch_and_decode_browser_image(&self.url, fetcher)
+                    .map(BrowserSubresourcePayload::Image)
+                    .map_err(BrowserSubresourceError::Image),
+            },
         }
     }
 }
@@ -1000,18 +1091,39 @@ impl BrowserSession {
         let Some(viewport) = &self.viewport else {
             return Vec::new();
         };
-        viewport
-            .page()
-            .image_resources
+        let page = viewport.page();
+        let mut requests = page
+            .stylesheet_resources
             .iter()
             .enumerate()
-            .filter(|(_, resource)| matches!(resource.state, BrowserImageResourceState::Pending))
+            .filter(|(_, resource)| {
+                matches!(resource.state, BrowserStylesheetResourceState::Pending)
+            })
             .map(|(ordinal, resource)| BrowserSubresourceRequest {
                 navigation_id: self.navigation_id,
+                kind: BrowserSubresourceKind::Stylesheet,
                 ordinal,
-                url: resource.url.clone(),
+                url: resource
+                    .url
+                    .clone()
+                    .expect("pending stylesheet must have a URL"),
             })
-            .collect()
+            .collect::<Vec<_>>();
+        requests.extend(
+            page.image_resources
+                .iter()
+                .enumerate()
+                .filter(|(_, resource)| {
+                    matches!(resource.state, BrowserImageResourceState::Pending)
+                })
+                .map(|(ordinal, resource)| BrowserSubresourceRequest {
+                    navigation_id: self.navigation_id,
+                    kind: BrowserSubresourceKind::Image,
+                    ordinal,
+                    url: resource.url.clone(),
+                }),
+        );
+        requests
     }
 
     pub fn resize(&mut self, viewport_height: f64) -> f64 {
@@ -1174,19 +1286,60 @@ impl BrowserSession {
                 pending_count: 0,
             };
         };
-        let Some(resource) = current.image_resources.get(completion.request.ordinal) else {
-            return self.ignored_duplicate_update();
-        };
-        if resource.url != completion.request.url
-            || !matches!(resource.state, BrowserImageResourceState::Pending)
-        {
-            return self.ignored_duplicate_update();
-        }
-
         let mut updated = current;
-        updated.image_resources[completion.request.ordinal].state = match completion.result {
-            Ok(pixels) => BrowserImageResourceState::Ready(pixels),
-            Err(error) => BrowserImageResourceState::Failed(error),
+        let repaint_required = match completion.request.kind {
+            BrowserSubresourceKind::Image => {
+                let Some(resource) = updated.image_resources.get(completion.request.ordinal) else {
+                    return self.ignored_duplicate_update();
+                };
+                if resource.url != completion.request.url
+                    || !matches!(resource.state, BrowserImageResourceState::Pending)
+                {
+                    return self.ignored_duplicate_update();
+                }
+                updated.image_resources[completion.request.ordinal].state = match completion.result
+                {
+                    Ok(BrowserSubresourcePayload::Image(pixels)) => {
+                        BrowserImageResourceState::Ready(pixels)
+                    }
+                    Err(BrowserSubresourceError::Image(error)) => {
+                        BrowserImageResourceState::Failed(error)
+                    }
+                    _ => return self.ignored_duplicate_update(),
+                };
+                true
+            }
+            BrowserSubresourceKind::Stylesheet => {
+                let before = active_stylesheet_source_count(&updated.stylesheet_resources);
+                let Some(resource) = updated.stylesheet_resources.get(completion.request.ordinal)
+                else {
+                    return self.ignored_duplicate_update();
+                };
+                if resource.url.as_deref() != Some(&completion.request.url)
+                    || !matches!(resource.state, BrowserStylesheetResourceState::Pending)
+                {
+                    return self.ignored_duplicate_update();
+                }
+                updated.stylesheet_resources[completion.request.ordinal].state =
+                    match completion.result {
+                        Ok(BrowserSubresourcePayload::Stylesheet(source)) => {
+                            match HtmlAuthorStylesheet::parse(&source) {
+                                Ok(_) => BrowserStylesheetResourceState::Ready(source),
+                                Err(error) => BrowserStylesheetResourceState::Failed(
+                                    BrowserStylesheetError::Parse {
+                                        url: Some(completion.request.url.clone()),
+                                        message: error.to_string(),
+                                    },
+                                ),
+                            }
+                        }
+                        Err(BrowserSubresourceError::Stylesheet(error)) => {
+                            BrowserStylesheetResourceState::Failed(error)
+                        }
+                        _ => return self.ignored_duplicate_update(),
+                    };
+                active_stylesheet_source_count(&updated.stylesheet_resources) != before
+            }
         };
         let updated = pipeline.reflow_retained_with_visited(&updated, &self.visited_links);
         if let Some(viewport) = self.viewport.as_mut() {
@@ -1194,7 +1347,7 @@ impl BrowserSession {
         }
         BrowserSubresourceUpdate {
             disposition: BrowserSubresourceDisposition::Applied,
-            repaint_required: true,
+            repaint_required,
             pending_count: self.pending_subresource_requests().len(),
         }
     }
@@ -1345,7 +1498,13 @@ where
         let document = BrowserDocument::from_document(&parsed);
         let render_tree =
             BrowserRenderTree::from_document_with_document_url(&parsed, &auxiliary.address);
-        let (paint, image_failures) = self.compose(&render_tree, &[], &VisitedLinks::new());
+        let stylesheet_resources = stylesheet_resources_for_document(&document, &auxiliary.address);
+        let (paint, image_failures, stylesheet_failures) = self.compose(
+            &render_tree,
+            &[],
+            &stylesheet_resources,
+            &VisitedLinks::new(),
+        );
 
         Ok(BrowserPage {
             requested_url: auxiliary.address.clone(),
@@ -1357,6 +1516,8 @@ where
             paint,
             image_failures,
             image_resources: Vec::new(),
+            stylesheet_failures,
+            stylesheet_resources,
         })
     }
 
@@ -1374,6 +1535,23 @@ where
         F: BrowserResourceFetcher,
     {
         let mut page = self.load_pending_with_visited(requested_url, fetcher, visited_links)?;
+        for resource in &mut page.stylesheet_resources {
+            if matches!(resource.state, BrowserStylesheetResourceState::Pending) {
+                let url = resource.url.as_deref().expect("pending stylesheet URL");
+                resource.state = match fetch_browser_stylesheet(url, fetcher) {
+                    Ok(source) => match HtmlAuthorStylesheet::parse(&source) {
+                        Ok(_) => BrowserStylesheetResourceState::Ready(source),
+                        Err(error) => {
+                            BrowserStylesheetResourceState::Failed(BrowserStylesheetError::Parse {
+                                url: Some(url.to_string()),
+                                message: error.to_string(),
+                            })
+                        }
+                    },
+                    Err(error) => BrowserStylesheetResourceState::Failed(error),
+                };
+            }
+        }
         for resource in &mut page.image_resources {
             resource.state = match fetch_and_decode_browser_image(&resource.url, fetcher) {
                 Ok(pixels) => BrowserImageResourceState::Ready(pixels),
@@ -1411,13 +1589,17 @@ where
             message: error.to_string(),
         })?;
         let document = BrowserDocument::from_document(&parsed);
+        let stylesheet_resources =
+            stylesheet_resources_for_document(&document, &response.final_url);
         let render_tree =
             BrowserRenderTree::from_document_with_document_url(&parsed, &response.final_url);
         let mut prospective_visited = visited_links.clone();
         let _ = prospective_visited.record(&response.final_url);
-        let mut paint = html_render_tree_to_paint_with_link_state(
+        let (style_context, stylesheet_failures) =
+            style_context_for_resources(self.theme, &stylesheet_resources);
+        let mut paint = html_render_tree_to_paint_with_style_context(
             &render_tree,
-            self.theme,
+            &style_context,
             &|url| prospective_visited.contains(url),
             self.viewport,
             self.measurer,
@@ -1448,6 +1630,8 @@ where
             paint,
             image_failures: image_resolution.failures,
             image_resources,
+            stylesheet_failures,
+            stylesheet_resources,
         })
     }
 
@@ -1479,11 +1663,16 @@ where
         page: &BrowserPage,
         visited_links: &VisitedLinks,
     ) -> BrowserPage {
-        let (paint, image_failures) =
-            self.compose(&page.render_tree, &page.image_resources, visited_links);
+        let (paint, image_failures, stylesheet_failures) = self.compose(
+            &page.render_tree,
+            &page.image_resources,
+            &page.stylesheet_resources,
+            visited_links,
+        );
         let mut reflowed = page.clone();
         reflowed.paint = paint;
         reflowed.image_failures = image_failures;
+        reflowed.stylesheet_failures = stylesheet_failures;
         reflowed
     }
 
@@ -1491,11 +1680,18 @@ where
         &self,
         render_tree: &BrowserRenderTree,
         image_resources: &[BrowserImageResource],
+        stylesheet_resources: &[BrowserStylesheetResource],
         visited_links: &VisitedLinks,
-    ) -> (HtmlPaintOutput, Vec<HtmlImageResourceError>) {
-        let mut paint = html_render_tree_to_paint_with_link_state(
+    ) -> (
+        HtmlPaintOutput,
+        Vec<HtmlImageResourceError>,
+        Vec<BrowserStylesheetError>,
+    ) {
+        let (style_context, stylesheet_failures) =
+            style_context_for_resources(self.theme, stylesheet_resources);
+        let mut paint = html_render_tree_to_paint_with_style_context(
             render_tree,
-            self.theme,
+            &style_context,
             &|url| visited_links.contains(url),
             self.viewport,
             self.measurer,
@@ -1508,8 +1704,102 @@ where
             &RetainedImageResolver(image_resources),
         );
         paint.scene = image_resolution.scene;
-        (paint, image_resolution.failures)
+        (paint, image_resolution.failures, stylesheet_failures)
     }
+}
+
+fn stylesheet_resources_for_document(
+    document: &BrowserDocument,
+    document_url: &str,
+) -> Vec<BrowserStylesheetResource> {
+    document
+        .stylesheets
+        .iter()
+        .map(|stylesheet| {
+            let active = !stylesheet.disabled
+                && !stylesheet.alternate
+                && stylesheet_media_applies(stylesheet.media.as_deref());
+            let authored_url = stylesheet
+                .resolved_href
+                .as_deref()
+                .or(stylesheet.href.as_deref());
+            let url = authored_url.and_then(|href| resolve_subresource_url(document_url, href));
+            let state = if !active {
+                BrowserStylesheetResourceState::Inactive
+            } else if let Some(source) = &stylesheet.text {
+                match HtmlAuthorStylesheet::parse(source) {
+                    Ok(_) => BrowserStylesheetResourceState::Ready(source.clone()),
+                    Err(error) => {
+                        BrowserStylesheetResourceState::Failed(BrowserStylesheetError::Parse {
+                            url: None,
+                            message: error.to_string(),
+                        })
+                    }
+                }
+            } else if url.is_some() {
+                BrowserStylesheetResourceState::Pending
+            } else {
+                BrowserStylesheetResourceState::Inactive
+            };
+            BrowserStylesheetResource {
+                url,
+                media: stylesheet.media.clone(),
+                render_blocking: active && stylesheet.href.is_some(),
+                state,
+            }
+        })
+        .collect()
+}
+
+fn resolve_subresource_url(document_url: &str, resource_url: &str) -> Option<String> {
+    Url::parse(document_url)
+        .and_then(|base| base.resolve(resource_url))
+        .map(|url| url.to_url_string())
+        .ok()
+        .or_else(|| resource_url.contains(':').then(|| resource_url.to_string()))
+}
+
+fn stylesheet_media_applies(media: Option<&str>) -> bool {
+    let Some(media) = media.map(str::trim).filter(|media| !media.is_empty()) else {
+        return true;
+    };
+    media.split(',').any(|query| {
+        let query = query.trim().to_ascii_lowercase();
+        (query == "all" || query == "screen" || query.starts_with("screen "))
+            && !query.starts_with("not ")
+    })
+}
+
+fn active_stylesheet_source_count(resources: &[BrowserStylesheetResource]) -> usize {
+    resources
+        .iter()
+        .take_while(|resource| !matches!(resource.state, BrowserStylesheetResourceState::Pending))
+        .count()
+}
+
+fn style_context_for_resources(
+    theme: &HtmlTheme,
+    resources: &[BrowserStylesheetResource],
+) -> (HtmlStyleContext, Vec<BrowserStylesheetError>) {
+    let mut context = HtmlStyleContext::new(theme.clone());
+    let mut failures = Vec::new();
+    for resource in resources {
+        match &resource.state {
+            BrowserStylesheetResourceState::Ready(source) => {
+                match HtmlAuthorStylesheet::parse(source) {
+                    Ok(stylesheet) => context.author_stylesheets.push(stylesheet),
+                    Err(error) => failures.push(BrowserStylesheetError::Parse {
+                        url: resource.url.clone(),
+                        message: error.to_string(),
+                    }),
+                }
+            }
+            BrowserStylesheetResourceState::Failed(error) => failures.push(error.clone()),
+            BrowserStylesheetResourceState::Pending => break,
+            BrowserStylesheetResourceState::Inactive => {}
+        }
+    }
+    (context, failures)
 }
 
 fn image_resource_state(resources: &[BrowserImageResource], url: &str) -> HtmlImageResource {
@@ -1546,6 +1836,34 @@ where
         });
     }
     decode_image_resource(url, FetchedImage::new(response.body, response.media_type))
+}
+
+fn fetch_browser_stylesheet<F>(url: &str, fetcher: &F) -> Result<String, BrowserStylesheetError>
+where
+    F: BrowserResourceFetcher,
+{
+    let response = fetcher
+        .fetch(url)
+        .map_err(|message| BrowserStylesheetError::Fetch {
+            url: url.to_string(),
+            message,
+        })?;
+    if !(200..300).contains(&response.status) {
+        return Err(BrowserStylesheetError::HttpStatus {
+            url: url.to_string(),
+            status: response.status,
+        });
+    }
+    if let Some(media_type) = response.media_type.as_deref() {
+        let essence = media_type.split(';').next().unwrap_or_default().trim();
+        if !essence.eq_ignore_ascii_case("text/css") {
+            return Err(BrowserStylesheetError::UnsupportedMediaType {
+                url: url.to_string(),
+                media_type: media_type.to_string(),
+            });
+        }
+    }
+    Ok(String::from_utf8_lossy(&response.body).into_owned())
 }
 
 struct RetainedImageResolver<'a>(&'a [BrowserImageResource]);
@@ -1632,6 +1950,20 @@ mod tests {
                 _ => 0,
             })
             .sum()
+    }
+
+    fn positioned_text_color(
+        node: &layout_ir::PositionedNode,
+        value: &str,
+    ) -> Option<layout_ir::Color> {
+        if let Some(layout_ir::Content::Text(text)) = &node.content {
+            if text.value == value {
+                return Some(text.color);
+            }
+        }
+        node.children
+            .iter()
+            .find_map(|child| positioned_text_color(child, value))
     }
 
     #[derive(Default)]
@@ -2551,10 +2883,12 @@ mod tests {
         let duplicate = session.complete_subresource(
             BrowserSubresourceCompletion {
                 request: update.requests[0].clone(),
-                result: Err(HtmlImageResourceError::Fetch {
-                    uri: update.requests[0].url.clone(),
-                    message: "late duplicate".into(),
-                }),
+                result: Err(BrowserSubresourceError::Image(
+                    HtmlImageResourceError::Fetch {
+                        uri: update.requests[0].url.clone(),
+                        message: "late duplicate".into(),
+                    },
+                )),
             },
             &pipeline,
         );
@@ -2563,6 +2897,190 @@ mod tests {
             BrowserSubresourceDisposition::IgnoredDuplicate
         );
         assert!(!duplicate.repaint_required);
+    }
+
+    #[test]
+    fn external_stylesheets_block_in_document_order_and_restyle_retained_page() {
+        let fetcher = |url: &str| {
+            assert_eq!(url, "http://example.test/page.html");
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<link rel='stylesheet' href='a.css'>\
+                  <style>p { color: red; }</style>\
+                  <link rel='stylesheet' href='b.css' media='screen'>\
+                  <link rel='stylesheet' href='print.css' media='print'>\
+                  <p id='target'>Styled later</p>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(160.0, 60.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/page.html", 60.0);
+        let update = session
+            .begin_execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        assert_eq!(
+            update
+                .requests
+                .iter()
+                .map(|request| (request.kind, request.url.as_str()))
+                .collect::<Vec<_>>(),
+            vec![
+                (
+                    BrowserSubresourceKind::Stylesheet,
+                    "http://example.test/a.css"
+                ),
+                (
+                    BrowserSubresourceKind::Stylesheet,
+                    "http://example.test/b.css"
+                ),
+            ]
+        );
+        assert_eq!(
+            positioned_text_color(
+                &session.viewport().unwrap().page().paint.positioned,
+                "Styled later"
+            ),
+            Some(layout_ir::rgb(0, 0, 0)),
+            "inline rules after a pending blocking sheet must not jump ahead"
+        );
+
+        let later = update.requests[1].resolve(&|url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/css".into()),
+                b"p { color: green; }".to_vec(),
+            ))
+        });
+        let later_update = session.complete_subresource(later, &pipeline);
+        assert!(!later_update.repaint_required);
+
+        let first = update.requests[0].resolve(&|url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/css; charset=utf-8".into()),
+                b"p { color: blue; }".to_vec(),
+            ))
+        });
+        let first_update = session.complete_subresource(first, &pipeline);
+        assert!(first_update.repaint_required);
+        assert_eq!(first_update.pending_count, 0);
+        let page = session.viewport().unwrap().page();
+        assert_eq!(
+            positioned_text_color(&page.paint.positioned, "Styled later"),
+            Some(layout_ir::rgb(0, 128, 0)),
+            "ordered author sheets must cascade after the earlier blocker settles"
+        );
+        assert!(page.stylesheet_failures.is_empty());
+        assert!(matches!(
+            page.stylesheet_resources[3].state,
+            BrowserStylesheetResourceState::Inactive
+        ));
+    }
+
+    #[test]
+    fn stylesheet_failure_unblocks_fallback_and_navigation_cancels_stale_work() {
+        let fetcher = |url: &str| {
+            let source = match url {
+                "http://example.test/one.html" => {
+                    "<link rel='stylesheet' href='bad.css'><link rel='stylesheet' href='good.css'><p>One</p>"
+                }
+                "http://example.test/two.html" => "<p>Two</p>",
+                _ => panic!("subresources must stay on the scheduler: {url}"),
+            };
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                source.as_bytes().to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(120.0, 40.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/one.html", 40.0);
+        let first = session
+            .begin_execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        let good = first.requests[1].resolve(&|url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/css".into()),
+                b"p { color: green; }".to_vec(),
+            ))
+        });
+        assert!(
+            !session
+                .complete_subresource(good, &pipeline)
+                .repaint_required
+        );
+        let bad = first.requests[0].resolve(&|url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                503,
+                Some("text/css".into()),
+                Vec::new(),
+            ))
+        });
+        assert!(
+            session
+                .complete_subresource(bad, &pipeline)
+                .repaint_required
+        );
+        let page = session.viewport().unwrap().page();
+        assert_eq!(page.stylesheet_failures.len(), 1);
+        assert_eq!(
+            positioned_text_color(&page.paint.positioned, "One"),
+            Some(layout_ir::rgb(0, 128, 0))
+        );
+
+        let pending = session
+            .begin_execute(BrowserNavigation::Reload, &pipeline, &fetcher)
+            .unwrap();
+        let next = session
+            .begin_execute(
+                BrowserNavigation::Navigate("http://example.test/two.html".into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        assert_eq!(next.cancelled, pending.requests);
+        let stale = session.complete_subresource(
+            pending.requests[0].resolve(&|url: &str| {
+                Ok(BrowserFetchResponse::new(
+                    url,
+                    200,
+                    Some("text/css".into()),
+                    b"p { color: red; }".to_vec(),
+                ))
+            }),
+            &pipeline,
+        );
+        assert_eq!(
+            stale.disposition,
+            BrowserSubresourceDisposition::IgnoredStaleNavigation
+        );
+        assert!(!stale.repaint_required);
     }
 
     #[test]
@@ -2613,10 +3131,12 @@ mod tests {
         let stale = session.complete_subresource(
             BrowserSubresourceCompletion {
                 request: first.requests[0].clone(),
-                result: Err(HtmlImageResourceError::Fetch {
-                    uri: first.requests[0].url.clone(),
-                    message: "arrived after cancellation".into(),
-                }),
+                result: Err(BrowserSubresourceError::Image(
+                    HtmlImageResourceError::Fetch {
+                        uri: first.requests[0].url.clone(),
+                        message: "arrived after cancellation".into(),
+                    },
+                )),
             },
             &pipeline,
         );

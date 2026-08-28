@@ -5,8 +5,10 @@ edition = "2021"
 description = "Converts html-parser browser render trees into the shared Layout IR."
 
 [dependencies]
+coding-adventures-css-parser = { path = "../css-parser" }
 coding-adventures-html-parser = { path = "../html-parser" }
 layout-ir = { path = "../layout-ir" }
+parser = { path = "../parser" }
 
 [dev-dependencies]
 layout-block = { path = "../layout-block" }
