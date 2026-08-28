@@ -4,6 +4,10 @@
 
 ### Added
 
+- `AssetRef.sourcePath` optionally carries the normalized storage-root-relative
+  locator produced by filesystem reference resolvers.
+- `AssetRef.urlSuffix` preserves authored query strings and fragments across
+  fingerprinted emission without folding them into filesystem identity.
 - `ProvenanceContributor` and `OutputProvenance` model every logical/revision
   input behind a rendered output. `RenderedPage` now accepts revision-aware
   provenance while preserving the legacy single-source producer shape during

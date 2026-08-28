@@ -213,6 +213,54 @@ describe("renderStatic — single-node rendering", () => {
     expect(page!.usedAssets).toEqual([]);
   });
 
+  it("renders resolved assets as placeholders and records unique usage", async () => {
+    const node = makeNode({
+      sourcePath: "posts/p.md",
+      markdown: "![Cat](../images/cat.png)\n",
+    });
+    const assetId = "01952c0d-7e63-7000-8000-000000000099" as never;
+    const resolved: ContentNode = {
+      ...node,
+      assetRefs: [
+        {
+          id: assetId,
+          nodePath: [0, 0],
+          role: "image",
+          sourcePath: "images/cat.png",
+          urlSuffix: "#thumbnail",
+        },
+        {
+          id: assetId,
+          nodePath: [0, 0],
+          role: "image",
+          sourcePath: "images/cat.png",
+          urlSuffix: "#thumbnail",
+        },
+      ],
+    };
+    await expect(runRender([resolved])).rejects.toThrow(/duplicate image AssetRef/);
+    const missing = {
+      ...resolved,
+      assetRefs: [{ ...resolved.assetRefs[0]!, nodePath: [99] }],
+    };
+    await expect(runRender([missing])).rejects.toThrow(/does not target an image node/);
+
+    const unrelatedId = "01952c0d-7e63-7000-8000-000000000098" as never;
+    const oneRef = {
+      ...resolved,
+      assetRefs: [
+        resolved.assetRefs[0]!,
+        { id: unrelatedId, nodePath: [], role: "font" as const, sourcePath: "fonts/site.woff2" },
+      ],
+    };
+    const [page] = await runRender([oneRef]);
+    expect(page!.html).toContain(`src="forme-asset:${assetId}#thumbnail"`);
+    expect(page!.html).not.toContain("../images/cat.png");
+    expect(page!.usedAssets).toEqual([assetId]);
+    const image = node.document.children[0] as { children: readonly [{ destination: string }] };
+    expect(image.children[0].destination).toBe("../images/cat.png");
+  });
+
   it("matches Style IR in source order and inlines an AOT per-page slice", async () => {
     const empty = emptyStyleDocument();
     const style: StyleDocument = {
