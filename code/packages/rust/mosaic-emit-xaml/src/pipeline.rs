@@ -942,10 +942,10 @@ struct PartStyleEntry {
     /// lowering (see `mosaic-emit-xaml.md` §3.1) reads them here instead,
     /// straight off the raw mosstyle props.
     flex: FlexHints,
-    /// A non-`inset` `box-shadow` was authored (issue #12028 item 1) —
-    /// like `flex`, has no 1:1 XAML setter and is read straight off the
-    /// raw mosstyle props rather than surviving into `base_fragment`.
-    wants_theme_shadow: bool,
+    /// The part's `elevation` value, if any (UI41, issue #12028 item 1)
+    /// — like `flex`, has no 1:1 XAML setter and is read straight off
+    /// the raw mosstyle props rather than surviving into `base_fragment`.
+    elevation: Option<ElevationTier>,
 }
 
 /// Layout hints a `Row`/`Column`'s `<Grid>` lowering needs but that have no
@@ -1100,48 +1100,75 @@ fn extract_flex_hints(props: &[StyleProp]) -> FlexHints {
     hints
 }
 
-/// A fixed Z-depth (effective pixels) for every `ThemeShadow` this
-/// emitter generates — see [`part_wants_theme_shadow`]'s doc comment
-/// for why this is a single constant rather than derived from the
-/// authored value. `4` matches Microsoft's own "Cards: 4–8px" elevation
-/// guidance (learn.microsoft.com/windows/apps/develop/ui/shadows).
-const THEME_SHADOW_TRANSLATION_Z: &str = "4";
+/// The two `elevation` tiers (UI41, issue #12028 item 1), mapped to a
+/// WinUI `ThemeShadow`'s casting depth. `ThemeShadow` is a fixed,
+/// system-composited shadow with no CSS-shaped blur/spread/color/opacity
+/// controls — Microsoft's own guidance is a Z-*depth* value for the
+/// casting element, not shadow parameters — so each tier is just a
+/// fixed `Translation` Z constant, not a reproduction of any authored
+/// shadow value.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ElevationTier {
+    /// A static "raised card" — cards, selected rows/tabs, static
+    /// panels. `4` matches Microsoft's own "Cards: 4–8px" elevation
+    /// guidance (learn.microsoft.com/windows/apps/develop/ui/shadows).
+    /// Every real `elevation` usage in this repo today is `Raised`.
+    Raised,
+    /// An element floating above everything else — modals, popovers,
+    /// tooltips, dropdowns, toasts. No real caller yet (UI41 §3 — those
+    /// components declare no shadow at all today), but wired up now so
+    /// a future overlay component doesn't need its own emitter change.
+    /// A deeper Z than `Raised` reads as "further off the surface."
+    Overlay,
+}
 
-/// Whether a part's raw mosstyle props author a non-`inset` `box-shadow`
-/// (issue #12028 item 1) — the signal that this element wants elevation.
+impl ElevationTier {
+    fn translation_z(self) -> &'static str {
+        match self {
+            ElevationTier::Raised => "4",
+            ElevationTier::Overlay => "16",
+        }
+    }
+}
+
+/// Read a part's `elevation` prop (UI41, issue #12028 item 1) — the
+/// signal that this element wants a native `ThemeShadow`. Replaces the
+/// old box-shadow-value-sniffing heuristic (`box-shadow` is still
+/// authored alongside `elevation` on every real part, for web's CSS
+/// rendering, but no longer drives XAML's shadow decision directly —
+/// see `dropped_style_properties` for the degradation-reporting
+/// consequence: a part with `box-shadow` but no `elevation` is now a
+/// genuine, reported drop).
 ///
-/// WinUI's `ThemeShadow` is a fixed, system-composited shadow with no
-/// CSS-shaped blur/spread/color/opacity controls — Microsoft's own
-/// guidance is a Z-*depth* value, not shadow parameters. So unlike
-/// every other property this emitter translates, this doesn't attempt
-/// to reproduce the authored numbers (TaskApp's shadows only ever vary
-/// by opacity/color between light/dark themes and one "stronger" tier —
-/// none of which `ThemeShadow` can express anyway): it recognizes "this
-/// element should look raised" and applies WinUI's own consistent
-/// elevation treatment at one fixed depth.
-///
-/// A value containing `inset` (e.g. `"5px -5px 0 0 #f1ebe1 inset"`) is
-/// a fundamentally different technique — a shape cutout used to fake a
-/// crescent-moon icon or a status dot, not elevation (issue #12028 item
-/// 3, a kernel drawing primitive) — and is deliberately excluded here,
-/// staying a genuine drop.
-fn part_wants_theme_shadow(props: &[mosstyle_compiler::StyleProp]) -> bool {
-    props
-        .iter()
-        .any(|p| p.name == "box-shadow" && !p.value.to_ascii_lowercase().contains("inset"))
+/// mosstyle's `validate()` already restricts `elevation` to exactly
+/// `raised`/`overlay` before this emitter ever sees it (any other value
+/// is a hard compile error), so an unrecognized value here is treated
+/// defensively as "no elevation" rather than panicking.
+fn part_elevation_tier(props: &[mosstyle_compiler::StyleProp]) -> Option<ElevationTier> {
+    let value = props.iter().find(|p| p.name == "elevation")?.value.as_str();
+    match value {
+        "raised" => Some(ElevationTier::Raised),
+        "overlay" => Some(ElevationTier::Overlay),
+        _ => None,
+    }
 }
 
 /// The `Translation="0,0,{z}"` attribute plus the `<{tag}.Shadow>`
 /// child-element block that gives `tag` a real `ThemeShadow`, or a pair
-/// of empty strings when `wants_shadow` is false. `tag` must match
+/// of empty strings when `elevation` is `None`. `tag` must match
 /// whatever element name the caller already opened (`Border`, `Grid`,
 /// `StackPanel`, …) — `Shadow` is a property every `UIElement` has.
-fn theme_shadow_attr_and_child(wants_shadow: bool, tag: &str, indent: usize) -> (String, String) {
-    if !wants_shadow {
+fn theme_shadow_attr_and_child(
+    elevation: Option<ElevationTier>,
+    tag: &str,
+    indent: usize,
+) -> (String, String) {
+    let Some(tier) = elevation else {
         return (String::new(), String::new());
-    }
+    };
     let pad = " ".repeat(indent);
-    let attr = format!(" Translation=\"0,0,{THEME_SHADOW_TRANSLATION_Z}\"");
+    let z = tier.translation_z();
+    let attr = format!(" Translation=\"0,0,{z}\"");
     let child = format!(
         "{pad}<{tag}.Shadow>\n{pad}    <ThemeShadow/>\n{pad}</{tag}.Shadow>\n"
     );
@@ -1182,7 +1209,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     for part in &style.parts {
         let base_fragment = build_style_fragment(&part.base);
         let flex = extract_flex_hints(&part.base);
-        let wants_theme_shadow = part_wants_theme_shadow(&part.base);
+        let elevation = part_elevation_tier(&part.base);
         let states = part
             .states
             .iter()
@@ -1205,7 +1232,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
             || !part.transitions.is_empty()
             || !part.states.is_empty()
             || has_flex_hints
-            || wants_theme_shadow
+            || elevation.is_some()
         {
             out.insert(
                 part.name.clone(),
@@ -1214,7 +1241,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
                     transitions: part.transitions.clone(),
                     states,
                     flex,
-                    wants_theme_shadow,
+                    elevation,
                 },
             );
         }
@@ -1823,11 +1850,28 @@ pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<Drop
                     v == "center-vertical" || v == "center"
                 }
                 "justify-content" => drop.value.trim() == "space-between",
-                // #12028 item 1: a non-inset box-shadow is consumed via
-                // the ThemeShadow side channel (`part_wants_theme_shadow`);
-                // an `inset` one is a drawing-primitive hack (item 3) and
-                // stays a genuine drop.
-                "box-shadow" => !drop.value.to_ascii_lowercase().contains("inset"),
+                // UI41, #12028 item 1: `elevation` (a recognized value)
+                // is consumed via the ThemeShadow side channel
+                // (`part_elevation_tier`), same shape as the flex hints
+                // above — it has no 1:1 XAML setter of its own.
+                "elevation" => matches!(drop.value.as_str(), "raised" | "overlay"),
+                // `box-shadow` no longer drives ThemeShadow directly —
+                // `elevation` does. A non-inset box-shadow is only
+                // "consumed" (not a genuine drop) when the same part
+                // also declares `elevation`, which is true for every
+                // real usage in this repo today (UI41's `.msl`
+                // migration added `elevation` alongside every real
+                // `box-shadow`) but is no longer guaranteed by
+                // construction — a part with `box-shadow` and no
+                // `elevation` now gets no shadow at all on XAML, and
+                // that gap is correctly reported here instead of
+                // silently matching the old heuristic. An `inset` value
+                // is a drawing-primitive hack (item 3) and stays a
+                // genuine drop regardless.
+                "box-shadow" => {
+                    !drop.value.to_ascii_lowercase().contains("inset")
+                        && part.base.iter().any(|p| p.name == "elevation")
+                }
                 _ => false,
             };
             if consumed_via_flex_hints {
@@ -2298,17 +2342,20 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         //                     property with a different value shape;
         //                     not wired yet, so drop rather than emit
         //                     an invalid literal.
-        //   box-shadow      — not a 1:1 XAML setter either way: a
-        //                     non-inset value IS handled, but as a
-        //                     `Translation`/`<Element.Shadow>` side
-        //                     channel (`part_wants_theme_shadow`,
-        //                     issue #12028 item 1), not through this
-        //                     table — WinUI's ThemeShadow takes no
-        //                     CSS-shaped blur/spread/color parameters,
-        //                     so there is no `value` to translate here.
-        //                     An `inset` value (the moon/status-dot
-        //                     drawing hack) is genuinely unsupported
-        //                     and stays dropped.
+        //   elevation       — UI41, issue #12028 item 1: handled, but as
+        //                     a `Translation`/`<Element.Shadow>` side
+        //                     channel (`part_elevation_tier`), not
+        //                     through this table — WinUI's ThemeShadow
+        //                     takes no CSS-shaped parameters, so there
+        //                     is no `value` here to translate; the two
+        //                     legal values (`raised`/`overlay`) each map
+        //                     to one fixed Z-depth constant instead.
+        //   box-shadow      — genuinely dropped now (`elevation` is
+        //                     what drives ThemeShadow — see above); kept
+        //                     as a real, authored property purely so
+        //                     web backends still render a real CSS
+        //                     shadow, and so the `inset` shape-cutout
+        //                     hack (issue #12028 item 3) keeps working.
         //   align-items     — no 1:1 XAML setter (it becomes per-child
         //                     Horizontal/VerticalAlignment, not one
         //                     attribute on the container). `emit_flex_grid`
@@ -2321,8 +2368,8 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         //                     See `FlexHints`/§3.1.
         //   flex-wrap       — WinUI has no built-in WrapPanel in WinUI 3.
         //                     Genuinely unhandled (tracked separately).
-        "align-items" | "border-collapse" | "border-style" | "box-shadow" | "flex-wrap"
-        | "justify-content" | "outline" | "text-decoration" => None,
+        "align-items" | "border-collapse" | "border-style" | "box-shadow" | "elevation"
+        | "flex-wrap" | "justify-content" | "outline" | "text-decoration" => None,
         // Unknown properties must not be PascalCased into fake WinUI
         // setters. That path let Lattice/web layout names such as
         // `gap` and `flex-wrap` leak into TextBlock styles and made
@@ -3325,10 +3372,30 @@ fn emit_flex_grid(
     let (container_attrs, grid_attrs, text_setters) =
         partition_flex_grid_style(node.part_name.as_deref(), part_styles, axis);
     let wrapped = !container_attrs.is_empty() || !text_setters.is_empty();
+    // UI41, #12028 item 1: an `elevation` prop means this element wants
+    // a native ThemeShadow — see `part_elevation_tier`. `Row`/`Column`
+    // real usage (TaskApp's `composer`/`label-composer`/`task-card`/
+    // `timeline-card`) always has other container styling too and so
+    // already takes the `wrapped` branch, but `Grid` is a `UIElement`
+    // like `Border` — `Translation`/`.Shadow` apply directly to it just
+    // as well, so an elevation-only Row/Column (no other style) still
+    // gets its shadow without needing to force a Border wrapper.
+    let elevation = node
+        .part_name
+        .as_deref()
+        .and_then(|p| part_styles.get(p))
+        .and_then(|entry| entry.elevation);
     let mut out = if !wrapped {
-        format!("{pad}<Grid{grid_attrs}>\n")
+        let (shadow_attr, shadow_child) =
+            theme_shadow_attr_and_child(elevation, "Grid", indent + 4);
+        let mut unwrapped_out = format!("{pad}<Grid{grid_attrs}{shadow_attr}>\n");
+        unwrapped_out.push_str(&shadow_child);
+        unwrapped_out
     } else {
-        let mut wrapped_out = format!("{pad}<Border{container_attrs}>\n");
+        let (shadow_attr, shadow_child) =
+            theme_shadow_attr_and_child(elevation, "Border", indent + 4);
+        let mut wrapped_out = format!("{pad}<Border{container_attrs}{shadow_attr}>\n");
+        wrapped_out.push_str(&shadow_child);
         emit_text_style_resources(&mut wrapped_out, "Border", indent + 4, &text_setters);
         writeln!(wrapped_out, "{inner_pad}<Grid{grid_attrs}>").unwrap();
         wrapped_out
@@ -3482,17 +3549,17 @@ fn emit_container(
     // + Badge demo (#4548).
     let (container_attrs, text_setters) =
         partition_box_style(node.part_name.as_deref(), part_styles);
-    // #12028 item 1: a non-inset box-shadow (any value) means this
-    // element wants elevation — see `part_wants_theme_shadow`.
-    let wants_shadow = node
+    // UI41, #12028 item 1: an `elevation` prop means this element wants
+    // a native ThemeShadow — see `part_elevation_tier`.
+    let elevation = node
         .part_name
         .as_deref()
         .and_then(|p| part_styles.get(p))
-        .is_some_and(|entry| entry.wants_theme_shadow);
+        .and_then(|entry| entry.elevation);
 
     if element != "Border" && (!container_attrs.is_empty() || !text_setters.is_empty()) {
         let (shadow_attr, shadow_child) =
-            theme_shadow_attr_and_child(wants_shadow, "Border", indent + 4);
+            theme_shadow_attr_and_child(elevation, "Border", indent + 4);
         let mut out = format!("{pad}<Border{container_attrs}{shadow_attr}>\n");
         out.push_str(&shadow_child);
         emit_text_style_resources(&mut out, "Border", indent + 4, &text_setters);
@@ -3508,7 +3575,7 @@ fn emit_container(
         return Ok(out);
     }
 
-    let (shadow_attr, shadow_child) = theme_shadow_attr_and_child(wants_shadow, element, indent + 4);
+    let (shadow_attr, shadow_child) = theme_shadow_attr_and_child(elevation, element, indent + 4);
     let mut out = format!("{pad}<{element}{container_attrs}{shadow_attr}>\n");
     out.push_str(&shadow_child);
 
@@ -4533,6 +4600,48 @@ public sealed class __COMPONENT__MosaicDragSource : ContentControl
             typeof(bool),
             typeof(__COMPONENT__MosaicDragSource),
             new PropertyMetadata(false, OnDragDisabledChanged));
+
+    // UI41, #12028 item 1: the `elevation` prop's translation Z-depth as
+    // a plain string DependencyProperty, e.g. "4" (raised) or "16"
+    // (overlay), empty when the part declares no `elevation`. NOT set
+    // via the `Translation`/`Shadow` XAML attribute/property-element
+    // syntax directly on this custom class's usage site -- a real,
+    // reproducible XamlCompiler failure (exit code 1, no diagnostic)
+    // for `Translation` on a custom `ContentControl` subclass, verified
+    // via a real `dotnet build` probe (a plain built-in `ContentControl`
+    // and `Border` both accept `Translation` as a XAML attribute fine;
+    // only a custom-subclassed one does not). Routing the Z-depth
+    // through an ordinary string DP -- the same shape `DragKey` etc.
+    // already use successfully on this exact class -- and applying
+    // `Translation`/`Shadow` from C# in the property-changed callback
+    // sidesteps the compiler bug entirely.
+    public string ElevationZ
+    {
+        get => (string)GetValue(ElevationZProperty);
+        set => SetValue(ElevationZProperty, value);
+    }
+    public static readonly DependencyProperty ElevationZProperty =
+        DependencyProperty.Register(
+            nameof(ElevationZ),
+            typeof(string),
+            typeof(__COMPONENT__MosaicDragSource),
+            new PropertyMetadata(string.Empty, OnElevationZChanged));
+
+    private static void OnElevationZChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    {
+        var source = (__COMPONENT__MosaicDragSource)sender;
+        var z = args.NewValue as string;
+        if (string.IsNullOrEmpty(z))
+        {
+            source.Shadow = null;
+            source.Translation = System.Numerics.Vector3.Zero;
+        }
+        else
+        {
+            source.Translation = new System.Numerics.Vector3(0, 0, float.Parse(z, System.Globalization.CultureInfo.InvariantCulture));
+            source.Shadow = new ThemeShadow();
+        }
+    }
 
     public event EventHandler<__COMPONENT__MosaicDragSourceEventArgs>? MosaicDragStarted;
     public event EventHandler<__COMPONENT__MosaicDragEndEventArgs>? MosaicDragEnded;
@@ -8296,14 +8405,14 @@ fn emit_host_button(
         attrs.push_str(&format!(" Click=\"{handler}\""));
     }
 
-    // #12028 item 1: a non-inset box-shadow (real usage: the "pill"
+    // UI41, #12028 item 1: an `elevation` prop (real usage: the "pill"
     // project toggle buttons) — same treatment as `emit_container`.
-    let wants_shadow = node
+    let elevation = node
         .part_name
         .as_deref()
         .and_then(|p| part_styles.get(p))
-        .is_some_and(|entry| entry.wants_theme_shadow);
-    let (shadow_attr, shadow_child) = theme_shadow_attr_and_child(wants_shadow, "Button", indent + 4);
+        .and_then(|entry| entry.elevation);
+    let (shadow_attr, shadow_child) = theme_shadow_attr_and_child(elevation, "Button", indent + 4);
     if shadow_child.is_empty() {
         Ok(format!(
             "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}{shadow_attr}/>\n"
@@ -8539,6 +8648,32 @@ fn emit_host_draggable(
         attrs.push_str(&format!(" MosaicDragEnded=\"{handler}\""));
     }
     let (style, spacing) = drag_control_style_attr(node, part_styles);
+    // UI41, #12028 item 1: an `elevation` prop means this element wants
+    // a native ThemeShadow — see `part_elevation_tier`. Real usage: the
+    // Kanban board's `board-card`/`board-card-crit`.
+    //
+    // Unlike every other emitter's tag, this is NOT expressed via
+    // `theme_shadow_attr_and_child`'s `Translation`/`.Shadow` attribute
+    // and property-element syntax — a real `dotnet build` probe found
+    // that combination fails XamlCompiler (exit code 1, no diagnostic)
+    // specifically on a custom `ContentControl` subclass like
+    // `MosaicDragSource` (a plain built-in `ContentControl` or `Border`
+    // both accept `Translation` as a XAML attribute fine). Instead the
+    // Z-depth flows through the `ElevationZ` string DependencyProperty
+    // added to the `{component}MosaicDragSource` class template — an
+    // ordinary attribute the same shape as `DragKey` et al. already use
+    // successfully on this class — whose property-changed callback
+    // applies `Translation`/`Shadow` from C#, sidestepping the bug.
+    let elevation_z = node
+        .part_name
+        .as_deref()
+        .and_then(|p| part_styles.get(p))
+        .and_then(|entry| entry.elevation)
+        .map(|tier| tier.translation_z())
+        .unwrap_or_default();
+    if !elevation_z.is_empty() {
+        attrs.push_str(&format!(" ElevationZ=\"{elevation_z}\""));
+    }
     let children = emit_drag_content_children(
         &node.children,
         indent + 4,
@@ -11184,6 +11319,73 @@ mod tests {
         assert!(!r.xaml.contains("StackPanel"), "got:\n{}", r.xaml);
     }
 
+    /// UI41, #12028 item 1: a `Row`/`Column` with ONLY `elevation` (no
+    /// other container style) still gets `Translation`/`.Shadow`
+    /// applied directly to the unwrapped `<Grid>` — `Grid` is a
+    /// `UIElement` like `Border`, so no wrapper is needed just for the
+    /// shadow. Real usage (`composer`, `label-composer`, `task-card`,
+    /// `timeline-card`) always has other style too and takes the
+    /// wrapped-in-`Border` path (see `column_with_elevation_and_other_style_wraps_in_border`),
+    /// but an elevation-only Row/Column is a legitimate case that must
+    /// not be silently dropped.
+    #[test]
+    fn row_with_only_elevation_shadows_the_unwrapped_grid() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("bar".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("bar", vec![("elevation", "raised")]);
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("<Grid") && r.xaml.contains("Translation=\"0,0,4\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Grid.Shadow>") && r.xaml.contains("<ThemeShadow/>"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// A `Column` with `elevation` PLUS other container style (the real
+    /// TaskApp shape) wraps in a `<Border>` as usual — the shadow lands
+    /// on that `Border`, not the inner `<Grid>`.
+    #[test]
+    fn column_with_elevation_and_other_style_wraps_in_border() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: Some("task-card".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box(
+            "task-card",
+            vec![("background", "#1a1714"), ("elevation", "raised")],
+        );
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("<Border") && r.xaml.contains("Translation=\"0,0,4\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Border.Shadow>") && r.xaml.contains("<ThemeShadow/>"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
     #[test]
     fn column_lowers_to_vertical_grid() {
         let c = component("Foo", vec![], vec![]);
@@ -11829,6 +12031,103 @@ mod tests {
         };
         let (attrs, _spacing) = drag_control_style_attr(&node, &part_styles);
         assert_hostile_value_escaped_not_injected(&attrs);
+    }
+
+    /// UI41, #12028 item 1: `HostDraggable [board-card] (elevation:
+    /// raised via its part style)` gets an `ElevationZ="4"` attribute —
+    /// NOT `Translation`/`.Shadow` directly (a real `dotnet build` probe
+    /// found that combination fails XamlCompiler on a custom
+    /// `ContentControl` subclass like `MosaicDragSource`; `ElevationZ`
+    /// sidesteps it by routing the Z-depth through an ordinary string
+    /// DP whose changed-callback applies `Translation`/`Shadow` in C#).
+    /// Matches the real Kanban board's `board-card`/`board-card-crit`.
+    #[test]
+    fn host_draggable_with_elevation_raised_emits_elevation_z_attribute() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "HostDraggable".to_string(),
+                part_name: Some("board-card".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("board-card", vec![("elevation", "raised")]);
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("ElevationZ=\"4\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Translation=") && !r.xaml.contains("<local:FooMosaicDragSource.Shadow>"),
+            "the Translation/.Shadow XAML syntax must not appear directly on the custom class — got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_draggable_with_elevation_overlay_emits_deeper_elevation_z() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "HostDraggable".to_string(),
+                part_name: Some("popover-card".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("popover-card", vec![("elevation", "overlay")]);
+        let r = compile(&c, &l, &s);
+        assert!(r.xaml.contains("ElevationZ=\"16\""), "got:\n{}", r.xaml);
+    }
+
+    /// No `elevation` on the part means no `ElevationZ` attribute at all
+    /// (not `ElevationZ=""`) — the DP's own empty-string default already
+    /// means "no shadow", so there is nothing to gain from emitting it.
+    #[test]
+    fn host_draggable_without_elevation_emits_no_elevation_z_attribute() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "HostDraggable".to_string(),
+                part_name: Some("plain-card".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("plain-card", vec![("background", "#fff")]);
+        let r = compile(&c, &l, &s);
+        assert!(!r.xaml.contains("ElevationZ"), "got:\n{}", r.xaml);
+    }
+
+    /// The `{Component}MosaicDragSource` class template carries the new
+    /// `ElevationZ` DP and its changed-callback whenever drag support is
+    /// emitted at all (the class is shared across every `HostDraggable`
+    /// usage in the component, so the DP must exist even if only some
+    /// usages set it).
+    #[test]
+    fn drag_source_class_template_declares_elevation_z_property() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "HostDraggable".to_string(),
+                part_name: Some("card".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.code_behind.contains("public string ElevationZ")
+                && r.code_behind.contains("OnElevationZChanged"),
+            "got:\n{}",
+            r.code_behind
+        );
     }
 
     /// `partition_stack_panel_style` (still used by the `HostTable` row-
@@ -14081,10 +14380,11 @@ mod tests {
         );
     }
 
-    /// `HostButton [name]` (→ `<Button>`) with a non-`inset` box-shadow
-    /// gets the same `Translation`/`<Button.Shadow>` treatment as a
-    /// `Box` — matches the real "pill" project-toggle buttons
-    /// (`mosaic-pkg-project-nav`'s `project-on`/`project-off`).
+    /// `HostButton [name]` (→ `<Button>`) with `elevation: raised` gets
+    /// the same `Translation`/`<Button.Shadow>` treatment as a `Box` —
+    /// matches the real "pill" project-toggle buttons
+    /// (`mosaic-pkg-project-nav`'s `project-on`/`project-off`, which
+    /// declare `box-shadow` alongside `elevation` — UI41).
     /// `Button` normally self-closes; a `<Button.Shadow>` child forces
     /// the open/close form instead.
     #[test]
@@ -14093,10 +14393,13 @@ mod tests {
         let l = layout_with_root("Foo", host_button_node(Some("project-on"), vec![]));
         let s = style_for_box(
             "project-on",
-            vec![(
-                "box-shadow",
-                "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)",
-            )],
+            vec![
+                (
+                    "box-shadow",
+                    "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)",
+                ),
+                ("elevation", "raised"),
+            ],
         );
         let r = compile(&c, &l, &s);
         assert!(
@@ -17181,23 +17484,50 @@ mod tests {
     /// A non-`inset` `box-shadow` (any value — real usage: two comma-
     /// separated layers, differing only by opacity/color between light/
     /// dark themes) is consumed by the `ThemeShadow` side channel
-    /// (issue #12028 item 1) and must never surface in the #12022
-    /// dropped-properties report — reporting it would be a false
+    /// (UI41, issue #12028 item 1) — but only when the same part also
+    /// declares `elevation`, since UI41 landed `elevation` as the actual
+    /// signal, not `box-shadow` itself. Must never surface in the
+    /// #12022 dropped-properties report — reporting it would be a false
     /// positive on a now-real feature.
     #[test]
-    fn dropped_style_properties_excludes_non_inset_box_shadow() {
+    fn dropped_style_properties_excludes_non_inset_box_shadow_when_elevation_present() {
         let style = style_for_box(
             "brand-mark",
-            vec![(
-                "box-shadow",
-                "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)",
-            )],
+            vec![
+                (
+                    "box-shadow",
+                    "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)",
+                ),
+                ("elevation", "raised"),
+            ],
         );
         assert!(
             dropped_style_properties(&style).is_empty(),
             "got: {:?}",
             dropped_style_properties(&style)
         );
+    }
+
+    /// UI41: a `box-shadow` with NO sibling `elevation` prop is now a
+    /// genuine drop — `elevation`, not `box-shadow`, drives ThemeShadow.
+    /// This is the intended behavior change from before UI41 landed
+    /// (when any non-inset `box-shadow` alone was enough); every real
+    /// part in this repo already declares both together (UI41's `.msl`
+    /// migration), so this only affects a hypothetical author who
+    /// writes `box-shadow` without `elevation`.
+    #[test]
+    fn dropped_style_properties_reports_box_shadow_without_elevation() {
+        let style = style_for_box(
+            "orphaned-shadow",
+            vec![(
+                "box-shadow",
+                "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)",
+            )],
+        );
+        let dropped = dropped_style_properties(&style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].part, "orphaned-shadow");
+        assert_eq!(dropped[0].name, "box-shadow");
     }
 
     /// `align-items: center` / `justify-content: space-between` are
@@ -17656,12 +17986,13 @@ mod tests {
         );
     }
 
-    /// `Box [name]` (→ `<Border>`) with a non-`inset` `box-shadow` gets
+    /// `Box [name]` (→ `<Border>`) with `elevation: raised` gets
     /// `Translation="0,0,4"` on the opening tag plus a `<Border.Shadow>`
     /// child — matching the real `mosaic-pkg-*`/`task-app` "raised
-    /// card" usage (`brand-mark`, `project-on`).
+    /// card" usage (`brand-mark`, `project-on`, which also declare
+    /// `box-shadow` for web — UI41).
     #[test]
-    fn box_with_box_shadow_emits_theme_shadow_and_translation() {
+    fn box_with_elevation_raised_emits_theme_shadow_and_translation() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root(
             "Foo",
@@ -17680,6 +18011,7 @@ mod tests {
                     "box-shadow",
                     "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)",
                 ),
+                ("elevation", "raised"),
             ],
         );
         let r = compile(&c, &l, &s);
@@ -17700,6 +18032,62 @@ mod tests {
         );
     }
 
+    /// `elevation: overlay` gets a deeper `Translation` Z than `raised`
+    /// — UI41's second tier, for future floating UI (modals/popovers/
+    /// tooltips), no real caller yet but wired up now.
+    #[test]
+    fn box_with_elevation_overlay_emits_deeper_translation() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("popover".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("popover", vec![("elevation", "overlay")]);
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("Translation=\"0,0,16\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("<Border.Shadow>") && r.xaml.contains("<ThemeShadow/>"),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// `box-shadow` with no sibling `elevation` prop gets no shadow at
+    /// all on XAML — the UI41 behavior change (`elevation`, not
+    /// `box-shadow`, now drives ThemeShadow).
+    #[test]
+    fn box_with_box_shadow_alone_gets_no_theme_shadow() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("orphaned-shadow".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box(
+            "orphaned-shadow",
+            vec![(
+                "box-shadow",
+                "0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.28)",
+            )],
+        );
+        let r = compile(&c, &l, &s);
+        assert!(!r.xaml.contains("Translation"), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("ThemeShadow"), "got:\n{}", r.xaml);
+    }
+
     /// An `inset` `box-shadow` gets no `Translation`/`ThemeShadow` at
     /// all — it's a drawing hack (item 3), not elevation (item 1).
     #[test]
@@ -17718,6 +18106,41 @@ mod tests {
         let r = compile(&c, &l, &s);
         assert!(!r.xaml.contains("Translation"), "got:\n{}", r.xaml);
         assert!(!r.xaml.contains("ThemeShadow"), "got:\n{}", r.xaml);
+    }
+
+    /// An `inset` `box-shadow` stays a genuine, reported drop even on a
+    /// part that ALSO declares `elevation` — `elevation` independently
+    /// drives the real `ThemeShadow`, but has nothing to say about the
+    /// unrelated shape-cutout hack (item 3), which is still unexpressed.
+    #[test]
+    fn box_with_inset_box_shadow_and_elevation_still_reports_inset_drop() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("moon".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box(
+            "moon",
+            vec![
+                ("box-shadow", "5px -5px 0 0 #1a1714 inset"),
+                ("elevation", "raised"),
+            ],
+        );
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("Translation=\"0,0,4\"") && r.xaml.contains("<ThemeShadow/>"),
+            "elevation must still apply independently, got:\n{}",
+            r.xaml
+        );
+        let dropped = dropped_style_properties(&s);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "box-shadow");
+        assert!(dropped[0].value.contains("inset"));
     }
 
     #[test]

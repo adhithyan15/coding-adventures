@@ -1,5 +1,70 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — drive `ThemeShadow` from the new `elevation` property (UI41, #12028 item 1)
+
+Second PR of the elevation-tokens cascade (mosstyle contract → **XAML**
+→ Compose → Qt → Flutter). Replaces `part_wants_theme_shadow`'s
+box-shadow-value-sniffing heuristic with a direct read of the new
+`elevation` prop (`part_elevation_tier`, returning a new `ElevationTier`
+enum instead of `bool`). `raised` keeps the already-shipped
+`Translation="0,0,4"` + `<Tag.Shadow><ThemeShadow/></Tag.Shadow>`
+treatment; `overlay` gets a deeper `Translation="0,0,16"` — no real
+caller yet (UI41 §3), wired up for future floating UI.
+
+This is a real behavior change from the prior heuristic: `box-shadow`
+alone no longer implies elevation — `elevation` does. Every real part
+in this repo already declares both together (mosstyle-compiler's own
+PR migrated all 8 real `.msl` files), so this only affects a
+hypothetical author who writes `box-shadow` without `elevation` — that
+case now correctly surfaces as a real, reported drop in
+`dropped_style_properties` instead of silently matching the old
+heuristic.
+
+**A real gap found via full-package verification, not just unit
+tests**: compiling the actual TaskApp package and counting rendered
+shadows (9 of 13 real `elevation: raised` parts) revealed that
+`emit_flex_grid` (`Row`/`Column`) and `emit_host_draggable`
+(`HostDraggable`) never called the shadow helper at all — only
+`emit_container` (`Box`/`Stack`) and the `HostButton` emitter did.
+Fixed both:
+
+- `emit_flex_grid`: applies `Translation`/`.Shadow` directly to the
+  unwrapped `<Grid>` when the part has no other container style, or to
+  the wrapping `<Border>` when it does (`Grid` is a `UIElement` like
+  `Border`, so no forced wrapping is needed just for elevation).
+- `emit_host_draggable`: **cannot** use the same `Translation`/
+  `.Shadow` XAML attribute/property-element syntax at all — a real
+  `dotnet build` probe found that combination fails XamlCompiler (exit
+  code 1, no diagnostic) specifically when applied to a *custom*
+  `ContentControl` subclass like `{component}MosaicDragSource` (a
+  plain built-in `ContentControl` or `Border` both accept `Translation`
+  as a XAML attribute fine — verified as the sanity baseline). Instead,
+  a new `ElevationZ` string `DependencyProperty` was added to the
+  `{component}MosaicDragSource` class template (the same shape
+  `DragKey`/`DragLabel` etc. already use successfully on this exact
+  class), whose property-changed callback applies `Translation`/
+  `Shadow` from C# — proven to work via the same probe once the
+  attribute/property-element XAML syntax was replaced with plain C#
+  assignment.
+
+Real usage now fully covered: `brand-mark` (`Stack`), six segmented-
+control tab buttons (`HostButton`), `composer`/`label-composer`
+(`Row`), `task-card`/`timeline-card` (`Column`), and
+`board-card`/`board-card-crit` (`HostDraggable`) — TaskApp's real
+project-nav "pill" toggle and Notes' selected-row button pull in the
+same treatment from their own packages.
+
+Verified against the real toolchain in two passes, matching this
+cascade's established discipline: a real `mosaic-compile pkg --backend
+xaml --profile native-complete` build against the real TaskApp package
+confirmed `nativeComplete: true` with only the expected `inset`
+box-shadow drop (the unrelated moon-icon shape hack) in
+`styleDegradations`, and zero `elevation`/non-inset-`box-shadow`
+degradations; then a real `mosaic-compile pkg --backend xaml
+--emit-project` build of the actual TaskApp WinUI project (all 13 real
+`elevation` parts, across every emitter path) ran through a real
+`dotnet build` with **zero errors**.
+
 ## [Unreleased] — lower `HostProgressRing` to native `ProgressRing` (#13176)
 
 XAML is the first backend to render the new kernel primitive

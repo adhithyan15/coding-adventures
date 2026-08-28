@@ -1,7 +1,7 @@
 # UI41 — `elevation`, a typed native-shadow-intent token
 
-**Status:** mosstyle contract implemented (validation + `.msl` migration);
-per-backend lowering not yet — see §4.
+**Status:** mosstyle contract and XAML implemented; Compose/Qt/Flutter
+not yet — see §4.
 **mosstyle surface:** one new property, `elevation`, validated in
 `mosstyle-compiler::validate` — the compiler's first property with a
 restricted (enum-shaped) value set instead of a freeform string.
@@ -94,7 +94,7 @@ rendering change), then one PR per backend.
 | Backend | Status |
 |---|---|
 | mosstyle-compiler | **implemented** — `elevation: raised \| overlay;` validated in `validate()`; the 8 real `.msl` files that declare a non-`inset` `box-shadow` now also declare `elevation: raised` alongside it. |
-| XAML | not yet — will replace `part_wants_theme_shadow`'s box-shadow-value-sniffing with a direct read of the `elevation` prop, reusing the existing, already-shipped `ThemeShadow`/`Translation` mechanism (`raised` keeps the current `THEME_SHADOW_TRANSLATION_Z = 4`; `overlay` gets a deeper Z). |
+| XAML | **implemented** — replaces `part_wants_theme_shadow`'s box-shadow-value-sniffing with a direct read of the `elevation` prop (`part_elevation_tier`, an `ElevationTier` enum), reusing the existing, already-shipped `ThemeShadow`/`Translation` mechanism (`raised` keeps `Translation="0,0,4"`; `overlay` gets a deeper `Translation="0,0,16"`). `Box`/`Stack`/`Row`/`Column`/`HostButton` all apply `Translation`/`.Shadow` directly via the usual XAML attribute/property-element syntax — but `HostDraggable` cannot: a real `dotnet build` probe found that syntax fails XamlCompiler (exit code 1, no diagnostic) specifically on a custom `ContentControl` subclass like `{component}MosaicDragSource`, so its Z-depth instead flows through a new `ElevationZ` string `DependencyProperty` (the same shape `DragKey` etc. already use) whose changed-callback applies `Translation`/`Shadow` from C#. Found and fixed via real full-package verification: an initial pass only wired `Box`/`Stack`/`HostButton`, and compiling the real TaskApp package and counting rendered shadows (9 of 13) revealed `Row`/`Column` (`emit_flex_grid`) and `HostDraggable` never called the shadow helper at all. Verified against the real toolchain: a `mosaic-compile pkg --backend xaml --profile native-complete` build of the real TaskApp package confirms `nativeComplete: true` with zero `elevation`/non-inset-`box-shadow` degradations; a real `mosaic-compile pkg --backend xaml --emit-project` build of the actual TaskApp WinUI project (all 13 real `elevation` parts) passed a real `dotnet build` with zero errors. |
 | Compose | not yet — `Modifier.shadow(elevation: Dp, ...)`; this crate already hardcodes `elevation = 8.dp`/`4.dp` on two unrelated components (Card, tooltip `Surface`), confirming the primitive — needs a real `gradle compileKotlin` probe against the pinned Material1 version before implementation. |
 | Qt | not yet, and the one real research risk — Qt 6.5+'s `QtQuick.Effects` `MultiEffect` (`shadowEnabled`/`shadowBlur`/`shadowColor`/`shadowVerticalOffset`) is the modern non-deprecated path; needs its own real-toolchain spike (`qmllint` + a live `qml` window, then re-verified against the *actual* `mosaic-compile --backend qt` output — the exact two-pass discipline that caught two real runtime bugs during `HostProgressRing`'s Qt PR). |
 | Flutter | not yet — `BoxDecoration(boxShadow: [BoxShadow(...)])`; standard, well-documented stable API, lower research risk than Qt but still verified via `dart analyze` and a live widget mount before landing. |
