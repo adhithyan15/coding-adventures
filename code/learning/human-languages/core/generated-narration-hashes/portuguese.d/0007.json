@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 7,
-  "sourceHash": "fnv1a64:b504ffa532cad313",
+  "sourceHash": "fnv1a64:0540a9bac445d486",
   "lessonIds": [
     "PT-C07-dias-1",
     "PT-C07-dias-2"
@@ -11,6 +11,6 @@
   "text": "portuguese/narration/ch07.txt",
   "json": "portuguese/narration/ch07.json",
   "textHash": "fnv1a64:08dec7632467340f",
-  "jsonHash": "fnv1a64:3255a6d0008ca6f1",
+  "jsonHash": "fnv1a64:e78b504abcc51749",
   "findings": []
 }

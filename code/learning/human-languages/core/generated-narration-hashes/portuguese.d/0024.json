@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 24,
-  "sourceHash": "fnv1a64:5aa37243ee8e4e17",
+  "sourceHash": "fnv1a64:72e3a05685290fca",
   "lessonIds": [
     "PT-C24-queijo",
     "PT-C24-ovo",
@@ -13,6 +13,6 @@
   "text": "portuguese/narration/ch24.txt",
   "json": "portuguese/narration/ch24.json",
   "textHash": "fnv1a64:7aa879b1b380602b",
-  "jsonHash": "fnv1a64:83277ac439c02cd0",
+  "jsonHash": "fnv1a64:dba085a98edeaed6",
   "findings": []
 }

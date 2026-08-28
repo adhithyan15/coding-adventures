@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 13,
-  "sourceHash": "fnv1a64:bde0638b592353e1",
+  "sourceHash": "fnv1a64:0d5ad780f729e409",
   "lessonIds": [
     "PT-C13-preto-branco",
     "PT-C13-vermelho-azul"
@@ -11,6 +11,6 @@
   "text": "portuguese/narration/ch13.txt",
   "json": "portuguese/narration/ch13.json",
   "textHash": "fnv1a64:3fc00b86dcd208d2",
-  "jsonHash": "fnv1a64:18fe907f0e365350",
+  "jsonHash": "fnv1a64:152e7f32b5bb0050",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 25,
-  "sourceHash": "fnv1a64:9a537968b4d88274",
+  "sourceHash": "fnv1a64:47d48b6c5be19400",
   "lessonIds": [
     "PT-C25-amigo",
     "PT-C25-familia",
@@ -13,6 +13,6 @@
   "text": "portuguese/narration/ch25.txt",
   "json": "portuguese/narration/ch25.json",
   "textHash": "fnv1a64:b4d8756296dbeb80",
-  "jsonHash": "fnv1a64:783fd5fb76a1dfba",
+  "jsonHash": "fnv1a64:43dfa2e61807b0cf",
   "findings": []
 }
