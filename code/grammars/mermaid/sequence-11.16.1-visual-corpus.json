@@ -6,6 +6,7 @@
     "note-over-participant-pairs",
     "note-left-of-participant",
     "note-right-of-participant",
-    "stacked-participant-activations"
+    "stacked-participant-activations",
+    "autonumber-increment-hundredths"
   ]
 }
