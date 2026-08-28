@@ -1228,10 +1228,15 @@ fn collect_native_degradations(
         // backend's PR lands (XAML, then Flutter, then Compose, then
         // Qt last — Qt has no off-the-shelf circular determinate
         // control and needs its own spike).
-        "HostProgressRing" if backend.is_native() && backend != Backend::Xaml => Some((
-            "primitive.progress-ring-unimplemented",
-            "the backend does not yet lower HostProgressRing to its native determinate progress control",
-        )),
+        "HostProgressRing"
+            if backend.is_native()
+                && !matches!(backend, Backend::Xaml | Backend::Flutter) =>
+        {
+            Some((
+                "primitive.progress-ring-unimplemented",
+                "the backend does not yet lower HostProgressRing to its native determinate progress control",
+            ))
+        }
         "HostLink" if backend == Backend::Flutter && flutter_link_requires_url_host(node) => Some((
             "effect.url-host-missing",
             "the Flutter emitter cannot open URLs without an application-supplied effect host",
@@ -4994,15 +4999,11 @@ layout Ring {
         )
         .unwrap();
 
-        // XAML lands its lowering in a separate PR — see
-        // host_progress_ring_xaml_now_has_a_native_lowering below. The
-        // remaining four still have no lowering at all.
-        for backend in [
-            Backend::Compose,
-            Backend::Flutter,
-            Backend::Qt,
-            Backend::SwiftUI,
-        ] {
+        // XAML and Flutter land their lowerings in separate PRs — see
+        // host_progress_ring_xaml_now_has_a_native_lowering and
+        // host_progress_ring_flutter_now_has_a_native_lowering below.
+        // The remaining three still have no lowering at all.
+        for backend in [Backend::Compose, Backend::Qt, Backend::SwiftUI] {
             let out = TempDir::new().unwrap();
             let report = analyze_package_degradations(
                 &BuildOptions {
@@ -5064,6 +5065,40 @@ layout Ring {
         assert!(
             report.native_complete,
             "XAML now has a native HostProgressRing lowering: {:?}",
+            report.degradations
+        );
+    }
+
+    #[test]
+    fn host_progress_ring_flutter_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-ring-flutter", &["Ring"]);
+        fs::write(
+            pkg.path().join("src/Ring.mll"),
+            r#"
+layout Ring {
+  HostProgressRing [ root ] (
+    value: 42
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Flutter,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Flutter progress ring capability analysis");
+        assert!(
+            report.native_complete,
+            "Flutter now has a native HostProgressRing lowering: {:?}",
             report.degradations
         );
     }
