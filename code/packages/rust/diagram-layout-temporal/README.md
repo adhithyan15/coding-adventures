@@ -44,5 +44,6 @@ civil calendar boundaries instead of fixed-duration approximations.
 Styled today markers preserve stroke opacity as backend-neutral paint semantics.
 Repeated vertical-marker task IDs lower once without consuming task rows.
 Date-only calendar exclusions remain valid when task dates include clock fields.
+Compact display mode packs non-overlapping tasks into shared section lanes.
 
 **Git**: Branch lanes (horizontal rows), commits as circles on lanes, merges as bezier arcs.

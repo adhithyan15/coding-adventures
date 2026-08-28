@@ -104,6 +104,7 @@ Calendar-aligned week and month fixtures gate weekday-aware native axis layout.
 Pinned styled-marker fixtures preserve Mermaid `todayMarker` opacity through paint lowering.
 Pinned repeated-vertical-marker fixtures gate row-free semantic marker lowering.
 Pinned date-time fixtures gate date-only exclusions and configurable weekend geometry.
+YAML `displayMode: compact` is preserved as semantic Gantt layout configuration.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

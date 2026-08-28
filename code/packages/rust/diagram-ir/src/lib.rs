@@ -1125,7 +1125,15 @@ pub struct GanttSection {
 }
 
 #[derive(Clone, Debug, PartialEq, Default)]
+pub enum GanttDisplayMode {
+    #[default]
+    Default,
+    Compact,
+}
+
+#[derive(Clone, Debug, PartialEq, Default)]
 pub struct GanttConfig {
+    pub display_mode: GanttDisplayMode,
     pub axis_format: Option<String>,
     pub tick_interval: Option<String>,
     pub includes: Vec<String>,
