@@ -139,4 +139,23 @@ export default [
       );
     },
   },
+  {
+    suite: "shared Perso-Arabic letters retain script-owned provenance",
+    suiteOrder: 50,
+    caseOrder: 160,
+    name: "keeps Japanese よ as a source-backed two-run hiragana path",
+    verify: ({ SCRIPTS }) => {
+      const japanese = SCRIPTS.find((script) => script.script === "japanese")!
+        .letters.find((entry) => entry.glyph === "よ")!;
+      expect(japanese.sound).toBe("yo");
+      expect(japanese.role).toBe("hiragana");
+      expect(japanese.penLifts).toBe(1);
+      expect(japanese.strokeOrder).toHaveLength(2);
+      expect(japanese.strokeOrder[0]).toMatch(/horizontal.*left to right/i);
+      expect(japanese.strokeOrder[1]).toMatch(/descend.*turn left.*clockwise.*lower loop.*rightward/i);
+      expect(japanese.strokeOrderSource?.url).toBe(
+        "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%88_stroke_order_animation.gif",
+      );
+    },
+  },
 ] satisfies readonly GlyphEvidence[];

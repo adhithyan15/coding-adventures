@@ -889,4 +889,49 @@ export const entries: DuctusEntry[] = [
         .strokeOrderSource!,
     },
   ],
+  // Sirgazil's corrected 26-frame animation writes よ with a short
+  // left-to-right upper bar, then one continuous stem and clockwise lower
+  // loop. These medians preserve that one-lift order in the bundled Noto Sans
+  // JP subset.
+  [
+    "japanese:よ",
+    {
+      script: "japanese",
+      glyph: "よ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the short upper horizontal from left to right",
+              path: [
+                { x: 500, y: 548 }, { x: 610, y: 550 }, { x: 720, y: 554 }, { x: 825, y: 562 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "descend through the upper bar and turn left",
+              path: [
+                { x: 535, y: 780 }, { x: 530, y: 665 }, { x: 520, y: 545 }, { x: 500, y: 420 },
+                { x: 470, y: 315 }, { x: 430, y: 255 }, { x: 390, y: 238 },
+              ],
+            },
+            {
+              label: "continue clockwise around the broad lower loop to the rightward finish",
+              path: [
+                { x: 390, y: 238 }, { x: 300, y: 230 }, { x: 220, y: 205 }, { x: 170, y: 160 },
+                { x: 165, y: 110 }, { x: 215, y: 35 }, { x: 300, y: 0 }, { x: 395, y: 0 },
+                { x: 500, y: 40 }, { x: 580, y: 175 }, { x: 650, y: 190 }, { x: 720, y: 130 },
+                { x: 780, y: 60 }, { x: 815, y: 40 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: japanese.letters.find((letter) => letter.glyph === "よ")!
+        .strokeOrderSource!,
+    },
+  ],
 ];

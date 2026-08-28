@@ -235,5 +235,22 @@ export const scriptInventoryEvidence = {
     );
     expect(missingByScript.get("japanese.json")?.has("ゆ")).toBe(false);
     expect(affected.get("ゆ") ?? 0).toBe(0);
+    const japaneseYo = scripts.japanese!.letters.find(
+      (entry) => entry.glyph === "よ",
+    )!;
+    expect(japaneseYo.sound).toBe("yo");
+    expect(japaneseYo.penLifts).toBe(1);
+    expect(japaneseYo.strokeOrder).toEqual([
+      "draw the short upper horizontal from left to right",
+      "lift, begin above the horizontal, descend through it, then turn left and continue clockwise around the broad lower loop to the rightward finish",
+    ]);
+    expect(japaneseYo.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*よ.*26 frames.*2\.6 seconds.*Wikimedia Commons.*1 October 2009.*corrected.*4 January 2012/i,
+    );
+    expect(japaneseYo.strokeOrderSource?.variation).toMatch(
+      /CC0.*two pen-down runs.*one lift.*corrected first stroke.*left to right.*descends through.*turns left.*clockwise.*lower loop.*rightward finish.*Noto Sans JP.*two-run order/i,
+    );
+    expect(missingByScript.get("japanese.json")?.has("よ")).toBe(false);
+    expect(affected.get("よ") ?? 0).toBe(0);
   },
 };

@@ -1,0 +1,21 @@
+{
+  "glyph": "よ",
+  "sound": "yo",
+  "role": "hiragana",
+  "components": [
+    "a short upper horizontal",
+    "a long vertical turning into a broad lower loop"
+  ],
+  "strokeOrder": [
+    "draw the short upper horizontal from left to right",
+    "lift, begin above the horizontal, descend through it, then turn left and continue clockwise around the broad lower loop to the rightward finish"
+  ],
+  "strokeOrderNote": "Sirgazil's corrected 26-frame animation writes よ in two separate pen-down runs: the short upper horizontal from left to right, then the descending stem and broad clockwise lower loop.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%88_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana よ stroke order animation.gif, hiragana よ, 26 frames, 2.6 seconds (Wikimedia Commons, 1 October 2009; corrected first-stroke direction 4 January 2012)",
+    "variation": "The CC0 animation draws よ in two pen-down runs with one lift. Its corrected first stroke moves left to right; the second descends through that bar, turns left, and continues clockwise around the broad lower loop to the rightward finish. The learner path is fitted to the bundled Noto Sans JP subset; handwritten loop width varies, but the two-run order remains the same."
+  },
+  "notes": "The yo of よろしく; one short, even mora. Keep the small top bar separate from the long looping second stroke."
+}
