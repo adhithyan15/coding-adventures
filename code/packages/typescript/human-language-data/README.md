@@ -55,7 +55,21 @@ build-time modules. Language Ladder does not import the modality owner corpus.
 npm run check:shards
 ```
 
-CI rebuilds every shard set in memory and rejects a resurrected aggregate.
+CI rebuilds every shard set in memory and rejects a resurrected aggregate. For
+the 47 generic core-spine, chapter, and curriculum plans, it also compares the
+logical owner set with an independent source: curriculum spine maps prove the
+core spine, generated narration chapter owners prove chapter capabilities, and
+core/path/extension references prove each curriculum section. A clean deletion,
+unexpected owner, duplicate identity, filename/body mismatch, or case-fold
+collision therefore fails even when the surviving shards still reconstruct.
+Ordinal prefixes remain ordering coordinates, so an id-bearing owner inserted
+at `0015` is accepted without renumbering its neighbours.
+
+The Japanese, Perso-Arabic, Tamil, and Urdu-Nastaliq script inventories declare
+`complete: false`; their generic plans are explicitly **structural-only** until
+#13381 supplies independent, per-glyph declarations. Their filename/body,
+parsing, safety, and aggregate-resurrection checks remain enforced, but
+`check:shards` does not yet claim that a clean glyph-owner deletion is detectable.
 
 Shared Markdown documents use `<document>.d/` and one strict, locale-free
 filename grammar. `_meta.md` is the only metadata shard. Every section shard is

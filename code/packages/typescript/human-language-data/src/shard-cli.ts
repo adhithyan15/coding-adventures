@@ -47,8 +47,9 @@
 // inserted between two others as `0015` without renaming its neighbours.
 // Renaming neighbours would be its own merge conflict, which is the thing this
 // whole exercise exists to avoid. `--shard` renumbers to the canonical stride,
-// but `--check` compares the REBUILT MONOLITH rather than the filenames, so a
-// hand-inserted `0015-SPINE-NEW.json` passes without anyone having to renumber.
+// but `--check` treats that prefix only as an ordering coordinate and compares
+// the stable logical id with an independent source, so a hand-inserted
+// `0015-SPINE-NEW.json` passes without anyone having to renumber.
 
 // `existsSync` is deliberately NOT imported. It uses `stat`, so it follows
 // symlinks and reports a dangling link as absent — which silently skipped a
@@ -77,6 +78,8 @@ import {
 import { pathToFileURL } from "node:url";
 import {
   defaultCurriculumRoot,
+  loadCurriculumSpine,
+  loadLanguageCurricula,
   loadLanguageRegistry,
   loadTrackChapters,
 } from "./loader.js";
@@ -216,6 +219,31 @@ export interface ShardGrouping {
   readonly groupOf: (element: unknown, key: string, index: number) => string;
 }
 
+/**
+ * The independent source that proves a removed monolith did not lose an owner.
+ *
+ * Re-sharding the surviving owners proves structural closure, but it cannot
+ * prove completeness: deleting one valid owner shrinks both the reconstructed
+ * document and the filenames reconstructed from it. Every exact mode therefore
+ * names a source that does not consult the owner set it is checking.
+ *
+ * The four script inventories are intentionally incomplete (`complete: false`)
+ * and have no exhaustive independent glyph source yet. Calling that fact out in
+ * the plan prevents `--check` from silently overstating what it proves while
+ * #13381 adds conflict-free declarations.
+ */
+export type ShardCompleteness =
+  | { readonly kind: "curriculum-spine-union" }
+  | {
+      readonly kind: "generated-narration-chapters";
+      readonly language: string;
+    }
+  | {
+      readonly kind: "curriculum-cross-references";
+      readonly language: string;
+    }
+  | { readonly kind: "structural-only"; readonly reason: string };
+
 export interface ShardPlan {
   /** Ledger path relative to the curriculum root, POSIX-separated. */
   readonly path: string;
@@ -237,6 +265,8 @@ export interface ShardPlan {
   readonly grouping?: ShardGrouping;
   /** Bespoke owner projection for a ledger whose stable identity is not an ordinal. */
   readonly projection?: "book-generation" | "sound-tags";
+  /** Independent logical-owner completeness for a removed generic shard plan. */
+  readonly completeness?: ShardCompleteness;
   /** What becomes of `X.json` once `X.d/` exists. See `MonolithDisposition`. */
   readonly monolith: MonolithDisposition;
 }
@@ -358,6 +388,10 @@ function chaptersPlan(track: string): ShardPlan {
           (element as { chapter?: unknown }).chapter as number,
       },
     ],
+    completeness: {
+      kind: "generated-narration-chapters",
+      language: track,
+    },
     // The build-time virtual-module boundary keeps one lazy module per track,
     // so deletion no longer creates one eager key per chapter. Capabilities
     // still come from the current authored shards, preserving stale-book
@@ -444,6 +478,10 @@ function curriculumPlan(track: string): ShardPlan {
       { key: "spine", dir: "spine", kind: "object", idOf },
       { key: "extensions", dir: "extensions", idOf },
     ],
+    completeness: {
+      kind: "curriculum-cross-references",
+      language: track,
+    },
     // One lazy virtual module per track replaces the old monolith glob. Its
     // eager key count is bounded by tracks rather than path/spine elements.
     monolith: "removed",
@@ -489,6 +527,11 @@ function scriptInventoryPlan(name: string): ShardPlan {
         idOf: (element) => scriptEntryId((element as { mark?: unknown }).mark),
       },
     ],
+    completeness: {
+      kind: "structural-only",
+      reason:
+        "the inventory declares complete: false and awaits independent per-glyph declarations in #13381",
+    },
     // Script Ductus receives these through HL25's fixed build-time virtual
     // module, so no browser consumer needs a tracked aggregate.
     monolith: "removed",
@@ -518,6 +561,7 @@ export const SHARD_PLANS: readonly ShardPlan[] = [
         idOf: (element) => (element as { id?: unknown }).id as string,
       },
     ],
+    completeness: { kind: "curriculum-spine-union" },
     monolith: "removed",
   },
   ...CHAPTER_SHARDED_TRACKS.map(chaptersPlan),
@@ -1566,6 +1610,307 @@ function assertBookGenerationCrossLedgerIdentities(
   });
 }
 
+const LOGICAL_OWNER_NAME = /^(\d{4})(?:-([A-Z][A-Z0-9-]*))?\.json$/;
+
+function ownerRecord(value: unknown, where: string): Record<string, unknown> {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new Error(`${where}: expected a JSON object`);
+  }
+  return value as Record<string, unknown>;
+}
+
+function ownerStringArray(value: unknown, where: string): string[] {
+  if (!Array.isArray(value) || value.some((entry) => typeof entry !== "string")) {
+    throw new Error(`${where}: expected an array of strings`);
+  }
+  return value as string[];
+}
+
+export function assertNoCaseFoldCollisions(
+  values: readonly string[],
+  label: string,
+): void {
+  const folded = new Map<string, string>();
+  for (const value of values) {
+    const key = value.toLowerCase();
+    const previous = folded.get(key);
+    if (previous !== undefined && previous !== value) {
+      throw new Error(`${label}: '${previous}' and '${value}' collide when case-folded`);
+    }
+    folded.set(key, value);
+  }
+}
+
+function assertExactLogicalIdentities(
+  actual: readonly string[],
+  expected: readonly string[],
+  label: string,
+): void {
+  assertNoCaseFoldCollisions(actual, `${label} actual identities`);
+  assertNoCaseFoldCollisions(expected, `${label} expected identities`);
+  const actualSet = new Set(actual);
+  const expectedSet = new Set(expected);
+  if (actualSet.size !== actual.length) {
+    throw new Error(`${label}: the owner set contains a duplicate logical identity`);
+  }
+  if (expectedSet.size !== expected.length) {
+    throw new Error(`${label}: the independent source contains a duplicate logical identity`);
+  }
+  const missing = [...expectedSet].filter((identity) => !actualSet.has(identity)).sort();
+  const unexpected = [...actualSet].filter((identity) => !expectedSet.has(identity)).sort();
+  if (missing.length > 0 || unexpected.length > 0) {
+    throw new Error(
+      `${label} identity set differs: missing [${missing.join(", ")}], ` +
+        `unexpected [${unexpected.join(", ")}]`,
+    );
+  }
+}
+
+/**
+ * Bind every generic owner filename to the logical identity inside its body.
+ *
+ * The ordinal remains only an ordering coordinate for id-bearing sections, so
+ * a hand-inserted `0015-ID.json` is valid. Recomputing canonical stride-of-ten
+ * filenames here would reject the exact conflict-free insertion the numbering
+ * scheme exists to support.
+ */
+function assertGenericOwnerBindings(
+  monolith: string,
+  document: Record<string, unknown>,
+  plan: ShardPlan,
+): void {
+  const names = listShardNames(monolith);
+  assertNoCaseFoldCollisions(names, `${plan.path} shard filenames`);
+
+  for (const section of plan.sections) {
+    const prefix = section.dir === undefined ? "" : `${section.dir}/`;
+    const ownerNames = names.filter(
+      (name) =>
+        name !== META_SHARD &&
+        (section.dir === undefined ? !name.includes("/") : name.startsWith(prefix)),
+    );
+    const raw = document[section.key];
+    const entries =
+      (section.kind ?? "array") === "object"
+        ? Object.entries(ownerRecord(raw, `${plan.path}: ${section.key}`)).map(
+            ([identity, value]) => ({ identity, value }),
+          )
+        : (() => {
+            if (!Array.isArray(raw)) {
+              throw new Error(`${plan.path}: ${section.key} must be an array`);
+            }
+            return raw.map((value, index) => ({ identity: undefined, value, index }));
+          })();
+
+    if (ownerNames.length !== entries.length) {
+      throw new Error(
+        `${plan.path}: ${section.key} has ${ownerNames.length} owner filenames but ` +
+          `${entries.length} reconstructed entries`,
+      );
+    }
+
+    ownerNames.forEach((name, index) => {
+      const localName = prefix === "" ? name : name.slice(prefix.length);
+      const match = LOGICAL_OWNER_NAME.exec(localName);
+      if (match === null) {
+        throw new Error(
+          `${plan.path}: shard '${name}' must match ${LOGICAL_OWNER_NAME.source}`,
+        );
+      }
+      const filenameOrdinal = Number(match[1]);
+      const filenameIdentity = match[2];
+      const entry = entries[index]!;
+
+      if ((section.kind ?? "array") === "object") {
+        const identity = assertSafeId(
+          entry.identity,
+          plan,
+          section,
+          `['${String(entry.identity)}']`,
+        );
+        if (filenameIdentity !== identity) {
+          throw new Error(
+            `${plan.path}: shard '${name}' claims '${String(filenameIdentity)}' but ` +
+              `${section.key} reconstructs key '${identity}'`,
+          );
+        }
+        return;
+      }
+
+      if (section.idOf !== undefined) {
+        const identity = assertSafeId(
+          section.idOf(entry.value, index),
+          plan,
+          section,
+          `[${index}]`,
+        );
+        if (filenameIdentity !== identity) {
+          throw new Error(
+            `${plan.path}: shard '${name}' is bound to '${identity}' by its body`,
+          );
+        }
+        return;
+      }
+
+      if (filenameIdentity !== undefined) {
+        throw new Error(
+          `${plan.path}: shard '${name}' carries an id, but ${section.key} is ordinal-owned`,
+        );
+      }
+      if (
+        section.ordinalOf !== undefined &&
+        filenameOrdinal !== ordinalFor(section, entry.value, index)
+      ) {
+        throw new Error(
+          `${plan.path}: shard '${name}' does not match its embedded ordinal identity`,
+        );
+      }
+    });
+  }
+}
+
+function actualSectionIdentities(
+  document: Record<string, unknown>,
+  plan: ShardPlan,
+  section: ShardSection,
+): string[] {
+  const raw = document[section.key];
+  if ((section.kind ?? "array") === "object") {
+    return Object.keys(ownerRecord(raw, `${plan.path}: ${section.key}`));
+  }
+  if (!Array.isArray(raw)) {
+    throw new Error(`${plan.path}: ${section.key} must be an array`);
+  }
+  if (section.idOf !== undefined) {
+    return raw.map((value, index) =>
+      assertSafeId(section.idOf!(value, index), plan, section, `[${index}]`),
+    );
+  }
+  if (section.ordinalOf !== undefined) {
+    return raw.map((value, index) => String(ordinalFor(section, value, index)));
+  }
+  throw new Error(
+    `${plan.path}: exact completeness needs a stable identity for section '${section.key}'`,
+  );
+}
+
+function cachedIdentities(
+  cache: Map<string, readonly string[]>,
+  key: string,
+  load: () => readonly string[],
+): readonly string[] {
+  const present = cache.get(key);
+  if (present !== undefined) return present;
+  const loaded = load();
+  cache.set(key, loaded);
+  return loaded;
+}
+
+function assertIndependentOwnerCompleteness(
+  root: string,
+  document: Record<string, unknown>,
+  plan: ShardPlan,
+  cache: Map<string, readonly string[]>,
+): void {
+  const completeness = plan.completeness;
+  if (completeness === undefined) {
+    throw new Error(
+      `${plan.path}: a removed generic shard plan must declare its completeness source`,
+    );
+  }
+  if (completeness.kind === "structural-only") return;
+
+  const expected = new Map<string, readonly string[]>();
+  if (completeness.kind === "curriculum-spine-union") {
+    expected.set(
+      "nodes",
+      cachedIdentities(cache, "curriculum-spine-union", () => {
+        const identities: string[] = [];
+        for (const curriculum of loadLanguageCurricula(root)) {
+          identities.push(
+            ...Object.keys(
+              ownerRecord(curriculum.spine, `${curriculum.language}: curriculum spine`),
+            ),
+          );
+        }
+        return [...new Set(identities)];
+      }),
+    );
+  } else if (completeness.kind === "generated-narration-chapters") {
+    if (document.language !== completeness.language) {
+      throw new Error(
+        `${plan.path}: declares language '${String(document.language)}', expected ` +
+          `'${completeness.language}'`,
+      );
+    }
+    expected.set(
+      "chapters",
+      readGeneratedNarrationHashManifest(
+        join(root, GENERATED_NARRATION_HASH_DIR, `${completeness.language}.json`),
+      ).manifest.chapters.map((chapter) => String(chapter.chapter)),
+    );
+  } else {
+    if (document.language !== completeness.language) {
+      throw new Error(
+        `${plan.path}: declares language '${String(document.language)}', expected ` +
+          `'${completeness.language}'`,
+      );
+    }
+    expected.set(
+      "spine",
+      cachedIdentities(cache, "core-spine", () =>
+        loadCurriculumSpine(root).nodes.map((node) => node.id),
+      ),
+    );
+    const spine = ownerRecord(document.spine, `${plan.path}: spine`);
+    expected.set(
+      "path",
+      Object.entries(spine).flatMap(([node, realization]) =>
+        ownerStringArray(
+          ownerRecord(realization, `${plan.path}: spine.${node}`).segments,
+          `${plan.path}: spine.${node}.segments`,
+        ),
+      ),
+    );
+    if (!Array.isArray(document.path)) {
+      throw new Error(`${plan.path}: path must be an array`);
+    }
+    expected.set(
+      "extensions",
+      document.path.flatMap((segment, index) => {
+        const record = ownerRecord(segment, `${plan.path}: path[${index}]`);
+        return ["before", "inline", "after"].flatMap((position) =>
+          ownerStringArray(
+            record[position],
+            `${plan.path}: path[${index}].${position}`,
+          ),
+        );
+      }),
+    );
+  }
+
+  for (const [sectionKey, sectionExpected] of expected) {
+    const section = plan.sections.find((candidate) => candidate.key === sectionKey);
+    if (section === undefined) {
+      throw new Error(
+        `${plan.path}: completeness source names unknown section '${sectionKey}'`,
+      );
+    }
+    assertExactLogicalIdentities(
+      actualSectionIdentities(document, plan, section),
+      sectionExpected,
+      `${plan.path} ${sectionKey}`,
+    );
+  }
+  for (const section of plan.sections) {
+    if (!expected.has(section.key)) {
+      throw new Error(
+        `${plan.path}: completeness source does not cover section '${section.key}'`,
+      );
+    }
+  }
+}
+
 export function runShardCli(
   args = process.argv.slice(2),
   root = defaultCurriculumRoot(),
@@ -1600,6 +1945,7 @@ export function runShardCli(
   }
 
   let failed = false;
+  const independentIdentityCache = new Map<string, readonly string[]>();
   for (const plan of plans) {
     if (mode === "--shard") {
       const written = shardLedger(root, plan);
@@ -1623,10 +1969,11 @@ export function runShardCli(
       continue;
     }
     const expected = unshardContents(root, plan);
+    const rebuilt = JSON.parse(expected) as Record<string, unknown>;
     if (plan.projection === "book-generation") {
       assertBookGenerationCrossLedgerIdentities(
         root,
-        JSON.parse(expected) as BookGenerationDocument,
+        rebuilt as unknown as BookGenerationDocument,
       );
     }
 
@@ -1648,22 +1995,33 @@ export function runShardCli(
             `in it are silently dead. Move them into the shards and delete the file.\n`,
         );
         failed = true;
+        // The reconstructed shards were already parsed above. Do not now ask
+        // secondary completeness sources to exist in a deliberately minimal
+        // diagnostic checkout: resurrection alone is conclusive, and this
+        // branch's purpose is to return the actionable dead-edit message.
+        continue;
       }
       // The rebuild still has to be exercised: it is what proves the shards
       // parse, carry a `_meta.json`, and fold back into one coherent document.
       // Without this the check would pass for a shard directory full of
       // unreadable files, having asserted nothing but an absence.
-      JSON.parse(expected);
-      const present = new Set(listShardNames(monolith));
-      for (const name of shardContents(
-        JSON.parse(expected) as Record<string, unknown>,
-        plan,
-      ).keys()) {
-        if (!present.has(name)) {
-          process.stderr.write(
-            `${plan.path}: expected shard '${name}' is missing\n`,
-          );
-          failed = true;
+      if (plan.sections.length > 0 && plan.grouping === undefined) {
+        assertGenericOwnerBindings(monolith, rebuilt, plan);
+        assertIndependentOwnerCompleteness(
+          root,
+          rebuilt,
+          plan,
+          independentIdentityCache,
+        );
+      } else {
+        const present = new Set(listShardNames(monolith));
+        for (const name of shardContents(rebuilt, plan).keys()) {
+          if (!present.has(name)) {
+            process.stderr.write(
+              `${plan.path}: expected shard '${name}' is missing\n`,
+            );
+            failed = true;
+          }
         }
       }
       continue;

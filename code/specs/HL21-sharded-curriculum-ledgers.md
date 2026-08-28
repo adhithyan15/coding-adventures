@@ -383,10 +383,31 @@ consumer and are deleted:
   to the grouped shards.
 
 Their `ShardPlan.monolith` disposition is `"removed"`. `check:shards` now fails
-if a merge resurrects one of them. `data/scripts/japanese.json` is not part of
-this migration: it is still statically imported by the independently buildable
-`script-ductus` package and needs a package-level shard boundary rather than a
-Language Ladder-only Vite plugin.
+if a merge resurrects one of them.
+
+The #13353 follow-up closes the other direction of drift. Reconstructing
+expected filenames from surviving shards cannot detect a clean deletion,
+because both observed and expected sets shrink together. The 47 generic
+core-spine, chapter, and curriculum plans therefore declare independent
+logical-identity sources:
+
+- the union of curriculum spine maps proves the core-spine owner set;
+- generated narration chapter owners prove each track's capability chapters;
+- the core spine proves each curriculum spine section, each spine realization's
+  segment references prove its path owners, and those path owners' before,
+  inline, and after references prove extension owners.
+
+`check:shards` compares those identities rather than regenerated stride-of-ten
+filenames. It rejects missing, unexpected, duplicate, case-fold-colliding, and
+filename/body-mismatched owners while accepting a stable id moved into an
+intermediate ordinal such as `0015`.
+
+The later script-inventory migration removed the Japanese, Perso-Arabic, Tamil,
+and Urdu-Nastaliq aggregates. Those inventories intentionally declare
+`complete: false`, so their plans are explicitly structural-only until #13381
+adds independent per-glyph declarations. The checker still enforces their
+shape, parsing, safe paths, filename/body binding, and monolith absence; it does
+not overstate clean-deletion detection during that transition.
 
 Acceptance is executable rather than inferred:
 
@@ -395,7 +416,9 @@ Acceptance is executable rather than inferred:
 2. Language Ladder tests, typecheck, build, and the bundle gate pass.
 3. The largest eager chunk remains at or below 500 kB.
 4. Rebuilding each deleted aggregate from its shards preserves its exact parsed
-   data, and the shard check rejects a resurrected monolith.
+   data, the shard check rejects a resurrected monolith, and every generic plan
+   claiming exact completeness proves its logical owners from an independent
+   ledger rather than from surviving filenames.
 
 ### 4.2 Tooling
 
