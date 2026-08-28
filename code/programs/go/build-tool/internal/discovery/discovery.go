@@ -191,7 +191,9 @@ func CanonicalToolchains() []string {
 // parseExtraToolchains scans raw BUILD file content for
 // "# needs-toolchain: <name>" comment lines and returns the declared
 // canonical toolchain names, in file order, deduplicated. Only ASCII space and
-// tab are grammar whitespace; an optional trailing CR admits CRLF files.
+// tab are grammar whitespace; CR is stripped only when it immediately precedes
+// an LF terminator. A final lone CR or CR before trailing whitespace remains
+// content and therefore makes the declaration inert.
 // Unknown, empty, malformed, and over-limit declarations fail closed as inert
 // comments.
 func parseExtraToolchains(rawContent string) []string {
@@ -200,12 +202,13 @@ func parseExtraToolchains(rawContent string) []string {
 	}
 	var toolchains []string
 	seen := make(map[string]bool)
-	for _, line := range strings.Split(rawContent, "\n") {
+	lines := strings.Split(rawContent, "\n")
+	for index, line := range lines {
+		if index < len(lines)-1 && strings.HasSuffix(line, "\r") {
+			line = strings.TrimSuffix(line, "\r")
+		}
 		trimmed := strings.TrimLeft(line, " \t")
 		trimmed = strings.TrimRight(trimmed, " \t")
-		if strings.HasSuffix(trimmed, "\r") {
-			trimmed = strings.TrimRight(strings.TrimSuffix(trimmed, "\r"), " \t")
-		}
 		if !strings.HasPrefix(trimmed, extraToolchainDirectivePrefix) {
 			continue
 		}

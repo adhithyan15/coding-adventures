@@ -315,6 +315,12 @@ them, validation reads only fixture data, toolchain detection never probes the
 host, and CLI cases parse only the closed inert `argv` record without invoking
 a native front door or build.
 
+Toolchain declaration lines split only on LF. A CR is discarded only when it
+is the byte immediately before that LF terminator. A final lone CR or a CR
+before trailing ASCII space or tab remains content and makes the declaration
+lookalike inert. The corpus carries both the accepted CRLF form and these two
+negative forms so adapters cannot silently broaden the grammar.
+
 The corpus now closes all process-free v1 domains:
 
 - discovery, resolution, graph, and plan;

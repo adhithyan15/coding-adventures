@@ -135,6 +135,22 @@ func TestParseExtraToolchainsAcceptsAsciiWhitespaceAndCRLF(t *testing.T) {
 	}
 }
 
+func TestParseExtraToolchainsStripsOnlyCRLFCarriageReturns(t *testing.T) {
+	if got := parseExtraToolchains("# needs-toolchain: python\r\n"); !slices.Equal(got, []string{"python"}) {
+		t.Fatalf("CRLF declaration = %v, want [python]", got)
+	}
+	for name, content := range map[string]string{
+		"lone CR":                  "# needs-toolchain: ruby\r",
+		"CR before trailing space": "# needs-toolchain: lua\r  ",
+	} {
+		t.Run(name, func(t *testing.T) {
+			if got := parseExtraToolchains(content); got != nil {
+				t.Fatalf("malformed declaration = %v, want inert", got)
+			}
+		})
+	}
+}
+
 func TestParseExtraToolchainsFailsClosedAtResourceCeilings(t *testing.T) {
 	for name, content := range map[string]string{
 		"bytes": strings.Repeat("x", maxExtraToolchainBuildBytes+1),
