@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-SCRIPT-RTL-01, FA-SCRIPT-ALEF-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-SCRIPT-RTL-01, FA-SCRIPT-ALEF-01]
 skills: [reading, writing]

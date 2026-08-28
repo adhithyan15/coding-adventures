@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-KHUB, FA-SCRIPT-KHUB, FA-DIALOGUE-NAME-EXCHANGE]
 introduces:
   knowledge: [FA-LEX-KHUBAM-REPLY, FA-GRAMMAR-PERSONAL-COPULA-AM, FA-SCRIPT-KHUBAM]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-KHUB, FA-SCRIPT-KHUB, FA-DIALOGUE-NAME-EXCHANGE, FA-LEX-KHUBAM-REPLY, FA-GRAMMAR-PERSONAL-COPULA-AM, FA-SCRIPT-KHUBAM]
 skills: [listening, speaking, reading]

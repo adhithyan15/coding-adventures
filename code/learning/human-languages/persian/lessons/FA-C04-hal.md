@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-DIALOGUE-NAME-EXCHANGE]
 introduces:
   knowledge: [FA-LEX-HAL, FA-SCRIPT-HAL, FA-ETYMON-HAL]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-DIALOGUE-NAME-EXCHANGE, FA-LEX-HAL, FA-SCRIPT-HAL, FA-ETYMON-HAL]
 skills: [listening, speaking, reading]

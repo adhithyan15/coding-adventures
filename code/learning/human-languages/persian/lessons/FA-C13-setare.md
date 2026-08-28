@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-MAH, FA-ETYMON-MAH]
 introduces:
   knowledge: [FA-LEX-SETARE, FA-ETYMON-SETARE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-MAH, FA-ETYMON-MAH, FA-LEX-SETARE, FA-ETYMON-SETARE, FA-LEX-DAR]
 skills: [listening, speaking, reading]

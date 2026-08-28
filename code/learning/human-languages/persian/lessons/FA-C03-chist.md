@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER]
 introduces:
   knowledge: [FA-LEX-CHIST, FA-SCRIPT-CHE-AND-YE, FA-GRAMMAR-CHI-AST-FUSION]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER, FA-LEX-CHIST, FA-SCRIPT-CHE-AND-YE, FA-GRAMMAR-CHI-AST-FUSION]
 skills: [listening, speaking, reading]

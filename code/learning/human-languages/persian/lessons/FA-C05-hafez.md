@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-KHODA, FA-SCRIPT-KHODA, FA-ETYMON-KHODA]
 introduces:
   knowledge: [FA-LEX-HAFEZ, FA-SCRIPT-HAFEZ, FA-ETYMON-HAFEZ]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-KHODA, FA-SCRIPT-KHODA, FA-LEX-HAFEZ, FA-SCRIPT-HAFEZ, FA-ETYMON-HAFEZ]
 skills: [listening, speaking, reading]

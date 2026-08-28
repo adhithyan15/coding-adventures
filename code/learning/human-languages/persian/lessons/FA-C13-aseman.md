@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-KETAB, FA-ETYMON-KETAB]
 introduces:
   knowledge: [FA-LEX-ASEMAN, FA-ETYMON-ASEMAN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-KETAB, FA-ETYMON-KETAB, FA-LEX-ASEMAN, FA-ETYMON-ASEMAN, FA-LEX-ZABAN, FA-SCRIPT-ZE]
 skills: [listening, speaking, reading]

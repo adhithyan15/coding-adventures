@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-HAL, FA-SCRIPT-HAL, FA-ETYMON-HAL]
 introduces:
   knowledge: [FA-LEX-CHETOR, FA-SCRIPT-CHETOR, FA-ETYMON-CHE-TOR]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-HAL, FA-LEX-CHETOR, FA-SCRIPT-CHETOR, FA-ETYMON-CHE-TOR]
 skills: [listening, speaking, reading]

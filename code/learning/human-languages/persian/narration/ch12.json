@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Name, Heart, Door, Book",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3d375573d3417b20",
+  "sourceHash": "fnv1a64:fd60a20979c810dd",
   "lessons": [
     {
       "id": "FA-C12-nam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b64d2af9a8559ee",
+      "sourceHash": "fnv1a64:d5c85a3e7b8b565b",
       "notice": null,
       "blocks": [
         {
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9f09ab490244f86",
+      "sourceHash": "fnv1a64:90b171e4d2136837",
       "notice": null,
       "blocks": [
         {
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15775c06c320d9b7",
+      "sourceHash": "fnv1a64:20aa178ea4ff9a30",
       "notice": null,
       "blocks": [
         {
@@ -442,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f857bde413e36919",
+      "sourceHash": "fnv1a64:c640ab87d24097e4",
       "notice": null,
       "blocks": [
         {

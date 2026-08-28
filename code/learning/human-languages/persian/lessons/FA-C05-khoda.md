@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-DIALOGUE-WELLBEING]
 introduces:
   knowledge: [FA-LEX-KHODA, FA-SCRIPT-KHODA, FA-ETYMON-KHODA]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-DIALOGUE-WELLBEING, FA-LEX-KHODA, FA-SCRIPT-KHODA, FA-ETYMON-KHODA]
 skills: [listening, speaking, reading]

@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-NAME-QUESTION, FA-LEX-ESM-E-MAN-AST]
 introduces:
   knowledge: [FA-LEX-KHOSHVAGHTAM, FA-MORPH-KHOSH-VAQT-AM, FA-ETYMON-VAQT-ARABIC]
+introduces_idioms: [FA-IDIOM-KHOSHVAGHTAM-PLEASED-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-NAME-QUESTION, FA-LEX-ESM-E-MAN-AST, FA-LEX-KHOSHVAGHTAM, FA-MORPH-KHOSH-VAQT-AM, FA-ETYMON-VAQT-ARABIC]
 skills: [listening, speaking, reading]

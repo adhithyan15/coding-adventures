@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-SETARE, FA-ETYMON-SETARE, FA-GRAMMAR-HAL-E-SHOMA]
 introduces:
   knowledge: [FA-LEX-BARAN, FA-ETYMON-BARAN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-ASEMAN, FA-ETYMON-ASEMAN, FA-LEX-KHORSHID, FA-ETYMON-KHORSHID, FA-LEX-MAH, FA-ETYMON-MAH, FA-LEX-SETARE, FA-ETYMON-SETARE, FA-LEX-BARAN, FA-ETYMON-BARAN, FA-GRAMMAR-HAL-E-SHOMA, FA-PRAGMATICS-WELLBEING-FORMAL, FA-LEX-CHETOR, FA-LEX-KHUBAM-REPLY, FA-SCRIPT-KHUBAM]
 skills: [listening, speaking, reading]

@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-BUDAN, FA-GRAMMAR-INFINITIVE-TAN-DAN]
 introduces:
   knowledge: [FA-LEX-RAFTAN, FA-GRAMMAR-PRESENT-STEM, FA-STEM-RAV]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-BUDAN, FA-GRAMMAR-INFINITIVE-TAN-DAN, FA-LEX-RAFTAN, FA-GRAMMAR-PRESENT-STEM, FA-STEM-RAV]
 skills: [listening, speaking, reading]

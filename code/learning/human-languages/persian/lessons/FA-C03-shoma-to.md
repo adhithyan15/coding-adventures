@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-ESM-E-MAN-AST]
 introduces:
   knowledge: [FA-LEX-SHOMA-TO, FA-SCRIPT-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER, FA-ETYMON-TO-THOU]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [FA-CULTURE-SHOMA-TO-REGISTER-01]
 practises:
   knowledge: [FA-LEX-ESM-E-MAN-AST, FA-LEX-SHOMA-TO, FA-SCRIPT-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER, FA-ETYMON-TO-THOU]
 skills: [listening, speaking, reading]
