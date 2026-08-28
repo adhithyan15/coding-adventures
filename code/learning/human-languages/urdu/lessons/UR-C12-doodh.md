@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-CHAI, UR-ETYMON-CHAI-SILKROAD, UR-SCRIPT-DO-CHASHMI-HE]
 introduces:
   knowledge: [UR-LEX-DOODH, UR-ETYMON-DOODH-DOUGHTY]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-CHAI, UR-ETYMON-CHAI-SILKROAD, UR-SCRIPT-DO-CHASHMI-HE, UR-LEX-DOODH, UR-ETYMON-DOODH-DOUGHTY]
 skills: [listening, speaking, reading]

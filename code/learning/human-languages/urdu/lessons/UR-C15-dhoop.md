@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-BARISH, UR-ETYMON-BARISH-PERSIAN]
 introduces:
   knowledge: [UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-BARISH, UR-ETYMON-BARISH-PERSIAN, UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-LEX-AANKH]
 skills: [listening, speaking, reading]

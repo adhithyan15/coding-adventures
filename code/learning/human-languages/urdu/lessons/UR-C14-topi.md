@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-JUTA, UR-ETYMON-JUTA-YOKE]
 introduces:
   knowledge: [UR-LEX-TOPI, UR-ETYMON-TOPI-INTO-ENGLISH]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-JUTA, UR-ETYMON-JUTA-YOKE, UR-LEX-TOPI, UR-ETYMON-TOPI-INTO-ENGLISH, UR-GRAMMAR-WELLBEING-WORD-ORDER, UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS]
 skills: [listening, speaking, reading]

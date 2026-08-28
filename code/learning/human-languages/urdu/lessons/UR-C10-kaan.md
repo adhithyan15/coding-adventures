@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-KHANDAN, UR-ETYMON-KHANDAN-PERSIAN, UR-GRAMMAR-MERA-GENDER-AGREEMENT]
 introduces:
   knowledge: [UR-LEX-KAAN, UR-ETYMON-KAAN-UNCERTAIN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-KHANDAN, UR-ETYMON-KHANDAN-PERSIAN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-LEX-KAAN, UR-ETYMON-KAAN-UNCERTAIN]
 skills: [listening, speaking, reading]

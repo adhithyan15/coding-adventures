@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2373594a092cc216",
+  "sourceHash": "fnv1a64:2f9996f9c2375308",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c1550787faff2c8",
+      "sourceHash": "fnv1a64:225a1b5b43282219",
       "notice": null,
       "blocks": [
         {
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5a55d9c52ca2ac6",
+      "sourceHash": "fnv1a64:510d5c117cc597ef",
       "notice": null,
       "blocks": [
         {
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:33f50c2a33ff9ab5",
+      "sourceHash": "fnv1a64:e25027a14ce306da",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -443,7 +443,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2688b429c36ed450",
+      "sourceHash": "fnv1a64:c8f2496ec4fb771a",
       "notice": null,
       "blocks": [
         {
@@ -588,7 +588,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7db9fff12a5c9fe7",
+      "sourceHash": "fnv1a64:48894eac6203d96c",
       "notice": null,
       "blocks": [
         {

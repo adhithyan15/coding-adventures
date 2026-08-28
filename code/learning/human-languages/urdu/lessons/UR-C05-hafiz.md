@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN]
 introduces:
   knowledge: [UR-LEX-HAFIZ, UR-SCRIPT-HAFIZ, UR-ETYMON-HAFIZ-ARABIC]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-LEX-HAFIZ, UR-SCRIPT-HAFIZ, UR-ETYMON-HAFIZ-ARABIC]
 skills: [listening, speaking, reading]

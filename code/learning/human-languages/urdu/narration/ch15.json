@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Rain, Sun, Wind, Heat, Cold",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:743735ab6b6e7b5c",
+  "sourceHash": "fnv1a64:aaac884bae67ef81",
   "lessons": [
     {
       "id": "UR-C15-barish",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35bf8f44ab39d7d0",
+      "sourceHash": "fnv1a64:7ca20e9bc98fdcbf",
       "notice": null,
       "blocks": [
         {
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e6ce7b7152ed836",
+      "sourceHash": "fnv1a64:3dbdf52e11cc1d79",
       "notice": null,
       "blocks": [
         {
@@ -277,7 +277,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd7b9bc6292f1226",
+      "sourceHash": "fnv1a64:5340442e5f223d3f",
       "notice": null,
       "blocks": [
         {
@@ -406,7 +406,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bcc653d8c97fe62b",
+      "sourceHash": "fnv1a64:9f33d3c6a56f7292",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -559,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d53dbd9a31d4ac8",
+      "sourceHash": "fnv1a64:9038b9c5e95b12c7",
       "notice": null,
       "blocks": [
         {

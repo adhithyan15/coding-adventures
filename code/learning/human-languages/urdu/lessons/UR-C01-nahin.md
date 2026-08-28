@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-SHUKRIYA]
 introduces:
   knowledge: [UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-SHUKRIYA, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01]
 skills: [listening, speaking, reading]

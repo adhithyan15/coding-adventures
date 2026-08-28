@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-BHAI, UR-ETYMON-BHAI-BROTHER]
 introduces:
   knowledge: [UR-LEX-BAHAN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-ETYMON-BAHAN-SHARE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-BHAI, UR-ETYMON-BHAI-BROTHER, UR-LEX-BAHAN, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-ETYMON-BAHAN-SHARE]
 skills: [listening, speaking, reading]

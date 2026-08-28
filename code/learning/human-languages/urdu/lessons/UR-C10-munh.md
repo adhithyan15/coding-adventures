@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-AANKH, UR-LEX-KAAN, UR-LEX-NAAK, UR-SCRIPT-KAAN-NAAK-REVERSAL, UR-SCRIPT-MAIN-HUN]
 introduces:
   knowledge: [UR-LEX-MUNH, UR-SCRIPT-NUN-NASAL-VOWEL, UR-ETYMON-MUNH-MYTH]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-AANKH, UR-LEX-KAAN, UR-LEX-NAAK, UR-SCRIPT-KAAN-NAAK-REVERSAL, UR-SCRIPT-MAIN-HUN, UR-LEX-MUNH, UR-SCRIPT-NUN-NASAL-VOWEL, UR-ETYMON-MUNH-MYTH]
 skills: [listening, speaking, reading]

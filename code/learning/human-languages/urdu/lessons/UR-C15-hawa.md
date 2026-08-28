@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT]
 introduces:
   knowledge: [UR-LEX-HAWA, UR-REGISTER-DOUBLE-LOAN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT, UR-LEX-HAWA, UR-REGISTER-DOUBLE-LOAN, UR-LEX-BAHAN, UR-LEX-DOST]
 skills: [listening, speaking, reading]

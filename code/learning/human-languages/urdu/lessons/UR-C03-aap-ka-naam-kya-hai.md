@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-MERA-NAAM-HAI, UR-GRAMMAR-COPULA-FINAL, UR-LEX-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-LEX-KYA]
 introduces:
   knowledge: [UR-LEX-NAME-QUESTION, UR-GRAMMAR-AAP-KA, UR-SCRIPT-URDU-QUESTION-MARK]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-MERA-NAAM-HAI, UR-GRAMMAR-COPULA-FINAL, UR-LEX-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-LEX-KYA, UR-LEX-NAME-QUESTION, UR-GRAMMAR-AAP-KA, UR-SCRIPT-URDU-QUESTION-MARK]
 skills: [listening, speaking, reading]

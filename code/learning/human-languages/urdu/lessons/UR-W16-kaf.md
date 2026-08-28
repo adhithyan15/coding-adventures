@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-SCRIPT-JOINING-01]
 introduces:
   knowledge: [UR-SCRIPT-KAF-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-SCRIPT-KAF-01, UR-SCRIPT-JOINING-01]
 skills: [reading, writing]

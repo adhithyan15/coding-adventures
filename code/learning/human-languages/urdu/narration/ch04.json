@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:9dbfd2d2b7a48352",
+  "sourceHash": "fnv1a64:58f0006f88e92482",
   "lessons": [
     {
       "id": "UR-C04-kaise-kaisi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fba07a89de0f4ae3",
+      "sourceHash": "fnv1a64:23c862a272e3546c",
       "notice": null,
       "blocks": [
         {
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4670924e6b5cd7a8",
+      "sourceHash": "fnv1a64:346cac317c82c911",
       "notice": null,
       "blocks": [
         {
@@ -288,7 +288,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f7eda2808e6faec",
+      "sourceHash": "fnv1a64:00ca41f9592de65b",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3f0baedf26298f9",
+      "sourceHash": "fnv1a64:cccf79b3efd38e46",
       "notice": null,
       "blocks": [
         {
@@ -556,7 +556,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f80175164da896d5",
+      "sourceHash": "fnv1a64:9a9ccdb9c6b73756",
       "notice": null,
       "blocks": [
         {
@@ -694,7 +694,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c50547e514646ca2",
+      "sourceHash": "fnv1a64:d3f0b3683de69a59",
       "notice": null,
       "blocks": [
         {

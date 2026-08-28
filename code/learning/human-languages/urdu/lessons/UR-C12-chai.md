@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-PANI, UR-ETYMON-PANI-DRINK, UR-SCRIPT-HAMZA-YE, UR-ETYMON-KHUDA-PERSIAN]
 introduces:
   knowledge: [UR-LEX-CHAI, UR-ETYMON-CHAI-SILKROAD]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-PANI, UR-ETYMON-PANI-DRINK, UR-SCRIPT-HAMZA-YE, UR-ETYMON-KHUDA-PERSIAN, UR-LEX-CHAI, UR-ETYMON-CHAI-SILKROAD]
 skills: [listening, speaking, reading]

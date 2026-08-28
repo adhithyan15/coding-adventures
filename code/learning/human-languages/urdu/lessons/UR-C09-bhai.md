@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-PASAND, UR-GRAMMAR-DATIVE-EXPERIENCER]
 introduces:
   knowledge: [UR-LEX-BHAI, UR-SCRIPT-HAMZA-YE, UR-ETYMON-BHAI-BROTHER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-PASAND, UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-BHAI, UR-SCRIPT-HAMZA-YE, UR-ETYMON-BHAI-BROTHER]
 skills: [listening, speaking, reading]

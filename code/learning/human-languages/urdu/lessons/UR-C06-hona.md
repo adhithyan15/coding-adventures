@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME]
 introduces:
   knowledge: [UR-LEX-HONA, UR-GRAMMAR-NA-INFINITIVE, UR-ETYMON-HONA-BE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-LEX-HONA, UR-GRAMMAR-NA-INFINITIVE, UR-ETYMON-HONA-BE]
 skills: [listening, speaking, reading]

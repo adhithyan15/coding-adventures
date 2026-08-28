@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-DIL, UR-ETYMON-DIL-HEART-PIE, UR-LEX-LENA, UR-ETYMON-LENA-TAKE, UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS]
 introduces:
   knowledge: [UR-LEX-PANI, UR-ETYMON-PANI-DRINK]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-DIL, UR-ETYMON-DIL-HEART-PIE, UR-LEX-LENA, UR-ETYMON-LENA-TAKE, UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-PANI, UR-ETYMON-PANI-DRINK]
 skills: [listening, speaking, reading]

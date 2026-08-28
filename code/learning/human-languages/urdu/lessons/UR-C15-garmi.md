@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-HAWA, UR-REGISTER-DOUBLE-LOAN]
 introduces:
   knowledge: [UR-LEX-GARMI, UR-ETYMON-GARMI-WARM-PIE, UR-SCRIPT-GAF-LETTER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-HAWA, UR-REGISTER-DOUBLE-LOAN, UR-LEX-GARMI, UR-ETYMON-GARMI-WARM-PIE, UR-SCRIPT-GAF-LETTER, UR-LEX-KHANDAN, UR-LEX-MUNH]
 skills: [listening, speaking, reading]

@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Four Words on the Face",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bb9c226c6cf168a7",
+  "sourceHash": "fnv1a64:1632ce3078cbdd02",
   "lessons": [
     {
       "id": "UR-C10-kaan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5db4e2d25630cf1f",
+      "sourceHash": "fnv1a64:28aba40e2f673778",
       "notice": null,
       "blocks": [
         {
@@ -143,7 +143,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:406f2cc4adf870f7",
+      "sourceHash": "fnv1a64:783c8604dd5f5f22",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bebdd0461d2a1622",
+      "sourceHash": "fnv1a64:7ceb4a20534b429b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -464,7 +464,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:583554d9df6b0203",
+      "sourceHash": "fnv1a64:805c1d108f8b6eae",
       "notice": {
         "modality": "sight",
         "needs": [

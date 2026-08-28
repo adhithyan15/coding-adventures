@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fc4210d6ddcf7d8b",
+  "sourceHash": "fnv1a64:43956bda93403ef4",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbaf59b34e5d5a38",
+      "sourceHash": "fnv1a64:9971d226c492c443",
       "notice": null,
       "blocks": [
         {
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24ecfe4c657e30a2",
+      "sourceHash": "fnv1a64:6bac4450a27f1419",
       "notice": null,
       "blocks": [
         {
@@ -281,7 +281,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7ba30adc928f3954",
+      "sourceHash": "fnv1a64:c68e406602c415a3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -432,7 +432,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:447fa1578ed99c7f",
+      "sourceHash": "fnv1a64:4886a8486582c1be",
       "notice": null,
       "blocks": [
         {

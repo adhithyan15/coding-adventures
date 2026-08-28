@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-ETYMON-TUM-THOU, UR-GRAMMAR-MERA-GENDER-AGREEMENT]
 introduces:
   knowledge: [UR-LEX-DOST, UR-ETYMON-DOST-CHOOSE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-ETYMON-TUM-THOU, UR-GRAMMAR-MERA-GENDER-AGREEMENT, UR-LEX-DOST, UR-ETYMON-DOST-CHOOSE]
 skills: [listening, speaking, reading]

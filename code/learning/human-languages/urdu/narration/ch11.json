@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The Heart",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:56f531518276b7d1",
+  "sourceHash": "fnv1a64:80942f2aa1e528af",
   "lessons": [
     {
       "id": "UR-C11-dil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c753f2c49bbf42d",
+      "sourceHash": "fnv1a64:ecf4de0987b43abc",
       "notice": null,
       "blocks": [
         {

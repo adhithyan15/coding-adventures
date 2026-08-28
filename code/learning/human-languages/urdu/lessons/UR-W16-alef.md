@@ -19,6 +19,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [UR-SCRIPT-RTL-01, UR-SCRIPT-ALIF-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-SCRIPT-RTL-01, UR-SCRIPT-ALIF-01]
 skills: [reading, writing]

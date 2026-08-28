@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-DOODH, UR-ETYMON-DOODH-DOUGHTY, UR-LEX-PANI, UR-LEX-CHAI, UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-PASAND]
 introduces:
   knowledge: [UR-LEX-ROTI, UR-ETYMON-ROTI-STRIKE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-DOODH, UR-ETYMON-DOODH-DOUGHTY, UR-LEX-PANI, UR-LEX-CHAI, UR-GRAMMAR-DATIVE-EXPERIENCER, UR-LEX-PASAND, UR-LEX-ROTI, UR-ETYMON-ROTI-STRIKE]
 skills: [listening, speaking, reading]

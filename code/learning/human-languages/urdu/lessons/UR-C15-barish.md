@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-KOAT, UR-REGISTER-ENGLISH-LAYER]
 introduces:
   knowledge: [UR-LEX-BARISH, UR-ETYMON-BARISH-PERSIAN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-KOAT, UR-REGISTER-ENGLISH-LAYER, UR-LEX-BARISH, UR-ETYMON-BARISH-PERSIAN, UR-SCRIPT-AAP-TUM-TU, UR-SCRIPT-HAFIZ]
 skills: [listening, speaking, reading]

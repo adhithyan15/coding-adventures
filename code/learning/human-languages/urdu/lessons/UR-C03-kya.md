@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-LEX-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER]
 introduces:
   knowledge: [UR-LEX-KYA, UR-SCRIPT-KYA, UR-ETYMON-KYA-QUESTION-FAMILY]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-LEX-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-LEX-KYA, UR-SCRIPT-KYA, UR-ETYMON-KYA-QUESTION-FAMILY]
 skills: [listening, speaking, reading]

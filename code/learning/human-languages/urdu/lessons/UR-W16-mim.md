@@ -19,6 +19,9 @@ requires:
   knowledge: [UR-SCRIPT-SIN-01]
 introduces:
   knowledge: [UR-SCRIPT-MIM-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [UR-SCRIPT-MIM-01, UR-SCRIPT-SIN-01]
 skills: [reading, writing]

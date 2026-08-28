@@ -5,7 +5,7 @@
     {
       "language": "urdu",
       "chapter": 2,
-      "sourceHash": "fnv1a64:7b41c53b478676a3",
+      "sourceHash": "fnv1a64:761ed729abf69b89",
       "lessonIds": [
         "UR-C02-mera-naam"
       ],
@@ -14,7 +14,7 @@
     {
       "language": "urdu",
       "chapter": 3,
-      "sourceHash": "fnv1a64:a44cf4254a0c8425",
+      "sourceHash": "fnv1a64:d02da295722d5610",
       "lessonIds": [
         "UR-C03-aap-tum-tu",
         "UR-C03-kya",
@@ -27,7 +27,7 @@
     {
       "language": "urdu",
       "chapter": 4,
-      "sourceHash": "fnv1a64:e7dcefdaf094531f",
+      "sourceHash": "fnv1a64:829dab8c40800883",
       "lessonIds": [
         "UR-C04-kaise-kaisi",
         "UR-C04-aap-kaise-hain",
@@ -41,7 +41,7 @@
     {
       "language": "urdu",
       "chapter": 5,
-      "sourceHash": "fnv1a64:67170056f0b53792",
+      "sourceHash": "fnv1a64:0913b7b5e28654a2",
       "lessonIds": [
         "UR-C05-khuda",
         "UR-C05-hafiz",
@@ -53,7 +53,7 @@
     {
       "language": "urdu",
       "chapter": 6,
-      "sourceHash": "fnv1a64:81a6a0348ec0740b",
+      "sourceHash": "fnv1a64:8be15da1119bf166",
       "lessonIds": [
         "UR-C06-hona",
         "UR-C06-jana",
@@ -66,7 +66,7 @@
     {
       "language": "urdu",
       "chapter": 7,
-      "sourceHash": "fnv1a64:e567598a98a41d59",
+      "sourceHash": "fnv1a64:85987522a867e0cb",
       "lessonIds": [
         "UR-C07-sochna",
         "UR-C07-samajhna",
@@ -78,7 +78,7 @@
     {
       "language": "urdu",
       "chapter": 8,
-      "sourceHash": "fnv1a64:0b038cedd34802ef",
+      "sourceHash": "fnv1a64:de0b3a68835ed2b3",
       "lessonIds": [
         "UR-C08-lena",
         "UR-C08-puchhna",
@@ -90,7 +90,7 @@
     {
       "language": "urdu",
       "chapter": 9,
-      "sourceHash": "fnv1a64:340213801ea754ca",
+      "sourceHash": "fnv1a64:a050da75d525dd14",
       "lessonIds": [
         "UR-C09-bhai",
         "UR-C09-bahan",
@@ -102,7 +102,7 @@
     {
       "language": "urdu",
       "chapter": 10,
-      "sourceHash": "fnv1a64:3f4066d663f306fe",
+      "sourceHash": "fnv1a64:cdf392821d8af2f4",
       "lessonIds": [
         "UR-C10-kaan",
         "UR-C10-naak",
@@ -114,7 +114,7 @@
     {
       "language": "urdu",
       "chapter": 11,
-      "sourceHash": "fnv1a64:666dcf5aec4a143c",
+      "sourceHash": "fnv1a64:1dc388e4300b1d72",
       "lessonIds": [
         "UR-C11-dil"
       ],
@@ -123,7 +123,7 @@
     {
       "language": "urdu",
       "chapter": 12,
-      "sourceHash": "fnv1a64:7ef0e0f99ce1e9ae",
+      "sourceHash": "fnv1a64:a60d793b75e8265a",
       "lessonIds": [
         "UR-C12-pani",
         "UR-C12-chai",
@@ -135,7 +135,7 @@
     {
       "language": "urdu",
       "chapter": 13,
-      "sourceHash": "fnv1a64:fde7f58004def645",
+      "sourceHash": "fnv1a64:1f344c2f35806273",
       "lessonIds": [
         "UR-C13-lal",
         "UR-C13-safed",
@@ -147,7 +147,7 @@
     {
       "language": "urdu",
       "chapter": 14,
-      "sourceHash": "fnv1a64:79ba217ced73dd76",
+      "sourceHash": "fnv1a64:7c9afbd0024da6c8",
       "lessonIds": [
         "UR-C14-qamiz",
         "UR-C14-juta",
@@ -159,7 +159,7 @@
     {
       "language": "urdu",
       "chapter": 15,
-      "sourceHash": "fnv1a64:67d202f016620697",
+      "sourceHash": "fnv1a64:a81a5090f8dcaa70",
       "lessonIds": [
         "UR-C15-barish",
         "UR-C15-dhoop",
@@ -172,7 +172,7 @@
     {
       "language": "urdu",
       "chapter": 16,
-      "sourceHash": "fnv1a64:2fcf9e68075991d4",
+      "sourceHash": "fnv1a64:8c281705507b483b",
       "lessonIds": [
         "UR-W16-alef",
         "UR-W16-lam",
