@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-LEX-BHAIN, PA-ETYMON-BHAIN-BHAGA, PA-SCRIPT-ADDAK-DOUBLING]
 introduces:
   knowledge: [PA-LEX-AKKH, PA-ETYMON-AKKH-EYE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-AKKH, PA-ETYMON-AKKH-EYE, PA-LEX-BHAIN, PA-ETYMON-BHAIN-BHAGA, PA-SCRIPT-ADDAK-DOUBLING]
 skills: [listening, speaking, reading]

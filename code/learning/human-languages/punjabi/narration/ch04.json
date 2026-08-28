@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bccc4cbfa76872a4",
+  "sourceHash": "fnv1a64:1287450e5863cf8a",
   "lessons": [
     {
       "id": "PA-C04-phir",
@@ -361,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1111b7e9500ba77",
+      "sourceHash": "fnv1a64:ecedec026b89131c",
       "notice": null,
       "blocks": [
         {

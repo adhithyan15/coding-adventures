@@ -19,6 +19,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [PA-CULTURE-PUNJAB-FIVE-RIVERS-NAME-01]
 practises:
   knowledge: [PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS]
 skills: [listening, speaking, reading]

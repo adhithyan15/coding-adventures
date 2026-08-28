@@ -48,9 +48,9 @@ const INVENTORIES = [
   {
     name: "japanese",
     plan: JAPANESE_SCRIPT_PLAN,
-    letters: 48,
+      letters: 49,
     marks: 3,
-    digest: "3c67dc6ec12999f0260cdb5f51e7a4ce6b2b53449a9e115e21b4be5f8d961a0b",
+    digest: "3e7fe91007f89bc7003bf93235c2dadafe511aa6f12972460e6f21dc61273737",
   },
   {
     name: "perso-arabic",

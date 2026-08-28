@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Water, Tea, Milk, and Bread",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:876cadf864267649",
+  "sourceHash": "fnv1a64:9b254de191b7b036",
   "lessons": [
     {
       "id": "PA-C10-paani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dfd5bcf4f1c5a178",
+      "sourceHash": "fnv1a64:268b734c24f667cb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -210,7 +210,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:272712fa4822d6f7",
+      "sourceHash": "fnv1a64:f5f961502f8bc694",
       "notice": null,
       "blocks": [
         {
@@ -380,7 +380,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c563cb8818f2ec50",
+      "sourceHash": "fnv1a64:7e5eaa8a86a0eb67",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -529,7 +529,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:59b55cfa516d4f75",
+      "sourceHash": "fnv1a64:4e28f6858db1647c",
       "notice": {
         "modality": "sight",
         "needs": [

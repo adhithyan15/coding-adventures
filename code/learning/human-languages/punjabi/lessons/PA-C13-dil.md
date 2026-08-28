@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-LEX-NAKK, PA-LEX-AKKH, PA-LEX-KANN, PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE]
 introduces:
   knowledge: [PA-LEX-DIL, PA-ETYMON-DIL-HEART]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [PA-CULTURE-DIL-EVERYDAY-HRIDAYA-LITERARY-REGISTER-01]
 practises:
   knowledge: [PA-LEX-DIL, PA-ETYMON-DIL-HEART, PA-LEX-NAKK, PA-LEX-AKKH, PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE]
 skills: [listening, speaking, reading]

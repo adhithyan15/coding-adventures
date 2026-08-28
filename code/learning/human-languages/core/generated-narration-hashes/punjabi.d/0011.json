@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 11,
-  "sourceHash": "fnv1a64:c6c833e1d1a6b395",
+  "sourceHash": "fnv1a64:e9d4766614bc4475",
   "lessonIds": [
     "PA-C11-dost",
     "PA-C11-parivar",
@@ -13,6 +13,6 @@
   "text": "punjabi/narration/ch11.txt",
   "json": "punjabi/narration/ch11.json",
   "textHash": "fnv1a64:3d762a82365f5292",
-  "jsonHash": "fnv1a64:ce5df93b051fd97c",
+  "jsonHash": "fnv1a64:0da36efe19870db0",
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "glyph": "つ",
+  "sound": "tsu",
+  "role": "hiragana",
+  "components": [
+    "a single broad sweep that arches right and returns left along the lower curve"
+  ],
+  "strokeOrder": [
+    "begin at the upper left, sweep right across the high arch, curve down around the outer right side, then return left along the broad lower curve to the finish"
+  ],
+  "strokeOrderNote": "Sirgazil's 24-frame animation writes つ in one uninterrupted pen-down run: upper-left start, high rightward arch, descending outer turn, and broad lower return to the left.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%A4_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana つ stroke order animation.gif, hiragana つ, 24 frames, 2.4 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws つ in one uninterrupted run from the upper left across the high arch, down around the outer right curve, and back left along the broad lower return. The learner path is fitted to the bundled Noto Sans JP subset; handwritten width and the height of the returning finish vary, but the zero-lift order remains the same."
+  },
+  "notes": "The tsu of つき and つ; one mora, pronounced as a short, even beat. Keep the full-sized つ distinct from small っ, which marks consonant closure."
+}

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bc09dda5bba4d90e",
+  "sourceHash": "fnv1a64:ebeecd6f957ef6a1",
   "lessons": [
     {
       "id": "PA-C03-kivein",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:13feacee070c0589",
+      "sourceHash": "fnv1a64:58181e78c97737a8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67c1425883cfebc0",
+      "sourceHash": "fnv1a64:926ee3e5c7115e73",
       "notice": null,
       "blocks": [
         {
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96efdc6397b9f8e0",
+      "sourceHash": "fnv1a64:202de047ba9d5f39",
       "notice": null,
       "blocks": [
         {
@@ -403,7 +403,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9bd127d8c66f0e58",
+      "sourceHash": "fnv1a64:8c74bcd4a9c611ed",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -558,7 +558,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d5e5598f7c637bf7",
+      "sourceHash": "fnv1a64:8f8f6bf8688b9550",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -716,7 +716,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0c7a33984ed2d729",
+      "sourceHash": "fnv1a64:c086f565adf83f93",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -859,7 +859,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dce86f6f942229f4",
+      "sourceHash": "fnv1a64:60848f42d47b0cf7",
       "notice": null,
       "blocks": [
         {

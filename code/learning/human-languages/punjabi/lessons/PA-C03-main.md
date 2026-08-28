@@ -18,6 +18,9 @@ requires:
   knowledge: [PA-LEX-MERA-02]
 introduces:
   knowledge: [PA-LEX-MAIN-03, PA-GRAMMAR-MAIN-HAAN-03, PA-ETYMON-FIRST-PERSON-M-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-MERA-02, PA-LEX-MAIN-03, PA-GRAMMAR-MAIN-HAAN-03, PA-ETYMON-FIRST-PERSON-M-03]
 skills: [listening, speaking]

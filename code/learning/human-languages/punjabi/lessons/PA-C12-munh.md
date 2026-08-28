@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-LEX-KANN, PA-CONTRAST-KANN-KARNA, PA-SOUND-TONE-HIGH-LEVEL, PA-LEX-CHA]
 introduces:
   knowledge: [PA-LEX-MUNH, PA-ETYMON-MUNH-MUKHA]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-MUNH, PA-ETYMON-MUNH-MUKHA, PA-LEX-KANN, PA-CONTRAST-KANN-KARNA, PA-SOUND-TONE-HIGH-LEVEL, PA-LEX-CHA]
 skills: [listening, speaking, reading]

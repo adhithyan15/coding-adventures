@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-GRAMMAR-NA-INFINITIVE]
 introduces:
   knowledge: [PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA]
 skills: [listening, speaking, reading]

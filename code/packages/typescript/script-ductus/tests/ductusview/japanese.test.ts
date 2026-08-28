@@ -60,6 +60,8 @@ const JAPANESE_YO = DUCTUS[ductusKey("japanese", "よ")];
 const japaneseYoOutline = japaneseOutline("よ");
 const JAPANESE_ME = DUCTUS[ductusKey("japanese", "め")];
 const japaneseMeOutline = japaneseOutline("め");
+const JAPANESE_TSU = DUCTUS[ductusKey("japanese", "つ")];
+const japaneseTsuOutline = japaneseOutline("つ");
 
 describe("し — one continuous descending curve", () => {
   const steps = ductusSteps(JAPANESE_SHI);
@@ -463,5 +465,21 @@ describe("め — a short curve followed by one crossing paired loop", () => {
       penPathD(JAPANESE_ME.strokes[0], 1),
     ]);
     expect(pen.attrs.d).toBe(penPathD(JAPANESE_ME.strokes[1], 1));
+  });
+});
+
+describe("つ — one continuous arch and lower return", () => {
+  const steps = ductusSteps(JAPANESE_TSU);
+  const strip = ductusFilmstrip(JAPANESE_TSU, japaneseTsuOutline);
+
+  it("keeps the high arch and broad return in one run", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+  });
+
+  it("reports a two-frame zero-lift filmstrip", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
   });
 });

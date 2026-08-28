@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01, PA-SCRIPT-NA-01, PA-SCRIPT-II-MATRA-01, PA-SCRIPT-MA-01, PA-SCRIPT-SA-01, PA-SCRIPT-TA-01, PA-SCRIPT-E-MATRA-01]
 introduces:
   knowledge: [PA-SCRIPT-NAMASTE-READ-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01, PA-SCRIPT-NA-01, PA-SCRIPT-II-MATRA-01, PA-SCRIPT-MA-01, PA-SCRIPT-SA-01, PA-SCRIPT-TA-01, PA-SCRIPT-E-MATRA-01, PA-SCRIPT-NAMASTE-READ-01]
 skills: [reading, writing]

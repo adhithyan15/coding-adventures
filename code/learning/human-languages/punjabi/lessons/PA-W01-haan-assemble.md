@@ -17,6 +17,9 @@ requires:
   knowledge: [PA-LEX-HAAN-NAHIN-01, PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01]
 introduces:
   knowledge: [PA-SCRIPT-HAAN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-HAAN-NAHIN-01, PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01, PA-SCRIPT-HAAN-01]
 skills: [reading]

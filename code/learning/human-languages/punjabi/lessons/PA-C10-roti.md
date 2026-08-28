@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA, PA-LEX-CHA, PA-ETYMON-CHA-CHINESE, PA-LEX-PAANI, PA-ETYMON-PAANI-DRINK, PA-PHRASE-KIRPA-KARKE]
 introduces:
   knowledge: [PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN, PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA, PA-LEX-CHA, PA-ETYMON-CHA-CHINESE, PA-LEX-PAANI, PA-ETYMON-PAANI-DRINK, PA-PHRASE-KIRPA-KARKE]
 skills: [listening, speaking, reading]

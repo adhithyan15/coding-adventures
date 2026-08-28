@@ -13,6 +13,7 @@ export const scriptInventoryEvidence = {
     affected,
     missingByScript,
   }: ScriptEvidenceContext): void {
+    const missingJapanese = missingByScript.get("japanese.json") ?? new Set<string>();
     const japaneseSmallTsu = scripts.japanese!.letters.find(
       (entry) => entry.glyph === "っ",
     )!;
@@ -46,7 +47,7 @@ export const scriptInventoryEvidence = {
     expect(japaneseShi.strokeOrderSource?.variation).toMatch(
       /one uninterrupted run.*descend from the top.*broad lower curve.*upward to the right.*Noto Sans JP.*zero-lift order/i,
     );
-    expect(missingByScript.get("japanese.json")?.has("し")).toBe(false);
+    expect(missingJapanese.has("し")).toBe(false);
     expect(affected.get("し") ?? 0).toBe(0);
     const japaneseKu = scripts.japanese!.letters.find(
       (entry) => entry.glyph === "く",
@@ -64,7 +65,7 @@ export const scriptInventoryEvidence = {
     expect(japaneseKu.strokeOrderSource?.variation).toMatch(
       /one uninterrupted run.*upper right.*sharp central turn.*down and right.*lower tip.*Noto Sans JP.*zero-lift order/i,
     );
-    expect(missingByScript.get("japanese.json")?.has("く")).toBe(false);
+    expect(missingJapanese.has("く")).toBe(false);
     expect(affected.get("く") ?? 0).toBe(0);
     const japaneseTa = scripts.japanese!.letters.find(
       (entry) => entry.glyph === "た",
@@ -84,7 +85,7 @@ export const scriptInventoryEvidence = {
     expect(japaneseTa.strokeOrderSource?.variation).toMatch(
       /four pen-down runs.*three lifts.*upper horizontal.*left-falling stem.*short right horizontal.*lower-right bowl.*Noto Sans JP.*four-run order/i,
     );
-    expect(missingByScript.get("japanese.json")?.has("た")).toBe(false);
+    expect(missingJapanese.has("た")).toBe(false);
     expect(affected.get("た") ?? 0).toBe(0);
     const japaneseNe = scripts.japanese!.letters.find(
       (entry) => entry.glyph === "ね",
@@ -102,7 +103,7 @@ export const scriptInventoryEvidence = {
     expect(japaneseNe.strokeOrderSource?.variation).toMatch(
       /two pen-down runs.*one lift.*short left vertical.*upper right.*cross left.*diagonal.*return.*clockwise.*lower-right loop.*Noto Sans JP.*two-run order/i,
     );
-    expect(missingByScript.get("japanese.json")?.has("ね")).toBe(false);
+    expect(missingJapanese.has("ね")).toBe(false);
     expect(affected.get("ね") ?? 0).toBe(0);
     const japaneseMi = scripts.japanese!.letters.find(
       (entry) => entry.glyph === "み",
@@ -120,7 +121,7 @@ export const scriptInventoryEvidence = {
     expect(japaneseMi.strokeOrderSource?.variation).toMatch(
       /two pen-down runs.*one lift.*top bar.*lower-left loop.*sweep right through the middle.*high on the right.*curve down and left.*turning upward.*Noto Sans JP.*two-run order/i,
     );
-    expect(missingByScript.get("japanese.json")?.has("み")).toBe(false);
+    expect(missingJapanese.has("み")).toBe(false);
     expect(affected.get("み") ?? 0).toBe(0);
     const japaneseSe = scripts.japanese!.letters.find(
       (entry) => entry.glyph === "せ",
@@ -139,7 +140,7 @@ export const scriptInventoryEvidence = {
     expect(japaneseSe.strokeOrderSource?.variation).toMatch(
       /three pen-down runs.*two lifts.*long horizontal.*left stem.*curving right.*right stem.*hooking left.*Noto Sans JP.*three-run order/i,
     );
-    expect(missingByScript.get("japanese.json")?.has("せ")).toBe(false);
+    expect(missingJapanese.has("せ")).toBe(false);
     expect(affected.get("せ") ?? 0).toBe(0);
     const japaneseTe = scripts.japanese!.letters.find(
       (entry) => entry.glyph === "て",
@@ -158,7 +159,7 @@ export const scriptInventoryEvidence = {
     expect(japaneseTe.strokeOrderSource?.variation).toMatch(
       /one uninterrupted run.*high horizontal.*left to right.*down and left.*diagonal.*broad lower curve.*sweep right.*Noto Sans JP.*zero-lift order/i,
     );
-    expect(missingByScript.get("japanese.json")?.has("て")).toBe(false);
+    expect(missingJapanese.has("て")).toBe(false);
     expect(affected.get("て") ?? 0).toBe(0);
     const japaneseNa = scripts.japanese!.letters.find(
       (entry) => entry.glyph === "な",
@@ -178,7 +179,7 @@ export const scriptInventoryEvidence = {
     expect(japaneseNa.strokeOrderSource?.variation).toMatch(
       /four pen-down runs.*three lifts.*upper-left horizontal.*left-falling stem.*upper-right diagonal.*lower-right stem.*loop.*right.*Noto Sans JP.*four-run order/i,
     );
-    expect(missingByScript.get("japanese.json")?.has("な")).toBe(false);
+    expect(missingJapanese.has("な")).toBe(false);
     expect(affected.get("な") ?? 0).toBe(0);
     const japaneseMo = scripts.japanese!.letters.find(
       (entry) => entry.glyph === "も",
@@ -197,9 +198,9 @@ export const scriptInventoryEvidence = {
     expect(japaneseMo.strokeOrderSource?.variation).toMatch(
       /three pen-down runs.*two lifts.*descending stem.*broad lower bowl.*upper and lower bars.*left to right.*Noto Sans JP.*three-run order/i,
     );
-    expect(missingByScript.get("japanese.json")?.has("も")).toBe(false);
+    expect(missingJapanese.has("も")).toBe(false);
     expect(affected.get("も") ?? 0).toBe(0);
-    expect(missingByScript.get("japanese.json")?.has("っ")).toBe(false);
+    expect(missingJapanese.has("っ")).toBe(false);
     expect(affected.get("っ") ?? 0).toBe(0);
     const japaneseWa = scripts.japanese!.letters.find(
       (entry) => entry.glyph === "わ",
@@ -216,7 +217,7 @@ export const scriptInventoryEvidence = {
     expect(japaneseWa.strokeOrderSource?.variation).toMatch(
       /CC0.*two pen-down runs.*long left vertical.*cross right.*hook down and left.*central crossing.*clockwise.*right loop.*Noto Sans JP.*two-run order/i,
     );
-    expect(missingByScript.get("japanese.json")?.has("わ")).toBe(false);
+    expect(missingJapanese.has("わ")).toBe(false);
     expect(affected.get("わ") ?? 0).toBe(0);
     const japaneseYu = scripts.japanese!.letters.find(
       (entry) => entry.glyph === "ゆ",
@@ -233,7 +234,7 @@ export const scriptInventoryEvidence = {
     expect(japaneseYu.strokeOrderSource?.variation).toMatch(
       /CC0.*two pen-down runs.*left stem.*high shoulder.*clockwise.*broad loop.*inner finish.*above the loop.*center.*down-left curve.*Noto Sans JP.*two-run order/i,
     );
-    expect(missingByScript.get("japanese.json")?.has("ゆ")).toBe(false);
+    expect(missingJapanese.has("ゆ")).toBe(false);
     expect(affected.get("ゆ") ?? 0).toBe(0);
     const japaneseYo = scripts.japanese!.letters.find(
       (entry) => entry.glyph === "よ",
@@ -250,7 +251,7 @@ export const scriptInventoryEvidence = {
     expect(japaneseYo.strokeOrderSource?.variation).toMatch(
       /CC0.*two pen-down runs.*one lift.*corrected first stroke.*left to right.*descends through.*turns left.*clockwise.*lower loop.*rightward finish.*Noto Sans JP.*two-run order/i,
     );
-    expect(missingByScript.get("japanese.json")?.has("よ")).toBe(false);
+    expect(missingJapanese.has("よ")).toBe(false);
     expect(affected.get("よ") ?? 0).toBe(0);
     const japaneseMe = scripts.japanese!.letters.find(
       (entry) => entry.glyph === "め",
@@ -267,7 +268,24 @@ export const scriptInventoryEvidence = {
     expect(japaneseMe.strokeOrderSource?.variation).toMatch(
       /CC0.*two pen-down runs.*one lift.*left descending curve.*high central restart.*crosses the first stroke.*lower left.*across the top.*clockwise.*broad right curve.*lower finish.*Noto Sans JP.*two-run order/i,
     );
-    expect(missingByScript.get("japanese.json")?.has("め")).toBe(false);
+    expect(missingJapanese.has("め")).toBe(false);
     expect(affected.get("め") ?? 0).toBe(0);
+    const japaneseTsu = scripts.japanese!.letters.find(
+      (entry) => entry.glyph === "つ",
+    )!;
+    expect(japaneseTsu.sound).toBe("tsu");
+    expect(japaneseTsu.role).toBe("hiragana");
+    expect(japaneseTsu.penLifts).toBe(0);
+    expect(japaneseTsu.strokeOrder).toEqual([
+      "begin at the upper left, sweep right across the high arch, curve down around the outer right side, then return left along the broad lower curve to the finish",
+    ]);
+    expect(japaneseTsu.strokeOrderSource?.citation).toMatch(
+      /Sirgazil.*つ.*24 frames.*2\.4 seconds.*Wikimedia Commons.*1 October 2009/i,
+    );
+    expect(japaneseTsu.strokeOrderSource?.variation).toMatch(
+      /CC0.*one uninterrupted run.*upper left.*high arch.*outer right curve.*back left.*broad lower return.*Noto Sans JP.*zero-lift order/i,
+    );
+    expect(missingJapanese.has("つ")).toBe(false);
+    expect(affected.get("つ") ?? 0).toBe(0);
   },
 };

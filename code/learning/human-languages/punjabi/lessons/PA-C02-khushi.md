@@ -18,6 +18,9 @@ requires:
   knowledge: [PA-PHRASE-MY-NAME-02, PA-LEX-SHUKRIYA-01]
 introduces:
   knowledge: [PA-PHRASE-KHUSHI-HOI-02, PA-ETYMON-KHUSH-PERSIAN-02]
+introduces_idioms: [PA-IDIOM-KHUSHI-HOI-MEETING-FORMULA-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-SHUKRIYA-01, PA-PHRASE-KHUSHI-HOI-02, PA-ETYMON-KHUSH-PERSIAN-02]
 skills: [listening, speaking]

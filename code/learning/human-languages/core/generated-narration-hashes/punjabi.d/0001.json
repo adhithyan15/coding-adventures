@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 1,
-  "sourceHash": "fnv1a64:38e4d09cb9231b0e",
+  "sourceHash": "fnv1a64:fb4dd55e6fd9bcd2",
   "lessonIds": [
     "PA-C01-sat-sri-akal",
     "PA-C01-namaste",
@@ -22,6 +22,6 @@
   "text": "punjabi/narration/ch01.txt",
   "json": "punjabi/narration/ch01.json",
   "textHash": "fnv1a64:17425fd5178936a4",
-  "jsonHash": "fnv1a64:8eeb8a1ecd881cda",
+  "jsonHash": "fnv1a64:4d7d386998efad11",
   "findings": []
 }

@@ -19,6 +19,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-HONA, PA-GRAMMAR-NA-INFINITIVE, PA-ETYMON-HONA-BHU, PA-GRAMMAR-BE-TWO-ROOTS]
 skills: [listening, speaking, reading]
