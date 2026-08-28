@@ -472,6 +472,7 @@ fn gantt_calendar_contains_day(
 ) -> bool {
     values.iter().any(|value| {
         date_to_days(value, format)
+            .or_else(|| date_to_days(value, &GanttDateFormat::default()))
             .is_some_and(|resolved| resolved.floor() as i64 == day)
     })
 }
@@ -1333,6 +1334,26 @@ mod tests {
         gantt.config.includes = vec!["09-02-2025".into()];
         let friday = date_to_days("07-02-2025", &gantt.date_format).unwrap();
         assert_eq!(gantt_elapsed_duration(friday, 1.0, gantt), 2.0);
+
+        gantt.date_format = GanttDateFormat {
+            source: "YYYY-MM-DD HH:mm:ss".into(),
+            parts: vec![
+                GanttDateFormatPart::Year4,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Month2,
+                GanttDateFormatPart::Literal("-".into()),
+                GanttDateFormatPart::Day2,
+                GanttDateFormatPart::Literal(" ".into()),
+                GanttDateFormatPart::Hour24,
+                GanttDateFormatPart::Literal(":".into()),
+                GanttDateFormatPart::Minute,
+                GanttDateFormatPart::Literal(":".into()),
+                GanttDateFormatPart::Second,
+            ],
+        };
+        gantt.config.excludes = vec!["2025-07-07".into()];
+        let sunday = date_to_days("2025-07-06 20:30:30", &gantt.date_format).unwrap();
+        assert_eq!(gantt_elapsed_duration(sunday, 1.0, gantt), 2.0);
     }
 
     #[test]
