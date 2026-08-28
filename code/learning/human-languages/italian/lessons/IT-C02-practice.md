@@ -69,17 +69,16 @@ Italian twin of Spanish *¿y usted?* and French *et toi?*.
 - **così così** — so-so (English "so-so" borrowed it whole).
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03, IT-SOUND-COME-02, IT-ETYMON-COME-03, IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04, IT-ETYMON-COME-STAI-02, IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02, IT-SOUND-COSI-COSI-02, IT-ETYMON-COSI-COSI-03, IT-GRAMMAR-COSI-COSI-04, IT-LEX-PRACTICE-02, IT-NOTICE-PRACTICE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03, IT-SOUND-COME-02, IT-ETYMON-COME-03, IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04, IT-ETYMON-COME-STAI-02, IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02, IT-SOUND-COSI-COSI-02, IT-ETYMON-COSI-COSI-03, IT-GRAMMAR-COSI-COSI-04, IT-LEX-NON-CE-MALE-02, IT-LEX-PRACTICE-02, IT-NOTICE-PRACTICE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: the full *formal* exchange, both voices]
 - [YOU SAY: the same *informally* — *sta → stai*, *Lei → tu*]
 - [YOU SAY: all three questions — Come stai? / Come sta? / Come va?]
-
 [REPEAT x2] "Come stai? — Sto bene, grazie, e tu?" until it's reflex.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03, IT-SOUND-COME-02, IT-ETYMON-COME-03, IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04, IT-ETYMON-COME-STAI-02, IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02, IT-SOUND-COSI-COSI-02, IT-ETYMON-COSI-COSI-03, IT-GRAMMAR-COSI-COSI-04, IT-LEX-PRACTICE-02, IT-NOTICE-PRACTICE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03, IT-SOUND-COME-02, IT-ETYMON-COME-03, IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04, IT-ETYMON-COME-STAI-02, IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02, IT-SOUND-COSI-COSI-02, IT-ETYMON-COSI-COSI-03, IT-GRAMMAR-COSI-COSI-04, IT-LEX-NON-CE-MALE-02, IT-LEX-PRACTICE-02, IT-NOTICE-PRACTICE-03] -->
 
 [PAUSE 3s] Which verb carries *Come stai?*, and what does it literally ask?
 (*stare*, "to stand" — "how do you stand?") What does *prego* answer, and from

@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: [IT-SENSE-PREGO-HERE-YOU-ARE-01]
 introduces_culture_claims: []
 practises:
-  knowledge: [IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03, IT-PRAGMATIC-PREGO-GO-AHEAD-04, IT-PRAGMATIC-PREGO-HERE-YOU-ARE-05]
+  knowledge: [IT-SOUND-PREGO-02, IT-PRAGMATIC-PREGO-GO-AHEAD-04, IT-PRAGMATIC-PREGO-HERE-YOU-ARE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]

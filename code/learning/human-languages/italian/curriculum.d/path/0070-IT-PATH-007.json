@@ -2,9 +2,14 @@
   "id": "IT-PATH-007",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "IT-C02-prego"
+    "IT-C02-prego",
+    "IT-C02-prego-go-ahead",
+    "IT-C02-prego-here-you-are",
+    "IT-C02-prego-come-again"
   ],
   "before": [],
-  "inline": [],
+  "inline": [
+    "IT-EXT-007-LANGUAGE-SPECIFIC"
+  ],
   "after": []
 }

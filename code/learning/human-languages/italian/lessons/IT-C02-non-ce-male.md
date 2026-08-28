@@ -22,7 +22,7 @@ introduces_idioms: [IT-IDIOM-NON-CE-MALE-NOT-BAD-01]
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [IT-SOUND-COSI-COSI-02, IT-ETYMON-COSI-COSI-03, IT-GRAMMAR-COSI-COSI-04, IT-LEX-NON-CE-MALE-02]
+  knowledge: [IT-GRAMMAR-COSI-COSI-04, IT-LEX-NON-CE-MALE-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]

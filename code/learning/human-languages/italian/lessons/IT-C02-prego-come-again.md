@@ -9,7 +9,7 @@ headword: Prego? — come again?
 gloss: sorry, come again? — the listening-repair use of prego
 concept_tag: IT-COURTESY-COME-AGAIN
 prerequisites: [IT-C02-prego-here-you-are]
-sounds: [hard-g-before-o, question-intonation]
+sounds: [hard-g-before-o]
 roots: [precari-latin]
 etymology_hook: "prego becomes a polite request for repetition when question intonation turns the invitation back toward the speaker"
 duration:
@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: [IT-SENSE-PREGO-COME-AGAIN-01]
 introduces_culture_claims: []
 practises:
-  knowledge: [IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03, IT-PRAGMATIC-PREGO-GO-AHEAD-04, IT-PRAGMATIC-PREGO-HERE-YOU-ARE-05, IT-PRAGMATIC-PREGO-COME-AGAIN-06]
+  knowledge: [IT-SOUND-PREGO-02, IT-PRAGMATIC-PREGO-GO-AHEAD-04, IT-PRAGMATIC-PREGO-HERE-YOU-ARE-05, IT-PRAGMATIC-PREGO-COME-AGAIN-06]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
