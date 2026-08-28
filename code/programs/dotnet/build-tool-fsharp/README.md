@@ -10,7 +10,9 @@ language front doors represented. It also exposes
 `validateTrackedArtifactSnapshot`, an F# facade for validating an inert
 tracked-artifact snapshot supplied by a caller, and
 `validateOrphanCrateSnapshot`, an F# facade for validating an inert
-orphan-crate and exemption-ledger snapshot.
+orphan-crate and exemption-ledger snapshot. The
+`evaluateToolchainSnapshot` facade evaluates bounded, caller-supplied package
+and BUILD-front records through a native F# symbol.
 
 ## Why share the engine?
 
@@ -36,6 +38,17 @@ debt, invalid exemption redaction, and stale exemption cleanup. The F# boundary
 accepts only caller-supplied records; it does not discover directories, open a
 manifest or BUILD file, consult Git, launch a process, read the environment, or
 access the network.
+
+The toolchain facade independently consumes all 11 language-neutral
+toolchain-detection cases through the F# boundary. Those cases cover the full
+16-key registry; C, C++, .NET, F#, and WASM language normalization; selected
+Windows, Darwin, Linux, shared-Unix, and generic BUILD precedence; exact and
+stably deduplicated declarations; affected-only, null-all, empty, forced, and
+full scheduling; unsupported diagnostics; CRLF-only carriage-return stripping;
+and per-file, per-line, and aggregate bounds. The adapter accepts only records
+already supplied by its caller and returns the shared deterministic result. It
+does not inspect a checkout, consult Git, open BUILD files, launch a process,
+read the environment, access the network, or execute a declaration.
 
 Build, publish, and package outputs declare the shared engine's mixed MIT and
 Unicode-3.0 licensing and include the full `UNICODE-LICENSE.txt` notice.

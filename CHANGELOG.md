@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Language-neutral extra CI toolchain declarations
 
+- Added the F# shared-engine adapter for bounded toolchain snapshots and made
+  its native test surface independently consume all 11 neutral declaration
+  cases. The facade reuses the reviewed C# decision engine without granting
+  checkout, Git, process, environment, network, or execution authority.
 - Hardened the shared declaration grammar so only a CR immediately preceding
   an LF terminator is stripped. A dedicated process-free snapshot now proves
   CRLF acceptance while final lone CR, doubled CR, and
