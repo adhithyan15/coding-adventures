@@ -853,6 +853,24 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
                     Some(interpreter_ir::Operand::Var(n)) if WIDE_I64_BUILTINS.contains(&n.as_str()))
         })
     });
+    // Narrowing an explicit i64 constant that does not fit in i32 is a semantic
+    // change, even when the module does not use a wide host builtin. COBOL's
+    // fixed-point lowering is the first frontend to make this observable: a
+    // nested COMPUTE division materialises 10^12 for its scale-12 intermediate.
+    // Converting that instruction to `const i32` truncated the multiplier and
+    // made real Java print 000000 instead of 000533.
+    //
+    // Keep the decision module-wide for the same call-signature reason as
+    // `module_prints`: callers and callees must agree on one scalar width.
+    let module_has_wide_i64_constant = module.functions.iter().any(|func| {
+        func.instructions.iter().any(|instr| {
+            instr.type_hint == "i64"
+                && instr.srcs.iter().any(|src| {
+                    matches!(src, interpreter_ir::Operand::Int(value)
+                        if i32::try_from(*value).is_err())
+                })
+        })
+    });
     // Whole-module, not per-function: a `call` couples a caller's and callee's
     // value models. Narrowing `main` while its callee `lambda_0` keeps a tagged
     // `object` boundary produced a caller that stores the call's `object` result
@@ -890,10 +908,12 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
                 && matches!(i.srcs.first(),
                     Some(interpreter_ir::Operand::Var(n)) if WIDE_I64_BUILTINS.contains(&n.as_str()))
         });
-        if uses_wide_builtin || module_prints {
+        if uses_wide_builtin || module_prints || module_has_wide_i64_constant {
             // Wide i64 value model: this function uses a wide builtin directly
-            // or shares a module with one, so it must keep i64 to stay
-            // call-signature-consistent with its callers/callees.
+            // or shares a module with one, or the module contains an explicit
+            // i64 constant that cannot be represented by i32. It must keep i64
+            // to preserve values and stay call-signature-consistent with its
+            // callers/callees.
             continue;
         }
         let to_i32 = |t: &str| is_narrowable_dynamic(t) || t == "i64";
@@ -2813,6 +2833,52 @@ mod tests {
                 instr.op == "alloc_array" && instr.type_hint == "array<i32>"
             }),
             "the allocation must narrow to the same int[] descriptor"
+        );
+    }
+
+    #[test]
+    fn jvm_concretization_preserves_wide_cobol_decimal_intermediates() {
+        let src = "000000 IDENTIFICATION DIVISION.\n\
+                   000000 PROGRAM-ID. P.\n\
+                   000000 DATA DIVISION.\n\
+                   000000 WORKING-STORAGE SECTION.\n\
+                   000000 01  A  PIC 9(3) VALUE 10.\n\
+                   000000 01  B  PIC 9(3) VALUE 3.\n\
+                   000000 01  C  PIC 9(3) VALUE 2.\n\
+                   000000 01  R  PIC 9(4)V99.\n\
+                   000000 PROCEDURE DIVISION.\n\
+                   000000 MAIN.\n\
+                   000000     COMPUTE R = A / B + C.\n\
+                   000000     DISPLAY R.\n\
+                   000000     STOP RUN.";
+        let mut module = compile_source_to_iir(Language::Cobol60, src, "cobol_wide_decimal")
+            .expect("COBOL nested division must compile");
+
+        concretize_scalar_any_for_jvm(&mut module);
+
+        let main = module.get_function("main").expect("main function exists");
+        let scale = main
+            .instructions
+            .iter()
+            .find(|instr| {
+                instr.op == "const"
+                    && instr
+                        .srcs
+                        .iter()
+                        .any(|src| matches!(src, interpreter_ir::Operand::Int(1_000_000_000_000)))
+            })
+            .expect("nested division must materialize its scale-12 multiplier");
+        assert_eq!(
+            scale.type_hint, "i64",
+            "a non-i32 constant must keep the JVM module on its long model"
+        );
+        assert!(
+            main.instructions
+                .iter()
+                .filter(|instr| instr.type_hint == "i64")
+                .count()
+                > 1,
+            "the whole scalar module must keep one call-compatible width"
         );
     }
 
