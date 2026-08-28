@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-MAUSAM-01, MW-SCRIPT-MA-01, MW-SCRIPT-AU-MATRA-01, MW-SCRIPT-SA-01]
 introduces:
   knowledge: [MW-SCRIPT-MAUSAM-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01, MW-SCRIPT-MA-01, MW-SCRIPT-AU-MATRA-01, MW-SCRIPT-SA-01, MW-LEX-HAWA-01, MW-SCRIPT-BAADAL-01, MW-SCRIPT-THARO-01, MW-DIALOGUE-NAME-EXCHANGE-01, MW-QUESTION-NAME-01, MW-SCRIPT-MANDIR-01]
 skills: [listening, speaking, reading, writing]

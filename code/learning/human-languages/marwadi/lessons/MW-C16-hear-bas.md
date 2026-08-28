@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-BAS-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-BAS-01, MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01, MW-LEX-MAHANGO-01, MW-LEX-BHAAV-01]
 skills: [listening, speaking]

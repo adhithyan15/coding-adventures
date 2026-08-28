@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-DADA-01]
 introduces:
   knowledge: [MW-SCRIPT-DA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-DADA-01, MW-SCRIPT-DA-01, MW-LEX-BHAI-01, MW-SCRIPT-BHAI-01, MW-LEX-BAHAN-01, MW-ANSWER-WELLBEING-01, MW-SCRIPT-HOON-01, MW-SCRIPT-THIK-01]
 skills: [reading, writing]

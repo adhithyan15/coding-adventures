@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-PAANI-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-AABHAAR-01, MW-LEX-HAAN-01, MW-RESPONSE-HAAN-SAA-POLITE-01, MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01, MW-LEX-PAANI-01]
 skills: [listening, speaking, reading, writing]

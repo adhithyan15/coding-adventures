@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-NANI-01, MW-SCRIPT-NANA-01, MW-SCRIPT-II-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-NANI-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-NANI-01, MW-SCRIPT-NANI-01, MW-LEX-NANA-01, MW-SCRIPT-NANA-01, MW-SCRIPT-II-MATRA-01, MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01]
 skills: [listening, speaking, reading, writing]

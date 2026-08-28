@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Hand and Money: No New Signs",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:5b84d801b2e5095b",
+  "sourceHash": "fnv1a64:1a3253fdbd6b6fc5",
   "lessons": [
     {
       "id": "MW-C10-hear-haath",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a757d9fdad5b4e4d",
+      "sourceHash": "fnv1a64:dccef203960fd2bc",
       "notice": null,
       "blocks": [
         {
@@ -98,7 +98,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97150b4162d030e9",
+      "sourceHash": "fnv1a64:4638add817ee9dd2",
       "notice": null,
       "blocks": [
         {
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93bbd6470e5e858e",
+      "sourceHash": "fnv1a64:dc2caaa05bd51811",
       "notice": null,
       "blocks": [
         {
@@ -264,7 +264,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6fd9b423450cc5c8",
+      "sourceHash": "fnv1a64:2b7cb6da3b1c49f3",
       "notice": null,
       "blocks": [
         {
@@ -351,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:807a0cc27e941112",
+      "sourceHash": "fnv1a64:17d170c127691269",
       "notice": null,
       "blocks": [
         {
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99403a22b359ad90",
+      "sourceHash": "fnv1a64:b4bb3b704e00926f",
       "notice": null,
       "blocks": [
         {
@@ -527,7 +527,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c4bcce729331fa5",
+      "sourceHash": "fnv1a64:bb055da2d5b6d446",
       "notice": null,
       "blocks": [
         {

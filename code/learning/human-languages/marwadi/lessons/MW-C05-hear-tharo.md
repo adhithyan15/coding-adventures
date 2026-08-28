@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-PHRASE-MY-NAME-IS-01]
 introduces:
   knowledge: [MW-LEX-THARO-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-PHRASE-MY-NAME-IS-01, MW-LEX-MHARO-01, MW-LEX-THARO-01, MW-SCRIPT-NA-01, MW-SCRIPT-HAI-01]
 skills: [listening, speaking]

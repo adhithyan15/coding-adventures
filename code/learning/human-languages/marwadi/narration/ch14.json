@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Three Useful Places: Two New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:18d4d914eed0ebaa",
+  "sourceHash": "fnv1a64:b8d5523ff11f9d36",
   "lessons": [
     {
       "id": "MW-C10-hear-bajar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f4d974a00bf7f9d",
+      "sourceHash": "fnv1a64:999c4872c8715192",
       "notice": null,
       "blocks": [
         {
@@ -99,7 +99,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:820c3321bf91695e",
+      "sourceHash": "fnv1a64:bb8aadad1df38025",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -195,7 +195,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98ff5ba299e971c7",
+      "sourceHash": "fnv1a64:63bb340e1c48014e",
       "notice": null,
       "blocks": [
         {
@@ -282,7 +282,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53a3342d3e7bb55c",
+      "sourceHash": "fnv1a64:9aed861e2fbce076",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0d234fc26781b394",
+      "sourceHash": "fnv1a64:10d1ad650b58f295",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -459,7 +459,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e86d122223e47ba",
+      "sourceHash": "fnv1a64:abe8afb57b0fa0d5",
       "notice": null,
       "blocks": [
         {
@@ -547,7 +547,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb913a0f1ce8cc5d",
+      "sourceHash": "fnv1a64:a5775f01c8ce1746",
       "notice": null,
       "blocks": [
         {
@@ -628,7 +628,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4744b7e178aea0c5",
+      "sourceHash": "fnv1a64:1ee50608827d7c0a",
       "notice": null,
       "blocks": [
         {
@@ -715,7 +715,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b7b1c7d0b2f15f5",
+      "sourceHash": "fnv1a64:750a4c55ef301648",
       "notice": null,
       "blocks": [
         {

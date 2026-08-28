@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Mharo Naam: Give One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b92cb985ccda313a",
+  "sourceHash": "fnv1a64:abd7d84c2c435be1",
   "lessons": [
     {
       "id": "MW-C05-hear-mharo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3ad00b7cee2acf1",
+      "sourceHash": "fnv1a64:0d36649cf412a62c",
       "notice": null,
       "blocks": [
         {
@@ -114,7 +114,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7ac7f3c232c6c739",
+      "sourceHash": "fnv1a64:34dd587cb77a00dc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -217,7 +217,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4d56bbbd4d28076a",
+      "sourceHash": "fnv1a64:e29ab1884293ad8b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -318,7 +318,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da249dd46b5d8dbf",
+      "sourceHash": "fnv1a64:9141ca73ca80acec",
       "notice": null,
       "blocks": [
         {
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45f4caaa857c5dd1",
+      "sourceHash": "fnv1a64:0087eec68addd8b8",
       "notice": null,
       "blocks": [
         {
@@ -508,7 +508,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:879fbcb78b98f3fa",
+      "sourceHash": "fnv1a64:2c1604708e09f3fb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -607,7 +607,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8eea8117f320088d",
+      "sourceHash": "fnv1a64:54cf01a258a1c012",
       "notice": null,
       "blocks": [
         {
@@ -699,7 +699,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f38a89889ee717f6",
+      "sourceHash": "fnv1a64:47ce944df5c6e88d",
       "notice": null,
       "blocks": [
         {
@@ -795,7 +795,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:abf9ea4ae78fa189",
+      "sourceHash": "fnv1a64:826fa97327f79d2a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -896,7 +896,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b2e1743ae524c5b",
+      "sourceHash": "fnv1a64:7a8dfcb0cef6c50e",
       "notice": null,
       "blocks": [
         {

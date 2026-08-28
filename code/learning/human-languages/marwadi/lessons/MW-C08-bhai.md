@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-BHAI-01, MW-SCRIPT-BHA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-II-INDEPENDENT-01]
 introduces:
   knowledge: [MW-SCRIPT-BHAI-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-BHAI-01, MW-SCRIPT-BHAI-01, MW-SCRIPT-BHA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-II-INDEPENDENT-01, MW-LEX-MAA-01, MW-LEX-AAP-01, MW-LEX-KAISO-01, MW-QUESTION-WELLBEING-HEARD-01]
 skills: [listening, speaking, reading, writing]

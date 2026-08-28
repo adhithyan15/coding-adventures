@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-SCRIPT-JA-01, MW-SCRIPT-GHA-01, MW-SCRIPT-BAJAR-01, MW-SCRIPT-GHAR-01, MW-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-SCRIPT-JA-01, MW-SCRIPT-GHA-01, MW-SCRIPT-BAJAR-01, MW-SCRIPT-GHAR-01, MW-LEX-BAJAR-01, MW-LEX-GHAR-01, MW-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01, MW-SCRIPT-TA-01, MW-SCRIPT-CHA-01, MW-SCRIPT-NA-01, MW-SCRIPT-HAATH-01]
 skills: [listening, reading, writing]

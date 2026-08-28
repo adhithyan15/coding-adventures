@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-PERFORMANCE-FAMILY-TWELVE-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-BAJAR-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-BAJAR-01, MW-PERFORMANCE-FAMILY-TWELVE-FOUR-SKILL-01, MW-LEX-PARIVAAR-01]
 skills: [listening, speaking]

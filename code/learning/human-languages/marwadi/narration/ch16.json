@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Wind, Cloud, and Rain: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:b79982949dde6149",
+  "sourceHash": "fnv1a64:1f1c37b20f025af6",
   "lessons": [
     {
       "id": "MW-C11-hear-hawa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a712989c004ac16b",
+      "sourceHash": "fnv1a64:0dcc03389705a7de",
       "notice": null,
       "blocks": [
         {
@@ -98,7 +98,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:859102b879ef5497",
+      "sourceHash": "fnv1a64:2f14793b6148bb52",
       "notice": null,
       "blocks": [
         {
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d26bcbc6868c6102",
+      "sourceHash": "fnv1a64:7dab26744cc68e0f",
       "notice": null,
       "blocks": [
         {
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7ad5ae0070556fc",
+      "sourceHash": "fnv1a64:ea45b3a520fd2d13",
       "notice": null,
       "blocks": [
         {
@@ -353,7 +353,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0d2efe7063c8a9d",
+      "sourceHash": "fnv1a64:14134aef605bb5e2",
       "notice": null,
       "blocks": [
         {
@@ -432,7 +432,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1dca5ebe59f04f8",
+      "sourceHash": "fnv1a64:b58ea9ef368d5427",
       "notice": null,
       "blocks": [
         {
@@ -520,7 +520,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a24693563284a055",
+      "sourceHash": "fnv1a64:f8e4e53a940011f6",
       "notice": null,
       "blocks": [
         {
@@ -598,7 +598,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fea7dcf633fd684a",
+      "sourceHash": "fnv1a64:64bfcf5c31170ca9",
       "notice": null,
       "blocks": [
         {
@@ -692,7 +692,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fb4f6be6635694c",
+      "sourceHash": "fnv1a64:c313db0c58058d4d",
       "notice": null,
       "blocks": [
         {

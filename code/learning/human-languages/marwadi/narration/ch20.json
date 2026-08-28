@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Clothes and Expensive: One Dot Below",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a8bfbca31b7865d6",
+  "sourceHash": "fnv1a64:9f7bba043d9b4ff5",
   "lessons": [
     {
       "id": "MW-C15-hear-kapda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a521ef7950e839f4",
+      "sourceHash": "fnv1a64:832f840d61cda883",
       "notice": null,
       "blocks": [
         {
@@ -100,7 +100,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6e488cf65fdde8db",
+      "sourceHash": "fnv1a64:273ffbac111de2d4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c56ce22f810e503c",
+      "sourceHash": "fnv1a64:7f5c4717e3ce8f7b",
       "notice": null,
       "blocks": [
         {
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b1edb496e7ec723",
+      "sourceHash": "fnv1a64:6b6744438fc5ff74",
       "notice": null,
       "blocks": [
         {
@@ -370,7 +370,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7b562746777d461",
+      "sourceHash": "fnv1a64:8542779146d578da",
       "notice": null,
       "blocks": [
         {
@@ -458,7 +458,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09294c21fa2ca6be",
+      "sourceHash": "fnv1a64:239074d0f8a4363b",
       "notice": null,
       "blocks": [
         {
@@ -535,7 +535,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be53e805fadeaecb",
+      "sourceHash": "fnv1a64:28522f759dd1a42e",
       "notice": null,
       "blocks": [
         {
@@ -626,7 +626,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc1c7e3c46d31a9c",
+      "sourceHash": "fnv1a64:6b462d18c93859a9",
       "notice": null,
       "blocks": [
         {

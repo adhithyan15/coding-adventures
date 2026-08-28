@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-HAATH-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-HAATH-01, MW-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01, MW-LEX-GHAR-01, MW-PERFORMANCE-PAANI-FOUR-SKILL-01]
 skills: [listening, speaking]

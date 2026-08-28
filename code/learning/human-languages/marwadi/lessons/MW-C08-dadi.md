@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-DADI-01, MW-SCRIPT-DA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-II-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-DADI-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-DADI-01, MW-SCRIPT-DADI-01, MW-SCRIPT-DA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-II-MATRA-01, MW-LEX-DADA-01, MW-LEX-BAHAN-01, MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01, MW-SCRIPT-CHHA-01]
 skills: [listening, speaking, reading, writing]

@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-SCRIPT-AA-INDEPENDENT-01, MW-SCRIPT-BHA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-RA-01]
 introduces:
   knowledge: [MW-SCRIPT-AABHAAR-01, MW-LEX-AABHAAR-01]
+introduces_idioms: [MW-IDIOM-AABHAAR-FORMAL-THANKS-01]
+introduces_senses: []
+introduces_culture_claims: [MW-CULTURE-AABHAAR-FORMAL-SANSKRIT-DERIVED-01]
 practises:
   knowledge: [MW-SCRIPT-SAA-01, MW-SCRIPT-AA-INDEPENDENT-01, MW-SCRIPT-BHA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-RA-01, MW-SCRIPT-AABHAAR-01, MW-LEX-AABHAAR-01]
 skills: [listening, speaking, reading, writing]

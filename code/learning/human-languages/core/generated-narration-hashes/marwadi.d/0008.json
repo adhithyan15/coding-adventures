@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 8,
-  "sourceHash": "fnv1a64:662213f5ad3a5b77",
+  "sourceHash": "fnv1a64:c423ef3a7e5a92ae",
   "lessonIds": [
     "MW-C06-hear-answer",
     "MW-W06-uu-matra",
@@ -14,6 +14,6 @@
   "text": "marwadi/narration/ch08.txt",
   "json": "marwadi/narration/ch08.json",
   "textHash": "fnv1a64:fbe7aee098259530",
-  "jsonHash": "fnv1a64:51aebbc82dca9e75",
+  "jsonHash": "fnv1a64:79acc97395725eed",
   "findings": []
 }

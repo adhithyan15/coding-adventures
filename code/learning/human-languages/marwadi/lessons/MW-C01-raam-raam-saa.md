@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-SAA-01]
 introduces:
   knowledge: [MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA]
+introduces_idioms: [MW-IDIOM-RAAM-RAAM-SAA-GREETING-01]
+introduces_senses: []
+introduces_culture_claims: [MW-CULTURE-SAA-RESPECTFUL-GREETING-01]
 practises:
   knowledge: [MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-SAA-01, MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA]
 skills: [listening, speaking, reading, writing]

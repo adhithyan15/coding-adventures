@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-MAA-01]
 introduces:
   knowledge: [MW-LEX-BAAP-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-MAA-01, MW-SCRIPT-MAA-01, MW-LEX-BAAP-01, MW-LEX-PAANI-01, MW-SCRIPT-LA-01, MW-SCRIPT-KA-01]
 skills: [listening, speaking]

@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Shop, Item, and Price: One New Vowel Mark",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4cfad76bf34a267f",
+  "sourceHash": "fnv1a64:2364b3d013c389ef",
   "lessons": [
     {
       "id": "MW-C13-hear-dukan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0427eaa1542d9910",
+      "sourceHash": "fnv1a64:c35db5d173137329",
       "notice": null,
       "blocks": [
         {
@@ -101,7 +101,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b076618785134dbc",
+      "sourceHash": "fnv1a64:868a618e63559747",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -197,7 +197,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ef8de73fed357d1",
+      "sourceHash": "fnv1a64:da22a03e74b3c0c2",
       "notice": null,
       "blocks": [
         {
@@ -285,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:919c150a6fa65776",
+      "sourceHash": "fnv1a64:f85d65e97605560d",
       "notice": null,
       "blocks": [
         {
@@ -366,7 +366,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:605005dd224ad897",
+      "sourceHash": "fnv1a64:7c513dcad1a57ccc",
       "notice": null,
       "blocks": [
         {
@@ -454,7 +454,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17fb35093869d064",
+      "sourceHash": "fnv1a64:5e04a78bdd90c769",
       "notice": null,
       "blocks": [
         {
@@ -533,7 +533,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7c7b31f7e22da6c",
+      "sourceHash": "fnv1a64:1ace0076d9333b71",
       "notice": null,
       "blocks": [
         {
@@ -620,7 +620,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:208c70132fa2f586",
+      "sourceHash": "fnv1a64:7eac70288c87050d",
       "notice": null,
       "blocks": [
         {
@@ -698,7 +698,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74f721a2bf0ad88b",
+      "sourceHash": "fnv1a64:bb58d79f35186108",
       "notice": null,
       "blocks": [
         {
@@ -792,7 +792,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14cef151a956ab64",
+      "sourceHash": "fnv1a64:ab33d14130ccdb7d",
       "notice": null,
       "blocks": [
         {

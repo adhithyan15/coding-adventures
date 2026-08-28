@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-THELA-01, MW-SCRIPT-TTHA-01, MW-SCRIPT-E-MATRA-01, MW-SCRIPT-LA-01, MW-SCRIPT-AA-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-THELA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-THELA-01, MW-SCRIPT-THELA-01, MW-SCRIPT-GAADI-01, MW-LEX-PATI-01, MW-LEX-SASTA-01]
 skills: [listening, speaking, reading, writing]

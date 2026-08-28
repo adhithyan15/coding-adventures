@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-SCRIPT-CHHA-01]
 introduces:
   knowledge: [MW-SCRIPT-E-MATRA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-PACHHE-01, MW-SCRIPT-CHHA-01, MW-SCRIPT-E-MATRA-01, MW-SCRIPT-UU-MATRA-01, MW-LEX-HAI-01]
 skills: [reading, writing]

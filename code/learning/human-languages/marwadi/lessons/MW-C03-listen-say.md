@@ -17,6 +17,9 @@ requires:
   knowledge: [MW-SCRIPT-HAAN-01, MW-LEX-HAAN-01]
 introduces:
   knowledge: [MW-RESPONSE-HAAN-SAA-POLITE-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-SCRIPT-AA-INDEPENDENT-01, MW-SCRIPT-AABHAAR-01, MW-LEX-AABHAAR-01, MW-SCRIPT-HA-01, MW-SCRIPT-ANUSVARA-01, MW-SCRIPT-HAAN-01, MW-LEX-HAAN-01, MW-RESPONSE-HAAN-SAA-POLITE-01]
 skills: [listening, speaking, reading, writing]

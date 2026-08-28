@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Rickshaw and Horse: One New Consonant",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f24f107c183641b6",
+  "sourceHash": "fnv1a64:b44f401e5708100f",
   "lessons": [
     {
       "id": "MW-C17-hear-riksha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dff82404cabc6eff",
+      "sourceHash": "fnv1a64:456f0eb9b2427856",
       "notice": null,
       "blocks": [
         {
@@ -100,7 +100,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:927055ccd98d1fb9",
+      "sourceHash": "fnv1a64:f2eab6392c9f2e78",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25da10500157e4ff",
+      "sourceHash": "fnv1a64:95d34a943661aadc",
       "notice": null,
       "blocks": [
         {
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f2a4c644a1ed8ba",
+      "sourceHash": "fnv1a64:3d357af5aa50235b",
       "notice": null,
       "blocks": [
         {
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad886658ce92b41a",
+      "sourceHash": "fnv1a64:b4302bf1f44f417b",
       "notice": null,
       "blocks": [
         {
@@ -455,7 +455,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45bf9ec3f0ae67de",
+      "sourceHash": "fnv1a64:4313ce52dfba97d7",
       "notice": null,
       "blocks": [
         {
@@ -532,7 +532,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:830f6eb8d187ee7f",
+      "sourceHash": "fnv1a64:1dfec7e0d8a312e2",
       "notice": null,
       "blocks": [
         {
@@ -623,7 +623,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e085566786dd644",
+      "sourceHash": "fnv1a64:b63b1fca8f1425ad",
       "notice": null,
       "blocks": [
         {

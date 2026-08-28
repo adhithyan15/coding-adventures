@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-HOON-01, MW-LEX-THIK-01, MW-ANSWER-WELLBEING-HEARD-01, MW-SCRIPT-UU-MATRA-01, MW-SCRIPT-TTHA-01]
 introduces:
   knowledge: [MW-SCRIPT-HOON-01, MW-SCRIPT-THIK-01, MW-ANSWER-WELLBEING-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-AAP-01, MW-LEX-KAISO-01, MW-QUESTION-WELLBEING-HEARD-01, MW-LEX-HOON-01, MW-LEX-THIK-01, MW-ANSWER-WELLBEING-HEARD-01, MW-SCRIPT-UU-MATRA-01, MW-SCRIPT-TTHA-01, MW-SCRIPT-MHARO-01, MW-SCRIPT-HOON-01, MW-SCRIPT-THIK-01, MW-ANSWER-WELLBEING-01]
 skills: [listening, speaking, reading, writing]

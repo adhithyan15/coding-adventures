@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-SCRIPT-E-MATRA-01, MW-SCRIPT-MA-01]
 introduces:
   knowledge: [MW-SCRIPT-I-MATRA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-MILSOO-01, MW-SCRIPT-MA-01, MW-SCRIPT-I-MATRA-01, MW-SCRIPT-II-MATRA-01, MW-SCRIPT-AI-MATRA-01]
 skills: [reading, writing]

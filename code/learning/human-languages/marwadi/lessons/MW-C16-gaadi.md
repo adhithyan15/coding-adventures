@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-GAADI-01, MW-SCRIPT-GA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-RRA-01, MW-SCRIPT-II-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-GAADI-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-GAADI-01, MW-SCRIPT-GAADI-01, MW-SCRIPT-KAPDA-01, MW-LEX-NANI-01, MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01]
 skills: [listening, speaking, reading, writing]

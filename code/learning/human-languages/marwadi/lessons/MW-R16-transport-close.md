@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01, MW-LEX-BAS-01, MW-SCRIPT-BAS-01, MW-LEX-GAADI-01, MW-SCRIPT-GAADI-01, MW-LEX-THELA-01, MW-SCRIPT-THELA-01, MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01, MW-SCRIPT-SAMAAN-01]
 skills: [listening, speaking, reading, writing]

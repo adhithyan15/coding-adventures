@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01, MW-SCRIPT-U-MATRA-01, MW-SCRIPT-AU-MATRA-01, MW-SCRIPT-GA-01, MW-SCRIPT-DDA-01, MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01, MW-SCRIPT-BA-01]
 skills: [listening, speaking, reading, writing]

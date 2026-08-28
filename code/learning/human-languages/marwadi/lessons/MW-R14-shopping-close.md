@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-PERFORMANCE-SHOPPING-FIVE-FOUR-SKILL-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01, MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01, MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01, MW-PERFORMANCE-SHOPPING-FIVE-FOUR-SKILL-01, MW-SCRIPT-U-MATRA-01, MW-DIALOGUE-NAME-EXCHANGE-01, MW-DIALOGUE-WELLBEING-01, MW-SCRIPT-DADA-01, MW-SCRIPT-THANDI-01]
 skills: [listening, speaking, reading, writing]

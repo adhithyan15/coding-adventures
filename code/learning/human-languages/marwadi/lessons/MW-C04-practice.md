@@ -17,6 +17,9 @@ requires:
   knowledge: [MW-LEX-PAANI-01, MW-SCRIPT-PA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-NNA-01, MW-SCRIPT-II-MATRA-01, MW-SCRIPT-PAANI-01]
 introduces:
   knowledge: [MW-PERFORMANCE-PAANI-FOUR-SKILL-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01, MW-LEX-AABHAAR-01, MW-LEX-HAAN-01, MW-LEX-PAANI-01, MW-SCRIPT-PA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-NNA-01, MW-SCRIPT-II-MATRA-01, MW-SCRIPT-PAANI-01, MW-PERFORMANCE-PAANI-FOUR-SKILL-01]
 skills: [listening, speaking, reading, writing]

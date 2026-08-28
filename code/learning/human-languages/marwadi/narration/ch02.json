@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Aabhaar: Formal Thanks, Two New Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2b82af50b3ab04d0",
+  "sourceHash": "fnv1a64:595ab8097b8e6e08",
   "lessons": [
     {
       "id": "MW-W02-aa-independent",
@@ -22,7 +22,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:64a32f92736a50df",
+      "sourceHash": "fnv1a64:2a9aabe8e5289198",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -147,7 +147,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:496d994124c20134",
+      "sourceHash": "fnv1a64:0eb4d76ceb7ed2fb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -265,7 +265,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:21b84f3790a00905",
+      "sourceHash": "fnv1a64:28ddd7bfa8bb6b3a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -395,7 +395,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bc95709643763e8",
+      "sourceHash": "fnv1a64:1945e8230819625d",
       "notice": null,
       "blocks": [
         {

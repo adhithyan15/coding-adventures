@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Cheap and Goods: No New Signs",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:82f88c569d9be245",
+  "sourceHash": "fnv1a64:ec8142c7f0232d21",
   "lessons": [
     {
       "id": "MW-C14-hear-sasta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c05fca4bb72c18b",
+      "sourceHash": "fnv1a64:d25f07cc6be786a4",
       "notice": null,
       "blocks": [
         {
@@ -100,7 +100,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e3e18765f9b19b4",
+      "sourceHash": "fnv1a64:fb240590ba20b00b",
       "notice": null,
       "blocks": [
         {
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86d2d44f5c2c5671",
+      "sourceHash": "fnv1a64:3a3fb5ae81461fc0",
       "notice": null,
       "blocks": [
         {
@@ -269,7 +269,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d141c7c3a25e4bd",
+      "sourceHash": "fnv1a64:1a5f92f681d787ac",
       "notice": null,
       "blocks": [
         {
@@ -357,7 +357,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db1ac09a038c3e08",
+      "sourceHash": "fnv1a64:a9663b86b645f8b5",
       "notice": null,
       "blocks": [
         {
@@ -434,7 +434,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4a403f13d7dc930",
+      "sourceHash": "fnv1a64:33c4690dae90610b",
       "notice": null,
       "blocks": [
         {
@@ -530,7 +530,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6aa3353416b2d9f6",
+      "sourceHash": "fnv1a64:437d75cdd3fa8013",
       "notice": null,
       "blocks": [
         {

@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-LEX-RIKSHA-01, MW-SCRIPT-RIKSHA-01, MW-LEX-GHODO-01, MW-SCRIPT-GHODO-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-RIKSHA-01, MW-SCRIPT-RIKSHA-01, MW-LEX-GHODO-01, MW-SCRIPT-GHODO-01, MW-SCRIPT-SHA-01, MW-SCRIPT-RRA-01]
 skills: [listening, speaking, reading, writing]

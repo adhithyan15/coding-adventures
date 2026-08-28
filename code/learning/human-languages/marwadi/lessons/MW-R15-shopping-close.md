@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01, MW-LEX-KAPDA-01, MW-SCRIPT-KAPDA-01, MW-LEX-MAHANGO-01, MW-SCRIPT-MAHANGO-01, MW-SCRIPT-RRA-01, MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01, MW-SCRIPT-VASTU-01]
 skills: [listening, speaking, reading, writing]

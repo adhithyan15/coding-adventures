@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-SCRIPT-KA-01, MW-SCRIPT-II-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-II-INDEPENDENT-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-SCRIPT-KA-01, MW-SCRIPT-PA-01, MW-SCRIPT-II-MATRA-01, MW-SCRIPT-II-INDEPENDENT-01]
 skills: [reading, writing]

@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-LEX-THARO-01, MW-SCRIPT-THA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-RA-01, MW-SCRIPT-O-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-THARO-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-THARO-01, MW-SCRIPT-THA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-RA-01, MW-SCRIPT-O-MATRA-01, MW-SCRIPT-THARO-01, MW-LEX-MHARO-01, MW-SCRIPT-MHARO-01]
 skills: [listening, speaking, reading, writing]

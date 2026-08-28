@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-SCRIPT-BAS-01, MW-SCRIPT-RRA-01]
 introduces:
   knowledge: [MW-LEX-GAADI-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-GAADI-01, MW-LEX-BAS-01, MW-SCRIPT-BAS-01, MW-LEX-KAPDA-01, MW-SCRIPT-RRA-01, MW-SCRIPT-NANA-01]
 skills: [listening, speaking]

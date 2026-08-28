@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-LEX-KAIN-01, MW-SCRIPT-KA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-ANUSVARA-01, MW-SCRIPT-II-INDEPENDENT-01]
 introduces:
   knowledge: [MW-SCRIPT-KAIN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-KAIN-01, MW-SCRIPT-KA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-ANUSVARA-01, MW-SCRIPT-II-INDEPENDENT-01, MW-SCRIPT-KAIN-01, MW-SCRIPT-NNA-01, MW-SCRIPT-THA-01]
 skills: [listening, speaking, reading, writing]

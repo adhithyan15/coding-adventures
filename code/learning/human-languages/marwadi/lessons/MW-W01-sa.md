@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01]
 introduces:
   knowledge: [MW-SCRIPT-SA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-SA-01]
 skills: [reading, writing]

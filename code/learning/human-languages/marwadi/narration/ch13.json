@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Wife and Child: One New Sign",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:010913ed9284b2d4",
+  "sourceHash": "fnv1a64:a60fc439da0a79f5",
   "lessons": [
     {
       "id": "MW-C09-hear-patni",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a514bb076b9e9d6",
+      "sourceHash": "fnv1a64:6ddb9cb5e43cb778",
       "notice": null,
       "blocks": [
         {
@@ -99,7 +99,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dee5202abd2596c8",
+      "sourceHash": "fnv1a64:ec80d950ff0ce945",
       "notice": null,
       "blocks": [
         {
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2311ce5e2989fa80",
+      "sourceHash": "fnv1a64:48ad22dba3aae43f",
       "notice": null,
       "blocks": [
         {
@@ -266,7 +266,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:548e9b27958de819",
+      "sourceHash": "fnv1a64:24709a382a00e730",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -362,7 +362,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5348b319cdce7e27",
+      "sourceHash": "fnv1a64:5ab783a8e9fc33e0",
       "notice": null,
       "blocks": [
         {
@@ -449,7 +449,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb610cddbef2ed5b",
+      "sourceHash": "fnv1a64:6e25e033fd4a01aa",
       "notice": null,
       "blocks": [
         {
@@ -529,7 +529,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00ec32019b21ec4c",
+      "sourceHash": "fnv1a64:4f37dd4e85cb3809",
       "notice": null,
       "blocks": [
         {
@@ -625,7 +625,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6432559dacc17e4d",
+      "sourceHash": "fnv1a64:948474289e9d25c2",
       "notice": null,
       "blocks": [
         {

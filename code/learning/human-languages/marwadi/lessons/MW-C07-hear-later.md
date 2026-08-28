@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-DIALOGUE-WELLBEING-01]
 introduces:
   knowledge: [MW-LEX-PACHHE-01, MW-LEX-MILSOO-01, MW-FAREWELL-LATER-HEARD-01]
+introduces_idioms: [MW-IDIOM-PAACHHE-MILSU-SEE-YOU-LATER-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-DIALOGUE-WELLBEING-01, MW-ANSWER-WELLBEING-HEARD-01, MW-LEX-HOON-01, MW-LEX-THIK-01, MW-LEX-RAAM-RAAM-SAA, MW-LEX-PACHHE-01, MW-LEX-MILSOO-01, MW-FAREWELL-LATER-HEARD-01]
 skills: [listening, speaking]

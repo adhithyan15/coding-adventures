@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-GHAR-01]
 introduces:
   knowledge: [MW-SCRIPT-GHA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-GHAR-01, MW-SCRIPT-GHA-01, MW-SCRIPT-HA-01, MW-SCRIPT-JA-01, MW-LEX-PAANI-01, MW-LEX-NANA-01]
 skills: [reading, writing]

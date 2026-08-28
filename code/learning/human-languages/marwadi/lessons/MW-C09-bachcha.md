@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-BACHCHA-01, MW-SCRIPT-BA-01, MW-SCRIPT-CHA-01, MW-SCRIPT-VIRAMA-01, MW-SCRIPT-AA-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-BACHCHA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-BACHCHA-01, MW-SCRIPT-BACHCHA-01, MW-SCRIPT-BA-01, MW-SCRIPT-CHA-01, MW-SCRIPT-VIRAMA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-PATNI-01, MW-LEX-PATNI-01, MW-SCRIPT-BHA-01, MW-SCRIPT-DADI-01]
 skills: [listening, speaking, reading, writing]

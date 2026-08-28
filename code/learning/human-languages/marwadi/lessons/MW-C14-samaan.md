@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-SAMAAN-01, MW-SCRIPT-SA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-MA-01, MW-SCRIPT-NA-01]
 introduces:
   knowledge: [MW-SCRIPT-SAMAAN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01, MW-SCRIPT-AA-MATRA-01, MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01, MW-SCRIPT-DUKAN-01, MW-SCRIPT-VASTU-01, MW-SCRIPT-MAUSAM-01, MW-SCRIPT-NAAM-01, MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01]
 skills: [listening, speaking, reading, writing]

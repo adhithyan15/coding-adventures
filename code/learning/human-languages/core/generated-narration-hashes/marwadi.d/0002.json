@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 2,
-  "sourceHash": "fnv1a64:2b82af50b3ab04d0",
+  "sourceHash": "fnv1a64:595ab8097b8e6e08",
   "lessonIds": [
     "MW-W02-aa-independent",
     "MW-W02-bha",
@@ -13,6 +13,6 @@
   "text": "marwadi/narration/ch02.txt",
   "json": "marwadi/narration/ch02.json",
   "textHash": "fnv1a64:e35cca3d954d646a",
-  "jsonHash": "fnv1a64:5b00e74e60f6c24d",
+  "jsonHash": "fnv1a64:74ecd8999f295707",
   "findings": []
 }

@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01]
 introduces:
   knowledge: [MW-LEX-SAMAAN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-SAMAAN-01, MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01, MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-VASTU-01, MW-SCRIPT-BHAAV-01, MW-SCRIPT-GHAR-01, MW-SCRIPT-BAHAN-01, MW-SCRIPT-GARMI-01]
 skills: [listening, speaking]

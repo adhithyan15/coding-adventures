@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Grandparents and Family: Two New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:147840a93646591c",
+  "sourceHash": "fnv1a64:175ca27757bb21e2",
   "lessons": [
     {
       "id": "MW-C08-hear-dada",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8eabe4369a72351",
+      "sourceHash": "fnv1a64:45b75c03ae917ac2",
       "notice": null,
       "blocks": [
         {
@@ -114,7 +114,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:760a70c6e9909a57",
+      "sourceHash": "fnv1a64:b6eb9f2066b3d3e0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -218,7 +218,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b4cbaf56c772d45f",
+      "sourceHash": "fnv1a64:57e22948779b9bd6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -321,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8e655bd46095a77",
+      "sourceHash": "fnv1a64:2998ea7566262a8c",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +415,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a40963cb51f5868b",
+      "sourceHash": "fnv1a64:ff37d6ed424770e6",
       "notice": null,
       "blocks": [
         {
@@ -512,7 +512,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5ed9cb50d8983fa",
+      "sourceHash": "fnv1a64:71bfb940fee47e07",
       "notice": null,
       "blocks": [
         {
@@ -606,7 +606,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5d9961e27c3b6d6d",
+      "sourceHash": "fnv1a64:f0543bd63db1a2b6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -710,7 +710,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:2a8a3c8506c7798b",
+      "sourceHash": "fnv1a64:585923814fcc5a50",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -813,7 +813,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d277b75697fa3c3f",
+      "sourceHash": "fnv1a64:825ccdcec5eeaea4",
       "notice": null,
       "blocks": [
         {
@@ -907,7 +907,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28a007856b4ee1d1",
+      "sourceHash": "fnv1a64:189ce17acdfce980",
       "notice": null,
       "blocks": [
         {
@@ -990,7 +990,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ec0fff05268bd4e",
+      "sourceHash": "fnv1a64:c1308919a76c1e75",
       "notice": null,
       "blocks": [
         {
@@ -1107,7 +1107,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:429b1560ba6f1e98",
+      "sourceHash": "fnv1a64:552ddbee013308c5",
       "notice": null,
       "blocks": [
         {

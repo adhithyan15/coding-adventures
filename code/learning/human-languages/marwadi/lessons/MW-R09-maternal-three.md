@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-LEX-NANA-01, MW-SCRIPT-NANA-01, MW-LEX-NANI-01, MW-SCRIPT-NANI-01, MW-LEX-PATI-01, MW-SCRIPT-PATI-01]
 introduces:
   knowledge: [MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-NANA-01, MW-SCRIPT-NANA-01, MW-LEX-NANI-01, MW-SCRIPT-NANI-01, MW-LEX-PATI-01, MW-SCRIPT-PATI-01, MW-SCRIPT-TA-01, MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01, MW-LEX-MAA-01, MW-LEX-BAAP-01, MW-SCRIPT-SA-01, MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01]
 skills: [listening, speaking, reading, writing]

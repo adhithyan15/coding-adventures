@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-BAJAR-01, MW-SCRIPT-BA-01, MW-SCRIPT-JA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-RA-01]
 introduces:
   knowledge: [MW-SCRIPT-BAJAR-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-BAJAR-01, MW-SCRIPT-BAJAR-01, MW-SCRIPT-BA-01, MW-SCRIPT-JA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-RA-01, MW-LEX-BACHCHA-01, MW-RESPONSE-HAAN-SAA-POLITE-01, MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01]
 skills: [listening, speaking, reading, writing]

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Tharo Naam: Ask One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3728591382d807d9",
+  "sourceHash": "fnv1a64:e21a3191c76b045d",
   "lessons": [
     {
       "id": "MW-C05-hear-tharo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79f8d2378e45fa0e",
+      "sourceHash": "fnv1a64:90f2928507b13cf9",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5e6bcc8211ee876d",
+      "sourceHash": "fnv1a64:9ac226884979fa32",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -213,7 +213,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81cb5f0f3c847666",
+      "sourceHash": "fnv1a64:4e34182adedcb433",
       "notice": null,
       "blocks": [
         {
@@ -306,7 +306,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d0cd1c18740842a",
+      "sourceHash": "fnv1a64:0c4ed1c4e47c75a7",
       "notice": null,
       "blocks": [
         {
@@ -400,7 +400,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bc63cf3db3242586",
+      "sourceHash": "fnv1a64:c679a332a7770ee1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -501,7 +501,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:509ac5cf97a8c28e",
+      "sourceHash": "fnv1a64:f73ffa9fcd2f0e8b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -600,7 +600,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:519a21196a8c9204",
+      "sourceHash": "fnv1a64:3c88e64064c5b245",
       "notice": null,
       "blocks": [
         {
@@ -692,7 +692,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c47f3942c50897f",
+      "sourceHash": "fnv1a64:6feab596b08448f8",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Four Family Words: Meaning First, One New Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:af7dedf43105a26b",
+  "sourceHash": "fnv1a64:59f0b13f57edb6f6",
   "lessons": [
     {
       "id": "MW-C08-hear-maa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:351d9094ed4b0a38",
+      "sourceHash": "fnv1a64:c572f6a4c6ccae1d",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:58c7e5780c2460a7",
+      "sourceHash": "fnv1a64:35917798a852be54",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -216,7 +216,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4034c1f0e27b2e1b",
+      "sourceHash": "fnv1a64:1b3b252cace96d94",
       "notice": null,
       "blocks": [
         {
@@ -310,7 +310,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a534ff27ddb70b01",
+      "sourceHash": "fnv1a64:25145653dba8f10c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:659c6c0c163cafec",
+      "sourceHash": "fnv1a64:da0232c39ee3a781",
       "notice": null,
       "blocks": [
         {
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf76aa69014096cb",
+      "sourceHash": "fnv1a64:d8557623924d14c8",
       "notice": null,
       "blocks": [
         {
@@ -605,7 +605,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b77e7157163fcf4e",
+      "sourceHash": "fnv1a64:064dafd0afdebe81",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -709,7 +709,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c4520e24be473c8",
+      "sourceHash": "fnv1a64:799d815b5fb1ec61",
       "notice": null,
       "blocks": [
         {
@@ -803,7 +803,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e63c854b6b2be06",
+      "sourceHash": "fnv1a64:87bcf80174a2d6ff",
       "notice": null,
       "blocks": [
         {
@@ -900,7 +900,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec5b5882ab318e83",
+      "sourceHash": "fnv1a64:266d48450b1eada2",
       "notice": null,
       "blocks": [
         {

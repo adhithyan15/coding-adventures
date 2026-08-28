@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-RIKSHA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-RIKSHA-01, MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01, MW-LEX-PATNI-01, MW-SCRIPT-SAMAAN-01]
 skills: [listening, speaking]

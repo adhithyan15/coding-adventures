@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-DUKAN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-DUKAN-01, MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01, MW-LEX-BAJAR-01, MW-SCRIPT-MAUSAM-01, MW-SCRIPT-GARMI-01, MW-SCRIPT-THANDI-01, MW-SCRIPT-I-MATRA-01]
 skills: [listening, speaking]

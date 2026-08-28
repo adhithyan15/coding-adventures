@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-FAREWELL-LATER-HEARD-01]
 introduces:
   knowledge: [MW-SCRIPT-CHHA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-PACHHE-01, MW-FAREWELL-LATER-HEARD-01, MW-SCRIPT-CHHA-01, MW-SCRIPT-TTHA-01, MW-SCRIPT-NAAM-01]
 skills: [reading, writing]

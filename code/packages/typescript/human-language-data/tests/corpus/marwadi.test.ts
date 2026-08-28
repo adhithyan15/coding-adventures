@@ -4,12 +4,21 @@ import { loadTrackLessons } from "../../src/loader.js";
 import { measureScriptClosure } from "../../src/script-closure.js";
 import {
   expectLanguageContinuity,
+  expectLanguageLessonBudgets,
   expectLanguageModality,
   languageWritingStages,
 } from "./assert-language-corpus.js";
 
 it("pins Marwadi continuity", () => expectLanguageContinuity("marwadi"));
 it("pins Marwadi modality", () => expectLanguageModality("marwadi"));
+it("pins Marwadi lesson-content budgets", () =>
+  expectLanguageLessonBudgets("marwadi", {
+    lessons: 172,
+    idioms: 7,
+    senses: 3,
+    cultureClaims: 5,
+    unitPrefix: "MW",
+  }));
 
 it("pins Marwadi's complete pre-A1 writing ramp", () => {
   const marwadi = languageWritingStages("marwadi");
