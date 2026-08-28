@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:70129fcfaa529aeb",
+  "sourceHash": "fnv1a64:ba6c43e31b2958ff",
   "lessons": [
     {
       "id": "LA-C13-hora",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2bedf7362612ade1",
+      "sourceHash": "fnv1a64:59b3e6b1c0db64ab",
       "notice": null,
       "blocks": [
         {

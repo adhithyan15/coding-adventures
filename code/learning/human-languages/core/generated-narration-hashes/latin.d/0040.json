@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 40,
-  "sourceHash": "fnv1a64:cea80cdbe6828083",
+  "sourceHash": "fnv1a64:080e0b84f7fd9f38",
   "lessonIds": [
     "LA-C40-audio",
     "LA-C40-dormio",
@@ -13,6 +13,6 @@
   "text": "latin/narration/ch40.txt",
   "json": "latin/narration/ch40.json",
   "textHash": "fnv1a64:691cfbbf8bc541ee",
-  "jsonHash": "fnv1a64:35547045352fc963",
+  "jsonHash": "fnv1a64:583da6d535e96c74",
   "findings": []
 }

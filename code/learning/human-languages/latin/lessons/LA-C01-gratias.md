@@ -17,6 +17,9 @@ requires:
   knowledge: [LA-PHONO-VALE-01, LA-ETYMON-VALE-02, LA-GRAMMAR-VALE-03]
 introduces:
   knowledge: [LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03]
+introduces_idioms: [LA-IDIOM-GRATIAS-TIBI-AGO-THANKS-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-PHONO-VALE-01, LA-ETYMON-VALE-02, LA-GRAMMAR-VALE-03, LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03]
 skills: [listening, speaking, reading]

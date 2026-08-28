@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-ETYMON-CANIS-FELES-CATTUS-01, LA-LEX-CANIS-FELES-CATTUS-02, LA-PRAGMATICS-CANIS-FELES-CATTUS-03]
 introduces:
   knowledge: [LA-ETYMON-VIRIDIS-FLAVUS-01, LA-ETYMON-VIRIDIS-FLAVUS-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-ETYMON-CANIS-FELES-CATTUS-01, LA-LEX-CANIS-FELES-CATTUS-02, LA-PRAGMATICS-CANIS-FELES-CATTUS-03, LA-ETYMON-VIRIDIS-FLAVUS-01, LA-ETYMON-VIRIDIS-FLAVUS-02]
 skills: [listening, speaking, reading]

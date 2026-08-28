@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02, LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02]
 introduces:
   knowledge: [LA-LEX-DIES-01, LA-ETYMON-DIES-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-DIES-LUNAE-VENERIS-01, LA-PRAGMATICS-DIES-LUNAE-VENERIS-02, LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02, LA-LEX-DIES-01, LA-ETYMON-DIES-02]
 skills: [listening, speaking, reading]

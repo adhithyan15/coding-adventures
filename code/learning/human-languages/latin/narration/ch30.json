@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f3a2478d1df2b1c2",
+  "sourceHash": "fnv1a64:78ed0862bacc54d8",
   "lessons": [
     {
       "id": "LA-C30-bonam-noctem",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:227678274c9d90e1",
+      "sourceHash": "fnv1a64:6a1699f47b14ad16",
       "notice": null,
       "blocks": [
         {

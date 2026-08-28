@@ -17,6 +17,9 @@ requires:
   knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03]
 introduces:
   knowledge: [LA-PHONO-AVE-01, LA-ETYMON-AVE-02, LA-LEX-AVE-03]
+introduces_idioms: [LA-IDIOM-AVE-HAIL-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PHONO-AVE-01, LA-ETYMON-AVE-02, LA-LEX-AVE-03]
 skills: [listening, speaking, reading]

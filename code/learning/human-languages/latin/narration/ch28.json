@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:040b4a9eb03ace92",
+  "sourceHash": "fnv1a64:7da62dde3db25e29",
   "lessons": [
     {
       "id": "LA-C28-dies",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d347115db770b2b1",
+      "sourceHash": "fnv1a64:cecdc6bf919baf34",
       "notice": null,
       "blocks": [
         {

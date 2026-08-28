@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 37,
-  "sourceHash": "fnv1a64:83d4326c264a1aaa",
+  "sourceHash": "fnv1a64:978e180bdfbc99a4",
   "lessonIds": [
     "LA-C37-sum",
     "LA-C37-habeo",
@@ -17,6 +17,6 @@
   "text": "latin/narration/ch37.txt",
   "json": "latin/narration/ch37.json",
   "textHash": "fnv1a64:ac5df0103ad7b98a",
-  "jsonHash": "fnv1a64:c1afa17f579b199a",
+  "jsonHash": "fnv1a64:f25482f3bb6a4fd2",
   "findings": []
 }

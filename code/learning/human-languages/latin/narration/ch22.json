@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "You, Singular and Plural",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4b3451a0670a1066",
+  "sourceHash": "fnv1a64:81a13b166f8eebad",
   "lessons": [
     {
       "id": "LA-C22-tu-vos",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58b50d89a5634ac8",
+      "sourceHash": "fnv1a64:bdfbcd2804a1d72c",
       "notice": null,
       "blocks": [
         {

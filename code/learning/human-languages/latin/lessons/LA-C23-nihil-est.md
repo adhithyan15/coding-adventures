@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03]
 introduces:
   knowledge: [LA-LEX-NIHIL-EST-01, LA-ETYMON-NIHIL-EST-02, LA-PRAGMATICS-NIHIL-EST-03]
+introduces_idioms: [LA-IDIOM-NIHIL-EST-YOURE-WELCOME-01]
+introduces_senses: []
+introduces_culture_claims: [LA-CULTURE-NIHIL-EST-MODERN-CONVENTION-01]
 practises:
   knowledge: [LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-LEX-NIHIL-EST-01, LA-ETYMON-NIHIL-EST-02, LA-PRAGMATICS-NIHIL-EST-03]
 skills: [listening, speaking, reading]

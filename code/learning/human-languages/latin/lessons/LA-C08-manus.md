@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02]
 introduces:
   knowledge: [LA-ETYMON-MANUS-01, LA-ETYMON-MANUS-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02, LA-ETYMON-MANUS-01, LA-ETYMON-MANUS-02]
 skills: [listening, speaking, reading]

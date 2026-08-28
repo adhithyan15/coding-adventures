@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:edc64f98539cbfbd",
+  "sourceHash": "fnv1a64:8dca95d7c0bbb7df",
   "lessons": [
     {
       "id": "LA-C09-anni-tempora",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01584ac09d4f269c",
+      "sourceHash": "fnv1a64:9bcbf395c2d4e8ff",
       "notice": null,
       "blocks": [
         {

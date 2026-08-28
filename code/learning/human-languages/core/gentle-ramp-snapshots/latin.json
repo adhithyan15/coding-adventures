@@ -1,7 +1,7 @@
 {
   "language": "latin",
-  "lessonCount": 111,
-  "atomMeasurableLessons": 111,
+  "lessonCount": 112,
+  "atomMeasurableLessons": 112,
   "atomMeasurementBlindLessons": 0,
   "durationViolations": 0,
   "atomLessonSpikes": 1,
@@ -16,14 +16,14 @@
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
   "forwardReferences": 16,
-  "atomsTaught": 210,
+  "atomsTaught": 211,
   "atomsNeverRevisited": 26,
-  "reinforcementWindowMisses": 430,
+  "reinforcementWindowMisses": 436,
   "reinforcementMissesByWindow": {
     "R1": 50,
-    "R2": 162,
-    "R3": 152,
-    "R4": 66
+    "R2": 163,
+    "R3": 154,
+    "R4": 69
   },
   "payoffSurprises": 0,
   "writingPracticeLessons": 4,
@@ -47,7 +47,7 @@
     {
       "language": "latin",
       "kind": "reinforcement",
-      "count": 430,
+      "count": 436,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     }

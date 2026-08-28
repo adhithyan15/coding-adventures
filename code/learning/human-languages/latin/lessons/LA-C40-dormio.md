@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-AUDIO-01, LA-ETYMON-AUDIO-02, LA-LEX-VIDEO-01]
 introduces:
   knowledge: [LA-LEX-DORMIO-01, LA-ETYMON-DORMIO-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-AUDIO-01, LA-ETYMON-AUDIO-02, LA-LEX-VIDEO-01, LA-LEX-DORMIO-01, LA-ETYMON-DORMIO-02]
 skills: [listening, speaking, reading]

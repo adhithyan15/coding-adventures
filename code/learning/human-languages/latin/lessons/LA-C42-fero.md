@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-CLAUDO-01, LA-ETYMON-CLAUDO-02, LA-LEX-APERIO-01, LA-LEX-DO-01, LA-ETYMON-DO-02, LA-ETYMON-SUM-02]
 introduces:
   knowledge: [LA-LEX-FERO-01, LA-GRAMMAR-FERO-SUPPLETION-02, LA-ETYMON-FERO-03]
+introduces_idioms: []
+introduces_senses: [LA-SENSE-FERO-CARRY-01]
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-CLAUDO-01, LA-ETYMON-CLAUDO-02, LA-LEX-APERIO-01, LA-LEX-DO-01, LA-ETYMON-DO-02, LA-ETYMON-SUM-02, LA-LEX-FERO-01, LA-GRAMMAR-FERO-SUPPLETION-02, LA-ETYMON-FERO-03]
 skills: [listening, speaking, reading]

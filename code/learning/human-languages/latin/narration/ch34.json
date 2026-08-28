@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Good Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d620539a00f8c156",
+  "sourceHash": "fnv1a64:2e75419bba220ab4",
   "lessons": [
     {
       "id": "LA-C34-bonum-vesperum",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a44722fca6b01fc",
+      "sourceHash": "fnv1a64:4cc8c62ed3d21426",
       "notice": null,
       "blocks": [
         {

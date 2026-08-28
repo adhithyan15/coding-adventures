@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 41,
-  "sourceHash": "fnv1a64:3c0a3047e99d7026",
+  "sourceHash": "fnv1a64:4063761d2998eccf",
   "lessonIds": [
     "LA-C41-ambulo",
     "LA-C41-curro",
@@ -13,6 +13,6 @@
   "text": "latin/narration/ch41.txt",
   "json": "latin/narration/ch41.json",
   "textHash": "fnv1a64:789a7ac18d00e297",
-  "jsonHash": "fnv1a64:1695cbed59a01968",
+  "jsonHash": "fnv1a64:bbf8354e5f2013ac",
   "findings": []
 }

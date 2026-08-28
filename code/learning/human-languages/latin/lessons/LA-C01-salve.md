@@ -17,6 +17,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03]
+introduces_idioms: [LA-IDIOM-SALVE-GREETING-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03]
 skills: [listening, speaking, reading, writing]

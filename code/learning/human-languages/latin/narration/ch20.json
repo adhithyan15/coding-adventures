@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Exchanging Names",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b25c55ef1e914d27",
+  "sourceHash": "fnv1a64:aa95185aabcff891",
   "lessons": [
     {
       "id": "LA-C20-quid-tibi-nomen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9dd4a51e3b64720c",
+      "sourceHash": "fnv1a64:d4545a13a924ca00",
       "notice": null,
       "blocks": [
         {
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25752f46deb4c04b",
+      "sourceHash": "fnv1a64:afdc353ab82c07e7",
       "notice": null,
       "blocks": [
         {

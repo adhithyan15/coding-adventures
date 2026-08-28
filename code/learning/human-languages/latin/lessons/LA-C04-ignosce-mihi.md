@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-ETYMON-QUAESO-01, LA-PRAGMATICS-QUAESO-02]
 introduces:
   knowledge: [LA-ETYMON-IGNOSCE-MIHI-01, LA-PRAGMATICS-IGNOSCE-MIHI-02]
+introduces_idioms: [LA-IDIOM-IGNOSCE-MIHI-SORRY-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-ETYMON-QUAESO-01, LA-PRAGMATICS-QUAESO-02, LA-ETYMON-IGNOSCE-MIHI-01, LA-PRAGMATICS-IGNOSCE-MIHI-02]
 skills: [listening, speaking, reading]

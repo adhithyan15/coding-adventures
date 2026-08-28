@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 9,
-  "sourceHash": "fnv1a64:edc64f98539cbfbd",
+  "sourceHash": "fnv1a64:8dca95d7c0bbb7df",
   "lessonIds": [
     "LA-C09-anni-tempora"
   ],
@@ -10,6 +10,6 @@
   "text": "latin/narration/ch09.txt",
   "json": "latin/narration/ch09.json",
   "textHash": "fnv1a64:cd8f356bfc3ab4e6",
-  "jsonHash": "fnv1a64:19f65be45faff4df",
+  "jsonHash": "fnv1a64:c1e16e7174843e01",
   "findings": []
 }

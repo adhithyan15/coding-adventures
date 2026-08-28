@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:bd30fdc59052d494",
+  "sourceHash": "fnv1a64:bae7958867fdd074",
   "lessons": [
     {
       "id": "LA-C08-caput",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0d70f698ae3f763",
+      "sourceHash": "fnv1a64:c06ab9c5756dca48",
       "notice": null,
       "blocks": [
         {
@@ -156,7 +156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:219a83524eb2f5c6",
+      "sourceHash": "fnv1a64:67c6939540fb01cd",
       "notice": null,
       "blocks": [
         {

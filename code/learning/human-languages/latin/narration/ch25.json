@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "See You Tomorrow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:909f8cccf78a29c4",
+  "sourceHash": "fnv1a64:8dd7c2f2f02808d3",
   "lessons": [
     {
       "id": "LA-C25-cras-te-videbo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:191337c0bbe191b6",
+      "sourceHash": "fnv1a64:4c4db08d8d84b636",
       "notice": null,
       "blocks": [
         {

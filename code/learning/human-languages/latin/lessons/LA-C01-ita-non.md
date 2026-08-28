@@ -17,6 +17,9 @@ requires:
   knowledge: [LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03]
 introduces:
   knowledge: [LA-PHONO-ITA-NON-01, LA-ETYMON-ITA-NON-02, LA-LEX-ITA-NON-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-PHONO-ITA-NON-01, LA-ETYMON-ITA-NON-02, LA-LEX-ITA-NON-03]
 skills: [listening, speaking, reading]

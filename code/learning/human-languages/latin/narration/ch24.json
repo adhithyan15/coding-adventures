@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "See You Soon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fbfe6bfdc8699ad8",
+  "sourceHash": "fnv1a64:693351155bbf9e45",
   "lessons": [
     {
       "id": "LA-C24-propediem-te-videbo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd20f29edbdaba21",
+      "sourceHash": "fnv1a64:59770f9c3cd8e6b7",
       "notice": null,
       "blocks": [
         {

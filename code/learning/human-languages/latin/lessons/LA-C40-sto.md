@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-SEDEO-01, LA-ETYMON-SEDEO-02, LA-ETYMON-INHERITED-VS-BORROWED-03, LA-LEX-AUDIO-01, LA-LEX-DORMIO-01, LA-LEX-SUM-01, LA-ETYMON-SUM-02, LA-LEX-EO-01, LA-ETYMON-EO-02]
 introduces:
   knowledge: [LA-LEX-STO-01, LA-ETYMON-STO-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-AUDIO-01, LA-LEX-DORMIO-01, LA-LEX-SEDEO-01, LA-ETYMON-SEDEO-02, LA-ETYMON-INHERITED-VS-BORROWED-03, LA-LEX-STO-01, LA-ETYMON-STO-02, LA-LEX-SUM-01, LA-ETYMON-SUM-02, LA-LEX-EO-01, LA-ETYMON-EO-02]
 skills: [listening, speaking, reading]

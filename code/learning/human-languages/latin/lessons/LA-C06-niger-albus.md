@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02]
 introduces:
   knowledge: [LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02, LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02]
 skills: [listening, speaking, reading]

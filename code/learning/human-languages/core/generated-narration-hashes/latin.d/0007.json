@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 7,
-  "sourceHash": "fnv1a64:cad110c49d4d24a0",
+  "sourceHash": "fnv1a64:3e2ba2a5bd68e8ab",
   "lessonIds": [
     "LA-C07-pater-mater",
     "LA-C07-frater-soror"
@@ -11,6 +11,6 @@
   "text": "latin/narration/ch07.txt",
   "json": "latin/narration/ch07.json",
   "textHash": "fnv1a64:19e8d0a6932951c5",
-  "jsonHash": "fnv1a64:509c7ec212fba8ec",
+  "jsonHash": "fnv1a64:392b93d32121faf5",
   "findings": []
 }

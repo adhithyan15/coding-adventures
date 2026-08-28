@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-ETYMON-RUBER-CAERULEUS-01, LA-ETYMON-RUBER-CAERULEUS-02]
 introduces:
   knowledge: [LA-ETYMON-PATER-MATER-01, LA-ETYMON-PATER-MATER-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-ETYMON-RUBER-CAERULEUS-01, LA-ETYMON-RUBER-CAERULEUS-02, LA-ETYMON-PATER-MATER-01, LA-ETYMON-PATER-MATER-02]
 skills: [listening, speaking, reading]

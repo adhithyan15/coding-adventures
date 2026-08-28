@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-LEX-VALEO-FAMILY-01]
 introduces:
   knowledge: [LA-LEX-QUID-TIBI-NOMEN-01, LA-LEX-QUID-TIBI-NOMEN-02]
+introduces_idioms: [LA-IDIOM-QUID-TIBI-NOMEN-NAME-EXCHANGE-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-LEX-VALEO-FAMILY-01, LA-LEX-QUID-TIBI-NOMEN-01, LA-LEX-QUID-TIBI-NOMEN-02]
 skills: [listening, speaking, reading]

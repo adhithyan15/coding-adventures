@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 31,
-  "sourceHash": "fnv1a64:d9f6f591d0ed8564",
+  "sourceHash": "fnv1a64:79a94d63abb15a58",
   "lessonIds": [
     "LA-C31-mane"
   ],
@@ -10,6 +10,6 @@
   "text": "latin/narration/ch31.txt",
   "json": "latin/narration/ch31.json",
   "textHash": "fnv1a64:425bde575f4ac72d",
-  "jsonHash": "fnv1a64:7f23e446a2a5a725",
+  "jsonHash": "fnv1a64:bdb777932235bfa9",
   "findings": []
 }

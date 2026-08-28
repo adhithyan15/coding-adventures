@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ed8c641caa3d95e0",
+  "sourceHash": "fnv1a64:dbf8c750da959bef",
   "lessons": [
     {
       "id": "LA-C06-niger-albus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c1374e8b4fd28a5",
+      "sourceHash": "fnv1a64:a3b169e6f6ff32ac",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:469d49d7467b0bd0",
+      "sourceHash": "fnv1a64:03c468b3aa630497",
       "notice": null,
       "blocks": [
         {

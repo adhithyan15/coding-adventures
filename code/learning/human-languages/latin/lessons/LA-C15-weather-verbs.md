@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-TEMPESTAS-PLUIT-01]
 introduces:
   knowledge: [LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-TEMPESTAS-PLUIT-01, LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02]
 skills: [listening, speaking, reading]

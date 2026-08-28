@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1bfb3b5087967528",
+  "sourceHash": "fnv1a64:462fc9f8e2710dd4",
   "lessons": [
     {
       "id": "LA-C12-medius-dies-nox",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f34f23b9caa3f5f3",
+      "sourceHash": "fnv1a64:43ea00f1f2c7cfec",
       "notice": null,
       "blocks": [
         {

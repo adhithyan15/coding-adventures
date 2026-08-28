@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02]
 introduces:
   knowledge: [LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01]
+introduces_idioms: [LA-IDIOM-VOLUP-EST-CONVENISSE-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02, LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01]
 skills: [listening, speaking, reading]

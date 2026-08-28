@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-ETYMON-PATER-MATER-01, LA-ETYMON-PATER-MATER-02]
 introduces:
   knowledge: [LA-ETYMON-FRATER-SOROR-01, LA-ETYMON-FRATER-SOROR-02, LA-PRAGMATICS-FRATER-SOROR-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-ETYMON-PATER-MATER-01, LA-ETYMON-PATER-MATER-02, LA-ETYMON-FRATER-SOROR-01, LA-ETYMON-FRATER-SOROR-02, LA-PRAGMATICS-FRATER-SOROR-03]
 skills: [listening, speaking, reading]

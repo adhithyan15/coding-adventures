@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3662fdf3d0d3281d",
+  "sourceHash": "fnv1a64:d65f76b1c950745c",
   "lessons": [
     {
       "id": "LA-C03-quaeso",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c27a461435c37855",
+      "sourceHash": "fnv1a64:544b9c4ef6c34cbe",
       "notice": null,
       "blocks": [
         {

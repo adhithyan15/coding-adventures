@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-C44-HOUSE-01, LA-LEX-C44-HOUSE-02, LA-LEX-C44-HOUSE-03]
 introduces:
   knowledge: [LA-LEX-C44-HOUSE-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-C44-HOUSE-01, LA-LEX-C44-HOUSE-02, LA-LEX-C44-HOUSE-03, LA-LEX-C44-HOUSE-04]
 skills: [listening, speaking, reading]

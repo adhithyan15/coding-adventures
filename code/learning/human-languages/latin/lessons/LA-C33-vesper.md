@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [LA-ETYMON-VESPER-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-ETYMON-VESPER-01]
 skills: [listening, speaking, reading]

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 11,
-  "sourceHash": "fnv1a64:ed09806a42bd4829",
+  "sourceHash": "fnv1a64:b82b119102d6b430",
   "lessonIds": [
     "LA-C11-menses"
   ],
@@ -10,6 +10,6 @@
   "text": "latin/narration/ch11.txt",
   "json": "latin/narration/ch11.json",
   "textHash": "fnv1a64:3622e598bb5467ce",
-  "jsonHash": "fnv1a64:91eda246b0a272cc",
+  "jsonHash": "fnv1a64:e6cdcb2100e38cc6",
   "findings": []
 }

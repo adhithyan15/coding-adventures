@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-NOX-01, LA-ETYMON-NOX-02, LA-GRAMMAR-NOX-03]
 introduces:
   knowledge: [LA-GRAMMAR-BONAM-NOCTEM-01, LA-GRAMMAR-BONAM-NOCTEM-02]
+introduces_idioms: [LA-IDIOM-BONAM-NOCTEM-GOOD-NIGHT-01]
+introduces_senses: []
+introduces_culture_claims: [LA-CULTURE-BONAM-NOCTEM-ATTESTATION-CAUTION-01]
 practises:
   knowledge: [LA-LEX-NOX-01, LA-ETYMON-NOX-02, LA-GRAMMAR-NOX-03, LA-GRAMMAR-BONAM-NOCTEM-01, LA-GRAMMAR-BONAM-NOCTEM-02]
 skills: [listening, speaking, reading]

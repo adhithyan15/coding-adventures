@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 29,
-  "sourceHash": "fnv1a64:6fc771adb72bf7be",
+  "sourceHash": "fnv1a64:7522bedf77975d54",
   "lessonIds": [
     "LA-C29-nox"
   ],
@@ -10,6 +10,6 @@
   "text": "latin/narration/ch29.txt",
   "json": "latin/narration/ch29.json",
   "textHash": "fnv1a64:2745169703285dd7",
-  "jsonHash": "fnv1a64:781e81dfff880ed9",
+  "jsonHash": "fnv1a64:8415a61579e881e6",
   "findings": []
 }

@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03]
 introduces:
   knowledge: [LA-ETYMON-QUAESO-01, LA-PRAGMATICS-QUAESO-02]
+introduces_idioms: [LA-IDIOM-QUAESO-PLEASE-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-ETYMON-QUAESO-01, LA-PRAGMATICS-QUAESO-02]
 skills: [listening, speaking, reading]
