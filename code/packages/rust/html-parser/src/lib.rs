@@ -7638,6 +7638,7 @@ impl HtmlParser {
                     || is_media_element(name)
                     || is_form_semantic_element(name)
                     || is_phrasing_container_element(name)
+                    || is_select_option_element(name)
                     || (is_rcdata_element(name)
                         && self.options.initial_tokenizer_context
                             == HtmlInitialTokenizerContext::Data)
@@ -8429,6 +8430,7 @@ impl HtmlParser {
             || is_media_element(name)
             || is_form_semantic_element(name)
             || is_phrasing_container_element(name)
+            || is_select_option_element(name)
             || (is_rcdata_element(name)
                 && self.options.initial_tokenizer_context == HtmlInitialTokenizerContext::Data)
             || (name == "script"
@@ -12888,6 +12890,10 @@ fn is_form_semantic_element(name: &str) -> bool {
 
 fn is_phrasing_container_element(name: &str) -> bool {
     matches!(name, "slot" | "span")
+}
+
+fn is_select_option_element(name: &str) -> bool {
+    matches!(name, "optgroup" | "option")
 }
 
 fn is_rcdata_element(name: &str) -> bool {
@@ -28320,6 +28326,18 @@ mod tests {
     }
 
     fn unmatched_phrasing_container_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            format!("end tag `</{name}>` did not match an open element"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
+    fn unmatched_select_option_end_tag(
         source: &str,
         name: &str,
         occurrence: usize,
@@ -45576,6 +45594,115 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+    }
+
+    #[test]
+    fn positions_unmatched_select_option_end_tags_at_token_emission() {
+        let names = ["optgroup", "option"];
+        let source =
+            "<!doctype html></optgroup></option><!--é-->\r\n</optgroup><select></option></select><p>tail</p>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert!(source.len() > source.chars().count());
+        assert_eq!(element_text_content(body(&output.document)), "tail");
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                unmatched_select_option_end_tag(source, "optgroup", 0),
+                unmatched_select_option_end_tag(source, "option", 0),
+                unmatched_select_option_end_tag(source, "optgroup", 1),
+                unmatched_select_option_end_tag(source, "option", 1),
+            ]
+        );
+
+        let fragment_source = "</optgroup></option>tail";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(fragment.nodes, vec![Node::text("tail")]);
+        assert_eq!(
+            fragment.parser_diagnostics,
+            names
+                .into_iter()
+                .map(|name| unmatched_select_option_end_tag(fragment_source, name, 0))
+                .collect::<Vec<_>>()
+        );
+
+        let select_fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "select").unwrap();
+        assert_eq!(select_fragment.nodes, vec![Node::text("tail")]);
+        assert_eq!(
+            select_fragment.parser_diagnostics,
+            names
+                .into_iter()
+                .map(|name| unmatched_select_option_end_tag(fragment_source, name, 0))
+                .collect::<Vec<_>>()
+        );
+
+        for name in names {
+            let matched_source = format!("<!doctype html><select><{name}>X</{name}></select>");
+            let matched = parse_html_with_diagnostics(&matched_source).unwrap();
+            assert!(matched
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+            let foreign_source = format!(
+                "<!doctype html><svg><foreignObject></{name}>X</foreignObject></svg>"
+            );
+            let foreign = parse_html_with_diagnostics(&foreign_source).unwrap();
+            assert_eq!(
+                foreign.parser_diagnostics,
+                vec![
+                    generic_foreign_end_tag_mismatch(&foreign_source, name),
+                    unmatched_select_option_end_tag(&foreign_source, name, 0),
+                ]
+            );
+
+            let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+            direct.process_token(Token::EndTag {
+                name: name.to_string(),
+            });
+            direct.process_token(Token::Eof);
+            assert!(direct
+                .diagnostics()
+                .iter()
+                .all(|diagnostic| diagnostic.position.is_none()));
+
+            let mut foreign_direct =
+                HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+            for token in [
+                Token::StartTag {
+                    name: "svg".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::StartTag {
+                    name: "foreignObject".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::EndTag {
+                    name: name.to_string(),
+                },
+                Token::Eof,
+            ] {
+                foreign_direct.process_token(token);
+            }
+            assert!(foreign_direct
+                .diagnostics()
+                .iter()
+                .all(|diagnostic| diagnostic.position.is_none()));
+
+            let incomplete_source = format!("<!doctype html></{name}");
+            let incomplete = parse_html_with_diagnostics(&incomplete_source).unwrap();
+            assert!(incomplete
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+        }
     }
 
     #[test]
