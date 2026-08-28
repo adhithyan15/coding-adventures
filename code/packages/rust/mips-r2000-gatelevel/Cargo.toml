@@ -2,9 +2,10 @@
 name = "coding-adventures-mips-r2000-gatelevel"
 version = "0.1.0"
 edition = "2021"
-description = "MIPS R2000 gate-level simulator — every operation routes through real logic gates"
+description = "Complete 525,409-DFF MIPS R2000 gate-level simulator with shared checked lifecycle"
 license = "MIT"
 
 [dependencies]
 logic-gates = { path = "../logic-gates" }
 arithmetic = { path = "../arithmetic" }
+mips-r2000-simulator = { path = "../mips-r2000-simulator" }
