@@ -11,14 +11,21 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 13388,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13388",
+    "branch": "codex/build-tool-extra-ci-toolchain-declaration-corpus",
+    "implementation_revision": "9d5b9269885ab99eaccc7500d52b3dcbb1d52947",
+    "status": "checks-pending",
+    "opened_at": "2026-08-28T07:19:33Z"
+  },
   "last_ci_action": {
-    "observed_at": "2026-08-28T06:18:27Z",
-    "pr_number": 13366,
-    "run_id": 33143618885,
-    "attempt": 2,
-    "status": "merged-after-auto-merge",
-    "notes": "All 48 final checks reached terminal acceptable conclusions after rerunning one Linux OCaml setup job whose first attempt failed while curl fetched the pinned compiler archive. GitHub reported final head a6eefa89f743922efd3cda335d715f2e9443bd06 conflict-free. The loop enabled squash auto-merge; GitHub merged PR #13366 at 2026-08-28T06:18:27Z as 038431ce25f4af12a5498eb65d70e82664ce94b1 without a manual merge command."
+    "observed_at": "2026-08-28T07:19:47Z",
+    "pr_number": 13388,
+    "run_id": 33151040429,
+    "attempt": 1,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #13388 is mergeable and conflict-free at published head 9d5b9269885ab99eaccc7500d52b3dcbb1d52947. Required CI and CodeQL checks are queued or running, so auto-merge remains disabled and the loop is monitor-only after this lifecycle publication update."
   },
   "last_inventory": {
     "revision": "d751dfa23a4cdfbefe1c9f637de67a2c8003d02d",
@@ -173,12 +180,18 @@
     {
       "id": "build-tool-extra-ci-toolchain-declaration-corpus",
       "title": "Define language-neutral extra CI toolchain declaration fixtures",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": "codex/build-tool-extra-ci-toolchain-declaration-corpus",
-      "pr_number": null,
+      "pr_number": 13388,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13388",
+      "opened_at": "2026-08-28T07:19:33Z",
+      "opened_revision": "9d5b9269885ab99eaccc7500d52b3dcbb1d52947",
+      "implementation_revision": "9d5b9269885ab99eaccc7500d52b3dcbb1d52947",
       "selection_revision": "d751dfa23a4cdfbefe1c9f637de67a2c8003d02d",
       "selection_notes": "Selected after PR #13366 merged and a collision-checked schema-3 refresh confirmed 15 established lanes, 1,383 identities, 4,595 slots, 1,422 all-reported identities, zero collisions, zero unknown buckets, and OCaml still emerging at zero packages. Before implementation, the branch rebased over later unrelated merges; the final pre-publication base is d751dfa23a4cdfbefe1c9f637de67a2c8003d02d. Merged PR #13368 adds the pre-classified TypeScript-only forme-resolve-asset-refs-fs identity, moving the inventory to 1,384 identities, 4,596 slots, 1,423 all-reported identities, 918 singletons, and 12,852 singleton gaps while preserving every other band, zero collisions, zero unknown buckets, and zero OCaml packages. It remains owned by the existing Forme family and clears that owner's live-PR block, so no eligible unowned gap was discovered. This process-free corpus is the highest-leverage ready dependency because it closes the only immediately actionable Go-oracle prerequisite and advances the Go-oracle-to-OCaml execution-substrate chain without claiming execution authority. A live open-PR path audit found no overlap with the shared fixture/schema/runner, Go discovery and toolchain tests, state, roadmap, or documentation surfaces.",
+      "validation_notes": "The closed schema and semantic runner pass 22 schema tests and 61 complete runner tests; the corpus validates 118 cases and 283 files across 16 implementations and 15 established lanes. The complete Go suite, coverage, vet, and trimpath build pass; discovery reaches 89.7% coverage and validator 82.6%. A real Windows platform-plan run evaluates 45 Starlark BUILD files, discovers 5,105 packages, keeps the orphan-crate gate clean, and proves the selected java-to-semantic-ir BUILD_windows front emits needs_python=true. A Python-3.10-backed python3 shim makes all 41 Java-to-SIR Python execution proofs run rather than skip; its 2 bounded flat-scoping, 6 Node loop, 312 lowering, and 1 doctest cases also pass. Cargo audit reports no vulnerabilities and two reviewed pre-existing unmaintained advisories; Bandit and changed-runner formatting pass, Ruff adds no finding beyond the exact origin/main baseline, and diff hygiene passes. The 551-owner/799-edge state remains complete and acyclic, and the collision report remains 1,384 identities, 4,596 slots, zero collisions, zero unknown buckets, and zero OCaml packages. An independent final review found and the branch fixed the production platform-refresh gap and stale Forme roadmap wording before publication; documentation now accurately assigns invalid-case and aggregate-limit enforcement to the shared validator while the Go consumer exercises successful cases.",
+      "publication_notes": "Opened ready-for-review PR #13388 from validated head 9d5b9269885ab99eaccc7500d52b3dcbb1d52947. GitHub reports it mergeable and conflict-free; required checks are queued or running, so auto-merge is intentionally disabled until every required check is terminal and acceptable. The tranche remains process-free, grants no execution authority or OCaml promotion, and leaves remaining-engine adoption under the dependent umbrella owner.",
       "notes": "Discovered when the C# orphan consumer rebased over merged PR #12687. Go now recognizes shell BUILD comments of the form '# needs-toolchain: NAME' and adds those names only for affected packages, but the behavior has no language-neutral toolchain-detection fixture or cross-engine contract. The post-#12819 audit also found that java-to-semantic-ir's Python execution proof silently skips when python3 is unavailable while its unchanged BUILD files declare no Python marker; merged PR #12838 adds two more classic/enhanced loop proofs behind that same undeclared toolchain boundary. Cover this concrete consumer in the corpus and remaining-engine adoption rather than creating a duplicate owner. Define a closed process-free snapshot for exact directive syntax, canonical toolchain names, empty and unknown values, stable deduplication, multiple declarations, platform BUILD precedence, affected-only selection, forced-full behavior, and deterministic results; then make the canonical Go oracle consume it without consulting a checkout, process, environment, or network."
     },
     {
