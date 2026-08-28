@@ -65,7 +65,10 @@ pub fn int_to_bits16(value: u16) -> Vec<u8> {
 /// assert_eq!(bits_to_u8(&[1, 0, 1, 0, 0, 0, 0, 0]), 5);
 /// ```
 pub fn bits_to_u8(bits: &[u8]) -> u8 {
-    bits.iter().take(8).enumerate().fold(0u8, |acc, (i, &b)| acc | (b << i))
+    bits.iter()
+        .take(8)
+        .enumerate()
+        .fold(0u8, |acc, (i, &b)| acc | (b << i))
 }
 
 /// Convert an LSB-first 16-element bit vector back to a `u16`.

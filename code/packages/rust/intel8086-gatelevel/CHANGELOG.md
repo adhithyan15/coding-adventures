@@ -1,5 +1,22 @@
 # Changelog — coding-adventures-intel8086-gatelevel
 
+## [0.2.0] — 2026-08-28
+
+### Added
+
+- Exact 8,392,922-DFF persistent topology covering the full 1 MiB memory,
+  thirteen registers, FLAGS, halt, and both 256-byte port banks.
+- Shared functional state/error/trace/result types with atomic checked loads,
+  restores, ports, steps, and transactional bounded runs.
+- Fixed gate partial-product multiply and restoring divide networks, reused by
+  signed variants and AAM/AAD; exhaustive byte and seeded word tests.
+- A 461-vector full-state differential against the completed functional oracle.
+
+### Fixed
+
+- LES/LDS register-form oracle behavior, INT protocol boundaries, multi-count
+  shift/rotate overflow flags, and invalid FF/F6/F7 extension handling.
+
 ## [0.1.0] — 2026-06-15
 
 ### Added
@@ -23,7 +40,7 @@
 - Shifts: `shl`, `shr`, `sar` (logical and arithmetic)
 - Rotates: `rol`, `ror`, `rcl`, `rcr` (the latter two rotate through carry)
 - BCD: `daa`, `das`, `aaa`, `aas`, `aam`, `aad`
-- MUL/DIV (host arithmetic — gate-level multiplier documented exception):
+- MUL/DIV (replaced in 0.2.0 by fixed gate multiplier/divider networks):
   `mul8`, `mul16`, `imul8`, `imul16`, `div8`, `div16`, `idiv8`, `idiv16`
 - INC/DEC: correct CF-preservation behaviour (caller preserves old CF)
 - SUB: CF = NOT(carry_out), AF = nibble_borrow()
