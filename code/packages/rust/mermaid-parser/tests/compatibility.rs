@@ -88,6 +88,26 @@ fn pinned_gantt_visual_corpus_covers_every_valid_fixture() {
 }
 
 #[test]
+fn gantt_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let gantt = manifest["families"]
+        .as_array()
+        .expect("families array")
+        .iter()
+        .find(|family| family["id"] == "gantt")
+        .expect("gantt family");
+    assert_eq!(gantt["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(GANTT_CORPUS).expect("Gantt corpus must be JSON");
+    let visual: Value =
+        serde_json::from_str(GANTT_VISUAL_CORPUS).expect("Gantt visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert!(!syntax["valid"].as_array().expect("valid corpus").is_empty());
+    assert!(!syntax["invalid"].as_array().expect("invalid corpus").is_empty());
+}
+
+#[test]
 fn xychart_full_status_is_backed_by_the_pinned_corpus() {
     let manifest: Value =
         serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");

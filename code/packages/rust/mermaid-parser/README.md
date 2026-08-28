@@ -68,10 +68,10 @@ layout geometry. Millisecond, second, minute, hour, day, and week durations also
 retain their authored units in typed IR before precise layout conversion. A
 pinned upstream corpus now gates this supported parser surface. Semicolon- and
 hash-prefixed titles, sections, and task labels follow the pinned upstream
-grammar while lowering to clean semantic labels. Gantt remains partial while
+grammar while lowering to clean semantic labels.
 HTML break variants in titles, sections, and tasks now lower to semantic
 newlines with multiline layout. Colon and compact timezone offsets compile to
-typed parts and normalize into UTC layout geometry. Gantt remains partial while
+typed parts and normalize into UTC layout geometry.
 single-component second timestamps also retain sub-minute precision through
 layout, and typed 12-hour clocks resolve meridiem markers before layout. Gantt
 also validates numeric plus two-letter, short, and long English weekday tokens
@@ -83,9 +83,10 @@ Unpadded 24-hour, minute, and second fields retain sub-minute precision.
 Quarter tokens resolve to the first month of the authored quarter.
 Signed variable-width year tokens retain their sign through semantic parsing
 and backend-neutral temporal layout.
-Every valid pinned Gantt syntax fixture now also passes backend-neutral paint
-lowering and Metal-to-PNG validation. Gantt remains partial while non-English
-locale data is still outstanding.
+Every valid pinned Gantt syntax fixture passes backend-neutral paint lowering
+and Metal-to-PNG validation. The pinned Mermaid 11.16.1 Gantt bundle's English
+date tokens are complete; host-specific responsive SVG sizing is intentionally
+outside the native backend-neutral compatibility contract.
 The pinned parser corpus includes upstream configuration, multiline
 accessibility, task-tag, callback-argument, prototype-like ID, millisecond,
 multi-reference dependency, and forward cross-section dependency cases.
@@ -105,6 +106,7 @@ Pinned styled-marker fixtures preserve Mermaid `todayMarker` opacity through pai
 Pinned repeated-vertical-marker fixtures gate row-free semantic marker lowering.
 Pinned date-time fixtures gate date-only exclusions and configurable weekend geometry.
 YAML `displayMode: compact` is preserved as semantic Gantt layout configuration.
+The upstream unpadded day-only render case closes the pinned native fixture set.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:
