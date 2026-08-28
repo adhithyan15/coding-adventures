@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-JANA]
 introduces:
   knowledge: [PA-LEX-AUNA, PA-GRAMMAR-A-PREFIX-TOWARD, PA-ETYMON-AUNA-GAM]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-JANA, PA-LEX-AUNA, PA-GRAMMAR-A-PREFIX-TOWARD, PA-ETYMON-AUNA-GAM]
 skills: [listening, speaking, reading]

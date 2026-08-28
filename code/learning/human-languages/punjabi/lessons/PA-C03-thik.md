@@ -18,6 +18,9 @@ requires:
   knowledge: [PA-LEX-MAIN-03, PA-GRAMMAR-MAIN-HAAN-03, PA-PHRASE-HOW-ARE-YOU-03]
 introduces:
   knowledge: [PA-LEX-THIK-03, PA-PHRASE-I-AM-FINE-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-PHRASE-HOW-ARE-YOU-03, PA-LEX-MAIN-03, PA-GRAMMAR-MAIN-HAAN-03, PA-LEX-THIK-03, PA-PHRASE-I-AM-FINE-03]
 skills: [listening, speaking]

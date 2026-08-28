@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-LEX-DIL, PA-ETYMON-DIL-HEART, PA-LEX-NAKK, PA-ETYMON-NAKK-NOSE, PA-LEX-AKKH, PA-LEX-KANN, PA-LEX-MUNH, PA-LEX-BHARA, PA-LEX-BHAIN, PA-SOUND-TONE-LOW, PA-SOUND-TONE-HIGH-LEVEL]
 introduces:
   knowledge: [PA-LEX-SIR, PA-ETYMON-SIR-HORN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-SIR, PA-ETYMON-SIR-HORN, PA-LEX-DIL, PA-ETYMON-DIL-HEART, PA-LEX-NAKK, PA-ETYMON-NAKK-NOSE, PA-LEX-AKKH, PA-LEX-KANN, PA-LEX-MUNH, PA-LEX-BHARA, PA-LEX-BHAIN, PA-SOUND-TONE-LOW]
 skills: [listening, speaking, reading]

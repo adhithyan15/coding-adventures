@@ -18,6 +18,9 @@ requires:
   knowledge: [PA-LEX-KI-02]
 introduces:
   knowledge: [PA-LEX-KIVEIN-03, PA-ETYMON-QUESTION-K-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-KI-02, PA-LEX-KIVEIN-03, PA-ETYMON-QUESTION-K-03]
 skills: [listening, speaking]

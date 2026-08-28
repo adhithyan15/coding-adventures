@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:38e4d09cb9231b0e",
+  "sourceHash": "fnv1a64:fb4dd55e6fd9bcd2",
   "lessons": [
     {
       "id": "PA-C01-sat-sri-akal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:836e8ae4284500b6",
+      "sourceHash": "fnv1a64:d88b64d2e787972b",
       "notice": null,
       "blocks": [
         {
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9cc2e8d1d4ef820",
+      "sourceHash": "fnv1a64:f1edf54ba434f16f",
       "notice": null,
       "blocks": [
         {
@@ -244,7 +244,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd93501ba302f8bd",
+      "sourceHash": "fnv1a64:100343f90371008a",
       "notice": null,
       "blocks": [
         {
@@ -390,7 +390,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ff4853fe4c956668",
+      "sourceHash": "fnv1a64:355cc818eac264b3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -497,7 +497,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:17188499a5e51aaf",
+      "sourceHash": "fnv1a64:c2c89f64d26d1a3c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -607,7 +607,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:143a5947ed38a09a",
+      "sourceHash": "fnv1a64:9b47de53bcb0391f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -719,7 +719,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a797111c5b871d24",
+      "sourceHash": "fnv1a64:af162bf222dea615",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -818,7 +818,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:cd91f60b8ab9c3a6",
+      "sourceHash": "fnv1a64:5eaaae1fcdd44ce3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -901,7 +901,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:22f3257310022d94",
+      "sourceHash": "fnv1a64:6ff2449cc3904c2b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -998,7 +998,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:203cde4f82ee4eac",
+      "sourceHash": "fnv1a64:777d287b1cbfdd27",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1086,7 +1086,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fb864d38bd214e3",
+      "sourceHash": "fnv1a64:8dd684244e1af3ce",
       "notice": null,
       "blocks": [
         {
@@ -1193,7 +1193,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74202a95294e8fd5",
+      "sourceHash": "fnv1a64:5b0f205bbc8eee92",
       "notice": null,
       "blocks": [
         {
@@ -1302,7 +1302,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:144a52a8fa24a85d",
+      "sourceHash": "fnv1a64:0c31d76c94d3b16c",
       "notice": {
         "modality": "pen",
         "needs": [

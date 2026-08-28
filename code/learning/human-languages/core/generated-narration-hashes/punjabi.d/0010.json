@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 10,
-  "sourceHash": "fnv1a64:876cadf864267649",
+  "sourceHash": "fnv1a64:9b254de191b7b036",
   "lessonIds": [
     "PA-C10-paani",
     "PA-C10-chaa",
@@ -13,6 +13,6 @@
   "text": "punjabi/narration/ch10.txt",
   "json": "punjabi/narration/ch10.json",
   "textHash": "fnv1a64:e3ea8a4fb3e6664b",
-  "jsonHash": "fnv1a64:286ac4fb0857d0de",
+  "jsonHash": "fnv1a64:28e8e37a78b5a4b2",
   "findings": []
 }

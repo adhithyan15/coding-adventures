@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 12,
-  "sourceHash": "fnv1a64:590257278af1e1ec",
+  "sourceHash": "fnv1a64:39b537dd0b563990",
   "lessonIds": [
     "PA-C12-akkh",
     "PA-C12-kann",
@@ -13,6 +13,6 @@
   "text": "punjabi/narration/ch12.txt",
   "json": "punjabi/narration/ch12.json",
   "textHash": "fnv1a64:40e044872fb5ea99",
-  "jsonHash": "fnv1a64:48b5bc74b74ad160",
+  "jsonHash": "fnv1a64:afafb3abe53114b8",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 4,
-  "sourceHash": "fnv1a64:bccc4cbfa76872a4",
+  "sourceHash": "fnv1a64:1287450e5863cf8a",
   "lessonIds": [
     "PA-C04-phir",
     "PA-C04-milaange",
@@ -15,6 +15,6 @@
   "text": "punjabi/narration/ch04.txt",
   "json": "punjabi/narration/ch04.json",
   "textHash": "fnv1a64:3e277b0edd57eab3",
-  "jsonHash": "fnv1a64:705899a4d947cba2",
+  "jsonHash": "fnv1a64:a0bfdc601e892b00",
   "findings": []
 }

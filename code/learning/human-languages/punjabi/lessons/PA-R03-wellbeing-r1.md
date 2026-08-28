@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-GRAMMAR-TUSI-HO-03, PA-ETYMON-QUESTION-K-03]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-GRAMMAR-TUSI-HO-03, PA-ETYMON-QUESTION-K-03]
 skills: [listening, speaking]

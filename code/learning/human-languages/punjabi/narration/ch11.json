@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Friend, Family, Brother, and Sister",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c6c833e1d1a6b395",
+  "sourceHash": "fnv1a64:e9d4766614bc4475",
   "lessons": [
     {
       "id": "PA-C11-dost",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1e7b38f4476778ba",
+      "sourceHash": "fnv1a64:e9adc15a9f3ba5e3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ac3e35f497e92e49",
+      "sourceHash": "fnv1a64:3f049e4aa36e4fb8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e0e3c62522448c62",
+      "sourceHash": "fnv1a64:c39647080b625461",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -528,7 +528,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dcde203bbabcbb3c",
+      "sourceHash": "fnv1a64:37b807e0900e53d9",
       "notice": {
         "modality": "sight",
         "needs": [

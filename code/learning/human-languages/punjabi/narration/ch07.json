@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Six Verbs at the Core",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8d097f1d87187648",
+  "sourceHash": "fnv1a64:2a44c1fd1fb662bf",
   "lessons": [
     {
       "id": "PA-C07-hona",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b885be04f89dedf2",
+      "sourceHash": "fnv1a64:4662b67ab08de593",
       "notice": null,
       "blocks": [
         {
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:454611cabf72ba2e",
+      "sourceHash": "fnv1a64:e8296a86ba7ff043",
       "notice": null,
       "blocks": [
         {
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9564a2e1bfc6b848",
+      "sourceHash": "fnv1a64:de95cf78daea6df3",
       "notice": null,
       "blocks": [
         {
@@ -428,7 +428,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:399aa141195ccd0f",
+      "sourceHash": "fnv1a64:ba4f33f3a55ae352",
       "notice": null,
       "blocks": [
         {
@@ -573,7 +573,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:206f10ac6c1ebf37",
+      "sourceHash": "fnv1a64:318823eea240e19e",
       "notice": null,
       "blocks": [
         {
@@ -697,7 +697,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2673e58945cb94b1",
+      "sourceHash": "fnv1a64:72cc6108fc6c927e",
       "notice": null,
       "blocks": [
         {
@@ -841,7 +841,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:720de68e6041f13e",
+      "sourceHash": "fnv1a64:6d241d60dba8de3f",
       "notice": null,
       "blocks": [
         {

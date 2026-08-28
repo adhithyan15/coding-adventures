@@ -18,6 +18,9 @@ requires:
   knowledge: [PA-LEX-NAMASTE-01, PA-LEX-HAAN-NAHIN-01, PA-SCRIPT-HAAN-01]
 introduces:
   knowledge: [PA-LEX-DHANVAAD-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-NAMASTE-01, PA-LEX-HAAN-NAHIN-01, PA-LEX-DHANVAAD-01]
 skills: [listening, speaking]

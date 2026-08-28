@@ -18,6 +18,9 @@ requires:
   knowledge: [PA-LEX-NAAM-02]
 introduces:
   knowledge: [PA-LEX-MERA-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-NAAM-02, PA-LEX-MERA-02]
 skills: [listening, speaking]

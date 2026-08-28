@@ -17,6 +17,9 @@ requires:
   knowledge: [PA-LEX-NAAM-02, PA-LEX-MERA-02, PA-LEX-HAI-02, PA-GRAMMAR-VERB-LAST-02, PA-PHRASE-MY-NAME-02, PA-LEX-YOU-REGISTER-02, PA-LEX-KI-02, PA-PHRASE-YOUR-NAME-02, PA-PHRASE-KHUSHI-HOI-02, PA-ETYMON-KHUSH-PERSIAN-02]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-NAAM-02, PA-LEX-MERA-02, PA-LEX-HAI-02, PA-GRAMMAR-VERB-LAST-02, PA-PHRASE-MY-NAME-02, PA-LEX-YOU-REGISTER-02, PA-LEX-KI-02, PA-PHRASE-YOUR-NAME-02, PA-PHRASE-KHUSHI-HOI-02, PA-ETYMON-KHUSH-PERSIAN-02]
 skills: [listening, speaking]

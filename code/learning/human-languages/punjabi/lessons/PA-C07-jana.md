@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-GRAMMAR-NA-INFINITIVE]
 introduces:
   knowledge: [PA-LEX-JANA, PA-SOUND-Y-TO-J, PA-ETYMON-JANA-YATI]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-JANA, PA-SOUND-Y-TO-J, PA-ETYMON-JANA-YATI]
 skills: [listening, speaking, reading]

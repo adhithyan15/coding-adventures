@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "From the Mouth of the Guru, One Piece at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:684ba5108fb5a9f7",
+  "sourceHash": "fnv1a64:5a35b37ab801540e",
   "lessons": [
     {
       "id": "PA-W01-na",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:425fff0822b2ddb6",
+      "sourceHash": "fnv1a64:ec1301f1f656d3e7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -132,7 +132,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a7371059a8bb4421",
+      "sourceHash": "fnv1a64:a66b20a6e1bc51bc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -264,7 +264,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e0133bf731a1b255",
+      "sourceHash": "fnv1a64:a924a7b930d37c24",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -384,7 +384,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:447800b30688dd70",
+      "sourceHash": "fnv1a64:682dd5f1acb0746d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -496,7 +496,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d406593dd3166706",
+      "sourceHash": "fnv1a64:41b4e4c376b76a3b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -612,7 +612,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a59475f6637af613",
+      "sourceHash": "fnv1a64:fbda09282ac90a88",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -732,7 +732,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a25243511a7eaa71",
+      "sourceHash": "fnv1a64:4bbe49c3b617e79c",
       "notice": {
         "modality": "pen",
         "needs": [

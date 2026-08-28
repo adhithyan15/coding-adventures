@@ -6,12 +6,21 @@ import { measureContinuity } from "../../src/continuity.js";
 import { defaultCurriculumRoot, loadTrackLessons } from "../../src/loader.js";
 import {
   expectLanguageContinuity,
+  expectLanguageLessonBudgets,
   expectLanguageModality,
   languageWritingStages,
 } from "./assert-language-corpus.js";
 
 it("pins Punjabi continuity", () => expectLanguageContinuity("punjabi"));
 it("pins Punjabi modality", () => expectLanguageModality("punjabi"));
+it("pins Punjabi lesson-content budgets", () =>
+  expectLanguageLessonBudgets("punjabi", {
+    lessons: 68,
+    idioms: 4,
+    senses: 3,
+    cultureClaims: 7,
+    unitPrefix: "PA",
+  }));
 
 it("keeps Punjabi's 78-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(

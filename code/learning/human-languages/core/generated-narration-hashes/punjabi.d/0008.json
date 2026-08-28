@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 8,
-  "sourceHash": "fnv1a64:5f929452ca816174",
+  "sourceHash": "fnv1a64:db78e652bd6374fe",
   "lessonIds": [
     "PA-C08-sochna",
     "PA-C08-samajhna",
@@ -13,6 +13,6 @@
   "text": "punjabi/narration/ch08.txt",
   "json": "punjabi/narration/ch08.json",
   "textHash": "fnv1a64:6ca1905a00f9fe5a",
-  "jsonHash": "fnv1a64:3638cb3a333df164",
+  "jsonHash": "fnv1a64:124768049f17e92b",
   "findings": []
 }

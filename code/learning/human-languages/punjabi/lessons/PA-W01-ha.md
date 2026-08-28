@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-LEX-HAAN-NAHIN-01]
 introduces:
   knowledge: [PA-SCRIPT-HA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [PA-CULTURE-GURMUKHI-GURU-ANGAD-STANDARDISATION-01]
 practises:
   knowledge: [PA-LEX-HAAN-NAHIN-01, PA-SCRIPT-HA-01]
 skills: [reading, writing]

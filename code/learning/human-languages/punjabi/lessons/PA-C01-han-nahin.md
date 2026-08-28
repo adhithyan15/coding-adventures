@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [PA-LEX-HAAN-NAHIN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-HAAN-NAHIN-01]
 skills: [listening, speaking]
