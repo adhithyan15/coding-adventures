@@ -114,7 +114,7 @@
 /// Because the 4004 is accumulator-based, we track the accumulator
 /// and carry flag before and after each instruction. For 2-byte
 /// instructions, `raw2` holds the second byte.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Intel4004Trace {
     pub address: usize,
     pub raw: u8,
@@ -124,6 +124,75 @@ pub struct Intel4004Trace {
     pub accumulator_after: u8,
     pub carry_before: bool,
     pub carry_after: bool,
+}
+
+/// A checked execution failure. Every error leaves architectural state unchanged.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Intel4004Error {
+    /// The supplied program does not fit in configured ROM.
+    ProgramTooLarge { bytes: usize, capacity: usize },
+    /// Instruction fetch or an instruction target is outside configured ROM.
+    AddressOutOfRange { address: usize, capacity: usize },
+    /// A two-byte instruction is missing its second byte.
+    TruncatedInstruction { address: usize },
+    /// The byte is not part of the specified instruction set.
+    UnknownOpcode { address: usize, opcode: u8 },
+    /// Execution was requested after HLT.
+    Halted,
+    /// Publicly mutable legacy state was placed outside architectural bounds.
+    InvalidState(&'static str),
+}
+
+impl std::fmt::Display for Intel4004Error {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::ProgramTooLarge { bytes, capacity } => {
+                write!(
+                    formatter,
+                    "program has {bytes} bytes but ROM holds {capacity}"
+                )
+            }
+            Self::AddressOutOfRange { address, capacity } => {
+                write!(
+                    formatter,
+                    "ROM address {address:#05x} is outside {capacity} bytes"
+                )
+            }
+            Self::TruncatedInstruction { address } => {
+                write!(
+                    formatter,
+                    "two-byte instruction at {address:#05x} is truncated"
+                )
+            }
+            Self::UnknownOpcode { address, opcode } => {
+                write!(formatter, "unknown opcode {opcode:#04x} at {address:#05x}")
+            }
+            Self::Halted => formatter.write_str("CPU is halted"),
+            Self::InvalidState(component) => write!(formatter, "invalid {component} state"),
+        }
+    }
+}
+
+impl std::error::Error for Intel4004Error {}
+
+/// Immutable, owned view of all architecturally visible state.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Intel4004State {
+    pub accumulator: u8,
+    pub registers: Vec<u8>,
+    pub carry: bool,
+    pub memory: Vec<u8>,
+    pub pc: usize,
+    pub halted: bool,
+    pub hw_stack: [u16; 3],
+    pub stack_pointer: usize,
+    pub ram: [[[u8; 16]; 4]; 4],
+    pub ram_status: [[[u8; 4]; 4]; 4],
+    pub ram_output: [u8; 4],
+    pub ram_bank: usize,
+    pub ram_register: usize,
+    pub ram_character: usize,
+    pub rom_port: u8,
 }
 
 // ===========================================================================
@@ -171,6 +240,7 @@ fn is_two_byte(raw: u8) -> bool {
 ///     |  RAM output port: 4 bits per bank          |
 ///     +-------------------------------------------+
 /// ```
+#[derive(Clone)]
 pub struct Intel4004Simulator {
     /// The 4-bit accumulator (0-15).
     pub accumulator: u8,
@@ -189,7 +259,6 @@ pub struct Intel4004Simulator {
     pub halted: bool,
 
     // ----- New fields for full 4004 support -----
-
     /// Hardware subroutine stack.
     ///
     /// The real 4004 has a 3-level deep hardware stack (no RAM-based stack).
@@ -290,12 +359,42 @@ impl Intel4004Simulator {
     }
 
     /// Load a program into memory starting at address 0.
-    pub fn load_program(&mut self, program: &[u8]) {
-        for (i, &b) in program.iter().enumerate() {
-            self.memory[i] = b;
+    ///
+    /// ROM is cleared before a successful load. Oversized programs fail without
+    /// changing any state.
+    pub fn load_program(&mut self, program: &[u8]) -> Result<(), Intel4004Error> {
+        if program.len() > self.memory.len() {
+            return Err(Intel4004Error::ProgramTooLarge {
+                bytes: program.len(),
+                capacity: self.memory.len(),
+            });
         }
+        self.memory.fill(0);
+        self.memory[..program.len()].copy_from_slice(program);
         self.pc = 0;
         self.halted = false;
+        Ok(())
+    }
+
+    /// Return an owned snapshot that cannot mutate the simulator.
+    pub fn snapshot(&self) -> Intel4004State {
+        Intel4004State {
+            accumulator: self.accumulator,
+            registers: self.registers.clone(),
+            carry: self.carry,
+            memory: self.memory.clone(),
+            pc: self.pc,
+            halted: self.halted,
+            hw_stack: self.hw_stack,
+            stack_pointer: self.stack_pointer,
+            ram: self.ram,
+            ram_status: self.ram_status,
+            ram_output: self.ram_output,
+            ram_bank: self.ram_bank,
+            ram_register: self.ram_register,
+            ram_character: self.ram_character,
+            rom_port: self.rom_port,
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -349,7 +448,11 @@ impl Intel4004Simulator {
     /// (underflow), it wraps and returns whatever value happens to be
     /// in that slot -- just like the real hardware.
     fn stack_pop(&mut self) -> u16 {
-        self.stack_pointer = if self.stack_pointer == 0 { 2 } else { self.stack_pointer - 1 };
+        self.stack_pointer = if self.stack_pointer == 0 {
+            2
+        } else {
+            self.stack_pointer - 1
+        };
         self.hw_stack[self.stack_pointer % 3]
     }
 
@@ -394,24 +497,14 @@ impl Intel4004Simulator {
     /// 4. **Execute**: Dispatch to the appropriate instruction handler.
     /// 5. **Trace**: Record before/after state for debugging.
     ///
-    /// # Panics
-    ///
-    /// Panics if the CPU has already halted.
-    pub fn step(&mut self) -> Intel4004Trace {
-        assert!(!self.halted, "CPU is halted");
-
+    pub fn step(&mut self) -> Result<Intel4004Trace, Intel4004Error> {
+        let (raw, raw2) = self.preflight_step()?;
         let address = self.pc;
-        let raw = self.memory[self.pc];
         self.pc += 1;
 
-        // Fetch second byte for 2-byte instructions.
-        let raw2 = if is_two_byte(raw) {
-            let b = self.memory[self.pc];
+        if raw2.is_some() {
             self.pc += 1;
-            Some(b)
-        } else {
-            None
-        };
+        }
 
         let acc_before = self.accumulator;
         let carry_before = self.carry;
@@ -422,7 +515,7 @@ impl Intel4004Simulator {
 
         let mnemonic = self.execute(opcode, operand, raw, raw2, address);
 
-        Intel4004Trace {
+        Ok(Intel4004Trace {
             address,
             raw,
             raw2,
@@ -431,6 +524,95 @@ impl Intel4004Simulator {
             accumulator_after: self.accumulator,
             carry_before,
             carry_after: self.carry,
+        })
+    }
+
+    fn preflight_step(&self) -> Result<(u8, Option<u8>), Intel4004Error> {
+        if self.halted {
+            return Err(Intel4004Error::Halted);
+        }
+        if self.registers.len() != 16 {
+            return Err(Intel4004Error::InvalidState("register file"));
+        }
+        if self.stack_pointer >= 3 {
+            return Err(Intel4004Error::InvalidState("stack pointer"));
+        }
+        if self.ram_bank >= 4 || self.ram_register >= 4 || self.ram_character >= 16 {
+            return Err(Intel4004Error::InvalidState("RAM selector"));
+        }
+
+        let address = self.pc;
+        let raw = *self
+            .memory
+            .get(address)
+            .ok_or(Intel4004Error::AddressOutOfRange {
+                address,
+                capacity: self.memory.len(),
+            })?;
+        if matches!(raw, 0x02..=0x0F | 0xFE..=0xFF) {
+            return Err(Intel4004Error::UnknownOpcode {
+                address,
+                opcode: raw,
+            });
+        }
+        let raw2 = if is_two_byte(raw) {
+            Some(
+                *self
+                    .memory
+                    .get(address + 1)
+                    .ok_or(Intel4004Error::TruncatedInstruction { address })?,
+            )
+        } else {
+            None
+        };
+
+        let target = match raw >> 4 {
+            0x1 if self.jcn_is_taken(raw & 0xF) => {
+                Some(((address + 2) & 0xF00) | usize::from(raw2.unwrap_or(0)))
+            }
+            0x3 if raw & 1 == 0 => Some(((address + 1) & 0xF00) | usize::from(self.read_pair(0))),
+            0x3 => {
+                let pair = usize::from((raw & 0xF) >> 1);
+                Some(((address + 1) & 0xF00) | usize::from(self.read_pair(pair)))
+            }
+            0x4 | 0x5 => Some((usize::from(raw & 0xF) << 8) | usize::from(raw2.unwrap_or(0))),
+            0x7 if self.registers[usize::from(raw & 0xF)].wrapping_add(1) & 0xF != 0 => {
+                Some(((address + 2) & 0xF00) | usize::from(raw2.unwrap_or(0)))
+            }
+            0xC => {
+                let slot = if self.stack_pointer == 0 {
+                    2
+                } else {
+                    self.stack_pointer - 1
+                };
+                Some(usize::from(self.hw_stack[slot]))
+            }
+            _ => None,
+        };
+        if let Some(target) = target {
+            self.validate_rom_address(target)?;
+        }
+        Ok((raw, raw2))
+    }
+
+    fn validate_rom_address(&self, address: usize) -> Result<(), Intel4004Error> {
+        if address < self.memory.len() {
+            Ok(())
+        } else {
+            Err(Intel4004Error::AddressOutOfRange {
+                address,
+                capacity: self.memory.len(),
+            })
+        }
+    }
+
+    fn jcn_is_taken(&self, condition: u8) -> bool {
+        let selected =
+            (condition & 0x4 != 0 && self.accumulator == 0) || (condition & 0x2 != 0 && self.carry);
+        if condition & 0x8 != 0 {
+            !selected
+        } else {
+            selected
         }
     }
 
@@ -841,9 +1023,7 @@ impl Intel4004Simulator {
                     // WPM -- Write program memory (not implemented in simulator).
                     // On the real 4004, this writes to an external program
                     // memory device. We treat it as a NOP.
-                    0xE3 => {
-                        "WPM".to_string()
-                    }
+                    0xE3 => "WPM".to_string(),
                     // WR0-WR3 -- Write accumulator to RAM status character 0-3.
                     0xE4 => {
                         self.ram_write_status(0, self.accumulator);
@@ -1082,17 +1262,27 @@ impl Intel4004Simulator {
     ///
     /// Resets all CPU state before loading the program, ensuring a clean
     /// execution environment. Returns the trace of every executed instruction.
-    pub fn run(&mut self, program: &[u8], max_steps: usize) -> Vec<Intel4004Trace> {
+    pub fn run(
+        &mut self,
+        program: &[u8],
+        max_steps: usize,
+    ) -> Result<Vec<Intel4004Trace>, Intel4004Error> {
+        if program.len() > self.memory.len() {
+            return Err(Intel4004Error::ProgramTooLarge {
+                bytes: program.len(),
+                capacity: self.memory.len(),
+            });
+        }
         self.reset();
-        self.load_program(program);
+        self.load_program(program)?;
         let mut traces = Vec::new();
         for _ in 0..max_steps {
             if self.halted {
                 break;
             }
-            traces.push(self.step());
+            traces.push(self.step()?);
         }
-        traces
+        Ok(traces)
     }
 }
 
@@ -1197,68 +1387,128 @@ pub fn encode_isz(r: u8, addr: u8) -> (u8, u8) {
 // I/O instruction encoders (all single-byte, fixed encoding).
 
 /// Encode `WRM` (write accumulator to RAM main memory).
-pub fn encode_wrm() -> u8 { 0xE0 }
+pub fn encode_wrm() -> u8 {
+    0xE0
+}
 /// Encode `WMP` (write accumulator to RAM output port).
-pub fn encode_wmp() -> u8 { 0xE1 }
+pub fn encode_wmp() -> u8 {
+    0xE1
+}
 /// Encode `WRR` (write accumulator to ROM port).
-pub fn encode_wrr() -> u8 { 0xE2 }
+pub fn encode_wrr() -> u8 {
+    0xE2
+}
 /// Encode `WPM` (write program memory -- no-op in simulator).
-pub fn encode_wpm() -> u8 { 0xE3 }
+pub fn encode_wpm() -> u8 {
+    0xE3
+}
 /// Encode `WR0` (write accumulator to RAM status char 0).
-pub fn encode_wr0() -> u8 { 0xE4 }
+pub fn encode_wr0() -> u8 {
+    0xE4
+}
 /// Encode `WR1` (write accumulator to RAM status char 1).
-pub fn encode_wr1() -> u8 { 0xE5 }
+pub fn encode_wr1() -> u8 {
+    0xE5
+}
 /// Encode `WR2` (write accumulator to RAM status char 2).
-pub fn encode_wr2() -> u8 { 0xE6 }
+pub fn encode_wr2() -> u8 {
+    0xE6
+}
 /// Encode `WR3` (write accumulator to RAM status char 3).
-pub fn encode_wr3() -> u8 { 0xE7 }
+pub fn encode_wr3() -> u8 {
+    0xE7
+}
 /// Encode `SBM` (subtract RAM from accumulator).
-pub fn encode_sbm() -> u8 { 0xE8 }
+pub fn encode_sbm() -> u8 {
+    0xE8
+}
 /// Encode `RDM` (read RAM main memory into accumulator).
-pub fn encode_rdm() -> u8 { 0xE9 }
+pub fn encode_rdm() -> u8 {
+    0xE9
+}
 /// Encode `RDR` (read ROM port into accumulator).
-pub fn encode_rdr() -> u8 { 0xEA }
+pub fn encode_rdr() -> u8 {
+    0xEA
+}
 /// Encode `ADM` (add RAM main memory to accumulator).
-pub fn encode_adm() -> u8 { 0xEB }
+pub fn encode_adm() -> u8 {
+    0xEB
+}
 /// Encode `RD0` (read RAM status char 0).
-pub fn encode_rd0() -> u8 { 0xEC }
+pub fn encode_rd0() -> u8 {
+    0xEC
+}
 /// Encode `RD1` (read RAM status char 1).
-pub fn encode_rd1() -> u8 { 0xED }
+pub fn encode_rd1() -> u8 {
+    0xED
+}
 /// Encode `RD2` (read RAM status char 2).
-pub fn encode_rd2() -> u8 { 0xEE }
+pub fn encode_rd2() -> u8 {
+    0xEE
+}
 /// Encode `RD3` (read RAM status char 3).
-pub fn encode_rd3() -> u8 { 0xEF }
+pub fn encode_rd3() -> u8 {
+    0xEF
+}
 
 // Accumulator group encoders (all single-byte, fixed encoding).
 
 /// Encode `CLB` (clear both accumulator and carry).
-pub fn encode_clb() -> u8 { 0xF0 }
+pub fn encode_clb() -> u8 {
+    0xF0
+}
 /// Encode `CLC` (clear carry).
-pub fn encode_clc() -> u8 { 0xF1 }
+pub fn encode_clc() -> u8 {
+    0xF1
+}
 /// Encode `IAC` (increment accumulator).
-pub fn encode_iac() -> u8 { 0xF2 }
+pub fn encode_iac() -> u8 {
+    0xF2
+}
 /// Encode `CMC` (complement carry).
-pub fn encode_cmc() -> u8 { 0xF3 }
+pub fn encode_cmc() -> u8 {
+    0xF3
+}
 /// Encode `CMA` (complement accumulator).
-pub fn encode_cma() -> u8 { 0xF4 }
+pub fn encode_cma() -> u8 {
+    0xF4
+}
 /// Encode `RAL` (rotate accumulator left through carry).
-pub fn encode_ral() -> u8 { 0xF5 }
+pub fn encode_ral() -> u8 {
+    0xF5
+}
 /// Encode `RAR` (rotate accumulator right through carry).
-pub fn encode_rar() -> u8 { 0xF6 }
+pub fn encode_rar() -> u8 {
+    0xF6
+}
 /// Encode `TCC` (transfer carry to accumulator, clear carry).
-pub fn encode_tcc() -> u8 { 0xF7 }
+pub fn encode_tcc() -> u8 {
+    0xF7
+}
 /// Encode `DAC` (decrement accumulator).
-pub fn encode_dac() -> u8 { 0xF8 }
+pub fn encode_dac() -> u8 {
+    0xF8
+}
 /// Encode `TCS` (transfer carry subtract, clear carry).
-pub fn encode_tcs() -> u8 { 0xF9 }
+pub fn encode_tcs() -> u8 {
+    0xF9
+}
 /// Encode `STC` (set carry).
-pub fn encode_stc() -> u8 { 0xFA }
+pub fn encode_stc() -> u8 {
+    0xFA
+}
 /// Encode `DAA` (decimal adjust accumulator).
-pub fn encode_daa() -> u8 { 0xFB }
+pub fn encode_daa() -> u8 {
+    0xFB
+}
 /// Encode `KBP` (keyboard process).
-pub fn encode_kbp() -> u8 { 0xFC }
+pub fn encode_kbp() -> u8 {
+    0xFC
+}
 /// Encode `DCL` (designate command line -- select RAM bank).
-pub fn encode_dcl() -> u8 { 0xFD }
+pub fn encode_dcl() -> u8 {
+    0xFD
+}
 
 // ===========================================================================
 // Tests
@@ -1274,7 +1524,7 @@ mod tests {
 
     fn run_program(program: &[u8]) -> Intel4004Simulator {
         let mut sim = Intel4004Simulator::new(4096);
-        sim.run(program, 1000);
+        sim.run(program, 1000).unwrap();
         sim
     }
 
@@ -1286,7 +1536,7 @@ mod tests {
     fn nop_does_nothing() {
         let mut sim = Intel4004Simulator::new(4096);
         let program = vec![encode_nop(), encode_nop(), encode_hlt()];
-        let traces = sim.run(&program, 10);
+        let traces = sim.run(&program, 10).unwrap();
         assert_eq!(traces.len(), 3);
         assert_eq!(traces[0].mnemonic, "NOP");
         assert_eq!(traces[1].mnemonic, "NOP");
@@ -1301,11 +1551,12 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "CPU is halted")]
-    fn halted_step_panics() {
+    fn halted_step_fails_closed() {
         let mut sim = Intel4004Simulator::new(4096);
         sim.halted = true;
-        sim.step();
+        let before = sim.snapshot();
+        assert_eq!(sim.step(), Err(Intel4004Error::Halted));
+        assert_eq!(sim.snapshot(), before);
     }
 
     // =======================================================================
@@ -1334,9 +1585,9 @@ mod tests {
     fn ld_loads_register() {
         let sim = run_program(&[
             encode_ldm(9),
-            encode_xch(3),  // R3 = 9
-            encode_ldm(0),  // A = 0
-            encode_ld(3),   // A = R3 = 9
+            encode_xch(3), // R3 = 9
+            encode_ldm(0), // A = 0
+            encode_ld(3),  // A = R3 = 9
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 9);
@@ -1350,9 +1601,9 @@ mod tests {
     fn xch_exchanges_values() {
         let sim = run_program(&[
             encode_ldm(5),
-            encode_xch(0),  // R0=5, A=0
-            encode_ldm(3),  // A=3
-            encode_xch(0),  // R0=3, A=5
+            encode_xch(0), // R0=5, A=0
+            encode_ldm(3), // A=3
+            encode_xch(0), // R0=3, A=5
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 5);
@@ -1367,9 +1618,10 @@ mod tests {
     fn add_basic() {
         // 1 + 2 = 3, no carry
         let sim = run_program(&[
-            encode_ldm(2), encode_xch(0),  // R0=2
-            encode_ldm(1),                  // A=1
-            encode_add(0),                  // A=1+2+0=3
+            encode_ldm(2),
+            encode_xch(0), // R0=2
+            encode_ldm(1), // A=1
+            encode_add(0), // A=1+2+0=3
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 3);
@@ -1380,7 +1632,8 @@ mod tests {
     fn add_overflow_sets_carry() {
         // 15 + 15 = 30 -> carry=true, A=14
         let sim = run_program(&[
-            encode_ldm(15), encode_xch(0),
+            encode_ldm(15),
+            encode_xch(0),
             encode_ldm(15),
             encode_add(0),
             encode_hlt(),
@@ -1394,14 +1647,18 @@ mod tests {
         // A=5, R0=3, set carry first -> 5+3+1=9
         let mut sim = Intel4004Simulator::new(4096);
         sim.load_program(&[
-            encode_ldm(3), encode_xch(0),  // R0=3
-            encode_ldm(5),                  // A=5
-            encode_stc(),                   // carry=true
-            encode_add(0),                  // A=5+3+1=9
+            encode_ldm(3),
+            encode_xch(0), // R0=3
+            encode_ldm(5), // A=5
+            encode_stc(),  // carry=true
+            encode_add(0), // A=5+3+1=9
             encode_hlt(),
-        ]);
+        ])
+        .unwrap();
         // Run manually since run() resets
-        while !sim.halted { sim.step(); }
+        while !sim.halted {
+            sim.step().unwrap();
+        }
         assert_eq!(sim.accumulator, 9);
         assert!(!sim.carry);
     }
@@ -1415,7 +1672,8 @@ mod tests {
         // A=5, R0=3, carry starts false -> borrow_in=1
         // complement(3) = 12, 5+12+1 = 18, carry=true, A=2
         let sim = run_program(&[
-            encode_ldm(3), encode_xch(0),
+            encode_ldm(3),
+            encode_xch(0),
             encode_ldm(5),
             encode_sub(0),
             encode_hlt(),
@@ -1429,7 +1687,8 @@ mod tests {
         // A=3, R0=5, carry=false -> borrow_in=1
         // complement(5) = 10, 3+10+1 = 14, carry=false, A=14
         let sim = run_program(&[
-            encode_ldm(5), encode_xch(0),
+            encode_ldm(5),
+            encode_xch(0),
             encode_ldm(3),
             encode_sub(0),
             encode_hlt(),
@@ -1443,7 +1702,8 @@ mod tests {
         // A=0, R0=1, carry=false -> borrow_in=1
         // complement(1)=14, 0+14+1=15, carry=false, A=15
         let sim = run_program(&[
-            encode_ldm(1), encode_xch(0),
+            encode_ldm(1),
+            encode_xch(0),
             encode_ldm(0),
             encode_sub(0),
             encode_hlt(),
@@ -1459,8 +1719,9 @@ mod tests {
     #[test]
     fn inc_basic() {
         let sim = run_program(&[
-            encode_ldm(7), encode_xch(2),  // R2=7
-            encode_inc(2),                  // R2=8
+            encode_ldm(7),
+            encode_xch(2), // R2=7
+            encode_inc(2), // R2=8
             encode_hlt(),
         ]);
         assert_eq!(sim.registers[2], 8);
@@ -1468,11 +1729,7 @@ mod tests {
 
     #[test]
     fn inc_wraps_at_15() {
-        let sim = run_program(&[
-            encode_ldm(15), encode_xch(0),
-            encode_inc(0),
-            encode_hlt(),
-        ]);
+        let sim = run_program(&[encode_ldm(15), encode_xch(0), encode_inc(0), encode_hlt()]);
         assert_eq!(sim.registers[0], 0);
     }
 
@@ -1480,12 +1737,16 @@ mod tests {
     fn inc_does_not_affect_carry() {
         let mut sim = Intel4004Simulator::new(4096);
         sim.load_program(&[
-            encode_ldm(15), encode_xch(0),
-            encode_stc(),    // set carry
-            encode_inc(0),   // R0: 15->0, carry should remain true
+            encode_ldm(15),
+            encode_xch(0),
+            encode_stc(),  // set carry
+            encode_inc(0), // R0: 15->0, carry should remain true
             encode_hlt(),
-        ]);
-        while !sim.halted { sim.step(); }
+        ])
+        .unwrap();
+        while !sim.halted {
+            sim.step().unwrap();
+        }
         assert_eq!(sim.registers[0], 0);
         assert!(sim.carry, "INC should not affect carry");
     }
@@ -1498,10 +1759,11 @@ mod tests {
     fn jun_jumps() {
         let (b1, b2) = encode_jun(0x004); // Jump to address 4
         let sim = run_program(&[
-            b1, b2,             // JUN 0x004: skip next 2 bytes
-            encode_ldm(15),     // skipped
-            encode_hlt(),       // skipped
-            encode_ldm(7),      // landed here
+            b1,
+            b2,             // JUN 0x004: skip next 2 bytes
+            encode_ldm(15), // skipped
+            encode_hlt(),   // skipped
+            encode_ldm(7),  // landed here
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 7);
@@ -1517,11 +1779,12 @@ mod tests {
         // After return, A should be 3 (BBL loads its operand into A).
         let (b1, b2) = encode_jms(0x004); // subroutine at addr 4
         let sim = run_program(&[
-            b1, b2,             // 0x000: JMS 0x004
-            encode_hlt(),       // 0x002: HLT (return here)
-            0x00,               // 0x003: padding
-            encode_ldm(5),      // 0x004: subroutine body: A=5
-            encode_bbl(3),      // 0x005: return, A=3
+            b1,
+            b2,            // 0x000: JMS 0x004
+            encode_hlt(),  // 0x002: HLT (return here)
+            0x00,          // 0x003: padding
+            encode_ldm(5), // 0x004: subroutine body: A=5
+            encode_bbl(3), // 0x005: return, A=3
         ]);
         assert_eq!(sim.accumulator, 3);
     }
@@ -1566,12 +1829,13 @@ mod tests {
         // JCN target = (0+2) & 0xF00 | 0x05 = 0x05 (addr 5)
         let (b1, b2) = encode_jcn(0x4, 0x05);
         let sim = run_program(&[
-            b1, b2,             // addr 0-1: JCN test_zero, 0x05
-            encode_ldm(15),     // addr 2: skipped
-            encode_hlt(),       // addr 3: skipped
-            0x00,               // addr 4: padding
-            encode_ldm(1),      // addr 5: landed here
-            encode_hlt(),       // addr 6
+            b1,
+            b2,             // addr 0-1: JCN test_zero, 0x05
+            encode_ldm(15), // addr 2: skipped
+            encode_hlt(),   // addr 3: skipped
+            0x00,           // addr 4: padding
+            encode_ldm(1),  // addr 5: landed here
+            encode_hlt(),   // addr 6
         ]);
         assert_eq!(sim.accumulator, 1);
     }
@@ -1581,9 +1845,10 @@ mod tests {
         // Condition 0x4: test_zero. A=5 (not zero), so should NOT jump.
         let (b1, b2) = encode_jcn(0x4, 0x06);
         let sim = run_program(&[
-            encode_ldm(5),      // A=5
-            b1, b2,             // JCN test_zero, 0x06 -- no jump
-            encode_ldm(2),      // executed (A=2)
+            encode_ldm(5), // A=5
+            b1,
+            b2,            // JCN test_zero, 0x06 -- no jump
+            encode_ldm(2), // executed (A=2)
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 2);
@@ -1597,12 +1862,13 @@ mod tests {
         // JCN at addr 1, target = (1+2) & 0xF00 | 0x05 = 0x05
         let (b1, b2) = encode_jcn(0xC, 0x05);
         let sim = run_program(&[
-            encode_ldm(5),      // addr 0: A=5 (not zero)
-            b1, b2,             // addr 1-2: JCN invert+zero, 0x05
-            encode_ldm(15),     // addr 3: skipped
-            encode_hlt(),       // addr 4: skipped
-            encode_ldm(1),      // addr 5: landed here
-            encode_hlt(),       // addr 6
+            encode_ldm(5), // addr 0: A=5 (not zero)
+            b1,
+            b2,             // addr 1-2: JCN invert+zero, 0x05
+            encode_ldm(15), // addr 3: skipped
+            encode_hlt(),   // addr 4: skipped
+            encode_ldm(1),  // addr 5: landed here
+            encode_hlt(),   // addr 6
         ]);
         assert_eq!(sim.accumulator, 1);
     }
@@ -1615,12 +1881,13 @@ mod tests {
         // JCN at addr 1, target = (1+2) & 0xF00 | 0x05 = 0x05
         let (b1, b2) = encode_jcn(0x2, 0x05);
         let sim = run_program(&[
-            encode_stc(),       // addr 0: set carry
-            b1, b2,             // addr 1-2: JCN test_carry, 0x05
-            encode_ldm(15),     // addr 3: skipped
-            encode_hlt(),       // addr 4: skipped
-            encode_ldm(1),      // addr 5: landed here
-            encode_hlt(),       // addr 6
+            encode_stc(), // addr 0: set carry
+            b1,
+            b2,             // addr 1-2: JCN test_carry, 0x05
+            encode_ldm(15), // addr 3: skipped
+            encode_hlt(),   // addr 4: skipped
+            encode_ldm(1),  // addr 5: landed here
+            encode_hlt(),   // addr 6
         ]);
         assert_eq!(sim.accumulator, 1);
     }
@@ -1636,9 +1903,11 @@ mod tests {
         // After 2 iterations: R0=14->15->0, loop exits.
         let (isz_b1, isz_b2) = encode_isz(0, 0x02);
         let sim = run_program(&[
-            encode_ldm(14), encode_xch(0),  // R0=14
-            isz_b1, isz_b2,                 // addr 2: ISZ R0, 0x02
-            encode_hlt(),                   // addr 4: exits when R0=0
+            encode_ldm(14),
+            encode_xch(0), // R0=14
+            isz_b1,
+            isz_b2,       // addr 2: ISZ R0, 0x02
+            encode_hlt(), // addr 4: exits when R0=0
         ]);
         assert_eq!(sim.registers[0], 0);
     }
@@ -1648,9 +1917,11 @@ mod tests {
         // R0=15, ISZ increments to 0 -> falls through (no jump).
         let (isz_b1, isz_b2) = encode_isz(0, 0x10);
         let sim = run_program(&[
-            encode_ldm(15), encode_xch(0),
-            isz_b1, isz_b2,    // ISZ R0, 0x10 -- R0=0, no jump
-            encode_ldm(7),      // falls through here
+            encode_ldm(15),
+            encode_xch(0),
+            isz_b1,
+            isz_b2,        // ISZ R0, 0x10 -- R0=0, no jump
+            encode_ldm(7), // falls through here
             encode_hlt(),
         ]);
         assert_eq!(sim.registers[0], 0);
@@ -1713,11 +1984,15 @@ mod tests {
         // FIN P1 should read 0xBC -> R2=0xB, R3=0xC.
         let (fim_b1, fim_b2) = encode_fim(0, 0x08);
         let mut program = vec![
-            fim_b1, fim_b2,     // FIM P0, 0x08
-            encode_fin(1),      // FIN P1 (read ROM[0x08])
+            fim_b1,
+            fim_b2,        // FIM P0, 0x08
+            encode_fin(1), // FIN P1 (read ROM[0x08])
             encode_hlt(),
-            0, 0, 0, 0,        // padding to addr 8
-            0xBC,               // addr 8: data to read
+            0,
+            0,
+            0,
+            0,    // padding to addr 8
+            0xBC, // addr 8: data to read
         ];
         // Ensure program is long enough.
         while program.len() < 9 {
@@ -1740,12 +2015,13 @@ mod tests {
         //   0: fim_b1  1: fim_b2  2: jin  3: ldm15  4: hlt  5: ldm3  6: hlt
         let (fim_b1, fim_b2) = encode_fim(0, 0x05);
         let sim = run_program(&[
-            fim_b1, fim_b2,     // addr 0-1: FIM P0, 0x05
-            encode_jin(0),      // addr 2: JIN P0 -> jump to 0x05
-            encode_ldm(15),     // addr 3: skipped
-            encode_hlt(),       // addr 4: skipped
-            encode_ldm(3),      // addr 5: landed here
-            encode_hlt(),       // addr 6
+            fim_b1,
+            fim_b2,         // addr 0-1: FIM P0, 0x05
+            encode_jin(0),  // addr 2: JIN P0 -> jump to 0x05
+            encode_ldm(15), // addr 3: skipped
+            encode_hlt(),   // addr 4: skipped
+            encode_ldm(3),  // addr 5: landed here
+            encode_hlt(),   // addr 6
         ]);
         assert_eq!(sim.accumulator, 3);
     }
@@ -1759,12 +2035,13 @@ mod tests {
         // Write 7 to RAM, read it back.
         let (fim_b1, fim_b2) = encode_fim(0, 0x00); // register 0, character 0
         let sim = run_program(&[
-            fim_b1, fim_b2,
-            encode_src(0),      // SRC P0 -> address RAM[0][0][0]
-            encode_ldm(7),      // A=7
-            encode_wrm(),       // RAM[0][0][0] = 7
-            encode_ldm(0),      // A=0 (clear accumulator)
-            encode_rdm(),       // A = RAM[0][0][0] = 7
+            fim_b1,
+            fim_b2,
+            encode_src(0), // SRC P0 -> address RAM[0][0][0]
+            encode_ldm(7), // A=7
+            encode_wrm(),  // RAM[0][0][0] = 7
+            encode_ldm(0), // A=0 (clear accumulator)
+            encode_rdm(),  // A = RAM[0][0][0] = 7
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 7);
@@ -1776,27 +2053,28 @@ mod tests {
         let (fim_b1, fim_b2) = encode_fim(0, 0x00);
         let sim = run_program(&[
             // Set up SRC to register 0, character 0.
-            fim_b1, fim_b2,
+            fim_b1,
+            fim_b2,
             encode_src(0),
             // Write 5 to bank 0.
             encode_ldm(0),
-            encode_dcl(),       // bank = 0
+            encode_dcl(), // bank = 0
             encode_ldm(5),
             encode_wrm(),
             // Write 9 to bank 2.
             encode_ldm(2),
-            encode_dcl(),       // bank = 2
+            encode_dcl(), // bank = 2
             encode_ldm(9),
             encode_wrm(),
             // Read back bank 0.
             encode_ldm(0),
-            encode_dcl(),       // bank = 0
-            encode_rdm(),       // A = 5
-            encode_xch(2),      // R2 = 5
+            encode_dcl(),  // bank = 0
+            encode_rdm(),  // A = 5
+            encode_xch(2), // R2 = 5
             // Read back bank 2.
             encode_ldm(2),
-            encode_dcl(),       // bank = 2
-            encode_rdm(),       // A = 9
+            encode_dcl(), // bank = 2
+            encode_rdm(), // A = 9
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 9);
@@ -1811,18 +2089,26 @@ mod tests {
     fn wr_rd_status_roundtrip() {
         let (fim_b1, fim_b2) = encode_fim(0, 0x00);
         let sim = run_program(&[
-            fim_b1, fim_b2,
+            fim_b1,
+            fim_b2,
             encode_src(0),
             // Write status chars 0-3.
-            encode_ldm(1),  encode_wr0(),
-            encode_ldm(2),  encode_wr1(),
-            encode_ldm(3),  encode_wr2(),
-            encode_ldm(4),  encode_wr3(),
+            encode_ldm(1),
+            encode_wr0(),
+            encode_ldm(2),
+            encode_wr1(),
+            encode_ldm(3),
+            encode_wr2(),
+            encode_ldm(4),
+            encode_wr3(),
             // Read them back.
-            encode_rd0(),   encode_xch(4),  // R4 = 1
-            encode_rd1(),   encode_xch(5),  // R5 = 2
-            encode_rd2(),   encode_xch(6),  // R6 = 3
-            encode_rd3(),                   // A = 4
+            encode_rd0(),
+            encode_xch(4), // R4 = 1
+            encode_rd1(),
+            encode_xch(5), // R5 = 2
+            encode_rd2(),
+            encode_xch(6), // R6 = 3
+            encode_rd3(),  // A = 4
             encode_hlt(),
         ]);
         assert_eq!(sim.registers[4], 1);
@@ -1839,9 +2125,9 @@ mod tests {
     fn wrr_and_rdr_roundtrip() {
         let sim = run_program(&[
             encode_ldm(11),
-            encode_wrr(),       // rom_port = 11
-            encode_ldm(0),      // A = 0
-            encode_rdr(),       // A = rom_port = 11
+            encode_wrr(),  // rom_port = 11
+            encode_ldm(0), // A = 0
+            encode_rdr(),  // A = rom_port = 11
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 11);
@@ -1855,9 +2141,9 @@ mod tests {
     fn wmp_writes_output_port() {
         let sim = run_program(&[
             encode_ldm(0),
-            encode_dcl(),       // bank 0
+            encode_dcl(), // bank 0
             encode_ldm(13),
-            encode_wmp(),       // ram_output[0] = 13
+            encode_wmp(), // ram_output[0] = 13
             encode_hlt(),
         ]);
         assert_eq!(sim.ram_output[0], 13);
@@ -1871,12 +2157,13 @@ mod tests {
     fn adm_adds_ram_to_accumulator() {
         let (fim_b1, fim_b2) = encode_fim(0, 0x00);
         let sim = run_program(&[
-            fim_b1, fim_b2,
+            fim_b1,
+            fim_b2,
             encode_src(0),
             encode_ldm(6),
-            encode_wrm(),       // RAM[0][0][0] = 6
-            encode_ldm(3),      // A = 3
-            encode_adm(),       // A = 3 + 6 + 0 = 9
+            encode_wrm(),  // RAM[0][0][0] = 6
+            encode_ldm(3), // A = 3
+            encode_adm(),  // A = 3 + 6 + 0 = 9
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 9);
@@ -1891,12 +2178,13 @@ mod tests {
     fn sbm_subtracts_ram_from_accumulator() {
         let (fim_b1, fim_b2) = encode_fim(0, 0x00);
         let sim = run_program(&[
-            fim_b1, fim_b2,
+            fim_b1,
+            fim_b2,
             encode_src(0),
             encode_ldm(3),
-            encode_wrm(),       // RAM[0][0][0] = 3
-            encode_ldm(7),      // A = 7
-            encode_sbm(),       // A = 7 - 3 = 4, carry=true (no borrow)
+            encode_wrm(),  // RAM[0][0][0] = 3
+            encode_ldm(7), // A = 7
+            encode_sbm(),  // A = 7 - 3 = 4, carry=true (no borrow)
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 4);
@@ -1909,12 +2197,7 @@ mod tests {
 
     #[test]
     fn clb_clears_accumulator_and_carry() {
-        let sim = run_program(&[
-            encode_ldm(15),
-            encode_stc(),
-            encode_clb(),
-            encode_hlt(),
-        ]);
+        let sim = run_program(&[encode_ldm(15), encode_stc(), encode_clb(), encode_hlt()]);
         assert_eq!(sim.accumulator, 0);
         assert!(!sim.carry);
     }
@@ -1925,12 +2208,7 @@ mod tests {
 
     #[test]
     fn clc_clears_carry_only() {
-        let sim = run_program(&[
-            encode_ldm(7),
-            encode_stc(),
-            encode_clc(),
-            encode_hlt(),
-        ]);
+        let sim = run_program(&[encode_ldm(7), encode_stc(), encode_clc(), encode_hlt()]);
         assert_eq!(sim.accumulator, 7);
         assert!(!sim.carry);
     }
@@ -2125,10 +2403,11 @@ mod tests {
     fn daa_adjustment_on_overflow() {
         // Simulate BCD: 8 + 5 = 13 (binary), DAA should add 6 -> 19, A=3, carry=1
         let sim = run_program(&[
-            encode_ldm(5), encode_xch(0),
+            encode_ldm(5),
+            encode_xch(0),
             encode_ldm(8),
-            encode_add(0),      // A = 8+5+0 = 13, carry=false
-            encode_daa(),       // A > 9, add 6: 13+6=19, A=3, carry=true
+            encode_add(0), // A = 8+5+0 = 13, carry=false
+            encode_daa(),  // A > 9, add 6: 13+6=19, A=3, carry=true
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 3);
@@ -2141,12 +2420,7 @@ mod tests {
         // A=2, carry=true -> add 6: 2+6=8, no overflow.
         // Carry remains true because DAA only sets carry on overflow,
         // it doesn't clear existing carry.
-        let sim = run_program(&[
-            encode_ldm(2),
-            encode_stc(),
-            encode_daa(),
-            encode_hlt(),
-        ]);
+        let sim = run_program(&[encode_ldm(2), encode_stc(), encode_daa(), encode_hlt()]);
         assert_eq!(sim.accumulator, 8);
         assert!(sim.carry);
     }
@@ -2161,7 +2435,11 @@ mod tests {
         let cases = [(0, 0), (1, 1), (2, 2), (4, 3), (8, 4)];
         for (input, expected) in cases {
             let sim = run_program(&[encode_ldm(input), encode_kbp(), encode_hlt()]);
-            assert_eq!(sim.accumulator, expected, "KBP({}) should be {}", input, expected);
+            assert_eq!(
+                sim.accumulator, expected,
+                "KBP({}) should be {}",
+                input, expected
+            );
         }
     }
 
@@ -2252,8 +2530,8 @@ mod tests {
     fn trace_records_raw2_for_two_byte_instructions() {
         let (b1, b2) = encode_jun(0x004);
         let mut sim = Intel4004Simulator::new(4096);
-        sim.load_program(&[b1, b2, 0, 0, encode_hlt()]);
-        let trace = sim.step();
+        sim.load_program(&[b1, b2, 0, 0, encode_hlt()]).unwrap();
+        let trace = sim.step().unwrap();
         assert_eq!(trace.raw, b1);
         assert_eq!(trace.raw2, Some(b2));
     }
@@ -2261,8 +2539,8 @@ mod tests {
     #[test]
     fn trace_records_none_for_single_byte() {
         let mut sim = Intel4004Simulator::new(4096);
-        sim.load_program(&[encode_ldm(5), encode_hlt()]);
-        let trace = sim.step();
+        sim.load_program(&[encode_ldm(5), encode_hlt()]).unwrap();
+        let trace = sim.step().unwrap();
         assert_eq!(trace.raw2, None);
     }
 
@@ -2299,12 +2577,19 @@ mod tests {
     // =======================================================================
 
     #[test]
-    fn unknown_instruction_produces_mnemonic() {
+    fn unknown_instruction_fails_closed() {
         // 0xFE and 0xFF are not defined instructions
         let mut sim = Intel4004Simulator::new(4096);
-        sim.load_program(&[0xFE, encode_hlt()]);
-        let trace = sim.step();
-        assert!(trace.mnemonic.contains("UNKNOWN"));
+        sim.load_program(&[0xFE, encode_hlt()]).unwrap();
+        let before = sim.snapshot();
+        assert_eq!(
+            sim.step(),
+            Err(Intel4004Error::UnknownOpcode {
+                address: 0,
+                opcode: 0xFE,
+            })
+        );
+        assert_eq!(sim.snapshot(), before);
     }
 
     // =======================================================================
@@ -2344,12 +2629,7 @@ mod tests {
         // addr 2-3: JCN 0xC, 0x01  -- if A != 0, jump to addr 1
         // addr 4: HLT
         let (jcn_b1, jcn_b2) = encode_jcn(0xC, 0x01); // invert+test_zero: jump if NOT zero
-        let sim = run_program(&[
-            encode_ldm(5),
-            encode_dac(),
-            jcn_b1, jcn_b2,
-            encode_hlt(),
-        ]);
+        let sim = run_program(&[encode_ldm(5), encode_dac(), jcn_b1, jcn_b2, encode_hlt()]);
         assert_eq!(sim.accumulator, 0);
     }
 
@@ -2359,11 +2639,12 @@ mod tests {
     #[test]
     fn program_bcd_addition() {
         let sim = run_program(&[
-            encode_ldm(5), encode_xch(0),   // R0 = 5
-            encode_ldm(8),                   // A = 8
-            encode_clc(),                    // clear carry for clean add
-            encode_add(0),                   // A = 8+5 = 13 (binary)
-            encode_daa(),                    // DAA: 13+6 = 19, A=3, carry=1
+            encode_ldm(5),
+            encode_xch(0), // R0 = 5
+            encode_ldm(8), // A = 8
+            encode_clc(),  // clear carry for clean add
+            encode_add(0), // A = 8+5 = 13 (binary)
+            encode_daa(),  // DAA: 13+6 = 19, A=3, carry=1
             encode_hlt(),
         ]);
         assert_eq!(sim.accumulator, 3);
@@ -2378,21 +2659,21 @@ mod tests {
         let mut program = vec![0u8; 256];
 
         // Main: load 6, call double at 0x010, halt.
-        program[0] = encode_ldm(6);      // A = 6
-        program[1] = encode_xch(0);      // R0 = 6
+        program[0] = encode_ldm(6); // A = 6
+        program[1] = encode_xch(0); // R0 = 6
         let (b1, b2) = encode_jms(0x010);
         program[2] = b1;
-        program[3] = b2;                  // JMS 0x010
-        // After return, load R1 to get the result.
-        program[4] = encode_ld(1);        // A = R1 = 12
+        program[3] = b2; // JMS 0x010
+                         // After return, load R1 to get the result.
+        program[4] = encode_ld(1); // A = R1 = 12
         program[5] = encode_hlt();
 
         // Double subroutine at 0x010:
         // Expects input in R0. Stores R0 * 2 in R1.
-        program[0x010] = encode_ld(0);    // A = R0 = 6
-        program[0x011] = encode_add(0);   // A = 6+6 = 12
-        program[0x012] = encode_xch(1);   // R1 = 12
-        program[0x013] = encode_bbl(0);   // return, A=0
+        program[0x010] = encode_ld(0); // A = R0 = 6
+        program[0x011] = encode_add(0); // A = 6+6 = 12
+        program[0x012] = encode_xch(1); // R1 = 12
+        program[0x013] = encode_bbl(0); // return, A=0
 
         let sim = run_program(&program);
         assert_eq!(sim.accumulator, 12);
@@ -2436,15 +2717,17 @@ mod tests {
         let (fim_b1, fim_b2) = encode_fim(0, 13 << 4);
         let (isz_b1, isz_b2) = encode_isz(0, 0x04);
         let sim = run_program(&[
-            fim_b1, fim_b2,     // R0=13, R1=0
-            encode_ldm(0),      // A=0
-            encode_xch(2),      // R2=0 (sum)
-            encode_inc(1),      // R1++ (iteration)
-            encode_ld(2),       // A = sum
-            encode_add(1),      // A = sum + iteration
-            encode_xch(2),      // R2 = new sum
-            isz_b1, isz_b2,    // R0++, jump to 0x04 if R0 != 0
-            encode_ld(2),       // A = final sum
+            fim_b1,
+            fim_b2,        // R0=13, R1=0
+            encode_ldm(0), // A=0
+            encode_xch(2), // R2=0 (sum)
+            encode_inc(1), // R1++ (iteration)
+            encode_ld(2),  // A = sum
+            encode_add(1), // A = sum + iteration
+            encode_xch(2), // R2 = new sum
+            isz_b1,
+            isz_b2,       // R0++, jump to 0x04 if R0 != 0
+            encode_ld(2), // A = final sum
             encode_hlt(),
         ]);
         // R0 goes 13->14->15->0: three iterations.
@@ -2469,12 +2752,7 @@ mod tests {
         // A=0b0001 (1), carry=false
         // RAL 1: carry=0, A=0b0010 (2)
         // RAL 2: carry=0, A=0b0100 (4)
-        let sim = run_program(&[
-            encode_ldm(1),
-            encode_ral(),
-            encode_ral(),
-            encode_hlt(),
-        ]);
+        let sim = run_program(&[encode_ldm(1), encode_ral(), encode_ral(), encode_hlt()]);
         assert_eq!(sim.accumulator, 4);
         assert!(!sim.carry);
     }
@@ -2487,7 +2765,8 @@ mod tests {
             let sim = run_program(&[encode_ldm(input), encode_kbp(), encode_hlt()]);
             assert_eq!(
                 sim.accumulator, expected[input as usize],
-                "KBP({}) = {}, expected {}", input, sim.accumulator, expected[input as usize]
+                "KBP({}) = {}, expected {}",
+                input, sim.accumulator, expected[input as usize]
             );
         }
     }
@@ -2529,7 +2808,7 @@ mod tests {
         // Stack has 3 slots, so the main return address (0x02) may be lost.
         // We just verify it doesn't crash.
         let mut sim = Intel4004Simulator::new(4096);
-        sim.run(&program, 100);
+        sim.run(&program, 100).unwrap();
     }
 
     /// Encoding roundtrip: all encoder functions produce expected byte patterns.
@@ -2611,12 +2890,13 @@ mod tests {
         let mut sim = Intel4004Simulator::new(4096);
 
         // First program: set A=15, carry=true
-        sim.run(&[encode_ldm(15), encode_stc(), encode_hlt()], 10);
+        sim.run(&[encode_ldm(15), encode_stc(), encode_hlt()], 10)
+            .unwrap();
         assert_eq!(sim.accumulator, 15);
         assert!(sim.carry);
 
         // Second program: should start with A=0, carry=false
-        sim.run(&[encode_hlt()], 10);
+        sim.run(&[encode_hlt()], 10).unwrap();
         assert_eq!(sim.accumulator, 0);
         assert!(!sim.carry);
     }

@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Owned full-machine `Intel4004State` snapshots.
+- Typed `Intel4004Error` failures for ROM capacity, fetch/decode/target bounds,
+  halted execution, and invalid public legacy state.
+- Atomic safety tests for loading, truncated and illegal instructions,
+  direct/indirect targets, selector corruption, reset, and bounded execution.
+
+### Changed
+
+- `load_program`, `step`, and `run` now return checked `Result` values and leave
+  architectural state unchanged when rejecting an operation.
+
 ## [0.2.0] - 2026-03-21
 
 ### Added
