@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-OHR-02, GE-SOUND-OHR-03, GE-ETYMON-OHR-04]
 introduces:
   knowledge: [GE-LEX-MUND-02, GE-SOUND-MUND-03, GE-ETYMON-MUND-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-MUND-02, GE-SOUND-MUND-03, GE-ETYMON-MUND-04, GE-LEX-OHR-02, GE-ETYMON-OHR-04]
 skills: [listening, speaking, reading]

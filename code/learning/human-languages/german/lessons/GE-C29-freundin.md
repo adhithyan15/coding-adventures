@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-FREUND-02, GE-SOUND-FREUND-03, GE-ETYMON-FREUND-04]
 introduces:
   knowledge: [GE-LEX-FREUNDIN-02, GE-GRAMMAR-SUFFIX-IN-03, GE-ETYMON-SUFFIX-IN-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-FREUNDIN-02, GE-GRAMMAR-SUFFIX-IN-03, GE-ETYMON-SUFFIX-IN-04, GE-LEX-FREUND-02, GE-ETYMON-FREUND-04]
 skills: [listening, speaking, reading]

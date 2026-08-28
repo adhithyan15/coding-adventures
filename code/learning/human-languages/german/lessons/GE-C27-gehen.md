@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-HOEREN-09, GE-ETYMON-HOEREN-10, GE-FALSEFRIEND-GEHOEREN-11, GE-LEX-STEHEN-04, GE-ETYMON-STEHEN-05, GE-LEX-SCHLAFEN-06, GE-LEX-SITZEN-02]
 introduces:
   knowledge: [GE-LEX-GEHEN-02, GE-ETYMON-GEHEN-03]
+introduces_idioms: []
+introduces_senses: [GE-SENSE-GEHEN-WALK-01]
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-GEHEN-02, GE-ETYMON-GEHEN-03, GE-LEX-HOEREN-09, GE-ETYMON-HOEREN-10, GE-FALSEFRIEND-GEHOEREN-11, GE-LEX-STEHEN-04, GE-ETYMON-STEHEN-05, GE-LEX-SCHLAFEN-06, GE-LEX-SITZEN-02]
 skills: [listening, speaking, reading]

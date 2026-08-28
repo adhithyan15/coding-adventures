@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Green and Yellow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6fb7a16474f85d3e",
+  "sourceHash": "fnv1a64:eb1b6a770268bde7",
   "lessons": [
     {
       "id": "GE-C23-gruen-gelb",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e76b587bcf9af4a",
+      "sourceHash": "fnv1a64:4758e3a27af79e93",
       "notice": null,
       "blocks": [
         {

@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03, GE-ETYMON-BITTE-04]
 introduces:
   knowledge: [GE-LEX-ENTSCHULDIGUNG-02, GE-ETYMON-ENTSCHULDIGUNG-03, GE-PRAGMATICS-SORRY-04]
+introduces_idioms: [GE-IDIOM-ES-TUT-MIR-LEID-01]
+introduces_senses: [GE-SENSE-ENTSCHULDIGUNG-APOLOGY-01]
+introduces_culture_claims: [GE-CULTURE-SORRY-REGISTER-01]
 practises:
   knowledge: [GE-LEX-ENTSCHULDIGUNG-02, GE-ETYMON-ENTSCHULDIGUNG-03, GE-PRAGMATICS-SORRY-04]
 skills: [listening, speaking, reading]

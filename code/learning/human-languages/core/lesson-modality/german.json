@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:a513375138de47ba",
+  "sourceHash": "fnv1a64:6aaecf9738ab3f87",
   "summary": {
     "totalLessons": 107,
     "voice": 95,
@@ -606,7 +606,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d5fe472729a39be1",
+      "sourceHash": "fnv1a64:740594c787b5a06e",
       "detachableSegments": [
         "Writing — follow one word you can see"
       ]
@@ -628,7 +628,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b89a00fcc01e8354",
+      "sourceHash": "fnv1a64:defd473a05618d23",
       "detachableSegments": [
         "Writing — one guided copy"
       ]
@@ -1821,7 +1821,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3efd11634f5e8898"
+      "sourceHash": "fnv1a64:98293b151494f443"
     },
     {
       "id": "GE-C17-kopf-haupt",
@@ -1839,7 +1839,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a043450fec40dee2"
+      "sourceHash": "fnv1a64:93ea44c73b29e77a"
     },
     {
       "id": "GE-C17-hand",
@@ -1857,7 +1857,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f183755d890cccc6"
+      "sourceHash": "fnv1a64:a9a7088caa413b0f"
     },
     {
       "id": "GE-C18-ja",
@@ -1875,7 +1875,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6db290ebf326fdbd"
+      "sourceHash": "fnv1a64:3f28277d4065e794"
     },
     {
       "id": "GE-C18-nein",
@@ -1893,7 +1893,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0320e08d92620a31"
+      "sourceHash": "fnv1a64:11d63ed090a3b526"
     },
     {
       "id": "GE-C19-bitte-requests",
@@ -1911,7 +1911,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8aa3db256c553235"
+      "sourceHash": "fnv1a64:4f50929b1dacdae9"
     },
     {
       "id": "GE-C20-entschuldigung",
@@ -1929,7 +1929,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7aa6cd0b1c17a61e"
+      "sourceHash": "fnv1a64:fe978410d8e86afe"
     },
     {
       "id": "GE-C21-das-wetter",
@@ -1947,7 +1947,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:880e01feb51320ea"
+      "sourceHash": "fnv1a64:14303b79ae9a48e7"
     },
     {
       "id": "GE-C22-hund-katze",
@@ -1965,7 +1965,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c326f0bf01024045"
+      "sourceHash": "fnv1a64:546bc40abfcc5494"
     },
     {
       "id": "GE-C23-gruen-gelb",
@@ -1983,7 +1983,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9e76b587bcf9af4a"
+      "sourceHash": "fnv1a64:4758e3a27af79e93"
     },
     {
       "id": "GE-C24-denken",
@@ -2001,7 +2001,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:952056daa67f2430"
+      "sourceHash": "fnv1a64:3c88e62f1ee1a63d"
     },
     {
       "id": "GE-C24-verstehen",
@@ -2019,7 +2019,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:73fbcc1325631e99"
+      "sourceHash": "fnv1a64:a6873235c1e8a29e"
     },
     {
       "id": "GE-C24-lesen",
@@ -2037,7 +2037,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a035960a81dead44"
+      "sourceHash": "fnv1a64:639dafccc43805e3"
     },
     {
       "id": "GE-C24-schreiben",
@@ -2055,7 +2055,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:82ad7baeb935d3cc"
+      "sourceHash": "fnv1a64:f7565a476cd02a0d"
     },
     {
       "id": "GE-C25-nehmen",
@@ -2073,7 +2073,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:659f8d944102c0e7"
+      "sourceHash": "fnv1a64:900c981ec65bd06c"
     },
     {
       "id": "GE-C25-fragen",
@@ -2091,7 +2091,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ab45bd24d364b2c1"
+      "sourceHash": "fnv1a64:09c8cafeeeb2e956"
     },
     {
       "id": "GE-C25-helfen",
@@ -2109,7 +2109,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:66a99fa68a451154"
+      "sourceHash": "fnv1a64:89ff729ea29b01ab"
     },
     {
       "id": "GE-C25-moegen-lieben",
@@ -2127,7 +2127,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6fc3b7ef52590ba9"
+      "sourceHash": "fnv1a64:b39ff1091f509af0"
     },
     {
       "id": "GE-C26-sitzen",
@@ -2145,7 +2145,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:afb92dd9ac5c4a8b"
+      "sourceHash": "fnv1a64:0486c687ccbcb702"
     },
     {
       "id": "GE-C26-stehen",
@@ -2163,7 +2163,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:db4d4825d0f6442f"
+      "sourceHash": "fnv1a64:4143c4f233e106fc"
     },
     {
       "id": "GE-C26-schlafen",
@@ -2181,7 +2181,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ecd66be4bbd05f73"
+      "sourceHash": "fnv1a64:b31282d28577bf9a"
     },
     {
       "id": "GE-C26-hoeren",
@@ -2199,7 +2199,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5f32d7202016c02e"
+      "sourceHash": "fnv1a64:d7090378487ea2f7"
     },
     {
       "id": "GE-C27-gehen",
@@ -2217,7 +2217,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1fa9934cbba41401"
+      "sourceHash": "fnv1a64:0457812fe352eb3d"
     },
     {
       "id": "GE-C27-laufen",
@@ -2235,7 +2235,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a27427e8f3c4687d"
+      "sourceHash": "fnv1a64:44399b8594cb4396"
     },
     {
       "id": "GE-C27-oeffnen",
@@ -2253,7 +2253,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1d968eb670945a45"
+      "sourceHash": "fnv1a64:d2963acd57141a92"
     },
     {
       "id": "GE-C27-schliessen",
@@ -2271,7 +2271,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3a010511b57a5214"
+      "sourceHash": "fnv1a64:9f0e0836a5674d01"
     },
     {
       "id": "GE-C28-kaffee",
@@ -2289,7 +2289,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3fbab8899748712a"
+      "sourceHash": "fnv1a64:800b47f03f9b2037"
     },
     {
       "id": "GE-C28-tee",
@@ -2307,7 +2307,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3cd28c752f5508c0"
+      "sourceHash": "fnv1a64:938eba3155e0975d"
     },
     {
       "id": "GE-C28-milch",
@@ -2325,7 +2325,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f229c9f1440a16e1"
+      "sourceHash": "fnv1a64:b632083c015ee168"
     },
     {
       "id": "GE-C29-freund",
@@ -2343,7 +2343,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:255f7d9852976311"
+      "sourceHash": "fnv1a64:67a631ab931ae5ca"
     },
     {
       "id": "GE-C29-freundin",
@@ -2361,7 +2361,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5013476bf9a82728"
+      "sourceHash": "fnv1a64:0a1447f9dcc0550f"
     },
     {
       "id": "GE-C29-familie",
@@ -2379,7 +2379,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f75d5996f6ae9cd5"
+      "sourceHash": "fnv1a64:cfbb76618e5673f8"
     },
     {
       "id": "GE-C30-auge",
@@ -2397,7 +2397,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9e20540b104f0b9c"
+      "sourceHash": "fnv1a64:71265027dead60e9"
     },
     {
       "id": "GE-C30-ohr",
@@ -2415,7 +2415,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5ee3fc0d1115dfb8"
+      "sourceHash": "fnv1a64:52fc18b4830de0eb"
     },
     {
       "id": "GE-C30-mund",
@@ -2433,7 +2433,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4dae31e2b01f104a"
+      "sourceHash": "fnv1a64:24fb4a7f4f3cdc45"
     },
     {
       "id": "GE-C30-nase",
@@ -2451,7 +2451,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1b392954bec8c0aa"
+      "sourceHash": "fnv1a64:11a51d31a51bb07d"
     },
     {
       "id": "GE-C31-arm",
@@ -2469,7 +2469,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2ac2090d55f0b0c3"
+      "sourceHash": "fnv1a64:b58f0b5ddcfad454"
     },
     {
       "id": "GE-C31-finger",
@@ -2487,7 +2487,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4063540295d7a9bd"
+      "sourceHash": "fnv1a64:30e953adf9743140"
     },
     {
       "id": "GE-C31-fuss",
@@ -2505,7 +2505,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0439aad4c260d555"
+      "sourceHash": "fnv1a64:4f96d4bd25ac7568"
     },
     {
       "id": "GE-C31-herz",
@@ -2523,7 +2523,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:360b747dd556a5cd"
+      "sourceHash": "fnv1a64:7f87a27ffe4287ce"
     }
   ],
   "findings": []

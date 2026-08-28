@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-ARM-02, GE-SOUND-ARM-03, GE-ETYMON-ARM-04]
 introduces:
   knowledge: [GE-LEX-FINGER-02, GE-ETYMON-FINGER-03, GE-EVIDENCE-FINGER-FUENF-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-FINGER-02, GE-ETYMON-FINGER-03, GE-EVIDENCE-FINGER-FUENF-04, GE-LEX-ARM-02]
 skills: [listening, speaking, reading]

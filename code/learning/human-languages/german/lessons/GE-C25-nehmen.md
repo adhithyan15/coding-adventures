@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-SCHREIBEN-10, GE-ETYMON-SCHREIBEN-11, GE-GRAMMAR-STRONG-VOWEL-09, GE-LEX-HAND-02, GE-LEX-LESEN-07]
 introduces:
   knowledge: [GE-LEX-NEHMEN-02, GE-ETYMON-NEHMEN-03, GE-FALSEFRIEND-BEKOMMEN-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-NEHMEN-02, GE-ETYMON-NEHMEN-03, GE-FALSEFRIEND-BEKOMMEN-04, GE-GRAMMAR-STRONG-VOWEL-09, GE-LEX-SCHREIBEN-10, GE-ETYMON-SCHREIBEN-11, GE-LEX-LESEN-07, GE-LEX-HAND-02]
 skills: [listening, speaking, reading]

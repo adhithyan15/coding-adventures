@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Eyes, Ears, Mouth, Nose",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3d76ed21c25da698",
+  "sourceHash": "fnv1a64:37a192c1c28d6006",
   "lessons": [
     {
       "id": "GE-C30-auge",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e20540b104f0b9c",
+      "sourceHash": "fnv1a64:71265027dead60e9",
       "notice": null,
       "blocks": [
         {
@@ -156,7 +156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ee3fc0d1115dfb8",
+      "sourceHash": "fnv1a64:52fc18b4830de0eb",
       "notice": null,
       "blocks": [
         {
@@ -293,7 +293,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4dae31e2b01f104a",
+      "sourceHash": "fnv1a64:24fb4a7f4f3cdc45",
       "notice": null,
       "blocks": [
         {
@@ -430,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b392954bec8c0aa",
+      "sourceHash": "fnv1a64:11a51d31a51bb07d",
       "notice": null,
       "blocks": [
         {

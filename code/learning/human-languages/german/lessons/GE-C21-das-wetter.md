@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [GE-LEX-WETTER-02, GE-ETYMON-WETTER-03, GE-GRAMMAR-WEATHER-SEIN-04, GE-LEX-REGNET-05, GE-ETYMON-REGNET-06]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-WETTER-02, GE-ETYMON-WETTER-03, GE-GRAMMAR-WEATHER-SEIN-04, GE-LEX-REGNET-05, GE-ETYMON-REGNET-06]
 skills: [listening, speaking, reading]

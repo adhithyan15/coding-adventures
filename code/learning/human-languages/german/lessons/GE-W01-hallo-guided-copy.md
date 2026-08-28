@@ -16,6 +16,9 @@ requires:
   knowledge: [GE-LEX-HALLO-01, GE-SOUND-HALLO-02, GE-ETYMON-HALLO-03]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-HALLO-01, GE-SOUND-HALLO-02, GE-ETYMON-HALLO-03]
 skills: [reading, writing]

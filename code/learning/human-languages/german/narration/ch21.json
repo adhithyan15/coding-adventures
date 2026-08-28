@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Weather",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e773a690ba617e60",
+  "sourceHash": "fnv1a64:389516e718676981",
   "lessons": [
     {
       "id": "GE-C21-das-wetter",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:880e01feb51320ea",
+      "sourceHash": "fnv1a64:14303b79ae9a48e7",
       "notice": null,
       "blocks": [
         {

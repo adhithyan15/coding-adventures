@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:56d533c514140e42",
+  "sourceHash": "fnv1a64:01e79cb23f947ddb",
   "lessons": [
     {
       "id": "GE-C19-bitte-requests",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8aa3db256c553235",
+      "sourceHash": "fnv1a64:4f50929b1dacdae9",
       "notice": null,
       "blocks": [
         {

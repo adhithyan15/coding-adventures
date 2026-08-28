@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-MOEGEN-LIEBEN-09, GE-GRAMMAR-GERN-11, GE-LEX-HELFEN-07, GE-ETYMON-HELFEN-08, GE-GRAMMAR-STRONG-VOWEL-09]
 introduces:
   knowledge: [GE-LEX-SITZEN-02, GE-ETYMON-SITZEN-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-SITZEN-02, GE-ETYMON-SITZEN-03, GE-LEX-MOEGEN-LIEBEN-09, GE-GRAMMAR-GERN-11, GE-LEX-HELFEN-07, GE-ETYMON-HELFEN-08, GE-GRAMMAR-STRONG-VOWEL-09]
 skills: [listening, speaking, reading]

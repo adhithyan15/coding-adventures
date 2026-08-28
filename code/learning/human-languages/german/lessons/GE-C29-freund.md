@@ -18,6 +18,9 @@ requires:
   knowledge: [GE-LEX-MILCH-02, GE-SOUND-MILCH-03, GE-ETYMON-MILCH-04]
 introduces:
   knowledge: [GE-LEX-FREUND-02, GE-SOUND-FREUND-03, GE-ETYMON-FREUND-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GE-LEX-FREUND-02, GE-SOUND-FREUND-03, GE-ETYMON-FREUND-04, GE-LEX-MILCH-02, GE-ETYMON-MILCH-04]
 skills: [listening, speaking, reading]

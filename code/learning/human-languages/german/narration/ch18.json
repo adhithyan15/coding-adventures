@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9ee7c138518419ac",
+  "sourceHash": "fnv1a64:65b9a357c444bf22",
   "lessons": [
     {
       "id": "GE-C18-ja",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6db290ebf326fdbd",
+      "sourceHash": "fnv1a64:3f28277d4065e794",
       "notice": null,
       "blocks": [
         {
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0320e08d92620a31",
+      "sourceHash": "fnv1a64:11d63ed090a3b526",
       "notice": null,
       "blocks": [
         {
