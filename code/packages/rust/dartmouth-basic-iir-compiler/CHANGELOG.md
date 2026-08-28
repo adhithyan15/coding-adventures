@@ -1,5 +1,19 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## [0.39.0] — 2026-08-28 (mixed numeric/string DATA)
+
+`DATA`, `READ`, and `RESTORE` now preserve one source-ordered stream containing
+both numeric and string values. The compiler materialises parallel kind,
+`array<f64>`, and `array<str>` pools with one shared read pointer. Each `READ`
+checks the next runtime kind before loading the target's typed pool, supports
+numeric and string scalars and arrays, and traps on a type mismatch or when the
+program reads past the pool. `RESTORE` rewinds the shared pointer, so both value
+representations restart together.
+
+The mixed scalar/array/rewind program runs through NativeAOT, LLVM, WASM, JVM,
+VM, and JIT locally; the unified matrix supplies the real CLR execution in CI.
+JIT tests also execute the mismatch trap rather than only inspecting IIR.
+
 ## [0.38.0] — 2026-08-28 (deterministic transcendental builtins)
 
 `SIN`, `COS`, `LOG`, and `EXP` now lower directly to the shared `f64_sin`,
@@ -38,7 +52,7 @@ rejected as a BA4 follow-up. A program can `DIM A$(2)`, assign `A$(0)="O"` /
 element-feeds-concat; numeric-context + numeric-RHS rejections; numeric/string array
 coexistence).
 
-**Deferred:** string `READ`/`DATA` (numeric `DATA` only today).
+**Deferred at 0.37.0:** string `READ`/`DATA` (landed in 0.39.0).
 
 ## [0.36.0] — 2026-07-06 (LANG-FULL E4-dyn — string `INPUT A$` reads a runtime string)
 

@@ -596,6 +596,13 @@ mod tests {
     }
 
     #[test]
+    fn test_mixed_numeric_and_string_data() {
+        let ast = parse_dartmouth_basic("10 DATA 1, \"HELLO\", 2, \"WORLD\"\n");
+        assert_program_root(&ast);
+        assert!(find_rule(&ast, "data_stmt"), "Expected data_stmt node");
+    }
+
+    #[test]
     fn test_restore() {
         let ast = parse_dartmouth_basic("10 RESTORE\n");
         assert_program_root(&ast);

@@ -2,6 +2,12 @@
 
 All notable changes to this crate will be documented in this file.
 
+## [0.5.0] — 2026-08-28 — mixed numeric/string DATA literals
+
+`DATA` now accepts each comma-separated item as either `NUMBER` or `STRING`,
+allowing ordered mixed pools such as `DATA 1, "HELLO", 2, "WORLD"`. `READ`
+target-type enforcement remains the IIR compiler's responsibility.
+
 ## [0.4.0] — 2026-07-14
 
 ### Fixed — recursion-depth guard against native stack overflow (DoS)

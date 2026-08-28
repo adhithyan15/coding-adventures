@@ -187,6 +187,40 @@ fn jit_basic_read_restore_rewinds() {
         "READ A,B then RESTORE then READ C should print 10,20,10, got {got:?}");
 }
 
+/// VM-017 — one ordered DATA pointer carries numeric and string literals into
+/// scalar and array targets, and RESTORE rewinds both representations together.
+#[test]
+fn jit_basic_mixed_data_preserves_order_and_restore() {
+    let src = "10 DIM S$(1)\n\
+               20 DATA 20, \"O\", 22, \"K\"\n\
+               30 READ A, S$(0), B, S$(1)\n\
+               40 PRINT A + B\n\
+               50 PRINT S$(0) + S$(1)\n\
+               60 RESTORE\n\
+               70 READ C, T$\n\
+               80 PRINT C\n\
+               90 PRINT T$\n\
+               100 END\n";
+    let got = jit_execute_and_capture_prints(src);
+    assert_eq!(got, "42\nOK\n20\nO\n",
+        "mixed DATA/READ/RESTORE should preserve type and source order");
+}
+
+/// A READ target whose type disagrees with the next DATA item must trap rather
+/// than silently reading the placeholder from the parallel value array.
+#[test]
+fn jit_basic_mixed_data_type_mismatch_traps() {
+    let mut module = compile_source(
+        "10 DATA \"NOT A NUMBER\"\n20 READ X\n30 END\n",
+        "jit_data_type_mismatch",
+    ).expect("mixed DATA source should compile");
+    let mut vm = VMCore::new();
+    let mut jit = JITCore::new(&mut vm, Box::new(DeferToInterpreterBackend));
+    let result = jit.execute_with_jit(&mut vm, &mut module, "main", &[]);
+    assert!(result.is_err(),
+        "READ X must trap when the next DATA item is a string, got {result:?}");
+}
+
 /// FOR / NEXT loop: `10 FOR I = 1 TO 3 / 20 PRINT I / 30 NEXT I / 40 END`
 /// should print 1, 2, 3 in order.  Exercises label / jmp_if_false /
 /// add / jmp under the JIT interpreter.

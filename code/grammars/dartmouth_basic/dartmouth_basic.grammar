@@ -251,18 +251,19 @@ rem_stmt = "REM" ;
 #
 #   10 READ X
 #   20 READ A, B, C
-#   30 DATA 1, 2, 3, 4, 5
+#   30 DATA 1, "HELLO", 2, "WORLD"
 #   40 RESTORE
 #
 # DATA lines define a pool of values (in line-number order). READ pops values
 # sequentially. RESTORE resets the pool pointer to the beginning.
 #
-# DATA values are numeric literals only — the 1964 spec lacks string variables.
+# DATA values may be numeric or string literals. The single ordered pool keeps
+# their source order; READ target types are checked by the IIR compiler.
 # =============================================================================
 
 read_stmt    = "READ" variable { COMMA variable } ;
 
-data_stmt    = "DATA" NUMBER { COMMA NUMBER } ;
+data_stmt    = "DATA" ( NUMBER | STRING ) { COMMA ( NUMBER | STRING ) } ;
 
 restore_stmt = "RESTORE" ;
 
