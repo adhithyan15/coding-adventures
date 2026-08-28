@@ -1,4 +1,10 @@
 {
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "fixtures": ["equals-participant-id", "create-and-destroy-participant"]
+  "fixtures": [
+    "equals-participant-id",
+    "create-and-destroy-participant",
+    "note-over-participant-pairs",
+    "note-left-of-participant",
+    "note-right-of-participant"
+  ]
 }
