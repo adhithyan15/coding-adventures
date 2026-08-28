@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:b541e8e2562b8562",
+  "lessonIds": [
+    "ES-C39-conocer"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch171.txt",
+  "json": "spanish/narration/ch171.json",
+  "textHash": "fnv1a64:52063deacba721be",
+  "jsonHash": "fnv1a64:6ed7fb48eccda4a2",
+  "findings": []
+}

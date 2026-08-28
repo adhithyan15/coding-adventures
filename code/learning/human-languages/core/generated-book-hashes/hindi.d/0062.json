@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:63ff8f05655588b6",
+  "lessonIds": [
+    "HI-C62-rope",
+    "HI-C62-needle",
+    "HI-C62-basket",
+    "HI-C62-clay",
+    "HI-C62-wood"
+  ],
+  "tex": "hindi/book/chapters/ch62-what-hands-work-with.tex"
+}

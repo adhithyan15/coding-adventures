@@ -1,0 +1,18 @@
+{
+  "language": "bengali",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:522e9ad053b71b7f",
+  "lessonIds": [
+    "BN-C10-cha",
+    "BN-C10-jol",
+    "BN-C10-dudh",
+    "BN-C10-bhat"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch10.txt",
+  "json": "bengali/narration/ch10.json",
+  "textHash": "fnv1a64:eea9fbb90287eb68",
+  "jsonHash": "fnv1a64:2429dc14cf122ad4",
+  "findings": []
+}

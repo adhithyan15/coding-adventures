@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:9944553efc69c580",
+  "lessonIds": [
+    "HI-C41-big",
+    "HI-C41-small",
+    "HI-C41-good",
+    "HI-C41-new",
+    "HI-C41-old",
+    "HI-C41-adjective-system"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch41.txt",
+  "json": "hindi/narration/ch41.json",
+  "textHash": "fnv1a64:c41962000bc9cd77",
+  "jsonHash": "fnv1a64:14223ea517a2f780",
+  "findings": []
+}

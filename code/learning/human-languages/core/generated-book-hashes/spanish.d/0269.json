@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:283c1e0999cae051",
+  "lessonIds": [
+    "ES-C269-feliz",
+    "ES-C269-espero",
+    "ES-C269-mas-que",
+    "ES-C269-durante"
+  ],
+  "tex": "spanish/book/chapters/ch269-experiencia.tex"
+}

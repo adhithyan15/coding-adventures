@@ -1,0 +1,16 @@
+{
+  "language": "marwadi",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:2cd592df647dba28",
+  "lessonIds": [
+    "MW-C09-hear-nana",
+    "MW-C09-nana",
+    "MW-C09-hear-nani",
+    "MW-C09-nani",
+    "MW-C09-hear-pati",
+    "MW-W09-ta",
+    "MW-C09-pati",
+    "MW-R09-maternal-three"
+  ],
+  "tex": "marwadi/book/chapters/ch12-maternal-and-husband.tex"
+}

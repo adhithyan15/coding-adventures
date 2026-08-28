@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:e6593c62fe206e4f",
+  "lessonIds": [
+    "ML-C62-rope",
+    "ML-C62-thread",
+    "ML-C62-needle",
+    "ML-C62-broom",
+    "ML-C62-winnowing-tray"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch62.txt",
+  "json": "malayalam/narration/ch62.json",
+  "textHash": "fnv1a64:0dd34ed4e5aaed36",
+  "jsonHash": "fnv1a64:a249cfe0e156ba4f",
+  "findings": []
+}

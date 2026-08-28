@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:675c01e26ec8050b",
+  "lessonIds": [
+    "TA-C47-true",
+    "TA-C47-enough",
+    "TA-C47-certainly",
+    "TA-C47-perhaps",
+    "TA-C47-just-so"
+  ],
+  "tex": "tamil/book/chapters/ch47-short-replies.tex"
+}

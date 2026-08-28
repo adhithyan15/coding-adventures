@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:60d4c7983fd72d57",
+  "lessonIds": [
+    "ML-C47-leg",
+    "ML-C47-tooth",
+    "ML-C47-hair",
+    "ML-C47-finger",
+    "ML-C47-stomach"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch47.txt",
+  "json": "malayalam/narration/ch47.json",
+  "textHash": "fnv1a64:0105f58d205d0dc9",
+  "jsonHash": "fnv1a64:f3ca0e3b6d15ac8f",
+  "findings": []
+}

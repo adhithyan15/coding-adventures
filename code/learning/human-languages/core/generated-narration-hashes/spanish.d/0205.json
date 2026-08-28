@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:e59369eb0ffbf542",
+  "lessonIds": [
+    "ES-C55-sintesis-preterito-completo"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch205.txt",
+  "json": "spanish/narration/ch205.json",
+  "textHash": "fnv1a64:7966f49586e6eeac",
+  "jsonHash": "fnv1a64:babdf6059f33f316",
+  "findings": []
+}

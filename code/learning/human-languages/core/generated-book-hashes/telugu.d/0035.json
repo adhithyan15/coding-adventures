@@ -1,0 +1,10 @@
+{
+  "language": "telugu",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:f9e8a941d3e456f2",
+  "lessonIds": [
+    "TE-C35-kutumbam",
+    "TE-C35-snehitudu"
+  ],
+  "tex": "telugu/book/chapters/ch35-family-and-friends.tex"
+}

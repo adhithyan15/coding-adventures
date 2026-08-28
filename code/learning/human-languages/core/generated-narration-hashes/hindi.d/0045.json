@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:1209d4e5f87fc0dc",
+  "lessonIds": [
+    "HI-C45-fruit",
+    "HI-C45-cloth",
+    "HI-C45-lamp",
+    "HI-C45-salt",
+    "HI-C45-soap"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch45.txt",
+  "json": "hindi/narration/ch45.json",
+  "textHash": "fnv1a64:25a18fb2c072f8d0",
+  "jsonHash": "fnv1a64:2cbba22e99287d03",
+  "findings": []
+}

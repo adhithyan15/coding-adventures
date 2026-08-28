@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:ff5b1b2aa51325b0",
+  "lessonIds": [
+    "ES-C313-boleto",
+    "ES-C313-moneda",
+    "ES-C313-pasaporte",
+    "ES-C313-entrada",
+    "ES-C313-cambio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch313.txt",
+  "json": "spanish/narration/ch313.json",
+  "textHash": "fnv1a64:c94adaf18bd8f499",
+  "jsonHash": "fnv1a64:1f1778bd5c424c43",
+  "findings": []
+}

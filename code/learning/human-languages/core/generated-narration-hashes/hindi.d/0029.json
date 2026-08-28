@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:1c9e0f1751013b5b",
+  "lessonIds": [
+    "HI-C29-shaam"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "hindi/narration/ch29.txt",
+  "json": "hindi/narration/ch29.json",
+  "textHash": "fnv1a64:7d6c1e42b6f5a781",
+  "jsonHash": "fnv1a64:2968bd86e1fc6d26",
+  "findings": []
+}

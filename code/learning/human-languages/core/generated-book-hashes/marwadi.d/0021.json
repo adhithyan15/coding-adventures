@@ -1,0 +1,17 @@
+{
+  "language": "marwadi",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:147cf2692686f1c1",
+  "lessonIds": [
+    "MW-C16-hear-bas",
+    "MW-C16-bas",
+    "MW-C16-hear-gaadi",
+    "MW-C16-gaadi",
+    "MW-C16-hear-thela",
+    "MW-C16-thela",
+    "MW-R16-transport-three",
+    "MW-C16-transport-three",
+    "MW-R16-transport-close"
+  ],
+  "tex": "marwadi/book/chapters/ch21-transport-three.tex"
+}

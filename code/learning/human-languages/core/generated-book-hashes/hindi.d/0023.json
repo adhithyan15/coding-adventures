@@ -1,0 +1,10 @@
+{
+  "language": "hindi",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:c099ea8696b64ef8",
+  "lessonIds": [
+    "HI-C23-kutta-billi",
+    "HI-C23-billi-history"
+  ],
+  "tex": "hindi/book/chapters/ch23-dog-and-cat.tex"
+}

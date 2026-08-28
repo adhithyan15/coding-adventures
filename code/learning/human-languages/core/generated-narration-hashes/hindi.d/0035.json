@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:7bd7ac99a07ba3a0",
+  "lessonIds": [
+    "HI-C35-lena",
+    "HI-C35-puchna",
+    "HI-C35-madad",
+    "HI-C35-pasand"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "hindi/narration/ch35.txt",
+  "json": "hindi/narration/ch35.json",
+  "textHash": "fnv1a64:1757a90c9de0992c",
+  "jsonHash": "fnv1a64:f4179828cf759966",
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "urdu",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:829dab8c40800883",
+  "lessonIds": [
+    "UR-C04-kaise-kaisi",
+    "UR-C04-aap-kaise-hain",
+    "UR-C04-main-hun",
+    "UR-C04-thik",
+    "UR-C04-main-thik-hun",
+    "UR-C04-practice"
+  ],
+  "tex": "urdu/book/chapters/ch04-how-are-you.tex"
+}

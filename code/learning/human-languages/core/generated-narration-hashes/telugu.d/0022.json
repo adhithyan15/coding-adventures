@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:fd1ed5e909687fa0",
+  "lessonIds": [
+    "TE-C22-pacha-pasupu"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch22.txt",
+  "json": "telugu/narration/ch22.json",
+  "textHash": "fnv1a64:8ecae3220ca35ede",
+  "jsonHash": "fnv1a64:0d500ba5291d3820",
+  "findings": []
+}

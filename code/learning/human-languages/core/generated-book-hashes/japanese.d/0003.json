@@ -1,0 +1,16 @@
+{
+  "language": "japanese",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:263995256f27b91e",
+  "lessonIds": [
+    "JA-W03-a",
+    "JA-W03-ri",
+    "JA-W03-ka",
+    "JA-W03-dakuten",
+    "JA-W03-to",
+    "JA-W03-u",
+    "JA-W03-arigatou-read",
+    "JA-C01-arigatou"
+  ],
+  "tex": "japanese/book/chapters/ch03-thanks.tex"
+}

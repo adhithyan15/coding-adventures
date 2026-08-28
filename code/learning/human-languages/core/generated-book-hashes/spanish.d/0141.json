@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:58734e7f1626a2a5",
+  "lessonIds": [
+    "ES-C24-cabeza",
+    "ES-C24-mano"
+  ],
+  "tex": "spanish/book/chapters/ch141-head-and-hand.tex"
+}

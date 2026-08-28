@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:5ec977fec28d742e",
+  "lessonIds": [
+    "SA-C50-sound",
+    "SA-C50-question",
+    "SA-C50-voice",
+    "SA-C50-song",
+    "SA-C50-verse"
+  ],
+  "tex": "sanskrit/book/chapters/ch50-sound-and-song.tex"
+}

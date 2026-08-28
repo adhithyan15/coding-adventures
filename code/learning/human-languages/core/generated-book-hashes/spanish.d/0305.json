@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:77977d90461b6ffe",
+  "lessonIds": [
+    "ES-C305-nombre",
+    "ES-C305-apellido",
+    "ES-C305-senor",
+    "ES-C305-senora",
+    "ES-C305-encantado"
+  ],
+  "tex": "spanish/book/chapters/ch305-nombre-y-apellido.tex"
+}

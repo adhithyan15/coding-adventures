@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:223d0fe488502203",
+  "lessonIds": [
+    "ML-C44-look",
+    "ML-C44-listen",
+    "ML-C44-speak",
+    "ML-C44-write"
+  ],
+  "tex": "malayalam/book/chapters/ch44-see-say.tex"
+}

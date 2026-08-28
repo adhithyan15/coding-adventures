@@ -1,0 +1,12 @@
+{
+  "language": "kannada",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:900fe923c397d51f",
+  "lessonIds": [
+    "KA-C33-yocisu",
+    "KA-C33-artha-maadiko",
+    "KA-C33-oodu",
+    "KA-C33-bare"
+  ],
+  "tex": "kannada/book/chapters/ch33-mind-verbs.tex"
+}

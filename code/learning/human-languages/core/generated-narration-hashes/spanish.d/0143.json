@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:02a407898878b56a",
+  "lessonIds": [
+    "ES-C26-agua",
+    "ES-C26-vino",
+    "ES-C26-pan"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch143.txt",
+  "json": "spanish/narration/ch143.json",
+  "textHash": "fnv1a64:ed8463e405e2f181",
+  "jsonHash": "fnv1a64:4f93c626dceb2468",
+  "findings": []
+}

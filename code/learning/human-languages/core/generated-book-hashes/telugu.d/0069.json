@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:ba8b4a5a9d5b7880",
+  "lessonIds": [
+    "TE-C69-axe",
+    "TE-C69-saw",
+    "TE-C69-spade",
+    "TE-C69-hammer",
+    "TE-C69-stick"
+  ],
+  "tex": "telugu/book/chapters/ch69-tools.tex"
+}

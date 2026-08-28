@@ -1,0 +1,16 @@
+{
+  "language": "arabic",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:b801e7640e9436c0",
+  "lessonIds": [
+    "AR-C29-qala",
+    "AR-C29-raa"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "arabic/narration/ch29.txt",
+  "json": "arabic/narration/ch29.json",
+  "textHash": "fnv1a64:7d987e7d54adfd9e",
+  "jsonHash": "fnv1a64:9b60d6edca2af077",
+  "findings": []
+}

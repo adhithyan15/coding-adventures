@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:95511a042b6d48c6",
+  "lessonIds": [
+    "ES-C356-desde",
+    "ES-C356-cita",
+    "ES-C356-etapa",
+    "ES-C356-ocasion",
+    "ES-C356-repente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch356.txt",
+  "json": "spanish/narration/ch356.json",
+  "textHash": "fnv1a64:5936a9cf6e75075f",
+  "jsonHash": "fnv1a64:11378a57d11675df",
+  "findings": []
+}

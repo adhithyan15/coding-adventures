@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:8b3cc16e6568cfe0",
+  "lessonIds": [
+    "ES-C13-sintesis-yo-go"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch75.txt",
+  "json": "spanish/narration/ch75.json",
+  "textHash": "fnv1a64:5fae92b8d72898ca",
+  "jsonHash": "fnv1a64:a3c621888ac65deb",
+  "findings": []
+}

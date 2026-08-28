@@ -1,0 +1,9 @@
+{
+  "language": "french",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:d520a52bdfee2b10",
+  "lessonIds": [
+    "FR-C23-vert-jaune"
+  ],
+  "tex": "french/book/chapters/ch23-green-and-yellow.tex"
+}

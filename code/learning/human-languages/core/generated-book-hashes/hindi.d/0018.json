@@ -1,0 +1,10 @@
+{
+  "language": "hindi",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:f138e126d0284ebb",
+  "lessonIds": [
+    "HI-C18-ghanta",
+    "HI-S122-letter-kha"
+  ],
+  "tex": "hindi/book/chapters/ch18-telling-time.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:1f02d564fe2e75d6",
+  "lessonIds": [
+    "ES-C06-estudiar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch21.txt",
+  "json": "spanish/narration/ch21.json",
+  "textHash": "fnv1a64:153958188e8fa852",
+  "jsonHash": "fnv1a64:437de478355422b2",
+  "findings": []
+}

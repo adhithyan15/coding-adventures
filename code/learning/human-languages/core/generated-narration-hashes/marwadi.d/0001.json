@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:ac69312516661d42",
+  "lessonIds": [
+    "MW-W01-ra",
+    "MW-W01-aa-matra",
+    "MW-W01-raam",
+    "MW-W01-sa",
+    "MW-W01-saa",
+    "MW-C01-raam-raam-saa",
+    "MW-C01-practice"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "marwadi/narration/ch01.txt",
+  "json": "marwadi/narration/ch01.json",
+  "textHash": "fnv1a64:9ed0384bad3462e2",
+  "jsonHash": "fnv1a64:2b437b9cdc4110f3",
+  "findings": []
+}

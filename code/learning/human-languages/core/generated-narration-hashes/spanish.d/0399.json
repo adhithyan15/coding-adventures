@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:73ac0e48fe3e7802",
+  "lessonIds": [
+    "ES-C399-bonito",
+    "ES-C399-guapo"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch399.txt",
+  "json": "spanish/narration/ch399.json",
+  "textHash": "fnv1a64:2472fa4d7aab38a9",
+  "jsonHash": "fnv1a64:7955f7949c31ed5d",
+  "findings": []
+}

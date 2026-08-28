@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:ba9d7491b2b6824d",
+  "lessonIds": [
+    "ES-C07-vivir"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch35.txt",
+  "json": "spanish/narration/ch35.json",
+  "textHash": "fnv1a64:097944ab9756ae08",
+  "jsonHash": "fnv1a64:9d5a79cc46b71577",
+  "findings": []
+}

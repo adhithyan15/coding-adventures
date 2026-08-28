@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:d35760e6c483a1a6",
+  "lessonIds": [
+    "TE-C61-curd",
+    "TE-C61-ghee",
+    "TE-C61-oil",
+    "TE-C61-sugar",
+    "TE-C61-chilli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch61.txt",
+  "json": "telugu/narration/ch61.json",
+  "textHash": "fnv1a64:f30269de607aa1e0",
+  "jsonHash": "fnv1a64:238a72f4425c61ac",
+  "findings": []
+}

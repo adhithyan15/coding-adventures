@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:dfec40d016988583",
+  "lessonIds": [
+    "BN-C14-lal",
+    "BN-C14-nil",
+    "BN-C14-kalo",
+    "BN-C14-shada",
+    "BN-C14-shobuj"
+  ],
+  "tex": "bengali/book/chapters/ch14-five-colors.tex"
+}

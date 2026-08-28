@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:8012efdd13708381",
+  "lessonIds": [
+    "ES-C07-beber",
+    "ES-C07-que",
+    "ES-C07-donde",
+    "ES-C07-practice"
+  ],
+  "tex": "spanish/book/chapters/ch36-beber-preguntas.tex"
+}

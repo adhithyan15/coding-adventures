@@ -2,7 +2,10 @@ import { defineConfig } from "vite";
 import path from "node:path";
 import { humanLanguageLedgerPlugin } from "./human-language-ledger-plugin.ts";
 import { scriptInventoryPlugin } from "@coding-adventures/script-ductus/script-inventory-plugin.ts";
-import { isHandwritingToolsModuleId } from "./chunk-routing.ts";
+import {
+  isBookLedgerModuleId,
+  isHandwritingToolsModuleId,
+} from "./chunk-routing.ts";
 // How lesson batches are grouped lives in ONE module, imported by both this
 // config and scripts/check-bundle.mjs. The gate used to recover the band width
 // by regex-ing this file, which a comment mentioning the constant could shadow.
@@ -149,7 +152,7 @@ export default defineConfig({
             },
             {
               name: "book-ledgers",
-              test: /(?:human-language-ledger[\\/]chapters|generated-book-hashes[\\/][^/\\]+\.json)$/,
+              test: isBookLedgerModuleId,
             },
             {
               // Handwriting grows one cited path at a time. Keep its model,

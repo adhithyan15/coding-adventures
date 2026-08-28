@@ -1,0 +1,17 @@
+{
+  "language": "tamil",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:f2e5a8bd92a1b7ab",
+  "lessonIds": [
+    "TA-C23-naal",
+    "TA-C23-day-family-register",
+    "TA-W09-read-peyar"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch23.txt",
+  "json": "tamil/narration/ch23.json",
+  "textHash": "fnv1a64:0675fc36a05e7de7",
+  "jsonHash": "fnv1a64:1f91944b35987f5f",
+  "findings": []
+}

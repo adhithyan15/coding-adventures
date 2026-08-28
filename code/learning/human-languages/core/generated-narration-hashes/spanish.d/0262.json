@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:13c8fc6c6e8f283f",
+  "lessonIds": [
+    "ES-C67-primero",
+    "ES-C67-primer-libro"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch262.txt",
+  "json": "spanish/narration/ch262.json",
+  "textHash": "fnv1a64:2b7289f2d37d806c",
+  "jsonHash": "fnv1a64:293643b47def6a64",
+  "findings": []
+}

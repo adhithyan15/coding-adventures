@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:6deadbf7f6f17240",
+  "lessonIds": [
+    "ES-C16-practice",
+    "ES-C16-sintesis-imperfecto"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch110.txt",
+  "json": "spanish/narration/ch110.json",
+  "textHash": "fnv1a64:020a5cd02399f077",
+  "jsonHash": "fnv1a64:38c05722d94d3a99",
+  "findings": []
+}

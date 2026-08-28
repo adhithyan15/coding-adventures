@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:498b8217e561b143",
+  "lessonIds": [
+    "ML-C50-now",
+    "ML-C50-day-after",
+    "ML-C50-journey",
+    "ML-C50-set-out",
+    "ML-C50-farewell"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch50.txt",
+  "json": "malayalam/narration/ch50.json",
+  "textHash": "fnv1a64:3b51f74b641f5599",
+  "jsonHash": "fnv1a64:fff45bfe9d2ad246",
+  "findings": []
+}

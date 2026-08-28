@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:7c9afbd0024da6c8",
+  "lessonIds": [
+    "UR-C14-qamiz",
+    "UR-C14-juta",
+    "UR-C14-topi",
+    "UR-C14-koat"
+  ],
+  "tex": "urdu/book/chapters/ch14-clothing.tex"
+}

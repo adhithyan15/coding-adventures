@@ -1,0 +1,9 @@
+{
+  "language": "german",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:732445561e406455",
+  "lessonIds": [
+    "GE-C22-hund-katze"
+  ],
+  "tex": "german/book/chapters/ch22-dog-and-cat.tex"
+}

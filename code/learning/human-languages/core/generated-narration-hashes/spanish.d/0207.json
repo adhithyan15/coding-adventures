@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:343ae577cfc778b3",
+  "lessonIds": [
+    "ES-C56-tuviera"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch207.txt",
+  "json": "spanish/narration/ch207.json",
+  "textHash": "fnv1a64:3059140e5b690844",
+  "jsonHash": "fnv1a64:e8d079377c6fdf66",
+  "findings": []
+}

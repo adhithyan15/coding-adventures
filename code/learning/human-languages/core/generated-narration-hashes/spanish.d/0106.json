@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:e7554784a1fc7486",
+  "lessonIds": [
+    "ES-C15-practice",
+    "ES-C15-sintesis-preterito"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch106.txt",
+  "json": "spanish/narration/ch106.json",
+  "textHash": "fnv1a64:796ab1f2f01ed086",
+  "jsonHash": "fnv1a64:b2c5e68891c3a165",
+  "findings": []
+}

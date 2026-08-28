@@ -1,0 +1,12 @@
+{
+  "language": "arabic",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:756b8ebf2bae353f",
+  "lessonIds": [
+    "AR-C31-fahima",
+    "AR-C31-qaraa",
+    "AR-C31-saala",
+    "AR-C31-kataba"
+  ],
+  "tex": "arabic/book/chapters/ch31-understanding-reading-writing.tex"
+}

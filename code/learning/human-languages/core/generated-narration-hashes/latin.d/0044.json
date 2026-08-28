@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:9c7be8656e2aff79",
+  "lessonIds": [
+    "LA-C44-domus",
+    "LA-C44-porta",
+    "LA-C44-murus",
+    "LA-C44-hortus",
+    "LA-C44-focus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch44.txt",
+  "json": "latin/narration/ch44.json",
+  "textHash": "fnv1a64:642fc19cff7f50bf",
+  "jsonHash": "fnv1a64:c4dd81ce085de463",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:e5a79bc5ac2907ad",
+  "lessonIds": [
+    "ML-C29-suprabhaatham"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch29.txt",
+  "json": "malayalam/narration/ch29.json",
+  "textHash": "fnv1a64:e4ba2ed3a7dfa9b7",
+  "jsonHash": "fnv1a64:555857a30318f0ca",
+  "findings": []
+}

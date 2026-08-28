@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:8c0d8f35b84bc538",
+  "lessonIds": [
+    "ES-C16-imperfecto",
+    "ES-C16-comer-imperfecto",
+    "ES-C16-vivir-imperfecto"
+  ],
+  "tex": "spanish/book/chapters/ch107-imperfecto.tex"
+}

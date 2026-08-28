@@ -24,8 +24,8 @@
     {
       "category": "fs",
       "action": "write",
-      "target": "../../learning/human-languages/core/generated-book-hashes/*.json",
-      "justification": "The explicit generate:books command refreshes one independently mergeable app/book source-hash manifest per language; CI normally verifies them without writing."
+      "target": "../../learning/human-languages/core/generated-book-hashes/*.d/*.json",
+      "justification": "The explicit generate:books command refreshes stable metadata and chapter-owned app/book source-hash files inside registered language directories; CI normally verifies them without writing, and no flat aggregate is written."
     },
     {
       "category": "fs",
@@ -48,8 +48,8 @@
     {
       "category": "fs",
       "action": "write",
-      "target": "../../learning/human-languages/core/generated-narration-hashes/*.json",
-      "justification": "The explicit generate:narration command refreshes one independently mergeable source-hash manifest per language to detect drift between lessons and committed voice scripts; CI normally verifies them without writing."
+      "target": "../../learning/human-languages/core/generated-narration-hashes/*.d/*.json",
+      "justification": "The explicit generate:narration command refreshes stable metadata and chapter-owned source/output hash files inside registered language directories to detect drift between lessons and committed voice scripts; CI normally verifies them without writing, and no flat aggregate is written."
     },
     {
       "category": "fs",
@@ -58,5 +58,5 @@
       "justification": "The explicit generate:progress command refreshes one independently mergeable progress card per registered language; CI normally uses the read-only check:progress drift gate."
     }
   ],
-  "justification": "Filesystem access stays in loader-backed CLI entry points. Validation/reporting are read-only; the explicit generators write only configured LaTeX chapters, per-chapter narration scripts, generated manifests, and per-language progress cards. No network or process access is needed."
+  "justification": "Filesystem access stays in loader-backed CLI entry points. Validation/reporting are read-only; the explicit generators write only configured LaTeX chapters, per-chapter narration scripts, chapter-owned generated-hash files, and per-language progress cards. No network or process access is needed."
 }

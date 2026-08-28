@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:edc8e81452279bc3",
+  "lessonIds": [
+    "ES-C07-comemos",
+    "ES-C07-vivimos"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch43.txt",
+  "json": "spanish/narration/ch43.json",
+  "textHash": "fnv1a64:dcf84a17dc27a0ed",
+  "jsonHash": "fnv1a64:4067e6a96600cfaa",
+  "findings": []
+}

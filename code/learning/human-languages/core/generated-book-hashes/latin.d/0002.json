@@ -1,0 +1,10 @@
+{
+  "language": "latin",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:e487ced01dcb7f2f",
+  "lessonIds": [
+    "LA-C02-numbers-1-5",
+    "LA-C02-numbers-6-10"
+  ],
+  "tex": "latin/book/chapters/ch02-numbers-1-10.tex"
+}

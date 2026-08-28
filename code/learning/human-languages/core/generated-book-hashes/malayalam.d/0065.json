@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:cb0e67c932a36e31",
+  "lessonIds": [
+    "ML-C65-request",
+    "ML-C65-permission",
+    "ML-C65-consent",
+    "ML-C65-manners",
+    "ML-C65-trust"
+  ],
+  "tex": "malayalam/book/chapters/ch65-asking-well.tex"
+}

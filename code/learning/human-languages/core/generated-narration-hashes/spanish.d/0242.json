@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:606a411eaf50be43",
+  "lessonIds": [
+    "ES-C63-comisteis"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch242.txt",
+  "json": "spanish/narration/ch242.json",
+  "textHash": "fnv1a64:22d98b9cbe596d18",
+  "jsonHash": "fnv1a64:4bc22d4c3d7a57f6",
+  "findings": []
+}

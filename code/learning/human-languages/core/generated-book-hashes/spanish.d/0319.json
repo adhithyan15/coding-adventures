@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:34be96aee91be425",
+  "lessonIds": [
+    "ES-C319-repaso-la-superficie",
+    "ES-C319-repaso-salir",
+    "ES-C319-despedida",
+    "ES-C319-repaso-presentarse",
+    "ES-C319-dos-respuestas",
+    "ES-C319-repaso-respuestas",
+    "ES-C319-otro-y-poco"
+  ],
+  "tex": "spanish/book/chapters/ch319-repaso-la-superficie.tex"
+}

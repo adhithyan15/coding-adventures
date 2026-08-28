@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:8dca3177bc71fe52",
+  "lessonIds": [
+    "HI-C38-aankh",
+    "HI-C38-daant",
+    "HI-C38-pair",
+    "HI-C38-pet"
+  ],
+  "tex": "hindi/book/chapters/ch38-where-it-hurts.tex"
+}

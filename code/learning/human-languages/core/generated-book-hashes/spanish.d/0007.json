@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:ca9c13a99d22d7f1",
+  "lessonIds": [
+    "ES-C19-si",
+    "ES-C19-no",
+    "ES-C04-gracias",
+    "ES-C04-de-nada",
+    "ES-C04-repaso-gracias"
+  ],
+  "tex": "spanish/book/chapters/ch07-thank-you.tex"
+}

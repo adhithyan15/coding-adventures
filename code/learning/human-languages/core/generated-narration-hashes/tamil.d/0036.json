@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:0c4b08a654ae45b6",
+  "lessonIds": [
+    "TA-C36-teneer",
+    "TA-C36-paal",
+    "TA-C36-unavu",
+    "TA-W17-read-unavu",
+    "TA-C36-tavaru"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "tamil/narration/ch36.txt",
+  "json": "tamil/narration/ch36.json",
+  "textHash": "fnv1a64:952d52c201fd0ca8",
+  "jsonHash": "fnv1a64:30e98ca2b6f0ebb0",
+  "findings": []
+}

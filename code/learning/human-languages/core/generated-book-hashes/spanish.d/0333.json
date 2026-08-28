@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:0c0d40eb323cc83c",
+  "lessonIds": [
+    "ES-C333-ruido",
+    "ES-C333-silencio",
+    "ES-C333-calma",
+    "ES-C333-prisa",
+    "ES-C333-cuidado"
+  ],
+  "tex": "spanish/book/chapters/ch333-calma-y-prisa.tex"
+}

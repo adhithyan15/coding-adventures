@@ -1,0 +1,18 @@
+{
+  "language": "telugu",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:f689846837768ab5",
+  "lessonIds": [
+    "TE-C43-come",
+    "TE-C43-sit",
+    "TE-C43-stand",
+    "TE-C43-give"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "telugu/narration/ch43.txt",
+  "json": "telugu/narration/ch43.json",
+  "textHash": "fnv1a64:a09ea8d6339ee676",
+  "jsonHash": "fnv1a64:b4202945eb623ded",
+  "findings": []
+}

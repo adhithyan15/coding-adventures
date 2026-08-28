@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:6f34d268d35f4e77",
+  "lessonIds": [
+    "ML-C43-run",
+    "ML-C43-sleep",
+    "ML-C43-stand",
+    "ML-C43-give"
+  ],
+  "tex": "malayalam/book/chapters/ch43-more-verbs.tex"
+}

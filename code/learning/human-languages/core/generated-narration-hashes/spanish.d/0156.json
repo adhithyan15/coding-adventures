@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:5800fa7dcc97cef4",
+  "lessonIds": [
+    "ES-C34-escribir"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch156.txt",
+  "json": "spanish/narration/ch156.json",
+  "textHash": "fnv1a64:23595ce89a800dbc",
+  "jsonHash": "fnv1a64:a03cd98763d611a5",
+  "findings": []
+}

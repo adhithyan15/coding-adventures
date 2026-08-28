@@ -1,0 +1,16 @@
+{
+  "language": "marwadi",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:83bef818d89813aa",
+  "lessonIds": [
+    "MW-C06-hear-question",
+    "MW-C06-question"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "marwadi/narration/ch07.txt",
+  "json": "marwadi/narration/ch07.json",
+  "textHash": "fnv1a64:a6b0626462b7a1a2",
+  "jsonHash": "fnv1a64:6dcb82878540b25a",
+  "findings": []
+}

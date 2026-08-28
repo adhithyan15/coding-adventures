@@ -1,0 +1,10 @@
+{
+  "language": "tamil",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:0f11581bbcc95d5b",
+  "lessonIds": [
+    "TA-C11-nirangal",
+    "TA-S115-letter-llla"
+  ],
+  "tex": "tamil/book/chapters/ch11-colours.tex"
+}

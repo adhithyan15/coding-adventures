@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:f20b4d7801f31a84",
+  "lessonIds": [
+    "FA-C04-hal",
+    "FA-C04-chetor",
+    "FA-C04-hal-e-shoma-chetor-ast",
+    "FA-C04-khub",
+    "FA-C04-khubam",
+    "FA-C04-practice"
+  ],
+  "tex": "persian/book/chapters/ch04-how-are-you.tex"
+}

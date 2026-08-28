@@ -1,0 +1,9 @@
+{
+  "language": "latin",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:fa97e3b30a80d10e",
+  "lessonIds": [
+    "LA-C17-canis-feles-cattus"
+  ],
+  "tex": "latin/book/chapters/ch17-dog-and-cat.tex"
+}

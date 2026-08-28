@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:efb6b7c9fb361a59",
+  "lessonIds": [
+    "LA-C35-meridies"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "latin/narration/ch35.txt",
+  "json": "latin/narration/ch35.json",
+  "textHash": "fnv1a64:e2c71fb04c0a2a73",
+  "jsonHash": "fnv1a64:f2d1a72b40d03928",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:4235586e667c5779",
+  "lessonIds": [
+    "ES-C282-bienvenido",
+    "ES-C282-saludo",
+    "ES-C282-abrazo",
+    "ES-C282-sonrisa",
+    "ES-C282-invitado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch282.txt",
+  "json": "spanish/narration/ch282.json",
+  "textHash": "fnv1a64:84c5850d84bfd34f",
+  "jsonHash": "fnv1a64:85416737b6b105df",
+  "findings": []
+}

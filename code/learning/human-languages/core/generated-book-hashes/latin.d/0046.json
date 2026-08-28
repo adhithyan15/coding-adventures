@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:42f78ca781b13965",
+  "lessonIds": [
+    "LA-C46-lux",
+    "LA-C46-umbra",
+    "LA-C46-stella",
+    "LA-C46-luna",
+    "LA-C46-somnus"
+  ],
+  "tex": "latin/book/chapters/ch46-lux.tex"
+}

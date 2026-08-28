@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:2aa6820c1005aba9",
+  "lessonIds": [
+    "GE-C20-entschuldigung"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "german/narration/ch20.txt",
+  "json": "german/narration/ch20.json",
+  "textHash": "fnv1a64:9ce079dca9cb122b",
+  "jsonHash": "fnv1a64:3a618a1a6f0a9426",
+  "findings": []
+}

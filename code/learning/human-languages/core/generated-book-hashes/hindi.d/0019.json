@@ -1,0 +1,11 @@
+{
+  "language": "hindi",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:f7ecde7c33871521",
+  "lessonIds": [
+    "HI-C19-umr",
+    "HI-C19-age-grammar",
+    "HI-S123-letter-da"
+  ],
+  "tex": "hindi/book/chapters/ch19-age.tex"
+}

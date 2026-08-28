@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:2eef008015750468",
+  "lessonIds": [
+    "HI-C46-hair",
+    "HI-C46-finger",
+    "HI-C46-ear",
+    "HI-C46-nose",
+    "HI-C46-throat"
+  ],
+  "tex": "hindi/book/chapters/ch46-hair-ear-throat.tex"
+}

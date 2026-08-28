@@ -1,0 +1,23 @@
+{
+  "language": "chinese",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:f2b53fef3e4412ee",
+  "lessonIds": [
+    "ZH-C14-hear-xiao",
+    "ZH-W14-xiao",
+    "ZH-C14-xiao",
+    "ZH-C14-hear-xiaoxue",
+    "ZH-C14-xiaoxue",
+    "ZH-C14-hear-xiaoxuesheng",
+    "ZH-C14-xiaoxuesheng",
+    "ZH-R14-primary-three",
+    "ZH-C14-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch14.txt",
+  "json": "chinese/narration/ch14.json",
+  "textHash": "fnv1a64:ba9939450ed875a6",
+  "jsonHash": "fnv1a64:d12e75692bbd6022",
+  "findings": []
+}

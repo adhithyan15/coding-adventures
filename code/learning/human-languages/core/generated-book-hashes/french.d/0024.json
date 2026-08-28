@@ -1,0 +1,12 @@
+{
+  "language": "french",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:63714e77bdd41f52",
+  "lessonIds": [
+    "FR-C24-prendre",
+    "FR-C24-demander",
+    "FR-C24-aider",
+    "FR-C24-aimer"
+  ],
+  "tex": "french/book/chapters/ch24-taking-asking-helping-loving.tex"
+}

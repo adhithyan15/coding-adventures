@@ -1,0 +1,12 @@
+{
+  "language": "telugu",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:5bac8b19c36c4d8b",
+  "lessonIds": [
+    "TE-C45-grandfather",
+    "TE-C45-grandmother",
+    "TE-C45-husband",
+    "TE-C45-wife"
+  ],
+  "tex": "telugu/book/chapters/ch45-grandparents.tex"
+}

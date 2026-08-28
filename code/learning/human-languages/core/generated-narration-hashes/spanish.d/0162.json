@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:570329c89b523da6",
+  "lessonIds": [
+    "ES-C35-repaso-tres"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch162.txt",
+  "json": "spanish/narration/ch162.json",
+  "textHash": "fnv1a64:15bfa0a5a77fdba2",
+  "jsonHash": "fnv1a64:3bf423e72d5e3c65",
+  "findings": []
+}

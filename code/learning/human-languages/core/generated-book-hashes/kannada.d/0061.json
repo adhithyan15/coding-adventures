@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:736c142d5ce0bc55",
+  "lessonIds": [
+    "KA-C61-curd",
+    "KA-C61-ghee",
+    "KA-C61-oil",
+    "KA-C61-jaggery",
+    "KA-C61-sugar"
+  ],
+  "tex": "kannada/book/chapters/ch61-in-the-kitchen.tex"
+}

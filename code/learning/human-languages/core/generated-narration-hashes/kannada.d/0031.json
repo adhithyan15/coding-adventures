@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:55413f7e93660d6a",
+  "lessonIds": [
+    "KA-C31-shubha-madhyahna"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch31.txt",
+  "json": "kannada/narration/ch31.json",
+  "textHash": "fnv1a64:0e5febfbe3bcb408",
+  "jsonHash": "fnv1a64:070d1d3d81a1b359",
+  "findings": []
+}

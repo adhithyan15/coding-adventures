@@ -5,6 +5,7 @@ import {
   readFileSync,
   readdirSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
@@ -49,19 +50,21 @@ function fixture(output = "test/book/chapters/ch01-first.tex"): string {
     `${JSON.stringify({
       version: 1,
       language: "test",
-      chapters: [{
-        chapter: 1,
-        title: "Hello",
-        label: "ch:hello",
-        canDo: "I can say hello.",
-        spineNodes: ["HELLO"],
-        payoff: {
-          lesson: "TEST-C01-hello",
-          kind: "task",
-          summary: "Say hello.",
-          assesses: [],
+      chapters: [
+        {
+          chapter: 1,
+          title: "Hello",
+          label: "ch:hello",
+          canDo: "I can say hello.",
+          spineNodes: ["HELLO"],
+          payoff: {
+            lesson: "TEST-C01-hello",
+            kind: "task",
+            summary: "Say hello.",
+            assesses: [],
+          },
         },
-      }],
+      ],
     })}\n`,
   );
   writeFileSync(
@@ -97,10 +100,42 @@ Read the [curriculum guide](../guide.md) and the
 
 afterEach(() => {
   vi.restoreAllMocks();
-  for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
+  for (const root of roots.splice(0))
+    rmSync(root, { recursive: true, force: true });
 });
 
 describe("canonical book generator filesystem shell", () => {
+  it("refuses to write through a symlinked hash-owner directory or file", () => {
+    const root = fixture();
+    const outside = mkdtempSync(join(tmpdir(), "human-language-book-outside-"));
+    roots.push(outside);
+    mkdirSync(join(root, "core", "generated-book-hashes"), { recursive: true });
+    symlinkSync(outside, join(root, "core", "generated-book-hashes", "test.d"));
+    expect(() => runBookGeneration(["--write"], root)).toThrow(
+      /real directory/,
+    );
+
+    rmSync(join(root, "core", "generated-book-hashes", "test.d"));
+    expect(runBookGeneration(["--write"], root)).toBe(0);
+    const owner = join(
+      root,
+      "core",
+      "generated-book-hashes",
+      "test.d",
+      "0001.json",
+    );
+    rmSync(owner);
+    const victim = join(outside, "victim.json");
+    writeFileSync(victim, "unchanged\n");
+    symlinkSync(victim, owner);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    expect(runBookGeneration(["--check"], root)).toBe(1);
+    expect(() => runBookGeneration(["--write"], root)).toThrow(
+      /real regular file/,
+    );
+    expect(readFileSync(victim, "utf8")).toBe("unchanged\n");
+  });
+
   it("writes and checks the generated chapter plus source-hash manifest", () => {
     const root = fixture();
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
@@ -108,11 +143,25 @@ describe("canonical book generator filesystem shell", () => {
 
     expect(runBookGeneration(["--write"], root)).toBe(0);
     const chapter = join(root, "test", "book", "chapters", "ch01-first.tex");
-    const manifest = join(root, "core", "generated-book-hashes", "test.json");
+    const manifest = join(
+      root,
+      "core",
+      "generated-book-hashes",
+      "test.d",
+      "_meta.json",
+    );
+    const chapterOwner = join(
+      root,
+      "core",
+      "generated-book-hashes",
+      "test.d",
+      "0001.json",
+    );
     const modalities = join(root, "test", "book", "chapter-modalities.tex");
     expect(existsSync(chapter)).toBe(true);
     expect(existsSync(modalities)).toBe(true);
     expect(readFileSync(manifest, "utf8")).toContain('"algorithm": "fnv1a64"');
+    expect(readFileSync(chapterOwner, "utf8")).toContain('"chapter": 1');
     expect(readFileSync(modalities, "utf8")).toContain(
       "\\textbf{Hands-free start:} all 1 lesson.",
     );
@@ -137,7 +186,9 @@ describe("canonical book generator filesystem shell", () => {
 
   it("rejects outputs outside the curriculum root", () => {
     const root = fixture("../../escape.tex");
-    expect(() => generatedBookOutputs(root)).toThrow(/unsafe generated book output/);
+    expect(() => generatedBookOutputs(root)).toThrow(
+      /unsafe generated book output/,
+    );
   });
 
   it("resolves reusable script sets for cross-script comparison chapters", () => {
@@ -164,48 +215,66 @@ describe("canonical book generator filesystem shell", () => {
             { unicodeScript: "Tamil", scriptCommand: "ta" },
           ],
         },
-        targets: [{
-          language: "test",
-          chapter: 1,
-          output: "test/book/chapters/ch01-first.tex",
-          scriptSet: "comparisons",
-        }],
+        targets: [
+          {
+            language: "test",
+            chapter: 1,
+            output: "test/book/chapters/ch01-first.tex",
+            scriptSet: "comparisons",
+          },
+        ],
       })}\n`,
     );
 
-    const chapter = generatedBookOutputs(root).get("test/book/chapters/ch01-first.tex");
+    const chapter = generatedBookOutputs(root).get(
+      "test/book/chapters/ch01-first.tex",
+    );
     expect(chapter).toContain("\\te{తెలుగు} \\ta{தமிழ்}");
   });
 
   it("writes and byte-checks configured canonical reference appendices", () => {
     const root = fixture();
     const configPath = join(root, "core", "book-generation.json");
-    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<string, unknown>;
-    writeFileSync(join(root, "test", "pronunciation-reference.md"), `# Test reference
+    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<
+      string,
+      unknown
+    >;
+    writeFileSync(
+      join(root, "test", "pronunciation-reference.md"),
+      `# Test reference
 
 ## The script
 
 - Read **తెలుగు**.
-`);
+`,
+    );
     writeFileSync(
       configPath,
       `${JSON.stringify({
         ...config,
-        referenceAppendices: [{
-          language: "test",
-          title: "Pronunciation Reference",
-          source: "test/pronunciation-reference.md",
-          output: "test/book/chapters/appendix-pronunciation.tex",
-          unicodeScript: "Telugu",
-          scriptCommand: "te",
-        }],
+        referenceAppendices: [
+          {
+            language: "test",
+            title: "Pronunciation Reference",
+            source: "test/pronunciation-reference.md",
+            output: "test/book/chapters/appendix-pronunciation.tex",
+            unicodeScript: "Telugu",
+            scriptCommand: "te",
+          },
+        ],
       })}\n`,
     );
 
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runBookGeneration(["--write"], root)).toBe(0);
-    const appendix = join(root, "test", "book", "chapters", "appendix-pronunciation.tex");
+    const appendix = join(
+      root,
+      "test",
+      "book",
+      "chapters",
+      "appendix-pronunciation.tex",
+    );
     expect(readFileSync(appendix, "utf8")).toContain("\\textbf{\\te{తెలుగు}}");
     expect(runBookGeneration(["--check"], root)).toBe(0);
 
@@ -219,22 +288,33 @@ describe("canonical book generator filesystem shell", () => {
   it("writes and byte-checks configured canonical glossaries", () => {
     const root = fixture();
     const configPath = join(root, "core", "book-generation.json");
-    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<string, unknown>;
+    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<
+      string,
+      unknown
+    >;
     writeFileSync(
       configPath,
       `${JSON.stringify({
         ...config,
-        glossaries: [{
-          language: "test",
-          output: "test/book/chapters/appendix-glossary.tex",
-        }],
+        glossaries: [
+          {
+            language: "test",
+            output: "test/book/chapters/appendix-glossary.tex",
+          },
+        ],
       })}\n`,
     );
 
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runBookGeneration(["--write"], root)).toBe(0);
-    const glossary = join(root, "test", "book", "chapters", "appendix-glossary.tex");
+    const glossary = join(
+      root,
+      "test",
+      "book",
+      "chapters",
+      "appendix-glossary.tex",
+    );
     expect(readFileSync(glossary, "utf8")).toContain("\\textbf{hello}");
     expect(runBookGeneration(["--check"], root)).toBe(0);
 
@@ -260,22 +340,33 @@ Read`,
       ),
     );
     const configPath = join(root, "core", "book-generation.json");
-    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<string, unknown>;
+    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<
+      string,
+      unknown
+    >;
     writeFileSync(
       configPath,
       `${JSON.stringify({
         ...config,
-        answerKeys: [{
-          language: "test",
-          output: "test/book/chapters/appendix-answer-key.tex",
-        }],
+        answerKeys: [
+          {
+            language: "test",
+            output: "test/book/chapters/appendix-answer-key.tex",
+          },
+        ],
       })}\n`,
     );
 
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runBookGeneration(["--write"], root)).toBe(0);
-    const answerKey = join(root, "test", "book", "chapters", "appendix-answer-key.tex");
+    const answerKey = join(
+      root,
+      "test",
+      "book",
+      "chapters",
+      "appendix-answer-key.tex",
+    );
     const generated = readFileSync(answerKey, "utf8");
     expect(generated).toContain("\\chapter*{Review Questions}");
     expect(generated).toContain("Type the greeting.");
@@ -296,31 +387,38 @@ Read`,
       `${JSON.stringify({
         version: 1,
         language: "test",
-        chapters: [{
-          chapter: 1,
-          title: "Greetings",
-          label: "ch:hello",
-          canDo: "I can greet someone.",
-          spineNodes: ["HELLO"],
-          payoff: {
-            lesson: "TEST-C01-hello",
-            kind: "task",
-            summary: "Greet someone.",
-            assesses: [],
+        chapters: [
+          {
+            chapter: 1,
+            title: "Greetings",
+            label: "ch:hello",
+            canDo: "I can greet someone.",
+            spineNodes: ["HELLO"],
+            payoff: {
+              lesson: "TEST-C01-hello",
+              kind: "task",
+              summary: "Greet someone.",
+              assesses: [],
+            },
           },
-        }],
+        ],
       })}\n`,
     );
     const configPath = join(root, "core", "book-generation.json");
-    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<string, unknown>;
+    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<
+      string,
+      unknown
+    >;
     writeFileSync(
       configPath,
       `${JSON.stringify({
         ...config,
-        indexes: [{
-          language: "test",
-          output: "test/book/chapters/appendix-index.tex",
-        }],
+        indexes: [
+          {
+            language: "test",
+            output: "test/book/chapters/appendix-index.tex",
+          },
+        ],
       })}\n`,
     );
 
@@ -346,20 +444,27 @@ Read`,
   it("rejects reference sources outside the curriculum root", () => {
     const root = fixture();
     const configPath = join(root, "core", "book-generation.json");
-    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<string, unknown>;
+    const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<
+      string,
+      unknown
+    >;
     writeFileSync(
       configPath,
       `${JSON.stringify({
         ...config,
-        referenceAppendices: [{
-          language: "test",
-          title: "Pronunciation Reference",
-          source: "../escape.md",
-          output: "test/book/chapters/appendix-pronunciation.tex",
-        }],
+        referenceAppendices: [
+          {
+            language: "test",
+            title: "Pronunciation Reference",
+            source: "../escape.md",
+            output: "test/book/chapters/appendix-pronunciation.tex",
+          },
+        ],
       })}\n`,
     );
-    expect(() => generatedBookOutputs(root)).toThrow(/unsafe generated book source/);
+    expect(() => generatedBookOutputs(root)).toThrow(
+      /unsafe generated book source/,
+    );
   });
 
   it("fails closed on an unknown reusable script set", () => {
@@ -367,9 +472,14 @@ Read`,
     const config = join(root, "core", "book-generation.json");
     writeFileSync(
       config,
-      readFileSync(config, "utf8").replace('"output":"test/book/chapters/ch01-first.tex"', '"output":"test/book/chapters/ch01-first.tex","scriptSet":"missing"'),
+      readFileSync(config, "utf8").replace(
+        '"output":"test/book/chapters/ch01-first.tex"',
+        '"output":"test/book/chapters/ch01-first.tex","scriptSet":"missing"',
+      ),
     );
-    expect(() => generatedBookOutputs(root)).toThrow(/unknown scriptSet 'missing'/);
+    expect(() => generatedBookOutputs(root)).toThrow(
+      /unknown scriptSet 'missing'/,
+    );
   });
 
   it("rejects an empty generation config and unsupported CLI modes", () => {
@@ -382,7 +492,9 @@ Read`,
 
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runBookGeneration([], root)).toBe(2);
-    expect(process.stderr.write).toHaveBeenCalledWith("usage: book-cli (--check | --write)\n");
+    expect(process.stderr.write).toHaveBeenCalledWith(
+      "usage: book-cli (--check | --write)\n",
+    );
   });
 
   it("requires a canonical HTTP(S) source base URL", () => {
@@ -395,7 +507,9 @@ Read`,
         '"sourceBaseUrl":"../curriculum"',
       ),
     );
-    expect(() => generatedBookOutputs(root)).toThrow(/must declare an HTTP\(S\) sourceBaseUrl/);
+    expect(() => generatedBookOutputs(root)).toThrow(
+      /must declare an HTTP\(S\) sourceBaseUrl/,
+    );
   });
 
   it("rejects legacy title or label ownership in the generation config", () => {
@@ -429,14 +543,22 @@ describe("handwritten schema-v2 lesson coverage", () => {
   ): string {
     const configPath = join(root, "core", "book-generation.json");
     const config = JSON.parse(readFileSync(configPath, "utf8"));
-    config.handwritten = [{
-      language: "test",
-      chapter: 1,
-      output: "test/book/chapters/ch01-handwritten.tex",
-      ...declaration,
-    }];
+    config.handwritten = [
+      {
+        language: "test",
+        chapter: 1,
+        output: "test/book/chapters/ch01-handwritten.tex",
+        ...declaration,
+      },
+    ];
     writeFileSync(configPath, `${JSON.stringify(config)}\n`);
-    const chapter = join(root, "test", "book", "chapters", "ch01-handwritten.tex");
+    const chapter = join(
+      root,
+      "test",
+      "book",
+      "chapters",
+      "ch01-handwritten.tex",
+    );
     mkdirSync(join(root, "test", "book", "chapters"), { recursive: true });
     return chapter;
   }
@@ -452,9 +574,14 @@ describe("handwritten schema-v2 lesson coverage", () => {
   it("permits only issue-owned omission debt", () => {
     const root = fixture();
     configure(root, { omittedLessonIds: ["TEST-C01-hello"] });
-    expect(() => assertHandwrittenLessonCoverage(root)).toThrow(/positive omissionIssue/);
+    expect(() => assertHandwrittenLessonCoverage(root)).toThrow(
+      /positive omissionIssue/,
+    );
 
-    configure(root, { omittedLessonIds: ["TEST-C01-hello"], omissionIssue: 13117 });
+    configure(root, {
+      omittedLessonIds: ["TEST-C01-hello"],
+      omissionIssue: 13117,
+    });
     expect(() => assertHandwrittenLessonCoverage(root)).not.toThrow();
   });
 
@@ -462,9 +589,14 @@ describe("handwritten schema-v2 lesson coverage", () => {
     const root = fixture();
     const chapter = configure(root, { embeddedLessonIds: ["TEST-C01-hello"] });
     writeFileSync(chapter, "\\chapter{Hello}\n");
-    expect(() => assertHandwrittenLessonCoverage(root)).toThrow(/canonical-insertion marker/);
+    expect(() => assertHandwrittenLessonCoverage(root)).toThrow(
+      /canonical-insertion marker/,
+    );
 
-    writeFileSync(chapter, "% canonical-insertion: TEST-C01-hello\n\\chapter{Hello}\n");
+    writeFileSync(
+      chapter,
+      "% canonical-insertion: TEST-C01-hello\n\\chapter{Hello}\n",
+    );
     expect(() => assertHandwrittenLessonCoverage(root)).toThrow(
       /lacks \\label\{lesson:TEST-C01-hello\}/,
     );
@@ -478,7 +610,10 @@ describe("handwritten schema-v2 lesson coverage", () => {
 
   it("rejects stale or cross-chapter lesson ids in the ledger", () => {
     const root = fixture();
-    configure(root, { omittedLessonIds: ["TEST-C99-not-here"], omissionIssue: 13117 });
+    configure(root, {
+      omittedLessonIds: ["TEST-C99-not-here"],
+      omissionIssue: 13117,
+    });
     expect(() => assertHandwrittenLessonCoverage(root)).toThrow(
       /is not a canonical schema-v2 lesson in this chapter/,
     );
@@ -522,7 +657,8 @@ describe("hand-written chapters", () => {
       if (character === "{") depth += 1;
       else if (character === "}") {
         depth -= 1;
-        if (depth === 0) return tex.slice(start.index + start[0].length, i).trim();
+        if (depth === 0)
+          return tex.slice(start.index + start[0].length, i).trim();
       }
     }
     return undefined;
@@ -600,7 +736,9 @@ describe("hand-written chapters", () => {
         ],
       })}\n`,
     );
-    expect(() => handwrittenBookChapters(sandbox)).toThrow(/unsafe generated book output/);
+    expect(() => handwrittenBookChapters(sandbox)).toThrow(
+      /unsafe generated book output/,
+    );
   });
 
   it("never lists the same chapter as both generated and hand-written", () => {
@@ -608,7 +746,10 @@ describe("hand-written chapters", () => {
       const clash = config.targets.find(
         (t) => t.language === entry.language && t.chapter === entry.chapter,
       );
-      expect(clash, `${entry.language} ch${entry.chapter} is in both lists`).toBeUndefined();
+      expect(
+        clash,
+        `${entry.language} ch${entry.chapter} is in both lists`,
+      ).toBeUndefined();
     }
   });
 
@@ -651,9 +792,10 @@ describe("hand-written chapters", () => {
         // Appendices carry no chapter number and are outside this accounting.
         if (!/^ch\d+.*\.tex$/.test(file)) continue;
         const relative = `${language.name}/book/chapters/${file}`;
-        expect(known.has(relative), `${relative} is in neither targets[] nor handwritten[]`).toBe(
-          true,
-        );
+        expect(
+          known.has(relative),
+          `${relative} is in neither targets[] nor handwritten[]`,
+        ).toBe(true);
       }
     }
   });
@@ -669,7 +811,13 @@ describe("pronunciation reference coverage", () => {
     expect(registry.languages.length).toBeGreaterThan(0);
     for (const { id } of registry.languages) {
       const book = join(root, id, "book", "book.tex");
-      const appendix = join(root, id, "book", "chapters", "appendix-pronunciation.tex");
+      const appendix = join(
+        root,
+        id,
+        "book",
+        "chapters",
+        "appendix-pronunciation.tex",
+      );
       expect(existsSync(book), `${id} book`).toBe(true);
       expect(readFileSync(book, "utf8"), `${id} book input`).toContain(
         "\\input{chapters/appendix-pronunciation}",
@@ -680,7 +828,13 @@ describe("pronunciation reference coverage", () => {
 
   it("generates and byte-gates the five references that were missing", () => {
     const outputs = generatedBookOutputs(root);
-    for (const language of ["chinese", "japanese", "persian", "russian", "urdu"]) {
+    for (const language of [
+      "chinese",
+      "japanese",
+      "persian",
+      "russian",
+      "urdu",
+    ]) {
       const relative = `${language}/book/chapters/appendix-pronunciation.tex`;
       expect(outputs.get(relative), relative).toMatch(/^% GENERATED FILE\./);
     }
@@ -700,9 +854,10 @@ describe("glossary coverage", () => {
       const relative = `${id}/book/chapters/appendix-glossary.tex`;
       expect(outputs.get(relative), relative).toMatch(/^% GENERATED FILE\./);
       expect(existsSync(join(root, relative)), `${id} glossary`).toBe(true);
-      expect(readFileSync(join(root, id, "book", "book.tex"), "utf8"), `${id} book input`).toContain(
-        "\\input{chapters/appendix-glossary}",
-      );
+      expect(
+        readFileSync(join(root, id, "book", "book.tex"), "utf8"),
+        `${id} book input`,
+      ).toContain("\\input{chapters/appendix-glossary}");
     }
   });
 });
@@ -723,9 +878,10 @@ describe("answer-key coverage", () => {
         /% canonical-activities: [1-9]\d*/,
       );
       expect(existsSync(join(root, relative)), `${id} answer key`).toBe(true);
-      expect(readFileSync(join(root, id, "book", "book.tex"), "utf8"), `${id} book input`).toContain(
-        "\\input{chapters/appendix-answer-key}",
-      );
+      expect(
+        readFileSync(join(root, id, "book", "book.tex"), "utf8"),
+        `${id} book input`,
+      ).toContain("\\input{chapters/appendix-answer-key}");
     }
   });
 });
@@ -746,9 +902,10 @@ describe("subject-index coverage", () => {
         /% canonical-index-entries: [1-9]\d*/,
       );
       expect(existsSync(join(root, relative)), `${id} index`).toBe(true);
-      expect(readFileSync(join(root, id, "book", "book.tex"), "utf8"), `${id} book input`).toContain(
-        "\\input{chapters/appendix-index}",
-      );
+      expect(
+        readFileSync(join(root, id, "book", "book.tex"), "utf8"),
+        `${id} book input`,
+      ).toContain("\\input{chapters/appendix-index}");
     }
   });
 });
@@ -807,7 +964,10 @@ describe("the manifest covers the corpus", () => {
         const inName = chapterInFilename(entry.output);
         return inName !== null && inName !== entry.chapter;
       })
-      .map((entry) => `${entry.language}: ${entry.output} declares chapter ${entry.chapter}`);
+      .map(
+        (entry) =>
+          `${entry.language}: ${entry.output} declares chapter ${entry.chapter}`,
+      );
     expect(offenders).toEqual([]);
   });
 
@@ -815,8 +975,12 @@ describe("the manifest covers the corpus", () => {
     // A target writing into another track's folder passes every other check while
     // silently adding a chapter to a book nobody edited.
     const offenders = declared
-      .filter((entry) => !entry.output.startsWith(`${entry.language}/book/chapters/`))
-      .map((entry) => `${entry.language} ch${entry.chapter} -> ${entry.output}`);
+      .filter(
+        (entry) => !entry.output.startsWith(`${entry.language}/book/chapters/`),
+      )
+      .map(
+        (entry) => `${entry.language} ch${entry.chapter} -> ${entry.output}`,
+      );
     expect(offenders).toEqual([]);
   });
 
@@ -826,7 +990,10 @@ describe("the manifest covers the corpus", () => {
     const offenders: string[] = [];
     for (const entry of declared) {
       const previous = seen.get(entry.output);
-      if (previous) offenders.push(`${entry.output}: ${previous} and ${entry.language} ch${entry.chapter}`);
+      if (previous)
+        offenders.push(
+          `${entry.output}: ${previous} and ${entry.language} ch${entry.chapter}`,
+        );
       seen.set(entry.output, `${entry.language} ch${entry.chapter}`);
     }
     expect(offenders).toEqual([]);
@@ -847,7 +1014,10 @@ describe("the manifest covers the corpus", () => {
     for (const track of loadTrackChapters()) {
       const language = track.language;
       if (!inputs.has(language)) {
-        inputs.set(language, readFileSync(join(root, language, "book", "book.tex"), "utf8"));
+        inputs.set(
+          language,
+          readFileSync(join(root, language, "book", "book.tex"), "utf8"),
+        );
       }
       const bookTex = inputs.get(language)!;
       for (const entry of track.chapters) {
@@ -858,9 +1028,14 @@ describe("the manifest covers the corpus", () => {
           offenders.push(`${language} ch${entry.chapter}: no declaration`);
           continue;
         }
-        const stem = (match.output.split("/").pop() ?? "").replace(/\.tex$/, "");
+        const stem = (match.output.split("/").pop() ?? "").replace(
+          /\.tex$/,
+          "",
+        );
         if (!bookTex.includes(`\\input{chapters/${stem}}`)) {
-          offenders.push(`${language} ch${entry.chapter}: ${stem} is never \\input into book.tex`);
+          offenders.push(
+            `${language} ch${entry.chapter}: ${stem} is never \\input into book.tex`,
+          );
         }
       }
     }
@@ -888,10 +1063,16 @@ describe("chapter order against the back matter", () => {
     ) as { languages: Array<{ id: string }> };
     expect(registry.languages.length).toBeGreaterThan(0);
     for (const { id } of registry.languages) {
-      const lines = readFileSync(join(root, id, "book", "book.tex"), "utf8").split("\n");
-      const backmatter = lines.findIndex((line) => line.trim() === "\\backmatter");
+      const lines = readFileSync(
+        join(root, id, "book", "book.tex"),
+        "utf8",
+      ).split("\n");
+      const backmatter = lines.findIndex(
+        (line) => line.trim() === "\\backmatter",
+      );
       if (backmatter < 0) continue;
-      const isChapter = (line: string) => line.startsWith("\\input{chapters/ch");
+      const isChapter = (line: string) =>
+        line.startsWith("\\input{chapters/ch");
       const stranded = lines.slice(backmatter).filter(isChapter);
       expect(stranded, `${id}: chapters input after \\backmatter`).toEqual([]);
 
@@ -929,17 +1110,35 @@ describe("chapter label validation", () => {
   }
 
   it("refuses a label that can break out of \\label{...}", () => {
-    expect(() => loadTrackChapters(withLabel(hostile))).toThrow(/label must match/);
+    expect(() => loadTrackChapters(withLabel(hostile))).toThrow(
+      /label must match/,
+    );
   });
 
   it("refuses a label carrying a backslash, a brace, or whitespace", () => {
-    for (const label of ["ch:a\\input{x}", "ch:a}", "ch:a{", "ch a", "ch:a\n", ""]) {
-      expect(() => loadTrackChapters(withLabel(label))).toThrow(/label must match/);
+    for (const label of [
+      "ch:a\\input{x}",
+      "ch:a}",
+      "ch:a{",
+      "ch a",
+      "ch:a\n",
+      "",
+    ]) {
+      expect(() => loadTrackChapters(withLabel(label))).toThrow(
+        /label must match/,
+      );
     }
   });
 
   it("still accepts every label convention the corpus actually uses", () => {
-    for (const label of ["ch:hello", "ch:fa-alefbe", "ch:persian-greetings", "ch:zh-components", "ch:a_b", "ch:1"]) {
+    for (const label of [
+      "ch:hello",
+      "ch:fa-alefbe",
+      "ch:persian-greetings",
+      "ch:zh-components",
+      "ch:a_b",
+      "ch:1",
+    ]) {
       expect(() => loadTrackChapters(withLabel(label))).not.toThrow();
     }
   });

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:acb2cb2965d406c9",
+  "lessonIds": [
+    "ES-C57-pregunto-donde"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch215.txt",
+  "json": "spanish/narration/ch215.json",
+  "textHash": "fnv1a64:15623f6245bc2d91",
+  "jsonHash": "fnv1a64:9c4a063163119f58",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:d02da295722d5610",
+  "lessonIds": [
+    "UR-C03-aap-tum-tu",
+    "UR-C03-kya",
+    "UR-C03-aap-ka-naam-kya-hai",
+    "UR-C03-khushi-hui",
+    "UR-C03-practice"
+  ],
+  "tex": "urdu/book/chapters/ch03-ask-and-answer-names.tex"
+}

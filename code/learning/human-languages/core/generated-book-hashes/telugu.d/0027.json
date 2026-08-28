@@ -1,0 +1,9 @@
+{
+  "language": "telugu",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:f89d7d33069a70dc",
+  "lessonIds": [
+    "TE-C27-sayantram"
+  ],
+  "tex": "telugu/book/chapters/ch27-evening.tex"
+}

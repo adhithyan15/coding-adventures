@@ -1,0 +1,10 @@
+{
+  "language": "italian",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:ea76fa2794ca2791",
+  "lessonIds": [
+    "IT-C06-numeri-1-5",
+    "IT-C06-numeri-6-10"
+  ],
+  "tex": "italian/book/chapters/ch06-numbers-1-10.tex"
+}

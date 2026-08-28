@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:07bf5f0f38dc8edd",
+  "lessonIds": [
+    "ES-C49-sintesis-dos-orillas"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch121.txt",
+  "json": "spanish/narration/ch121.json",
+  "textHash": "fnv1a64:ffe0d3002e333280",
+  "jsonHash": "fnv1a64:7611db6aac944354",
+  "findings": []
+}

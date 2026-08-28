@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:cbc0896ad4cd0986",
+  "lessonIds": [
+    "LA-C18-viridis-flavus"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "latin/narration/ch18.txt",
+  "json": "latin/narration/ch18.json",
+  "textHash": "fnv1a64:2b5152686c2306a5",
+  "jsonHash": "fnv1a64:18fb96c9386c6851",
+  "findings": []
+}

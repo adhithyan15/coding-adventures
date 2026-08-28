@@ -1,0 +1,9 @@
+{
+  "language": "urdu",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:1dc388e4300b1d72",
+  "lessonIds": [
+    "UR-C11-dil"
+  ],
+  "tex": "urdu/book/chapters/ch11-heart.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:2b253298d8436e4a",
+  "lessonIds": [
+    "ES-C285-vecino",
+    "ES-C285-amiga",
+    "ES-C285-maestro",
+    "ES-C285-enfermera",
+    "ES-C285-cocinero"
+  ],
+  "tex": "spanish/book/chapters/ch285-quien-es.tex"
+}

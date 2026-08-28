@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:753e758554ebb86e",
+  "lessonIds": [
+    "ES-C371-pequeno",
+    "ES-C371-gordo",
+    "ES-C371-joven",
+    "ES-C371-lento",
+    "ES-C371-dulce"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch371.txt",
+  "json": "spanish/narration/ch371.json",
+  "textHash": "fnv1a64:7844734ac0628569",
+  "jsonHash": "fnv1a64:180a2acde5cc6ecb",
+  "findings": []
+}

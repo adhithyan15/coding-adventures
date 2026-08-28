@@ -1,0 +1,10 @@
+{
+  "language": "kannada",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:e09d7cfe310320b5",
+  "lessonIds": [
+    "KA-C14-kaalagalu",
+    "KA-S118-letter-dda"
+  ],
+  "tex": "kannada/book/chapters/ch14-seasons.tex"
+}

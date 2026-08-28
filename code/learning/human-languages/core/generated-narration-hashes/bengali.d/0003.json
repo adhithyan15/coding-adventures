@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:a5ba65dea1e48ba0",
+  "lessonIds": [
+    "BN-C03-ami",
+    "BN-C03-kemon",
+    "BN-C03-tumi-kemon-achho",
+    "BN-C03-bhalo",
+    "BN-C03-kono-bepar-na",
+    "BN-C03-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch03.txt",
+  "json": "bengali/narration/ch03.json",
+  "textHash": "fnv1a64:3189e770b17a352b",
+  "jsonHash": "fnv1a64:0f54017933c38284",
+  "findings": []
+}

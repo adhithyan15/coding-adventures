@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:8b609d5f8952a119",
+  "lessonIds": [
+    "ES-C325-pais",
+    "ES-C325-ciudad",
+    "ES-C325-barrio",
+    "ES-C325-plaza",
+    "ES-C325-lugar"
+  ],
+  "tex": "spanish/book/chapters/ch325-pais-y-lugar.tex"
+}

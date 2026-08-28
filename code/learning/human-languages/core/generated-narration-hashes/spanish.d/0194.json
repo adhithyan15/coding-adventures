@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:7df9f631fb334219",
+  "lessonIds": [
+    "ES-C54-repaso-hay"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch194.txt",
+  "json": "spanish/narration/ch194.json",
+  "textHash": "fnv1a64:3046a149282c7f92",
+  "jsonHash": "fnv1a64:35cf59a2133cd465",
+  "findings": []
+}

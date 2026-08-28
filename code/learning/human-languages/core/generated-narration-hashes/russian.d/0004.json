@@ -1,0 +1,18 @@
+{
+  "language": "russian",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:8dfbdf735211649a",
+  "lessonIds": [
+    "RU-C04-dumat",
+    "RU-C04-ponimat",
+    "RU-C04-chitat",
+    "RU-C04-pisat"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "russian/narration/ch04.txt",
+  "json": "russian/narration/ch04.json",
+  "textHash": "fnv1a64:ec4f9cfd7ee5cd80",
+  "jsonHash": "fnv1a64:62a7511e9f4ae00c",
+  "findings": []
+}

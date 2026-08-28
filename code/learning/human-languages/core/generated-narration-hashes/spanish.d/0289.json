@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:13cb45048b842d33",
+  "lessonIds": [
+    "ES-C289-amanecer",
+    "ES-C289-cielo",
+    "ES-C289-nube",
+    "ES-C289-estrella",
+    "ES-C289-sombra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch289.txt",
+  "json": "spanish/narration/ch289.json",
+  "textHash": "fnv1a64:bdb035e20c98f557",
+  "jsonHash": "fnv1a64:d7e02894050078e4",
+  "findings": []
+}

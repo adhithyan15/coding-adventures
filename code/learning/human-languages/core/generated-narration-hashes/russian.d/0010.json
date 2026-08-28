@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:6144b94c8716f560",
+  "lessonIds": [
+    "RU-C10-serdtse"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "russian/narration/ch10.txt",
+  "json": "russian/narration/ch10.json",
+  "textHash": "fnv1a64:344eed543d162f55",
+  "jsonHash": "fnv1a64:8e1b6465e3cedb1c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:9fcc9b8434f1dae5",
+  "lessonIds": [
+    "GU-W06-ga",
+    "GU-W06-independent-e",
+    "GU-W06-kha",
+    "GU-W06-independent-u",
+    "GU-R06-first-four-r1"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch06.txt",
+  "json": "gujarati/narration/ch06.json",
+  "textHash": "fnv1a64:5d9e4c9a423331ad",
+  "jsonHash": "fnv1a64:c083ed0e4733a073",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:9cb96abd65af388f",
+  "lessonIds": [
+    "ES-C07-beber",
+    "ES-C07-que",
+    "ES-C07-donde",
+    "ES-C07-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch36.txt",
+  "json": "spanish/narration/ch36.json",
+  "textHash": "fnv1a64:80d5f301db7493fd",
+  "jsonHash": "fnv1a64:b7309f2360140ca5",
+  "findings": []
+}

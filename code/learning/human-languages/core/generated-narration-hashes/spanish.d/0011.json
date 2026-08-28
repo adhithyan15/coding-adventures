@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:cfc061307a7bbc7f",
+  "lessonIds": [
+    "ES-W02-enye",
+    "ES-W02-enye-formas",
+    "ES-W03-inverted",
+    "ES-W03-question-span",
+    "ES-C04-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch11.txt",
+  "json": "spanish/narration/ch11.json",
+  "textHash": "fnv1a64:eb9e48d115e268d0",
+  "jsonHash": "fnv1a64:62120208790a05b9",
+  "findings": []
+}

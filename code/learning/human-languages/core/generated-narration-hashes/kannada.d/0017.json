@@ -1,0 +1,16 @@
+{
+  "language": "kannada",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:cef66874854331e1",
+  "lessonIds": [
+    "KA-C17-madhyaahna-madhyaraatri",
+    "KA-S121-letter-sa"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch17.txt",
+  "json": "kannada/narration/ch17.json",
+  "textHash": "fnv1a64:66bf3c56c7decbe1",
+  "jsonHash": "fnv1a64:a11d1e94cf0ced31",
+  "findings": []
+}

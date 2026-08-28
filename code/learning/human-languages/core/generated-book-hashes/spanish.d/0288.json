@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:ebe51ed9089779fb",
+  "lessonIds": [
+    "ES-C288-salida",
+    "ES-C288-viaje",
+    "ES-C288-vuelta",
+    "ES-C288-llegada",
+    "ES-C288-despedida"
+  ],
+  "tex": "spanish/book/chapters/ch288-la-partida.tex"
+}

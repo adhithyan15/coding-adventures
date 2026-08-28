@@ -1,0 +1,17 @@
+{
+  "language": "latin",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:b6d1686c248ae1e9",
+  "lessonIds": [
+    "LA-C19-quid-agis",
+    "LA-C19-valeo-family",
+    "LA-C19-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "latin/narration/ch19.txt",
+  "json": "latin/narration/ch19.json",
+  "textHash": "fnv1a64:9d66e64cdd4d67bf",
+  "jsonHash": "fnv1a64:f821a2b60a28a1ef",
+  "findings": []
+}

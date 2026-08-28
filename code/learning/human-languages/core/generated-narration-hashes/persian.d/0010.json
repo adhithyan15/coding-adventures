@@ -1,0 +1,18 @@
+{
+  "language": "persian",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:e537a298c4873bf6",
+  "lessonIds": [
+    "FA-C10-madar",
+    "FA-C10-pedar",
+    "FA-C10-baradar",
+    "FA-C10-dokhtar"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "persian/narration/ch10.txt",
+  "json": "persian/narration/ch10.json",
+  "textHash": "fnv1a64:435d3efbb4b79034",
+  "jsonHash": "fnv1a64:7fff2fb887d1bd5c",
+  "findings": []
+}

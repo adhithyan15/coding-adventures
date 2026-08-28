@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:30c70158955e0b10",
+  "lessonIds": [
+    "ES-C287-jabon",
+    "ES-C287-toalla",
+    "ES-C287-vaso",
+    "ES-C287-cuchara",
+    "ES-C287-plato"
+  ],
+  "tex": "spanish/book/chapters/ch287-cinco-cosas.tex"
+}

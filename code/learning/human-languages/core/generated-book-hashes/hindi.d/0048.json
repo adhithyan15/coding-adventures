@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:3a6282d4ca8160a2",
+  "lessonIds": [
+    "HI-C48-true",
+    "HI-C48-enough",
+    "HI-C48-certainly",
+    "HI-C48-perhaps",
+    "HI-C48-absolutely"
+  ],
+  "tex": "hindi/book/chapters/ch48-short-replies.tex"
+}

@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:fd716df1951a00d7",
+  "lessonIds": [
+    "ES-C06-espanol",
+    "ES-C06-hablo-espanol"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch22.txt",
+  "json": "spanish/narration/ch22.json",
+  "textHash": "fnv1a64:3be8bec522d2bfa5",
+  "jsonHash": "fnv1a64:735a3bd304361537",
+  "findings": []
+}

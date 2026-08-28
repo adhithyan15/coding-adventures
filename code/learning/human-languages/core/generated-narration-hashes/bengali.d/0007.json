@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:1d694b233788553e",
+  "lessonIds": [
+    "BN-C07-howa",
+    "BN-C07-jaowa",
+    "BN-C07-asha",
+    "BN-C07-khaowa",
+    "BN-C07-dekha",
+    "BN-C07-jana"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch07.txt",
+  "json": "bengali/narration/ch07.json",
+  "textHash": "fnv1a64:8e59b8d0aca4bfed",
+  "jsonHash": "fnv1a64:7cb57a472d3aefe2",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:39409ae2555a430c",
+  "lessonIds": [
+    "ES-C329-tal",
+    "ES-C329-cual",
+    "ES-C329-pues",
+    "ES-C329-sino",
+    "ES-C329-salvo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch329.txt",
+  "json": "spanish/narration/ch329.json",
+  "textHash": "fnv1a64:1a5714736323587b",
+  "jsonHash": "fnv1a64:260ab880fd786cd4",
+  "findings": []
+}

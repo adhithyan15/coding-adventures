@@ -1,0 +1,12 @@
+{
+  "language": "telugu",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:51d5f16ba078ad2a",
+  "lessonIds": [
+    "TE-C43-come",
+    "TE-C43-sit",
+    "TE-C43-stand",
+    "TE-C43-give"
+  ],
+  "tex": "telugu/book/chapters/ch43-more-verbs.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:b50b20396d3cd9cb",
+  "lessonIds": [
+    "ES-C11-querer",
+    "ES-C11-poder",
+    "ES-C11-stem-changes",
+    "ES-C11-nuestro",
+    "ES-C11-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch69.txt",
+  "json": "spanish/narration/ch69.json",
+  "textHash": "fnv1a64:1c60aadd8704b9d5",
+  "jsonHash": "fnv1a64:7b0c908efa25c39e",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:76716b14eb7efa74",
+  "lessonIds": [
+    "PT-C03-eu",
+    "PT-C03-me-chamo",
+    "PT-C03-como-se-chama",
+    "PT-C03-prazer",
+    "PT-C03-practice"
+  ],
+  "tex": "portuguese/book/chapters/ch03-introductions.tex"
+}

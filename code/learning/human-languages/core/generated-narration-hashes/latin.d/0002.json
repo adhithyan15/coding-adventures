@@ -1,0 +1,16 @@
+{
+  "language": "latin",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:3574a27090aae3f1",
+  "lessonIds": [
+    "LA-C02-numbers-1-5",
+    "LA-C02-numbers-6-10"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "latin/narration/ch02.txt",
+  "json": "latin/narration/ch02.json",
+  "textHash": "fnv1a64:e313bfd401c47777",
+  "jsonHash": "fnv1a64:6ed874821a207b5d",
+  "findings": []
+}

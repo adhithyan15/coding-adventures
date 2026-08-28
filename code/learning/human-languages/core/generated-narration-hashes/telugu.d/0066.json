@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:e23f6c0c2f7c4565",
+  "lessonIds": [
+    "TE-C66-field",
+    "TE-C66-paddy",
+    "TE-C66-grass",
+    "TE-C66-threshing-floor",
+    "TE-C66-harvest"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch66.txt",
+  "json": "telugu/narration/ch66.json",
+  "textHash": "fnv1a64:c3b67086553f904a",
+  "jsonHash": "fnv1a64:d0d151b8ee96ee2d",
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:50dac6bb67decd78",
+  "lessonIds": [
+    "ES-C06-espanol",
+    "ES-C06-hablo-espanol"
+  ],
+  "tex": "spanish/book/chapters/ch22-espanol.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:5db0fbc58a27718f",
+  "lessonIds": [
+    "TA-C53-river",
+    "TA-C53-hill",
+    "TA-C53-field",
+    "TA-C53-path",
+    "TA-C53-village"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch53.txt",
+  "json": "tamil/narration/ch53.json",
+  "textHash": "fnv1a64:af036dbb5f7ee412",
+  "jsonHash": "fnv1a64:9d9854c2b18fafae",
+  "findings": []
+}

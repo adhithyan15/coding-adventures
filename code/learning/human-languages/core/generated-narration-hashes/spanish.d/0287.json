@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:f6d42f1acaabff13",
+  "lessonIds": [
+    "ES-C287-jabon",
+    "ES-C287-toalla",
+    "ES-C287-vaso",
+    "ES-C287-cuchara",
+    "ES-C287-plato"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch287.txt",
+  "json": "spanish/narration/ch287.json",
+  "textHash": "fnv1a64:9edea97fdfdaee22",
+  "jsonHash": "fnv1a64:175d42df051c8e4d",
+  "findings": []
+}

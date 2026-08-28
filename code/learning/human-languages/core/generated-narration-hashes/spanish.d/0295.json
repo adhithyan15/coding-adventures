@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:f11d87c6a915a19a",
+  "lessonIds": [
+    "ES-C295-sendero",
+    "ES-C295-puente",
+    "ES-C295-orilla",
+    "ES-C295-isla",
+    "ES-C295-niebla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch295.txt",
+  "json": "spanish/narration/ch295.json",
+  "textHash": "fnv1a64:057b0c7819c8d37a",
+  "jsonHash": "fnv1a64:d3a055b274486d4b",
+  "findings": []
+}

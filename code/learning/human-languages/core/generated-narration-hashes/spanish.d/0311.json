@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:67c1b04547900771",
+  "lessonIds": [
+    "ES-C311-tienda",
+    "ES-C311-cuenta",
+    "ES-C311-precio",
+    "ES-C311-bolsa",
+    "ES-C311-asiento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch311.txt",
+  "json": "spanish/narration/ch311.json",
+  "textHash": "fnv1a64:0a247ba9f2e5bdd0",
+  "jsonHash": "fnv1a64:56733c1a5adc7255",
+  "findings": []
+}

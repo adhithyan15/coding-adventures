@@ -1,0 +1,16 @@
+{
+  "language": "german",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:43f8eec17cde9e22",
+  "lessonIds": [
+    "GE-C08-uhr",
+    "GE-C08-mittag-mitternacht"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "german/narration/ch08.txt",
+  "json": "german/narration/ch08.json",
+  "textHash": "fnv1a64:8b2960f7341a3736",
+  "jsonHash": "fnv1a64:ab91a571c8ec019f",
+  "findings": []
+}

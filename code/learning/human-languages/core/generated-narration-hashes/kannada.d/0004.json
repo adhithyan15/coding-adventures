@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:f03224f356d2cf54",
+  "lessonIds": [
+    "KA-C04-hoogu",
+    "KA-C04-hoogi-baruttene",
+    "KA-C04-naale-sigona",
+    "KA-C04-matte-sigona",
+    "KA-C04-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch04.txt",
+  "json": "kannada/narration/ch04.json",
+  "textHash": "fnv1a64:aff5135c0f709539",
+  "jsonHash": "fnv1a64:324a910f4f97e326",
+  "findings": []
+}

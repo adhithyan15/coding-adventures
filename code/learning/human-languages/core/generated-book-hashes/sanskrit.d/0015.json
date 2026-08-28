@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:5a6500ab57a18a8d",
+  "lessonIds": [
+    "SA-C15-big",
+    "SA-C15-small",
+    "SA-C15-good",
+    "SA-C15-new",
+    "SA-C15-old",
+    "SA-C15-adjective-system",
+    "SA-S114-letter-ha"
+  ],
+  "tex": "sanskrit/book/chapters/ch15-describing-things.tex"
+}

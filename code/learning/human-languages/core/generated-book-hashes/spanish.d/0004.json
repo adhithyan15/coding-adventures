@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:c414448a90df227e",
+  "lessonIds": [
+    "ES-C03-me",
+    "ES-C03-llamar",
+    "ES-C03-me-llamo",
+    "ES-C03-repaso-nombre"
+  ],
+  "tex": "spanish/book/chapters/ch04-your-name.tex"
+}

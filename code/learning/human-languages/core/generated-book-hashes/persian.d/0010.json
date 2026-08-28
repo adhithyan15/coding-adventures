@@ -1,0 +1,12 @@
+{
+  "language": "persian",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:38e7b87208b29472",
+  "lessonIds": [
+    "FA-C10-madar",
+    "FA-C10-pedar",
+    "FA-C10-baradar",
+    "FA-C10-dokhtar"
+  ],
+  "tex": "persian/book/chapters/ch10-family.tex"
+}

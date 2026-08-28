@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:9ddb135db7a4b884",
+  "lessonIds": [
+    "SA-C39-cow",
+    "SA-C39-bird",
+    "SA-C39-fish",
+    "SA-C39-dog",
+    "SA-C39-snake"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch39.txt",
+  "json": "sanskrit/narration/ch39.json",
+  "textHash": "fnv1a64:0de5ec6c55205e47",
+  "jsonHash": "fnv1a64:159737427184624f",
+  "findings": []
+}

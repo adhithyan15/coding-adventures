@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:1d79d633a0b77682",
+  "lessonIds": [
+    "TA-C19-vayathu",
+    "TA-C19-age-register-grammar",
+    "TA-S09-i-sign",
+    "TA-W07-write-sari",
+    "TA-S123-vowel-sign-ee"
+  ],
+  "tex": "tamil/book/chapters/ch19-age.tex"
+}

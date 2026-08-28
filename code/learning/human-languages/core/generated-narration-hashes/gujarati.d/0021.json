@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:d4c37f4c41ec8609",
+  "lessonIds": [
+    "GU-R17-you-r4",
+    "GU-R17-shun-r4",
+    "GU-R17-whats-your-name-r4",
+    "GU-R17-introduction-r4",
+    "GU-R17-hun-r4",
+    "GU-R17-kem-r4"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch21.txt",
+  "json": "gujarati/narration/ch21.json",
+  "textHash": "fnv1a64:0f622c565c15bf9f",
+  "jsonHash": "fnv1a64:81cac6c302e90090",
+  "findings": []
+}

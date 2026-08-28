@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:070acfb9284810a0",
+  "lessonIds": [
+    "ES-C320-favor",
+    "ES-C320-molestia",
+    "ES-C320-pena",
+    "ES-C320-suerte",
+    "ES-C320-culpa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch320.txt",
+  "json": "spanish/narration/ch320.json",
+  "textHash": "fnv1a64:50e4557dad4c6541",
+  "jsonHash": "fnv1a64:a9addab3d5eaeea9",
+  "findings": []
+}

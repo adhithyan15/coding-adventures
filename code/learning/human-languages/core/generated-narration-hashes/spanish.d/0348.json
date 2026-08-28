@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:7cd8a48eac412bde",
+  "lessonIds": [
+    "ES-C348-principio",
+    "ES-C348-fin",
+    "ES-C348-instante",
+    "ES-C348-demora",
+    "ES-C348-turno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch348.txt",
+  "json": "spanish/narration/ch348.json",
+  "textHash": "fnv1a64:de6a203fa96b960f",
+  "jsonHash": "fnv1a64:cf2a4cdafe729c17",
+  "findings": []
+}

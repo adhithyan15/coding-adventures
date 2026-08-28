@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:c263dd847126d2b5",
+  "lessonIds": [
+    "ES-C380-simpatico",
+    "ES-C380-alegre",
+    "ES-C380-feo",
+    "ES-C380-ultimo",
+    "ES-C380-necesario"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch380.txt",
+  "json": "spanish/narration/ch380.json",
+  "textHash": "fnv1a64:47713affa9a0aec9",
+  "jsonHash": "fnv1a64:95e17297b62e35df",
+  "findings": []
+}

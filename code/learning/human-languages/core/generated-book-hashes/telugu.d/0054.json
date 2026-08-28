@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:f5f2b1c78ca04ccf",
+  "lessonIds": [
+    "TE-C54-tree",
+    "TE-C54-branch",
+    "TE-C54-root",
+    "TE-C54-seed",
+    "TE-C54-seedling"
+  ],
+  "tex": "telugu/book/chapters/ch54-the-tree.tex"
+}

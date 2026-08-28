@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:040b4a9eb03ace92",
+  "lessonIds": [
+    "LA-C28-dies"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "latin/narration/ch28.txt",
+  "json": "latin/narration/ch28.json",
+  "textHash": "fnv1a64:4f1b199317fe7681",
+  "jsonHash": "fnv1a64:a02e9c601e63b087",
+  "findings": []
+}

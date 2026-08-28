@@ -1,0 +1,12 @@
+{
+  "language": "telugu",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:e8cf8b1c5fc5a86f",
+  "lessonIds": [
+    "TE-C33-anuko",
+    "TE-C33-artham-cesuko",
+    "TE-C33-caduvu",
+    "TE-C33-raayu"
+  ],
+  "tex": "telugu/book/chapters/ch33-verbs-of-the-mind.tex"
+}

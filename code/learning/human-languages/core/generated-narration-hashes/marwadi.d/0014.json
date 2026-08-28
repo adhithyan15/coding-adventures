@@ -1,0 +1,23 @@
+{
+  "language": "marwadi",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:18d4d914eed0ebaa",
+  "lessonIds": [
+    "MW-C10-hear-bajar",
+    "MW-W10-ja",
+    "MW-C10-bajar",
+    "MW-C10-hear-ghar",
+    "MW-W10-gha",
+    "MW-C10-ghar",
+    "MW-C10-hear-mandir",
+    "MW-C10-mandir",
+    "MW-R10-places-three"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 1,
+  "text": "marwadi/narration/ch14.txt",
+  "json": "marwadi/narration/ch14.json",
+  "textHash": "fnv1a64:46ee49039aecb597",
+  "jsonHash": "fnv1a64:f3aedf99001ca55c",
+  "findings": []
+}

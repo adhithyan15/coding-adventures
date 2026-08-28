@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:ed8761aa054e8bbf",
+  "lessonIds": [
+    "ES-C36-oir",
+    "ES-C36-dormir",
+    "ES-C36-caminar",
+    "ES-C36-correr"
+  ],
+  "tex": "spanish/book/chapters/ch165-hear-sleep-walk-run.tex"
+}

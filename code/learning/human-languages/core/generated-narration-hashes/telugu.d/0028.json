@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:bc9bacbd61c667ec",
+  "lessonIds": [
+    "TE-C28-madhyahnam-widened"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch28.txt",
+  "json": "telugu/narration/ch28.json",
+  "textHash": "fnv1a64:a93c6ea387678175",
+  "jsonHash": "fnv1a64:cc0c2471dd1cff56",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:58f8967272263fe8",
+  "lessonIds": [
+    "ZH-W07-zao",
+    "ZH-W07-shang",
+    "ZH-C07-zaoshang",
+    "ZH-C07-zaoshanghao",
+    "ZH-C07-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "chinese/narration/ch07.txt",
+  "json": "chinese/narration/ch07.json",
+  "textHash": "fnv1a64:a2e33151f6aeca02",
+  "jsonHash": "fnv1a64:ab55350196beaff9",
+  "findings": []
+}

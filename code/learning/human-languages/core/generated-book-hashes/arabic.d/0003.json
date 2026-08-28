@@ -1,0 +1,17 @@
+{
+  "language": "arabic",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:5e130c10585446e6",
+  "lessonIds": [
+    "AR-W07-hook-family-ha-kha",
+    "AR-W08-kaf-and-ra",
+    "AR-W09-khayr-bikhayr",
+    "AR-C03-kayfa",
+    "AR-C03-hal",
+    "AR-C03-kayfa-haluka",
+    "AR-C03-bi-khayr",
+    "AR-C03-al-hamdu-lillah",
+    "AR-C03-practice"
+  ],
+  "tex": "arabic/book/chapters/ch03-how-are-you.tex"
+}

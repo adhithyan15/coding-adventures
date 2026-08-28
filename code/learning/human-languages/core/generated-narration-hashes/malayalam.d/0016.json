@@ -1,0 +1,16 @@
+{
+  "language": "malayalam",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:c783b6c08a409aef",
+  "lessonIds": [
+    "ML-C16-kollavarsham-maasangal",
+    "ML-S120-sign-anusvara"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch16.txt",
+  "json": "malayalam/narration/ch16.json",
+  "textHash": "fnv1a64:e302c3fec1055b96",
+  "jsonHash": "fnv1a64:5d70808772ecdfaf",
+  "findings": []
+}

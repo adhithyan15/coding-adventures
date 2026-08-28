@@ -1,0 +1,16 @@
+{
+  "language": "italian",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:3075b31c8103dfd1",
+  "lessonIds": [
+    "IT-C11-pane",
+    "IT-C11-acqua-vino"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "italian/narration/ch11.txt",
+  "json": "italian/narration/ch11.json",
+  "textHash": "fnv1a64:b1fd754c6cf12223",
+  "jsonHash": "fnv1a64:c8beea42da4a8a72",
+  "findings": []
+}

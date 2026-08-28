@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:86c2dfaa869d26e8",
+  "lessonIds": [
+    "HI-C07-haan",
+    "HI-C07-nahin",
+    "HI-S02-letter-na",
+    "HI-S111-letter-ka"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch07.txt",
+  "json": "hindi/narration/ch07.json",
+  "textHash": "fnv1a64:8f53b2fc7fdf0607",
+  "jsonHash": "fnv1a64:52dc35b99045fd33",
+  "findings": []
+}

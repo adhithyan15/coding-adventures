@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:0455a70531d8193a",
+  "lessonIds": [
+    "MR-R09-script-a-r3",
+    "MR-R09-script-b-r3",
+    "MR-R09-script-c-r3",
+    "MR-R09-script-d-r3",
+    "MR-C06-numbers-1-5",
+    "MR-C06-number-differences"
+  ],
+  "tex": "marathi/book/chapters/ch09-numbers-1-5.tex"
+}

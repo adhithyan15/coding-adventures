@@ -1,0 +1,18 @@
+{
+  "language": "french",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:da6f69e8ad67d74a",
+  "lessonIds": [
+    "FR-C30-fromage",
+    "FR-C30-beurre",
+    "FR-C30-sel",
+    "FR-C30-oeuf"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "french/narration/ch30.txt",
+  "json": "french/narration/ch30.json",
+  "textHash": "fnv1a64:01da32a9214c0415",
+  "jsonHash": "fnv1a64:bea7f35f29f9053c",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:6fa9927c00a59393",
+  "lessonIds": [
+    "ES-C50-sintesis-pedir-bien"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch136.txt",
+  "json": "spanish/narration/ch136.json",
+  "textHash": "fnv1a64:6ac4f492f40ce026",
+  "jsonHash": "fnv1a64:070fb272e5cbb0e4",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:52ce5478da7f7681",
+  "lessonIds": [
+    "ZH-C01-tones",
+    "ZH-C01-ni",
+    "ZH-C01-hao",
+    "ZH-C01-nihao",
+    "ZH-C01-tone-sandhi",
+    "ZH-C01-hao-fond",
+    "ZH-C01-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "chinese/narration/ch01.txt",
+  "json": "chinese/narration/ch01.json",
+  "textHash": "fnv1a64:5323bcdf35abbc86",
+  "jsonHash": "fnv1a64:0afb39a607d43c36",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "bengali",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:57a1eb4abdd47e77",
+  "lessonIds": [
+    "BN-C08-bhaba",
+    "BN-C08-bojha",
+    "BN-C08-pora",
+    "BN-C08-lekha"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch08.txt",
+  "json": "bengali/narration/ch08.json",
+  "textHash": "fnv1a64:b82b6ec3905b4ac3",
+  "jsonHash": "fnv1a64:02380d21707dd1ec",
+  "findings": []
+}

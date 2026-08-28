@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:d811ed36294043c3",
+  "lessonIds": [
+    "SA-C48-lion",
+    "SA-C48-wolf",
+    "SA-C48-goat",
+    "SA-C48-monkey",
+    "SA-C48-goose"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch48.txt",
+  "json": "sanskrit/narration/ch48.json",
+  "textHash": "fnv1a64:3cde65d109429109",
+  "jsonHash": "fnv1a64:3b03e53623b76b64",
+  "findings": []
+}

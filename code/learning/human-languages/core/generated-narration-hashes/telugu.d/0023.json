@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:ece18b024e8a6897",
+  "lessonIds": [
+    "TE-C23-roju"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch23.txt",
+  "json": "telugu/narration/ch23.json",
+  "textHash": "fnv1a64:3948abd51f7f90f9",
+  "jsonHash": "fnv1a64:dd2827c4ca830f3c",
+  "findings": []
+}

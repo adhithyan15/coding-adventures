@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:393475ed6edbd8d4",
+  "lessonIds": [
+    "ES-C348-principio",
+    "ES-C348-fin",
+    "ES-C348-instante",
+    "ES-C348-demora",
+    "ES-C348-turno"
+  ],
+  "tex": "spanish/book/chapters/ch348-el-principio-y-el-fin.tex"
+}

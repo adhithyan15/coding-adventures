@@ -1,0 +1,12 @@
+{
+  "language": "portuguese",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:d47dceb3be54daa6",
+  "lessonIds": [
+    "PT-C20-tomar-pegar",
+    "PT-C20-perguntar",
+    "PT-C20-ajudar",
+    "PT-C20-gostar"
+  ],
+  "tex": "portuguese/book/chapters/ch20-taking-asking-helping-liking.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:4c850bd00e146040",
+  "lessonIds": [
+    "HI-C45-fruit",
+    "HI-C45-cloth",
+    "HI-C45-lamp",
+    "HI-C45-salt",
+    "HI-C45-soap"
+  ],
+  "tex": "hindi/book/chapters/ch45-things-you-ask-for.tex"
+}

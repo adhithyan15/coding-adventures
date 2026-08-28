@@ -1,0 +1,11 @@
+{
+  "language": "malayalam",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:edf5b8d38df72897",
+  "lessonIds": [
+    "ML-C13-shareera-bhaagangal",
+    "ML-S08-letter-ta",
+    "ML-S117-letter-tta"
+  ],
+  "tex": "malayalam/book/chapters/ch13-head-and-hand.tex"
+}

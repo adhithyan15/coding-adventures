@@ -1,0 +1,16 @@
+{
+  "language": "german",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:d26e6b5bb3b7dc17",
+  "lessonIds": [
+    "GE-C13-schwarz-weiss",
+    "GE-C13-rot-blau"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "german/narration/ch13.txt",
+  "json": "german/narration/ch13.json",
+  "textHash": "fnv1a64:6ed1e69f52088e78",
+  "jsonHash": "fnv1a64:fc72ac45d2c3a0db",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:9746d87673fef68c",
+  "lessonIds": [
+    "TA-C41-big",
+    "TA-C41-small",
+    "TA-C41-good",
+    "TA-C41-new",
+    "TA-C41-old",
+    "TA-C41-adjective-system"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch41.txt",
+  "json": "tamil/narration/ch41.json",
+  "textHash": "fnv1a64:a4f6e3d40908f9c2",
+  "jsonHash": "fnv1a64:0df4bc54671dd90e",
+  "findings": []
+}

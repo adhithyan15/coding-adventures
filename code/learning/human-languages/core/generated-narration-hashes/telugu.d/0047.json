@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:28629dad21d7e699",
+  "lessonIds": [
+    "TE-C47-leg",
+    "TE-C47-tooth",
+    "TE-C47-hair",
+    "TE-C47-finger",
+    "TE-C47-stomach"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch47.txt",
+  "json": "telugu/narration/ch47.json",
+  "textHash": "fnv1a64:cb409ca5f2cab9e8",
+  "jsonHash": "fnv1a64:a832a1bfa3c93268",
+  "findings": []
+}

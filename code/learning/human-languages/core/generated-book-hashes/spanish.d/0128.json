@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:1ea6d2b94fb6235a",
+  "lessonIds": [
+    "ES-C18-querer-subjuntivo",
+    "ES-C18-poder-subjuntivo",
+    "ES-C18-hacer-subjuntivo"
+  ],
+  "tex": "spanish/book/chapters/ch128-subjuntivo-yo-stem.tex"
+}

@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:a8e7308e3b652322",
+  "lessonIds": [
+    "ML-C45-grandfather",
+    "ML-C45-grandmother",
+    "ML-C45-husband",
+    "ML-C45-wife"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch45.txt",
+  "json": "malayalam/narration/ch45.json",
+  "textHash": "fnv1a64:bd21c685cfab3f9e",
+  "jsonHash": "fnv1a64:6d4411a4a078c48c",
+  "findings": []
+}

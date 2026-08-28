@@ -1,0 +1,30 @@
+{
+  "language": "hindi",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:30b74a8bd8da4912",
+  "lessonIds": [
+    "HI-C02-naam",
+    "HI-C02-meraa",
+    "HI-C02-hai",
+    "HI-C02-mera-naam-hai",
+    "HI-C02-aap-tum",
+    "HI-C02-kya",
+    "HI-C02-aapka-naam-kya-hai",
+    "HI-C02-khushi",
+    "HI-W03-matras-naam",
+    "HI-W03-preposed-i",
+    "HI-W04-ra-sa-mera-naam",
+    "HI-W04-write-mera-naam",
+    "HI-W05-virama-namaste",
+    "HI-W05-conjuncts",
+    "HI-W05-write-namaste",
+    "HI-C02-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "hindi/narration/ch02.txt",
+  "json": "hindi/narration/ch02.json",
+  "textHash": "fnv1a64:f67f045838e41941",
+  "jsonHash": "fnv1a64:033082f174c8ca95",
+  "findings": []
+}

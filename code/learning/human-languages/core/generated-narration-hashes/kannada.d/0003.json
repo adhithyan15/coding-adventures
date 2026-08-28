@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:5e7ea2c74c9eb4eb",
+  "lessonIds": [
+    "KA-C03-hege",
+    "KA-C03-niivu-hegiddiira",
+    "KA-C03-naanu",
+    "KA-C03-cennaagi",
+    "KA-C03-paravaagilla",
+    "KA-C03-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch03.txt",
+  "json": "kannada/narration/ch03.json",
+  "textHash": "fnv1a64:1193ebd2ef13eeea",
+  "jsonHash": "fnv1a64:650a36e23f5c11c2",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:8430eacd3df5139f",
+  "lessonIds": [
+    "KA-C23-dina"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch23.txt",
+  "json": "kannada/narration/ch23.json",
+  "textHash": "fnv1a64:4a0ffac21d9cc656",
+  "jsonHash": "fnv1a64:45281ba3f3d6398e",
+  "findings": []
+}

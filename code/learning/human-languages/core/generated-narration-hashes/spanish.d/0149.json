@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:ead16a7005c00bca",
+  "lessonIds": [
+    "ES-C31-once-quince",
+    "ES-C31-dieciseis-diecinueve",
+    "ES-C31-teens-latinos",
+    "ES-C31-veinte"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch149.txt",
+  "json": "spanish/narration/ch149.json",
+  "textHash": "fnv1a64:825d6bcb75f6e5c4",
+  "jsonHash": "fnv1a64:7a2aa3c427e8a5a0",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:6825c8e7c290f2be",
+  "lessonIds": [
+    "ES-C306-hijo",
+    "ES-C306-hija",
+    "ES-C306-abuelo",
+    "ES-C306-abuela",
+    "ES-C306-esposo"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch306.txt",
+  "json": "spanish/narration/ch306.json",
+  "textHash": "fnv1a64:22e32cc1767e066e",
+  "jsonHash": "fnv1a64:6d3905d950285346",
+  "findings": []
+}

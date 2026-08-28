@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:b76599eb30393d2b",
+  "lessonIds": [
+    "ES-C301-cuerda",
+    "ES-C301-aguja",
+    "ES-C301-hilo",
+    "ES-C301-cesta",
+    "ES-C301-papel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch301.txt",
+  "json": "spanish/narration/ch301.json",
+  "textHash": "fnv1a64:356093d1171c0ea9",
+  "jsonHash": "fnv1a64:1009248f912f7f74",
+  "findings": []
+}

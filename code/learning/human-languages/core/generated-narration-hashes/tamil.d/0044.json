@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:3aad2293d4e0698b",
+  "lessonIds": [
+    "TA-C44-fruit",
+    "TA-C44-cloth",
+    "TA-C44-lamp",
+    "TA-C44-salt",
+    "TA-C44-book"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch44.txt",
+  "json": "tamil/narration/ch44.json",
+  "textHash": "fnv1a64:31ef485f7d42a1d4",
+  "jsonHash": "fnv1a64:1775ae40d4d514b1",
+  "findings": []
+}

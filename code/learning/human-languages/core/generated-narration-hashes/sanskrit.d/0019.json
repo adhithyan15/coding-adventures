@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:2620d676e48678f8",
+  "lessonIds": [
+    "SA-C19-six",
+    "SA-C19-seven",
+    "SA-C19-eight",
+    "SA-C19-nine",
+    "SA-C19-ten",
+    "SA-C19-number-family"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch19.txt",
+  "json": "sanskrit/narration/ch19.json",
+  "textHash": "fnv1a64:ab86acd57302e6e4",
+  "jsonHash": "fnv1a64:091d2c33c53f476a",
+  "findings": []
+}

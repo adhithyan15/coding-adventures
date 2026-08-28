@@ -1,0 +1,17 @@
+{
+  "language": "kannada",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:12f92fc1da647044",
+  "lessonIds": [
+    "KA-C20-hannondu-ippattu",
+    "KA-C20-havamana",
+    "KA-S124-letter-pa"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "kannada/narration/ch20.txt",
+  "json": "kannada/narration/ch20.json",
+  "textHash": "fnv1a64:28f48c7408d5458e",
+  "jsonHash": "fnv1a64:c1f6e05c6d0db0a8",
+  "findings": []
+}

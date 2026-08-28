@@ -1,0 +1,10 @@
+{
+  "language": "italian",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:087885552d8aa7a4",
+  "lessonIds": [
+    "IT-C08-ora",
+    "IT-C08-mezzogiorno-mezzanotte"
+  ],
+  "tex": "italian/book/chapters/ch08-telling-time.tex"
+}

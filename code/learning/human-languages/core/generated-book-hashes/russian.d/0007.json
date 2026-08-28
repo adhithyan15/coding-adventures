@@ -1,0 +1,12 @@
+{
+  "language": "russian",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:94bc11314fa848ef",
+  "lessonIds": [
+    "RU-C07-drug",
+    "RU-C07-podruga",
+    "RU-C07-brat",
+    "RU-C07-sestra"
+  ],
+  "tex": "russian/book/chapters/ch07-friend-and-siblings.tex"
+}

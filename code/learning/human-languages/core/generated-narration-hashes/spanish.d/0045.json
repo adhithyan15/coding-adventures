@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:da89124f4e12267b",
+  "lessonIds": [
+    "ES-C07-comen-viven"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch45.txt",
+  "json": "spanish/narration/ch45.json",
+  "textHash": "fnv1a64:1fba148e24b352df",
+  "jsonHash": "fnv1a64:8f009786d18bbe4c",
+  "findings": []
+}

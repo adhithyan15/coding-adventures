@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:3f6b2f85a35f306a",
+  "lessonIds": [
+    "MR-C03-kasa",
+    "MR-C03-tumhi-kase-aahat",
+    "MR-C03-mi",
+    "MR-C03-mi-bara-aahe",
+    "MR-C03-kaahi-harkat-nahi",
+    "MR-C03-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch06.txt",
+  "json": "marathi/narration/ch06.json",
+  "textHash": "fnv1a64:784e2af7ad5b3cc1",
+  "jsonHash": "fnv1a64:e32081bf86f45879",
+  "findings": []
+}

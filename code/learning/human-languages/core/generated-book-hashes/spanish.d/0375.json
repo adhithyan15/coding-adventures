@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:2a57a3c85dcf603c",
+  "lessonIds": [
+    "ES-C375-una",
+    "ES-C375-labio",
+    "ES-C375-pulgar",
+    "ES-C375-beso",
+    "ES-C375-sobrino"
+  ],
+  "tex": "spanish/book/chapters/ch375-la-una-y-el-labio.tex"
+}

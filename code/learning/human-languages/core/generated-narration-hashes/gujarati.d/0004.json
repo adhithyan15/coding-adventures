@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:499bfe012dde2674",
+  "lessonIds": [
+    "GU-W04-lla",
+    "GU-W04-tha",
+    "GU-W04-independent-a",
+    "GU-W04-i-matra",
+    "GU-R04-first-four-r1"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch04.txt",
+  "json": "gujarati/narration/ch04.json",
+  "textHash": "fnv1a64:9d07b5437d7e52b2",
+  "jsonHash": "fnv1a64:b2cb37b3061f7453",
+  "findings": []
+}

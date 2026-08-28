@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:5cfc087b09d69aa1",
+  "lessonIds": [
+    "ES-W01-frase-propia"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch337.txt",
+  "json": "spanish/narration/ch337.json",
+  "textHash": "fnv1a64:e9e6a7a19254c652",
+  "jsonHash": "fnv1a64:843901b5da0ec359",
+  "findings": []
+}

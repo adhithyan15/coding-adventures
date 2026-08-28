@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:5c87a0cda45a7676",
+  "lessonIds": [
+    "RU-C03-byt",
+    "RU-C03-zhit",
+    "RU-C03-znat",
+    "RU-C03-govorit",
+    "RU-C03-videt",
+    "RU-C03-idti"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch03.txt",
+  "json": "russian/narration/ch03.json",
+  "textHash": "fnv1a64:94334874788a6c14",
+  "jsonHash": "fnv1a64:970e66130b9011ec",
+  "findings": []
+}

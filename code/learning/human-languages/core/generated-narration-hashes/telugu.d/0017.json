@@ -1,0 +1,16 @@
+{
+  "language": "telugu",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:d28c7e04aa8a004d",
+  "lessonIds": [
+    "TE-C17-madhyaahnam-ardharaatri",
+    "TE-S120-vowel-sign-ee"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch17.txt",
+  "json": "telugu/narration/ch17.json",
+  "textHash": "fnv1a64:d9a4a34f66ff68d5",
+  "jsonHash": "fnv1a64:69c94ddaca935eac",
+  "findings": []
+}

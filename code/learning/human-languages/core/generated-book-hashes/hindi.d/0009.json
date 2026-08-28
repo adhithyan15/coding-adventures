@@ -1,0 +1,11 @@
+{
+  "language": "hindi",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:36b50bc3eb44a3ac",
+  "lessonIds": [
+    "HI-C09-maaf-kijiye",
+    "HI-S04-letter-aa",
+    "HI-S113-letter-pa"
+  ],
+  "tex": "hindi/book/chapters/ch09-sorry.tex"
+}

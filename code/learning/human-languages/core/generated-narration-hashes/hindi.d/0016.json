@@ -1,0 +1,16 @@
+{
+  "language": "hindi",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:36b9d36d11bbabd0",
+  "lessonIds": [
+    "HI-C16-mahine",
+    "HI-S120-vowel-sign-u"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "hindi/narration/ch16.txt",
+  "json": "hindi/narration/ch16.json",
+  "textHash": "fnv1a64:83b3d076ca0a3a9e",
+  "jsonHash": "fnv1a64:d00bf1c8b45210ad",
+  "findings": []
+}

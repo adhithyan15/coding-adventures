@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:612d10b32990b082",
+  "lessonIds": [
+    "ES-C07-comer",
+    "ES-C07-como",
+    "ES-C07-comes",
+    "ES-C07-come",
+    "ES-C07-repaso-comer"
+  ],
+  "tex": "spanish/book/chapters/ch34-comer.tex"
+}

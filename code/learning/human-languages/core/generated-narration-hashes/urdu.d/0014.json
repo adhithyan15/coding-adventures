@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:2bdeebb8465054d9",
+  "lessonIds": [
+    "UR-C14-qamiz",
+    "UR-C14-juta",
+    "UR-C14-topi",
+    "UR-C14-koat"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "urdu/narration/ch14.txt",
+  "json": "urdu/narration/ch14.json",
+  "textHash": "fnv1a64:4b8d218c9b64fd4c",
+  "jsonHash": "fnv1a64:0fa8f843e15d877f",
+  "findings": []
+}

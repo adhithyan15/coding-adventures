@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:1d329e96ae058a75",
+  "lessonIds": [
+    "ES-C376-harina",
+    "ES-C376-uva",
+    "ES-C376-maiz",
+    "ES-C376-chocolate",
+    "ES-C376-pimiento"
+  ],
+  "tex": "spanish/book/chapters/ch376-la-harina-y-la-uva.tex"
+}

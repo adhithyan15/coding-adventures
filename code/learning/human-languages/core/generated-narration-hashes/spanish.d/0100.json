@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:26fae626bb39949d",
+  "lessonIds": [
+    "ES-C47-por-que-se"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch100.txt",
+  "json": "spanish/narration/ch100.json",
+  "textHash": "fnv1a64:b8af7867aeb42f05",
+  "jsonHash": "fnv1a64:2fc8bd3bc8c2337f",
+  "findings": []
+}

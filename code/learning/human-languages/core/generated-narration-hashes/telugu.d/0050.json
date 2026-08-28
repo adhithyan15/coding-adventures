@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:d7882d1a74054ce4",
+  "lessonIds": [
+    "TE-C50-now",
+    "TE-C50-day-after",
+    "TE-C50-journey",
+    "TE-C50-set-out",
+    "TE-C50-farewell"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch50.txt",
+  "json": "telugu/narration/ch50.json",
+  "textHash": "fnv1a64:9eabdaafd89d516e",
+  "jsonHash": "fnv1a64:f50ee049b06f10b7",
+  "findings": []
+}

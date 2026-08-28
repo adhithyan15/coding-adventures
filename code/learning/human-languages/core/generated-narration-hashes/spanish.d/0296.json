@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:af091d54f2fd15aa",
+  "lessonIds": [
+    "ES-C296-caballo",
+    "ES-C296-vaca",
+    "ES-C296-oveja",
+    "ES-C296-gallina",
+    "ES-C296-burro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch296.txt",
+  "json": "spanish/narration/ch296.json",
+  "textHash": "fnv1a64:079ea283044edf37",
+  "jsonHash": "fnv1a64:bd8fb2c686cf7aaf",
+  "findings": []
+}

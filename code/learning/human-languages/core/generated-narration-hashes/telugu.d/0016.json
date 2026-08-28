@@ -1,0 +1,16 @@
+{
+  "language": "telugu",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:67355eabf26b0380",
+  "lessonIds": [
+    "TE-C16-nelalu",
+    "TE-S119-vowel-sign-ii"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch16.txt",
+  "json": "telugu/narration/ch16.json",
+  "textHash": "fnv1a64:c56625856b5ccb91",
+  "jsonHash": "fnv1a64:a2bc73afd94e8602",
+  "findings": []
+}

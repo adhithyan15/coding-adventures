@@ -1,0 +1,24 @@
+{
+  "language": "hindi",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:c1a07f2bc049fd1f",
+  "lessonIds": [
+    "HI-C02-naam",
+    "HI-C02-meraa",
+    "HI-C02-hai",
+    "HI-C02-mera-naam-hai",
+    "HI-C02-aap-tum",
+    "HI-C02-kya",
+    "HI-C02-aapka-naam-kya-hai",
+    "HI-C02-khushi",
+    "HI-W03-matras-naam",
+    "HI-W03-preposed-i",
+    "HI-W04-ra-sa-mera-naam",
+    "HI-W04-write-mera-naam",
+    "HI-W05-virama-namaste",
+    "HI-W05-conjuncts",
+    "HI-W05-write-namaste",
+    "HI-C02-practice"
+  ],
+  "tex": "hindi/book/chapters/ch02-introductions.tex"
+}

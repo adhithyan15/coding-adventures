@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:6f9666b39c97a91f",
+  "lessonIds": [
+    "ML-C63-hunger",
+    "ML-C63-tiredness",
+    "ML-C63-pain",
+    "ML-C63-cough",
+    "ML-C63-fever"
+  ],
+  "tex": "malayalam/book/chapters/ch63-how-the-body-reports.tex"
+}

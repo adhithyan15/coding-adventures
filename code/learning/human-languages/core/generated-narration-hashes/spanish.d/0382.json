@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:dabd0668b0b942fa",
+  "lessonIds": [
+    "ES-C382-empezar",
+    "ES-C382-acabar",
+    "ES-C382-pagar",
+    "ES-C382-quedar"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch382.txt",
+  "json": "spanish/narration/ch382.json",
+  "textHash": "fnv1a64:f0c9135a4884c1ed",
+  "jsonHash": "fnv1a64:016494a7cd51ee58",
+  "findings": []
+}

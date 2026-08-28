@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:c5cfd5efab66db52",
+  "lessonIds": [
+    "ES-C09-ista"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch53.txt",
+  "json": "spanish/narration/ch53.json",
+  "textHash": "fnv1a64:c0468fff680b00fe",
+  "jsonHash": "fnv1a64:55d2317397e63edb",
+  "findings": []
+}

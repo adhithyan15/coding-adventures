@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:395163d3a481d446",
+  "lessonIds": [
+    "ES-C65-ahi-alli"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch251.txt",
+  "json": "spanish/narration/ch251.json",
+  "textHash": "fnv1a64:148c14468cfa0699",
+  "jsonHash": "fnv1a64:21f335c3890175e3",
+  "findings": []
+}

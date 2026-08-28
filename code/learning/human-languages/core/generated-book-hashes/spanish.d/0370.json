@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:f99824489062fe7f",
+  "lessonIds": [
+    "ES-C370-tormenta",
+    "ES-C370-trueno",
+    "ES-C370-hielo",
+    "ES-C370-cueva",
+    "ES-C370-costa"
+  ],
+  "tex": "spanish/book/chapters/ch370-la-tormenta-y-el-trueno.tex"
+}

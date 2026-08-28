@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:ba37f05254e1c500",
+  "lessonIds": [
+    "ES-C391-menu",
+    "ES-C391-camarero",
+    "ES-C391-postre",
+    "ES-C391-supermercado",
+    "ES-C391-euro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch391.txt",
+  "json": "spanish/narration/ch391.json",
+  "textHash": "fnv1a64:3065c9c6694dc661",
+  "jsonHash": "fnv1a64:68dd2a8c2f7716fe",
+  "findings": []
+}

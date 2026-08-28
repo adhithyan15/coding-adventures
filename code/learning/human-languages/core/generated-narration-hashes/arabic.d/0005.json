@@ -1,0 +1,16 @@
+{
+  "language": "arabic",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:e783c269a62befac",
+  "lessonIds": [
+    "AR-C05-naam",
+    "AR-C05-la"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "arabic/narration/ch05.txt",
+  "json": "arabic/narration/ch05.json",
+  "textHash": "fnv1a64:fa3daf4b3ae22aed",
+  "jsonHash": "fnv1a64:299c670994901dd6",
+  "findings": []
+}

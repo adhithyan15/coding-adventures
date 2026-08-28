@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:85623cdace8e9b48",
+  "lessonIds": [
+    "ES-C355-pared",
+    "ES-C355-techo",
+    "ES-C355-piso",
+    "ES-C355-rincon",
+    "ES-C355-fondo"
+  ],
+  "tex": "spanish/book/chapters/ch355-la-pared-y-el-techo.tex"
+}

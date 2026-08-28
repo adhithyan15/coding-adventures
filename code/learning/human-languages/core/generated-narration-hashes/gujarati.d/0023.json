@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:fb0122fb7175b82b",
+  "lessonIds": [
+    "GU-R19-doorway-nine-r4"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch23.txt",
+  "json": "gujarati/narration/ch23.json",
+  "textHash": "fnv1a64:d5ea3817b8613956",
+  "jsonHash": "fnv1a64:d5a54861bd66e136",
+  "findings": []
+}

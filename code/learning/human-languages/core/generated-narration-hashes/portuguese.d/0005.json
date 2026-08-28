@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:e76e77a13fe3855a",
+  "lessonIds": [
+    "PT-C05-falar",
+    "PT-C05-morar",
+    "PT-C05-trabalhar",
+    "PT-C05-falo-portugues",
+    "PT-C05-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch05.txt",
+  "json": "portuguese/narration/ch05.json",
+  "textHash": "fnv1a64:c389cba21fdfb939",
+  "jsonHash": "fnv1a64:1f61f0fe2d671611",
+  "findings": []
+}

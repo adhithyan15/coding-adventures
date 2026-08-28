@@ -22,6 +22,16 @@ source-backed paths without making startup asynchronous. BUILD requires that
 split and checks both the request ceiling and the unchanged 500,000-byte eager
 chunk budget.
 
+Generated book hashes are chapter-owned on disk under
+`core/generated-book-hashes/<language>.d/`, but the browser does not receive one
+module key per chapter. The build-time ledger boundary folds those owners into
+exactly one lazy virtual module per registered language—23 loaders today—so
+the loader table stays bounded while the curriculum grows toward C2. A failed
+lazy load keeps the existing honest fallback (`not-generated`), reports the
+error, and leaves the rest of the app usable; additions and removals invalidate
+the relevant virtual module in development. No tracked language aggregate is
+needed to preserve the book-synced diagnostic.
+
 ## Learn mode (the curriculum session)
 
 The spine of the app is [HL03](../../../specs/HL03-unified-language-learning-app.md)

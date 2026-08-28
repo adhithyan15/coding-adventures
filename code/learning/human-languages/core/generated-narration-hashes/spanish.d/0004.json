@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:77bc191daa544cc7",
+  "lessonIds": [
+    "ES-C03-me",
+    "ES-C03-llamar",
+    "ES-C03-me-llamo",
+    "ES-C03-repaso-nombre"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch04.txt",
+  "json": "spanish/narration/ch04.json",
+  "textHash": "fnv1a64:1d259f4843d82277",
+  "jsonHash": "fnv1a64:5e9d9034f2c9fae7",
+  "findings": []
+}

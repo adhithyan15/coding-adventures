@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:1ab1362caf4450a0",
+  "lessonIds": [
+    "TE-C72-shop",
+    "TE-C72-money",
+    "TE-C72-price",
+    "TE-C72-weight",
+    "TE-C72-bargain"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch72.txt",
+  "json": "telugu/narration/ch72.json",
+  "textHash": "fnv1a64:d582d58c0c3ab67f",
+  "jsonHash": "fnv1a64:9f7587deeb4e5a17",
+  "findings": []
+}

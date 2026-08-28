@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:1fa7535add818308",
+  "lessonIds": [
+    "ML-C53-sky",
+    "ML-C53-sun",
+    "ML-C53-moon",
+    "ML-C53-star",
+    "ML-C53-sunshine"
+  ],
+  "tex": "malayalam/book/chapters/ch53-overhead.tex"
+}

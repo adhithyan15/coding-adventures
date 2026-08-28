@@ -1,0 +1,16 @@
+{
+  "language": "latin",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:bd30fdc59052d494",
+  "lessonIds": [
+    "LA-C08-caput",
+    "LA-C08-manus"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "latin/narration/ch08.txt",
+  "json": "latin/narration/ch08.json",
+  "textHash": "fnv1a64:d2bd942f92ffc0ad",
+  "jsonHash": "fnv1a64:bc79c8b9173eccc6",
+  "findings": []
+}

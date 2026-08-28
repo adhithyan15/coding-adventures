@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:6e4d80496bca2294",
+  "lessonIds": [
+    "GU-C22-hear-shahar",
+    "GU-C22-shahar",
+    "GU-C22-hear-shaalaa",
+    "GU-C22-shaalaa",
+    "GU-C22-hear-rasto",
+    "GU-C22-rasto",
+    "GU-C22-route-three"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "gujarati/narration/ch26.txt",
+  "json": "gujarati/narration/ch26.json",
+  "textHash": "fnv1a64:285f307d2f1a6fc0",
+  "jsonHash": "fnv1a64:682edb051555a4b8",
+  "findings": []
+}

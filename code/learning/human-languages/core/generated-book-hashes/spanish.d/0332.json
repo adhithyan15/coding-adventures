@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:c2771073dfcc5763",
+  "lessonIds": [
+    "ES-C332-permiso",
+    "ES-C332-aviso",
+    "ES-C332-disculpa",
+    "ES-C332-palabra",
+    "ES-C332-voz"
+  ],
+  "tex": "spanish/book/chapters/ch332-permiso-y-voz.tex"
+}

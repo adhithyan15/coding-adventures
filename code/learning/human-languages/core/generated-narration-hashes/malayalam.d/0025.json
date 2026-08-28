@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:642fa2c7b3998717",
+  "lessonIds": [
+    "ML-C25-shubha-rathri"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch25.txt",
+  "json": "malayalam/narration/ch25.json",
+  "textHash": "fnv1a64:16ea1723a10b79c3",
+  "jsonHash": "fnv1a64:87e5fb11cb851ed3",
+  "findings": []
+}

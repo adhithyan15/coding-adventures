@@ -1,0 +1,27 @@
+{
+  "language": "arabic",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:31a51f2caf5ae843",
+  "lessonIds": [
+    "AR-C02-ism",
+    "AR-C02-ii-my",
+    "AR-C02-ismii",
+    "AR-C02-anta-anti",
+    "AR-C02-maa",
+    "AR-C02-maa-ismuka",
+    "AR-C02-tasharrafna",
+    "AR-C02-practice",
+    "AR-W04-dots-family-nun-ta",
+    "AR-W05-ya-and-my-name",
+    "AR-W06-harakat-and-hamza",
+    "AR-W06-sukun-shadda-tanwin",
+    "AR-W06-hamza"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "arabic/narration/ch02.txt",
+  "json": "arabic/narration/ch02.json",
+  "textHash": "fnv1a64:b9fd8aca2944504a",
+  "jsonHash": "fnv1a64:f1a22d79d2cccfa6",
+  "findings": []
+}

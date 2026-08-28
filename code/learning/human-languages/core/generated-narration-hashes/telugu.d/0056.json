@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:51118e0ec266ad1d",
+  "lessonIds": [
+    "TE-C56-mat",
+    "TE-C56-basket",
+    "TE-C56-knife",
+    "TE-C56-vessel",
+    "TE-C56-box"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch56.txt",
+  "json": "telugu/narration/ch56.json",
+  "textHash": "fnv1a64:fe01264de1afb328",
+  "jsonHash": "fnv1a64:fb06bbe55d674397",
+  "findings": []
+}

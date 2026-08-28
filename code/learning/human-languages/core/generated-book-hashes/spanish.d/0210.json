@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:6aa90d134e4743a0",
+  "lessonIds": [
+    "ES-C56-sintesis-condiciones",
+    "ES-C56-depende"
+  ],
+  "tex": "spanish/book/chapters/ch210-synthesis-condiciones.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:000036d76be44512",
+  "lessonIds": [
+    "TE-C42-big",
+    "TE-C42-small",
+    "TE-C42-good",
+    "TE-C42-new",
+    "TE-C42-old",
+    "TE-C42-adjective-system"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch42.txt",
+  "json": "telugu/narration/ch42.json",
+  "textHash": "fnv1a64:9e020212a09db8c3",
+  "jsonHash": "fnv1a64:ecf3a5a68bec4444",
+  "findings": []
+}

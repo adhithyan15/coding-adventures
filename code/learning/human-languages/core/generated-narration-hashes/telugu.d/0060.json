@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:c81bca627d596923",
+  "lessonIds": [
+    "TE-C60-buffalo",
+    "TE-C60-goat",
+    "TE-C60-hen",
+    "TE-C60-ant",
+    "TE-C60-bird"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch60.txt",
+  "json": "telugu/narration/ch60.json",
+  "textHash": "fnv1a64:3f999173c19c13be",
+  "jsonHash": "fnv1a64:e1ff1b0f34ad8f74",
+  "findings": []
+}

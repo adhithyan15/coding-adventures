@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:56d8a698540deca8",
+  "lessonIds": [
+    "TA-C34-edu",
+    "TA-C34-kel",
+    "TA-W14-read-pesu",
+    "TA-C34-utavu",
+    "TA-C34-pidi"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "tamil/narration/ch34.txt",
+  "json": "tamil/narration/ch34.json",
+  "textHash": "fnv1a64:df1589ac7e6aa906",
+  "jsonHash": "fnv1a64:d93100f4905b1d9c",
+  "findings": []
+}

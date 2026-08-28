@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:28eda0c5278a3898",
+  "lessonIds": [
+    "TA-C54-mat",
+    "TA-C54-basket",
+    "TA-C54-knife",
+    "TA-C54-bowl",
+    "TA-C54-box"
+  ],
+  "tex": "tamil/book/chapters/ch54-things-in-the-house.tex"
+}

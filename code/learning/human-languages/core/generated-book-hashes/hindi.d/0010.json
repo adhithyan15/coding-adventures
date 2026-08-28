@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:92bb31fca6e891f3",
+  "lessonIds": [
+    "HI-C10-somavaar-shukravaar",
+    "HI-C10-shanivaar-ravivaar",
+    "HI-S05-sign-virama",
+    "HI-S114-letter-ha"
+  ],
+  "tex": "hindi/book/chapters/ch10-days.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:93a07ee046c5ff12",
+  "lessonIds": [
+    "ES-C309-familia",
+    "ES-C309-apodo",
+    "ES-C309-pariente",
+    "ES-C309-pareja",
+    "ES-C309-bebe"
+  ],
+  "tex": "spanish/book/chapters/ch309-familia-y-pareja.tex"
+}

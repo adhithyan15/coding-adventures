@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:e160efe1c90ba23a",
+  "lessonIds": [
+    "ES-W01-acento",
+    "ES-W01-tilde-diacritica",
+    "ES-W01-repaso-acento"
+  ],
+  "tex": "spanish/book/chapters/ch10-written-accent.tex"
+}

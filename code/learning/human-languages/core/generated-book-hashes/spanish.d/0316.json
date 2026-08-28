@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:510dcb6723ad5eb5",
+  "lessonIds": [
+    "ES-C316-llanto",
+    "ES-C316-nunca",
+    "ES-C316-siempre",
+    "ES-C316-todo",
+    "ES-C316-nada"
+  ],
+  "tex": "spanish/book/chapters/ch316-nunca-y-siempre.tex"
+}

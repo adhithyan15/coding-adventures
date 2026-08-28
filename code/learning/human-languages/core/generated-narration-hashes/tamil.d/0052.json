@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:b520d8966f76601f",
+  "lessonIds": [
+    "TA-C52-tree",
+    "TA-C52-branch",
+    "TA-C52-shoot",
+    "TA-C52-root",
+    "TA-C52-seed"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch52.txt",
+  "json": "tamil/narration/ch52.json",
+  "textHash": "fnv1a64:0a1fa92f05919659",
+  "jsonHash": "fnv1a64:1868558c8f5ba324",
+  "findings": []
+}

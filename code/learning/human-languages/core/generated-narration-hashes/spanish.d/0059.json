@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:a7a858c85159a9d1",
+  "lessonIds": [
+    "ES-C09-cansado"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch59.txt",
+  "json": "spanish/narration/ch59.json",
+  "textHash": "fnv1a64:c84b9b169771af86",
+  "jsonHash": "fnv1a64:4f105a7aa26f9f1d",
+  "findings": []
+}

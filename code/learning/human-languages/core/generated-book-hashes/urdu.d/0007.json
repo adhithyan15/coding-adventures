@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:85987522a867e0cb",
+  "lessonIds": [
+    "UR-C07-sochna",
+    "UR-C07-samajhna",
+    "UR-C07-parhna",
+    "UR-C07-likhna"
+  ],
+  "tex": "urdu/book/chapters/ch07-mind-verbs.tex"
+}

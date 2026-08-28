@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:370df9b4ea729bb3",
+  "lessonIds": [
+    "ES-C65-repaso-parejas",
+    "ES-C65-repaso-dos-pasados",
+    "ES-C65-repaso-columna-vosotros"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch256.txt",
+  "json": "spanish/narration/ch256.json",
+  "textHash": "fnv1a64:6f06d43196b25b09",
+  "jsonHash": "fnv1a64:3ca588c65cf944dd",
+  "findings": []
+}

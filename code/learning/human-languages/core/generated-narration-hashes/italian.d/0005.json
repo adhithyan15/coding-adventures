@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:7577e64790f4e58f",
+  "lessonIds": [
+    "IT-C05-parlare",
+    "IT-C05-abitare",
+    "IT-C05-lavorare",
+    "IT-C05-parlo-italiano",
+    "IT-C05-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "italian/narration/ch05.txt",
+  "json": "italian/narration/ch05.json",
+  "textHash": "fnv1a64:6d44cdd003fa5243",
+  "jsonHash": "fnv1a64:055ab7a00ce209a4",
+  "findings": []
+}

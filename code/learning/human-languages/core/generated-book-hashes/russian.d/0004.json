@@ -1,0 +1,12 @@
+{
+  "language": "russian",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:c9d35de6063a5291",
+  "lessonIds": [
+    "RU-C04-dumat",
+    "RU-C04-ponimat",
+    "RU-C04-chitat",
+    "RU-C04-pisat"
+  ],
+  "tex": "russian/book/chapters/ch04-verbs-of-the-mind.tex"
+}

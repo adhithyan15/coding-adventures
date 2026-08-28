@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:2b5e2d27736de6a7",
+  "lessonIds": [
+    "ES-C335-repaso-seis-palabras"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch335.txt",
+  "json": "spanish/narration/ch335.json",
+  "textHash": "fnv1a64:6ebfd73de50235c4",
+  "jsonHash": "fnv1a64:f1a00792e98c49f7",
+  "findings": []
+}

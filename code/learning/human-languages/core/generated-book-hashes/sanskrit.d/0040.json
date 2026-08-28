@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:47f83f7ab3111b57",
+  "lessonIds": [
+    "SA-C40-curd",
+    "SA-C40-sugar",
+    "SA-C40-butter",
+    "SA-C40-vegetable",
+    "SA-C40-sweet"
+  ],
+  "tex": "sanskrit/book/chapters/ch40-in-the-kitchen.tex"
+}

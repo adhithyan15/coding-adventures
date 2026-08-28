@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:6dbee9e5bddb8a3d",
+  "lessonIds": [
+    "ES-C378-selva",
+    "ES-C378-prado",
+    "ES-C378-volcan",
+    "ES-C378-cumbre",
+    "ES-C378-edificio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch378.txt",
+  "json": "spanish/narration/ch378.json",
+  "textHash": "fnv1a64:e67843d3e52c96bb",
+  "jsonHash": "fnv1a64:e97f5cb08abc1640",
+  "findings": []
+}

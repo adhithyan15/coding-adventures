@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:90890ce9bde9bf31",
+  "lessonIds": [
+    "ES-C355-pared",
+    "ES-C355-techo",
+    "ES-C355-piso",
+    "ES-C355-rincon",
+    "ES-C355-fondo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch355.txt",
+  "json": "spanish/narration/ch355.json",
+  "textHash": "fnv1a64:05b87b9fb6e51d3c",
+  "jsonHash": "fnv1a64:8c6152b642084977",
+  "findings": []
+}

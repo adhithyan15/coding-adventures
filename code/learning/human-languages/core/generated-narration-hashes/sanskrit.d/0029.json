@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:6efd7b2a99d209b5",
+  "lessonIds": [
+    "SA-C29-please",
+    "SA-C29-pardon",
+    "SA-C29-bow",
+    "SA-C29-favour",
+    "SA-C29-fortunate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch29.txt",
+  "json": "sanskrit/narration/ch29.json",
+  "textHash": "fnv1a64:b983648aef9193d1",
+  "jsonHash": "fnv1a64:4192dd04d84386e5",
+  "findings": []
+}

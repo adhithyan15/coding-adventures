@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:8a59ec1855ed2387",
+  "lessonIds": [
+    "ES-C55-tuvieron"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch202.txt",
+  "json": "spanish/narration/ch202.json",
+  "textHash": "fnv1a64:a2dd1ea3f32cca44",
+  "jsonHash": "fnv1a64:95a59d4a0f090b4b",
+  "findings": []
+}

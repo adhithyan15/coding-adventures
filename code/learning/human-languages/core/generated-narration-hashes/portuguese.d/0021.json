@@ -1,0 +1,18 @@
+{
+  "language": "portuguese",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:befd3a1bdd4a02e8",
+  "lessonIds": [
+    "PT-C21-trazer",
+    "PT-C21-conseguir",
+    "PT-C21-esperar",
+    "PT-C21-comprar"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "portuguese/narration/ch21.txt",
+  "json": "portuguese/narration/ch21.json",
+  "textHash": "fnv1a64:acbc571e5de794f8",
+  "jsonHash": "fnv1a64:9df463fe46c00400",
+  "findings": []
+}

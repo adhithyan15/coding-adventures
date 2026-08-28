@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:c6a4871501220cd0",
+  "lessonIds": [
+    "ES-C360-ropa",
+    "ES-C360-vestido",
+    "ES-C360-zapato",
+    "ES-C360-pantalon",
+    "ES-C360-boton"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch360.txt",
+  "json": "spanish/narration/ch360.json",
+  "textHash": "fnv1a64:ffd1c7e1ab0fd694",
+  "jsonHash": "fnv1a64:c47c60ad5bcf50df",
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "portuguese",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:8874b449726b531b",
+  "lessonIds": [
+    "PT-C21-trazer",
+    "PT-C21-conseguir",
+    "PT-C21-esperar",
+    "PT-C21-comprar"
+  ],
+  "tex": "portuguese/book/chapters/ch21-bringing-getting-waiting-buying.tex"
+}

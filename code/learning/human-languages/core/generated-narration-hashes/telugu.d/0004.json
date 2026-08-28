@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:eec23ac55024fea5",
+  "lessonIds": [
+    "TE-C04-vellu",
+    "TE-C04-velli-vastaanu",
+    "TE-C04-reepu-kaluddaam",
+    "TE-C04-malli-kaluddaam",
+    "TE-C04-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "telugu/narration/ch04.txt",
+  "json": "telugu/narration/ch04.json",
+  "textHash": "fnv1a64:07eccf956778636e",
+  "jsonHash": "fnv1a64:eeb697cc2726f572",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "language": "latin",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:4f8de404aea51d9c",
+  "lessonIds": [
+    "LA-C11-menses"
+  ],
+  "tex": "latin/book/chapters/ch11-months.tex"
+}

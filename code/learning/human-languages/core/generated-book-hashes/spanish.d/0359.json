@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:6d3dbad6d4d43b83",
+  "lessonIds": [
+    "ES-C359-metro",
+    "ES-C359-gramo",
+    "ES-C359-kilo",
+    "ES-C359-litro",
+    "ES-C359-peso"
+  ],
+  "tex": "spanish/book/chapters/ch359-el-kilo-y-el-litro.tex"
+}

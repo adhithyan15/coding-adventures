@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:a2cd3c5b3556d9b7",
+  "lessonIds": [
+    "PT-C03-eu",
+    "PT-C03-me-chamo",
+    "PT-C03-como-se-chama",
+    "PT-C03-prazer",
+    "PT-C03-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch03.txt",
+  "json": "portuguese/narration/ch03.json",
+  "textHash": "fnv1a64:87481ae18c63b798",
+  "jsonHash": "fnv1a64:e76cb5011bbb6cb0",
+  "findings": []
+}

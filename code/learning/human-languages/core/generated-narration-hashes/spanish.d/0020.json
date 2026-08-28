@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:cab4a2846e7d5321",
+  "lessonIds": [
+    "ES-C06-trabajar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch20.txt",
+  "json": "spanish/narration/ch20.json",
+  "textHash": "fnv1a64:30e8fc3c0ee30e18",
+  "jsonHash": "fnv1a64:afe86063bdb4c0d3",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "language": "telugu",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:c78965f0bfb88e1a",
+  "lessonIds": [
+    "TE-C11-rangulu",
+    "TE-S06-letter-ra",
+    "TE-S114-letter-la"
+  ],
+  "tex": "telugu/book/chapters/ch11-colours.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:71d9e91f007f92f2",
+  "lessonIds": [
+    "SA-C12-akshi",
+    "SA-C12-karnah",
+    "SA-C12-mukham",
+    "SA-S05-sign-virama",
+    "SA-S111-letter-ka"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "sanskrit/narration/ch12.txt",
+  "json": "sanskrit/narration/ch12.json",
+  "textHash": "fnv1a64:5074a2fd286695b0",
+  "jsonHash": "fnv1a64:406dd6c1f765f6a6",
+  "findings": []
+}

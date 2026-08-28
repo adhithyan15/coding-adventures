@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:940fd9319f463f9b",
+  "lessonIds": [
+    "HI-C46-hair",
+    "HI-C46-finger",
+    "HI-C46-ear",
+    "HI-C46-nose",
+    "HI-C46-throat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch46.txt",
+  "json": "hindi/narration/ch46.json",
+  "textHash": "fnv1a64:b00b6b07ee6afde4",
+  "jsonHash": "fnv1a64:11c2cfaa453471df",
+  "findings": []
+}

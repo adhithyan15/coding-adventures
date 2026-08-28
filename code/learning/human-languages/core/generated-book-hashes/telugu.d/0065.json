@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:60d871c6d92667aa",
+  "lessonIds": [
+    "TE-C65-welcome",
+    "TE-C65-manners",
+    "TE-C65-request",
+    "TE-C65-permission",
+    "TE-C65-trust"
+  ],
+  "tex": "telugu/book/chapters/ch65-more-good-manners.tex"
+}

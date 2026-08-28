@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:c2e90ecd8ef917da",
+  "lessonIds": [
+    "BN-C07-howa",
+    "BN-C07-jaowa",
+    "BN-C07-asha",
+    "BN-C07-khaowa",
+    "BN-C07-dekha",
+    "BN-C07-jana"
+  ],
+  "tex": "bengali/book/chapters/ch07-core-verbs.tex"
+}

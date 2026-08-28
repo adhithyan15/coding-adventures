@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:3967fc8681cadadf",
+  "lessonIds": [
+    "ES-C320-favor",
+    "ES-C320-molestia",
+    "ES-C320-pena",
+    "ES-C320-suerte",
+    "ES-C320-culpa"
+  ],
+  "tex": "spanish/book/chapters/ch320-favor-y-culpa.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:b78a75324002e58e",
+  "lessonIds": [
+    "ES-C277-segun",
+    "ES-C277-es-decir",
+    "ES-C277-por-un-lado",
+    "ES-C277-en-resumen",
+    "ES-C277-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch277.txt",
+  "json": "spanish/narration/ch277.json",
+  "textHash": "fnv1a64:2888de4be8df17bf",
+  "jsonHash": "fnv1a64:b69799abe61ce208",
+  "findings": []
+}

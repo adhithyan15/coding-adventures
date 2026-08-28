@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:b06274dc71bda036",
+  "lessonIds": [
+    "ES-C65-vi-di",
+    "ES-C65-di"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch255.txt",
+  "json": "spanish/narration/ch255.json",
+  "textHash": "fnv1a64:c6090a0c22aef03c",
+  "jsonHash": "fnv1a64:f58004819f06cf6f",
+  "findings": []
+}

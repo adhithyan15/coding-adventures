@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:95cbff60b1c09375",
+  "lessonIds": [
+    "ES-C52-sintesis-el-letrero"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch185.txt",
+  "json": "spanish/narration/ch185.json",
+  "textHash": "fnv1a64:19d7fa7e82c13eb9",
+  "jsonHash": "fnv1a64:b90a3b4f82273622",
+  "findings": []
+}

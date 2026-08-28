@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:e887a4010cea1114",
+  "lessonIds": [
+    "ES-C09-ser",
+    "ES-C09-ser-vs-estar",
+    "ES-C09-soy-de",
+    "ES-C09-esta-en",
+    "ES-C09-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch48.txt",
+  "json": "spanish/narration/ch48.json",
+  "textHash": "fnv1a64:b2cbbb9174325f2a",
+  "jsonHash": "fnv1a64:cd212a43f0ca03a4",
+  "findings": []
+}

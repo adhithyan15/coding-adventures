@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:c95cc1d2d84d1b6f",
+  "lessonIds": [
+    "TA-C43-child",
+    "TA-C43-son",
+    "TA-C43-daughter",
+    "TA-C43-family"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "tamil/narration/ch43.txt",
+  "json": "tamil/narration/ch43.json",
+  "textHash": "fnv1a64:f3cc61dffe89fea4",
+  "jsonHash": "fnv1a64:edc42a6321660468",
+  "findings": []
+}

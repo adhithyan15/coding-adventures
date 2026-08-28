@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:2596850f9648e1c4",
+  "lessonIds": [
+    "KA-C62-thread",
+    "KA-C62-needle",
+    "KA-C62-rope",
+    "KA-C62-broom",
+    "KA-C62-umbrella"
+  ],
+  "tex": "kannada/book/chapters/ch62-things-people-make.tex"
+}

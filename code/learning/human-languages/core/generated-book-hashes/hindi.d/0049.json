@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:bb610ca50b6a121c",
+  "lessonIds": [
+    "HI-C49-now",
+    "HI-C49-day-after",
+    "HI-C49-journey",
+    "HI-C49-set-out",
+    "HI-C49-meeting"
+  ],
+  "tex": "hindi/book/chapters/ch49-taking-your-leave.tex"
+}

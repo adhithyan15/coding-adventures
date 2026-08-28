@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:3c51e95aa7bf0ce2",
+  "lessonIds": [
+    "HI-C03-kaise",
+    "HI-C03-aap-kaise-hain",
+    "HI-C03-main",
+    "HI-C03-hun",
+    "HI-C03-thik",
+    "HI-C03-aapka-swagat-hai",
+    "HI-C03-practice"
+  ],
+  "tex": "hindi/book/chapters/ch03-responding.tex"
+}

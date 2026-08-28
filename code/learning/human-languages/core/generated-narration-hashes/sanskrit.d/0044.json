@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:6c286fb414b9813c",
+  "lessonIds": [
+    "SA-C44-white",
+    "SA-C44-dark",
+    "SA-C44-yellow",
+    "SA-C44-green",
+    "SA-C44-blue"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch44.txt",
+  "json": "sanskrit/narration/ch44.json",
+  "textHash": "fnv1a64:2ef4d97354c9491f",
+  "jsonHash": "fnv1a64:e047d7b81d4ae2e5",
+  "findings": []
+}

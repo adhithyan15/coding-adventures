@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:4cacc8aa4dbfcb69",
+  "lessonIds": [
+    "LA-C14-annos-natus"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "latin/narration/ch14.txt",
+  "json": "latin/narration/ch14.json",
+  "textHash": "fnv1a64:52a00d2d32dd54cc",
+  "jsonHash": "fnv1a64:6af5eba23474d79a",
+  "findings": []
+}

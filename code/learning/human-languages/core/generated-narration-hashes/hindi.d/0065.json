@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:202dac5979ee5bb1",
+  "lessonIds": [
+    "HI-C65-kindness",
+    "HI-C65-entreaty",
+    "HI-C65-permission",
+    "HI-C65-trust",
+    "HI-C65-manners"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch65.txt",
+  "json": "hindi/narration/ch65.json",
+  "textHash": "fnv1a64:a983e2119b40040d",
+  "jsonHash": "fnv1a64:b5f4d77b6962a2ea",
+  "findings": []
+}

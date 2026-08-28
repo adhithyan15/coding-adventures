@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:ef59f7e86d3ed65d",
+  "lessonIds": [
+    "TA-C35-veedu",
+    "TA-W15-read-po",
+    "TA-C35-kadavu",
+    "TA-C35-arai",
+    "TA-C35-naarkaali"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "tamil/narration/ch35.txt",
+  "json": "tamil/narration/ch35.json",
+  "textHash": "fnv1a64:eb692dab7ce74c09",
+  "jsonHash": "fnv1a64:8701f8e9b5e65685",
+  "findings": []
+}

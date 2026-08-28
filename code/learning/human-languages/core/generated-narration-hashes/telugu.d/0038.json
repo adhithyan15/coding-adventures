@@ -1,0 +1,16 @@
+{
+  "language": "telugu",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:d56eb8750d2c6131",
+  "lessonIds": [
+    "TE-C38-gunde",
+    "TE-C38-hrudayam"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch38.txt",
+  "json": "telugu/narration/ch38.json",
+  "textHash": "fnv1a64:d8846f7c814a4c3c",
+  "jsonHash": "fnv1a64:02b429c73439b50e",
+  "findings": []
+}

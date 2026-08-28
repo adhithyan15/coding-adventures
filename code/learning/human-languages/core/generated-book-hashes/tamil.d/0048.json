@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:1b6f1fc3a6fafe65",
+  "lessonIds": [
+    "TA-C48-now",
+    "TA-C48-time",
+    "TA-C48-journey",
+    "TA-C48-later",
+    "TA-C48-set-out"
+  ],
+  "tex": "tamil/book/chapters/ch48-setting-out.tex"
+}

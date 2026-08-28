@@ -1,0 +1,22 @@
+{
+  "language": "sanskrit",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:b39cf9020dead40a",
+  "lessonIds": [
+    "SA-C02-nama",
+    "SA-C02-mama",
+    "SA-C02-asti",
+    "SA-C02-mama-nama-asti",
+    "SA-C02-bhavan-tvam",
+    "SA-C02-kim",
+    "SA-C02-tava-nama-kim",
+    "SA-C02-anandah"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "sanskrit/narration/ch02.txt",
+  "json": "sanskrit/narration/ch02.json",
+  "textHash": "fnv1a64:48c14d654e33986e",
+  "jsonHash": "fnv1a64:56e36edcbbdd3c76",
+  "findings": []
+}

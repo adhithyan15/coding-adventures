@@ -1,0 +1,10 @@
+{
+  "language": "telugu",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:f701380e92d9ec89",
+  "lessonIds": [
+    "TE-C14-rutuvulu",
+    "TE-S117-letter-va"
+  ],
+  "tex": "telugu/book/chapters/ch14-seasons.tex"
+}

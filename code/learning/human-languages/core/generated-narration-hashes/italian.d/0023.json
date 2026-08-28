@@ -1,0 +1,18 @@
+{
+  "language": "italian",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:c10c02b8e7198afe",
+  "lessonIds": [
+    "IT-C23-amico-amica",
+    "IT-C23-famiglia",
+    "IT-C23-nome",
+    "IT-C23-persona"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "italian/narration/ch23.txt",
+  "json": "italian/narration/ch23.json",
+  "textHash": "fnv1a64:4c763763d2a5a3fa",
+  "jsonHash": "fnv1a64:f45c6913c6a2d936",
+  "findings": []
+}

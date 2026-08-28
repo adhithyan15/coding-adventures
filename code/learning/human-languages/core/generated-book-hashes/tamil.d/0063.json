@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:0f3d2553ce431c43",
+  "lessonIds": [
+    "TA-C63-request",
+    "TA-C63-permission",
+    "TA-C63-hesitancy",
+    "TA-C63-trust",
+    "TA-C63-humility"
+  ],
+  "tex": "tamil/book/chapters/ch63-asking-well.tex"
+}

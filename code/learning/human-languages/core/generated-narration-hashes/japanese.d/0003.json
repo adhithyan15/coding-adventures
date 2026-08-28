@@ -1,0 +1,22 @@
+{
+  "language": "japanese",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:7832024c6b7ac24d",
+  "lessonIds": [
+    "JA-W03-a",
+    "JA-W03-ri",
+    "JA-W03-ka",
+    "JA-W03-dakuten",
+    "JA-W03-to",
+    "JA-W03-u",
+    "JA-W03-arigatou-read",
+    "JA-C01-arigatou"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "japanese/narration/ch03.txt",
+  "json": "japanese/narration/ch03.json",
+  "textHash": "fnv1a64:0a64d358416e6526",
+  "jsonHash": "fnv1a64:e8dcc423abb08498",
+  "findings": []
+}

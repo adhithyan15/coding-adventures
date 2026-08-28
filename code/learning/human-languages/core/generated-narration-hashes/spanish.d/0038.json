@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:67e4bf1974f325d7",
+  "lessonIds": [
+    "ES-C07-hablamos"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch38.txt",
+  "json": "spanish/narration/ch38.json",
+  "textHash": "fnv1a64:10fb10f8ce19af17",
+  "jsonHash": "fnv1a64:5789ed9e6b39d73e",
+  "findings": []
+}

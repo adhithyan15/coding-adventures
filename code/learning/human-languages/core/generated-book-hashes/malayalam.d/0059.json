@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:c88d334e573093c0",
+  "lessonIds": [
+    "ML-C59-wind",
+    "ML-C59-sand",
+    "ML-C59-mud",
+    "ML-C59-smoke",
+    "ML-C59-ember"
+  ],
+  "tex": "malayalam/book/chapters/ch59-what-the-air-carries.tex"
+}

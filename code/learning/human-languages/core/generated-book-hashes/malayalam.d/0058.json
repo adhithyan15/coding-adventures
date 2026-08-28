@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:0f76c7ef56509417",
+  "lessonIds": [
+    "ML-C58-more",
+    "ML-C58-less",
+    "ML-C58-a-little",
+    "ML-C58-no-need",
+    "ML-C58-that-will-do"
+  ],
+  "tex": "malayalam/book/chapters/ch58-five-more-short-answers.tex"
+}

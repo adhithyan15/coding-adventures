@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:773cdd3fd7a20474",
+  "lessonIds": [
+    "TE-C48-teacher",
+    "TE-C48-student",
+    "TE-C48-doctor",
+    "TE-C48-farmer",
+    "TE-C48-guest"
+  ],
+  "tex": "telugu/book/chapters/ch48-roles.tex"
+}

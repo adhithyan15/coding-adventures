@@ -1,0 +1,11 @@
+{
+  "language": "telugu",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:2231b9cbf0ea42a2",
+  "lessonIds": [
+    "TE-C10-vaaram",
+    "TE-S05-sign-virama",
+    "TE-S113-letter-pa"
+  ],
+  "tex": "telugu/book/chapters/ch10-days.tex"
+}

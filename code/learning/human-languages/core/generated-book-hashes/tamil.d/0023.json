@@ -1,0 +1,11 @@
+{
+  "language": "tamil",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:c4a7df5eb5336177",
+  "lessonIds": [
+    "TA-C23-naal",
+    "TA-C23-day-family-register",
+    "TA-W09-read-peyar"
+  ],
+  "tex": "tamil/book/chapters/ch23-day.tex"
+}

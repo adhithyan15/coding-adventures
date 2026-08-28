@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:3a8b50ff46c100ac",
+  "lessonIds": [
+    "ES-C350-propio",
+    "ES-C350-ajeno",
+    "ES-C350-igual",
+    "ES-C350-distinto",
+    "ES-C350-tipo"
+  ],
+  "tex": "spanish/book/chapters/ch350-propio-y-ajeno.tex"
+}

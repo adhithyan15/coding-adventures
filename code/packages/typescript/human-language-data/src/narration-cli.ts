@@ -38,7 +38,13 @@
 // can go stale.
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
+import {
+  dirname,
+  join,
+  normalize,
+  relative as pathRelative,
+  resolve,
+} from "node:path";
 import { assertRelativeManifestPath } from "./manifest-path.js";
 import { pathToFileURL } from "node:url";
 import { fnv1a64 } from "./hash.js";
@@ -55,38 +61,16 @@ import {
   type ChapterNarration,
 } from "./narration.js";
 import { DEFAULT_LINEARISABLE_TABLE_COLUMNS } from "./speech.js";
+import {
+  GENERATED_NARRATION_HASH_DIR,
+  assertGeneratedHashOwnerNames,
+  generatedNarrationHashOwnerContents,
+  prepareGeneratedHashOwnerWrite,
+  type GeneratedNarrationHashManifest,
+} from "./generated-hash-shards.js";
 
 /** One independently mergeable narration manifest per language. */
-export const NARRATION_HASH_MANIFEST_DIR = "core/generated-narration-hashes";
-
-function manifestPath(language: string): string {
-  if (!/^[a-z0-9-]+$/.test(language)) {
-    throw new Error(`unsafe generated narration manifest language '${language}'`);
-  }
-  return `${NARRATION_HASH_MANIFEST_DIR}/${language}.json`;
-}
-
-interface GeneratedNarrationManifest {
-  version: 1;
-  algorithm: "fnv1a64";
-  /** The width the export was generated at; a change here changes every file. */
-  maxLinearisableTableColumns: number;
-  chapters: Array<{
-    language: string;
-    chapter: number;
-    /** Fingerprint of the chapter's lesson ASTs — the drift detector. */
-    sourceHash: string;
-    lessonIds: string[];
-    voiceLessons: number;
-    drivablePrefix: number;
-    text: string;
-    json: string;
-    /** Fingerprint of what we generated, so a hand-edited export is caught too. */
-    textHash: string;
-    jsonHash: string;
-  }>;
-  findings: Array<{ code: string; lessonId: string; language: string; message: string }>;
-}
+export const NARRATION_HASH_MANIFEST_DIR = GENERATED_NARRATION_HASH_DIR;
 
 /**
  * Resolve a curriculum-root-relative output path, refusing anything that escapes.
@@ -99,9 +83,15 @@ interface GeneratedNarrationManifest {
  * be for a function that writes files.
  */
 export function safeOutput(root: string, relative: string): string {
-  assertRelativeManifestPath(relative, `unsafe generated narration output '${relative}'`);
+  assertRelativeManifestPath(
+    relative,
+    `unsafe generated narration output '${relative}'`,
+  );
   const output = resolve(root, relative);
-  const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll("\\", "/");
+  const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll(
+    "\\",
+    "/",
+  );
   if (
     fromRoot === "" ||
     fromRoot === ".." ||
@@ -128,10 +118,17 @@ function chapterSlug(chapter: number): string {
  * checkouts of the policy file working.
  */
 export function policyTableWidth(root: string): number {
-  const policy = loadChapterPolicy(root) as { maxLinearisableTableColumns?: unknown };
+  const policy = loadChapterPolicy(root) as {
+    maxLinearisableTableColumns?: unknown;
+  };
   const value = policy.maxLinearisableTableColumns;
   if (value === undefined) return DEFAULT_LINEARISABLE_TABLE_COLUMNS;
-  if (typeof value !== "number" || !Number.isInteger(value) || value < 0 || value > 16) {
+  if (
+    typeof value !== "number" ||
+    !Number.isInteger(value) ||
+    value < 0 ||
+    value > 16
+  ) {
     throw new Error(
       "chapter-policy.json: maxLinearisableTableColumns must be an integer from 0 through 16",
     );
@@ -145,7 +142,9 @@ export function policyTableWidth(root: string): number {
  * Pure enough to test: it reads the curriculum once through the loader and then does
  * no I/O of its own. `runNarrationGeneration` is the only thing that writes.
  */
-export function narrationOutputs(root = defaultCurriculumRoot()): Map<string, string> {
+export function narrationOutputs(
+  root = defaultCurriculumRoot(),
+): Map<string, string> {
   const maxLinearisableTableColumns = policyTableWidth(root);
   const lessons = loadLessons(root);
 
@@ -164,9 +163,12 @@ export function narrationOutputs(root = defaultCurriculumRoot()): Map<string, st
     names.set(language.id, language.name ?? language.id);
   }
 
-  const chapters = narrationChapters(lessons, { maxLinearisableTableColumns, titles });
+  const chapters = narrationChapters(lessons, {
+    maxLinearisableTableColumns,
+    titles,
+  });
   const outputs = new Map<string, string>();
-  const manifests = new Map<string, GeneratedNarrationManifest>();
+  const manifests = new Map<string, GeneratedNarrationHashManifest>();
 
   for (const chapter of chapters) {
     const slug = chapterSlug(chapter.chapter);
@@ -175,7 +177,10 @@ export function narrationOutputs(root = defaultCurriculumRoot()): Map<string, st
     safeOutput(root, textPath);
     safeOutput(root, jsonPath);
 
-    const text = renderChapterNarrationText(chapter, names.get(chapter.language));
+    const text = renderChapterNarrationText(
+      chapter,
+      names.get(chapter.language),
+    );
     const json = `${JSON.stringify(serializeChapter(chapter), null, 2)}\n`;
     outputs.set(textPath, text);
     outputs.set(jsonPath, json);
@@ -195,7 +200,9 @@ export function narrationOutputs(root = defaultCurriculumRoot()): Map<string, st
       chapter: chapter.chapter,
       sourceHash: chapter.sourceHash,
       lessonIds: chapter.lessonIds,
-      voiceLessons: chapter.lessons.filter((lesson) => lesson.modality === "voice").length,
+      voiceLessons: chapter.lessons.filter(
+        (lesson) => lesson.modality === "voice",
+      ).length,
       drivablePrefix: chapter.drivablePrefix,
       text: textPath,
       json: jsonPath,
@@ -205,12 +212,21 @@ export function narrationOutputs(root = defaultCurriculumRoot()): Map<string, st
     manifest.findings.push(...chapter.findings);
   }
 
-  for (const [language, manifest] of [...manifests].sort(([left], [right]) => left.localeCompare(right))) {
+  for (const [language, manifest] of [...manifests].sort(([left], [right]) =>
+    left.localeCompare(right),
+  )) {
     manifest.chapters.sort((left, right) => left.chapter - right.chapter);
     manifest.findings.sort(
-      (left, right) => left.lessonId.localeCompare(right.lessonId) || left.code.localeCompare(right.code),
+      (left, right) =>
+        left.lessonId.localeCompare(right.lessonId) ||
+        left.code.localeCompare(right.code),
     );
-    outputs.set(manifestPath(language), `${JSON.stringify(manifest, null, 2)}\n`);
+    for (const [relative, content] of generatedNarrationHashOwnerContents(
+      language,
+      manifest,
+    )) {
+      outputs.set(relative, content);
+    }
   }
   return outputs;
 }
@@ -262,22 +278,49 @@ export function runNarrationGeneration(
   try {
     outputs = narrationOutputs(root);
   } catch (error) {
-    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+    process.stderr.write(
+      `${error instanceof Error ? error.message : String(error)}\n`,
+    );
     return 2;
   }
   let mismatch = false;
+  if (mode === "--check") {
+    try {
+      assertGeneratedHashOwnerNames(
+        root,
+        NARRATION_HASH_MANIFEST_DIR,
+        outputs.keys(),
+      );
+    } catch (error) {
+      process.stderr.write(
+        `${error instanceof Error ? error.message : String(error)}\n`,
+      );
+      return 1;
+    }
+  }
   for (const [relative, expected] of outputs) {
-    const output = relative.startsWith(`${NARRATION_HASH_MANIFEST_DIR}/`)
-      ? join(root, relative)
+    const hashOwner = relative.startsWith(`${NARRATION_HASH_MANIFEST_DIR}/`);
+    const output = hashOwner
+      ? mode === "--write"
+        ? prepareGeneratedHashOwnerWrite(
+            root,
+            NARRATION_HASH_MANIFEST_DIR,
+            relative,
+          )
+        : join(root, relative)
       : safeOutput(root, relative);
     if (mode === "--write") {
       mkdirSync(dirname(output), { recursive: true });
       writeFileSync(output, expected, "utf8");
       continue;
     }
-    const actual = existsSync(output) ? readFileSync(output, "utf8") : undefined;
+    const actual = existsSync(output)
+      ? readFileSync(output, "utf8")
+      : undefined;
     if (actual !== expected) {
-      process.stderr.write(`${relative}: generated narration is missing or stale\n`);
+      process.stderr.write(
+        `${relative}: generated narration is missing or stale\n`,
+      );
       mismatch = true;
     }
   }
@@ -287,6 +330,9 @@ export function runNarrationGeneration(
   return mismatch ? 1 : 0;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(resolve(process.argv[1])).href
+) {
   process.exit(runNarrationGeneration());
 }

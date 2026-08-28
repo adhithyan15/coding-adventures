@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:f8dbec90e7a6bf43",
+  "lessonIds": [
+    "ES-C52-tres-ses"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch184.txt",
+  "json": "spanish/narration/ch184.json",
+  "textHash": "fnv1a64:1cb83824f77dc1c8",
+  "jsonHash": "fnv1a64:960fdc683a16a8e2",
+  "findings": []
+}

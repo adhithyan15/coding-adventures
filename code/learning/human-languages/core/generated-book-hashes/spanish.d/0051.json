@@ -1,0 +1,9 @@
+{
+  "language": "spanish",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:9c6d48ed00e04a4a",
+  "lessonIds": [
+    "ES-C09-profesor"
+  ],
+  "tex": "spanish/book/chapters/ch51-profesor.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:8197d0927b11e2f8",
+  "lessonIds": [
+    "ES-C352-conjunto",
+    "ES-C352-entero",
+    "ES-C352-mayoria",
+    "ES-C352-resto",
+    "ES-C352-escaso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch352.txt",
+  "json": "spanish/narration/ch352.json",
+  "textHash": "fnv1a64:fa6e39d47b3d619d",
+  "jsonHash": "fnv1a64:9e12bc2a8115d6df",
+  "findings": []
+}

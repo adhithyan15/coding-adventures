@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:e855a8fe180ee066",
+  "lessonIds": [
+    "ES-C12-hacer",
+    "ES-C12-decir",
+    "ES-C12-yo-go",
+    "ES-C12-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch70.txt",
+  "json": "spanish/narration/ch70.json",
+  "textHash": "fnv1a64:cc8edd8fd1541a74",
+  "jsonHash": "fnv1a64:665e1ddd4246c377",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "language": "spanish",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:f68093df87f011ff",
+  "lessonIds": [
+    "ES-C47-sintesis-dos-a-la-vez"
+  ],
+  "tex": "spanish/book/chapters/ch102-synthesis-double-object.tex"
+}

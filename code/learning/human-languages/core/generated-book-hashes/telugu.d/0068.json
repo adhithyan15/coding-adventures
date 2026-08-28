@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:e5186807429aa68f",
+  "lessonIds": [
+    "TE-C68-sound",
+    "TE-C68-voice",
+    "TE-C68-song",
+    "TE-C68-shout",
+    "TE-C68-message"
+  ],
+  "tex": "telugu/book/chapters/ch68-sound-and-voice.tex"
+}

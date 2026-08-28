@@ -1,0 +1,18 @@
+{
+  "language": "arabic",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:50bfbe0a5a2b3534",
+  "lessonIds": [
+    "AR-C32-akhadha",
+    "AR-C32-fakkara",
+    "AR-C32-saada",
+    "AR-C32-ahabba"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "arabic/narration/ch32.txt",
+  "json": "arabic/narration/ch32.json",
+  "textHash": "fnv1a64:3ca7e79f4affb56d",
+  "jsonHash": "fnv1a64:d2a82041341e5629",
+  "findings": []
+}

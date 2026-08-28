@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:bd22d96d9014e3f5",
+  "lessonIds": [
+    "MW-C14-hear-sasta",
+    "MW-C14-sasta",
+    "MW-C14-hear-samaan",
+    "MW-C14-samaan",
+    "MW-R14-shopping-new-two",
+    "MW-C14-shopping-five",
+    "MW-R14-shopping-close"
+  ],
+  "tex": "marwadi/book/chapters/ch19-shopping-five.tex"
+}

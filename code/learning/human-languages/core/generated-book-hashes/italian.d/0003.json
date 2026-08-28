@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:31898bd4820a6171",
+  "lessonIds": [
+    "IT-C03-io",
+    "IT-C03-mi-chiamo",
+    "IT-C03-come-ti-chiami",
+    "IT-C03-piacere",
+    "IT-C03-practice"
+  ],
+  "tex": "italian/book/chapters/ch03-introductions.tex"
+}

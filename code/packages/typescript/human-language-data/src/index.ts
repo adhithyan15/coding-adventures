@@ -70,7 +70,12 @@ export {
   type MetalanguageUse,
   type MetalanguageReport,
 } from "./metalanguage.js";
-export { parseBodyBlocks, parseLesson, buildDataset, type ParsedLesson } from "./parse.js";
+export {
+  parseBodyBlocks,
+  parseLesson,
+  buildDataset,
+  type ParsedLesson,
+} from "./parse.js";
 export {
   parseLessonActivityValue,
   normalizeActivityResponse,
@@ -121,7 +126,12 @@ export {
   languagesForConcept,
   coverageByLanguage,
 } from "./queries.js";
-export { validate, hasErrors, summarize, type ValidateInput } from "./validate.js";
+export {
+  validate,
+  hasErrors,
+  summarize,
+  type ValidateInput,
+} from "./validate.js";
 export {
   validateCurriculum,
   type CurriculumValidationInput,
@@ -181,6 +191,28 @@ export {
   type ReadLedgerOptions,
   type Shard,
 } from "./shard.js";
+export {
+  GENERATED_BOOK_HASH_DIR,
+  GENERATED_NARRATION_HASH_DIR,
+  generatedHashShardDirectory,
+  generatedHashChapterFilename,
+  prepareGeneratedHashOwnerWrite,
+  readGeneratedBookHashManifest,
+  readGeneratedNarrationHashManifest,
+  listGeneratedBookHashOwnerLanguages,
+  listGeneratedBookHashManifests,
+  generatedBookHashOwnerContents,
+  generatedNarrationHashOwnerContents,
+  assertGeneratedHashOwnerNames,
+  type GeneratedBookHashChapter,
+  type GeneratedBookHashManifest,
+  type GeneratedNarrationFinding,
+  type GeneratedNarrationHashChapter,
+  type GeneratedNarrationChapterOwner,
+  type GeneratedNarrationHashManifest,
+  type LoadedGeneratedHashManifest,
+  type GeneratedHashReadOptions,
+} from "./generated-hash-shards.js";
 export {
   buildTrackProgress,
   renderTrackProgressCard,

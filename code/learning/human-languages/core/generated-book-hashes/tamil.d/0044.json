@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:66b356a46ac01de1",
+  "lessonIds": [
+    "TA-C44-fruit",
+    "TA-C44-cloth",
+    "TA-C44-lamp",
+    "TA-C44-salt",
+    "TA-C44-book"
+  ],
+  "tex": "tamil/book/chapters/ch44-things-you-ask-for.tex"
+}

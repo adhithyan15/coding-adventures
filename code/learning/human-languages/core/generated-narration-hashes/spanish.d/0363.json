@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:154925d9c5e30230",
+  "lessonIds": [
+    "ES-C363-coche",
+    "ES-C363-avion",
+    "ES-C363-barco",
+    "ES-C363-autobus",
+    "ES-C363-bicicleta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch363.txt",
+  "json": "spanish/narration/ch363.json",
+  "textHash": "fnv1a64:e6f535616b32cb4f",
+  "jsonHash": "fnv1a64:569ef0c470f2b0f8",
+  "findings": []
+}

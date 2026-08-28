@@ -1,0 +1,10 @@
+{
+  "language": "italian",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:f57c62b8fac9d0f7",
+  "lessonIds": [
+    "IT-C07-giorni-1",
+    "IT-C07-giorni-2"
+  ],
+  "tex": "italian/book/chapters/ch07-days-of-the-week.tex"
+}

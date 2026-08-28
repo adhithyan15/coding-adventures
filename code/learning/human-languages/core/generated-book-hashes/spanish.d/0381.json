@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:02a1fee4fa7fd2a7",
+  "lessonIds": [
+    "ES-C381-lavar",
+    "ES-C381-romper",
+    "ES-C381-saltar",
+    "ES-C381-sonar"
+  ],
+  "tex": "spanish/book/chapters/ch381-lavar-y-romper.tex"
+}

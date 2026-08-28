@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:e29790b66ca25dad",
+  "lessonIds": [
+    "ES-C55-si-futuro"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch197.txt",
+  "json": "spanish/narration/ch197.json",
+  "textHash": "fnv1a64:e0908d7debf4fb9e",
+  "jsonHash": "fnv1a64:e06496698e2d36a2",
+  "findings": []
+}

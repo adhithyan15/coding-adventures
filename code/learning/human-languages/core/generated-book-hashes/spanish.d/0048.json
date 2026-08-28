@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:352470f4801434b3",
+  "lessonIds": [
+    "ES-C09-ser",
+    "ES-C09-ser-vs-estar",
+    "ES-C09-soy-de",
+    "ES-C09-esta-en",
+    "ES-C09-practice"
+  ],
+  "tex": "spanish/book/chapters/ch48-ser-y-estar.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:796736ad2cc5607a",
+  "lessonIds": [
+    "ML-C42-big",
+    "ML-C42-small",
+    "ML-C42-good",
+    "ML-C42-new",
+    "ML-C42-old",
+    "ML-C42-adjective-system"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch42.txt",
+  "json": "malayalam/narration/ch42.json",
+  "textHash": "fnv1a64:c145d3fcf65ce77e",
+  "jsonHash": "fnv1a64:85b3f393e089e1a2",
+  "findings": []
+}

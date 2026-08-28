@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:e5dbf3de0891bc7d",
+  "lessonIds": [
+    "KA-C28-aparahna"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch28.txt",
+  "json": "kannada/narration/ch28.json",
+  "textHash": "fnv1a64:778e572752b543b5",
+  "jsonHash": "fnv1a64:548cfeef9dfe231d",
+  "findings": []
+}

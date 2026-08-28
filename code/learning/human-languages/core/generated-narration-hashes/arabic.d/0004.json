@@ -1,0 +1,22 @@
+{
+  "language": "arabic",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:9563dd3c2f44136a",
+  "lessonIds": [
+    "AR-W10-ayn",
+    "AR-W11-ha-and-ta-marbuta",
+    "AR-W12-maa-salama",
+    "AR-C04-maa-with",
+    "AR-C04-al-salama",
+    "AR-C04-maa-salama",
+    "AR-C04-ila-liqaa",
+    "AR-C04-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "arabic/narration/ch04.txt",
+  "json": "arabic/narration/ch04.json",
+  "textHash": "fnv1a64:d2f2e8b249b95a7e",
+  "jsonHash": "fnv1a64:124478821f35470b",
+  "findings": []
+}

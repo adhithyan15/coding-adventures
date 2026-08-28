@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:7bd5592b97c4660c",
+  "lessonIds": [
+    "TE-C68-sound",
+    "TE-C68-voice",
+    "TE-C68-song",
+    "TE-C68-shout",
+    "TE-C68-message"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch68.txt",
+  "json": "telugu/narration/ch68.json",
+  "textHash": "fnv1a64:f9672d855cfed426",
+  "jsonHash": "fnv1a64:720983e59cde71c9",
+  "findings": []
+}

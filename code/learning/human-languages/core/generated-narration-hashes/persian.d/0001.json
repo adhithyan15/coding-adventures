@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:a53ddc263ce690b5",
+  "lessonIds": [
+    "FA-C01-salam",
+    "FA-W00-alef-guided-copy",
+    "FA-C01-mamnoon",
+    "FA-C01-bale",
+    "FA-C01-na",
+    "FA-C01-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "persian/narration/ch01.txt",
+  "json": "persian/narration/ch01.json",
+  "textHash": "fnv1a64:2c1c4243bf87f46b",
+  "jsonHash": "fnv1a64:714e807ef2398aac",
+  "findings": []
+}

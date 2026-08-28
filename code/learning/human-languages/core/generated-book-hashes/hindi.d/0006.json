@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:06cd03dcec0f8c10",
+  "lessonIds": [
+    "HI-C06-numbers-1-5",
+    "HI-C06-tin-char-history",
+    "HI-C06-paanch-nasal",
+    "HI-S01-letter-ma",
+    "HI-S110-letter-ra"
+  ],
+  "tex": "hindi/book/chapters/ch06-numbers-1-5.tex"
+}

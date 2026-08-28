@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:abfe1556621efc4d",
+  "lessonIds": [
+    "HI-C34-sochna",
+    "HI-C34-samajhna",
+    "HI-C34-padhna",
+    "HI-C34-likhna"
+  ],
+  "tex": "hindi/book/chapters/ch34-verbs-of-the-mind.tex"
+}

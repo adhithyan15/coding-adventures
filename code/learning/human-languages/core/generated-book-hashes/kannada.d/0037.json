@@ -1,0 +1,12 @@
+{
+  "language": "kannada",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:7b8bd9c2992e03fc",
+  "lessonIds": [
+    "KA-C37-kannu",
+    "KA-C37-kivi",
+    "KA-C37-moogu",
+    "KA-C37-baayi"
+  ],
+  "tex": "kannada/book/chapters/ch37-face-words.tex"
+}

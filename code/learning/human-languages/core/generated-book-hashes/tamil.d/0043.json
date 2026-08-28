@@ -1,0 +1,12 @@
+{
+  "language": "tamil",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:363b6632b20a4903",
+  "lessonIds": [
+    "TA-C43-child",
+    "TA-C43-son",
+    "TA-C43-daughter",
+    "TA-C43-family"
+  ],
+  "tex": "tamil/book/chapters/ch43-household.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:04c87d7850de7de1",
+  "lessonIds": [
+    "ES-C58-tampoco"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch220.txt",
+  "json": "spanish/narration/ch220.json",
+  "textHash": "fnv1a64:d47c47f761ae6e7f",
+  "jsonHash": "fnv1a64:b0a6c031fa741ab2",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:8e1edded36eafd9b",
+  "lessonIds": [
+    "MR-C09-ghene",
+    "MR-C09-vicharne",
+    "MR-C09-madat-karne",
+    "MR-C09-avadne"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch12.txt",
+  "json": "marathi/narration/ch12.json",
+  "textHash": "fnv1a64:330d538828f25c5d",
+  "jsonHash": "fnv1a64:2cb30213bfa80290",
+  "findings": []
+}

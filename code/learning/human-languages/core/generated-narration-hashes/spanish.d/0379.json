@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:81635863cca05e26",
+  "lessonIds": [
+    "ES-C379-seco",
+    "ES-C379-mojado",
+    "ES-C379-fresco",
+    "ES-C379-tibio",
+    "ES-C379-grueso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch379.txt",
+  "json": "spanish/narration/ch379.json",
+  "textHash": "fnv1a64:99eb97eaf279f99a",
+  "jsonHash": "fnv1a64:1bb05033fd1e786e",
+  "findings": []
+}

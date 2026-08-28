@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:023e1f16565a08a2",
+  "lessonIds": [
+    "TA-C34-edu",
+    "TA-C34-kel",
+    "TA-W14-read-pesu",
+    "TA-C34-utavu",
+    "TA-C34-pidi"
+  ],
+  "tex": "tamil/book/chapters/ch34-verbs-between-people.tex"
+}

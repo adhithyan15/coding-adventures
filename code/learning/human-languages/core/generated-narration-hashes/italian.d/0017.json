@@ -1,0 +1,16 @@
+{
+  "language": "italian",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:34a887be239573b3",
+  "lessonIds": [
+    "IT-C17-testa",
+    "IT-C17-mano"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "italian/narration/ch17.txt",
+  "json": "italian/narration/ch17.json",
+  "textHash": "fnv1a64:9cc2b7961d57ea5c",
+  "jsonHash": "fnv1a64:87e4cad5a30c420b",
+  "findings": []
+}

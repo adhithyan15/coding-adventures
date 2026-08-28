@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:96c088ee69f058da",
+  "lessonIds": [
+    "ES-C63-repaso-paradigmas"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch245.txt",
+  "json": "spanish/narration/ch245.json",
+  "textHash": "fnv1a64:1211a57a1d5fa89d",
+  "jsonHash": "fnv1a64:1f8489a55e60addb",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:e790e2f50b471093",
+  "lessonIds": [
+    "SA-C24-water",
+    "SA-C24-rice",
+    "SA-C24-fruit",
+    "SA-C24-cloth",
+    "SA-C24-lamp"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch24.txt",
+  "json": "sanskrit/narration/ch24.json",
+  "textHash": "fnv1a64:7a33293c789c6c05",
+  "jsonHash": "fnv1a64:61769c201ca1b522",
+  "findings": []
+}

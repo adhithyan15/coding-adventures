@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:c85cdf80ed10d7e1",
+  "lessonIds": [
+    "LA-C45-terra",
+    "LA-C45-ignis",
+    "LA-C45-ventus",
+    "LA-C45-caelum",
+    "LA-C45-mare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch45.txt",
+  "json": "latin/narration/ch45.json",
+  "textHash": "fnv1a64:5fbee0118f05ea7c",
+  "jsonHash": "fnv1a64:5c9bb42c9a368000",
+  "findings": []
+}

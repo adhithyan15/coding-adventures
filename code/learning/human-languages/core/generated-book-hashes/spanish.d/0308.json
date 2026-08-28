@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:1752c3b3d96d0885",
+  "lessonIds": [
+    "ES-C308-nino",
+    "ES-C308-nina",
+    "ES-C308-chico",
+    "ES-C308-chica",
+    "ES-C308-gente"
+  ],
+  "tex": "spanish/book/chapters/ch308-ninos-y-gente.tex"
+}

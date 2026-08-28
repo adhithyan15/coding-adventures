@@ -1,0 +1,18 @@
+{
+  "language": "portuguese",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:5aa37243ee8e4e17",
+  "lessonIds": [
+    "PT-C24-queijo",
+    "PT-C24-ovo",
+    "PT-C24-arroz",
+    "PT-C24-acucar"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "portuguese/narration/ch24.txt",
+  "json": "portuguese/narration/ch24.json",
+  "textHash": "fnv1a64:7aa879b1b380602b",
+  "jsonHash": "fnv1a64:83277ac439c02cd0",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:f9f9787b11ac023a",
+  "lessonIds": [
+    "ES-C52-como-se-dice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch183.txt",
+  "json": "spanish/narration/ch183.json",
+  "textHash": "fnv1a64:f9a8f61849a00061",
+  "jsonHash": "fnv1a64:8cff42e2d7f4c573",
+  "findings": []
+}

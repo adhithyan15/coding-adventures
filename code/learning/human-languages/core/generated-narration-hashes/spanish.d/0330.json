@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:f716773a82bc272e",
+  "lessonIds": [
+    "ES-C330-camino",
+    "ES-C330-parada",
+    "ES-C330-mundo",
+    "ES-C330-vida",
+    "ES-C330-vez"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch330.txt",
+  "json": "spanish/narration/ch330.json",
+  "textHash": "fnv1a64:43b854026d60e61a",
+  "jsonHash": "fnv1a64:849f24b0cb54baa6",
+  "findings": []
+}

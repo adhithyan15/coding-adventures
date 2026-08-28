@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:0b82a9609bdf6ec5",
+  "lessonIds": [
+    "ES-C296-caballo",
+    "ES-C296-vaca",
+    "ES-C296-oveja",
+    "ES-C296-gallina",
+    "ES-C296-burro"
+  ],
+  "tex": "spanish/book/chapters/ch296-animales.tex"
+}

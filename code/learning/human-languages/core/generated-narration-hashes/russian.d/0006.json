@@ -1,0 +1,18 @@
+{
+  "language": "russian",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:edd9dcc2df8d21f2",
+  "lessonIds": [
+    "RU-C06-voda",
+    "RU-C06-kofe",
+    "RU-C06-chai",
+    "RU-C06-khleb"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "russian/narration/ch06.txt",
+  "json": "russian/narration/ch06.json",
+  "textHash": "fnv1a64:f77dfccb2d4c7547",
+  "jsonHash": "fnv1a64:d7b5af0ada6aa5a9",
+  "findings": []
+}

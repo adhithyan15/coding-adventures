@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:a634867aca2ff633",
+  "lessonIds": [
+    "TA-C18-mani",
+    "TA-S08-pulli",
+    "TA-W06-write-illai",
+    "TA-C18-mani-homophone-time",
+    "TA-S122-letter-ta"
+  ],
+  "tex": "tamil/book/chapters/ch18-telling-time.tex"
+}

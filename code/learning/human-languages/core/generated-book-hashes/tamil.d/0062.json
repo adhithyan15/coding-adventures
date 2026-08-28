@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:9b4362b0fd9acb29",
+  "lessonIds": [
+    "TA-C62-only",
+    "TA-C62-still",
+    "TA-C62-soon",
+    "TA-C62-at-once",
+    "TA-C62-first-of-all"
+  ],
+  "tex": "tamil/book/chapters/ch62-only-and-still.tex"
+}

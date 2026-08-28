@@ -1,0 +1,18 @@
+{
+  "language": "latin",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:3c0a3047e99d7026",
+  "lessonIds": [
+    "LA-C41-ambulo",
+    "LA-C41-curro",
+    "LA-C41-aperio",
+    "LA-C41-claudo"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "latin/narration/ch41.txt",
+  "json": "latin/narration/ch41.json",
+  "textHash": "fnv1a64:789a7ac18d00e297",
+  "jsonHash": "fnv1a64:1695cbed59a01968",
+  "findings": []
+}

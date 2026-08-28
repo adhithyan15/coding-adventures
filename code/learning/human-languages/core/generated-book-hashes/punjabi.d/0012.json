@@ -1,0 +1,12 @@
+{
+  "language": "punjabi",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:44fc2ddb1f86fe37",
+  "lessonIds": [
+    "PA-C12-akkh",
+    "PA-C12-kann",
+    "PA-C12-munh",
+    "PA-C12-nakk"
+  ],
+  "tex": "punjabi/book/chapters/ch12-face-parts.tex"
+}

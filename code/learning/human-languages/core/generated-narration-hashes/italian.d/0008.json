@@ -1,0 +1,16 @@
+{
+  "language": "italian",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:42ce63347a2a14e3",
+  "lessonIds": [
+    "IT-C08-ora",
+    "IT-C08-mezzogiorno-mezzanotte"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "italian/narration/ch08.txt",
+  "json": "italian/narration/ch08.json",
+  "textHash": "fnv1a64:45846c44afde85f7",
+  "jsonHash": "fnv1a64:8f82d720486e7672",
+  "findings": []
+}

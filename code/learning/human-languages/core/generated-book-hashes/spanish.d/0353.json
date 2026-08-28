@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:af9219a6edb1af31",
+  "lessonIds": [
+    "ES-C353-hospital",
+    "ES-C353-banco",
+    "ES-C353-farmacia",
+    "ES-C353-biblioteca",
+    "ES-C353-museo"
+  ],
+  "tex": "spanish/book/chapters/ch353-el-hospital-y-el-banco.tex"
+}

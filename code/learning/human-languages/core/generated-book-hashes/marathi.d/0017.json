@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:530b47683c820bba",
+  "lessonIds": [
+    "MR-R14-mitra-r2",
+    "MR-R14-kutumb-r2",
+    "MR-R14-siblings",
+    "MR-R14-eye-ear",
+    "MR-R14-mouth-nose",
+    "MR-R14-food",
+    "MR-R14-doing",
+    "MR-R14-mind",
+    "MR-R14-core",
+    "MR-R14-mitra-r3",
+    "MR-R14-numbers",
+    "MR-R14-kutumb-r3"
+  ],
+  "tex": "marathi/book/chapters/ch17-family-memory.tex"
+}

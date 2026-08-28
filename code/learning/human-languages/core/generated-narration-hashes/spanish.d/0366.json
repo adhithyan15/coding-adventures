@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:b559102a70f4971d",
+  "lessonIds": [
+    "ES-C366-caja",
+    "ES-C366-lampara",
+    "ES-C366-almohada",
+    "ES-C366-escalera",
+    "ES-C366-armario"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch366.txt",
+  "json": "spanish/narration/ch366.json",
+  "textHash": "fnv1a64:85c7ae60c2d0daf7",
+  "jsonHash": "fnv1a64:bcd7fd41c9d17a3c",
+  "findings": []
+}

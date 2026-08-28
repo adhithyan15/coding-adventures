@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:bd6a61e553a562f4",
+  "lessonIds": [
+    "ES-C13-poner"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch71.txt",
+  "json": "spanish/narration/ch71.json",
+  "textHash": "fnv1a64:b431f0be6e767280",
+  "jsonHash": "fnv1a64:12400fa236316e9d",
+  "findings": []
+}

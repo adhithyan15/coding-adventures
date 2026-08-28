@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:2b99b6040e01c707",
+  "lessonIds": [
+    "KA-C61-curd",
+    "KA-C61-ghee",
+    "KA-C61-oil",
+    "KA-C61-jaggery",
+    "KA-C61-sugar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch61.txt",
+  "json": "kannada/narration/ch61.json",
+  "textHash": "fnv1a64:baab146f054c4e56",
+  "jsonHash": "fnv1a64:59e8d8083913b10f",
+  "findings": []
+}

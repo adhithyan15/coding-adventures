@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:8e48bf1a3e011c6e",
+  "lessonIds": [
+    "ES-C272-es-que",
+    "ES-C272-si-claro",
+    "ES-C272-tomar-el-pelo",
+    "ES-C272-mira",
+    "ES-C272-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch272.txt",
+  "json": "spanish/narration/ch272.json",
+  "textHash": "fnv1a64:ab89fa75a95f827d",
+  "jsonHash": "fnv1a64:d264a6e35fff2604",
+  "findings": []
+}

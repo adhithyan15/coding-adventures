@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:05eca4141f599b78",
+  "lessonIds": [
+    "ES-C389-saber",
+    "ES-C389-repaso-se-y-puedo"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch389.txt",
+  "json": "spanish/narration/ch389.json",
+  "textHash": "fnv1a64:213d59217219070d",
+  "jsonHash": "fnv1a64:6d4357e1045001a2",
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:841e25ee2a9eb3bb",
+  "lessonIds": [
+    "ES-C276-mas",
+    "ES-C276-asonancia",
+    "ES-C276-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch276.txt",
+  "json": "spanish/narration/ch276.json",
+  "textHash": "fnv1a64:75b0695109f469b6",
+  "jsonHash": "fnv1a64:af4808116e995500",
+  "findings": []
+}

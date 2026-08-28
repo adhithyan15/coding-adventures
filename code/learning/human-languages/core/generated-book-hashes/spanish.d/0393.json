@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:ab5d3b4e4597f367",
+  "lessonIds": [
+    "ES-C393-ordenador",
+    "ES-C393-internet",
+    "ES-C393-correo-electronico",
+    "ES-C393-direccion",
+    "ES-C393-nacionalidad"
+  ],
+  "tex": "spanish/book/chapters/ch393-el-ordenador-y-el-correo-electronico.tex"
+}

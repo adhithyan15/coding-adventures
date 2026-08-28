@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:48a5cef20b80b3a0",
+  "lessonIds": [
+    "TE-C30-subha-sayantram"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch30.txt",
+  "json": "telugu/narration/ch30.json",
+  "textHash": "fnv1a64:a197381a3ce8d00f",
+  "jsonHash": "fnv1a64:13f72d80fe33ba5e",
+  "findings": []
+}

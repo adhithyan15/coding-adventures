@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:476a2db7cf1fc2c0",
+  "lessonIds": [
+    "ES-C385-usar",
+    "ES-C385-tocar",
+    "ES-C385-mezclar",
+    "ES-C385-colgar"
+  ],
+  "tex": "spanish/book/chapters/ch385-usar-y-tocar.tex"
+}

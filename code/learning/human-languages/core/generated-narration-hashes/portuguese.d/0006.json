@@ -1,0 +1,16 @@
+{
+  "language": "portuguese",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:e500f5a113192fbf",
+  "lessonIds": [
+    "PT-C06-numeros-1-5",
+    "PT-C06-numeros-6-10"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "portuguese/narration/ch06.txt",
+  "json": "portuguese/narration/ch06.json",
+  "textHash": "fnv1a64:97379762b5435d12",
+  "jsonHash": "fnv1a64:7ac8a29b46d991a7",
+  "findings": []
+}

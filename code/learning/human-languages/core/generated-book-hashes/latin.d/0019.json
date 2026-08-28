@@ -1,0 +1,11 @@
+{
+  "language": "latin",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:df96afc7df74c9da",
+  "lessonIds": [
+    "LA-C19-quid-agis",
+    "LA-C19-valeo-family",
+    "LA-C19-practice"
+  ],
+  "tex": "latin/book/chapters/ch19-how-are-you.tex"
+}

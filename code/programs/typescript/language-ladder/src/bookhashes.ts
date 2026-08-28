@@ -1,5 +1,8 @@
 import { combineChapterHash } from "@coding-adventures/human-language-data/src/hash.ts";
-import { chapterLoaders } from "virtual:human-language-ledgers";
+import {
+  bookHashLoaders,
+  chapterLoaders,
+} from "virtual:human-language-ledgers";
 import type { Lesson } from "./lessons.ts";
 
 interface BookHashEntry {
@@ -37,7 +40,7 @@ interface ChapterCapabilityEntry {
 }
 
 /**
- * The book-hash manifest, loaded LAZILY.
+ * The book-hash manifests, loaded LAZILY through one virtual child per track.
  *
  * This file is 136 kB and grows with every chapter in every track. It was a
  * static import, which put all of it in the eager chunk — and the eager chunk
@@ -45,16 +48,23 @@ interface ChapterCapabilityEntry {
  * (500,459 bytes). What it buys is one diagnostic word in a metadata line:
  * "book synced" or "book stale". That is not worth 136 kB on first paint.
  *
- * So the manifest arrives after the app does. Until it lands, every chapter
+ * The canonical files are chapter-owned shards now, but those 1,088 owners are
+ * a build-time concern. The human-language ledger plugin validates and
+ * reconstructs them into one lazy browser module per track, while this eager
+ * lookup table remains proportional to the 23 tracks. A nested glob here would
+ * instead create one request/module per chapter and undo the ownership win at
+ * the bundle boundary.
+ *
+ * The manifests arrive after the app does. Until they land, every chapter
  * reports `not-generated`, which is the same answer the app already gives for
  * a chapter the book has never covered — an honest "I do not know yet" rather
  * than a wrong claim. Call `whenBookHashesReady()` and re-render when it
  * resolves; tests await it in `beforeAll`.
  */
-const BOOK_HASH_MANIFEST_LOADERS = import.meta.glob(
-  "../../../../learning/human-languages/core/generated-book-hashes/*.json",
-  { import: "default" },
-) as Record<string, () => Promise<BookHashManifest>>;
+const BOOK_HASH_MANIFEST_LOADERS = bookHashLoaders as Record<
+  string,
+  () => Promise<BookHashManifest>
+>;
 
 let ENTRIES: BookHashEntry[] = [];
 
@@ -68,7 +78,10 @@ const MANIFEST_READY: Promise<void> = Promise.all([
     // "not-generated" and the rest of the app is unaffected. It is still
     // reported, because a silent catch here once turned a plain ordering bug
     // into an empty capability map that looked like ordinary "no data".
-    console.warn("book-hash manifest failed to load; status will read not-generated", error);
+    console.warn(
+      "book-hash manifest failed to load; status will read not-generated",
+      error,
+    );
     ENTRIES = [];
   });
 
@@ -99,8 +112,13 @@ async function loadCapabilities(): Promise<void> {
 
 export type BookHashStatus = "not-generated" | "synced" | "stale";
 
-export function expectedBookHash(language: string, chapter: number): BookHashEntry | undefined {
-  return ENTRIES.find((entry) => entry.language === language && entry.chapter === chapter);
+export function expectedBookHash(
+  language: string,
+  chapter: number,
+): BookHashEntry | undefined {
+  return ENTRIES.find(
+    (entry) => entry.language === language && entry.chapter === chapter,
+  );
 }
 
 export function actualChapterHash(
@@ -114,7 +132,8 @@ export function actualChapterHash(
   if (
     chapterLessons.length === 0 ||
     chapterLessons.some(
-      (lesson) => lesson.sourceHash === undefined || lesson.sequence === undefined,
+      (lesson) =>
+        lesson.sourceHash === undefined || lesson.sequence === undefined,
     )
   ) {
     return undefined;
@@ -137,5 +156,7 @@ export function bookHashStatus(
 ): BookHashStatus {
   const expected = expectedBookHash(language, chapter);
   if (!expected) return "not-generated";
-  return actualChapterHash(lessons, language, chapter) === expected.sourceHash ? "synced" : "stale";
+  return actualChapterHash(lessons, language, chapter) === expected.sourceHash
+    ? "synced"
+    : "stale";
 }

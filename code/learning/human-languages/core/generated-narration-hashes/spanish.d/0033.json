@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:cb862476e67c7bb6",
+  "lessonIds": [
+    "ES-C06-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch33.txt",
+  "json": "spanish/narration/ch33.json",
+  "textHash": "fnv1a64:eae335667111ae2e",
+  "jsonHash": "fnv1a64:7210502931ccb120",
+  "findings": []
+}

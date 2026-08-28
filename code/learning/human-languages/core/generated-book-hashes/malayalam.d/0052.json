@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:4f96c095c1916558",
+  "lessonIds": [
+    "ML-C52-door",
+    "ML-C52-chair",
+    "ML-C52-kolam",
+    "ML-C52-flower",
+    "ML-C52-garland"
+  ],
+  "tex": "malayalam/book/chapters/ch52-welcoming-a-guest.tex"
+}

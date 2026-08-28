@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:4abb1a4bcca8179d",
+  "lessonIds": [
+    "ES-C349-jornada",
+    "ES-C349-decada",
+    "ES-C349-fiesta",
+    "ES-C349-aniversario",
+    "ES-C349-agenda"
+  ],
+  "tex": "spanish/book/chapters/ch349-la-jornada-y-la-decada.tex"
+}

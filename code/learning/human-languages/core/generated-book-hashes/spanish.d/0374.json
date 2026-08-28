@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:b4a4faf458a21b12",
+  "lessonIds": [
+    "ES-C374-lapiz",
+    "ES-C374-cepillo",
+    "ES-C374-guante",
+    "ES-C374-vela",
+    "ES-C374-nudo"
+  ],
+  "tex": "spanish/book/chapters/ch374-el-lapiz-y-el-cepillo.tex"
+}

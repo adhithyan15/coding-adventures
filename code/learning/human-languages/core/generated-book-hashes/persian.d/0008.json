@@ -1,0 +1,12 @@
+{
+  "language": "persian",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:4389567ec6a68bb4",
+  "lessonIds": [
+    "FA-C08-gereftan",
+    "FA-C08-porsidan",
+    "FA-C08-komak-kardan",
+    "FA-C08-dust-dashtan"
+  ],
+  "tex": "persian/book/chapters/ch08-doing-verbs.tex"
+}

@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:97abf3313d714f60",
+  "lessonIds": [
+    "ES-C279-puerta",
+    "ES-C279-ventana",
+    "ES-C279-silla",
+    "ES-C279-cama"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch279.txt",
+  "json": "spanish/narration/ch279.json",
+  "textHash": "fnv1a64:2e4ab418c89f64ff",
+  "jsonHash": "fnv1a64:a4fb997ebcdcfe99",
+  "findings": []
+}

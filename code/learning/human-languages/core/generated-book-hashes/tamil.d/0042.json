@@ -1,0 +1,12 @@
+{
+  "language": "tamil",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:18b8100442455001",
+  "lessonIds": [
+    "TA-C42-come",
+    "TA-C42-sit",
+    "TA-C42-read",
+    "TA-C42-give"
+  ],
+  "tex": "tamil/book/chapters/ch42-more-verbs.tex"
+}

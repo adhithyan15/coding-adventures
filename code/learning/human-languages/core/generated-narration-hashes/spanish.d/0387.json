@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:7019253a4b797c52",
+  "lessonIds": [
+    "ES-C387-quemar",
+    "ES-C387-cruzar",
+    "ES-C387-volar",
+    "ES-C387-girar"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch387.txt",
+  "json": "spanish/narration/ch387.json",
+  "textHash": "fnv1a64:1244ebd00c7bc045",
+  "jsonHash": "fnv1a64:e68f60f875caf790",
+  "findings": []
+}

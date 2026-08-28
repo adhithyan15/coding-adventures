@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:c58a8d3dc3d2a194",
+  "lessonIds": [
+    "AR-C17-kam-umruka"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch17.txt",
+  "json": "arabic/narration/ch17.json",
+  "textHash": "fnv1a64:2863cd0ae9e1a4d0",
+  "jsonHash": "fnv1a64:19671cd9dd4848d8",
+  "findings": []
+}

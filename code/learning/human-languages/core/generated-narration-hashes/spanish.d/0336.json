@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:bef83402f1babca3",
+  "lessonIds": [
+    "ES-C336-repaso-seis-en-uso"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch336.txt",
+  "json": "spanish/narration/ch336.json",
+  "textHash": "fnv1a64:9facf9c92a5dbc7e",
+  "jsonHash": "fnv1a64:34d0a5009112e9fd",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:6e4318b1b25c4f4f",
+  "lessonIds": [
+    "ES-C312-reloj",
+    "ES-C312-telefono",
+    "ES-C312-maleta",
+    "ES-C312-mapa",
+    "ES-C312-carta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch312.txt",
+  "json": "spanish/narration/ch312.json",
+  "textHash": "fnv1a64:a02b1468093b583c",
+  "jsonHash": "fnv1a64:cfaeafcbadc360c8",
+  "findings": []
+}

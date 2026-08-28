@@ -1,0 +1,12 @@
+{
+  "language": "portuguese",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:3e5077ec3ddc6352",
+  "lessonIds": [
+    "PT-C25-amigo",
+    "PT-C25-familia",
+    "PT-C25-homem",
+    "PT-C25-mulher"
+  ],
+  "tex": "portuguese/book/chapters/ch25-people-you-introduce.tex"
+}

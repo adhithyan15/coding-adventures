@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:0a99ed386e39c341",
+  "lessonIds": [
+    "MR-C08-vichar-karne",
+    "MR-C08-samajne",
+    "MR-C08-vachne",
+    "MR-C08-lihine"
+  ],
+  "tex": "marathi/book/chapters/ch11-mind-and-page.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:13550d1f85bf5d6c",
+  "lessonIds": [
+    "HI-C52-rice",
+    "HI-C52-lentils",
+    "HI-C52-oil",
+    "HI-C52-sugar",
+    "HI-C52-vegetable"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch52.txt",
+  "json": "hindi/narration/ch52.json",
+  "textHash": "fnv1a64:96aec961eb9f1d02",
+  "jsonHash": "fnv1a64:ffad7a77118406db",
+  "findings": []
+}

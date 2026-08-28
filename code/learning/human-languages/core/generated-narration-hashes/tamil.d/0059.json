@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:8b952cf43bccb15b",
+  "lessonIds": [
+    "TA-C59-curd",
+    "TA-C59-ghee",
+    "TA-C59-oil",
+    "TA-C59-jaggery",
+    "TA-C59-sugar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch59.txt",
+  "json": "tamil/narration/ch59.json",
+  "textHash": "fnv1a64:853f1841df9f159f",
+  "jsonHash": "fnv1a64:ad1b3ca769c3665a",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:c6c1426b7777b01b",
+  "lessonIds": [
+    "ES-C22-negro-blanco",
+    "ES-C22-blanco-germanico",
+    "ES-C22-rojo",
+    "ES-C22-azul"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch139.txt",
+  "json": "spanish/narration/ch139.json",
+  "textHash": "fnv1a64:3d6e2ad189a4f282",
+  "jsonHash": "fnv1a64:abc4691aec31dffa",
+  "findings": []
+}

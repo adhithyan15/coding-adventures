@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:866f9c8f103ba49d",
+  "lessonIds": [
+    "HI-C06-numbers-1-5",
+    "HI-C06-tin-char-history",
+    "HI-C06-paanch-nasal",
+    "HI-S01-letter-ma",
+    "HI-S110-letter-ra"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch06.txt",
+  "json": "hindi/narration/ch06.json",
+  "textHash": "fnv1a64:488cfa86d6ad7d9f",
+  "jsonHash": "fnv1a64:b570ee124f6e04f7",
+  "findings": []
+}

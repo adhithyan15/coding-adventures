@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:5f9ba7a802991332",
+  "lessonIds": [
+    "ES-C331-rato",
+    "ES-C331-manera",
+    "ES-C331-modo",
+    "ES-C331-cosa",
+    "ES-C331-asunto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch331.txt",
+  "json": "spanish/narration/ch331.json",
+  "textHash": "fnv1a64:f067f469c6d80cdf",
+  "jsonHash": "fnv1a64:28b1dee56922411c",
+  "findings": []
+}

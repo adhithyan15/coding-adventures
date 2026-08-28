@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:c8088090a5484e16",
+  "lessonIds": [
+    "FR-C19-sil-vous-plait"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "french/narration/ch19.txt",
+  "json": "french/narration/ch19.json",
+  "textHash": "fnv1a64:6b32f6eaf2a920b9",
+  "jsonHash": "fnv1a64:94b558bef31e3541",
+  "findings": []
+}

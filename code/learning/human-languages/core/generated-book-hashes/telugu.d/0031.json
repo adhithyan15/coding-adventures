@@ -1,0 +1,10 @@
+{
+  "language": "telugu",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:6cd4c22919382e5a",
+  "lessonIds": [
+    "TE-C31-subha-madhyahnam",
+    "TE-C31-subha-madhyahnam-register"
+  ],
+  "tex": "telugu/book/chapters/ch31-good-afternoon.tex"
+}

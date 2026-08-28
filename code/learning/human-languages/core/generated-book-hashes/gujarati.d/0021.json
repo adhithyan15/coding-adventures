@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:a9b6ffc8770e96e2",
+  "lessonIds": [
+    "GU-R17-you-r4",
+    "GU-R17-shun-r4",
+    "GU-R17-whats-your-name-r4",
+    "GU-R17-introduction-r4",
+    "GU-R17-hun-r4",
+    "GU-R17-kem-r4"
+  ],
+  "tex": "gujarati/book/chapters/ch21-r4-respectful-questions.tex"
+}

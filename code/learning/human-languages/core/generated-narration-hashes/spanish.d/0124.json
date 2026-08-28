@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:d500369106687dde",
+  "lessonIds": [
+    "ES-C17-irregulares",
+    "ES-C17-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch124.txt",
+  "json": "spanish/narration/ch124.json",
+  "textHash": "fnv1a64:876a83ea93659da1",
+  "jsonHash": "fnv1a64:97404f8c613781ad",
+  "findings": []
+}

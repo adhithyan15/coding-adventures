@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:5fb8da0835bb261a",
+  "lessonIds": [
+    "SA-C47-wall",
+    "SA-C47-window",
+    "SA-C47-stair",
+    "SA-C47-pillar",
+    "SA-C47-floor"
+  ],
+  "tex": "sanskrit/book/chapters/ch47-parts-of-a-house.tex"
+}

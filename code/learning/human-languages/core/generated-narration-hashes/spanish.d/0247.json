@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:4b8e516ee25c0421",
+  "lessonIds": [
+    "ES-C64-conmigo"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch247.txt",
+  "json": "spanish/narration/ch247.json",
+  "textHash": "fnv1a64:f7cf72f8c3bc32b2",
+  "jsonHash": "fnv1a64:cb7bfbfb9deb96cb",
+  "findings": []
+}

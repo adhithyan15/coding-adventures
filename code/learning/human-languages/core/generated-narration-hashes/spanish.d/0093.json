@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:d9d86a6fbb4059a8",
+  "lessonIds": [
+    "ES-C46-le"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch93.txt",
+  "json": "spanish/narration/ch93.json",
+  "textHash": "fnv1a64:0e46c94fe08ec3f1",
+  "jsonHash": "fnv1a64:afcb31796adc5040",
+  "findings": []
+}

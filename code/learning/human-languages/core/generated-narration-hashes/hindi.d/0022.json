@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:3d53759c519dce7d",
+  "lessonIds": [
+    "HI-C22-gyarah-bees"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "hindi/narration/ch22.txt",
+  "json": "hindi/narration/ch22.json",
+  "textHash": "fnv1a64:a1d3af22574fe7df",
+  "jsonHash": "fnv1a64:edb0293429fa5798",
+  "findings": []
+}

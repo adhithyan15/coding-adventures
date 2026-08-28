@@ -1,0 +1,9 @@
+{
+  "language": "german",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:ca0f45c1530d618a",
+  "lessonIds": [
+    "GE-C21-das-wetter"
+  ],
+  "tex": "german/book/chapters/ch21-weather.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:dee87df459e79d98",
+  "lessonIds": [
+    "ES-C63-hablabamos"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch243.txt",
+  "json": "spanish/narration/ch243.json",
+  "textHash": "fnv1a64:2d0790c51d295d20",
+  "jsonHash": "fnv1a64:c212be298944cf0b",
+  "findings": []
+}

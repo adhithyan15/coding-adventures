@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:3730fb210d950601",
+  "lessonIds": [
+    "RU-C08-semya"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "russian/narration/ch08.txt",
+  "json": "russian/narration/ch08.json",
+  "textHash": "fnv1a64:836b51214c92b611",
+  "jsonHash": "fnv1a64:81dc32f146034fd5",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:1a2644c46e1ab49f",
+  "lessonIds": [
+    "ES-C290-trigo",
+    "ES-C290-arroz",
+    "ES-C290-cebolla",
+    "ES-C290-tomate",
+    "ES-C290-miel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch290.txt",
+  "json": "spanish/narration/ch290.json",
+  "textHash": "fnv1a64:e8c24513ed69d8c1",
+  "jsonHash": "fnv1a64:81f5a8bde22a489d",
+  "findings": []
+}

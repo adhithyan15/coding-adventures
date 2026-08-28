@@ -1,0 +1,10 @@
+{
+  "language": "italian",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:38fbb7d3e9c236bd",
+  "lessonIds": [
+    "IT-C17-testa",
+    "IT-C17-mano"
+  ],
+  "tex": "italian/book/chapters/ch17-head-and-hand.tex"
+}

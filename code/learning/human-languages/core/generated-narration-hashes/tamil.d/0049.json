@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:8c7694ba4bb134a0",
+  "lessonIds": [
+    "TA-C49-affection",
+    "TA-C49-respect",
+    "TA-C49-gladness",
+    "TA-C49-good-wish",
+    "TA-C49-many-thanks"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch49.txt",
+  "json": "tamil/narration/ch49.json",
+  "textHash": "fnv1a64:7d46d0920811d0e8",
+  "jsonHash": "fnv1a64:05ba29756b0fcfed",
+  "findings": []
+}

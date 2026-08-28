@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:97c43dc7d152190e",
+  "lessonIds": [
+    "ES-C291-semilla",
+    "ES-C291-raiz",
+    "ES-C291-tronco",
+    "ES-C291-rama",
+    "ES-C291-bosque"
+  ],
+  "tex": "spanish/book/chapters/ch291-de-la-semilla.tex"
+}

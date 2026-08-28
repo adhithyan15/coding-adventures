@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:81c42dcff6d445fd",
+  "lessonIds": [
+    "ES-C32-gato",
+    "ES-C32-perro"
+  ],
+  "tex": "spanish/book/chapters/ch150-dog-and-cat.tex"
+}

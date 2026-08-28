@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:c02b9ae7824d21eb",
+  "lessonIds": [
+    "ES-C386-vender",
+    "ES-C386-servir",
+    "ES-C386-gastar",
+    "ES-C386-crecer"
+  ],
+  "tex": "spanish/book/chapters/ch386-vender-y-servir.tex"
+}

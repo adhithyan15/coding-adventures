@@ -1,0 +1,17 @@
+{
+  "language": "chinese",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:3be3efc2a91d2482",
+  "lessonIds": [
+    "ZH-C14-hear-xiao",
+    "ZH-W14-xiao",
+    "ZH-C14-xiao",
+    "ZH-C14-hear-xiaoxue",
+    "ZH-C14-xiaoxue",
+    "ZH-C14-hear-xiaoxuesheng",
+    "ZH-C14-xiaoxuesheng",
+    "ZH-R14-primary-three",
+    "ZH-C14-practice"
+  ],
+  "tex": "chinese/book/chapters/ch14-primary-three.tex"
+}

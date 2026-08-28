@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:d170c122b4cf33da",
+  "lessonIds": [
+    "ES-C66-nombres-propios"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch260.txt",
+  "json": "spanish/narration/ch260.json",
+  "textHash": "fnv1a64:62a96ab026de4e79",
+  "jsonHash": "fnv1a64:4cb105ce59ecf8ab",
+  "findings": []
+}

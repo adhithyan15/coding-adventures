@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:ef09da4a8c51f434",
+  "lessonIds": [
+    "ES-C35-preguntar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch160.txt",
+  "json": "spanish/narration/ch160.json",
+  "textHash": "fnv1a64:846213cfabaa0854",
+  "jsonHash": "fnv1a64:654ba9b6989bf8a6",
+  "findings": []
+}

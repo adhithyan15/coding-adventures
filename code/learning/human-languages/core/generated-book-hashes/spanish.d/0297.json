@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:0428a3312b94b865",
+  "lessonIds": [
+    "ES-C297-sarten",
+    "ES-C297-horno",
+    "ES-C297-tenedor",
+    "ES-C297-ajo",
+    "ES-C297-sopa"
+  ],
+  "tex": "spanish/book/chapters/ch297-la-cocina.tex"
+}

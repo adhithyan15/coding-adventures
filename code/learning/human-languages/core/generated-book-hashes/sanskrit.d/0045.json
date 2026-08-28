@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:5b002f857395ec73",
+  "lessonIds": [
+    "SA-C45-morning",
+    "SA-C45-noon",
+    "SA-C45-evening",
+    "SA-C45-month",
+    "SA-C45-year"
+  ],
+  "tex": "sanskrit/book/chapters/ch45-times-of-the-day.tex"
+}

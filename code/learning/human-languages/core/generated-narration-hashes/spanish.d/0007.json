@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:1eb1c05d767a9288",
+  "lessonIds": [
+    "ES-C19-si",
+    "ES-C19-no",
+    "ES-C04-gracias",
+    "ES-C04-de-nada",
+    "ES-C04-repaso-gracias"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch07.txt",
+  "json": "spanish/narration/ch07.json",
+  "textHash": "fnv1a64:c9b5f3156d86e0a4",
+  "jsonHash": "fnv1a64:d25845db0fd5381f",
+  "findings": []
+}

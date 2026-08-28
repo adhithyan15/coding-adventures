@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:0c75a56982cd525b",
+  "lessonIds": [
+    "KA-C59-wind",
+    "KA-C59-mist",
+    "KA-C59-sand",
+    "KA-C59-mud",
+    "KA-C59-fire"
+  ],
+  "tex": "kannada/book/chapters/ch59-weather-and-ground.tex"
+}

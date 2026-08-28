@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:ed3208131198dff3",
+  "lessonIds": [
+    "ES-C378-selva",
+    "ES-C378-prado",
+    "ES-C378-volcan",
+    "ES-C378-cumbre",
+    "ES-C378-edificio"
+  ],
+  "tex": "spanish/book/chapters/ch378-la-selva-y-el-prado.tex"
+}

@@ -1,0 +1,16 @@
+{
+  "language": "hindi",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:23b5644f154e5450",
+  "lessonIds": [
+    "HI-C24-hara-pila",
+    "HI-C24-pila-history"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch24.txt",
+  "json": "hindi/narration/ch24.json",
+  "textHash": "fnv1a64:a7d9732f7302e573",
+  "jsonHash": "fnv1a64:905d65a00b5e0a01",
+  "findings": []
+}

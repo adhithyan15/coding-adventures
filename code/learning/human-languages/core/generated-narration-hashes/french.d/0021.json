@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:7e75bbea32d4d7a6",
+  "lessonIds": [
+    "FR-C21-le-temps"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "french/narration/ch21.txt",
+  "json": "french/narration/ch21.json",
+  "textHash": "fnv1a64:b6b6643ea92e5448",
+  "jsonHash": "fnv1a64:b0f844fa5559a099",
+  "findings": []
+}

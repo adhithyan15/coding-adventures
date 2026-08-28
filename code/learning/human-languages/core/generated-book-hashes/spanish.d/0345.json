@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:fc6220398230aa5b",
+  "lessonIds": [
+    "ES-C345-mismo",
+    "ES-C345-cada",
+    "ES-C345-parte",
+    "ES-C345-persona",
+    "ES-C345-objeto",
+    "ES-C345-repaso-persona-objeto",
+    "ES-C345-repaso-cada-mismo-objeto"
+  ],
+  "tex": "spanish/book/chapters/ch345-cada-y-mismo.tex"
+}

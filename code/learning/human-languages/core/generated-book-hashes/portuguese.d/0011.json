@@ -1,0 +1,10 @@
+{
+  "language": "portuguese",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:d1f46a118cbf0b4c",
+  "lessonIds": [
+    "PT-C11-pao",
+    "PT-C11-agua-vinho"
+  ],
+  "tex": "portuguese/book/chapters/ch11-bread-water-wine.tex"
+}

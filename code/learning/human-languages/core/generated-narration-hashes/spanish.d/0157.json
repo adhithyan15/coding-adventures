@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:560f7e517464f7e8",
+  "lessonIds": [
+    "ES-C34-repaso-mente"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch157.txt",
+  "json": "spanish/narration/ch157.json",
+  "textHash": "fnv1a64:520d786d829db8be",
+  "jsonHash": "fnv1a64:937423c76f0c6a2c",
+  "findings": []
+}

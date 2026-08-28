@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:a1fa8a8b8f81f5a4",
+  "lessonIds": [
+    "ES-C04-estar",
+    "ES-C04-estar-estado",
+    "ES-C04-como-esta",
+    "ES-C04-repaso-como-esta"
+  ],
+  "tex": "spanish/book/chapters/ch08-how-are-you.tex"
+}

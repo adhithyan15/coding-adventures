@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:577e7da9b8830ac3",
+  "lessonIds": [
+    "SA-C26-teacher",
+    "SA-C26-student",
+    "SA-C26-king",
+    "SA-C26-guest",
+    "SA-C26-physician"
+  ],
+  "tex": "sanskrit/book/chapters/ch26-roles.tex"
+}

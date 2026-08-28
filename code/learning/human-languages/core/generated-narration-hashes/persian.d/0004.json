@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:c1bbd7cc9468ad3f",
+  "lessonIds": [
+    "FA-C04-hal",
+    "FA-C04-chetor",
+    "FA-C04-hal-e-shoma-chetor-ast",
+    "FA-C04-khub",
+    "FA-C04-khubam",
+    "FA-C04-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch04.txt",
+  "json": "persian/narration/ch04.json",
+  "textHash": "fnv1a64:ebbe6631b14b5d5e",
+  "jsonHash": "fnv1a64:cf8f5aeec63a1ebc",
+  "findings": []
+}

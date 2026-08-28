@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:ba827695e2beb87a",
+  "lessonIds": [
+    "KA-C63-hunger",
+    "KA-C63-sleep",
+    "KA-C63-fever",
+    "KA-C63-pain",
+    "KA-C63-health"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch63.txt",
+  "json": "kannada/narration/ch63.json",
+  "textHash": "fnv1a64:5568f231ca170d10",
+  "jsonHash": "fnv1a64:c4d99810dd5caf72",
+  "findings": []
+}

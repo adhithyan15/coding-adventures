@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:bc03dbc251689e0f",
+  "lessonIds": [
+    "MR-C01-dhanyavad",
+    "MR-W02-visarga",
+    "MR-W02-aa-independent",
+    "MR-W02-bha",
+    "MR-W02-e-matra",
+    "MR-W02-anusvara",
+    "MR-W02-ta"
+  ],
+  "tex": "marathi/book/chapters/ch02-thanks-script-a.tex"
+}

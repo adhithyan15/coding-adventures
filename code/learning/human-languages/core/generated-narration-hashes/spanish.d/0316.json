@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:83c1fe9adb8e1f44",
+  "lessonIds": [
+    "ES-C316-llanto",
+    "ES-C316-nunca",
+    "ES-C316-siempre",
+    "ES-C316-todo",
+    "ES-C316-nada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch316.txt",
+  "json": "spanish/narration/ch316.json",
+  "textHash": "fnv1a64:4bf9b010226ab060",
+  "jsonHash": "fnv1a64:9a1888bc4b1fab4b",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:74ce2151729c3c29",
+  "lessonIds": [
+    "ES-C381-lavar",
+    "ES-C381-romper",
+    "ES-C381-saltar",
+    "ES-C381-sonar"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch381.txt",
+  "json": "spanish/narration/ch381.json",
+  "textHash": "fnv1a64:b747cb3c09a77a44",
+  "jsonHash": "fnv1a64:89afd9609a8654cd",
+  "findings": []
+}

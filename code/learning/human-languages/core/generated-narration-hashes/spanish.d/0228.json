@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:d9abeba6e8a62ead",
+  "lessonIds": [
+    "ES-C60-mal",
+    "ES-C60-apocope"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch228.txt",
+  "json": "spanish/narration/ch228.json",
+  "textHash": "fnv1a64:2803fe811a197f72",
+  "jsonHash": "fnv1a64:5652509d882d0ec4",
+  "findings": []
+}

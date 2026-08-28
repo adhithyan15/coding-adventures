@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:9962d65e74c37515",
+  "lessonIds": [
+    "ES-C02-tarde",
+    "ES-C02-buenas-tardes",
+    "ES-C02-noche",
+    "ES-C02-buenas-noches",
+    "ES-C02-concordancia",
+    "ES-C02-practice"
+  ],
+  "tex": "spanish/book/chapters/ch02-greetings.tex"
+}

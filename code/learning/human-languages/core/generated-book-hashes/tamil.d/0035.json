@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:65a207deb9f6b6df",
+  "lessonIds": [
+    "TA-C35-veedu",
+    "TA-W15-read-po",
+    "TA-C35-kadavu",
+    "TA-C35-arai",
+    "TA-C35-naarkaali"
+  ],
+  "tex": "tamil/book/chapters/ch35-arriving-at-a-house.tex"
+}

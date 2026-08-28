@@ -1,0 +1,12 @@
+{
+  "language": "bengali",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:89cb40fe92cb7cd8",
+  "lessonIds": [
+    "BN-C11-bondhu",
+    "BN-C11-poribar",
+    "BN-C11-bhai",
+    "BN-C11-bon"
+  ],
+  "tex": "bengali/book/chapters/ch11-friend-family-brother-sister.tex"
+}

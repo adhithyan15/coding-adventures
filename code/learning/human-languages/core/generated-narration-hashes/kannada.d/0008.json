@@ -1,0 +1,17 @@
+{
+  "language": "kannada",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:99419a39cad07f86",
+  "lessonIds": [
+    "KA-C08-dayavittu",
+    "KA-S03-sign-virama",
+    "KA-S112-letter-ga"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch08.txt",
+  "json": "kannada/narration/ch08.json",
+  "textHash": "fnv1a64:673c49d5e01ec731",
+  "jsonHash": "fnv1a64:a8b86c9246381390",
+  "findings": []
+}

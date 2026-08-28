@@ -1,0 +1,12 @@
+{
+  "language": "italian",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:ca470d1004a7ad26",
+  "lessonIds": [
+    "IT-C20-portare",
+    "IT-C20-comprare",
+    "IT-C20-aspettare",
+    "IT-C20-incontrare"
+  ],
+  "tex": "italian/book/chapters/ch20-carry-buy-wait-meet.tex"
+}

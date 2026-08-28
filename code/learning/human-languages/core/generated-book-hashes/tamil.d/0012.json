@@ -1,0 +1,10 @@
+{
+  "language": "tamil",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:5ec73ec6481882e9",
+  "lessonIds": [
+    "TA-C12-kudumbam",
+    "TA-S116-letter-ca"
+  ],
+  "tex": "tamil/book/chapters/ch12-family.tex"
+}

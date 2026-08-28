@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:a377d5e47b57ea53",
+  "lessonIds": [
+    "ES-C327-despierto",
+    "ES-C327-dormido",
+    "ES-C327-fuerte",
+    "ES-C327-debil",
+    "ES-C327-sano"
+  ],
+  "tex": "spanish/book/chapters/ch327-despierto-y-sano.tex"
+}

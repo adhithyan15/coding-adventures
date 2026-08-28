@@ -1,0 +1,16 @@
+{
+  "language": "hindi",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:d7040781be8f2a6f",
+  "lessonIds": [
+    "HI-C14-ritu",
+    "HI-S118-sign-candrabindu"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "hindi/narration/ch14.txt",
+  "json": "hindi/narration/ch14.json",
+  "textHash": "fnv1a64:eda54473dfb07d8a",
+  "jsonHash": "fnv1a64:45ff53c8e1973764",
+  "findings": []
+}

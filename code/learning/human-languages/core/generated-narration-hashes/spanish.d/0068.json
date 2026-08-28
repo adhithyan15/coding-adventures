@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:a2df87f5bf916e10",
+  "lessonIds": [
+    "ES-C10-vamos",
+    "ES-C10-van"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch68.txt",
+  "json": "spanish/narration/ch68.json",
+  "textHash": "fnv1a64:dd5fe1ecdbc60bcb",
+  "jsonHash": "fnv1a64:06559d17efb2e35f",
+  "findings": []
+}

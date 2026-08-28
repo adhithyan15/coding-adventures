@@ -1,0 +1,18 @@
+{
+  "language": "russian",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:3ddabaef514b7038",
+  "lessonIds": [
+    "RU-C02-ya",
+    "RU-C02-ty-vy",
+    "RU-C02-vy-formality",
+    "RU-C02-menya-zovut",
+    "RU-C02-kak-vas-zovut",
+    "RU-C02-kak-cross-language",
+    "RU-C02-ochen-priyatno",
+    "RU-C02-practice",
+    "RU-C02-practice-cases",
+    "RU-C02-practice-zero-copula"
+  ],
+  "tex": "russian/book/chapters/ch02-introducing-yourself.tex"
+}

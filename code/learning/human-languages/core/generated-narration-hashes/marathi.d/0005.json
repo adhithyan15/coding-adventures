@@ -1,0 +1,23 @@
+{
+  "language": "marathi",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:91cac9f01782b313",
+  "lessonIds": [
+    "MR-C02-naav",
+    "MR-C02-majhe",
+    "MR-C02-aahe",
+    "MR-C02-majhe-naav-aahe",
+    "MR-C02-tu-tumhi",
+    "MR-C02-kaay",
+    "MR-C02-tumche-naav-kaay-aahe",
+    "MR-C02-anand",
+    "MR-C02-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch05.txt",
+  "json": "marathi/narration/ch05.json",
+  "textHash": "fnv1a64:48599575056f96ea",
+  "jsonHash": "fnv1a64:5a60e68eecf6f4ea",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:e28a6ccc00aadcd0",
+  "lessonIds": [
+    "ES-C17-futuro",
+    "ES-C17-comer-futuro",
+    "ES-C17-vivir-futuro"
+  ],
+  "tex": "spanish/book/chapters/ch122-futuro.tex"
+}

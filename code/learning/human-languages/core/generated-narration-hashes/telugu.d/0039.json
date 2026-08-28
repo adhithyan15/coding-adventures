@@ -1,0 +1,16 @@
+{
+  "language": "telugu",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:89b83c4589275a67",
+  "lessonIds": [
+    "TE-C39-tii",
+    "TE-C39-paalu"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "telugu/narration/ch39.txt",
+  "json": "telugu/narration/ch39.json",
+  "textHash": "fnv1a64:09e76cd48c83b0f3",
+  "jsonHash": "fnv1a64:d108f3b38eecbb82",
+  "findings": []
+}

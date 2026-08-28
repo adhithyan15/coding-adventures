@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:296b851b4f9163b4",
+  "lessonIds": [
+    "TE-C55-river",
+    "TE-C55-tank",
+    "TE-C55-hill",
+    "TE-C55-village",
+    "TE-C55-path"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch55.txt",
+  "json": "telugu/narration/ch55.json",
+  "textHash": "fnv1a64:42c11eb7bf3c8329",
+  "jsonHash": "fnv1a64:02366e21d82963e9",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:a35be21741972d83",
+  "lessonIds": [
+    "ES-C65-vuestro"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch254.txt",
+  "json": "spanish/narration/ch254.json",
+  "textHash": "fnv1a64:2ad232a61e19dfbf",
+  "jsonHash": "fnv1a64:6405d1ff6cba86c5",
+  "findings": []
+}

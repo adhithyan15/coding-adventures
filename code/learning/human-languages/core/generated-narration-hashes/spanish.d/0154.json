@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:47e8d372fd8c38a3",
+  "lessonIds": [
+    "ES-C34-entender"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch154.txt",
+  "json": "spanish/narration/ch154.json",
+  "textHash": "fnv1a64:b325122a309f8740",
+  "jsonHash": "fnv1a64:517a45666c9dbe6e",
+  "findings": []
+}

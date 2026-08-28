@@ -1,0 +1,12 @@
+{
+  "language": "gujarati",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:827520ff8209270f",
+  "lessonIds": [
+    "GU-C09-levun",
+    "GU-C09-puchhvun",
+    "GU-C09-madad-karvi",
+    "GU-C09-gamvun"
+  ],
+  "tex": "gujarati/book/chapters/ch15-doing-verbs.tex"
+}

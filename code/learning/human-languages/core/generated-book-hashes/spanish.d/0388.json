@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:519242a9f22647b7",
+  "lessonIds": [
+    "ES-C388-empujar",
+    "ES-C388-lanzar",
+    "ES-C388-borrar",
+    "ES-C388-gritar",
+    "ES-C388-repaso-cuatro-hedges"
+  ],
+  "tex": "spanish/book/chapters/ch388-empujar-y-lanzar.tex"
+}

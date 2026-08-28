@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:cae668c73bf557db",
+  "lessonIds": [
+    "KA-C66-field",
+    "KA-C66-grass",
+    "KA-C66-paddy",
+    "KA-C66-crop",
+    "KA-C66-harvest"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch66.txt",
+  "json": "kannada/narration/ch66.json",
+  "textHash": "fnv1a64:6e00b34938bc5169",
+  "jsonHash": "fnv1a64:fd07329b5ec6cb49",
+  "findings": []
+}

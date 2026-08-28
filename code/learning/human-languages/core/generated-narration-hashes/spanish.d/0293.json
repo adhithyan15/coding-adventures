@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:f223186b904f7362",
+  "lessonIds": [
+    "ES-C293-cuello",
+    "ES-C293-hombro",
+    "ES-C293-espalda",
+    "ES-C293-rodilla",
+    "ES-C293-tobillo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch293.txt",
+  "json": "spanish/narration/ch293.json",
+  "textHash": "fnv1a64:9b87006197d9425a",
+  "jsonHash": "fnv1a64:389324c237e0be1c",
+  "findings": []
+}

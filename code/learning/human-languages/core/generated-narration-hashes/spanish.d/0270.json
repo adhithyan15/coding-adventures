@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:d407c638d0060bed",
+  "lessonIds": [
+    "ES-C270-en-mi-opinion",
+    "ES-C270-por-ejemplo",
+    "ES-C270-sin-embargo",
+    "ES-C270-aunque"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch270.txt",
+  "json": "spanish/narration/ch270.json",
+  "textHash": "fnv1a64:e3669f8256cf53ac",
+  "jsonHash": "fnv1a64:8482c60b260d45d0",
+  "findings": []
+}

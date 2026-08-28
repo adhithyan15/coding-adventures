@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:09e598ca5aafe9c3",
+  "lessonIds": [
+    "TE-C59-wind",
+    "TE-C59-mist",
+    "TE-C59-sand",
+    "TE-C59-mud",
+    "TE-C59-fire"
+  ],
+  "tex": "telugu/book/chapters/ch59-weather-and-ground.tex"
+}

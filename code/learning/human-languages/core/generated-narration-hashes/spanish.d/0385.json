@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:0e6d9322965ed320",
+  "lessonIds": [
+    "ES-C385-usar",
+    "ES-C385-tocar",
+    "ES-C385-mezclar",
+    "ES-C385-colgar"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch385.txt",
+  "json": "spanish/narration/ch385.json",
+  "textHash": "fnv1a64:7ba3b83d1c3c07ea",
+  "jsonHash": "fnv1a64:fb635d2ede0c1883",
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "language": "portuguese",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:d448cc68a9d403d0",
+  "lessonIds": [
+    "PT-C09-meses",
+    "PT-C09-estacoes"
+  ],
+  "tex": "portuguese/book/chapters/ch09-months-and-seasons.tex"
+}

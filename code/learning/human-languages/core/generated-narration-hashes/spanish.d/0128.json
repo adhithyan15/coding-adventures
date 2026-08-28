@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:899dc1ba1ef4385f",
+  "lessonIds": [
+    "ES-C18-querer-subjuntivo",
+    "ES-C18-poder-subjuntivo",
+    "ES-C18-hacer-subjuntivo"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch128.txt",
+  "json": "spanish/narration/ch128.json",
+  "textHash": "fnv1a64:52e08ed095178125",
+  "jsonHash": "fnv1a64:b4b78e132b5b06d6",
+  "findings": []
+}

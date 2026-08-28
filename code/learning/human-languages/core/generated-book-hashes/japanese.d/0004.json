@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:9265f112fa74be49",
+  "lessonIds": [
+    "JA-W03-sa",
+    "JA-W03-ma",
+    "JA-W03-su",
+    "JA-C01-gozaimasu",
+    "JA-C03-practice"
+  ],
+  "tex": "japanese/book/chapters/ch04-polite-thanks.tex"
+}

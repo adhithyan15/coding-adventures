@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:bccc4cbfa76872a4",
+  "lessonIds": [
+    "PA-C04-phir",
+    "PA-C04-milaange",
+    "PA-C04-phir-milaange",
+    "PA-R04-wellbeing-r2",
+    "PA-C04-rab-raakha",
+    "PA-C04-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch04.txt",
+  "json": "punjabi/narration/ch04.json",
+  "textHash": "fnv1a64:3e277b0edd57eab3",
+  "jsonHash": "fnv1a64:705899a4d947cba2",
+  "findings": []
+}

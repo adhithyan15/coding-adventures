@@ -1,0 +1,16 @@
+{
+  "language": "malayalam",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:8e23ea4f97e7ae6e",
+  "lessonIds": [
+    "ML-C21-naaya-poocha",
+    "ML-S124-letter-sa"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch21.txt",
+  "json": "malayalam/narration/ch21.json",
+  "textHash": "fnv1a64:1144b6b0164995f0",
+  "jsonHash": "fnv1a64:70a3d25b4ca0a323",
+  "findings": []
+}

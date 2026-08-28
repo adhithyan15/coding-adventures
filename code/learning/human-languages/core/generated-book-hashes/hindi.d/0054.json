@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:6f6d4f06d7c74526",
+  "lessonIds": [
+    "HI-C54-cow",
+    "HI-C54-horse",
+    "HI-C54-fish",
+    "HI-C54-bird",
+    "HI-C54-goat"
+  ],
+  "tex": "hindi/book/chapters/ch54-animals.tex"
+}

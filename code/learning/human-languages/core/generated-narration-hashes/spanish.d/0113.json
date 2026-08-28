@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:c1eef30dac4f1402",
+  "lessonIds": [
+    "ES-C48-tenia-tuve"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch113.txt",
+  "json": "spanish/narration/ch113.json",
+  "textHash": "fnv1a64:8d6937e6dbaaf9ef",
+  "jsonHash": "fnv1a64:ebd0ce7ce5e852d3",
+  "findings": []
+}

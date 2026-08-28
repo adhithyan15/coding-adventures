@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:e9d047210453473b",
+  "lessonIds": [
+    "ES-C371-pequeno",
+    "ES-C371-gordo",
+    "ES-C371-joven",
+    "ES-C371-lento",
+    "ES-C371-dulce"
+  ],
+  "tex": "spanish/book/chapters/ch371-pequeno-y-gordo.tex"
+}

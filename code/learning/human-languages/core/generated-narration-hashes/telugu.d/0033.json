@@ -1,0 +1,18 @@
+{
+  "language": "telugu",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:791f531f16275b91",
+  "lessonIds": [
+    "TE-C33-anuko",
+    "TE-C33-artham-cesuko",
+    "TE-C33-caduvu",
+    "TE-C33-raayu"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "telugu/narration/ch33.txt",
+  "json": "telugu/narration/ch33.json",
+  "textHash": "fnv1a64:6cf429e862d299b4",
+  "jsonHash": "fnv1a64:f2fe985de93c279e",
+  "findings": []
+}

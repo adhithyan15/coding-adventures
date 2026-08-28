@@ -1,0 +1,10 @@
+{
+  "language": "portuguese",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:5dbed02c85efe6db",
+  "lessonIds": [
+    "PT-C08-hora",
+    "PT-C08-meio-dia-meia-noite"
+  ],
+  "tex": "portuguese/book/chapters/ch08-telling-time.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:cf383bc7b60b4962",
+  "lessonIds": [
+    "ES-C55-la-bebo"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch144.txt",
+  "json": "spanish/narration/ch144.json",
+  "textHash": "fnv1a64:d585d994da85a3a1",
+  "jsonHash": "fnv1a64:0b7481b79b058921",
+  "findings": []
+}

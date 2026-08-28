@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:2ded40e3090780d4",
+  "lessonIds": [
+    "TA-C46-teacher",
+    "TA-C46-student",
+    "TA-C46-doctor",
+    "TA-C46-farmer",
+    "TA-C46-guest"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch46.txt",
+  "json": "tamil/narration/ch46.json",
+  "textHash": "fnv1a64:0e33c6eb0ab6add5",
+  "jsonHash": "fnv1a64:61a034827b89c7d5",
+  "findings": []
+}

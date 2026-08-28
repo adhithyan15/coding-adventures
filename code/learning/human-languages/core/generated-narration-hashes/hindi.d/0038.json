@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:f180ca06271bbf4e",
+  "lessonIds": [
+    "HI-C38-aankh",
+    "HI-C38-daant",
+    "HI-C38-pair",
+    "HI-C38-pet"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "hindi/narration/ch38.txt",
+  "json": "hindi/narration/ch38.json",
+  "textHash": "fnv1a64:4ac7037b230e02be",
+  "jsonHash": "fnv1a64:cf0eb0b2a5b15cb3",
+  "findings": []
+}

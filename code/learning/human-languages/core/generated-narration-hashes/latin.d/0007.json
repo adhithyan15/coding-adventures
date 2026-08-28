@@ -1,0 +1,16 @@
+{
+  "language": "latin",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:cad110c49d4d24a0",
+  "lessonIds": [
+    "LA-C07-pater-mater",
+    "LA-C07-frater-soror"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "latin/narration/ch07.txt",
+  "json": "latin/narration/ch07.json",
+  "textHash": "fnv1a64:19e8d0a6932951c5",
+  "jsonHash": "fnv1a64:509c7ec212fba8ec",
+  "findings": []
+}

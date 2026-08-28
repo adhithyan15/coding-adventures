@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:37caf6316eb491f8",
+  "lessonIds": [
+    "SA-C30-door",
+    "SA-C30-seat",
+    "SA-C30-flower",
+    "SA-C30-garland",
+    "SA-C30-anjali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch30.txt",
+  "json": "sanskrit/narration/ch30.json",
+  "textHash": "fnv1a64:3d47f78534d5f535",
+  "jsonHash": "fnv1a64:031e1ef5fb721ce0",
+  "findings": []
+}

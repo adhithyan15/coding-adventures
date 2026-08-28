@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:593d5e21767e1f97",
+  "lessonIds": [
+    "TE-C61-curd",
+    "TE-C61-ghee",
+    "TE-C61-oil",
+    "TE-C61-sugar",
+    "TE-C61-chilli"
+  ],
+  "tex": "telugu/book/chapters/ch61-in-the-kitchen.tex"
+}

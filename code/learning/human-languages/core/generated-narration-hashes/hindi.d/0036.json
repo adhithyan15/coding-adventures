@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:21e94bfc2692c481",
+  "lessonIds": [
+    "HI-C36-ghar",
+    "HI-C36-darvaaza",
+    "HI-C36-kamra",
+    "HI-C36-kursi"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "hindi/narration/ch36.txt",
+  "json": "hindi/narration/ch36.json",
+  "textHash": "fnv1a64:5a67d1c7fef3b179",
+  "jsonHash": "fnv1a64:249dcc39108ef541",
+  "findings": []
+}

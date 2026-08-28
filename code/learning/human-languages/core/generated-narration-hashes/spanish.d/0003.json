@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:b0ecd8932369092f",
+  "lessonIds": [
+    "ES-C02-un",
+    "ES-C02-una",
+    "ES-C02-repaso-articulos"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch03.txt",
+  "json": "spanish/narration/ch03.json",
+  "textHash": "fnv1a64:81410c2e777d34ae",
+  "jsonHash": "fnv1a64:53b01e1a8058adeb",
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "language": "hindi",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:6de850852f3d8ed5",
+  "lessonIds": [
+    "HI-C08-kripaya",
+    "HI-S03-letter-a",
+    "HI-S112-vowel-sign-e"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "hindi/narration/ch08.txt",
+  "json": "hindi/narration/ch08.json",
+  "textHash": "fnv1a64:dd4af85fa40f11e9",
+  "jsonHash": "fnv1a64:9dde267fe6cb1132",
+  "findings": []
+}

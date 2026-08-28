@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:a0b0ee6069234a0a",
+  "lessonIds": [
+    "ES-C347-norte",
+    "ES-C347-sur",
+    "ES-C347-oeste",
+    "ES-C347-centro",
+    "ES-C347-alrededor"
+  ],
+  "tex": "spanish/book/chapters/ch347-el-norte-y-el-sur.tex"
+}

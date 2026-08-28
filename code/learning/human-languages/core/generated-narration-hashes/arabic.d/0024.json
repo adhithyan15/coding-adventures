@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:90b11a35af7be781",
+  "lessonIds": [
+    "AR-C24-ila-al-ghad"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch24.txt",
+  "json": "arabic/narration/ch24.json",
+  "textHash": "fnv1a64:691ef908377f59fd",
+  "jsonHash": "fnv1a64:d9bd52870435e653",
+  "findings": []
+}

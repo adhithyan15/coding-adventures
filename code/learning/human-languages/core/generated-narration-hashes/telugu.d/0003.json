@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:f9bcb1dd350456aa",
+  "lessonIds": [
+    "TE-C03-elaa",
+    "TE-C03-miiru-elaa-unnaaru",
+    "TE-C03-nenu",
+    "TE-C03-baagaa",
+    "TE-C03-paravaaledu",
+    "TE-C03-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "telugu/narration/ch03.txt",
+  "json": "telugu/narration/ch03.json",
+  "textHash": "fnv1a64:a5a5b4998fe3b9d1",
+  "jsonHash": "fnv1a64:7e2a538e46bf4d87",
+  "findings": []
+}

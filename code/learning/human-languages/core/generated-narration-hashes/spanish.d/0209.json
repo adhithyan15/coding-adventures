@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:83a894dd1e94f378",
+  "lessonIds": [
+    "ES-C56-repaso-condiciones"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch209.txt",
+  "json": "spanish/narration/ch209.json",
+  "textHash": "fnv1a64:e00e8d277d1ba89e",
+  "jsonHash": "fnv1a64:e70a711a23ef25e0",
+  "findings": []
+}

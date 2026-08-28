@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:868cc9f53978abd8",
+  "lessonIds": [
+    "FR-C20-je-suis-desole"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "french/narration/ch20.txt",
+  "json": "french/narration/ch20.json",
+  "textHash": "fnv1a64:50fe95c927349137",
+  "jsonHash": "fnv1a64:10e8e2147d4eea8f",
+  "findings": []
+}

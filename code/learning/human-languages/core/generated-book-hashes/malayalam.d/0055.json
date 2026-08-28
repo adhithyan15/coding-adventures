@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:abc60a65cbda297a",
+  "lessonIds": [
+    "ML-C55-river",
+    "ML-C55-rock",
+    "ML-C55-homeland",
+    "ML-C55-path",
+    "ML-C55-field"
+  ],
+  "tex": "malayalam/book/chapters/ch55-ground-underfoot.tex"
+}

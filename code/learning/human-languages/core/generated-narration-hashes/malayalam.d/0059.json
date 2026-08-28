@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:990f201e6569c8b6",
+  "lessonIds": [
+    "ML-C59-wind",
+    "ML-C59-sand",
+    "ML-C59-mud",
+    "ML-C59-smoke",
+    "ML-C59-ember"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch59.txt",
+  "json": "malayalam/narration/ch59.json",
+  "textHash": "fnv1a64:5e59933951763cdb",
+  "jsonHash": "fnv1a64:5e0c51d9ac0e7a7f",
+  "findings": []
+}

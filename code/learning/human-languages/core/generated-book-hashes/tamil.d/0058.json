@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:ff2adae6f9fba049",
+  "lessonIds": [
+    "TA-C58-cow",
+    "TA-C58-goat",
+    "TA-C58-hen",
+    "TA-C58-crow",
+    "TA-C58-bird"
+  ],
+  "tex": "tamil/book/chapters/ch58-around-the-yard.tex"
+}

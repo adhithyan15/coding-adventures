@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:d09adbee100a36e4",
+  "lessonIds": [
+    "ES-C14-ayer",
+    "ES-C14-ser-ir-preterite",
+    "ES-C14-hablar-preterite",
+    "ES-C14-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch103.txt",
+  "json": "spanish/narration/ch103.json",
+  "textHash": "fnv1a64:bd7dbfe64b16c3fe",
+  "jsonHash": "fnv1a64:9b97af6df7842d7d",
+  "findings": []
+}

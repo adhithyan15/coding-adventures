@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:b78f797bb6fe25e2",
+  "lessonIds": [
+    "MR-C10-paani",
+    "MR-C10-chaha",
+    "MR-C10-dudh",
+    "MR-C10-bhakari"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch13.txt",
+  "json": "marathi/narration/ch13.json",
+  "textHash": "fnv1a64:0e968546a2e8b9e5",
+  "jsonHash": "fnv1a64:35ec05ec81d1a5db",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:225d29d8a7fc8c15",
+  "lessonIds": [
+    "ES-C304-tranquilo",
+    "ES-C304-enfermo",
+    "ES-C304-contento",
+    "ES-C304-ocupado",
+    "ES-C304-triste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch304.txt",
+  "json": "spanish/narration/ch304.json",
+  "textHash": "fnv1a64:f4a851a92186391d",
+  "jsonHash": "fnv1a64:635c7fab57e9f8a5",
+  "findings": []
+}

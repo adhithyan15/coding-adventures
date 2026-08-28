@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:8b06a43f236f3623",
+  "lessonIds": [
+    "TE-C49-true",
+    "TE-C49-enough",
+    "TE-C49-certainly",
+    "TE-C49-perhaps",
+    "TE-C49-alright"
+  ],
+  "tex": "telugu/book/chapters/ch49-replies.tex"
+}

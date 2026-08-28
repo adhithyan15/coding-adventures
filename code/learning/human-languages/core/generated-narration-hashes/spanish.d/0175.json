@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:3e927b7155004dc8",
+  "lessonIds": [
+    "ES-C41-creer",
+    "ES-C41-asi-que",
+    "ES-C41-deber",
+    "ES-C41-explicar"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch175.txt",
+  "json": "spanish/narration/ch175.json",
+  "textHash": "fnv1a64:59aaa43199c02480",
+  "jsonHash": "fnv1a64:aa3edfc3e1bee472",
+  "findings": []
+}

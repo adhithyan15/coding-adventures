@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:77152a9df18ee825",
+  "lessonIds": [
+    "ES-C318-repaso-despedirse",
+    "ES-C318-repaso-disculparse",
+    "ES-C318-repaso-genero",
+    "ES-C318-repaso-marcas"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch318.txt",
+  "json": "spanish/narration/ch318.json",
+  "textHash": "fnv1a64:c0548310575a6021",
+  "jsonHash": "fnv1a64:263cf02cc8d225de",
+  "findings": []
+}

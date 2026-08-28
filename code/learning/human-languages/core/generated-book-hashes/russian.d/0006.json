@@ -1,0 +1,12 @@
+{
+  "language": "russian",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:a9a85a28eba881aa",
+  "lessonIds": [
+    "RU-C06-voda",
+    "RU-C06-kofe",
+    "RU-C06-chai",
+    "RU-C06-khleb"
+  ],
+  "tex": "russian/book/chapters/ch06-water-coffee-tea-bread.tex"
+}

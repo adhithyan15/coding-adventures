@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:0727cb8130b2a5a3",
+  "lessonIds": [
+    "TA-C48-now",
+    "TA-C48-time",
+    "TA-C48-journey",
+    "TA-C48-later",
+    "TA-C48-set-out"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch48.txt",
+  "json": "tamil/narration/ch48.json",
+  "textHash": "fnv1a64:85d15d72b70ea6a3",
+  "jsonHash": "fnv1a64:6b76cf60da262aec",
+  "findings": []
+}

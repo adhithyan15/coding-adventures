@@ -1,0 +1,16 @@
+{
+  "language": "telugu",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:3bfaef7b1191ba4c",
+  "lessonIds": [
+    "TE-C31-subha-madhyahnam",
+    "TE-C31-subha-madhyahnam-register"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "telugu/narration/ch31.txt",
+  "json": "telugu/narration/ch31.json",
+  "textHash": "fnv1a64:7af59c4cbaf05617",
+  "jsonHash": "fnv1a64:1e77c1d50cf055db",
+  "findings": []
+}

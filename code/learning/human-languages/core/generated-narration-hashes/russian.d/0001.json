@@ -1,0 +1,30 @@
+{
+  "language": "russian",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:9f1cf4a89c6097ba",
+  "lessonIds": [
+    "RU-C01-privet",
+    "RU-C01-zdravstvuyte",
+    "RU-C01-da",
+    "RU-C01-net",
+    "RU-C01-spasibo",
+    "RU-C01-pozhaluysta",
+    "RU-C01-practice",
+    "RU-W01-false-friends-v-r",
+    "RU-W02-false-friends-s-n",
+    "RU-W03-new-shapes-b-d",
+    "RU-W04-privet-letters-p-i",
+    "RU-W05-privet-letters-e-t",
+    "RU-W05-privet-observe",
+    "RU-W05-privet-guided-copy",
+    "RU-W05-privet-delayed-copy",
+    "RU-W05-privet-dictation"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "russian/narration/ch01.txt",
+  "json": "russian/narration/ch01.json",
+  "textHash": "fnv1a64:7c665568b36d3bde",
+  "jsonHash": "fnv1a64:11e7fba6daba9906",
+  "findings": []
+}

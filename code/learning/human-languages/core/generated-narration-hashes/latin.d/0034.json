@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:d620539a00f8c156",
+  "lessonIds": [
+    "LA-C34-bonum-vesperum"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "latin/narration/ch34.txt",
+  "json": "latin/narration/ch34.json",
+  "textHash": "fnv1a64:91037662aa55eb43",
+  "jsonHash": "fnv1a64:90a35b431044a226",
+  "findings": []
+}

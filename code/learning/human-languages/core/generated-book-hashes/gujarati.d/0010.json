@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:8f9a61400ae3b9ef",
+  "lessonIds": [
+    "GU-C04-malishun",
+    "GU-C04-kaale",
+    "GU-C04-pachha",
+    "GU-C04-pachha-malishun",
+    "GU-C04-practice"
+  ],
+  "tex": "gujarati/book/chapters/ch10-farewells.tex"
+}

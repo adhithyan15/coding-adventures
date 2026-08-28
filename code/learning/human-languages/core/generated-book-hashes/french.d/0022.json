@@ -1,0 +1,9 @@
+{
+  "language": "french",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:fb49102a7d9fbcc6",
+  "lessonIds": [
+    "FR-C22-chien-chat"
+  ],
+  "tex": "french/book/chapters/ch22-dog-and-cat.tex"
+}

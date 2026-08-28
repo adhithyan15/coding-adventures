@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:ed3f50bfaa0fe7d5",
+  "lessonIds": [
+    "ES-C267-no-verbo",
+    "ES-C267-no-nada",
+    "ES-C267-pregunta-si-no",
+    "ES-C267-verdad-no",
+    "ES-C267-negar-preguntar"
+  ],
+  "tex": "spanish/book/chapters/ch267-negate-and-ask.tex"
+}

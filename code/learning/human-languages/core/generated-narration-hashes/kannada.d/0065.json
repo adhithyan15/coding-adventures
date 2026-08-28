@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:f4afe4d129b0d584",
+  "lessonIds": [
+    "KA-C65-request",
+    "KA-C65-permission",
+    "KA-C65-hesitancy",
+    "KA-C65-trust",
+    "KA-C65-manners"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch65.txt",
+  "json": "kannada/narration/ch65.json",
+  "textHash": "fnv1a64:60e2eeccffa98717",
+  "jsonHash": "fnv1a64:57cacc279dbfdca7",
+  "findings": []
+}

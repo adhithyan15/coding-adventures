@@ -1,0 +1,18 @@
+{
+  "language": "german",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:dce4cbbb92786bf7",
+  "lessonIds": [
+    "GE-C24-denken",
+    "GE-C24-verstehen",
+    "GE-C24-lesen",
+    "GE-C24-schreiben"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "german/narration/ch24.txt",
+  "json": "german/narration/ch24.json",
+  "textHash": "fnv1a64:ac105e0ff17b46e8",
+  "jsonHash": "fnv1a64:1d2523ebee1887f7",
+  "findings": []
+}

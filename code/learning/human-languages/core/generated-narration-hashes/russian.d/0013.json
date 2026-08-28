@@ -1,0 +1,18 @@
+{
+  "language": "russian",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:024aa681b5022962",
+  "lessonIds": [
+    "RU-C13-moloko",
+    "RU-C13-syr",
+    "RU-C13-sok",
+    "RU-C13-sup"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "russian/narration/ch13.txt",
+  "json": "russian/narration/ch13.json",
+  "textHash": "fnv1a64:66918c28ee35b27e",
+  "jsonHash": "fnv1a64:5198457ea1ec3f04",
+  "findings": []
+}

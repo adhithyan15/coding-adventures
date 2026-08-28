@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:e0cdf01f279990de",
+  "lessonIds": [
+    "SA-C34-arm",
+    "SA-C34-neck",
+    "SA-C34-bone",
+    "SA-C34-blood",
+    "SA-C34-body"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch34.txt",
+  "json": "sanskrit/narration/ch34.json",
+  "textHash": "fnv1a64:e7a51c08d91e466c",
+  "jsonHash": "fnv1a64:e9fb82235e3bee4c",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:2436808dfe19056a",
+  "lessonIds": [
+    "ES-C303-ayuda",
+    "ES-C303-momento",
+    "ES-C303-otra-vez",
+    "ES-C303-no-se",
+    "ES-C303-que-significa"
+  ],
+  "tex": "spanish/book/chapters/ch303-reparaciones.tex"
+}

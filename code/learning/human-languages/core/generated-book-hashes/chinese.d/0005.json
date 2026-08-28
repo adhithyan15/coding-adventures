@@ -1,0 +1,12 @@
+{
+  "language": "chinese",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:e57ff95fe2751f97",
+  "lessonIds": [
+    "ZH-W05-shi",
+    "ZH-C05-shi",
+    "ZH-C05-bushi",
+    "ZH-C05-practice"
+  ],
+  "tex": "chinese/book/chapters/ch05-shi.tex"
+}

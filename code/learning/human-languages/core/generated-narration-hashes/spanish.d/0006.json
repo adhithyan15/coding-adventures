@@ -1,0 +1,22 @@
+{
+  "language": "spanish",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:eb8dfddd45c9d1a1",
+  "lessonIds": [
+    "ES-C03-como",
+    "ES-C03-como-acento",
+    "ES-C03-familia-qu",
+    "ES-C03-se-llama",
+    "ES-C03-como-se-llama",
+    "ES-C03-mucho",
+    "ES-C03-gusto",
+    "ES-C03-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch06.txt",
+  "json": "spanish/narration/ch06.json",
+  "textHash": "fnv1a64:ce1fb7f0c2030b26",
+  "jsonHash": "fnv1a64:968067a2fece9d60",
+  "findings": []
+}

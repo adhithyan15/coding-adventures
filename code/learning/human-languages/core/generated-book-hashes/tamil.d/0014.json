@@ -1,0 +1,10 @@
+{
+  "language": "tamil",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:20bda5e243c7380a",
+  "lessonIds": [
+    "TA-C14-kaalangal",
+    "TA-S118-letter-tta"
+  ],
+  "tex": "tamil/book/chapters/ch14-seasons.tex"
+}

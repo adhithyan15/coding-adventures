@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:3bd6ae7efae90ef0",
+  "lessonIds": [
+    "ES-C288-salida",
+    "ES-C288-viaje",
+    "ES-C288-vuelta",
+    "ES-C288-llegada",
+    "ES-C288-despedida"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch288.txt",
+  "json": "spanish/narration/ch288.json",
+  "textHash": "fnv1a64:acf12715e57c6556",
+  "jsonHash": "fnv1a64:643312f6266d75fe",
+  "findings": []
+}

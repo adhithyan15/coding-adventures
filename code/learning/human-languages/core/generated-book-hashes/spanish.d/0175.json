@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:08eb64df60c0bc71",
+  "lessonIds": [
+    "ES-C41-creer",
+    "ES-C41-asi-que",
+    "ES-C41-deber",
+    "ES-C41-explicar"
+  ],
+  "tex": "spanish/book/chapters/ch175-giving-reasons.tex"
+}

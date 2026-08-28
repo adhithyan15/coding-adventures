@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:03b7b8da92c4b814",
+  "lessonIds": [
+    "ES-C362-tierra",
+    "ES-C362-mar",
+    "ES-C362-aire",
+    "ES-C362-fuego",
+    "ES-C362-luna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch362.txt",
+  "json": "spanish/narration/ch362.json",
+  "textHash": "fnv1a64:4a3b38ec3b7c6181",
+  "jsonHash": "fnv1a64:3fb4478be30a63b5",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "language": "spanish",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:e75e92f27c2f1a41",
+  "lessonIds": [
+    "ES-C06-trabajar"
+  ],
+  "tex": "spanish/book/chapters/ch20-trabajar.tex"
+}

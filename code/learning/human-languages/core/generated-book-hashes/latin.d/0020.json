@@ -1,0 +1,10 @@
+{
+  "language": "latin",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:2d81097ff35192d2",
+  "lessonIds": [
+    "LA-C20-quid-tibi-nomen",
+    "LA-C20-name-case-variation"
+  ],
+  "tex": "latin/book/chapters/ch20-exchanging-names.tex"
+}

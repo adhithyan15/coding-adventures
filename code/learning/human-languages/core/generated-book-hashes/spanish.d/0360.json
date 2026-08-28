@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:283349b6e9505ee6",
+  "lessonIds": [
+    "ES-C360-ropa",
+    "ES-C360-vestido",
+    "ES-C360-zapato",
+    "ES-C360-pantalon",
+    "ES-C360-boton"
+  ],
+  "tex": "spanish/book/chapters/ch360-la-ropa-y-el-zapato.tex"
+}

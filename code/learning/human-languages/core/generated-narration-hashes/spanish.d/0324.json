@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:dbc9bfedfc8063e8",
+  "lessonIds": [
+    "ES-C324-verdad",
+    "ES-C324-falso",
+    "ES-C324-acaso",
+    "ES-C324-menos",
+    "ES-C324-siquiera"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch324.txt",
+  "json": "spanish/narration/ch324.json",
+  "textHash": "fnv1a64:8ff220827c570903",
+  "jsonHash": "fnv1a64:ffba6e0a90dae291",
+  "findings": []
+}

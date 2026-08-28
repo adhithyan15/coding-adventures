@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:cf8be6540157f59b",
+  "lessonIds": [
+    "SA-C32-tree",
+    "SA-C32-leaf",
+    "SA-C32-grass",
+    "SA-C32-vine",
+    "SA-C32-wood"
+  ],
+  "tex": "sanskrit/book/chapters/ch32-the-tree.tex"
+}

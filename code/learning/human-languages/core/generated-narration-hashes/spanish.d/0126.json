@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:6e08c4d010e004f1",
+  "lessonIds": [
+    "ES-C18-quiero-que"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch126.txt",
+  "json": "spanish/narration/ch126.json",
+  "textHash": "fnv1a64:0a660f2c129367c0",
+  "jsonHash": "fnv1a64:fc4140eb41b385c9",
+  "findings": []
+}

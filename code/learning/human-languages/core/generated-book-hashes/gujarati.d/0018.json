@@ -1,0 +1,12 @@
+{
+  "language": "gujarati",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:778786fec675bd94",
+  "lessonIds": [
+    "GU-C12-aankh",
+    "GU-C12-kaan",
+    "GU-C12-modhu",
+    "GU-C12-naak"
+  ],
+  "tex": "gujarati/book/chapters/ch18-face-parts.tex"
+}

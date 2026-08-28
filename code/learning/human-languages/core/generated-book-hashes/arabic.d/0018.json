@@ -1,0 +1,9 @@
+{
+  "language": "arabic",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:4535aec40b7fd225",
+  "lessonIds": [
+    "AR-C18-al-taqs"
+  ],
+  "tex": "arabic/book/chapters/ch18-weather.tex"
+}

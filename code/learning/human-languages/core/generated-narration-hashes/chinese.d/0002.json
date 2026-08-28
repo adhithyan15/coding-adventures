@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:f6536c2a08dff0b2",
+  "lessonIds": [
+    "ZH-W01-ren",
+    "ZH-W01-ren-radical",
+    "ZH-W01-er",
+    "ZH-W01-ni-build",
+    "ZH-W01-nu",
+    "ZH-W01-zi",
+    "ZH-W01-hao-build"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "chinese/narration/ch02.txt",
+  "json": "chinese/narration/ch02.json",
+  "textHash": "fnv1a64:7e9cb98a749101fa",
+  "jsonHash": "fnv1a64:93ca57d2525688df",
+  "findings": []
+}

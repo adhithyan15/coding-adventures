@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:373a526aa186224d",
+  "lessonIds": [
+    "TA-C45-eye",
+    "TA-C45-ear",
+    "TA-C45-nose",
+    "TA-C45-tooth",
+    "TA-C45-stomach"
+  ],
+  "tex": "tamil/book/chapters/ch45-more-of-the-body.tex"
+}

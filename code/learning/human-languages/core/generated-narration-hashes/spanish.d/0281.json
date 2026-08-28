@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:9a1b56eb2593ec91",
+  "lessonIds": [
+    "ES-C281-nuevo",
+    "ES-C281-viejo",
+    "ES-C281-limpio",
+    "ES-C281-sucio"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch281.txt",
+  "json": "spanish/narration/ch281.json",
+  "textHash": "fnv1a64:e782a26017f822ad",
+  "jsonHash": "fnv1a64:a1592d1ab8eb8f19",
+  "findings": []
+}

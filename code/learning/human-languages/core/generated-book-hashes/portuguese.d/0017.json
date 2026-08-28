@@ -1,0 +1,11 @@
+{
+  "language": "portuguese",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:d4b97210e061cf0e",
+  "lessonIds": [
+    "PT-C17-cabeca",
+    "PT-C17-cabeca-caput",
+    "PT-C17-mao"
+  ],
+  "tex": "portuguese/book/chapters/ch17-head-and-hand.tex"
+}

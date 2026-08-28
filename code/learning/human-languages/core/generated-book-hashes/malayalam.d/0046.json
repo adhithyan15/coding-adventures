@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:613c242abb4fddb6",
+  "lessonIds": [
+    "ML-C46-fruit",
+    "ML-C46-cloth",
+    "ML-C46-lamp",
+    "ML-C46-salt",
+    "ML-C46-book"
+  ],
+  "tex": "malayalam/book/chapters/ch46-things-you-ask-for.tex"
+}

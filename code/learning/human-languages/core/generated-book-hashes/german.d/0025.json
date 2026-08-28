@@ -1,0 +1,12 @@
+{
+  "language": "german",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:7dabb29604f903c1",
+  "lessonIds": [
+    "GE-C25-nehmen",
+    "GE-C25-fragen",
+    "GE-C25-helfen",
+    "GE-C25-moegen-lieben"
+  ],
+  "tex": "german/book/chapters/ch25-doing-verbs.tex"
+}

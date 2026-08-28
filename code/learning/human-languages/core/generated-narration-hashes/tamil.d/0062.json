@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:f7552970c1397df0",
+  "lessonIds": [
+    "TA-C62-only",
+    "TA-C62-still",
+    "TA-C62-soon",
+    "TA-C62-at-once",
+    "TA-C62-first-of-all"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch62.txt",
+  "json": "tamil/narration/ch62.json",
+  "textHash": "fnv1a64:5ac59d8482b16aed",
+  "jsonHash": "fnv1a64:bf0ba605a7d1b6b3",
+  "findings": []
+}

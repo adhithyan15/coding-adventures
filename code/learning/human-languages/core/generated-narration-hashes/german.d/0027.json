@@ -1,0 +1,18 @@
+{
+  "language": "german",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:1a0cda01f714b52a",
+  "lessonIds": [
+    "GE-C27-gehen",
+    "GE-C27-laufen",
+    "GE-C27-oeffnen",
+    "GE-C27-schliessen"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "german/narration/ch27.txt",
+  "json": "german/narration/ch27.json",
+  "textHash": "fnv1a64:70899409818d857b",
+  "jsonHash": "fnv1a64:0880cea61ae9af5f",
+  "findings": []
+}

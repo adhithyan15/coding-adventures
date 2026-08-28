@@ -1,0 +1,18 @@
+{
+  "language": "russian",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:cba0a8f8ea27e406",
+  "lessonIds": [
+    "RU-C05-brat",
+    "RU-C05-sprashivat",
+    "RU-C05-pomogat",
+    "RU-C05-lyubit"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "russian/narration/ch05.txt",
+  "json": "russian/narration/ch05.json",
+  "textHash": "fnv1a64:b4a3dd6676ba148c",
+  "jsonHash": "fnv1a64:6ed0615f1cecceee",
+  "findings": []
+}

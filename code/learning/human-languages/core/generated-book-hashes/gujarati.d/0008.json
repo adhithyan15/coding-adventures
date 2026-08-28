@@ -1,0 +1,18 @@
+{
+  "language": "gujarati",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:650fac29efb569a5",
+  "lessonIds": [
+    "GU-C02-naam",
+    "GU-C02-maarun",
+    "GU-C02-chhe",
+    "GU-C02-maarun-naam-chhe",
+    "GU-C02-anand",
+    "GU-C02-tu-tame",
+    "GU-C02-shun",
+    "GU-C02-tamarun-naam-shun-chhe",
+    "GU-R04-doorway-nine-r2",
+    "GU-C02-practice"
+  ],
+  "tex": "gujarati/book/chapters/ch08-introductions.tex"
+}

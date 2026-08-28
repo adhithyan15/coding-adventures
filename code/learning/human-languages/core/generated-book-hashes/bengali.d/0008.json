@@ -1,0 +1,12 @@
+{
+  "language": "bengali",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:c469281b28c81e96",
+  "lessonIds": [
+    "BN-C08-bhaba",
+    "BN-C08-bojha",
+    "BN-C08-pora",
+    "BN-C08-lekha"
+  ],
+  "tex": "bengali/book/chapters/ch08-mind-and-page.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:20fbd7ec23e5601d",
+  "lessonIds": [
+    "MW-W01-ra",
+    "MW-W01-aa-matra",
+    "MW-W01-raam",
+    "MW-W01-sa",
+    "MW-W01-saa",
+    "MW-C01-raam-raam-saa",
+    "MW-C01-practice"
+  ],
+  "tex": "marwadi/book/chapters/ch01-ram-ram-sa.tex"
+}

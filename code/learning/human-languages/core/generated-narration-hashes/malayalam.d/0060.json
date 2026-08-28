@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:2ceb8a7f27805d9c",
+  "lessonIds": [
+    "ML-C60-cow",
+    "ML-C60-goat",
+    "ML-C60-hen",
+    "ML-C60-crow",
+    "ML-C60-elephant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch60.txt",
+  "json": "malayalam/narration/ch60.json",
+  "textHash": "fnv1a64:524be6bbab45810e",
+  "jsonHash": "fnv1a64:c9be5c5a61226a32",
+  "findings": []
+}

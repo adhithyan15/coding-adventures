@@ -1,0 +1,18 @@
+{
+  "language": "french",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:4ee9cdf417bf763d",
+  "lessonIds": [
+    "FR-C24-prendre",
+    "FR-C24-demander",
+    "FR-C24-aider",
+    "FR-C24-aimer"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "french/narration/ch24.txt",
+  "json": "french/narration/ch24.json",
+  "textHash": "fnv1a64:60ea88664f353cf6",
+  "jsonHash": "fnv1a64:1b3fad915a64fb5c",
+  "findings": []
+}

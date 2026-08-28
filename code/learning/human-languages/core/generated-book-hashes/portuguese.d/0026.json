@@ -1,0 +1,12 @@
+{
+  "language": "portuguese",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:f73da968d08cbd25",
+  "lessonIds": [
+    "PT-C26-olho",
+    "PT-C26-orelha",
+    "PT-C26-boca",
+    "PT-C26-coracao"
+  ],
+  "tex": "portuguese/book/chapters/ch26-body-how-are-you.tex"
+}

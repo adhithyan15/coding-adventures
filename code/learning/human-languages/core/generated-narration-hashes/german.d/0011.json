@@ -1,0 +1,16 @@
+{
+  "language": "german",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:8cccc1dc0356d9b4",
+  "lessonIds": [
+    "GE-C11-brot",
+    "GE-C11-wasser-wein"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "german/narration/ch11.txt",
+  "json": "german/narration/ch11.json",
+  "textHash": "fnv1a64:2f185347f13e9e41",
+  "jsonHash": "fnv1a64:07e659f5b2796f09",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:dd1d6c896ddd02b4",
+  "lessonIds": [
+    "ML-C60-cow",
+    "ML-C60-goat",
+    "ML-C60-hen",
+    "ML-C60-crow",
+    "ML-C60-elephant"
+  ],
+  "tex": "malayalam/book/chapters/ch60-animals-around-a-house.tex"
+}

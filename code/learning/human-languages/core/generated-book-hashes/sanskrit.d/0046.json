@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:371b4f0c9246afa1",
+  "lessonIds": [
+    "SA-C46-sun",
+    "SA-C46-ray",
+    "SA-C46-light",
+    "SA-C46-shade",
+    "SA-C46-heat"
+  ],
+  "tex": "sanskrit/book/chapters/ch46-sun-and-shade.tex"
+}

@@ -1,0 +1,26 @@
+{
+  "language": "marathi",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:a23497108ec8498f",
+  "lessonIds": [
+    "MR-R14-mitra-r2",
+    "MR-R14-kutumb-r2",
+    "MR-R14-siblings",
+    "MR-R14-eye-ear",
+    "MR-R14-mouth-nose",
+    "MR-R14-food",
+    "MR-R14-doing",
+    "MR-R14-mind",
+    "MR-R14-core",
+    "MR-R14-mitra-r3",
+    "MR-R14-numbers",
+    "MR-R14-kutumb-r3"
+  ],
+  "voiceLessons": 12,
+  "drivablePrefix": 12,
+  "text": "marathi/narration/ch17.txt",
+  "json": "marathi/narration/ch17.json",
+  "textHash": "fnv1a64:e9b216f0dda15c2a",
+  "jsonHash": "fnv1a64:0d28c3e8be489fa3",
+  "findings": []
+}

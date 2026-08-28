@@ -1,0 +1,17 @@
+{
+  "language": "tamil",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:dad3fd41250097f3",
+  "lessonIds": [
+    "TA-C17-nanpakal-nalliravu",
+    "TA-C17-transparent-middle-synonyms",
+    "TA-S121-vowel-sign-u"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch17.txt",
+  "json": "tamil/narration/ch17.json",
+  "textHash": "fnv1a64:a96510c5f3cffa9d",
+  "jsonHash": "fnv1a64:4d0de3aea215cb2a",
+  "findings": []
+}

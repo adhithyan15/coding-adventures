@@ -1,0 +1,10 @@
+{
+  "language": "malayalam",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:de1a1e055482e261",
+  "lessonIds": [
+    "ML-C18-mani",
+    "ML-S121-letter-ssa"
+  ],
+  "tex": "malayalam/book/chapters/ch18-telling-time.tex"
+}

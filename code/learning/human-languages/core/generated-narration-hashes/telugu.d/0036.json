@@ -1,0 +1,16 @@
+{
+  "language": "telugu",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:b0b4ecc15cddc51d",
+  "lessonIds": [
+    "TE-C36-koduku",
+    "TE-C36-kuuturu"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "telugu/narration/ch36.txt",
+  "json": "telugu/narration/ch36.json",
+  "textHash": "fnv1a64:36b910b6a2a794e9",
+  "jsonHash": "fnv1a64:12e19100fb35b131",
+  "findings": []
+}

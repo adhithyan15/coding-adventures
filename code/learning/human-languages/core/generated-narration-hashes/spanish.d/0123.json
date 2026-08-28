@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:c00ef5a955646ef2",
+  "lessonIds": [
+    "ES-C17-condicional",
+    "ES-C17-comer-condicional",
+    "ES-C17-vivir-condicional"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch123.txt",
+  "json": "spanish/narration/ch123.json",
+  "textHash": "fnv1a64:2105765b6ba588f2",
+  "jsonHash": "fnv1a64:d6533697aac0bb7c",
+  "findings": []
+}

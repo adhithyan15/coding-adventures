@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:47ef569413dda094",
+  "lessonIds": [
+    "ES-C27-los-meses"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch145.txt",
+  "json": "spanish/narration/ch145.json",
+  "textHash": "fnv1a64:6893068a5673c0ad",
+  "jsonHash": "fnv1a64:f08e520550262dac",
+  "findings": []
+}

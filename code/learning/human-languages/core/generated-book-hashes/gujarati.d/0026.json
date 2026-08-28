@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:917b538c769de6d0",
+  "lessonIds": [
+    "GU-C22-hear-shahar",
+    "GU-C22-shahar",
+    "GU-C22-hear-shaalaa",
+    "GU-C22-shaalaa",
+    "GU-C22-hear-rasto",
+    "GU-C22-rasto",
+    "GU-C22-route-three"
+  ],
+  "tex": "gujarati/book/chapters/ch26-city-school-road.tex"
+}

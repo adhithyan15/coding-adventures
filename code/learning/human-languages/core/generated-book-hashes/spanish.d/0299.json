@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:ae43b77d1d396b1b",
+  "lessonIds": [
+    "ES-C299-campo",
+    "ES-C299-granja",
+    "ES-C299-ganado",
+    "ES-C299-cosecha",
+    "ES-C299-pastor"
+  ],
+  "tex": "spanish/book/chapters/ch299-la-granja.tex"
+}

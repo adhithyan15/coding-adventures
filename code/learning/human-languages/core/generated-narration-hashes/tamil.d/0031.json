@@ -1,0 +1,17 @@
+{
+  "language": "tamil",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:20a75ec52e7beed9",
+  "lessonIds": [
+    "TA-C31-matiya-vanakkam",
+    "TA-C31-afternoon-greeting-root",
+    "TA-W13-read-irukkirirgal"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch31.txt",
+  "json": "tamil/narration/ch31.json",
+  "textHash": "fnv1a64:0781c122808b9480",
+  "jsonHash": "fnv1a64:662383f3225b2a8d",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:905a23c912c44a0c",
+  "lessonIds": [
+    "ES-C51-la-flecha"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch178.txt",
+  "json": "spanish/narration/ch178.json",
+  "textHash": "fnv1a64:f7ebe3d3995afd4d",
+  "jsonHash": "fnv1a64:9ed0820d94f9f571",
+  "findings": []
+}

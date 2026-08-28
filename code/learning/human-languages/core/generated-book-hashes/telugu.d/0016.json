@@ -1,0 +1,10 @@
+{
+  "language": "telugu",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:cf4904b4b69cb90d",
+  "lessonIds": [
+    "TE-C16-nelalu",
+    "TE-S119-vowel-sign-ii"
+  ],
+  "tex": "telugu/book/chapters/ch16-months.tex"
+}

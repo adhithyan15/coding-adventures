@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:241e2396f0abe942",
+  "lessonIds": [
+    "ES-C09-somos",
+    "ES-C09-son",
+    "ES-C09-sois",
+    "ES-C09-repaso-ser"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch50.txt",
+  "json": "spanish/narration/ch50.json",
+  "textHash": "fnv1a64:dc506a51e341f254",
+  "jsonHash": "fnv1a64:16f8a3f823576e44",
+  "findings": []
+}

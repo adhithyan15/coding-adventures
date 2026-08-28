@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:5584ae95d93a6b7e",
+  "lessonIds": [
+    "ES-C300-sed",
+    "ES-C300-sueno",
+    "ES-C300-piel",
+    "ES-C300-sangre",
+    "ES-C300-remedio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch300.txt",
+  "json": "spanish/narration/ch300.json",
+  "textHash": "fnv1a64:73a75a0f3207f2dc",
+  "jsonHash": "fnv1a64:b3ba27ccaf402bd6",
+  "findings": []
+}

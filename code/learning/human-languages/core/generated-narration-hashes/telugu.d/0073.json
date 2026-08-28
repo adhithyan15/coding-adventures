@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:36d42d74129e6538",
+  "lessonIds": [
+    "TE-C73-sweet",
+    "TE-C73-sour",
+    "TE-C73-bitter",
+    "TE-C73-pungent",
+    "TE-C73-astringent"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch73.txt",
+  "json": "telugu/narration/ch73.json",
+  "textHash": "fnv1a64:c2ad8a3097ab9557",
+  "jsonHash": "fnv1a64:4b637c3feb85b3a3",
+  "findings": []
+}

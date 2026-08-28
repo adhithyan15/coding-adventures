@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:d916732db0d13be3",
+  "lessonIds": [
+    "ES-C16-imperfecto",
+    "ES-C16-comer-imperfecto",
+    "ES-C16-vivir-imperfecto"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch107.txt",
+  "json": "spanish/narration/ch107.json",
+  "textHash": "fnv1a64:5aad010a121c0d3d",
+  "jsonHash": "fnv1a64:d3d8592d37f27b6c",
+  "findings": []
+}

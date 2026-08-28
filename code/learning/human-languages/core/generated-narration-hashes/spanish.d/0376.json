@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:9777c75c5ab0f902",
+  "lessonIds": [
+    "ES-C376-harina",
+    "ES-C376-uva",
+    "ES-C376-maiz",
+    "ES-C376-chocolate",
+    "ES-C376-pimiento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch376.txt",
+  "json": "spanish/narration/ch376.json",
+  "textHash": "fnv1a64:cacd6818d8d06c93",
+  "jsonHash": "fnv1a64:e27407bbe8a5ec84",
+  "findings": []
+}

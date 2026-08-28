@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:766bc9fa8027c84c",
+  "lessonIds": [
+    "ES-C291-semilla",
+    "ES-C291-raiz",
+    "ES-C291-tronco",
+    "ES-C291-rama",
+    "ES-C291-bosque"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch291.txt",
+  "json": "spanish/narration/ch291.json",
+  "textHash": "fnv1a64:bb957ec45fa69b41",
+  "jsonHash": "fnv1a64:00d21e36ec0c2d08",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:5a1a98622172715e",
+  "lessonIds": [
+    "TA-C60-needle",
+    "TA-C60-rope",
+    "TA-C60-umbrella",
+    "TA-C60-broom",
+    "TA-C60-comb"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch60.txt",
+  "json": "tamil/narration/ch60.json",
+  "textHash": "fnv1a64:b40bb868581a77be",
+  "jsonHash": "fnv1a64:29fa5dfda02ba9c4",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:7ca1d7c547720f59",
+  "lessonIds": [
+    "BN-C01-nomoshkar",
+    "BN-C01-dhonnobad",
+    "BN-C01-hyan-na",
+    "BN-C01-achchha",
+    "BN-C01-ashi",
+    "BN-C01-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch01.txt",
+  "json": "bengali/narration/ch01.json",
+  "textHash": "fnv1a64:4814da95deb4a48e",
+  "jsonHash": "fnv1a64:7e1c84c3b2b0321f",
+  "findings": []
+}

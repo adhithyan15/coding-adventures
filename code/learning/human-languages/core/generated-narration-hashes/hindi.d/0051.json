@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:9c9d075b1b211d3c",
+  "lessonIds": [
+    "HI-C51-flower",
+    "HI-C51-garland",
+    "HI-C51-courtyard",
+    "HI-C51-table",
+    "HI-C51-sweet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch51.txt",
+  "json": "hindi/narration/ch51.json",
+  "textHash": "fnv1a64:913e09d42235b894",
+  "jsonHash": "fnv1a64:1bc0788dd86193e4",
+  "findings": []
+}

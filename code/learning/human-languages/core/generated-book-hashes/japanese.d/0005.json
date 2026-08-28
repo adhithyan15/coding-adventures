@@ -1,0 +1,15 @@
+{
+  "language": "japanese",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:2211c70d67acf7a1",
+  "lessonIds": [
+    "JA-W05-nichi-kanji",
+    "JA-W05-hon-kanji",
+    "JA-W05-gen-component",
+    "JA-W05-five-component",
+    "JA-W05-mouth-component",
+    "JA-W05-go-kanji",
+    "JA-C01-nihongo"
+  ],
+  "tex": "japanese/book/chapters/ch05-nihongo-kanji.tex"
+}

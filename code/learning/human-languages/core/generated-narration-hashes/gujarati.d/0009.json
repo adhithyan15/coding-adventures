@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:b2756451c5e51083",
+  "lessonIds": [
+    "GU-C03-hun",
+    "GU-C03-kem",
+    "GU-C03-tame-kem-chho",
+    "GU-C03-majaa",
+    "GU-C03-vandho-nahi",
+    "GU-C03-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch09.txt",
+  "json": "gujarati/narration/ch09.json",
+  "textHash": "fnv1a64:66735779570eb633",
+  "jsonHash": "fnv1a64:a343e6e1d0fb653f",
+  "findings": []
+}

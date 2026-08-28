@@ -1,0 +1,11 @@
+{
+  "language": "latin",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:f03b8c1442ac6361",
+  "lessonIds": [
+    "LA-C33-vesper",
+    "LA-C33-vesper-afterlives",
+    "LA-C33-practice"
+  ],
+  "tex": "latin/book/chapters/ch33-evening.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:bc81aa718c33e504",
+  "lessonIds": [
+    "ES-C357-navidad",
+    "ES-C357-pascua",
+    "ES-C357-vispera",
+    "ES-C357-regalo",
+    "ES-C357-tarjeta"
+  ],
+  "tex": "spanish/book/chapters/ch357-la-navidad-y-la-pascua.tex"
+}

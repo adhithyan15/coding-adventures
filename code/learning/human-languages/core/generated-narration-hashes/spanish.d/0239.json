@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:b3ee646703217cc5",
+  "lessonIds": [
+    "ES-C62-veo-a-maria"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch239.txt",
+  "json": "spanish/narration/ch239.json",
+  "textHash": "fnv1a64:eef16709242cbe7e",
+  "jsonHash": "fnv1a64:7ec310b431fa5e34",
+  "findings": []
+}

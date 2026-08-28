@@ -1,0 +1,10 @@
+{
+  "language": "french",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:bf95cd427951952e",
+  "lessonIds": [
+    "FR-C18-oui",
+    "FR-C18-non"
+  ],
+  "tex": "french/book/chapters/ch18-yes-and-no.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:d4181d2efb9889d8",
+  "lessonIds": [
+    "ML-C56-mat",
+    "ML-C56-basket",
+    "ML-C56-knife",
+    "ML-C56-vessel",
+    "ML-C56-box"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch56.txt",
+  "json": "malayalam/narration/ch56.json",
+  "textHash": "fnv1a64:6c8afcced4c10962",
+  "jsonHash": "fnv1a64:49a69a04af9e26eb",
+  "findings": []
+}

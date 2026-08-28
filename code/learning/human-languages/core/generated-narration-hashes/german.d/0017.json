@@ -1,0 +1,17 @@
+{
+  "language": "german",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:58c4ffb2df0e7c2a",
+  "lessonIds": [
+    "GE-C17-kopf",
+    "GE-C17-kopf-haupt",
+    "GE-C17-hand"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "german/narration/ch17.txt",
+  "json": "german/narration/ch17.json",
+  "textHash": "fnv1a64:0f6cf37951ace1c7",
+  "jsonHash": "fnv1a64:a6e8471870bd73fc",
+  "findings": []
+}

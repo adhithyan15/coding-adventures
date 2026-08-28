@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:a717cfb272e9c5c1",
+  "lessonIds": [
+    "ES-C354-hotel",
+    "ES-C354-restaurante",
+    "ES-C354-cine",
+    "ES-C354-parque",
+    "ES-C354-jardin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch354.txt",
+  "json": "spanish/narration/ch354.json",
+  "textHash": "fnv1a64:805e16025b4fbf99",
+  "jsonHash": "fnv1a64:7caf011d4fe114f8",
+  "findings": []
+}

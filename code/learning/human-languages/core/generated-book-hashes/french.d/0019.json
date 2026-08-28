@@ -1,0 +1,9 @@
+{
+  "language": "french",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:298172841af8e4ae",
+  "lessonIds": [
+    "FR-C19-sil-vous-plait"
+  ],
+  "tex": "french/book/chapters/ch19-please.tex"
+}

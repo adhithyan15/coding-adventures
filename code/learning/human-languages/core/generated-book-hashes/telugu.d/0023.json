@@ -1,0 +1,9 @@
+{
+  "language": "telugu",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:512981cf87b0ede8",
+  "lessonIds": [
+    "TE-C23-roju"
+  ],
+  "tex": "telugu/book/chapters/ch23-day.tex"
+}

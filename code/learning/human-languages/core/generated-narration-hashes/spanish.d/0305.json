@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:94ed80c6fd9c72dc",
+  "lessonIds": [
+    "ES-C305-nombre",
+    "ES-C305-apellido",
+    "ES-C305-senor",
+    "ES-C305-senora",
+    "ES-C305-encantado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch305.txt",
+  "json": "spanish/narration/ch305.json",
+  "textHash": "fnv1a64:be046a4011a98b90",
+  "jsonHash": "fnv1a64:85f937fc608ffeb6",
+  "findings": []
+}

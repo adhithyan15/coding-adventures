@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:d20bc1abddc78abf",
+  "lessonIds": [
+    "HI-C44-son",
+    "HI-C44-daughter",
+    "HI-C44-family",
+    "HI-C44-people"
+  ],
+  "tex": "hindi/book/chapters/ch44-sons-daughters.tex"
+}

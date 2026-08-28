@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:83477a341d4888ac",
+  "lessonIds": [
+    "ES-C07-sintesis-preguntar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch37.txt",
+  "json": "spanish/narration/ch37.json",
+  "textHash": "fnv1a64:f97efdf03c327ff4",
+  "jsonHash": "fnv1a64:ac79a864f0d0b775",
+  "findings": []
+}

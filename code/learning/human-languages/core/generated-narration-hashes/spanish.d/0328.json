@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:8ea3235dbbe19d47",
+  "lessonIds": [
+    "ES-C328-asi",
+    "ES-C328-jamas",
+    "ES-C328-apenas",
+    "ES-C328-casi",
+    "ES-C328-incluso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch328.txt",
+  "json": "spanish/narration/ch328.json",
+  "textHash": "fnv1a64:198b6304a0a1689d",
+  "jsonHash": "fnv1a64:709cf0ff3754c984",
+  "findings": []
+}

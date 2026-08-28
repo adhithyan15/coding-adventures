@@ -1,0 +1,12 @@
+{
+  "language": "french",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:93539542a2fb6b61",
+  "lessonIds": [
+    "FR-C31-oeil",
+    "FR-C31-nez",
+    "FR-C31-bouche",
+    "FR-C31-ventre"
+  ],
+  "tex": "french/book/chapters/ch31-eyes-nose-mouth-stomach.tex"
+}

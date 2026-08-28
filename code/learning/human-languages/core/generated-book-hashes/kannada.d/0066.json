@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:b8c295fdca86607c",
+  "lessonIds": [
+    "KA-C66-field",
+    "KA-C66-grass",
+    "KA-C66-paddy",
+    "KA-C66-crop",
+    "KA-C66-harvest"
+  ],
+  "tex": "kannada/book/chapters/ch66-the-field.tex"
+}

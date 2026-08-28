@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:0030d5c9ef8324c9",
+  "lessonIds": [
+    "TE-C29-subhodayam"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch29.txt",
+  "json": "telugu/narration/ch29.json",
+  "textHash": "fnv1a64:1cc9e4599884828c",
+  "jsonHash": "fnv1a64:9f5575b8374df3c9",
+  "findings": []
+}

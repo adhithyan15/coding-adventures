@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:e4e7655daa34bae7",
+  "lessonIds": [
+    "ES-C13-plurales-cambio",
+    "ES-C13-plurales-yo-go",
+    "ES-C13-sintesis-derivar"
+  ],
+  "tex": "spanish/book/chapters/ch76-derive-plurals.tex"
+}

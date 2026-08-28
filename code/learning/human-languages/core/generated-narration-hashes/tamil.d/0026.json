@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:1f4ae4bf5838368d",
+  "lessonIds": [
+    "TA-C26-kaalai"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch26.txt",
+  "json": "tamil/narration/ch26.json",
+  "textHash": "fnv1a64:f9945e3ae4bac7f7",
+  "jsonHash": "fnv1a64:beb99819b6ef8d3f",
+  "findings": []
+}

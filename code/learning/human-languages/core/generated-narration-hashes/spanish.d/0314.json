@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:a3a011f6dd4f02ce",
+  "lessonIds": [
+    "ES-C314-brazo",
+    "ES-C314-pierna",
+    "ES-C314-pie",
+    "ES-C314-diente",
+    "ES-C314-oido"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch314.txt",
+  "json": "spanish/narration/ch314.json",
+  "textHash": "fnv1a64:d3c050bf7a71b2da",
+  "jsonHash": "fnv1a64:2b0bf62bcfe2ab9d",
+  "findings": []
+}

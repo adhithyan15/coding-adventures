@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:095ab5ecf8193caf",
+  "lessonIds": [
+    "TA-C38-udambu",
+    "TA-C38-sugam",
+    "TA-C38-vidai",
+    "TA-W19-read-muunru"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "tamil/narration/ch38.txt",
+  "json": "tamil/narration/ch38.json",
+  "textHash": "fnv1a64:bc7276bef51a8231",
+  "jsonHash": "fnv1a64:e20fc60ca7b84719",
+  "findings": []
+}

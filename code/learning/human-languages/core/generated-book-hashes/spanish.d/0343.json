@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:675a7a3f5d36ea1f",
+  "lessonIds": [
+    "ES-C343-fecha",
+    "ES-C343-calendario",
+    "ES-C343-proximo",
+    "ES-C343-epoca",
+    "ES-C343-siglo"
+  ],
+  "tex": "spanish/book/chapters/ch343-la-fecha-y-el-siglo.tex"
+}

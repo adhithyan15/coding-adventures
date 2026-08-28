@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:61177a51e19bca4c",
+  "lessonIds": [
+    "ES-C67-comer-es-bueno",
+    "ES-C67-repaso-cuando-dos-palabras-se-tocan"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch264.txt",
+  "json": "spanish/narration/ch264.json",
+  "textHash": "fnv1a64:b193cb9390815d34",
+  "jsonHash": "fnv1a64:3a0ddcc82da2885e",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:3a7e617427b0151a",
+  "lessonIds": [
+    "FA-C14-khahar",
+    "FA-C14-pesar",
+    "FA-C14-mard",
+    "FA-C14-zan",
+    "FA-C14-dust"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch14.txt",
+  "json": "persian/narration/ch14.json",
+  "textHash": "fnv1a64:97eb74a09ab3ca6d",
+  "jsonHash": "fnv1a64:a61304de15f26f12",
+  "findings": []
+}

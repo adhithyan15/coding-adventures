@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:1d7eabee6a49ebca",
+  "lessonIds": [
+    "UR-C01-salam",
+    "UR-W01-shukriya-first-three",
+    "UR-C01-shukriya",
+    "UR-C01-ji-han",
+    "UR-C01-nahin"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "urdu/narration/ch01.txt",
+  "json": "urdu/narration/ch01.json",
+  "textHash": "fnv1a64:c9be4191db4256ef",
+  "jsonHash": "fnv1a64:60d8ab9cd0e5a286",
+  "findings": []
+}

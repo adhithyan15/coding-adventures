@@ -1,0 +1,10 @@
+{
+  "language": "telugu",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:a84953d3a566724f",
+  "lessonIds": [
+    "TE-C36-koduku",
+    "TE-C36-kuuturu"
+  ],
+  "tex": "telugu/book/chapters/ch36-son-and-daughter.tex"
+}

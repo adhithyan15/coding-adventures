@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:a9b8d7f7cfda4fb4",
+  "lessonIds": [
+    "ES-C09-oso"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch61.txt",
+  "json": "spanish/narration/ch61.json",
+  "textHash": "fnv1a64:6b50471956bcc5e1",
+  "jsonHash": "fnv1a64:86f9f31f372459f4",
+  "findings": []
+}

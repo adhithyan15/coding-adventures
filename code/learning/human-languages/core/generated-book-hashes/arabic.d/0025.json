@@ -1,0 +1,9 @@
+{
+  "language": "arabic",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:8c2a3fafa186b9ee",
+  "lessonIds": [
+    "AR-C25-yawm"
+  ],
+  "tex": "arabic/book/chapters/ch25-day.tex"
+}

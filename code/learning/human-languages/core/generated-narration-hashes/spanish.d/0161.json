@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:411f839a2534bbc1",
+  "lessonIds": [
+    "ES-C35-ayudar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch161.txt",
+  "json": "spanish/narration/ch161.json",
+  "textHash": "fnv1a64:5fd8b0ad3b7aee4b",
+  "jsonHash": "fnv1a64:567797baf460ed58",
+  "findings": []
+}

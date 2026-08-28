@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:8cbc023c73c95858",
+  "lessonIds": [
+    "ES-C44-repaso-articulos",
+    "ES-C44-repaso-ir-ida"
+  ],
+  "tex": "spanish/book/chapters/ch81-review-articles.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:034734e69bd94429",
+  "lessonIds": [
+    "ES-C373-oro",
+    "ES-C373-botella",
+    "ES-C373-alfombra",
+    "ES-C373-falda",
+    "ES-C373-peine"
+  ],
+  "tex": "spanish/book/chapters/ch373-el-oro-y-la-botella.tex"
+}

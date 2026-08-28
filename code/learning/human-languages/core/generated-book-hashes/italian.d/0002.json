@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:fbc4f81f17793646",
+  "lessonIds": [
+    "IT-C02-prego",
+    "IT-C02-prego-go-ahead",
+    "IT-C02-prego-here-you-are",
+    "IT-C02-prego-come-again",
+    "IT-C02-come",
+    "IT-C02-stare",
+    "IT-C02-come-stai",
+    "IT-C02-come-sta",
+    "IT-C02-come-va",
+    "IT-C02-cosi-cosi",
+    "IT-C02-non-ce-male",
+    "IT-C02-practice"
+  ],
+  "tex": "italian/book/chapters/ch02-how-are-you.tex"
+}

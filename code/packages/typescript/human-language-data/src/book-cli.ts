@@ -1,5 +1,19 @@
-import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
-import { dirname, join, normalize, relative as pathRelative, resolve, sep } from "node:path";
+import {
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  readFileSync,
+  realpathSync,
+  writeFileSync,
+} from "node:fs";
+import {
+  dirname,
+  join,
+  normalize,
+  relative as pathRelative,
+  resolve,
+  sep,
+} from "node:path";
 import { assertRelativeManifestPath } from "./manifest-path.js";
 import {
   BOOK_GENERATION_GROUPED_KEYS,
@@ -36,8 +50,18 @@ import {
   renderBookTex,
 } from "./book-tex.js";
 import type { ChapterCapability } from "./types.js";
+import {
+  GENERATED_BOOK_HASH_DIR,
+  assertGeneratedHashOwnerNames,
+  generatedBookHashOwnerContents,
+  prepareGeneratedHashOwnerWrite,
+  type GeneratedBookHashManifest,
+} from "./generated-hash-shards.js";
 
-interface ConfiguredBookGenerationTarget extends Omit<BookGenerationTarget, "title" | "label"> {
+interface ConfiguredBookGenerationTarget extends Omit<
+  BookGenerationTarget,
+  "title" | "label"
+> {
   /** Named reusable mapping from the config's scriptSets table. */
   scriptSet?: string;
 }
@@ -120,26 +144,7 @@ interface BookGenerationConfig {
   handwritten?: ConfiguredHandwrittenBookChapter[];
 }
 
-interface GeneratedBookHashManifest {
-  version: 1;
-  algorithm: "fnv1a64";
-  chapters: Array<{
-    language: string;
-    chapter: number;
-    sourceHash: string;
-    lessonIds: string[];
-    tex: string;
-  }>;
-}
-
-export const BOOK_HASH_MANIFEST_DIR = "core/generated-book-hashes";
-
-function manifestPath(language: string): string {
-  if (!/^[a-z0-9-]+$/.test(language)) {
-    throw new Error(`unsafe generated book manifest language '${language}'`);
-  }
-  return `${BOOK_HASH_MANIFEST_DIR}/${language}.json`;
-}
+export const BOOK_HASH_MANIFEST_DIR = GENERATED_BOOK_HASH_DIR;
 
 export function loadBookGenerationConfig(root: string): BookGenerationConfig {
   // Through the shard reader, not a bare `readFileSync`. This was the only
@@ -151,7 +156,10 @@ export function loadBookGenerationConfig(root: string): BookGenerationConfig {
   const config = readMaybeSharded<BookGenerationConfig>(
     join(root, "core", "book-generation.json"),
     (shards) =>
-      mergeGroupedShards(shards, BOOK_GENERATION_GROUPED_KEYS) as unknown as BookGenerationConfig,
+      mergeGroupedShards(
+        shards,
+        BOOK_GENERATION_GROUPED_KEYS,
+      ) as unknown as BookGenerationConfig,
   );
   for (const [kind, entries] of [
     ["target", config.targets ?? []],
@@ -193,9 +201,15 @@ function requireChapterCapability(
 }
 
 function safeOutput(root: string, relative: string): string {
-  assertRelativeManifestPath(relative, `unsafe generated book output '${relative}'`);
+  assertRelativeManifestPath(
+    relative,
+    `unsafe generated book output '${relative}'`,
+  );
   const output = resolve(root, relative);
-  const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll("\\", "/");
+  const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll(
+    "\\",
+    "/",
+  );
   if (
     fromRoot === "" ||
     fromRoot === ".." ||
@@ -208,9 +222,15 @@ function safeOutput(root: string, relative: string): string {
 }
 
 function safeMarkdownSource(root: string, relative: string): string {
-  assertRelativeManifestPath(relative, `unsafe generated book source '${relative}'`);
+  assertRelativeManifestPath(
+    relative,
+    `unsafe generated book source '${relative}'`,
+  );
   const source = resolve(root, relative);
-  const fromRoot = normalize(pathRelative(resolve(root), source)).replaceAll("\\", "/");
+  const fromRoot = normalize(pathRelative(resolve(root), source)).replaceAll(
+    "\\",
+    "/",
+  );
   if (
     fromRoot === "" ||
     fromRoot === ".." ||
@@ -299,7 +319,9 @@ function readAuthoredFragment(root: string, path: string): string {
   // its contents copied verbatim into the generated `book.tex`. Windows is this
   // repo's primary development platform, so that is the live case.
   if (real !== realRoot && !real.startsWith(realRoot + sep)) {
-    throw new Error(`authored book fragment '${path}' resolves outside the curriculum root`);
+    throw new Error(
+      `authored book fragment '${path}' resolves outside the curriculum root`,
+    );
   }
   return readFileSync(real, "utf8");
 }
@@ -338,13 +360,17 @@ function assertHandwrittenLessonCoverageFrom(
   for (const entry of config.handwritten ?? []) {
     const key = `${entry.language}#${entry.chapter}`;
     const canonical = byChapter.get(key) ?? [];
-    const canonicalIds = new Set(canonical.map((lesson) => lesson.realization.lessonId));
+    const canonicalIds = new Set(
+      canonical.map((lesson) => lesson.realization.lessonId),
+    );
     const embedded = entry.embeddedLessonIds ?? [];
     const omitted = entry.omittedLessonIds ?? [];
     const declared = [...embedded, ...omitted];
 
     if (new Set(declared).size !== declared.length) {
-      throw new Error(`${entry.language} chapter ${entry.chapter}: handwritten lesson declarations contain duplicates`);
+      throw new Error(
+        `${entry.language} chapter ${entry.chapter}: handwritten lesson declarations contain duplicates`,
+      );
     }
     for (const lessonId of declared) {
       if (!canonicalIds.has(lessonId)) {
@@ -353,13 +379,18 @@ function assertHandwrittenLessonCoverageFrom(
         );
       }
     }
-    const undeclared = [...canonicalIds].filter((lessonId) => !declared.includes(lessonId));
+    const undeclared = [...canonicalIds].filter(
+      (lessonId) => !declared.includes(lessonId),
+    );
     if (undeclared.length > 0) {
       throw new Error(
         `${entry.language} chapter ${entry.chapter}: canonical schema-v2 lesson(s) missing from handwritten coverage ledger: ${undeclared.sort().join(", ")}`,
       );
     }
-    if (omitted.length > 0 && (!Number.isInteger(entry.omissionIssue) || entry.omissionIssue! < 1)) {
+    if (
+      omitted.length > 0 &&
+      (!Number.isInteger(entry.omissionIssue) || entry.omissionIssue! < 1)
+    ) {
       throw new Error(
         `${entry.language} chapter ${entry.chapter}: omitted handwritten lessons require a positive omissionIssue`,
       );
@@ -388,15 +419,25 @@ function assertHandwrittenLessonCoverageFrom(
 }
 
 /** Public audit entry point used by focused tests and maintenance tooling. */
-export function assertHandwrittenLessonCoverage(root = defaultCurriculumRoot()): void {
-  assertHandwrittenLessonCoverageFrom(root, loadBookGenerationConfig(root), loadLessons(root));
+export function assertHandwrittenLessonCoverage(
+  root = defaultCurriculumRoot(),
+): void {
+  assertHandwrittenLessonCoverageFrom(
+    root,
+    loadBookGenerationConfig(root),
+    loadLessons(root),
+  );
 }
 
-export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string, string> {
+export function generatedBookOutputs(
+  root = defaultCurriculumRoot(),
+): Map<string, string> {
   const capabilities = chapterCapabilityIndex(root);
   const config = loadBookGenerationConfig(root);
   if (config.version !== 1 || config.targets.length === 0) {
-    throw new Error("book-generation.json must declare version 1 and at least one target");
+    throw new Error(
+      "book-generation.json must declare version 1 and at least one target",
+    );
   }
   // `sourceBaseUrl` names the canonical home of the lesson sources. It is still
   // required, and still validated, because it is the config's statement of
@@ -407,9 +448,12 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
   // the config keep the field.
   try {
     const parsed = new URL(config.sourceBaseUrl);
-    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") throw new Error();
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:")
+      throw new Error();
   } catch {
-    throw new Error("book-generation.json must declare an HTTP(S) sourceBaseUrl");
+    throw new Error(
+      "book-generation.json must declare an HTTP(S) sourceBaseUrl",
+    );
   }
   const lessons = loadLessons(root);
   assertHandwrittenLessonCoverageFrom(root, config, lessons);
@@ -479,16 +523,20 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
     if (chapters) chapters.add(entry.chapter);
     else declaredByLanguage.set(entry.language, new Set([entry.chapter]));
   }
-  for (const [language, declared] of [...declaredByLanguage].sort(([left], [right]) =>
-    left.localeCompare(right),
+  for (const [language, declared] of [...declaredByLanguage].sort(
+    ([left], [right]) => left.localeCompare(right),
   )) {
     const track = modality.tracks.find((entry) => entry.language === language);
-    if (!track) throw new Error(`${language}: declared book has no modality data`);
+    if (!track)
+      throw new Error(`${language}: declared book has no modality data`);
     const chapters = [...declared]
       .sort((left, right) => left - right)
       .map((chapter) => {
-        const entry = track.chapters.find((candidate) => candidate.chapter === chapter);
-        if (!entry) throw new Error(`${language} chapter ${chapter}: no modality data`);
+        const entry = track.chapters.find(
+          (candidate) => candidate.chapter === chapter,
+        );
+        if (!entry)
+          throw new Error(`${language} chapter ${chapter}: no modality data`);
         return entry;
       });
     const relative = `${language}/book/chapter-modalities.tex`;
@@ -518,7 +566,8 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
     }
     const source = safeMarkdownSource(root, appendix.source);
     safeOutput(root, appendix.output);
-    if (!existsSync(source)) throw new Error(`${appendix.source}: reference source is missing`);
+    if (!existsSync(source))
+      throw new Error(`${appendix.source}: reference source is missing`);
     if (outputs.has(appendix.output)) {
       throw new Error(`${appendix.output}: duplicate generated book output`);
     }
@@ -542,7 +591,9 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
       }
       const inlineScripts = config.scriptSets?.[scriptSet];
       if (!inlineScripts) {
-        throw new Error(`${glossary.language} glossary: unknown scriptSet '${scriptSet}'`);
+        throw new Error(
+          `${glossary.language} glossary: unknown scriptSet '${scriptSet}'`,
+        );
       }
       glossary = { ...glossary, inlineScripts };
     }
@@ -567,7 +618,9 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
       }
       const inlineScripts = config.scriptSets?.[scriptSet];
       if (!inlineScripts) {
-        throw new Error(`${answerKey.language} answer key: unknown scriptSet '${scriptSet}'`);
+        throw new Error(
+          `${answerKey.language} answer key: unknown scriptSet '${scriptSet}'`,
+        );
       }
       answerKey = { ...answerKey, inlineScripts };
     }
@@ -592,7 +645,9 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
       }
       const inlineScripts = config.scriptSets?.[scriptSet];
       if (!inlineScripts) {
-        throw new Error(`${index.language} index: unknown scriptSet '${scriptSet}'`);
+        throw new Error(
+          `${index.language} index: unknown scriptSet '${scriptSet}'`,
+        );
       }
       index = { ...index, inlineScripts };
     }
@@ -616,9 +671,16 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
       });
     outputs.set(index.output, renderBookIndex(index, lessons, chapters));
   }
-  for (const [language, manifest] of [...manifests].sort(([left], [right]) => left.localeCompare(right))) {
+  for (const [language, manifest] of [...manifests].sort(([left], [right]) =>
+    left.localeCompare(right),
+  )) {
     manifest.chapters.sort((left, right) => left.chapter - right.chapter);
-    outputs.set(manifestPath(language), `${JSON.stringify(manifest, null, 2)}\n`);
+    for (const [relative, content] of generatedBookHashOwnerContents(
+      language,
+      manifest,
+    )) {
+      outputs.set(relative, content);
+    }
   }
 
   // HL21 section 6: `book.tex` is the last hand-maintained link in the
@@ -630,7 +692,9 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
   // The authored halves live beside it as `frontmatter.tex` and
   // `backmatter.tex`; only the `\input` list in between is derived, and it is
   // derived from the ledger already in hand.
-  for (const language of [...new Set(config.targets.map((target) => target.language))].sort()) {
+  for (const language of [
+    ...new Set(config.targets.map((target) => target.language)),
+  ].sort()) {
     // Validated BEFORE the `join`, so the check covers the reads below and not
     // only the write. Checking it afterwards via `safeOutput` would still
     // contain the write, but a traversing `language` would reach `existsSync`
@@ -638,7 +702,9 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
     // violation into a silent no-op, which is the exact failure mode this
     // generator exists to remove.
     if (!/^[a-z][a-z0-9-]*$/.test(language)) {
-      throw new Error(`unsafe track language '${language}' in book-generation.json`);
+      throw new Error(
+        `unsafe track language '${language}' in book-generation.json`,
+      );
     }
     const frontPath = join(root, language, "book", FRONTMATTER_TEX);
     const backPath = join(root, language, "book", BACKMATTER_TEX);
@@ -670,9 +736,27 @@ export function runBookGeneration(
     return 2;
   }
   let mismatch = false;
-  for (const [relative, expected] of generatedBookOutputs(root)) {
-    const output = relative.startsWith(`${BOOK_HASH_MANIFEST_DIR}/`)
-      ? join(root, relative)
+  const outputs = generatedBookOutputs(root);
+  if (mode === "--check") {
+    try {
+      assertGeneratedHashOwnerNames(
+        root,
+        BOOK_HASH_MANIFEST_DIR,
+        outputs.keys(),
+      );
+    } catch (error) {
+      process.stderr.write(
+        `${error instanceof Error ? error.message : String(error)}\n`,
+      );
+      return 1;
+    }
+  }
+  for (const [relative, expected] of outputs) {
+    const hashOwner = relative.startsWith(`${BOOK_HASH_MANIFEST_DIR}/`);
+    const output = hashOwner
+      ? mode === "--write"
+        ? prepareGeneratedHashOwnerWrite(root, BOOK_HASH_MANIFEST_DIR, relative)
+        : join(root, relative)
       : safeOutput(root, relative);
     if (mode === "--write") {
       mkdirSync(dirname(output), { recursive: true });
@@ -696,15 +780,22 @@ export function runBookGeneration(
       process.stdout.write(`generated ${relative}\n`);
       continue;
     }
-    const actual = existsSync(output) ? readFileSync(output, "utf8") : undefined;
+    const actual = existsSync(output)
+      ? readFileSync(output, "utf8")
+      : undefined;
     if (actual !== expected) {
-      process.stderr.write(`${relative}: generated output is missing or stale\n`);
+      process.stderr.write(
+        `${relative}: generated output is missing or stale\n`,
+      );
       mismatch = true;
     }
   }
   return mismatch ? 1 : 0;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(resolve(process.argv[1])).href
+) {
   process.exit(runBookGeneration());
 }

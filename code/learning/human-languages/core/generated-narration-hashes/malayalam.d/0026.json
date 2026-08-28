@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:c46bdd07fdefb91a",
+  "lessonIds": [
+    "ML-C26-raavile"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch26.txt",
+  "json": "malayalam/narration/ch26.json",
+  "textHash": "fnv1a64:e21dc5be54984360",
+  "jsonHash": "fnv1a64:67804f9f20c0a836",
+  "findings": []
+}

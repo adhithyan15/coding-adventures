@@ -1,0 +1,16 @@
+{
+  "language": "german",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:3d80023a6ae5350c",
+  "lessonIds": [
+    "GE-C07-wochentage-1",
+    "GE-C07-wochentage-2"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "german/narration/ch07.txt",
+  "json": "german/narration/ch07.json",
+  "textHash": "fnv1a64:7c84327897fedd56",
+  "jsonHash": "fnv1a64:179dda10263539c8",
+  "findings": []
+}

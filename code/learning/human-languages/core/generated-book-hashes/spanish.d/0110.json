@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:1839efbc75e6092b",
+  "lessonIds": [
+    "ES-C16-practice",
+    "ES-C16-sintesis-imperfecto"
+  ],
+  "tex": "spanish/book/chapters/ch110-synthesis-imperfecto.tex"
+}

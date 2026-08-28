@@ -1,0 +1,12 @@
+{
+  "language": "portuguese",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:41d613d7095a2e39",
+  "lessonIds": [
+    "PT-C16-ser",
+    "PT-C16-ser-roots",
+    "PT-C16-ser-vs-estar",
+    "PT-C16-ser-estar-meaning"
+  ],
+  "tex": "portuguese/book/chapters/ch16-ser-and-estar.tex"
+}

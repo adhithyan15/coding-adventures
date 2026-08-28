@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:93326fd1f95c2b93",
+  "lessonIds": [
+    "ES-C11-querer",
+    "ES-C11-poder",
+    "ES-C11-stem-changes",
+    "ES-C11-nuestro",
+    "ES-C11-practice"
+  ],
+  "tex": "spanish/book/chapters/ch69-stem-changes.tex"
+}

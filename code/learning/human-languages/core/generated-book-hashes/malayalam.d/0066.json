@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:287208dc84f9d747",
+  "lessonIds": [
+    "ML-C66-paddy",
+    "ML-C66-grass",
+    "ML-C66-ear-of-grain",
+    "ML-C66-plough",
+    "ML-C66-harvest"
+  ],
+  "tex": "malayalam/book/chapters/ch66-out-in-the-paddy.tex"
+}

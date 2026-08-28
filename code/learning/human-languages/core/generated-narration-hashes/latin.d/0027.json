@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:4f1ddd5d47387816",
+  "lessonIds": [
+    "LA-C27-bene"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "latin/narration/ch27.txt",
+  "json": "latin/narration/ch27.json",
+  "textHash": "fnv1a64:32eb63c15be60158",
+  "jsonHash": "fnv1a64:2dac7be2d15fa35b",
+  "findings": []
+}

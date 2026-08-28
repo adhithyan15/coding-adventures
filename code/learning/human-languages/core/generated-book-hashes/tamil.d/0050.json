@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:02925d579e885207",
+  "lessonIds": [
+    "TA-C50-threshold",
+    "TA-C50-kolam",
+    "TA-C50-flower",
+    "TA-C50-betel-leaf",
+    "TA-C50-welcome"
+  ],
+  "tex": "tamil/book/chapters/ch50-at-the-doorway.tex"
+}

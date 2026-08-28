@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:445f03affd0b25c7",
+  "lessonIds": [
+    "SA-C34-arm",
+    "SA-C34-neck",
+    "SA-C34-bone",
+    "SA-C34-blood",
+    "SA-C34-body"
+  ],
+  "tex": "sanskrit/book/chapters/ch34-more-of-the-body.tex"
+}

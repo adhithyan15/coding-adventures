@@ -1,0 +1,9 @@
+{
+  "language": "german",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:f9d5474810f82aff",
+  "lessonIds": [
+    "GE-C23-gruen-gelb"
+  ],
+  "tex": "german/book/chapters/ch23-green-and-yellow.tex"
+}

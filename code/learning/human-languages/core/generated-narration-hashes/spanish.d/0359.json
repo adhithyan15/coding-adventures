@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:ec3d89ffff2acda5",
+  "lessonIds": [
+    "ES-C359-metro",
+    "ES-C359-gramo",
+    "ES-C359-kilo",
+    "ES-C359-litro",
+    "ES-C359-peso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch359.txt",
+  "json": "spanish/narration/ch359.json",
+  "textHash": "fnv1a64:30aa6b7ee2145cd8",
+  "jsonHash": "fnv1a64:3cdae6db35fba209",
+  "findings": []
+}

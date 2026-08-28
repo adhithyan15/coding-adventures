@@ -1,0 +1,22 @@
+{
+  "language": "marwadi",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:30bbfae27d80c60e",
+  "lessonIds": [
+    "MW-C09-hear-nana",
+    "MW-C09-nana",
+    "MW-C09-hear-nani",
+    "MW-C09-nani",
+    "MW-C09-hear-pati",
+    "MW-W09-ta",
+    "MW-C09-pati",
+    "MW-R09-maternal-three"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch12.txt",
+  "json": "marwadi/narration/ch12.json",
+  "textHash": "fnv1a64:d5fd823bcdb54065",
+  "jsonHash": "fnv1a64:d41513afd48270e3",
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "language": "arabic",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:3811cc7c13520f1b",
+  "lessonIds": [
+    "AR-C11-ras",
+    "AR-C11-yad"
+  ],
+  "tex": "arabic/book/chapters/ch11-head-and-hand.tex"
+}

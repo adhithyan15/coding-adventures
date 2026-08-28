@@ -1,0 +1,12 @@
+{
+  "language": "sanskrit",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:31d6543ceb8ed599",
+  "lessonIds": [
+    "SA-C13-nasika",
+    "SA-C13-hridayam",
+    "SA-S06-vowel-sign-aa",
+    "SA-S112-vowel-sign-e"
+  ],
+  "tex": "sanskrit/book/chapters/ch13-face-nouns-2.tex"
+}

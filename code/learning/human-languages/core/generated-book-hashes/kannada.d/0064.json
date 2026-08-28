@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:16f128fc2f103bad",
+  "lessonIds": [
+    "KA-C64-after",
+    "KA-C64-also",
+    "KA-C64-still",
+    "KA-C64-soon",
+    "KA-C64-in-that-case"
+  ],
+  "tex": "kannada/book/chapters/ch64-joining-words.tex"
+}

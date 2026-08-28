@@ -1,0 +1,10 @@
+{
+  "language": "latin",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:d48f10d0381e4da7",
+  "lessonIds": [
+    "LA-C10-aqua-vinum",
+    "LA-C10-panis"
+  ],
+  "tex": "latin/book/chapters/ch10-water-wine-bread.tex"
+}

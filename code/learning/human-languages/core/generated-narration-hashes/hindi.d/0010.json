@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:6e3a74eac1695fa0",
+  "lessonIds": [
+    "HI-C10-somavaar-shukravaar",
+    "HI-C10-shanivaar-ravivaar",
+    "HI-S05-sign-virama",
+    "HI-S114-letter-ha"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "hindi/narration/ch10.txt",
+  "json": "hindi/narration/ch10.json",
+  "textHash": "fnv1a64:b57607900b0aad2e",
+  "jsonHash": "fnv1a64:07cd6293eddeac9a",
+  "findings": []
+}

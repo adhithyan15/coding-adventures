@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:175101f79dbbafb9",
+  "lessonIds": [
+    "TE-C53-sky",
+    "TE-C53-sun",
+    "TE-C53-moon",
+    "TE-C53-star",
+    "TE-C53-cloud"
+  ],
+  "tex": "telugu/book/chapters/ch53-the-sky.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:d61aafe0e296b4a8",
+  "lessonIds": [
+    "ML-C48-teacher",
+    "ML-C48-student",
+    "ML-C48-doctor",
+    "ML-C48-farmer",
+    "ML-C48-guest"
+  ],
+  "tex": "malayalam/book/chapters/ch48-roles.tex"
+}

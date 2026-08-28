@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:9d98f716d1a49786",
+  "lessonIds": [
+    "ES-C40-sintesis-describir",
+    "ES-C40-repaso-palabras-con-historia",
+    "ES-C40-repaso-un-sabado-de-octubre"
+  ],
+  "tex": "spanish/book/chapters/ch152-synthesis-describing.tex"
+}

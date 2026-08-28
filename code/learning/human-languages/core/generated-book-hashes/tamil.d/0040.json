@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:79b346c9f5ce726d",
+  "lessonIds": [
+    "TA-C40-this",
+    "TA-C40-that",
+    "TA-C40-here",
+    "TA-C40-there",
+    "TA-C40-who",
+    "TA-C40-where",
+    "TA-C40-deixis-system"
+  ],
+  "tex": "tamil/book/chapters/ch40-pointing-and-asking.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:4f0b0203af99c0ca",
+  "lessonIds": [
+    "SA-C46-sun",
+    "SA-C46-ray",
+    "SA-C46-light",
+    "SA-C46-shade",
+    "SA-C46-heat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch46.txt",
+  "json": "sanskrit/narration/ch46.json",
+  "textHash": "fnv1a64:a7b3f0d02780e947",
+  "jsonHash": "fnv1a64:e11e7a12d04eaaea",
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "language": "hindi",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:7f75f272d7f2c544",
+  "lessonIds": [
+    "HI-C32-shubh-sandhya",
+    "HI-C32-evening-register"
+  ],
+  "tex": "hindi/book/chapters/ch32-good-evening.tex"
+}

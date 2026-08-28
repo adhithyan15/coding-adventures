@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:08e02b05784188e9",
+  "lessonIds": [
+    "ES-C18-ojala",
+    "ES-C18-practice",
+    "ES-C18-repaso-el-yo-que-viaja"
+  ],
+  "tex": "spanish/book/chapters/ch129-ojala.tex"
+}

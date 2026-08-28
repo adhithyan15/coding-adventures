@@ -1,0 +1,10 @@
+{
+  "language": "telugu",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:f8e0d3a98636e92b",
+  "lessonIds": [
+    "TE-C38-gunde",
+    "TE-C38-hrudayam"
+  ],
+  "tex": "telugu/book/chapters/ch38-heart.tex"
+}

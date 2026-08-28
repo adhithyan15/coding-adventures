@@ -1,0 +1,12 @@
+{
+  "language": "sanskrit",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:ce6d7b681e7f9753",
+  "lessonIds": [
+    "SA-C21-dance",
+    "SA-C21-laugh",
+    "SA-C21-stand",
+    "SA-C21-remember"
+  ],
+  "tex": "sanskrit/book/chapters/ch21-more-verbs.tex"
+}

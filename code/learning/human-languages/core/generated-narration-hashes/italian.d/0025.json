@@ -1,0 +1,17 @@
+{
+  "language": "italian",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:9152dc466a42ebd4",
+  "lessonIds": [
+    "IT-C25-naso",
+    "IT-C25-stomaco",
+    "IT-C25-gola"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "italian/narration/ch25.txt",
+  "json": "italian/narration/ch25.json",
+  "textHash": "fnv1a64:28b3b63f3eac83d2",
+  "jsonHash": "fnv1a64:c0708a180ac258ca",
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:a8fc700e8e57301e",
+  "lessonIds": [
+    "ES-C280-queso",
+    "ES-C280-huevo",
+    "ES-C280-manzana",
+    "ES-C280-dinero"
+  ],
+  "tex": "spanish/book/chapters/ch280-la-compra.tex"
+}

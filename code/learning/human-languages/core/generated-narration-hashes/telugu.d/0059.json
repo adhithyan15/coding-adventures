@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:d845d74de385c06b",
+  "lessonIds": [
+    "TE-C59-wind",
+    "TE-C59-mist",
+    "TE-C59-sand",
+    "TE-C59-mud",
+    "TE-C59-fire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch59.txt",
+  "json": "telugu/narration/ch59.json",
+  "textHash": "fnv1a64:601c18a2382a53ea",
+  "jsonHash": "fnv1a64:9e74006b7f39c1b5",
+  "findings": []
+}

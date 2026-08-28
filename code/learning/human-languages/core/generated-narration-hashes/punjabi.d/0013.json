@@ -1,0 +1,16 @@
+{
+  "language": "punjabi",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:5befc5cc961e0e3d",
+  "lessonIds": [
+    "PA-C13-dil",
+    "PA-C13-sir"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch13.txt",
+  "json": "punjabi/narration/ch13.json",
+  "textHash": "fnv1a64:4381828405ebd516",
+  "jsonHash": "fnv1a64:e48facd3e87b7eb0",
+  "findings": []
+}

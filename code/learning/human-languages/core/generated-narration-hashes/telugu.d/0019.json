@@ -1,0 +1,16 @@
+{
+  "language": "telugu",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:f4907d416dfd1571",
+  "lessonIds": [
+    "TE-C19-vayasu",
+    "TE-S122-letter-u"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch19.txt",
+  "json": "telugu/narration/ch19.json",
+  "textHash": "fnv1a64:4db0b794e576ecc2",
+  "jsonHash": "fnv1a64:346417921579c460",
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "russian",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:f07f8ed31bd43613",
+  "lessonIds": [
+    "RU-C05-brat",
+    "RU-C05-sprashivat",
+    "RU-C05-pomogat",
+    "RU-C05-lyubit"
+  ],
+  "tex": "russian/book/chapters/ch05-verbs-of-the-hand.tex"
+}

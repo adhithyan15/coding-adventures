@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:7d1f81f19d1dec62",
+  "lessonIds": [
+    "TE-C51-gratitude",
+    "TE-C51-favour",
+    "TE-C51-respect",
+    "TE-C51-blessing",
+    "TE-C51-salutation"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch51.txt",
+  "json": "telugu/narration/ch51.json",
+  "textHash": "fnv1a64:9057300aea9e3920",
+  "jsonHash": "fnv1a64:f211adc4be8da21b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:d4d4a0cbb4fe01ea",
+  "lessonIds": [
+    "ML-C55-river",
+    "ML-C55-rock",
+    "ML-C55-homeland",
+    "ML-C55-path",
+    "ML-C55-field"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch55.txt",
+  "json": "malayalam/narration/ch55.json",
+  "textHash": "fnv1a64:683ac05559928904",
+  "jsonHash": "fnv1a64:72d8a2d1bcc7b7b0",
+  "findings": []
+}

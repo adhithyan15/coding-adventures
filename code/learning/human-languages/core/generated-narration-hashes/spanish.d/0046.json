@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:b4fe2f1a51163b5e",
+  "lessonIds": [
+    "ES-C07-repaso-tres-familias"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch46.txt",
+  "json": "spanish/narration/ch46.json",
+  "textHash": "fnv1a64:16b4589a05eb236e",
+  "jsonHash": "fnv1a64:4bd95da2b0d1ef2b",
+  "findings": []
+}

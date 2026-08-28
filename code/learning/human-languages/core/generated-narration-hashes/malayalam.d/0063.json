@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:97fdcb6836b22a31",
+  "lessonIds": [
+    "ML-C63-hunger",
+    "ML-C63-tiredness",
+    "ML-C63-pain",
+    "ML-C63-cough",
+    "ML-C63-fever"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch63.txt",
+  "json": "malayalam/narration/ch63.json",
+  "textHash": "fnv1a64:e3d846b6b164bbeb",
+  "jsonHash": "fnv1a64:2e90435a5d570a06",
+  "findings": []
+}

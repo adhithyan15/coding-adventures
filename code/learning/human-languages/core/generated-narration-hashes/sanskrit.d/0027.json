@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:5f9d309a5e7f4742",
+  "lessonIds": [
+    "SA-C27-so-be-it",
+    "SA-C27-well-done",
+    "SA-C27-enough",
+    "SA-C27-true",
+    "SA-C27-thus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch27.txt",
+  "json": "sanskrit/narration/ch27.json",
+  "textHash": "fnv1a64:7e048b8590710576",
+  "jsonHash": "fnv1a64:2cf82f0797ef5d5f",
+  "findings": []
+}

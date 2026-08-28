@@ -1,0 +1,17 @@
+{
+  "language": "malayalam",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:b609bf2dd03a50c7",
+  "lessonIds": [
+    "ML-C10-azhcha",
+    "ML-S05-letter-na",
+    "ML-S113-letter-nna"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "malayalam/narration/ch10.txt",
+  "json": "malayalam/narration/ch10.json",
+  "textHash": "fnv1a64:463a962956349d92",
+  "jsonHash": "fnv1a64:36463ce0195cefb5",
+  "findings": []
+}

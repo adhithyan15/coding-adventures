@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:35a6c3da246cc4ba",
+  "lessonIds": [
+    "ES-C382-empezar",
+    "ES-C382-acabar",
+    "ES-C382-pagar",
+    "ES-C382-quedar"
+  ],
+  "tex": "spanish/book/chapters/ch382-acabar-y-empezar.tex"
+}

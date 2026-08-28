@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:744dc2deafce2451",
+  "lessonIds": [
+    "TE-C53-sky",
+    "TE-C53-sun",
+    "TE-C53-moon",
+    "TE-C53-star",
+    "TE-C53-cloud"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch53.txt",
+  "json": "telugu/narration/ch53.json",
+  "textHash": "fnv1a64:b1ee4109ba088699",
+  "jsonHash": "fnv1a64:117a02f3d693afe8",
+  "findings": []
+}

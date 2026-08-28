@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:1bb743b976672367",
+  "lessonIds": [
+    "ES-C317-algo",
+    "ES-C317-alguien",
+    "ES-C317-nadie",
+    "ES-C317-otro",
+    "ES-C317-poco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch317.txt",
+  "json": "spanish/narration/ch317.json",
+  "textHash": "fnv1a64:fb6b0e77c7cdb63c",
+  "jsonHash": "fnv1a64:737bdb3f5b4b4c6d",
+  "findings": []
+}

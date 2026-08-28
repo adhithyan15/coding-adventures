@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:b3aa123df2611289",
+  "lessonIds": [
+    "SA-C35-milk",
+    "SA-C35-honey",
+    "SA-C35-salt",
+    "SA-C35-book",
+    "SA-C35-bed"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch35.txt",
+  "json": "sanskrit/narration/ch35.json",
+  "textHash": "fnv1a64:e1d6c58a853ebd08",
+  "jsonHash": "fnv1a64:b5f64cc33d27498d",
+  "findings": []
+}

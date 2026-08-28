@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:9cfd020fdbd8118b",
+  "lessonIds": [
+    "TE-C47-leg",
+    "TE-C47-tooth",
+    "TE-C47-hair",
+    "TE-C47-finger",
+    "TE-C47-stomach"
+  ],
+  "tex": "telugu/book/chapters/ch47-leg-and-tooth.tex"
+}

@@ -1,0 +1,16 @@
+{
+  "language": "french",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:775d82c740dc2d99",
+  "lessonIds": [
+    "FR-C10-parents",
+    "FR-C10-freres-soeurs"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "french/narration/ch10.txt",
+  "json": "french/narration/ch10.json",
+  "textHash": "fnv1a64:4cf523063f4801eb",
+  "jsonHash": "fnv1a64:6169b6c73763dc39",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:359b8870dcbb0314",
+  "lessonIds": [
+    "KA-C60-cow",
+    "KA-C60-goat",
+    "KA-C60-hen",
+    "KA-C60-crow",
+    "KA-C60-bird"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch60.txt",
+  "json": "kannada/narration/ch60.json",
+  "textHash": "fnv1a64:4bea8e9e97d3587d",
+  "jsonHash": "fnv1a64:af20786456c7e168",
+  "findings": []
+}

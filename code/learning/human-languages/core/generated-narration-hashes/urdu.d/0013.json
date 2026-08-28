@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:fa4c9848ccad8edb",
+  "lessonIds": [
+    "UR-C13-lal",
+    "UR-C13-safed",
+    "UR-C13-kala",
+    "UR-C13-nila"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "urdu/narration/ch13.txt",
+  "json": "urdu/narration/ch13.json",
+  "textHash": "fnv1a64:7020203f4d096e30",
+  "jsonHash": "fnv1a64:dea25428f4f630ee",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:c873ee0828d10d9b",
+  "lessonIds": [
+    "ML-C62-rope",
+    "ML-C62-thread",
+    "ML-C62-needle",
+    "ML-C62-broom",
+    "ML-C62-winnowing-tray"
+  ],
+  "tex": "malayalam/book/chapters/ch62-made-by-hand.tex"
+}

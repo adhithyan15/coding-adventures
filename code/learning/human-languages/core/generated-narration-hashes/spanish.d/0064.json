@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:9045db96c0ac2d3f",
+  "lessonIds": [
+    "ES-C09-repaso-ocho"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch64.txt",
+  "json": "spanish/narration/ch64.json",
+  "textHash": "fnv1a64:ba9dbef3bbdaca12",
+  "jsonHash": "fnv1a64:f8ae8569a0f52317",
+  "findings": []
+}

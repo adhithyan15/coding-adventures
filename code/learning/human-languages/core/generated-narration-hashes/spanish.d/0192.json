@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:84dfc7df5651b530",
+  "lessonIds": [
+    "ES-C54-ha-mas-y"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch192.txt",
+  "json": "spanish/narration/ch192.json",
+  "textHash": "fnv1a64:cc6efb7c788f4109",
+  "jsonHash": "fnv1a64:eab46168fbfa62a7",
+  "findings": []
+}

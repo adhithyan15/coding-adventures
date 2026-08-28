@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:d067a2a0b5523c67",
+  "lessonIds": [
+    "ES-C310-llave",
+    "ES-C310-ducha",
+    "ES-C310-mesa",
+    "ES-C310-luz",
+    "ES-C310-bano"
+  ],
+  "tex": "spanish/book/chapters/ch310-el-cuarto-y-la-mesa.tex"
+}

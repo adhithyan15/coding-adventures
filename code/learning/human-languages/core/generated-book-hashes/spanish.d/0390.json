@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:7b318ef30c69c9cf",
+  "lessonIds": [
+    "ES-C390-terraza",
+    "ES-C390-sala",
+    "ES-C390-planta",
+    "ES-C390-ascensor",
+    "ES-C390-piscina"
+  ],
+  "tex": "spanish/book/chapters/ch390-la-terraza-y-la-sala.tex"
+}

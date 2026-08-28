@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:8e859480b5d438cc",
+  "lessonIds": [
+    "ES-C09-estamos",
+    "ES-C09-estan",
+    "ES-C09-estais",
+    "ES-C09-repaso-ser-estar"
+  ],
+  "tex": "spanish/book/chapters/ch55-estar-plural.tex"
+}

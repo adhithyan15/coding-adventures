@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:8e5165c5a780c899",
+  "lessonIds": [
+    "ES-C39-jugar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch170.txt",
+  "json": "spanish/narration/ch170.json",
+  "textHash": "fnv1a64:5a5e8c4c751b8ce2",
+  "jsonHash": "fnv1a64:c13e07a0a7b47da6",
+  "findings": []
+}

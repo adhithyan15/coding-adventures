@@ -1,0 +1,23 @@
+{
+  "language": "tamil",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:759e5addc915cad6",
+  "lessonIds": [
+    "TA-C06-dative-ukku",
+    "TA-S01-va",
+    "TA-W02-ma-retroflex-na",
+    "TA-C06-dative-stacking",
+    "TA-C06-dative-subject",
+    "TA-C06-dative-subject-family",
+    "TA-S02-nna",
+    "TA-W02-three-ns",
+    "TA-S101-letter-pa"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch06.txt",
+  "json": "tamil/narration/ch06.json",
+  "textHash": "fnv1a64:e7f22c26911ed9f3",
+  "jsonHash": "fnv1a64:9cd69d15e8b69439",
+  "findings": []
+}

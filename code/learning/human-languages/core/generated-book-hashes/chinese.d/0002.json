@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:5432e6ff10c3a520",
+  "lessonIds": [
+    "ZH-W01-ren",
+    "ZH-W01-ren-radical",
+    "ZH-W01-er",
+    "ZH-W01-ni-build",
+    "ZH-W01-nu",
+    "ZH-W01-zi",
+    "ZH-W01-hao-build"
+  ],
+  "tex": "chinese/book/chapters/ch02-components.tex"
+}

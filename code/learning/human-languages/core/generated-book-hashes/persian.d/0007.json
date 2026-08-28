@@ -1,0 +1,12 @@
+{
+  "language": "persian",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:59de2874e35942c5",
+  "lessonIds": [
+    "FA-C07-fekr-kardan",
+    "FA-C07-fahmidan",
+    "FA-C07-khandan",
+    "FA-C07-neveshtan"
+  ],
+  "tex": "persian/book/chapters/ch07-mind-verbs.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:f2d4a698070362d3",
+  "lessonIds": [
+    "TA-C18-mani",
+    "TA-S08-pulli",
+    "TA-W06-write-illai",
+    "TA-C18-mani-homophone-time",
+    "TA-S122-letter-ta"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch18.txt",
+  "json": "tamil/narration/ch18.json",
+  "textHash": "fnv1a64:1fa21c88a19877e2",
+  "jsonHash": "fnv1a64:d0937473a443b6d8",
+  "findings": []
+}

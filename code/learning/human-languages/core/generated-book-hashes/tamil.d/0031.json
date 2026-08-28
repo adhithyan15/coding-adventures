@@ -1,0 +1,11 @@
+{
+  "language": "tamil",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:2640c69e6c28ce48",
+  "lessonIds": [
+    "TA-C31-matiya-vanakkam",
+    "TA-C31-afternoon-greeting-root",
+    "TA-W13-read-irukkirirgal"
+  ],
+  "tex": "tamil/book/chapters/ch31-good-afternoon.tex"
+}

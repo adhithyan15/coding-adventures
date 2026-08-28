@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:8d2b894b6bf2caab",
+  "lessonIds": [
+    "ES-C364-mujer",
+    "ES-C364-cara",
+    "ES-C364-nariz",
+    "ES-C364-dedo",
+    "ES-C364-corazon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch364.txt",
+  "json": "spanish/narration/ch364.json",
+  "textHash": "fnv1a64:d54f002ce7217806",
+  "jsonHash": "fnv1a64:4423033a684787ba",
+  "findings": []
+}

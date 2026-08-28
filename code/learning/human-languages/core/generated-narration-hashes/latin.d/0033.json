@@ -1,0 +1,17 @@
+{
+  "language": "latin",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:7df24e4c500c2166",
+  "lessonIds": [
+    "LA-C33-vesper",
+    "LA-C33-vesper-afterlives",
+    "LA-C33-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "latin/narration/ch33.txt",
+  "json": "latin/narration/ch33.json",
+  "textHash": "fnv1a64:c02311d016598d8e",
+  "jsonHash": "fnv1a64:834567017f79508e",
+  "findings": []
+}

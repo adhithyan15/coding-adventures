@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:3bab282c2c3969a4",
+  "lessonIds": [
+    "ES-C392-aeropuerto",
+    "ES-C392-vacaciones",
+    "ES-C392-destino",
+    "ES-C392-pasajero",
+    "ES-C392-agosto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch392.txt",
+  "json": "spanish/narration/ch392.json",
+  "textHash": "fnv1a64:62b756e84a0ae6cf",
+  "jsonHash": "fnv1a64:a3d646898a493cb5",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:ecd1b2f3960ba9f8",
+  "lessonIds": [
+    "ML-C65-request",
+    "ML-C65-permission",
+    "ML-C65-consent",
+    "ML-C65-manners",
+    "ML-C65-trust"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch65.txt",
+  "json": "malayalam/narration/ch65.json",
+  "textHash": "fnv1a64:bf97dd5bfc737aad",
+  "jsonHash": "fnv1a64:52ec5807c819dff3",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:bb3fab32cb07454c",
+  "lessonIds": [
+    "TA-C16-thamizh-maadangal",
+    "TA-S07-ma",
+    "TA-W05-write-aam",
+    "TA-S120-letter-aa"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch16.txt",
+  "json": "tamil/narration/ch16.json",
+  "textHash": "fnv1a64:7e3462db983f6257",
+  "jsonHash": "fnv1a64:3b4b93c78e493740",
+  "findings": []
+}

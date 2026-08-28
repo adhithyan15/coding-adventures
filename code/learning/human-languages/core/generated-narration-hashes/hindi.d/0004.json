@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:254b0713b9b6a859",
+  "lessonIds": [
+    "HI-C04-phir",
+    "HI-C04-milenge",
+    "HI-C04-phir-milenge",
+    "HI-C04-kal-milte-hain",
+    "HI-C04-chalta-hun",
+    "HI-C04-practice"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "hindi/narration/ch04.txt",
+  "json": "hindi/narration/ch04.json",
+  "textHash": "fnv1a64:fb80ac347f9fde84",
+  "jsonHash": "fnv1a64:dcec2d80d7123310",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:7b2539288a4238cb",
+  "lessonIds": [
+    "TA-C04-po",
+    "TA-C04-poy-varugiren",
+    "TA-C04-naalai",
+    "TA-C04-mindum-sandippom",
+    "TA-W01-curves-va-ka",
+    "TA-C04-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "tamil/narration/ch04.txt",
+  "json": "tamil/narration/ch04.json",
+  "textHash": "fnv1a64:2cee39b77a9ca241",
+  "jsonHash": "fnv1a64:a4772f0769a259f7",
+  "findings": []
+}

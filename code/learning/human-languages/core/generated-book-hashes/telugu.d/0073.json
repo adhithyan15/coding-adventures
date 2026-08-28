@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:09bfc9fb2fb5aa9a",
+  "lessonIds": [
+    "TE-C73-sweet",
+    "TE-C73-sour",
+    "TE-C73-bitter",
+    "TE-C73-pungent",
+    "TE-C73-astringent"
+  ],
+  "tex": "telugu/book/chapters/ch73-tastes.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:6f571ea38872481e",
+  "lessonIds": [
+    "KA-C51-gratitude",
+    "KA-C51-favour",
+    "KA-C51-respect",
+    "KA-C51-blessing",
+    "KA-C51-salutation"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch51.txt",
+  "json": "kannada/narration/ch51.json",
+  "textHash": "fnv1a64:e57d882196cdc6e7",
+  "jsonHash": "fnv1a64:d0cd619549e5446b",
+  "findings": []
+}

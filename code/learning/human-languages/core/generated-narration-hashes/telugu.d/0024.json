@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:1dfd2146b938c6e0",
+  "lessonIds": [
+    "TE-C24-ratri"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch24.txt",
+  "json": "telugu/narration/ch24.json",
+  "textHash": "fnv1a64:3cb4cdcf71ba78d6",
+  "jsonHash": "fnv1a64:862a9b61e70c55af",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:1c863be5f6ba4d4a",
+  "lessonIds": [
+    "ES-C357-navidad",
+    "ES-C357-pascua",
+    "ES-C357-vispera",
+    "ES-C357-regalo",
+    "ES-C357-tarjeta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch357.txt",
+  "json": "spanish/narration/ch357.json",
+  "textHash": "fnv1a64:8662ae7e22b1b24e",
+  "jsonHash": "fnv1a64:deafbb52c00140f1",
+  "findings": []
+}

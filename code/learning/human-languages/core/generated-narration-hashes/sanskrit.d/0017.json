@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:0074b178ebc6d4c1",
+  "lessonIds": [
+    "SA-C17-day",
+    "SA-C17-night",
+    "SA-C17-today",
+    "SA-C17-yesterday",
+    "SA-C17-always",
+    "SA-C17-time-words"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch17.txt",
+  "json": "sanskrit/narration/ch17.json",
+  "textHash": "fnv1a64:7b8ba6a1cc045fc9",
+  "jsonHash": "fnv1a64:2e63a7f7d9bebbd5",
+  "findings": []
+}

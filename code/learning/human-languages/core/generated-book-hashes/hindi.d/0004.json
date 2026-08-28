@@ -1,0 +1,14 @@
+{
+  "language": "hindi",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:27623451b14bac16",
+  "lessonIds": [
+    "HI-C04-phir",
+    "HI-C04-milenge",
+    "HI-C04-phir-milenge",
+    "HI-C04-kal-milte-hain",
+    "HI-C04-chalta-hun",
+    "HI-C04-practice"
+  ],
+  "tex": "hindi/book/chapters/ch04-farewells.tex"
+}

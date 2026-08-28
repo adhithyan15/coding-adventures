@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:314fa3e8236a2cae",
+  "lessonIds": [
+    "ES-C292-pueblo",
+    "ES-C292-colina",
+    "ES-C292-valle",
+    "ES-C292-lago",
+    "ES-C292-montana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch292.txt",
+  "json": "spanish/narration/ch292.json",
+  "textHash": "fnv1a64:3e51c8c5d2da56cb",
+  "jsonHash": "fnv1a64:43825cb9f595d4e2",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:b80bf55c804e3169",
+  "lessonIds": [
+    "ES-C312-reloj",
+    "ES-C312-telefono",
+    "ES-C312-maleta",
+    "ES-C312-mapa",
+    "ES-C312-carta"
+  ],
+  "tex": "spanish/book/chapters/ch312-lo-que-llevas.tex"
+}

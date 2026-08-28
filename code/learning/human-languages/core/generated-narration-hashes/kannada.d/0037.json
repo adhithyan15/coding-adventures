@@ -1,0 +1,18 @@
+{
+  "language": "kannada",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:1d2b959adaf95179",
+  "lessonIds": [
+    "KA-C37-kannu",
+    "KA-C37-kivi",
+    "KA-C37-moogu",
+    "KA-C37-baayi"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "kannada/narration/ch37.txt",
+  "json": "kannada/narration/ch37.json",
+  "textHash": "fnv1a64:21b5ad2e420b2aba",
+  "jsonHash": "fnv1a64:8abbe186475a86f6",
+  "findings": []
+}

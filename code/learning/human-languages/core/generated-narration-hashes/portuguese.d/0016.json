@@ -1,0 +1,18 @@
+{
+  "language": "portuguese",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:bc608ce25d6412a4",
+  "lessonIds": [
+    "PT-C16-ser",
+    "PT-C16-ser-roots",
+    "PT-C16-ser-vs-estar",
+    "PT-C16-ser-estar-meaning"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "portuguese/narration/ch16.txt",
+  "json": "portuguese/narration/ch16.json",
+  "textHash": "fnv1a64:01a8cd004256eac8",
+  "jsonHash": "fnv1a64:64f5aed00ee7816e",
+  "findings": []
+}

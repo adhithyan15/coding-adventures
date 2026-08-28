@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:cce63f202f721fc2",
+  "lessonIds": [
+    "ES-C67-hoy-como-en-casa",
+    "ES-C67-repaso-la-terminacion-y-el-infinitivo"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch265.txt",
+  "json": "spanish/narration/ch265.json",
+  "textHash": "fnv1a64:5a73a1ce0074f40d",
+  "jsonHash": "fnv1a64:612bf11566fed3c7",
+  "findings": []
+}

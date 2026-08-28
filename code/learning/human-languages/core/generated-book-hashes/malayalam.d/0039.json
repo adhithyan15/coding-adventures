@@ -1,0 +1,11 @@
+{
+  "language": "malayalam",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:e7f006dc2feacc96",
+  "lessonIds": [
+    "ML-C39-chaaya",
+    "ML-C39-kaapi",
+    "ML-C39-paal"
+  ],
+  "tex": "malayalam/book/chapters/ch39-tea-coffee-milk.tex"
+}

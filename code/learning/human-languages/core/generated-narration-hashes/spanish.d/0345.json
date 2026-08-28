@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:b8cf40d75cabd742",
+  "lessonIds": [
+    "ES-C345-mismo",
+    "ES-C345-cada",
+    "ES-C345-parte",
+    "ES-C345-persona",
+    "ES-C345-objeto",
+    "ES-C345-repaso-persona-objeto",
+    "ES-C345-repaso-cada-mismo-objeto"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch345.txt",
+  "json": "spanish/narration/ch345.json",
+  "textHash": "fnv1a64:38a84b41d9b59c07",
+  "jsonHash": "fnv1a64:7b80ccbe175d18cf",
+  "findings": []
+}

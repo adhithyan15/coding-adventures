@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:603bce1723ab042d",
+  "lessonIds": [
+    "GU-R18-how-are-you-r4",
+    "GU-R18-majaa-r4",
+    "GU-R18-no-problem-r4",
+    "GU-R18-wellbeing-r4",
+    "GU-R18-farewell-r4"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch22.txt",
+  "json": "gujarati/narration/ch22.json",
+  "textHash": "fnv1a64:16414927046a1589",
+  "jsonHash": "fnv1a64:b0aec4c4968905e2",
+  "findings": []
+}

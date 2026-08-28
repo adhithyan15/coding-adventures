@@ -1,0 +1,17 @@
+{
+  "language": "latin",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:71453eda34ec1745",
+  "lessonIds": [
+    "LA-C43-respondeo",
+    "LA-C43-convenio",
+    "LA-C43-emo"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "latin/narration/ch43.txt",
+  "json": "latin/narration/ch43.json",
+  "textHash": "fnv1a64:c3803f03eef8aafc",
+  "jsonHash": "fnv1a64:a97a2763013cd568",
+  "findings": []
+}

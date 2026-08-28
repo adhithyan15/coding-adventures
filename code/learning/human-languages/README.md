@@ -57,14 +57,22 @@ core/spine.d/*.json             ordered, language-independent can-do spine: one 
 core/book-generation.d/*.json  per-language generated-book declarations
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 core/lesson-modality/*.json     generated per-language voice/sight/pen and chapter prefixes
-core/generated-book-hashes/*.json generated per-language book source-hash ledgers
-core/generated-narration-hashes/*.json generated per-language narration source/output ledgers
+core/generated-book-hashes/<language>.d/ generated book hashes, one JSON owner per chapter
+core/generated-narration-hashes/<language>.d/ generated narration hashes, one JSON owner per chapter
 progress/*.md                   generated per-language progress cards for conflict-free authoring
 core/figure-generation.json     configured canonical-data SVG figures and safe book targets
 core/generated-figure-hashes.json generated: figure source/SVG drift fingerprints
 concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```
+
+The two generated-hash families use stable four-digit chapter owners rather
+than per-language arrays: `_meta.json` carries document-wide fields and
+`NNNN.json` carries exactly one chapter. There is no tracked language or corpus
+aggregate. This lets independent agents regenerate different chapters of the
+same language without sharing a manifest; `check:books` and `check:narration`
+still fold and verify the complete corpus in memory. See
+[`HL29`](../../specs/HL29-sharded-generated-chapter-hash-ownership.md).
 
 ### Sharded ledgers: `X.d/` (HL21)
 

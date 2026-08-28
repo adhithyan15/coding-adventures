@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:f244f702ecbf938d",
+  "lessonIds": [
+    "TE-C57-neck",
+    "TE-C57-back",
+    "TE-C57-lip",
+    "TE-C57-nail",
+    "TE-C57-bone"
+  ],
+  "tex": "telugu/book/chapters/ch57-more-of-the-body.tex"
+}

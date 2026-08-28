@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:9f7109d240ad6877",
+  "lessonIds": [
+    "AR-C19-wahid-khamsa"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch19.txt",
+  "json": "arabic/narration/ch19.json",
+  "textHash": "fnv1a64:41586236e4914f90",
+  "jsonHash": "fnv1a64:e90a98fc532f80d6",
+  "findings": []
+}

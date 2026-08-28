@@ -1,0 +1,17 @@
+{
+  "language": "telugu",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:5b51e0ca07c26811",
+  "lessonIds": [
+    "TE-C20-padakondu-iravai",
+    "TE-C20-vatavaranam",
+    "TE-S123-letter-dda"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "telugu/narration/ch20.txt",
+  "json": "telugu/narration/ch20.json",
+  "textHash": "fnv1a64:f0bb220f85f76d9d",
+  "jsonHash": "fnv1a64:589eef13bf9d53fe",
+  "findings": []
+}

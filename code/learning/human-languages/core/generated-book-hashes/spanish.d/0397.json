@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:64b0b78c9840fe9c",
+  "lessonIds": [
+    "ES-C397-barato",
+    "ES-C397-caro",
+    "ES-C397-gratis",
+    "ES-C397-mayor",
+    "ES-C397-menor"
+  ],
+  "tex": "spanish/book/chapters/ch397-barato-y-caro.tex"
+}

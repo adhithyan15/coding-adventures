@@ -1,0 +1,16 @@
+{
+  "language": "tamil",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:37175827ddc1837f",
+  "lessonIds": [
+    "TA-C15-thanneer-arisi",
+    "TA-S119-letter-a"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch15.txt",
+  "json": "tamil/narration/ch15.json",
+  "textHash": "fnv1a64:4a4b811adff787dc",
+  "jsonHash": "fnv1a64:7e3d6d520ed9a905",
+  "findings": []
+}

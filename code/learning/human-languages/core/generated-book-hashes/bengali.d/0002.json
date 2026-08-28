@@ -1,0 +1,16 @@
+{
+  "language": "bengali",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:dcda8e5e7aa8d135",
+  "lessonIds": [
+    "BN-C02-naam",
+    "BN-C02-amar",
+    "BN-C02-amar-naam",
+    "BN-C02-alaap",
+    "BN-C02-ki",
+    "BN-C02-tumi-apni",
+    "BN-C02-tomar-naam-ki",
+    "BN-C02-practice"
+  ],
+  "tex": "bengali/book/chapters/ch02-introductions.tex"
+}

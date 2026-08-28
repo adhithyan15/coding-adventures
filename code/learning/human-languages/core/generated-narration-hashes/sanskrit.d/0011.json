@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:1a6c6c3f5058300d",
+  "lessonIds": [
+    "SA-C11-mitram",
+    "SA-C11-kutumbam",
+    "SA-C11-bhrata",
+    "SA-C11-bhagini",
+    "SA-S04-letter-aa",
+    "SA-S110-letter-ra"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "sanskrit/narration/ch11.txt",
+  "json": "sanskrit/narration/ch11.json",
+  "textHash": "fnv1a64:dfe6a5fcdac1454d",
+  "jsonHash": "fnv1a64:c10a4ff4a1e3246f",
+  "findings": []
+}

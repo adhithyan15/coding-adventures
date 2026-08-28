@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:c5a9557f3e0522ab",
+  "lessonIds": [
+    "ES-C57-es-inicial"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch30.txt",
+  "json": "spanish/narration/ch30.json",
+  "textHash": "fnv1a64:d0c64cdc9a2040fe",
+  "jsonHash": "fnv1a64:a1722d5e0067d06a",
+  "findings": []
+}

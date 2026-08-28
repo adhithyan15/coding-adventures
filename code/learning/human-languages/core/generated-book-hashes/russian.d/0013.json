@@ -1,0 +1,12 @@
+{
+  "language": "russian",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:1ab14437abfd3438",
+  "lessonIds": [
+    "RU-C13-moloko",
+    "RU-C13-syr",
+    "RU-C13-sok",
+    "RU-C13-sup"
+  ],
+  "tex": "russian/book/chapters/ch13-milk-cheese-juice-soup.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:b540ca63a3910a90",
+  "lessonIds": [
+    "ES-C379-seco",
+    "ES-C379-mojado",
+    "ES-C379-fresco",
+    "ES-C379-tibio",
+    "ES-C379-grueso"
+  ],
+  "tex": "spanish/book/chapters/ch379-seco-y-mojado.tex"
+}

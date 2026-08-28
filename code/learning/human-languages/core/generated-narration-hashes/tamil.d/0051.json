@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:7f0385d4692f0090",
+  "lessonIds": [
+    "TA-C51-sky",
+    "TA-C51-sun",
+    "TA-C51-moon",
+    "TA-C51-star",
+    "TA-C51-cloud"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch51.txt",
+  "json": "tamil/narration/ch51.json",
+  "textHash": "fnv1a64:1f52fa49857f0f0e",
+  "jsonHash": "fnv1a64:7f5d3e95a125c499",
+  "findings": []
+}

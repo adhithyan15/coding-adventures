@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:44514fd4a018fa24",
+  "lessonIds": [
+    "SA-C05-vadami",
+    "SA-C05-aham-samskritam-vadami",
+    "SA-C05-vasami",
+    "SA-C05-karomi",
+    "SA-C05-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "sanskrit/narration/ch05.txt",
+  "json": "sanskrit/narration/ch05.json",
+  "textHash": "fnv1a64:e5fce21269521272",
+  "jsonHash": "fnv1a64:f3b628b80e167949",
+  "findings": []
+}

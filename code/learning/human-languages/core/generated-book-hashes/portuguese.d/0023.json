@@ -1,0 +1,11 @@
+{
+  "language": "portuguese",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:573c685f4300b260",
+  "lessonIds": [
+    "PT-C23-cafe",
+    "PT-C23-cha",
+    "PT-C23-leite"
+  ],
+  "tex": "portuguese/book/chapters/ch23-coffee-tea-milk.tex"
+}

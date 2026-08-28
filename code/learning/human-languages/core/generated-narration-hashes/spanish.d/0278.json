@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:6b211c02528a2206",
+  "lessonIds": [
+    "ES-C278-viento",
+    "ES-C278-nieve",
+    "ES-C278-arbol",
+    "ES-C278-flor"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch278.txt",
+  "json": "spanish/narration/ch278.json",
+  "textHash": "fnv1a64:8e035ee8dbfc6936",
+  "jsonHash": "fnv1a64:f3195c1f3eebf6aa",
+  "findings": []
+}

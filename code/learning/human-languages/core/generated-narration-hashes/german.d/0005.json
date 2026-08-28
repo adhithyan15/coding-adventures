@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:6167866188cc7a4e",
+  "lessonIds": [
+    "GE-C05-wohnen",
+    "GE-C05-machen",
+    "GE-C05-lernen",
+    "GE-C05-ich-lerne-deutsch",
+    "GE-C05-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch05.txt",
+  "json": "german/narration/ch05.json",
+  "textHash": "fnv1a64:04ee664778731999",
+  "jsonHash": "fnv1a64:d8e0bed3a9f8f5b7",
+  "findings": []
+}

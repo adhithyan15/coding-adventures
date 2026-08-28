@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:6d6455bd2ad89e06",
+  "lessonIds": [
+    "ES-C35-tomar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch159.txt",
+  "json": "spanish/narration/ch159.json",
+  "textHash": "fnv1a64:433de77477cdc7d7",
+  "jsonHash": "fnv1a64:c33a94ecbd1b60af",
+  "findings": []
+}

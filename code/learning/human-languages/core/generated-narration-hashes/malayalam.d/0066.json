@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:c52087d6dd0d54dd",
+  "lessonIds": [
+    "ML-C66-paddy",
+    "ML-C66-grass",
+    "ML-C66-ear-of-grain",
+    "ML-C66-plough",
+    "ML-C66-harvest"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch66.txt",
+  "json": "malayalam/narration/ch66.json",
+  "textHash": "fnv1a64:ba75995695d5eb1e",
+  "jsonHash": "fnv1a64:330c59dfc9b2c500",
+  "findings": []
+}

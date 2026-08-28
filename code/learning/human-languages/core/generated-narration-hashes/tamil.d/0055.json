@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:d207a9552db063ff",
+  "lessonIds": [
+    "TA-C55-neck",
+    "TA-C55-back",
+    "TA-C55-lip",
+    "TA-C55-nail",
+    "TA-C55-bone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch55.txt",
+  "json": "tamil/narration/ch55.json",
+  "textHash": "fnv1a64:0b7a35b11614701f",
+  "jsonHash": "fnv1a64:f96b8eebf771c226",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:92b48fc24df9b33d",
+  "lessonIds": [
+    "HI-C53-shoulder",
+    "HI-C53-knee",
+    "HI-C53-forehead",
+    "HI-C53-back",
+    "HI-C53-lip"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch53.txt",
+  "json": "hindi/narration/ch53.json",
+  "textHash": "fnv1a64:4291dabbf9d40b68",
+  "jsonHash": "fnv1a64:c93eaea901d2358d",
+  "findings": []
+}

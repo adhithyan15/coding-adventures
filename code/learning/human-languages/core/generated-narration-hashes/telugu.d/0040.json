@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:7173f8d45e9dfe1c",
+  "lessonIds": [
+    "TE-C40-bhojanam"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch40.txt",
+  "json": "telugu/narration/ch40.json",
+  "textHash": "fnv1a64:36b06e906966a50f",
+  "jsonHash": "fnv1a64:d3079fc3b7fa3eff",
+  "findings": []
+}

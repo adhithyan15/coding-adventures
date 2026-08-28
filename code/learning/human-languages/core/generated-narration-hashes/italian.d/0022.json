@@ -1,0 +1,18 @@
+{
+  "language": "italian",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:e63e009b52422e59",
+  "lessonIds": [
+    "IT-C22-caffe",
+    "IT-C22-te",
+    "IT-C22-latte",
+    "IT-C22-zucchero"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "italian/narration/ch22.txt",
+  "json": "italian/narration/ch22.json",
+  "textHash": "fnv1a64:3c328d60decec1f5",
+  "jsonHash": "fnv1a64:c38416c9edc3c8dc",
+  "findings": []
+}

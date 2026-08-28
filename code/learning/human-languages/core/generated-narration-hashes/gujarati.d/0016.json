@@ -1,0 +1,18 @@
+{
+  "language": "gujarati",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:2ccc380f758c3760",
+  "lessonIds": [
+    "GU-C10-paani",
+    "GU-C10-chaa",
+    "GU-C10-dudh",
+    "GU-C10-rotli"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch16.txt",
+  "json": "gujarati/narration/ch16.json",
+  "textHash": "fnv1a64:b7fcd8fb8bdd1eff",
+  "jsonHash": "fnv1a64:751ee87619564a1e",
+  "findings": []
+}

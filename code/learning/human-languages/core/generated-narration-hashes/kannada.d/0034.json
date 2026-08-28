@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:999218b42070c45f",
+  "lessonIds": [
+    "KA-C34-tegeduko",
+    "KA-C34-keelu",
+    "KA-C34-sahaya-maadu",
+    "KA-C34-ishta",
+    "KA-S125-letter-oo"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "kannada/narration/ch34.txt",
+  "json": "kannada/narration/ch34.json",
+  "textHash": "fnv1a64:bd9cd2c99c745828",
+  "jsonHash": "fnv1a64:4071d9c7383f9d9f",
+  "findings": []
+}

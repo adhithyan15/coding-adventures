@@ -1,0 +1,12 @@
+{
+  "language": "latin",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:d3d8200ac451dca3",
+  "lessonIds": [
+    "LA-C38-cogito",
+    "LA-C38-lego",
+    "LA-C38-intellego",
+    "LA-C38-scribo"
+  ],
+  "tex": "latin/book/chapters/ch38-mind-verbs.tex"
+}

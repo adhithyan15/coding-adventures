@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:d5d57ff658b7ecb9",
+  "lessonIds": [
+    "PA-W01-na",
+    "PA-W01-ii-matra",
+    "PA-W01-ma",
+    "PA-W01-sa",
+    "PA-W01-ta",
+    "PA-W01-e-matra",
+    "PA-W01-namaste-read"
+  ],
+  "tex": "punjabi/book/chapters/ch14-script-first.tex"
+}

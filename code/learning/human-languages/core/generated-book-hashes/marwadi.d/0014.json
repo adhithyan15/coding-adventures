@@ -1,0 +1,17 @@
+{
+  "language": "marwadi",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:3333da0f2d4f97a4",
+  "lessonIds": [
+    "MW-C10-hear-bajar",
+    "MW-W10-ja",
+    "MW-C10-bajar",
+    "MW-C10-hear-ghar",
+    "MW-W10-gha",
+    "MW-C10-ghar",
+    "MW-C10-hear-mandir",
+    "MW-C10-mandir",
+    "MW-R10-places-three"
+  ],
+  "tex": "marwadi/book/chapters/ch14-three-places.tex"
+}

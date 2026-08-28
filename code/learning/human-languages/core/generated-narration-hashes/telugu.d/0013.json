@@ -1,0 +1,17 @@
+{
+  "language": "telugu",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:3b96e1038b0c673a",
+  "lessonIds": [
+    "TE-C13-sharira-bhagalu",
+    "TE-S08-vowel-sign-i",
+    "TE-S116-letter-da"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch13.txt",
+  "json": "telugu/narration/ch13.json",
+  "textHash": "fnv1a64:651bea9677782f8b",
+  "jsonHash": "fnv1a64:c11d70e80fb3f794",
+  "findings": []
+}

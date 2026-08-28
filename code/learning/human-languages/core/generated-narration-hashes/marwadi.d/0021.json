@@ -1,0 +1,23 @@
+{
+  "language": "marwadi",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:eef5ca68be538974",
+  "lessonIds": [
+    "MW-C16-hear-bas",
+    "MW-C16-bas",
+    "MW-C16-hear-gaadi",
+    "MW-C16-gaadi",
+    "MW-C16-hear-thela",
+    "MW-C16-thela",
+    "MW-R16-transport-three",
+    "MW-C16-transport-three",
+    "MW-R16-transport-close"
+  ],
+  "voiceLessons": 9,
+  "drivablePrefix": 9,
+  "text": "marwadi/narration/ch21.txt",
+  "json": "marwadi/narration/ch21.json",
+  "textHash": "fnv1a64:f5e40819874e10f1",
+  "jsonHash": "fnv1a64:03a0240de7d9742f",
+  "findings": []
+}

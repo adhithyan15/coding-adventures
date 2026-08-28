@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:0e00d97dd15baa40",
+  "lessonIds": [
+    "JA-W05-nichi-kanji",
+    "JA-W05-hon-kanji",
+    "JA-W05-gen-component",
+    "JA-W05-five-component",
+    "JA-W05-mouth-component",
+    "JA-W05-go-kanji",
+    "JA-C01-nihongo"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "japanese/narration/ch05.txt",
+  "json": "japanese/narration/ch05.json",
+  "textHash": "fnv1a64:7a1c67660ee7b849",
+  "jsonHash": "fnv1a64:ccecbd4aab2688d9",
+  "findings": []
+}

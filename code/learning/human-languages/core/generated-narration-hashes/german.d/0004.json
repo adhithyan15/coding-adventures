@@ -1,0 +1,23 @@
+{
+  "language": "german",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:93f7fa99a45c99fc",
+  "lessonIds": [
+    "GE-C04-auf-wiedersehen",
+    "GE-C04-tschuss",
+    "GE-C04-bis-bald",
+    "GE-C04-bis-morgen",
+    "GE-C04-bis-spater",
+    "GE-C04-practice",
+    "GE-W01-eszett",
+    "GE-W02-umlauts",
+    "GE-W03-capitalization"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch04.txt",
+  "json": "german/narration/ch04.json",
+  "textHash": "fnv1a64:f41ea9e71ef8d25e",
+  "jsonHash": "fnv1a64:3c08b91a13ce7eb8",
+  "findings": []
+}

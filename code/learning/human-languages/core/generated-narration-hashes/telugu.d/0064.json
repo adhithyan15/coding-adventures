@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:a642c62262ecb3f2",
+  "lessonIds": [
+    "TE-C64-also",
+    "TE-C64-only",
+    "TE-C64-in-that-case",
+    "TE-C64-after",
+    "TE-C64-still"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch64.txt",
+  "json": "telugu/narration/ch64.json",
+  "textHash": "fnv1a64:c713924511bc58b6",
+  "jsonHash": "fnv1a64:508849eb7b83fe4f",
+  "findings": []
+}

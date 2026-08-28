@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:1a17b339db0f39b2",
+  "lessonIds": [
+    "MR-R09-script-a-r3",
+    "MR-R09-script-b-r3",
+    "MR-R09-script-c-r3",
+    "MR-R09-script-d-r3",
+    "MR-C06-numbers-1-5",
+    "MR-C06-number-differences"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch09.txt",
+  "json": "marathi/narration/ch09.json",
+  "textHash": "fnv1a64:9f62d6e3963b4084",
+  "jsonHash": "fnv1a64:5cc7cfe1f817389f",
+  "findings": []
+}

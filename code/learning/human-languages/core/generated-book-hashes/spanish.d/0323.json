@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:3ed2bd82b2bbb174",
+  "lessonIds": [
+    "ES-C323-ya",
+    "ES-C323-entonces",
+    "ES-C323-antes",
+    "ES-C323-despues",
+    "ES-C323-mientras"
+  ],
+  "tex": "spanish/book/chapters/ch323-antes-y-despues.tex"
+}

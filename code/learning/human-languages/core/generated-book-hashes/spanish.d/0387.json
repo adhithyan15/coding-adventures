@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:24a691ceffb07781",
+  "lessonIds": [
+    "ES-C387-quemar",
+    "ES-C387-cruzar",
+    "ES-C387-volar",
+    "ES-C387-girar"
+  ],
+  "tex": "spanish/book/chapters/ch387-quemar-y-cruzar.tex"
+}

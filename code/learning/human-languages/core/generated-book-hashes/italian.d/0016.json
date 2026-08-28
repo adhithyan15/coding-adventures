@@ -1,0 +1,12 @@
+{
+  "language": "italian",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:f5b5749d658db006",
+  "lessonIds": [
+    "IT-C16-essere",
+    "IT-C16-essere-stato",
+    "IT-C16-andare",
+    "IT-C16-passato-prossimo-essere"
+  ],
+  "tex": "italian/book/chapters/ch16-essere-andare-past.tex"
+}

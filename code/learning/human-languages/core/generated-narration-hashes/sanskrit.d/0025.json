@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:68be4c4a02fc726e",
+  "lessonIds": [
+    "SA-C25-hand",
+    "SA-C25-foot",
+    "SA-C25-head",
+    "SA-C25-tooth",
+    "SA-C25-hair"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch25.txt",
+  "json": "sanskrit/narration/ch25.json",
+  "textHash": "fnv1a64:10e936a884296d74",
+  "jsonHash": "fnv1a64:37a045a8ef8e9efe",
+  "findings": []
+}

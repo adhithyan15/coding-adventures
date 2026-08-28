@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:380ae85d189acd9e",
+  "lessonIds": [
+    "ES-C269-feliz",
+    "ES-C269-espero",
+    "ES-C269-mas-que",
+    "ES-C269-durante"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch269.txt",
+  "json": "spanish/narration/ch269.json",
+  "textHash": "fnv1a64:3d4994592e28cea2",
+  "jsonHash": "fnv1a64:851cadb4b666149d",
+  "findings": []
+}

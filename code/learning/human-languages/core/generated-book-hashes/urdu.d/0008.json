@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:de0b3a68835ed2b3",
+  "lessonIds": [
+    "UR-C08-lena",
+    "UR-C08-puchhna",
+    "UR-C08-madad",
+    "UR-C08-pasand"
+  ],
+  "tex": "urdu/book/chapters/ch08-social-verbs.tex"
+}

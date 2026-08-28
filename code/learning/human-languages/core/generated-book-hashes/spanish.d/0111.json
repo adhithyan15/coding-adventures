@@ -1,0 +1,9 @@
+{
+  "language": "spanish",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:c522e8e23533407e",
+  "lessonIds": [
+    "ES-C48-dos-miradas"
+  ],
+  "tex": "spanish/book/chapters/ch111-aspect-not-time.tex"
+}

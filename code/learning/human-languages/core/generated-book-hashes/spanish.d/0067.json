@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:3f1125d4ebe2b5cd",
+  "lessonIds": [
+    "ES-C08-tenemos",
+    "ES-C08-tienen"
+  ],
+  "tex": "spanish/book/chapters/ch67-tener-plural.tex"
+}

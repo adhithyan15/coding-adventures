@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:b8f837ccb6aaaa1a",
+  "lessonIds": [
+    "TE-C66-field",
+    "TE-C66-paddy",
+    "TE-C66-grass",
+    "TE-C66-threshing-floor",
+    "TE-C66-harvest"
+  ],
+  "tex": "telugu/book/chapters/ch66-the-field.tex"
+}

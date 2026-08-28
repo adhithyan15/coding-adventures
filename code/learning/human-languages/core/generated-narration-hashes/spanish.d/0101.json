@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:ce4eb7d5a8a5195d",
+  "lessonIds": [
+    "ES-C47-repaso-dobles"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch101.txt",
+  "json": "spanish/narration/ch101.json",
+  "textHash": "fnv1a64:8a39ecfed5d23f3e",
+  "jsonHash": "fnv1a64:cbb453e9db2ecb5b",
+  "findings": []
+}

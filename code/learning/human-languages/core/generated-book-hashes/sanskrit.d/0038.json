@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:8a942f358928e554",
+  "lessonIds": [
+    "SA-C38-fire",
+    "SA-C38-ash",
+    "SA-C38-stone",
+    "SA-C38-sand",
+    "SA-C38-soil"
+  ],
+  "tex": "sanskrit/book/chapters/ch38-fire-and-stone.tex"
+}

@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:cecadbdd604efb49",
+  "lessonIds": [
+    "ES-C386-vender",
+    "ES-C386-servir",
+    "ES-C386-gastar",
+    "ES-C386-crecer"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch386.txt",
+  "json": "spanish/narration/ch386.json",
+  "textHash": "fnv1a64:b6cfb1f14600a5f4",
+  "jsonHash": "fnv1a64:0ef10033b59f8ded",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:82e0ad2da16cf73f",
+  "lessonIds": [
+    "TA-C03-eppadi",
+    "TA-C03-eppadi-irukkirirgal",
+    "TA-C03-naan",
+    "TA-C03-nalam",
+    "TA-C03-paravayillai",
+    "TA-C03-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch03.txt",
+  "json": "tamil/narration/ch03.json",
+  "textHash": "fnv1a64:3f649260c6ff2243",
+  "jsonHash": "fnv1a64:2b0a00f1b41e2b08",
+  "findings": []
+}

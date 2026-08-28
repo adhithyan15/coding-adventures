@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:bc09dda5bba4d90e",
+  "lessonIds": [
+    "PA-C03-kivein",
+    "PA-C03-tusi-kivein-ho",
+    "PA-R03-wellbeing-r1",
+    "PA-C03-main",
+    "PA-C03-thik",
+    "PA-C03-koi-gall-nahin",
+    "PA-C03-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch03.txt",
+  "json": "punjabi/narration/ch03.json",
+  "textHash": "fnv1a64:25ed2f7ee4db57d0",
+  "jsonHash": "fnv1a64:c9d7c2ed25d0ca01",
+  "findings": []
+}

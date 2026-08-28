@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:9ca2c03773a116a7",
+  "lessonIds": [
+    "HI-C66-seed",
+    "HI-C66-crop",
+    "HI-C66-grain",
+    "HI-C66-grass",
+    "HI-C66-well"
+  ],
+  "tex": "hindi/book/chapters/ch66-the-field-and-the-well.tex"
+}

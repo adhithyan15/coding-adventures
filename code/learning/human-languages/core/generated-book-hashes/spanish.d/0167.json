@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:6682465863b5269c",
+  "lessonIds": [
+    "ES-C38-luego",
+    "ES-C38-porque",
+    "ES-C38-repaso-los-tres-porques",
+    "ES-C38-imperfecto",
+    "ES-C38-contar"
+  ],
+  "tex": "spanish/book/chapters/ch167-narrating.tex"
+}

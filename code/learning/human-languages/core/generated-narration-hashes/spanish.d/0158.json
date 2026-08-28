@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:da7bafea4d13355f",
+  "lessonIds": [
+    "ES-C34-sintesis-mente"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch158.txt",
+  "json": "spanish/narration/ch158.json",
+  "textHash": "fnv1a64:43dbe8cf50e6fbdc",
+  "jsonHash": "fnv1a64:79ab2a3fb6919ad6",
+  "findings": []
+}

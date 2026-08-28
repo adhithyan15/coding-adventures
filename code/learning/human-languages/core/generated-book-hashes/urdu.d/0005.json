@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:0913b7b5e28654a2",
+  "lessonIds": [
+    "UR-C05-khuda",
+    "UR-C05-hafiz",
+    "UR-C05-khuda-hafiz",
+    "UR-C05-practice"
+  ],
+  "tex": "urdu/book/chapters/ch05-take-leave.tex"
+}

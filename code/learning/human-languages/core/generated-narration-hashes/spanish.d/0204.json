@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:453deab0debd63aa",
+  "lessonIds": [
+    "ES-C55-repaso-preterito"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch204.txt",
+  "json": "spanish/narration/ch204.json",
+  "textHash": "fnv1a64:11325eb6339a55cc",
+  "jsonHash": "fnv1a64:e2ebc7e0fa5c4870",
+  "findings": []
+}

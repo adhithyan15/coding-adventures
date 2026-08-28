@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:792ebe28ac67d5bb",
+  "lessonIds": [
+    "KA-C40-oota"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch40.txt",
+  "json": "kannada/narration/ch40.json",
+  "textHash": "fnv1a64:461f363042c461c0",
+  "jsonHash": "fnv1a64:cec391d462dc97d9",
+  "findings": []
+}

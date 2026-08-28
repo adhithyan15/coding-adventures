@@ -1,0 +1,18 @@
+{
+  "language": "persian",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:95fa8a16323e7fa9",
+  "lessonIds": [
+    "FA-C11-cheshm",
+    "FA-C11-dast",
+    "FA-C11-pa",
+    "FA-C11-zaban"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "persian/narration/ch11.txt",
+  "json": "persian/narration/ch11.json",
+  "textHash": "fnv1a64:5274c2790a37de92",
+  "jsonHash": "fnv1a64:7ca705cb2279ec20",
+  "findings": []
+}

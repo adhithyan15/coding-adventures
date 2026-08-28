@@ -1,0 +1,17 @@
+{
+  "language": "portuguese",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:05efdf7fd1a723f5",
+  "lessonIds": [
+    "PT-C17-cabeca",
+    "PT-C17-cabeca-caput",
+    "PT-C17-mao"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "portuguese/narration/ch17.txt",
+  "json": "portuguese/narration/ch17.json",
+  "textHash": "fnv1a64:62f67c6f5510f9a2",
+  "jsonHash": "fnv1a64:4dae81118ecf4b5d",
+  "findings": []
+}

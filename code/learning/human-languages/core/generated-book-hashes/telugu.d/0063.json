@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:3062c05174f48c62",
+  "lessonIds": [
+    "TE-C63-hunger",
+    "TE-C63-sleep",
+    "TE-C63-cough",
+    "TE-C63-disease",
+    "TE-C63-health"
+  ],
+  "tex": "telugu/book/chapters/ch63-hunger-sleep-health.tex"
+}

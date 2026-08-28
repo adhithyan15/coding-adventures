@@ -1,0 +1,9 @@
+{
+  "language": "telugu",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:415baca4453537e2",
+  "lessonIds": [
+    "TE-C24-ratri"
+  ],
+  "tex": "telugu/book/chapters/ch24-night.tex"
+}

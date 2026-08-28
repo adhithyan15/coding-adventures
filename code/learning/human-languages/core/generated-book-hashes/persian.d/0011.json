@@ -1,0 +1,12 @@
+{
+  "language": "persian",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:0c1886b4285249b5",
+  "lessonIds": [
+    "FA-C11-cheshm",
+    "FA-C11-dast",
+    "FA-C11-pa",
+    "FA-C11-zaban"
+  ],
+  "tex": "persian/book/chapters/ch11-body.tex"
+}

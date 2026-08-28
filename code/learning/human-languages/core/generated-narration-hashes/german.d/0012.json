@@ -1,0 +1,16 @@
+{
+  "language": "german",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:8f39891bf2f8c2d6",
+  "lessonIds": [
+    "GE-C12-elf-zwoelf",
+    "GE-C12-zahlen-13-20"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "german/narration/ch12.txt",
+  "json": "german/narration/ch12.json",
+  "textHash": "fnv1a64:ad93e46ef5dcda71",
+  "jsonHash": "fnv1a64:6b179a8e99bb66a8",
+  "findings": []
+}

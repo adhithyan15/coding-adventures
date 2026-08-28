@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "algorithm": "fnv1a64",
+  "maxLinearisableTableColumns": 3
+}

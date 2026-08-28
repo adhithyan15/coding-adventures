@@ -13,6 +13,7 @@ import {
   mkdirSync,
   readFileSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
@@ -28,7 +29,9 @@ import {
 const roots: string[] = [];
 
 /** A one-track curriculum on disk: registry, policy, an HL05 ledger, and two lessons. */
-function fixture(options: { policy?: Record<string, unknown>; extraLesson?: string } = {}): string {
+function fixture(
+  options: { policy?: Record<string, unknown>; extraLesson?: string } = {},
+): string {
   const root = mkdtempSync(join(tmpdir(), "human-language-narration-"));
   roots.push(root);
   mkdirSync(join(root, "core"), { recursive: true });
@@ -39,7 +42,14 @@ function fixture(options: { policy?: Record<string, unknown>; extraLesson?: stri
     `${JSON.stringify({
       version: 1,
       languages: [
-        { id: "test", name: "Testish", family: "None", script: "latin", status: "active", bridges: [] },
+        {
+          id: "test",
+          name: "Testish",
+          family: "None",
+          script: "latin",
+          status: "active",
+          bridges: [],
+        },
       ],
     })}\n`,
   );
@@ -66,7 +76,12 @@ function fixture(options: { policy?: Record<string, unknown>; extraLesson?: stri
           label: "ch:first",
           canDo: "I can say hello.",
           spineNodes: [],
-          payoff: { lesson: "TEST-C01-hello", kind: "dialogue", summary: "hi", assesses: [] },
+          payoff: {
+            lesson: "TEST-C01-hello",
+            kind: "dialogue",
+            summary: "hi",
+            assesses: [],
+          },
         },
       ],
     })}\n`,
@@ -100,17 +115,59 @@ concept_tag: GREETING-HELLO
 `,
   );
   if (options.extraLesson !== undefined) {
-    writeFileSync(join(root, "test", "lessons", "extra.md"), options.extraLesson);
+    writeFileSync(
+      join(root, "test", "lessons", "extra.md"),
+      options.extraLesson,
+    );
   }
   return root;
 }
 
 afterEach(() => {
   vi.restoreAllMocks();
-  for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
+  for (const root of roots.splice(0))
+    rmSync(root, { recursive: true, force: true });
 });
 
 describe("the narration export's filesystem shell", () => {
+  it("refuses to write through a symlinked hash-owner directory or file", () => {
+    const root = fixture();
+    const outside = mkdtempSync(
+      join(tmpdir(), "human-language-narration-outside-"),
+    );
+    roots.push(outside);
+    mkdirSync(join(root, "core", "generated-narration-hashes"), {
+      recursive: true,
+    });
+    symlinkSync(
+      outside,
+      join(root, "core", "generated-narration-hashes", "test.d"),
+    );
+    expect(() => runNarrationGeneration(["--write"], root)).toThrow(
+      /real directory/,
+    );
+
+    rmSync(join(root, "core", "generated-narration-hashes", "test.d"));
+    expect(runNarrationGeneration(["--write"], root)).toBe(0);
+    const owner = join(
+      root,
+      "core",
+      "generated-narration-hashes",
+      "test.d",
+      "0001.json",
+    );
+    rmSync(owner);
+    const victim = join(outside, "victim.json");
+    writeFileSync(victim, "unchanged\n");
+    symlinkSync(victim, owner);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    expect(runNarrationGeneration(["--check"], root)).toBe(1);
+    expect(() => runNarrationGeneration(["--write"], root)).toThrow(
+      /real regular file/,
+    );
+    expect(readFileSync(victim, "utf8")).toBe("unchanged\n");
+  });
+
   it("writes a script, a structured view, and a hash manifest per chapter", () => {
     const root = fixture();
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
@@ -118,7 +175,20 @@ describe("the narration export's filesystem shell", () => {
     expect(runNarrationGeneration(["--write"], root)).toBe(0);
     const text = join(root, "test", "narration", "ch01.txt");
     const json = join(root, "test", "narration", "ch01.json");
-    const manifest = join(root, "core", "generated-narration-hashes", "test.json");
+    const manifest = join(
+      root,
+      "core",
+      "generated-narration-hashes",
+      "test.d",
+      "_meta.json",
+    );
+    const chapterOwner = join(
+      root,
+      "core",
+      "generated-narration-hashes",
+      "test.d",
+      "0001.json",
+    );
     expect(existsSync(text)).toBe(true);
 
     const script = readFileSync(text, "utf8");
@@ -129,7 +199,10 @@ describe("the narration export's filesystem shell", () => {
 
     const structured = JSON.parse(readFileSync(json, "utf8")) as {
       version: number;
-      lessons: Array<{ id: string; blocks: Array<{ segments: Array<{ kind: string }> }> }>;
+      lessons: Array<{
+        id: string;
+        blocks: Array<{ segments: Array<{ kind: string }> }>;
+      }>;
     };
     expect(structured.version).toBe(1);
     expect(structured.lessons[0]?.id).toBe("TEST-C01-hello");
@@ -141,12 +214,16 @@ describe("the narration export's filesystem shell", () => {
     const recorded = JSON.parse(readFileSync(manifest, "utf8")) as {
       algorithm: string;
       maxLinearisableTableColumns: number;
-      chapters: Array<{ sourceHash: string; textHash: string; drivablePrefix: number }>;
+    };
+    const recordedChapter = JSON.parse(readFileSync(chapterOwner, "utf8")) as {
+      sourceHash: string;
+      textHash: string;
+      drivablePrefix: number;
     };
     expect(recorded.algorithm).toBe("fnv1a64");
     expect(recorded.maxLinearisableTableColumns).toBe(3);
-    expect(recorded.chapters[0]?.sourceHash).toMatch(/^fnv1a64:[0-9a-f]{16}$/);
-    expect(recorded.chapters[0]?.drivablePrefix).toBe(1);
+    expect(recordedChapter.sourceHash).toMatch(/^fnv1a64:[0-9a-f]{16}$/);
+    expect(recordedChapter.drivablePrefix).toBe(1);
 
     expect(runNarrationGeneration(["--check"], root)).toBe(0);
   });
@@ -178,10 +255,19 @@ describe("the narration export's filesystem shell", () => {
     expect(runNarrationGeneration(["--check"], root)).toBe(0);
 
     const source = join(root, "test", "lessons", "hello.md");
-    writeFileSync(source, readFileSync(source, "utf8").replace("Say it once.", "Say it twice."));
+    writeFileSync(
+      source,
+      readFileSync(source, "utf8").replace("Say it once.", "Say it twice."),
+    );
     expect(runNarrationGeneration(["--check"], root)).toBe(1);
 
-    const manifest = join(root, "core", "generated-narration-hashes", "test.json");
+    const manifest = join(
+      root,
+      "core",
+      "generated-narration-hashes",
+      "test.d",
+      "0001.json",
+    );
     const stale = readFileSync(manifest, "utf8");
     expect(runNarrationGeneration(["--write"], root)).toBe(0);
     const fresh = readFileSync(manifest, "utf8");
@@ -191,8 +277,12 @@ describe("the narration export's filesystem shell", () => {
 
   it("refuses any output path that escapes the curriculum root", () => {
     const root = fixture();
-    expect(() => safeOutput(root, "../escape.txt")).toThrow(/unsafe generated narration output/);
-    expect(() => safeOutput(root, "/etc/passwd")).toThrow(/unsafe generated narration output/);
+    expect(() => safeOutput(root, "../escape.txt")).toThrow(
+      /unsafe generated narration output/,
+    );
+    expect(() => safeOutput(root, "/etc/passwd")).toThrow(
+      /unsafe generated narration output/,
+    );
     expect(() => safeOutput(root, "test/narration/../../../out.json")).toThrow(
       /unsafe generated narration output/,
     );
@@ -210,9 +300,13 @@ describe("the narration export's filesystem shell", () => {
     // reshape every lesson's modality, so it is rejected loudly instead.
     for (const bad of [-1, 2.5, 99, "3", null]) {
       const root = fixture({ policy: { maxLinearisableTableColumns: bad } });
-      expect(() => policyTableWidth(root)).toThrow(/maxLinearisableTableColumns/);
+      expect(() => policyTableWidth(root)).toThrow(
+        /maxLinearisableTableColumns/,
+      );
     }
-    const missing = fixture({ policy: { maxLinearisableTableColumns: undefined } });
+    const missing = fixture({
+      policy: { maxLinearisableTableColumns: undefined },
+    });
     writeFileSync(
       join(missing, "core", "chapter-policy.json"),
       `${JSON.stringify({ version: 1, payoffRepresentativeness: 0.5, maxNewAtomsPerLesson: 3, maxNewAtomsPerChapter: 12 })}\n`,
@@ -246,11 +340,16 @@ gloss: a grid
 |---|---|---|
 | soy | eres | es |
 `;
-    const narrow = narrationOutputs(fixture({ extraLesson: wide })).get("test/narration/ch02.txt");
+    const narrow = narrationOutputs(fixture({ extraLesson: wide })).get(
+      "test/narration/ch02.txt",
+    );
     expect(narrow).toContain("yo: soy. tú: eres. él: es.");
 
     const strict = narrationOutputs(
-      fixture({ policy: { maxLinearisableTableColumns: 2 }, extraLesson: wide }),
+      fixture({
+        policy: { maxLinearisableTableColumns: 2 },
+        extraLesson: wide,
+      }),
     ).get("test/narration/ch02.txt");
     expect(strict).toContain("There is a table here I cannot read to you");
     expect(strict).toContain("Before we start: this one needs your eyes");
@@ -262,13 +361,19 @@ gloss: a grid
     for (const args of [[], ["--write", "--check"], ["--wat"]]) {
       expect(runNarrationGeneration(args, root)).toBe(2);
     }
-    expect(process.stderr.write).toHaveBeenCalledWith("usage: narration-cli (--check | --write)\n");
+    expect(process.stderr.write).toHaveBeenCalledWith(
+      "usage: narration-cli (--check | --write)\n",
+    );
   });
 
   it("keeps the manifest deterministic across runs", () => {
     const root = fixture();
-    const first = narrationOutputs(root).get("core/generated-narration-hashes/test.json");
-    const second = narrationOutputs(root).get("core/generated-narration-hashes/test.json");
+    const first = narrationOutputs(root).get(
+      "core/generated-narration-hashes/test.d/0001.json",
+    );
+    const second = narrationOutputs(root).get(
+      "core/generated-narration-hashes/test.d/0001.json",
+    );
     expect(first).toBe(second);
     expect(first?.endsWith("\n")).toBe(true);
   });
