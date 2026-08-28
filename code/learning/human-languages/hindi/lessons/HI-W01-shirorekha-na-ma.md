@@ -77,14 +77,16 @@ shows up.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W01-SHIROREKHA-NA-MA-01] -->
+<!-- hl-writing-stage: observe-trace -->
 
-[PAUSE 1s]
-- [YOU TRACE: the bar across **नमस्ते**, from left edge to right edge]
-- [YOU GESTURE: write letter bodies first, then cap the whole word]
-- [YOU SAY: "शिरोरेखा — the **head-line**"]
+Keep **नमस्ते** visible. Finger-trace only its horizontal head-line once, from
+left edge to right edge. Then trace that same visible line once with a pencil.
+Do not copy the letter bodies yet. Say **शिरोरेखा — head-line** after your hand
+stops, and compare your traced line with the model immediately.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W01-SHIROREKHA-NA-MA-01] -->
+<!-- hl-activity: {"id":"HI-W01-shirorekha-na-ma-observe-trace","kind":"text","assesses":["HI-CONCEPT-W01-SHIROREKHA-NA-MA-01"],"prompt":"Keep नमस्ते visible and trace its head-line once from left to right. What is that line called?","answer":"शिरोरेखा","accepted":["shirorekha","head-line","headline"],"feedback":{"correct":"Yes: शिरोरेखा is the visible head-line you traced.","incorrect":"Keep नमस्ते visible, trace only the top line once, and name it शिरोरेखा."},"response_seconds":15} -->
 <!-- hl-activity: {"id":"HI-W01-shirorekha-na-ma-drawing-order","kind":"text","assesses":["HI-CONCEPT-W01-SHIROREKHA-NA-MA-01"],"prompt":"When is the shirorekha usually drawn?","answer":"last","accepted":["at the end","after the letter bodies"],"feedback":{"correct":"Correct: write the letter bodies first, then draw the headline across them.","incorrect":"The usual order is letter bodies first and the shirorekha last."},"response_seconds":8} -->
 
 [PAUSE 3s] What is the line across the top called, and what does the word

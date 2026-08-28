@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Added — a cumulative first Hindi writing-stage runway
+
+Hindi's existing writing lessons now expose an honest, machine-checkable first
+support-removal sequence: visible head-line trace, visible guided copy of **न**
+and **म**, delayed copy of the already-known **नमस्ते**, and transcription of
+that same word from a heard cue. The two new lessons are capped at 120 seconds,
+include compare-and-repair steps, and introduce no new language or script form.
+
+This closes only the glyph-to-known-word stage slice in #13445. It does not
+claim that Hindi writing, pre-A1, or any exam level is complete; phrase and
+short connected-text work remains explicit in #13446.
+
 ### Fixed — one false forward-review claim
 
 `HI-C05-rahna` now records only the earlier `HI-C05-bolna` lesson that its

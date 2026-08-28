@@ -1,14 +1,15 @@
 {
   "lesson": {
-    "id": "HI-W01-shirorekha-na-ma",
+    "id": "HI-W05-namaste-delayed-copy",
     "language": "hindi",
-    "chapter": 1,
-    "sequence": 60,
+    "chapter": 2,
+    "sequence": 251,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
+      "writing-block",
       "sight-cue"
     ],
     "coreModality": "pen",
@@ -17,7 +18,10 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:baf2ab441e487f89",
+    "sourceHash": "fnv1a64:9e6ed4429f12ea3d",
+    "detachableSegments": [
+      "Writing — delayed copy"
+    ],
     "delivery": "script"
   },
   "findings": []

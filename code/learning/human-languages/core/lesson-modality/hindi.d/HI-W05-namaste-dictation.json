@@ -1,21 +1,25 @@
 {
   "lesson": {
-    "id": "HI-W01-na-ma",
+    "id": "HI-W05-namaste-dictation",
     "language": "hindi",
-    "chapter": 1,
-    "sequence": 70,
+    "chapter": 2,
+    "sequence": 252,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
-      "writing-type"
+      "writing-type",
+      "writing-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:65de23c5aa6aea34",
+    "sourceHash": "fnv1a64:34f120b9eab3a174",
+    "detachableSegments": [
+      "Writing — short dictation"
+    ],
     "delivery": "script"
   },
   "findings": []

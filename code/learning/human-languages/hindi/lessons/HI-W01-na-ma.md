@@ -71,14 +71,16 @@ have **no** right-hand spine at all. You will meet them as they come.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W01-NA-MA-01, HI-CONCEPT-W01-NA-MA-02, HI-CONCEPT-W01-NA-MA-03] -->
+<!-- hl-writing-stage: guided-copy -->
 
-[PAUSE 1s]
-- [YOU WRITE: न — "bowl, spine, **bar last**"]
-- [YOU WRITE: म — "lower loop, upper loop, spine, **bar last**"]
-- [YOU WRITE: न and म side by side, then **one single bar across both**]
+Keep **न म** visible. Copy **न** once, looking back after any piece you need.
+Then copy **म** once the same way. Put them side by side and add one head-line
+across both. Compare each copy with the visible model immediately. Memory is
+not the task yet; one careful, supported copy is enough.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W01-NA-MA-01, HI-CONCEPT-W01-NA-MA-02, HI-CONCEPT-W01-NA-MA-03] -->
+<!-- hl-activity: {"id":"HI-W01-na-ma-guided-copy","kind":"text","assesses":["HI-CONCEPT-W01-NA-MA-01","HI-CONCEPT-W01-NA-MA-02","HI-CONCEPT-W01-NA-MA-03"],"prompt":"Keep न म visible, copy each once, and name the shared frame.","answer":"right spine and top bar","accepted":["spine on the right and a top bar","right-hand spine and headline","right spine, top bar"],"feedback":{"correct":"Good: both supported copies use a right spine and a top bar.","incorrect":"Look back at न म: each has a spine on the right and a bar across the top."},"response_seconds":18} -->
 
 [PAUSE 3s] Draw **न** — its three pieces? (Bowl, spine, bar.) Draw **म** — what
 makes it different? (**Two loops** where न has one bowl.) Where does the spine
