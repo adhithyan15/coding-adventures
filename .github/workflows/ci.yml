@@ -115,6 +115,8 @@ jobs:
           cargo build --manifest-path code/packages/rust/adj-lang-cli/Cargo.toml --bin adj-formula-inventory
           cargo build --manifest-path code/packages/rust/adj-lang-cli/Cargo.toml --bin adj-formula-audit
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_elixir_windows_build_fronts.py'
+          python3 code/scripts/validate_elixir_windows_build_fronts.py --format json > /tmp/elixir-windows-build-fronts.json
           python3 -m unittest discover -s code/scripts/tests -p 'test_classical_cipher_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_generate_scytale_fixture_consumers.py'
           python3 code/scripts/generate_scytale_fixture_consumers.py --check
@@ -385,7 +387,7 @@ jobs:
             entries = [
               {"os": "ubuntu-latest", "label": "ubuntu-latest", "sharded": False, "shard_index": -1},
               {"os": "macos-latest", "label": "macos-latest", "sharded": False, "shard_index": -1},
-              {"os": "windows-latest", "label": "windows-latest", "sharded": False, "shard_index": -1},
+              {"os": "windows-2025", "label": "windows-2025", "sharded": False, "shard_index": -1},
             ]
             shard_count = 0
           else:
@@ -469,7 +471,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124
         with:
           elixir-version: '1.18.4'
           otp-version: '27.3.4.11'
@@ -522,7 +524,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124
         with:
           elixir-version: '1.18.4'
           otp-version: '27.3.4.11'
@@ -575,7 +577,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124
         with:
           elixir-version: '1.18.4'
           otp-version: '27.3.4.11'
@@ -635,7 +637,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124
         with:
           elixir-version: '1.18.4'
           otp-version: '27.3.4.11'
@@ -701,7 +703,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124
         with:
           elixir-version: '1.18.4'
           otp-version: '27.3.4.11'
@@ -1096,9 +1098,10 @@ jobs:
         run: cargo install cargo-tarpaulin
 
       - name: Set up Elixir
-        # Pure-BEAM packages have executable BUILD_windows fronts. Pin the
-        # setup-beam revision proven on the Windows 2025 / VS 2026 image; NIF
-        # packages retain their package-level BUILD_windows exclusions.
+        # Pure-BEAM packages run executable BUILD_windows fronts on the pinned
+        # Windows runner. Pin the setup-beam revision proven on Windows 2025 /
+        # VS 2026; NIF and Metal packages retain narrow machine-reported
+        # BUILD_windows exceptions.
         if: needs.detect.outputs.needs_elixir == 'true'
         uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124
         with:
@@ -2128,7 +2131,7 @@ jobs:
       # plus this PR's modest additions) while still turning a real hang into
       # a fast, loud CI failure instead of an hours-long silent stall.
       - name: Build and test affected packages
-        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true')
+        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true')
         timeout-minutes: 150
         shell: bash
         run: |

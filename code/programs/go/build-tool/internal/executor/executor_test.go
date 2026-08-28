@@ -184,6 +184,51 @@ func TestRunPackageBuildStopsOnFailure(t *testing.T) {
 	}
 }
 
+func TestRunPackageBuildReturnsUnsupportedWithoutExecutingShell(t *testing.T) {
+	root := t.TempDir()
+	pkg := discovery.Package{
+		Name: "elixir/native-demo",
+		Path: root,
+		BuildCommands: []string{
+			"echo BUILD_TOOL_UNSUPPORTED:ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE -- skipped",
+		},
+		Language: "elixir",
+	}
+
+	result := runPackageBuild(pkg, false)
+	if result.Status != "unsupported" {
+		t.Fatalf("expected unsupported, got %s", result.Status)
+	}
+	if result.ReasonCode != "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE" {
+		t.Fatalf("unexpected reason code: %q", result.ReasonCode)
+	}
+	if result.Stdout != "" || result.Stderr != "" || result.ReturnCode != 0 {
+		t.Fatalf("unsupported front executed or returned process output: %#v", result)
+	}
+}
+
+func TestUnsupportedBuildCodeIsClosedAndRejectsMixedCommands(t *testing.T) {
+	valid := []string{
+		"echo BUILD_TOOL_UNSUPPORTED:ELIXIR_WINDOWS_METAL_UNAVAILABLE -- skipped",
+	}
+	if code, ok := unsupportedBuildCode(valid); !ok || code != "ELIXIR_WINDOWS_METAL_UNAVAILABLE" {
+		t.Fatalf("valid protocol was not recognized: code=%q ok=%v", code, ok)
+	}
+
+	invalid := [][]string{
+		{"echo BUILD_TOOL_UNSUPPORTED:lowercase -- skipped"},
+		{"echo BUILD_TOOL_UNSUPPORTED:CODE"},
+		{"echo BUILD_TOOL_UNSUPPORTED:CODE -- skipped && mix test"},
+		{"echo BUILD_TOOL_UNSUPPORTED:CODE -- skipped", "mix test"},
+		{"echo skipped for Windows"},
+	}
+	for _, commands := range invalid {
+		if code, ok := unsupportedBuildCode(commands); ok {
+			t.Fatalf("invalid protocol accepted: commands=%v code=%q", commands, code)
+		}
+	}
+}
+
 func contains(s, substr string) bool {
 	return len(s) >= len(substr) && (s == substr || len(substr) == 0 ||
 		(len(s) > 0 && len(substr) > 0 && containsHelper(s, substr)))
@@ -295,6 +340,56 @@ func TestExecuteBuildsDepSkipped(t *testing.T) {
 	}
 	if results["python/pkg-b"].Status != "dep-skipped" {
 		t.Fatalf("expected pkg-b dep-skipped, got %s", results["python/pkg-b"].Status)
+	}
+}
+
+func TestExecuteBuildsPropagatesUnsupportedDependency(t *testing.T) {
+	root := t.TempDir()
+	packages := []discovery.Package{
+		{
+			Name: "elixir/native",
+			Path: filepath.Join(root, "native"),
+			BuildCommands: []string{
+				"echo BUILD_TOOL_UNSUPPORTED:ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE -- skipped",
+			},
+			Language: "elixir",
+		},
+		{Name: "elixir/app", Path: filepath.Join(root, "app"), BuildCommands: []string{"mix test"}, Language: "elixir"},
+	}
+	for _, pkg := range packages {
+		if err := os.MkdirAll(pkg.Path, 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	graph := directedgraph.New()
+	graph.AddNode("elixir/native")
+	graph.AddNode("elixir/app")
+	graph.AddEdge("elixir/native", "elixir/app")
+	buildCache := cache.New()
+
+	results := ExecuteBuilds(
+		packages,
+		graph,
+		buildCache,
+		map[string]string{"elixir/native": "a", "elixir/app": "b"},
+		map[string]string{"elixir/native": "c", "elixir/app": "d"},
+		true,
+		false,
+		1,
+		nil,
+		nil,
+		false,
+	)
+
+	if results["elixir/native"].Status != "unsupported" {
+		t.Fatalf("native status = %q", results["elixir/native"].Status)
+	}
+	app := results["elixir/app"]
+	if app.Status != "dep-unsupported" || app.ReasonCode != "DEPENDENCY_UNSUPPORTED" {
+		t.Fatalf("app result = %#v", app)
+	}
+	if !buildCache.NeedsBuild("elixir/native", "a", "c") || !buildCache.NeedsBuild("elixir/app", "b", "d") {
+		t.Fatal("unsupported results must not enter the success cache")
 	}
 }
 

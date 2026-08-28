@@ -130,3 +130,29 @@ func TestChangedPackageRootsUseOnlySelectedPlatformBuildFile(t *testing.T) {
 		}
 	}
 }
+
+func TestChangedPackageRootsIncludeDeletedPlatformOverrideOnItsPlatform(t *testing.T) {
+	root := t.TempDir()
+	pkgPath := filepath.Join(root, "code", "packages", "elixir", "atbash_cipher")
+	if err := os.MkdirAll(pkgPath, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(pkgPath, "BUILD"), []byte("mix test\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	packages := []discovery.Package{{
+		Name:     "elixir/atbash_cipher",
+		Path:     pkgPath,
+		Language: "elixir",
+	}}
+	deletedWindowsOverride := []string{
+		"code/packages/elixir/atbash_cipher/BUILD_windows",
+	}
+
+	if got := changedPackageRootsForPlatform(deletedWindowsOverride, packages, root, "linux"); len(got) != 0 {
+		t.Fatalf("deleted Windows override affected Linux: %#v", got)
+	}
+	if got := changedPackageRootsForPlatform(deletedWindowsOverride, packages, root, "windows"); !got["elixir/atbash_cipher"] {
+		t.Fatalf("deleted Windows override did not affect Windows fallback: %#v", got)
+	}
+}

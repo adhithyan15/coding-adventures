@@ -215,10 +215,35 @@ func changedPackageRootsForPlatform(
 		selectedRel, err := filepath.Rel(repoRoot, selected)
 		if err == nil && filepath.Clean(selectedRel) == nativeChanged {
 			filtered = append(filtered, changed)
+			continue
+		}
+
+		// A deleted platform override is no longer the selected file, but its
+		// removal is precisely what changed selection to the generic fallback.
+		// Keep it scoped to platforms on which that variant could have won.
+		if _, statErr := os.Stat(filepath.Join(repoRoot, nativeChanged)); os.IsNotExist(statErr) && buildVariantApplies(base, goos) {
+			filtered = append(filtered, changed)
 		}
 	}
 
 	return gitdiff.MapFilesToPackages(filtered, packages, repoRoot)
+}
+
+func buildVariantApplies(base, goos string) bool {
+	switch base {
+	case "BUILD":
+		return true
+	case "BUILD_windows":
+		return goos == "windows"
+	case "BUILD_mac":
+		return goos == "darwin"
+	case "BUILD_linux":
+		return goos == "linux"
+	case "BUILD_mac_and_linux":
+		return goos == "darwin" || goos == "linux"
+	default:
+		return false
+	}
 }
 
 func graphEdges(graph *directedgraph.Graph) [][2]string {

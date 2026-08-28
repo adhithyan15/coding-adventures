@@ -14,15 +14,14 @@
 # on one line.
 #
 # WHAT RUNS WHERE. Pull-request CI fans out over ubuntu-latest, macos-latest and
-# windows-latest (the `detect` job's build_matrix in .github/workflows/ci.yml),
-# but Rust is only ever built on ubuntu and macOS. The windows leg never builds
-# it, for two independent reasons: on a PR the "Build and test affected packages"
-# step — the one that runs `-language all` — is guarded by
-# `if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true')`
-# (ci.yml:1529), so on Windows it runs ONLY when the PR touches Swift; and on main
+# windows-2025 (the `detect` job's build_matrix in .github/workflows/ci.yml),
+# but Rust is only ever built on ubuntu and macOS for this package. On a PR the
+# "Build and test affected packages" step — the one that runs `-language all` —
+# executes on Windows only when the diff needs Swift or Elixir; this Rust-only
+# package enables neither. On main
 # the detect job hardcodes every matrix entry to `"os": "ubuntu-latest"`, so the
 # unguarded "Full build on main merge" step has no windows leg to run on. A green
-# `build (windows-latest)` is therefore not evidence that Rust compiled there.
+# `build (windows-2025)` is therefore not evidence that Rust compiled there.
 #
 #   --lib               58 unit tests incl. the dynval_runtime_golden divergence
 #                       guard. Host-independent — runs on ubuntu + macOS.

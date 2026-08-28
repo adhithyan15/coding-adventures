@@ -1,1 +1,2 @@
-echo "skipped (NIF not yet supported on Windows)"
+# build-tool: unsupported=ELIXIR_WINDOWS_NIF_DEPENDENCY_UNAVAILABLE
+echo BUILD_TOOL_UNSUPPORTED:ELIXIR_WINDOWS_NIF_DEPENDENCY_UNAVAILABLE -- skipped

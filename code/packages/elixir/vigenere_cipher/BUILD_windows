@@ -1,1 +1,0 @@
-echo Skipping elixir/vigenere_cipher on Windows -- Elixir is not installed on Windows CI

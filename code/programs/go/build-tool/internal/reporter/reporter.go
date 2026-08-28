@@ -7,11 +7,12 @@
 //
 //	Build Report
 //	============
-//	Package                    Status     Duration
-//	python/logic-gates         SKIPPED    -
-//	python/arithmetic          BUILT      2.3s
-//	python/arm-simulator       FAILED     0.5s
-//	python/riscv-simulator     DEP-SKIP   - (dep failed)
+//	Package                    Status            Duration       Reason
+//	python/logic-gates         SKIPPED           -
+//	python/arithmetic          BUILT             2.3s
+//	python/arm-simulator       FAILED            0.5s
+//	python/riscv-simulator     DEP-SKIP          - (dep failed)
+//	elixir/native              UNSUPPORTED       -              ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE
 //
 //	Total: 21 packages | 5 built | 14 skipped | 1 failed | 1 dep-skipped
 //
@@ -32,11 +33,13 @@ import (
 // statusDisplay maps internal status strings to display names.
 // We uppercase for visual clarity in the terminal.
 var statusDisplay = map[string]string{
-	"built":       "BUILT",
-	"failed":      "FAILED",
-	"skipped":     "SKIPPED",
-	"dep-skipped": "DEP-SKIP",
-	"would-build": "WOULD-BUILD",
+	"built":           "BUILT",
+	"failed":          "FAILED",
+	"skipped":         "SKIPPED",
+	"dep-skipped":     "DEP-SKIP",
+	"unsupported":     "UNSUPPORTED",
+	"dep-unsupported": "DEP-UNSUPPORTED",
+	"would-build":     "WOULD-BUILD",
 }
 
 // formatDuration converts seconds to a display string.
@@ -70,7 +73,7 @@ func FormatReport(results map[string]executor.BuildResult) string {
 	}
 
 	// Header row.
-	buf.WriteString(fmt.Sprintf("%-*s   %-12s %s\n", maxNameLen, "Package", "Status", "Duration"))
+	buf.WriteString(fmt.Sprintf("%-*s   %-16s %-14s %s\n", maxNameLen, "Package", "Status", "Duration", "Reason"))
 
 	// Sort results by package name for consistent output.
 	names := make([]string, 0, len(results))
@@ -89,8 +92,10 @@ func FormatReport(results map[string]executor.BuildResult) string {
 		duration := formatDuration(result.Duration)
 		if result.Status == "dep-skipped" {
 			duration = "- (dep failed)"
+		} else if result.Status == "dep-unsupported" {
+			duration = "- (dep unsupported)"
 		}
-		buf.WriteString(fmt.Sprintf("%-*s   %-12s %s\n", maxNameLen, name, status, duration))
+		buf.WriteString(fmt.Sprintf("%-*s   %-16s %-14s %s\n", maxNameLen, name, status, duration, result.ReasonCode))
 	}
 
 	// Show error details for failed packages.
@@ -119,6 +124,8 @@ func FormatReport(results map[string]executor.BuildResult) string {
 	skipped := 0
 	failed := 0
 	depSkipped := 0
+	unsupported := 0
+	depUnsupported := 0
 	wouldBuild := 0
 	for _, r := range results {
 		switch r.Status {
@@ -130,6 +137,10 @@ func FormatReport(results map[string]executor.BuildResult) string {
 			failed++
 		case "dep-skipped":
 			depSkipped++
+		case "unsupported":
+			unsupported++
+		case "dep-unsupported":
+			depUnsupported++
 		case "would-build":
 			wouldBuild++
 		}
@@ -147,6 +158,12 @@ func FormatReport(results map[string]executor.BuildResult) string {
 	}
 	if depSkipped > 0 {
 		buf.WriteString(fmt.Sprintf(" | %d dep-skipped", depSkipped))
+	}
+	if unsupported > 0 {
+		buf.WriteString(fmt.Sprintf(" | %d unsupported", unsupported))
+	}
+	if depUnsupported > 0 {
+		buf.WriteString(fmt.Sprintf(" | %d dep-unsupported", depUnsupported))
 	}
 	if wouldBuild > 0 {
 		buf.WriteString(fmt.Sprintf(" | %d would-build", wouldBuild))

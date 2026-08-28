@@ -6,6 +6,20 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- **Platform exceptions now produce machine-readable `UNSUPPORTED` results
+  instead of false `BUILT` successes.** A selected BUILD front may consist of
+  exactly `echo BUILD_TOOL_UNSUPPORTED:CODE -- skipped`, where `CODE` is a
+  bounded uppercase diagnostic. The executor recognizes the entire record
+  without invoking a shell, omits it from the success cache, and reports the
+  stable reason. Dependents stop as `DEP-UNSUPPORTED` with
+  `DEPENDENCY_UNSUPPORTED`; dry runs preserve the same classification. Mixed,
+  malformed, lowercase, or shell-chained lookalikes remain ordinary commands
+  and cannot acquire exception authority.
+- **Deleting a platform BUILD override now schedules its fallback on that
+  platform.** Platform-plan detection recognizes that an absent
+  `BUILD_windows`, `BUILD_mac`, `BUILD_linux`, or `BUILD_mac_and_linux` changed
+  the selected front, while retaining platform isolation for unrelated lanes.
+
 - **A package can now declare an extra CI toolchain it needs beyond the
   one its own path-bucket language infers.** `inferLanguage` buckets a
   package's `Language` purely by the directory segment right after

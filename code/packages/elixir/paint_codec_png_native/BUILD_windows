@@ -1,1 +1,2 @@
-echo Skipping elixir/paint_codec_png_native on Windows -- ERTS import library not available
+# build-tool: unsupported=ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE
+echo BUILD_TOOL_UNSUPPORTED:ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE -- skipped
