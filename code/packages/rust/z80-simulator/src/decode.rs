@@ -13,9 +13,9 @@
 //! ```text
 //! decode(first_byte, fetch)
 //!   ├─ first_byte == 0xCB → decode_cb    (bit manipulation / extended rotate-shift)
-//!   ├─ first_byte == 0xED → decode_ed    (NOT PORTED — see module docs below)
-//!   ├─ first_byte == 0xDD → decode_ddfd(use_ix=true)   (IX basics)
-//!   ├─ first_byte == 0xFD → decode_ddfd(use_ix=false)  (IY basics)
+//!   ├─ first_byte == 0xED → decode_ed    (extended arithmetic / block / I/O)
+//!   ├─ first_byte == 0xDD → decode_ddfd(use_ix=true)   (IX + DDCB)
+//!   ├─ first_byte == 0xFD → decode_ddfd(use_ix=false)  (IY + FDCB)
 //!   └─ otherwise          → decode_main  (base 8080-compatible set + the
 //!                                          handful of Z80-only unprefixed
 //!                                          opcodes: EX AF,AF' / EXX / DJNZ / JR*)
@@ -31,27 +31,18 @@
 //! precisely the 8080's undefined/reserved opcode slots for these new
 //! instructions, so a stock 8080 program never collides with them.
 //!
-//! # `ED`-prefix: deliberately NOT ported in this v0.1.0
+//! # Prefixed opcode spaces
 //!
 //! The `ED`-prefix opcode space covers 16-bit `ADC`/`SBC HL,rp`, the
 //! block-transfer/compare/I-O instruction families (`LDIR`/`LDDR`/
 //! `CPIR`/`CPDR`/`INIR`/`INDR`/`OTIR`/`OTDR`, plus their non-repeating
 //! `LDI`/`LDD`/`CPI`/`CPD`/`INI`/`IND`/`OUTI`/`OUTD` siblings), `LD A,I`/
 //! `LD A,R`/`LD I,A`/`LD R,A`, `NEG`, `RETN`/`RETI`, and interrupt-mode
-//! selection (`IM 0`/`IM 1`/`IM 2`) — see
-//! `code/packages/python/z80-simulator/src/z80_simulator/simulator.py`'s
-//! `_exec_ed` (~190 lines) for the full reference implementation.  None
-//! of it is reachable from the minimal-viable `z80-backend` (`const_*` /
-//! `ret_*` only), and porting the block-op family in particular pulls in
-//! a genuinely different control-flow shape (auto-repeating instructions
-//! that re-execute themselves until BC/the compare condition is
-//! exhausted) that doesn't fit this crate's per-opcode `execute` model
-//! without real design work.  `decode_ed` here fetches (and discards) the
-//! second opcode byte — mirroring real Z80 fetch timing — and returns
-//! `"undefined"`, which `execute.rs` treats as a fail-closed halt, same
-//! as any genuinely undefined byte.  A future increment can port `ED`
-//! following the same pattern this module already establishes for `CB`
-//! and `DD`/`FD`.
+//! selection (`IM 0`/`IM 1`/`IM 2`). `DD`/`FD` replace HL with IX/IY
+//! across loads, arithmetic, stack, branch, and displacement-addressed
+//! forms; `DDCB`/`FDCB` apply rotate/shift and bit operations to indexed
+//! memory. All forms implemented by the Python reference are decoded;
+//! genuinely unassigned prefixed bytes remain `"undefined"`.
 
 use crate::opcodes::*;
 use std::collections::HashMap;
@@ -142,10 +133,7 @@ fn decode_main(opcode: u8, fetch: &mut dyn FnMut() -> u8) -> DecodeResult {
                 JR_NC => COND_NC,
                 _ => COND_C,
             };
-            let fields = HashMap::from([
-                ("cond".to_string(), cond as i32),
-                ("e".to_string(), e),
-            ]);
+            let fields = HashMap::from([("cond".to_string(), cond as i32), ("e".to_string(), e)]);
             return result("jr_cond", fields, raw);
         }
         _ => {}
@@ -247,25 +235,57 @@ fn decode_group00(
     }
 
     match opcode {
-        LD_BC_A => result("ld_rp_a", HashMap::from([("pair".to_string(), PAIR_BC as i32)]), raw.clone()),
-        LD_DE_A => result("ld_rp_a", HashMap::from([("pair".to_string(), PAIR_DE as i32)]), raw.clone()),
-        LD_A_BC => result("ld_a_rp", HashMap::from([("pair".to_string(), PAIR_BC as i32)]), raw.clone()),
-        LD_A_DE => result("ld_a_rp", HashMap::from([("pair".to_string(), PAIR_DE as i32)]), raw.clone()),
+        LD_BC_A => result(
+            "ld_rp_a",
+            HashMap::from([("pair".to_string(), PAIR_BC as i32)]),
+            raw.clone(),
+        ),
+        LD_DE_A => result(
+            "ld_rp_a",
+            HashMap::from([("pair".to_string(), PAIR_DE as i32)]),
+            raw.clone(),
+        ),
+        LD_A_BC => result(
+            "ld_a_rp",
+            HashMap::from([("pair".to_string(), PAIR_BC as i32)]),
+            raw.clone(),
+        ),
+        LD_A_DE => result(
+            "ld_a_rp",
+            HashMap::from([("pair".to_string(), PAIR_DE as i32)]),
+            raw.clone(),
+        ),
         LD_NN_HL => {
             let addr = fetch_word(raw, fetch);
-            result("ld_nn_hl", HashMap::from([("addr".to_string(), addr as i32)]), raw.clone())
+            result(
+                "ld_nn_hl",
+                HashMap::from([("addr".to_string(), addr as i32)]),
+                raw.clone(),
+            )
         }
         LD_HL_NN => {
             let addr = fetch_word(raw, fetch);
-            result("ld_hl_nn", HashMap::from([("addr".to_string(), addr as i32)]), raw.clone())
+            result(
+                "ld_hl_nn",
+                HashMap::from([("addr".to_string(), addr as i32)]),
+                raw.clone(),
+            )
         }
         LD_NN_A => {
             let addr = fetch_word(raw, fetch);
-            result("ld_nn_a", HashMap::from([("addr".to_string(), addr as i32)]), raw.clone())
+            result(
+                "ld_nn_a",
+                HashMap::from([("addr".to_string(), addr as i32)]),
+                raw.clone(),
+            )
         }
         LD_A_NN => {
             let addr = fetch_word(raw, fetch);
-            result("ld_a_nn", HashMap::from([("addr".to_string(), addr as i32)]), raw.clone())
+            result(
+                "ld_a_nn",
+                HashMap::from([("addr".to_string(), addr as i32)]),
+                raw.clone(),
+            )
         }
         RLCA => result("rlca", HashMap::new(), raw.clone()),
         RRCA => result("rrca", HashMap::new(), raw.clone()),
@@ -336,11 +356,19 @@ fn decode_group11(
     }
     if opcode == JP {
         let addr = fetch_word(raw, fetch);
-        return result("jp", HashMap::from([("addr".to_string(), addr as i32)]), raw.clone());
+        return result(
+            "jp",
+            HashMap::from([("addr".to_string(), addr as i32)]),
+            raw.clone(),
+        );
     }
     if opcode == CALL {
         let addr = fetch_word(raw, fetch);
-        return result("call", HashMap::from([("addr".to_string(), addr as i32)]), raw.clone());
+        return result(
+            "call",
+            HashMap::from([("addr".to_string(), addr as i32)]),
+            raw.clone(),
+        );
     }
 
     // ALU immediate — 11ooo110
@@ -366,11 +394,19 @@ fn decode_group11(
         JP_HL => result("jp_hl", HashMap::new(), raw.clone()),
         IN => {
             let port = fetch_one(raw, fetch);
-            result("in", HashMap::from([("port".to_string(), port as i32)]), raw.clone())
+            result(
+                "in",
+                HashMap::from([("port".to_string(), port as i32)]),
+                raw.clone(),
+            )
         }
         OUT => {
             let port = fetch_one(raw, fetch);
-            result("out", HashMap::from([("port".to_string(), port as i32)]), raw.clone())
+            result(
+                "out",
+                HashMap::from([("port".to_string(), port as i32)]),
+                raw.clone(),
+            )
         }
         EI => result("ei", HashMap::new(), raw.clone()),
         DI => result("di", HashMap::new(), raw.clone()),
@@ -415,39 +451,242 @@ fn decode_cb(fetch: &mut dyn FnMut() -> u8) -> DecodeResult {
 }
 
 // ===========================================================================
-// ED-prefix — NOT PORTED (see module docs above)
+// ED-prefix — extended arithmetic, transfer, I/O, and interrupt operations
 // ===========================================================================
 
 fn decode_ed(fetch: &mut dyn FnMut() -> u8) -> DecodeResult {
     let mut raw = vec![ED_PREFIX];
     let op = fetch_one(&mut raw, fetch);
+    let register = (op >> 3) & 0x07;
+    let pair = (op >> 4) & 0x03;
+
+    if op & 0xCF == 0x4B {
+        let address = fetch_word(&mut raw, fetch);
+        return result(
+            "ed_ld_rp_mem",
+            HashMap::from([
+                ("pair".to_string(), pair as i32),
+                ("addr".to_string(), address as i32),
+            ]),
+            raw,
+        );
+    }
+    if op & 0xCF == 0x43 {
+        let address = fetch_word(&mut raw, fetch);
+        return result(
+            "ed_ld_mem_rp",
+            HashMap::from([
+                ("pair".to_string(), pair as i32),
+                ("addr".to_string(), address as i32),
+            ]),
+            raw,
+        );
+    }
+    if op & 0xCF == 0x4A {
+        return result(
+            "ed_adc_hl_rp",
+            HashMap::from([("pair".to_string(), pair as i32)]),
+            raw,
+        );
+    }
+    if op & 0xCF == 0x42 {
+        return result(
+            "ed_sbc_hl_rp",
+            HashMap::from([("pair".to_string(), pair as i32)]),
+            raw,
+        );
+    }
+    if op & 0xC7 == 0x40 {
+        return result(
+            "ed_in_r_c",
+            HashMap::from([("reg".to_string(), register as i32)]),
+            raw,
+        );
+    }
+    if op & 0xC7 == 0x41 {
+        return result(
+            "ed_out_c_r",
+            HashMap::from([("reg".to_string(), register as i32)]),
+            raw,
+        );
+    }
+
+    let mnemonic = match op {
+        0x57 => "ed_ld_a_i",
+        0x5F => "ed_ld_a_r",
+        0x47 => "ed_ld_i_a",
+        0x4F => "ed_ld_r_a",
+        0x44 => "ed_neg",
+        0x46 => "ed_im0",
+        0x56 => "ed_im1",
+        0x5E => "ed_im2",
+        0x4D => "ed_reti",
+        0x45 => "ed_retn",
+        0x6F => "ed_rld",
+        0x67 => "ed_rrd",
+        0xA0 => "ed_ldi",
+        0xA8 => "ed_ldd",
+        0xB0 => "ed_ldir",
+        0xB8 => "ed_lddr",
+        0xA1 => "ed_cpi",
+        0xA9 => "ed_cpd",
+        0xB1 => "ed_cpir",
+        0xB9 => "ed_cpdr",
+        0xA2 => "ed_ini",
+        0xAA => "ed_ind",
+        0xB2 => "ed_inir",
+        0xBA => "ed_indr",
+        0xA3 => "ed_outi",
+        0xAB => "ed_outd",
+        0xB3 => "ed_otir",
+        0xBB => "ed_otdr",
+        _ => "undefined",
+    };
     result(
-        "undefined",
+        mnemonic,
         HashMap::from([("opcode".to_string(), op as i32)]),
         raw,
     )
 }
 
 // ===========================================================================
-// DD/FD-prefix — IX/IY basics (v0.1.0 scope: LD rp,nn and INC rp only)
+// DD/FD-prefix — IX/IY indexed operations, including DDCB/FDCB
 // ===========================================================================
 
 fn decode_ddfd(use_ix: bool, fetch: &mut dyn FnMut() -> u8) -> DecodeResult {
     let mut raw = vec![if use_ix { DD_PREFIX } else { FD_PREFIX }];
     let op = fetch_one(&mut raw, fetch);
+    let index = use_ix as i32;
+    let index_field = || ("index".to_string(), index);
 
-    // LD IX,nn / LD IY,nn — 0x21 (same second byte as LXI H on the base
-    // 8080-compatible set; the DD/FD prefix redirects HL → IX/IY).
-    if op == 0x21 {
-        let imm = fetch_word(&mut raw, fetch);
-        let mnemonic = if use_ix { "ld_ix_nn" } else { "ld_iy_nn" };
-        return result(mnemonic, HashMap::from([("imm".to_string(), imm as i32)]), raw);
+    if op == CB_PREFIX {
+        let displacement = fetch_signed(&mut raw, fetch);
+        let subop = fetch_one(&mut raw, fetch);
+        let fields = HashMap::from([
+            index_field(),
+            ("d".to_string(), displacement),
+            ("op".to_string(), ((subop >> 3) & 0x07) as i32),
+            ("reg".to_string(), (subop & 0x07) as i32),
+            ("bit".to_string(), ((subop >> 3) & 0x07) as i32),
+        ]);
+        let mnemonic = if subop < 0x40 {
+            "index_cb_rot"
+        } else if subop < 0x80 {
+            "index_cb_bit"
+        } else if subop < 0xC0 {
+            "index_cb_res"
+        } else {
+            "index_cb_set"
+        };
+        return result(mnemonic, fields, raw);
     }
 
-    // INC IX / INC IY — 0x23.
-    if op == 0x23 {
-        let mnemonic = if use_ix { "inc_ix" } else { "inc_iy" };
-        return result(mnemonic, HashMap::new(), raw);
+    if op == 0x36 {
+        let displacement = fetch_signed(&mut raw, fetch);
+        let immediate = fetch_one(&mut raw, fetch);
+        return result(
+            "index_ld_mem_n",
+            HashMap::from([
+                index_field(),
+                ("d".to_string(), displacement),
+                ("imm".to_string(), immediate as i32),
+            ]),
+            raw,
+        );
+    }
+
+    if (0x40..=0x7F).contains(&op) && op != HALT {
+        let destination = (op >> 3) & 0x07;
+        let source = op & 0x07;
+        if source == REG_M || destination == REG_M {
+            let displacement = fetch_signed(&mut raw, fetch);
+            return result(
+                if source == REG_M {
+                    "index_ld_r_mem"
+                } else {
+                    "index_ld_mem_r"
+                },
+                HashMap::from([
+                    index_field(),
+                    ("d".to_string(), displacement),
+                    ("dst".to_string(), destination as i32),
+                    ("src".to_string(), source as i32),
+                ]),
+                raw,
+            );
+        }
+    }
+
+    if op == 0x21 {
+        let imm = fetch_word(&mut raw, fetch);
+        return result(
+            "index_ld_nn",
+            HashMap::from([index_field(), ("imm".to_string(), imm as i32)]),
+            raw,
+        );
+    }
+
+    if matches!(op, 0x2A | 0x22) {
+        let address = fetch_word(&mut raw, fetch);
+        return result(
+            if op == 0x2A {
+                "index_ld_from_mem"
+            } else {
+                "index_ld_to_mem"
+            },
+            HashMap::from([index_field(), ("addr".to_string(), address as i32)]),
+            raw,
+        );
+    }
+
+    if op & 0xCF == 0x09 {
+        return result(
+            "index_add_rp",
+            HashMap::from([
+                index_field(),
+                ("pair".to_string(), ((op >> 4) & 0x03) as i32),
+            ]),
+            raw,
+        );
+    }
+
+    if matches!(op, 0x23 | 0x2B | 0xF9 | 0xE5 | 0xE1 | 0xE9 | 0xE3) {
+        let mnemonic = match op {
+            0x23 => "index_inc",
+            0x2B => "index_dec",
+            0xF9 => "index_ld_sp",
+            0xE5 => "index_push",
+            0xE1 => "index_pop",
+            0xE9 => "index_jp",
+            _ => "index_ex_sp",
+        };
+        return result(mnemonic, HashMap::from([index_field()]), raw);
+    }
+
+    if matches!(op, 0x34 | 0x35) {
+        let displacement = fetch_signed(&mut raw, fetch);
+        return result(
+            if op == 0x34 {
+                "index_inc_mem"
+            } else {
+                "index_dec_mem"
+            },
+            HashMap::from([index_field(), ("d".to_string(), displacement)]),
+            raw,
+        );
+    }
+
+    if (0x86..=0xBE).contains(&op) && op & 0x07 == REG_M {
+        let displacement = fetch_signed(&mut raw, fetch);
+        return result(
+            "index_alu_mem",
+            HashMap::from([
+                index_field(),
+                ("d".to_string(), displacement),
+                ("op".to_string(), ((op >> 3) & 0x07) as i32),
+            ]),
+            raw,
+        );
     }
 
     result(
@@ -556,17 +795,28 @@ mod tests {
     #[test]
     fn decode_ddfd_ix_iy_basics() {
         let d = decode_bytes(&[0xDD, 0x21, 0x34, 0x12]);
-        assert_eq!(d.mnemonic, "ld_ix_nn");
+        assert_eq!(d.mnemonic, "index_ld_nn");
+        assert_eq!(d.fields["index"], 1);
         assert_eq!(d.fields["imm"], 0x1234);
 
         let d = decode_bytes(&[0xFD, 0x23]);
-        assert_eq!(d.mnemonic, "inc_iy");
+        assert_eq!(d.mnemonic, "index_inc");
+        assert_eq!(d.fields["index"], 0);
+
+        let d = decode_bytes(&[0xDD, 0xCB, 0xFE, 0x00]);
+        assert_eq!(d.mnemonic, "index_cb_rot");
+        assert_eq!(d.fields["d"], -2);
     }
 
     #[test]
-    fn decode_ed_not_ported_is_undefined() {
-        let d = decode_bytes(&[0xED, 0x57]); // LD A,I on real hardware
-        assert_eq!(d.mnemonic, "undefined");
+    fn decode_ed_families_and_undefined_space() {
+        assert_eq!(decode_bytes(&[0xED, 0x57]).mnemonic, "ed_ld_a_i");
+        let load = decode_bytes(&[0xED, 0x5B, 0x34, 0x12]);
+        assert_eq!(load.mnemonic, "ed_ld_rp_mem");
+        assert_eq!(load.fields["pair"], 1);
+        assert_eq!(load.fields["addr"], 0x1234);
+        assert_eq!(decode_bytes(&[0xED, 0xB0]).mnemonic, "ed_ldir");
+        assert_eq!(decode_bytes(&[0xED, 0x00]).mnemonic, "undefined");
     }
 
     #[test]

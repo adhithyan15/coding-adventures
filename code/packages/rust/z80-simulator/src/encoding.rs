@@ -76,34 +76,42 @@ pub fn encode_dec_r(reg: u8) -> u8 {
     0b00_000_101 | ((reg & 0x07) << 3)
 }
 
-/// `LD (BC),A` / `LD (DE),A` — memory[rp] ← A.  Only `PAIR_BC`/`PAIR_DE`
+/// `LD (BC),A` / `LD (DE),A` — `memory[rp]` ← A.  Only `PAIR_BC`/`PAIR_DE`
 /// are valid.  Zilog's name for 8080's `STAX`.
 pub fn encode_ld_rp_a(pair: u8) -> u8 {
-    if pair == PAIR_DE { LD_DE_A } else { LD_BC_A }
+    if pair == PAIR_DE {
+        LD_DE_A
+    } else {
+        LD_BC_A
+    }
 }
 
-/// `LD A,(BC)` / `LD A,(DE)` — A ← memory[rp].  Only `PAIR_BC`/`PAIR_DE`
+/// `LD A,(BC)` / `LD A,(DE)` — A ← `memory[rp]`.  Only `PAIR_BC`/`PAIR_DE`
 /// are valid.  Zilog's name for 8080's `LDAX`.
 pub fn encode_ld_a_rp(pair: u8) -> u8 {
-    if pair == PAIR_DE { LD_A_DE } else { LD_A_BC }
+    if pair == PAIR_DE {
+        LD_A_DE
+    } else {
+        LD_A_BC
+    }
 }
 
-/// `LD (nn),HL` — memory[nn] ← L; memory[nn+1] ← H.  Zilog's `SHLD`.
+/// `LD (nn),HL` — `memory[nn]` ← L; `memory[nn+1]` ← H.  Zilog's `SHLD`.
 pub fn encode_ld_nn_hl(addr: u16) -> Vec<u8> {
     vec![LD_NN_HL, (addr & 0xFF) as u8, (addr >> 8) as u8]
 }
 
-/// `LD HL,(nn)` — L ← memory[nn]; H ← memory[nn+1].  Zilog's `LHLD`.
+/// `LD HL,(nn)` — L ← `memory[nn]`; H ← `memory[nn+1]`.  Zilog's `LHLD`.
 pub fn encode_ld_hl_nn(addr: u16) -> Vec<u8> {
     vec![LD_HL_NN, (addr & 0xFF) as u8, (addr >> 8) as u8]
 }
 
-/// `LD (nn),A` — memory[nn] ← A.  Zilog's `STA`.
+/// `LD (nn),A` — `memory[nn]` ← A.  Zilog's `STA`.
 pub fn encode_ld_nn_a(addr: u16) -> Vec<u8> {
     vec![LD_NN_A, (addr & 0xFF) as u8, (addr >> 8) as u8]
 }
 
-/// `LD A,(nn)` — A ← memory[nn].  Zilog's `LDA`.
+/// `LD A,(nn)` — A ← `memory[nn]`.  Zilog's `LDA`.
 pub fn encode_ld_a_nn(addr: u16) -> Vec<u8> {
     vec![LD_A_NN, (addr & 0xFF) as u8, (addr >> 8) as u8]
 }
@@ -111,7 +119,7 @@ pub fn encode_ld_a_nn(addr: u16) -> Vec<u8> {
 /// `LD dst,src` — register-to-register copy (either side may be `(HL)`).
 /// Bit pattern: `01_ddd_sss`.  `LD (HL),(HL)` (`0x76`) is reserved for
 /// `HALT`; this function does not special-case it — callers should use
-/// [`HALT`](crate::opcodes::HALT) directly.  Zilog's name for 8080's
+/// [`HALT`] directly.  Zilog's name for 8080's
 /// `MOV`.
 pub fn encode_ld_r_r(dst: u8, src: u8) -> u8 {
     0b01_000_000 | ((dst & 0x07) << 3) | (src & 0x07)
@@ -182,12 +190,12 @@ pub fn encode_pop(pair: u8) -> u8 {
     0b11_000_001 | ((pair & 0x03) << 4)
 }
 
-/// `IN A,(n)` — A ← input_port[n].
+/// `IN A,(n)` — A ← `input_port[n]`.
 pub fn encode_in(port: u8) -> Vec<u8> {
     vec![IN, port]
 }
 
-/// `OUT (n),A` — output_port[n] ← A.
+/// `OUT (n),A` — `output_port[n]` ← A.
 pub fn encode_out(port: u8) -> Vec<u8> {
     vec![OUT, port]
 }
@@ -285,7 +293,7 @@ pub fn encode_set(bit: u8, reg: u8) -> Vec<u8> {
 }
 
 // ===========================================================================
-// DD/FD-prefixed encoders — IX/IY basics (v0.1.0 scope: LD/INC only)
+// DD/FD-prefixed convenience encoders
 // ===========================================================================
 
 /// `LD IX,nn` — load a 16-bit immediate into IX.

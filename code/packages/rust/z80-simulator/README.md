@@ -45,20 +45,27 @@ two encoders.
 - Relative jumps: `DJNZ e`, `JR e` + 4 conditional forms
 - `CB`-prefix: `RLC`/`RRC`/`RL`/`RR`/`SLA`/`SRA`/`SLL`(undocumented)/`SRL`
   and `BIT`/`RES`/`SET` against any of the 8 `r`-coded operands
-- `DD`/`FD`-prefix (IX/IY basics only): `LD IX,nn`/`LD IY,nn`,
-  `INC IX`/`INC IY`
+- `ED`-prefix: 16-bit `ADC`/`SBC HL,rp` and loads, `NEG`, `RLD`/`RRD`,
+  I/R-register transfers, `RETI`/`RETN`, interrupt-mode selection, and
+  all transfer/compare/input/output block families
+- `DD`/`FD`-prefix: IX/IY direct loads, arithmetic, stack and control-flow
+  forms, plus displacement-addressed loads, INC/DEC, and ALU operations
+- `DDCB`/`FDCB`: indexed rotate/shift, `BIT`, `RES`, and `SET`, including
+  the memory-plus-register result forms
 
-**Deliberately NOT ported** (v0.1.0 scope cut — see `decode.rs` module
-docs for the rationale): the entire `ED`-prefix opcode space — 16-bit
-`ADC HL,rp`/`SBC HL,rp`, the block-transfer/compare/I-O instruction
-families (`LDIR`/`LDDR`/`CPIR`/`CPDR`/`INIR`/`INDR`/`OTIR`/`OTDR` and
-their non-repeating siblings), `LD A,I`/`LD A,R`/`LD I,A`/`LD R,A`, `NEG`,
-`RETN`/`RETI`, and interrupt-mode selection. Every `ED`-prefixed opcode
-decodes to `"undefined"`, which the executor treats as a fail-closed
-halt — never silently executing garbage. Full displacement addressing
-through IX/IY (`LD r,(IX+d)`, ALU-via-`(IX+d)`, `LD (IX+d),n`) is also
-not ported — only the unconditional `LD IX/IY,nn` and `INC IX/IY` forms
-the "IX/IY basics" scope calls for.
+Genuinely unassigned prefixed bytes return a typed `UnknownOpcode` error
+without changing state.
+
+## Checked lifecycle
+
+- The architectural address space is always exactly 64 KiB; loads wrap at
+  `0xFFFF`, and images larger than 64 KiB are rejected atomically.
+- `snapshot` and `restore` own every register, flag, memory byte, port
+  latch, interrupt flip-flop, interrupt mode, PC, and halt state.
+- Successful steps return complete before/after traces. Bounded runs are
+  transactional on error.
+- Input/output port access is bounds checked; maskable interrupt modes
+  0/1/2 and NMI implement the architectural stack contract.
 
 ## Architecture
 
@@ -79,9 +86,10 @@ simulator.rs -- top-level Z80Simulator with fetch-decode-execute
 - **An alternate register bank** stored as raw byte values (`Registers`
   has `a2`/`f2`/`b2`/…) rather than unpacked flags — it's opaque to every
   instruction except `EX AF,AF'`/`EXX`.
-- **Fail-closed halt on `ED`-prefixed and undefined opcodes** — no
-  exception channel through `step() -> String`, matching the fail-closed
-  convention every simulator in this workspace uses.
+- **Typed, atomic undefined-opcode handling** rather than silent no-ops,
+  partial execution, or panics.
+- **Full-state Python differential** across all defined opcode spaces:
+  252 base, 256 CB, 60 ED, 40 DD, 40 FD, 256 DDCB, and 256 FDCB vectors.
 
 ## Usage
 
@@ -96,6 +104,7 @@ sim.run_instructions(&[
     encode_ld_a_n(2),
     vec![encode_alu_reg(ALU_ADD, REG_B)],
     vec![HALT],
-]);
+], 10)?;
 assert_eq!(sim.regs.a, 3);
+# Ok::<(), z80_simulator::Z80Error>(())
 ```

@@ -58,8 +58,8 @@ fn canonical_const_42_then_ret_actually_executes_to_a_equals_42() {
     let bytes = compile(&ctx("fortytwo", &[], "i64"), &cir).expect("lowering");
 
     let mut sim = Z80Simulator::new(65536);
-    sim.load_program(&bytes);
-    let result = sim.run_loaded_with_limit(10);
+    sim.load_program(&bytes).unwrap();
+    let result = sim.run_loaded_with_limit(10).unwrap();
     assert!(result.halted);
     assert_eq!(result.steps, 2, "LD A,42 then HALT is exactly two steps");
     assert_eq!(sim.regs.a, 42);
@@ -93,8 +93,7 @@ fn z80_backend_matches_intel8080_backend_byte_for_byte() {
     let cir = const_42_ret_cir();
     let z80_bytes = compile(&ctx("fortytwo", &[], "i64"), &cir).expect("z80 lowering");
     assert_eq!(
-        z80_bytes,
-        INTEL8080_BACKEND_CANONICAL_CONST_42_RET,
+        z80_bytes, INTEL8080_BACKEND_CANONICAL_CONST_42_RET,
         "z80-backend must emit the same bytes intel8080-backend emits for \
          const 42; ret -- both chips share the same LD A,n / HALT (MVI A,n / HLT) \
          encoding for this minimal-viable subset"
@@ -141,7 +140,12 @@ fn ret_void_alone_emits_just_halt() {
 #[test]
 fn const_bool_true() {
     let cir = vec![
-        ci("const_bool", Some("b"), vec![CIROperand::Bool(true)], "bool"),
+        ci(
+            "const_bool",
+            Some("b"),
+            vec![CIROperand::Bool(true)],
+            "bool",
+        ),
         ci("ret_bool", None, vec![CIROperand::Var("b".into())], "bool"),
     ];
     let bytes = compile(&ctx("btrue", &[], "bool"), &cir).expect("lowering");
@@ -193,11 +197,15 @@ fn const_value_equal_to_halt_opcode_byte_is_not_misread() {
         ci("ret_i64", None, vec![CIROperand::Var("v".into())], "i64"),
     ];
     let bytes = compile(&ctx("halt_valued_const", &[], "i64"), &cir).expect("lowering");
-    assert_eq!(bytes, vec![0x3E, 0x76, 0x76], "LD A,0x76 then the real HALT");
+    assert_eq!(
+        bytes,
+        vec![0x3E, 0x76, 0x76],
+        "LD A,0x76 then the real HALT"
+    );
 
     let mut sim = Z80Simulator::new(65536);
-    sim.load_program(&bytes);
-    let result = sim.run_loaded_with_limit(10);
+    sim.load_program(&bytes).unwrap();
+    let result = sim.run_loaded_with_limit(10).unwrap();
     assert!(result.halted);
     assert_eq!(result.steps, 2);
     assert_eq!(sim.regs.a, 0x76);
@@ -217,8 +225,14 @@ fn dangling_const_with_no_ret_still_gets_a_real_terminator() {
     assert_eq!(bytes, vec![0x3E, 0x07, 0x76]);
 
     let mut sim = Z80Simulator::new(65536);
-    sim.load_program(&bytes);
-    let result = sim.run_loaded_with_limit(1000);
-    assert!(result.halted, "program should halt, not run out the step budget");
-    assert!(result.steps < 1000, "should halt well before the step limit");
+    sim.load_program(&bytes).unwrap();
+    let result = sim.run_loaded_with_limit(1000).unwrap();
+    assert!(
+        result.halted,
+        "program should halt, not run out the step budget"
+    );
+    assert!(
+        result.steps < 1000,
+        "should halt well before the step limit"
+    );
 }
