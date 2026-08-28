@@ -9859,9 +9859,13 @@ two-package affected build closure. The facade adds no discovery, Git,
 filesystem, process, environment, network, execution, credential, secret,
 dependency, or logging authority.
 
-After lifecycle reconciliation and selection, the complete graph contains
-566 owners: 168 merged, 397 pending, and exactly one in-progress owner. There
-is no active parity PR.
+After publication, the complete graph contains 566 owners: 168 merged, 397
+pending, and exactly one `pr-open` owner. Ready-for-review PR #13453 is the
+sole active parity PR at validated head
+`814cb3c1b3d616f8687e9a06a8865541b41093f4`. GitHub reports it mergeable;
+required CI and CodeQL checks are queued, so auto-merge remains disabled until
+every required check is terminal and acceptable and the branch remains
+conflict-free.
 
 ## Autonomous Loop Protocol
 
