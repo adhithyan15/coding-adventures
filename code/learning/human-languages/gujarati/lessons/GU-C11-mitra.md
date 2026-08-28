@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-LEX-ROTLI, GU-GRAMMAR-GENDER-NOT-BY-ENDING, GU-PHRASE-MEHERBANI-KARINE]
 introduces:
   knowledge: [GU-LEX-MITRA, GU-ETYMON-MITRA-BIND]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [GU-CULTURE-MITRA-MEHERBANI-TWO-BORROWING-ROUTES-01]
 practises:
   knowledge: [GU-LEX-MITRA, GU-ETYMON-MITRA-BIND, GU-LEX-ROTLI, GU-PHRASE-MEHERBANI-KARINE]
 skills: [listening, speaking, reading]

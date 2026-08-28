@@ -17,7 +17,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:e6cd2e676f88d93c",
+    "sourceHash": "fnv1a64:5019b2387a064ceb",
     "delivery": "script",
     "authored": "pen",
     "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."

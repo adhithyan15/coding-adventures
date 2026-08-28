@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Last Four Shown Forms",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c54e0ac772284caa",
+  "sourceHash": "fnv1a64:f46391a772373e6d",
   "lessons": [
     {
       "id": "GU-W07-uu-matra",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ffee50d9e01cdbb0",
+      "sourceHash": "fnv1a64:f12aec679f9944a9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -145,7 +145,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aff91318fbfc9cf3",
+      "sourceHash": "fnv1a64:3ae2e9db8791407c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -268,7 +268,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:067460faaf9b2afe",
+      "sourceHash": "fnv1a64:2c0ccaad8434a0e1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -391,7 +391,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1dd122aff118d3e0",
+      "sourceHash": "fnv1a64:9775f65aa5aa86f3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -514,7 +514,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:49825da0c4e1ecf9",
+      "sourceHash": "fnv1a64:f95ba9119f715c02",
       "notice": {
         "modality": "pen",
         "needs": [

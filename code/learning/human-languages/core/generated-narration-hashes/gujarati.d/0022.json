@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 22,
-  "sourceHash": "fnv1a64:603bce1723ab042d",
+  "sourceHash": "fnv1a64:d0d0fc5407485e99",
   "lessonIds": [
     "GU-R18-how-are-you-r4",
     "GU-R18-majaa-r4",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch22.txt",
   "json": "gujarati/narration/ch22.json",
   "textHash": "fnv1a64:16414927046a1589",
-  "jsonHash": "fnv1a64:b0aec4c4968905e2",
+  "jsonHash": "fnv1a64:03a6081bd99cbf4e",
   "findings": []
 }

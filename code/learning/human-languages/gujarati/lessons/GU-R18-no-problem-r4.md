@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-CONCEPT-C01-AABHAAR-01, GU-CONCEPT-C01-HAANAA-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-CONCEPT-C01-AABHAAR-01, GU-CONCEPT-C01-HAANAA-01, GU-CONCEPT-C03-VANDHONAHI-01]
 skills: [listening, speaking, reading, writing]

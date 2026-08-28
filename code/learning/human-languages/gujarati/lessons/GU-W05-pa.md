@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-SCRIPT-LA-01]
 introduces:
   knowledge: [GU-SCRIPT-PA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-SCRIPT-LA-01, GU-SCRIPT-PA-01]
 skills: [reading, writing]

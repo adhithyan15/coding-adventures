@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Fourth Return: The Introduction",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d117be795acf1a28",
+  "sourceHash": "fnv1a64:4809d62940353d25",
   "lessons": [
     {
       "id": "GU-R16-naam-r4",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:f305c9a7e5d7e81b",
+      "sourceHash": "fnv1a64:d0b8bf1c3fbaccfc",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:484988c0bbc01a28",
+      "sourceHash": "fnv1a64:ade5b3fe0a1c9779",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:362bec01a950adfd",
+      "sourceHash": "fnv1a64:9f2b4ec29f551ad0",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -389,7 +389,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:5ff34c5e1dbb5361",
+      "sourceHash": "fnv1a64:77de755d6a454e26",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:c181c7ca33f482bb",
+      "sourceHash": "fnv1a64:9f4fa5a43c7c2060",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -641,7 +641,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:523bedbc9d901429",
+      "sourceHash": "fnv1a64:215e9e6249845f9e",
       "notice": {
         "modality": "pen",
         "needs": [],

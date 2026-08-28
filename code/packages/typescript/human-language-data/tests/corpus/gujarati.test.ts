@@ -6,12 +6,21 @@ import { measureContinuity, REINFORCEMENT_WINDOWS } from "../../src/continuity.j
 import { defaultCurriculumRoot, loadTrackChapters, loadTrackLessons } from "../../src/loader.js";
 import {
   expectLanguageContinuity,
+  expectLanguageLessonBudgets,
   expectLanguageModality,
   languageWritingStages,
 } from "./assert-language-corpus.js";
 
 it("pins Gujarati continuity", () => expectLanguageContinuity("gujarati"));
 it("pins Gujarati modality", () => expectLanguageModality("gujarati"));
+it("pins Gujarati lesson-content budgets", () =>
+  expectLanguageLessonBudgets("gujarati", {
+    lessons: 165,
+    idioms: 12,
+    senses: 6,
+    cultureClaims: 15,
+    unitPrefix: "GU",
+  }));
 
 it("keeps the Gujarati session map aligned with canonical chapter and lesson order", () => {
   const ordered = loadTrackLessons("gujarati").sort(

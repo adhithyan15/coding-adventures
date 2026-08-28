@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Four Final Forms Before the Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9fcc9b8434f1dae5",
+  "sourceHash": "fnv1a64:9c162448109bb39e",
   "lessons": [
     {
       "id": "GU-W06-ga",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:278cb90db5cb87cd",
+      "sourceHash": "fnv1a64:9a1bb6d95afed354",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -144,7 +144,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d88d5f5abb243c89",
+      "sourceHash": "fnv1a64:7dcf84b27c51f958",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -267,7 +267,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fc6d99424a008b3c",
+      "sourceHash": "fnv1a64:985fc4f1d080dea3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -390,7 +390,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a4b263fa7025bd97",
+      "sourceHash": "fnv1a64:1eababbfe1d9fa22",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -513,7 +513,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c9bd1db542ebe210",
+      "sourceHash": "fnv1a64:2e445c37db9733ab",
       "notice": {
         "modality": "pen",
         "needs": [

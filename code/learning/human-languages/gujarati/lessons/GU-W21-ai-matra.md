@@ -20,6 +20,9 @@ requires:
   knowledge: [GU-LEX-PAISA-01]
 introduces:
   knowledge: [GU-SCRIPT-AI-MATRA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-SCRIPT-AI-MATRA-01]
 skills: [reading, writing]

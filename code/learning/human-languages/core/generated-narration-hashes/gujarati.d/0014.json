@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 14,
-  "sourceHash": "fnv1a64:65b447ac53b91c91",
+  "sourceHash": "fnv1a64:b4988b06f6cf7ff2",
   "lessonIds": [
     "GU-C08-vicharvun",
     "GU-C08-samajvun",
@@ -13,6 +13,6 @@
   "text": "gujarati/narration/ch14.txt",
   "json": "gujarati/narration/ch14.json",
   "textHash": "fnv1a64:b5a540ecef074e6c",
-  "jsonHash": "fnv1a64:febc8821d5f5715f",
+  "jsonHash": "fnv1a64:9f27c67d6f946e3c",
   "findings": []
 }

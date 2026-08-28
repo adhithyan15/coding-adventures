@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Friend and Family",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ce5ec58e6b71ac31",
+  "sourceHash": "fnv1a64:921b1f391a4662e7",
   "lessons": [
     {
       "id": "GU-C11-mitra",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:28c4ec59519daba5",
+      "sourceHash": "fnv1a64:a3c22080e5d5220d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d32526f27fdadb1d",
+      "sourceHash": "fnv1a64:9b73483168a8b9ed",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -318,7 +318,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:11b4060d54e7624e",
+      "sourceHash": "fnv1a64:31c4e6eb3c90f067",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -460,7 +460,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1228571199cb2623",
+      "sourceHash": "fnv1a64:5898ee0b7ca29f0a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -616,7 +616,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:07648052f9c25ebb",
+      "sourceHash": "fnv1a64:455bda4b20ba2e9c",
       "notice": {
         "modality": "pen",
         "needs": [

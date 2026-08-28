@@ -17,6 +17,9 @@ requires:
   knowledge: [GU-CONCEPT-C02-SHUN-01]
 introduces:
   knowledge: [GU-CONCEPT-C03-KEM-01]
+introduces_idioms: []
+introduces_senses: [GU-SENSE-KEM-HOW-WHY-01]
+introduces_culture_claims: [GU-CULTURE-KEM-CHHO-EVERYDAY-GUJARATI-HELLO-01]
 practises:
   knowledge: [GU-CONCEPT-C02-SHUN-01, GU-CONCEPT-C03-KEM-01, GU-SCRIPT-BHA-01]
 skills: [listening, speaking, reading, writing]

@@ -19,6 +19,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [GU-LEX-DUKAAN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-DUKAAN-01]
 skills: [listening, speaking]

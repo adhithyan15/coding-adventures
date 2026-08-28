@@ -17,6 +17,9 @@ requires:
   knowledge: [GU-CONCEPT-C04-MALISHUN-01]
 introduces:
   knowledge: [GU-CONCEPT-C04-KAALE-01]
+introduces_idioms: [GU-IDIOM-KAALE-MALISHUN-FAREWELL-01]
+introduces_senses: [GU-SENSE-KAAL-TOMORROW-YESTERDAY-01]
+introduces_culture_claims: []
 practises:
   knowledge: [GU-CONCEPT-C04-KAALE-01, GU-CONCEPT-C04-MALISHUN-01]
 skills: [listening, speaking, reading]

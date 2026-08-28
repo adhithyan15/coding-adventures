@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 26,
-  "sourceHash": "fnv1a64:6e4d80496bca2294",
+  "sourceHash": "fnv1a64:b3a6ee139900c9ae",
   "lessonIds": [
     "GU-C22-hear-shahar",
     "GU-C22-shahar",
@@ -16,6 +16,6 @@
   "text": "gujarati/narration/ch26.txt",
   "json": "gujarati/narration/ch26.json",
   "textHash": "fnv1a64:285f307d2f1a6fc0",
-  "jsonHash": "fnv1a64:682edb051555a4b8",
+  "jsonHash": "fnv1a64:bd9414aa4842e3f1",
   "findings": []
 }

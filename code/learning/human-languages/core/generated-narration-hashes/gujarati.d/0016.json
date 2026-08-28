@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 16,
-  "sourceHash": "fnv1a64:2ccc380f758c3760",
+  "sourceHash": "fnv1a64:0bf4dec709f5fb76",
   "lessonIds": [
     "GU-C10-paani",
     "GU-C10-chaa",
@@ -13,6 +13,6 @@
   "text": "gujarati/narration/ch16.txt",
   "json": "gujarati/narration/ch16.json",
   "textHash": "fnv1a64:b7fcd8fb8bdd1eff",
-  "jsonHash": "fnv1a64:751ee87619564a1e",
+  "jsonHash": "fnv1a64:d8b85369e977aa89",
   "findings": []
 }

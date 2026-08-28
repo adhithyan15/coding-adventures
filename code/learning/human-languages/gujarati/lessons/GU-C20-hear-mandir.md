@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-LEX-BAJAR-01, GU-LEX-GHAR-01]
 introduces:
   knowledge: [GU-LEX-MANDIR-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-MANDIR-01, GU-LEX-BAJAR-01, GU-LEX-GHAR-01]
 skills: [listening, speaking]

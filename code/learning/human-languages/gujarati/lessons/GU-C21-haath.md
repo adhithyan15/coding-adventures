@@ -22,6 +22,9 @@ requires:
   knowledge: [GU-LEX-HAATH-01]
 introduces:
   knowledge: [GU-SCRIPT-HAATH-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-HAATH-01, GU-SCRIPT-HAATH-01, GU-SCRIPT-GHAR-01]
 skills: [listening, speaking, reading, writing]

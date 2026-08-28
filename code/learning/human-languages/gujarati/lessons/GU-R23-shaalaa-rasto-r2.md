@@ -22,6 +22,9 @@ requires:
   knowledge: [GU-LEX-SHAALAA-01, GU-SCRIPT-SHAALAA-01, GU-LEX-RASTO-01, GU-SCRIPT-RASTO-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-SHAALAA-01, GU-SCRIPT-SHAALAA-01, GU-LEX-RASTO-01, GU-SCRIPT-RASTO-01]
 skills: [listening, speaking, reading, writing]

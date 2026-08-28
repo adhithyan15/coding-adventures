@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-SCRIPT-DHA-01, GU-SCRIPT-BHA-01]
 introduces:
   knowledge: [GU-SCRIPT-VOCALIC-R-MATRA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [GU-CULTURE-VOCALIC-R-SANSKRIT-LOAN-REGISTER-01]
 practises:
   knowledge: [GU-SCRIPT-DHA-01, GU-SCRIPT-BHA-01, GU-SCRIPT-VOCALIC-R-MATRA-01]
 skills: [reading, writing]

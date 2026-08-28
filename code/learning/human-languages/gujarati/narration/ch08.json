@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ca09f1aca26a2d3e",
+  "sourceHash": "fnv1a64:715871f2b2727f8e",
   "lessons": [
     {
       "id": "GU-C02-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:beb46eb07dd9f68c",
+      "sourceHash": "fnv1a64:556eaa0d16698b89",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d97c3efe30e10e86",
+      "sourceHash": "fnv1a64:6687990baa692033",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -283,7 +283,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:991f33c887175894",
+      "sourceHash": "fnv1a64:816e67d1d4112707",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -417,7 +417,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17989ec60295c9fb",
+      "sourceHash": "fnv1a64:0a9cd69762f34128",
       "notice": null,
       "blocks": [
         {
@@ -522,7 +522,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8b436bb1d9bfbc82",
+      "sourceHash": "fnv1a64:5c59fc0203ae4ca2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -645,7 +645,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bc27e959824b61a5",
+      "sourceHash": "fnv1a64:e574a3c1dbb87c1d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -797,7 +797,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dd3d93a107cc2793",
+      "sourceHash": "fnv1a64:f88a097b5acb1bd6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -949,7 +949,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8a09dc071ea777f1",
+      "sourceHash": "fnv1a64:5e83dfbe5eda55c6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1101,7 +1101,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:ca8371b44d9ad60a",
+      "sourceHash": "fnv1a64:24e96bac2110a0d5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1232,7 +1232,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9e8d48880696f41",
+      "sourceHash": "fnv1a64:4a3d0967ebea7d74",
       "notice": null,
       "blocks": [
         {

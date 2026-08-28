@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Hand and Money Join the Map",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3f214bb0d11b178c",
+  "sourceHash": "fnv1a64:a84502cbea15a30b",
   "lessons": [
     {
       "id": "GU-C21-hear-haath",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4319bcc474118cf",
+      "sourceHash": "fnv1a64:2172fb483d616454",
       "notice": null,
       "blocks": [
         {
@@ -88,7 +88,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:c67811afa66f857b",
+      "sourceHash": "fnv1a64:be76f02c6dac8fb4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64b469e20e3d903c",
+      "sourceHash": "fnv1a64:009c3e0b1fe138fd",
       "notice": null,
       "blocks": [
         {
@@ -236,7 +236,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:7f2fb1e490d6859a",
+      "sourceHash": "fnv1a64:41e03737643db407",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:a60d96237de12a24",
+      "sourceHash": "fnv1a64:fffcf3eaf4cb4805",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -391,7 +391,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:e8d92bf645e9348f",
+      "sourceHash": "fnv1a64:ed9fc8412bc8c018",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -477,7 +477,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:9ecfd6b279c50770",
+      "sourceHash": "fnv1a64:cb9cdc535ea14107",
       "notice": {
         "modality": "pen",
         "needs": [

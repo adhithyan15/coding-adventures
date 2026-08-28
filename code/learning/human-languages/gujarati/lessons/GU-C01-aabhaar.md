@@ -17,6 +17,9 @@ requires:
   knowledge: [GU-CONCEPT-C01-NAMASTE-01]
 introduces:
   knowledge: [GU-CONCEPT-C01-AABHAAR-01]
+introduces_idioms: [GU-IDIOM-AABHAAR-THANKS-FORMULA-01]
+introduces_senses: []
+introduces_culture_claims: [GU-CULTURE-AABHAAR-EVERYDAY-DHANYAVAD-SANSKRITIC-01]
 practises:
   knowledge: [GU-CONCEPT-C01-AABHAAR-01, GU-CONCEPT-C01-NAMASTE-01, GU-SCRIPT-RA-01, GU-SCRIPT-VOCALIC-R-MATRA-01]
 skills: [listening, speaking, reading, writing]

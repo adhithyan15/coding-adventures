@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-SCRIPT-DHA-01, GU-SCRIPT-INDEPENDENT-II-01]
 introduces:
   knowledge: [GU-SCRIPT-DDHA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-SCRIPT-DHA-01, GU-SCRIPT-DDHA-01]
 skills: [reading, writing]

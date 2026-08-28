@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-LEX-HOVU, GU-LEX-JAVU, GU-LEX-AAVVU, GU-LEX-KHAAVU, GU-LEX-JOVU, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA]
 introduces:
   knowledge: [GU-LEX-JAANVU, GU-ETYMON-JAANVU-KNOW]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-HOVU, GU-LEX-JAVU, GU-LEX-AAVVU, GU-LEX-KHAAVU, GU-LEX-JOVU, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA, GU-LEX-JAANVU, GU-ETYMON-JAANVU-KNOW]
 skills: [listening, speaking, reading]

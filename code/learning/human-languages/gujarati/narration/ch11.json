@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ad510659844ccf12",
+  "sourceHash": "fnv1a64:b0d2fc9d6326f9d3",
   "lessons": [
     {
       "id": "GU-C05-bolvun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0255320c1ce0d75f",
+      "sourceHash": "fnv1a64:a39a65a9b6df1354",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5d164087b01081b5",
+      "sourceHash": "fnv1a64:4f161b0669003e7d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5c1da6d550466ff4",
+      "sourceHash": "fnv1a64:5f9642ea6560d78b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -442,7 +442,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aae0bdb1f5861458",
+      "sourceHash": "fnv1a64:3b605c3e7f93e572",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -576,7 +576,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15a530a8721a15a0",
+      "sourceHash": "fnv1a64:ced5acb306cb061f",
       "notice": null,
       "blocks": [
         {

@@ -17,6 +17,9 @@ requires:
   knowledge: [GU-CONCEPT-C01-AAVJO-01, GU-CONCEPT-C04-MALISHUN-01, GU-CONCEPT-C04-PACHHA-01]
 introduces:
   knowledge: [GU-CONCEPT-C04-PACHHAMALISHUN-01]
+introduces_idioms: [GU-IDIOM-PACHHA-MALISHUN-FAREWELL-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-CONCEPT-C01-AAVJO-01, GU-CONCEPT-C04-MALISHUN-01, GU-CONCEPT-C04-PACHHA-01, GU-CONCEPT-C04-PACHHAMALISHUN-01]
 skills: [listening, speaking, reading]

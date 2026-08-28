@@ -17,6 +17,9 @@ requires:
   knowledge: [GU-CONCEPT-C02-NAAM-01]
 introduces:
   knowledge: [GU-CONCEPT-C02-MAARUN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-CONCEPT-C02-MAARUN-01, GU-CONCEPT-C02-NAAM-01]
 skills: [listening, speaking, reading]

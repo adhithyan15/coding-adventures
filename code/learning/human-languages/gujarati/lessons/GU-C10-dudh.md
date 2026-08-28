@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-LEX-CHA, GU-ETYMON-CHA-CHINESE, GU-LEX-PAANI, GU-PHRASE-MEHERBANI-KARINE]
 introduces:
   knowledge: [GU-LEX-DUDH, GU-ETYMON-DUDH-DUGDHA]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-DUDH, GU-ETYMON-DUDH-DUGDHA, GU-LEX-CHA, GU-ETYMON-CHA-CHINESE, GU-LEX-PAANI, GU-PHRASE-MEHERBANI-KARINE]
 skills: [listening, speaking, reading]

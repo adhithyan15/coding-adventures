@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-LEX-AANKH, GU-ETYMON-AANKH-EYE, GU-GRAMMAR-GENDER-NOT-BY-ENDING]
 introduces:
   knowledge: [GU-LEX-KAAN, GU-ETYMON-KAAN-DISPUTED, GU-GRAMMAR-GENDER-SHIFT-INHERITANCE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-KAAN, GU-ETYMON-KAAN-DISPUTED, GU-GRAMMAR-GENDER-SHIFT-INHERITANCE, GU-LEX-AANKH, GU-ETYMON-AANKH-EYE, GU-GRAMMAR-GENDER-NOT-BY-ENDING]
 skills: [listening, speaking, reading]

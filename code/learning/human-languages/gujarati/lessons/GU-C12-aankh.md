@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-LEX-BAHEN, GU-ETYMON-BAHEN-BHAGA, GU-SCRIPT-ANUSVARA-MEDIAL]
 introduces:
   knowledge: [GU-LEX-AANKH, GU-ETYMON-AANKH-EYE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-AANKH, GU-ETYMON-AANKH-EYE, GU-LEX-BAHEN, GU-SCRIPT-ANUSVARA-MEDIAL]
 skills: [listening, speaking, reading]

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Nine Doorway Forms",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1a6b2afdffc13f91",
+  "sourceHash": "fnv1a64:1d4665979c21232d",
   "lessons": [
     {
       "id": "GU-W03-ja",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a6021d1c687108b1",
+      "sourceHash": "fnv1a64:3cf3106b6c207e9c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -144,7 +144,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6b5938cec96155be",
+      "sourceHash": "fnv1a64:f5d037bec9b02079",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -267,7 +267,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fef023aa751ef84c",
+      "sourceHash": "fnv1a64:048d3a3ab924d8b5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -390,7 +390,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:29c97a1f0570ecb5",
+      "sourceHash": "fnv1a64:0497c5d0befca482",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -513,7 +513,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e159d34e370866ae",
+      "sourceHash": "fnv1a64:eb8ecc843e1427e3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -636,7 +636,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:43626368c6b4ad42",
+      "sourceHash": "fnv1a64:70adcb6d5f355ca1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -759,7 +759,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ea0c9e0aa21ab195",
+      "sourceHash": "fnv1a64:e7f34ff1a2f9ba36",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -882,7 +882,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:af833bd1e044be9b",
+      "sourceHash": "fnv1a64:bad708aa4b957a16",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1005,7 +1005,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4889c6c7820b7cce",
+      "sourceHash": "fnv1a64:4c1078577b59748f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1192,7 +1192,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:29217bc373f59f75",
+      "sourceHash": "fnv1a64:4a2fcfa3d9aedc1c",
       "notice": {
         "modality": "pen",
         "needs": [

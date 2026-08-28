@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Numbers One to Five",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:bb51f2017819af61",
+  "sourceHash": "fnv1a64:1e5519ae780a0662",
   "lessons": [
     {
       "id": "GU-C06-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ee6747aa7f6c3f8",
+      "sourceHash": "fnv1a64:26b3837831443ac7",
       "notice": null,
       "blocks": [
         {
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd37de0a5ebeaffd",
+      "sourceHash": "fnv1a64:5ae7c7f3b1647468",
       "notice": null,
       "blocks": [
         {

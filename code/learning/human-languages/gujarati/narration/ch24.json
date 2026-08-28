@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "A First Three-Place Map",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c6ae1f7630c620ce",
+  "sourceHash": "fnv1a64:df118aa720f5beef",
   "lessons": [
     {
       "id": "GU-C20-hear-bajar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4afb101e69cfb3cb",
+      "sourceHash": "fnv1a64:8a6e55dce23081a8",
       "notice": null,
       "blocks": [
         {
@@ -88,7 +88,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:a46539ae956d0b42",
+      "sourceHash": "fnv1a64:509b24534ec7d151",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e08d60d1f4551663",
+      "sourceHash": "fnv1a64:8d2c3118fc2cdf82",
       "notice": null,
       "blocks": [
         {
@@ -236,7 +236,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:f17408dedc946171",
+      "sourceHash": "fnv1a64:6c13bf7979c075a4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -312,7 +312,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e6cd2e676f88d93c",
+      "sourceHash": "fnv1a64:5019b2387a064ceb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -393,7 +393,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a9b59635611544d",
+      "sourceHash": "fnv1a64:7dbdd8c62c61cb10",
       "notice": null,
       "blocks": [
         {
@@ -462,7 +462,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:48433150b57078b9",
+      "sourceHash": "fnv1a64:96aa6f5c15516c6e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -542,7 +542,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:c10cf25559b36e35",
+      "sourceHash": "fnv1a64:dac913f858f3098a",
       "notice": {
         "modality": "pen",
         "needs": [

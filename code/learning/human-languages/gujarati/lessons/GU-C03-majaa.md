@@ -17,6 +17,9 @@ requires:
   knowledge: [GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C03-TAMEKEMCHHO-01]
 introduces:
   knowledge: [GU-CONCEPT-C03-MAJAA-01]
+introduces_idioms: [GU-IDIOM-HUN-MAJAMA-CHHUN-WELLBEING-REPLY-01]
+introduces_senses: [GU-SENSE-MAJAA-ENJOYMENT-WELLBEING-01]
+introduces_culture_claims: [GU-CULTURE-MAJAA-PERSIAN-ARABIAN-SEA-COMMERCE-01]
 practises:
   knowledge: [GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C03-MAJAA-01, GU-CONCEPT-C03-TAMEKEMCHHO-01, GU-SCRIPT-VOCALIC-R-MATRA-01]
 skills: [listening, speaking, reading, writing]

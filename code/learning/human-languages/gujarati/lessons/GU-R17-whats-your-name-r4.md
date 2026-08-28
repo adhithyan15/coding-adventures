@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-SHUN-01, GU-CONCEPT-C02-TUTAME-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-SHUN-01, GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01, GU-CONCEPT-C02-TUTAME-01]
 skills: [listening, speaking, reading, writing]
