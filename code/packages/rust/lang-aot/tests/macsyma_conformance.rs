@@ -142,6 +142,29 @@ fn tmp_dir(tag: &str) -> tempfile::TempDir {
         .expect("create a private temp dir")
 }
 
+/// Decode the scalar-result ABI used by executable backends in this suite.
+///
+/// A POSIX process status preserves only the low byte, so a compiled result of
+/// `-7` is observed as 249. Windows may instead expose the sign-extended value
+/// directly. Every executable result in `PROGRAMS` is deliberately within the
+/// signed-byte range; interpreting the low byte as two's-complement makes both
+/// host representations agree with the in-process backends.
+fn decode_process_result(code: i32) -> i64 {
+    let low_byte = u8::try_from(code.rem_euclid(256))
+        .expect("an i32 remainder modulo 256 always fits in a byte");
+    i64::from(i8::from_ne_bytes([low_byte]))
+}
+
+#[test]
+fn executable_result_decoder_handles_unix_and_windows_statuses() {
+    assert_eq!(decode_process_result(0), 0);
+    assert_eq!(decode_process_result(42), 42);
+    assert_eq!(decode_process_result(127), 127);
+    assert_eq!(decode_process_result(249), -7); // POSIX low-byte status.
+    assert_eq!(decode_process_result(-7), -7); // Sign-extended Windows status.
+    assert_eq!(decode_process_result(255), -1);
+}
+
 // ── Backend 1: VM (the reference interpreter, tagged-word). Always runs. ──
 fn run_vm(src: &str) -> Option<i64> {
     let module = match compile_source_to_iir(Language::Macsyma, src, "vm") {
@@ -332,7 +355,7 @@ fn run_llvm(src: &str) -> Option<i64> {
     }
     let out = std::process::Command::new(&exe).output().expect("llvm: run linked executable");
     match out.status.code() {
-        Some(c) => Some(i64::from(c)),
+        Some(c) => Some(decode_process_result(c)),
         None => backend_failed("LLVM", src, "reading the exit code", "process was signalled"),
     }
 }
@@ -373,7 +396,7 @@ fn run_native(src: &str) -> Option<i64> {
     }
     let out = std::process::Command::new(&exe).output().expect("native: run linked executable");
     match out.status.code() {
-        Some(c) => Some(i64::from(c)),
+        Some(c) => Some(decode_process_result(c)),
         None => backend_failed("native-AOT", src, "reading the exit code", "process was signalled"),
     }
 }
