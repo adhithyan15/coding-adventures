@@ -69,7 +69,7 @@ according to the current prioritization run.
 | RCPU-003 / RCPU-004 | 1954 | IBM 704 | Complete: `ibm704-simulator` | Complete: `ibm704-gatelevel` |
 | RCPU-005 / RCPU-006 | 1961 | GE-225 | Complete: `ge225-simulator` | Complete: `ge225-gatelevel` |
 | RCPU-007 / RCPU-008 | 1964 | CDC 6600 | Complete: `cdc6600-simulator` | Complete: `cdc6600-gatelevel` |
-| RCPU-009 / RCPU-010 | 1970 | DEC PDP-11 | Complete: `pdp11-simulator` | Missing |
+| RCPU-009 / RCPU-010 | 1970 | DEC PDP-11 | Complete: `pdp11-simulator` | Complete: `pdp11-gatelevel` |
 | RCPU-011 / RCPU-012 | 1971 | Intel 4004 | Audit: `intel4004-simulator` | Audit: `intel4004-gatelevel` |
 | RCPU-013 / RCPU-014 | 1972 | Intel 8008 | Audit: `intel8008-simulator` | Audit: `intel8008-gatelevel` |
 | RCPU-015 / RCPU-016 | 1974 | Intel 8080 | Audit: `intel8080-simulator` | Audit: `intel8080-gatelevel` |
@@ -91,8 +91,8 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-010**, the DEC PDP-11 gate-level Rust simulator,
-ordered behind publication of the completed RCPU-009 functional simulator.
+Current selection: **RCPU-011**, the Intel 4004 functional Rust audit, ordered
+behind publication of the completed RCPU-009 and RCPU-010 PDP-11 pair.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -164,9 +164,8 @@ bounded workloads. Core line coverage is 98.22% (441/449), above the completion
 floor. Its green required CI and squash auto-merge close the gate-level cell
 and advance the chronological queue to the PDP-11 functional oracle audit.
 
-RCPU-009 is implementation-complete and rebased atop merged RCPU-008. Its Rust
-package
-ports the full 59-mnemonic-variant Spec 07o/Python-oracle surface: all eight
+RCPU-009 merged in PR #13405 at `67098ffa`. Its Rust package ports the full
+59-mnemonic-variant Spec 07o/Python-oracle surface: all eight
 addressing modes, twelve double-operand variants, 25 single-operand variants,
 15 branch conditions, and HALT/NOP/RTI/RTS/JMP/JSR/SOB control over eight
 16-bit registers, NZVC, and 64 KiB little-endian memory. Seven integration
@@ -174,8 +173,21 @@ tests cover every decode family, every addressing mode, byte/SP/PC stepping,
 word/byte result and flag edges, branch paths, subroutine/interrupt stacks,
 typed atomic failures, bounded loops, and three multi-instruction Python-oracle
 workloads. Core line coverage is 92.98% (477/513), above the completion floor.
-Publication is now the highest-priority work item; its merge closes RCPU-009
-and unblocks its gate-level partner.
+Its green required CI and squash auto-merge close the functional cell and
+unblock its gate-level partner.
+
+RCPU-010 is implementation-complete locally atop RCPU-009. Its normative 07o2
+contract and `pdp11-gatelevel` package put all 524,433 persistent memory,
+register, PSW, and halt bits in D flip-flops. Gate networks provide complete
+instruction decode, 8/16-bit arithmetic and logic, NZVC updates, effective
+address side effects, branch predicates and offsets, stack/PC paths, and byte
+sign extension across the same 59 mnemonic variants and all eight addressing
+modes as the functional oracle. One unit and seven integration tests cover every
+instruction and addressing family, all 15 taken and fall-through branch paths,
+seeded workloads, calls/returns/interrupt stacks, exact topology, and atomic
+failure boundaries. Core line coverage is 95.13% (644/677), above the completion
+floor. Publication closes the PDP-11 pair and advances the chronological queue
+to the Intel 4004 functional audit.
 
 ## Cross-language wave
 

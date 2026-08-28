@@ -1,0 +1,14 @@
+[package]
+name = "pdp11-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DEC PDP-11 gate-level simulator"
+license = "MIT"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+pdp11-simulator = { path = "../pdp11-simulator" }
+
+[dev-dependencies]
+pdp11-simulator = { path = "../pdp11-simulator" }
