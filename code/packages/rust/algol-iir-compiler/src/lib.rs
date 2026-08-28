@@ -2624,7 +2624,7 @@ impl Compiler {
                 }
             }
             let (base, exponents) = operands.split_first()?;
-            let exponent = self.static_nonnegative_integer_power_chain(exponents)?;
+            let exponent = self.static_nonnegative_integer_power_chain(exponents, true)?;
             return self
                 .static_integer_scalar_value(base)?
                 .checked_pow(exponent);
@@ -2674,18 +2674,20 @@ impl Compiler {
     }
 
     /// Evaluate a right-associative exponent chain through the same static
-    /// integer evaluator used for snapshots, but only when every operand is
-    /// variable-free. This admits implemented integer-valued standard
-    /// functions without turning tracked runtime variables into unrolled
-    /// exponent constants.
+    /// integer evaluator used for snapshots. Every dependency must resolve to
+    /// tracked local scalar metadata, so unrolling cannot discard a procedure
+    /// call, global read, or dynamic value.
     fn static_nonnegative_integer_power_chain(
         &self,
         nodes: &[&GrammarASTNode],
+        allow_tracked_dependencies: bool,
     ) -> Option<u32> {
         let (last, prefix) = nodes.split_last()?;
         let operand_value = |node: &GrammarASTNode| {
-            self.static_predicate_dependencies(node)
-                .filter(HashSet::is_empty)?;
+            let dependencies = self.static_predicate_dependencies(node)?;
+            if !allow_tracked_dependencies && !dependencies.is_empty() {
+                return None;
+            }
             let value = self.static_integer_scalar_value(node)?;
             (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64).then_some(value as u32)
         };
@@ -7213,7 +7215,10 @@ impl Compiler {
 
         // When the complete right-hand exponent chain is a small nonnegative
         // checked integer constant, preserve the integer/real fast path.
-        if let Some(k) = self.static_nonnegative_integer_power_chain(exponent_nodes) {
+        if let Some(k) = self.static_nonnegative_integer_power_chain(
+            exponent_nodes,
+            base.ty == ScalarType::Integer,
+        ) {
             return Ok(self.emit_pow_unroll(base, k));
         }
 
@@ -9955,6 +9960,31 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
         }));
+    }
+
+    #[test]
+    fn al4_print_static_integer_tracked_exponent_snapshot_in_real_expression() {
+        let module = compile_source(
+            "begin integer exponent, n, saved; exponent := 2; n := 6 ^ exponent + 6; saved := n; exponent := 3; output(saved + 0.5) end",
+            "test",
+        )
+        .expect("a tracked local integer may provide a bounded integer exponent");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+    }
+
+    #[test]
+    fn al4_dynamic_integer_exponent_remains_real() {
+        let err = compile_source(
+            "begin integer exponent, n; exponent := 2; if n = 0 then exponent := 2 else exponent := 3; n := 6 ^ exponent + 6; output(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a path-dependent integer exponent must retain runtime real-power lowering");
+        assert!(format!("{err:?}").contains("cannot use real where integer is required"));
     }
 
     #[test]
@@ -15718,23 +15748,17 @@ mod tests {
         );
     }
 
-    /// A runtime integer exponent widens both operands to the shared
-    /// `f64_pow` path rather than requiring a compile-time unroll.
+    /// An exact tracked integer exponent retains the bounded integer-power
+    /// path before the result widens for a real assignment target.
     #[test]
-    fn integer_base_runtime_integer_exponent_widens_to_real() {
+    fn integer_base_tracked_integer_exponent_unrolls_before_widening() {
         let src = "begin integer exponent; real result; exponent := 3; result := 2 ^ exponent end";
         assert_eq!(run_f64(src), 8.0);
 
-        let module = compile_source(src, "runtime_integer_exponent").expect("compiles");
+        let module = compile_source(src, "tracked_integer_exponent").expect("compiles");
         let main = module.get_function("main").expect("main function exists");
-        assert!(
-            main.instructions.iter().any(|instr| {
-                instr.op == "f64_pow"
-                    && instr.type_hint == "f64"
-                    && instr.srcs.len() == 2
-            }),
-            "a runtime integer exponent must use the f64_pow operation"
-        );
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
     }
 
     /// A negative integer exponent is not a literal-unroll shape and therefore
