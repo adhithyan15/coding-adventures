@@ -38,9 +38,9 @@ pub struct DecodedInstruction {
     /// Optional second byte for 2-byte instructions.
     pub raw2: Option<u8>,
 
-    /// Upper nibble bits [7:4].
+    /// Upper nibble bits `7:4`.
     pub upper: u8,
-    /// Lower nibble bits [3:0].
+    /// Lower nibble bits `3:0`.
     pub lower: u8,
 
     // --- Instruction family detection (from gate logic) ---
@@ -134,11 +134,16 @@ pub fn decode(raw: u8, raw2: Option<u8>) -> DecodedInstruction {
     );
 
     // 0x1_ = 0001 : JCN
-    let is_jcn_family =
-        and_gate(and_gate(not_gate(b7), not_gate(b6)), and_gate(not_gate(b5), b4));
+    let is_jcn_family = and_gate(
+        and_gate(not_gate(b7), not_gate(b6)),
+        and_gate(not_gate(b5), b4),
+    );
 
     // 0x2_ = 0010 : FIM (even b0) or SRC (odd b0)
-    let is_2x = and_gate(and_gate(not_gate(b7), not_gate(b6)), and_gate(b5, not_gate(b4)));
+    let is_2x = and_gate(
+        and_gate(not_gate(b7), not_gate(b6)),
+        and_gate(b5, not_gate(b4)),
+    );
     let is_fim = and_gate(is_2x, not_gate(b0));
     let is_src = and_gate(is_2x, b0);
 
@@ -148,12 +153,13 @@ pub fn decode(raw: u8, raw2: Option<u8>) -> DecodedInstruction {
     let is_jin = and_gate(is_3x, b0);
 
     // 0x4_ = 0100 : JUN
-    let is_jun_family =
-        and_gate(and_gate(not_gate(b7), b6), and_gate(not_gate(b5), not_gate(b4)));
+    let is_jun_family = and_gate(
+        and_gate(not_gate(b7), b6),
+        and_gate(not_gate(b5), not_gate(b4)),
+    );
 
     // 0x5_ = 0101 : JMS
-    let is_jms_family =
-        and_gate(and_gate(not_gate(b7), b6), and_gate(not_gate(b5), b4));
+    let is_jms_family = and_gate(and_gate(not_gate(b7), b6), and_gate(not_gate(b5), b4));
 
     // 0x6_ = 0110 : INC
     let is_inc_family = and_gate(and_gate(not_gate(b7), b6), and_gate(b5, not_gate(b4)));
@@ -162,12 +168,13 @@ pub fn decode(raw: u8, raw2: Option<u8>) -> DecodedInstruction {
     let is_isz_family = and_gate(and_gate(not_gate(b7), b6), and_gate(b5, b4));
 
     // 0x8_ = 1000 : ADD
-    let is_add_family =
-        and_gate(and_gate(b7, not_gate(b6)), and_gate(not_gate(b5), not_gate(b4)));
+    let is_add_family = and_gate(
+        and_gate(b7, not_gate(b6)),
+        and_gate(not_gate(b5), not_gate(b4)),
+    );
 
     // 0x9_ = 1001 : SUB
-    let is_sub_family =
-        and_gate(and_gate(b7, not_gate(b6)), and_gate(not_gate(b5), b4));
+    let is_sub_family = and_gate(and_gate(b7, not_gate(b6)), and_gate(not_gate(b5), b4));
 
     // 0xA_ = 1010 : LD
     let is_ld_family = and_gate(and_gate(b7, not_gate(b6)), and_gate(b5, not_gate(b4)));
@@ -176,8 +183,7 @@ pub fn decode(raw: u8, raw2: Option<u8>) -> DecodedInstruction {
     let is_xch_family = and_gate(and_gate(b7, not_gate(b6)), and_gate(b5, b4));
 
     // 0xC_ = 1100 : BBL
-    let is_bbl_family =
-        and_gate(and_gate(b7, b6), and_gate(not_gate(b5), not_gate(b4)));
+    let is_bbl_family = and_gate(and_gate(b7, b6), and_gate(not_gate(b5), not_gate(b4)));
 
     // 0xD_ = 1101 : LDM
     let is_ldm_family = and_gate(and_gate(b7, b6), and_gate(not_gate(b5), b4));
@@ -191,10 +197,7 @@ pub fn decode(raw: u8, raw2: Option<u8>) -> DecodedInstruction {
     // Two-byte detection
     let is_two_byte = or_gate(
         or_gate(is_jcn_family, is_jun_family),
-        or_gate(
-            or_gate(is_jms_family, is_isz_family),
-            is_fim,
-        ),
+        or_gate(or_gate(is_jms_family, is_isz_family), is_fim),
     );
 
     // Operand extraction

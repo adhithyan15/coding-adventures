@@ -37,8 +37,8 @@ pub struct RAM {
     main: Vec<Vec<Vec<Vec<FlipFlopState>>>>,
     /// status[bank][reg][index] = flip-flop state for one status nibble.
     status: Vec<Vec<Vec<Vec<FlipFlopState>>>>,
-    /// Output ports (one per bank, written by WMP).
-    output: [u8; 4],
+    /// Four 4-bit output-port registers (one per bank, written by WMP).
+    output: Vec<Vec<FlipFlopState>>,
 }
 
 impl RAM {
@@ -77,10 +77,18 @@ impl RAM {
             status.push(bank_status);
         }
 
+        let mut output = Vec::with_capacity(4);
+        for _ in 0..4 {
+            let mut state = vec![FlipFlopState::default(); 4];
+            register(&[0; 4], 0, &mut state);
+            register(&[0; 4], 1, &mut state);
+            output.push(state);
+        }
+
         Self {
             main,
             status,
-            output: [0; 4],
+            output,
         }
     }
 
@@ -116,12 +124,16 @@ impl RAM {
 
     /// Read a RAM output port value.
     pub fn read_output(&self, bank: usize) -> u8 {
-        self.output[bank & 3]
+        let mut state = self.output[bank & 3].clone();
+        bits_to_int(&register(&[0; 4], 0, &mut state)) as u8
     }
 
     /// Write to a RAM output port (WMP instruction).
     pub fn write_output(&mut self, bank: usize, value: u8) {
-        self.output[bank & 3] = value & 0xF;
+        let bits = int_to_bits(u16::from(value & 0xF), 4);
+        let state = &mut self.output[bank & 3];
+        register(&bits, 0, state);
+        register(&bits, 1, state);
     }
 
     /// Reset all RAM to 0.
@@ -135,14 +147,14 @@ impl RAM {
                     self.write_status(bank, reg, stat, 0);
                 }
             }
-            self.output[bank] = 0;
+            self.write_output(bank, 0);
         }
     }
 
-    /// 4 banks x 4 regs x 20 nibbles x 4 bits x 6 gates/ff = 7680.
+    /// 1,296 storage bits x 6 gates/ff plus addressing/decoding.
     /// Plus addressing/decoding: ~200 gates.
     pub fn gate_count(&self) -> usize {
-        7880
+        7976
     }
 }
 

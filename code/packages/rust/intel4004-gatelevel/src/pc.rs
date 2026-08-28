@@ -40,8 +40,7 @@ pub struct ProgramCounter {
 impl ProgramCounter {
     /// Initialize PC to 0.
     pub fn new() -> Self {
-        let mut state: Vec<FlipFlopState> =
-            (0..12).map(|_| FlipFlopState::default()).collect();
+        let mut state: Vec<FlipFlopState> = (0..12).map(|_| FlipFlopState::default()).collect();
         register(&[0; 12], 0, &mut state);
         register(&[0; 12], 1, &mut state);
         Self { state }
