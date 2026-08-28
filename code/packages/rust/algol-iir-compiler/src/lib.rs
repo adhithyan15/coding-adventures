@@ -2682,15 +2682,56 @@ impl Compiler {
         nodes: &[&GrammarASTNode],
         allow_tracked_dependencies: bool,
     ) -> Option<u32> {
-        let (last, prefix) = nodes.split_last()?;
-        let operand_value = |node: &GrammarASTNode| {
+        self.static_nonnegative_power_chain_with(nodes, &|node| {
             let dependencies = self.static_predicate_dependencies(node)?;
             if !allow_tracked_dependencies && !dependencies.is_empty() {
                 return None;
             }
             let value = self.static_integer_scalar_value(node)?;
             (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64).then_some(value as u32)
-        };
+        })
+    }
+
+    /// Admit a tracked exponent for a real base only when the exponent operand
+    /// is one bare local integer. This retains the real multiplication path
+    /// without erasing a call or conditional expression from runtime IIR.
+    fn static_nonnegative_bare_tracked_integer_power_chain(
+        &self,
+        nodes: &[&GrammarASTNode],
+    ) -> Option<u32> {
+        self.static_nonnegative_power_chain_with(nodes, &|node| {
+            let dependencies = self.static_predicate_dependencies(node)?;
+            if dependencies.is_empty() {
+                let value = self.static_integer_scalar_value(node)?;
+                return (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64)
+                    .then_some(value as u32);
+            }
+            let name = expr_variable_name(node)?;
+            if dependencies.len() != 1 || !dependencies.contains(&name) {
+                return None;
+            }
+            let binding = self.require_var(&name).ok()?;
+            if binding.ty != ScalarType::Integer
+                || binding.is_global
+                || binding.array.is_some()
+                || self.active_by_name_binding(&name).is_some()
+            {
+                return None;
+            }
+            let value = *self.static_integer_slots.get(&binding.slot)?;
+            (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64).then_some(value as u32)
+        })
+    }
+
+    fn static_nonnegative_power_chain_with<F>(
+        &self,
+        nodes: &[&GrammarASTNode],
+        operand_value: &F,
+    ) -> Option<u32>
+    where
+        F: Fn(&GrammarASTNode) -> Option<u32>,
+    {
+        let (last, prefix) = nodes.split_last()?;
         let mut value = operand_value(last)? as u64;
 
         for node in prefix.iter().rev() {
@@ -7215,10 +7256,19 @@ impl Compiler {
 
         // When the complete right-hand exponent chain is a small nonnegative
         // checked integer constant, preserve the integer/real fast path.
-        if let Some(k) = self.static_nonnegative_integer_power_chain(
-            exponent_nodes,
-            base.ty == ScalarType::Integer,
-        ) {
+        let exponent = self
+            .static_nonnegative_integer_power_chain(
+                exponent_nodes,
+                base.ty == ScalarType::Integer,
+            )
+            .or_else(|| {
+                (base.ty == ScalarType::Real)
+                    .then(|| {
+                        self.static_nonnegative_bare_tracked_integer_power_chain(exponent_nodes)
+                    })
+                    .flatten()
+            });
+        if let Some(k) = exponent {
             return Ok(self.emit_pow_unroll(base, k));
         }
 
@@ -10305,18 +10355,30 @@ mod tests {
     }
 
     #[test]
-    fn al4_tracks_integer_exponents_for_real_snapshot_metadata_only() {
+    fn al4_bare_tracked_integer_exponents_unroll_real_powers() {
         let module = compile_source(
             "begin integer exponent; real saved; exponent := 2; saved := 6.0 ^ exponent + 6.0; exponent := 3; output(saved + 0.5) end",
             "test",
         )
-        .expect("an exact integer exponent may contribute to real snapshot metadata");
+        .expect("an exact bare integer exponent may retain real multiplication lowering");
         let main = module.get_function("main").expect("has main");
-        assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
         }));
+    }
+
+    #[test]
+    fn al4_path_dependent_bare_integer_exponents_remain_dynamic_for_real_powers() {
+        let module = compile_source(
+            "begin integer gate, exponent; real saved; if gate = 0 then exponent := 2 else exponent := 3; saved := 6.0 ^ exponent end",
+            "test",
+        )
+        .expect("a path-dependent exponent retains runtime real-power lowering");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
     }
 
     #[test]
