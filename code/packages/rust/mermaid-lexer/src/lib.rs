@@ -1139,4 +1139,12 @@ A\\-B: reverse stick bottom
         );
         assert_eq!(tokens.iter().filter(|token| token.value == "-").count(), 3);
     }
+
+    #[test]
+    fn tokenizes_equals_sign_sequence_actor_references() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\nparticipant Alice=Wonderland\nAlice=Wonderland->>Bob: Submit\n",
+        );
+        assert_eq!(tokens.iter().filter(|token| token.value == "=").count(), 2);
+    }
 }

@@ -1,0 +1,16 @@
+{
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source": "packages/mermaid/src/diagrams/sequence/sequenceDiagram.spec.js",
+  "valid": [
+    {
+      "id": "equals-participant-id",
+      "source": "sequenceDiagram\nparticipant Alice=Wonderland\nparticipant Bob\nAlice=Wonderland->Bob:Hello Bob, how are - you?\nBob-->Alice=Wonderland:I am good thanks!"
+    }
+  ],
+  "invalid": [
+    {
+      "id": "participant-config-missing-colon",
+      "source": "sequenceDiagram\nparticipant C@{ \"type\" \"control\" }\nC ->> C: action"
+    }
+  ]
+}

@@ -53,10 +53,13 @@ COMMA                    = ","
 AT                       = "@"
 PLUS                     = "+"
 MINUS                    = "-"
+EQUAL                    = "="
+QUESTION                 = "?"
+EXCLAMATION              = "!"
 NUMBER                   = /(?:[0-9]+(?:\.[0-9]{1,2})?|\.[0-9]{1,2})/
 IDENTIFIER               = /[A-Za-z0-9_.$]+/
 ANGLE_TEXT               = /[<>]+/
-WORD                     = /[^ \t\r\n:,+-@;]+/
+WORD                     = /[^ \t\r\n:,=+!?-@;]+/
 
 keywords:
   participant

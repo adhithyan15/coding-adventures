@@ -163,6 +163,9 @@ is retained consistently across declarations, messages, notes, lifecycle events,
 and metadata commands.
 Hyphenated actor identifiers retain their punctuation through those same
 semantic references while post-arrow `-` remains the deactivation operator.
+The first pinned Mermaid 11.16.1 Sequence corpus slice preserves equals-sign
+participant IDs through semantic IR, layout, Paint lowering, and Metal rendering,
+while retaining upstream rejection of malformed participant configuration.
 Both single-line accessibility statements and multiline `accDescr` blocks
 lower to PaintScene metadata.
 Newlines and semicolons are interchangeable sequence statement terminators,
