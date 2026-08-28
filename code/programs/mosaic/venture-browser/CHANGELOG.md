@@ -1,5 +1,15 @@
 # Changelog
 
+## Imported and element-authored CSS convergence
+
+- Added inline style attributes, inherited custom properties, `var()` value
+  resolution, four-side spacing shorthands, attribute/structural selectors,
+  and viewport-aware media evaluation to the shared computed-style boundary.
+- Added append-only `@import` scheduling with newly discovered completion
+  effects, depth-first cascade ordering, navigation-safe stable ordinals, and
+  ancestor-cycle diagnostics; the shared real-page corpus exercises the full
+  path across available hosts.
+
 ## External stylesheets and computed cascade
 
 - Added typed stylesheet requests to the shared subresource lifecycle with

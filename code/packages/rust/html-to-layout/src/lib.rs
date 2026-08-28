@@ -11,8 +11,8 @@ use std::collections::HashMap;
 use coding_adventures_css_parser::create_css_parser;
 use coding_adventures_html_parser::{BrowserRenderNode, BrowserRenderTree};
 use layout_ir::{
-    color_black, edges_all, edges_xy, font_bold, font_italic, font_spec, rgb, Color, ExtValue,
-    FontSpec, ImageContent, ImageFit, LayoutNode, SizeValue, TextAlign, TextContent,
+    color_black, edges_all, edges_xy, font_bold, font_italic, font_spec, rgb, Color, Edges,
+    ExtValue, FontSpec, ImageContent, ImageFit, LayoutNode, SizeValue, TextAlign, TextContent,
     TextDecoration,
 };
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -27,6 +27,14 @@ pub const VERSION: &str = "0.4.0";
 #[derive(Clone, Debug, PartialEq)]
 pub struct HtmlAuthorStylesheet {
     rules: Vec<StyleRule>,
+    imports: Vec<HtmlStylesheetImport>,
+}
+
+/// One grammar-validated `@import`, still independent from fetch policy.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct HtmlStylesheetImport {
+    pub href: String,
+    pub media: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -50,8 +58,14 @@ impl HtmlAuthorStylesheet {
                 message: error.to_string(),
             })?;
         let mut rules = Vec::new();
-        collect_style_rules(&ast, true, &mut rules);
-        Ok(Self { rules })
+        collect_style_rules(&ast, &[], &mut rules);
+        let mut imports = Vec::new();
+        collect_stylesheet_imports(&ast, &mut imports);
+        Ok(Self { rules, imports })
+    }
+
+    pub fn imports(&self) -> &[HtmlStylesheetImport] {
+        &self.imports
     }
 }
 
@@ -60,6 +74,8 @@ impl HtmlAuthorStylesheet {
 pub struct HtmlStyleContext {
     pub theme: HtmlTheme,
     pub author_stylesheets: Vec<HtmlAuthorStylesheet>,
+    pub viewport_width: f64,
+    pub viewport_height: f64,
 }
 
 impl HtmlStyleContext {
@@ -67,7 +83,15 @@ impl HtmlStyleContext {
         Self {
             theme,
             author_stylesheets: Vec::new(),
+            viewport_width: 800.0,
+            viewport_height: 600.0,
         }
+    }
+
+    pub fn with_viewport(mut self, width: f64, height: f64) -> Self {
+        self.viewport_width = finite_non_negative(width);
+        self.viewport_height = finite_non_negative(height);
+        self
     }
 
     pub fn with_author_stylesheets(
@@ -81,6 +105,8 @@ impl HtmlStyleContext {
         Ok(Self {
             theme,
             author_stylesheets,
+            viewport_width: 800.0,
+            viewport_height: 600.0,
         })
     }
 }
@@ -95,8 +121,9 @@ pub struct HtmlComputedStyle {
     pub background: Option<Color>,
     pub width: Option<f64>,
     pub height: Option<f64>,
-    pub margin: Option<f64>,
-    pub padding: Option<f64>,
+    pub margin: Option<Edges>,
+    pub padding: Option<Edges>,
+    pub custom_properties: HashMap<String, Vec<String>>,
 }
 
 /// Fully resolved visual defaults applied before a future CSS cascade exists.
@@ -144,6 +171,16 @@ pub fn mosaic_html_theme() -> HtmlTheme {
     }
 }
 
+/// Evaluate the shared screen-media profile for a concrete logical viewport.
+/// Loading and cascade callers use this same function so inactive resources
+/// and inactive rules cannot disagree.
+pub fn html_media_query_applies(media: Option<&str>, width: f64, height: f64) -> bool {
+    let Some(media) = media.map(str::trim).filter(|media| !media.is_empty()) else {
+        return true;
+    };
+    media_query_list_applies(&[media.to_string()], width, height)
+}
+
 /// Convert a browser render tree into a shared layout tree.
 ///
 /// The returned root fills the available width, wraps its content height, and
@@ -187,14 +224,20 @@ where
     let theme = &context.theme;
     let style = root_computed_style(context);
     let ancestors = Vec::new();
-    let children = render_tree
-        .children
-        .iter()
-        .filter_map(|node| convert_node(node, context, &style, &ancestors, is_visited))
-        .collect();
+    let children = convert_children(
+        &render_tree.children,
+        context,
+        &style,
+        &ancestors,
+        is_visited,
+    );
 
     let mut root = LayoutNode::container(children)
-        .with_padding(edges_all(style.padding.unwrap_or(theme.page_padding)))
+        .with_padding(
+            style
+                .padding
+                .unwrap_or_else(|| edges_all(theme.page_padding)),
+        )
         .with_width(SizeValue::Fill)
         .with_height(SizeValue::Wrap)
         .with_ext("block", display_ext("block"))
@@ -211,12 +254,13 @@ fn convert_node<F>(
     context: &HtmlStyleContext,
     inherited: &HtmlComputedStyle,
     ancestors: &[&BrowserRenderNode],
+    position: Option<NodePosition>,
     is_visited: &F,
 ) -> Option<LayoutNode>
 where
     F: Fn(&str) -> bool + ?Sized,
 {
-    let style = style_for_node(node, context, inherited, ancestors, is_visited);
+    let style = style_for_node(node, context, inherited, ancestors, position, is_visited);
     let display = style.display.as_deref().unwrap_or(&node.display);
     if display == "none" || node.hidden {
         return None;
@@ -237,7 +281,7 @@ where
     apply_size_hints(&mut layout, node, &style, display);
     apply_spacing(&mut layout, node, &context.theme, &style);
     if let Some(padding) = style.padding {
-        layout.padding = Some(edges_all(padding));
+        layout.padding = Some(padding);
     }
     if let Some(background) = style.background {
         layout
@@ -247,6 +291,33 @@ where
     layout.ext.insert("html".into(), html_ext(node));
     layout.ext.insert("block".into(), block_ext(node, display));
     Some(layout)
+}
+
+fn convert_children<F>(
+    nodes: &[BrowserRenderNode],
+    context: &HtmlStyleContext,
+    inherited: &HtmlComputedStyle,
+    ancestors: &[&BrowserRenderNode],
+    is_visited: &F,
+) -> Vec<LayoutNode>
+where
+    F: Fn(&str) -> bool + ?Sized,
+{
+    let element_count = nodes.iter().filter(|node| node.name.is_some()).count();
+    let mut element_index = 0;
+    nodes
+        .iter()
+        .filter_map(|node| {
+            let position = node.name.as_ref().map(|_| {
+                element_index += 1;
+                NodePosition {
+                    index: element_index,
+                    count: element_count,
+                }
+            });
+            convert_node(node, context, inherited, ancestors, position, is_visited)
+        })
+        .collect()
 }
 
 fn container_or_fallback<F>(
@@ -259,11 +330,7 @@ fn container_or_fallback<F>(
 where
     F: Fn(&str) -> bool + ?Sized,
 {
-    let children: Vec<_> = node
-        .children
-        .iter()
-        .filter_map(|child| convert_node(child, context, style, ancestors, is_visited))
-        .collect();
+    let children = convert_children(&node.children, context, style, ancestors, is_visited);
 
     if !children.is_empty() {
         return LayoutNode::container(children);
@@ -312,6 +379,7 @@ fn style_for_node<F>(
     context: &HtmlStyleContext,
     inherited: &HtmlComputedStyle,
     ancestors: &[&BrowserRenderNode],
+    position: Option<NodePosition>,
     is_visited: &F,
 ) -> HtmlComputedStyle
 where
@@ -347,7 +415,7 @@ where
         };
         style.decoration = theme.link_decoration;
     }
-    apply_author_cascade(&mut style, node, ancestors, context, is_visited);
+    apply_author_cascade(&mut style, node, ancestors, position, context, is_visited);
     style
 }
 
@@ -355,6 +423,7 @@ where
 struct StyleRule {
     selectors: Vec<Selector>,
     declarations: Vec<Declaration>,
+    media: Vec<Vec<String>>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -383,7 +452,30 @@ struct CompoundSelector {
     tag: Option<String>,
     id: Option<String>,
     classes: Vec<String>,
+    attributes: Vec<AttributeSelector>,
     link_state: Option<LinkState>,
+    structural: Vec<StructuralPseudo>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct AttributeSelector {
+    name: String,
+    operator: Option<String>,
+    value: Option<String>,
+    case_insensitive: bool,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum StructuralPseudo {
+    First,
+    Last,
+    Nth(usize),
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct NodePosition {
+    index: usize,
+    count: usize,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -425,12 +517,16 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         width: None,
         height: None,
         margin: None,
-        padding: Some(context.theme.page_padding),
+        padding: Some(edges_all(context.theme.page_padding)),
+        custom_properties: HashMap::new(),
     };
     let mut winners = HashMap::new();
     let mut order = 0;
     for stylesheet in &context.author_stylesheets {
         for rule in &stylesheet.rules {
+            if !rule_media_applies(rule, context) {
+                continue;
+            }
             for selector in &rule.selectors {
                 if selector.matches_virtual_body() {
                     record_declarations(
@@ -451,6 +547,7 @@ fn apply_author_cascade<F>(
     style: &mut HtmlComputedStyle,
     node: &BrowserRenderNode,
     ancestors: &[&BrowserRenderNode],
+    position: Option<NodePosition>,
     context: &HtmlStyleContext,
     is_visited: &F,
 ) where
@@ -460,8 +557,11 @@ fn apply_author_cascade<F>(
     let mut order = 0;
     for stylesheet in &context.author_stylesheets {
         for rule in &stylesheet.rules {
+            if !rule_media_applies(rule, context) {
+                continue;
+            }
             for selector in &rule.selectors {
-                if selector.matches(node, ancestors, is_visited) {
+                if selector.matches(node, ancestors, position, is_visited) {
                     record_declarations(
                         &mut winners,
                         &rule.declarations,
@@ -470,6 +570,11 @@ fn apply_author_cascade<F>(
                     );
                 }
             }
+        }
+    }
+    if let Some(inline_style) = node.style.as_deref() {
+        if let Ok(declarations) = parse_inline_declarations(inline_style) {
+            record_declarations(&mut winners, &declarations, (u16::MAX, 0, 0), &mut order);
         }
     }
     apply_declaration_winners(style, winners);
@@ -482,20 +587,19 @@ fn record_declarations(
     order: &mut usize,
 ) {
     for declaration in declarations {
-        let priority = CascadePriority {
-            important: declaration.important,
-            specificity,
-            order: *order,
-        };
-        *order += 1;
-        let should_replace = winners
-            .get(&declaration.property)
-            .is_none_or(|(current, _)| priority >= *current);
-        if should_replace {
-            winners.insert(
-                declaration.property.clone(),
-                (priority, declaration.value.clone()),
-            );
+        for (property, value) in expand_declaration(declaration) {
+            let priority = CascadePriority {
+                important: declaration.important,
+                specificity,
+                order: *order,
+            };
+            *order += 1;
+            let should_replace = winners
+                .get(&property)
+                .is_none_or(|(current, _)| priority >= *current);
+            if should_replace {
+                winners.insert(property, (priority, value));
+            }
         }
     }
 }
@@ -504,7 +608,22 @@ fn apply_declaration_winners(
     style: &mut HtmlComputedStyle,
     winners: HashMap<String, (CascadePriority, Vec<String>)>,
 ) {
-    for (property, (_, value)) in winners {
+    let mut custom_winners = winners
+        .iter()
+        .filter(|(property, _)| property.starts_with("--"))
+        .map(|(property, (_, value))| (property.clone(), value.clone()))
+        .collect::<Vec<_>>();
+    custom_winners.sort_by(|left, right| left.0.cmp(&right.0));
+    for (property, value) in custom_winners {
+        style.custom_properties.insert(property, value);
+    }
+    for (property, (_, raw_value)) in winners {
+        if property.starts_with("--") {
+            continue;
+        }
+        let Some(value) = resolve_css_value(&raw_value, &style.custom_properties, 0) else {
+            continue;
+        };
         match property.as_str() {
             "color" => {
                 if let Some(color) = parse_color(&value) {
@@ -552,8 +671,30 @@ fn apply_declaration_winners(
             "display" => style.display = value.first().cloned(),
             "width" => style.width = parse_css_length(&value),
             "height" => style.height = parse_css_length(&value),
-            "margin" => style.margin = parse_css_length(&value),
-            "padding" => style.padding = parse_css_length(&value),
+            "margin-top" => set_edge(&mut style.margin, EdgeSide::Top, parse_css_length(&value)),
+            "margin-right" => {
+                set_edge(&mut style.margin, EdgeSide::Right, parse_css_length(&value))
+            }
+            "margin-bottom" => set_edge(
+                &mut style.margin,
+                EdgeSide::Bottom,
+                parse_css_length(&value),
+            ),
+            "margin-left" => set_edge(&mut style.margin, EdgeSide::Left, parse_css_length(&value)),
+            "padding-top" => set_edge(&mut style.padding, EdgeSide::Top, parse_css_length(&value)),
+            "padding-right" => set_edge(
+                &mut style.padding,
+                EdgeSide::Right,
+                parse_css_length(&value),
+            ),
+            "padding-bottom" => set_edge(
+                &mut style.padding,
+                EdgeSide::Bottom,
+                parse_css_length(&value),
+            ),
+            "padding-left" => {
+                set_edge(&mut style.padding, EdgeSide::Left, parse_css_length(&value))
+            }
             _ => {}
         }
     }
@@ -564,6 +705,7 @@ impl Selector {
         &self,
         node: &BrowserRenderNode,
         ancestors: &[&BrowserRenderNode],
+        position: Option<NodePosition>,
         is_visited: &F,
     ) -> bool
     where
@@ -572,7 +714,7 @@ impl Selector {
         let Some(last) = self.compounds.last() else {
             return false;
         };
-        if !last.matches(node, is_visited) {
+        if !last.matches(node, position, is_visited) {
             return false;
         }
         let mut ancestor_limit = ancestors.len();
@@ -585,14 +727,14 @@ impl Selector {
                         return false;
                     }
                     ancestor_limit -= 1;
-                    if !compound.matches(ancestors[ancestor_limit], is_visited) {
+                    if !compound.matches(ancestors[ancestor_limit], None, is_visited) {
                         return false;
                     }
                 }
                 SelectorRelation::Descendant => {
                     let Some(found) = (0..ancestor_limit)
                         .rev()
-                        .find(|position| compound.matches(ancestors[*position], is_visited))
+                        .find(|position| compound.matches(ancestors[*position], None, is_visited))
                     else {
                         return false;
                     };
@@ -609,12 +751,19 @@ impl Selector {
             && self.compounds[0].tag.as_deref() == Some("body")
             && self.compounds[0].id.is_none()
             && self.compounds[0].classes.is_empty()
+            && self.compounds[0].attributes.is_empty()
             && self.compounds[0].link_state.is_none()
+            && self.compounds[0].structural.is_empty()
     }
 }
 
 impl CompoundSelector {
-    fn matches<F>(&self, node: &BrowserRenderNode, is_visited: &F) -> bool
+    fn matches<F>(
+        &self,
+        node: &BrowserRenderNode,
+        position: Option<NodePosition>,
+        is_visited: &F,
+    ) -> bool
     where
         F: Fn(&str) -> bool + ?Sized,
     {
@@ -639,6 +788,20 @@ impl CompoundSelector {
         {
             return false;
         }
+        if self
+            .attributes
+            .iter()
+            .any(|selector| !selector.matches(node))
+        {
+            return false;
+        }
+        if self
+            .structural
+            .iter()
+            .any(|selector| !selector.matches(position))
+        {
+            return false;
+        }
         match self.link_state {
             Some(LinkState::Link) => node.role == "link",
             Some(LinkState::Visited) => {
@@ -654,10 +817,50 @@ impl CompoundSelector {
     }
 }
 
-fn collect_style_rules(node: &GrammarASTNode, media_applies: bool, rules: &mut Vec<StyleRule>) {
+impl AttributeSelector {
+    fn matches(&self, node: &BrowserRenderNode) -> bool {
+        let Some(actual) = node_attribute(node, &self.name) else {
+            return false;
+        };
+        let Some(expected) = self.value.as_deref() else {
+            return true;
+        };
+        let (actual, expected) = if self.case_insensitive {
+            (actual.to_ascii_lowercase(), expected.to_ascii_lowercase())
+        } else {
+            (actual, expected.to_string())
+        };
+        match self.operator.as_deref() {
+            Some("=") => actual == expected,
+            Some("~=") => actual.split_whitespace().any(|part| part == expected),
+            Some("|=") => actual == expected || actual.starts_with(&format!("{expected}-")),
+            Some("^=") => actual.starts_with(&expected),
+            Some("$=") => actual.ends_with(&expected),
+            Some("*=") => actual.contains(&expected),
+            None => true,
+            _ => false,
+        }
+    }
+}
+
+impl StructuralPseudo {
+    fn matches(self, position: Option<NodePosition>) -> bool {
+        let Some(position) = position else {
+            return false;
+        };
+        match self {
+            Self::First => position.index == 1,
+            Self::Last => position.index == position.count,
+            Self::Nth(index) => position.index == index,
+        }
+    }
+}
+
+fn collect_style_rules(node: &GrammarASTNode, media: &[Vec<String>], rules: &mut Vec<StyleRule>) {
     match node.rule_name.as_str() {
-        "qualified_rule" if media_applies => {
-            if let Some(rule) = parse_style_rule(node) {
+        "qualified_rule" => {
+            if let Some(mut rule) = parse_style_rule(node) {
+                rule.media = media.to_vec();
                 rules.push(rule);
             }
             return;
@@ -672,15 +875,12 @@ fn collect_style_rules(node: &GrammarASTNode, media_applies: bool, rules: &mut V
                 .find(|child| child.rule_name == "at_prelude")
                 .map(descendant_tokens)
                 .unwrap_or_default();
-            let is_media = keyword == Some("@media");
-            let applies = !is_media
-                || prelude
-                    .iter()
-                    .any(|token| token == "screen" || token == "all");
-            if is_media && applies {
+            if keyword == Some("@media") {
+                let mut nested_media = media.to_vec();
+                nested_media.push(prelude);
                 for child in child_nodes(node) {
                     if child.rule_name == "block" {
-                        collect_style_rules(child, media_applies, rules);
+                        collect_style_rules(child, &nested_media, rules);
                     }
                 }
             }
@@ -689,8 +889,65 @@ fn collect_style_rules(node: &GrammarASTNode, media_applies: bool, rules: &mut V
         _ => {}
     }
     for child in child_nodes(node) {
-        collect_style_rules(child, media_applies, rules);
+        collect_style_rules(child, media, rules);
     }
+}
+
+fn collect_stylesheet_imports(node: &GrammarASTNode, imports: &mut Vec<HtmlStylesheetImport>) {
+    if node.rule_name == "qualified_rule" {
+        return;
+    }
+    if node.rule_name == "at_rule" {
+        let keyword = node.children.iter().find_map(|child| match child {
+            ASTNodeOrToken::Token(token) => Some(token.value.as_str()),
+            ASTNodeOrToken::Node(_) => None,
+        });
+        if keyword == Some("@import") {
+            if let Some(prelude) = child_nodes(node)
+                .into_iter()
+                .find(|child| child.rule_name == "at_prelude")
+                .map(descendant_tokens)
+                .and_then(parse_stylesheet_import)
+            {
+                imports.push(prelude);
+            }
+        }
+        return;
+    }
+    for child in child_nodes(node) {
+        collect_stylesheet_imports(child, imports);
+    }
+}
+
+fn parse_stylesheet_import(tokens: Vec<String>) -> Option<HtmlStylesheetImport> {
+    let href_index = tokens
+        .iter()
+        .position(|token| {
+            token.starts_with(['\'', '"']) || token.starts_with("url(") || token == "url"
+        })
+        .or((!tokens.is_empty()).then_some(0))?;
+    let token = &tokens[href_index];
+    let (href, consumed) = if token == "url" || token == "url(" {
+        let value = tokens.get(href_index + 1)?;
+        (trim_css_string(value), 2)
+    } else if let Some(value) = token.strip_prefix("url(") {
+        (trim_css_string(value.trim_end_matches(')')), 1)
+    } else {
+        (trim_css_string(token), 1)
+    };
+    if href.is_empty() {
+        return None;
+    }
+    let media = tokens[href_index + consumed..]
+        .iter()
+        .filter(|token| token.as_str() != ")")
+        .cloned()
+        .collect::<Vec<_>>()
+        .join(" ");
+    Some(HtmlStylesheetImport {
+        href,
+        media: (!media.trim().is_empty()).then(|| media.trim().to_string()),
+    })
 }
 
 fn parse_style_rule(node: &GrammarASTNode) -> Option<StyleRule> {
@@ -710,7 +967,18 @@ fn parse_style_rule(node: &GrammarASTNode) -> Option<StyleRule> {
     (!selectors.is_empty() && !declarations.is_empty()).then_some(StyleRule {
         selectors,
         declarations,
+        media: Vec::new(),
     })
+}
+
+fn parse_inline_declarations(source: &str) -> Result<Vec<Declaration>, HtmlStyleError> {
+    let stylesheet = HtmlAuthorStylesheet::parse(&format!("* {{{source};}}"))?;
+    Ok(stylesheet
+        .rules
+        .into_iter()
+        .next()
+        .map(|rule| rule.declarations)
+        .unwrap_or_default())
 }
 
 fn collect_direct_declarations(node: &GrammarASTNode, declarations: &mut Vec<Declaration>) {
@@ -770,7 +1038,10 @@ fn parse_selector(node: &GrammarASTNode) -> Option<Selector> {
     }
     let specificity = compounds.iter().fold((0, 0, 0), |mut total, compound| {
         total.0 += u16::from(compound.id.is_some());
-        total.1 += compound.classes.len() as u16 + u16::from(compound.link_state.is_some());
+        total.1 += compound.classes.len() as u16
+            + compound.attributes.len() as u16
+            + compound.structural.len() as u16
+            + u16::from(compound.link_state.is_some());
         total.2 += u16::from(compound.tag.as_deref().is_some_and(|tag| tag != "*"));
         total
     });
@@ -805,17 +1076,54 @@ fn collect_compound_parts(node: &GrammarASTNode, compound: &mut CompoundSelector
                     .first()
                     .map(|id| id.trim_start_matches('#').to_string())
             }
+            "attribute_selector" => {
+                if let Some(selector) = parse_attribute_selector(&descendant_tokens(child)) {
+                    compound.attributes.push(selector);
+                }
+            }
             "pseudo_class" => {
                 let tokens = descendant_tokens(child);
                 if tokens.iter().any(|token| token == "visited") {
                     compound.link_state = Some(LinkState::Visited);
                 } else if tokens.iter().any(|token| token == "link") {
                     compound.link_state = Some(LinkState::Link);
+                } else if tokens.iter().any(|token| token == "first-child") {
+                    compound.structural.push(StructuralPseudo::First);
+                } else if tokens.iter().any(|token| token == "last-child") {
+                    compound.structural.push(StructuralPseudo::Last);
+                } else if tokens.iter().any(|token| token.starts_with("nth-child")) {
+                    if let Some(index) = tokens.iter().find_map(|token| token.parse().ok()) {
+                        compound.structural.push(StructuralPseudo::Nth(index));
+                    }
                 }
             }
             _ => collect_compound_parts(child, compound),
         }
     }
+}
+
+fn parse_attribute_selector(tokens: &[String]) -> Option<AttributeSelector> {
+    let tokens = tokens
+        .iter()
+        .filter(|token| !matches!(token.as_str(), "[" | "]"))
+        .collect::<Vec<_>>();
+    let name = tokens.first()?.to_ascii_lowercase();
+    let operator_index = tokens
+        .iter()
+        .position(|token| matches!(token.as_str(), "=" | "~=" | "|=" | "^=" | "$=" | "*="));
+    let operator = operator_index.map(|index| tokens[index].to_string());
+    let value = operator_index
+        .and_then(|index| tokens.get(index + 1))
+        .map(|value| trim_css_string(value));
+    let case_insensitive = operator_index
+        .and_then(|index| tokens.get(index + 2))
+        .is_some_and(|flag| flag.eq_ignore_ascii_case("i"));
+    Some(AttributeSelector {
+        name,
+        operator,
+        value,
+        case_insensitive,
+    })
 }
 
 fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
@@ -849,6 +1157,201 @@ fn collect_tokens(node: &GrammarASTNode, tokens: &mut Vec<String>) {
             ASTNodeOrToken::Node(node) => collect_tokens(node, tokens),
             ASTNodeOrToken::Token(token) => tokens.push(token.value.clone()),
         }
+    }
+}
+
+fn node_attribute(node: &BrowserRenderNode, name: &str) -> Option<String> {
+    match name {
+        "id" => node.id.clone(),
+        "class" => (!node.classes.is_empty()).then(|| node.classes.join(" ")),
+        "style" => node.style.clone(),
+        "title" => node.title.clone(),
+        "lang" => node.lang.clone(),
+        "dir" => node.dir.clone(),
+        "href" => node.href.clone(),
+        "target" => node.target.clone(),
+        "rel" => node.rel.clone(),
+        "src" => node.src.clone(),
+        "alt" => node.alt.clone(),
+        "width" => node.width.clone(),
+        "height" => node.height.clone(),
+        "type" => node.type_hint.clone(),
+        "media" => node.media.clone(),
+        "value" => node.value.clone(),
+        "placeholder" => node.placeholder.clone(),
+        "disabled" if node.disabled => Some(String::new()),
+        "required" if node.required => Some(String::new()),
+        "readonly" if node.readonly => Some(String::new()),
+        "checked" if node.checked => Some(String::new()),
+        "selected" if node.selected => Some(String::new()),
+        "multiple" if node.multiple => Some(String::new()),
+        "hidden" if node.hidden => Some(String::new()),
+        "open" if node.open => Some(String::new()),
+        _ => None,
+    }
+}
+
+fn rule_media_applies(rule: &StyleRule, context: &HtmlStyleContext) -> bool {
+    rule.media.iter().all(|query| {
+        media_query_list_applies(query, context.viewport_width, context.viewport_height)
+    })
+}
+
+fn media_query_list_applies(tokens: &[String], width: f64, height: f64) -> bool {
+    let query = tokens.join(" ").to_ascii_lowercase();
+    query.split(',').any(|candidate| {
+        let candidate = candidate.trim();
+        if candidate.starts_with("not ") || candidate.contains("print") {
+            return false;
+        }
+        let type_applies =
+            candidate.contains("screen") || candidate.contains("all") || candidate.starts_with('(');
+        type_applies
+            && media_feature_applies(candidate, "min-width", width, |actual, limit| {
+                actual >= limit
+            })
+            && media_feature_applies(candidate, "max-width", width, |actual, limit| {
+                actual <= limit
+            })
+            && media_feature_applies(candidate, "min-height", height, |actual, limit| {
+                actual >= limit
+            })
+            && media_feature_applies(candidate, "max-height", height, |actual, limit| {
+                actual <= limit
+            })
+    })
+}
+
+fn media_feature_applies(
+    query: &str,
+    feature: &str,
+    actual: f64,
+    compare: impl Fn(f64, f64) -> bool,
+) -> bool {
+    let Some(index) = query.find(feature) else {
+        return true;
+    };
+    let remainder = &query[index + feature.len()..];
+    let value = remainder
+        .trim_start_matches([' ', ':'])
+        .split(|character: char| character == ')' || character.is_whitespace())
+        .find(|part| !part.is_empty())
+        .and_then(|part| parse_css_length(&[part.to_string()]));
+    value.is_some_and(|limit| compare(actual, limit))
+}
+
+fn expand_declaration(declaration: &Declaration) -> Vec<(String, Vec<String>)> {
+    if !matches!(declaration.property.as_str(), "margin" | "padding") {
+        return vec![(declaration.property.clone(), declaration.value.clone())];
+    }
+    let Some(edges) = expand_edge_values(&declaration.value) else {
+        return Vec::new();
+    };
+    ["top", "right", "bottom", "left"]
+        .into_iter()
+        .zip(edges)
+        .map(|(side, value)| (format!("{}-{side}", declaration.property), vec![value]))
+        .collect()
+}
+
+fn expand_edge_values(value: &[String]) -> Option<[String; 4]> {
+    let values = value
+        .iter()
+        .filter(|token| token.as_str() != ",")
+        .take(4)
+        .cloned()
+        .collect::<Vec<_>>();
+    match values.as_slice() {
+        [all] => Some([all.clone(), all.clone(), all.clone(), all.clone()]),
+        [vertical, horizontal] => Some([
+            vertical.clone(),
+            horizontal.clone(),
+            vertical.clone(),
+            horizontal.clone(),
+        ]),
+        [top, horizontal, bottom] => Some([
+            top.clone(),
+            horizontal.clone(),
+            bottom.clone(),
+            horizontal.clone(),
+        ]),
+        [top, right, bottom, left] => {
+            Some([top.clone(), right.clone(), bottom.clone(), left.clone()])
+        }
+        _ => None,
+    }
+}
+
+fn resolve_css_value(
+    value: &[String],
+    custom_properties: &HashMap<String, Vec<String>>,
+    depth: usize,
+) -> Option<Vec<String>> {
+    if depth > 16 {
+        return None;
+    }
+    let Some(var_index) = value
+        .iter()
+        .position(|token| token == "var" || token.starts_with("var("))
+    else {
+        return Some(value.to_vec());
+    };
+    let name_index = value[var_index..]
+        .iter()
+        .position(|token| token.starts_with("--"))?
+        + var_index;
+    let name = &value[name_index];
+    let end_index = value[name_index..]
+        .iter()
+        .position(|token| token == ")")
+        .map(|index| name_index + index)
+        .unwrap_or(name_index);
+    let replacement = custom_properties.get(name).cloned().or_else(|| {
+        value[name_index + 1..=end_index]
+            .iter()
+            .position(|token| token == ",")
+            .map(|comma| value[name_index + 2 + comma..end_index].to_vec())
+    })?;
+    let mut resolved = value[..var_index].to_vec();
+    resolved.extend(replacement);
+    resolved.extend_from_slice(&value[end_index.saturating_add(1)..]);
+    resolve_css_value(&resolved, custom_properties, depth + 1)
+}
+
+#[derive(Clone, Copy)]
+enum EdgeSide {
+    Top,
+    Right,
+    Bottom,
+    Left,
+}
+
+fn set_edge(edges: &mut Option<Edges>, side: EdgeSide, value: Option<f64>) {
+    let Some(value) = value else {
+        return;
+    };
+    let edges = edges.get_or_insert_with(Edges::default);
+    match side {
+        EdgeSide::Top => edges.top = value,
+        EdgeSide::Right => edges.right = value,
+        EdgeSide::Bottom => edges.bottom = value,
+        EdgeSide::Left => edges.left = value,
+    }
+}
+
+fn trim_css_string(value: &str) -> String {
+    value
+        .trim()
+        .trim_matches(['\'', '"'])
+        .trim_end_matches(')')
+        .to_string()
+}
+
+fn finite_non_negative(value: f64) -> f64 {
+    if value.is_finite() && value >= 0.0 {
+        value
+    } else {
+        0.0
     }
 }
 
@@ -938,9 +1441,11 @@ fn apply_spacing(
     theme: &HtmlTheme,
     style: &HtmlComputedStyle,
 ) {
-    let spacing = if let Some(margin) = style.margin {
-        margin
-    } else if node.role == "heading" {
+    if let Some(margin) = style.margin {
+        layout.margin = Some(margin);
+        return;
+    }
+    let spacing = if node.role == "heading" {
         theme.heading_spacing
     } else if matches!(
         node.role.as_str(),
@@ -1145,6 +1650,118 @@ mod tests {
             html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
         assert_eq!(first_text(&layout).unwrap().color, rgb(0, 128, 0));
         assert!(HtmlAuthorStylesheet::parse("p { color: ; }").is_err());
+    }
+
+    #[test]
+    fn element_styles_custom_properties_and_edge_shorthands_share_the_cascade() {
+        let render = parse_browser_render_tree(
+            "<main style='--accent: #123456'><p id='hero' \
+             style='color: var(--accent); margin: 1px 2px 3px 4px; padding: 5px 6px'>Inline</p></main>",
+        )
+        .unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            ["#hero { color: red; margin-left: 99px; }"],
+        )
+        .unwrap();
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        let hero = find_by_id(&layout, "hero").unwrap();
+        assert_eq!(first_text(hero).unwrap().color, rgb(18, 52, 86));
+        assert_eq!(
+            hero.margin,
+            Some(Edges {
+                top: 1.0,
+                right: 2.0,
+                bottom: 3.0,
+                left: 4.0,
+            })
+        );
+        assert_eq!(
+            hero.padding,
+            Some(Edges {
+                top: 5.0,
+                right: 6.0,
+                bottom: 5.0,
+                left: 6.0,
+            })
+        );
+    }
+
+    #[test]
+    fn attribute_and_structural_selectors_match_rendered_element_positions() {
+        let render = parse_browser_render_tree(
+            "<section><p id='first' title='lead story'>One</p><p id='second'>Two</p><p id='last'>Three</p></section>",
+        )
+        .unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            ["p[title~='story']:first-child { color: red; } \
+              p:nth-child(2) { color: green; } p:last-child { color: blue; }"],
+        )
+        .unwrap();
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        assert_eq!(
+            first_text(find_by_id(&layout, "first").unwrap())
+                .unwrap()
+                .color,
+            rgb(255, 0, 0)
+        );
+        assert_eq!(
+            first_text(find_by_id(&layout, "second").unwrap())
+                .unwrap()
+                .color,
+            rgb(0, 128, 0)
+        );
+        assert_eq!(
+            first_text(find_by_id(&layout, "last").unwrap())
+                .unwrap()
+                .color,
+            rgb(0, 0, 255)
+        );
+    }
+
+    #[test]
+    fn viewport_media_and_import_metadata_remain_parser_owned() {
+        let stylesheet = HtmlAuthorStylesheet::parse(
+            "@import url('base.css') screen and (min-width: 400px); \
+             @media screen and (max-width: 500px) { p { color: red; } } \
+             @media screen and (min-width: 501px) { p { color: blue; } }",
+        )
+        .unwrap();
+        assert_eq!(stylesheet.imports().len(), 1);
+        assert_eq!(stylesheet.imports()[0].href, "base.css");
+        assert!(stylesheet.imports()[0]
+            .media
+            .as_deref()
+            .is_some_and(|media| media.contains("min-width")));
+
+        let render = parse_browser_render_tree("<p>Viewport</p>").unwrap();
+        let mut narrow = HtmlStyleContext::new(mosaic_html_theme()).with_viewport(480.0, 320.0);
+        narrow.author_stylesheets.push(stylesheet.clone());
+        let mut wide = HtmlStyleContext::new(mosaic_html_theme()).with_viewport(800.0, 600.0);
+        wide.author_stylesheets.push(stylesheet);
+        assert_eq!(
+            first_text(&html_render_tree_to_layout_with_style_context(
+                &render,
+                &narrow,
+                &never_visited,
+            ))
+            .unwrap()
+            .color,
+            rgb(255, 0, 0)
+        );
+        assert_eq!(
+            first_text(&html_render_tree_to_layout_with_style_context(
+                &render,
+                &wide,
+                &never_visited,
+            ))
+            .unwrap()
+            .color,
+            rgb(0, 0, 255)
+        );
     }
 
     #[test]

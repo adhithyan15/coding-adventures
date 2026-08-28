@@ -896,9 +896,11 @@ mod tests {
         let pending = probe_rgba(240, 120, &pending_rgba).unwrap();
         assert_eq!(pending.magenta_pixels, 0);
 
-        for request in navigation.requests {
+        let mut requests = navigation.requests;
+        while let Some(request) = requests.pop() {
             let completion = request.resolve(&|url: &str| fixture_response(origin, url));
-            assert!(host.complete_subresource(completion).repaint_required);
+            let update = host.complete_subresource(completion);
+            requests.extend(update.requests);
         }
         let metrics = host.scroll_metrics().unwrap();
         let mut saw_image = false;

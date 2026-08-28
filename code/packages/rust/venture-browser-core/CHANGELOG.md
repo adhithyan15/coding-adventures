@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add stable append-only `@import` graph scheduling, completion-discovered
+  requests, depth-first cascade order, viewport media, and import-cycle
+  diagnostics while retaining navigation cancellation and document state.
 - Generalize the shared subresource scheduler with typed stylesheet/image
   requests and completions. External author sheets now retain parser-defined
   order, block later rules until settled, honor screen/all media, survive
