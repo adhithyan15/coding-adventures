@@ -73,13 +73,17 @@ test needs a human sitting a past paper, and that item is on the queue (§6).
 
 ## 3. The item families
 
-Eight, and every one of them is enumerable from a report the package already
+Twelve, and every one of them is enumerable from a report the package already
 produces. No work item is ever authored by hand; a *finding* is, and findings go
 in `BACKLOG.md`.
 
 | kind | one item is | outstanding is counted in | tranche |
 |---|---|---|---|
 | `assessment-contract` | write one track's external/project target, four-skill pass rule, writing ramp and full-mock contract | tracks | 1 |
+| `external-capstone` | finish one declared non-CEFR capstone's missing evidence | artifacts | 1 |
+| `task-shape` | write one track/level four-skill performance shape | inventories | 1 |
+| `writing-stage` | close one track/level/stage evidence deficit | stages | 1 |
+| `human-validation` | check in reviewer or pilot evidence for one track/level's mocks | mocks | 1 |
 | `exam-inventory` | write the external or project-defined point list for one (track, level) | inventories | 1 |
 | `script-closure` | teach the glyphs one track shows but never taught | glyphs | 10 |
 | `vocabulary` | raise one track's headword count at one level | headwords | 35 |
@@ -114,13 +118,17 @@ one track clears the floor.
 
 ```
 1. assessment-contract the whole pass target, including productive writing
-2. exam-inventory      you cannot aim at a content target not written down
-3. script-closure      decoding is a precondition for reading, and it ENDS
-4. exam-point          named gaps against the external list
-5. vocabulary          the dominant remaining mass
-6. reinforcement       retention — what separates a corpus claim from a learner one
-7. atom-budget         a ramp that got steeper is a regression, not a backlog item
-8. spine-nodes         functional coverage, the coarsest corpus criterion
+2. external-capstone   preserve a real destination without inventing CEFR equivalence
+3. task-shape          name what the candidate must read, hear, write and say
+4. writing-stage       build productive writing cumulatively from the first page
+5. human-validation    prove each full mock was reviewed or piloted by a human
+6. exam-inventory      you cannot aim at a content target not written down
+7. script-closure      decoding is a precondition for reading, and it ENDS
+8. exam-point          named gaps against the external list
+9. vocabulary          the dominant remaining mass
+10. reinforcement     retention — what separates a corpus claim from a learner one
+11. atom-budget        a ramp that got steeper is a regression, not a backlog item
+12. spine-nodes        functional coverage, the coarsest corpus criterion
 ```
 
 **Why `exam-point` moved above `vocabulary`, and it is the one ordering here

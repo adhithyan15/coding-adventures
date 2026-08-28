@@ -5664,10 +5664,22 @@
       "sound": "r̥",
       "role": "vowel",
       "components": [
-        "ಋ  r̥ — independent vowel (word-initial)"
+        "a left double-spiral body flowing into the rounded middle bowl",
+        "a separate inward bar curling up into the high hook",
+        "a separate rounded right bowl with an open upper terminal"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn clockwise around the compact upper-left spiral, descend through the outer curve, curl around the lower-left spiral, and sweep through the join around the rounded middle bowl",
+        "lift, draw the inward bar from left to right, then curl upward into the high hook",
+        "lift, sweep rightward around the lower bowl, climb its outer side, and finish at the open upper terminal"
+      ],
+      "strokeOrderNote": "Three pen-down runs: the double-spiral left body continues through the rounded middle bowl; the high inward hook and the open right bowl are added separately.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-ru.gif, animation of Kannada independent vowel ಋ, 59 frames, 5.9 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ru.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಋ in three pen-down runs: the upper-left spiral descends into the lower-left spiral and continues through the rounded middle bowl; after a lift, an inward bar curls upward into the high hook; after a second lift, the right bowl sweeps from the lower join around to its open upper terminal. The path is fitted to the bundled Noto Sans Kannada outline; handwritten spiral size, bowl width, and hook height vary, but the two-lift order remains the same."
+      }
     }
   ],
   "marks": [

@@ -55,8 +55,20 @@ function validCapstone() {
     cefrRelation: "not-mapped",
     skills: { reading: skill, listening: skill, writing: skill, speaking: skill },
     fullMocks: [
-      { id: "provider-1", timed: true, rubric: "mocks/provider/rubric.md", answerKey: "mocks/provider/one.md" },
-      { id: "provider-2", timed: true, rubric: "mocks/provider/rubric.md", answerKey: "mocks/provider/two.md" },
+      {
+        id: "provider-1",
+        timed: true,
+        rubric: "mocks/provider/rubric.md",
+        answerKey: "mocks/provider/one.md",
+        humanValidation: "mocks/provider/one-validation.md",
+      },
+      {
+        id: "provider-2",
+        timed: true,
+        rubric: "mocks/provider/rubric.md",
+        answerKey: "mocks/provider/two.md",
+        humanValidation: "mocks/provider/two-validation.md",
+      },
     ],
   };
 }
@@ -121,11 +133,19 @@ describe("non-CEFR-mapped external exam capstones", () => {
       language: "alpha",
       id: "provider-academic",
       complete: false,
-      missingArtifacts: ["mocks/provider/one.md", "mocks/provider/two.md"],
+      missingArtifacts: [
+        "mocks/provider/one.md",
+        "mocks/provider/one-validation.md",
+        "mocks/provider/two.md",
+        "mocks/provider/two-validation.md",
+      ],
     });
 
     writeFileSync(join(root, "alpha", "mocks", "provider", "one.md"), "# Key one\n");
     writeFileSync(join(root, "alpha", "mocks", "provider", "two.md"), "# Key two\n");
+    expect(listExternalExamCapstones(root)[0]).toMatchObject({ complete: false });
+    writeFileSync(join(root, "alpha", "mocks", "provider", "one-validation.md"), "# Pilot one\n");
+    writeFileSync(join(root, "alpha", "mocks", "provider", "two-validation.md"), "# Pilot two\n");
     expect(listExternalExamCapstones(root)[0]).toMatchObject({ complete: true, missingArtifacts: [] });
   });
 });

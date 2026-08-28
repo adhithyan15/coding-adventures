@@ -48,9 +48,9 @@ use std::path::Path;
 
 use interpreter_ir::module::IIRModule;
 
-/// McCarthy Lisp on the universal JIT backend (W15).
+/// Lisp-family languages on the universal JIT backend.
 pub mod jit_lisp;
-pub use jit_lisp::run_mccarthy_on_jit;
+pub use jit_lisp::{run_macsyma_on_jit, run_mccarthy_on_jit};
 
 /// Source language a `lang-aot` invocation is compiling.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

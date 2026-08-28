@@ -316,9 +316,16 @@ npm run generate:assessment-artifacts  # lower the per-track ceilings
 ```
 
 Every `<track>/assessment.json` names paths: a task-shape inventory per skill, and a
-rubric and answer key per timed mock. Until this gate, nothing checked the paths led
-anywhere — 13 of 23 tracks carried a contract, all 13 dangled, and between them they
-named 351 artifacts that were not on disk.
+rubric, answer key, and (as contracts migrate) human-validation record per timed
+mock. Until this gate, nothing checked the paths led anywhere — 13 of 23 tracks
+carried a contract, all 13 dangled, and between them they named 351 artifacts that
+were not on disk.
+
+The policy has always required human validation. A legacy mock may temporarily omit
+`humanValidation` so its enclosing contract remains readable, but omission is now
+visible `human-validation/<language>/<level>` work. A declared reference is both
+safe-relative-path checked and included in the artifact audit; the work item closes
+only when every mock at the rung declares evidence and every evidence file exists.
 
 The known set is pinned per track under `core/assessment-artifact-ceiling/`. It is a
 **ceiling**, not a licence: a dangling reference outside the pin fails, and a pinned
@@ -357,7 +364,8 @@ Three ordering rules, all mechanical. **The floor is universal** — every pre-A
 outranks every A1 item in any track, because a track that climbs while its floor is
 missing has built a cliff with upper-level lessons on top. **Family priority** then
 decides what a track's next action is: the complete pass-ready assessment contract
-first, then its sourced four-skill task shape, external/project content inventory,
+first, then any declared non-CEFR capstone, its sourced four-skill task shape,
+gentle writing evidence, human mock validation, external/project content inventory,
 script closure, exam points, and vocabulary. And the
 queue **rotates across tracks**, furthest-behind first, so every language moves once
 before any language moves twice.
@@ -367,9 +375,10 @@ a flat sort produced a head of 22 consecutive research tasks and no content, and
 inventory for a rung a track has not reached was outranking the floor it is standing
 on. See `code/specs/HL15-the-completion-plan.md` §4.
 
-Three of the eight families report `null` rather than a number in the projection.
-That means **not projectable** — reinforcement debt at B1 is a function of lessons
-nobody has written — which is a different fact from zero.
+Some families report `null` rather than a number in the projection. That means
+**not projectable** — human-validation work is exact for mocks in contracts that
+exist but unknowable for tracks with no contract, while reinforcement debt at B1
+is a function of lessons nobody has written. That is a different fact from zero.
 
 ### The super-gentle cross-language queue (HL17)
 

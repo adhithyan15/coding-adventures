@@ -652,4 +652,154 @@ export const entries: DuctusEntry[] = [
       source: kannadaIndependentVowelSource("ಐ"),
     },
   ],
+  // Gopala Krishna A's 59-frame animation writes independent vowel ಋ in
+  // three runs. The first joins the upper-left spiral, lower-left spiral, and
+  // rounded middle bowl. After one lift, the second draws the inward bar and
+  // high hook. After another lift, the third circles the open right bowl.
+  // These seven medians fit that attested order to Noto Sans Kannada.
+  [
+    "kannada:ಋ",
+    {
+      script: "kannada",
+      glyph: "ಋ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "turn clockwise around the compact upper-left spiral",
+              path: [
+                { x: 245, y: 440 },
+                { x: 240, y: 485 },
+                { x: 210, y: 525 },
+                { x: 155, y: 540 },
+                { x: 100, y: 525 },
+                { x: 65, y: 490 },
+                { x: 60, y: 445 },
+                { x: 75, y: 415 },
+                { x: 115, y: 390 },
+                { x: 150, y: 365 },
+                { x: 155, y: 370 },
+                { x: 205, y: 375 },
+                { x: 225, y: 395 },
+                { x: 245, y: 440 },
+              ],
+            },
+            {
+              label:
+                "descend through the outer curve and curl around the lower-left spiral",
+              path: [
+                { x: 245, y: 440 },
+                { x: 295, y: 405 },
+                { x: 295, y: 445 },
+                { x: 300, y: 450 },
+                { x: 335, y: 395 },
+                { x: 355, y: 320 },
+                { x: 355, y: 315 },
+                { x: 370, y: 240 },
+                { x: 375, y: 155 },
+                { x: 350, y: 100 },
+                { x: 300, y: 70 },
+                { x: 250, y: 50 },
+                { x: 190, y: 40 },
+                { x: 120, y: 50 },
+                { x: 70, y: 90 },
+                { x: 60, y: 140 },
+                { x: 90, y: 180 },
+                { x: 145, y: 195 },
+                { x: 200, y: 185 },
+                { x: 230, y: 160 },
+                { x: 235, y: 150 },
+                { x: 240, y: 110 },
+              ],
+            },
+            {
+              label:
+                "sweep through the join and around the rounded middle bowl",
+              path: [
+                { x: 240, y: 110 },
+                { x: 275, y: 75 },
+                { x: 355, y: 80 },
+                { x: 385, y: 75 },
+                { x: 445, y: 55 },
+                { x: 535, y: 70 },
+                { x: 625, y: 60 },
+                { x: 650, y: 85 },
+                { x: 675, y: 105 },
+                { x: 700, y: 145 },
+                { x: 705, y: 175 },
+                { x: 710, y: 235 },
+                { x: 685, y: 330 },
+                { x: 680, y: 335 },
+                { x: 660, y: 445 },
+                { x: 625, y: 535 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the inward bar from left to right",
+              path: [
+                { x: 455, y: 510 },
+                { x: 500, y: 515 },
+                { x: 555, y: 515 },
+                { x: 610, y: 525 },
+                { x: 650, y: 555 },
+              ],
+            },
+            {
+              label: "curl upward into the high hook",
+              path: [
+                { x: 650, y: 555 },
+                { x: 680, y: 570 },
+                { x: 695, y: 590 },
+                { x: 695, y: 595 },
+                { x: 700, y: 615 },
+                { x: 700, y: 660 },
+                { x: 685, y: 725 },
+                { x: 655, y: 760 },
+                { x: 640, y: 750 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then sweep rightward around the lower bowl",
+              path: [
+                { x: 690, y: 105 },
+                { x: 735, y: 65 },
+                { x: 755, y: 75 },
+                { x: 810, y: 45 },
+                { x: 900, y: 55 },
+                { x: 990, y: 70 },
+                { x: 995, y: 75 },
+                { x: 1020, y: 85 },
+                { x: 1050, y: 115 },
+                { x: 1065, y: 145 },
+              ],
+            },
+            {
+              label:
+                "climb the outer side and finish at the open upper terminal",
+              path: [
+                { x: 1065, y: 145 },
+                { x: 1075, y: 215 },
+                { x: 1065, y: 295 },
+                { x: 1060, y: 305 },
+                { x: 1035, y: 390 },
+                { x: 1005, y: 490 },
+                { x: 960, y: 535 },
+                { x: 925, y: 560 },
+                { x: 910, y: 540 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: kannadaIndependentVowelSource("ಋ"),
+    },
+  ],
 ];

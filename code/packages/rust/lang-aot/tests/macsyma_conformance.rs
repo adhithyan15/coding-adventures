@@ -3,14 +3,13 @@
 //! Macsyma's Wave 1 (`macsyma-iir-compiler` + `macsyma-vm`) proved the v0
 //! integer-arithmetic/assignment/unevaluated-symbolic-`Apply` value model on the
 //! VM interpreter only. This suite is the Wave 4 capstone: the **same** source,
-//! compiled through five independent code generators, computes the same number.
+//! compiled through five independent code generators, the VM interpreter, and
+//! the universal JIT, computes the same number.
 //! Structurally this is `conformance.rs`'s McCarthy W16 capstone, retargeted —
 //! `Language::McCarthyLisp` → `Language::Macsyma`, `mccarthy_lisp_vm::run` →
 //! `macsyma_vm::run` — scoped to the five backends `macsyma-iir-vm.md` §6 Wave 4
-//! names (NativeAOT arm64/x86_64, LLVM, WASM, JVM, CLR). BEAM and the universal
-//! JIT are explicitly out of scope: JIT is McCarthy-hardcoded today
-//! (`lang_aot::run_mccarthy_on_jit`, no generic `run_on_jit(language, ..)`), and
-//! BEAM is scoped out repo-wide for non-McCarthy languages
+//! names (NativeAOT arm64/x86_64, LLVM, WASM, JVM, CLR), plus the universal JIT.
+//! BEAM remains scoped out repo-wide for non-McCarthy languages
 //! (`code/specs/LANG-PLATFORM-MATRIX.md`).
 //!
 //! ## The one genuine risk this suite is built to catch
@@ -37,7 +36,8 @@
 
 use lang_aot::{
     compile_source_to_cil_artifact, compile_source_to_iir, compile_source_to_jvm_class,
-    compile_source_to_llvm_with_target, compile_source_to_wasm, Language,
+    compile_source_to_llvm_with_target, compile_source_to_wasm, run_macsyma_on_jit,
+    Language,
 };
 
 // Shared `gc_link_args()` — see `conformance.rs`'s identical `mod common;` for why
@@ -180,7 +180,21 @@ fn run_vm(src: &str) -> Option<i64> {
     }
 }
 
-// ── Backend 2: WASM via the in-repo runtime. Always runs. ──
+// ── Backend 2: universal JIT. Always runs. The runner applies the shared
+//    dynamic-arithmetic lowering before driving GenericCirJit. ──
+fn run_jit(src: &str) -> Option<i64> {
+    match run_macsyma_on_jit(src) {
+        Ok(v) => v,
+        Err(e) => backend_failed(
+            "JIT",
+            src,
+            "source → universal JIT",
+            format!("{e:?}"),
+        ),
+    }
+}
+
+// ── Backend 3: WASM via the in-repo runtime. Always runs. ──
 fn run_wasm(src: &str) -> Option<i64> {
     let bytes = match compile_source_to_wasm(Language::Macsyma, src, "main") {
         Ok(b) => b,
@@ -195,7 +209,7 @@ fn run_wasm(src: &str) -> Option<i64> {
     }
 }
 
-// ── Backend 3: CLR via the in-repo simulator. Always runs. ──
+// ── Backend 4: CLR via the in-repo simulator. Always runs. ──
 fn run_clr(src: &str) -> Option<i64> {
     use clr_simulator::{CLRSimulator, MethodCode, Value};
     let artifact = match compile_source_to_cil_artifact(Language::Macsyma, src, "Main") {
@@ -228,7 +242,7 @@ fn run_clr(src: &str) -> Option<i64> {
     }
 }
 
-// ── Backend 4: JVM on a real `java`. Gated on `java`. ──
+// ── Backend 5: JVM on a real `java`. Gated on `java`. ──
 fn run_jvm(src: &str) -> Option<i64> {
     use iir_to_jvm_class_file::serialize_jvm_class_file;
     use jvm_class_file::{
@@ -313,7 +327,7 @@ fn run_jvm(src: &str) -> Option<i64> {
     }
 }
 
-// ── Backend 5: LLVM via `clang` + the shared C runtime. Gated on `clang`. ──
+// ── Backend 6: LLVM via `clang` + the shared C runtime. Gated on `clang`. ──
 fn run_llvm(src: &str) -> Option<i64> {
     if !tool_ok("clang", "--version") {
         return None;
@@ -360,7 +374,7 @@ fn run_llvm(src: &str) -> Option<i64> {
     }
 }
 
-// ── Backend 6: native AOT — cross-platform (Linux/macOS/Windows), unlike the
+// ── Backend 7: native AOT — cross-platform (Linux/macOS/Windows), unlike the
 //    McCarthy W16 capstone's macOS-only `run_native`. Mirrors
 //    `lang_matrix.rs::compile_native`'s per-OS dispatch. ──
 #[cfg(target_os = "linux")]
@@ -408,6 +422,7 @@ fn macsyma_is_uniform_across_every_backend() {
     #[allow(clippy::type_complexity)]
     let backends: &[(&str, fn(&str) -> Option<i64>)] = &[
         ("VM", run_vm),
+        ("JIT", run_jit),
         ("WASM", run_wasm),
         ("CLR", run_clr),
         ("JVM", run_jvm),
@@ -428,9 +443,9 @@ fn macsyma_is_uniform_across_every_backend() {
         }
     }
 
-    // The three pure-in-process backends have no external dependency and MUST
+    // The four pure-in-process backends have no external dependency and MUST
     // run every program — they are the conformance floor.
-    for must in ["VM", "WASM", "CLR"] {
+    for must in ["VM", "JIT", "WASM", "CLR"] {
         assert!(exercised.contains(must), "in-process backend {must} failed to run");
     }
 

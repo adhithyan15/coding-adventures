@@ -54,6 +54,8 @@ describe("the plan CLI", () => {
     // work did not appear, it was always there and was invisible while the
     // target list covered one of four content dimensions.
     expect(out).toMatch(/exam-point — spanish/);
+    expect(out).toMatch(/human-validation — marwadi/);
+    expect(out).toMatch(/human-validate 2 of 2 pre-A1 full mock\(s\) for marwadi/);
     // Still PARTIAL, and therefore still "0 complete": the pronunciation half
     // of phonology-orthography has no A1-only boundary in the source, so that
     // single dimension keeps the whole inventory partial. This is the HL20 rule

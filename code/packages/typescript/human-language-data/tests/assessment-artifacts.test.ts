@@ -25,7 +25,11 @@ import {
   serializeCeiling,
 } from "../src/assessment-artifacts.js";
 import { runAssessmentArtifactCli } from "../src/assessment-artifact-cli.js";
-import { defaultCurriculumRoot, loadAssessmentContracts } from "../src/loader.js";
+import {
+  defaultCurriculumRoot,
+  listHumanValidationStatuses,
+  loadAssessmentContracts,
+} from "../src/loader.js";
 
 // --- fixture -----------------------------------------------------------------
 
@@ -46,7 +50,7 @@ const STAGES: Record<(typeof LEVELS)[number], string[]> = {
 };
 for (const level of ["B1", "B2", "C1", "C2"] as const) STAGES[level] = STAGES.A2;
 
-function contract(language: string): unknown {
+function contract(language: string, withHumanValidation = false): unknown {
   return {
     version: 1,
     language,
@@ -71,6 +75,9 @@ function contract(language: string): unknown {
           timed: true,
           rubric: `mocks/${slug}/rubric.md`,
           answerKey: `mocks/${slug}/mock-${n}-answer-key.md`,
+          ...(withHumanValidation
+            ? { humanValidation: `validation/${slug}-mock-${n}.md` }
+            : {}),
         })),
       };
     }),
@@ -182,6 +189,39 @@ describe("dangling assessment-contract references", () => {
     const inventory = references.find((r) => r.reference === "task-shapes/a1.json#reading")!;
     expect(inventory.reference).toBe("task-shapes/a1.json#reading");
     expect(inventory.path).toBe("task-shapes/a1.json");
+  });
+
+  it("measures absent, partial, complete, and dangling human-validation evidence", () => {
+    // Legacy contracts remain readable, but every mock is explicit debt.
+    expect(listHumanValidationStatuses(root)[0]).toMatchObject({
+      language: "fixtura",
+      level: "pre-A1",
+      requiredMocks: 2,
+      validatedMocks: 0,
+      missingMocks: ["pre-a1-mock-1", "pre-a1-mock-2"],
+    });
+
+    // Declaring evidence makes it part of the strict artifact walk. One real
+    // file and one dangling promise is partial, not complete.
+    write("fixtura/assessment.json", `${JSON.stringify(contract("fixtura", true), null, 2)}\n`);
+    write("fixtura/validation/pre-a1-mock-1.md", "# reviewed\n");
+    expect(listHumanValidationStatuses(root)[0]).toMatchObject({
+      requiredMocks: 2,
+      validatedMocks: 1,
+      missingMocks: ["pre-a1-mock-2"],
+    });
+    const dangling = collectArtifactReferences(loadAssessmentContracts(root)[0]!.contract)
+      .find((reference) => reference.where.endsWith("pre-a1-mock-2].humanValidation"));
+    expect(dangling).toMatchObject({
+      reference: "validation/pre-a1-mock-2.md",
+      path: "validation/pre-a1-mock-2.md",
+    });
+
+    write("fixtura/validation/pre-a1-mock-2.md", "# reviewed\n");
+    expect(listHumanValidationStatuses(root)[0]).toMatchObject({
+      validatedMocks: 2,
+      missingMocks: [],
+    });
   });
 });
 

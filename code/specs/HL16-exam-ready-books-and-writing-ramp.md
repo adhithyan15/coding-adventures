@@ -80,7 +80,16 @@ contract contains every level and, at each level:
 6. the writing stages required at that level;
 7. at least two complete timed mocks;
 8. a rubric and answer key for every mock;
-9. every compulsory provider-specific component beyond the four-skill floor.
+9. a safe relative `humanValidation` reference for every mock, pointing to its
+   checked-in reviewer or pilot record;
+10. every compulsory provider-specific component beyond the four-skill floor.
+
+`humanValidation` is optional in the parser only for migration. Omitting it does
+not satisfy the policy: the completion plan emits
+`human-validation/<language>/<level>` until every mock at that rung declares an
+evidence file and every declared file exists. A malformed or unsafe declared
+path is an invalid contract, and a safe path to no file is caught by the strict
+assessment-artifact gate.
 
 An external exam may require a separately passed component that is not itself
 one of the four universal skills—for example, TORFL's `Lexis. Grammar`
@@ -141,8 +150,10 @@ Each declaration has a stable lowercase id, an external target and dated source,
 `cefrRelation: not-mapped`, the curriculum level after which the capstone is
 attempted, four independently thresholded skill inventories, any additional
 provider components, and at least two timed mocks with rubrics and answer keys.
-The level is a dependency boundary, not an equivalence claim. Missing referenced
-artifacts remain a computed `external-capstone` work item until they exist.
+Each mock also names its checked-in human-validation evidence. The level is a
+dependency boundary, not an equivalence claim. Missing declarations and missing
+referenced artifacts remain a computed `external-capstone` work item until they
+exist.
 
 ## 5. Writing is a full strand, beginning on the first page
 
@@ -244,11 +255,12 @@ testable tranches:
 | `writing-stage` | close one track/level/stage coverage deficit | exact after manifests exist |
 | `task-shape` | add missing teaching and scored practice for one paper task | exact after inventories exist |
 | `mock-assessment` | add or repair one full timed mock and its scoring materials | exact: target count minus valid mocks |
-| `human-validation` | run or repair one pre-registered book-only learner study | not honestly projectable before recruitment |
+| `human-validation` | make every timed mock at one track/level carry present reviewer or pilot evidence | exact for contracts that exist; future mocks are unknown until their contract exists |
 
-The first family is implemented with this spec. The others stay explicit here
-and in #12207 until their validators land. A prose-only future family must never
-be counted as zero.
+The assessment, writing-stage, task-shape, and human-validation families are now
+implemented. The human-validation count measures required evidence artifacts;
+it does not pretend that recruitment time or study outcome is predictable. A
+prose-only future family must never be counted as zero.
 
 ## 9. Program sequence
 
