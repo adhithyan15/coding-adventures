@@ -1224,13 +1224,18 @@ fn collect_native_degradations(
         // #13176 — a native determinate progress ring for TaskApp's
         // workspace-progress display (and any future percent-complete
         // UI). Unconditionally degraded on every native backend at
-        // registration, exactly like HostSwitch above; narrow as each
-        // backend's PR lands (XAML, then Flutter, then Compose, then
-        // Qt last — Qt has no off-the-shelf circular determinate
-        // control and needs its own spike).
+        // registration, exactly like HostSwitch above; narrowed as each
+        // backend's PR landed (XAML, Flutter, Compose, then Qt — Qt had
+        // no off-the-shelf circular determinate control, so it drew one
+        // by hand via QtQuick.Shapes' Shape/ShapePath/PathAngleArc).
+        // Only SwiftUI (out of scope, tracked separately in #13206)
+        // remains.
         "HostProgressRing"
             if backend.is_native()
-                && !matches!(backend, Backend::Xaml | Backend::Flutter | Backend::Compose) =>
+                && !matches!(
+                    backend,
+                    Backend::Xaml | Backend::Flutter | Backend::Compose | Backend::Qt
+                ) =>
         {
             Some((
                 "primitive.progress-ring-unimplemented",
@@ -4999,12 +5004,15 @@ layout Ring {
         )
         .unwrap();
 
-        // XAML, Flutter, and Compose land their lowerings in separate
-        // PRs — see host_progress_ring_xaml_now_has_a_native_lowering,
-        // host_progress_ring_flutter_now_has_a_native_lowering, and
-        // host_progress_ring_compose_now_has_a_native_lowering below.
-        // The remaining two still have no lowering at all.
-        for backend in [Backend::Qt, Backend::SwiftUI] {
+        // XAML, Flutter, Compose, and Qt land their lowerings in
+        // separate PRs — see host_progress_ring_xaml_now_has_a_native_lowering,
+        // host_progress_ring_flutter_now_has_a_native_lowering,
+        // host_progress_ring_compose_now_has_a_native_lowering, and
+        // host_progress_ring_qt_now_has_a_native_lowering below.
+        // SwiftUI (out of scope, tracked separately in #13206) is the
+        // only backend still with no lowering at all.
+        {
+            let backend = Backend::SwiftUI;
             let out = TempDir::new().unwrap();
             let report = analyze_package_degradations(
                 &BuildOptions {
@@ -5134,6 +5142,40 @@ layout Ring {
         assert!(
             report.native_complete,
             "Compose now has a native HostProgressRing lowering: {:?}",
+            report.degradations
+        );
+    }
+
+    #[test]
+    fn host_progress_ring_qt_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-ring-qt", &["Ring"]);
+        fs::write(
+            pkg.path().join("src/Ring.mll"),
+            r#"
+layout Ring {
+  HostProgressRing [ root ] (
+    value: 42
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Qt,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Qt progress ring capability analysis");
+        assert!(
+            report.native_complete,
+            "Qt now has a native HostProgressRing lowering: {:?}",
             report.degradations
         );
     }

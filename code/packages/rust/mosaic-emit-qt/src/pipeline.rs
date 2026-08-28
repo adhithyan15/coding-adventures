@@ -2031,6 +2031,14 @@ fn emit_qml_tree(
         "HostCheckbox" => return emit_host_checkbox_qml(node, depth, ctx),
         "HostRadio" => return emit_host_radio_qml(node, depth, ctx),
         "HostSlider" => return emit_host_slider_qml(node, depth, ctx),
+        // #13176 — `HostProgressRing` lowers to a hand-drawn determinate
+        // arc (`Shape`/`ShapePath`/`PathAngleArc`, from `QtQuick.Shapes`):
+        // Qt Quick Controls 2 has no off-the-shelf circular *determinate*
+        // ring (`ProgressBar` is linear; `BusyIndicator`, used above for
+        // the Icon spinner, is indeterminate-only with no `value`
+        // property). See `emit_host_progress_ring_qml`'s doc comment for
+        // the real-toolchain verification behind this approach.
+        "HostProgressRing" => return emit_host_progress_ring_qml(node, depth, ctx),
 
         // UI29-4 kernel — `HostLink` lowers to a rich-text `Text`
         // with `onLinkActivated` (Qt has no first-class hyperlink
@@ -4063,6 +4071,153 @@ fn emit_host_slider_qml(
     Ok(out)
 }
 
+/// Lower `HostProgressRing` to a hand-drawn determinate arc (#13176).
+///
+/// Qt Quick Controls 2 has no off-the-shelf circular *determinate*
+/// progress control: `ProgressBar` is linear, and `BusyIndicator`
+/// (already used above for the `Icon(glyph: "spinner")` case) is
+/// indeterminate-only with no `value` property. Unlike every other
+/// backend in this cascade (XAML's `ProgressRing`, Flutter's and
+/// Compose's `CircularProgressIndicator`), there is no native ring
+/// widget to reuse here — this draws the arc by hand with
+/// `Shape`/`ShapePath`/`PathAngleArc` from `QtQuick.Shapes`, the same
+/// module already imported for `Path`'s `line`/`curve` kinds (UI39).
+/// `PathAngleArc` takes a center, radii, a start angle, and a sweep
+/// angle in degrees; `-90` starts the arc at 12 o'clock (matching every
+/// other backend's ring orientation) and the sweep is `360 *
+/// (value / 100)`.
+///
+/// `value` is required and supports the same `Number`/`SlotRef`/`Expr`
+/// three-way binding every other numeric prop has (unlike `Path`'s
+/// coordinate props, which explicitly reject binding) — the whole
+/// point of this primitive is rendering a live `ring-percent-value`.
+/// The `sweepAngle` binding embeds `value_expr` directly (already
+/// either a literal or fully qualified via `mosaicRoot.`), and a
+/// sibling `property real value` is declared on the `Shape` for Qt's
+/// generic accessibility bridge (`QAccessibleQuickItem`, which wraps
+/// every `QQuickItem`, not just hand-coded C++ controls) to pick up via
+/// `QAccessibleValueInterface` property introspection — matching this
+/// crate's role+name accessibility convention (`Accessible.role` +
+/// `Accessible.name`, reused from `build_text_accessible_name_attribute`)
+/// for every other primitive.
+///
+/// `centerX`/`centerY`/`radiusX`/`radiusY` are literal numbers computed
+/// here in Rust from the part's `width`/`height` style (falling back to
+/// TaskApp's own 34px `ring-circle` size if unstyled) — the same
+/// "compute geometry as plain numbers at emit time" approach `Path`'s
+/// `circle` kind already uses, and required here for a real reason
+/// found empirically (see below), not just consistency: a first attempt
+/// read `width`/`height` back from the `Shape` itself via QML property
+/// bindings so the arc would track live resizes, but `Shape` derives
+/// its own `implicitWidth`/`implicitHeight` from its *contained path's*
+/// rendered bounding box by default — and that bounding box depends on
+/// `PathAngleArc`'s radii, which depended on `Shape.width`/`.height`,
+/// which (via the default `width: implicitWidth` binding) depended back
+/// on the bounding box: a genuine circular binding loop, confirmed by a
+/// real `qml` runtime run reporting "Binding loop detected for property
+/// implicitWidth" and rendering a garbage near-zero ring. Computing the
+/// radii as plain Rust numbers breaks the cycle at its root — matching
+/// how mosstyle's `width`/`height` are themselves always static literal
+/// pixel values in every real usage anyway (there's no "live-resizing
+/// ring" case this loses).
+///
+/// Verified against the real, complete generated output (not just an
+/// isolated hand-written probe): compiled a real `.mil`/`.mll`/`.msl`
+/// triple through `mosaic-compile --backend qt`, then ran the exact
+/// generated file through `qmllint` (clean) and a real `qml` runtime
+/// window (Qt 6.8.1, the version this repo pins), cycling `value`
+/// through 0, 50, 100, and a fractional 33.5 with no crash, no binding
+/// loop warning, and no `ReferenceError` (the first draft's unqualified
+/// `width`/`height`/`value` references inside `PathAngleArc` — legal
+/// and correctly resolved in an isolated single-component probe —
+/// threw `ReferenceError: value is not defined` at runtime once
+/// embedded in the real generated file's deeper structure under
+/// `pragma ComponentBehavior: Bound`; this rewrite avoids the whole
+/// class of bug by never relying on unqualified lookups for numbers
+/// that are already known at emit time).
+fn emit_host_progress_ring_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let nested = "    ".repeat(depth + 2);
+
+    let value_expr = required_progress_ring_value(node)?;
+    let props = part_style_props(node, ctx).unwrap_or(&[]);
+    let stroke_color = style_prop(props, "color")
+        .and_then(qml_hex_color_or_none)
+        .unwrap_or_else(|| "#808080".to_string());
+    let ring_px = |prop_name: &str| -> f64 {
+        style_prop(props, prop_name)
+            .and_then(qml_px_or_none)
+            .and_then(|value| value.parse::<f64>().ok())
+            .unwrap_or(34.0)
+    };
+    let width = ring_px("width");
+    let height = ring_px("height");
+    let stroke_width = 3.0_f64;
+    let center_x = width / 2.0;
+    let center_y = height / 2.0;
+    let radius_x = (width - stroke_width) / 2.0;
+    let radius_y = (height - stroke_width) / 2.0;
+
+    let mut out = String::new();
+    writeln!(out, "{pad}Shape {{").unwrap();
+    writeln!(out, "{inner}property real value: {value_expr}").unwrap();
+    writeln!(out, "{inner}width: {width}").unwrap();
+    writeln!(out, "{inner}height: {height}").unwrap();
+    writeln!(out, "{inner}Layout.preferredWidth: {width}").unwrap();
+    writeln!(out, "{inner}Layout.preferredHeight: {height}").unwrap();
+    writeln!(out, "{inner}antialiasing: true").unwrap();
+    writeln!(out, "{inner}Accessible.role: Accessible.ProgressBar").unwrap();
+    if let Some(accessible_name) = build_text_accessible_name_attribute(node) {
+        writeln!(out, "{inner}{accessible_name}").unwrap();
+    }
+    writeln!(out, "{inner}ShapePath {{").unwrap();
+    writeln!(out, "{nested}strokeColor: \"{stroke_color}\"").unwrap();
+    writeln!(out, "{nested}strokeWidth: {stroke_width}").unwrap();
+    writeln!(out, "{nested}fillColor: \"transparent\"").unwrap();
+    writeln!(out, "{nested}capStyle: ShapePath.RoundCap").unwrap();
+    writeln!(out, "{nested}PathAngleArc {{").unwrap();
+    writeln!(out, "{nested}    centerX: {center_x}").unwrap();
+    writeln!(out, "{nested}    centerY: {center_y}").unwrap();
+    writeln!(out, "{nested}    radiusX: {radius_x}").unwrap();
+    writeln!(out, "{nested}    radiusY: {radius_y}").unwrap();
+    writeln!(out, "{nested}    startAngle: -90").unwrap();
+    writeln!(out, "{nested}    sweepAngle: 360 * ({value_expr}) / 100").unwrap();
+    writeln!(out, "{nested}}}").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Read `HostProgressRing`'s required `value` prop's
+/// `Number`/`SlotRef`/`Expr` three-way binding — a missing prop is a
+/// clear compile error, not a silent default (unlike `HostSlider`'s
+/// optional `min`/`max`/`step`, which fall back to a sensible default
+/// when absent).
+fn required_progress_ring_value(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    let Some(prop) = node.props.iter().find(|prop| prop.name == "value") else {
+        return Err(PipelineEmitError::UnknownPrimitive(
+            "HostProgressRing missing required prop 'value:'".to_string(),
+        ));
+    };
+    match &prop.value {
+        LayoutPropValue::SlotRef(slot) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(format!("mosaicRoot.{field}"))
+        }
+        LayoutPropValue::Number(number) => Ok(number.to_string()),
+        LayoutPropValue::Expr(expression) => Ok(expression.clone()),
+        _ => Err(PipelineEmitError::UnknownPrimitive(
+            "HostProgressRing missing required prop 'value:'".to_string(),
+        )),
+    }
+}
+
 // =====================================================================
 // UI29-4 — HostLink / HostTooltip / HostNumberInput emitters
 // =====================================================================
@@ -4558,10 +4713,12 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
     ) || node.children.iter().any(tree_needs_controls_import)
 }
 
-/// UI39: does this tree contain a `Path` whose `kind` needs `QtQuick.Shapes`
-/// (`line`/`curve`/`arc` — `circle` lowers to a plain `Rectangle` and needs
-/// no import)? A `Path` with a missing/unrecognized `kind` is not matched
-/// here — `emit_path_qml` reports that as a clear error at emission time
+/// UI39/UI40: does this tree contain a `Path` whose `kind` needs
+/// `QtQuick.Shapes` (`line`/`curve`/`arc` — `circle` lowers to a plain
+/// `Rectangle` and needs no import), or a `HostProgressRing` (which always
+/// lowers to a hand-drawn `Shape`/`ShapePath`/`PathAngleArc` arc — #13176)?
+/// A `Path` with a missing/unrecognized `kind` is not matched here —
+/// `emit_path_qml` reports that as a clear error at emission time
 /// regardless of what this predicate decides about the import line.
 fn tree_needs_shapes_import(node: &LayoutNode) -> bool {
     (node.tag == "Path"
@@ -4569,6 +4726,7 @@ fn tree_needs_shapes_import(node: &LayoutNode) -> bool {
             find_keyword_prop(node, "kind"),
             Some("line") | Some("curve") | Some("arc")
         ))
+        || node.tag == "HostProgressRing"
         || node.children.iter().any(tree_needs_shapes_import)
 }
 
@@ -10879,6 +11037,180 @@ mod tests {
         assert!(!out.contains("snapMode:"));
         assert!(!out.contains("onMoved:"));
         assert!(!out.contains("onPressedChanged:"));
+    }
+
+    /// #13176 — literal `value:` and a sized `ring-circle` part lower to
+    /// a hand-drawn determinate arc: `Shape`/`ShapePath`/`PathAngleArc`
+    /// via `QtQuick.Shapes`, no wrapper `Item`/`id`, sized through the
+    /// same `implicitWidth`/`implicitHeight` style-map lookup every
+    /// other primitive gets.
+    #[test]
+    fn host_progress_ring_lowers_to_determinate_arc() {
+        let style = StyleDef {
+            component_name: "Ring".to_string(),
+            parts: vec![PartStyle {
+                name: "ring-circle".to_string(),
+                base: vec![sp("width", "34px"), sp("height", "34px")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "Ring".to_string(),
+            root: LayoutNode {
+                tag: "HostProgressRing".to_string(),
+                part_name: Some("ring-circle".to_string()),
+                props: vec![LayoutProp {
+                    name: "value".to_string(),
+                    value: LayoutPropValue::Number(42.0),
+                }],
+                children: vec![],
+            },
+        };
+        let m = component("Ring", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &style)
+            .expect("emit native Qt progress ring")
+            .output;
+
+        assert!(out.contains("import QtQuick.Shapes"));
+        assert!(out.contains("Shape {"));
+        assert!(out.contains("property real value: 42"));
+        assert!(out.contains("width: 34"));
+        assert!(out.contains("height: 34"));
+        assert!(out.contains("Layout.preferredWidth: 34"));
+        assert!(out.contains("Layout.preferredHeight: 34"));
+        assert!(out.contains("Accessible.role: Accessible.ProgressBar"));
+        assert!(out.contains("ShapePath {"));
+        assert!(out.contains("PathAngleArc {"));
+        assert!(out.contains("centerX: 17"));
+        assert!(out.contains("centerY: 17"));
+        assert!(out.contains("radiusX: 15.5"));
+        assert!(out.contains("radiusY: 15.5"));
+        assert!(out.contains("startAngle: -90"));
+        assert!(out.contains("sweepAngle: 360 * (42) / 100"));
+    }
+
+    /// #13176 — `value:` MUST support live `SlotRef` binding from day
+    /// one (unlike `Path`'s coordinate props): the whole point is
+    /// rendering a live `ring-percent-value`.
+    #[test]
+    fn host_progress_ring_value_accepts_slot_binding() {
+        let m = component("Ring", vec![slot("percent", SlotType::Number, true)], vec![]);
+        let l = LayoutDef {
+            component_name: "Ring".to_string(),
+            root: LayoutNode {
+                tag: "HostProgressRing".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "value".to_string(),
+                    value: LayoutPropValue::SlotRef("percent".to_string()),
+                }],
+                children: vec![],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Ring")).unwrap().output;
+        assert!(out.contains("property real value: mosaicRoot.percent"));
+        assert!(out.contains("sweepAngle: 360 * (mosaicRoot.percent) / 100"));
+    }
+
+    /// Without a `ring-circle` (or any) part style, the ring falls back
+    /// to TaskApp's own 34px `ring-circle` size rather than an
+    /// implicit/unset (and therefore invisible) 0×0 arc — there is no
+    /// native-widget default to fall back on here, unlike XAML/Flutter/
+    /// Compose's real ring controls.
+    #[test]
+    fn host_progress_ring_without_size_style_falls_back_to_34px() {
+        let m = component("Ring", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Ring".to_string(),
+            root: LayoutNode {
+                tag: "HostProgressRing".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "value".to_string(),
+                    value: LayoutPropValue::Number(50.0),
+                }],
+                children: vec![],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Ring")).unwrap().output;
+        assert!(out.contains("width: 34"));
+        assert!(out.contains("height: 34"));
+        assert!(out.contains("centerX: 17"));
+        assert!(out.contains("radiusX: 15.5"));
+    }
+
+    #[test]
+    fn host_progress_ring_missing_value_is_a_clear_error() {
+        let m = component("Ring", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Ring".to_string(),
+            root: LayoutNode {
+                tag: "HostProgressRing".to_string(),
+                part_name: None,
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let err = from_pipeline(&m, &l, &empty_style("Ring")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("value")));
+    }
+
+    #[test]
+    fn host_progress_ring_a11y_label_lowers_to_accessible_name() {
+        let m = component("Ring", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Ring".to_string(),
+            root: LayoutNode {
+                tag: "HostProgressRing".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "value".to_string(),
+                        value: LayoutPropValue::Number(75.0),
+                    },
+                    LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::String("Workspace progress".to_string()),
+                    },
+                ],
+                children: vec![],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Ring")).unwrap().output;
+        assert!(out.contains("Accessible.name: \"Workspace progress\""));
+    }
+
+    /// A layout using `HostProgressRing` without any `Path` `line`/
+    /// `curve`/`arc` must still get `import QtQuick.Shapes` — the ring
+    /// always needs it, unlike `Path`, where only some `kind`s do.
+    #[test]
+    fn host_progress_ring_alone_imports_shapes() {
+        let m = component("Ring", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Ring".to_string(),
+            root: LayoutNode {
+                tag: "HostProgressRing".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "value".to_string(),
+                    value: LayoutPropValue::Number(10.0),
+                }],
+                children: vec![],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Ring")).unwrap().output;
+        assert!(out.contains("import QtQuick.Shapes"));
+    }
+
+    /// A layout using neither `Path` nor `HostProgressRing` must not pay
+    /// for the `QtQuick.Shapes` import.
+    #[test]
+    fn layout_without_path_or_progress_ring_gets_no_shapes_import() {
+        let m = component("X", vec![], vec![]);
+        let l = single_box_layout("X");
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(!out.contains("import QtQuick.Shapes"));
     }
 
     /// UI29-4 Qt test 4 — bare `HostNumberInput` lowers to a
