@@ -16,6 +16,7 @@ import os
 import re
 import shutil
 import subprocess  # nosec B404 -- fixed local runner tools only
+import tempfile
 from collections.abc import Iterable, Mapping
 from pathlib import Path
 
@@ -122,26 +123,50 @@ def find_vcvarsall(program_files_x86: Path) -> Path:
     return vcvarsall
 
 
+def developer_command_script(vcvarsall: Path, architecture: str) -> str:
+    """Build a temporary batch wrapper without ``cmd /c`` quote ambiguity."""
+
+    return (
+        "@echo off\r\n"
+        f'call "{vcvarsall}" {architecture}\r\n'
+        "if errorlevel 1 exit /b %errorlevel%\r\n"
+        "set\r\n"
+    )
+
+
 def capture_developer_environment(
     vcvarsall: Path, architecture: str, *, comspec: Path
 ) -> dict[str, str]:
     """Call vcvarsall and return the complete resulting command environment."""
 
-    # Invoke the batch file the same way the upstream action did: as a command
-    # in cmd.exe, not through CALL. On the Windows 2025 / Visual Studio 2026
-    # runner, CALL incorrectly propagates exit status 1 even though the same
-    # vcvarsall command is valid. The harmless leading SET also keeps the
-    # command from beginning with a quoted path, avoiding cmd.exe /c's special
-    # first-quote parsing rule.
-    command = f'set >nul && "{vcvarsall}" {architecture} >nul && set'
-    result = subprocess.run(  # nosec B603 -- fixed cmd.exe and reviewed batch path
-        [str(comspec), "/d", "/c", command],
-        check=False,
-        capture_output=True,
-        text=True,
-        encoding=locale.getpreferredencoding(False),
-        errors="replace",
-    )
+    # Put the quoted vcvarsall invocation in a batch file instead of embedding
+    # it in the argument after ``cmd /c``. Python's Windows argv serialization
+    # and cmd.exe's first-quote rule otherwise disagree about the quotes around
+    # Visual Studio's space-containing path. CALL is required here so control
+    # returns to the wrapper and the resulting environment can be printed.
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        suffix=".cmd",
+        prefix="setup-msvc-",
+        encoding="utf-8",
+        newline="",
+        delete=False,
+    ) as wrapper:
+        wrapper.write(developer_command_script(vcvarsall, architecture))
+        wrapper_path = Path(wrapper.name)
+
+    try:
+        result = subprocess.run(  # nosec B603 -- fixed cmd.exe and reviewed batch path
+            [str(comspec), "/d", "/c", wrapper_path.name],
+            cwd=wrapper_path.parent,
+            check=False,
+            capture_output=True,
+            text=True,
+            encoding=locale.getpreferredencoding(False),
+            errors="replace",
+        )
+    finally:
+        wrapper_path.unlink(missing_ok=True)
     if result.returncode != 0:
         detail = result.stderr.strip() or result.stdout.strip() or "no command output"
         raise RuntimeError(

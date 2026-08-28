@@ -51,11 +51,37 @@ class EnvironmentParsingTests(unittest.TestCase):
             changes,
         )
 
-    @patch("setup_msvc_dev_cmd.subprocess.run")
-    def test_invokes_vcvarsall_directly_without_call_or_cmd_s(self, run) -> None:
-        run.return_value = CompletedProcess(
-            args=[], returncode=0, stdout="Path=C:\\VC\\bin\r\n", stderr=""
+    def test_builds_batch_wrapper_that_returns_after_vcvarsall(self) -> None:
+        self.assertEqual(
+            "@echo off\r\n"
+            'call "C:\\Program Files\\Microsoft Visual Studio\\18\\VC\\vcvarsall.bat" x64\r\n'
+            "if errorlevel 1 exit /b %errorlevel%\r\n"
+            "set\r\n",
+            msvc.developer_command_script(
+                Path(r"C:\Program Files\Microsoft Visual Studio\18\VC\vcvarsall.bat"),
+                "x64",
+            ),
         )
+
+    @patch("setup_msvc_dev_cmd.subprocess.run")
+    def test_invokes_temporary_wrapper_without_cmd_quote_ambiguity(self, run) -> None:
+        wrapper_paths: list[Path] = []
+
+        def execute(command, **kwargs):
+            wrapper_path = Path(kwargs["cwd"]) / command[-1]
+            wrapper_paths.append(wrapper_path)
+            self.assertEqual(
+                "@echo off\r\n"
+                'call "C:\\Program Files\\Microsoft Visual Studio\\18\\VC\\vcvarsall.bat" x64\r\n'
+                "if errorlevel 1 exit /b %errorlevel%\r\n"
+                "set\r\n",
+                wrapper_path.read_bytes().decode("utf-8"),
+            )
+            return CompletedProcess(
+                args=command, returncode=0, stdout="Path=C:\\VC\\bin\r\n", stderr=""
+            )
+
+        run.side_effect = execute
 
         environment = msvc.capture_developer_environment(
             Path(r"C:\Program Files\Microsoft Visual Studio\18\VC\vcvarsall.bat"),
@@ -70,11 +96,11 @@ class EnvironmentParsingTests(unittest.TestCase):
                 r"C:\Windows\System32\cmd.exe",
                 "/d",
                 "/c",
-                'set >nul && "C:\\Program Files\\Microsoft Visual Studio\\18\\VC\\vcvarsall.bat" x64 >nul && set',
+                wrapper_paths[0].name,
             ],
             command,
         )
-        self.assertNotIn("call ", command[-1].casefold())
+        self.assertFalse(wrapper_paths[0].exists())
 
 
 class GitHubEnvironmentFileTests(unittest.TestCase):
