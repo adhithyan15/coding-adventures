@@ -20,19 +20,26 @@
 //! - arithmetic: half_adder, full_adder, ripple_carry_adder, ALU
 //! - arm1-simulator: types, condition codes, instruction encoding helpers
 
-use logic_gates::gates::{and_gate, not_gate, or_gate, xor_gate, xnor_gate};
-use logic_gates::combinational::mux2;
 use arithmetic::adders::ripple_carry_adder_with_carry;
+use logic_gates::combinational::mux2;
+use logic_gates::gates::{and_gate, not_gate, or_gate, xnor_gate, xor_gate};
+use std::panic::{catch_unwind, AssertUnwindSafe};
+
+mod state;
+pub use state::DffMemory;
+use state::{clock_bit, clock_word};
 
 use arm1_simulator::{
-    Flags, Trace, MemoryAccess, DecodedInstruction, InstType,
-    FLAG_I, FLAG_F, MODE_SVC, MODE_FIQ, MODE_IRQ, MODE_MASK, PC_MASK, HALT_SWI,
-    OP_MOV, OP_MVN,
-    COND_EQ, COND_NE, COND_CS, COND_CC, COND_MI, COND_PL,
-    COND_VS, COND_VC, COND_HI, COND_LS, COND_GE, COND_LT,
-    COND_GT, COND_LE, COND_AL, COND_NV,
-    decode, cond_string, is_test_op,
+    cond_string, decode, is_test_op, Arm1Error, Arm1State, DecodedInstruction, ExecutionResult,
+    Flags, InstType, MemoryAccess, StepTrace, Trace, ARM1, COND_AL, COND_CC, COND_CS, COND_EQ,
+    COND_GE, COND_GT, COND_HI, COND_LE, COND_LS, COND_LT, COND_MI, COND_NE, COND_NV, COND_PL,
+    COND_VC, COND_VS, FLAG_F, FLAG_I, HALT_SWI, MEMORY_SIZE, MODE_FIQ, MODE_IRQ, MODE_MASK,
+    MODE_SVC, OP_MOV, OP_MVN, PC_MASK,
 };
+
+/// Exact persistent topology: 536,870,912 memory bits, 864 physical-register
+/// bits, and one halt bit.
+pub const FLIP_FLOP_COUNT: usize = MEMORY_SIZE * 8 + 27 * 32 + 1;
 
 // =========================================================================
 // Bit Conversion Helpers
@@ -63,7 +70,9 @@ pub fn int_to_bits(value: u32, width: usize) -> Vec<u8> {
 pub fn bits_to_int(bits: &[u8]) -> u32 {
     let mut result: u32 = 0;
     for (i, &bit) in bits.iter().enumerate() {
-        if i >= 32 { break; }
+        if i >= 32 {
+            break;
+        }
         result |= (bit as u32) << i;
     }
     result
@@ -93,60 +102,79 @@ pub struct GateALUResult {
 /// Every operation routes through actual gate function calls:
 /// - Arithmetic: ripple_carry_adder (32 full adders -> 160+ gate calls)
 /// - Logical: AND/OR/XOR/NOT applied to each of 32 bits (32-64 gate calls)
-pub fn gate_alu_execute(opcode: u32, a: &[u8], b: &[u8], carry_in: u8, shifter_carry: u8, old_v: u8) -> GateALUResult {
+pub fn gate_alu_execute(
+    opcode: u32,
+    a: &[u8],
+    b: &[u8],
+    carry_in: u8,
+    shifter_carry: u8,
+    old_v: u8,
+) -> GateALUResult {
     let (result, carry, overflow) = match opcode {
         // -- Logical operations --
-        0x0 | 0x8 => { // AND, TST
+        0x0 | 0x8 => {
+            // AND, TST
             (bitwise_gate(a, b, and_gate), shifter_carry, old_v)
         }
-        0x1 | 0x9 => { // EOR, TEQ
+        0x1 | 0x9 => {
+            // EOR, TEQ
             (bitwise_gate(a, b, xor_gate), shifter_carry, old_v)
         }
-        0xC => { // ORR
+        0xC => {
+            // ORR
             (bitwise_gate(a, b, or_gate), shifter_carry, old_v)
         }
-        0xD => { // MOV
+        0xD => {
+            // MOV
             (b.to_vec(), shifter_carry, old_v)
         }
-        0xE => { // BIC = AND(a, NOT(b))
+        0xE => {
+            // BIC = AND(a, NOT(b))
             let not_b = bitwise_not(b);
             (bitwise_gate(a, &not_b, and_gate), shifter_carry, old_v)
         }
-        0xF => { // MVN = NOT(b)
+        0xF => {
+            // MVN = NOT(b)
             (bitwise_not(b), shifter_carry, old_v)
         }
 
         // -- Arithmetic operations --
         // All route through the ripple-carry adder (32 full adders chained).
-        0x4 | 0xB => { // ADD, CMN: A + B
+        0x4 | 0xB => {
+            // ADD, CMN: A + B
             let r = ripple_carry_adder_with_carry(a, b, 0);
             let ov = compute_overflow(a, b, &r.sum);
             (r.sum, r.carry_out, ov)
         }
-        0x5 => { // ADC: A + B + C
+        0x5 => {
+            // ADC: A + B + C
             let r = ripple_carry_adder_with_carry(a, b, carry_in);
             let ov = compute_overflow(a, b, &r.sum);
             (r.sum, r.carry_out, ov)
         }
-        0x2 | 0xA => { // SUB, CMP: A - B = A + NOT(B) + 1
+        0x2 | 0xA => {
+            // SUB, CMP: A - B = A + NOT(B) + 1
             let not_b = bitwise_not(b);
             let r = ripple_carry_adder_with_carry(a, &not_b, 1);
             let ov = compute_overflow(a, &not_b, &r.sum);
             (r.sum, r.carry_out, ov)
         }
-        0x6 => { // SBC: A - B - !C = A + NOT(B) + C
+        0x6 => {
+            // SBC: A - B - !C = A + NOT(B) + C
             let not_b = bitwise_not(b);
             let r = ripple_carry_adder_with_carry(a, &not_b, carry_in);
             let ov = compute_overflow(a, &not_b, &r.sum);
             (r.sum, r.carry_out, ov)
         }
-        0x3 => { // RSB: B - A = B + NOT(A) + 1
+        0x3 => {
+            // RSB: B - A = B + NOT(A) + 1
             let not_a = bitwise_not(a);
             let r = ripple_carry_adder_with_carry(b, &not_a, 1);
             let ov = compute_overflow(b, &not_a, &r.sum);
             (r.sum, r.carry_out, ov)
         }
-        0x7 => { // RSC: B - A - !C = B + NOT(A) + C
+        0x7 => {
+            // RSC: B - A - !C = B + NOT(A) + C
             let not_a = bitwise_not(a);
             let r = ripple_carry_adder_with_carry(b, &not_a, carry_in);
             let ov = compute_overflow(b, &not_a, &r.sum);
@@ -161,13 +189,22 @@ pub fn gate_alu_execute(opcode: u32, a: &[u8], b: &[u8], carry_in: u8, shifter_c
     // Z flag: NOR of all 32 result bits
     let z = compute_zero(&result);
 
-    GateALUResult { result, n, z, c: carry, v: overflow }
+    GateALUResult {
+        result,
+        n,
+        z,
+        c: carry,
+        v: overflow,
+    }
 }
 
 /// Applies a 2-input gate function to each bit pair.
 /// This is how the real ARM1 does AND, OR, XOR -- 32 gate instances in parallel.
 fn bitwise_gate(a: &[u8], b: &[u8], gate: fn(u8, u8) -> u8) -> Vec<u8> {
-    a.iter().zip(b.iter()).map(|(&ai, &bi)| gate(ai, bi)).collect()
+    a.iter()
+        .zip(b.iter())
+        .map(|(&ai, &bi)| gate(ai, bi))
+        .collect()
 }
 
 /// Applies NOT to each bit.
@@ -213,7 +250,13 @@ fn compute_overflow(a: &[u8], b: &[u8], result: &[u8]) -> u8 {
 /// Performs a shift operation on a 32-bit value using a tree of multiplexer gates.
 ///
 /// Returns (shifted_value, carry_out) where both are bit arrays.
-pub fn gate_barrel_shift(value: &[u8], shift_type: u32, amount: u32, carry_in: u8, by_register: bool) -> (Vec<u8>, u8) {
+pub fn gate_barrel_shift(
+    value: &[u8],
+    shift_type: u32,
+    amount: u32,
+    carry_in: u8,
+    by_register: bool,
+) -> (Vec<u8>, u8) {
     if by_register && amount == 0 {
         return (value.to_vec(), carry_in);
     }
@@ -284,7 +327,11 @@ fn gate_lsr(value: &[u8], amount: u32, carry_in: u8, by_register: bool) -> (Vec<
         let sel = ((amount >> level) & 1) as u8;
         let mut next = vec![0u8; 32];
         for i in 0..32 {
-            let shifted = if i + shift < 32 { current[i + shift] } else { 0 };
+            let shifted = if i + shift < 32 {
+                current[i + shift]
+            } else {
+                0
+            };
             next[i] = mux2(current[i], shifted, sel);
         }
         current = next;
@@ -315,7 +362,11 @@ fn gate_asr(value: &[u8], amount: u32, carry_in: u8, by_register: bool) -> (Vec<
         let sel = ((amount >> level) & 1) as u8;
         let mut next = vec![0u8; 32];
         for i in 0..32 {
-            let shifted = if i + shift < 32 { current[i + shift] } else { sign_bit };
+            let shifted = if i + shift < 32 {
+                current[i + shift]
+            } else {
+                sign_bit
+            };
             next[i] = mux2(current[i], shifted, sel);
         }
         current = next;
@@ -332,7 +383,7 @@ fn gate_ror(value: &[u8], amount: u32, carry_in: u8, by_register: bool) -> (Vec<
         let mut result = vec![0u8; 32];
         result[..31].copy_from_slice(&value[1..32]);
         result[31] = carry_in; // Old carry becomes MSB
-        let carry = value[0];  // Old LSB becomes new carry
+        let carry = value[0]; // Old LSB becomes new carry
         return (result, carry);
     }
     if amount == 0 {
@@ -396,13 +447,17 @@ pub fn gate_decode_immediate(imm8: u32, rotate: u32) -> (Vec<u8>, u8) {
 /// but routes all DATA PATH operations (ALU, barrel shifter, register
 /// read/write, flag computation) through gates.
 pub struct ARM1GateLevel {
-    /// Register file: stored as bit arrays (27 x 32 flip-flop states).
+    /// Register file: packed stable-Q state for 27 x 32 D flip-flops.
     regs: [[u8; 32]; 27],
 
-    /// Memory (not gate-level -- would need millions of flip-flops).
-    memory: Vec<u8>,
+    /// Unified memory: one packed stable Q bit per architectural DFF.
+    memory: DffMemory,
 
     halted: bool,
+    halt_q: u8,
+
+    loaded_origin: usize,
+    loaded_len: usize,
 
     /// Gate count tracking.
     gate_ops: usize,
@@ -411,11 +466,18 @@ pub struct ARM1GateLevel {
 impl ARM1GateLevel {
     /// Creates a new gate-level ARM1 simulator.
     pub fn new(memory_size: usize) -> Self {
-        let memory_size = if memory_size == 0 { 1024 * 1024 } else { memory_size };
+        let memory_size = if memory_size == 0 {
+            1024 * 1024
+        } else {
+            memory_size
+        };
         let mut cpu = Self {
             regs: [[0u8; 32]; 27],
-            memory: vec![0u8; memory_size],
+            memory: DffMemory::new(memory_size),
             halted: false,
+            halt_q: 0,
+            loaded_origin: 0,
+            loaded_len: memory_size,
             gate_ops: 0,
         };
         cpu.reset();
@@ -430,7 +492,13 @@ impl ARM1GateLevel {
         let bits = int_to_bits(r15val, 32);
         self.regs[15].copy_from_slice(&bits);
         self.halted = false;
+        clock_bit(&mut self.halt_q, false);
         self.gate_ops = 0;
+    }
+
+    /// Creates the exact 26-bit, 64 MiB architectural machine.
+    pub fn architectural() -> Self {
+        Self::new(MEMORY_SIZE)
     }
 
     // =====================================================================
@@ -444,8 +512,11 @@ impl ARM1GateLevel {
 
     fn write_reg(&mut self, index: usize, value: u32) {
         let phys = self.physical_reg(index);
-        let bits = int_to_bits(value, 32);
-        self.regs[phys].copy_from_slice(&bits);
+        clock_word(&mut self.regs[phys], value);
+    }
+
+    fn write_physical_reg(&mut self, index: usize, value: u32) {
+        clock_word(&mut self.regs[index], value);
     }
 
     fn physical_reg(&self, index: usize) -> usize {
@@ -472,8 +543,7 @@ impl ARM1GateLevel {
     pub fn set_pc(&mut self, addr: u32) {
         let r15 = bits_to_int(&self.regs[15]);
         let new_r15 = (r15 & !PC_MASK) | (addr & PC_MASK);
-        let bits = int_to_bits(new_r15, 32);
-        self.regs[15].copy_from_slice(&bits);
+        self.write_physical_reg(15, new_r15);
     }
 
     /// Returns the current condition flags.
@@ -487,10 +557,13 @@ impl ARM1GateLevel {
     }
 
     fn set_flags_bits(&mut self, n: u8, z: u8, c: u8, v: u8) {
-        self.regs[15][31] = n;
-        self.regs[15][30] = z;
-        self.regs[15][29] = c;
-        self.regs[15][28] = v;
+        let mut r15 = bits_to_int(&self.regs[15]);
+        r15 = (r15 & 0x0FFF_FFFF)
+            | (u32::from(n) << 31)
+            | (u32::from(z) << 30)
+            | (u32::from(c) << 29)
+            | (u32::from(v) << 28);
+        self.write_physical_reg(15, r15);
     }
 
     /// Returns the current processor mode.
@@ -508,8 +581,144 @@ impl ARM1GateLevel {
         self.gate_ops
     }
 
+    /// Returns the raw combined PC/status/mode value in R15.
+    pub fn r15_raw(&self) -> u32 {
+        bits_to_int(&self.regs[15])
+    }
+
+    /// Reads a logical register, respecting the active register bank.
+    pub fn read_register(&self, index: usize) -> u32 {
+        self.read_reg(index)
+    }
+
+    /// Writes a logical register, respecting the active register bank.
+    pub fn write_register(&mut self, index: usize, value: u32) {
+        self.write_reg(index, value);
+    }
+
+    /// Reads a logical register with a typed range check.
+    pub fn read_register_checked(&self, index: usize) -> Result<u32, Arm1Error> {
+        if index >= 16 {
+            return Err(Arm1Error::InvalidRegister { index });
+        }
+        Ok(self.read_reg(index))
+    }
+
+    /// Writes a logical register with a typed range check.
+    pub fn write_register_checked(&mut self, index: usize, value: u32) -> Result<(), Arm1Error> {
+        if index >= 16 {
+            return Err(Arm1Error::InvalidRegister { index });
+        }
+        self.write_reg(index, value);
+        Ok(())
+    }
+
+    /// Returns a complete owned snapshot of every architectural bit.
+    pub fn get_state(&self) -> Arm1State {
+        Arm1State {
+            regs: std::array::from_fn(|index| bits_to_int(&self.regs[index])),
+            memory: self.memory.snapshot(),
+            halted: self.halted,
+            loaded_origin: self.loaded_origin as u32,
+            loaded_len: self.loaded_len,
+        }
+    }
+
+    /// Restores a validated complete state atomically.
+    pub fn restore(&mut self, state: &Arm1State) -> Result<(), Arm1Error> {
+        let mut validator = ARM1::new(self.memory.len());
+        validator.restore(state)?;
+        for (index, value) in state.regs.iter().copied().enumerate() {
+            self.write_physical_reg(index, value);
+        }
+        self.memory.restore_snapshot(&state.memory);
+        self.halted = state.halted;
+        clock_bit(&mut self.halt_q, state.halted);
+        self.loaded_origin = state.loaded_origin as usize;
+        self.loaded_len = state.loaded_len;
+        Ok(())
+    }
+
+    /// Reset, clear memory, and atomically load code at address zero.
+    pub fn load_checked(&mut self, code: &[u8]) -> Result<(), Arm1Error> {
+        self.load_at_checked(code, 0)
+    }
+
+    /// Reset, clear memory, and atomically load code at an explicit origin.
+    pub fn load_at_checked(&mut self, code: &[u8], origin: u32) -> Result<(), Arm1Error> {
+        let start = usize::try_from(origin).ok();
+        let end = start.and_then(|value| value.checked_add(code.len()));
+        if origin & 3 != 0 {
+            return Err(Arm1Error::MisalignedProgram { origin });
+        }
+        if end.is_none_or(|value| value > self.memory.len()) {
+            return Err(Arm1Error::ProgramOutOfRange {
+                origin,
+                length: code.len(),
+                memory_size: self.memory.len(),
+            });
+        }
+        self.reset();
+        self.memory.clear();
+        let start = start.expect("validated origin");
+        self.memory.copy_from_slice(start, code);
+        self.set_pc(origin);
+        self.loaded_origin = start;
+        self.loaded_len = code.len();
+        Ok(())
+    }
+
+    /// Reset, clear memory, and load little-endian instruction words.
+    pub fn load_words_checked(
+        &mut self,
+        instructions: &[u32],
+        origin: u32,
+    ) -> Result<(), Arm1Error> {
+        let byte_len = instructions
+            .len()
+            .checked_mul(4)
+            .ok_or(Arm1Error::ProgramOutOfRange {
+                origin,
+                length: usize::MAX,
+                memory_size: self.memory.len(),
+            })?;
+        let mut code = Vec::with_capacity(byte_len);
+        for instruction in instructions {
+            code.extend_from_slice(&instruction.to_le_bytes());
+        }
+        self.load_at_checked(&code, origin)
+    }
+
+    /// Enter the IRQ vector if IRQ is unmasked.
+    pub fn raise_irq(&mut self) -> bool {
+        let r15 = self.r15_raw();
+        if r15 & FLAG_I != 0 {
+            return false;
+        }
+        self.write_physical_reg(24, r15);
+        self.write_physical_reg(15, (r15 & !MODE_MASK) | MODE_IRQ | FLAG_I);
+        self.set_pc(0x18);
+        self.halted = false;
+        clock_bit(&mut self.halt_q, false);
+        true
+    }
+
+    /// Enter the FIQ vector if FIQ is unmasked.
+    pub fn raise_fiq(&mut self) -> bool {
+        let r15 = self.r15_raw();
+        if r15 & FLAG_F != 0 {
+            return false;
+        }
+        self.write_physical_reg(22, r15);
+        self.write_physical_reg(15, (r15 & !MODE_MASK) | MODE_FIQ | FLAG_I | FLAG_F);
+        self.set_pc(0x1C);
+        self.halted = false;
+        clock_bit(&mut self.halt_q, false);
+        true
+    }
+
     // =====================================================================
-    // Memory (same as behavioral -- not gate-level)
+    // Memory
     // =====================================================================
 
     /// Reads a 32-bit word from memory (little-endian, word-aligned).
@@ -535,31 +744,91 @@ impl ARM1GateLevel {
             return;
         }
         let bytes = value.to_le_bytes();
-        self.memory[a..a + 4].copy_from_slice(&bytes);
+        for (offset, byte) in bytes.into_iter().enumerate() {
+            self.memory.write(a + offset, byte);
+        }
     }
 
     /// Reads a single byte from memory.
     pub fn read_byte(&self, addr: u32) -> u8 {
         let a = (addr & PC_MASK) as usize;
-        if a >= self.memory.len() { return 0; }
-        self.memory[a]
+        if a >= self.memory.len() {
+            return 0;
+        }
+        self.memory.read(a)
     }
 
     /// Writes a single byte to memory.
     pub fn write_byte(&mut self, addr: u32, value: u8) {
         let a = (addr & PC_MASK) as usize;
-        if a >= self.memory.len() { return; }
-        self.memory[a] = value;
+        if a >= self.memory.len() {
+            return;
+        }
+        self.memory.write(a, value);
+    }
+
+    fn checked_access(&self, address: u32, width: usize) -> Result<(), Arm1Error> {
+        let address = (address & PC_MASK) as usize;
+        let start = if width == 4 { address & !3 } else { address };
+        if start
+            .checked_add(width)
+            .is_none_or(|end| end > self.memory.len())
+        {
+            return Err(Arm1Error::MemoryOutOfRange {
+                address: address as u32,
+                width,
+            });
+        }
+        Ok(())
+    }
+
+    /// Reads one word with a typed bounds check.
+    pub fn read_word_checked(&self, addr: u32) -> Result<u32, Arm1Error> {
+        self.checked_access(addr, 4)?;
+        Ok(self.read_word(addr))
+    }
+
+    /// Writes one word with a typed bounds check.
+    pub fn write_word_checked(&mut self, addr: u32, value: u32) -> Result<(), Arm1Error> {
+        self.checked_access(addr, 4)?;
+        self.write_word(addr, value);
+        Ok(())
+    }
+
+    /// Reads one byte with a typed bounds check.
+    pub fn read_byte_checked(&self, addr: u32) -> Result<u8, Arm1Error> {
+        self.checked_access(addr, 1)?;
+        Ok(self.read_byte(addr))
+    }
+
+    /// Writes one byte with a typed bounds check.
+    pub fn write_byte_checked(&mut self, addr: u32, value: u8) -> Result<(), Arm1Error> {
+        self.checked_access(addr, 1)?;
+        self.write_byte(addr, value);
+        Ok(())
+    }
+
+    /// Returns the complete packed stable-Q memory image.
+    pub fn memory(&self) -> &[u8] {
+        &self.memory
     }
 
     /// Loads raw bytes into memory.
     pub fn load_program(&mut self, code: &[u8], start_addr: u32) {
-        for (i, &b) in code.iter().enumerate() {
-            let addr = start_addr as usize + i;
+        let start = start_addr as usize;
+        let available = self
+            .memory
+            .len()
+            .saturating_sub(start.min(self.memory.len()));
+        let copied = code.len().min(available);
+        for (i, &b) in code.iter().take(copied).enumerate() {
+            let addr = start + i;
             if addr < self.memory.len() {
-                self.memory[addr] = b;
+                self.memory.write(addr, b);
             }
         }
+        self.loaded_origin = start;
+        self.loaded_len = copied;
     }
 
     /// Loads a program from u32 instruction words.
@@ -617,6 +886,22 @@ impl ARM1GateLevel {
         }
         let flags_before = self.flags();
 
+        if self.halted {
+            return Trace {
+                address: pc,
+                raw: 0,
+                mnemonic: "HALTED".to_string(),
+                condition: String::new(),
+                condition_met: false,
+                regs_before,
+                regs_after: regs_before,
+                flags_before,
+                flags_after: flags_before,
+                memory_reads: Vec::new(),
+                memory_writes: Vec::new(),
+            };
+        }
+
         let instruction = self.read_word(pc);
         let decoded = decode(instruction);
         let cond_met = self.evaluate_condition(decoded.cond, flags_before);
@@ -652,6 +937,7 @@ impl ARM1GateLevel {
             trace.regs_after[i] = self.read_reg(i);
         }
         trace.flags_after = self.flags();
+        clock_bit(&mut self.halt_q, self.halted);
         trace
     }
 
@@ -659,10 +945,96 @@ impl ARM1GateLevel {
     pub fn run(&mut self, max_steps: usize) -> Vec<Trace> {
         let mut traces = Vec::with_capacity(max_steps.min(1024));
         for _ in 0..max_steps {
-            if self.halted { break; }
+            if self.halted {
+                break;
+            }
             traces.push(self.step());
         }
         traces
+    }
+
+    /// Executes one instruction atomically, checks the full transition against
+    /// the functional simulator, and returns complete before/after state.
+    pub fn step_checked(&mut self) -> Result<StepTrace, Arm1Error> {
+        if self.halted {
+            return Err(Arm1Error::Halted);
+        }
+        let state_before = self.get_state();
+        let address = self.pc();
+        let mut oracle = ARM1::new(self.memory.len());
+        oracle.restore(&state_before)?;
+        let oracle_trace = oracle.step_checked()?;
+
+        let legacy = match catch_unwind(AssertUnwindSafe(|| self.step())) {
+            Ok(trace) => trace,
+            Err(payload) => {
+                self.restore(&state_before)?;
+                let message = payload
+                    .downcast_ref::<String>()
+                    .cloned()
+                    .or_else(|| {
+                        payload
+                            .downcast_ref::<&str>()
+                            .map(|value| (*value).to_string())
+                    })
+                    .unwrap_or_else(|| "ARM1 gate execution panicked".to_string());
+                return Err(Arm1Error::Execution(message));
+            }
+        };
+        let state_after = self.get_state();
+        if state_after != oracle_trace.state_after {
+            self.restore(&state_before)?;
+            return Err(Arm1Error::Execution(format!(
+                "gate transition diverged from functional oracle for {} at {address:#010x}",
+                oracle_trace.mnemonic
+            )));
+        }
+        Ok(StepTrace {
+            address,
+            raw: oracle_trace.raw,
+            mnemonic: oracle_trace.mnemonic,
+            legacy,
+            state_before,
+            state_after,
+        })
+    }
+
+    /// Executes the loaded machine transactionally for at most `max_steps`.
+    pub fn run_loaded_checked(&mut self, max_steps: usize) -> Result<ExecutionResult, Arm1Error> {
+        let original = self.get_state();
+        let mut traces = Vec::new();
+        while traces.len() < max_steps && !self.halted {
+            match self.step_checked() {
+                Ok(trace) => traces.push(trace),
+                Err(error) => {
+                    self.restore(&original)?;
+                    return Err(error);
+                }
+            }
+        }
+        Ok(ExecutionResult {
+            halted: self.halted,
+            steps: traces.len(),
+            final_state: self.get_state(),
+            traces,
+        })
+    }
+
+    /// Deterministically loads and executes a fresh program transactionally.
+    pub fn run_checked(
+        &mut self,
+        code: &[u8],
+        max_steps: usize,
+    ) -> Result<ExecutionResult, Arm1Error> {
+        let original = self.get_state();
+        self.load_checked(code)?;
+        match self.run_loaded_checked(max_steps) {
+            Ok(result) => Ok(result),
+            Err(error) => {
+                self.restore(&original)?;
+                Err(error)
+            }
+        }
     }
 
     // =====================================================================
@@ -684,7 +1056,11 @@ impl ARM1GateLevel {
 
         let (b_bits, shifter_carry) = if d.immediate {
             let (bits, sc) = gate_decode_immediate(d.imm8, d.rotate);
-            if d.rotate == 0 { (bits, flag_c) } else { (bits, sc) }
+            if d.rotate == 0 {
+                (bits, flag_c)
+            } else {
+                (bits, sc)
+            }
         } else {
             let rm_bits = self.read_reg_bits_for_exec(d.rm);
             let shift_amount = if d.shift_by_reg {
@@ -705,8 +1081,7 @@ impl ARM1GateLevel {
         if !is_test_op(d.opcode) {
             if d.rd == 15 {
                 if d.s {
-                    let r15bits = int_to_bits(result_val, 32);
-                    self.regs[15].copy_from_slice(&r15bits);
+                    self.write_physical_reg(15, result_val);
                 } else {
                     self.set_pc(result_val & PC_MASK);
                 }
@@ -751,7 +1126,8 @@ impl ARM1GateLevel {
             if d.shift_imm != 0 {
                 let rm_bits = int_to_bits(rm_val, 32);
                 let flag_c: u8 = if self.flags().c { 1 } else { 0 };
-                let (shifted, _) = gate_barrel_shift(&rm_bits, d.shift_type, d.shift_imm, flag_c, false);
+                let (shifted, _) =
+                    gate_barrel_shift(&rm_bits, d.shift_type, d.shift_imm, flag_c, false);
                 rm_val = bits_to_int(&shifted);
             }
             rm_val
@@ -760,7 +1136,11 @@ impl ARM1GateLevel {
         };
 
         let base = self.read_reg_for_exec(d.rn);
-        let addr = if d.up { base.wrapping_add(offset) } else { base.wrapping_sub(offset) };
+        let addr = if d.up {
+            base.wrapping_add(offset)
+        } else {
+            base.wrapping_sub(offset)
+        };
         let transfer_addr = if d.pre_index { addr } else { base };
 
         if d.load {
@@ -774,10 +1154,12 @@ impl ARM1GateLevel {
                 }
                 v
             };
-            trace.memory_reads.push(MemoryAccess { address: transfer_addr, value });
+            trace.memory_reads.push(MemoryAccess {
+                address: transfer_addr,
+                value,
+            });
             if d.rd == 15 {
-                let bits = int_to_bits(value, 32);
-                self.regs[15].copy_from_slice(&bits);
+                self.write_physical_reg(15, value);
             } else {
                 self.write_reg(d.rd, value);
             }
@@ -788,54 +1170,74 @@ impl ARM1GateLevel {
             } else {
                 self.write_word(transfer_addr, value);
             }
-            trace.memory_writes.push(MemoryAccess { address: transfer_addr, value });
+            trace.memory_writes.push(MemoryAccess {
+                address: transfer_addr,
+                value,
+            });
         }
 
-        if (d.write_back || !d.pre_index)
-            && d.rn != 15 {
-                self.write_reg(d.rn, addr);
-            }
+        if (d.write_back || !d.pre_index) && d.rn != 15 {
+            self.write_reg(d.rn, addr);
+        }
     }
 
     fn execute_block_transfer(&mut self, d: &DecodedInstruction, trace: &mut Trace) {
         let base = self.read_reg(d.rn);
         let count: u32 = (0..16).filter(|i| (d.register_list >> i) & 1 == 1).count() as u32;
-        if count == 0 { return; }
+        if count == 0 {
+            return;
+        }
 
         let start_addr = match (d.pre_index, d.up) {
             (false, true) => base,
-            (true, true) => base + 4,
-            (false, false) => base - (count * 4) + 4,
-            (true, false) => base - (count * 4),
+            (true, true) => base.wrapping_add(4),
+            (false, false) => base.wrapping_sub(count.wrapping_mul(4)).wrapping_add(4),
+            (true, false) => base.wrapping_sub(count.wrapping_mul(4)),
         };
 
         let mut addr = start_addr;
         for i in 0..16usize {
-            if (d.register_list >> i) & 1 == 0 { continue; }
+            if (d.register_list >> i) & 1 == 0 {
+                continue;
+            }
 
             if d.load {
                 let value = self.read_word(addr);
-                trace.memory_reads.push(MemoryAccess { address: addr, value });
+                trace.memory_reads.push(MemoryAccess {
+                    address: addr,
+                    value,
+                });
                 if i == 15 {
-                    let bits = int_to_bits(value, 32);
-                    self.regs[15].copy_from_slice(&bits);
+                    self.write_physical_reg(15, value);
+                } else if d.force_user {
+                    self.write_physical_reg(i, value);
                 } else {
                     self.write_reg(i, value);
                 }
             } else {
                 let value = if i == 15 {
                     bits_to_int(&self.regs[15]).wrapping_add(4)
+                } else if d.force_user {
+                    bits_to_int(&self.regs[i])
                 } else {
                     self.read_reg(i)
                 };
                 self.write_word(addr, value);
-                trace.memory_writes.push(MemoryAccess { address: addr, value });
+                trace.memory_writes.push(MemoryAccess {
+                    address: addr,
+                    value,
+                });
             }
-            addr += 4;
+            addr = addr.wrapping_add(4);
         }
 
         if d.write_back {
-            let new_base = if d.up { base + (count * 4) } else { base - (count * 4) };
+            let delta = count.wrapping_mul(4);
+            let new_base = if d.up {
+                base.wrapping_add(delta)
+            } else {
+                base.wrapping_sub(delta)
+            };
             self.write_reg(d.rn, new_base);
         }
     }
@@ -856,21 +1258,19 @@ impl ARM1GateLevel {
             return;
         }
         let r15val = bits_to_int(&self.regs[15]);
-        self.regs[25] = self.regs[15];
-        self.regs[26] = self.regs[15];
+        self.write_physical_reg(25, r15val);
+        self.write_physical_reg(26, r15val);
 
         let new_r15 = (r15val & !MODE_MASK) | MODE_SVC | FLAG_I;
-        let bits = int_to_bits(new_r15, 32);
-        self.regs[15].copy_from_slice(&bits);
+        self.write_physical_reg(15, new_r15);
         self.set_pc(0x08);
     }
 
     fn trap_undefined(&mut self) {
-        self.regs[26] = self.regs[15];
         let r15val = bits_to_int(&self.regs[15]);
+        self.write_physical_reg(26, r15val);
         let new_r15 = (r15val & !MODE_MASK) | MODE_SVC | FLAG_I;
-        let bits = int_to_bits(new_r15, 32);
-        self.regs[15].copy_from_slice(&bits);
+        self.write_physical_reg(15, new_r15);
         self.set_pc(0x04);
     }
 }
@@ -883,9 +1283,9 @@ impl ARM1GateLevel {
 mod tests {
     use super::*;
     use arm1_simulator::{
-        ARM1, encode_mov_imm, encode_alu_reg, encode_halt, encode_branch,
-        encode_data_processing, encode_ldr, encode_str, encode_ldm, encode_stm,
-        OP_ADD, OP_SUB, OP_AND, OP_EOR, OP_ORR, OP_CMP, SHIFT_LSL,
+        encode_alu_reg, encode_branch, encode_data_processing, encode_halt, encode_ldm, encode_ldr,
+        encode_mov_imm, encode_stm, encode_str, ARM1, OP_ADD, OP_AND, OP_CMP, OP_EOR, OP_ORR,
+        OP_SUB, SHIFT_LSL,
     };
 
     // =====================================================================
@@ -1005,12 +1405,12 @@ mod tests {
     #[test]
     fn test_gate_level_gate_ops_tracking() {
         let mut cpu = ARM1GateLevel::new(1024);
-        cpu.load_program_words(&[
-            encode_mov_imm(COND_AL, 0, 42),
-            encode_halt(),
-        ], 0);
+        cpu.load_program_words(&[encode_mov_imm(COND_AL, 0, 42), encode_halt()], 0);
         cpu.run(10);
-        assert!(cpu.gate_ops() > 0, "gate ops should be non-zero after execution");
+        assert!(
+            cpu.gate_ops() > 0,
+            "gate ops should be non-zero after execution"
+        );
     }
 
     // =====================================================================
@@ -1031,9 +1431,11 @@ mod tests {
         let g_traces = gate_lev.run(200);
 
         assert_eq!(
-            b_traces.len(), g_traces.len(),
+            b_traces.len(),
+            g_traces.len(),
             "{name}: trace count mismatch: behavioral={} gate-level={}",
-            b_traces.len(), g_traces.len()
+            b_traces.len(),
+            g_traces.len()
         );
 
         for i in 0..b_traces.len() {
@@ -1041,7 +1443,10 @@ mod tests {
             let gt = &g_traces[i];
 
             assert_eq!(bt.address, gt.address, "{name} step {i}: address mismatch");
-            assert_eq!(bt.condition_met, gt.condition_met, "{name} step {i}: condition mismatch");
+            assert_eq!(
+                bt.condition_met, gt.condition_met,
+                "{name} step {i}: condition mismatch"
+            );
 
             for r in 0..16 {
                 assert_eq!(
@@ -1061,116 +1466,136 @@ mod tests {
 
     #[test]
     fn test_cross_validate_one_plus_two() {
-        cross_validate("1+2", &[
-            encode_mov_imm(COND_AL, 0, 1),
-            encode_mov_imm(COND_AL, 1, 2),
-            encode_alu_reg(COND_AL, OP_ADD, 0, 2, 0, 1),
-            encode_halt(),
-        ]);
+        cross_validate(
+            "1+2",
+            &[
+                encode_mov_imm(COND_AL, 0, 1),
+                encode_mov_imm(COND_AL, 1, 2),
+                encode_alu_reg(COND_AL, OP_ADD, 0, 2, 0, 1),
+                encode_halt(),
+            ],
+        );
     }
 
     #[test]
     fn test_cross_validate_subs_with_flags() {
-        cross_validate("SUBS", &[
-            encode_mov_imm(COND_AL, 0, 5),
-            encode_mov_imm(COND_AL, 1, 5),
-            encode_alu_reg(COND_AL, OP_SUB, 1, 2, 0, 1),
-            encode_halt(),
-        ]);
+        cross_validate(
+            "SUBS",
+            &[
+                encode_mov_imm(COND_AL, 0, 5),
+                encode_mov_imm(COND_AL, 1, 5),
+                encode_alu_reg(COND_AL, OP_SUB, 1, 2, 0, 1),
+                encode_halt(),
+            ],
+        );
     }
 
     #[test]
     fn test_cross_validate_conditional() {
-        cross_validate("conditional", &[
-            encode_mov_imm(COND_AL, 0, 5),
-            encode_mov_imm(COND_AL, 1, 5),
-            encode_alu_reg(COND_AL, OP_SUB, 1, 2, 0, 1),
-            encode_mov_imm(COND_NE, 3, 99),
-            encode_mov_imm(COND_EQ, 4, 42),
-            encode_halt(),
-        ]);
+        cross_validate(
+            "conditional",
+            &[
+                encode_mov_imm(COND_AL, 0, 5),
+                encode_mov_imm(COND_AL, 1, 5),
+                encode_alu_reg(COND_AL, OP_SUB, 1, 2, 0, 1),
+                encode_mov_imm(COND_NE, 3, 99),
+                encode_mov_imm(COND_EQ, 4, 42),
+                encode_halt(),
+            ],
+        );
     }
 
     #[test]
     fn test_cross_validate_barrel_shifter() {
         // ADD R1, R0, R0, LSL #2 (multiply by 5)
-        let add_with_shift = ((COND_AL << 28) |
-            (OP_ADD << 21)) |
-            (1 << 12) |
-            (2 << 7) |
-            (SHIFT_LSL << 5);
+        let add_with_shift =
+            ((COND_AL << 28) | (OP_ADD << 21)) | (1 << 12) | (2 << 7) | (SHIFT_LSL << 5);
 
-        cross_validate("barrel_shifter", &[
-            encode_mov_imm(COND_AL, 0, 7),
-            add_with_shift,
-            encode_halt(),
-        ]);
+        cross_validate(
+            "barrel_shifter",
+            &[encode_mov_imm(COND_AL, 0, 7), add_with_shift, encode_halt()],
+        );
     }
 
     #[test]
     fn test_cross_validate_loop() {
-        cross_validate("loop_sum_1_to_10", &[
-            encode_mov_imm(COND_AL, 0, 0),
-            encode_mov_imm(COND_AL, 1, 10),
-            encode_alu_reg(COND_AL, OP_ADD, 0, 0, 0, 1),
-            encode_data_processing(COND_AL, OP_SUB, 1, 1, 1, (1 << 25) | 1),
-            encode_branch(COND_NE, false, -16),
-            encode_halt(),
-        ]);
+        cross_validate(
+            "loop_sum_1_to_10",
+            &[
+                encode_mov_imm(COND_AL, 0, 0),
+                encode_mov_imm(COND_AL, 1, 10),
+                encode_alu_reg(COND_AL, OP_ADD, 0, 0, 0, 1),
+                encode_data_processing(COND_AL, OP_SUB, 1, 1, 1, (1 << 25) | 1),
+                encode_branch(COND_NE, false, -16),
+                encode_halt(),
+            ],
+        );
     }
 
     #[test]
     fn test_cross_validate_ldr_str() {
-        cross_validate("ldr_str", &[
-            encode_mov_imm(COND_AL, 0, 42),
-            encode_data_processing(COND_AL, OP_MOV, 0, 0, 1, (1 << 25) | (12 << 8) | 1),
-            encode_str(COND_AL, 0, 1, 0, true),
-            encode_mov_imm(COND_AL, 0, 0),
-            encode_ldr(COND_AL, 0, 1, 0, true),
-            encode_halt(),
-        ]);
+        cross_validate(
+            "ldr_str",
+            &[
+                encode_mov_imm(COND_AL, 0, 42),
+                encode_data_processing(COND_AL, OP_MOV, 0, 0, 1, (1 << 25) | (12 << 8) | 1),
+                encode_str(COND_AL, 0, 1, 0, true),
+                encode_mov_imm(COND_AL, 0, 0),
+                encode_ldr(COND_AL, 0, 1, 0, true),
+                encode_halt(),
+            ],
+        );
     }
 
     #[test]
     fn test_cross_validate_stm_ldm() {
-        cross_validate("stm_ldm", &[
-            encode_mov_imm(COND_AL, 0, 10),
-            encode_mov_imm(COND_AL, 1, 20),
-            encode_mov_imm(COND_AL, 2, 30),
-            encode_mov_imm(COND_AL, 3, 40),
-            encode_data_processing(COND_AL, OP_MOV, 0, 0, 5, (1 << 25) | (12 << 8) | 1),
-            encode_stm(COND_AL, 5, 0x000F, true, "IA"),
-            encode_mov_imm(COND_AL, 0, 0),
-            encode_mov_imm(COND_AL, 1, 0),
-            encode_mov_imm(COND_AL, 2, 0),
-            encode_mov_imm(COND_AL, 3, 0),
-            encode_data_processing(COND_AL, OP_MOV, 0, 0, 5, (1 << 25) | (12 << 8) | 1),
-            encode_ldm(COND_AL, 5, 0x000F, true, "IA"),
-            encode_halt(),
-        ]);
+        cross_validate(
+            "stm_ldm",
+            &[
+                encode_mov_imm(COND_AL, 0, 10),
+                encode_mov_imm(COND_AL, 1, 20),
+                encode_mov_imm(COND_AL, 2, 30),
+                encode_mov_imm(COND_AL, 3, 40),
+                encode_data_processing(COND_AL, OP_MOV, 0, 0, 5, (1 << 25) | (12 << 8) | 1),
+                encode_stm(COND_AL, 5, 0x000F, true, "IA"),
+                encode_mov_imm(COND_AL, 0, 0),
+                encode_mov_imm(COND_AL, 1, 0),
+                encode_mov_imm(COND_AL, 2, 0),
+                encode_mov_imm(COND_AL, 3, 0),
+                encode_data_processing(COND_AL, OP_MOV, 0, 0, 5, (1 << 25) | (12 << 8) | 1),
+                encode_ldm(COND_AL, 5, 0x000F, true, "IA"),
+                encode_halt(),
+            ],
+        );
     }
 
     #[test]
     fn test_cross_validate_branch_and_link() {
-        cross_validate("branch_and_link", &[
-            encode_mov_imm(COND_AL, 0, 7),
-            encode_branch(COND_AL, true, 4),
-            encode_halt(),
-            0,
-            encode_alu_reg(COND_AL, OP_ADD, 0, 0, 0, 0),
-            encode_data_processing(COND_AL, OP_MOV, 1, 0, 15, 14),
-        ]);
+        cross_validate(
+            "branch_and_link",
+            &[
+                encode_mov_imm(COND_AL, 0, 7),
+                encode_branch(COND_AL, true, 4),
+                encode_halt(),
+                0,
+                encode_alu_reg(COND_AL, OP_ADD, 0, 0, 0, 0),
+                encode_data_processing(COND_AL, OP_MOV, 1, 0, 15, 14),
+            ],
+        );
     }
 
     #[test]
     fn test_cross_validate_cmp() {
-        cross_validate("cmp", &[
-            encode_mov_imm(COND_AL, 0, 10),
-            encode_mov_imm(COND_AL, 1, 5),
-            encode_alu_reg(COND_AL, OP_CMP, 1, 0, 0, 1),
-            encode_mov_imm(COND_GT, 2, 1),
-            encode_mov_imm(COND_LE, 2, 0),
-            encode_halt(),
-        ]);
+        cross_validate(
+            "cmp",
+            &[
+                encode_mov_imm(COND_AL, 0, 10),
+                encode_mov_imm(COND_AL, 1, 5),
+                encode_alu_reg(COND_AL, OP_CMP, 1, 0, 0, 1),
+                encode_mov_imm(COND_GT, 2, 1),
+                encode_mov_imm(COND_LE, 2, 0),
+                encode_halt(),
+            ],
+        );
     }
 }

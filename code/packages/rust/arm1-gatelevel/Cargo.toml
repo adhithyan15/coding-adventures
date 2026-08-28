@@ -2,7 +2,7 @@
 name = "arm1-gatelevel"
 version = "0.1.0"
 edition = "2021"
-description = "ARM1 gate-level simulator built from logic gates"
+description = "Complete ARM1 gate-level simulator with exact 536,871,777-DFF state and 599-vector full-state conformance"
 
 [dependencies]
 logic-gates = { path = "../logic-gates" }

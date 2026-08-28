@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-08-28
+
+### Changed
+
+- Added exact stable DFF identity for the 64 MiB memory, all 27 physical
+  registers, and HALT: 536,871,777 persistent DFFs in total.
+- Shared the functional simulator's complete state, typed errors, traces, and
+  results across deterministic transactional load/restore/step/run operations.
+- Added checked direct register and memory access plus exact installed-program
+  fetch bounds, deterministic clearing, and complete late-failure rollback.
+- Implemented force-user LDM/STM banking and mask-aware external IRQ/FIQ entry.
+- Added eight lifecycle tests and the complete 599-vector Python/functional
+  full-state differential while preserving the original 21 tests.
+- Replaced the stale Python/25-register design sketch with normative Rust Spec
+  07e2; strict checks pass and total line coverage is 93.12%.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added
