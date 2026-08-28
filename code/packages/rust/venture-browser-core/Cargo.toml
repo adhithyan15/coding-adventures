@@ -14,6 +14,7 @@ http1-client = { path = "../http1-client" }
 layout-ir = { path = "../layout-ir" }
 paint-instructions = { path = "../paint-instructions" }
 text-interfaces = { path = "../text-interfaces" }
+url-parser = { path = "../url-parser" }
 
 [dev-dependencies]
 image-codec-gif = { path = "../image-codec-gif" }

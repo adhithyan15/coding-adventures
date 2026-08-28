@@ -2,7 +2,10 @@
 //! instruction stages without coupling any of them to a platform host.
 
 use coding_adventures_html_parser::BrowserRenderTree;
-use html_to_layout::{html_render_tree_to_layout_with_link_state, HtmlTheme};
+use html_to_layout::{
+    html_render_tree_to_layout_with_link_state, html_render_tree_to_layout_with_style_context,
+    HtmlStyleContext, HtmlTheme,
+};
 use image_codec_gif::decode_gif;
 use image_codec_jpeg::decode_jpeg;
 use layout_block::layout_block;
@@ -323,6 +326,72 @@ where
     let width = finite_non_negative(viewport.width);
     let viewport_height = finite_non_negative(viewport.height);
     let layout = html_render_tree_to_layout_with_link_state(render_tree, theme, is_visited);
+    compose_layout_to_paint(
+        layout,
+        theme,
+        viewport,
+        width,
+        viewport_height,
+        measurer,
+        shaper,
+        metrics,
+        resolver,
+    )
+}
+
+/// Compose HTML using a pre-parsed UA/author style context.
+#[allow(clippy::too_many_arguments)]
+pub fn html_render_tree_to_paint_with_style_context<M, S, FM, R, F>(
+    render_tree: &BrowserRenderTree,
+    context: &HtmlStyleContext,
+    is_visited: &F,
+    viewport: HtmlPaintViewport,
+    measurer: &M,
+    shaper: &S,
+    metrics: &FM,
+    resolver: &R,
+) -> HtmlPaintOutput
+where
+    M: TextMeasurer,
+    S: TextShaper,
+    FM: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+    F: Fn(&str) -> bool + ?Sized,
+{
+    let width = finite_non_negative(viewport.width);
+    let viewport_height = finite_non_negative(viewport.height);
+    let layout = html_render_tree_to_layout_with_style_context(render_tree, context, is_visited);
+    compose_layout_to_paint(
+        layout,
+        &context.theme,
+        viewport,
+        width,
+        viewport_height,
+        measurer,
+        shaper,
+        metrics,
+        resolver,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn compose_layout_to_paint<M, S, FM, R>(
+    layout: layout_ir::LayoutNode,
+    theme: &HtmlTheme,
+    viewport: HtmlPaintViewport,
+    width: f64,
+    viewport_height: f64,
+    measurer: &M,
+    shaper: &S,
+    metrics: &FM,
+    resolver: &R,
+) -> HtmlPaintOutput
+where
+    M: TextMeasurer,
+    S: TextShaper,
+    FM: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
     let positioned = layout_block(
         &layout,
         Constraints {

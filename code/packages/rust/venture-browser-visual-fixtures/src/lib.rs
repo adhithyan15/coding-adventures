@@ -24,6 +24,7 @@ pub const VERSION: &str = "0.1.1";
 pub const FIXTURE_PATH: &str = "/visual.html";
 pub const IMAGE_PATH: &str = "/checker.gif";
 pub const MISSING_IMAGE_PATH: &str = "/missing.gif";
+pub const STYLESHEET_PATH: &str = "/fixture.css";
 pub const INTERNATIONAL_FIXTURE_PATH: &str = "/international.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
@@ -32,7 +33,7 @@ pub const GPU_LAYER_FIXTURE_HEIGHT: u32 = 8;
 
 pub const FIXTURE_HTML: &str = r#"<!doctype html>
 <html>
-<head><title>Venture visual fixture</title></head>
+<head><title>Venture visual fixture</title><link rel="stylesheet" href="fixture.css"></head>
 <body>
   <h1 id="masthead">Venture Visual Atlas</h1>
   <p id="mixed-inline">A compact page with <b>bold type</b>, <i>italic type</i>, and a <a href="next.html">long wrapped link that crosses more than one visual line</a>.</p>
@@ -46,6 +47,10 @@ preformatted columns stay aligned</pre>
   <p id="tail">End of the deterministic visual fixture.</p>
 </body>
 </html>"#;
+
+pub const FIXTURE_CSS: &str = r#"#masthead { color: maroon; }
+#tail { color: green; }
+a:link { text-decoration: underline; }"#;
 
 pub const INTERNATIONAL_FIXTURE_HTML: &str = r#"<!doctype html>
 <html lang="en">
@@ -449,6 +454,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let origin = origin.trim_end_matches('/');
     let page_url = format!("{origin}{FIXTURE_PATH}");
     let image_url = format!("{origin}{IMAGE_PATH}");
+    let stylesheet_url = format!("{origin}{STYLESHEET_PATH}");
     let international_url = format!("{origin}{INTERNATIONAL_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
@@ -462,6 +468,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("image/gif".into()),
             checker_gif(),
+        )),
+        url if url == stylesheet_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/css; charset=utf-8".into()),
+            FIXTURE_CSS.as_bytes().to_vec(),
         )),
         url if url == international_url => Ok(BrowserFetchResponse::new(
             url,
@@ -916,6 +928,7 @@ mod tests {
                 .map(|request| request.url.as_str())
                 .collect::<Vec<_>>(),
             vec![
+                "http://venture.test/fixture.css",
                 "http://venture.test/checker.gif",
                 "http://venture.test/missing.gif"
             ]
@@ -927,7 +940,7 @@ mod tests {
                 .iter()
                 .map(|completion| completion.pending_count)
                 .collect::<Vec<_>>(),
-            vec![1, 0],
+            vec![2, 1, 0],
             "reverse delivery must still converge deterministically"
         );
         assert_eq!(capture.pending.full_probe.magenta_pixels, 0);
@@ -983,6 +996,12 @@ mod tests {
         assert_eq!(page.body, FIXTURE_HTML.as_bytes());
         let image = fixture_response(origin, "http://venture.test/checker.gif").unwrap();
         assert_eq!(image.media_type.as_deref(), Some("image/gif"));
+        let stylesheet = fixture_response(origin, "http://venture.test/fixture.css").unwrap();
+        assert_eq!(
+            stylesheet.media_type.as_deref(),
+            Some("text/css; charset=utf-8")
+        );
+        assert_eq!(stylesheet.body, FIXTURE_CSS.as_bytes());
         assert!(fixture_response(origin, "http://venture.test/missing.gif").is_err());
     }
 
