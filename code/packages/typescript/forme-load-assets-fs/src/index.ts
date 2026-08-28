@@ -87,11 +87,47 @@ export function detectMimeType(sourcePath: string, bytes: Uint8Array): string {
     }
     return "video/mp4";
   }
-  const prefix = new TextDecoder().decode(bytes.subarray(0, 1024)).replace(/^\uFEFF/, "");
-  if (/^\s*(?:<\?xml[^>]*>\s*)?(?:<!--[^]*?-->\s*)*<svg\b/i.test(prefix)) {
+  const prefix = new TextDecoder().decode(bytes.subarray(0, 1024));
+  if (hasSvgRoot(prefix)) {
     return "image/svg+xml";
   }
   return MIME_BY_EXTENSION[extname(sourcePath).toLowerCase()] ?? "application/octet-stream";
+}
+
+/** Recognize an SVG root without running a backtracking regexp on file input. */
+function hasSvgRoot(prefix: string): boolean {
+  let offset = prefix.charCodeAt(0) === 0xfeff ? 1 : 0;
+  offset = skipWhitespace(prefix, offset);
+
+  if (startsWithAsciiCaseInsensitive(prefix, offset, "<?xml")) {
+    const declarationEnd = prefix.indexOf(">", offset + 5);
+    if (declarationEnd === -1) return false;
+    offset = skipWhitespace(prefix, declarationEnd + 1);
+  }
+
+  while (prefix.startsWith("<!--", offset)) {
+    const commentEnd = prefix.indexOf("-->", offset + 4);
+    if (commentEnd === -1) return false;
+    offset = skipWhitespace(prefix, commentEnd + 3);
+  }
+
+  if (!startsWithAsciiCaseInsensitive(prefix, offset, "<svg")) return false;
+  const boundary = prefix[offset + 4];
+  return boundary === undefined || boundary === ">" || boundary === "/" || isWhitespace(boundary);
+}
+
+function skipWhitespace(value: string, offset: number): number {
+  while (offset < value.length && isWhitespace(value[offset]!)) offset += 1;
+  return offset;
+}
+
+function isWhitespace(value: string): boolean {
+  return value === " " || value === "\t" || value === "\n" || value === "\r" || value === "\f";
+}
+
+function startsWithAsciiCaseInsensitive(value: string, offset: number, expected: string): boolean {
+  if (offset + expected.length > value.length) return false;
+  return value.slice(offset, offset + expected.length).toLowerCase() === expected;
 }
 
 /** Resolve and validate a portable source path beneath a canonical root. */
