@@ -37,12 +37,12 @@ one fresh worktree and one PR; remove the worktree after merge.
 | — | VM-016 | done ([#13392](https://github.com/adhithyan15/coding-adventures/pull/13392)) | Wire Dartmouth BASIC's deterministic `SIN`, `COS`, `LOG`, and `EXP` builtins to the existing shared transcendental IIR ops. | One discriminating program executes all four functions on NativeAOT, LLVM, WASM, JVM, CLR, VM, and JIT. |
 | — | VM-019 | done ([#13419](https://github.com/adhithyan15/coding-adventures/pull/13419)) | Reconcile the Dartmouth BASIC compiler README with landed general exponentiation, seven-backend string arrays, and current dynamic-string limitations. | The README no longer directs work toward already-landed power or string-array support and names only executed current gaps. |
 | — | VM-014 | decomposed | Extend the unified matrix to every wired frontend, especially FLOW-MATIC and Macsyma/JIT. | Split into VM-020 and VM-021 because FLOW-MATIC needs an executed matrix baseline while Macsyma needs new universal-JIT runtime glue. |
-| 1 | VM-020 | in progress | Add FLOW-MATIC's first unified matrix baseline. | A field `MOVE` plus `WRITE-ITEM` program prints `0` on NativeAOT, LLVM, WASM, JVM, CLR, VM, and JIT. |
-| 2 | VM-021 | queued | Add Macsyma to the universal JIT and its cross-backend conformance suite. | Macsyma's integer arithmetic corpus agrees across VM, NativeAOT, LLVM, WASM, JVM, CLR, and JIT. |
-| 3 | VM-017 | queued | Add mixed numeric/string Dartmouth BASIC `DATA`, `READ`, and `RESTORE` semantics. | Scalar and array string reads preserve source order with numeric values and execute on all applicable standard backends. |
-| 4 | VM-012 | queued | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
-| 5 | VM-018 | decision required | Define and implement portable Dartmouth BASIC `RND` semantics. | The accepted seed/repeatability contract is documented and executed consistently across all standard backends. |
-| 6 | VM-013 | decision required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `adc`, `sbb`, rotations, carry, parity). | The accepted semantics are documented and every intrinsic has executed portable and 8008 proofs. |
+| — | VM-020 | done ([#13428](https://github.com/adhithyan15/coding-adventures/pull/13428)) | Add FLOW-MATIC's first unified matrix baseline. | A field `MOVE` plus `WRITE-ITEM` program prints `0` on NativeAOT, LLVM, WASM, JVM, CLR, VM, and JIT. |
+| 1 | VM-021 | in progress | Add Macsyma to the universal JIT and its cross-backend conformance suite. | Macsyma's integer arithmetic corpus agrees across VM, NativeAOT, LLVM, WASM, JVM, CLR, and JIT. |
+| 2 | VM-017 | queued | Add mixed numeric/string Dartmouth BASIC `DATA`, `READ`, and `RESTORE` semantics. | Scalar and array string reads preserve source order with numeric values and execute on all applicable standard backends. |
+| 3 | VM-012 | queued | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
+| 4 | VM-018 | decision required | Define and implement portable Dartmouth BASIC `RND` semantics. | The accepted seed/repeatability contract is documented and executed consistently across all standard backends. |
+| 5 | VM-013 | decision required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `adc`, `sbb`, rotations, carry, parity). | The accepted semantics are documented and every intrinsic has executed portable and 8008 proofs. |
 
 ## Discovery log
 
@@ -107,6 +107,12 @@ one fresh worktree and one PR; remove the worktree after merge.
   explicitly excluding the universal JIT because its callback glue is still
   McCarthy-specific. Decomposed into VM-020 and VM-021; selected VM-020 first
   because it closes a zero-coverage frontend without changing runtime semantics.
+- **VM-D013 — confirmed 2026-08-28:** VM-021 did not require the anticipated
+  McCarthy tagged-runtime callback generalization. Macsyma's v0 integer corpus
+  becomes typed arithmetic after the existing `lower_dynamic_arith` pass, while
+  generic VM/JIT `box`/`unbox` are identity operations. The dedicated
+  `run_macsyma_on_jit` runner therefore adds no language-specific runtime
+  callbacks; all 21 programs execute and agree across seven engines.
 
 ## Ownership boundary
 
