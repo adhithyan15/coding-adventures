@@ -131,7 +131,7 @@ implement arithmetic and logic at the circuit level.
 | Step | Layer | Processor | Year | Notes |
 |------|-------|-----------|------|-------|
 | ✅ | 07n2 | Motorola 68000 | 1979 | 32-bit ALU; MOVEM; ABCD/SBCD/NBCD; supervisor mode |
-| ✅ | 07p2 | Intel 8051 | 1980 | Harvard arch; bit-addressable RAM; MUL/DIV via gate loops |
+| ✅ | 07p2 | Intel 8051 | 1980 | Harvard arch; 1,050,641 DFFs; fixed gate MUL/DIV; exhaustive functional differential |
 | ✅ | 07q2 | MIPS R2000 | 1985 | 32-bit RISC; HI/LO multiply via shift-and-add; 32-reg file |
 | ✅ | 07s2 | DEC Alpha AXP 21064 | 1992 | First 64-bit gate-level; MULQ/UMULH via 64-iter shift-and-add |
 | ✅ | 07u2 | PowerPC 601 | 1992 | 32-bit RISC; CR/LR/CTR; 32-GPR; 32-iter mul/div; AIM alliance |
