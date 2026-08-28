@@ -1,6 +1,6 @@
 # Forme Completion Roadmap
 
-> **Status:** Living delivery backlog, last prioritized 2026-08-27.
+> **Status:** Living delivery backlog, last prioritized 2026-08-28.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -29,15 +29,16 @@ visible so a local optimization cannot quietly close the project early.
 
 The implementation is substantial but not yet an end-to-end product:
 
-- 59 TypeScript `forme-*` packages and 178 package test files cover the kernel,
+- 60 TypeScript `forme-*` packages and 179 package test files cover the kernel,
   stage contracts, a sequential orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
 - The blog proves an eight-stage routed DAG: source → parse → router fans out
   to article rendering and chronological collection, then two filesystem sinks
   emit articles plus an index, RSS, Atom, and sitemap. Public metadata composes
   portable routes with the GitHub Pages project prefix. A reusable light/dark
-  Style IR theme now drives exact per-article AOT CSS slices; assets are not yet
-  integrated.
+  Style IR theme now drives exact per-article AOT CSS slices. Local asset
+  references are resolved and loaded into Asset IR, but are not yet emitted or
+  rewritten into fingerprinted public paths.
 - There is no general `forme` build/check/dev CLI, watch server, plugin host,
   runtime sandbox, authoring shell, or implemented deploy runner.
 - Interactivity IR has no numbered spec or package. The AOT implementation
@@ -80,8 +81,8 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 10 | FM-B005 | done | Make static rendering consume Style IR | The renderer accepts a resolved theme, records `usedStyle`, emits sliced CSS through the AOT path, supports light/dark preferences, and removes its hard-coded theme. |
 | 11 | FM-B025 | done | Implement typed named input ports and deterministic fan-in | A stage can declare required named side-input kinds in addition to its default input; explicit wires validate one producer per port, the DAG orders every dependency, and the scheduler invokes the join once with stable materialized inputs. Focused tests prove `Stream<RenderedPage>` + `Stream<Asset>` fan-in without filesystem or event-bus side channels. |
 | 12 | FM-B026 | done | Resolve local asset references and renderer placeholders | A filesystem-backed transform discovers local `ImageNode` references, rejects root escapes, assigns one identity per normalized source path, records source locators in `AssetRef`, and preserves external/data/hash URLs. Static rendering replaces resolved references with collision-free placeholders and records exact `usedAssets`; focused tests cover nested AST paths, duplicate references, cancellation, and identity sidecars. |
-| 13 | FM-B027 | ready | Load referenced filesystem assets into Asset IR | Depends on FM-B026. One collector invocation reads every unique referenced source, detects MIME type, preserves the resolved identity, hashes bytes into `revision`, emits deterministic `Asset` values, and diagnoses missing files or identity collisions without hidden state. |
-| 14 | FM-B028 | blocked | Emit and rewrite fingerprinted assets | Depends on FM-B025 and FM-B027. An asset-aware filesystem emitter joins rendered pages with assets, writes content-hashed filenames, rewrites only Forme placeholders, includes bytes and `DeployAssetEntry` records in the artifact, and covers the complete path with an end-to-end pipeline test. |
+| 13 | FM-B027 | done | Load referenced filesystem assets into Asset IR | Depends on FM-B026. One collector invocation reads every unique referenced source, detects MIME type, preserves the resolved identity, hashes bytes into `revision`, emits deterministic `Asset` values, and diagnoses missing files or identity collisions without hidden state. |
+| 14 | FM-B028 | ready | Emit and rewrite fingerprinted assets | Depends on FM-B025 and FM-B027. An asset-aware filesystem emitter joins rendered pages with assets, writes content-hashed filenames, rewrites only Forme placeholders, includes bytes and `DeployAssetEntry` records in the artifact, and covers the complete path with an end-to-end pipeline test. |
 | 15 | FM-B006 | blocked | Add a first-class asset pipeline | Depends on FM-B026–FM-B028. Referenced local assets are discovered, fingerprinted, copied, rewritten, cached, and included in the deploy manifest. |
 | 16 | FM-B007 | blocked | Generate the repository landing page with Forme | Depends on FM-B005 and FM-B006. Forme source and configuration reproduce the approved landing design; generated output replaces hand-maintained HTML and deploys through the existing Pages workflow. |
 | 17 | FM-B008 | ready | Implement the general headless CLI | `forme build`, `forme check`, and `forme clean` load a project config, produce stable diagnostics and exit codes, expose reproducible mode, and work outside the monorepo demo driver. |
@@ -95,6 +96,7 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 25 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
 | 26 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
 | 27 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
+| 28 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
 ## Dependency path
 
@@ -153,7 +155,9 @@ work.
 | 2026-08-27 | Asset emission must join rendered pages with processed asset bytes, but stages expose one input and config validation rejects every second incoming wire even though `EdgeSpec` already carries an unused target port. | Resolved in FM-B025 with typed named side inputs and deterministic scheduler fan-in; cross-stage data stays out of frontmatter, the event bus, and hidden filesystem side channels. |
 | 2026-08-27 | FM-B006 spans four contracts that must be independently reviewable: reference resolution, Asset IR loading, placeholder rewriting/fingerprinted emission, and the integrated product proof. Existing `AssetRef` lacks the source locator needed by a filesystem loader, while `RenderedPage.usedAssets` is always empty. | Split the dependency path into FM-B026–FM-B028. Start with source-safe reference resolution and renderer usage tracking; keep FM-B006 as the completion milestone. |
 | 2026-08-27 | Local asset URLs may carry cache parameters or SVG fragment targets. Stripping them during source resolution would silently change the rendered document after fingerprinting. | FM-B026 records the authored suffix separately from filesystem identity and carries it through the reserved renderer placeholder for FM-B028 to restore. |
-| 2026-08-27 | Lexical root containment prevents `..` traversal during reference resolution, but only the byte loader can detect a symlink that resolves outside the configured storage root. | FM-B027 must compare real paths before reading asset bytes and fail closed on symlink escapes. |
+| 2026-08-27 | Lexical root containment prevents `..` traversal during reference resolution, but only the byte loader can detect a symlink that resolves outside the configured storage root. | Resolved in FM-B027 by comparing canonical root and asset paths before reading, allowing in-root symlinks and rejecting escapes. |
+| 2026-08-28 | GitHub's automatic branch update superseded an in-flight PR run, while the obsolete run left its final gate queued and the same-head duplicate push suite left cancelled checks in the rollup. The required PR checks still auto-merged, but the intermediate state was misleading and consumed babysitting time. | Added FM-B029 as later delivery-infrastructure work. It does not displace the fingerprinted-asset critical path. |
+| 2026-08-28 | Existing structured revisions require canonical JSON, which would expand large asset bytes into costly number arrays. | Resolved in FM-B027 with a domain-separated binary revision primitive that hashes opaque bytes directly. |
 
 ## Loop protocol
 

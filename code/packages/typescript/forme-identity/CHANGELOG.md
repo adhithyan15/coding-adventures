@@ -4,6 +4,9 @@
 
 ### Added
 
+- `computeBinaryRevisionId()` hashes domain-separated opaque bytes directly,
+  avoiding the memory and serialization overhead of JSON number arrays for
+  large Forme assets.
 - `createOutputProvenance(contributors)` validates revision-aware source
   references, diagnoses conflicting revisions, canonicalizes order, removes
   exact duplicates, and computes a deterministic aggregate `RevisionId`.

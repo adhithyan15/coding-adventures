@@ -1,0 +1,25 @@
+{
+  "name": "@coding-adventures/forme-load-assets-fs",
+  "version": "0.1.0",
+  "description": "Load resolved Forme filesystem asset references into deterministic Asset IR values.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-types": "file:../forme-types",
+    "@coding-adventures/forme-identity": "file:../forme-identity",
+    "@coding-adventures/forme-stage": "file:../forme-stage"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}
