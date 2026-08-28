@@ -41,6 +41,9 @@ Tamil, and Urdu-Nastaliq script inventories. Edit the owning file under `X.d/`;
 their monoliths do not exist. Book-generation chapters use stable
 `<language>-<NNNN>.json` owners rather than per-language slices, and its
 backmatter and script sets live in independently owned section directories.
+The authored lesson-sound vocabulary uses `core/sound-tags.d/<language>.json`,
+one self-binding `{ language, tags }` owner per registered track plus a stable
+`_meta.json`; the former cross-language aggregate is not tracked.
 Language Ladder and Script Ductus fold bounded browser modules from the
 canonical shards at build time.
 
@@ -886,6 +889,8 @@ until the existing corpus has been split.
 | `parse.ts` | frontmatter + Markdown → typed lesson AST; realizations → `Dataset` | ✅ |
 | `activity.ts` | typed block activities → normalized runtime answer contracts | ✅ |
 | `hash.ts` | stable canonical lesson serialization and deterministic fingerprints | ✅ |
+| `sound-tags.ts` | pure closed-vocabulary shape and tag validation | ✅ |
+| `sound-tag-shards.ts` | strict per-language owner fold and filesystem boundary | ⛔ (fs) |
 | `book.ts` | typed lesson AST → LaTeX chapter | ✅ |
 | `curriculum.ts` | spine, realization-map, prerequisite, schema-v2 duration/block/knowledge validation | ✅ |
 | `plans.ts` | ordered local paths, extension placement, next lessons, and mixed ready frontiers | ✅ |

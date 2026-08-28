@@ -23,6 +23,7 @@ describe("sound-tag registry", () => {
   it("rejects malformed, unsorted, duplicate, and unsafe entries", () => {
     for (const bad of [
       { version: 2, tracks: {} },
+      { version: 1, tracks: {}, unexpected: true },
       { version: 1, tracks: [] },
       { version: 1, tracks: { tamil: ["short-a"], spanish: ["vowel-a"] } },
       { version: 1, tracks: { spanish: ["vowel-a", "silent-h"] } },
