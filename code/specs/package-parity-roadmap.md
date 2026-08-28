@@ -9615,6 +9615,16 @@ execution conformance, native OCaml build-tool implementation, package
 promotion, and entry into the established-language denominator stay with their
 existing downstream owners.
 
+Immediately before publication, the implementation rebased without conflict
+onto exact `origin/main` `72e33f497aba09efdcf195cc625f297f5a5ddf47`.
+Merged PR #13352 remains inside the registered ALGOL IIR neutral and lane
+owners, #13355 remains inside the Mermaid sequence-diagram owner, and #13357
+clears the GE-225 owner's former live-path block while leaving its neutral and
+cross-lane work pending. None changes an implementation identity or
+BUILD/build-tool marker. The refreshed collision-checked report therefore
+remains 15 established lanes, 1,383 identities, 4,595 slots, zero collisions,
+and zero unknown buckets.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
