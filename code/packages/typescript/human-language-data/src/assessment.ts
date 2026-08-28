@@ -25,6 +25,22 @@ export interface AssessmentPolicy {
   };
 }
 
+/** One complete simulation and the checked-in evidence that a human validated it. */
+export interface AssessmentFullMock {
+  id: string;
+  timed: boolean;
+  rubric: string;
+  answerKey: string;
+  /**
+   * Safe relative reference to the pilot/reviewer record for this exact mock.
+   *
+   * Optional while the corpus migrates. Absence is measured completion debt;
+   * making it a parse error would hide that debt by making every existing
+   * assessment contract unreadable at once.
+   */
+  humanValidation?: string;
+}
+
 export interface AssessmentContract {
   version: number;
   language: string;
@@ -48,12 +64,7 @@ export interface AssessmentContract {
       taskInventory: string[];
       passThreshold: number;
     }>;
-    fullMocks: Array<{
-      id: string;
-      timed: boolean;
-      rubric: string;
-      answerKey: string;
-    }>;
+    fullMocks: AssessmentFullMock[];
   }>;
   levels: Array<{
     level: CefrLevel;
@@ -72,12 +83,7 @@ export interface AssessmentContract {
       passThreshold: number;
     }>;
     writingStages: string[];
-    fullMocks: Array<{
-      id: string;
-      timed: boolean;
-      rubric: string;
-      answerKey: string;
-    }>;
+    fullMocks: AssessmentFullMock[];
   }>;
 }
 
@@ -287,11 +293,18 @@ export function parseAssessmentContract(
     const fullMocks = item.fullMocks.map((mock, mockIndex) => {
       const mockRaw = object(mock, `${expectedLanguage}.${current}.fullMocks[${mockIndex}]`);
       if (mockRaw.timed !== true) throw new Error(`assessment: ${expectedLanguage}.${current} mock must be timed`);
+      const humanValidation = mockRaw.humanValidation === undefined
+        ? undefined
+        : artifactReference(
+            mockRaw.humanValidation,
+            `${expectedLanguage}.${current}.fullMocks[${mockIndex}].humanValidation`,
+          );
       return {
         id: nonEmpty(mockRaw.id, `${expectedLanguage}.${current}.mock.id`),
         timed: true,
         rubric: artifactReference(mockRaw.rubric, `${expectedLanguage}.${current}.mock.rubric`),
         answerKey: artifactReference(mockRaw.answerKey, `${expectedLanguage}.${current}.mock.answerKey`),
+        ...(humanValidation === undefined ? {} : { humanValidation }),
       };
     });
     return {
@@ -393,11 +406,15 @@ export function parseAssessmentContract(
     const fullMocks = item.fullMocks.map((mock, mockIndex) => {
       const mockRaw = object(mock, `${where}.fullMocks[${mockIndex}]`);
       if (mockRaw.timed !== true) throw new Error(`assessment: ${where} mock must be timed`);
+      const humanValidation = mockRaw.humanValidation === undefined
+        ? undefined
+        : artifactReference(mockRaw.humanValidation, `${where}.fullMocks[${mockIndex}].humanValidation`);
       return {
         id: nonEmpty(mockRaw.id, `${where}.fullMocks[${mockIndex}].id`),
         timed: true,
         rubric: artifactReference(mockRaw.rubric, `${where}.fullMocks[${mockIndex}].rubric`),
         answerKey: artifactReference(mockRaw.answerKey, `${where}.fullMocks[${mockIndex}].answerKey`),
+        ...(humanValidation === undefined ? {} : { humanValidation }),
       };
     });
 

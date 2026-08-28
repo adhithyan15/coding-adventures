@@ -13,6 +13,7 @@ import { pathToFileURL } from "node:url";
 import {
   defaultCurriculumRoot as defaultRoot,
   listAssessmentContracts,
+  listHumanValidationStatuses,
   listExternalExamCapstones,
   loadAssessmentPolicy,
   listExamInventories,
@@ -177,6 +178,7 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
     scriptClosure: report.scriptClosure,
     writingStages: report.writingStages,
     assessmentContracts: listAssessmentContracts(options.root),
+    humanValidation: listHumanValidationStatuses(options.root),
     externalCapstones: listExternalExamCapstones(options.root),
     inventories: readable,
     partialInventories: partial,

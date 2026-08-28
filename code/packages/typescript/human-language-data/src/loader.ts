@@ -218,6 +218,46 @@ export function listAssessmentContracts(root = defaultCurriculumRoot()): string[
   return loadAssessmentContracts(root).map((entry) => entry.language);
 }
 
+/** Measured human-review evidence for every CEFR-rung mock in each valid contract. */
+export interface HumanValidationStatus {
+  language: string;
+  level: CefrLevel;
+  requiredMocks: number;
+  validatedMocks: number;
+  /** Mock ids whose evidence is absent, or whose declared evidence artifact is absent. */
+  missingMocks: string[];
+}
+
+/**
+ * Turn the policy's human-validation promise into schedulable evidence debt.
+ *
+ * Declaration and presence both count. A declared reference to a file that is
+ * not on disk is still missing evidence; an absent optional reference remains
+ * measurable without making the surrounding legacy contract unreadable.
+ */
+export function listHumanValidationStatuses(
+  root = defaultCurriculumRoot(),
+): HumanValidationStatus[] {
+  return loadAssessmentContracts(root).flatMap(({ language, contract }) =>
+    contract.levels.map((level) => {
+      const missingMocks = level.fullMocks
+        .filter((mock) => {
+          if (mock.humanValidation === undefined) return true;
+          const path = mock.humanValidation.split("#", 1)[0] ?? "";
+          return !artifactExists(join(root, language, path));
+        })
+        .map((mock) => mock.id);
+      return {
+        language,
+        level: level.level,
+        requiredMocks: level.fullMocks.length,
+        validatedMocks: level.fullMocks.length - missingMocks.length,
+        missingMocks,
+      };
+    }),
+  );
+}
+
 export interface ExternalExamCapstoneStatus {
   language: string;
   id: string;
@@ -235,13 +275,23 @@ export function listExternalExamCapstones(root = defaultCurriculumRoot()): Exter
       const references = [
         ...Object.values(capstone.skills).flatMap((skill) => skill.taskInventory),
         ...Object.values(capstone.additionalComponents).flatMap((component) => component.taskInventory),
-        ...capstone.fullMocks.flatMap((mock) => [mock.rubric, mock.answerKey]),
+        ...capstone.fullMocks.flatMap((mock) => [
+          mock.rubric,
+          mock.answerKey,
+          ...(mock.humanValidation === undefined ? [] : [mock.humanValidation]),
+        ]),
       ];
       // `artifactExists`, not `existsSync`: an EACCES here would have reported a
       // capstone's artifacts as missing on the strength of never having looked.
-      const missingArtifacts = [...new Set(references
-        .map((reference) => reference.split("#", 1)[0]!)
-        .filter((reference) => !artifactExists(join(root, language, reference))))];
+      const missingDeclarations = capstone.fullMocks
+        .filter((mock) => mock.humanValidation === undefined)
+        .map((mock) => `fullMocks[${mock.id}].humanValidation (not declared)`);
+      const missingArtifacts = [...new Set([
+        ...missingDeclarations,
+        ...references
+          .map((reference) => reference.split("#", 1)[0]!)
+          .filter((reference) => !artifactExists(join(root, language, reference))),
+      ])];
       out.push({
         language,
         id: capstone.id,

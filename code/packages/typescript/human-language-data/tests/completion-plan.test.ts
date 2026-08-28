@@ -174,6 +174,46 @@ describe("completion plan", () => {
     expect(withA1.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(6);
   });
 
+  it("queues the earliest human-validation deficit and closes it without hiding later rungs", () => {
+    const levelGate = gate([{ language: "alpha", inProgressAt: "pre-A1" }]);
+    const humanValidation = [
+      {
+        language: "alpha",
+        level: "pre-A1" as const,
+        requiredMocks: 2,
+        validatedMocks: 1,
+        missingMocks: ["pre-a1-mock-2"],
+      },
+      {
+        language: "alpha",
+        level: "A1" as const,
+        requiredMocks: 2,
+        validatedMocks: 0,
+        missingMocks: ["a1-mock-1", "a1-mock-2"],
+      },
+    ];
+    const missing = plan({ levelGate, humanValidation });
+    expect(missing.head[0]).toMatchObject({
+      id: "human-validation/alpha/pre-A1",
+      kind: "human-validation",
+      outstanding: 1,
+      tranches: 1,
+    });
+    expect(missing.projection.find((entry) => entry.kind === "human-validation")).toMatchObject({
+      items: 2,
+    });
+
+    humanValidation[0] = { ...humanValidation[0]!, validatedMocks: 2, missingMocks: [] };
+    const partial = plan({ levelGate, humanValidation });
+    expect(partial.head.some((item) => item.id === "human-validation/alpha/pre-A1")).toBe(false);
+    expect(partial.head.some((item) => item.id === "human-validation/alpha/A1")).toBe(true);
+
+    humanValidation[1] = { ...humanValidation[1]!, validatedMocks: 2, missingMocks: [] };
+    const complete = plan({ levelGate, humanValidation });
+    expect(complete.head.some((item) => item.kind === "human-validation")).toBe(false);
+    expect(complete.projection.find((entry) => entry.kind === "human-validation")?.items).toBe(0);
+  });
+
   it("measures pre-A1 task shapes without inventing a pre-A1 exam inventory", () => {
     const levelGate = gate([{ language: "alpha", inProgressAt: "pre-A1" }]);
     const missing = plan({ levelGate, taskShapes: [] });
@@ -302,6 +342,25 @@ describe("completion plan", () => {
     const built = plan({ levelGate: gate([{ language: "alpha", inProgressAt: null }]) });
     expect(built.summary.tracksDone).toBe(1);
     expect(built.head).toHaveLength(0);
+  });
+
+  it("does not call a structurally finished track done while human evidence is missing", () => {
+    const built = plan({
+      levelGate: gate([{ language: "alpha", inProgressAt: null }]),
+      humanValidation: [{
+        language: "alpha",
+        level: "pre-A1",
+        requiredMocks: 2,
+        validatedMocks: 1,
+        missingMocks: ["pre-a1-mock-2"],
+      }],
+    });
+    expect(built.summary.tracksDone).toBe(0);
+    expect(built.head[0]).toMatchObject({
+      id: "human-validation/alpha/pre-A1",
+      level: "pre-A1",
+      outstanding: 1,
+    });
   });
 
   it("measures script work in glyphs to teach, not in lessons that break", () => {
