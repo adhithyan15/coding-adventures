@@ -2779,6 +2779,7 @@ fn emit_xaml_node(
         "HostCheckbox" => emit_host_checkbox(node, indent, part_styles, ctx),
         "HostRadio" => emit_host_radio(node, indent, part_styles, ctx),
         "HostSlider" => emit_host_slider(node, indent, part_styles, ctx),
+        "HostProgressRing" => emit_host_progress_ring(node, indent, part_styles, ctx),
 
         // UI29-4 â€” HostLink lowers to a `<HyperlinkButton NavigateUri=
         // "..." Content="...">` (WinUI 3's first-class clickable
@@ -9269,6 +9270,79 @@ fn host_slider_number_attr_value(
     }
 }
 
+/// Lower `HostProgressRing` to WinUI 3's native `ProgressRing` in its
+/// determinate mode (`IsIndeterminate="False"`) — the real accessible
+/// `progressbar` role, announced value, and native visuals a `Box`+
+/// `Box` CSS conic-gradient trick can't provide on native backends at
+/// all (#13176). Unlike `HostSlider`, this needs no component-scoped
+/// subclass: `ProgressRing` has no interaction events to add, so the
+/// plain control lowers directly, reusing `host_slider_number_attr_value`
+/// for the `value` prop's `Number`/`SlotRef`/`Expr` handling (the exact
+/// same three-way binding, just without `HostSlider`'s `min`/`max`/
+/// `step`/`disabled`/event-handler machinery this display-only control
+/// doesn't need).
+///
+/// Verified against the real toolchain before writing this function: a
+/// `dotnet build` probe with both a literal `Value="42"` and an
+/// `x:Bind`-bound `Value="{x:Bind RingValue, Mode=OneWay}"`
+/// `ProgressRing IsActive="True" IsIndeterminate="False"` compiled
+/// cleanly and the real `.exe` launched without crashing.
+fn emit_host_progress_ring(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let style = part_style_attr(node, part_styles);
+
+    if find_prop_value(node, "value").is_none() {
+        return Err(PipelineEmitError::UnsupportedPrimitive(
+            "HostProgressRing missing required prop 'value:'".to_string(),
+        ));
+    }
+    let value = host_slider_number_attr_value(node, "value", "0", ctx)?;
+
+    let mut attrs = String::new();
+    match find_prop_value(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => {
+            attrs.push_str(&format!(
+                " AutomationProperties.Name=\"{}\"",
+                escape_xaml_attr(label)
+            ));
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            attrs.push_str(&format!(
+                " AutomationProperties.Name=\"{{x:Bind {}, Mode=OneWay}}\"",
+                ctx.slot_xbind_path(slot)
+            ));
+        }
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(
+                    " AutomationProperties.Name=\"{{x:Bind {path}, Mode=OneWay}}\""
+                ));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(
+                    " AutomationProperties.Name=\"{{x:Bind {call}, Mode=OneWay}}\""
+                ));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        Some(LayoutPropValue::Keyword(_))
+        | Some(LayoutPropValue::Number(_))
+        | Some(LayoutPropValue::EmitRef(_))
+        | None => {}
+    }
+
+    Ok(format!(
+        "{pad}<ProgressRing IsActive=\"True\" IsIndeterminate=\"False\" Minimum=\"0\" Maximum=\"100\" Value=\"{value}\"{attrs}{style}/>\n"
+    ))
+}
+
 fn host_slider_event_constructor(
     ctx: &EmitContext<'_>,
     emit_name: &str,
@@ -12195,6 +12269,122 @@ mod tests {
             matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("arc") && t.contains("not yet supported")),
             "{err:?}"
         );
+    }
+
+    // ====================================================================
+    // #13176 — `HostProgressRing`
+    // ====================================================================
+
+    fn progress_ring_node(part: &str, props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: "HostProgressRing".to_string(),
+            part_name: Some(part.to_string()),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    fn value_prop(value: f64) -> LayoutProp {
+        LayoutProp {
+            name: "value".to_string(),
+            value: LayoutPropValue::Number(value),
+        }
+    }
+
+    #[test]
+    fn host_progress_ring_lowers_to_determinate_progress_ring() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            progress_ring_node("ring-circle", vec![value_prop(42.0)]),
+        );
+        let s = style_for_box("ring-circle", vec![("width", "34"), ("height", "34")]);
+        let r = compile(&c, &l, &s);
+        assert!(r.xaml.contains("<ProgressRing"), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("IsActive=\"True\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("IsIndeterminate=\"False\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Minimum=\"0\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Maximum=\"100\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Value=\"42\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Width=\"34\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Height=\"34\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn host_progress_ring_value_accepts_slot_binding() {
+        let c = component(
+            "Foo",
+            vec![slot("ring-percent-value", SlotType::Number, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "HostProgressRing".to_string(),
+                part_name: Some("ring-circle".to_string()),
+                props: vec![LayoutProp {
+                    name: "value".to_string(),
+                    value: LayoutPropValue::SlotRef("ring-percent-value".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("Value=\"{x:Bind"),
+            "value must accept a live slot binding (unlike Path's geometry props), got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_progress_ring_missing_value_is_a_clear_error() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", progress_ring_node("ring-circle", vec![]));
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("value")),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn host_progress_ring_a11y_label_lowers_to_automation_name() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            progress_ring_node(
+                "ring-circle",
+                vec![
+                    value_prop(10.0),
+                    LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::String("Workspace progress".to_string()),
+                    },
+                ],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml
+                .contains("AutomationProperties.Name=\"Workspace progress\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn host_progress_ring_needs_no_component_scoped_subclass() {
+        // Unlike HostSlider (which needs `local:{component}MosaicSlider`
+        // for its change/commit events), HostProgressRing is display-only
+        // and lowers directly to the native control with no subclass.
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            progress_ring_node("ring-circle", vec![value_prop(50.0)]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(!r.xaml.contains("local:"), "got:\n{}", r.xaml);
     }
 
     // â”€â”€ unsupported primitives surface clearly â”€â”€

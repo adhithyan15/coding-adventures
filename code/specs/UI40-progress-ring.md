@@ -1,6 +1,6 @@
 # UI40 — `HostProgressRing`, a native determinate progress control
 
-**Status:** kernel contract only (no backend renders it yet) — see §4.
+**Status:** XAML implemented; Flutter/Compose/Qt/SwiftUI not yet — see §4.
 **Kernel surface:** one new leaf primitive, `HostProgressRing`, added to
 `moslayout-compiler::PRIMITIVES` and its mirror,
 `mosaic-package-resolver::KERNEL_PRIMITIVES`.
@@ -93,7 +93,7 @@ a round-trip fixture — no rendering), then one PR per backend.
 
 | Backend | Status |
 |---|---|
-| XAML | not yet — `<ProgressRing IsIndeterminate="False" Value="{n}" Minimum="0" Maximum="100"/>` is the target API (this repo already emits the indeterminate `<ProgressRing IsActive="True"/>` form for `Icon(glyph: "spinner")`); needs empirical `dotnet build` verification before implementation. |
+| XAML | **implemented** — lowers to `<ProgressRing IsActive="True" IsIndeterminate="False" Minimum="0" Maximum="100" Value="..."/>` (`mosaic-emit-xaml::emit_host_progress_ring`), reusing `HostSlider`'s existing `host_slider_number_attr_value` helper for `value`'s `Number`/`SlotRef`/`Expr` binding and its `a11y-label` → `AutomationProperties.Name` pattern. Unlike `HostSlider`, needs no component-scoped subclass — display-only, no events, so the plain control lowers directly. Verified against the real toolchain: a `dotnet build` probe confirmed both literal and `x:Bind`-bound `Value` syntax before implementation; after implementation, a real `mosaic-compile pkg --backend xaml --profile native-complete` build produces `nativeComplete: true` with zero degradations, and the generated `Ring` UserControl compiles and launches cleanly in a real WinUI window. |
 | Flutter | not yet — `CircularProgressIndicator(value: fraction)` (0.0–1.0), wrapped in `SizedBox(width:, height:)` for explicit sizing (the widget itself has no size params); needs a `value/100.0` conversion. Same widget already used indeterminate (no `value` arg) for the Icon spinner case. |
 | Compose | not yet — `androidx.compose.material.CircularProgressIndicator(progress: Float)` (0f–1f); same widget already used indeterminate for the Icon spinner. This repo pins Compose Material1, not Material3 — the determinate overload's exact signature needs empirical confirmation via a real `gradle compileKotlin` before implementation. |
 | Qt | not yet, and the one real gap — Qt Quick Controls 2 has no out-of-the-box circular *determinate* ring (`ProgressBar` is linear; `BusyIndicator`, already used for the Icon spinner, is indeterminate-only with no `value` prop). Will likely need a custom QML delegate (an arc drawn via `Canvas`/`Shape`) or a third-party style — its own research spike, sequenced last among the four backends. |

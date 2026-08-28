@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased] - narrow the `HostProgressRing` degradation to exclude XAML (#13176)
+
+XAML now lowers `HostProgressRing` to a real native `ProgressRing`
+(`mosaic-emit-xaml`). Narrowed the `("HostProgressRing", ...)` arm in
+`collect_native_degradations` with `backend != Backend::Xaml`, matching
+`Path`'s own per-backend narrowing pattern. Flutter, Compose, and Qt
+(last — no off-the-shelf circular determinate control) remain to
+narrow in follow-up PRs.
+
 ## [Unreleased] - degradation plumbing for `HostProgressRing` (#13176)
 
 New `("HostProgressRing", ...)` arm in `collect_native_degradations`:
