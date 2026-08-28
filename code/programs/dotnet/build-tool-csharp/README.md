@@ -57,7 +57,9 @@ dotnet run -- --emit-plan --plan-file build-plan.json
   16-key registry, `c`/`cpp`, .NET, and WASM language normalization, exact
   declaration grammar, stable deduplication, platform-front precedence,
   affected-only and forced-full scheduling, deterministic unsupported-language
-  diagnostics, and the 64-KiB/4,096-line/1-MiB input ceilings. Production
+  diagnostics, CRLF-only carriage-return stripping, and the
+  64-KiB/4,096-line/1-MiB input ceilings. A lone carriage return remains inert.
+  Production
   discovery records declarations from the same BUILD front whose shell commands
   it selects; unselected platform declarations remain inert.
 - Declares the mixed MIT and Unicode-3.0 licensing of the engine and derived
