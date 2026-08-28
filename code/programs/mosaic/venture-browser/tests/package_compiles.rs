@@ -453,6 +453,13 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
 }
 
 #[test]
+fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
+    let capture = venture_browser_visual_fixtures::capture("http://venture.test")
+        .expect("capture Venture's deterministic real-page fixture");
+    capture.assert_valid();
+}
+
+#[test]
 fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
     let build = read_package_file("BUILD");
     let build_windows = read_package_file("BUILD_windows");

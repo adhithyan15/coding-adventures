@@ -12,6 +12,12 @@
 
 ### Added
 
+- Add deterministic real-page visual acceptance through a reusable fixture
+  package with exact layout/link geometry, full and structural RGBA captures,
+  PNG diagnostics, and initial/image/scrolled viewport states. Production
+  Cairo, Metal, and Direct2D adapter tests consume the same resource router.
+- Render decoded page images in the Metal host with reusable affine, clip,
+  opacity, nearest-neighbor scaling, and source-over composition behavior.
 - Add host-neutral View Source across the generated backend matrix. The core
   projects retained response text into escaped synthetic preformatted HTML and
   native adapters forward one reusable auxiliary-document window effect

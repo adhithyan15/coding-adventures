@@ -885,6 +885,8 @@ mod tests {
 
     #[cfg(target_vendor = "apple")]
     use venture_browser_core::BrowserFetchResponse;
+    #[cfg(target_os = "macos")]
+    use venture_browser_visual_fixtures::{fixture_response, probe_rgba, FIXTURE_PATH};
     use window_core::WindowId;
 
     #[test]
@@ -932,6 +934,46 @@ mod tests {
             .0
             .iter()
             .any(|pixel| *pixel != [192, 192, 192, 255]));
+    }
+
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn production_metal_bridge_renders_the_real_page_visual_fixture() {
+        let origin = "http://venture.test";
+        let start_url = format!("{origin}{FIXTURE_PATH}");
+        let fetcher = move |url: &str| fixture_response(origin, url);
+        let mut host =
+            MacBrowserHost::new_with_fetcher(&start_url, 240.0, 120.0, Box::new(fetcher))
+                .expect("visual fixture loads through the production Metal bridge");
+        let metrics = host.scroll_metrics().expect("fixture should scroll");
+        let mut saw_link = false;
+        let mut saw_image = false;
+        let mut probes = Vec::new();
+        let mut offset = 0.0;
+        loop {
+            host.scroll_to(offset);
+            let scene = host
+                .controller
+                .session()
+                .viewport()
+                .unwrap()
+                .viewport_scene();
+            let pixels = paint_metal::render(&scene);
+            let probe = probe_rgba(pixels.width, pixels.height, &pixels.data)
+                .expect("valid Metal RGBA frame");
+            saw_link |= probe.blue_pixels > 0;
+            saw_image |= probe.magenta_pixels > 0 && probe.cyan_pixels > 0;
+            probes.push((offset, probe));
+            if offset >= metrics.max_offset_y {
+                break;
+            }
+            offset = (offset + 48.0).min(metrics.max_offset_y);
+        }
+        assert!(saw_link, "Metal frames lost wrapped-link paint");
+        assert!(
+            saw_image,
+            "Metal frames lost decoded image paint: {probes:?}"
+        );
     }
 
     #[cfg(target_vendor = "apple")]

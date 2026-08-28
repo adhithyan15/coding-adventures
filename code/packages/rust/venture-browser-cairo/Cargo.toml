@@ -15,3 +15,6 @@ layout-text-measure-native = { path = "../layout-text-measure-native" }
 paint-vm-cairo = { path = "../paint-vm-cairo" }
 text-native = { path = "../text-native" }
 venture-browser-core = { path = "../venture-browser-core" }
+
+[dev-dependencies]
+venture-browser-visual-fixtures = { path = "../venture-browser-visual-fixtures" }

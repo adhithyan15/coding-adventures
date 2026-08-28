@@ -1,5 +1,11 @@
 # Changelog — paint-metal
 
+## Unreleased
+
+- Composite decoded `PaintImage::Pixels` sources over Metal output with affine
+  transforms, nested rectangular clips, inherited opacity, nearest-neighbor
+  scaling, and source-over alpha before the CoreText glyph pass.
+
 ## 0.4.0 — 2026-08-13
 
 - Tessellate dashed `PaintPath` strokes, including dash offsets, for Metal rendering.

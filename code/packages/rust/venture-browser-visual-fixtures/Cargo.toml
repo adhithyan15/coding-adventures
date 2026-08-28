@@ -1,0 +1,20 @@
+[package]
+name = "venture-browser-visual-fixtures"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable deterministic visual fixtures and screenshot oracles for Venture browser hosts."
+
+[dependencies]
+html-to-layout = { path = "../html-to-layout" }
+html-to-paint = { path = "../html-to-paint" }
+image-codec-gif = { path = "../image-codec-gif" }
+layout-ir = { path = "../layout-ir" }
+paint-codec-png = { path = "../paint-codec-png" }
+paint-instructions = { path = "../paint-instructions" }
+paint-vm-cairo = { path = "../paint-vm-cairo" }
+text-interfaces = { path = "../text-interfaces" }
+venture-browser-core = { path = "../venture-browser-core" }
+
+[[example]]
+name = "capture"
+path = "examples/capture.rs"

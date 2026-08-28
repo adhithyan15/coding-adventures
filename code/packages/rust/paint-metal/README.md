@@ -78,7 +78,7 @@ DOT source text
 | `PaintGlyphRun`   | Implemented — CoreText CTFontDrawGlyphs overlay               |
 | `PaintLayer`      | Planned (offscreen texture + composite pass)                  |
 | `PaintGradient`   | Planned (MSL gradient shader)                                 |
-| `PaintImage`      | Planned (texture from PixelContainer or URI)                  |
+| `PaintImage`      | Decoded pixels: affine transform, clip, opacity, scaling       |
 
 All 2D barcode formats (QR Code, Data Matrix, Aztec, PDF417) produce only
 `PaintRect` instructions — the current implementation is complete for that use case.
@@ -93,6 +93,9 @@ PaintScene
   │    rect, line, ellipse (fan), path (fan + stroke segs)
   │    → PixelContainer (RGBA8)
   │
+  ├─ decoded-image compositor (PaintImage::Pixels)
+  │    inverse affine sampling + rectangular clips + source-over alpha
+  │
   ├─ CoreText overlay (PaintText)
   │    CTLineCreateWithAttributedString + CTLineDraw
   │    → drawn directly into CGBitmapContext wrapping pixel buffer
@@ -101,6 +104,11 @@ PaintScene
        CTFontDrawGlyphs (pre-positioned glyph IDs)
        → drawn directly into CGBitmapContext wrapping pixel buffer
 ```
+
+Decoded pixel images are composited after Metal readback and before CoreText
+glyphs. URI resolution, filtered layers, blend modes, and fully interleaved
+vector/image painter ordering remain future renderer work; the compositor is
+kept isolated so those additions do not leak into browser or toolkit hosts.
 
 ## font_ref format (PaintText)
 
