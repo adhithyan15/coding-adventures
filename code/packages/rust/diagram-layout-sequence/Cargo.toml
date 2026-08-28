@@ -1,6 +1,6 @@
 [package]
 name = "diagram-layout-sequence"
-version = "0.36.0"
+version = "0.37.0"
 edition = "2021"
 description = "Participant, lifeline, message, note, and activation layout for sequence diagrams"
 

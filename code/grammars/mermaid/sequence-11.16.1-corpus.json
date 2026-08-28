@@ -97,6 +97,42 @@
     {
       "id": "parallel-overlap",
       "source": "sequenceDiagram\npar_over Parallel overlap\nAlice ->> Bob: Message\nNote left of Alice: Alice note\nNote right of Bob: Bob note\nend"
+    },
+    {
+      "id": "solid-cross-message",
+      "source": "sequenceDiagram\nAlice-xBob:Hello Bob, how are you?"
+    },
+    {
+      "id": "dotted-cross-message",
+      "source": "sequenceDiagram\nAlice--xBob:Hello Bob, how are you?"
+    },
+    {
+      "id": "solid-point-message",
+      "source": "sequenceDiagram\nAlice-)Bob:Hello Bob, how are you?"
+    },
+    {
+      "id": "dotted-point-message",
+      "source": "sequenceDiagram\nAlice--)Bob:Hello Bob, how are you?"
+    },
+    {
+      "id": "solid-filled-message",
+      "source": "sequenceDiagram\nAlice->>Bob:Hello Bob, how are you?"
+    },
+    {
+      "id": "dotted-filled-message",
+      "source": "sequenceDiagram\nAlice-->>Bob:Hello Bob, how are you?"
+    },
+    {
+      "id": "bidirectional-solid-message",
+      "source": "sequenceDiagram\nAlice<<->>Bob:Hello Bob, how are you?"
+    },
+    {
+      "id": "bidirectional-dotted-message",
+      "source": "sequenceDiagram\nAlice<<-->>Bob:Hello Bob, how are you?"
+    },
+    {
+      "id": "half-arrow-families",
+      "source": "sequenceDiagram\nactor Bob\nactor Alice\nBob -|\\ Alice: Hello Alice, how are you?\nBob -|/ Alice: Hello Alice, how are you?\nBob -// Alice: Hello Alice, how are you?\nBob -\\\\ Alice: Hello Alice, how are you?\nBob \\|- Alice: Hello Alice, how are you?\nBob /|- Alice: Hello Alice, how are you?\nBob //- Alice: Hello Alice, how are you?\nBob \\\\- Alice: Hello Alice, how are you?"
     }
   ],
   "invalid": [
