@@ -291,6 +291,64 @@ pub fn lower_dynamic_arith(module: &mut IIRModule) {
     for fn_ in &mut module.functions {
         lower_dynamic_arith_function(fn_);
     }
+
+    // `lower_dynamic_arith_function` turns the result of every dynamic operation
+    // into `box ... : ref<any>`. Keep function and call-site signatures aligned
+    // with that rewritten value. Without this propagation, a helper such as
+    // `f() { return (+ global 1) }` returns a tagged word while its caller still
+    // labels the result bare `any`; the tagged native/LLVM exit pass consequently
+    // misses the required unbox and returns `(42 << 3) & 0xff == 80`.
+    //
+    // Iterate to a fixed point so a wrapper returning another dynamic helper's
+    // result also carries `ref<any>` through its own callers. This changes only
+    // call results that are proven dynamic by the callee's rewritten return.
+    loop {
+        let dynamic_callees: std::collections::HashSet<String> = module
+            .functions
+            .iter()
+            .filter(|f| f.return_type == REF_ANY)
+            .map(|f| f.name.clone())
+            .collect();
+        let mut changed = false;
+
+        for func in &mut module.functions {
+            for instr in &mut func.instructions {
+                let calls_dynamic = instr.op == "call"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name))
+                        if dynamic_callees.contains(name));
+                if calls_dynamic && instr.type_hint != REF_ANY {
+                    instr.type_hint = REF_ANY.to_string();
+                    changed = true;
+                }
+            }
+
+            let types = producer_types(func);
+            // Retype a function only when every value-returning path is boxed.
+            // A mixed raw/boxed function needs a separate representation-join
+            // transform; labelling it uniformly boxed here would make callers
+            // try to unbox the raw branch.
+            let mut return_types = func.instructions.iter().filter_map(|instr| {
+                if instr.op != "ret" {
+                    return None;
+                }
+                let Some(Operand::Var(name)) = instr.srcs.first() else {
+                    return Some("");
+                };
+                Some(types.get(name).map(String::as_str).unwrap_or(""))
+            });
+            let returns_dynamic = return_types
+                .next()
+                .is_some_and(|ty| ty == REF_ANY && return_types.all(|other| other == REF_ANY));
+            if returns_dynamic && func.return_type != REF_ANY {
+                func.return_type = REF_ANY.to_string();
+                changed = true;
+            }
+        }
+
+        if !changed {
+            break;
+        }
+    }
 }
 
 /// The runtime-call names the tagged-i64 world uses for box / unbox.
@@ -565,6 +623,53 @@ mod tests {
             vec!["const", "unbox", "cmp_lt", "box", "ret"],
             "a `ref<any>` parameter is a tagged value and must be unboxed"
         );
+    }
+
+    #[test]
+    fn boxed_return_type_propagates_to_callers() {
+        let helper = IIRFunction::new(
+            "f",
+            vec![],
+            "any",
+            vec![
+                IIRInstr::new(
+                    "global_load", Some("g".into()), vec![Operand::Str("g".into())], "any",
+                ),
+                IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("sum".into()),
+                    vec![
+                        Operand::Var("+".into()), Operand::Var("g".into()),
+                        Operand::Var("one".into()),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("sum".into())], "any"),
+            ],
+        );
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "any",
+            vec![
+                IIRInstr::new(
+                    "call", Some("result".into()), vec![Operand::Var("f".into())], "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("result".into())], "any"),
+            ],
+        );
+        let mut module = IIRModule::new("m", "twig");
+        module.functions = vec![main, helper];
+
+        lower_dynamic_arith(&mut module);
+
+        let helper = module.functions.iter().find(|f| f.name == "f").unwrap();
+        assert_eq!(helper.return_type, REF_ANY);
+        let main = module.functions.iter().find(|f| f.name == "main").unwrap();
+        assert_eq!(main.return_type, REF_ANY);
+        let call = main.instructions.iter().find(|i| i.op == "call").unwrap();
+        assert_eq!(call.type_hint, REF_ANY);
     }
 
     /// E6d-2b: `lower_box_unbox_to_runtime_calls` turns the generic `box`/`unbox`

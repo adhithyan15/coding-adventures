@@ -68,6 +68,10 @@ masks to a byte; this is how Brainfuck runs on the VM, v0.4.0), `call`/`call_bui
 here unchanged — the matrix's six scalar languages all share this one interpreter
 (LANG-MATRIX Phase V).
 
+The default dynamic builtin registry includes arithmetic (`+`, `-`, `*`),
+equality (`=`), and the lisp-family equality spelling (`equal?`). Symbol
+literals interned to stable integer IDs therefore compare directly on the VM.
+
 Integer arithmetic, bitwise, and shift results are **masked to the width named by
 the instruction's `type_hint`** (`u4`→`& 0xF`, `u8`→`& 0xFF`, `u16`, `u32`), so a
 `u8`-typed `add` of `200 + 100` wraps to `44` and `~x` on a `u8` flips 8 bits
