@@ -1,5 +1,22 @@
 # Changelog — mips-r2000-simulator
 
+## [0.2.0] - 2026-08-28
+
+### Changed
+
+- Added exact 64 KiB architectural construction, complete owned state, and
+  deterministic typed transactional load/restore/step/run boundaries.
+- Added complete checked traces/results and typed register, memory, truncation,
+  halt, alignment, BREAK, unknown, overflow, and divide-by-zero failures.
+- Aligned checked PC/effective-address wrapping and big-endian memory semantics
+  with the normative Spec 07q Python oracle.
+- Added MIPS I `LWL`, `LWR`, `SWL`, and `SWR` merge operations already present
+  in the Rust gate-level partner.
+- Added six lifecycle tests and a reproducible 218-vector Python full-state
+  differential across every decode and fault family.
+- Verified the Python oracle and Rust gate consumer; strict checks pass and
+  total Rust line coverage is 94.51%.
+
 ## [0.1.0] - 2026-08-17
 
 ### Added

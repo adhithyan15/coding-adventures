@@ -202,6 +202,9 @@ pub fn encode_lb(rt: u32, rs: u32, offset: i32) -> u32 {
 pub fn encode_lh(rt: u32, rs: u32, offset: i32) -> u32 {
     encode_i_type(OP_LH, rs, rt, offset)
 }
+pub fn encode_lwl(rt: u32, rs: u32, offset: i32) -> u32 {
+    encode_i_type(OP_LWL, rs, rt, offset)
+}
 pub fn encode_lw(rt: u32, rs: u32, offset: i32) -> u32 {
     encode_i_type(OP_LW, rs, rt, offset)
 }
@@ -211,14 +214,23 @@ pub fn encode_lbu(rt: u32, rs: u32, offset: i32) -> u32 {
 pub fn encode_lhu(rt: u32, rs: u32, offset: i32) -> u32 {
     encode_i_type(OP_LHU, rs, rt, offset)
 }
+pub fn encode_lwr(rt: u32, rs: u32, offset: i32) -> u32 {
+    encode_i_type(OP_LWR, rs, rt, offset)
+}
 pub fn encode_sb(rt: u32, rs: u32, offset: i32) -> u32 {
     encode_i_type(OP_SB, rs, rt, offset)
 }
 pub fn encode_sh(rt: u32, rs: u32, offset: i32) -> u32 {
     encode_i_type(OP_SH, rs, rt, offset)
 }
+pub fn encode_swl(rt: u32, rs: u32, offset: i32) -> u32 {
+    encode_i_type(OP_SWL, rs, rt, offset)
+}
 pub fn encode_sw(rt: u32, rs: u32, offset: i32) -> u32 {
     encode_i_type(OP_SW, rs, rt, offset)
+}
+pub fn encode_swr(rt: u32, rs: u32, offset: i32) -> u32 {
+    encode_i_type(OP_SWR, rs, rt, offset)
 }
 
 // ===========================================================================
