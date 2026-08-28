@@ -1681,12 +1681,42 @@
         "typescript"
       ]
     },
+    "toolchain_build_files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "BUILD"
+      ],
+      "properties": {
+        "BUILD": {
+          "type": "string",
+          "maxLength": 65536
+        },
+        "BUILD_windows": {
+          "type": "string",
+          "maxLength": 65536
+        },
+        "BUILD_mac": {
+          "type": "string",
+          "maxLength": 65536
+        },
+        "BUILD_linux": {
+          "type": "string",
+          "maxLength": 65536
+        },
+        "BUILD_mac_and_linux": {
+          "type": "string",
+          "maxLength": 65536
+        }
+      }
+    },
     "toolchain_package": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "name",
-        "language"
+        "language",
+        "build_files"
       ],
       "properties": {
         "name": {
@@ -1694,6 +1724,9 @@
         },
         "language": {
           "$ref": "#/$defs/language"
+        },
+        "build_files": {
+          "$ref": "#/$defs/toolchain_build_files"
         }
       }
     },
@@ -1712,11 +1745,23 @@
           "type": "object",
           "additionalProperties": false,
           "required": [
+            "platform",
+            "force_full",
             "packages",
             "scheduled_packages",
             "forced_toolchains"
           ],
           "properties": {
+            "platform": {
+              "enum": [
+                "darwin",
+                "linux",
+                "windows"
+              ]
+            },
+            "force_full": {
+              "type": "boolean"
+            },
             "packages": {
               "type": "array",
               "maxItems": 4096,

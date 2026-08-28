@@ -164,29 +164,76 @@ func readLines(filepath string) []string {
 //	# needs-toolchain: java
 const extraToolchainDirectivePrefix = "# needs-toolchain:"
 
+const (
+	maxExtraToolchainBuildBytes = 65_536
+	maxExtraToolchainBuildLines = 4_096
+)
+
+var canonicalToolchains = []string{
+	"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl",
+	"swift", "dart", "java", "kotlin", "haskell", "ocaml", "dotnet", "cpp",
+}
+
+var canonicalToolchainSet = func() map[string]bool {
+	result := make(map[string]bool, len(canonicalToolchains))
+	for _, toolchain := range canonicalToolchains {
+		result[toolchain] = true
+	}
+	return result
+}()
+
+// CanonicalToolchains returns the stable CI toolchain registry. Returning a
+// copy prevents callers from mutating the parser's validation authority.
+func CanonicalToolchains() []string {
+	return append([]string(nil), canonicalToolchains...)
+}
+
 // parseExtraToolchains scans raw BUILD file content for
 // "# needs-toolchain: <name>" comment lines and returns the declared
-// toolchain names, in file order, deduplicated. A name is not validated
-// against the canonical toolchain list here (that list — allToolchains —
-// lives in the main package, which this package cannot import without a
-// cycle); an unrecognized name is harmless, it only ever adds a CI
-// setup-step flag nothing consults.
+// canonical toolchain names, in file order, deduplicated. Only ASCII space and
+// tab are grammar whitespace; an optional trailing CR admits CRLF files.
+// Unknown, empty, malformed, and over-limit declarations fail closed as inert
+// comments.
 func parseExtraToolchains(rawContent string) []string {
+	if len(rawContent) > maxExtraToolchainBuildBytes || strings.Count(rawContent, "\n") >= maxExtraToolchainBuildLines {
+		return nil
+	}
 	var toolchains []string
 	seen := make(map[string]bool)
 	for _, line := range strings.Split(rawContent, "\n") {
-		trimmed := strings.TrimSpace(line)
+		trimmed := strings.TrimLeft(line, " \t")
+		trimmed = strings.TrimRight(trimmed, " \t")
+		if strings.HasSuffix(trimmed, "\r") {
+			trimmed = strings.TrimRight(strings.TrimSuffix(trimmed, "\r"), " \t")
+		}
 		if !strings.HasPrefix(trimmed, extraToolchainDirectivePrefix) {
 			continue
 		}
-		name := strings.TrimSpace(strings.TrimPrefix(trimmed, extraToolchainDirectivePrefix))
-		if name == "" || seen[name] {
+		suffix := strings.TrimPrefix(trimmed, extraToolchainDirectivePrefix)
+		if suffix == "" || (suffix[0] != ' ' && suffix[0] != '\t') {
+			continue
+		}
+		name := strings.Trim(suffix, " \t")
+		if !canonicalToolchainSet[name] || seen[name] {
 			continue
 		}
 		seen[name] = true
 		toolchains = append(toolchains, name)
 	}
 	return toolchains
+}
+
+// ExtraToolchainsForSnapshot selects the same platform BUILD front as package
+// discovery and parses it entirely from a caller-supplied in-memory snapshot.
+// It is the process-free conformance entrypoint: no checkout, process,
+// environment, or network is consulted.
+func ExtraToolchainsForSnapshot(buildFiles map[string]string, goos string) []string {
+	for _, filename := range buildFileCandidatesForPlatform(goos) {
+		if content, ok := buildFiles[filename]; ok {
+			return parseExtraToolchains(content)
+		}
+	}
+	return nil
 }
 
 // packageBoundary returns the final packages/programs boundary in path. The
@@ -280,43 +327,26 @@ func getBuildFile(directory string) string {
 //  3. Generic: BUILD (all platforms)
 //  4. "" if no BUILD file exists
 func GetBuildFileForPlatform(directory, goos string) string {
-	// Step 1: Check for the most specific platform file.
-	if goos == "darwin" {
-		platformBuild := filepath.Join(directory, "BUILD_mac")
-		if fileExists(platformBuild) {
-			return platformBuild
+	for _, filename := range buildFileCandidatesForPlatform(goos) {
+		candidate := filepath.Join(directory, filename)
+		if fileExists(candidate) {
+			return candidate
 		}
 	}
-
-	if goos == "linux" {
-		platformBuild := filepath.Join(directory, "BUILD_linux")
-		if fileExists(platformBuild) {
-			return platformBuild
-		}
-	}
-
-	if goos == "windows" {
-		platformBuild := filepath.Join(directory, "BUILD_windows")
-		if fileExists(platformBuild) {
-			return platformBuild
-		}
-	}
-
-	// Step 2: Check for the shared Unix file (macOS + Linux).
-	if goos == "darwin" || goos == "linux" {
-		sharedBuild := filepath.Join(directory, "BUILD_mac_and_linux")
-		if fileExists(sharedBuild) {
-			return sharedBuild
-		}
-	}
-
-	// Step 3: Fall back to the generic BUILD file.
-	genericBuild := filepath.Join(directory, "BUILD")
-	if fileExists(genericBuild) {
-		return genericBuild
-	}
-
 	return ""
+}
+
+func buildFileCandidatesForPlatform(goos string) []string {
+	switch goos {
+	case "darwin":
+		return []string{"BUILD_mac", "BUILD_mac_and_linux", "BUILD"}
+	case "linux":
+		return []string{"BUILD_linux", "BUILD_mac_and_linux", "BUILD"}
+	case "windows":
+		return []string{"BUILD_windows", "BUILD"}
+	default:
+		return []string{"BUILD"}
+	}
 }
 
 // fileExists reports whether the named file exists and is not a directory.

@@ -6,6 +6,18 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- **Extra CI toolchain declarations now consume the language-neutral
+  process-free corpus.** The Go parser accepts only exact canonical
+  `# needs-toolchain: NAME` comment records, supports CRLF and bounded ASCII
+  whitespace, stably deduplicates valid names, and ignores empty, unknown, or
+  malformed lookalikes. Platform selection shares one precedence table between
+  real discovery and inert fixture snapshots; the successful affected-only and
+  forced-full decisions are exercised without checkout, process, environment,
+  or network access, while the shared validator owns invalid-case and aggregate
+  snapshot rejection. Platform plan preparation refreshes declarations from
+  the selected BUILD front. Both `java-to-semantic-ir` BUILD fronts now
+  truthfully request the Python toolchain used by their execution proofs.
+
 - **OCaml now has a process-free build substrate.** Discovery retains package
   and program identities, field-aware opam and Dune parsing resolves local
   dependency edges without execution, source hashing excludes generated

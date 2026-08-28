@@ -9631,6 +9631,69 @@ required checks are queued and `mergeStateStatus` is `BLOCKED`, so auto-merge
 remains disabled until every required check is terminal and acceptable and the
 branch remains conflict-free.
 
+## Post-#13366 Refresh and Extra CI Toolchain Corpus Selection
+
+All 48 final checks for PR #13366 reached terminal acceptable conclusions. A
+single Linux locked-fixtures job failed while `curl` fetched the pinned OCaml
+compiler archive; its rerun passed without a repository change. GitHub then
+reported final head `a6eefa89f743922efd3cda335d715f2e9443bd06`
+conflict-free. The loop enabled squash auto-merge, and GitHub merged PR #13366
+at 2026-08-28T06:18:27Z as
+`038431ce25f4af12a5498eb65d70e82664ce94b1` without a manual merge
+command. The active parity slot is clear.
+
+The collision-checked schema-3 inventory on that exact merged `origin/main`
+remains topology-identical to the pre-publication report: 15 established
+lanes, 1,383 implementation identities, 4,595 package slots, and 1,422
+all-reported identities. The completion bands remain 175/265, 123/934,
+168/2,113, and 917/12,838; Rust has 729 singletons, canonical collisions and
+unknown buckets remain zero, and OCaml remains correctly emerging at zero
+packages. No implementation package directory was added or removed on main,
+and no exact-main eligible unowned package or build-tool gap was discovered.
+The live-PR audit pre-registers one prospective topology delta: PR #13377
+would add Rust `cdc6600-simulator` beside the existing Python package, so
+`cdc6600-simulator-two-lane-classification` records the future portable-core
+review and remains collision-blocked while that PR is open. Merged PR #13368's
+new filesystem asset resolver is classified as an applicable-lane child of the
+existing Forme family owner, and PR #13371 blocks the Venture visual-fixture
+owner while it changes that surface.
+
+The dependency/leverage pass selects
+`build-tool-extra-ci-toolchain-declaration-corpus` on branch
+`codex/build-tool-extra-ci-toolchain-declaration-corpus`. Its sole direct
+dependency, the pure-domain corpus, is merged. The tranche defines a closed,
+process-free fixture snapshot for exact `# needs-toolchain:` syntax, canonical
+names, empty and unknown values, stable deduplication, multiple declarations,
+platform BUILD precedence, affected-only selection, forced-full behavior, and
+deterministic complete toolchain maps. It then binds the canonical Go behavior
+to those neutral fixtures without consulting a checkout, process,
+environment, or network. The owner removes the immediately actionable blocker
+from the Go-oracle path and feeds every current engine plus later Dart, JVM,
+and promoted OCaml engines. The separate execution-semantics prerequisite
+remains gated by reviewed platform isolation work, so this slice claims no
+execution authority or OCaml promotion.
+
+A live open-PR path audit found no overlap with the shared fixture schema,
+cases, process-free runner, Go discovery and toolchain tests, state, roadmap,
+or documentation surfaces. After lifecycle reconciliation and selection, the
+complete acyclic graph has 551 owners and 799 dependency edges: 165 merged,
+385 pending, and exactly one in-progress owner, with no active parity PR.
+
+Before implementation, the selected branch rebased onto later `origin/main`
+revision `a20237bf01d079ea02bcce12009fed2156a3c654`. Those intervening merges did
+not overlap the selected paths; a second collision-checked report preserved the
+same topology and zero-collision result.
+
+Before publication, the branch rebased again onto
+`d751dfa23a4cdfbefe1c9f637de67a2c8003d02d`. Merged PR #13368 added the already
+classified TypeScript-only `forme-resolve-asset-refs-fs` identity, clearing the
+Forme live-PR block and moving the exact inventory to 1,384 implementation
+identities, 4,596 slots, 1,423 all-reported identities, 918 singletons, and
+12,852 singleton gaps. Every other completion band is unchanged; collisions,
+unknown buckets, and OCaml packages remain zero. The existing Forme family
+owner covers the new filesystem-authority child, so this refresh adds no
+eligible unowned gap and does not change the selected tranche.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

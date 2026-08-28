@@ -171,6 +171,10 @@ func packagesForPlatform(packages []discovery.Package, goos string) []discovery.
 			continue
 		}
 		pkg.BuildContent = string(data)
+		pkg.ExtraToolchains = discovery.ExtraToolchainsForSnapshot(
+			map[string]string{filepath.Base(buildFile): pkg.BuildContent},
+			goos,
+		)
 		if commands := discovery.ReadLines(buildFile); len(commands) > 0 {
 			pkg.BuildCommands = commands
 		}
@@ -769,7 +773,7 @@ func run() int {
 
 // allToolchains is the canonical list of build toolchains we may need in CI.
 // The order is stable and matches the order used in CI setup.
-var allToolchains = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "dart", "java", "kotlin", "haskell", "ocaml", "dotnet", "cpp"}
+var allToolchains = discovery.CanonicalToolchains()
 
 func toolchainForPackageLanguage(language string) string {
 	switch language {

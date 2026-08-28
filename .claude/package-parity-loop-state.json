@@ -11,35 +11,30 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13366,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13366",
-    "branch": "codex/ocaml-build-substrate-process-free-core",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-28T04:17:15Z",
-    "pr_number": 13287,
-    "run_id": 33114267618,
-    "attempt": 1,
+    "observed_at": "2026-08-28T06:18:27Z",
+    "pr_number": 13366,
+    "run_id": 33143618885,
+    "attempt": 2,
     "status": "merged-after-auto-merge",
-    "notes": "All 43 final checks reached terminal acceptable conclusions and GitHub reported the final head fffa84a555b74e0e4f95c6f7f8eac9fc9a023f4e conflict-free. The loop enabled squash auto-merge; GitHub merged PR #13287 at 2026-08-28T04:12:40Z as 548477ac8975894fd60a1f08878d81e0dfa0c692 without a manual merge command."
+    "notes": "All 48 final checks reached terminal acceptable conclusions after rerunning one Linux OCaml setup job whose first attempt failed while curl fetched the pinned compiler archive. GitHub reported final head a6eefa89f743922efd3cda335d715f2e9443bd06 conflict-free. The loop enabled squash auto-merge; GitHub merged PR #13366 at 2026-08-28T06:18:27Z as 038431ce25f4af12a5498eb65d70e82664ce94b1 without a manual merge command."
   },
   "last_inventory": {
-    "revision": "72e33f497aba09efdcf195cc625f297f5a5ddf47",
+    "revision": "d751dfa23a4cdfbefe1c9f637de67a2c8003d02d",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1383,
-    "implementation_package_slots": 4595,
-    "all_reported_identities": 1422,
+    "implementation_identities": 1384,
+    "implementation_package_slots": 4596,
+    "all_reported_identities": 1423,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 168,
     "two_to_four_missing_slots": 2113,
-    "singleton_packages": 917,
-    "singleton_missing_slots": 12838,
+    "singleton_packages": 918,
+    "singleton_missing_slots": 12852,
     "rust_singletons": 729,
     "ocaml_packages": 0,
     "canonical_collisions": 0,
@@ -178,10 +173,12 @@
     {
       "id": "build-tool-extra-ci-toolchain-declaration-corpus",
       "title": "Define language-neutral extra CI toolchain declaration fixtures",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-pure-domain-corpus"],
-      "branch": null,
+      "branch": "codex/build-tool-extra-ci-toolchain-declaration-corpus",
       "pr_number": null,
+      "selection_revision": "d751dfa23a4cdfbefe1c9f637de67a2c8003d02d",
+      "selection_notes": "Selected after PR #13366 merged and a collision-checked schema-3 refresh confirmed 15 established lanes, 1,383 identities, 4,595 slots, 1,422 all-reported identities, zero collisions, zero unknown buckets, and OCaml still emerging at zero packages. Before implementation, the branch rebased over later unrelated merges; the final pre-publication base is d751dfa23a4cdfbefe1c9f637de67a2c8003d02d. Merged PR #13368 adds the pre-classified TypeScript-only forme-resolve-asset-refs-fs identity, moving the inventory to 1,384 identities, 4,596 slots, 1,423 all-reported identities, 918 singletons, and 12,852 singleton gaps while preserving every other band, zero collisions, zero unknown buckets, and zero OCaml packages. It remains owned by the existing Forme family and clears that owner's live-PR block, so no eligible unowned gap was discovered. This process-free corpus is the highest-leverage ready dependency because it closes the only immediately actionable Go-oracle prerequisite and advances the Go-oracle-to-OCaml execution-substrate chain without claiming execution authority. A live open-PR path audit found no overlap with the shared fixture/schema/runner, Go discovery and toolchain tests, state, roadmap, or documentation surfaces.",
       "notes": "Discovered when the C# orphan consumer rebased over merged PR #12687. Go now recognizes shell BUILD comments of the form '# needs-toolchain: NAME' and adds those names only for affected packages, but the behavior has no language-neutral toolchain-detection fixture or cross-engine contract. The post-#12819 audit also found that java-to-semantic-ir's Python execution proof silently skips when python3 is unavailable while its unchanged BUILD files declare no Python marker; merged PR #12838 adds two more classic/enhanced loop proofs behind that same undeclared toolchain boundary. Cover this concrete consumer in the corpus and remaining-engine adoption rather than creating a duplicate owner. Define a closed process-free snapshot for exact directive syntax, canonical toolchain names, empty and unknown values, stable deduplication, multiple declarations, platform BUILD precedence, affected-only selection, forced-full behavior, and deterministic results; then make the canonical Go oracle consume it without consulting a checkout, process, environment, or network."
     },
     {
@@ -1344,10 +1341,14 @@
     {
       "id": "ocaml-build-substrate-process-free-core",
       "title": "Integrate OCaml discovery, resolution, hashing, and validation into the process-free Go substrate",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["ocaml-infrastructure", "ocaml-ci-toolchain", "build-tool-pure-domain-corpus"],
       "branch": "codex/ocaml-build-substrate-process-free-core",
       "pr_number": 13366,
+      "merged_head_revision": "a6eefa89f743922efd3cda335d715f2e9443bd06",
+      "merge_revision": "038431ce25f4af12a5498eb65d70e82664ce94b1",
+      "merged_at": "2026-08-28T06:18:27Z",
+      "merge_notes": "All 48 final checks reached terminal acceptable conclusions after one transient Linux compiler-download failure passed on rerun. GitHub reported the final head conflict-free; the loop enabled squash auto-merge, and GitHub merged PR #13366 without a manual merge command.",
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13366",
       "opened_at": "2026-08-28T05:02:29Z",
       "implementation_revision": "fba682dd329c03bcd85f2594cb855b4421a6d4ba",
@@ -1647,7 +1648,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, and immutable classless-theme behavior from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, and #13268 are merged, so the earlier live-path block has cleared. The collision-clean e6d99bc699 inventory adds TypeScript-only `forme-theme-classless`; it is covered here rather than creating a duplicate singleton owner."
+      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, and immutable classless-theme behavior from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, and #13368 are merged, so the earlier live-path blocks have cleared. The collision-clean inventories add TypeScript-only `forme-theme-classless` and filesystem-authority `forme-resolve-asset-refs-fs`; both remain covered by this family rather than creating duplicate singleton owners."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -2478,6 +2479,16 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the late collision-checked post-#13252 refresh after merged PR #13270 added the independently named Rust-only ibm704-gatelevel package. Classify its deterministic transistor, netlist, clock, machine-state, instruction, diagnostic, and resource-limit behavior; define a neutral gate-level contract and applicable-lane rollout where portable, or record a reviewed Rust-canonical simulator exception. Keep it separate from the higher-level ibm704-simulator two-lane classification owner."
+    },
+    {
+      "id": "cdc6600-simulator-two-lane-classification",
+      "title": "Classify CDC 6600 simulator portability across Python and Rust",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered during the post-#13366 live-PR audit. Open PR #13377 adds code/packages/rust/cdc6600-simulator beside the existing Python implementation and would move the identity from the singleton band into the two-to-four-lane band. If it merges, compare deterministic CPU state, instructions, stepping, diagnostics, and resource limits; define a language-neutral simulator corpus and dependency-shaped rollout or record narrowly reviewed target-specific exceptions. Do not modify the prospective Rust package or select this owner while PR #13377 remains open."
     },
     {
       "id": "layout-inline-singleton-classification",
@@ -6407,7 +6418,8 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean e6d99bc699 inventory after the Rust-only venture-browser-visual-fixtures identity appeared. Separate reusable deterministic HTML/resources, text measurement, geometry, RGBA, structural screenshot oracles, and resource bounds from Rust Venture integration plus Cairo and Apple native capture adapters. Define the language-neutral fixture contract and explicit applicable-lane exceptions; do not manufacture native screenshot hosts in every lane."
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-clean e6d99bc699 inventory after the Rust-only venture-browser-visual-fixtures identity appeared. Separate reusable deterministic HTML/resources, text measurement, geometry, RGBA, structural screenshot oracles, and resource bounds from Rust Venture integration plus Cairo and Apple native capture adapters. Define the language-neutral fixture contract and explicit applicable-lane exceptions; do not manufacture native screenshot hosts in every lane. Live PR #13371 currently owns the Venture visual-fixture README and isolated WGPU integration, so this classification owner remains collision-blocked while that PR is open."
     }
   ]
 }

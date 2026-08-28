@@ -17,18 +17,29 @@
   "input": {
     "operation": "toolchain_detection",
     "options": {
+      "platform": "windows",
+      "force_full": false,
       "packages": [
         {
           "name": "csharp/app",
-          "language": "csharp"
+          "language": "csharp",
+          "build_files": {
+            "BUILD": ""
+          }
         },
         {
           "name": "python/unused",
-          "language": "python"
+          "language": "python",
+          "build_files": {
+            "BUILD": ""
+          }
         },
         {
           "name": "wasm/plugin",
-          "language": "wasm"
+          "language": "wasm",
+          "build_files": {
+            "BUILD": ""
+          }
         }
       ],
       "scheduled_packages": [

@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 112)
+        self.assertEqual(summary["case_count"], 118)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -1120,10 +1120,60 @@ class PureDomainValidationTests(unittest.TestCase):
     ) -> None:
         case = load_case("toolchain-detection-empty.json")
         case["input"]["options"]["packages"].append(
-            {"name": "zig/unused", "language": "zig"}
+            {
+                "name": "zig/unused",
+                "language": "zig",
+                "build_files": {"BUILD": ""},
+            }
         )
 
         runner.validate_case_document(case, **self._schema_args())
+
+    def test_toolchain_declaration_corpus_closes_selection_and_platforms(
+        self,
+    ) -> None:
+        filenames = (
+            "toolchain-detection-declarations.json",
+            "toolchain-detection-affected-only.json",
+            "toolchain-detection-force-full.json",
+            "toolchain-detection-platform-windows.json",
+            "toolchain-detection-platform-linux.json",
+            "toolchain-detection-platform-darwin.json",
+        )
+        for filename in filenames:
+            with self.subTest(filename=filename):
+                case = load_case(filename)
+                runner.validate_case_document(case, **self._schema_args())
+                self.assertEqual(
+                    runner._expected_toolchains(case["input"]["options"]),
+                    case["expected"]["result"]["toolchains"],
+                )
+
+    def test_toolchain_force_full_requires_null_selection(self) -> None:
+        case = load_case("toolchain-detection-force-full.json")
+        case["input"]["options"]["scheduled_packages"] = ["rust/app"]
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(case, **self._schema_args())
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_TOOLCHAIN_FORCE_SELECTION_INVALID",
+        )
+
+    def test_toolchain_build_snapshots_are_byte_and_line_bounded(self) -> None:
+        for content in (
+            "é" * (runner.MAX_TOOLCHAIN_BUILD_BYTES // 2 + 1),
+            "\n" * runner.MAX_TOOLCHAIN_BUILD_LINES,
+        ):
+            with self.subTest(encoded_bytes=len(content.encode("utf-8"))):
+                case = load_case("toolchain-detection-declarations.json")
+                package = case["input"]["options"]["packages"][0]
+                package["build_files"]["BUILD"] = content
+                with self.assertRaises(runner.ConformanceError) as raised:
+                    runner.validate_case_document(case, **self._schema_args())
+                self.assertEqual(
+                    raised.exception.code,
+                    "CASE_TOOLCHAIN_SNAPSHOT_LIMIT_EXCEEDED",
+                )
 
     def test_sharding_ignores_unscheduled_unreferenced_toolchains(self) -> None:
         case = load_case("sharding-prerequisite-closed.json")
@@ -1356,7 +1406,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 112)
+        self.assertEqual(summary["case_count"], 118)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

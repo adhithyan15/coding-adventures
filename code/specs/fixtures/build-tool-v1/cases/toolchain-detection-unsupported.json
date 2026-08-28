@@ -17,10 +17,15 @@
   "input": {
     "operation": "toolchain_detection",
     "options": {
+      "platform": "linux",
+      "force_full": false,
       "packages": [
         {
           "name": "zig/app",
-          "language": "zig"
+          "language": "zig",
+          "build_files": {
+            "BUILD": ""
+          }
         }
       ],
       "scheduled_packages": null,
