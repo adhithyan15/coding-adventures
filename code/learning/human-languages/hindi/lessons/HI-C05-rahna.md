@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [HI-SENSE-RAHNA-LIVE-STAY-01]
+introduces_culture_claims: []
 id: HI-C05-rahna
 sequence: 410
 spine_node: SPINE-SAY-WHAT-I-DO

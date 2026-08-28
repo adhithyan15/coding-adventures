@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 35,
-  "sourceHash": "fnv1a64:7bd7ac99a07ba3a0",
+  "sourceHash": "fnv1a64:1ed7a03f95c97e37",
   "lessonIds": [
     "HI-C35-lena",
     "HI-C35-puchna",
@@ -13,6 +13,6 @@
   "text": "hindi/narration/ch35.txt",
   "json": "hindi/narration/ch35.json",
   "textHash": "fnv1a64:1757a90c9de0992c",
-  "jsonHash": "fnv1a64:f4179828cf759966",
+  "jsonHash": "fnv1a64:aa76b36ef0c832af",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:866d523f59639e08",
+  "sourceHash": "fnv1a64:de0d440f3de48ff6",
   "lessons": [
     {
       "id": "HI-C25-din",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5098d795834bba77",
+      "sourceHash": "fnv1a64:725ce14eb868a85c",
       "notice": null,
       "blocks": [
         {

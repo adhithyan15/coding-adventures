@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-CHALTA-HUN-LEAVE-01]
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-CHALTA-HUN-GENDERED-LEAVE-01]
 id: HI-C04-chalta-hun
 sequence: 380
 spine_node: SPINE-TAKE-LEAVE

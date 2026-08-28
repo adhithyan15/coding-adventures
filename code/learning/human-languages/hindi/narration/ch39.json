@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "The People Around You",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:15308ea7c5833105",
+  "sourceHash": "fnv1a64:4ec60d644b61096f",
   "lessons": [
     {
       "id": "HI-C39-dost",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:094b540aec89f672",
+      "sourceHash": "fnv1a64:45092dfbd4f58b7d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:beec7c097a166057",
+      "sourceHash": "fnv1a64:336a2e2cfe51fde4",
       "notice": null,
       "blocks": [
         {
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57d4d5259b48859f",
+      "sourceHash": "fnv1a64:308e63fc18eb6718",
       "notice": null,
       "blocks": [
         {
@@ -503,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96d1c27b396fe010",
+      "sourceHash": "fnv1a64:48da5f6f87220b65",
       "notice": null,
       "blocks": [
         {

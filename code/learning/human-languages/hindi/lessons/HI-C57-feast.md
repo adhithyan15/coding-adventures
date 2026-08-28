@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [HI-SENSE-DAAVAT-FEAST-INVITATION-01]
+introduces_culture_claims: []
 id: HI-C57-feast
 spine_node: SPINE-COURTESY-THANK
 sequence: 1960

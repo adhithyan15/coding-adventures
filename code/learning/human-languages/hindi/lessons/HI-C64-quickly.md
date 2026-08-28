@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [HI-SENSE-JALDI-QUICKLY-SOON-01]
+introduces_culture_claims: []
 id: HI-C64-quickly
 spine_node: SPINE-RESPOND-BASIC
 sequence: 2420

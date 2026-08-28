@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-KAMRA-PORTUGUESE-ROUTE-01]
 id: HI-C36-kamra
 spine_node: SPINE-MEET-GREET
 sequence: 960

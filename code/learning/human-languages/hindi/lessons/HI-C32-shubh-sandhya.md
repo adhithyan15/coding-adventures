@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-SHUBH-SANDHYA-01]
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-SANDHYA-SAANJH-REGISTER-01]
 id: HI-C32-shubh-sandhya
 spine_node: SPINE-TIME-OF-DAY
 sequence: 830

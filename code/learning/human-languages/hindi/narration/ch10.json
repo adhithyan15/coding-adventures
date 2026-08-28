@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6e3a74eac1695fa0",
+  "sourceHash": "fnv1a64:0edd968328f80f6f",
   "lessons": [
     {
       "id": "HI-C10-somavaar-shukravaar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:77ca7041f463e3f0",
+      "sourceHash": "fnv1a64:26182256f2671306",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25352c40eebfb01e",
+      "sourceHash": "fnv1a64:ca349a9efef9e48f",
       "notice": null,
       "blocks": [
         {
@@ -275,7 +275,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:736b801e698f9537",
+      "sourceHash": "fnv1a64:4541ba3d56443a20",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -452,7 +452,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:715b8be2054026ff",
+      "sourceHash": "fnv1a64:e553ff462b773272",
       "notice": {
         "modality": "pen",
         "needs": [

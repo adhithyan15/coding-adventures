@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Who Someone Is",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:69bd0c1b96ca2d0a",
+  "sourceHash": "fnv1a64:7cafc68f283cead9",
   "lessons": [
     {
       "id": "HI-C47-teacher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:334f669eccc795d2",
+      "sourceHash": "fnv1a64:dfda87fc90016d7b",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b67019084438d56",
+      "sourceHash": "fnv1a64:91cfd090f1905adf",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75f8c334454bbe92",
+      "sourceHash": "fnv1a64:3e8e6f07b7aeb133",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e1c7eb6fd380285",
+      "sourceHash": "fnv1a64:2f03c055f479f26e",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8b4dd8aa5367baa",
+      "sourceHash": "fnv1a64:2735d2602a7a9e31",
       "notice": null,
       "blocks": [
         {

@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [HI-SENSE-AADMI-MAN-PERSON-01]
+introduces_culture_claims: []
 id: HI-C39-aadmi
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 1080

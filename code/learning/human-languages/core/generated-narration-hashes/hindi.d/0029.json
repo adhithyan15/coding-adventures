@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 29,
-  "sourceHash": "fnv1a64:1c9e0f1751013b5b",
+  "sourceHash": "fnv1a64:584204f9dd2c6f51",
   "lessonIds": [
     "HI-C29-shaam"
   ],
@@ -10,6 +10,6 @@
   "text": "hindi/narration/ch29.txt",
   "json": "hindi/narration/ch29.json",
   "textHash": "fnv1a64:7d6c1e42b6f5a781",
-  "jsonHash": "fnv1a64:2968bd86e1fc6d26",
+  "jsonHash": "fnv1a64:3873fcbc059fdda0",
   "findings": []
 }

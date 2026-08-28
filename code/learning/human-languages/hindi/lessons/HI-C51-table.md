@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C51-table
 spine_node: SPINE-MEET-GREET
 sequence: 1680

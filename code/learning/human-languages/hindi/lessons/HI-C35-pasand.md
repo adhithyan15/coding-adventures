@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [HI-SENSE-PASAND-LIKED-PLEASING-01]
+introduces_culture_claims: []
 id: HI-C35-pasand
 spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 930

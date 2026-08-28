@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "The Road",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a9fe12878b752301",
+  "sourceHash": "fnv1a64:ffd83dc7d4cac5ce",
   "lessons": [
     {
       "id": "HI-C56-road",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f936d7d3767b6a8a",
+      "sourceHash": "fnv1a64:a3475929b74be89d",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d1e78da1bd951d9",
+      "sourceHash": "fnv1a64:5a3f5ba51eac6416",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07c55f90e7c3a004",
+      "sourceHash": "fnv1a64:532d77a20fb105d5",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d394f478075da44b",
+      "sourceHash": "fnv1a64:d5f73125475cc9b2",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:077cee68d5b95ab5",
+      "sourceHash": "fnv1a64:eaab6850ed164d4a",
       "notice": null,
       "blocks": [
         {

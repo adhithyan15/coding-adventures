@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-EVENING-GREETING-REGISTER-01]
 id: HI-C32-evening-register
 spine_node: SPINE-TIME-OF-DAY
 sequence: 840

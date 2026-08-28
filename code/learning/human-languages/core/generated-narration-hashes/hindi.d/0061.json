@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 61,
-  "sourceHash": "fnv1a64:c1de04e43cfe9e0e",
+  "sourceHash": "fnv1a64:2da705e0c4c2dbad",
   "lessonIds": [
     "HI-C61-vessel",
     "HI-C61-spoon",
@@ -14,6 +14,6 @@
   "text": "hindi/narration/ch61.txt",
   "json": "hindi/narration/ch61.json",
   "textHash": "fnv1a64:796376d0fa109d58",
-  "jsonHash": "fnv1a64:ea9ba6e7a0052d9d",
+  "jsonHash": "fnv1a64:742d0a4d02416bf1",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "At the Cooking Fire",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c1de04e43cfe9e0e",
+  "sourceHash": "fnv1a64:2da705e0c4c2dbad",
   "lessons": [
     {
       "id": "HI-C61-vessel",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f9a9b42385acbda",
+      "sourceHash": "fnv1a64:a33fb2688e15bc8f",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cffd09de4c360a9",
+      "sourceHash": "fnv1a64:274532ff13f76236",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ceda3aa0aca817d",
+      "sourceHash": "fnv1a64:b92f19fa9103e54e",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91eaa7d220ea3754",
+      "sourceHash": "fnv1a64:49c164b9bf6e6e31",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8cd0f7c5570e480",
+      "sourceHash": "fnv1a64:ea606731b807dc39",
       "notice": null,
       "blocks": [
         {

@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-S02-letter-na
 spine_node: SPINE-MEET-GREET
 sequence: 505

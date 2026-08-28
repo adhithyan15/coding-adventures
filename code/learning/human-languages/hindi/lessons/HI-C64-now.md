@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [HI-SENSE-AB-NOW-FROM-NOW-01]
+introduces_culture_claims: []
 id: HI-C64-now
 spine_node: SPINE-RESPOND-BASIC
 sequence: 2410

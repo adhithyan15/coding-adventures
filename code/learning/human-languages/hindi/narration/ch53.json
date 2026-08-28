@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:92b48fc24df9b33d",
+  "sourceHash": "fnv1a64:1ca5924d116f1f37",
   "lessons": [
     {
       "id": "HI-C53-shoulder",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd828af34298f3fc",
+      "sourceHash": "fnv1a64:3e1d05875964c481",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b94c2690cca9a23",
+      "sourceHash": "fnv1a64:1a71a86e4e4bbdbe",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b52a1b7a39e2acd1",
+      "sourceHash": "fnv1a64:010a10197ba99690",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e552a55b35deb71",
+      "sourceHash": "fnv1a64:7697eb6906e45b7e",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d850b2554c017f5",
+      "sourceHash": "fnv1a64:ba715cd60db1a5be",
       "notice": null,
       "blocks": [
         {

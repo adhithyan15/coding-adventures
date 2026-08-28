@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-S123-letter-da
 spine_node: SPINE-MEET-GREET
 sequence: 671

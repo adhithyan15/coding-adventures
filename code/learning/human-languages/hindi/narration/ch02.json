@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:30b74a8bd8da4912",
+  "sourceHash": "fnv1a64:864a92b2f2b445db",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1342e23f0c41f1b9",
+      "sourceHash": "fnv1a64:162b6d9579bd5020",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -152,7 +152,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e84aceae083cabaa",
+      "sourceHash": "fnv1a64:d16ce53104e5ca63",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -297,7 +297,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0010496ac5dd1cc0",
+      "sourceHash": "fnv1a64:123409156565ef87",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -450,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92fcf63a19b90f38",
+      "sourceHash": "fnv1a64:ffece98fc3af25e8",
       "notice": null,
       "blocks": [
         {
@@ -563,7 +563,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c7d1f6c7a5f948df",
+      "sourceHash": "fnv1a64:a863a274a8e1571d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -716,7 +716,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a982ce0e1a663030",
+      "sourceHash": "fnv1a64:c1431b4309af4983",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -850,7 +850,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f62c4e50cb51d629",
+      "sourceHash": "fnv1a64:86a08175943df2a6",
       "notice": null,
       "blocks": [
         {
@@ -972,7 +972,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb11d728d5582528",
+      "sourceHash": "fnv1a64:ebb8ad2f1d7071f5",
       "notice": null,
       "blocks": [
         {
@@ -1086,7 +1086,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:a3a4f992c53ceb0e",
+      "sourceHash": "fnv1a64:8a65ffe6d992467d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1261,7 +1261,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:c2ae6bb3cfba4b4f",
+      "sourceHash": "fnv1a64:b48b7899ce211ee6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1393,7 +1393,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:b8e6a078924ba61d",
+      "sourceHash": "fnv1a64:44756e60e8aadc32",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1572,7 +1572,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:fb8f9b5730381090",
+      "sourceHash": "fnv1a64:a07f3b31e42110fd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1705,7 +1705,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:ba56a8aa108b98f2",
+      "sourceHash": "fnv1a64:761b6d60e8880a63",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1834,7 +1834,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8fb1652ba09974ca",
+      "sourceHash": "fnv1a64:55e2880f8d8418fb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1970,7 +1970,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:982531436c9f0ff0",
+      "sourceHash": "fnv1a64:0866aaa42d8133fd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2138,7 +2138,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f038d9b402f85c9a",
+      "sourceHash": "fnv1a64:0832aa5013d12f47",
       "notice": null,
       "blocks": [
         {

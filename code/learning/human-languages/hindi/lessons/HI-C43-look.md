@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [HI-SENSE-DEKHNA-LOOK-SEE-01]
+introduces_culture_claims: []
 id: HI-C43-look
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1270

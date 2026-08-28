@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 47,
-  "sourceHash": "fnv1a64:69bd0c1b96ca2d0a",
+  "sourceHash": "fnv1a64:7cafc68f283cead9",
   "lessonIds": [
     "HI-C47-teacher",
     "HI-C47-student",
@@ -14,6 +14,6 @@
   "text": "hindi/narration/ch47.txt",
   "json": "hindi/narration/ch47.json",
   "textHash": "fnv1a64:6690fd414194da57",
-  "jsonHash": "fnv1a64:94c3cb232207d303",
+  "jsonHash": "fnv1a64:ef2efcd787a569d8",
   "findings": []
 }

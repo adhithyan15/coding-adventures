@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-THREE-FOUR-PRAKRIT-HISTORY-01]
 id: HI-C06-tin-char-history
 spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 470

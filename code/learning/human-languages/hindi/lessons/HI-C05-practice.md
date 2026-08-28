@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C05-practice
 sequence: 450
 spine_node: SPINE-SAY-WHAT-I-DO

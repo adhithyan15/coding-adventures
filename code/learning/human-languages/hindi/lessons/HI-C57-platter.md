@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-THALI-SERVING-TRADITION-01]
 id: HI-C57-platter
 spine_node: SPINE-COURTESY-THANK
 sequence: 1970

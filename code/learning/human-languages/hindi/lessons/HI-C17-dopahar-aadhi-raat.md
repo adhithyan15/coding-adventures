@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-PAHAR-TIMEKEEPING-01]
 id: HI-C17-dopahar-aadhi-raat
 spine_node: SPINE-TIME-OF-DAY
 sequence: 640

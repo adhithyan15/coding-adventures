@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C42-give
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1260

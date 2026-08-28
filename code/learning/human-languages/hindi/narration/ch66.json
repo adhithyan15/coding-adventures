@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "The Field and the Well",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a7181f2d7972b24f",
+  "sourceHash": "fnv1a64:5d646defe5091b33",
   "lessons": [
     {
       "id": "HI-C66-seed",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1525030d0581ed24",
+      "sourceHash": "fnv1a64:f5a164022c348d09",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0774d4e68be96f1",
+      "sourceHash": "fnv1a64:cc6e1dae16d68790",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b891bb2f0bda9e8a",
+      "sourceHash": "fnv1a64:19dd8b6a444abd03",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7132903f181fc643",
+      "sourceHash": "fnv1a64:cbbab69b40178230",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dcfd991d30a07dc8",
+      "sourceHash": "fnv1a64:eba139ee127dc7fd",
       "notice": null,
       "blocks": [
         {

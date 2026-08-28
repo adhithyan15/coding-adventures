@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-SUPRABHAT-01]
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-SUPRABHAT-FORMAL-REGISTER-01]
 id: HI-C31-suprabhat
 spine_node: SPINE-TIME-OF-DAY
 sequence: 820

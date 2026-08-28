@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8a4c730f2f560ab9",
+  "sourceHash": "fnv1a64:0e16b58948cef310",
   "lessons": [
     {
       "id": "HI-C28-subah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b908e5ccea472875",
+      "sourceHash": "fnv1a64:b5a269a03cc33f6f",
       "notice": null,
       "blocks": [
         {

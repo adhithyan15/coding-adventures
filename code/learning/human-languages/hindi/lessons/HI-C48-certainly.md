@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C48-certainly
 spine_node: SPINE-RESPOND-BASIC
 sequence: 1520

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 9,
-  "sourceHash": "fnv1a64:17432207a080938f",
+  "sourceHash": "fnv1a64:5b3036bf00dd4f04",
   "lessonIds": [
     "HI-C09-maaf-kijiye",
     "HI-S04-letter-aa",
@@ -12,6 +12,6 @@
   "text": "hindi/narration/ch09.txt",
   "json": "hindi/narration/ch09.json",
   "textHash": "fnv1a64:fb458b4f4991eaa2",
-  "jsonHash": "fnv1a64:b53e33e129d55c23",
+  "jsonHash": "fnv1a64:59172f98e1b8af52",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9c9d075b1b211d3c",
+  "sourceHash": "fnv1a64:ea961c177506a0aa",
   "lessons": [
     {
       "id": "HI-C51-flower",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:173a576c6874cb44",
+      "sourceHash": "fnv1a64:9b565e4ad7346113",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5a15ff38e973861",
+      "sourceHash": "fnv1a64:c36fe069764ee1bb",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40b83642d5558482",
+      "sourceHash": "fnv1a64:8c2853693399bfe9",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4fd162530062e183",
+      "sourceHash": "fnv1a64:9c5337c5133917b6",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba00cfe6777cc700",
+      "sourceHash": "fnv1a64:59a93c507eec02e3",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "The Sky",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4d66dd8fc2787ed3",
+  "sourceHash": "fnv1a64:fb4578b98c2ba1b3",
   "lessons": [
     {
       "id": "HI-C55-sun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06f455bf2f1a7bc5",
+      "sourceHash": "fnv1a64:4ff542fae932c076",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebb9566c36aaeec1",
+      "sourceHash": "fnv1a64:493636256a53f7fa",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f83d8286b6cfe8a7",
+      "sourceHash": "fnv1a64:ed096aa2b546fd34",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4b3d8aff7213701",
+      "sourceHash": "fnv1a64:4ad73f7e78a746d2",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e299bcf14efc60d",
+      "sourceHash": "fnv1a64:5de78b9214241ec2",
       "notice": null,
       "blocks": [
         {

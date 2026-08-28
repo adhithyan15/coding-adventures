@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C65-permission
 spine_node: SPINE-COURTESY-THANK
 sequence: 2480

@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Verbs of Seeing and Saying",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:dd2d5c7fa6dbd18c",
+  "sourceHash": "fnv1a64:7c3731d24ff3c231",
   "lessons": [
     {
       "id": "HI-C43-look",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2dd2c7267bbdfddf",
+      "sourceHash": "fnv1a64:d267ef18c18c21ae",
       "notice": null,
       "blocks": [
         {
@@ -128,7 +128,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76fc82916220c431",
+      "sourceHash": "fnv1a64:09c33c1c1065159b",
       "notice": null,
       "blocks": [
         {
@@ -246,7 +246,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c59a457811a6a97",
+      "sourceHash": "fnv1a64:510ce3ce9dd102ec",
       "notice": null,
       "blocks": [
         {
@@ -364,7 +364,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a55e936f9eba315a",
+      "sourceHash": "fnv1a64:c0e540b1c2d03453",
       "notice": null,
       "blocks": [
         {

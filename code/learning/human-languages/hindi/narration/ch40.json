@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:55728eb26e67792e",
+  "sourceHash": "fnv1a64:3fb16f997dff61ef",
   "lessons": [
     {
       "id": "HI-C40-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3eec31c43a739c02",
+      "sourceHash": "fnv1a64:d8167b58defca4b7",
       "notice": null,
       "blocks": [
         {
@@ -121,7 +121,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58b35ddb9202aee7",
+      "sourceHash": "fnv1a64:34c76223c83f898e",
       "notice": null,
       "blocks": [
         {
@@ -223,7 +223,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60fb441002532ad4",
+      "sourceHash": "fnv1a64:7ebea19822bb6281",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2eafa1d413cafbd",
+      "sourceHash": "fnv1a64:51047b0440a3235a",
       "notice": null,
       "blocks": [
         {
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53fc26f21670f307",
+      "sourceHash": "fnv1a64:ded967423cb0f6c0",
       "notice": null,
       "blocks": [
         {
@@ -529,7 +529,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55437e52b934bf8d",
+      "sourceHash": "fnv1a64:de9228e2273be438",
       "notice": null,
       "blocks": [
         {
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64eae09961a75166",
+      "sourceHash": "fnv1a64:fec07c0382c09831",
       "notice": null,
       "blocks": [
         {

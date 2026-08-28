@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C58-window
 spine_node: SPINE-MEET-GREET
 sequence: 2020

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 27,
-  "sourceHash": "fnv1a64:fd695bdb907dc7b6",
+  "sourceHash": "fnv1a64:02f28621c23df320",
   "lessonIds": [
     "HI-C27-shubh-raatri"
   ],
@@ -10,6 +10,6 @@
   "text": "hindi/narration/ch27.txt",
   "json": "hindi/narration/ch27.json",
   "textHash": "fnv1a64:9964998052ec83e1",
-  "jsonHash": "fnv1a64:e46aa53f3152914a",
+  "jsonHash": "fnv1a64:0aebf30ac8c56a94",
   "findings": []
 }

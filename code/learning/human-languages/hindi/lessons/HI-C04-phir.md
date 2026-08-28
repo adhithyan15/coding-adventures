@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [HI-SENSE-PHIR-AGAIN-THEN-01]
+introduces_culture_claims: []
 id: HI-C04-phir
 sequence: 340
 spine_node: SPINE-TAKE-LEAVE

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 25,
-  "sourceHash": "fnv1a64:866d523f59639e08",
+  "sourceHash": "fnv1a64:de0d440f3de48ff6",
   "lessonIds": [
     "HI-C25-din"
   ],
@@ -10,6 +10,6 @@
   "text": "hindi/narration/ch25.txt",
   "json": "hindi/narration/ch25.json",
   "textHash": "fnv1a64:801931df369a3979",
-  "jsonHash": "fnv1a64:016b7c8a99180b8a",
+  "jsonHash": "fnv1a64:3cc039582dc0776c",
   "findings": []
 }

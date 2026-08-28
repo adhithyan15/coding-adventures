@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 44,
-  "sourceHash": "fnv1a64:4798dbb915aa746d",
+  "sourceHash": "fnv1a64:cf51f072e99f72ba",
   "lessonIds": [
     "HI-C44-son",
     "HI-C44-daughter",
@@ -13,6 +13,6 @@
   "text": "hindi/narration/ch44.txt",
   "json": "hindi/narration/ch44.json",
   "textHash": "fnv1a64:d222320e2e5c078c",
-  "jsonHash": "fnv1a64:25374706625b2a9a",
+  "jsonHash": "fnv1a64:55a0dfae828b0726",
   "findings": []
 }

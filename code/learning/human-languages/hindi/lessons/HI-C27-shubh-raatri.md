@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-SHUBH-RAATRI-01]
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-SHUBH-RAATRI-LITERARY-REGISTER-01]
 id: HI-C27-shubh-raatri
 spine_node: SPINE-TAKE-LEAVE
 sequence: 780

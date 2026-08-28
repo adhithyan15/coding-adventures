@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Taking Your Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:56764eb1be8fc968",
+  "sourceHash": "fnv1a64:ae4701a80b003b11",
   "lessons": [
     {
       "id": "HI-C49-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:231e34ae91a0d6a3",
+      "sourceHash": "fnv1a64:c35130c275057ef8",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22e4e2d580455d8c",
+      "sourceHash": "fnv1a64:5d040e76fa9a075f",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62b4099d10fb8eca",
+      "sourceHash": "fnv1a64:c0b8fb756582949f",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8bdf0861e88d67d3",
+      "sourceHash": "fnv1a64:0de81ad31c6977c6",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d965091e9ea82c2",
+      "sourceHash": "fnv1a64:f91e592b13c9d019",
       "notice": null,
       "blocks": [
         {

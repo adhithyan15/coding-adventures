@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-PHIR-MILENGE-01]
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C04-phir-milenge
 sequence: 360
 spine_node: SPINE-TAKE-LEAVE

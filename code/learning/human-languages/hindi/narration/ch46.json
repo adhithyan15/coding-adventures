@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Hair, Ear, and Throat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:940fd9319f463f9b",
+  "sourceHash": "fnv1a64:6ce53cfafe440d8d",
   "lessons": [
     {
       "id": "HI-C46-hair",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c7e5ff2373c0952",
+      "sourceHash": "fnv1a64:0be65da569248b2f",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae9bbd49d06f5207",
+      "sourceHash": "fnv1a64:de272c3e35ae2aba",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06dabcd6fc7a6df2",
+      "sourceHash": "fnv1a64:5112d145d6d16835",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a988cbd7d9d4e8d",
+      "sourceHash": "fnv1a64:c0157425f901e270",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1762c37db099a61a",
+      "sourceHash": "fnv1a64:1033a9a187e11fdb",
       "notice": null,
       "blocks": [
         {

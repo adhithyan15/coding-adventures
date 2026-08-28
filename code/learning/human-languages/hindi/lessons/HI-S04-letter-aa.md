@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-S04-letter-aa
 spine_node: SPINE-MEET-GREET
 sequence: 525

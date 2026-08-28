@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-KRIPAYA-PLEASE-01]
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C08-kripaya
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 510

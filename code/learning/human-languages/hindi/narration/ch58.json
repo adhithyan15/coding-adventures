@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Inside the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5fc3ceb880c84204",
+  "sourceHash": "fnv1a64:36c80e3d935c2eda",
   "lessons": [
     {
       "id": "HI-C58-wall",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b28e17ca1b98aab6",
+      "sourceHash": "fnv1a64:a7c67a113a0568d3",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:740bc3b6f30730f3",
+      "sourceHash": "fnv1a64:574a1d1720008a1e",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba06d4287b34ca35",
+      "sourceHash": "fnv1a64:1884100dd7eaaf72",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52cfe32b8c4f26a9",
+      "sourceHash": "fnv1a64:9aaf54c963d915c8",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35012d7df5a2fb35",
+      "sourceHash": "fnv1a64:d19f882971639380",
       "notice": null,
       "blocks": [
         {

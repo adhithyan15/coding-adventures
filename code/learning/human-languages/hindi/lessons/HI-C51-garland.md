@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-GARLAND-WELCOME-GESTURE-01]
 id: HI-C51-garland
 spine_node: SPINE-MEET-GREET
 sequence: 1660

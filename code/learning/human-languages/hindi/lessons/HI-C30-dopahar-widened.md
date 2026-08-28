@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [HI-SENSE-DOPAHAR-NOON-AFTERNOON-01]
+introduces_culture_claims: []
 id: HI-C30-dopahar-widened
 spine_node: SPINE-TIME-OF-DAY
 sequence: 810

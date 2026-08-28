@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Numbers Six to Ten",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ecaddd9f9884f0f7",
+  "sourceHash": "fnv1a64:435a976f0e0018fd",
   "lessons": [
     {
       "id": "HI-C21-numbers-6-10",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57756c7dea35bfca",
+      "sourceHash": "fnv1a64:94ccfd8aa67d1d05",
       "notice": null,
       "blocks": [
         {
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d27aa98aba6dfbfe",
+      "sourceHash": "fnv1a64:ea3a9a7856a97611",
       "notice": null,
       "blocks": [
         {

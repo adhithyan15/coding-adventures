@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1dddd846ddfd42f4",
+  "sourceHash": "fnv1a64:19fbb52412c72cda",
   "lessons": [
     {
       "id": "HI-C05-bolna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:48916d08e1d6055c",
+      "sourceHash": "fnv1a64:6a78e77b7794d863",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -165,7 +165,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:dbbb3cb59f48db12",
+      "sourceHash": "fnv1a64:d88962cbf91bdf85",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -306,7 +306,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:459f134bc1ca75b5",
+      "sourceHash": "fnv1a64:49b8e92a92634d1b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -483,7 +483,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:926eab697b3d54c3",
+      "sourceHash": "fnv1a64:c024d49817a49d08",
       "notice": null,
       "blocks": [
         {
@@ -646,7 +646,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:64de2a7ed25c1785",
+      "sourceHash": "fnv1a64:ad7a3b2278051e36",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -783,7 +783,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d36b7ed52adbe147",
+      "sourceHash": "fnv1a64:71d4be382a9929c4",
       "notice": null,
       "blocks": [
         {

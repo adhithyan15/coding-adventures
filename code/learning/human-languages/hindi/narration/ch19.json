@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:de603f927a0a6e77",
+  "sourceHash": "fnv1a64:d56b999cbe9dce1e",
   "lessons": [
     {
       "id": "HI-C19-umr",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0b8d5a237a2ce8f",
+      "sourceHash": "fnv1a64:48eb30d4b433e120",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e933beb6aa73aa49",
+      "sourceHash": "fnv1a64:5f047e22b5b00962",
       "notice": null,
       "blocks": [
         {
@@ -230,7 +230,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bde14833ff02a3c3",
+      "sourceHash": "fnv1a64:99b31b0c05395f28",
       "notice": {
         "modality": "pen",
         "needs": [

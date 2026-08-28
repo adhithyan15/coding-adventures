@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ca44d3565fa1715f",
+  "sourceHash": "fnv1a64:f0eda9d47d4d601f",
   "lessons": [
     {
       "id": "HI-C13-sir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbc94e6c0e39a311",
+      "sourceHash": "fnv1a64:348927bd5b560cde",
       "notice": null,
       "blocks": [
         {
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:842f60a59c8cdfbf",
+      "sourceHash": "fnv1a64:4b648eefc762a3d4",
       "notice": null,
       "blocks": [
         {
@@ -242,7 +242,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:836a50bb3049edbc",
+      "sourceHash": "fnv1a64:49dcdaad6e6ea9c9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -431,7 +431,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9dfa6c08b711098e",
+      "sourceHash": "fnv1a64:73ccdd0fbd709fd9",
       "notice": {
         "modality": "pen",
         "needs": [

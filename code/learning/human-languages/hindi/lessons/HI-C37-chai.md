@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-TEA-NAME-ROUTES-01]
 id: HI-C37-chai
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 980

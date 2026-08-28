@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-BELL-HOUR-TIMEKEEPING-01]
 id: HI-C18-ghanta
 spine_node: SPINE-TIME-OF-DAY
 sequence: 650
