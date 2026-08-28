@@ -730,6 +730,13 @@ setting.
 There is no tracked per-language aggregate: regenerating chapter 7 updates
 `0007.json` without colliding with an agent working on chapter 8.
 
+`narrationLessonIdentityIndex(root, expectedLanguages)` is the shared strict
+corpus projection for gates that need narration-owned lesson identities without
+inventing another validator. It proves exact language-directory equality before
+opening owner bytes, then returns stable per-language lesson ids while rejecting
+unsafe or reserved identities, duplicate or case-fold-colliding ownership across
+chapters and languages, aggregates, nesting, symlinks, and non-regular owners.
+
 **Out of scope, per HL04 and HL08:** no audio. No TTS, no voice selection, no
 recordings. This is a script *for* a voice agent.
 
@@ -775,7 +782,8 @@ owners. They are not additional tracked aggregates.
 The loader first requires exact language-directory equality with
 `core/languages.json`. Within every directory it requires exact owner-ID equality
 with parsed lesson sources and independently with generated narration-hash lesson
-IDs, before trusting owner content. Owners must be canonical JSON, direct regular
+IDs through the shared `narrationLessonIdentityIndex` boundary, before trusting
+owner content. Owners must be canonical JSON, direct regular
 files whose filename, embedded lesson id, and embedded language agree. Missing,
 unexpected, nested, symlinked, case-colliding, unsafe, or noncanonical owners fail;
 so does any resurrected `core/lesson-modality/<language>.json`. There is no aggregate

@@ -15,12 +15,20 @@ import {
   type ModalityFinding,
   type ModalityReasonCode,
 } from "./modality.js";
-import {
-  GENERATED_NARRATION_HASH_DIR,
-  readGeneratedNarrationHashManifest,
-} from "./generated-hash-shards.js";
+import { narrationLessonIdentityIndex } from "./generated-hash-shards.js";
 
 export const MODALITY_META_OWNER = "_meta.json";
+
+/** @deprecated Use narrationLessonIdentityIndex from generated-hash-shards. */
+export function modalityNarrationLessonIds(
+  root: string,
+  languages: readonly string[],
+): ReadonlyMap<string, readonly string[]> {
+  const index = narrationLessonIdentityIndex(root, languages);
+  return new Map(
+    languages.map((language) => [language, index.get(language)!] as const),
+  );
+}
 
 const LANGUAGE = /^[a-z][a-z0-9-]*$/;
 const LESSON_ID = /^[A-Za-z0-9][A-Za-z0-9-]*$/;
@@ -486,38 +494,6 @@ export function assertModalityManifestLanguages(
     expectedLanguages,
     "modality manifest languages",
   );
-}
-
-/** Independent lesson identities declared by chapter-owned narration manifests. */
-export function modalityNarrationLessonIds(
-  root: string,
-  languages: readonly string[],
-): ReadonlyMap<string, readonly string[]> {
-  const out = new Map<string, readonly string[]>();
-  const global = new Map<string, string>();
-  for (const language of languages) {
-    if (!safeLanguage(language)) {
-      throw new Error(`modality narration language '${language}' is unsafe`);
-    }
-    const loaded = readGeneratedNarrationHashManifest(
-      join(root, GENERATED_NARRATION_HASH_DIR, `${language}.json`),
-    );
-    const ids = loaded.manifest.chapters.flatMap((chapter) => chapter.lessonIds);
-    assertNoCaseFoldCollisions(ids, `narration ${language} lesson ids`);
-    for (const id of ids) {
-      if (!safeLessonId(id)) {
-        throw new Error(`narration lesson id '${id}' is unsafe or reserved`);
-      }
-      const folded = id.toLowerCase();
-      const prior = global.get(folded);
-      if (prior !== undefined) {
-        throw new Error(`narration lesson id '${id}' duplicates '${prior}' across languages`);
-      }
-      global.set(folded, id);
-    }
-    out.set(language, [...ids].sort());
-  }
-  return out;
 }
 
 /**

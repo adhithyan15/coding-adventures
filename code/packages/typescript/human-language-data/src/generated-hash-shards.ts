@@ -7,8 +7,15 @@ export const GENERATED_BOOK_HASH_DIR = "core/generated-book-hashes";
 export const GENERATED_NARRATION_HASH_DIR = "core/generated-narration-hashes";
 
 const LANGUAGE = /^[a-z][a-z0-9-]*$/;
+const LESSON_ID = /^[A-Za-z0-9][A-Za-z0-9-]*$/;
 const CHAPTER_OWNER = /^(\d{4})\.json$/;
 const HASH = /^fnv1a64:[0-9a-f]{16}$/;
+const WINDOWS_RESERVED = /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])$/i;
+const DANGEROUS_IDENTITIES = new Set([
+  "__proto__",
+  "constructor",
+  "prototype",
+]);
 
 export interface GeneratedBookHashChapter {
   language: string;
@@ -744,13 +751,20 @@ function listLanguages(directory: string): string[] {
   }
   const owners = new Map<string, string>();
   for (const name of readdirSync(directory).sort()) {
-    if (name === "README.md") continue;
     const path = join(directory, name);
     const entry = lstatSync(path);
     if (entry.isSymbolicLink())
       throw new Error(
         `generated hash owner '${path}' must not be a symbolic link`,
       );
+    if (name === "README.md") {
+      if (!entry.isFile()) {
+        throw new Error(
+          `generated hash owner '${path}' must be a real regular file`,
+        );
+      }
+      continue;
+    }
     if (name.endsWith(".json")) {
       throw new Error(
         `generated hash owner '${path}' is a forbidden flat monolith; use a chapter-owned .d directory`,
@@ -772,6 +786,123 @@ function listLanguages(directory: string): string[] {
     owners.set(language, name);
   }
   return [...owners.keys()].sort();
+}
+
+function safeLanguageIdentity(value: string): boolean {
+  return (
+    LANGUAGE.test(value) &&
+    !WINDOWS_RESERVED.test(value) &&
+    !DANGEROUS_IDENTITIES.has(value.toLowerCase())
+  );
+}
+
+function safeLessonIdentity(value: string): boolean {
+  return (
+    LESSON_ID.test(value) &&
+    !WINDOWS_RESERVED.test(value) &&
+    !DANGEROUS_IDENTITIES.has(value.toLowerCase())
+  );
+}
+
+function assertNoCaseFoldIdentityCollisions(
+  values: readonly string[],
+  label: string,
+): void {
+  const seen = new Map<string, string>();
+  for (const value of values) {
+    const folded = value.toLowerCase();
+    const prior = seen.get(folded);
+    if (prior !== undefined) {
+      throw new Error(
+        prior === value
+          ? `${label} repeats '${value}'`
+          : `${label} has a case-fold collision between '${prior}' and '${value}'`,
+      );
+    }
+    seen.set(folded, value);
+  }
+}
+
+function assertExactNarrationLanguages(
+  actual: readonly string[],
+  expected: readonly string[],
+): void {
+  for (const language of expected) {
+    if (!safeLanguageIdentity(language)) {
+      throw new Error(
+        `expected narration language '${language}' is unsafe or reserved`,
+      );
+    }
+  }
+  for (const language of actual) {
+    if (!safeLanguageIdentity(language)) {
+      throw new Error(
+        `narration owner language '${language}' is unsafe or reserved`,
+      );
+    }
+  }
+  assertNoCaseFoldIdentityCollisions(
+    expected,
+    "expected narration languages",
+  );
+  assertNoCaseFoldIdentityCollisions(actual, "narration owner languages");
+  const found = new Set(actual);
+  const wanted = new Set(expected);
+  const missing = [...wanted].filter((language) => !found.has(language)).sort();
+  const extra = [...found].filter((language) => !wanted.has(language)).sort();
+  if (missing.length > 0 || extra.length > 0) {
+    throw new Error(
+      "narration owner languages do not match the expected registry" +
+        `${missing.length > 0 ? `; missing: ${missing.join(", ")}` : ""}` +
+        `${extra.length > 0 ? `; extra: ${extra.join(", ")}` : ""}`,
+    );
+  }
+}
+
+/**
+ * Exact lesson identities declared by strict chapter-owned narration shards.
+ *
+ * The language directory set is proven against the independent registry before
+ * any metadata or chapter bytes are opened. Lesson identities must then be safe
+ * and globally unique under case folding, including across chapter and language
+ * boundaries.
+ */
+export function narrationLessonIdentityIndex(
+  root: string,
+  expectedLanguages: readonly string[],
+): ReadonlyMap<string, readonly string[]> {
+  const directory = join(root, GENERATED_NARRATION_HASH_DIR);
+  const ownerLanguages = listLanguages(directory);
+  assertExactNarrationLanguages(ownerLanguages, expectedLanguages);
+
+  const out = new Map<string, readonly string[]>();
+  const globalOwners = new Map<string, { id: string; language: string }>();
+  for (const language of ownerLanguages) {
+    const loaded = readGeneratedNarrationHashManifest(
+      join(directory, `${language}.json`),
+    );
+    const ids = loaded.manifest.chapters.flatMap((chapter) => chapter.lessonIds);
+    for (const id of ids) {
+      if (!safeLessonIdentity(id)) {
+        throw new Error(`narration lesson id '${id}' is unsafe or reserved`);
+      }
+      const folded = id.toLowerCase();
+      const prior = globalOwners.get(folded);
+      if (prior !== undefined) {
+        const boundary = prior.language === language
+          ? `within language '${language}'`
+          : `across languages '${prior.language}' and '${language}'`;
+        throw new Error(
+          prior.id === id
+            ? `narration lesson id '${id}' is multiply owned ${boundary}`
+            : `narration lesson ids '${prior.id}' and '${id}' have a case-fold collision ${boundary}`,
+        );
+      }
+      globalOwners.set(folded, { id, language });
+    }
+    out.set(language, [...ids].sort());
+  }
+  return out;
 }
 
 /** Strict, name-only generated-book ownership discovery for eager consumers. */

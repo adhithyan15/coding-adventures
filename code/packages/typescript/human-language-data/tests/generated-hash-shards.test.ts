@@ -11,15 +11,18 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   GENERATED_BOOK_HASH_DIR,
+  GENERATED_NARRATION_HASH_DIR,
   generatedBookHashOwnerContents,
   generatedNarrationHashOwnerContents,
   listGeneratedBookHashOwnerLanguages,
+  narrationLessonIdentityIndex,
   prepareGeneratedHashOwnerWrite,
   readGeneratedBookHashManifest,
   readGeneratedNarrationHashManifest,
   type GeneratedBookHashManifest,
   type GeneratedNarrationHashManifest,
 } from "../src/generated-hash-shards.js";
+import { modalityNarrationLessonIds } from "../src/modality-shards.js";
 import { loadGeneratedBookChapterRefs } from "../src/track-progress-cli.js";
 
 const roots: string[] = [];
@@ -75,6 +78,28 @@ const narrationManifest = (): GeneratedNarrationHashManifest => ({
     },
   ],
 });
+
+function narrationFor(
+  language: string,
+  lessonIds: string[],
+  chapter = 2,
+): GeneratedNarrationHashManifest {
+  const manifest = narrationManifest();
+  manifest.chapters = [
+    {
+      ...manifest.chapters[0]!,
+      language,
+      chapter,
+      lessonIds,
+      voiceLessons: lessonIds.length,
+      drivablePrefix: lessonIds.length,
+      text: `${language}/narration/ch${String(chapter).padStart(2, "0")}.txt`,
+      json: `${language}/narration/ch${String(chapter).padStart(2, "0")}.json`,
+    },
+  ];
+  manifest.findings = [];
+  return manifest;
+}
 
 function writeOwners(root: string, outputs: ReadonlyMap<string, string>): void {
   for (const [relative, content] of outputs) {
@@ -358,5 +383,223 @@ describe("generated chapter hash shard loader", () => {
       recursive: true,
     });
     expect(loadGeneratedBookChapterRefs(root, new Set(["test"]))).toEqual([]);
+  });
+
+  it("indexes exact narration languages and returns stable lesson identities", () => {
+    const root = fixture();
+    const test = narrationFor("test", ["TEST-C02-zed", "TEST-C02-alpha"]);
+    test.chapters.push({
+      ...test.chapters[0]!,
+      chapter: 1,
+      lessonIds: ["TEST-C01-middle"],
+      voiceLessons: 1,
+      drivablePrefix: 1,
+      text: "test/narration/ch01.txt",
+      json: "test/narration/ch01.json",
+    });
+    writeOwners(root, generatedNarrationHashOwnerContents("test", test));
+    writeOwners(
+      root,
+      generatedNarrationHashOwnerContents(
+        "alpha",
+        narrationFor("alpha", ["ALPHA-C02-one"]),
+      ),
+    );
+
+    const index = narrationLessonIdentityIndex(root, ["test", "alpha"]);
+    expect([...index.keys()]).toEqual(["alpha", "test"]);
+    expect(index.get("alpha")).toEqual(["ALPHA-C02-one"]);
+    expect(index.get("test")).toEqual([
+      "TEST-C01-middle",
+      "TEST-C02-alpha",
+      "TEST-C02-zed",
+    ]);
+    expect([
+      ...modalityNarrationLessonIds(root, ["test", "alpha"]).keys(),
+    ]).toEqual(["test", "alpha"]);
+  });
+
+  it("proves exact language closure before opening owner bytes", () => {
+    const root = fixture();
+    writeOwners(
+      root,
+      generatedNarrationHashOwnerContents(
+        "test",
+        narrationFor("test", ["TEST-C02-one"]),
+      ),
+    );
+    writeOwners(
+      root,
+      generatedNarrationHashOwnerContents(
+        "extra",
+        narrationFor("extra", ["EXTRA-C02-one"]),
+      ),
+    );
+    writeFileSync(
+      join(root, GENERATED_NARRATION_HASH_DIR, "test.d", "0002.json"),
+      "not json\n",
+    );
+
+    expect(() => narrationLessonIdentityIndex(root, ["test"])).toThrow(
+      /extra: extra/,
+    );
+    expect(() =>
+      narrationLessonIdentityIndex(root, ["test", "extra", "missing"]),
+    ).toThrow(/missing: missing/);
+    expect(() => narrationLessonIdentityIndex(root, ["con"])).toThrow(
+      /unsafe or reserved/,
+    );
+    expect(() =>
+      narrationLessonIdentityIndex(root, ["constructor"]),
+    ).toThrow(/unsafe or reserved/);
+  });
+
+  it("rejects unsafe, repeated, and case-fold-colliding lesson identities", () => {
+    const unsafeRoot = fixture();
+    writeOwners(
+      unsafeRoot,
+      generatedNarrationHashOwnerContents(
+        "test",
+        narrationFor("test", ["constructor"]),
+      ),
+    );
+    expect(() => narrationLessonIdentityIndex(unsafeRoot, ["test"])).toThrow(
+      /unsafe or reserved/,
+    );
+
+    const foldedRoot = fixture();
+    const folded = narrationFor("test", ["TEST-C01-One"], 1);
+    folded.chapters.push({
+      ...folded.chapters[0]!,
+      chapter: 2,
+      lessonIds: ["test-c01-one"],
+      text: "test/narration/ch02.txt",
+      json: "test/narration/ch02.json",
+    });
+    writeOwners(
+      foldedRoot,
+      generatedNarrationHashOwnerContents("test", folded),
+    );
+    expect(() => narrationLessonIdentityIndex(foldedRoot, ["test"])).toThrow(
+      /case-fold collision within language 'test'/,
+    );
+
+    const repeatedRoot = fixture();
+    const repeated = narrationFor("test", ["TEST-C01-one"], 1);
+    repeated.chapters.push({
+      ...repeated.chapters[0]!,
+      chapter: 2,
+      lessonIds: ["TEST-C02-two"],
+      text: "test/narration/ch02.txt",
+      json: "test/narration/ch02.json",
+    });
+    writeOwners(
+      repeatedRoot,
+      generatedNarrationHashOwnerContents("test", repeated),
+    );
+    const second = join(
+      repeatedRoot,
+      GENERATED_NARRATION_HASH_DIR,
+      "test.d",
+      "0002.json",
+    );
+    const secondOwner = JSON.parse(readFileSync(second, "utf8"));
+    secondOwner.lessonIds = ["TEST-C01-one"];
+    writeFileSync(second, `${JSON.stringify(secondOwner)}\n`);
+    expect(() =>
+      narrationLessonIdentityIndex(repeatedRoot, ["test"]),
+    ).toThrow(/multiply owned within language 'test'/);
+  });
+
+  it("rejects exact and case-fold lesson collisions across languages", () => {
+    const exactRoot = fixture();
+    for (const language of ["alpha", "test"]) {
+      writeOwners(
+        exactRoot,
+        generatedNarrationHashOwnerContents(
+          language,
+          narrationFor(language, ["SHARED-C02-one"]),
+        ),
+      );
+    }
+    expect(() =>
+      narrationLessonIdentityIndex(exactRoot, ["alpha", "test"]),
+    ).toThrow(/multiply owned across languages 'alpha' and 'test'/);
+
+    const foldedRoot = fixture();
+    writeOwners(
+      foldedRoot,
+      generatedNarrationHashOwnerContents(
+        "alpha",
+        narrationFor("alpha", ["SHARED-C02-One"]),
+      ),
+    );
+    writeOwners(
+      foldedRoot,
+      generatedNarrationHashOwnerContents(
+        "test",
+        narrationFor("test", ["shared-c02-one"]),
+      ),
+    );
+    expect(() =>
+      narrationLessonIdentityIndex(foldedRoot, ["alpha", "test"]),
+    ).toThrow(/case-fold collision across languages 'alpha' and 'test'/);
+  });
+
+  it("rejects aggregates, nesting, symlinks, and non-regular narration owners", () => {
+    const aggregateRoot = fixture();
+    writeFileSync(
+      join(aggregateRoot, GENERATED_NARRATION_HASH_DIR, "test.json"),
+      "{}\n",
+    );
+    expect(() =>
+      narrationLessonIdentityIndex(aggregateRoot, ["test"]),
+    ).toThrow(/forbidden flat monolith/);
+
+    const nestedRoot = fixture();
+    mkdirSync(join(nestedRoot, GENERATED_NARRATION_HASH_DIR, "nested"));
+    expect(() => narrationLessonIdentityIndex(nestedRoot, [])).toThrow(
+      /malformed name or type/,
+    );
+
+    const nonRegularRoot = fixture();
+    writeOwners(
+      nonRegularRoot,
+      generatedNarrationHashOwnerContents(
+        "test",
+        narrationFor("test", ["TEST-C02-one"]),
+      ),
+    );
+    mkdirSync(
+      join(nonRegularRoot, GENERATED_NARRATION_HASH_DIR, "test.d", "0003.json"),
+    );
+    expect(() =>
+      narrationLessonIdentityIndex(nonRegularRoot, ["test"]),
+    ).toThrow(/regular file/);
+
+    const linkedRoot = fixture();
+    const outside = fixture();
+    symlinkSync(
+      join(outside, GENERATED_NARRATION_HASH_DIR),
+      join(linkedRoot, GENERATED_NARRATION_HASH_DIR, "linked.d"),
+    );
+    expect(() => narrationLessonIdentityIndex(linkedRoot, [])).toThrow(
+      /symbolic link/,
+    );
+
+    const linkedReadmeRoot = fixture();
+    symlinkSync(
+      join(outside, GENERATED_NARRATION_HASH_DIR, "README.md"),
+      join(linkedReadmeRoot, GENERATED_NARRATION_HASH_DIR, "README.md"),
+    );
+    expect(() => narrationLessonIdentityIndex(linkedReadmeRoot, [])).toThrow(
+      /symbolic link/,
+    );
+
+    const nestedReadmeRoot = fixture();
+    mkdirSync(join(nestedReadmeRoot, GENERATED_NARRATION_HASH_DIR, "README.md"));
+    expect(() => narrationLessonIdentityIndex(nestedReadmeRoot, [])).toThrow(
+      /regular file/,
+    );
   });
 });

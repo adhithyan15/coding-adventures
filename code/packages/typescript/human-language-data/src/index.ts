@@ -200,6 +200,7 @@ export {
   prepareGeneratedHashOwnerWrite,
   readGeneratedBookHashManifest,
   readGeneratedNarrationHashManifest,
+  narrationLessonIdentityIndex,
   listGeneratedBookHashOwnerLanguages,
   listGeneratedBookHashManifests,
   generatedBookHashOwnerContents,

@@ -40,9 +40,9 @@ import {
   type ModalityManifestLesson,
 } from "./modality-manifest.js";
 import {
-  modalityNarrationLessonIds,
   readModalityManifestOwners,
 } from "./modality-shards.js";
+import { narrationLessonIdentityIndex } from "./generated-hash-shards.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
 import {
   EXAM_CONTENT_DIMENSIONS,
@@ -649,7 +649,7 @@ export function loadModalityManifest(
   // not merely shrink the corpus it happened to discover. The source-derived second
   // comparison remains `check:modality`'s job so loading the emitted artifact never
   // reparses thousands of Markdown lessons.
-  const expectedLessonIds = modalityNarrationLessonIds(root, languages);
+  const expectedLessonIds = narrationLessonIdentityIndex(root, languages);
   return readModalityManifestOwners(root, {
     expectedLanguages: languages,
     expectedLessonIds,

@@ -63,10 +63,10 @@ import {
 } from "./modality-manifest.js";
 import {
   assertModalityManifestLanguages,
-  modalityNarrationLessonIds,
   modalityOwnerContents,
   readModalityManifestOwners,
 } from "./modality-shards.js";
+import { narrationLessonIdentityIndex } from "./generated-hash-shards.js";
 import type { ModalityOptions } from "./modality.js";
 import type { ParsedLesson } from "./parse.js";
 
@@ -441,7 +441,7 @@ export function runModalityManifest(
     const languages = loadLanguageRegistry(root).languages.map((language) => language.id);
     assertModalityManifestLanguages(manifest, languages);
     const sourceIds = expectedLessonIds(manifest);
-    const narrationIds = modalityNarrationLessonIds(root, languages);
+    const narrationIds = narrationLessonIdentityIndex(root, languages);
     const outputs = generatedModalityOutputsFromLessons(lessons);
 
     if (mode === "--write") {
