@@ -1,4 +1,7 @@
-//! Instruction executor for this crate's curated Intel 8086 subset.
+//! Focused executor for instructions produced by the compatibility decoder.
+//!
+//! Complete ISA dispatch lives in `simulator.rs`; this smaller executor stays
+//! public for source compatibility and isolated register-form tests.
 //!
 //! Direct-but-scoped transcription of the relevant arms of the Python
 //! original's big `_exec_op` dispatch (`code/packages/python/
@@ -9,7 +12,7 @@
 //! flags together, and re-deriving `&mut Intel8086Simulator`'s field set
 //! as a parameter list at every call site would just be indirection.
 //!
-//! # No memory operands in this crate's curated subset
+//! # No memory operands in this compatibility layer
 //!
 //! Every instruction `decode::fetch_decode` can produce in this crate
 //! either has no memory operand at all (`Implied`, `RegImm16`, `RegImm8`,
@@ -28,7 +31,7 @@ use crate::simulator::Intel8086Simulator;
 /// `sim.ip` on entry is already the *post-operand* address (`decode::
 /// fetch_decode` advanced the caller's local `ip` past every byte the
 /// instruction consumes, and `Intel8086Simulator::step` copied it back)
-/// — this crate's curated subset has no control-flow instructions
+/// — this compatibility subset has no control-flow instructions
 /// (`JMP`/`CALL`/branches are all out of scope — see `opcodes.rs`'s
 /// module doc), so unlike `mos6502_simulator::execute::execute`, no arm
 /// here ever needs to overwrite `sim.ip` itself.

@@ -1,5 +1,8 @@
-//! Opcode table and register-index constants for the curated Intel 8086
-//! instruction subset this simulator ports.
+//! Register constants and the focused opcode table used by `decode.rs`.
+//!
+//! The top-level simulator implements the full specified opcode surface with
+//! its integrated dispatcher. This compact table remains the stable public
+//! contract for callers that use the original register-only decoder.
 //!
 //! # Why "curated subset", not the full CISC opcode map
 //!
@@ -8,28 +11,20 @@
 //! effective-address forms ( `[BX+SI]`, `[BX+SI+disp8]`, `[BP+DI+disp16]`,
 //! …), segment-override prefixes, `REP`/`REPNE` string-op prefixes, BCD
 //! adjust instructions (`AAA`/`AAS`/`DAA`/`DAS`/`AAM`/`AAD`), and a full
-//! shift/rotate group. `code/packages/python/intel_8086_simulator/
-//! simulator.py` (the reference this crate ports) implements essentially
+//! shift/rotate group. The repository's Python reference implements
+//! essentially
 //! all of it in ~1670 lines.
 //!
-//! This crate ports a **curated core**: register-immediate data transfer,
+//! The compatibility table covers a **curated core**: register-immediate data transfer,
 //! register-to-register data transfer and ALU ops (ModRM **mod=11 only** —
 //! no memory effective-address computation), increment/decrement, and the
-//! real `HLT` halt instruction. This is deliberately more than the
-//! `const_*`/`ret_*`-only trivial-ROM scope every other lane in the
-//! 9-architecture expansion needed (see
-//! [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md)),
-//! because the task for this lane explicitly asks for "core data-transfer/
-//! arithmetic ops" — but it is still far short of the full ISA. See the
-//! crate-level doc's "Deferred" section for the complete list of what's
-//! out of scope.
+//! real `HLT` halt instruction. The integrated dispatcher in `simulator.rs`
+//! covers the complete specified ISA and is not limited by this helper table.
 //!
 //! # Register index encoding
 //!
 //! Mirrors the real 8086 ModRM `reg`/`rm` field encoding (and the Python
-//! reference's `_get_reg16`/`_get_reg8`) exactly, so a future increment
-//! that ports full ModRM effective-address decoding doesn't need to
-//! renumber anything here.
+//! reference's `_get_reg16`/`_get_reg8`) exactly.
 
 // ===========================================================================
 // 16-bit general-purpose / pointer register indices
@@ -133,7 +128,7 @@ pub const CMP_REG_RM16: u8 = 0x3B;
 // Instruction "shape" — how the opcode's further bytes are interpreted
 // ===========================================================================
 
-/// The decode shape for an opcode in this crate's curated subset.
+/// The decode shape for an opcode in the compatibility subset.
 ///
 /// A deliberately small vocabulary next to `mos6502_simulator::opcodes::
 /// AddrMode`'s 13 variants — the 8086's full ModRM/memory-addressing
@@ -165,7 +160,7 @@ pub enum Format {
 
 /// Look up the `(mnemonic, format)` pair for an opcode byte.
 ///
-/// Returns `None` for any opcode outside this crate's curated subset —
+/// Returns `None` for any opcode outside the compatibility subset —
 /// mirrors `mos6502_simulator::opcodes::lookup`'s `None`-for-unlisted
 /// convention, except here "unlisted" also covers the hundreds of real
 /// 8086 opcodes this lane intentionally hasn't ported yet (not just
@@ -273,7 +268,10 @@ mod tests {
 
     #[test]
     fn register_name_tables_are_eight_long_and_match_python_order() {
-        assert_eq!(REG16_NAMES, ["AX", "CX", "DX", "BX", "SP", "BP", "SI", "DI"]);
+        assert_eq!(
+            REG16_NAMES,
+            ["AX", "CX", "DX", "BX", "SP", "BP", "SI", "DI"]
+        );
         assert_eq!(REG8_NAMES, ["AL", "CL", "DL", "BL", "AH", "CH", "DH", "BH"]);
     }
 }

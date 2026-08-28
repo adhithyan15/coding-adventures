@@ -1,5 +1,27 @@
 # Changelog — intel8086-simulator
 
+## [0.2.0] - 2026-08-28
+
+### Added
+
+- Complete Python-oracle instruction surface: every ModRM addressing form;
+  prefixes; byte/word data transfer and ALU groups; stack and near/far control
+  flow; shifts/rotates; multiply/divide; BCD adjustment; REP string families;
+  interrupt-return/halt behavior; flag controls; and byte/word port I/O.
+- Fixed architectural 1 MiB memory, complete owned state, exact prefix/operand
+  traces, snapshot/restore, checked ports and program ranges, typed atomic
+  errors, and transactional bounded runs while retaining the legacy API.
+- A reproducible 461-vector Python full-state differential spanning all 256
+  first bytes, dense opcode extensions, all effective-address forms, prefixes,
+  control flow, strings, stack, and I/O. Every vector compares registers,
+  flags, full-memory hash, and both port-bank hashes.
+
+### Changed
+
+- The v0.1 curated decoder/executor remains available as a compatibility and
+  focused-unit-test layer; the top-level simulator now executes the complete
+  architecture rather than rejecting memory operands and deferred families.
+
 ## [0.1.0] - 2026-08-17
 
 ### Added
