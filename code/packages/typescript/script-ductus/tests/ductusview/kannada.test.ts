@@ -50,6 +50,8 @@ const KANNADA_O = DUCTUS[ductusKey("kannada", "ಒ")];
 const kannadaOOutline = kannadaOutline("ಒ");
 const KANNADA_AI = DUCTUS[ductusKey("kannada", "ಐ")];
 const kannadaAiOutline = kannadaOutline("ಐ");
+const KANNADA_VOCALIC_R = DUCTUS[ductusKey("kannada", "ಋ")];
+const kannadaVocalicROutline = kannadaOutline("ಋ");
 
 describe("Kannada ಅ — four movements in one unbroken run", () => {
   const steps = ductusSteps(KANNADA_A);
@@ -215,5 +217,29 @@ describe("Kannada ಐ — one spiral-to-returning-arch run", () => {
     expect(strip.frames).toHaveLength(3);
     expect(strip.penLifts).toBe(0);
     expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+});
+
+describe("Kannada ಋ — three source-attested pen-down runs", () => {
+  const steps = ductusSteps(KANNADA_VOCALIC_R);
+  const strip = ductusFilmstrip(KANNADA_VOCALIC_R, kannadaVocalicROutline);
+
+  it("starts the high hook and right bowl after separate lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 1, 2, 2]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+    ]);
+  });
+
+  it("reports a seven-frame, two-lift filmstrip", () => {
+    expect(strip.frames).toHaveLength(7);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 7 movements");
   });
 });

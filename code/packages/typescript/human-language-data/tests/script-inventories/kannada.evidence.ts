@@ -194,6 +194,24 @@ export const scriptInventoryEvidence = {
     );
     expect(missingByScript.get("kannada.json")?.has("ಐ")).toBe(false);
     expect(affected.get("ಐ") ?? 0).toBe(0);
+    const kannadaVocalicR = scripts.kannada!.independentVowels!.find(
+      (entry) => entry.glyph === "ಋ",
+    )!;
+    expect(kannadaVocalicR.sound).toBe("r̥");
+    expect(kannadaVocalicR.penLifts).toBe(2);
+    expect(kannadaVocalicR.strokeOrder).toEqual([
+      "turn clockwise around the compact upper-left spiral, descend through the outer curve, curl around the lower-left spiral, and sweep through the join around the rounded middle bowl",
+      "lift, draw the inward bar from left to right, then curl upward into the high hook",
+      "lift, sweep rightward around the lower bowl, climb its outer side, and finish at the open upper terminal",
+    ]);
+    expect(kannadaVocalicR.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-ru\.gif.*ಋ.*59 frames.*5\.9 seconds.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaVocalicR.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*three pen-down runs.*upper-left spiral.*lower-left spiral.*rounded middle bowl.*lift.*inward bar.*high hook.*second lift.*right bowl.*open upper terminal.*Noto Sans Kannada.*two-lift order/i,
+    );
+    expect(missingByScript.get("kannada.json")?.has("ಋ")).toBe(false);
+    expect(affected.get("ಋ") ?? 0).toBe(0);
     const kannadaAa = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಆ",
     )!;
@@ -215,6 +233,6 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ಆ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ಋ", 1]);
+    ).toEqual(["ಓ", 1]);
   },
 };
