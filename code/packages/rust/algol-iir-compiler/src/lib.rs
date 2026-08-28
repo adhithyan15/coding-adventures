@@ -2796,12 +2796,18 @@ impl Compiler {
         };
         let target_name = self.resolve_procedure_identity(&name);
         if self.proc_sigs.contains_key(&target_name)
-            || !matches!(target_name.as_str(), "abs" | "sign")
+            || !matches!(target_name.as_str(), "abs" | "sign" | "entier")
         {
             return false;
         }
         let actuals = self.standard_fn_actuals(node);
-        actuals.len() == 1 && self.exact_tracked_integer_expression(actuals[0])
+        if actuals.len() != 1 || !self.exact_tracked_integer_expression(actuals[0]) {
+            return false;
+        }
+        target_name != "entier"
+            || self
+                .static_integer_scalar_value(actuals[0])
+                .is_some_and(|value| value.unsigned_abs() <= 9_007_199_254_740_992_u64)
     }
 
     fn static_nonnegative_power_chain_with<F>(
@@ -2853,7 +2859,9 @@ impl Compiler {
                 Some(if value < 0.0 { -1 } else if value > 0.0 { 1 } else { 0 })
             }
             "entier" => {
-                let value = self.static_real_arithmetic_value(actuals[0])?.floor();
+                let value = self
+                    .static_real_arithmetic_value_with_widen(actuals[0], true)?
+                    .floor();
                 (value.is_finite() && value.abs() <= 9_007_199_254_740_992.0)
                     .then_some(value as i64)
             }
@@ -10576,6 +10584,40 @@ mod tests {
             assert!(!main.instructions.iter().any(|instr| instr.op == "f64_pow"));
             assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
             assert!(main.instructions.iter().any(|instr| instr.op == "cmp_eq"));
+        }
+    }
+
+    #[test]
+    fn al4_tracked_entier_exponents_unroll_real_powers_when_widening_is_exact() {
+        for exponent in [
+            "entier(exponent)",
+            "entier(abs(exponent) + sign(exponent) + 1)",
+        ] {
+            let initial = if exponent == "entier(exponent)" { 2 } else { -2 };
+            let source = format!(
+                "begin integer exponent; real saved; exponent := {initial}; saved := 6.0 ^ ({exponent}) + 6.0; exponent := 3; if saved = 42.0 then output(42) else output(1) end"
+            );
+            let module = compile_source(&source, "test")
+                .expect("exact tracked entier exponent should unroll");
+            let main = module.get_function("main").expect("has main");
+            assert!(!main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+            assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+        }
+    }
+
+    #[test]
+    fn al4_tracked_entier_exponents_fail_closed_for_inexact_widening_and_overrides() {
+        for source in [
+            "begin integer exponent; real saved; exponent := 9007199254740993; saved := 6.0 ^ (entier(exponent) - 9007199254740991) end",
+            "begin integer procedure entier(x); value x; integer x; entier := 2; integer exponent; real saved; exponent := 2; saved := 6.0 ^ entier(exponent) end",
+        ] {
+            let module = compile_source(source, "test")
+                .expect("unsafe tracked entier exponent must retain runtime real-power lowering");
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+            if source.contains("integer procedure entier") {
+                assert!(main.instructions.iter().any(|instr| instr.op == "call"));
+            }
         }
     }
 
