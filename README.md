@@ -30,16 +30,16 @@ and current direction; it deliberately avoids a hand-maintained package
 inventory. Run the [package parity report](./code/scripts/package_parity_report.py)
 for a live cross-language view.
 
-### Repository snapshot — August 27, 2026
+### Repository snapshot — August 28, 2026
 
 | Surface | Current scale |
 |---|---:|
-| Reusable package directories | 4,986 |
-| Runnable programs and applications | 209 |
+| Reusable package directories | 5,003 |
+| Runnable programs and applications | 211 |
 | Grammar families | 54 |
-| Architecture and roadmap specifications | 1,483 |
-| Learning documents | 4,869 |
-| Forme packages | 57 |
+| Architecture and roadmap specifications | 1,498 |
+| Learning documents | 4,963 |
+| Forme packages | 61 |
 | CI, release, and deployment workflows | 36 |
 
 These counts are a dated orientation point, not release promises. The generated
@@ -249,26 +249,30 @@ See the [Mosaic overview](./code/specs/UI00-mosaic.md) and
 
 Forme is the repository's universal authoring pipeline: typed, capability-aware
 stages turn content into web pages, documentation sites, feeds, search indexes,
-and deployment artifacts. Its 57 TypeScript packages now cover the kernel and
+and deployment artifacts. Its 61 TypeScript packages now cover the kernel and
 orchestrator, filesystem and Markdown sources, routing and collection,
-transformations, Style IR, HTML/AOT emitters, metadata, sitemaps, feeds, and a
-complete searchable documentation-site cluster.
+transformations, Style IR, HTML/AOT emitters, metadata, sitemaps, feeds,
+fingerprinted assets, and a complete searchable documentation-site cluster.
 
-Two end-to-end programs prove the composition model:
+Product sites and focused demos prove the composition model:
 
+- [`code/sites/landing-page`](./code/sites/landing-page/) generates this
+  repository's root Pages surface from declarative content through a seven-stage
+  routed Style IR and asset pipeline;
+- [`code/sites/blog`](./code/sites/blog/) runs a ten-stage routed DAG that emits
+  articles, a themed index, RSS, Atom, sitemap, and fingerprinted local assets;
 - [`forme-hello-world`](./code/programs/typescript/forme-hello-world/) runs the
   smallest source → parse → render → emit pipeline;
 - [`forme-doc-demo`](./code/programs/typescript/forme-doc-demo/) builds a
   multi-page documentation site with navigation, a table of contents, syntax
   highlighting, and browser search.
 
-The core pipeline works, but Forme is not yet a turnkey site generator. The
-remaining product layer includes a general CLI and dev server, watch mode and
-incremental rebuilds, a themed renderer that consumes Style IR, asset handling,
-the plugin host and OS sandboxes, and the deploy runner described by FM05. The
-existing [Forme blog](./code/sites/blog/) is an early four-stage demonstration;
-later router, index, feed, style, and AOT packages still need to be integrated
-back into that flagship site.
+The headless build path works, but Forme is not yet a turnkey site generator.
+The remaining product layer includes a general CLI and dev server, watch mode,
+persistent incremental scheduling, a reconciled specification map, the plugin
+host and OS sandboxes, interactivity, the authoring shell, and the deploy runner.
+The checked-in [completion roadmap](./code/specs/FM00-forme-completion-roadmap.md)
+tracks that path and the gaps discovered while dogfooding both live sites.
 
 Start with the [Forme vision](./code/specs/FM00-forme-vision.md),
 [kernel](./code/specs/FM01-forme-kernel.md),
