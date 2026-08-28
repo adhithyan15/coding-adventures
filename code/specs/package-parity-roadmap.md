@@ -9625,6 +9625,12 @@ BUILD/build-tool marker. The refreshed collision-checked report therefore
 remains 15 established lanes, 1,383 identities, 4,595 slots, zero collisions,
 and zero unknown buckets.
 
+Ready-for-review PR #13366 was opened at 2026-08-28T05:02:29Z from the
+validated two-commit branch. GitHub reports it non-draft and mergeable. Its
+required checks are queued and `mergeStateStatus` is `BLOCKED`, so auto-merge
+remains disabled until every required check is terminal and acceptable and the
+branch remains conflict-free.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

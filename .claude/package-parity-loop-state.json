@@ -11,7 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 13366,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13366",
+    "branch": "codex/ocaml-build-substrate-process-free-core",
+    "status": "open"
+  },
   "last_ci_action": {
     "observed_at": "2026-08-28T04:17:15Z",
     "pr_number": 13287,
@@ -1339,10 +1344,15 @@
     {
       "id": "ocaml-build-substrate-process-free-core",
       "title": "Integrate OCaml discovery, resolution, hashing, and validation into the process-free Go substrate",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["ocaml-infrastructure", "ocaml-ci-toolchain", "build-tool-pure-domain-corpus"],
       "branch": "codex/ocaml-build-substrate-process-free-core",
-      "pr_number": null,
+      "pr_number": 13366,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13366",
+      "opened_at": "2026-08-28T05:02:29Z",
+      "implementation_revision": "fba682dd329c03bcd85f2594cb855b4421a6d4ba",
+      "prepublication_revision": "72e33f497aba09efdcf195cc625f297f5a5ddf47",
+      "publication_notes": "Opened ready-for-review PR #13366 at 2026-08-28T05:02:29Z after a normal first push from the fully validated two-commit branch and confirmation that no parity PR was active. GitHub reports the PR non-draft and MERGEABLE; required checks from the push and pull-request trigger runs are queued and mergeStateStatus is BLOCKED, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict.",
       "selection_revision": "e6d99bc6997d0c4fae3b00b76653e0a824d6dc98",
       "selection_notes": "Selected after PR #13287 completed all 43 final checks and merged through squash auto-merge as 548477ac8975894fd60a1f08878d81e0dfa0c692 without a manual merge command. The exact-current-main collision report records 15 established lanes, 1,383 identities, 4,595 slots, 1,422 all-reported identities, bands 175/265, 123/934, 168/2,113, and 917/12,838, 729 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Newly discovered GE-225 gate-level, text-flow, and Venture visual-fixture identities have explicit pending owners; forme-theme-classless is covered by the Forme family; and the Swift paint-vm-ascii owner remains pending solely for its missing empty capability profile. All three OCaml process-free prerequisites are merged, former blockers #12149 and #12162 are merged, and every live PR has zero exact overlap with the prospective Go build-tool, OCaml specification, workflow, state, or roadmap surfaces. This tranche has the highest dependency leverage because it unlocks the execution-coupled OCaml substrate and representative package chain without claiming process execution, native OCaml build-tool conformance, or promotion.",
       "notes": "Discovered during the 41622fa7 post-merge security and leverage audit. Deliver the repository-owned, process-free OCaml build substrate now: language detection, package discovery, opam/Dune dependency resolution, source hashing, validator support, shard cost, affected-node behavior, and CI workflow markers. Correct code/specs/OCAML03-ci-toolchain.md from its stale in-progress label to the already merged PR #9354 status within this owner; the documentation drift does not need a separate implementation node. Do not claim execution conformance, opam-switch serialization, or promotion; those remain gated on the canonical Go oracle and execution contract.",
