@@ -1,5 +1,25 @@
 # Changelog — @coding-adventures/forme-render-static
 
+## 0.2.0 — 2026-08-27
+
+### Changed
+
+- Accept a validated, resolved `StyleDocument` through renderer config; an
+  unresolved named theme now fails with an actionable diagnostic.
+- Match Style IR selectors against the emitted HTML element tree and record
+  deterministic, source-ordered `RenderedPage.usedStyle` ids.
+- Compile matched rules with `forme-aot-css-slicer` and inline only the
+  current page's CSS. The renderer-owned `CLASSLESS_CSS` fallback is removed.
+- Enable preference-driven dark styles by default and emit the browser
+  light/dark color-scheme hint when the dark context is active.
+- Keep raw trusted HTML safe from over-slicing by conservatively retaining all
+  rules when exact element matching is impossible.
+
+### Tests
+
+- Cover Style IR validation, unresolved themes, per-page slicing, dark media
+  output, selector matching, tight lists, table structure, and raw HTML.
+
 ## Unreleased
 
 ### Changed

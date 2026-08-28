@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/forme-render-static",
-  "version": "0.1.0",
-  "description": "Forme render stage: Stream<ContentNode> → Stream<RenderedPage>. Wraps document-ast-to-html with a hard-coded classless HTML5 theme.",
+  "version": "0.2.0",
+  "description": "Forme render stage: Stream<ContentNode> → Stream<RenderedPage>. Matches Style IR and inlines AOT-sliced CSS.",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -17,11 +17,14 @@
     "@coding-adventures/forme-stage": "file:../forme-stage",
     "@coding-adventures/document-ast-to-html": "file:../document-ast-to-html",
     "@coding-adventures/document-ast": "file:../document-ast",
+    "@coding-adventures/forme-style-ir": "file:../forme-style-ir",
+    "@coding-adventures/forme-aot-css-slicer": "file:../forme-aot-css-slicer",
     "@coding-adventures/forme-aot-meta-link-tags": "file:../forme-aot-meta-link-tags",
     "@coding-adventures/forme-aot-rss-discovery-link": "file:../forme-aot-rss-discovery-link"
   },
   "devDependencies": {
     "@coding-adventures/gfm-parser": "file:../gfm-parser",
+    "@types/node": "^22.0.0",
     "typescript": "^5.0.0",
     "vitest": "^4.1.0",
     "@vitest/coverage-v8": "^4.1.0"

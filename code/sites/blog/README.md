@@ -48,8 +48,9 @@ full pipeline. It writes article pages plus `index.html`, `rss.xml`, `atom.xml`,
 and `sitemap.xml` under `dist/blog/`. Subsequent builds can use `npm run build`;
 run `npm test` to exercise both the dependency planner and collection-derived
 surface. The build verifies both named deploy manifests and the exact aggregate
-route set. HTML files are self-contained documents with a classless theme
-inlined in `<style>` — no JS, no external CSS.
+route set. HTML files are self-contained documents with matched rules from the
+reusable classless Style IR theme compiled through the AOT slicer and inlined
+in `<style>` — including light/dark preferences, with no JS or external CSS.
 
 `tsx` is a devDependency — it strips TypeScript types at execution
 time so we don't need a separate `tsc` step just to drive the
@@ -109,7 +110,9 @@ The live URL is
 - No asset extraction. Posts that reference images today will
   link to `data/`-relative paths; an asset stage will copy + hash
   them.
-- No dark mode. The classless theme is light-only for v0.
+- Theme rules are sliced per article; the generated aggregate index retains
+  the full theme conservatively because its trusted HTML bypasses Document AST
+  matching.
 - Aggregate artifacts carry deterministic revision-aware provenance for every
   collection contributor; empty collections have a stable empty provenance
   set and never need a fabricated single-source identity.

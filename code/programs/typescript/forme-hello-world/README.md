@@ -26,8 +26,9 @@ npm start
 # → dist/blog/hello.html
 ```
 
-Open `dist/blog/hello.html` in a browser to see the rendered post with
-the classless theme that `forme-render-static` ships in v0.
+Open `dist/blog/hello.html` in a browser to see the rendered post with the
+reusable `forme-theme-classless` Style IR theme. The renderer records matched
+rules and inlines its AOT-sliced light/dark CSS.
 
 ## Run the tests
 

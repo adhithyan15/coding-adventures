@@ -2,8 +2,8 @@
  * @coding-adventures/forme-render-static
  *
  * Forme render stage: `Stream<ContentNode>` → `Stream<RenderedPage>`.
- * Wraps `@coding-adventures/document-ast-to-html` and injects a
- * minimal classless HTML5 theme (see `theme.ts`).
+ * Wraps `@coding-adventures/document-ast-to-html`, matches Style IR rules,
+ * and inlines the existing AOT slicer's per-page CSS artefact.
  *
  *   consumes:    streamOf(Kinds.ContentNode)
  *   produces:    streamOf(Kinds.RenderedPage)
@@ -23,8 +23,8 @@
  *
  *     { route, html, usedStyle, usedIslands, usedAssets, meta, provenance }
  *
- * v0 emits `usedStyle: []` (no Style IR yet — the theme CSS is
- * inlined as one string), `usedIslands: []` (no interactivity), and
+ * `usedStyle` records rules matched in source order, while `usedIslands: []`
+ * (no interactivity) and
  * `usedAssets: []` (no asset-extraction stage yet). `provenance` records the
  * input node's logical and revision IDs; `source` remains as a temporary
  * compatibility hint for consumers of the v1.0 kind.
@@ -34,10 +34,10 @@
  *
  * === Spec adherence ===
  *
- * No deliberate divergences from FM00 / FM01.  v0 simplifications:
+ * No deliberate divergences from FM00 / FM01. Current simplifications:
  *
- *   - Single hard-coded theme (no Style IR).
- *   - `usedStyle` / `usedIslands` / `usedAssets` empty.
+ *   - Themes must be resolved before they reach this stage.
+ *   - `usedIslands` / `usedAssets` remain empty.
  *   - OpenGraph and structured data remain empty; canonical URLs,
  *     descriptions, and feed discovery are emitted when `siteUrl`
  *     is configured.
@@ -57,12 +57,23 @@ import { createOutputProvenance } from "@coding-adventures/forme-identity";
 import { toHtml } from "@coding-adventures/document-ast-to-html";
 import { generateMetaLinkTags } from "@coding-adventures/forme-aot-meta-link-tags";
 import { generateFeedDiscoveryLinks } from "@coding-adventures/forme-aot-rss-discovery-link";
+import {
+  emptyStyleDocument,
+  validateStyleDocument,
+  type StyleDocument,
+} from "@coding-adventures/forme-style-ir";
+import { slicePerPage } from "@coding-adventures/forme-aot-css-slicer";
 import { slugify } from "./slug.js";
 import { renderHtmlDocument } from "./theme.js";
 import { deriveTitle } from "./title.js";
+import { collectUsedStyle } from "./used-style.js";
 
-/** v0 config surface — every field optional with sensible defaults. */
+/** Renderer configuration; every field is optional with deterministic defaults. */
 export interface RenderStaticConfig {
+  /** A validated, fully resolved StyleDocument. Omit for unstyled HTML. */
+  readonly style?: StyleDocument;
+  /** Style contexts to compile. Dark preference support is on by default. */
+  readonly activeStyleContexts?: readonly string[];
   /** Site title for the page header.  Empty/undefined → no header. */
   readonly siteTitle?: string;
   /** Public deployment base, including a project-page prefix when present. */
@@ -79,9 +90,9 @@ const DEFAULT_SITE_TITLE = "";
 
 const renderStatic = defineStage({
   name: "@coding-adventures/forme-render-static",
-  version: "0.1.0",
+  version: "0.2.0",
   apiVersion: 1,
-  description: "Render each ContentNode as a self-contained HTML page with a classless theme.",
+  description: "Render ContentNode pages with matched Style IR and AOT-sliced CSS.",
   consumes: streamOf(Kinds.ContentNode),
   produces: streamOf(Kinds.RenderedPage),
   capabilities: [],
@@ -93,11 +104,27 @@ const renderStatic = defineStage({
       siteHomeRoute: { type: "string" },
       rssRoute:      { type: "string" },
       atomRoute:     { type: "string" },
+      style:         { type: "object" },
+      activeStyleContexts: {
+        type: "array",
+        items: { type: "string" },
+      },
     },
   },
   async *run(rawInput, rawConfig, ctx) {
     const config = (rawConfig ?? {}) as RenderStaticConfig;
     const siteTitle     = config.siteTitle     ?? DEFAULT_SITE_TITLE;
+    const validatedStyle = validateStyleDocument(config.style ?? emptyStyleDocument());
+    const style = validatedStyle.document;
+    if (style.theme !== null) {
+      throw new Error(
+        `forme-render-static: StyleDocument theme ${JSON.stringify(style.theme)} is unresolved; compose it before rendering`,
+      );
+    }
+    const activeStyleContexts = config.activeStyleContexts ?? ["screen", "dark"];
+    for (const warning of validatedStyle.warnings) {
+      ctx.logger.warn(`forme-render-static: ${warning.message}`, { code: warning.code });
+    }
     const stream = rawInput as AsyncIterable<ContentNode>;
 
     for await (const node of stream) {
@@ -123,6 +150,22 @@ const renderStatic = defineStage({
 
       // Title derivation: frontmatter.title → first H1 → slug.
       const title = deriveTitle(node, slug);
+      const usedStyle = collectUsedStyle(node.document, style, {
+        siteHeader: siteTitle.length > 0,
+        frontmatter: node.frontmatter,
+      });
+      const cssArtifact = slicePerPage(style, [{ id: route, usedRuleIds: usedStyle }], {
+        activeContexts: activeStyleContexts,
+        // CSS is inlined in a single page, so no cross-page selector scope is
+        // needed. Going through slicePerPage still preserves the AOT contract.
+        scopePrefix: () => "",
+      }).artefacts.get(route)!;
+      for (const warning of cssArtifact.warnings) {
+        ctx.logger.warn(`forme-render-static: ${warning.message}`, {
+          code: warning.code,
+          ...(warning.ruleId === undefined ? {} : { ruleId: warning.ruleId }),
+        });
+      }
 
       const description = stringFromFrontmatter(node.frontmatter, "excerpt");
       const canonicalUrl = config.siteUrl === undefined
@@ -152,7 +195,7 @@ const renderStatic = defineStage({
         ]));
       }
 
-      // Wrap in the full HTML5 document with the classless theme.
+      // Wrap in the theme-agnostic HTML5 shell with only this page's CSS.
       const html = renderHtmlDocument({
         title,
         siteTitle,
@@ -161,6 +204,8 @@ const renderStatic = defineStage({
           ? "/"
           : publicUrl(config.siteUrl, config.siteHomeRoute ?? "/"),
         headHtml: headParts.filter(Boolean).join("\n"),
+        styleCss: cssArtifact.css,
+        supportsDarkMode: activeStyleContexts.includes("dark"),
       });
 
       const meta: PageMeta = {
@@ -175,7 +220,7 @@ const renderStatic = defineStage({
       const page: RenderedPage = {
         route,
         html,
-        usedStyle: [],
+        usedStyle,
         usedIslands: [],
         usedAssets: [],
         meta,
@@ -205,4 +250,4 @@ export function publicUrl(siteUrl: string, route: string): string {
 }
 
 export default renderStatic;
-export { renderStatic, slugify, deriveTitle, renderHtmlDocument };
+export { renderStatic, slugify, deriveTitle, renderHtmlDocument, collectUsedStyle };

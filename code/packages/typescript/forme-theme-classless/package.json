@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/forme-theme-classless",
+  "version": "0.1.0",
+  "description": "Reusable classless light/dark StyleDocument for Forme web output.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-style-ir": "file:../forme-style-ir"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

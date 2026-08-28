@@ -50,9 +50,9 @@ pipeline. Five stages, one typed DAG, one HTML file on disk:
 - **No collection.** `forme-collect-chronological` is omitted because this
   minimal demo has no collection-consuming surface stage. The complete blog
   example proves that routed fan-out topology.
-- **No Style IR.** The theme is a hard-coded inline `<style>` block
-  in `forme-render-static`. FM04 will replace that with a proper
-  `StyleDocument` flowing through its own stages.
+- **Style IR is live.** `forme-theme-classless` supplies a resolved
+  `StyleDocument`; the renderer records matching rule ids and the AOT slicer
+  emits only the page's light/dark CSS.
 - **No interactivity.** No JavaScript is emitted. That's the point —
   static content ships zero bytes of JS, which is the FM00 thesis.
 - **No incremental rebuild.** Every run re-executes every stage.

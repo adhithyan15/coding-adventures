@@ -109,8 +109,8 @@ describe("forme-hello-world end-to-end", () => {
     const htmlPath = join(outDir, "blog", "hello.html");
     const html     = await readFile(htmlPath, "utf-8");
 
-    // Body content from hello.md flowed through GFM parsing + the
-    // classless theme.  These substrings are stable across renderer
+    // Body content from hello.md flowed through GFM parsing + Style IR.
+    // These substrings are stable across renderer
     // tweaks because they come straight from the source post.
     expect(html).toContain("<h1>Hello, Forme</h1>");
     expect(html).toContain("forme-source-fs");
@@ -121,9 +121,10 @@ describe("forme-hello-world end-to-end", () => {
     // fallback or the slug fallback).
     expect(html).toContain("<title>Hello, Forme</title>");
 
-    // The classless theme is inlined as a <style> block — proves
-    // forme-render-static's wrapper ran (vs raw GFM output).
+    // The classless StyleDocument is AOT-sliced into the page, including its
+    // dark preference rules — proves the themed renderer path ran.
     expect(html).toMatch(/<style>[\s\S]*<\/style>/);
+    expect(html).toContain("prefers-color-scheme: dark");
   });
 
   it("two consecutive builds produce the same buildId (determinism check)", async () => {

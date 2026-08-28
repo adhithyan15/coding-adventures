@@ -23,15 +23,17 @@ shape laid out in the FM00 spec:
    routed node out to the page and collection branches.
 4. **`forme-collect-chronological`** sorted this and the other posts
    by date while preserving that canonical route.
-5. **`forme-render-static`** wrapped the rendered body in a minimal
-   classless HTML5 theme and emitted a `RenderedPage`.
+5. **`forme-render-static`** matched the reusable classless Style IR theme,
+   recorded `usedStyle`, compiled the page slice through the AOT path, and
+   emitted a `RenderedPage`.
 6. **`forme-emit-fs`** wrote the result to `dist/` and emitted a
    `DeployArtifact`.
 
 The point isn't the post — it's that everything between the parser
 and the deployer is *plug-compatible*. Want a different theme?
-Replace `forme-render-static`. Want to ship to S3 instead of disk?
-Replace `forme-emit-fs`. The other five stages don't change.
+Pass a different resolved `StyleDocument`; the renderer does not change.
+Want to ship to S3 instead of disk? Replace `forme-emit-fs`. The rest of
+the DAG stays put.
 
 > One pipeline, many surfaces. That's the Forme bet.
 

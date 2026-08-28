@@ -22,5 +22,9 @@ cd ../../packages/typescript/forme-aot-sitemap-emitter && npm install --silent
 cd ../../packages/typescript/forme-aot-meta-link-tags && npm install --silent
 cd ../../packages/typescript/forme-aot-rss-discovery-link && npm install --silent
 cd ../../packages/typescript/forme-render-static && npm install --silent
+cd ../../packages/typescript/forme-style-ir && npm install --silent
+cd ../../packages/typescript/forme-style-to-css && npm install --silent
+cd ../../packages/typescript/forme-aot-css-slicer && npm install --silent
+cd ../../packages/typescript/forme-theme-classless && npm install --silent
 cd ../../packages/typescript/forme-emit-fs && npm install --silent
 npm install --silent && npm test && npx tsx build.ts && test -f dist/blog/index.html && test -f dist/blog/rss.xml && test -f dist/blog/atom.xml && test -f dist/blog/sitemap.xml && ls dist/blog

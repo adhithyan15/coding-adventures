@@ -20,6 +20,7 @@
     "@coding-adventures/forme-parse-markdown": "file:../../../packages/typescript/forme-parse-markdown",
     "@coding-adventures/forme-router": "file:../../../packages/typescript/forme-router",
     "@coding-adventures/forme-render-static": "file:../../../packages/typescript/forme-render-static",
+    "@coding-adventures/forme-theme-classless": "file:../../../packages/typescript/forme-theme-classless",
     "@coding-adventures/forme-emit-fs": "file:../../../packages/typescript/forme-emit-fs"
   },
   "devDependencies": {
