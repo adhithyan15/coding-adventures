@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-08-28
+
+- Added one process-free OCaml dependency-resolution case. It accepts only one
+  unambiguous root opam `depends` field plus `libraries` fields from the fixed
+  root Dune file set, exercises directory and declared aliases, collapses
+  duplicates, rejects self edges, and ignores comments, unrelated fields,
+  prose strings, unknown names, and ambiguous root opam manifests.
+- Expanded the canonical discovery registry with a paired OCaml program
+  identity and a Dune `_build` decoy. Consumers must retain the `programs`
+  segment and exclude exact generated Dune output components.
+
 ## 2026-08-25
 
 - Pinned tracked-artifact snapshots to Unicode 17.0.0 and added version-delta

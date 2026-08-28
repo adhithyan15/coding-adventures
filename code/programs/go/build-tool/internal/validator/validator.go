@@ -34,6 +34,7 @@ var requiresExplicitPrereqs = map[string]bool{
 	"python":     true,
 	"typescript": true,
 	"perl":       true,
+	"ocaml":      true,
 }
 
 // Languages in this set are installed conditionally by the main CI workflow.
@@ -50,6 +51,7 @@ var ciManagedToolchainLanguages = map[string]bool{
 	"dart":       true,
 	"swift":      true,
 	"haskell":    true,
+	"ocaml":      true,
 	// C/C++: CI installs Clang alongside GCC on Linux and MSVC on Windows so the
 	// pure-ISO multi-compiler check has all three across the matrix. Adding this
 	// makes validateCIFullBuildToolchains require ci.yml to bind needs_cpp and

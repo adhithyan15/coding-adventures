@@ -620,6 +620,51 @@ jobs:
 	}
 }
 
+func TestValidateBuildFilesRequiresOCamlStandalonePrerequisiteAndCIMarker(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "ocaml/graph", relPath: "code/packages/ocaml/graph", lang: "ocaml", commands: []string{"opam install . -y"}},
+		{name: "ocaml/app", relPath: "code/packages/ocaml/app", lang: "ocaml", commands: []string{"opam install . -y"}},
+	})
+	repoRoot := inferRepoRoot(pkgs)
+	ciDir := filepath.Join(repoRoot, ".github", "workflows")
+	if err := os.MkdirAll(ciDir, 0755); err != nil {
+		t.Fatal(err)
+	}
+	workflow := `
+jobs:
+  detect:
+    outputs:
+      needs_ocaml: ${{ steps.toolchains.outputs.needs_ocaml }}
+    steps:
+      - name: Normalize toolchain requirements
+        id: toolchains
+        run: printf '%s\n' 'needs_ocaml=true' >> "$GITHUB_OUTPUT"
+  build:
+    steps:
+      - name: Full build on main merge
+        run: ./build-tool -root . -force -validate-build-files -language all
+`
+	if err := os.WriteFile(filepath.Join(ciDir, "ci.yml"), []byte(workflow), 0644); err != nil {
+		t.Fatal(err)
+	}
+	graph := graphWithEdges([2]string{"ocaml/graph", "ocaml/app"})
+
+	err := ValidateBuildFiles(pkgs, graph)
+	if err == nil || !strings.Contains(err.Error(), "missing prerequisite refs") {
+		t.Fatalf("expected missing OCaml standalone prerequisite, got %v", err)
+	}
+
+	pkgs[1].BuildCommands = []string{"opam pin add --no-action -y coding-adventures-graph ../graph", "opam install . -y"}
+	if err := ValidateBuildFiles(pkgs, graph); err != nil {
+		t.Fatalf("expected explicit OCaml pin plus CI marker to pass, got %v", err)
+	}
+}
+
 func TestValidateBuildFilesFailsLuaBuildWithForeignRemoveAndBadOrder(t *testing.T) {
 	pkgs := makePackages(t, []struct {
 		name     string

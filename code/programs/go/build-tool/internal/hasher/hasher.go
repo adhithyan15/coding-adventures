@@ -60,6 +60,7 @@ var sourceExtensions = map[string]map[string]bool{
 	"starlark":   {".star": true},
 	"perl":       {".pl": true, ".pm": true, ".t": true, ".xs": true},
 	"haskell":    {".hs": true, ".cabal": true},
+	"ocaml":      {".ml": true, ".mli": true, ".opam": true},
 	"java":       {".java": true},
 	"kotlin":     {".kt": true, ".kts": true},
 	// .cs and .fs are C# and F# source files. .csproj and .fsproj are the
@@ -81,6 +82,7 @@ var specialFilenames = map[string]map[string]bool{
 	"starlark":   {},
 	"perl":       {"Makefile.PL": true, "Build.PL": true, "cpanfile": true, "MANIFEST": true, "META.json": true, "META.yml": true},
 	"haskell":    {},
+	"ocaml":      {"dune": true, "dune-project": true, ".ocamlformat": true},
 	"java":       {"settings.gradle.kts": true, "build.gradle.kts": true},
 	"kotlin":     {"settings.gradle.kts": true, "build.gradle.kts": true},
 	// global.json pins the .NET SDK version — a change here should trigger
@@ -113,7 +115,13 @@ func collectSourceFiles(pkg discovery.Package) []string {
 
 	// Walk the package directory recursively.
 	filepath.Walk(pkg.Path, func(path string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() {
+		if err != nil {
+			return nil
+		}
+		if info.IsDir() {
+			if pkg.Language == "ocaml" && path != pkg.Path && info.Name() == "_build" {
+				return filepath.SkipDir
+			}
 			return nil
 		}
 

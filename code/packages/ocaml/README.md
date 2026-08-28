@@ -40,7 +40,10 @@ scaffold-generator my-pkg --language ocaml --description "A pure OCaml package"
 The exact library and program contracts live in
 [`OCAML02-scaffold-infrastructure.md`](../../specs/OCAML02-scaffold-infrastructure.md).
 The solver and execution gate lives in
-[`OCAML03-ci-toolchain.md`](../../specs/OCAML03-ci-toolchain.md). Canonical
-build-tool integration, representative packages, capability analysis, the
-native OCaml build tool, and denominator promotion remain explicitly tracked
-roadmap items.
+[`OCAML03-ci-toolchain.md`](../../specs/OCAML03-ci-toolchain.md). The
+process-free discovery, resolution, hashing, validation, shard-cost, and CI
+marker substrate lives in
+[`OCAML04-process-free-build-substrate.md`](../../specs/OCAML04-process-free-build-substrate.md).
+Representative packages, capability analysis, executable build integration,
+the native OCaml build tool, and denominator promotion remain explicitly
+tracked roadmap items.

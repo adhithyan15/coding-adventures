@@ -268,7 +268,7 @@ func packageCost(pkg PackageEntry) int {
 	switch toolchainForLanguage(pkg.Language) {
 	case "rust":
 		cost += 6
-	case "dotnet", "haskell", "swift", "typescript":
+	case "dotnet", "haskell", "ocaml", "swift", "typescript":
 		cost += 4
 	case "java", "kotlin":
 		cost += 3

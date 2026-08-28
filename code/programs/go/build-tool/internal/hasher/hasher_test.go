@@ -179,6 +179,45 @@ func TestCollectSourceFilesGradleLanguages(t *testing.T) {
 	}
 }
 
+func TestCollectSourceFilesOCaml(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD":                       "opam exec -- dune build\n",
+		"pkg/BUILD_windows":               "opam exec -- dune build\n",
+		"pkg/.ocamlformat":                "version=0.27.0\n",
+		"pkg/coding-adventures-pkg.opam":  "opam-version: \"2.0\"\n",
+		"pkg/dune-project":                "(lang dune 3.16)\n",
+		"pkg/src/dune":                    "(library (name pkg))\n",
+		"pkg/src/pkg.ml":                  "let value = 1\n",
+		"pkg/src/pkg.mli":                 "val value : int\n",
+		"pkg/README.md":                   "docs\n",
+		"pkg/_build/default/generated.ml": "let generated = true\n",
+	})
+	pkg := discovery.Package{Name: "ocaml/pkg", Path: filepath.Join(root, "pkg"), Language: "ocaml"}
+
+	files := collectSourceFiles(pkg)
+	got := make(map[string]bool, len(files))
+	for _, file := range files {
+		rel, err := filepath.Rel(pkg.Path, file)
+		if err != nil {
+			t.Fatal(err)
+		}
+		got[filepath.ToSlash(rel)] = true
+	}
+	for _, want := range []string{
+		"BUILD", "BUILD_windows", ".ocamlformat", "coding-adventures-pkg.opam",
+		"dune-project", "src/dune", "src/pkg.ml", "src/pkg.mli",
+	} {
+		if !got[want] {
+			t.Errorf("missing OCaml hash input %q: %v", want, got)
+		}
+	}
+	for _, excluded := range []string{"README.md", "_build/default/generated.ml"} {
+		if got[excluded] {
+			t.Errorf("unexpected OCaml hash input %q", excluded)
+		}
+	}
+}
+
 func TestCollectSourceFilesEmpty(t *testing.T) {
 	root := t.TempDir()
 	pkg := discovery.Package{
