@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Replaced panic-prone and truncating lifecycle/I/O operations with typed,
+  atomic `Intel8008Error` results.
+- Added deterministic checked execution, complete owned `Intel8008State`
+  snapshots, exhaustive 256-byte opcode-boundary coverage, and end-of-memory,
+  halted, oversized-image, invalid-port, reset, and repeatability regressions.
+- Made traces comparable with `PartialEq`/`Eq` and fixed strict rustdoc links.
+
 ## [0.1.0] - 2026-04-12
 
 ### Added

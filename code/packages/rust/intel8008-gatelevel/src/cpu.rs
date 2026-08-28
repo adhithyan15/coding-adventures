@@ -546,7 +546,7 @@ mod tests {
         let mut bsim = Simulator::new();
         let mut gsim = GateLevelCpu::new();
 
-        let b_traces = bsim.run(program, 200);
+        let b_traces = bsim.run(program, 200).unwrap();
         let g_traces = gsim.run(program, 200);
 
         assert_eq!(
@@ -580,7 +580,7 @@ mod tests {
         ];
         let mut bsim = Simulator::new();
         let mut gsim = GateLevelCpu::new();
-        let b_traces = bsim.run(program, 100);
+        let b_traces = bsim.run(program, 100).unwrap();
         let g_traces = gsim.run(program, 100);
         for (bt, gt) in b_traces.iter().zip(g_traces.iter()) {
             assert_eq!(bt.a_after, gt.a_after);

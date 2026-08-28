@@ -41,7 +41,7 @@ let mut sim = Simulator::new();
 // ADD B    (0x80)
 // HLT      (0x76)
 let program = &[0x06u8, 0x01, 0x3E, 0x02, 0x80, 0x76];
-let traces = sim.run(program, 100);
+let traces = sim.run(program, 100)?;
 
 assert_eq!(sim.a(), 3);
 assert!(!sim.flags().carry);
@@ -62,13 +62,25 @@ program[6] = 0x80;                      // ADD B
 program[7] = 0x09;                      // DCR C
 program[8] = 0x48; program[9] = 0x06; program[10] = 0x00; // JFZ 6
 program[11] = 0x76;                     // HLT
-sim.run(&program, 200);
+sim.run(&program, 200)?;
 assert_eq!(sim.a(), 20);
 ```
 
 ## The Push-Down Stack
 
-The 8008 stack is a hardware push-down automaton — stack entry[0] IS the program counter. On CALL, the stack rotates down and the target loads into entry[0]. On RETURN, the stack rotates up, restoring the saved return address. Programs can nest calls at most 7 levels deep.
+The 8008 stack is a hardware push-down automaton — stack `entry[0]` IS the program counter. On CALL, the stack rotates down and the target loads into `entry[0]`. On RETURN, the stack rotates up, restoring the saved return address. Programs can nest calls at most 7 levels deep.
+
+## Checked lifecycle API
+
+`load_program`, `step`, `run`, and the input/output port boundary return
+`Intel8008Error`. Invalid ranges, undefined opcodes, instructions crossing the
+end of memory, and halted execution are rejected before state changes. `run`
+clears memory and CPU outputs before loading so repeated executions are
+deterministic; `reset` preserves memory and externally supplied input latches.
+
+`snapshot()` returns an owned `Intel8008State` containing all registers, the
+complete memory and push-down stack, flags, halt state, and I/O latches. This is
+the stable comparison boundary for the gate-level simulator.
 
 ## Instruction Set Overview
 
