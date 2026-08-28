@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Namaste, Piece by Piece",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:902f6944bb355e1d",
+  "sourceHash": "fnv1a64:fcbdfbf276c506cd",
   "lessons": [
     {
       "id": "GU-C01-namaste",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49aab790cdb77854",
+      "sourceHash": "fnv1a64:4451289de6389ea2",
       "notice": null,
       "blocks": [
         {
@@ -140,7 +140,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1f801a765a7b68b2",
+      "sourceHash": "fnv1a64:7763b880fb3d0e3f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -268,7 +268,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d545ce447952cbf7",
+      "sourceHash": "fnv1a64:4313c90cb7258834",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -406,7 +406,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0851a47cf86171d6",
+      "sourceHash": "fnv1a64:9c82ad80094af60d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -546,7 +546,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:330aede7e7e0ce2c",
+      "sourceHash": "fnv1a64:a533a88f439cc521",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -662,7 +662,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4912611e07482541",
+      "sourceHash": "fnv1a64:37f1e6161a5326c6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -782,7 +782,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:215e674e3c2308c7",
+      "sourceHash": "fnv1a64:b79850312e718662",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -902,7 +902,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1c61ee530c01e057",
+      "sourceHash": "fnv1a64:bce9c4a9c7c9b11e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1018,7 +1018,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d3e6f9f7644b28f8",
+      "sourceHash": "fnv1a64:82f9ca129d4db36b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1142,7 +1142,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4eb7ea2a445826e7",
+      "sourceHash": "fnv1a64:21dbf6401a0f1aa2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1274,7 +1274,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fa553a1942c50bb6",
+      "sourceHash": "fnv1a64:660a214aaaefebd5",
       "notice": {
         "modality": "pen",
         "needs": [

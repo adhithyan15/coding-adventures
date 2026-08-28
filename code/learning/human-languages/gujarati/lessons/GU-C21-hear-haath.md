@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01]
 introduces:
   knowledge: [GU-LEX-HAATH-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-HAATH-01, GU-LEX-GHAR-01, GU-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01]
 skills: [listening, speaking]

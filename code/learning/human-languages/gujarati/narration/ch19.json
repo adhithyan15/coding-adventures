@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Fourth Return: Script and Names",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9c21f46c74a15117",
+  "sourceHash": "fnv1a64:76b1031138cb68e1",
   "lessons": [
     {
       "id": "GU-R15-u-matra-r4",
@@ -21,7 +21,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a23105cee94837ee",
+      "sourceHash": "fnv1a64:67db36cc5f0782cd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -140,7 +140,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:fdbdb8dd1355e1ae",
+      "sourceHash": "fnv1a64:09617d7b306ac3ab",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -258,7 +258,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d26b3aa2e7aba85b",
+      "sourceHash": "fnv1a64:eddc0b6cc8272a6c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -376,7 +376,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:83067fcf45b4495d",
+      "sourceHash": "fnv1a64:b7821cdf2cc8f5e6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -494,7 +494,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:1251e258549de07e",
+      "sourceHash": "fnv1a64:9252f0c3b8b90477",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -611,7 +611,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:db3bfbdc98b88ca2",
+      "sourceHash": "fnv1a64:99a0244bce608269",
       "notice": {
         "modality": "pen",
         "needs": [],

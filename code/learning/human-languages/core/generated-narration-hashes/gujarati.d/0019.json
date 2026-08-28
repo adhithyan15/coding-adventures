@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 19,
-  "sourceHash": "fnv1a64:9c21f46c74a15117",
+  "sourceHash": "fnv1a64:76b1031138cb68e1",
   "lessonIds": [
     "GU-R15-u-matra-r4",
     "GU-R15-chha-r4",
@@ -15,6 +15,6 @@
   "text": "gujarati/narration/ch19.txt",
   "json": "gujarati/narration/ch19.json",
   "textHash": "fnv1a64:4c4d92fb8d9381aa",
-  "jsonHash": "fnv1a64:c191947a49225c17",
+  "jsonHash": "fnv1a64:0abc99e884d46b7b",
   "findings": []
 }

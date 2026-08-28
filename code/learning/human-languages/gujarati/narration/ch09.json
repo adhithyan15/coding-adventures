@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b2756451c5e51083",
+  "sourceHash": "fnv1a64:ce5d6decdf91c66f",
   "lessons": [
     {
       "id": "GU-C03-hun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b9dbb9c0bd9884d5",
+      "sourceHash": "fnv1a64:ef56611e6fc96ffa",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6187eeab817fc11a",
+      "sourceHash": "fnv1a64:22502225dcfd415d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c16852554e1ed5d3",
+      "sourceHash": "fnv1a64:2dd85efb50b2c11e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -484,7 +484,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6f3c00eb2dd512e4",
+      "sourceHash": "fnv1a64:850ba277d5237e96",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -647,7 +647,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:93cc08bf35068e41",
+      "sourceHash": "fnv1a64:9f81219959749e33",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -770,7 +770,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:735d5c29fcb024bb",
+      "sourceHash": "fnv1a64:0898ae04697d0bc0",
       "notice": null,
       "blocks": [
         {

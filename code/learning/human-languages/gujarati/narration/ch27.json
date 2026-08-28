@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Village and Shop Complete Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3fb388e8d82594e4",
+  "sourceHash": "fnv1a64:4510dc11c0942a40",
   "lessons": [
     {
       "id": "GU-C23-hear-gaam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93c5a041485168fd",
+      "sourceHash": "fnv1a64:c1998e019796f228",
       "notice": null,
       "blocks": [
         {
@@ -89,7 +89,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:21b3b1e99502b1cb",
+      "sourceHash": "fnv1a64:d219e0c17545e5aa",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -260,7 +260,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:773c12288b422582",
+      "sourceHash": "fnv1a64:61c614a28b769d29",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -336,7 +336,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:920685e01f1e7ab2",
+      "sourceHash": "fnv1a64:df57ebfd746a7e55",
       "notice": null,
       "blocks": [
         {
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:7d5630147fadf3c9",
+      "sourceHash": "fnv1a64:7b2f5556eb03d8fe",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -483,7 +483,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:c1e86ec51a989463",
+      "sourceHash": "fnv1a64:39c27b5a8ee5a5ce",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -566,7 +566,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:2e23576dfd68af31",
+      "sourceHash": "fnv1a64:5330cb820ecdcb44",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -649,7 +649,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d1676db0588d241b",
+      "sourceHash": "fnv1a64:b44900025a03a964",
       "notice": {
         "modality": "pen",
         "needs": [

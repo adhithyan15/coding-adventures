@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-SCRIPT-NNA-01]
 introduces:
   knowledge: [GU-SCRIPT-SHA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-SCRIPT-JA-01, GU-SCRIPT-O-MATRA-01, GU-SCRIPT-ANUSVARA-01, GU-SCRIPT-II-MATRA-01, GU-SCRIPT-U-MATRA-01, GU-SCRIPT-CHHA-01, GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01]
 skills: [reading, writing]

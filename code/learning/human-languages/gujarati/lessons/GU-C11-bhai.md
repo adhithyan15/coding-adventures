@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-LEX-KUTUMB, GU-ETYMON-KUTUMB-DRAVIDIAN, GU-GRAMMAR-LEARNED-BORROWING]
 introduces:
   knowledge: [GU-LEX-BHAI, GU-ETYMON-BHAI-BROTHER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-BHAI, GU-ETYMON-BHAI-BROTHER, GU-LEX-KUTUMB, GU-ETYMON-KUTUMB-DRAVIDIAN, GU-GRAMMAR-LEARNED-BORROWING]
 skills: [listening, speaking, reading]

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Four Forms Before Your Name",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:499bfe012dde2674",
+  "sourceHash": "fnv1a64:32753e1bf80d1c53",
   "lessons": [
     {
       "id": "GU-W04-lla",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:78e655e11e74e492",
+      "sourceHash": "fnv1a64:a49c9774489abc73",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -144,7 +144,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:738fb31773658c50",
+      "sourceHash": "fnv1a64:c0aaa4b7d032a20f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -267,7 +267,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d84c41fff374e0a2",
+      "sourceHash": "fnv1a64:b4f38eda816e122b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -390,7 +390,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2ffa0eb283bb1f80",
+      "sourceHash": "fnv1a64:39de4a65142de78b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -513,7 +513,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:56ca33ac98733c4c",
+      "sourceHash": "fnv1a64:603836ffe26a5b17",
       "notice": {
         "modality": "pen",
         "needs": [

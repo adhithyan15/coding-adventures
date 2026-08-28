@@ -22,6 +22,9 @@ requires:
   knowledge: [GU-LEX-PAISA-01, GU-SCRIPT-AI-MATRA-01]
 introduces:
   knowledge: [GU-SCRIPT-PAISA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-PAISA-01, GU-SCRIPT-PAISA-01, GU-SCRIPT-AI-MATRA-01, GU-LEX-HAATH-01, GU-SCRIPT-HAATH-01]
 skills: [listening, speaking, reading, writing]

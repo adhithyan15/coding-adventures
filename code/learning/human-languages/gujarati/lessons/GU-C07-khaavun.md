@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-LEX-AAVVU, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA]
 introduces:
   knowledge: [GU-LEX-KHAAVU, GU-ETYMON-KHAAVU-NO-ENGLISH-COUSIN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-AAVVU, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA, GU-LEX-KHAAVU, GU-ETYMON-KHAAVU-NO-ENGLISH-COUSIN]
 skills: [listening, speaking, reading]

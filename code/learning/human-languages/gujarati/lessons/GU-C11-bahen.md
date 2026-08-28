@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-LEX-BHAI, GU-ETYMON-BHAI-BROTHER, GU-LEX-KUTUMB, GU-GRAMMAR-LEARNED-BORROWING, GU-LEX-MITRA, GU-ETYMON-MITRA-BIND]
 introduces:
   knowledge: [GU-LEX-BAHEN, GU-ETYMON-BAHEN-BHAGA]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-BAHEN, GU-ETYMON-BAHEN-BHAGA, GU-LEX-BHAI, GU-ETYMON-BHAI-BROTHER, GU-LEX-KUTUMB, GU-ETYMON-KUTUMB-DRAVIDIAN, GU-GRAMMAR-LEARNED-BORROWING, GU-LEX-MITRA, GU-ETYMON-MITRA-BIND, GU-PHRASE-MEHERBANI-KARINE]
 skills: [listening, speaking, reading]

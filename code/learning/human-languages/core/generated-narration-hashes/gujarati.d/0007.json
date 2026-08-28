@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 7,
-  "sourceHash": "fnv1a64:c54e0ac772284caa",
+  "sourceHash": "fnv1a64:f46391a772373e6d",
   "lessonIds": [
     "GU-W07-uu-matra",
     "GU-W07-tta",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch07.txt",
   "json": "gujarati/narration/ch07.json",
   "textHash": "fnv1a64:10407a25e82af537",
-  "jsonHash": "fnv1a64:7528da7350b2db75",
+  "jsonHash": "fnv1a64:ea57d85d6725b6e4",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "City, School, and Road",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6e4d80496bca2294",
+  "sourceHash": "fnv1a64:b3a6ee139900c9ae",
   "lessons": [
     {
       "id": "GU-C22-hear-shahar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3a5b1a4d9ec3778",
+      "sourceHash": "fnv1a64:be2649023e22b9b5",
       "notice": null,
       "blocks": [
         {
@@ -88,7 +88,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:c342a4d972a68a09",
+      "sourceHash": "fnv1a64:21f7ae9a9efe3bf4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef770e15b2453d20",
+      "sourceHash": "fnv1a64:c456df355ea7fb0b",
       "notice": null,
       "blocks": [
         {
@@ -233,7 +233,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:c45c2473dc503b57",
+      "sourceHash": "fnv1a64:e44c24c9bc777250",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -326,7 +326,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a38ce66ef9d3bba9",
+      "sourceHash": "fnv1a64:319916b53eca2658",
       "notice": null,
       "blocks": [
         {
@@ -395,7 +395,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:b48f957f2096b37f",
+      "sourceHash": "fnv1a64:f37060ff64a8845a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -471,7 +471,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:da57d76d4bb8583d",
+      "sourceHash": "fnv1a64:6dedd6cad544291c",
       "notice": {
         "modality": "pen",
         "needs": [

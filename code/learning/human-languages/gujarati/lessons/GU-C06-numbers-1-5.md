@@ -19,6 +19,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [GU-LEX-NUMBERS-ONE-TO-FIVE, GU-SCRIPT-HEADLESS-CLUE, GU-FORM-BE-INITIAL-B, GU-FORM-TRAN-R]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-NUMBERS-ONE-TO-FIVE, GU-SCRIPT-HEADLESS-CLUE, GU-FORM-BE-INITIAL-B, GU-FORM-TRAN-R]
 skills: [listening, speaking, reading]

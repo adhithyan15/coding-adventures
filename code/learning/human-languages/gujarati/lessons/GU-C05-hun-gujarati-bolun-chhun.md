@@ -17,6 +17,9 @@ requires:
   knowledge: [GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C05-BOLVUN-01]
 introduces:
   knowledge: [GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [GU-CULTURE-GUJARATI-GURJAR-PEOPLE-NAME-01]
 practises:
   knowledge: [GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C05-BOLVUN-01, GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01]
 skills: [listening, speaking, reading]

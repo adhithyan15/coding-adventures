@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-LEX-PAANI, GU-PHRASE-MEHERBANI-KARINE, GU-ETYMON-PAANI-DRINK]
 introduces:
   knowledge: [GU-LEX-CHA, GU-ETYMON-CHA-CHINESE, GU-HISTORY-TEA-CHA-ISOGLOSS]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [GU-CULTURE-CHA-OVERLAND-TEA-ROUTE-01]
 practises:
   knowledge: [GU-LEX-CHA, GU-ETYMON-CHA-CHINESE, GU-HISTORY-TEA-CHA-ISOGLOSS, GU-LEX-PAANI, GU-PHRASE-MEHERBANI-KARINE, GU-ETYMON-PAANI-DRINK]
 skills: [listening, speaking, reading]

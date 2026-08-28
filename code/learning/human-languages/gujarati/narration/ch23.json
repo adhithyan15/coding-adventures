@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Fourth Return: The Doorway Nine",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fb0122fb7175b82b",
+  "sourceHash": "fnv1a64:a0f0da1a298a35ae",
   "lessons": [
     {
       "id": "GU-R19-doorway-nine-r4",
@@ -20,7 +20,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:7f476ddec1780cf6",
+      "sourceHash": "fnv1a64:3aeacf5cecb9e841",
       "notice": {
         "modality": "pen",
         "needs": [

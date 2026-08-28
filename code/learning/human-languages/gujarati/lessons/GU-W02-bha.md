@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-SCRIPT-YA-01]
 introduces:
   knowledge: [GU-SCRIPT-BHA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-SCRIPT-YA-01, GU-SCRIPT-BHA-01]
 skills: [reading, writing]

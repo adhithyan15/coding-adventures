@@ -17,6 +17,9 @@ requires:
   knowledge: [GU-CONCEPT-C02-NAAM-01]
 introduces:
   knowledge: [GU-CONCEPT-C02-TUTAME-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [GU-CULTURE-TAME-FIRST-MEETING-RESPECT-01]
 practises:
   knowledge: [GU-CONCEPT-C02-NAAM-01, GU-CONCEPT-C02-TUTAME-01, GU-SCRIPT-RA-01]
 skills: [listening, speaking, reading, writing]

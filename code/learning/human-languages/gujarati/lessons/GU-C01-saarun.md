@@ -17,6 +17,9 @@ requires:
   knowledge: [GU-CONCEPT-C01-NAMASTE-01]
 introduces:
   knowledge: [GU-CONCEPT-C01-SAARUN-01]
+introduces_idioms: []
+introduces_senses: [GU-SENSE-SAARUN-GOOD-FINE-OKAY-01]
+introduces_culture_claims: []
 practises:
   knowledge: [GU-CONCEPT-C01-NAMASTE-01, GU-CONCEPT-C01-SAARUN-01]
 skills: [listening, speaking, reading]

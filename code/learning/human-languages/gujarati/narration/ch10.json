@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4b6f521e15a22602",
+  "sourceHash": "fnv1a64:e424b6bae7c89597",
   "lessons": [
     {
       "id": "GU-C04-malishun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b7d65c3a3a4f6fbd",
+      "sourceHash": "fnv1a64:407c60b886d9799c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1c74f25343c3d5f2",
+      "sourceHash": "fnv1a64:64c1b09bc9c5bd72",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -276,7 +276,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f13de2f50400d7b8",
+      "sourceHash": "fnv1a64:a78cf8f157adce3f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -390,7 +390,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea3dc85f88dded85",
+      "sourceHash": "fnv1a64:45f403388d1b5a5c",
       "notice": null,
       "blocks": [
         {
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab69313b66ba6db5",
+      "sourceHash": "fnv1a64:cfb8461d09ad30ea",
       "notice": null,
       "blocks": [
         {

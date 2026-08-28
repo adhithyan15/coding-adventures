@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [GU-CONCEPT-C01-NAMASTE-01]
+introduces_idioms: [GU-IDIOM-NAMASTE-GREETING-LEAVE-TAKING-01]
+introduces_senses: []
+introduces_culture_claims: [GU-CULTURE-NAMASTE-SANSKRIT-RESPECTFUL-GREETING-01]
 practises:
   knowledge: [GU-CONCEPT-C01-NAMASTE-01]
 skills: [listening, speaking]

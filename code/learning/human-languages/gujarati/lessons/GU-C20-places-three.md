@@ -22,6 +22,9 @@ requires:
   knowledge: [GU-LEX-BAJAR-01, GU-SCRIPT-BAJAR-01, GU-LEX-GHAR-01, GU-SCRIPT-GHAR-01, GU-LEX-MANDIR-01, GU-SCRIPT-MANDIR-01]
 introduces:
   knowledge: [GU-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-BAJAR-01, GU-SCRIPT-BAJAR-01, GU-LEX-GHAR-01, GU-SCRIPT-GHAR-01, GU-LEX-MANDIR-01, GU-SCRIPT-MANDIR-01, GU-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01]
 skills: [listening, speaking, reading, writing]

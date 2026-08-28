@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-LEX-HAATH-01]
 introduces:
   knowledge: [GU-LEX-PAISA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-PAISA-01, GU-LEX-HAATH-01]
 skills: [listening, speaking]

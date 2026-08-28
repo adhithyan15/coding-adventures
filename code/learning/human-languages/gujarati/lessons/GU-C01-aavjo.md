@@ -17,6 +17,9 @@ requires:
   knowledge: [GU-CONCEPT-C01-NAMASTE-01]
 introduces:
   knowledge: [GU-CONCEPT-C01-AAVJO-01]
+introduces_idioms: [GU-IDIOM-AAVJO-LEAVE-TAKING-01]
+introduces_senses: []
+introduces_culture_claims: [GU-CULTURE-AAVJO-RETURN-FRAMED-GOODBYE-01]
 practises:
   knowledge: [GU-CONCEPT-C01-AAVJO-01, GU-CONCEPT-C01-NAMASTE-01, GU-SCRIPT-DA-01, GU-SCRIPT-YA-01]
 skills: [listening, speaking, reading, writing]

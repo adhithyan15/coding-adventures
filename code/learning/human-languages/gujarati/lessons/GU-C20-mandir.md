@@ -22,6 +22,9 @@ requires:
   knowledge: [GU-LEX-MANDIR-01]
 introduces:
   knowledge: [GU-SCRIPT-MANDIR-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-LEX-MANDIR-01, GU-SCRIPT-MANDIR-01, GU-SCRIPT-BAJAR-01, GU-SCRIPT-GHAR-01]
 skills: [listening, speaking, reading, writing]

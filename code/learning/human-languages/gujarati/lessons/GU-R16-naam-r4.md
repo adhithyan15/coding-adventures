@@ -19,6 +19,9 @@ requires:
   knowledge: [GU-CONCEPT-C02-NAAM-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-CONCEPT-C02-NAAM-01]
 skills: [listening, speaking, reading, writing]

@@ -15,7 +15,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:a46539ae956d0b42",
+    "sourceHash": "fnv1a64:509b24534ec7d151",
     "delivery": "script",
     "authored": "pen",
     "authoredReason": "The guided-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."

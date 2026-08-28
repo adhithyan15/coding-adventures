@@ -18,6 +18,9 @@ requires:
   knowledge: [GU-CONCEPT-C01-HAANAA-01, GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [GU-CONCEPT-C01-HAANAA-01, GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-VOCALIC-R-MATRA-01]
 skills: [reading, writing]
