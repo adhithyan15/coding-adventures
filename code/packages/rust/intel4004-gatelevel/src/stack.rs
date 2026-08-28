@@ -20,6 +20,7 @@
 use logic_gates::sequential::{register, FlipFlopState};
 
 use crate::bits::{bits_to_int, int_to_bits};
+use crate::registers::StateRegister;
 
 /// 3-level x 12-bit hardware call stack.
 ///
@@ -29,7 +30,7 @@ pub struct HardwareStack {
     /// Three 12-bit register states.
     levels: Vec<Vec<FlipFlopState>>,
     /// Current stack pointer (0, 1, or 2).
-    pointer: usize,
+    pointer: StateRegister,
 }
 
 impl HardwareStack {
@@ -37,15 +38,14 @@ impl HardwareStack {
     pub fn new() -> Self {
         let mut levels = Vec::with_capacity(3);
         for _ in 0..3 {
-            let mut state: Vec<FlipFlopState> =
-                (0..12).map(|_| FlipFlopState::default()).collect();
+            let mut state: Vec<FlipFlopState> = (0..12).map(|_| FlipFlopState::default()).collect();
             register(&[0; 12], 0, &mut state);
             register(&[0; 12], 1, &mut state);
             levels.push(state);
         }
         Self {
             levels,
-            pointer: 0,
+            pointer: StateRegister::new(2),
         }
     }
 
@@ -55,17 +55,19 @@ impl HardwareStack {
     /// to write, then the pointer increments mod 3.
     pub fn push(&mut self, address: u16) {
         let bits = int_to_bits(address & 0xFFF, 12);
-        register(&bits, 0, &mut self.levels[self.pointer]);
-        register(&bits, 1, &mut self.levels[self.pointer]);
-        self.pointer = (self.pointer + 1) % 3;
+        let pointer = usize::from(self.pointer.read());
+        register(&bits, 0, &mut self.levels[pointer]);
+        register(&bits, 1, &mut self.levels[pointer]);
+        self.pointer.write(((pointer + 1) % 3) as u16);
     }
 
     /// Pop and return the top address.
     ///
     /// Decrements pointer mod 3, then reads that register.
     pub fn pop(&mut self) -> u16 {
-        self.pointer = (self.pointer + 3 - 1) % 3;
-        let mut state = self.levels[self.pointer].clone();
+        let pointer = (usize::from(self.pointer.read()) + 2) % 3;
+        self.pointer.write(pointer as u16);
+        let mut state = self.levels[pointer].clone();
         let output = register(&[0; 12], 0, &mut state);
         bits_to_int(&output)
     }
@@ -76,12 +78,12 @@ impl HardwareStack {
             register(&[0; 12], 0, &mut self.levels[i]);
             register(&[0; 12], 1, &mut self.levels[i]);
         }
-        self.pointer = 0;
+        self.pointer.reset();
     }
 
     /// Current pointer position (not true depth, since we wrap).
     pub fn depth(&self) -> usize {
-        self.pointer
+        usize::from(self.pointer.read())
     }
 
     /// Read all stack level values (for inspection only).
@@ -95,9 +97,9 @@ impl HardwareStack {
         values
     }
 
-    /// 3 x 12-bit registers (216 gates) + pointer logic (~10 gates).
+    /// 38 D flip-flops plus pointer control logic.
     pub fn gate_count(&self) -> usize {
-        226
+        238
     }
 }
 

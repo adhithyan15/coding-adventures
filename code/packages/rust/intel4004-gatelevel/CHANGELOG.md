@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Exact 1,428-DFF persistent-state topology and owned full-machine snapshots.
+- Functional-oracle lockstep for every specified encoding and representative
+  memory, port, branch, indirect, and stack workloads.
+- Typed atomic failures for oversized ROM images, illegal opcodes, truncated
+  two-byte instructions, and halted steps.
+
+### Changed
+
+- RAM output ports, selectors, ROM port, halt state, and stack pointer now use
+  D flip-flops instead of host fields.
+- `load_program`, `step`, and `run` now return checked `Result` values.
+- SRC masks its register selector to the architectural two bits.
+- Strict rustdoc now passes and core coverage is 95.15% (686/721).
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

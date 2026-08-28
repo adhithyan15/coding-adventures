@@ -37,7 +37,11 @@
 pub fn int_to_bits(value: u16, width: usize) -> Vec<u8> {
     // Mask to width to handle oversized values.
     // We use u16 because the program counter is 12 bits wide.
-    let mask = if width >= 16 { 0xFFFF } else { (1u16 << width) - 1 };
+    let mask = if width >= 16 {
+        0xFFFF
+    } else {
+        (1u16 << width) - 1
+    };
     let masked = value & mask;
     (0..width).map(|i| ((masked >> i) & 1) as u8).collect()
 }
