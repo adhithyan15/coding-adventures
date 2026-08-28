@@ -1,5 +1,27 @@
 # Changelog — coding-adventures-mos6502-gatelevel
 
+## [0.1.1] — 2026-08-28
+
+### Changed
+
+- Back all 528,184 persistent memory, register, flag, halt, and I/O bits with
+  D flip-flops and publish the exact topology as `FLIP_FLOP_COUNT`.
+- Share the functional simulator's owned state, trace, result, and typed error
+  contracts; make load and step failures atomic and bounded runs transactional.
+- Route zero detection and corrected NMOS BCD ADC/SBC adjustment through gate
+  operations.
+- Add complete 64 KiB snapshots and 240 memory-mapped input/output latches.
+
+### Verified
+
+- Compare complete state with `mos6502-simulator` for all 151 official opcode
+  bytes and atomically reject all 105 undefined bytes.
+- Cover exact topology, lifecycle boundaries, IRQ/NMI entry, multi-instruction
+  workloads, and memory-mapped I/O with 81 unit, 5 integration, and 7
+  documentation tests.
+- Reach 96.60% core line coverage (994/1,029) and pass formatting, Clippy, and
+  rustdoc with warnings denied.
+
 ## [0.1.0] — 2026-06-15
 
 ### Added

@@ -24,10 +24,17 @@
 //! 4. BRK halts the simulator (pushes PC+2 and P with B=1).
 //! 5. Stack is in page 0x01xx; S wraps within the page.
 
-use crate::alu::{adc_bcd, add8, and8, asl8, bit8, compare8, dec8, inc8, lsr8, or8, rol8, ror8, sbc_bcd, sub8, xor8};
-use crate::bits::{add_16bit, add_8bit, int_to_bits8};
-use crate::decoder::{decode, ABS, ABX, ABY, ACC, IMM, IMP, IND, INX, INY, REL, ZP, ZPX, ZPY};
+use crate::alu::{
+    adc_bcd, add8, and8, asl8, bit8, compare8, dec8, inc8, lsr8, or8, rol8, ror8, sbc_bcd, sub8,
+    xor8,
+};
+use crate::bits::{add_16bit, add_8bit, compute_zero, int_to_bits8};
+use crate::decoder::{
+    decode, is_legal, ABS, ABX, ABY, ACC, IMM, IMP, IND, INX, INY, REL, ZP, ZPX, ZPY,
+};
 use crate::registers::RegisterFile6502;
+use crate::state::{DffMemory, StateRegister};
+use mos6502_simulator::{ExecutionResult, Mos6502Error, Mos6502State, StepTrace};
 
 const IO_BASE: usize = 0xFF00;
 const IO_END: usize = 0xFFEF;
@@ -38,32 +45,9 @@ const NMI_HI: usize = 0xFFFB;
 const IRQ_LO: usize = 0xFFFE;
 const IRQ_HI: usize = 0xFFFF;
 
-/// A snapshot of CPU state after execution.
-#[derive(Debug, Clone)]
-pub struct CpuState {
-    pub a: u8,
-    pub x: u8,
-    pub y: u8,
-    pub s: u8,
-    pub pc: u16,
-    pub flag_n: bool,
-    pub flag_v: bool,
-    pub flag_b: bool,
-    pub flag_d: bool,
-    pub flag_i: bool,
-    pub flag_z: bool,
-    pub flag_c: bool,
-    pub halted: bool,
-}
-
-/// Per-instruction trace entry.
-#[derive(Debug, Clone)]
-pub struct StepTrace {
-    pub pc_before: u16,
-    pub pc_after: u16,
-    pub mnemonic: String,
-    pub description: String,
-}
+/// Exact number of persistent D flip-flops in the complete machine.
+pub const FLIP_FLOP_COUNT: usize =
+    DffMemory::DFF_COUNT + 4 * 8 + 16 + 7 + 1 + NUM_PORTS * 8 + NUM_PORTS * 8;
 
 /// Gate-level MOS 6502 (NMOS) simulator.
 ///
@@ -74,94 +58,154 @@ pub struct StepTrace {
 ///
 /// let mut cpu = GateLevelCpu::new();
 /// // LDA #10 ; ADC #5 ; BRK
-/// let (traces, state) = cpu.run(&[0xA9, 0x0A, 0x69, 0x05, 0x00], 100);
-/// assert_eq!(state.a, 15);
-/// assert!(!state.flag_c);
+/// let result = cpu
+///     .run(&[0xA9, 0x0A, 0x69, 0x05, 0x00], 100)
+///     .unwrap();
+/// assert_eq!(result.final_state.a, 15);
+/// assert!(!result.final_state.flag_c);
 /// ```
+#[derive(Clone)]
 pub struct GateLevelCpu {
-    memory: [u8; 65536],
+    memory: DffMemory,
     rf: RegisterFile6502,
     halted: bool,
-    input_ports: [u8; NUM_PORTS],
-    output_ports: [u8; NUM_PORTS],
+    halt_state: StateRegister,
+    input_ports: [StateRegister; NUM_PORTS],
+    output_ports: [StateRegister; NUM_PORTS],
 }
 
 impl GateLevelCpu {
     /// Create a new CPU with zeroed memory and power-on register state.
     pub fn new() -> Self {
         Self {
-            memory: [0u8; 65536],
+            memory: DffMemory::new(),
             rf: RegisterFile6502::new(),
             halted: false,
-            input_ports: [0u8; NUM_PORTS],
-            output_ports: [0u8; NUM_PORTS],
+            halt_state: StateRegister::new(1),
+            input_ports: std::array::from_fn(|_| StateRegister::new(8)),
+            output_ports: std::array::from_fn(|_| StateRegister::new(8)),
         }
     }
 
     /// Reset CPU to power-on state (clears memory).
     pub fn reset(&mut self) {
-        self.memory = [0u8; 65536];
+        self.memory = DffMemory::new();
         self.rf.reset();
         self.halted = false;
+        self.halt_state.write(0);
     }
 
     /// Load program bytes at `origin` and set PC.
-    pub fn load(&mut self, program: &[u8], origin: u16) {
+    pub fn load(&mut self, program: &[u8], origin: u16) -> Result<(), Mos6502Error> {
+        if program.len() > DffMemory::BYTE_LEN {
+            return Err(Mos6502Error::ProgramTooLarge {
+                length: program.len(),
+                capacity: DffMemory::BYTE_LEN,
+            });
+        }
         for (i, &byte) in program.iter().enumerate() {
             let addr = (origin as usize + i) & 0xFFFF;
-            self.memory[addr] = byte;
+            self.memory.write(addr, byte);
         }
         self.rf.pc.write(origin);
         self.halted = false;
+        self.halt_state.write(0);
+        Ok(())
     }
 
     /// Set input port value (read when code accesses 0xFF00 + port).
-    pub fn set_input_port(&mut self, port: usize, value: u8) {
-        assert!(port < NUM_PORTS, "port out of range");
-        self.input_ports[port] = value;
+    pub fn set_input_port(&mut self, port: u8, value: u8) -> Result<(), Mos6502Error> {
+        let register = self
+            .input_ports
+            .get_mut(port as usize)
+            .ok_or(Mos6502Error::InvalidPort { port })?;
+        register.write(u16::from(value));
+        Ok(())
     }
 
     /// Get output port value (written when code writes to 0xFF00 + port).
-    pub fn get_output_port(&self, port: usize) -> u8 {
-        assert!(port < NUM_PORTS, "port out of range");
-        self.output_ports[port]
+    pub fn get_output_port(&self, port: u8) -> Result<u8, Mos6502Error> {
+        self.output_ports
+            .get(port as usize)
+            .map(|register| register.read() as u8)
+            .ok_or(Mos6502Error::InvalidPort { port })
     }
 
     /// Load and run program until BRK or `max_steps`.
     ///
-    /// Returns `(traces, final_state)`.
-    pub fn run(&mut self, program: &[u8], max_steps: usize) -> (Vec<StepTrace>, CpuState) {
-        self.reset();
-        self.load(program, 0x0000);
+    pub fn run(
+        &mut self,
+        program: &[u8],
+        max_steps: usize,
+    ) -> Result<ExecutionResult, Mos6502Error> {
+        let before = self.snapshot();
+        self.load(program, 0)?;
         let mut traces = Vec::new();
         let mut steps = 0;
         while !self.halted && steps < max_steps {
-            let trace = self.step();
+            let trace = match self.step() {
+                Ok(trace) => trace,
+                Err(error) => {
+                    self.restore(&before)?;
+                    return Err(error);
+                }
+            };
             traces.push(trace);
             steps += 1;
         }
-        (traces, self.get_state())
+        Ok(ExecutionResult {
+            halted: self.halted,
+            steps,
+            pc: self.rf.pc.read(),
+            traces,
+            final_state: self.snapshot(),
+        })
     }
 
     /// Execute one instruction.
-    pub fn step(&mut self) -> StepTrace {
-        assert!(!self.halted, "CPU is halted");
-        let pc_before = self.rf.pc.read();
+    pub fn step(&mut self) -> Result<StepTrace, Mos6502Error> {
+        self.load_wires_from_state();
+        if self.halted {
+            return Err(Mos6502Error::Halted);
+        }
+        let address = self.rf.pc.read();
+        let opcode = self.read_mem(address);
+        if !is_legal(opcode) {
+            return Err(Mos6502Error::UnknownOpcode { address, opcode });
+        }
+        let length = mos6502_simulator::opcodes::lookup(opcode)
+            .expect("gate and functional opcode tables must agree")
+            .1
+            .instruction_len();
+        let raw = (0..length)
+            .map(|offset| self.read_mem(address.wrapping_add(offset as u16)))
+            .collect();
+        let state_before = self.snapshot();
         let opcode = self.fetch_byte();
         let instr = decode(opcode);
-        let desc = self.execute(instr.mnemonic, instr.mode);
-        StepTrace {
-            pc_before,
-            pc_after: self.rf.pc.read(),
+        self.execute(instr.mnemonic, instr.mode);
+        self.clock_wires_into_state();
+        Ok(StepTrace {
+            address,
+            raw,
             mnemonic: instr.mnemonic.to_string(),
-            description: desc,
-        }
+            state_before,
+            state_after: self.snapshot(),
+        })
     }
 
     /// Return a snapshot of current CPU state.
-    pub fn get_state(&self) -> CpuState {
+    pub fn get_state(&self) -> Mos6502State {
+        self.snapshot()
+    }
+
+    pub fn state(&self) -> Mos6502State {
+        self.snapshot()
+    }
+
+    pub fn snapshot(&self) -> Mos6502State {
         let f = &self.rf.flags;
-        CpuState {
+        Mos6502State {
             a: self.rf.a.read(),
             x: self.rf.x.read(),
             y: self.rf.y.read(),
@@ -175,7 +219,49 @@ impl GateLevelCpu {
             flag_z: f.z != 0,
             flag_c: f.c != 0,
             halted: self.halted,
+            memory: self.memory.snapshot(),
+            input_ports: std::array::from_fn(|port| self.input_ports[port].read() as u8),
+            output_ports: std::array::from_fn(|port| self.output_ports[port].read() as u8),
         }
+    }
+
+    pub fn restore(&mut self, state: &Mos6502State) -> Result<(), Mos6502Error> {
+        if state.memory.len() != DffMemory::BYTE_LEN {
+            return Err(Mos6502Error::InvalidStateMemory {
+                length: state.memory.len(),
+            });
+        }
+        self.rf.a.write(state.a);
+        self.rf.x.write(state.x);
+        self.rf.y.write(state.y);
+        self.rf.s.write(state.s);
+        self.rf.pc.write(state.pc);
+        self.rf.flags.n = state.flag_n as u8;
+        self.rf.flags.v = state.flag_v as u8;
+        self.rf.flags.b = state.flag_b as u8;
+        self.rf.flags.d = state.flag_d as u8;
+        self.rf.flags.i = state.flag_i as u8;
+        self.rf.flags.z = state.flag_z as u8;
+        self.rf.flags.c = state.flag_c as u8;
+        self.rf.flags.clock();
+        self.halted = state.halted;
+        self.halt_state.write(state.halted as u16);
+        self.memory.copy_from_slice(&state.memory);
+        for port in 0..NUM_PORTS {
+            self.input_ports[port].write(u16::from(state.input_ports[port]));
+            self.output_ports[port].write(u16::from(state.output_ports[port]));
+        }
+        Ok(())
+    }
+
+    fn load_wires_from_state(&mut self) {
+        self.rf.flags.load_wires();
+        self.halted = self.halt_state.read() != 0;
+    }
+
+    fn clock_wires_into_state(&mut self) {
+        self.rf.flags.clock();
+        self.halt_state.write(self.halted as u16);
     }
 
     // ── Memory helpers ────────────────────────────────────────────────────────
@@ -183,23 +269,23 @@ impl GateLevelCpu {
     fn read_mem(&self, addr: u16) -> u8 {
         let a = addr as usize;
         if (IO_BASE..=IO_END).contains(&a) {
-            return self.input_ports[a - IO_BASE];
+            return self.input_ports[a - IO_BASE].read() as u8;
         }
-        self.memory[a]
+        self.memory.read(a)
     }
 
     fn write_mem(&mut self, addr: u16, value: u8) {
         let a = addr as usize;
         if (IO_BASE..=IO_END).contains(&a) {
-            self.output_ports[a - IO_BASE] = value;
+            self.output_ports[a - IO_BASE].write(u16::from(value));
         } else {
-            self.memory[a] = value;
+            self.memory.write(a, value);
         }
     }
 
     fn fetch_byte(&mut self) -> u8 {
         let pc = self.rf.pc.read();
-        let byte = self.memory[pc as usize];
+        let byte = self.read_mem(pc);
         self.rf.pc.inc(1);
         byte
     }
@@ -215,12 +301,7 @@ impl GateLevelCpu {
     }
 
     fn pull_byte(&mut self) -> u8 {
-        // We can't call stack_pull with &self.memory because we need mutable self.rf
-        // Inline the logic here.
-        let s = self.rf.s.read();
-        let (new_s, _carry) = add_8bit(s, 1, 0);
-        self.rf.s.write(new_s);
-        self.memory[0x0100 | new_s as usize]
+        self.rf.stack_pull(&self.memory)
     }
 
     // ── Addressing mode resolver ──────────────────────────────────────────────
@@ -271,15 +352,15 @@ impl GateLevelCpu {
                 let zp = self.fetch_byte();
                 let x = self.rf.x.read();
                 let (ptr, _c) = add_8bit(zp, x, 0);
-                let lo = self.memory[ptr as usize] as u16;
-                let hi = self.memory[(ptr.wrapping_add(1)) as usize] as u16;
+                let lo = self.read_mem(ptr as u16) as u16;
+                let hi = self.read_mem(ptr.wrapping_add(1) as u16) as u16;
                 Some((hi << 8) | lo)
             }
 
             m if m == INY => {
                 let zp = self.fetch_byte();
-                let lo = self.memory[zp as usize] as u16;
-                let hi = self.memory[zp.wrapping_add(1) as usize] as u16;
+                let lo = self.read_mem(zp as u16) as u16;
+                let hi = self.read_mem(zp.wrapping_add(1) as u16) as u16;
                 let base = (hi << 8) | lo;
                 let y = self.rf.y.read() as u16;
                 let (result, _c) = add_16bit(base, y, 0);
@@ -288,10 +369,10 @@ impl GateLevelCpu {
 
             m if m == IND => {
                 let ptr = self.fetch_word();
-                let lo = self.memory[ptr as usize] as u16;
+                let lo = self.read_mem(ptr) as u16;
                 // 6502 hardware bug: high byte wraps within page (ptr & 0xFF00)
                 let hi_addr = (ptr & 0xFF00) | ((ptr.wrapping_add(1)) & 0x00FF);
-                let hi = self.memory[hi_addr as usize] as u16;
+                let hi = self.read_mem(hi_addr) as u16;
                 Some((hi << 8) | lo)
             }
 
@@ -317,7 +398,7 @@ impl GateLevelCpu {
     fn update_nz(&mut self, value: u8) {
         let bits = int_to_bits8(value);
         self.rf.flags.n = bits[7];
-        self.rf.flags.z = if bits.iter().all(|&b| b == 0) { 1 } else { 0 };
+        self.rf.flags.z = compute_zero(&bits);
     }
 
     fn update_nzc(&mut self, value: u8, carry: u8) {
@@ -458,7 +539,11 @@ impl GateLevelCpu {
                 let a = self.rf.a.read();
                 let c = self.rf.flags.c;
                 let d = self.rf.flags.d;
-                let res = if d != 0 { adc_bcd(a, m, c) } else { add8(a, m, c) };
+                let res = if d != 0 {
+                    adc_bcd(a, m, c)
+                } else {
+                    add8(a, m, c)
+                };
                 self.rf.a.write(res.result);
                 self.rf.flags.n = res.flag_n;
                 self.rf.flags.v = res.flag_v;
@@ -474,7 +559,11 @@ impl GateLevelCpu {
                 let a = self.rf.a.read();
                 let c = self.rf.flags.c;
                 let d = self.rf.flags.d;
-                let res = if d != 0 { sbc_bcd(a, m, c) } else { sub8(a, m, c) };
+                let res = if d != 0 {
+                    sbc_bcd(a, m, c)
+                } else {
+                    sub8(a, m, c)
+                };
                 self.rf.a.write(res.result);
                 self.rf.flags.n = res.flag_n;
                 self.rf.flags.v = res.flag_v;
@@ -658,7 +747,7 @@ impl GateLevelCpu {
                 let reg = match mnemonic {
                     "CMP" => self.rf.a.read(),
                     "CPX" => self.rf.x.read(),
-                    _     => self.rf.y.read(),
+                    _ => self.rf.y.read(),
                 };
                 let (flag_n, flag_z, flag_c) = compare8(reg, m);
                 self.rf.flags.n = flag_n;
@@ -679,7 +768,7 @@ impl GateLevelCpu {
                     "BPL" => f.n == 0,
                     "BMI" => f.n != 0,
                     "BVC" => f.v == 0,
-                    _     => f.v != 0, // BVS
+                    _ => f.v != 0, // BVS
                 };
                 if taken {
                     self.rf.pc.write(target);
@@ -730,13 +819,34 @@ impl GateLevelCpu {
             }
 
             // ── Flag instructions ──────────────────────────────────────────────
-            "CLC" => { self.rf.flags.c = 0; "CLC — C=0".to_string() }
-            "SEC" => { self.rf.flags.c = 1; "SEC — C=1".to_string() }
-            "CLD" => { self.rf.flags.d = 0; "CLD — D=0".to_string() }
-            "SED" => { self.rf.flags.d = 1; "SED — D=1".to_string() }
-            "CLI" => { self.rf.flags.i = 0; "CLI — I=0".to_string() }
-            "SEI" => { self.rf.flags.i = 1; "SEI — I=1".to_string() }
-            "CLV" => { self.rf.flags.v = 0; "CLV — V=0".to_string() }
+            "CLC" => {
+                self.rf.flags.c = 0;
+                "CLC — C=0".to_string()
+            }
+            "SEC" => {
+                self.rf.flags.c = 1;
+                "SEC — C=1".to_string()
+            }
+            "CLD" => {
+                self.rf.flags.d = 0;
+                "CLD — D=0".to_string()
+            }
+            "SED" => {
+                self.rf.flags.d = 1;
+                "SED — D=1".to_string()
+            }
+            "CLI" => {
+                self.rf.flags.i = 0;
+                "CLI — I=0".to_string()
+            }
+            "SEI" => {
+                self.rf.flags.i = 1;
+                "SEI — I=1".to_string()
+            }
+            "CLV" => {
+                self.rf.flags.v = 0;
+                "CLV — V=0".to_string()
+            }
 
             _ => panic!("unhandled mnemonic {mnemonic:?}"),
         }
@@ -746,6 +856,7 @@ impl GateLevelCpu {
 
     /// Trigger an IRQ (masked by I flag).
     pub fn interrupt(&mut self) {
+        self.load_wires_from_state();
         if self.rf.flags.i != 0 {
             return; // IRQ masked
         }
@@ -755,22 +866,25 @@ impl GateLevelCpu {
         let p = self.rf.flags.pack(Some(0)); // B=0 for hardware interrupt
         self.push_byte(p);
         self.rf.flags.i = 1;
-        let lo = self.memory[IRQ_LO] as u16;
-        let hi = self.memory[IRQ_HI] as u16;
+        let lo = self.read_mem(IRQ_LO as u16) as u16;
+        let hi = self.read_mem(IRQ_HI as u16) as u16;
         self.rf.pc.write((hi << 8) | lo);
+        self.clock_wires_into_state();
     }
 
     /// Trigger an NMI (non-maskable).
     pub fn nmi(&mut self) {
+        self.load_wires_from_state();
         let pc = self.rf.pc.read();
         self.push_byte((pc >> 8) as u8);
         self.push_byte(pc as u8);
         let p = self.rf.flags.pack(Some(0)); // B=0 for hardware interrupt
         self.push_byte(p);
         self.rf.flags.i = 1;
-        let lo = self.memory[NMI_LO] as u16;
-        let hi = self.memory[NMI_HI] as u16;
+        let lo = self.read_mem(NMI_LO as u16) as u16;
+        let hi = self.read_mem(NMI_HI as u16) as u16;
         self.rf.pc.write((hi << 8) | lo);
+        self.clock_wires_into_state();
     }
 }
 
@@ -786,10 +900,9 @@ impl Default for GateLevelCpu {
 mod tests {
     use super::*;
 
-    fn run(program: &[u8]) -> CpuState {
+    fn run(program: &[u8]) -> Mos6502State {
         let mut cpu = GateLevelCpu::new();
-        let (_, state) = cpu.run(program, 1000);
-        state
+        cpu.run(program, 1000).unwrap().final_state
     }
 
     #[test]
@@ -948,10 +1061,10 @@ mod tests {
         // LDA #0 ; BEQ +2 ; NOP ; BRK ; NOP ; BRK
         // BEQ jumps past the first NOP to the second BRK
         let state = run(&[
-            0xA9, 0x00,  // LDA #0
-            0xF0, 0x01,  // BEQ +1 (skip the NOP)
-            0xEA,        // NOP (skipped)
-            0x00,        // BRK (reached)
+            0xA9, 0x00, // LDA #0
+            0xF0, 0x01, // BEQ +1 (skip the NOP)
+            0xEA, // NOP (skipped)
+            0x00, // BRK (reached)
         ]);
         assert!(state.halted);
     }
@@ -1025,9 +1138,9 @@ mod tests {
         // Layout: JMP at 0, NOP at 3, NOP at 4, BRK at 5, BRK at 6
         let state = run(&[
             0x4C, 0x05, 0x00, // JMP $0005
-            0xEA,              // NOP (skipped)
-            0xEA,              // NOP (skipped)
-            0x00,              // BRK (reached)
+            0xEA, // NOP (skipped)
+            0xEA, // NOP (skipped)
+            0x00, // BRK (reached)
         ]);
         assert!(state.halted);
     }
@@ -1036,12 +1149,12 @@ mod tests {
     fn jsr_rts() {
         // LDA #0 ; JSR $0008 ; BRK ; ... subroutine at 0x0008: LDA #0x42 ; RTS
         let prog = [
-            0xA9, 0x00,       // 0x00: LDA #0
+            0xA9, 0x00, // 0x00: LDA #0
             0x20, 0x07, 0x00, // 0x02: JSR $0007
-            0x00,             // 0x05: BRK
-            0xEA,             // 0x06: NOP (padding)
-            0xA9, 0x42,       // 0x07: LDA #0x42
-            0x60,             // 0x09: RTS
+            0x00, // 0x05: BRK
+            0xEA, // 0x06: NOP (padding)
+            0xA9, 0x42, // 0x07: LDA #0x42
+            0x60, // 0x09: RTS
         ];
         let state = run(&prog);
         assert_eq!(state.a, 0x42);
@@ -1067,11 +1180,17 @@ mod tests {
         // LDA #0x00 ; TAX ; TXS ; LDX #0xFF ; TXS ; BRK
         // After TXS with X=0xFF, Z should not be set (TXS doesn't update flags)
         let mut cpu = GateLevelCpu::new();
-        let (_, state) = cpu.run(&[
-            0xA2, 0x42, // LDX #0x42
-            0x9A,       // TXS (no flag update)
-            0x00,       // BRK
-        ], 100);
+        let state = cpu
+            .run(
+                &[
+                    0xA2, 0x42, // LDX #0x42
+                    0x9A, // TXS (no flag update)
+                    0x00, // BRK
+                ],
+                100,
+            )
+            .unwrap()
+            .final_state;
         // BRK pushes PCH, PCL, P (3 bytes) → S = 0x42 - 3 = 0x3F
         assert_eq!(state.s, 0x42u8.wrapping_sub(3));
     }
