@@ -200,6 +200,151 @@ describe("buildPipeline + runOnce — happy path", () => {
     expect(result.outputs.paths).toMatchObject({ meta: { paths: ["A.MD", "B.MD"] } });
     await o.dispose();
   });
+
+  it("joins default and named materialized streams exactly once", async () => {
+    const pageSource = defineStage({
+      name: "@test/pages",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "two rendered pages",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.RenderedPage),
+      capabilities: [],
+      configSchema: null,
+      async *run() {
+        for (const route of ["/a.html", "/b.html"]) {
+          yield {
+            route,
+            html: route,
+            usedStyle: [],
+            usedIslands: [],
+            usedAssets: [],
+            meta: {
+              title: route,
+              description: null,
+              canonicalUrl: null,
+              openGraph: {},
+              structured: [],
+              extra: {},
+            },
+            source: "01952c0d-7e63-7000-8000-000000000000" as never,
+          } as never;
+        }
+      },
+    });
+    const assetSource = defineStage({
+      name: "@test/assets",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "two assets",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.Asset),
+      capabilities: [],
+      configSchema: null,
+      async *run() {
+        for (const value of [1, 2]) {
+          yield {
+            identity: `01952c0d-7e63-7000-8000-00000000000${value}` as never,
+            revision: `blake2b:0${value}` as never,
+            role: "image",
+            mimeType: "image/png",
+            bytes: new Uint8Array([value]),
+            byteLength: 1,
+            dimensions: null,
+            durationMs: null,
+            derivedFrom: null,
+            meta: {},
+          } as never;
+        }
+      },
+    });
+    let invocations = 0;
+    const join = defineStage({
+      name: "@test/join",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "join pages and assets into one deploy artifact",
+      consumes: streamOf(Kinds.RenderedPage),
+      inputPorts: { assets: streamOf(Kinds.Asset) },
+      produces: Kinds.DeployArtifact,
+      capabilities: [],
+      configSchema: null,
+      async run(input) {
+        invocations++;
+        expect(Object.keys(input)).toEqual(["default", "assets"]);
+        const readRoutes = async () => {
+          const routes: string[] = [];
+          for await (const page of input.default) routes.push(page.route);
+          return routes;
+        };
+        const readAssets = async () => {
+          const ids: string[] = [];
+          for await (const asset of input.assets) ids.push(asset.identity);
+          return ids;
+        };
+        const routes = await readRoutes();
+        const replayedRoutes = await readRoutes();
+        const assets = await readAssets();
+        const replayedAssets = await readAssets();
+        expect(replayedRoutes).toEqual(routes);
+        expect(replayedAssets).toEqual(assets);
+        return {
+          variant: { kind: "dist-tree" },
+          files: {},
+          manifest: {
+            routes: routes.map(pattern => ({
+              pattern,
+              target: { kind: "file", path: pattern.slice(1) },
+              islands: [],
+              css: [],
+            })),
+            assets: assets.map((id, index) => ({
+              id,
+              path: `assets/${index}.png`,
+              mime: "image/png",
+              sha256: String(index),
+            })),
+            buildTime: "2026-05-15T00:00:00Z",
+            buildId: "blake2b:00" as never,
+          },
+        } as never;
+      },
+    });
+    const config: PipelineConfig = {
+      ...makeConfig([
+        { stage: join, id: "join" },
+        { stage: pageSource, id: "pages" },
+        { stage: assetSource, id: "assets" },
+      ]),
+      wires: [
+        { from: { id: "pages" }, to: { id: "join" } },
+        { from: { id: "assets" }, to: { id: "join", port: "assets" } },
+      ],
+    };
+
+    const o = createOrchestrator({ logger: silentLogger() });
+    const pipeline = await o.buildPipeline(config);
+    expect(pipeline.dag.sources).toEqual(["pages", "assets"]);
+    expect(pipeline.dag.sinks).toEqual(["join"]);
+    expect(pipeline.dag.topoOrder).toEqual(["pages", "assets", "join"]);
+    expect(pipeline.dag.instances.get("join")!.producer).toBe("pages");
+    expect(pipeline.dag.instances.get("join")!.inputProducers.get("assets")).toBe("assets");
+
+    const result = await o.runOnce(pipeline);
+    expect(result.outcome).toBe("success");
+    expect(invocations).toBe(1);
+    expect(result.stages.find(stage => stage.instanceId === "join")).toMatchObject({
+      itemsConsumed: 4,
+      itemsProduced: 1,
+    });
+    expect(result.outputs.join).toMatchObject({
+      manifest: {
+        routes: [{ pattern: "/a.html" }, { pattern: "/b.html" }],
+        assets: [{ path: "assets/0.png" }, { path: "assets/1.png" }],
+      },
+    });
+    await o.dispose();
+  });
 });
 
 describe("Error handling", () => {
@@ -453,6 +598,33 @@ describe("buildDag — direct API", () => {
     expect(() => buildDag(validateConfig(config))).toThrow(/explicit wire.*incompatible/);
   });
 
+  it("rejects an incompatible explicit named-input wire", () => {
+    const pages = tinySource(["page"]);
+    const join = defineStage({
+      name: "@test/join",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "requires an asset side input",
+      consumes: streamOf(Kinds.ContentSource),
+      inputPorts: { assets: streamOf(Kinds.Asset) },
+      produces: Kinds.DeployArtifact,
+      capabilities: [],
+      configSchema: null,
+      async run() { return null as never; },
+    });
+    const config: PipelineConfig = {
+      ...makeConfig([
+        { stage: pages, id: "pages" },
+        { stage: join, id: "join" },
+      ]),
+      wires: [
+        { from: { id: "pages" }, to: { id: "join" } },
+        { from: { id: "pages" }, to: { id: "join", port: "assets" } },
+      ],
+    };
+    expect(() => buildDag(validateConfig(config))).toThrow(/join.*assets.*incompatible/);
+  });
+
   it("rejects explicit wire cycles", () => {
     const pass = (name: string) => defineStage({
       name, version: "0.1.0", apiVersion: KERNEL_API_VERSION,
@@ -464,6 +636,32 @@ describe("buildDag — direct API", () => {
       wires: [
         { from: { id: "a" }, to: { id: "b" } },
         { from: { id: "b" }, to: { id: "a" } },
+      ],
+    };
+    expect(() => buildDag(validateConfig(config))).toThrow(/cycle detected/);
+  });
+
+  it("rejects cycles formed only by named side-input dependencies", () => {
+    const sideDependent = (name: string) => defineStage({
+      name,
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "source-shaped stage with one named dependency",
+      consumes: Kinds.Void,
+      inputPorts: { peer: Kinds.ContentSource },
+      produces: Kinds.ContentSource,
+      capabilities: [],
+      configSchema: null,
+      async run() { return {} as never; },
+    });
+    const config: PipelineConfig = {
+      ...makeConfig([
+        { stage: sideDependent("a"), id: "a" },
+        { stage: sideDependent("b"), id: "b" },
+      ]),
+      wires: [
+        { from: { id: "a" }, to: { id: "b", port: "peer" } },
+        { from: { id: "b" }, to: { id: "a", port: "peer" } },
       ],
     };
     expect(() => buildDag(validateConfig(config))).toThrow(/cycle detected/);

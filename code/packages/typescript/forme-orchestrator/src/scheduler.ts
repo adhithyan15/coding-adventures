@@ -9,9 +9,10 @@
  *
  *   - **No streaming pipelining.**  When a stage produces a Stream<X>,
  *     we drain it fully into memory before passing per-value to the
- *     downstream consumer.  This is correct (the consumer is invoked
- *     once per value) but not lazy — large streams allocate fully.
- *     Lazy streaming lands in v1 alongside parallelism.
+ *     downstream consumer. Legacy single-input consumers are invoked
+ *     once per value; named-input stages receive replayable streams in
+ *     one fan-in invocation. This is correct but not lazy — large streams
+ *     allocate fully. Lazy streaming lands in v1 alongside parallelism.
  *
  *   - **No incremental rebuild.**  Every run executes every stage;
  *     the cache backend exists but isn't hit yet.  Incremental
@@ -33,6 +34,7 @@
  *   - init/dispose lifecycle hooks
  *   - Fail-fast and best-effort error handling
  *   - Cancellation propagation
+ *   - Deterministic named-input fan-in with replayable stream inputs
  *   - Per-stage timing + error counts in StageRunSummary
  */
 
@@ -57,6 +59,7 @@ import {
 import type {
   CancellationToken,
   Clock,
+  InputPortMap,
   Logger,
   StageContext,
   StageInitContext,
@@ -202,10 +205,24 @@ export async function executeDag(
     try {
       // Sources have no input; non-sources read from their producer's
       // output (which we previously stored in `outputs`).
-      const inputs = collectInputs(inst, states);
+      const inputs = hasNamedInputs(inst)
+        ? collectPortInputs(inst, states)
+        : collectInputs(inst, states);
       const ctx: StageContext = makeRunContext(inst, options, newClock);
 
-      if (inst.stage.consumes.name === "Stream" || inst.stage.consumes.name === "Void"
+      if (hasNamedInputs(inst)) {
+        // Named fan-in is a join boundary: every producer has already been
+        // materialized, every stream gets a fresh replayable AsyncIterable,
+        // and the stage is invoked exactly once with the stable port object.
+        const result = await inst.stage.run(inputs.value as never, inst.config, ctx);
+        const stored = await materialize(result, inst.stage.produces.name === "Stream");
+        state.output = stored.value;
+        state.isStreamOutput = stored.isStream;
+        state.summary.itemsConsumed = inputs.itemCount;
+        state.summary.itemsProduced = stored.isStream
+          ? (stored.value as unknown[]).length
+          : 1;
+      } else if (inst.stage.consumes.name === "Stream" || inst.stage.consumes.name === "Void"
           || isSingleProducer(inst, dag, states)) {
         // One invocation: source / collector-style / single-input.
         const result = await inst.stage.run(inputs.value as never, inst.config, ctx);
@@ -323,6 +340,67 @@ function isSingleProducer(
 interface CollectedInput {
   value: unknown;
   itemCount: number;
+}
+
+function hasNamedInputs(inst: ResolvedInstance): boolean {
+  return inst.stage.inputPorts !== undefined;
+}
+
+function collectPortInputs(
+  inst: ResolvedInstance,
+  states: Map<string, RunState>,
+): CollectedInput {
+  const input: Record<string, unknown> = Object.create(null);
+  const defaultInput = collectProducerInput(
+    inst.producer,
+    inst.stage.consumes.name === "Stream",
+    states,
+  );
+  input.default = defaultInput.value;
+  let itemCount = defaultInput.itemCount;
+
+  const declared: InputPortMap = inst.stage.inputPorts ?? {};
+  for (const port of Object.keys(declared).sort()) {
+    const producerId = inst.inputProducers.get(port);
+    if (producerId === undefined) {
+      throw new Error(
+        `scheduler: instance ${JSON.stringify(inst.id)} has no producer for named input ${JSON.stringify(port)}`,
+      );
+    }
+    const sideInput = collectProducerInput(
+      producerId,
+      declared[port]!.name === "Stream",
+      states,
+    );
+    input[port] = sideInput.value;
+    itemCount += sideInput.itemCount;
+  }
+  return { value: Object.freeze(input), itemCount };
+}
+
+function collectProducerInput(
+  producerId: string | null,
+  expectsStream: boolean,
+  states: Map<string, RunState>,
+): CollectedInput {
+  if (producerId === null) return { value: undefined, itemCount: 0 };
+  const producer = states.get(producerId);
+  if (!producer) return { value: undefined, itemCount: 0 };
+  if (producer.isStreamOutput) {
+    const list = producer.output as unknown[];
+    if (!expectsStream) {
+      throw new Error(
+        `scheduler: materialized stream from ${JSON.stringify(producerId)} cannot feed a single-value named input`,
+      );
+    }
+    return { value: makeAsyncIterableFromArray(list), itemCount: list.length };
+  }
+  if (expectsStream) {
+    throw new Error(
+      `scheduler: single value from ${JSON.stringify(producerId)} cannot feed a stream named input`,
+    );
+  }
+  return { value: producer.output, itemCount: 1 };
 }
 
 function collectInputs(

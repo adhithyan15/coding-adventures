@@ -42,8 +42,11 @@ These are deferred to follow-up packages:
 
 ## What v0 *does* implement
 
-- Explicit `wires` with deterministic fan-out and stable topological execution;
-  unwired stages still infer the nearest compatible producer
+- Explicit `wires` with deterministic fan-out, typed named fan-in, and stable
+  topological execution; unwired default inputs still infer the nearest
+  compatible producer
+- One materialization per producer and a fresh replayable `AsyncIterable` for
+  every stream input port; a multi-input join is invoked exactly once
 - Per-stage `StageContext` construction with denied-by-default capability APIs
 - `init` / `dispose` lifecycle hooks (init failure aborts before any `run`; dispose always runs)
 - Fail-fast and best-effort error handling

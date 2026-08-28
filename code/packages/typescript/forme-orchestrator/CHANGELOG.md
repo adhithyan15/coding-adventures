@@ -8,6 +8,12 @@
   point forward in declaration order and override inferred producers.
 - One producer may feed multiple consumers. A stable topological sort executes
   each materialized stream once and makes it available to every branch.
+- Stages may declare required named `inputPorts` alongside their default input.
+  The DAG type-checks each port, includes every side dependency in cycle/sink/
+  source discovery, and supports explicit forward wires.
+- The scheduler invokes a named fan-in stage exactly once with `default` plus a
+  lexicographically stable named-port map. Materialized streams are wrapped in
+  independently replayable `AsyncIterable` values for each port.
 - Explicit edges are kind-checked after stream-promotion semantics are applied;
   incompatible edges, incoming wires to sources, and cycles fail before run.
 - `@types/node` is now a direct development dependency, so `npm run build`
@@ -18,6 +24,8 @@
 - Integration coverage pins explicit-over-inferred selection, forward wires,
   incompatible wires, cycle rejection, true sink discovery, and a stream
   fanning out to per-item and collector consumers.
+- A rendered-page + asset join test pins forward named dependencies, stable
+  port order, replayability, one invocation, summary counts, and deploy output.
 
 ## 0.2.0 — 2026-05-16
 

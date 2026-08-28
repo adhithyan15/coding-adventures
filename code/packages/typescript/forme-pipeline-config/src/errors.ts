@@ -93,6 +93,12 @@ export const CONFIG_ERROR_CODES = Object.freeze({
   UNKNOWN_INSTANCE_ID:       "UNKNOWN_INSTANCE_ID",
   /** More than one wire targets the single input of a stage instance. */
   MULTIPLE_INPUT_WIRES:      "MULTIPLE_INPUT_WIRES",
+  /** A wire names a target input port the stage does not declare. */
+  UNKNOWN_INPUT_PORT:        "UNKNOWN_INPUT_PORT",
+  /** A required named input port has no explicit producer wire. */
+  MISSING_INPUT_PORT_WIRE:   "MISSING_INPUT_PORT_WIRE",
+  /** Output ports are reserved but not implemented by the v1 stage contract. */
+  OUTPUT_PORT_UNSUPPORTED:   "OUTPUT_PORT_UNSUPPORTED",
   /** Top-level field is missing or has the wrong type. */
   MALFORMED:                 "MALFORMED",
 } as const);

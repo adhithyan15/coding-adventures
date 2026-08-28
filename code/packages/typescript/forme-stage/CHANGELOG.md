@@ -1,5 +1,16 @@
 # Changelog — @coding-adventures/forme-stage
 
+## Unreleased
+
+### Added
+
+- `Stage` accepts an optional typed `inputPorts` map for required named side
+  inputs in addition to its default `consumes` input.
+- `StageInput`, `PortInputs`, and `InputPortMap` map descriptors to a stable
+  `run` input object (`default` plus each named port) without weakening legacy
+  single-input inference.
+- `defineStage` preserves the named-port generic and infers every payload.
+
 ## 0.1.0 — 2026-05-15
 
 Initial release. Implements FM01 §3-4 — the Stage contract and the

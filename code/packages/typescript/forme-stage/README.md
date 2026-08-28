@@ -10,7 +10,7 @@ See [code/specs/FM01-forme-kernel.md](../../../specs/FM01-forme-kernel.md) §3-4
 
 ```typescript
 import { defineStage } from "@coding-adventures/forme-stage";
-import { Kinds } from "@coding-adventures/forme-types";
+import { Kinds, streamOf } from "@coding-adventures/forme-types";
 
 export default defineStage({
   name:        "@forme/parse-markdown",
@@ -28,6 +28,31 @@ export default defineStage({
   },
 });
 ```
+
+Stages that need deterministic fan-in keep `consumes` as their default input
+and declare required named side inputs with `inputPorts`:
+
+```typescript
+export default defineStage({
+  name: "@forme/emit-static-site",
+  version: "0.1.0",
+  apiVersion: 1,
+  description: "Join rendered pages with processed assets.",
+  consumes: streamOf(Kinds.RenderedPage),
+  inputPorts: { assets: streamOf(Kinds.Asset) },
+  produces: Kinds.DeployArtifact,
+  capabilities: ["filesystem:write"],
+  configSchema: null,
+  async run(input, config, ctx) {
+    // input.default is AsyncIterable<RenderedPage>.
+    // input.assets is an independently replayable AsyncIterable<Asset>.
+  },
+});
+```
+
+Named inputs are required and explicitly wired. The scheduler invokes a
+multi-input stage once after materializing every producer; it never uses the
+event bus or ambient filesystem state as a data channel.
 
 ### Orchestrator authors
 
@@ -62,7 +87,7 @@ const ctx: StageContext = {
 
 | Group              | Exports                                                                                                       |
 | ------------------ | ------------------------------------------------------------------------------------------------------------- |
-| Stage contract     | `Stage`, `defineStage`, `StageOutput`, `JsonSchema`                                                           |
+| Stage contract     | `Stage`, `defineStage`, `StageInput`, `PortInputs`, `InputPortMap`, `StageOutput`, `JsonSchema`              |
 | Context shapes     | `StageContext`, `StageInitContext`                                                                            |
 | Logger             | `Logger`, `LogLevel`, `LOG_LEVELS`, `consoleLogger()`, `silentLogger()`                                       |
 | Cancellation       | `CancellationToken`, `CancellationTokenSource`, `createCancellationTokenSource()`, `neverCancelledToken()`     |

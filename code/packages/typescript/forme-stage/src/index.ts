@@ -24,7 +24,14 @@
 
 // ─── Stage contract ───────────────────────────────────────────────────────
 export { defineStage } from "./stage.js";
-export type { JsonSchema, Stage, StageOutput } from "./stage.js";
+export type {
+  InputPortMap,
+  JsonSchema,
+  PortInputs,
+  Stage,
+  StageInput,
+  StageOutput,
+} from "./stage.js";
 
 // ─── StageContext shapes ──────────────────────────────────────────────────
 export type { StageContext, StageInitContext } from "./context.js";

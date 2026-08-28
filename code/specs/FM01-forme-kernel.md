@@ -712,12 +712,29 @@ export type KindPayload<K extends KindDescriptor> = /* … see Appendix A … */
 
 ## 3. The Stage Contract
 
-### 3.1 The `Stage<In, Out>` interface
+### 3.1 The `Stage<In, Out, Ports>` interface
 
 ```typescript
+export type InputPortMap = Readonly<Record<string, KindDescriptor>>;
+
+export type PortInputs<
+  In extends KindDescriptor,
+  Ports extends InputPortMap
+> = Readonly<{
+  default: KindPayload<In>;
+} & {
+  [Name in keyof Ports]: KindPayload<Ports[Name]>;
+}>;
+
+export type StageInput<
+  In extends KindDescriptor,
+  Ports extends InputPortMap | undefined
+> = Ports extends InputPortMap ? PortInputs<In, Ports> : KindPayload<In>;
+
 export interface Stage<
   In extends KindDescriptor = KindDescriptor,
-  Out extends KindDescriptor = KindDescriptor
+  Out extends KindDescriptor = KindDescriptor,
+  Ports extends InputPortMap | undefined = undefined
 > {
   // ─── Static identification ──────────────────────────────────────
   /** Package-qualified name, e.g. "@forme/parse-markdown". */
@@ -732,6 +749,8 @@ export interface Stage<
   // ─── Type contract ──────────────────────────────────────────────
   readonly consumes: In;
   readonly produces: Out;
+  /** Required named side inputs; `consumes` remains the default input. */
+  readonly inputPorts?: Ports;
 
   // ─── Capability declarations ────────────────────────────────────
   /**
@@ -763,7 +782,7 @@ export interface Stage<
    * references to context APIs after `run` resolves.
    */
   run(
-    input: KindPayload<In>,
+    input: StageInput<In, Ports>,
     config: unknown,
     ctx: StageContext
   ): StageOutput<Out>;
@@ -952,6 +971,13 @@ export interface StageContext {
   readonly events: EventBus;
 }
 ```
+
+`inputPorts` is additive and optional. A legacy stage receives its existing
+single `KindPayload<In>`. A stage that declares one or more named ports receives
+one `PortInputs` object and is invoked exactly once after all inputs are ready.
+The `default` property carries `consumes`; every named property carries the
+descriptor declared under the same key. Named ports are required, wired
+explicitly, and are data channels — the event bus remains coordination-only.
 
 An `init` hook receives `StageInitContext`, which is the same shape
 minus per-run concerns:
