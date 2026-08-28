@@ -189,6 +189,42 @@
     {
       "id": "actor-stereotypes-with-aliases",
       "source": "sequenceDiagram\nactor A@{ \"type\" : \"database\" } AS Database Server\nactor B@{ \"type\" : \"queue\" } as Message Queue\nA->>B: Send message"
+    },
+    {
+      "id": "dual-solid-central-connection",
+      "source": "sequenceDiagram\nparticipant Alice\nparticipant Bob\nAlice ()->>() Bob: Hello Bob, how are you?"
+    },
+    {
+      "id": "dual-dotted-central-connection",
+      "source": "sequenceDiagram\nparticipant Alice\nparticipant Bob\nAlice ()-->>() Bob: Hello Bob, how are you?"
+    },
+    {
+      "id": "destination-central-connection",
+      "source": "sequenceDiagram\nparticipant Alice\nparticipant Bob\nAlice ->>() Bob: Hello Bob, how are you?"
+    },
+    {
+      "id": "source-dotted-central-connection",
+      "source": "sequenceDiagram\nparticipant Alice\nparticipant Bob\nAlice ()-->> Bob: Hello Bob, how are you?"
+    },
+    {
+      "id": "source-solid-central-connection",
+      "source": "sequenceDiagram\nparticipant Alice\nparticipant Bob\nAlice ()->> Bob: Hello Bob, how are you?"
+    },
+    {
+      "id": "dual-bidirectional-dotted-central-connection",
+      "source": "sequenceDiagram\nparticipant Alice\nparticipant Bob\nAlice ()<<-->>() Bob: Hello Bob, how are you?"
+    },
+    {
+      "id": "dual-bidirectional-solid-central-connection",
+      "source": "sequenceDiagram\nparticipant Alice\nparticipant Bob\nAlice ()<<->>() Bob: Hello Bob, how are you?"
+    },
+    {
+      "id": "mixed-central-connections",
+      "source": "sequenceDiagram\nparticipant Alice\nparticipant Bob\nparticipant Charlie\nAlice ()->>() Bob: Message 1\nBob ()-->> Charlie: Message 2\nCharlie ()<<-->>() Alice: Message 3"
+    },
+    {
+      "id": "cross-central-connections",
+      "source": "sequenceDiagram\nparticipant Alice\nparticipant Bob\nAlice ()-x() Bob: Cross message\nAlice ()--x() Bob: Dotted cross message"
     }
   ],
   "invalid": [

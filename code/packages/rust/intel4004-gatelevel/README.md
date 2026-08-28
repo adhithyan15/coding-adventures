@@ -13,7 +13,10 @@ D flip-flop -> register -> register file / program counter / stack
 
 When you execute `ADD R3`, the value in R3 is read from flip-flops, the accumulator is read from flip-flops, both are fed into the ALU (which uses full adders built from gates), and the result is clocked back into the accumulator's flip-flops.
 
-Nothing is simulated behaviorally. Every bit passes through gate functions.
+All persistent architectural bits (other than read-only program ROM) are held
+in D flip-flops, and every arithmetic, logical, decode, increment, and selector
+datapath passes through gate functions. Host values are used only for control,
+trace bookkeeping, and ROM addressing.
 
 ## How it fits in the stack
 
@@ -34,10 +37,10 @@ intel4004-gatelevel (this package)
 | `gate_alu`  | 4-bit ALU (add, subtract, complement, AND, OR)       | 32        |
 | `registers` | 16x4-bit register file + accumulator + carry flag     | 510       |
 | `pc`        | 12-bit program counter with half-adder incrementer    | 96        |
-| `stack`     | 3-level hardware call stack (36 flip-flops)           | 226       |
-| `ram`       | 4 banks x 4 regs x 20 nibbles (1,280 flip-flops)     | 7,880     |
+| `stack`     | 3-level stack plus pointer (38 flip-flops)            | 238       |
+| `ram`       | Main/status RAM plus outputs (1,296 flip-flops)       | 7,976     |
 | `decoder`   | Combinational instruction decoder (AND/OR/NOT gates)  | ~50       |
-| `cpu`       | Top-level CPU tying all components together           | ~1,014    |
+| `cpu`       | 1,428 exact persistent D flip-flops, excluding ROM    | >8,000    |
 
 ## Usage
 
@@ -47,7 +50,7 @@ use intel4004_gatelevel::Intel4004GateLevel;
 let mut cpu = Intel4004GateLevel::new();
 
 // LDM 5 (load immediate 5), HLT (halt)
-let traces = cpu.run(&[0xD5, 0x01], 100);
+let traces = cpu.run(&[0xD5, 0x01], 100).unwrap();
 assert_eq!(cpu.accumulator(), 5);
 assert!(cpu.halted());
 
@@ -73,9 +76,16 @@ All 46 Intel 4004 instructions are implemented:
 
 - `logic-gates` -- fundamental gates and sequential circuits
 - `arithmetic` -- adder circuits and ALU
+- `intel4004-simulator` -- typed execution errors and the differential oracle
 
 ## Testing
 
 ```bash
 cargo test -p intel4004-gatelevel
 ```
+
+The suite contains 88 component/unit tests and four full-machine integration
+tests. It differentially executes every one of the 254 specified first-byte
+encodings plus RAM, port, branch, indirect, stack, reset, topology, and atomic
+failure workloads against `intel4004-simulator`. Core line coverage is 95.15%
+(686/721).

@@ -70,7 +70,7 @@ according to the current prioritization run.
 | RCPU-005 / RCPU-006 | 1961 | GE-225 | Complete: `ge225-simulator` | Complete: `ge225-gatelevel` |
 | RCPU-007 / RCPU-008 | 1964 | CDC 6600 | Complete: `cdc6600-simulator` | Complete: `cdc6600-gatelevel` |
 | RCPU-009 / RCPU-010 | 1970 | DEC PDP-11 | Complete: `pdp11-simulator` | Complete: `pdp11-gatelevel` |
-| RCPU-011 / RCPU-012 | 1971 | Intel 4004 | Complete: `intel4004-simulator` | Audit: `intel4004-gatelevel` |
+| RCPU-011 / RCPU-012 | 1971 | Intel 4004 | Complete: `intel4004-simulator` | Complete: `intel4004-gatelevel` |
 | RCPU-013 / RCPU-014 | 1972 | Intel 8008 | Audit: `intel8008-simulator` | Audit: `intel8008-gatelevel` |
 | RCPU-015 / RCPU-016 | 1974 | Intel 8080 | Audit: `intel8080-simulator` | Audit: `intel8080-gatelevel` |
 | RCPU-017 / RCPU-018 | 1975 | MOS 6502 | Audit: `mos6502-simulator` | Audit: `mos6502-gatelevel` |
@@ -91,8 +91,8 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-012**, the Intel 4004 gate-level Rust audit, ordered
-immediately after publication of the completed RCPU-011 functional audit.
+Current selection: **RCPU-013**, the Intel 8008 functional Rust audit, ordered
+behind publication of the completed PDP-11 and Intel 4004 pairs.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -189,7 +189,7 @@ failure boundaries. Core line coverage is 95.13% (644/677), above the completion
 floor. Its green required CI and squash auto-merge close the PDP-11 pair and
 advance the chronological queue to the Intel 4004 functional audit.
 
-RCPU-011 is audit-complete locally atop RCPU-010. The existing functional crate
+RCPU-011 merged through PR #13431 as `565d68071e`. The functional crate
 already implemented the complete specified 46-instruction surface, including
 all register/pair, control, three-level stack, BCD, RAM/status, and port paths.
 The audit replaces panic-prone loading and stepping with typed checked results,
@@ -198,8 +198,20 @@ truncated or illegal instructions, invalid direct/indirect targets, halted
 execution, and corrupted public legacy selectors atomically, and preserves the
 Nib compiler consumer. Its 82 unit and five integration tests cover reset,
 load, bounded execution, every instruction family, full state, and failure
-boundaries. Core line coverage is 98.30% (463/471), above the completion target.
-Publication closes RCPU-011 and unblocks the existing gate-level partner audit.
+boundaries. Core line coverage is 98.30% (463/471), above the completion target,
+and its green squash merge unblocked the gate-level partner audit.
+
+RCPU-012 is audit-complete locally atop the merged RCPU-011. The existing package already
+had gate ALU, decode, PC, register, stack, and RAM components plus 88 unit tests.
+The audit moves the remaining RAM outputs, selectors, ROM port, halt state, and
+stack pointer into D flip-flops for an exact 1,428 persistent bits; fixes SRC's
+register-selector width; adds typed atomic load/fetch/decode/halt failures and a
+full owned snapshot; and replaces the stale Python-oriented 07d2 text with a
+normative Rust contract. Four integration tests differentially cover all 254
+specified first-byte encodings plus memory/status/ports, indirect paths,
+branches, stack, reset, topology, and failure boundaries against the functional
+oracle. Core line coverage is 95.15% (686/721), above the completion target.
+Its publication will close the Intel 4004 pair and advance to the Intel 8008 audit.
 
 ## Cross-language wave
 
@@ -227,6 +239,7 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-27 | RCPU-012 audit found 88 passing unit tests and complete instruction dispatch, but no functional differentials or typed failure boundary. Oversized ROMs were silently truncated, a two-byte instruction at ROM end wrapped its operand to address zero, halted steps panicked, SRC retained four register-select bits instead of two, RAM outputs/selectors/ROM port/halt/stack pointer used host state, strict rustdoc failed, and Spec 07d2 described a stale Python/control-FSM design with inconsistent gate counts. | P0, gate completion contract, follows RCPU-011 | Preserve the gate-backed ISA while moving every mutable architectural bit into D flip-flops, publish the exact topology, share typed atomic errors with the functional oracle, add full snapshots and exhaustive encoding/full-state differentials, correct SRC, replace stale 07d2, pass strict Clippy/rustdoc, and exceed 95% core coverage. |
 | 2026-08-27 | RCPU-011 audit found a complete, highly tested 46-instruction Rust implementation (82 passing tests, 98.83% pre-audit core coverage) whose legacy load/step/run API could panic on oversized programs, halted steps, truncated instructions, and out-of-range fetch/branch/FIN addresses. Spec 07d also still described a stale GenericVM/Python execution model. | P0, functional completion contract, blocks RCPU-012 | Preserve the complete ISA behavior while adding typed atomic failures, full owned snapshots, deterministic clearing loads, caller-bounded checked runs, direct and Nib-compiler consumer tests, and corrected Rust execution/API documentation. Require strict Clippy/rustdoc and at least 95% post-audit core coverage. |
 | 2026-08-27 | RCPU-010 planning audit found no separate PDP-11 gate-level specification or Rust package. The completed behavioral model's orthogonal operand machinery makes effective-address side effects and byte/word stepping the largest fidelity risk; its 64 KiB memory dominates persistent topology. | P0, chronological gate partner, follows RCPU-009 | Create normative `07o2` and one `pdp11-gatelevel` crate. Require DFF-backed memory/register/PSW/halt state; gate decode; 16/8-bit ALU and NZVC networks; gate-backed address increments/decrements/indexing, branch offsets, SP/PC paths, and byte sign extension; exact topology; complete state/trace differentials across all modes and 59 mnemonic variants; atomic failures; docs/build integration; and at least 80% core coverage. |
 | 2026-08-27 | RCPU-009 audit found a mature Python PDP-11 oracle and normative 07o spec but no Rust package. The oracle has 163 passing tests and 98.63% total line coverage. Its behavioral surface is 64 KiB little-endian memory, eight 16-bit registers, NZVC, all eight addressing modes, 12 double-operand word/byte variants, 25 single-operand variants, 15 branches, and HALT/NOP/RTI/RTS/JMP/JSR/SOB control. The Python package is not enrolled in the root uv workspace or repository BUILD graph, so its audit required an explicit local editable dependency on `simulator-protocol`. | P0, chronological functional oracle, blocks RCPU-010 | Port the complete specified/oracle surface in one `pdp11-simulator` Rust crate with typed atomic failures, bounded traces, immutable full-memory snapshots, public encoders, all addressing-mode side effects, byte-register MOV sign extension, exact NZVC edge rules, Python differential vectors, BUILD/workspace/docs integration, and at least 80% core coverage. Keep Python BUILD enrollment as a P1 infrastructure discovery; it does not block the Rust port. |

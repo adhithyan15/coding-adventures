@@ -39,13 +39,19 @@ The implementation is substantial but not yet an end-to-end product:
   and sitemap. Public metadata and asset URLs compose portable routes with the
   GitHub Pages project prefix. A reusable light/dark Style IR theme drives exact
   per-article AOT CSS slices.
+- The repository landing page is a seven-stage Forme site: declarative content
+  is validated into Content IR, routed, rendered with a portable Style IR layer
+  plus web-specific layout CSS, joined with its social image, and emitted as a
+  fingerprinted root artifact. Pull requests run the same clean build that the
+  existing Pages workflow publishes.
 - There is no general `forme` build/check/dev CLI, watch server, plugin host,
   runtime sandbox, authoring shell, or implemented deploy runner.
 - Interactivity IR has no numbered spec or package. The AOT implementation
   refers to a missing FM06 spec, and the existing FM05 deploy-runner spec
   collides with older FM01–FM04 references that use FM05 for Interactivity IR.
-- The repository landing page is still hand-maintained HTML. Rebuilding it
-  through Forme is the decisive dogfooding milestone from FM00.
+- The remaining headless-product gap is the general CLI, preview/watch path,
+  persistent incremental scheduling, and deploy runner; both live sites still
+  use small site-local build drivers and bootstrap scripts.
 
 ## Prioritization method
 
@@ -85,7 +91,7 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 14 | FM-B030 | done | Make SVG MIME sniffing linear-time | Replace the uncontrolled-data backtracking expression found by CodeQL with a bounded prefix scanner; preserve XML declaration, comment, BOM, whitespace, and case-insensitive SVG detection; adversarial repeated-comment input and CodeQL pass. |
 | 15 | FM-B028 | done | Emit and rewrite fingerprinted assets | Depends on FM-B025 and FM-B027. An asset-aware filesystem emitter joins rendered pages with assets, writes content-hashed filenames, rewrites only Forme placeholders, includes bytes and `DeployAssetEntry` records in the artifact, and covers the complete path with an end-to-end pipeline test. |
 | 16 | FM-B006 | done | Add a first-class asset pipeline | Depends on FM-B026–FM-B028. Referenced local assets are discovered, fingerprinted, copied, rewritten to cache-safe URLs, and included in the deploy manifest; the clean blog build verifies exact artifact and on-disk bytes. |
-| 17 | FM-B007 | ready | Generate the repository landing page with Forme | Depends on FM-B005 and FM-B006. Forme source and configuration reproduce the approved landing design; generated output replaces hand-maintained HTML and deploys through the existing Pages workflow. |
+| 17 | FM-B007 | done | Generate the repository landing page with Forme | Depends on FM-B005 and FM-B006. Declarative Forme source and a seven-stage configuration reproduce the approved responsive design; generated output replaces the hand-maintained HTML, fingerprints the social image, and deploys through the existing Pages workflow. |
 | 18 | FM-B008 | ready | Implement the general headless CLI | `forme build`, `forme check`, and `forme clean` load a project config, produce stable diagnostics and exit codes, expose reproducible mode, and work outside the monorepo demo driver. |
 | 19 | FM-B009 | blocked | Implement watch mode and a dev server | Depends on FM-B008. File changes rebuild the correct affected set, browser refresh is reliable, cancellation is clean, and error pages preserve the last good output. |
 | 20 | FM-B010 | ready | Finish orchestrator incrementality and scheduling | Persistent cache hits skip unchanged stages; bounded streaming, backpressure, and `maxConcurrency` avoid draining every stream into memory; deterministic tests cover cancellation and reproducibility. |
@@ -164,6 +170,8 @@ work.
 | 2026-08-28 | A root-owned `/assets/...` URL works on a custom domain but breaks the repository's GitHub Pages project deployment beneath `/coding-adventures`. | Resolved in FM-B028 with a validated, segment-encoded `publicPathPrefix` option covered by the emitter tests. |
 | 2026-08-28 | Asset "caching" spans two distinct guarantees: immutable content-hashed public URLs and build-time stage reuse. The former is required for a complete deployable asset path; the latter belongs to orchestrator incrementality and must not be hidden inside a filesystem emitter. | FM-B006 proves cache-safe content URLs in the live blog path; persistent build reuse remains explicit in FM-B010. |
 | 2026-08-28 | The blog has two disjoint deploy sinks sharing `dist`: articles need page/asset fan-in, while collection-derived index/feed/sitemap output owns no assets. | Resolved in FM-B006 by migrating only `emit-articles` to `forme-emit-site-fs`; `emit-surface` remains the compatible page-only sink, and build assertions reject asset ownership drift. |
+| 2026-08-28 | The backend-neutral Style IR intentionally lacks web-only grid/flex layout, pseudo-elements, and responsive breakpoint primitives needed to reproduce the approved landing design. | Resolved for FM-B007 with an explicit two-layer theme: portable color/typography rules compile through Style IR and AOT, while a separate documented web layout layer owns browser-only primitives. Backend convergence remains visible in FM-B017 instead of leaking CSS concepts into the portable core. |
+| 2026-08-28 | Both live Forme sites need nearly identical local dependency bootstrap and build-driver plumbing because no general product CLI exists yet. | Folded into FM-B008: the CLI must replace site-local bootstrap/driver ceremony rather than merely wrap it. |
 
 ## Loop protocol
 

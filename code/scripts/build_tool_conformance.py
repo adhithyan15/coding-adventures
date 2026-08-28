@@ -1715,10 +1715,14 @@ def _extra_toolchain_declarations(raw_content: str) -> list[str]:
     prefix = "# needs-toolchain:"
     declarations: list[str] = []
     seen: set[str] = set()
-    for raw_line in raw_content.split("\n"):
+    raw_lines = raw_content.split("\n")
+    for index, raw_line in enumerate(raw_lines):
+        # Splitting on LF preserves the byte immediately before the terminator.
+        # Remove CR only when this segment really was LF-terminated; a final
+        # lone CR and a CR before trailing spaces remain grammar content.
+        if index < len(raw_lines) - 1 and raw_line.endswith("\r"):
+            raw_line = raw_line[:-1]
         line = raw_line.lstrip(" \t").rstrip(" \t")
-        if line.endswith("\r"):
-            line = line[:-1].rstrip(" \t")
         if not line.startswith(prefix):
             continue
         suffix = line[len(prefix) :]

@@ -37,6 +37,37 @@ use logic_gates::sequential::{register, FlipFlopState};
 
 use crate::bits::{bits_to_int, int_to_bits};
 
+/// Fixed-width persistent state stored entirely in D flip-flops.
+pub(crate) struct StateRegister {
+    state: Vec<FlipFlopState>,
+    width: usize,
+}
+
+impl StateRegister {
+    pub(crate) fn new(width: usize) -> Self {
+        let mut state = vec![FlipFlopState::default(); width];
+        let zeros = vec![0; width];
+        register(&zeros, 0, &mut state);
+        register(&zeros, 1, &mut state);
+        Self { state, width }
+    }
+
+    pub(crate) fn read(&self) -> u16 {
+        let mut state = self.state.clone();
+        bits_to_int(&register(&vec![0; self.width], 0, &mut state))
+    }
+
+    pub(crate) fn write(&mut self, value: u16) {
+        let bits = int_to_bits(value, self.width);
+        register(&bits, 0, &mut self.state);
+        register(&bits, 1, &mut self.state);
+    }
+
+    pub(crate) fn reset(&mut self) {
+        self.write(0);
+    }
+}
+
 /// 16 x 4-bit register file built from D flip-flops.
 ///
 /// Each of the 16 registers is a group of 4 D flip-flops from the
@@ -53,8 +84,7 @@ impl RegisterFile {
         let mut states = Vec::with_capacity(16);
         for _ in 0..16 {
             // Initialize state by clocking zeros through
-            let mut state: Vec<FlipFlopState> =
-                (0..4).map(|_| FlipFlopState::default()).collect();
+            let mut state: Vec<FlipFlopState> = (0..4).map(|_| FlipFlopState::default()).collect();
             register(&[0, 0, 0, 0], 0, &mut state);
             register(&[0, 0, 0, 0], 1, &mut state);
             states.push(state);
@@ -137,8 +167,7 @@ pub struct Accumulator {
 impl Accumulator {
     /// Initialize accumulator to 0.
     pub fn new() -> Self {
-        let mut state: Vec<FlipFlopState> =
-            (0..4).map(|_| FlipFlopState::default()).collect();
+        let mut state: Vec<FlipFlopState> = (0..4).map(|_| FlipFlopState::default()).collect();
         register(&[0, 0, 0, 0], 0, &mut state);
         register(&[0, 0, 0, 0], 1, &mut state);
         Self { state }
@@ -186,8 +215,7 @@ pub struct CarryFlag {
 impl CarryFlag {
     /// Initialize carry to false (0).
     pub fn new() -> Self {
-        let mut state: Vec<FlipFlopState> =
-            (0..1).map(|_| FlipFlopState::default()).collect();
+        let mut state: Vec<FlipFlopState> = (0..1).map(|_| FlipFlopState::default()).collect();
         register(&[0], 0, &mut state);
         register(&[0], 1, &mut state);
         Self { state }

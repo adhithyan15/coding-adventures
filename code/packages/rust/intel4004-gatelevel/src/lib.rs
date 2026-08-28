@@ -12,8 +12,8 @@
 //! - **`registers`** -- 16x4-bit register file, accumulator, and carry flag (all flip-flops)
 //! - **`decoder`** -- combinational instruction decoder using AND/OR/NOT gates
 //! - **`pc`** -- 12-bit program counter with half-adder incrementer
-//! - **`stack`** -- 3-level hardware call stack (36 flip-flops)
-//! - **`ram`** -- 4 banks x 4 registers x 20 nibbles (1,280 flip-flops)
+//! - **`stack`** -- 3-level call stack plus pointer (38 flip-flops)
+//! - **`ram`** -- RAM/status/output ports (1,296 flip-flops)
 //! - **`cpu`** -- top-level CPU tying all components together
 //!
 //! # Example
@@ -23,7 +23,7 @@
 //!
 //! let mut cpu = Intel4004GateLevel::new();
 //! // LDM 5 (load 5 into accumulator), HLT (halt)
-//! let traces = cpu.run(&[0xD5, 0x01], 100);
+//! let traces = cpu.run(&[0xD5, 0x01], 100).unwrap();
 //! assert_eq!(cpu.accumulator(), 5);
 //! assert!(cpu.halted());
 //! ```
@@ -37,4 +37,5 @@ pub mod ram;
 pub mod registers;
 pub mod stack;
 
-pub use cpu::{GateTrace, Intel4004GateLevel};
+pub use cpu::{GateState, GateTrace, Intel4004GateLevel, FLIP_FLOP_COUNT};
+pub use intel4004_simulator::Intel4004Error;

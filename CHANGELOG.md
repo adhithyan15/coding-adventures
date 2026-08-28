@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Language-neutral extra CI toolchain declarations
 
+- Hardened the shared declaration grammar so only a CR immediately preceding
+  an LF terminator is stripped. A dedicated process-free snapshot now proves
+  CRLF acceptance while final lone CR, doubled CR, and
+  CR-before-trailing-ASCII-whitespace lookalikes stay inert in both the Python
+  reference and canonical Go oracle.
 - Made the C# build-tool engine the first follow-on consumer of the neutral
   declaration corpus. It now parses exact declarations from the selected
   platform BUILD front, emits the complete canonical 16-key toolchain map,

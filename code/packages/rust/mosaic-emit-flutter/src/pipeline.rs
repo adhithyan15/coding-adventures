@@ -2390,12 +2390,24 @@ fn emit_container(
         child_ctx,
     )?;
 
-    if children.is_empty() {
-        return Ok(format!("{pad}const {widget}(children: [])\n"));
+    let body = if children.is_empty() {
+        format!("{pad}const {widget}(children: [])\n")
+    } else {
+        format!("{pad}{widget}(\n{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
+    };
+
+    // UI41, #12028 item 1 — `Row`/`Column`/`Stack` have no decoration
+    // mechanism of their own (unlike `Box` → `Container`), so a part
+    // with `elevation` set gets wrapped in a `Container` carrying just
+    // the shadow. Base props only (see `elevation_tier`'s doc comment).
+    if let Some(tier) = elevation_tier(&parse_style_props(style_props)) {
+        let body_trimmed = body.trim_start().trim_end_matches('\n');
+        return Ok(format!(
+            "{pad}Container(\n{inner_pad}decoration: BoxDecoration(boxShadow: [{}]),\n{inner_pad}child: {body_trimmed}\n{pad})\n",
+            tier.box_shadow_dart()
+        ));
     }
-    Ok(format!(
-        "{pad}{widget}(\n{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n"
-    ))
+    Ok(body)
 }
 
 /// Walk a sibling list with two pieces of sibling-aware behaviour:
@@ -2888,8 +2900,12 @@ fn parse_style_props(style_props: &str) -> HashMap<String, String> {
 
 /// True when a part's base style declares anything that needs a real
 /// `Container` decoration / sizing pass: a border, a background, an
-/// explicit height/width, or a text alignment. Plain parts (no visual
-/// styling) keep the lightweight inline form in [`emit_container`].
+/// explicit height/width, a text alignment, or `elevation` (UI41,
+/// #12028 item 1 — `boxShadow` lives inside `BoxDecoration`, so a part
+/// with ONLY `elevation` set still needs the decoration path, not the
+/// lightweight `style_to_container_args` one, which can't express a
+/// shadow at all). Plain parts (no visual styling) keep the lightweight
+/// inline form in [`emit_container`].
 fn part_has_decoration(style_props: &str) -> bool {
     let m = parse_style_props(style_props);
     m.contains_key("border-width")
@@ -2899,6 +2915,78 @@ fn part_has_decoration(style_props: &str) -> bool {
         || m.contains_key("height")
         || m.contains_key("width")
         || m.contains_key("text-align")
+        || m.contains_key("elevation")
+}
+
+/// The two `elevation` tiers (UI41, issue #12028 item 1), mapped to a
+/// Flutter `BoxShadow`. The vertical offsets (4 / 16) match
+/// `mosaic-emit-xaml`'s `ElevationTier::translation_z`,
+/// `mosaic-emit-compose`'s `dp()`, and `mosaic-emit-qt`'s
+/// `shadowVerticalOffset`, so a `raised`/`overlay` part reads the same
+/// "how far off the surface" intent on every backend; `blurRadius` is
+/// tuned independently (8 / 24) so the shadow reads as a soft gradient
+/// rather than a flat block — verified via a real `flutter test`
+/// golden-image render (see this PR's CHANGELOG for the screenshot
+/// narrative: the first attempt at `overlay` used blur 16, which
+/// rendered as a solid grey bar, not a shadow).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ElevationTier {
+    /// A static "raised card" — cards, selected rows/tabs, static panels.
+    /// Every real `elevation` usage in this repo today is `Raised`.
+    Raised,
+    /// An element floating above everything else — modals, popovers,
+    /// tooltips, dropdowns, toasts. No real caller yet, wired up now so a
+    /// future overlay component doesn't need its own emitter change.
+    Overlay,
+}
+
+impl ElevationTier {
+    /// `(blurRadius, verticalOffset)` — `color` is the same `0x40000000`
+    /// for both tiers (only depth/softness differ, matching every real
+    /// `elevation` usage in this repo declaring `raised`, never a
+    /// deliberately-darker shadow).
+    fn shadow_params(self) -> (&'static str, &'static str) {
+        match self {
+            ElevationTier::Raised => ("8", "4"),
+            ElevationTier::Overlay => ("24", "16"),
+        }
+    }
+
+    /// The `BoxShadow(...)` Dart expression for this tier, ready to
+    /// splice into a `boxShadow: [...]` list.
+    fn box_shadow_dart(self) -> String {
+        let (blur, offset) = self.shadow_params();
+        format!("BoxShadow(color: const Color(0x40000000), blurRadius: {blur}, offset: const Offset(0, {offset}))")
+    }
+
+    /// The bare numeric elevation for Flutter's native Material
+    /// `ButtonStyle.elevation` (`HostButton`'s idiomatic shadow —
+    /// verified via a real `flutter analyze` + widget-test render that
+    /// `ButtonStyle(elevation: WidgetStatePropertyAll(N))` renders a
+    /// real, depth-scaling shadow; no `BoxShadow` involved here since
+    /// Material buttons already have a first-class elevation concept).
+    fn button_elevation(self) -> &'static str {
+        match self {
+            ElevationTier::Raised => "4.0",
+            ElevationTier::Overlay => "16.0",
+        }
+    }
+}
+
+/// Read a part's `elevation` value (UI41, issue #12028 item 1) — the
+/// signal that this element wants a native shadow. mosstyle's
+/// `validate()` already restricts `elevation` to exactly
+/// `raised`/`overlay` before this emitter ever sees it (any other value
+/// is a hard compile error), so an unrecognized value here is treated
+/// defensively as "no elevation" rather than panicking. Base props only
+/// — matches every other backend's `part_elevation_tier`; no real part
+/// conditions elevation on a state today.
+fn elevation_tier(props: &HashMap<String, String>) -> Option<ElevationTier> {
+    match props.get("elevation").map(String::as_str) {
+        Some("raised") => Some(ElevationTier::Raised),
+        Some("overlay") => Some(ElevationTier::Overlay),
+        _ => None,
+    }
 }
 
 /// True when the node carries any `state-when-*` predicate prop — the
@@ -3086,6 +3174,11 @@ fn emit_styled_box(
             "border: Border.all(color: {bc}, width: {})",
             parse_pixel_value(bw)
         ));
+    }
+    // UI41, #12028 item 1 — base props only (see `elevation_tier`'s doc
+    // comment).
+    if let Some(tier) = elevation_tier(&base) {
+        deco_parts.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
     }
     args.push(format!(
         "decoration: BoxDecoration({})",
@@ -3544,6 +3637,18 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
     }
     if let Some(color) = props.get("color").and_then(|v| css_color_to_dart(v)) {
         style_parts.push(format!("foregroundColor: WidgetStatePropertyAll({color})"));
+    }
+    // UI41, #12028 item 1 — Material's `ElevatedButton` already has a
+    // first-class `elevation` concept (a real, depth-scaling shadow —
+    // verified via a real widget-test golden render), so a styled
+    // `HostButton` reads its native property directly instead of a
+    // `BoxShadow` hack. Base props only (see `elevation_tier`'s doc
+    // comment).
+    if let Some(tier) = elevation_tier(&props) {
+        style_parts.push(format!(
+            "elevation: WidgetStatePropertyAll({})",
+            tier.button_elevation()
+        ));
     }
     if let Some(padding) = props.get("padding").map(|v| parse_pixel_value(v)) {
         style_parts.push(format!(
@@ -6548,6 +6653,310 @@ mod tests {
             out.contains("side: BorderSide(color: const Color(0xFF7F1D1D), width: 2)"),
             "missing border side style:\n{out}"
         );
+    }
+
+    // ── UI41, #12028 item 1: `elevation` -> native shadow ──────────────
+
+    fn box_layout_with_part(part: &str) -> LayoutDef {
+        layout(
+            "X",
+            LayoutNode {
+                tag: "Box".into(),
+                part_name: Some(part.into()),
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".into(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("hi".into()),
+                    }],
+                    children: vec![],
+                }],
+            },
+        )
+    }
+
+    #[test]
+    fn box_with_elevation_raised_emits_box_shadow() {
+        let style = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "task-card".into(),
+                base: vec![
+                    StyleProp {
+                        name: "box-shadow".into(),
+                        value: "0 1px 2px rgba(60,45,25,.05), 0 4px 14px rgba(60,45,25,.05)"
+                            .into(),
+                    },
+                    StyleProp {
+                        name: "elevation".into(),
+                        value: "raised".into(),
+                    },
+                    StyleProp {
+                        name: "background".into(),
+                        value: "#ffffff".into(),
+                    },
+                ],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_layout_with_part("task-card");
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+
+        assert!(
+            out.contains("boxShadow: [BoxShadow("),
+            "missing boxShadow:\n{out}"
+        );
+        assert!(
+            out.contains("blurRadius: 8, offset: const Offset(0, 4)"),
+            "raised tier must use blur 8 / offset 4:\n{out}"
+        );
+        // The raw box-shadow CSS value never leaks into the shadow —
+        // `elevation` is the only signal Flutter reads.
+        assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
+    }
+
+    #[test]
+    fn box_with_elevation_overlay_emits_deeper_shadow() {
+        let style = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "toast".into(),
+                base: vec![
+                    StyleProp {
+                        name: "elevation".into(),
+                        value: "overlay".into(),
+                    },
+                    StyleProp {
+                        name: "background".into(),
+                        value: "#ffffff".into(),
+                    },
+                ],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_layout_with_part("toast");
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+
+        assert!(
+            out.contains("blurRadius: 24, offset: const Offset(0, 16)"),
+            "overlay tier must use blur 24 / offset 16:\n{out}"
+        );
+    }
+
+    #[test]
+    fn box_shadow_without_elevation_emits_no_box_shadow() {
+        let style = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "card".into(),
+                base: vec![
+                    StyleProp {
+                        name: "box-shadow".into(),
+                        value: "0 1px 2px rgba(0,0,0,.1)".into(),
+                    },
+                    StyleProp {
+                        name: "background".into(),
+                        value: "#ffffff".into(),
+                    },
+                ],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_layout_with_part("card");
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+
+        assert!(!out.contains("boxShadow"), "got:\n{out}");
+    }
+
+    #[test]
+    fn inset_box_shadow_alongside_elevation_still_shadows_from_elevation_only() {
+        // The theme-toggle moon-icon `inset` hack: `elevation` is the only
+        // signal read, so an `inset` box-shadow value alongside a real
+        // `elevation` declaration behaves identically to any other
+        // box-shadow value -- it's ignored, not specially detected.
+        let style = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "moon".into(),
+                base: vec![
+                    StyleProp {
+                        name: "box-shadow".into(),
+                        value: "5px -5px 0 0 #000 inset".into(),
+                    },
+                    StyleProp {
+                        name: "elevation".into(),
+                        value: "raised".into(),
+                    },
+                ],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = box_layout_with_part("moon");
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+
+        assert!(
+            out.contains("blurRadius: 8, offset: const Offset(0, 4)"),
+            "got:\n{out}"
+        );
+    }
+
+    /// #12028 item 1's XAML PR found a real gap: `Row`/`Column` never
+    /// wired up elevation at all in an early pass. Flutter's `Row`/
+    /// `Column`/`Stack` have NO decoration mechanism of their own (unlike
+    /// `Box` -> `Container`), so elevation must wrap them in a real
+    /// `Container` -- this test locks in that the wrapping actually
+    /// happens, not assumed to inherit `Box`'s wiring for free.
+    #[test]
+    fn row_with_elevation_wraps_in_container_with_box_shadow() {
+        let style = StyleDef {
+            component_name: "Header".into(),
+            parts: vec![PartStyle {
+                name: "toolbar".into(),
+                base: vec![StyleProp {
+                    name: "elevation".into(),
+                    value: "raised".into(),
+                }],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let l = layout(
+            "Header",
+            LayoutNode {
+                tag: "Row".into(),
+                part_name: Some("toolbar".into()),
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".into(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("hi".into()),
+                    }],
+                    children: vec![],
+                }],
+            },
+        );
+        let out = from_pipeline(&component("Header", vec![], vec![]), &l, &style)
+            .unwrap()
+            .output;
+
+        assert!(
+            out.contains("Container("),
+            "elevation-only Row must be wrapped in a Container:\n{out}"
+        );
+        assert!(out.contains("boxShadow: [BoxShadow("), "got:\n{out}");
+        assert!(out.contains("child: Row("), "got:\n{out}");
+    }
+
+    /// `HostButton` should use Flutter's native, first-class Material
+    /// `ButtonStyle.elevation` (a real depth-scaling shadow, verified via
+    /// a real widget-test golden render) rather than a `BoxShadow` hack.
+    #[test]
+    fn host_button_with_elevation_uses_native_button_style_elevation() {
+        let style = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "danger".into(),
+                base: vec![
+                    StyleProp {
+                        name: "background".into(),
+                        value: "#f87171".into(),
+                    },
+                    StyleProp {
+                        name: "elevation".into(),
+                        value: "raised".into(),
+                    },
+                ],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            LayoutNode {
+                tag: "HostButton".into(),
+                part_name: Some("danger".into()),
+                props: vec![LayoutProp {
+                    name: "label".into(),
+                    value: LayoutPropValue::String("Delete".into()),
+                }],
+                children: vec![],
+            },
+        );
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+
+        assert!(
+            out.contains("elevation: WidgetStatePropertyAll(4.0)"),
+            "missing native ButtonStyle elevation:\n{out}"
+        );
+        assert!(
+            !out.contains("boxShadow"),
+            "HostButton must use native elevation, not BoxShadow:\n{out}"
+        );
+    }
+
+    /// `HostDraggable` delegates its body straight to `emit_container(node,
+    /// "Container", ...)`, reading `node.part_name` directly -- elevation
+    /// should flow through for free with no HostDraggable-specific wiring
+    /// (unlike XAML, which hit a real XamlCompiler bug on this exact
+    /// primitive and needed a workaround).
+    #[test]
+    fn host_draggable_with_elevation_gets_shadow_via_container_delegation() {
+        let style = StyleDef {
+            component_name: "Board".into(),
+            parts: vec![PartStyle {
+                name: "board-card".into(),
+                base: vec![
+                    StyleProp {
+                        name: "background".into(),
+                        value: "#ffffff".into(),
+                    },
+                    StyleProp {
+                        name: "elevation".into(),
+                        value: "raised".into(),
+                    },
+                ],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let l = layout(
+            "Board",
+            LayoutNode {
+                tag: "HostDraggable".into(),
+                part_name: Some("board-card".into()),
+                props: vec![LayoutProp {
+                    name: "drag-key".into(),
+                    value: LayoutPropValue::String("card-1".into()),
+                }],
+                children: vec![LayoutNode {
+                    tag: "Text".into(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("hi".into()),
+                    }],
+                    children: vec![],
+                }],
+            },
+        );
+        let out = from_pipeline(&component("Board", vec![], vec![]), &l, &style)
+            .unwrap()
+            .output;
+
+        assert!(out.contains("boxShadow: [BoxShadow("), "got:\n{out}");
     }
 
     #[test]
