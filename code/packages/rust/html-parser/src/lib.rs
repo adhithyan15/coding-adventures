@@ -8432,6 +8432,7 @@ impl HtmlParser {
             || is_phrasing_container_element(name)
             || is_select_option_element(name)
             || is_table_structure_end_tag_element(name)
+            || is_state_boundary_element(name)
             || (is_rcdata_element(name)
                 && self.options.initial_tokenizer_context == HtmlInitialTokenizerContext::Data)
             || (name == "script"
@@ -12902,6 +12903,10 @@ fn is_table_structure_end_tag_element(name: &str) -> bool {
         name,
         "caption" | "table" | "tbody" | "td" | "tfoot" | "th" | "thead" | "tr"
     )
+}
+
+fn is_state_boundary_element(name: &str) -> bool {
+    matches!(name, "frameset" | "select")
 }
 
 fn is_rcdata_element(name: &str) -> bool {
@@ -28358,6 +28363,18 @@ mod tests {
     }
 
     fn unmatched_table_structure_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            format!("end tag `</{name}>` did not match an open element"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
+    fn unmatched_state_boundary_end_tag(
         source: &str,
         name: &str,
         occurrence: usize,
@@ -45829,6 +45846,108 @@ mod tests {
             ("th", "<!doctype html><table><tbody><tr><th></th></tr></tbody></table>"),
             ("thead", "<!doctype html><table><thead></thead></table>"),
             ("tr", "<!doctype html><table><tbody><tr></tr></tbody></table>"),
+        ] {
+            let matched = parse_html_with_diagnostics(matched_source).unwrap();
+            assert!(matched
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+            let foreign_source = format!(
+                "<!doctype html><svg><foreignObject></{name}>X</foreignObject></svg>"
+            );
+            let foreign = parse_html_with_diagnostics(&foreign_source).unwrap();
+            assert!(foreign.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-end-tag"
+                    && diagnostic.code != "unexpected-end-tag-in-foreign-content"
+            }));
+
+            let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+            direct.process_token(Token::EndTag {
+                name: name.to_string(),
+            });
+            direct.process_token(Token::Eof);
+            assert!(direct
+                .diagnostics()
+                .iter()
+                .all(|diagnostic| diagnostic.position.is_none()));
+
+            let incomplete_source = format!("<!doctype html></{name}");
+            let incomplete = parse_html_with_diagnostics(&incomplete_source).unwrap();
+            assert!(incomplete
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+        }
+    }
+
+    #[test]
+    fn positions_unmatched_state_boundary_end_tags_at_token_emission() {
+        let names = ["frameset", "select"];
+        let source =
+            "<!doctype html></frameset></select><!--é-->\r\n</frameset><p>tail</p>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let clean =
+            parse_html_with_diagnostics("<!doctype html><!--é-->\r\n<p>tail</p>").unwrap();
+        assert!(source.len() > source.chars().count());
+        assert_eq!(output.document, clean.document);
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                unmatched_state_boundary_end_tag(source, "frameset", 0),
+                unmatched_state_boundary_end_tag(source, "select", 0),
+                unmatched_state_boundary_end_tag(source, "frameset", 1),
+            ]
+        );
+
+        let fragment_source = "</frameset></select>tail";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        let clean_fragment = parse_html_fragment_with_diagnostics("tail").unwrap();
+        assert_eq!(fragment.nodes, clean_fragment.nodes);
+        assert_eq!(
+            fragment.parser_diagnostics,
+            names
+                .into_iter()
+                .map(|name| unmatched_state_boundary_end_tag(fragment_source, name, 0))
+                .collect::<Vec<_>>()
+        );
+
+        for name in names {
+            let seeded_source = format!("</{name}>");
+            let seeded =
+                parse_html_fragment_for_context_with_diagnostics(&seeded_source, name).unwrap();
+            assert_eq!(
+                seeded.parser_diagnostics,
+                vec![fragment_context_end_tag(&seeded_source, name, 0)]
+            );
+        }
+
+        let frameset_source = "</select>";
+        let frameset =
+            parse_html_fragment_for_context_with_diagnostics(frameset_source, "frameset")
+                .unwrap();
+        assert_eq!(
+            frameset.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-frameset",
+                    "end tag `</select>` in a frameset was ignored",
+                )
+                .at_emission(Some(end_tag_position_at(frameset_source, "select", 0)))
+            ]
+        );
+
+        for (name, matched_source) in [
+            (
+                "frameset",
+                "<!doctype html><html><frameset></frameset></html>",
+            ),
+            ("select", "<!doctype html><select></select>"),
         ] {
             let matched = parse_html_with_diagnostics(matched_source).unwrap();
             assert!(matched
