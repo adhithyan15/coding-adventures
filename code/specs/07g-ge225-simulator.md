@@ -47,12 +47,15 @@ The remaining functional work is deliberately split into auditable slices:
    and typewriter contracts (RCPU-P005B);
 6. controller-selector selection/status decode, three-word command blocks,
    interrupt behavior, and deterministic controller contracts (RCPU-P005C);
-7. the optional Auxiliary Arithmetic Unit, including fixed, normalized
-   floating-point, and unnormalized floating-point modes.
+7. the optional Auxiliary Arithmetic Unit, including its separate 40-bit
+   registers, fixed, normalized floating-point, and unnormalized floating-point
+   modes, transient/hold alerts, and plug-7 status branches (RCPU-P005D).
 
-Until all seven slices pass the Rust completion contract in
-`RUST-CPU-SIMULATOR-BACKLOG.md`, GE225/Core remains a useful compiler target but
-must not be presented as a complete historical GE-225 implementation.
+All seven functional slices now pass the Rust completion contract in
+`RUST-CPU-SIMULATOR-BACKLOG.md`. GE225/Core is the functional oracle for the
+gate-level RCPU-006 work. This completion claim covers the CPU and documented
+optional CPU units, not DTSS, cycle-accurate core timing, or every historical
+peripheral controller.
 
 The fifth slice replaces the original queued-record shortcut with the direct
 subsystem contract: aligned and automatically modified card DMA, all decimal,
@@ -78,6 +81,16 @@ capture and explicit selector/controller service events rather than using host
 timing. Its shared core preflight also validates every multiword operand,
 raw/X-word destination, `MOV` range, branch target, and taken decision skip
 before architectural instruction state is clocked.
+
+The seventh slice gives the optional AAU its own AX, BX, QX, and IX registers
+instead of reusing the central A/Q pair. It recognizes the exact general,
+memory-reference, and plug-7 `BAR` words; applies central X-word modification;
+and preserves the manual's paired-word and odd-address transfers. Fixed and
+floating calculations use bounded integer representations, including 60-bit
+minor floating results, so normalized and unnormalized behavior never depends
+on host floating-point. Overflow and underflow have separate transient and hold
+latches, exponent underflow clears AX/QX, and the next accepted AAU instruction
+resets only the transient indicators.
 
 ## Layer Position
 
