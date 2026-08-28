@@ -11,9 +11,9 @@ offscreen `Rgba8Unorm` WGPU texture and reads the result back as a
 can share the same scene lowering and tessellation model.
 
 This crate is intentionally Tier 1: it validates the backend plumbing, command
-ordering, solid mesh rendering, image textures, linear gradients, rectangular
-clips, sampled gradients, and readback path without pretending that text or
-filters are already exact.
+ordering, solid mesh rendering, image textures, gradients, rectangular clips,
+isolated layer composition, and readback path without pretending that text is
+already exact.
 
 ## Where It Fits
 
@@ -34,13 +34,13 @@ Producer (barcode, Mermaid, layout, HTML)
 | Clip | Implemented through WGPU scissor stack |
 | Group transform / opacity | Implemented by the shared GPU plan |
 | Layer transform | Implemented by the shared GPU plan |
-| Isolated layer opacity / filters / blend modes | Explicit shared commands; rejected until WGPU offscreen-pass execution lands |
+| Isolated layer opacity / filters / blend modes | Implemented with transparent render targets and ordered compute passes |
 | Offscreen readback | Implemented with padded row-copy handling |
 | Images | Implemented for `ImageSrc::Pixels` through RGBA texture upload/sampling |
 | Linear gradients | Implemented through shared ramp textures and gradient UVs |
 | Radial gradients | Implemented through shared 2D textures and radial UVs |
 | Text / glyph runs | Not implemented until glyph atlas and shaping strategy lands |
-| Filters / blend modes | Not implemented |
+| Filters / blend modes | All shared layer filters and blend modes implemented |
 
 ## Runtime Use
 
@@ -57,7 +57,5 @@ Skia, or future GPU backends until WGPU grows a glyph atlas and shaping path.
 
 - Add glyph atlas planning once the shared text shaping and font metric pipeline
   is ready.
-- Execute shared isolated layer scopes with ping-pong WGPU render/compute
-  targets, using the same visual fixture as Metal.
 - Reuse the same WGPU plumbing as a reference implementation for native
   Vulkan/OpenGL/Mesa backends.
