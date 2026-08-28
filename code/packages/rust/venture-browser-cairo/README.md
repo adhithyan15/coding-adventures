@@ -10,6 +10,11 @@ library. They therefore share navigation, chrome projection, scrolling, hover,
 link activation, retained-page reflow, and rendering behavior without placing
 cross-platform browser ownership in a toolkit-specific package.
 
+`begin_navigation` and `complete_subresource` expose the core-owned
+document-first lifecycle to Qt, Flutter, and Compose event loops. The bridge
+retains no toolkit-specific loader or decoder; hosts dispatch the shared
+scheduler effects and repaint only when completion outcomes request it.
+
 View Source follows that same boundary: the shared core creates the synthetic
 preformatted document and the C ABI serializes one `open-auxiliary-document`
 effect. Qt emits the request to its window layer, while Flutter and Compose

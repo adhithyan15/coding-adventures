@@ -2,7 +2,7 @@
 //!
 //! The platform shell owns windows, events, font implementations, and the
 //! final paint backend. This crate composes the shared network, HTML, layout,
-//! paint, and image-resource seams into one synchronous page load.
+//! paint, and asynchronous image-resource lifecycle.
 
 use browser_bookmarks::transact as transact_bookmarks;
 pub use browser_bookmarks::{
@@ -13,13 +13,14 @@ pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
 use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTree};
 use html_to_layout::HtmlTheme;
 use html_to_paint::{
-    hit_test_link, html_render_tree_to_paint_with_link_state,
-    resolve_scene_image_resources_with_mosaic_fallback, FetchedImage, HtmlImageResourceError,
-    HtmlPaintOutput, HtmlPaintViewport, LinkRegion,
+    decode_image_resource, hit_test_link, html_render_tree_to_paint_with_link_state,
+    resolve_scene_image_resources_incrementally, scene_image_resource_uris, FetchedImage,
+    HtmlImageResolver, HtmlImageResource, HtmlImageResourceError, HtmlPaintOutput,
+    HtmlPaintViewport, LinkRegion,
 };
 use http1_client::HttpClient;
 use layout_ir::TextMeasurer;
-use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintScene};
+use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintScene, PixelContainer};
 use std::fmt;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
@@ -287,6 +288,102 @@ pub struct BrowserPage {
     pub render_tree: BrowserRenderTree,
     pub paint: HtmlPaintOutput,
     pub image_failures: Vec<HtmlImageResourceError>,
+    pub image_resources: Vec<BrowserImageResource>,
+}
+
+impl BrowserPage {
+    pub fn pending_image_urls(&self) -> impl Iterator<Item = &str> {
+        self.image_resources.iter().filter_map(|resource| {
+            matches!(resource.state, BrowserImageResourceState::Pending)
+                .then_some(resource.url.as_str())
+        })
+    }
+}
+
+/// Retained state for one deduplicated inline image, in DOM paint order.
+#[derive(Clone, Debug, PartialEq)]
+pub struct BrowserImageResource {
+    pub url: String,
+    pub state: BrowserImageResourceState,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum BrowserImageResourceState {
+    Pending,
+    Ready(PixelContainer),
+    Failed(HtmlImageResourceError),
+}
+
+/// One scheduler request belonging to a particular committed navigation.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserSubresourceRequest {
+    pub navigation_id: u64,
+    pub ordinal: usize,
+    pub url: String,
+}
+
+/// Host-delivered result for an earlier subresource request.
+#[derive(Clone, Debug, PartialEq)]
+pub struct BrowserSubresourceCompletion {
+    pub request: BrowserSubresourceRequest,
+    pub result: Result<PixelContainer, HtmlImageResourceError>,
+}
+
+impl BrowserSubresourceRequest {
+    /// Execute fetch and decode work on the host scheduler, before delivery.
+    pub fn resolve<F>(&self, fetcher: &F) -> BrowserSubresourceCompletion
+    where
+        F: BrowserResourceFetcher,
+    {
+        BrowserSubresourceCompletion {
+            request: self.clone(),
+            result: fetch_and_decode_browser_image(&self.url, fetcher),
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum BrowserSubresourceDisposition {
+    Applied,
+    IgnoredDuplicate,
+    IgnoredStaleNavigation,
+}
+
+/// Incremental repaint decision returned after a host completion.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserSubresourceUpdate {
+    pub disposition: BrowserSubresourceDisposition,
+    pub repaint_required: bool,
+    pub pending_count: usize,
+}
+
+/// Effects produced when a navigation commits its document before images.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct BrowserNavigationUpdate {
+    pub viewport_changed: bool,
+    pub requests: Vec<BrowserSubresourceRequest>,
+    pub cancelled: Vec<BrowserSubresourceRequest>,
+}
+
+/// Reusable host scheduling seam for navigation-owned subresource work.
+///
+/// Implementations may use threads, an async runtime, browser fetch, or a
+/// deterministic test queue. Core always delivers cancellations before new
+/// requests, and completion generation checks remain the final safety net.
+pub trait BrowserSubresourceScheduler {
+    fn cancel(&mut self, request: &BrowserSubresourceRequest);
+    fn request(&mut self, request: BrowserSubresourceRequest);
+}
+
+impl BrowserNavigationUpdate {
+    pub fn dispatch_to(&self, scheduler: &mut dyn BrowserSubresourceScheduler) {
+        for request in &self.cancelled {
+            scheduler.cancel(request);
+        }
+        for request in &self.requests {
+            scheduler.request(request.clone());
+        }
+    }
 }
 
 /// A synthetic browser document that a host presents outside the primary
@@ -828,6 +925,7 @@ pub struct BrowserSession {
     bookmarks: BookmarkCatalog,
     viewport: Option<BrowserViewport>,
     viewport_height: f64,
+    navigation_id: u64,
 }
 
 impl BrowserSession {
@@ -838,6 +936,7 @@ impl BrowserSession {
             bookmarks: BookmarkCatalog::new(),
             viewport: None,
             viewport_height: finite_non_negative(viewport_height),
+            navigation_id: 0,
         }
     }
 
@@ -892,6 +991,29 @@ impl BrowserSession {
         self.viewport.as_mut()
     }
 
+    pub const fn navigation_id(&self) -> u64 {
+        self.navigation_id
+    }
+
+    /// Pending requests for the current document in deterministic paint order.
+    pub fn pending_subresource_requests(&self) -> Vec<BrowserSubresourceRequest> {
+        let Some(viewport) = &self.viewport else {
+            return Vec::new();
+        };
+        viewport
+            .page()
+            .image_resources
+            .iter()
+            .enumerate()
+            .filter(|(_, resource)| matches!(resource.state, BrowserImageResourceState::Pending))
+            .map(|(ordinal, resource)| BrowserSubresourceRequest {
+                navigation_id: self.navigation_id,
+                ordinal,
+                url: resource.url.clone(),
+            })
+            .collect()
+    }
+
     pub fn resize(&mut self, viewport_height: f64) -> f64 {
         self.viewport_height = finite_non_negative(viewport_height);
         self.viewport
@@ -927,7 +1049,7 @@ impl BrowserSession {
     pub fn reflow<'session, F, M, S, FM, R>(
         &'session mut self,
         pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
-        fetcher: &F,
+        _fetcher: &F,
         viewport_height: f64,
     ) -> Option<&'session BrowserViewport>
     where
@@ -937,11 +1059,8 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let page = pipeline.reflow_with_visited(
-            self.viewport.as_ref()?.page(),
-            fetcher,
-            &self.visited_links,
-        );
+        let page = pipeline
+            .reflow_retained_with_visited(self.viewport.as_ref()?.page(), &self.visited_links);
         self.viewport_height = finite_non_negative(viewport_height);
         self.viewport
             .as_mut()?
@@ -962,6 +1081,32 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        let update = self.begin_execute(navigation, pipeline, fetcher)?;
+        for request in update.requests {
+            let completion = request.resolve(fetcher);
+            let _ = self.complete_subresource(completion, pipeline);
+        }
+        Ok(update.viewport_changed.then(|| {
+            self.viewport
+                .as_ref()
+                .expect("committed navigation must retain a viewport")
+        }))
+    }
+
+    /// Commit a document and emit its image requests without fetching them.
+    pub fn begin_execute<F, M, S, FM, R>(
+        &mut self,
+        navigation: BrowserNavigation,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        document_fetcher: &F,
+    ) -> Result<BrowserNavigationUpdate, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
         let mut history = self.history.clone();
         let requested_url = match navigation {
             BrowserNavigation::Navigate(url) => Some(history.navigate(url).to_string()),
@@ -971,10 +1116,15 @@ impl BrowserSession {
             BrowserNavigation::Reload => history.reload().map(str::to_owned),
         };
         let Some(requested_url) = requested_url else {
-            return Ok(None);
+            return Ok(BrowserNavigationUpdate::default());
         };
 
-        let page = pipeline.load_with_visited(&requested_url, fetcher, &self.visited_links)?;
+        let page = pipeline.load_pending_with_visited(
+            &requested_url,
+            document_fetcher,
+            &self.visited_links,
+        )?;
+        let cancelled = self.pending_subresource_requests();
         let mut visited_links = self.visited_links.clone();
         let _ = visited_links.record(&page.final_url);
         history.replace_current(page.final_url.clone());
@@ -985,7 +1135,76 @@ impl BrowserSession {
         }
         self.history = history;
         self.visited_links = visited_links;
-        Ok(self.viewport.as_ref())
+        self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
+        Ok(BrowserNavigationUpdate {
+            viewport_changed: true,
+            requests: self.pending_subresource_requests(),
+            cancelled,
+        })
+    }
+
+    /// Apply one completion to the current retained page and recompose paint.
+    /// Stale navigation results and duplicate deliveries are harmless no-ops.
+    pub fn complete_subresource<M, S, FM, R>(
+        &mut self,
+        completion: BrowserSubresourceCompletion,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> BrowserSubresourceUpdate
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        if completion.request.navigation_id != self.navigation_id {
+            return BrowserSubresourceUpdate {
+                disposition: BrowserSubresourceDisposition::IgnoredStaleNavigation,
+                repaint_required: false,
+                pending_count: self.pending_subresource_requests().len(),
+            };
+        }
+        let Some(current) = self
+            .viewport
+            .as_ref()
+            .map(|viewport| viewport.page().clone())
+        else {
+            return BrowserSubresourceUpdate {
+                disposition: BrowserSubresourceDisposition::IgnoredStaleNavigation,
+                repaint_required: false,
+                pending_count: 0,
+            };
+        };
+        let Some(resource) = current.image_resources.get(completion.request.ordinal) else {
+            return self.ignored_duplicate_update();
+        };
+        if resource.url != completion.request.url
+            || !matches!(resource.state, BrowserImageResourceState::Pending)
+        {
+            return self.ignored_duplicate_update();
+        }
+
+        let mut updated = current;
+        updated.image_resources[completion.request.ordinal].state = match completion.result {
+            Ok(pixels) => BrowserImageResourceState::Ready(pixels),
+            Err(error) => BrowserImageResourceState::Failed(error),
+        };
+        let updated = pipeline.reflow_retained_with_visited(&updated, &self.visited_links);
+        if let Some(viewport) = self.viewport.as_mut() {
+            viewport.reflow_page(updated, self.viewport_height);
+        }
+        BrowserSubresourceUpdate {
+            disposition: BrowserSubresourceDisposition::Applied,
+            repaint_required: true,
+            pending_count: self.pending_subresource_requests().len(),
+        }
+    }
+
+    fn ignored_duplicate_update(&self) -> BrowserSubresourceUpdate {
+        BrowserSubresourceUpdate {
+            disposition: BrowserSubresourceDisposition::IgnoredDuplicate,
+            repaint_required: false,
+            pending_count: self.pending_subresource_requests().len(),
+        }
     }
 
     pub fn activate_link<'session, F, M, S, FM, R>(
@@ -1126,13 +1345,7 @@ where
         let document = BrowserDocument::from_document(&parsed);
         let render_tree =
             BrowserRenderTree::from_document_with_document_url(&parsed, &auxiliary.address);
-        let unavailable = |url: &str| -> Result<BrowserFetchResponse, String> {
-            Err(format!(
-                "synthetic auxiliary documents cannot fetch resource {url}"
-            ))
-        };
-        let (paint, image_failures) =
-            self.compose(&render_tree, &unavailable, &VisitedLinks::new());
+        let (paint, image_failures) = self.compose(&render_tree, &[], &VisitedLinks::new());
 
         Ok(BrowserPage {
             requested_url: auxiliary.address.clone(),
@@ -1143,6 +1356,7 @@ where
             render_tree,
             paint,
             image_failures,
+            image_resources: Vec::new(),
         })
     }
 
@@ -1159,12 +1373,35 @@ where
     where
         F: BrowserResourceFetcher,
     {
-        let response = fetcher
-            .fetch(requested_url)
-            .map_err(|message| BrowserLoadError::Fetch {
-                url: requested_url.to_string(),
-                message,
-            })?;
+        let mut page = self.load_pending_with_visited(requested_url, fetcher, visited_links)?;
+        for resource in &mut page.image_resources {
+            resource.state = match fetch_and_decode_browser_image(&resource.url, fetcher) {
+                Ok(pixels) => BrowserImageResourceState::Ready(pixels),
+                Err(error) => BrowserImageResourceState::Failed(error),
+            };
+        }
+        let mut prospective_visited = visited_links.clone();
+        let _ = prospective_visited.record(&page.final_url);
+        Ok(self.reflow_retained_with_visited(&page, &prospective_visited))
+    }
+
+    /// Fetch and parse only the main document, leaving inline images pending.
+    pub fn load_pending_with_visited<F>(
+        &self,
+        requested_url: &str,
+        document_fetcher: &F,
+        visited_links: &VisitedLinks,
+    ) -> Result<BrowserPage, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+    {
+        let response =
+            document_fetcher
+                .fetch(requested_url)
+                .map_err(|message| BrowserLoadError::Fetch {
+                    url: requested_url.to_string(),
+                    message,
+                })?;
         ensure_success(&response)?;
         ensure_html_media_type(&response)?;
 
@@ -1178,7 +1415,28 @@ where
             BrowserRenderTree::from_document_with_document_url(&parsed, &response.final_url);
         let mut prospective_visited = visited_links.clone();
         let _ = prospective_visited.record(&response.final_url);
-        let (paint, image_failures) = self.compose(&render_tree, fetcher, &prospective_visited);
+        let mut paint = html_render_tree_to_paint_with_link_state(
+            &render_tree,
+            self.theme,
+            &|url| prospective_visited.contains(url),
+            self.viewport,
+            self.measurer,
+            self.shaper,
+            self.metrics,
+            self.resolver,
+        );
+        let image_resources = scene_image_resource_uris(&paint.scene)
+            .into_iter()
+            .map(|url| BrowserImageResource {
+                url,
+                state: BrowserImageResourceState::Pending,
+            })
+            .collect::<Vec<_>>();
+        let image_resolution = resolve_scene_image_resources_incrementally(
+            &paint.scene,
+            &RetainedImageResolver(&image_resources),
+        );
+        paint.scene = image_resolution.scene;
 
         Ok(BrowserPage {
             requested_url: requested_url.to_string(),
@@ -1188,7 +1446,8 @@ where
             document,
             render_tree,
             paint,
-            image_failures,
+            image_failures: image_resolution.failures,
+            image_resources,
         })
     }
 
@@ -1205,28 +1464,35 @@ where
     pub fn reflow_with_visited<F>(
         &self,
         page: &BrowserPage,
-        fetcher: &F,
+        _fetcher: &F,
         visited_links: &VisitedLinks,
     ) -> BrowserPage
     where
         F: BrowserResourceFetcher,
     {
-        let (paint, image_failures) = self.compose(&page.render_tree, fetcher, visited_links);
+        self.reflow_retained_with_visited(page, visited_links)
+    }
+
+    /// Recompose from retained document and subresource state only.
+    pub fn reflow_retained_with_visited(
+        &self,
+        page: &BrowserPage,
+        visited_links: &VisitedLinks,
+    ) -> BrowserPage {
+        let (paint, image_failures) =
+            self.compose(&page.render_tree, &page.image_resources, visited_links);
         let mut reflowed = page.clone();
         reflowed.paint = paint;
         reflowed.image_failures = image_failures;
         reflowed
     }
 
-    fn compose<F>(
+    fn compose(
         &self,
         render_tree: &BrowserRenderTree,
-        fetcher: &F,
+        image_resources: &[BrowserImageResource],
         visited_links: &VisitedLinks,
-    ) -> (HtmlPaintOutput, Vec<HtmlImageResourceError>)
-    where
-        F: BrowserResourceFetcher,
-    {
+    ) -> (HtmlPaintOutput, Vec<HtmlImageResourceError>) {
         let mut paint = html_render_tree_to_paint_with_link_state(
             render_tree,
             self.theme,
@@ -1237,16 +1503,56 @@ where
             self.metrics,
             self.resolver,
         );
-        let image_resolution =
-            resolve_scene_image_resources_with_mosaic_fallback(&paint.scene, &|url: &str| {
-                let resource = fetcher.fetch(url)?;
-                if !is_success(resource.status) {
-                    return Err(format!("HTTP status {}", resource.status));
-                }
-                Ok(FetchedImage::new(resource.body, resource.media_type))
-            });
+        let image_resolution = resolve_scene_image_resources_incrementally(
+            &paint.scene,
+            &RetainedImageResolver(image_resources),
+        );
         paint.scene = image_resolution.scene;
         (paint, image_resolution.failures)
+    }
+}
+
+fn image_resource_state(resources: &[BrowserImageResource], url: &str) -> HtmlImageResource {
+    match resources.iter().find(|resource| resource.url == url) {
+        Some(BrowserImageResource {
+            state: BrowserImageResourceState::Ready(pixels),
+            ..
+        }) => HtmlImageResource::Ready(pixels.clone()),
+        Some(BrowserImageResource {
+            state: BrowserImageResourceState::Failed(error),
+            ..
+        }) => HtmlImageResource::Failed(error.clone()),
+        _ => HtmlImageResource::Pending,
+    }
+}
+
+fn fetch_and_decode_browser_image<F>(
+    url: &str,
+    fetcher: &F,
+) -> Result<PixelContainer, HtmlImageResourceError>
+where
+    F: BrowserResourceFetcher,
+{
+    let response = fetcher
+        .fetch(url)
+        .map_err(|message| HtmlImageResourceError::Fetch {
+            uri: url.to_string(),
+            message,
+        })?;
+    if !is_success(response.status) {
+        return Err(HtmlImageResourceError::Fetch {
+            uri: url.to_string(),
+            message: format!("HTTP status {}", response.status),
+        });
+    }
+    decode_image_resource(url, FetchedImage::new(response.body, response.media_type))
+}
+
+struct RetainedImageResolver<'a>(&'a [BrowserImageResource]);
+
+impl HtmlImageResolver for RetainedImageResolver<'_> {
+    fn resolve(&self, uri: &str) -> HtmlImageResource {
+        image_resource_state(self.0, uri)
     }
 }
 
@@ -1314,6 +1620,32 @@ mod tests {
     use layout_ir::{FontSpec, MeasureResult};
     use paint_instructions::{ImageSrc, PaintInstruction, PixelContainer};
     use std::cell::RefCell;
+
+    fn count_pixel_images(instructions: &[PaintInstruction]) -> usize {
+        instructions
+            .iter()
+            .map(|instruction| match instruction {
+                PaintInstruction::Image(image) if matches!(image.src, ImageSrc::Pixels(_)) => 1,
+                PaintInstruction::Group(group) => count_pixel_images(&group.children),
+                PaintInstruction::Layer(layer) => count_pixel_images(&layer.children),
+                PaintInstruction::Clip(clip) => count_pixel_images(&clip.children),
+                _ => 0,
+            })
+            .sum()
+    }
+
+    #[derive(Default)]
+    struct RecordingScheduler(Vec<String>);
+
+    impl BrowserSubresourceScheduler for RecordingScheduler {
+        fn cancel(&mut self, request: &BrowserSubresourceRequest) {
+            self.0.push(format!("cancel:{}", request.url));
+        }
+
+        fn request(&mut self, request: BrowserSubresourceRequest) {
+            self.0.push(format!("request:{}", request.url));
+        }
+    }
     use text_interfaces::{
         Direction, FontQuery, FontResolutionError, Glyph, ShapeOptions, ShapedRun, ShapedText,
         ShapingError,
@@ -2143,6 +2475,160 @@ mod tests {
         assert_eq!(viewport.scroll_state().offset_y(), 0.0);
         assert_eq!(viewport.scroll_state().content_height(), 20.0);
         assert_eq!(viewport.scroll_state().viewport_height(), 40.0);
+    }
+
+    #[test]
+    fn async_images_request_once_and_repaint_from_out_of_order_completions() {
+        let mut source_pixels = PixelContainer::new(2, 2);
+        source_pixels.fill(255, 0, 255, 255);
+        let gif = encode_gif(&source_pixels);
+        let document_fetches = RefCell::new(Vec::new());
+        let fetcher = |url: &str| {
+            document_fetches.borrow_mut().push(url.to_string());
+            assert_eq!(url, "http://example.test/page.html");
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<img src='a.gif' alt='a' width='10' height='10'>\
+                  <img src='b.gif' alt='b' width='10' height='10'>\
+                  <img src='a.gif' alt='again' width='10' height='10'>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(120.0, 40.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/page.html", 40.0);
+        let update = session
+            .begin_execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .expect("document should commit before images");
+
+        assert_eq!(document_fetches.into_inner().len(), 1);
+        assert_eq!(
+            update
+                .requests
+                .iter()
+                .map(|request| request.url.as_str())
+                .collect::<Vec<_>>(),
+            vec!["http://example.test/a.gif", "http://example.test/b.gif"]
+        );
+        assert!(update.cancelled.is_empty());
+        assert_eq!(session.pending_subresource_requests(), update.requests);
+        assert!(session.viewport().unwrap().page().image_failures.is_empty());
+
+        let failed_completion = update.requests[1]
+            .resolve(&|_: &str| -> Result<BrowserFetchResponse, String> { Err("offline".into()) });
+        let failed = session.complete_subresource(failed_completion, &pipeline);
+        assert_eq!(failed.disposition, BrowserSubresourceDisposition::Applied);
+        assert!(failed.repaint_required);
+        assert_eq!(failed.pending_count, 1);
+        assert_eq!(session.viewport().unwrap().page().image_failures.len(), 1);
+
+        let loaded_completion = update.requests[0].resolve(&|_: &str| {
+            Ok(BrowserFetchResponse::new(
+                "http://cdn.example.test/a.gif",
+                200,
+                Some("image/gif".into()),
+                gif.clone(),
+            ))
+        });
+        let loaded = session.complete_subresource(loaded_completion, &pipeline);
+        assert_eq!(loaded.pending_count, 0);
+        let page = session.viewport().unwrap().page();
+        assert_eq!(
+            count_pixel_images(&page.paint.scene.instructions),
+            2,
+            "one completion should repaint every duplicate URL"
+        );
+
+        let duplicate = session.complete_subresource(
+            BrowserSubresourceCompletion {
+                request: update.requests[0].clone(),
+                result: Err(HtmlImageResourceError::Fetch {
+                    uri: update.requests[0].url.clone(),
+                    message: "late duplicate".into(),
+                }),
+            },
+            &pipeline,
+        );
+        assert_eq!(
+            duplicate.disposition,
+            BrowserSubresourceDisposition::IgnoredDuplicate
+        );
+        assert!(!duplicate.repaint_required);
+    }
+
+    #[test]
+    fn navigation_cancels_pending_images_and_ignores_stale_completion() {
+        let fetcher = |url: &str| {
+            let source = match url {
+                "http://example.test/one.html" => "<img src='one.gif'>",
+                "http://example.test/two.html" => "<p>Two</p>",
+                _ => panic!("subresources must be scheduled, not fetched inline: {url}"),
+            };
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                source.as_bytes().to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(100.0, 40.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/one.html", 40.0);
+        let first = session
+            .begin_execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        let second = session
+            .begin_execute(
+                BrowserNavigation::Navigate("http://example.test/two.html".into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        assert_eq!(second.cancelled, first.requests);
+        assert!(second.requests.is_empty());
+        let mut scheduler = RecordingScheduler::default();
+        second.dispatch_to(&mut scheduler);
+        assert_eq!(
+            scheduler.0,
+            vec!["cancel:http://example.test/one.gif"],
+            "navigation effects must cancel old work before scheduling new work"
+        );
+
+        let stale = session.complete_subresource(
+            BrowserSubresourceCompletion {
+                request: first.requests[0].clone(),
+                result: Err(HtmlImageResourceError::Fetch {
+                    uri: first.requests[0].url.clone(),
+                    message: "arrived after cancellation".into(),
+                }),
+            },
+            &pipeline,
+        );
+        assert_eq!(
+            stale.disposition,
+            BrowserSubresourceDisposition::IgnoredStaleNavigation
+        );
+        assert!(!stale.repaint_required);
+        assert_eq!(
+            session.viewport().unwrap().page().final_url,
+            "http://example.test/two.html"
+        );
     }
 
     #[test]

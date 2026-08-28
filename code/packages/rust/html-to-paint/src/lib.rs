@@ -39,6 +39,32 @@ pub trait HtmlImageFetcher {
     fn fetch(&self, uri: &str) -> Result<FetchedImage, String>;
 }
 
+/// Current browser-owned state for one URI-backed image.
+///
+/// Keeping this contract in the shared composition layer lets a browser paint
+/// pending resources without teaching layout or a platform toolkit about
+/// request scheduling.
+#[derive(Clone, Debug, PartialEq)]
+pub enum HtmlImageResource {
+    Pending,
+    Ready(paint_instructions::PixelContainer),
+    Failed(HtmlImageResourceError),
+}
+
+/// Host-neutral lookup boundary for incrementally available image resources.
+pub trait HtmlImageResolver {
+    fn resolve(&self, uri: &str) -> HtmlImageResource;
+}
+
+impl<F> HtmlImageResolver for F
+where
+    F: Fn(&str) -> HtmlImageResource,
+{
+    fn resolve(&self, uri: &str) -> HtmlImageResource {
+        self(uri)
+    }
+}
+
 impl<F> HtmlImageFetcher for F
 where
     F: Fn(&str) -> Result<FetchedImage, String>,
@@ -157,6 +183,17 @@ pub struct HtmlPaintOutput {
 pub struct HtmlImageResolution {
     pub scene: PaintScene,
     pub failures: Vec<HtmlImageResourceError>,
+    pub pending: Vec<String>,
+}
+
+/// Return URI-backed image resources in stable first-paint order.
+///
+/// Repeated image URLs are deduplicated so the browser scheduler can issue one
+/// request and repaint every matching instruction from the same completion.
+pub fn scene_image_resource_uris(scene: &PaintScene) -> Vec<String> {
+    let mut uris = Vec::new();
+    collect_instruction_image_uris(&scene.instructions, &mut uris);
+    uris
 }
 
 /// Fetch and decode every URI-backed image in a paint scene.
@@ -201,6 +238,34 @@ where
     HtmlImageResolution {
         scene: resolved,
         failures,
+        pending: Vec::new(),
+    }
+}
+
+/// Resolve the currently available subset of URI-backed images.
+///
+/// Pending resources receive the same stable geometry and alt-text placeholder
+/// as failures but are reported separately and do not become diagnostics.
+pub fn resolve_scene_image_resources_incrementally<R>(
+    scene: &PaintScene,
+    resolver: &R,
+) -> HtmlImageResolution
+where
+    R: HtmlImageResolver,
+{
+    let mut resolved = scene.clone();
+    let mut failures = Vec::new();
+    let mut pending = Vec::new();
+    resolve_instruction_images_incrementally(
+        &mut resolved.instructions,
+        resolver,
+        &mut failures,
+        &mut pending,
+    );
+    HtmlImageResolution {
+        scene: resolved,
+        failures,
+        pending,
     }
 }
 
@@ -455,6 +520,96 @@ fn resolve_instruction_images_with_mosaic_fallback<F>(
     }
 }
 
+fn collect_instruction_image_uris(instructions: &[PaintInstruction], uris: &mut Vec<String>) {
+    for instruction in instructions {
+        match instruction {
+            PaintInstruction::Image(image) => {
+                if let ImageSrc::Uri(uri) = &image.src {
+                    if !uris.contains(uri) {
+                        uris.push(uri.clone());
+                    }
+                }
+            }
+            PaintInstruction::Group(group) => {
+                collect_instruction_image_uris(&group.children, uris);
+            }
+            PaintInstruction::Layer(layer) => {
+                collect_instruction_image_uris(&layer.children, uris);
+            }
+            PaintInstruction::Clip(clip) => {
+                collect_instruction_image_uris(&clip.children, uris);
+            }
+            _ => {}
+        }
+    }
+}
+
+fn resolve_instruction_images_incrementally<R>(
+    instructions: &mut [PaintInstruction],
+    resolver: &R,
+    failures: &mut Vec<HtmlImageResourceError>,
+    pending: &mut Vec<String>,
+) where
+    R: HtmlImageResolver,
+{
+    for instruction in instructions {
+        let replacement = match instruction {
+            PaintInstruction::Image(image) => {
+                let ImageSrc::Uri(uri) = &image.src else {
+                    continue;
+                };
+                match resolver.resolve(uri) {
+                    HtmlImageResource::Ready(pixels) => {
+                        image.src = ImageSrc::Pixels(pixels);
+                        None
+                    }
+                    HtmlImageResource::Failed(error) => {
+                        failures.push(error);
+                        Some(mosaic_broken_image_fallback(image))
+                    }
+                    HtmlImageResource::Pending => {
+                        if !pending.contains(uri) {
+                            pending.push(uri.clone());
+                        }
+                        Some(mosaic_broken_image_fallback(image))
+                    }
+                }
+            }
+            PaintInstruction::Group(group) => {
+                resolve_instruction_images_incrementally(
+                    &mut group.children,
+                    resolver,
+                    failures,
+                    pending,
+                );
+                None
+            }
+            PaintInstruction::Layer(layer) => {
+                resolve_instruction_images_incrementally(
+                    &mut layer.children,
+                    resolver,
+                    failures,
+                    pending,
+                );
+                None
+            }
+            PaintInstruction::Clip(clip) => {
+                resolve_instruction_images_incrementally(
+                    &mut clip.children,
+                    resolver,
+                    failures,
+                    pending,
+                );
+                None
+            }
+            _ => None,
+        };
+        if let Some(replacement) = replacement {
+            *instruction = replacement;
+        }
+    }
+}
+
 fn fetch_and_decode_image<F>(
     image: &PaintImage,
     fetcher: &F,
@@ -471,23 +626,31 @@ where
             uri: uri.clone(),
             message,
         })?;
+    decode_image_resource(uri, fetched)
+}
+
+/// Decode fetched image bytes before delivering a browser completion.
+pub fn decode_image_resource(
+    uri: &str,
+    fetched: FetchedImage,
+) -> Result<paint_instructions::PixelContainer, HtmlImageResourceError> {
     match detect_image_format(uri, &fetched) {
         Some(SupportedImageFormat::Gif) => {
             decode_gif(&fetched.bytes).map_err(|message| HtmlImageResourceError::Decode {
-                uri: uri.clone(),
+                uri: uri.to_string(),
                 format: "GIF",
                 message,
             })
         }
         Some(SupportedImageFormat::Jpeg) => {
             decode_jpeg(&fetched.bytes).map_err(|message| HtmlImageResourceError::Decode {
-                uri: uri.clone(),
+                uri: uri.to_string(),
                 format: "JPEG",
                 message,
             })
         }
         None => Err(HtmlImageResourceError::UnsupportedFormat {
-            uri: uri.clone(),
+            uri: uri.to_string(),
             media_type: fetched.media_type,
         }),
     }
@@ -613,6 +776,14 @@ mod tests {
         Direction, FontQuery, FontResolutionError, Glyph, ShapeOptions, ShapedRun, ShapedText,
         ShapingError,
     };
+
+    struct PendingImageResolver;
+
+    impl HtmlImageResolver for PendingImageResolver {
+        fn resolve(&self, _uri: &str) -> HtmlImageResource {
+            HtmlImageResource::Pending
+        }
+    }
 
     struct MonoMeasurer;
 
@@ -1066,6 +1237,45 @@ mod tests {
             }
         );
         assert_eq!(scene, original);
+    }
+
+    #[test]
+    fn incremental_resolution_deduplicates_pending_urls_without_failures() {
+        let render = parse_browser_render_tree(
+            "<base href='https://example.test/assets/'>\
+             <img src='logo.gif' alt='first' width='20' height='10'>\
+             <img src='other.gif' alt='second' width='20' height='10'>\
+             <img src='logo.gif' alt='third' width='20' height='10'>",
+        )
+        .unwrap();
+        let output = html_render_tree_to_paint(
+            &render,
+            &mosaic_html_theme(),
+            HtmlPaintViewport::new(100.0, 40.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+
+        assert_eq!(
+            scene_image_resource_uris(&output.scene),
+            vec![
+                "https://example.test/assets/logo.gif",
+                "https://example.test/assets/other.gif"
+            ]
+        );
+        let resolution =
+            resolve_scene_image_resources_incrementally(&output.scene, &PendingImageResolver);
+        assert_eq!(
+            resolution.pending,
+            vec![
+                "https://example.test/assets/logo.gif",
+                "https://example.test/assets/other.gif"
+            ]
+        );
+        assert!(resolution.failures.is_empty());
+        assert!(first_image(&resolution.scene.instructions).is_none());
     }
 
     #[test]

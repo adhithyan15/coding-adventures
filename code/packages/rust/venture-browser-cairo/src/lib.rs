@@ -14,8 +14,9 @@ use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
     BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
     BrowserFetchResponse, BrowserHostController, BrowserHostEffect, BrowserHostEventOutcome,
-    BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
-    BrowserScrollCommand, BrowserScrollMetrics, BrowserSession, HttpBrowserFetcher,
+    BrowserLoadError, BrowserNavigation, BrowserNavigationUpdate, BrowserPagePipeline,
+    BrowserResourceFetcher, BrowserScrollCommand, BrowserScrollMetrics, BrowserSession,
+    BrowserSubresourceCompletion, BrowserSubresourceUpdate, HttpBrowserFetcher,
     MemoryBookmarkRepository,
 };
 
@@ -183,6 +184,52 @@ impl CairoBrowserHost {
 
     pub fn update_hover(&mut self, x: f64, y: f64) -> bool {
         self.controller.update_hover(x, y)
+    }
+
+    /// Commit navigation before inline images and return scheduler effects.
+    pub fn begin_navigation(
+        &mut self,
+        navigation: BrowserNavigation,
+    ) -> Result<BrowserNavigationUpdate, BrowserLoadError> {
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        self.controller
+            .session_mut()
+            .begin_execute(navigation, &pipeline, &self.fetcher)
+    }
+
+    /// Apply one scheduler completion and report whether the surface repaints.
+    pub fn complete_subresource(
+        &mut self,
+        completion: BrowserSubresourceCompletion,
+    ) -> BrowserSubresourceUpdate {
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        self.controller
+            .session_mut()
+            .complete_subresource(completion, &pipeline)
     }
 
     pub fn resize(&mut self, width: f64, height: f64) -> bool {
@@ -829,6 +876,46 @@ mod tests {
         assert!(
             distinct_hashes.len() >= 3,
             "scrolling should expose distinct frames"
+        );
+    }
+
+    #[test]
+    fn cairo_host_exposes_the_shared_incremental_image_lifecycle() {
+        let origin = "http://venture.test";
+        let start_url = format!("{origin}{FIXTURE_PATH}");
+        let fetcher = move |url: &str| fixture_response(origin, url);
+        let mut host =
+            CairoBrowserHost::new_with_fetcher(&start_url, 240.0, 120.0, Box::new(fetcher))
+                .expect("fixture loads");
+
+        let navigation = host
+            .begin_navigation(BrowserNavigation::Reload)
+            .expect("document-first reload commits");
+        assert_eq!(navigation.requests.len(), 2);
+        let (_, _, pending_rgba) = host.render_rgba().expect("pending page renders");
+        let pending = probe_rgba(240, 120, &pending_rgba).unwrap();
+        assert_eq!(pending.magenta_pixels, 0);
+
+        for request in navigation.requests {
+            let completion = request.resolve(&|url: &str| fixture_response(origin, url));
+            assert!(host.complete_subresource(completion).repaint_required);
+        }
+        let metrics = host.scroll_metrics().unwrap();
+        let mut saw_image = false;
+        let mut offset = 0.0;
+        loop {
+            host.scroll_to(offset);
+            let (_, _, loaded_rgba) = host.render_rgba().expect("completed page renders");
+            let loaded = probe_rgba(240, 120, &loaded_rgba).unwrap();
+            saw_image |= loaded.magenta_pixels > 0 && loaded.cyan_pixels > 0;
+            if offset >= metrics.max_offset_y {
+                break;
+            }
+            offset = (offset + 48.0).min(metrics.max_offset_y);
+        }
+        assert!(
+            saw_image,
+            "incremental completion lost decoded image pixels"
         );
     }
 

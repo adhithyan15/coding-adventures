@@ -12,8 +12,9 @@ use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
     BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
     BrowserFetchResponse, BrowserHostController, BrowserHostEventOutcome, BrowserLoadError,
-    BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher, BrowserScrollCommand,
-    BrowserScrollMetrics, BrowserSession, HttpBrowserFetcher, MemoryBookmarkRepository,
+    BrowserNavigation, BrowserNavigationUpdate, BrowserPagePipeline, BrowserResourceFetcher,
+    BrowserScrollCommand, BrowserScrollMetrics, BrowserSession, BrowserSubresourceCompletion,
+    BrowserSubresourceUpdate, HttpBrowserFetcher, MemoryBookmarkRepository,
 };
 
 #[cfg(any(target_os = "windows", test))]
@@ -179,6 +180,52 @@ impl WindowsBrowserHost {
 
     pub fn update_hover(&mut self, x: f64, y: f64) -> bool {
         self.controller.update_hover(x, y)
+    }
+
+    /// Commit navigation before inline images and return scheduler effects.
+    pub fn begin_navigation(
+        &mut self,
+        navigation: BrowserNavigation,
+    ) -> Result<BrowserNavigationUpdate, BrowserLoadError> {
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        self.controller
+            .session_mut()
+            .begin_execute(navigation, &pipeline, &self.fetcher)
+    }
+
+    /// Apply one scheduler completion and report whether the surface repaints.
+    pub fn complete_subresource(
+        &mut self,
+        completion: BrowserSubresourceCompletion,
+    ) -> BrowserSubresourceUpdate {
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        self.controller
+            .session_mut()
+            .complete_subresource(completion, &pipeline)
     }
 
     /// Reflow the retained page for a new logical content-surface size.

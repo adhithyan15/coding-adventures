@@ -9,13 +9,19 @@ requested URL
   -> final fetched URL + HTML bytes
   -> html-parser
   -> html-to-paint
-  -> synchronous GIF/JPEG resource resolution
-  -> BrowserPage { document, source, links, scene, image_failures }
+  -> ordered BrowserSubresourceRequest effects
+  -> incremental GIF/JPEG completions and repaint
+  -> BrowserPage { document, source, links, scene, image_resources }
 ```
 
 `BrowserPagePipeline::load` uses the final fetched document URL as the base for
-relative links and images. Image failures are recoverable: successful images
-remain decoded while failures become Mosaic-style bordered `alt` text.
+relative links and images. `begin_execute` commits the retained document before
+images and emits deduplicated requests in paint order. Hosts dispatch those
+effects through `BrowserSubresourceScheduler`; each completion recomposes only
+from retained document/resource state and reports whether repaint is required.
+Navigation emits cancellation effects, and generation IDs make late or
+duplicate completions harmless. Image failures remain recoverable Mosaic-style
+bordered `alt` text.
 
 The default `HttpBrowserFetcher` adapts `http1-client`, but tests and platform
 hosts can inject any transport. Font measurement, shaping, metrics, resolution,
@@ -51,7 +57,10 @@ replaces redirect history with the final URL, and updates the viewport only
 after a successful load. Pointer activation uses viewport coordinates and
 follows the resolved link through the same transactional path. Successful
 final URLs are committed to session visited state only after full composition;
-failed loads preserve history, viewport, and visited state together. Reflow,
+failed loads preserve history, viewport, and visited state together. The
+legacy `execute`/`load` methods synchronously drain the same lifecycle for
+compatibility; native and web event loops use `begin_execute`, scheduler
+effects, and `complete_subresource`. Reflow,
 reload, Back, and Forward all project the retained state into blue/purple link
 styling without coupling browser history to HTML layout.
 

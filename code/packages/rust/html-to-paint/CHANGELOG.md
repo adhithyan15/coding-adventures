@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add stable URI discovery and tri-state incremental image resolution so
+  pending resources preserve geometry without becoming failure diagnostics.
+
 ## 0.5.0
 
 - Add visited-aware HTML composition through a narrow URL-state callback while

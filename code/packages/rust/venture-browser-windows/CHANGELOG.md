@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Expose WinUI-facing begin-navigation and incremental image-completion methods
+  over the shared cancellable subresource lifecycle.
 - Return core-owned View Source auxiliary documents through the WinUI bridge
   response while preserving platform ownership of window presentation.
 

@@ -20,6 +20,10 @@ Host launch tests should serve `fixture_response` from their existing local
 HTTP server and report the shared frame and scroll probes. They should not copy
 the fixture HTML or invent toolkit-specific visual baselines.
 
+`capture_subresource_lifecycle` records the document-first placeholder frame,
+ordered requests, reverse-order completion diagnostics, and converged visual
+capture. It is the shared acceptance seam for scheduler and repaint behavior.
+
 `load_international_page` provides a second non-golden fixture for reusable
 text-flow acceptance. It covers inherited RTL content, isolate and embedding
 controls, CJK wrapping without spaces, dictionary-segmented Thai/Lao/Khmer,

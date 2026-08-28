@@ -15,7 +15,9 @@ use text_interfaces::{
     ShapedRun, ShapedText, ShapingError, TextShaper,
 };
 use venture_browser_core::{
-    BrowserFetchResponse, BrowserPage, BrowserPagePipeline, BrowserScrollCommand, BrowserViewport,
+    BrowserFetchResponse, BrowserNavigation, BrowserNavigationUpdate, BrowserPage,
+    BrowserPagePipeline, BrowserScrollCommand, BrowserSession, BrowserSubresourceUpdate,
+    BrowserViewport,
 };
 
 pub const VERSION: &str = "0.1.1";
@@ -221,6 +223,15 @@ pub struct VisualFixtureCapture {
     pub scrolled: ScreenshotSnapshot,
     pub image_scroll_offset_y: f64,
     pub scroll_offset_y: f64,
+}
+
+/// Deterministic evidence for document-first loading and incremental images.
+#[derive(Clone, Debug, PartialEq)]
+pub struct SubresourceLifecycleCapture {
+    pub navigation: BrowserNavigationUpdate,
+    pub pending: ScreenshotSnapshot,
+    pub completions: Vec<BrowserSubresourceUpdate>,
+    pub completed: VisualFixtureCapture,
 }
 
 impl VisualFixtureCapture {
@@ -506,6 +517,48 @@ pub fn load_fixture_page(origin: &str) -> Result<BrowserPage, String> {
 
 pub fn capture(origin: &str) -> Result<VisualFixtureCapture, String> {
     capture_page(load_fixture_page(origin)?)
+}
+
+pub fn capture_subresource_lifecycle(origin: &str) -> Result<SubresourceLifecycleCapture, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let page_url = format!("{}{FIXTURE_PATH}", origin.trim_end_matches('/'));
+    let mut session = BrowserSession::new(&page_url, VIEWPORT_HEIGHT);
+    let navigation = session
+        .begin_execute(BrowserNavigation::Home, &pipeline, &|url: &str| {
+            fixture_response(origin, url)
+        })
+        .map_err(|error| error.to_string())?;
+    let pending = screenshot(
+        &session
+            .viewport()
+            .ok_or_else(|| "fixture navigation did not retain a viewport".to_string())?
+            .viewport_scene(),
+    )?;
+    let mut completions = Vec::new();
+    for request in navigation.requests.iter().rev() {
+        let completion = request.resolve(&|url: &str| fixture_response(origin, url));
+        completions.push(session.complete_subresource(completion, &pipeline));
+    }
+    let page = session
+        .viewport()
+        .ok_or_else(|| "fixture completion lost its viewport".to_string())?
+        .page()
+        .clone();
+    Ok(SubresourceLifecycleCapture {
+        navigation,
+        pending,
+        completions,
+        completed: capture_page(page)?,
+    })
 }
 
 pub fn capture_page(page: BrowserPage) -> Result<VisualFixtureCapture, String> {
@@ -849,6 +902,39 @@ mod tests {
         let capture = capture("http://venture.test").expect("capture fixture");
         capture.assert_valid();
         eprintln!("{}", capture.describe());
+    }
+
+    #[test]
+    fn representative_page_captures_incremental_subresource_repaints() {
+        let capture = capture_subresource_lifecycle("http://venture.test")
+            .expect("capture incremental fixture");
+        assert_eq!(
+            capture
+                .navigation
+                .requests
+                .iter()
+                .map(|request| request.url.as_str())
+                .collect::<Vec<_>>(),
+            vec![
+                "http://venture.test/checker.gif",
+                "http://venture.test/missing.gif"
+            ]
+        );
+        assert!(capture.navigation.cancelled.is_empty());
+        assert_eq!(
+            capture
+                .completions
+                .iter()
+                .map(|completion| completion.pending_count)
+                .collect::<Vec<_>>(),
+            vec![1, 0],
+            "reverse delivery must still converge deterministically"
+        );
+        assert_eq!(capture.pending.full_probe.magenta_pixels, 0);
+        assert_eq!(capture.pending.full_probe.cyan_pixels, 0);
+        assert!(capture.completed.image.full_probe.magenta_pixels > 0);
+        assert!(capture.completed.image.full_probe.cyan_pixels > 0);
+        capture.completed.assert_valid();
     }
 
     #[cfg(target_vendor = "apple")]
