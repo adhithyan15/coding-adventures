@@ -29,9 +29,22 @@ const CARD_ADDRESS_LIMIT: i32 = 2_048;
 const CARD_DECIMAL_SYNC: i32 = 0o2606077;
 const CARD_BINARY_SYNC: i32 = 0o2001777;
 const CARD_FULL_SYNC: i32 = 0o2007777;
+const CONTROLLER_COUNT: usize = 8;
+const MAX_CONTROLLER_COMMANDS: usize = 64;
+const CONTROLLER_READY_CONDITION: u8 = 0o20;
+const CONTROLLER_CONDITION_MIN: u8 = 0o20;
+const CONTROLLER_CONDITION_MAX: u8 = 0o35;
+const CONTROLLER_PLUG_MASK: i32 = 0o700;
+const CONTROLLER_CONDITION_MASK: i32 = 0o77;
+const CONTROLLER_SELECT_BASE: i32 = 0o2500020;
+const CONTROLLER_STATUS_SET_BASE: i32 = 0o2514000;
+const CONTROLLER_STATUS_CLEAR_BASE: i32 = 0o2516000;
+const API_SAVED_PC_ADDRESS: i32 = 0o201;
+const API_VECTOR_ADDRESS: i32 = 0o204;
+const API_X_GROUP: usize = 32;
 
 /// Persistent non-memory bits in the P006B2 central/direct-I/O model.
-pub const CENTRAL_FLIP_FLOPS: usize = 185;
+pub const CENTRAL_FLIP_FLOPS: usize = 1_270;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum CardFormat {
@@ -79,6 +92,24 @@ pub enum NRegisterDevice {
 pub struct PaperTapeFrame {
     pub data: i32,
     pub parity_error: bool,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ControllerStatus {
+    pub online: bool,
+    pub ready: bool,
+    pub error: bool,
+    pub conditions: u64,
+    pub error_conditions: u64,
+    pub api_enabled: bool,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ControllerCommand {
+    pub plug: u8,
+    pub select_word: i32,
+    pub command_word: i32,
+    pub address_word: i32,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -149,6 +180,18 @@ pub struct Ge225GateState {
     pub n_overrun: bool,
     pub stop_on_parity_alarm: bool,
     pub control_switches: i32,
+    pub automatic_interrupt_mode: bool,
+    pub priority_mode: bool,
+    pub priority_return_armed: bool,
+    pub pending_controller_interrupts: u8,
+    pub card_reader_api_enabled: bool,
+    pub card_punch_api_enabled: bool,
+    pub card_reader_interrupt_pending: bool,
+    pub card_punch_interrupt_pending: bool,
+    pub controller_selector_busy: bool,
+    pub controller_selector_alarm: bool,
+    pub selected_controller: Option<u8>,
+    pub controllers: Vec<ControllerStatus>,
     pub memory: Vec<i32>,
 }
 
@@ -184,6 +227,11 @@ pub enum Ge225GateError {
     InvalidCharacter { code: i32 },
     CharacterQueueFull,
     DeviceNotActive { device: &'static str },
+    ControllerPlugOutOfRange { plug: usize },
+    ControllerConditionOutOfRange { condition: u8 },
+    ControllerReadyCannotBeError,
+    ControllerOffline { plug: usize },
+    ControllerCommandQueueFull,
 }
 
 impl Display for Ge225GateError {
@@ -258,6 +306,23 @@ impl Display for Ge225GateError {
             Self::DeviceNotActive { device } => {
                 write!(formatter, "GE-225 {device} is not active")
             }
+            Self::ControllerPlugOutOfRange { plug } => {
+                write!(formatter, "GE-225 controller plug out of range: {plug}")
+            }
+            Self::ControllerConditionOutOfRange { condition } => write!(
+                formatter,
+                "GE-225 controller condition must be {CONTROLLER_CONDITION_MIN:02o} through {CONTROLLER_CONDITION_MAX:02o}, got {condition:o}"
+            ),
+            Self::ControllerReadyCannotBeError => {
+                write!(formatter, "GE-225 controller ready status cannot be an error condition")
+            }
+            Self::ControllerOffline { plug } => {
+                write!(formatter, "GE-225 controller plug {plug} is offline")
+            }
+            Self::ControllerCommandQueueFull => write!(
+                formatter,
+                "GE-225 controller command capture is full at {MAX_CONTROLLER_COMMANDS} commands"
+            ),
         }
     }
 }
@@ -350,6 +415,11 @@ enum Operation {
     Bcn,
     Bpr,
     Bpn,
+    Sel,
+    BcsSet,
+    BcsClear,
+    SetPst,
+    SetPbk,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -367,7 +437,7 @@ pub struct Ge225GateLevel {
     decimal_carry: BitRegister<2>,
     clock_sixths: BitRegister<19>,
     n_ready: BitRegister<1>,
-    selected_x_group: BitRegister<5>,
+    selected_x_group: BitRegister<6>,
     halted: BitRegister<1>,
     card_reader_continuous: BitRegister<2>,
     card_reader_base: BitRegister<15>,
@@ -392,6 +462,26 @@ pub struct Ge225GateLevel {
     paper_tape_input: VecDeque<PaperTapeFrame>,
     paper_tape_output: Vec<i32>,
     typewriter_input: VecDeque<i32>,
+    controller_online: [BitRegister<1>; CONTROLLER_COUNT],
+    controller_ready: [BitRegister<1>; CONTROLLER_COUNT],
+    controller_error: [BitRegister<1>; CONTROLLER_COUNT],
+    controller_conditions: [BitRegister<64>; CONTROLLER_COUNT],
+    controller_error_conditions: [BitRegister<64>; CONTROLLER_COUNT],
+    controller_api_enabled: [BitRegister<1>; CONTROLLER_COUNT],
+    controller_commands: Vec<ControllerCommand>,
+    controller_selector_busy: BitRegister<1>,
+    controller_selector_alarm: BitRegister<1>,
+    selected_controller: BitRegister<4>,
+    pending_controller_interrupts: BitRegister<8>,
+    card_reader_api_enabled: BitRegister<1>,
+    card_punch_api_enabled: BitRegister<1>,
+    card_reader_interrupt_pending: BitRegister<1>,
+    card_punch_interrupt_pending: BitRegister<1>,
+    priority_mode: BitRegister<1>,
+    priority_return_armed: BitRegister<1>,
+    api_branch_inhibit: BitRegister<1>,
+    interrupted_x_group: BitRegister<6>,
+    automatic_interrupt_mode: BitRegister<1>,
 }
 
 impl Ge225GateLevel {
@@ -440,6 +530,28 @@ impl Ge225GateLevel {
             paper_tape_input: VecDeque::new(),
             paper_tape_output: Vec::new(),
             typewriter_input: VecDeque::new(),
+            controller_online: std::array::from_fn(|_| BitRegister::new(&[1])),
+            controller_ready: std::array::from_fn(|_| BitRegister::new(&[1])),
+            controller_error: std::array::from_fn(|_| BitRegister::zero()),
+            controller_conditions: std::array::from_fn(|_| {
+                BitRegister::new(&u64_to_bits::<64>(1_u64 << CONTROLLER_READY_CONDITION))
+            }),
+            controller_error_conditions: std::array::from_fn(|_| BitRegister::zero()),
+            controller_api_enabled: std::array::from_fn(|_| BitRegister::zero()),
+            controller_commands: Vec::new(),
+            controller_selector_busy: BitRegister::zero(),
+            controller_selector_alarm: BitRegister::zero(),
+            selected_controller: BitRegister::zero(),
+            pending_controller_interrupts: BitRegister::zero(),
+            card_reader_api_enabled: BitRegister::zero(),
+            card_punch_api_enabled: BitRegister::zero(),
+            card_reader_interrupt_pending: BitRegister::zero(),
+            card_punch_interrupt_pending: BitRegister::zero(),
+            priority_mode: BitRegister::zero(),
+            priority_return_armed: BitRegister::zero(),
+            api_branch_inhibit: BitRegister::zero(),
+            interrupted_x_group: BitRegister::zero(),
+            automatic_interrupt_mode: BitRegister::zero(),
         })
     }
 
@@ -459,7 +571,7 @@ impl Ge225GateLevel {
         self.decimal_carry.write(&[0; 2]);
         self.clock_sixths.write(&[0; 19]);
         self.n_ready.write(&[1]);
-        self.selected_x_group.write(&[0; 5]);
+        self.selected_x_group.write(&[0; 6]);
         self.halted.write(&[0]);
         self.card_reader_continuous.write(&[0; 2]);
         self.card_reader_base.write(&[0; 15]);
@@ -484,6 +596,29 @@ impl Ge225GateLevel {
         self.paper_tape_input.clear();
         self.paper_tape_output.clear();
         self.typewriter_input.clear();
+        for plug in 0..CONTROLLER_COUNT {
+            self.controller_online[plug].write(&[1]);
+            self.controller_ready[plug].write(&[1]);
+            self.controller_error[plug].write(&[0]);
+            self.controller_conditions[plug]
+                .write(&u64_to_bits::<64>(1_u64 << CONTROLLER_READY_CONDITION));
+            self.controller_error_conditions[plug].write(&[0; 64]);
+            self.controller_api_enabled[plug].write(&[0]);
+        }
+        self.controller_commands.clear();
+        self.controller_selector_busy.write(&[0]);
+        self.controller_selector_alarm.write(&[0]);
+        self.selected_controller.write(&[0; 4]);
+        self.pending_controller_interrupts.write(&[0; 8]);
+        self.card_reader_api_enabled.write(&[0]);
+        self.card_punch_api_enabled.write(&[0]);
+        self.card_reader_interrupt_pending.write(&[0]);
+        self.card_punch_interrupt_pending.write(&[0]);
+        self.priority_mode.write(&[0]);
+        self.priority_return_armed.write(&[0]);
+        self.api_branch_inhibit.write(&[0]);
+        self.interrupted_x_group.write(&[0; 6]);
+        self.automatic_interrupt_mode.write(&[0]);
     }
 
     pub fn load_words(&mut self, words: &[i32], origin: usize) -> Result<(), Ge225GateError> {
@@ -519,6 +654,8 @@ impl Ge225GateLevel {
         words: &[i32],
         status: CardStatus,
     ) -> Result<(), Ge225GateError> {
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
         if words.len() != format.word_count() {
             return Err(Ge225GateError::InvalidCardRecordLength {
                 format,
@@ -533,6 +670,7 @@ impl Ge225GateLevel {
             words: words.iter().map(|word| word & WORD_MASK).collect(),
             status,
         });
+        self.record_direct_ready_transitions(reader_before, punch_before);
         Ok(())
     }
 
@@ -556,29 +694,45 @@ impl Ge225GateLevel {
     }
 
     pub fn take_card_punch_output(&mut self) -> Vec<CardRecord> {
-        std::mem::take(&mut self.card_punch_output)
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
+        let output = std::mem::take(&mut self.card_punch_output);
+        self.record_direct_ready_transitions(reader_before, punch_before);
+        output
     }
 
     pub fn set_card_reader_online(&mut self, online: bool) {
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
         self.card_reader_online.write(&[u8::from(online)]);
         if !online {
             self.card_reader_continuous.write(&[0; 2]);
         }
+        self.record_direct_ready_transitions(reader_before, punch_before);
     }
 
     pub fn set_card_punch_online(&mut self, online: bool) {
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
         self.card_punch_online.write(&[u8::from(online)]);
+        self.record_direct_ready_transitions(reader_before, punch_before);
     }
 
     pub fn set_card_reader_fault(&mut self, fault: bool) {
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
         self.card_reader_fault.write(&[u8::from(fault)]);
         if fault {
             self.card_reader_continuous.write(&[0; 2]);
         }
+        self.record_direct_ready_transitions(reader_before, punch_before);
     }
 
     pub fn set_card_punch_fault(&mut self, fault: bool) {
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
         self.card_punch_fault.write(&[u8::from(fault)]);
+        self.record_direct_ready_transitions(reader_before, punch_before);
     }
 
     pub fn set_stop_on_parity_alarm(&mut self, enabled: bool) {
@@ -593,9 +747,10 @@ impl Ge225GateLevel {
     pub fn clear_direct_io_alarms(&mut self) {
         self.card_reader_alarm.write(&[0]);
         self.card_punch_alarm.write(&[0]);
-        self.priority_alarm.write(&[0]);
+        let selector_alarm = self.controller_selector_alarm.read()[0];
+        self.priority_alarm.write(&[selector_alarm]);
         self.parity_error.write(&[0]);
-        self.halted.write(&[0]);
+        self.halted.write(&[selector_alarm]);
     }
 
     pub fn queue_paper_tape_input(&mut self, frames: &[i32]) -> Result<(), Ge225GateError> {
@@ -698,6 +853,8 @@ impl Ge225GateLevel {
     }
 
     pub fn advance_card_reader(&mut self) -> Result<bool, Ge225GateError> {
+        let reader_before = self.card_reader_ready();
+        let punch_before = self.card_punch_ready();
         let Some(format) = decode_continuous(self.card_reader_continuous.read()) else {
             return Err(Ge225GateError::DeviceNotActive {
                 device: "card reader",
@@ -705,14 +862,162 @@ impl Ge225GateLevel {
         };
         if self.card_reader_queue.is_empty() {
             self.card_reader_continuous.write(&[0; 2]);
+            self.record_direct_ready_transitions(reader_before, punch_before);
             return Ok(false);
         }
         self.transfer_card_input(format)?;
+        self.record_direct_ready_transitions(reader_before, punch_before);
         Ok(true)
     }
 
     pub fn get_typewriter_output(&self) -> String {
         self.typewriter_output.join("")
+    }
+
+    pub fn controller_commands(&self) -> &[ControllerCommand] {
+        &self.controller_commands
+    }
+
+    pub fn take_controller_commands(&mut self) -> Vec<ControllerCommand> {
+        std::mem::take(&mut self.controller_commands)
+    }
+
+    pub fn highest_priority_pending_controller(&self) -> Option<usize> {
+        let pending = self.pending_controller_interrupts.read();
+        (0..CONTROLLER_COUNT).find(|plug| pending[*plug] == 1)
+    }
+
+    pub fn set_controller_online(
+        &mut self,
+        plug: usize,
+        online: bool,
+    ) -> Result<(), Ge225GateError> {
+        self.controller_index(plug)?;
+        self.controller_online[plug].write(&[u8::from(online)]);
+        if !online {
+            self.set_controller_ready_value(plug, false);
+        }
+        Ok(())
+    }
+
+    pub fn set_controller_api_enabled(
+        &mut self,
+        plug: usize,
+        enabled: bool,
+    ) -> Result<(), Ge225GateError> {
+        self.controller_index(plug)?;
+        self.controller_api_enabled[plug].write(&[u8::from(enabled)]);
+        Ok(())
+    }
+
+    pub fn set_controller_condition(
+        &mut self,
+        plug: usize,
+        condition: u8,
+        asserted: bool,
+    ) -> Result<(), Ge225GateError> {
+        self.controller_index(plug)?;
+        self.check_controller_condition(condition)?;
+        if condition == CONTROLLER_READY_CONDITION {
+            return self.set_controller_ready(plug, asserted);
+        }
+        let mut conditions = self.controller_conditions[plug].read();
+        conditions[condition as usize] = u8::from(asserted);
+        self.controller_conditions[plug].write(&conditions);
+        Ok(())
+    }
+
+    pub fn set_controller_error(&mut self, plug: usize, error: bool) -> Result<(), Ge225GateError> {
+        self.controller_index(plug)?;
+        self.controller_error[plug].write(&[u8::from(error)]);
+        if !error {
+            let errors = self.controller_error_conditions[plug].read();
+            let conditions = self.controller_conditions[plug].read();
+            self.controller_conditions[plug].write(&std::array::from_fn(|bit| {
+                and_gate(conditions[bit], not_gate(errors[bit]))
+            }));
+            self.controller_error_conditions[plug].write(&[0; 64]);
+        }
+        Ok(())
+    }
+
+    pub fn set_controller_error_condition(
+        &mut self,
+        plug: usize,
+        condition: u8,
+        asserted: bool,
+    ) -> Result<(), Ge225GateError> {
+        self.controller_index(plug)?;
+        self.check_controller_condition(condition)?;
+        if condition == CONTROLLER_READY_CONDITION {
+            return Err(Ge225GateError::ControllerReadyCannotBeError);
+        }
+        let mut conditions = self.controller_conditions[plug].read();
+        let mut errors = self.controller_error_conditions[plug].read();
+        conditions[condition as usize] = u8::from(asserted);
+        errors[condition as usize] = u8::from(asserted);
+        self.controller_conditions[plug].write(&conditions);
+        self.controller_error_conditions[plug].write(&errors);
+        self.controller_error[plug].write(&[not_gate(is_zero(&errors))]);
+        Ok(())
+    }
+
+    pub fn set_controller_ready(&mut self, plug: usize, ready: bool) -> Result<(), Ge225GateError> {
+        self.controller_index(plug)?;
+        let transitioned = and_gate(
+            not_gate(self.controller_ready[plug].read()[0]),
+            u8::from(ready),
+        );
+        self.set_controller_ready_value(plug, ready);
+        if and_gate(transitioned, self.controller_api_enabled[plug].read()[0]) == 1 {
+            let mut pending = self.pending_controller_interrupts.read();
+            pending[plug] = 1;
+            self.pending_controller_interrupts.write(&pending);
+        }
+        Ok(())
+    }
+
+    pub fn complete_controller(
+        &mut self,
+        plug: usize,
+        conditions: u64,
+        error: bool,
+    ) -> Result<(), Ge225GateError> {
+        self.controller_index(plug)?;
+        if self.controller_online[plug].read()[0] == 0 {
+            return Err(Ge225GateError::ControllerOffline { plug });
+        }
+        self.controller_conditions[plug].write(&u64_to_bits::<64>(conditions));
+        self.controller_error[plug].write(&[u8::from(error)]);
+        self.controller_error_conditions[plug].write(&[0; 64]);
+        self.set_controller_ready(plug, true)
+    }
+
+    pub fn advance_controller_selector(&mut self) -> bool {
+        if self.controller_selector_busy.read()[0] == 0 {
+            return false;
+        }
+        self.controller_selector_busy.write(&[0]);
+        self.selected_controller.write(&[0; 4]);
+        true
+    }
+
+    pub fn set_card_reader_api_enabled(&mut self, enabled: bool) {
+        self.card_reader_api_enabled.write(&[u8::from(enabled)]);
+    }
+
+    pub fn set_card_punch_api_enabled(&mut self, enabled: bool) {
+        self.card_punch_api_enabled.write(&[u8::from(enabled)]);
+    }
+
+    pub fn clear_controller_selector_alarm(&mut self) {
+        self.controller_selector_alarm.write(&[0]);
+        let direct_alarm = or_gate(
+            self.card_reader_alarm.read()[0],
+            self.card_punch_alarm.read()[0],
+        );
+        self.priority_alarm.write(&[direct_alarm]);
+        self.halted.write(&[direct_alarm]);
     }
 
     pub fn set_program_counter(&mut self, address: i32) -> Result<(), Ge225GateError> {
@@ -725,6 +1030,13 @@ impl Ge225GateLevel {
         if self.halted.read()[0] == 1 {
             return Err(Ge225GateError::Halted);
         }
+        if self.api_branch_inhibit.read()[0] == 1 {
+            self.api_branch_inhibit.write(&[0]);
+        } else {
+            self.enter_api_interrupt_if_pending()?;
+        }
+        let reader_ready_before = self.card_reader_ready();
+        let punch_ready_before = self.card_punch_ready();
         let pc_before = bits_to_i32(&self.pc.read());
         let instruction = self.read_word(pc_before)?;
         let (mut operation, mut modifier, mut address) =
@@ -822,6 +1134,7 @@ impl Ge225GateLevel {
         }
         self.preflight_decimal(operation, effective_address)?;
         self.preflight_direct_io(operation, effective_address)?;
+        self.preflight_controller(operation, address, sequential)?;
         if ir_word == instruction && modifier != 0 {
             if let Some(modified) = effective_address.map(|effective| {
                 if is_card_operation(operation) {
@@ -850,7 +1163,25 @@ impl Ge225GateLevel {
             operation_name(operation)
         }
         .to_string();
+        let priority_return = and_gate(
+            self.priority_mode.read()[0],
+            and_gate(
+                self.priority_return_armed.read()[0],
+                u8::from(operation == Operation::Bru && modifier != 0),
+            ),
+        );
         self.execute(operation, modifier, effective_address, address, pc_before)?;
+        if priority_return == 1 {
+            self.priority_mode.write(&[0]);
+            self.priority_return_armed.write(&[0]);
+            self.selected_x_group
+                .write(&self.interrupted_x_group.read());
+        }
+        if operation == Operation::Bru {
+            self.api_branch_inhibit.write(&[1]);
+        }
+        self.record_direct_ready_transitions(reader_ready_before, punch_ready_before);
+        self.checked_address(bits_to_i32(&self.pc.read()))?;
 
         Ok(StepTrace {
             pc_before,
@@ -911,6 +1242,28 @@ impl Ge225GateLevel {
             n_overrun: self.n_overrun.read()[0] == 1,
             stop_on_parity_alarm: self.stop_on_parity_alarm.read()[0] == 1,
             control_switches: bits_to_i32(&self.control_switches.read()),
+            automatic_interrupt_mode: self.automatic_interrupt_mode.read()[0] == 1,
+            priority_mode: self.priority_mode.read()[0] == 1,
+            priority_return_armed: self.priority_return_armed.read()[0] == 1,
+            pending_controller_interrupts: bits_to_i32(&self.pending_controller_interrupts.read())
+                as u8,
+            card_reader_api_enabled: self.card_reader_api_enabled.read()[0] == 1,
+            card_punch_api_enabled: self.card_punch_api_enabled.read()[0] == 1,
+            card_reader_interrupt_pending: self.card_reader_interrupt_pending.read()[0] == 1,
+            card_punch_interrupt_pending: self.card_punch_interrupt_pending.read()[0] == 1,
+            controller_selector_busy: self.controller_selector_busy.read()[0] == 1,
+            controller_selector_alarm: self.controller_selector_alarm.read()[0] == 1,
+            selected_controller: decode_selected_controller(self.selected_controller.read()),
+            controllers: (0..CONTROLLER_COUNT)
+                .map(|plug| ControllerStatus {
+                    online: self.controller_online[plug].read()[0] == 1,
+                    ready: self.controller_ready[plug].read()[0] == 1,
+                    error: self.controller_error[plug].read()[0] == 1,
+                    conditions: bits_to_u64(&self.controller_conditions[plug].read()),
+                    error_conditions: bits_to_u64(&self.controller_error_conditions[plug].read()),
+                    api_enabled: self.controller_api_enabled[plug].read()[0] == 1,
+                })
+                .collect(),
             memory: self
                 .memory
                 .iter()
@@ -1025,6 +1378,75 @@ impl Ge225GateLevel {
         and_gate(and_gate(online, healthy), and_gate(idle, queued))
     }
 
+    fn controller_index(&self, plug: usize) -> Result<usize, Ge225GateError> {
+        (plug < CONTROLLER_COUNT)
+            .then_some(plug)
+            .ok_or(Ge225GateError::ControllerPlugOutOfRange { plug })
+    }
+
+    fn check_controller_condition(&self, condition: u8) -> Result<(), Ge225GateError> {
+        if !(CONTROLLER_CONDITION_MIN..=CONTROLLER_CONDITION_MAX).contains(&condition) {
+            return Err(Ge225GateError::ControllerConditionOutOfRange { condition });
+        }
+        Ok(())
+    }
+
+    fn set_controller_ready_value(&mut self, plug: usize, ready: bool) {
+        self.controller_ready[plug].write(&[u8::from(ready)]);
+        let mut conditions = self.controller_conditions[plug].read();
+        conditions[CONTROLLER_READY_CONDITION as usize] = u8::from(ready);
+        self.controller_conditions[plug].write(&conditions);
+    }
+
+    fn api_interrupt_pending(&self) -> u8 {
+        let controller = not_gate(is_zero(&self.pending_controller_interrupts.read()));
+        or_gate(
+            controller,
+            or_gate(
+                self.card_reader_interrupt_pending.read()[0],
+                self.card_punch_interrupt_pending.read()[0],
+            ),
+        )
+    }
+
+    fn enter_api_interrupt_if_pending(&mut self) -> Result<(), Ge225GateError> {
+        let enter = and_gate(
+            self.automatic_interrupt_mode.read()[0],
+            and_gate(
+                not_gate(self.priority_mode.read()[0]),
+                self.api_interrupt_pending(),
+            ),
+        );
+        if enter == 0 {
+            return Ok(());
+        }
+        self.write_word(API_SAVED_PC_ADDRESS, bits_to_i32(&self.pc.read()))?;
+        self.checked_address(API_VECTOR_ADDRESS)?;
+        self.interrupted_x_group
+            .write(&self.selected_x_group.read());
+        self.selected_x_group
+            .write(&i32_to_bits::<6>(API_X_GROUP as i32));
+        self.pc.write(&i32_to_bits::<15>(API_VECTOR_ADDRESS));
+        self.automatic_interrupt_mode.write(&[0]);
+        self.priority_mode.write(&[1]);
+        self.priority_return_armed.write(&[0]);
+        self.pending_controller_interrupts.write(&[0; 8]);
+        self.card_reader_interrupt_pending.write(&[0]);
+        self.card_punch_interrupt_pending.write(&[0]);
+        Ok(())
+    }
+
+    fn record_direct_ready_transitions(&mut self, reader_before: u8, punch_before: u8) {
+        let reader_transition = and_gate(not_gate(reader_before), self.card_reader_ready());
+        if and_gate(reader_transition, self.card_reader_api_enabled.read()[0]) == 1 {
+            self.card_reader_interrupt_pending.write(&[1]);
+        }
+        let punch_transition = and_gate(not_gate(punch_before), self.card_punch_ready());
+        if and_gate(punch_transition, self.card_punch_api_enabled.read()[0]) == 1 {
+            self.card_punch_interrupt_pending.write(&[1]);
+        }
+    }
+
     fn card_punch_ready(&self) -> u8 {
         and_gate(
             and_gate(
@@ -1076,6 +1498,30 @@ impl Ge225GateLevel {
                 }
                 _ => {}
             }
+        }
+        Ok(())
+    }
+
+    fn preflight_controller(
+        &self,
+        operation: Operation,
+        raw_address: i32,
+        sequential: i32,
+    ) -> Result<(), Ge225GateError> {
+        if operation != Operation::Sel {
+            return Ok(());
+        }
+        let plug = raw_address as usize;
+        self.controller_index(plug)?;
+        if self.controller_selector_busy.read()[0] == 1
+            || self.controller_online[plug].read()[0] == 0
+        {
+            return Ok(());
+        }
+        self.checked_range(sequential, 2)?;
+        self.checked_address(sequential + 2)?;
+        if self.controller_commands.len() >= MAX_CONTROLLER_COMMANDS {
+            return Err(Ge225GateError::ControllerCommandQueueFull);
         }
         Ok(())
     }
@@ -1313,6 +1759,17 @@ impl Ge225GateLevel {
                     _ => unreachable!("the match contains only direct-I/O branch tests"),
                 };
                 i32::from(condition == 0)
+            }
+            Operation::BcsSet | Operation::BcsClear => {
+                let plug = ((raw_address >> 6) & 0o7) as usize;
+                let condition = (raw_address & CONTROLLER_CONDITION_MASK) as usize;
+                let asserted = self.controller_conditions[plug].read()[condition];
+                let branch = if operation == Operation::BcsSet {
+                    asserted
+                } else {
+                    not_gate(asserted)
+                };
+                i32::from(branch == 0)
             }
             _ => 0,
         })
@@ -1557,6 +2014,14 @@ impl Ge225GateLevel {
                         _ => unreachable!("the match contains typed card reads"),
                     });
                     self.transfer_card_input(format)?;
+                    if operation == Operation::Rcf
+                        && and_gate(
+                            self.card_reader_ready(),
+                            self.card_reader_api_enabled.read()[0],
+                        ) == 1
+                    {
+                        self.card_reader_interrupt_pending.write(&[1]);
+                    }
                 }
             }
             Operation::Rcm => {
@@ -1575,6 +2040,13 @@ impl Ge225GateLevel {
                         self.card_reader_slot.write(&[0; 2]);
                         self.card_reader_continuous.write(&[0; 2]);
                         self.transfer_card_input(format)?;
+                        if and_gate(
+                            self.card_reader_ready(),
+                            self.card_reader_api_enabled.read()[0],
+                        ) == 1
+                        {
+                            self.card_reader_interrupt_pending.write(&[1]);
+                        }
                     }
                 }
             }
@@ -1586,6 +2058,13 @@ impl Ge225GateLevel {
                         card_operation_format(operation).expect("a typed card punch has a format"),
                         address,
                     )?;
+                    if and_gate(
+                        self.card_punch_ready(),
+                        self.card_punch_api_enabled.read()[0],
+                    ) == 1
+                    {
+                        self.card_punch_interrupt_pending.write(&[1]);
+                    }
                 }
             }
             Operation::Hcr => self.card_reader_continuous.write(&[0; 2]),
@@ -1669,6 +2148,58 @@ impl Ge225GateLevel {
                 }
                 NRegisterDevice::Off | NRegisterDevice::PaperTapePunch => {}
             },
+            Operation::Sel => {
+                let plug = raw_address as usize;
+                if self.controller_selector_busy.read()[0] == 1
+                    || self.controller_online[plug].read()[0] == 0
+                {
+                    self.controller_selector_alarm.write(&[1]);
+                    self.priority_alarm.write(&[1]);
+                    self.halted.write(&[1]);
+                } else {
+                    let command_word = self.read_word(bits_to_i32(&self.pc.read()))?;
+                    let address_word =
+                        self.read_word(self.following_address(bits_to_i32(&self.pc.read()))?)?;
+                    let errors = self.controller_error_conditions[plug].read();
+                    let conditions = self.controller_conditions[plug].read();
+                    self.controller_conditions[plug].write(&std::array::from_fn(|bit| {
+                        and_gate(conditions[bit], not_gate(errors[bit]))
+                    }));
+                    self.controller_error_conditions[plug].write(&[0; 64]);
+                    self.controller_error[plug].write(&[0]);
+                    self.set_controller_ready_value(plug, false);
+                    self.controller_commands.push(ControllerCommand {
+                        plug: plug as u8,
+                        select_word: bits_to_i32(&self.ir.read()),
+                        command_word,
+                        address_word,
+                    });
+                    self.controller_selector_busy.write(&[1]);
+                    self.selected_controller
+                        .write(&encode_selected_controller(Some(plug as u8)));
+                    self.advance_pc(2)?;
+                }
+            }
+            Operation::BcsSet | Operation::BcsClear => {
+                let plug = ((raw_address >> 6) & 0o7) as usize;
+                let condition = (raw_address & CONTROLLER_CONDITION_MASK) as usize;
+                let asserted = self.controller_conditions[plug].read()[condition];
+                let branch = if operation == Operation::BcsSet {
+                    asserted
+                } else {
+                    not_gate(asserted)
+                };
+                if branch == 0 {
+                    self.advance_pc(1)?;
+                }
+            }
+            Operation::SetPst => {
+                self.automatic_interrupt_mode.write(&[1]);
+                if self.priority_mode.read()[0] == 1 {
+                    self.priority_return_armed.write(&[1]);
+                }
+            }
+            Operation::SetPbk => self.automatic_interrupt_mode.write(&[0]),
             Operation::Ldz => self.a.write(&[0; 20]),
             Operation::Ldo => self.a.write(&i32_to_bits::<20>(1)),
             Operation::Lmo => self.a.write(&[1; 20]),
@@ -1747,7 +2278,7 @@ impl Ge225GateLevel {
             | Operation::Sld
             | Operation::Nor
             | Operation::Dno => self.execute_shift(operation, raw_address)?,
-            Operation::Sxg => self.selected_x_group.write(&i32_to_bits::<5>(raw_address)),
+            Operation::Sxg => self.selected_x_group.write(&i32_to_bits::<6>(raw_address)),
             Operation::Bod
             | Operation::Bev
             | Operation::Bmi
@@ -2017,6 +2548,18 @@ fn decode_n_device(bits: [u8; 2]) -> NRegisterDevice {
     }
 }
 
+fn encode_selected_controller(plug: Option<u8>) -> [u8; 4] {
+    plug.map_or([0; 4], |plug| {
+        let mut bits = i32_to_bits::<4>(i32::from(plug));
+        bits[3] = 1;
+        bits
+    })
+}
+
+fn decode_selected_controller(bits: [u8; 4]) -> Option<u8> {
+    (bits[3] == 1).then_some(bits_to_i32(&bits[..3]) as u8)
+}
+
 fn decode_continuous(bits: [u8; 2]) -> Option<CardFormat> {
     match bits {
         [1, 0] => Some(CardFormat::Decimal),
@@ -2124,6 +2667,28 @@ fn decode(word: i32, _n_device: NRegisterDevice) -> Option<(Operation, i32, i32)
     let modifier = (normalized >> 13) & 0x03;
     let canonical = normalized & !(0x03 << 13);
     let canonical_bits = i32_to_bits::<20>(canonical);
+    if (canonical & !CONTROLLER_PLUG_MASK) == CONTROLLER_SELECT_BASE {
+        return Some((
+            Operation::Sel,
+            modifier,
+            (canonical & CONTROLLER_PLUG_MASK) >> 6,
+        ));
+    }
+    let controller_status_base = normalized & !(CONTROLLER_PLUG_MASK | CONTROLLER_CONDITION_MASK);
+    let controller_condition = (normalized & CONTROLLER_CONDITION_MASK) as u8;
+    if matches!(
+        controller_status_base,
+        CONTROLLER_STATUS_SET_BASE | CONTROLLER_STATUS_CLEAR_BASE
+    ) && (CONTROLLER_CONDITION_MIN..=CONTROLLER_CONDITION_MAX).contains(&controller_condition)
+    {
+        let operation = if controller_status_base == CONTROLLER_STATUS_SET_BASE {
+            Operation::BcsSet
+        } else {
+            Operation::BcsClear
+        };
+        let plug = (normalized & CONTROLLER_PLUG_MASK) >> 6;
+        return Some((operation, 0, (plug << 6) | i32::from(controller_condition)));
+    }
     if (canonical >> 15) == 0o25 {
         let address = canonical & ADDRESS_MASK;
         let base = address & !(CARD_ADDRESS_ALIGNMENT - 1);
@@ -2185,6 +2750,8 @@ const FIXED_OPERATIONS: &[(i32, Operation)] = &[
     (0o2500014, Operation::Ron),
     (0o2500015, Operation::Pon),
     (0o2500016, Operation::Hpt),
+    (0o2506015, Operation::SetPst),
+    (0o2506016, Operation::SetPbk),
     (0o2504002, Operation::Ldz),
     (0o2504022, Operation::Ldo),
     (0o2504102, Operation::Lmo),
@@ -2318,6 +2885,11 @@ fn is_fixed(operation: Operation) -> bool {
             | Operation::Bcn
             | Operation::Bpr
             | Operation::Bpn
+            | Operation::Sel
+            | Operation::BcsSet
+            | Operation::BcsClear
+            | Operation::SetPst
+            | Operation::SetPbk
     )
 }
 
@@ -2454,6 +3026,10 @@ fn operation_name(operation: Operation) -> &'static str {
         Operation::Bcn => "BCN",
         Operation::Bpr => "BPR",
         Operation::Bpn => "BPN",
+        Operation::Sel => "SEL",
+        Operation::BcsSet | Operation::BcsClear => "BCS",
+        Operation::SetPst => "SET_PST",
+        Operation::SetPbk => "SET_PBK",
     }
 }
 
@@ -2909,6 +3485,12 @@ fn bits_to_i32(bits: &[u8]) -> i32 {
     bits.iter()
         .enumerate()
         .fold(0, |value, (bit, input)| value | i32::from(*input) << bit)
+}
+
+fn bits_to_u64(bits: &[u8]) -> u64 {
+    bits.iter()
+        .enumerate()
+        .fold(0, |value, (bit, input)| value | u64::from(*input) << bit)
 }
 
 pub fn encode_instruction(opcode: i32, modifier: i32, address: i32) -> Option<i32> {

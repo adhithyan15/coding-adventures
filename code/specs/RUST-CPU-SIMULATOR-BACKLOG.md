@@ -91,8 +91,8 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-P006B2**, the GE-225 gate-level direct card,
-paper-tape, and typewriter slice. RCPU-005 is complete after the AAU/final-audit slice added separate
+Current selection: **RCPU-P006C**, the GE-225 gate-level AAU and final
+instruction-family differential audit. RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
 transient/hold alerts, modification, and fail-closed preflight. The functional
@@ -118,13 +118,21 @@ acceptance boundary is DFF-backed decimal mode/carry and 19-bit clock state,
 gate-only single/double BCD arithmetic and clock advancement, exact fixed-word
 decode, oracle differentials, fail-closed validation, and above-floor coverage.
 Its 23 combined tests include 48 seeded decimal vectors; core line coverage is
-89.91% (1,257/1,398). P006B2 is implementation-complete locally with 53 new
+89.91% (1,257/1,398). P006B2 merged in PR #13349 at `709a6fb`: its 53 new
 DFF-backed state bits and ten direct-I/O conformance tests spanning all seven
 card modes, continuous DMA slots and sync/status words, shared N-device routing,
 readiness branches, parity/overrun/priority alarms, atomic failures, and an
 instruction-sequence differential against the functional oracle. The 33 combined
-tests cover 83.48% of core lines (1,339/1,604), above the completion floor. P006B3 remains
-the next chronological item after P006B2 merges.
+tests cover 83.48% of core lines (1,339/1,604), above the completion floor.
+P006B3 is the current publication slice and is implementation-complete locally:
+1,085 additional DFF-backed bits model eight controller banks, selector/API
+latches, group-32 interrupt state, and widened X-group selection. Thirteen new
+tests cover selector/status formats, modification, bounded opaque command
+capture, condition branches, disabled/deferred ready events, card participation,
+group-32 vector/return, SET PST/SET PBK, BRU target inhibition, reset, functional
+lockstep, and atomic memory edges. The 46 combined tests cover 84.92% of core
+lines (1,650/1,943), above the completion floor. P006C remains dependency-stacked
+behind P006B3 and is the next publication slice.
 
 ## Cross-language wave
 
@@ -152,6 +160,7 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-27 | P006B3 gate-state audit found that API service selects special X group 32 at core 0200-0203, one beyond the ordinary five-bit SXG encoding. The P006A selected-group register could represent only groups 0-31. | P0, architectural state width, blocks P006B3 | Widen selected X-group state to six DFFs, retain ordinary SXG decode at five bits, add a separate six-bit interrupted-group latch, and pin group-32 vectoring plus restoration of the interrupted ordinary group. |
 | 2026-08-27 | P006B fidelity review found two independently auditable hardware domains inside the original optional-I/O slice: decimal/clock is a combinational central datapath, while direct devices and selector/API are bounded event-driven state machines. Combining them would make gate provenance and atomic error review unnecessarily difficult. | P0, scope clarity, blocks RCPU-006 | Split P006B into P006B1 decimal/clock, P006B2 direct card/paper-tape/typewriter, and P006B3 selector/API. Preserve chronological order and keep all three ahead of the AAU/final audit. |
 | 2026-08-27 | P006B1 implementation review found that the deterministic clock API accepts a 64-bit tick count, including `u64::MAX`; host modulo would violate the gate-level arithmetic contract even though instruction stepping remained gate-backed. | P0, gate fidelity, blocks P006B1 | Reduce and advance the external tick vector through a 65-bit restoring-division/add/subtract gate network, preserving both daily wrap and the documented 19-bit out-of-day recovery path. |
 | 2026-08-27 | P006A pre-push security review found that `run(max_steps)` passed the caller-controlled bound directly to `Vec::with_capacity`, so `usize::MAX` panicked before executing even one fail-closed instruction. | P0, allocation/panic safety, blocks P006A | Grow traces only as accepted instructions execute, and pin an oversized bound that must report the first unknown instruction instead of preallocating from the bound. |

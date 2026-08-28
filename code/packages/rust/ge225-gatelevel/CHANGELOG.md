@@ -22,3 +22,9 @@ All notable changes to the GE-225 gate-level Rust package are documented here.
 - Ten direct-I/O conformance tests, including instruction-sequence lockstep
   against the functional GE-225 oracle and atomic modified-address rejection;
   the 33 combined tests cover 83.48% of core lines (1,339/1,604).
+- RCPU-P006B3 eight DFF-backed controller banks, bounded selector command
+  capture, controller status branches, ready-event API latches, exact group-32
+  save/vector/return behavior, SET PST/SET PBK, and BRU target inhibition.
+- Thirteen controller/API conformance tests, including functional-oracle
+  lockstep and fail-closed command/skip boundaries; the 46 combined tests cover
+  84.92% of core lines (1,650/1,943).
