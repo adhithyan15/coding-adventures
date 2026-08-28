@@ -1,20 +1,23 @@
 /**
  * forme.config.ts — pipeline config for the Coding Adventures blog.
  *
- * Eight stages with explicit fan-out after routing and collection.
+ * Ten stages with explicit fan-out after asset resolution, routing, and collection.
  * See `build.ts` for the driver that verifies both deploy sinks.
  *
  * Roll call:
  *
  *   forme-source-fs              Void                 → Stream<ContentSource>
  *   forme-parse-markdown         ContentSource        → ContentNode
+ *   forme-resolve-asset-refs-fs  Stream<ContentNode>  → Stream<ContentNode>
  *   forme-router                 Stream<ContentNode>  → Stream<ContentNode>
  *                                         ├→ collect → blog-surface → emit-surface
- *                                         └→ render-pages → emit-articles
+ *                                         ├→ render-pages ──────────────┐
+ *                                         └→ load-assets ──(assets)─────┴→ emit-articles
  *
  * The router is the sole routing-policy stage. Its materialized stream
- * fans out to the chronological collection and page renderer, so both
- * branches consume exactly the same canonical `ContentNode.route`.
+ * fans out to the chronological collection, page renderer, and asset loader,
+ * so all three branches consume the same canonical `ContentNode.route` and
+ * resolved `AssetRef` identities.
  *
  * Note on the route template: `/blog/{slug}.html` does NOT include the
  * `/coding-adventures/` repo-name prefix that the live URL has.  That
@@ -24,17 +27,21 @@
  * non-portable (rename the repo, switch to a user/org page, point a
  * custom domain at it → all the routes would need rewriting).  The
  * deploy workflow publishes dist/blog/ to gh-pages:blog/, while
- * `siteUrl` composes the deployment prefix only for public links,
- * canonical metadata, feeds, and sitemap entries.
+ * `siteUrl` composes the deployment prefix for canonical metadata,
+ * feeds, and sitemap entries; the site emitter's `publicPathPrefix`
+ * does the same at the asset-link boundary without changing artifact paths.
  */
 
 import sourceFs       from "@coding-adventures/forme-source-fs";
 import parseMarkdown  from "@coding-adventures/forme-parse-markdown";
+import resolveAssetRefsFs from "@coding-adventures/forme-resolve-asset-refs-fs";
 import router         from "@coding-adventures/forme-router";
 import collectChronological from "@coding-adventures/forme-collect-chronological";
 import renderStatic   from "@coding-adventures/forme-render-static";
 import classlessTheme from "@coding-adventures/forme-theme-classless";
+import loadAssetsFs   from "@coding-adventures/forme-load-assets-fs";
 import emitFs         from "@coding-adventures/forme-emit-fs";
+import emitSiteFs     from "@coding-adventures/forme-emit-site-fs";
 import blogSurface    from "./surface-stage.ts";
 import type { PipelineConfig } from "@coding-adventures/forme-pipeline-config";
 
@@ -61,6 +68,11 @@ const config: PipelineConfig = {
       config: {},
     },
     {
+      id: "resolve-assets",
+      stage: resolveAssetRefsFs,
+      config: { root: "data", persistIdentities: true },
+    },
+    {
       id: "route",
       stage: router,
       config: { routeTemplate: "/blog/{slug}.html" },
@@ -84,6 +96,11 @@ const config: PipelineConfig = {
       },
     },
     {
+      id: "load-assets",
+      stage: loadAssetsFs,
+      config: { root: "data" },
+    },
+    {
       id: "render-surface",
       stage: blogSurface,
       config: {
@@ -98,8 +115,12 @@ const config: PipelineConfig = {
     },
     {
       id: "emit-articles",
-      stage: emitFs,
-      config: { outDir: "dist" },
+      stage: emitSiteFs,
+      config: {
+        outDir: "dist",
+        assetDir: "blog/assets",
+        publicPathPrefix: "/coding-adventures",
+      },
     },
     {
       id: "emit-surface",
@@ -109,11 +130,14 @@ const config: PipelineConfig = {
   ],
   wires: [
     { from: { id: "source" },       to: { id: "parse" } },
-    { from: { id: "parse" },        to: { id: "route" } },
+    { from: { id: "parse" },        to: { id: "resolve-assets" } },
+    { from: { id: "resolve-assets" }, to: { id: "route" } },
     { from: { id: "route" },        to: { id: "collect-posts" } },
     { from: { id: "route" },        to: { id: "render-pages" } },
+    { from: { id: "route" },        to: { id: "load-assets" } },
     { from: { id: "collect-posts" }, to: { id: "render-surface" } },
     { from: { id: "render-pages" }, to: { id: "emit-articles" } },
+    { from: { id: "load-assets" },  to: { id: "emit-articles", port: "assets" } },
     { from: { id: "render-surface" }, to: { id: "emit-surface" } },
   ],
   outputs: [

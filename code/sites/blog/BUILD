@@ -14,6 +14,7 @@ cd ../../packages/typescript/forme-cache && npm install --silent
 cd ../../packages/typescript/forme-orchestrator && npm install --silent
 cd ../../packages/typescript/forme-source-fs && npm install --silent
 cd ../../packages/typescript/forme-parse-markdown && npm install --silent
+cd ../../packages/typescript/forme-resolve-asset-refs-fs && npm install --silent
 cd ../../packages/typescript/forme-router && npm install --silent
 cd ../../packages/typescript/forme-collect-chronological && npm install --silent
 cd ../../packages/typescript/forme-index-renderer && npm install --silent
@@ -22,9 +23,11 @@ cd ../../packages/typescript/forme-aot-sitemap-emitter && npm install --silent
 cd ../../packages/typescript/forme-aot-meta-link-tags && npm install --silent
 cd ../../packages/typescript/forme-aot-rss-discovery-link && npm install --silent
 cd ../../packages/typescript/forme-render-static && npm install --silent
+cd ../../packages/typescript/forme-load-assets-fs && npm install --silent
 cd ../../packages/typescript/forme-style-ir && npm install --silent
 cd ../../packages/typescript/forme-style-to-css && npm install --silent
 cd ../../packages/typescript/forme-aot-css-slicer && npm install --silent
 cd ../../packages/typescript/forme-theme-classless && npm install --silent
 cd ../../packages/typescript/forme-emit-fs && npm install --silent
-npm install --silent && npm test && npx tsx build.ts && test -f dist/blog/index.html && test -f dist/blog/rss.xml && test -f dist/blog/atom.xml && test -f dist/blog/sitemap.xml && ls dist/blog
+cd ../../packages/typescript/forme-emit-site-fs && npm install --silent
+npm install --silent && npm test && npx tsx build.ts && test -f dist/blog/index.html && test -f dist/blog/rss.xml && test -f dist/blog/atom.xml && test -f dist/blog/sitemap.xml && test -n "$(find dist/blog/assets -type f -name 'forme-pipeline.*.svg' -print -quit)" && ! grep -R "forme-asset:" dist/blog && ls dist/blog
