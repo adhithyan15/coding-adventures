@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added a reusable isolated GPU layer scene and pixel oracle covering overlap
+  isolation, layer opacity, ordered filters, and multiply blending, with Metal
+  acceptance and a stable seam for future WGPU/native backends.
 - Added an international real-page fixture for bidi shaping, CJK wrapping,
   grapheme-safe content, and visible fallback-font run identities.
 

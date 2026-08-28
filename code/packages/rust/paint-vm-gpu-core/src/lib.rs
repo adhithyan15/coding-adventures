@@ -14,10 +14,10 @@
 use std::collections::HashMap;
 
 use paint_instructions::{
-    BlendMode, FillRule, GradientKind, GradientStop, ImageSrc, PaintClip, PaintEllipse,
-    PaintGlyphRun, PaintGradient, PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintLine,
-    PaintPath, PaintRect, PaintScene, PaintText, PathCommand, StrokeCap, StrokeJoin, Transform2D,
-    IDENTITY_TRANSFORM,
+    BlendMode, FillRule, FilterEffect, GradientKind, GradientStop, ImageSrc, PaintClip,
+    PaintEllipse, PaintGlyphRun, PaintGradient, PaintGroup, PaintImage, PaintInstruction,
+    PaintLayer, PaintLine, PaintPath, PaintRect, PaintScene, PaintText, PathCommand, StrokeCap,
+    StrokeJoin, Transform2D, IDENTITY_TRANSFORM,
 };
 
 /// Host-owned boundary for resolving URI-backed paint images.
@@ -61,6 +61,74 @@ pub enum GpuCommand {
     DrawGlyphRun(GpuGlyphRun),
     PushClip { rect: GpuRect },
     PopClip,
+    BeginLayer(GpuLayer),
+    EndLayer,
+}
+
+/// Backend-neutral isolated compositing scope.
+///
+/// Children between `BeginLayer` and `EndLayer` render into a transparent
+/// offscreen target. Filters run in order, then the result is composited once
+/// into its parent with `opacity` and `blend_mode`.
+#[derive(Clone, Debug, PartialEq)]
+pub struct GpuLayer {
+    pub opacity: f32,
+    pub blend_mode: GpuBlendMode,
+    pub filters: Vec<GpuFilter>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum GpuBlendMode {
+    Normal,
+    Multiply,
+    Screen,
+    Overlay,
+    Darken,
+    Lighten,
+    ColorDodge,
+    ColorBurn,
+    HardLight,
+    SoftLight,
+    Difference,
+    Exclusion,
+    Hue,
+    Saturation,
+    Color,
+    Luminosity,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum GpuFilter {
+    Blur {
+        radius: f32,
+    },
+    DropShadow {
+        dx: f32,
+        dy: f32,
+        blur: f32,
+        color: GpuColor,
+    },
+    ColorMatrix {
+        matrix: [f32; 20],
+    },
+    Brightness {
+        amount: f32,
+    },
+    Contrast {
+        amount: f32,
+    },
+    Saturate {
+        amount: f32,
+    },
+    HueRotate {
+        angle_degrees: f32,
+    },
+    Invert {
+        amount: f32,
+    },
+    Opacity {
+        amount: f32,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -169,6 +237,7 @@ pub struct GpuPlanOptions {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum GpuApiFamily {
+    Metal,
     Vulkan,
     OpenGl,
     Mesa,
@@ -204,6 +273,9 @@ pub struct GpuBackendProfile {
     pub supports_linear_gradients: bool,
     pub supports_radial_gradients: bool,
     pub supports_glyph_atlas: bool,
+    pub supports_isolated_layers: bool,
+    pub supports_layer_filters: bool,
+    pub supports_layer_blend_modes: bool,
     pub accepts_degraded_solid_gradients: bool,
 }
 
@@ -227,6 +299,9 @@ impl GpuBackendProfile {
             supports_linear_gradients: false,
             supports_radial_gradients: false,
             supports_glyph_atlas: false,
+            supports_isolated_layers: false,
+            supports_layer_filters: false,
+            supports_layer_blend_modes: false,
             accepts_degraded_solid_gradients: true,
         }
     }
@@ -250,8 +325,18 @@ impl GpuBackendProfile {
             supports_linear_gradients: true,
             supports_radial_gradients: true,
             supports_glyph_atlas: false,
+            supports_isolated_layers: false,
+            supports_layer_filters: false,
+            supports_layer_blend_modes: false,
             accepts_degraded_solid_gradients: true,
         }
+    }
+
+    pub const fn with_isolated_layers(mut self) -> Self {
+        self.supports_isolated_layers = true;
+        self.supports_layer_filters = true;
+        self.supports_layer_blend_modes = true;
+        self
     }
 }
 
@@ -305,6 +390,19 @@ pub fn unsupported_plan_features(
             {
                 push_unique(&mut unsupported, "text")
             }
+            GpuCommand::BeginLayer(_) | GpuCommand::EndLayer
+                if !profile.supports_isolated_layers =>
+            {
+                push_unique(&mut unsupported, "layer")
+            }
+            GpuCommand::BeginLayer(layer) => {
+                if !layer.filters.is_empty() && !profile.supports_layer_filters {
+                    push_unique(&mut unsupported, "layer.filter");
+                }
+                if layer.blend_mode != GpuBlendMode::Normal && !profile.supports_layer_blend_modes {
+                    push_unique(&mut unsupported, "layer.blend");
+                }
+            }
             _ => {}
         }
     }
@@ -332,6 +430,27 @@ pub fn unsupported_plan_features(
 fn push_unique(features: &mut Vec<&'static str>, feature: &'static str) {
     if !features.contains(&feature) {
         features.push(feature);
+    }
+}
+
+fn gpu_blend_mode(mode: Option<&BlendMode>) -> GpuBlendMode {
+    match mode.unwrap_or(&BlendMode::Normal) {
+        BlendMode::Normal => GpuBlendMode::Normal,
+        BlendMode::Multiply => GpuBlendMode::Multiply,
+        BlendMode::Screen => GpuBlendMode::Screen,
+        BlendMode::Overlay => GpuBlendMode::Overlay,
+        BlendMode::Darken => GpuBlendMode::Darken,
+        BlendMode::Lighten => GpuBlendMode::Lighten,
+        BlendMode::ColorDodge => GpuBlendMode::ColorDodge,
+        BlendMode::ColorBurn => GpuBlendMode::ColorBurn,
+        BlendMode::HardLight => GpuBlendMode::HardLight,
+        BlendMode::SoftLight => GpuBlendMode::SoftLight,
+        BlendMode::Difference => GpuBlendMode::Difference,
+        BlendMode::Exclusion => GpuBlendMode::Exclusion,
+        BlendMode::Hue => GpuBlendMode::Hue,
+        BlendMode::Saturation => GpuBlendMode::Saturation,
+        BlendMode::Color => GpuBlendMode::Color,
+        BlendMode::Luminosity => GpuBlendMode::Luminosity,
     }
 }
 
@@ -729,29 +848,153 @@ impl PlanBuilder<'_> {
     }
 
     fn plan_layer(&mut self, layer: &PaintLayer, transform: Transform2D, opacity: f32) {
-        if layer
-            .filters
-            .as_ref()
-            .is_some_and(|filters| !filters.is_empty())
-        {
-            self.diagnostic(
-                GpuPlanSeverity::Unsupported,
-                "layer.filters",
-                "GPU core preserves no filter graph yet",
-            );
-        }
-        if !matches!(layer.blend_mode.as_ref(), None | Some(BlendMode::Normal)) {
-            self.diagnostic(
-                GpuPlanSeverity::Unsupported,
-                "layer.blend_mode",
-                "non-normal blend modes require backend render-pass support",
-            );
-        }
         let next_transform = layer
             .transform
             .map_or(transform, |local| multiply_transform(transform, local));
-        let next_opacity = opacity * layer.opacity.unwrap_or(1.0).clamp(0.0, 1.0) as f32;
-        self.plan_instructions(&layer.children, next_transform, next_opacity);
+        let filters = layer
+            .filters
+            .as_deref()
+            .unwrap_or_default()
+            .iter()
+            .filter_map(|filter| self.plan_filter(filter))
+            .collect();
+        self.plan.commands.push(GpuCommand::BeginLayer(GpuLayer {
+            opacity: layer.opacity.unwrap_or(1.0).clamp(0.0, 1.0) as f32,
+            blend_mode: gpu_blend_mode(layer.blend_mode.as_ref()),
+            filters,
+        }));
+        // Group/parent opacity remains inherited by children. Layer opacity is
+        // applied once after all children and filters are complete.
+        self.plan_instructions(&layer.children, next_transform, opacity);
+        self.plan.commands.push(GpuCommand::EndLayer);
+    }
+
+    fn plan_filter(&mut self, filter: &FilterEffect) -> Option<GpuFilter> {
+        match filter {
+            FilterEffect::Blur { radius } => self
+                .non_negative_filter_value(*radius, "layer.filter.blur", "blur radius")
+                .map(|radius| GpuFilter::Blur { radius }),
+            FilterEffect::DropShadow {
+                dx,
+                dy,
+                blur,
+                color,
+            } => {
+                if !dx.is_finite() || !dy.is_finite() {
+                    self.diagnostic(
+                        GpuPlanSeverity::Degraded,
+                        "layer.filter.drop_shadow",
+                        "drop-shadow offsets must be finite; the filter was omitted",
+                    );
+                    return None;
+                }
+                self.non_negative_filter_value(
+                    *blur,
+                    "layer.filter.drop_shadow",
+                    "drop-shadow blur radius",
+                )
+                .map(|blur| GpuFilter::DropShadow {
+                    dx: *dx as f32,
+                    dy: *dy as f32,
+                    blur,
+                    color: parse_color_with_opacity(color, 1.0),
+                })
+            }
+            FilterEffect::ColorMatrix { matrix } => {
+                let Ok(matrix) = <&[f64; 20]>::try_from(matrix.as_slice()) else {
+                    self.diagnostic(
+                        GpuPlanSeverity::Degraded,
+                        "layer.filter.color_matrix",
+                        "color matrix must contain exactly 20 values; the filter was omitted",
+                    );
+                    return None;
+                };
+                if matrix.iter().any(|value| !value.is_finite()) {
+                    self.diagnostic(
+                        GpuPlanSeverity::Degraded,
+                        "layer.filter.color_matrix",
+                        "color matrix values must be finite; the filter was omitted",
+                    );
+                    return None;
+                }
+                Some(GpuFilter::ColorMatrix {
+                    matrix: matrix.map(|value| value as f32),
+                })
+            }
+            FilterEffect::Brightness { amount } => {
+                self.scalar_filter(*amount, "layer.filter.brightness", |amount| {
+                    GpuFilter::Brightness { amount }
+                })
+            }
+            FilterEffect::Contrast { amount } => {
+                self.scalar_filter(*amount, "layer.filter.contrast", |amount| {
+                    GpuFilter::Contrast { amount }
+                })
+            }
+            FilterEffect::Saturate { amount } => {
+                self.scalar_filter(*amount, "layer.filter.saturate", |amount| {
+                    GpuFilter::Saturate { amount }
+                })
+            }
+            FilterEffect::HueRotate { angle } => {
+                self.scalar_filter(*angle, "layer.filter.hue_rotate", |angle_degrees| {
+                    GpuFilter::HueRotate { angle_degrees }
+                })
+            }
+            FilterEffect::Invert { amount } => {
+                self.unit_filter(*amount, "layer.filter.invert", |amount| GpuFilter::Invert {
+                    amount,
+                })
+            }
+            FilterEffect::Opacity { amount } => {
+                self.unit_filter(*amount, "layer.filter.opacity", |amount| {
+                    GpuFilter::Opacity { amount }
+                })
+            }
+        }
+    }
+
+    fn scalar_filter(
+        &mut self,
+        value: f64,
+        feature: &'static str,
+        create: impl FnOnce(f32) -> GpuFilter,
+    ) -> Option<GpuFilter> {
+        if !value.is_finite() {
+            self.diagnostic(
+                GpuPlanSeverity::Degraded,
+                feature,
+                "filter parameter must be finite; the filter was omitted",
+            );
+            return None;
+        }
+        Some(create(value as f32))
+    }
+
+    fn unit_filter(
+        &mut self,
+        value: f64,
+        feature: &'static str,
+        create: impl FnOnce(f32) -> GpuFilter,
+    ) -> Option<GpuFilter> {
+        self.scalar_filter(value, feature, |value| create(value.clamp(0.0, 1.0)))
+    }
+
+    fn non_negative_filter_value(
+        &mut self,
+        value: f64,
+        feature: &'static str,
+        label: &str,
+    ) -> Option<f32> {
+        if !value.is_finite() || value < 0.0 {
+            self.diagnostic(
+                GpuPlanSeverity::Degraded,
+                feature,
+                format!("{label} must be finite and non-negative; the filter was omitted"),
+            );
+            return None;
+        }
+        Some(value as f32)
     }
 
     fn plan_clip(&mut self, clip: &PaintClip, transform: Transform2D, opacity: f32) {
@@ -3482,6 +3725,122 @@ mod tests {
         assert_eq!(image_mesh.texture_id, Some(0));
         assert_eq!(image_mesh.vertices[0].color.a, 0.5);
         assert!(plan.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn layers_preserve_isolation_filter_order_and_blend_metadata() {
+        let mut scene = PaintScene::new(16.0, 12.0);
+        scene.instructions.push(PaintInstruction::Layer(PaintLayer {
+            base: PaintBase::default(),
+            children: vec![PaintInstruction::Rect(PaintRect::filled(
+                1.0, 2.0, 8.0, 6.0, "#ff0000",
+            ))],
+            filters: Some(vec![
+                FilterEffect::Brightness { amount: 1.25 },
+                FilterEffect::Blur { radius: 2.0 },
+                FilterEffect::Opacity { amount: 0.4 },
+            ]),
+            blend_mode: Some(BlendMode::Multiply),
+            opacity: Some(0.5),
+            transform: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(plan.commands.len(), 3);
+        assert_eq!(
+            plan.commands[0],
+            GpuCommand::BeginLayer(GpuLayer {
+                opacity: 0.5,
+                blend_mode: GpuBlendMode::Multiply,
+                filters: vec![
+                    GpuFilter::Brightness { amount: 1.25 },
+                    GpuFilter::Blur { radius: 2.0 },
+                    GpuFilter::Opacity { amount: 0.4 },
+                ],
+            })
+        );
+        let mesh_id = match plan.commands[1] {
+            GpuCommand::DrawMesh { mesh_id } => mesh_id,
+            ref command => panic!("expected layer child draw, got {command:?}"),
+        };
+        assert_eq!(plan.meshes[mesh_id].vertices[0].color.a, 1.0);
+        assert_eq!(plan.commands[2], GpuCommand::EndLayer);
+        assert!(plan.diagnostics.is_empty());
+        let portable = GpuBackendProfile::tier1_textured(
+            "portable",
+            GpuApiFamily::Wgpu,
+            GpuRenderPath::GraphicsPipeline,
+            "WGSL",
+            GpuReadbackStrategy::TextureCopyToBuffer,
+        );
+        assert_eq!(unsupported_plan_features(portable, &plan), vec!["layer"]);
+        assert!(unsupported_plan_features(portable.with_isolated_layers(), &plan).is_empty());
+    }
+
+    #[test]
+    fn nested_layers_keep_balanced_explicit_scopes() {
+        let leaf = PaintInstruction::Rect(PaintRect::filled(0.0, 0.0, 2.0, 2.0, "#fff"));
+        let inner = PaintInstruction::Layer(PaintLayer {
+            base: PaintBase::default(),
+            children: vec![leaf],
+            filters: None,
+            blend_mode: None,
+            opacity: Some(0.5),
+            transform: None,
+        });
+        let mut scene = PaintScene::new(4.0, 4.0);
+        scene.instructions.push(PaintInstruction::Layer(PaintLayer {
+            base: PaintBase::default(),
+            children: vec![inner],
+            filters: None,
+            blend_mode: Some(BlendMode::Screen),
+            opacity: Some(0.75),
+            transform: None,
+        }));
+
+        let plan = plan_scene(&scene);
+        assert!(matches!(plan.commands[0], GpuCommand::BeginLayer(_)));
+        assert!(matches!(plan.commands[1], GpuCommand::BeginLayer(_)));
+        assert!(matches!(plan.commands[2], GpuCommand::DrawMesh { .. }));
+        assert_eq!(plan.commands[3], GpuCommand::EndLayer);
+        assert_eq!(plan.commands[4], GpuCommand::EndLayer);
+    }
+
+    #[test]
+    fn invalid_filter_parameters_degrade_without_unbalancing_layer_scope() {
+        let mut scene = PaintScene::new(4.0, 4.0);
+        scene.instructions.push(PaintInstruction::Layer(PaintLayer {
+            base: PaintBase::default(),
+            children: vec![],
+            filters: Some(vec![
+                FilterEffect::Blur { radius: -1.0 },
+                FilterEffect::ColorMatrix {
+                    matrix: vec![1.0, 2.0],
+                },
+            ]),
+            blend_mode: None,
+            opacity: None,
+            transform: None,
+        }));
+
+        let plan = plan_scene(&scene);
+        assert_eq!(
+            plan.commands,
+            vec![
+                GpuCommand::BeginLayer(GpuLayer {
+                    opacity: 1.0,
+                    blend_mode: GpuBlendMode::Normal,
+                    filters: vec![],
+                }),
+                GpuCommand::EndLayer,
+            ]
+        );
+        assert_eq!(plan.diagnostics.len(), 2);
+        assert!(plan
+            .diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.severity == GpuPlanSeverity::Degraded));
     }
 
     #[test]

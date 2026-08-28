@@ -349,6 +349,10 @@ async fn render_plan(plan: GpuPaintPlan) -> Result<PixelContainer, PaintRenderEr
                         plan.height,
                     );
                 }
+                // validate_plan rejects isolated layers until this backend's
+                // offscreen pass executor is wired. Keeping the variants here
+                // makes the shared command contract exhaustive for that work.
+                GpuCommand::BeginLayer(_) | GpuCommand::EndLayer => {}
                 GpuCommand::DrawText(_) | GpuCommand::DrawGlyphRun(_) => {}
             }
         }
@@ -427,6 +431,17 @@ fn validate_plan(plan: &GpuPaintPlan) -> Result<(), PaintRenderError> {
         return Err(PaintRenderError::RenderFailed {
             backend: "paint-vm-wgpu",
             message: "text and glyph atlas rendering are not wired in the WGPU backend yet"
+                .to_string(),
+        });
+    }
+    if plan
+        .commands
+        .iter()
+        .any(|command| matches!(command, GpuCommand::BeginLayer(_) | GpuCommand::EndLayer))
+    {
+        return Err(PaintRenderError::RenderFailed {
+            backend: "paint-vm-wgpu",
+            message: "isolated GPU layer commands require WGPU offscreen pass execution"
                 .to_string(),
         });
     }
@@ -712,6 +727,44 @@ mod tests {
         assert!(profile.supports_texture_sampling);
         assert!(profile.supports_linear_gradients);
         assert!(profile.supports_radial_gradients);
+        assert!(!profile.supports_isolated_layers);
+        assert!(!profile.supports_layer_filters);
+        assert!(!profile.supports_layer_blend_modes);
+    }
+
+    #[test]
+    fn isolated_layer_plan_requires_the_offscreen_executor_path() {
+        let plan = GpuPaintPlan {
+            width: 1,
+            height: 1,
+            background: paint_vm_gpu_core::GpuColor {
+                r: 0.0,
+                g: 0.0,
+                b: 0.0,
+                a: 0.0,
+            },
+            commands: vec![
+                GpuCommand::BeginLayer(paint_vm_gpu_core::GpuLayer {
+                    opacity: 0.5,
+                    blend_mode: paint_vm_gpu_core::GpuBlendMode::Multiply,
+                    filters: vec![],
+                }),
+                GpuCommand::EndLayer,
+            ],
+            meshes: vec![],
+            images: vec![],
+            diagnostics: vec![],
+        };
+
+        let error = validate_plan(&plan).expect_err("WGPU must not flatten isolated layers");
+        assert_eq!(
+            error,
+            PaintRenderError::RenderFailed {
+                backend: "paint-vm-wgpu",
+                message: "isolated GPU layer commands require WGPU offscreen pass execution"
+                    .to_string(),
+            }
+        );
     }
 
     #[test]

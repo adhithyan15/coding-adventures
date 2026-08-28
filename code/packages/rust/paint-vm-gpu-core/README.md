@@ -12,6 +12,8 @@ Instead, it converts `paint-instructions::PaintScene` into a backend-neutral
 - Linear gradients become sampled ramp textures plus gradient UVs on meshes.
 - Radial gradients become sampled 2D textures plus radial UVs on meshes.
 - Rectangular clips become push/pop clip commands.
+- Isolated layers become balanced begin/end commands carrying post-filter
+  opacity, ordered filter chains, and non-normal blend metadata.
 - Text and glyph runs are preserved as explicit commands so backend-specific
   glyph atlas and shaping strategies can evolve without losing IR fidelity.
 
@@ -29,7 +31,7 @@ backend interprets the PaintScene geometry.
 | `PaintPath` | Flattened line/quad/cubic contours; simple fan fill; solid stroked segments with bevel, round, and bounded miter joins plus open-contour caps; dashed stroked segments with continuing-run joins |
 | `PaintClip` | Push/pop axis-aligned clip bounding rect |
 | `PaintGroup` | Transform and opacity folded into children |
-| `PaintLayer` | Transform and opacity folded into children; filters/blends diagnosed |
+| `PaintLayer` | Explicit isolated begin/end scope; transform folded into children while opacity, ordered filters, and blend mode stay on the layer command |
 | `PaintImage` | Texture upload plus textured quad; URI resolution is caller-owned |
 | `PaintText` | Preserved text command |
 | `PaintGlyphRun` | Preserved positioned glyph command |
@@ -40,4 +42,4 @@ backend interprets the PaintScene geometry.
 - Replace simple fan path filling with a robust tessellator.
 - Carry dashed join topology across closed-contour seams.
 - Add glyph atlas planning once text shaping/font metrics are finalized.
-- Add explicit offscreen layer commands for filters and non-normal blend modes.
+- Add robust non-convex path tessellation.

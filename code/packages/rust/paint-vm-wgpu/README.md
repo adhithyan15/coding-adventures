@@ -33,7 +33,8 @@ Producer (barcode, Mermaid, layout, HTML)
 | Rect, line, ellipse, path | Implemented through shared solid mesh lowering |
 | Clip | Implemented through WGPU scissor stack |
 | Group transform / opacity | Implemented by the shared GPU plan |
-| Layer transform / opacity | Implemented by the shared GPU plan |
+| Layer transform | Implemented by the shared GPU plan |
+| Isolated layer opacity / filters / blend modes | Explicit shared commands; rejected until WGPU offscreen-pass execution lands |
 | Offscreen readback | Implemented with padded row-copy handling |
 | Images | Implemented for `ImageSrc::Pixels` through RGBA texture upload/sampling |
 | Linear gradients | Implemented through shared ramp textures and gradient UVs |
@@ -56,5 +57,7 @@ Skia, or future GPU backends until WGPU grows a glyph atlas and shaping path.
 
 - Add glyph atlas planning once the shared text shaping and font metric pipeline
   is ready.
+- Execute shared isolated layer scopes with ping-pong WGPU render/compute
+  targets, using the same visual fixture as Metal.
 - Reuse the same WGPU plumbing as a reference implementation for native
   Vulkan/OpenGL/Mesa backends.
