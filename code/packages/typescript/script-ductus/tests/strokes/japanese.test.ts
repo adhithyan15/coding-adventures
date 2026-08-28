@@ -34,7 +34,9 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  registerStrokeHonestyTests(letters, { ね: 0.88, わ: 0.88 });
+  // よ's sourced handwritten loop briefly bridges the open counter in the
+  // bundled print outline; keep that bounded variation explicit.
+  registerStrokeHonestyTests(letters, { ね: 0.88, わ: 0.88, よ: 0.95 });
 
   it("Japanese し descends and sweeps upward right without lifting", () => {
     expect(penLifts(JAPANESE_SHI)).toBe(0);
