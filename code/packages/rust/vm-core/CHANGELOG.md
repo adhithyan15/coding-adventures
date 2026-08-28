@@ -1,5 +1,13 @@
 # Changelog — vm-core
 
+## [0.26.0] — 2026-08-27 (lisp `equal?` dynamic builtin)
+
+The default builtin registry now exposes `equal?` as the lisp-family spelling
+of dynamic `Value` equality, alongside the existing `=` primitive. This lets
+Twig's compile-time-interned symbol literals run through the generic VM without
+a language-specific interpreter wrapper; same-name symbol IDs compare true,
+distinct IDs compare false, and malformed arity returns a clean VM error.
+
 ## [0.25.0] — 2026-08-11 (`gc_alloc`'d pairs become genuinely movable, AOT00-T10 PR-3)
 
 `gc-core` 0.35.0/0.36.0 (AOT00-T10 PR-1/PR-2) added a **tagged** kind-registration

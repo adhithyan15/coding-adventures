@@ -31,12 +31,12 @@ one fresh worktree and one PR; remove the worktree after merge.
 | — | VM-005 | done ([#13348](https://github.com/adhithyan15/coding-adventures/pull/13348)) | Link Linux LLVM matrix executables with the host math library. | Dartmouth BASIC `trunc` and non-ALGOL math cells link and pass under `lang_matrix` on Linux; ALGOL-native gaps remain separately owned. |
 | — | VM-002 | done ([#13326](https://github.com/adhithyan15/coding-adventures/pull/13326)) | Protect every CI-green `lang-aot` integration suite in `lang-aot/BUILD`, including `e6d7a_wasm_closures`; replace stale exclusions with the current Macsyma and Linux-matrix failures. | The normal build command runs every CI-green top-level integration target and documents both red exclusions precisely. |
 | — | VM-003 | done ([#13356](https://github.com/adhithyan15/coding-adventures/pull/13356)) | Reconcile `LANG-FULL-IMPLEMENTATION.md` with landed Twig E6 and McCarthy work. | Roadmap statuses match current executed suites and name only genuine gaps. |
-| 1 | VM-015 | in progress | Reconcile the McCarthy compiler README with the completed L3/W16 backend campaign. | The package README no longer calls L3 future work and links the authoritative eight-backend completion matrix. |
-| 2 | VM-010 | queued | Close the remaining Twig dynamic VM/JIT gaps: interned symbols/quote and forward-referenced globals, including boxed global arithmetic. | The existing symbol and dynamic-global matrix cells run on VM and JIT in addition to the five code-generation backends. |
-| 3 | VM-011 | queued | Close Dartmouth BASIC's non-ALGOL semantic tail: remaining math builtins and dynamic string data paths. | `SIN`, `COS`, `LOG`, `EXP`, `RND`, and remaining string `READ`/`DATA` cases have seven-backend executed cells. |
-| 4 | VM-012 | queued | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
-| 5 | VM-013 | decision required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `adc`, `sbb`, rotations, carry, parity). | The accepted semantics are documented and every intrinsic has executed portable and 8008 proofs. |
-| 6 | VM-014 | queued | Extend the unified matrix to every wired frontend, especially FLOW-MATIC and Macsyma/JIT. | Every `Language` variant has an executed baseline on every applicable standard backend, with explicit exclusions only where architectural. |
+| — | VM-015 | done ([#13367](https://github.com/adhithyan15/coding-adventures/pull/13367)) | Reconcile the McCarthy compiler README with the completed L3/W16 backend campaign. | The package README no longer calls L3 future work and links the authoritative eight-backend completion matrix. |
+| 1 | VM-010 | in progress | Close the remaining Twig dynamic VM/JIT gaps: interned symbols/quote and forward-referenced globals, including boxed global arithmetic. | The existing symbol and dynamic-global matrix cells run on VM and JIT in addition to the five code-generation backends. |
+| 2 | VM-011 | queued | Close Dartmouth BASIC's non-ALGOL semantic tail: remaining math builtins and dynamic string data paths. | `SIN`, `COS`, `LOG`, `EXP`, `RND`, and remaining string `READ`/`DATA` cases have seven-backend executed cells. |
+| 3 | VM-012 | queued | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
+| 4 | VM-013 | decision required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `adc`, `sbb`, rotations, carry, parity). | The accepted semantics are documented and every intrinsic has executed portable and 8008 proofs. |
+| 5 | VM-014 | queued | Extend the unified matrix to every wired frontend, especially FLOW-MATIC and Macsyma/JIT. | Every `Language` variant has an executed baseline on every applicable standard backend, with explicit exclusions only where architectural. |
 
 ## Discovery log
 
@@ -72,6 +72,13 @@ one fresh worktree and one PR; remove the worktree after merge.
   `mccarthy-lisp-iir-compiler/README.md` still says L3 is the next phase even
   though the authoritative McCarthy platform matrix marks W1–W16 complete.
   Promoted to VM-015 as a separate package-documentation reconciliation.
+- **VM-D008 — confirmed 2026-08-27:** the discriminating Twig forward-global
+  arithmetic cell returned the tagged word for 42 (`336`, observed as process
+  exit 80) on native AOT and LLVM because `lower_dynamic_arith` boxed the
+  helper's result without propagating `ref<any>` through its return/call
+  signature. BEAM refused the same representation-only `box` op even though
+  Erlang integers are already dynamic terms. Retained inside VM-010 because
+  boxed global arithmetic was an explicit part of that item.
 
 ## Ownership boundary
 
