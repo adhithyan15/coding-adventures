@@ -38,12 +38,14 @@
 //! Bit 4 = X   Bit 3 = N   Bit 2 = Z   Bit 1 = V   Bit 0 = C
 //! ```
 
+use crate::state::StateRegister;
 use logic_gates::gates::{and_gate, or_gate};
 
 /// The Motorola 68000 register file.
 ///
 /// All integer values are unsigned.  Flag bits are stored as `u8` (0 or 1)
 /// and assembled into/extracted from `sr` on demand.
+#[derive(Clone)]
 pub struct RegisterFile68K {
     /// Data registers D0–D7 (32-bit each).
     pub d: [u32; 8],
@@ -53,6 +55,9 @@ pub struct RegisterFile68K {
     pub pc: u32,
     /// Status register (16-bit: system byte + CCR).
     pub sr: u16,
+    register_state: [StateRegister; 16],
+    pc_state: StateRegister,
+    sr_state: StateRegister,
 }
 
 /// 24-bit address space mask.
@@ -88,9 +93,36 @@ impl RegisterFile68K {
             a: [0u32; 8],
             pc: 0x0000_1000,
             sr: 0x2700,
+            register_state: std::array::from_fn(|_| StateRegister::new(32)),
+            pc_state: StateRegister::new(32),
+            sr_state: StateRegister::new(16),
         };
         rf.a[7] = 0x0000_F000; // supervisor stack pointer
+        rf.clock_wires_into_state();
         rf
+    }
+
+    /// Clock all public register input wires into their persistent DFF banks.
+    pub(crate) fn clock_wires_into_state(&mut self) {
+        for (state, value) in self
+            .register_state
+            .iter_mut()
+            .zip(self.d.into_iter().chain(self.a))
+        {
+            state.write(value);
+        }
+        self.pc_state.write(self.pc);
+        self.sr_state.write(u32::from(self.sr));
+    }
+
+    #[cfg(test)]
+    pub(crate) fn latched_values(&self) -> ([u32; 8], [u32; 8], u32, u16) {
+        (
+            std::array::from_fn(|index| self.register_state[index].read()),
+            std::array::from_fn(|index| self.register_state[index + 8].read()),
+            self.pc_state.read(),
+            self.sr_state.read() as u16,
+        )
     }
 
     // ── Data register access ──────────────────────────────────────────────────
@@ -263,22 +295,22 @@ impl RegisterFile68K {
         // Gate-level implementation: each condition is a combinational logic
         // expression.  NOT/AND/OR gates on the flag bits.
         match cc {
-            0  => true,                                          // T
-            1  => false,                                         // F
-            2  => and_gate(1 - c, 1 - z) != 0,                  // HI: NOT C AND NOT Z
-            3  => or_gate(c, z) != 0,                           // LS
-            4  => c == 0,                                       // CC
-            5  => c != 0,                                       // CS
-            6  => z == 0,                                       // NE
-            7  => z != 0,                                       // EQ
-            8  => v == 0,                                       // VC
-            9  => v != 0,                                       // VS
-            10 => n == 0,                                       // PL
-            11 => n != 0,                                       // MI
-            12 => n == v,                                       // GE: N XNOR V (N==V)
-            13 => n != v,                                       // LT
-            14 => and_gate(1 - z, if n == v { 1 } else { 0 }) != 0,  // GT
-            _  => or_gate(z, if n != v { 1 } else { 0 }) != 0, // LE
+            0 => true,                                              // T
+            1 => false,                                             // F
+            2 => and_gate(1 - c, 1 - z) != 0,                       // HI: NOT C AND NOT Z
+            3 => or_gate(c, z) != 0,                                // LS
+            4 => c == 0,                                            // CC
+            5 => c != 0,                                            // CS
+            6 => z == 0,                                            // NE
+            7 => z != 0,                                            // EQ
+            8 => v == 0,                                            // VC
+            9 => v != 0,                                            // VS
+            10 => n == 0,                                           // PL
+            11 => n != 0,                                           // MI
+            12 => n == v,                                           // GE: N XNOR V (N==V)
+            13 => n != v,                                           // LT
+            14 => and_gate(1 - z, if n == v { 1 } else { 0 }) != 0, // GT
+            _ => or_gate(z, if n != v { 1 } else { 0 }) != 0,       // LE
         }
     }
 
@@ -364,8 +396,8 @@ mod tests {
     #[test]
     fn test_cc_t_f() {
         let rf = RegisterFile68K::new();
-        assert!(rf.test_cc(0));   // T
-        assert!(!rf.test_cc(1));  // F
+        assert!(rf.test_cc(0)); // T
+        assert!(!rf.test_cc(1)); // F
     }
 
     #[test]
@@ -373,8 +405,8 @@ mod tests {
         let mut rf = RegisterFile68K::new();
         // Z=1 → EQ true, NE false
         rf.set_ccr(0, 0, 1, 0, 0);
-        assert!(rf.test_cc(7));   // EQ
-        assert!(!rf.test_cc(6));  // NE
+        assert!(rf.test_cc(7)); // EQ
+        assert!(!rf.test_cc(6)); // NE
     }
 
     #[test]
@@ -382,9 +414,9 @@ mod tests {
         let mut rf = RegisterFile68K::new();
         // N=0, V=0 → N==V → GE true, LT false
         rf.set_ccr(0, 0, 0, 0, 0);
-        assert!(rf.test_cc(12));  // GE
+        assert!(rf.test_cc(12)); // GE
         assert!(!rf.test_cc(13)); // LT
-        // N=1, V=0 → N!=V → GE false, LT true
+                                  // N=1, V=0 → N!=V → GE false, LT true
         rf.set_ccr(0, 1, 0, 0, 0);
         assert!(!rf.test_cc(12));
         assert!(rf.test_cc(13));

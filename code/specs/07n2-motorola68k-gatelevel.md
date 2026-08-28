@@ -1,303 +1,133 @@
-# Spec 07n2: Motorola 68000 Gate-Level Simulator
-
-## Overview
-
-This package implements a gate-level behavioral simulator for the Motorola 68000
-(1979) CPU.  Every ALU data-path operation (ADD, SUB, AND, OR, XOR, NOT, shifts,
-rotates) routes through logic gate primitives from the `logic-gates` and
-`arithmetic` packages.  No Python integer arithmetic is used in the critical ALU
-path; all arithmetic is performed by ripple-carry adder chains operating on
-bit arrays.
-
-The package cross-validates against the behavioral Motorola 68000 simulator
-(`motorola-68000-simulator`) using the shared `M68KState` snapshot type and the
-`Simulator[M68KState]` protocol from `simulator-protocol`.
-
-## Layer
-
-Layer 07n2 — gate-level Motorola 68000 (builds on 07n behavioral simulator)
-
-## Dependencies
-
-- `coding-adventures-logic-gates` — AND, OR, XOR, NOT gate primitives
-- `coding-adventures-arithmetic` — half_adder, full_adder, ripple_carry_adder
-- `coding-adventures-simulator-protocol` — Simulator protocol, ExecutionResult, StepTrace
-- `coding-adventures-motorola-68000-simulator` — M68KState, used for cross-validation
-
-## Architecture
-
-### Motorola 68000 Hardware Summary
-
-The Motorola 68000 contains approximately 68,000 transistors:
-
-- **Data registers:** D0–D7 (32-bit each, fully orthogonal)
-  - Byte ops affect bits 7–0 only (upper bits preserved)
-  - Word ops affect bits 15–0 only (upper 16 bits preserved)
-  - Longword ops affect all 32 bits
-- **Address registers:** A0–A6 (32-bit), A7 = supervisor stack pointer (SSP)
-  - No byte-size access to address registers
-- **Program counter:** 32-bit (only bits 23–0 are significant — 24-bit address bus)
-- **Status Register (SR):**
-  - Bit 13: S — supervisor mode (always 1 in this simulator)
-  - Bits 10–8: I2 I1 I0 — interrupt priority mask
-  - Bit 4: X — extend (set same as C for ADD/SUB; used by ADDX/SUBX)
-  - Bit 3: N — negative (MSB of result)
-  - Bit 2: Z — zero (result == 0)
-  - Bit 1: V — overflow (signed overflow)
-  - Bit 0: C — carry (unsigned carry/borrow)
-
-### Memory Model
-
-- Flat 24-bit address space: 0x000000–0xFFFFFF (16 MB)
-- Big-endian: MSB at lowest address
-- Word and longword accesses must be even-aligned
-- 0x000000–0x0003FF: Exception vector table (256 vectors × 4 bytes)
-- 0x001000: Program load address
-- 0x00F000: Initial supervisor stack pointer (A7)
-
-## Gate-Level ALU Design
-
-### Bit Representation
-
-All register values and intermediate ALU results are represented internally as
-lists of bits, LSB-first (index 0 = bit 0).  This matches the `logic-gates` and
-`arithmetic` package conventions.
-
-### Addition (add_8bit / add_16bit / add_32bit)
-
-Uses `ripple_carry_adder` from the `arithmetic` package.  The adder chains
-individual `full_adder` gates:
-
-```
-bit 0: full_adder(a[0], b[0], carry_in)   → (sum[0], carry[0])
-bit 1: full_adder(a[1], b[1], carry[0])   → (sum[1], carry[1])
-...
-bit N: full_adder(a[N], b[N], carry[N-1]) → (sum[N], carry_out)
-```
-
-### Subtraction (two's complement)
-
-SUB A, B = A + NOT(B) + 1 (no borrow)
-SUBX A, B, X = A + NOT(B) + NOT(X)  (with extend/borrow)
-
-The N NOT gates and 1 add are the gate-level path.  CF (carry = borrow) is
-derived as NOT(carry_out_of_adder).
-
-### Overflow Detection
-
-For N-bit signed addition A + B = R:
-
-```
-OF = XOR(carry_into_bit[N-1], carry_out_of_bit[N-1])
-```
-
-This is a single XOR gate at the MSB stage of the adder.
-
-### Logical Operations (AND / OR / XOR / NOT)
-
-N parallel gates (one per bit), operating on bit arrays.  No flags: V=0, C=0,
-X unchanged.
-
-### Shifts and Rotates
-
-Implemented as bit-array rewiring — gates model the routing of bits to new
-positions.  For each shift of count C:
-- LSL/ASL: bits[C:width] → result[0:width-C]; zeros fill from right
-- LSR/ASR: bits[0:width-C] → result[C:width]; ASR replicates sign bit
-- ROL: circular left rotation of bit array
-- ROR: circular right rotation of bit array
-- ROXL/ROXR: rotation through the X flag (width+1 bit rotation)
-
-## Module Structure
-
-### `bits.py`
-
-Core bit-manipulation utilities:
-
-```
-int_to_bits(value, width) → list[int]   # unsigned integer → LSB-first bit list
-bits_to_int(bits) → int                  # bit list → unsigned integer
-add_8bit(a, b, carry_in=0) → (result, carry_out, aux_carry)
-add_16bit(a, b, carry_in=0) → (result, carry_out, aux_carry)
-add_32bit(a, b, carry_in=0) → (result, carry_out)
-invert_8bit(value) → int
-invert_16bit(value) → int
-invert_32bit(value) → int
-compute_parity(bits) → int   # XOR tree over low 8 bits; 1=even parity
-compute_zero(bits) → int     # NOR tree; 1 if all bits are 0
-```
-
-### `alu.py`
-
-ALUResult68k dataclass + all ALU operations:
-
-```
-add8/add16/add32(a, b, extend_in=0) → ALUResult68k
-sub8/sub16/sub32(a, b, extend_in=0) → ALUResult68k
-and8/and16/and32(a, b) → ALUResult68k
-or8/or16/or32(a, b) → ALUResult68k
-xor8/xor16/xor32(a, b) → ALUResult68k
-not8/not16/not32(a) → int
-neg8/neg16/neg32(a) → ALUResult68k
-cmp8/cmp16/cmp32(a, b) → ALUResult68k
-asl/asr/lsl/lsr/rol/ror/roxl/roxr(value, count, width, [x]) → (result, c, [v])
-muls/mulu(d_val, src_val) → (result32, n, z)
-divs/divu(d_val, src_val) → (q16, r16, overflow)
-```
-
-### `register_file.py`
-
-`RegisterFile68k` class — maintains all CPU registers as bit arrays:
-
-- `_d[0..7]` — 32-bit data registers (LSB-first bit lists)
-- `_a[0..7]` — 32-bit address registers
-- `_pc` — 32-bit program counter
-- Individual flag bits: `_flag_c`, `_flag_v`, `_flag_z`, `_flag_n`, `_flag_x`, `_flag_s`
-- `_int_mask` — 3-bit interrupt mask
-
-Methods: `read_dn(n, size)`, `write_dn(n, value, size)`, `read_an(n)`, `write_an(n, value)`,
-`read_pc()`, `write_pc(value)`, `pack_ccr()`, `unpack_ccr(ccr)`, `pack_sr()`, `unpack_sr(sr)`.
-
-### `decoder.py`
-
-`decode(memory, pc) → DecodedInstr68k` — decodes a 68000 instruction from memory:
-
-- Reads the 16-bit opword at `pc`
-- Dispatches on opword bits 15–12 (instruction class)
-- Returns: mnemonic, size, src_ea, dst_ea, byte_length
-
-### `simulator.py`
-
-`Motorola68kGateLevelSimulator` — implements the `Simulator[M68KState]` protocol:
-
-- `reset()` — power-on state
-- `load(program)` — load bytes at 0x001000
-- `step()` → `StepTrace` — execute one instruction
-- `execute(program, max_steps)` → `ExecutionResult[M68KState]`
-- `get_state()` → `M68KState`
-- `set_input_port(port, value)` / `get_output_port(port)` — no-op (68k has no I/O ports)
-- `interrupt(level)` / `nmi()` — set pending interrupt / NMI
-
-## Instruction Set Coverage
-
-### Data Movement
-- MOVE.B/.W/.L (all EA modes)
-- MOVEA.W/.L — move to address register
-- MOVEQ — quick immediate to Dn
-- MOVEM — move multiple registers to/from memory
-- MOVE to/from CCR, to/from SR
-- EXG — exchange registers
-
-### Arithmetic
-- ADD, ADDA, ADDI, ADDQ, ADDX (all sizes)
-- SUB, SUBA, SUBI, SUBQ, SUBX (all sizes)
-- MULS, MULU — signed/unsigned 16×16→32 multiply
-- DIVS, DIVU — signed/unsigned 32÷16→(quotient,remainder)
-- NEG, NEGX — negate (with extend)
-- CLR — clear operand
-- EXT — sign-extend
-- ABCD, SBCD, NBCD — BCD arithmetic
-
-### Logical
-- AND, ANDI, OR, ORI, EOR, EORI (all sizes)
-- NOT — bitwise complement
-
-### Shifts and Rotates
-- ASL, ASR — arithmetic shift left/right
-- LSL, LSR — logical shift left/right
-- ROL, ROR — rotate left/right (without carry)
-- ROXL, ROXR — rotate left/right through X flag
-
-### Bit Operations
-- BTST, BCHG, BCLR, BSET — bit test, change, clear, set
-
-### Comparison and Test
-- CMP, CMPA, CMPI, CMPM — compare
-- TST — test (sets N/Z flags, clears V/C)
-- CHK — check register against bounds
-
-### Control Flow
-- BRA — branch always
-- BSR — branch to subroutine
-- Bcc — conditional branch (16 conditions: T/F/HI/LS/CC/CS/NE/EQ/VC/VS/PL/MI/GE/LT/GT/LE)
-- DBcc — decrement and branch
-- Scc — set byte on condition
-- ADDQ/SUBQ — quick add/subtract (3-bit immediate)
-
-### Subroutine and Stack
-- JSR — jump to subroutine
-- JMP — jump
-- RTS — return from subroutine
-- RTR — return and restore CCR
-- RTE — return from exception
-- LINK — link and allocate stack frame
-- UNLK — unlink
-
-### Miscellaneous
-- NOP — no operation
-- SWAP — swap halves of Dn
-- PEA — push effective address
-- LEA — load effective address
-- TRAP #n — software exception
-- ILLEGAL — undefined instruction exception
-- STOP — stop and wait for interrupt
-- RESET — assert RESET line (no-op in simulator)
-
-## Effective Address Modes
-
-| Mode | Notation | Description |
-|------|----------|-------------|
-| 000 Dn | Dn | Data register direct |
-| 001 An | An | Address register direct |
-| 010 An | (An) | Address register indirect |
-| 011 An | (An)+ | Postincrement indirect |
-| 100 An | -(An) | Predecrement indirect |
-| 101 An | d16(An) | 16-bit displacement indirect |
-| 110 An | d8(An,Xn) | 8-bit displacement + index |
-| 111 000 | (xxx).W | Absolute short (sign-extended 16-bit) |
-| 111 001 | (xxx).L | Absolute long (32-bit) |
-| 111 010 | d16(PC) | PC-relative + 16-bit displacement |
-| 111 011 | d8(PC,Xn) | PC-relative + index |
-| 111 100 | #imm | Immediate data |
-
-## Flag Rules
-
-| Operation | C | X | N | Z | V |
-|-----------|---|---|---|---|---|
-| ADD | carry | =C | MSB | zero | signed OVF |
-| ADDA | — | — | — | — | — |
-| ADDQ | carry | =C | MSB | zero | signed OVF |
-| ADDX | carry | =C | MSB | only clears | signed OVF |
-| SUB | borrow | =C | MSB | zero | signed OVF |
-| AND/OR/XOR | 0 | — | MSB | zero | 0 |
-| MOVE | 0 | — | MSB | zero | 0 |
-| CMP | borrow | — | MSB | zero | signed OVF |
-| NEG | ≠0 | =C | MSB | zero | =0x80 |
-| SHIFT | last out | =C | MSB | zero | see note |
-| ROTATE | last out | — | MSB | zero | 0 |
-| ROXL/ROXR | last out | =C | MSB | zero | 0 |
-
-Note: For ASL/ASR/LSL/LSR, V=1 if any bits shifted out differ from MSB (overflow).
-For count=0, V=0; for ROXL/ROXR, V=0.
-
-## Cross-Validation
-
-The `test_equivalence.py` test module runs 40+ programs on both the gate-level
-and behavioral simulators, comparing final `M68KState` values for identical
-register state and flag values.  Programs include:
-- Arithmetic loops (factorial, Fibonacci)
-- Subroutine calls (BSR/RTS/LINK/UNLK)
-- MOVEM register save/restore
-- DBcc counted loops
-- String copy (MOVE.B with postincrement)
-- All shift/rotate sizes
-
-## Implementation Divergence from Spec
-
-None — this is the initial implementation.
-
-## Testing Requirements
-
-- At least 300 tests, >80% coverage
-- `ruff check` must pass
-- Literate-style docstrings throughout
+# Spec 07n2 — Motorola 68000 Gate-Level Simulator
+
+## Status and scope
+
+Layer 07n2 is the Rust gate-level partner of the complete Layer 07n
+`m68k-simulator`. It models the repository's Motorola 68000 execution surface:
+the 24-bit big-endian machine, eight data and eight address registers, PC, SR,
+all specified effective-address forms, and every instruction family dispatched
+by Spec 07n.
+
+The implementation is `code/packages/rust/motorola68k-gatelevel`. The Python
+package remains the independent behavioral oracle that generates the committed
+82-vector JSONL corpus; the Rust functional simulator consumes that corpus and
+is the typed lifecycle oracle shared by this gate implementation.
+
+## Persistent topology
+
+Every mutable architectural bit has a D-flip-flop identity:
+
+| State | Width |
+|---|---:|
+| 16 MiB memory | 134,217,728 bits |
+| D0–D7 | 256 bits |
+| A0–A7 | 256 bits |
+| PC | 32 bits |
+| SR | 16 bits |
+| Halt latch | 1 bit |
+| **Total** | **134,218,289 D flip-flops** |
+
+At a completed master/slave clock edge, the four internal latch outputs are
+fully determined by Q: `(q, !q, q, !q)`. Memory stores these stable Q values in
+packed bytes, reconstructs the full transient latch state for each write, and
+clocks both phases through `logic-gates::sequential::register`. This is an exact,
+lossless boundary representation without expanding 16 MiB into a 512 MiB host
+object. Register, PC, SR, and halt banks retain explicit `FlipFlopState` values.
+
+## Datapath gate contract
+
+- ADD, ADDX, SUB, SUBX, NEG, NEGX, and address arithmetic use full-adder chains.
+- AND, OR, XOR, NOT, flag reduction, and condition predicates use logic gates.
+- Shifts and rotates use fixed bit routing with gate-computed flag outputs.
+- MULU/MULS use a fixed 16×16 partial-product network. Each multiplier bit gates
+  one 16-bit row, and 32-bit ripple adders accumulate the rows.
+- DIVU/DIVS use a fixed 32÷16 restoring network. Each stage shifts the partial
+  remainder, subtracts the divisor with a gate adder, and selects the quotient
+  bit from the no-borrow output.
+
+Host arithmetic may appear in tests as an independent expected-value oracle; it
+must not implement these production datapaths.
+
+## Architectural state
+
+Reset establishes:
+
+- 16 MiB of zeroed big-endian memory;
+- PC `0x001000`;
+- supervisor stack A7 `0x00F000`;
+- SR `0x2700`;
+- D0–D7 and A0–A6 zero;
+- halt false.
+
+Addresses are masked to 24 bits. Byte accesses are unaligned. Checked word and
+long instruction/data transitions follow the functional oracle's alignment and
+failure rules. The four bytes of a long value appear most-significant first.
+
+## Effective addresses
+
+The gate CPU supports the complete Spec 07n EA matrix:
+
+| Mode | Form |
+|---:|---|
+| `000` | Dn |
+| `001` | An |
+| `010` | (An) |
+| `011` | (An)+ |
+| `100` | -(An) |
+| `101` | d16(An) |
+| `110` | d8(An,Xn.W/L) |
+| `111/000` | absolute word |
+| `111/001` | absolute long |
+| `111/010` | d16(PC) |
+| `111/011` | d8(PC,Xn.W/L) |
+| `111/100` | immediate |
+
+A7 byte pre-decrement/post-increment uses two bytes. MOVEA.W and ADDA/SUBA word
+sources sign-extend to 32 bits. PC-relative bases follow the extension-word
+position defined by the functional oracle.
+
+## Instruction surface
+
+The implemented decoder covers lines 0–9 and B–E:
+
+- immediate OR/AND/SUB/ADD/EOR/CMP and immediate/register bit operations;
+- MOVE.B/W/L, MOVEA, MOVEQ, SR/CCR transfers;
+- CLR, NEG, NEGX, NOT, TST, SWAP, EXT, PEA, LEA;
+- NOP, RESET, STOP, TRAP, LINK, UNLK, JSR, JMP, RTS, RTR;
+- ADDQ, SUBQ, Scc, DBcc, BRA, BSR, and all Bcc predicates;
+- OR, AND, EOR, ADD/ADDA/ADDX, SUB/SUBA/SUBX, CMP/CMPA/CMPM;
+- MULU, MULS, DIVU, DIVS, EXG;
+- register and memory ASL/ASR, LSL/LSR, ROXL/ROXR, ROL/ROR.
+
+`TRAP #15` is the repository halt convention. Other TRAP values retain the
+functional oracle's lightweight D7 behavior. STOP loads SR and halts.
+
+## Checked lifecycle
+
+`Cpu68K` shares `M68kState`, `StepTrace`, `ExecutionResult`, and `M68kError` with
+the functional Rust simulator.
+
+- `get_state()` owns every register, flag, halt bit, and all 16 MiB of memory.
+- `restore()` validates memory length and the 24-bit PC before mutation.
+- `load_checked()` and `load_at_checked()` reject overflowing programs before
+  reset or memory writes.
+- `step_checked()` rejects halted or misaligned entry, validates decode and
+  execution against the functional oracle, and returns complete before/after
+  states.
+- `run_loaded_checked()` and `run_checked()` restore their entry state on any
+  failure.
+
+Legacy `load`, `step`, and `execute` remain available for the original crate
+surface. Checked APIs are the normative integration boundary.
+
+## Conformance
+
+Completion requires:
+
+1. exact topology/latch tests;
+2. typed atomic load, restore, step, and run tests;
+3. all existing gate component and instruction tests;
+4. the 82 committed Python-oracle full-state vectors across every addressing,
+   decode, flag-edge, multiply/divide, and shift family;
+5. at least 80% core line coverage;
+6. clean `cargo fmt`, Clippy with `-D warnings`, and rustdoc with `-D warnings`.
