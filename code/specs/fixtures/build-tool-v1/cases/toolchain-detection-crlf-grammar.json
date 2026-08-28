@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "toolchain-detection/crlf-only-carriage-return",
   "domain": "toolchain_detection",
-  "summary": "Only the carriage return in a CRLF terminator is stripped; lone or space-separated carriage returns stay inert content.",
+  "summary": "Only the final carriage return in a CRLF terminator is stripped; lone, doubled, or whitespace-separated carriage returns stay inert content.",
   "platforms": ["darwin", "linux", "windows"],
   "capabilities": ["toolchain_detection"],
   "workspace": {"files": []},
@@ -26,12 +26,24 @@
           "name": "rust/cr-before-space-negative",
           "language": "rust",
           "build_files": {"BUILD": "# needs-toolchain: lua\r  "}
+        },
+        {
+          "name": "rust/cr-before-tab-negative",
+          "language": "rust",
+          "build_files": {"BUILD": "# needs-toolchain: perl\r\t\n"}
+        },
+        {
+          "name": "rust/double-crlf-negative",
+          "language": "rust",
+          "build_files": {"BUILD": "# needs-toolchain: swift\r\r\n"}
         }
       ],
       "scheduled_packages": [
         "rust/crlf-positive",
         "rust/lone-cr-negative",
-        "rust/cr-before-space-negative"
+        "rust/cr-before-space-negative",
+        "rust/cr-before-tab-negative",
+        "rust/double-crlf-negative"
       ],
       "forced_toolchains": []
     }

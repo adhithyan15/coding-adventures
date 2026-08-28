@@ -21,7 +21,7 @@
     "notes": "All 40 final checks reached terminal acceptable conclusions: 33 successes and seven expected skips. GitHub reported final head 0f4f64103081f39ce49536384f356688476a1d7e conflict-free. The loop enabled squash auto-merge, and GitHub merged PR #13418 as bb74da875cf8453c08ffe409522a7975b0b3134c without a manual merge command. The active parity slot is clear and the CRLF grammar hardening owner is selected."
   },
   "last_inventory": {
-    "revision": "e054ea4bf22cfae28916b1ed2aa52203cecd37ea",
+    "revision": "3b0c94906b8f257b17e021d1e592fa7cbda96014",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -199,6 +199,8 @@
       "branch": "codex/build-tool-extra-ci-toolchain-crlf-grammar-hardening",
       "pr_number": null,
       "selection_revision": "e054ea4bf22cfae28916b1ed2aa52203cecd37ea",
+      "rebase_revision": "3b0c94906b8f257b17e021d1e592fa7cbda96014",
+      "rebase_notes": "Rebased conflict-free before validation onto exact origin/main after merged PRs #13421, #13408, and #13417. The intervening Venture cascade work, ALGOL exponent composition, and Sanskrit curriculum content do not overlap the shared build-tool corpus, Python reference, Go oracle, state, roadmap, or changelog surfaces and do not change the collision inventory counts. PR #13421 remains covered by the existing Venture portable-host-bridge owner, so it does not create a duplicate owner.",
       "selection_notes": "Selected immediately after PR #13418 merged because it is the highest-leverage ready dependency: repairing the language-neutral reference and canonical Go oracle unblocks F# plus nine other existing-engine declaration consumers without widening host authority. The collision-checked exact-main inventory records 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, zero collisions, zero unknown buckets, and OCaml still emerging at zero packages. Merged PRs #13405 and #13409 clear the PDP-11 functional and Forme owner blocks; merged PR #13422 adds the separately owned Rust-only pdp11-gatelevel identity. No eligible exact-main topology gap remains unowned.",
       "notes": "Discovered during independent review of the selected C# consumer before publication. The language-neutral Python reference and current Go declaration parser accept a lone terminal carriage return even though the merged grammar permits carriage-return stripping only as part of CRLF. Extend the neutral corpus with a CRLF positive case plus lone-CR and CR-before-trailing-space negatives, then repair the reference and Go oracle together before the remaining engines consume the hardened contract. The selected C# consumer already rejects lone CR directly, so this follow-up does not block its publication."
     },

@@ -35,7 +35,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 118-case bootstrap corpus covers every process-free v1 domain:
+The 119-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, Kotlin, and OCaml package/program
@@ -318,8 +318,9 @@ a native front door or build.
 Toolchain declaration lines split only on LF. A CR is discarded only when it
 is the byte immediately before that LF terminator. A final lone CR or a CR
 before trailing ASCII space or tab remains content and makes the declaration
-lookalike inert. The corpus carries both the accepted CRLF form and these two
-negative forms so adapters cannot silently broaden the grammar.
+lookalike inert. Exactly one CR is consumed as part of CRLF, so doubled CRLF is
+also inert. The corpus carries the accepted CRLF form and each negative form
+so adapters cannot silently broaden the grammar.
 
 The corpus now closes all process-free v1 domains:
 

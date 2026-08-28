@@ -4,7 +4,8 @@
 
 - Added the toolchain-declaration CRLF grammar boundary case. It accepts a
   canonical declaration terminated by CRLF and rejects otherwise identical
-  declarations ending in a lone CR or a CR followed by trailing spaces.
+  declarations ending in a lone CR, a CR followed by trailing ASCII space or
+  tab, or doubled CR before LF.
 - Added six process-free extra-CI toolchain declaration cases. A closed
   platform/BUILD snapshot now pins exact canonical directive syntax, CRLF and
   ASCII-whitespace boundaries, stable deduplication, invalid and unknown

@@ -9763,7 +9763,7 @@ squash auto-merge, and GitHub merged the PR at 2026-08-28T10:01:38Z as
 The active parity slot is therefore clear.
 
 The collision-checked schema-3 inventory on exact current `origin/main`
-`e054ea4bf22cfae28916b1ed2aa52203cecd37ea` records 15 established lanes,
+`3b0c94906b8f257b17e021d1e592fa7cbda96014` records 15 established lanes,
 1,388 implementation identities, 4,602 package slots, and 1,427 all-reported
 identities. The four completion bands are 175/265, 123/934, 170/2,139, and
 920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
@@ -9779,6 +9779,13 @@ Rust-only `pdp11-gatelevel` identity. New pending owner
 gate-backed state, clock, trace, diagnostic, topology, resource-limit, and
 functional-differential review before selection. With that addition, no
 eligible exact-main topology gap remains unowned.
+
+Before validation, the selected branch rebased conflict-free over merged PRs
+#13421, #13408, and #13417. Their Venture cascade work, ALGOL exponent
+composition, and Sanskrit curriculum content do not overlap this tranche and
+do not change the collision inventory counts. PR #13421 stays classified by
+the existing Venture portable-host-bridge owner rather than creating a
+duplicate owner.
 
 The dependency/leverage pass selects
 `build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening` on branch
