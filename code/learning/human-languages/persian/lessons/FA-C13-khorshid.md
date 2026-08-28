@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-ASEMAN, FA-ETYMON-ASEMAN]
 introduces:
   knowledge: [FA-LEX-KHORSHID, FA-ETYMON-KHORSHID]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-ASEMAN, FA-ETYMON-ASEMAN, FA-LEX-KHORSHID, FA-ETYMON-KHORSHID]
 skills: [listening, speaking, reading]

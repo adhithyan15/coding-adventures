@@ -6,7 +6,7 @@
     {
       "language": "persian",
       "chapter": 1,
-      "sourceHash": "fnv1a64:71ff8595e75605b5",
+      "sourceHash": "fnv1a64:a53ddc263ce690b5",
       "lessonIds": [
         "FA-C01-salam",
         "FA-W00-alef-guided-copy",
@@ -20,12 +20,12 @@
       "text": "persian/narration/ch01.txt",
       "json": "persian/narration/ch01.json",
       "textHash": "fnv1a64:2c1c4243bf87f46b",
-      "jsonHash": "fnv1a64:6a420e544b19630b"
+      "jsonHash": "fnv1a64:714e807ef2398aac"
     },
     {
       "language": "persian",
       "chapter": 2,
-      "sourceHash": "fnv1a64:cad44010e7979bb5",
+      "sourceHash": "fnv1a64:bbcd6155ac118e2a",
       "lessonIds": [
         "FA-C02-esm-e-man"
       ],
@@ -34,12 +34,12 @@
       "text": "persian/narration/ch02.txt",
       "json": "persian/narration/ch02.json",
       "textHash": "fnv1a64:7ec4ca87d5f990d6",
-      "jsonHash": "fnv1a64:9ddd8b726e68fe96"
+      "jsonHash": "fnv1a64:1631a71577eeae74"
     },
     {
       "language": "persian",
       "chapter": 3,
-      "sourceHash": "fnv1a64:6079d14592306807",
+      "sourceHash": "fnv1a64:c382a44a66a07827",
       "lessonIds": [
         "FA-C03-shoma-to",
         "FA-C03-chist",
@@ -52,12 +52,12 @@
       "text": "persian/narration/ch03.txt",
       "json": "persian/narration/ch03.json",
       "textHash": "fnv1a64:a7b747e0634217be",
-      "jsonHash": "fnv1a64:8ba0a8f46d6b4ee5"
+      "jsonHash": "fnv1a64:638b0b256c295f93"
     },
     {
       "language": "persian",
       "chapter": 4,
-      "sourceHash": "fnv1a64:b6a2b7c1f4986bb4",
+      "sourceHash": "fnv1a64:c1bbd7cc9468ad3f",
       "lessonIds": [
         "FA-C04-hal",
         "FA-C04-chetor",
@@ -71,12 +71,12 @@
       "text": "persian/narration/ch04.txt",
       "json": "persian/narration/ch04.json",
       "textHash": "fnv1a64:ebbe6631b14b5d5e",
-      "jsonHash": "fnv1a64:5abc49c3f1822740"
+      "jsonHash": "fnv1a64:cf8f5aeec63a1ebc"
     },
     {
       "language": "persian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:def693c2c104b5a0",
+      "sourceHash": "fnv1a64:414c681517af67e2",
       "lessonIds": [
         "FA-C05-khoda",
         "FA-C05-hafez",
@@ -88,12 +88,12 @@
       "text": "persian/narration/ch05.txt",
       "json": "persian/narration/ch05.json",
       "textHash": "fnv1a64:307de4f0c4b49946",
-      "jsonHash": "fnv1a64:53527d3812c0def1"
+      "jsonHash": "fnv1a64:9e3756af520a1e3a"
     },
     {
       "language": "persian",
       "chapter": 6,
-      "sourceHash": "fnv1a64:e17405c0806693fb",
+      "sourceHash": "fnv1a64:ee07c5f77f2bdce8",
       "lessonIds": [
         "FA-C06-budan",
         "FA-C06-raftan",
@@ -106,12 +106,12 @@
       "text": "persian/narration/ch06.txt",
       "json": "persian/narration/ch06.json",
       "textHash": "fnv1a64:03d604560e0778f5",
-      "jsonHash": "fnv1a64:b40dda9f34ebe0dc"
+      "jsonHash": "fnv1a64:a2d72f3054b0c50b"
     },
     {
       "language": "persian",
       "chapter": 7,
-      "sourceHash": "fnv1a64:e912a983a1f20f1f",
+      "sourceHash": "fnv1a64:2bdc6d434477728a",
       "lessonIds": [
         "FA-C07-fekr-kardan",
         "FA-C07-fahmidan",
@@ -123,12 +123,12 @@
       "text": "persian/narration/ch07.txt",
       "json": "persian/narration/ch07.json",
       "textHash": "fnv1a64:c0d4475b960b77d5",
-      "jsonHash": "fnv1a64:56af2d28ccd8aef4"
+      "jsonHash": "fnv1a64:bd2576b226ef7cf8"
     },
     {
       "language": "persian",
       "chapter": 8,
-      "sourceHash": "fnv1a64:f2733b8f55885f54",
+      "sourceHash": "fnv1a64:12bc5d02963fddc3",
       "lessonIds": [
         "FA-C08-gereftan",
         "FA-C08-porsidan",
@@ -140,12 +140,12 @@
       "text": "persian/narration/ch08.txt",
       "json": "persian/narration/ch08.json",
       "textHash": "fnv1a64:2b882a065a605eb5",
-      "jsonHash": "fnv1a64:eb903c3f1906f9aa"
+      "jsonHash": "fnv1a64:7a3349e95d55047b"
     },
     {
       "language": "persian",
       "chapter": 9,
-      "sourceHash": "fnv1a64:badc825e34e86a15",
+      "sourceHash": "fnv1a64:e3cffd99a97483ae",
       "lessonIds": [
         "FA-C09-ab",
         "FA-C09-nan",
@@ -157,12 +157,12 @@
       "text": "persian/narration/ch09.txt",
       "json": "persian/narration/ch09.json",
       "textHash": "fnv1a64:94787a353584ca0d",
-      "jsonHash": "fnv1a64:af9160b063012e03"
+      "jsonHash": "fnv1a64:53731e58403a55ac"
     },
     {
       "language": "persian",
       "chapter": 10,
-      "sourceHash": "fnv1a64:6ccbfe0d3e71fe28",
+      "sourceHash": "fnv1a64:e537a298c4873bf6",
       "lessonIds": [
         "FA-C10-madar",
         "FA-C10-pedar",
@@ -174,12 +174,12 @@
       "text": "persian/narration/ch10.txt",
       "json": "persian/narration/ch10.json",
       "textHash": "fnv1a64:435d3efbb4b79034",
-      "jsonHash": "fnv1a64:7d5a82481f5b9221"
+      "jsonHash": "fnv1a64:7fff2fb887d1bd5c"
     },
     {
       "language": "persian",
       "chapter": 11,
-      "sourceHash": "fnv1a64:8f4fa561dca27999",
+      "sourceHash": "fnv1a64:95fa8a16323e7fa9",
       "lessonIds": [
         "FA-C11-cheshm",
         "FA-C11-dast",
@@ -191,12 +191,12 @@
       "text": "persian/narration/ch11.txt",
       "json": "persian/narration/ch11.json",
       "textHash": "fnv1a64:5274c2790a37de92",
-      "jsonHash": "fnv1a64:3365065b61ae00c6"
+      "jsonHash": "fnv1a64:7ca705cb2279ec20"
     },
     {
       "language": "persian",
       "chapter": 12,
-      "sourceHash": "fnv1a64:3d375573d3417b20",
+      "sourceHash": "fnv1a64:fd60a20979c810dd",
       "lessonIds": [
         "FA-C12-nam",
         "FA-C12-del",
@@ -208,12 +208,12 @@
       "text": "persian/narration/ch12.txt",
       "json": "persian/narration/ch12.json",
       "textHash": "fnv1a64:c0420c20f3d365af",
-      "jsonHash": "fnv1a64:5b8b0554ba49a7f2"
+      "jsonHash": "fnv1a64:1eed69c66fd67d9d"
     },
     {
       "language": "persian",
       "chapter": 13,
-      "sourceHash": "fnv1a64:eaf81b9034472f37",
+      "sourceHash": "fnv1a64:fd0c2b50ddd95fbe",
       "lessonIds": [
         "FA-C13-aseman",
         "FA-C13-khorshid",
@@ -226,12 +226,12 @@
       "text": "persian/narration/ch13.txt",
       "json": "persian/narration/ch13.json",
       "textHash": "fnv1a64:e5c155fb0714a9cf",
-      "jsonHash": "fnv1a64:18eefd0cff2c4381"
+      "jsonHash": "fnv1a64:7bcc4be8af8fda6d"
     },
     {
       "language": "persian",
       "chapter": 14,
-      "sourceHash": "fnv1a64:74afbe93603a1852",
+      "sourceHash": "fnv1a64:3a7e617427b0151a",
       "lessonIds": [
         "FA-C14-khahar",
         "FA-C14-pesar",
@@ -244,12 +244,12 @@
       "text": "persian/narration/ch14.txt",
       "json": "persian/narration/ch14.json",
       "textHash": "fnv1a64:97eb74a09ab3ca6d",
-      "jsonHash": "fnv1a64:ce6efb03162a411a"
+      "jsonHash": "fnv1a64:a61304de15f26f12"
     },
     {
       "language": "persian",
       "chapter": 15,
-      "sourceHash": "fnv1a64:6afd3f52e8e8f90d",
+      "sourceHash": "fnv1a64:d3dd704bac36aaa3",
       "lessonIds": [
         "FA-W15-alef",
         "FA-W15-lam",
@@ -267,7 +267,7 @@
       "text": "persian/narration/ch15.txt",
       "json": "persian/narration/ch15.json",
       "textHash": "fnv1a64:270c163c606ff93a",
-      "jsonHash": "fnv1a64:5bdc648c12312d2c"
+      "jsonHash": "fnv1a64:5f2eba547de8ad25"
     }
   ],
   "findings": []

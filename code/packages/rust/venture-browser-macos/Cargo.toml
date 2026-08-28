@@ -23,3 +23,4 @@ objc-bridge = { path = "../objc-bridge" }
 
 [target.'cfg(target_os = "macos")'.dev-dependencies]
 mosaic-package-artifact-builder = { path = "../mosaic-package-artifact-builder" }
+venture-browser-visual-fixtures = { path = "../venture-browser-visual-fixtures" }

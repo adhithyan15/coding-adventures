@@ -53,15 +53,25 @@ written. The state below was verified directly against the repository
 | typescript | ✅     | ✅                   | ✅               | ✅                                       |
 | ruby       | ✅     | ❌                   | ❌               | —                                        |
 | elixir     | ✅     | ❌                   | ❌               | —                                        |
-| csharp     | ❌     | ✅                   | ✅               | ✅                                       |
-| fsharp     | ❌     | ✅                   | ✅               | ✅                                       |
-| perl       | ❌     | ✅                   | ✅               | ❌ (rect-only)                          |
-| haskell    | ❌     | ✅                   | ✅               | ❌ (rect-only)                          |
-| java       | ❌     | ✅                   | ❌               | —                                        |
-| kotlin     | ❌     | ✅                   | ❌               | —                                        |
-| dart       | ❌     | ✅                   | ❌               | —                                        |
-| lua        | ❌     | ❌                   | ❌               | —                                        |
-| swift      | ❌     | ✅                   | ❌               | —                                        |
+| csharp     | ✅     | ✅                   | ✅               | ✅                                       |
+| fsharp     | ✅     | ✅                   | ✅               | ✅                                       |
+| perl       | ✅     | ✅                   | ✅               | ✅                                       |
+| haskell    | ✅     | ✅                   | ✅               | ✅                                       |
+| java       | ✅     | ✅                   | ✅               | ✅                                       |
+| kotlin     | ✅     | ✅                   | ✅               | ✅                                       |
+| dart       | ✅     | ✅                   | ✅               | ✅                                       |
+| lua        | ✅     | ✅                   | ✅               | ✅                                       |
+| swift      | ✅     | ✅                   | ✅               | ✅                                       |
+
+(Table updated as of the lua-cowsay PR, the last item in issue #1611's
+backlog -- all 9 target languages now have cowsay routed through
+paint-vm-ascii. Corrects two stale rows in the process: this table hadn't
+been kept in sync as csharp/fsharp/perl/haskell/java/kotlin/dart/swift
+landed one PR at a time. lua's `paint-instructions`/`paint-vm-ascii` columns
+were also corrected from ❌ to ✅ retroactively -- both packages already
+existed rect-only before this PR (added for the `barcode-2d` producer), not
+"neither exists" as this table previously implied; see that PR's commit
+message for the full write-up.)
 
 Notes on the issue's original matrix:
 
@@ -176,9 +186,12 @@ steps," and the general small-PR discipline in `CLAUDE.md`).
   package-naming convention) but no `paint-vm-ascii` package at all — build
   one from scratch implementing the full `P2D02-paint-vm-ascii.md` contract
   (not just rect), then add cowsay.
-- **Phase 4** — **Lua**. Has neither `paint-instructions` nor
-  `paint-vm-ascii` — both packages need to be built from scratch before
-  cowsay can land. The only language in this position.
+- **Phase 4** — **Lua**. Has both `paint-instructions` and
+  `paint-vm-ascii` already (added for the `barcode-2d` producer), but both
+  are `rect`-only like perl/haskell's were at the start of Phase 2 — extend
+  both to the full contract, then add cowsay. (An earlier draft of this
+  spec claimed neither package existed at all; that was never true — see
+  the corrected coverage matrix's note above.)
 
 ---
 

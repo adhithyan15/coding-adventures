@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-AMADAN, FA-STEM-A, FA-GRAMMAR-PRESENT-STEM, FA-GRAMMAR-INFINITIVE-TAN-DAN]
 introduces:
   knowledge: [FA-LEX-GOFTAN, FA-SCRIPT-GAF, FA-STEM-GU]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-AMADAN, FA-STEM-A, FA-GRAMMAR-PRESENT-STEM, FA-GRAMMAR-INFINITIVE-TAN-DAN, FA-LEX-GOFTAN, FA-SCRIPT-GAF, FA-STEM-GU]
 skills: [listening, speaking, reading]

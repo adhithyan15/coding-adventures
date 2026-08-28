@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Give your name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cad44010e7979bb5",
+  "sourceHash": "fnv1a64:bbcd6155ac118e2a",
   "lessons": [
     {
       "id": "FA-C02-esm-e-man",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa39932a49590127",
+      "sourceHash": "fnv1a64:b87d876066b3e66a",
       "notice": null,
       "blocks": [
         {

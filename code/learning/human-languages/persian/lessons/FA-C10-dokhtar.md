@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-BARADAR, FA-GRAMMAR-EZAFE-OWNER, FA-SCRIPT-ESM-MAN-AST]
 introduces:
   knowledge: [FA-LEX-DOKHTAR, FA-ETYMON-DOKHTAR]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-MADAR, FA-ETYMON-MADAR, FA-LEX-PEDAR, FA-ETYMON-PEDAR, FA-LEX-BARADAR, FA-ETYMON-BARADAR, FA-LEX-DOKHTAR, FA-ETYMON-DOKHTAR, FA-GRAMMAR-EZAFE-OWNER, FA-SCRIPT-ESM-MAN-AST]
 skills: [listening, speaking, reading]

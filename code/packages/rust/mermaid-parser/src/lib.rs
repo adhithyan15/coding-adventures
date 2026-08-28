@@ -529,7 +529,7 @@ fn token_name(token: &Token) -> &str {
 
 use diagram_ir::{
     Axis, AxisKind, ChartDataPoint, ChartDiagram, ChartKind, ChartOrientation, ChartSeries,
-    Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
+    Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
     GitDiagram, GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice,
     QuadrantConfig, QuadrantPoint, RelKind, RequirementElementMetadata, RequirementKind,
     RequirementMetadata, RequirementRisk, RequirementVerifyMethod, SankeyFlow, SankeyNode,
@@ -3604,9 +3604,11 @@ pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseErro
 struct PreprocessedMermaid {
     source: String,
     wrap: Option<bool>,
+    display_mode: Option<String>,
 }
 
 fn preprocess_mermaid_source(source: &str) -> Result<PreprocessedMermaid, ParseError> {
+    let display_mode = mermaid_front_matter_scalar(source, "displayMode");
     let mut cleaned = blank_mermaid_front_matter(source)?;
     let cleaned_source =
         String::from_utf8(cleaned.clone()).expect("front matter blanking preserves UTF-8");
@@ -3644,7 +3646,22 @@ fn preprocess_mermaid_source(source: &str) -> Result<PreprocessedMermaid, ParseE
     Ok(PreprocessedMermaid {
         source: String::from_utf8(cleaned).expect("directive blanking preserves UTF-8"),
         wrap,
+        display_mode,
     })
+}
+
+fn mermaid_front_matter_scalar(source: &str, key: &str) -> Option<String> {
+    let mut lines = source.lines().skip_while(|line| line.trim().is_empty());
+    if lines.next()?.trim() != "---" { return None; }
+    for line in lines {
+        let trimmed = line.trim();
+        if trimmed == "---" { break; }
+        let Some((name, value)) = trimmed.split_once(':') else { continue };
+        if name.trim() == key {
+            return Some(value.trim().trim_matches(['\'', '"']).to_ascii_lowercase());
+        }
+    }
+    None
 }
 
 fn blank_mermaid_front_matter(source: &str) -> Result<Vec<u8>, ParseError> {
@@ -5945,6 +5962,9 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
     let mut accessibility_title = None;
     let mut accessibility_description = None;
     let mut config = GanttConfig::default();
+    if preprocessed.display_mode.as_deref() == Some("compact") {
+        config.display_mode = GanttDisplayMode::Compact;
+    }
     let mut sections: Vec<GanttSection> = Vec::new();
     let mut current_section: Option<GanttSection> = None;
     let mut previous_task_id = None;
@@ -7165,6 +7185,11 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.config.today_marker.as_deref(), Some("off"));
         assert_eq!(diagram.config.weekday.as_deref(), Some("monday"));
         assert_eq!(diagram.config.weekend.as_deref(), Some("friday"));
+
+        let compact = parse_gantt(
+            "---\ndisplayMode: compact\n---\ngantt\nTask :t1, 2026-01-01, 1d\n",
+        ).unwrap();
+        assert_eq!(compact.config.display_mode, GanttDisplayMode::Compact);
     }
 
     #[test]

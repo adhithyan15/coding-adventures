@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-MADAR, FA-ETYMON-MADAR]
 introduces:
   knowledge: [FA-LEX-PEDAR, FA-ETYMON-PEDAR]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-MADAR, FA-ETYMON-MADAR, FA-LEX-PEDAR, FA-ETYMON-PEDAR]
 skills: [listening, speaking, reading]

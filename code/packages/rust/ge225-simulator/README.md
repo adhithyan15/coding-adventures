@@ -37,9 +37,11 @@ encoded group (00 through 31); it does not take a group number from A. A fixed
 or shift instruction carrying an X selector adds the selected X word to its
 operand field before execution, with modified shift counts rejected above the
 architectural 31-place limit. Overflow from single-length arithmetic and left
-shifts remains latched until `BOV` or `BNO` tests it. The current core has
-83.49% line coverage (1,254/1,502); the completion floor must be rechecked after
-the remaining optional CPU, controller, and AAU instruction families land.
+shifts remains latched until `BOV` or `BNO` tests it. A shared pre-execution
+check validates pair operands, raw and X-word addresses, `MOV` ranges, branch
+targets, and exact decision skips before I, P, or operand state changes. The
+current core has 87.45% line coverage (1,680/1,921); the floor is rechecked after
+the remaining optional AAU instruction family lands.
 
 The optional central-processor arithmetic path models decimal words as the
 manual's three BCD digits plus sign and end-of-field flag. In decimal mode,
@@ -70,6 +72,24 @@ the architectural parity indicator and can honor the console's stop-on-parity
 setting; `HPT` stops tape or enables optional
 keyboard input, and `OFF` disconnects all three devices. Input and output queues
 have explicit limits.
+
+The controller selector exposes its eight fixed-priority plugs through a
+bounded deterministic adapter. `SEL P,X` delivers the following two words as
+an opaque controller command, skips both words, clears the selected
+controller's error state, and requires an explicit selector service event
+before another selection. A busy or offline selection produces the documented
+alert halt. Device controllers publish their own status bits for the
+`2514PCC`/`2516PCC` `BCS` families and complete operations through explicit
+not-ready-to-ready events.
+
+The optional Automatic Program Interrupt path latches enabled controller, card
+reader, and card punch ready transitions even while interrupts are disabled.
+At an instruction boundary it saves P at octal 0201, selects special X-group
+32, vectors to octal 0204, and disables further interrupts while the priority
+routine runs. `SET PST` followed by a modified `BRU` returns through the saved
+X word and restores the interrupted X group; an intervening `SET PBK` returns
+with interrupts disabled. The target of a `BRU` is never interrupted, matching
+the manual's explicitly uninterruptible branch rule.
 
 The primary reference is General Electric's corrected 1966 printing of the
 [GE-225 Programming Reference Manual](https://www.bitsavers.org/www.computer.museum.uq.edu.au/pdf/CPB-252A%20GE-225%20Programming%20Reference%20Manual%201966.pdf),

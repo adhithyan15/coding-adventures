@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-DIALOGUE-WELLBEING, FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED, FA-PRAGMATICS-STANDARD-FAREWELL]
 introduces:
   knowledge: [FA-DIALOGUE-TAKE-LEAVE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-DIALOGUE-WELLBEING, FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED, FA-PRAGMATICS-STANDARD-FAREWELL, FA-DIALOGUE-TAKE-LEAVE]
 skills: [listening, speaking, reading]

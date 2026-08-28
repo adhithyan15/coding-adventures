@@ -530,6 +530,9 @@ fn finite_positive_or(value: f64, fallback: f64) -> f64 {
 mod tests {
     use super::*;
 
+    #[cfg(target_os = "windows")]
+    use venture_browser_visual_fixtures::{fixture_response, probe_rgba, FIXTURE_PATH};
+
     fn page(url: &str, title: &str, body: &str) -> BrowserFetchResponse {
         BrowserFetchResponse::new(
             url,
@@ -591,6 +594,41 @@ mod tests {
         assert_eq!(props.address, "http://example.test/next");
         assert_eq!(props.page_title, "Next");
         assert!(!props.back_disabled);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn production_direct2d_bridge_renders_the_real_page_visual_fixture() {
+        let origin = "http://venture.test";
+        let start_url = format!("{origin}{FIXTURE_PATH}");
+        let fetcher = move |url: &str| fixture_response(origin, url);
+        let mut host =
+            WindowsBrowserHost::new_with_fetcher(&start_url, 240.0, 120.0, Box::new(fetcher))
+                .expect("visual fixture loads through the production Direct2D bridge");
+        let metrics = host.scroll_metrics().expect("fixture should scroll");
+        let mut saw_link = false;
+        let mut saw_image = false;
+        let mut offset = 0.0;
+        loop {
+            host.scroll_to(offset);
+            let scene = host
+                .controller
+                .session()
+                .viewport()
+                .unwrap()
+                .viewport_scene();
+            let pixels = paint_vm_direct2d::render(&scene);
+            let probe = probe_rgba(pixels.width, pixels.height, &pixels.data)
+                .expect("valid Direct2D RGBA frame");
+            saw_link |= probe.blue_pixels > 0;
+            saw_image |= probe.magenta_pixels > 0 && probe.cyan_pixels > 0;
+            if offset >= metrics.max_offset_y {
+                break;
+            }
+            offset = (offset + 48.0).min(metrics.max_offset_y);
+        }
+        assert!(saw_link, "Direct2D frames lost wrapped-link paint");
+        assert!(saw_image, "Direct2D frames lost decoded image paint");
     }
 
     #[test]

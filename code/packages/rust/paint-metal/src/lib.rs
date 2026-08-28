@@ -20,7 +20,7 @@
 //! | `PaintGlyphRun`   | Implemented — CoreText CTFontDrawGlyphs overlay             |
 //! | `PaintLayer`      | Planned — offscreen texture + compose                       |
 //! | `PaintGradient`   | Planned — MSL gradient shader                               |
-//! | `PaintImage`      | Planned — texture from PixelContainer or URI                |
+//! | `PaintImage`      | Decoded pixels composited with transforms, clips, opacity   |
 //!
 //! ## Metal pipeline
 //!
@@ -36,7 +36,7 @@
 //!   ├── 6. Encode render commands into command buffer
 //!   ├── 7. Commit and wait for GPU completion
 //!   ├── 8. Read back RGBA8 pixels → PixelContainer
-//!   ├── 9. CoreText overlay: draw PaintText via CTLine into CGBitmapContext
+//!   ├── 9. Composite decoded PaintImage pixels over the Metal surface
 //!   └── 10. CoreText overlay: draw PaintGlyphRun via CTFontDrawGlyphs
 //! ```
 //!
@@ -272,7 +272,7 @@ fn parse_rgb_components(inner: &str, has_alpha: bool) -> (f64, f64, f64, f64) {
 /// - Group and Clip nodes are recursed into (up to `MAX_GROUP_DEPTH` levels).
 /// - GlyphRun is rendered by the CoreText overlay (glyph_run_overlay module).
 /// - Text (PaintText) is Canvas/SVG/DOM-only — not rendered by Metal.
-/// - Layer, Gradient, Image are deferred to P2D08.
+/// - Layer and Gradient are deferred to P2D08; Image is composited after readback.
 ///
 /// `depth` must be 0 on the initial call; it is incremented for each recursive Group/Clip.
 fn collect_geometry(
@@ -807,11 +807,235 @@ fn add_path_vertices(path: &PaintPath, positions: &mut Vec<f32>, colors: &mut Ve
 pub fn render(scene: &PaintScene) -> PixelContainer {
     let mut pixels = unsafe { render_unsafe(scene) };
 
+    image_overlay::overlay_decoded_images(scene, &mut pixels);
+
     // Render PaintGlyphRun instructions via CoreText glyph drawing.
     unsafe {
         glyph_run_overlay::overlay_coretext_glyph_runs(scene, &mut pixels);
     }
     pixels
+}
+
+mod image_overlay {
+    use paint_instructions::{ImageSrc, PaintImage, PaintInstruction, PaintScene, PixelContainer};
+
+    const IDENTITY: [f64; 6] = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0];
+
+    #[derive(Clone, Copy)]
+    struct State {
+        transform: [f64; 6],
+        opacity: f64,
+        clip: [f64; 4],
+    }
+
+    pub(super) fn overlay_decoded_images(scene: &PaintScene, output: &mut PixelContainer) {
+        let state = State {
+            transform: IDENTITY,
+            opacity: 1.0,
+            clip: [0.0, 0.0, scene.width, scene.height],
+        };
+        walk(&scene.instructions, state, output, 0);
+    }
+
+    fn walk(
+        instructions: &[PaintInstruction],
+        state: State,
+        output: &mut PixelContainer,
+        depth: usize,
+    ) {
+        if depth > 128 {
+            return;
+        }
+        for instruction in instructions {
+            match instruction {
+                PaintInstruction::Image(image) => draw_image(image, state, output),
+                PaintInstruction::Group(group) => walk(
+                    &group.children,
+                    State {
+                        transform: compose(state.transform, group.transform.unwrap_or(IDENTITY)),
+                        opacity: state.opacity * group.opacity.unwrap_or(1.0).clamp(0.0, 1.0),
+                        ..state
+                    },
+                    output,
+                    depth + 1,
+                ),
+                PaintInstruction::Layer(layer) => walk(
+                    &layer.children,
+                    State {
+                        transform: compose(state.transform, layer.transform.unwrap_or(IDENTITY)),
+                        opacity: state.opacity * layer.opacity.unwrap_or(1.0).clamp(0.0, 1.0),
+                        ..state
+                    },
+                    output,
+                    depth + 1,
+                ),
+                PaintInstruction::Clip(clip) => {
+                    let corners = transformed_corners(
+                        state.transform,
+                        clip.x,
+                        clip.y,
+                        clip.width,
+                        clip.height,
+                    );
+                    let bounds = intersect(state.clip, bounds(corners));
+                    walk(
+                        &clip.children,
+                        State {
+                            clip: bounds,
+                            ..state
+                        },
+                        output,
+                        depth + 1,
+                    );
+                }
+                _ => {}
+            }
+        }
+    }
+
+    fn draw_image(image: &PaintImage, state: State, output: &mut PixelContainer) {
+        let ImageSrc::Pixels(source) = &image.src else {
+            return;
+        };
+        if source.width == 0 || source.height == 0 || image.width <= 0.0 || image.height <= 0.0 {
+            return;
+        }
+        let Some(inverse) = inverse(state.transform) else {
+            return;
+        };
+        let draw_bounds = intersect(
+            state.clip,
+            bounds(transformed_corners(
+                state.transform,
+                image.x,
+                image.y,
+                image.width,
+                image.height,
+            )),
+        );
+        let x0 = draw_bounds[0].floor().max(0.0) as u32;
+        let y0 = draw_bounds[1].floor().max(0.0) as u32;
+        let x1 = draw_bounds[2].ceil().min(output.width as f64) as u32;
+        let y1 = draw_bounds[3].ceil().min(output.height as f64) as u32;
+        let opacity = state.opacity * image.opacity.unwrap_or(1.0).clamp(0.0, 1.0);
+        for y in y0..y1 {
+            for x in x0..x1 {
+                let [local_x, local_y] = point(inverse, x as f64 + 0.5, y as f64 + 0.5);
+                if local_x < image.x
+                    || local_y < image.y
+                    || local_x >= image.x + image.width
+                    || local_y >= image.y + image.height
+                {
+                    continue;
+                }
+                let u = (local_x - image.x) / image.width;
+                let v = (local_y - image.y) / image.height;
+                let sx = (u * source.width as f64)
+                    .floor()
+                    .min(source.width as f64 - 1.0) as u32;
+                let sy = (v * source.height as f64)
+                    .floor()
+                    .min(source.height as f64 - 1.0) as u32;
+                blend(output, x, y, source.pixel_at(sx, sy), opacity);
+            }
+        }
+    }
+
+    fn blend(output: &mut PixelContainer, x: u32, y: u32, source: (u8, u8, u8, u8), opacity: f64) {
+        let offset = ((y * output.width + x) * 4) as usize;
+        let source_alpha = source.3 as f64 / 255.0 * opacity;
+        let destination_alpha = output.data[offset + 3] as f64 / 255.0;
+        let out_alpha = source_alpha + destination_alpha * (1.0 - source_alpha);
+        if out_alpha <= f64::EPSILON {
+            output.data[offset..offset + 4].fill(0);
+            return;
+        }
+        for (index, channel) in [source.0, source.1, source.2].into_iter().enumerate() {
+            let source_value = channel as f64 / 255.0;
+            let destination_value = output.data[offset + index] as f64 / 255.0;
+            output.data[offset + index] = (((source_value * source_alpha
+                + destination_value * destination_alpha * (1.0 - source_alpha))
+                / out_alpha)
+                * 255.0)
+                .round() as u8;
+        }
+        output.data[offset + 3] = (out_alpha * 255.0).round() as u8;
+    }
+
+    fn compose(parent: [f64; 6], local: [f64; 6]) -> [f64; 6] {
+        [
+            parent[0] * local[0] + parent[2] * local[1],
+            parent[1] * local[0] + parent[3] * local[1],
+            parent[0] * local[2] + parent[2] * local[3],
+            parent[1] * local[2] + parent[3] * local[3],
+            parent[0] * local[4] + parent[2] * local[5] + parent[4],
+            parent[1] * local[4] + parent[3] * local[5] + parent[5],
+        ]
+    }
+
+    fn inverse(transform: [f64; 6]) -> Option<[f64; 6]> {
+        let determinant = transform[0] * transform[3] - transform[1] * transform[2];
+        if determinant.abs() <= f64::EPSILON {
+            return None;
+        }
+        Some([
+            transform[3] / determinant,
+            -transform[1] / determinant,
+            -transform[2] / determinant,
+            transform[0] / determinant,
+            (transform[2] * transform[5] - transform[3] * transform[4]) / determinant,
+            (transform[1] * transform[4] - transform[0] * transform[5]) / determinant,
+        ])
+    }
+
+    fn point(transform: [f64; 6], x: f64, y: f64) -> [f64; 2] {
+        [
+            transform[0] * x + transform[2] * y + transform[4],
+            transform[1] * x + transform[3] * y + transform[5],
+        ]
+    }
+
+    fn transformed_corners(
+        transform: [f64; 6],
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+    ) -> [[f64; 2]; 4] {
+        [
+            point(transform, x, y),
+            point(transform, x + width, y),
+            point(transform, x, y + height),
+            point(transform, x + width, y + height),
+        ]
+    }
+
+    fn bounds(points: [[f64; 2]; 4]) -> [f64; 4] {
+        points.into_iter().fold(
+            [
+                f64::INFINITY,
+                f64::INFINITY,
+                f64::NEG_INFINITY,
+                f64::NEG_INFINITY,
+            ],
+            |mut bounds, point| {
+                bounds[0] = bounds[0].min(point[0]);
+                bounds[1] = bounds[1].min(point[1]);
+                bounds[2] = bounds[2].max(point[0]);
+                bounds[3] = bounds[3].max(point[1]);
+                bounds
+            },
+        )
+    }
+
+    fn intersect(left: [f64; 4], right: [f64; 4]) -> [f64; 4] {
+        [
+            left[0].max(right[0]),
+            left[1].max(right[1]),
+            left[2].min(right[2]),
+            left[3].min(right[3]),
+        ]
+    }
 }
 
 #[cfg(target_vendor = "apple")]
@@ -1560,7 +1784,8 @@ mod live_present {
 mod tests {
     use super::*;
     use paint_instructions::{
-        PaintBase, PaintEllipse, PaintInstruction, PaintPath, PaintRect, PaintScene, PathCommand,
+        ImageSrc, PaintBase, PaintEllipse, PaintImage, PaintInstruction, PaintPath, PaintRect,
+        PaintScene, PathCommand,
     };
 
     #[test]
@@ -1825,6 +2050,26 @@ mod tests {
         assert_eq!(g, 255, "green channel at corner (background)");
         assert_eq!(b, 255, "blue channel at corner (background)");
         assert_eq!(a, 255, "alpha at corner (background)");
+    }
+
+    #[test]
+    fn render_decoded_image_pixels_with_scaling() {
+        let source = PixelContainer::from_data(2, 1, vec![255, 0, 255, 255, 0, 255, 255, 255]);
+        let mut scene = PaintScene::new(20.0, 10.0);
+        scene.instructions.push(PaintInstruction::Image(PaintImage {
+            base: PaintBase::default(),
+            x: 2.0,
+            y: 2.0,
+            width: 16.0,
+            height: 6.0,
+            src: ImageSrc::Pixels(source),
+            opacity: None,
+        }));
+
+        let pixels = render(&scene);
+        assert_eq!(pixels.pixel_at(4, 4), (255, 0, 255, 255));
+        assert_eq!(pixels.pixel_at(15, 4), (0, 255, 255, 255));
+        assert_eq!(pixels.pixel_at(0, 0), (255, 255, 255, 255));
     }
 
     /// Render a blue filled ellipse and verify the centre pixel is blue.

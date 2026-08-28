@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-GRAMMAR-INFINITIVE-TAN-DAN, FA-GRAMMAR-PRESENT-STEM, FA-MORPH-KHOSH-VAQT-AM, FA-SCRIPT-GAF]
 introduces:
   knowledge: [FA-LEX-FEKR-KARDAN, FA-GRAMMAR-COMPOUND-VERB-KARDAN, FA-STEM-KON]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-GRAMMAR-INFINITIVE-TAN-DAN, FA-GRAMMAR-PRESENT-STEM, FA-MORPH-KHOSH-VAQT-AM, FA-SCRIPT-GAF, FA-LEX-FEKR-KARDAN, FA-GRAMMAR-COMPOUND-VERB-KARDAN, FA-STEM-KON]
 skills: [listening, speaking, reading]

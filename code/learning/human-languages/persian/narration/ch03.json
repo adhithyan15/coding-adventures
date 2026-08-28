@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6079d14592306807",
+  "sourceHash": "fnv1a64:c382a44a66a07827",
   "lessons": [
     {
       "id": "FA-C03-shoma-to",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be202b2738d36b7b",
+      "sourceHash": "fnv1a64:4a85922eeffe5d79",
       "notice": null,
       "blocks": [
         {
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71b3336475de7a57",
+      "sourceHash": "fnv1a64:c3aea9dc955afe90",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c28cba7850362b53",
+      "sourceHash": "fnv1a64:09fc810f7ecc8342",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -451,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e199c041ce87eb5d",
+      "sourceHash": "fnv1a64:f913aa6b5a9f7b6f",
       "notice": null,
       "blocks": [
         {
@@ -592,7 +592,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c3f2d98d0b2ca18",
+      "sourceHash": "fnv1a64:241f3770cfef28eb",
       "notice": null,
       "blocks": [
         {

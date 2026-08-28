@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:71ff8595e75605b5",
+  "sourceHash": "fnv1a64:a53ddc263ce690b5",
   "lessons": [
     {
       "id": "FA-C01-salam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:ad23c2ed65999d3f",
+      "sourceHash": "fnv1a64:18883d2683f99439",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -163,7 +163,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2252145bd97b2d8a",
+      "sourceHash": "fnv1a64:7a9f8a41988d58e3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -466,7 +466,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5041765073cb33e5",
+      "sourceHash": "fnv1a64:ecd1756ff7d7e840",
       "notice": null,
       "blocks": [
         {

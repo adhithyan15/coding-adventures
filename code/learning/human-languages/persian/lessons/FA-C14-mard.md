@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-PESAR, FA-ETYMON-PESAR]
 introduces:
   knowledge: [FA-LEX-MARD, FA-ETYMON-MARD]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-PESAR, FA-ETYMON-PESAR, FA-LEX-MARD, FA-ETYMON-MARD]
 skills: [listening, speaking, reading]

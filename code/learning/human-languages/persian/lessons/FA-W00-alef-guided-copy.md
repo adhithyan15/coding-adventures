@@ -18,6 +18,9 @@ requires:
   knowledge: [FA-LEX-SALAM-01, FA-ETYMON-SALAM-SLM-02, FA-SCRIPT-RTL-01]
 introduces:
   knowledge: [FA-SCRIPT-ALEF-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-SALAM-01, FA-SCRIPT-RTL-01, FA-SCRIPT-ALEF-01]
 skills: [reading, writing]

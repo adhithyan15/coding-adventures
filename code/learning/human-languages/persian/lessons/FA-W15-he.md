@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-SCRIPT-TE-01, FA-SCRIPT-NUN-01, FA-SCRIPT-JOINING-01]
 introduces:
   knowledge: [FA-SCRIPT-HE-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-SCRIPT-HE-01, FA-SCRIPT-JOINING-01, FA-SCRIPT-TE-01, FA-SCRIPT-NUN-01]
 skills: [reading, writing]

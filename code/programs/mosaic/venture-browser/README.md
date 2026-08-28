@@ -111,6 +111,20 @@ The POSIX wrapper stays `/bin/sh` compatible because the repository build tool
 interprets `BUILD` contents itself; Bash-specific logic remains in
 `scripts/build-all.sh`.
 
+The package contract also runs `venture-browser-visual-fixtures`, a reusable
+Mosaic-era page and resource corpus that fixes deterministic geometry and
+structural RGBA screenshots for mixed inline text, preformatted blocks,
+decoded and failed images, wrapped links, and multiple scroll states. Full
+font-raster screenshots are retained as diagnostics while exact structural
+screenshots mask platform glyph pixels. Production adapter tests sweep the
+same fixture through Cairo (shared by Qt, Flutter, and Compose), Metal, and
+Direct2D, using portable frame probes instead of toolkit-owned HTML or golden
+files. Generate the six inspectable PNGs with:
+
+```sh
+cargo run -p venture-browser-visual-fixtures --example capture -- target/venture-visuals
+```
+
 React and Electron run their production builds; HTML and Web Components run
 JavaScript syntax checks plus one shared package-owned jsdom interaction gate;
 SwiftUI, Qt, XAML, Flutter, and Compose invoke their native toolchains. React

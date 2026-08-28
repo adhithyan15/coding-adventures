@@ -35,6 +35,7 @@
     "datetime-specific-date-exclusion",
     "datetime-saturday-weekend",
     "datetime-friday-weekend",
+    "compact-display-mode",
     "weekend-exclusions",
     "friday-start-weekend",
     "recurring-exclusions-leave-friday",

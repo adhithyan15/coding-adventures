@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-WELLBEING-QUESTION, FA-GRAMMAR-HAL-E-SHOMA, FA-PRAGMATICS-WELLBEING-FORMAL]
 introduces:
   knowledge: [FA-LEX-KHUB, FA-SCRIPT-KHUB, FA-ETYMON-KHUB]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-WELLBEING-QUESTION, FA-LEX-KHUB, FA-SCRIPT-KHUB, FA-ETYMON-KHUB]
 skills: [listening, speaking, reading]

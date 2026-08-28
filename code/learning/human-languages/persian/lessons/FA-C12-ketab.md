@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-DAR, FA-ETYMON-DAR, FA-GRAMMAR-EZAFE-OWNER]
 introduces:
   knowledge: [FA-LEX-KETAB, FA-ETYMON-KETAB]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-NAM, FA-ETYMON-NAM, FA-LEX-DEL, FA-ETYMON-DEL, FA-LEX-DAR, FA-ETYMON-DAR, FA-LEX-KETAB, FA-ETYMON-KETAB, FA-GRAMMAR-EZAFE-OWNER, FA-PHRASE-LOTFAN, FA-GRAMMAR-CHI-AST-FUSION, FA-GRAMMAR-NAME-QUESTION-ORDER, FA-LEX-KHOSHVAGHTAM, FA-SCRIPT-CHE-AND-YE, FA-SCRIPT-SHOMA-TO, FA-LEX-PA]
 skills: [listening, speaking, reading]

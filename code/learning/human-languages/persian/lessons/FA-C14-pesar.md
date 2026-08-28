@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-KHAHAR, FA-ETYMON-KHAHAR]
 introduces:
   knowledge: [FA-LEX-PESAR, FA-ETYMON-PESAR]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-KHAHAR, FA-ETYMON-KHAHAR, FA-LEX-PESAR, FA-ETYMON-PESAR, FA-LEX-BARADAR]
 skills: [listening, speaking, reading]

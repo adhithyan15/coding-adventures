@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-ZAN, FA-ETYMON-ZAN, FA-LEX-KHODAHAFEZ]
 introduces:
   knowledge: [FA-LEX-DUST, FA-ETYMON-DUST]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-KHAHAR, FA-LEX-PESAR, FA-LEX-MARD, FA-LEX-ZAN, FA-LEX-DUST, FA-ETYMON-DUST, FA-LEX-KHODAHAFEZ, FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS, FA-SCRIPT-KHODAHAFEZ-JOINED, FA-PRAGMATICS-STANDARD-FAREWELL, FA-DIALOGUE-TAKE-LEAVE, FA-LEX-HAFEZ, FA-SCRIPT-HAFEZ, FA-LEX-CHAY, FA-LEX-KELID, FA-LEX-BARAN]
 skills: [listening, speaking, reading]

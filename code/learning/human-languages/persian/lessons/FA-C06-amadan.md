@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-RAFTAN, FA-STEM-RAV, FA-GRAMMAR-PRESENT-STEM]
 introduces:
   knowledge: [FA-LEX-AMADAN, FA-SCRIPT-ALEF-MADDE, FA-STEM-A]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-RAFTAN, FA-STEM-RAV, FA-GRAMMAR-PRESENT-STEM, FA-LEX-AMADAN, FA-SCRIPT-ALEF-MADDE, FA-STEM-A]
 skills: [listening, speaking, reading]

@@ -19,6 +19,9 @@ requires:
   knowledge: [FA-LEX-CHAY, FA-PHRASE-LOTFAN, FA-GRAMMAR-EZAFE-OWNER]
 introduces:
   knowledge: [FA-LEX-KELID, FA-ETYMON-KELID]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FA-LEX-AB, FA-PHRASE-LOTFAN, FA-ETYMON-AB, FA-LEX-NAN, FA-ETYMON-NAN, FA-LEX-CHAY, FA-ETYMON-CHAY, FA-LEX-KELID, FA-ETYMON-KELID, FA-GRAMMAR-EZAFE-OWNER]
 skills: [listening, speaking, reading]

@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Sister, Son, Man, Woman, Friend",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:74afbe93603a1852",
+  "sourceHash": "fnv1a64:3a7e617427b0151a",
   "lessons": [
     {
       "id": "FA-C14-khahar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55b71627ffef3156",
+      "sourceHash": "fnv1a64:7b3d5eca40d69fbb",
       "notice": null,
       "blocks": [
         {
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:373ce01752c06f4e",
+      "sourceHash": "fnv1a64:2b9cf8ed4993e5a7",
       "notice": null,
       "blocks": [
         {
@@ -316,7 +316,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:878a7d36dcd4cf57",
+      "sourceHash": "fnv1a64:d4a506b2c5d015f4",
       "notice": null,
       "blocks": [
         {
@@ -450,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3fc55ad5e087c08",
+      "sourceHash": "fnv1a64:46e21da598f888b5",
       "notice": null,
       "blocks": [
         {
@@ -602,7 +602,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6dab3630555d9c86",
+      "sourceHash": "fnv1a64:191ca3a7c6fd13e3",
       "notice": null,
       "blocks": [
         {

@@ -21,9 +21,22 @@ cross-platform proving application. Items are ordered by risk and dependency.
   menus. Completed with escaped synthetic `<pre>` documents, a typed auxiliary
   window effect, shared generated chrome, native host forwarding, and live
   Flutter/Compose plus DOM/Qt acceptance without navigation or refetch.
-- [ ] **P1 browser convergence — deterministic real-page visuals.** Ratchet
+- [x] **P1 browser convergence — deterministic real-page visuals.** Ratchet
   representative Mosaic-era pages with screenshot and geometry fixtures for
   mixed inline content, preformatted text, images, wrapped links, and scrolling.
+  Completed with a reusable page/resource router, deterministic layout and
+  structural screenshot oracle, PNG diagnostics, package-contract coverage,
+  and production Cairo, Metal, and Direct2D adapter sweeps. The sweep also
+  closed decoded-image rendering in `paint-metal`.
+- [ ] **P2 paint convergence — fully ordered Metal image composition.** Promote
+  decoded images from the isolated post-readback compositor into ordered Metal
+  draw commands when mixed vector/image painter ordering, URI-backed sources,
+  layer filters, and blend modes land. Preserve the current affine, clip,
+  opacity, scaling, and alpha behavior as the backend-neutral contract.
+- [ ] **P2 browser convergence — international inline content.** Expand the
+  representative real-page corpus through bidi text, script fallback,
+  grapheme-aware selection geometry, and UAX #14 line-breaking without moving
+  language behavior into platform shells.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a
