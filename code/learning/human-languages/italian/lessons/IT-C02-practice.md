@@ -8,17 +8,20 @@ type: practice-mix
 headword: (practice)
 gloss: the full "Come stai?" exchange, formal and informal
 concept_tag: CH2-PRACTICE
-prerequisites: [IT-C02-prego, IT-C02-come, IT-C02-stare, IT-C02-come-stai, IT-C02-come-sta, IT-C02-come-va, IT-C02-cosi-cosi]
+prerequisites: [IT-C02-prego, IT-C02-come, IT-C02-stare, IT-C02-come-stai, IT-C02-come-sta, IT-C02-come-va, IT-C02-cosi-cosi, IT-C02-non-ce-male]
 sounds: []
 roots: []
 duration:
   max_seconds: 297
 requires:
-  knowledge: [IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03, IT-SOUND-COME-02, IT-ETYMON-COME-03, IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04, IT-ETYMON-COME-STAI-02, IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02, IT-SOUND-COSI-COSI-02, IT-ETYMON-COSI-COSI-03, IT-GRAMMAR-COSI-COSI-04]
+  knowledge: [IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03, IT-SOUND-COME-02, IT-ETYMON-COME-03, IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04, IT-ETYMON-COME-STAI-02, IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02, IT-SOUND-COSI-COSI-02, IT-ETYMON-COSI-COSI-03, IT-GRAMMAR-COSI-COSI-04, IT-LEX-NON-CE-MALE-02]
 introduces:
   knowledge: [IT-LEX-PRACTICE-02, IT-NOTICE-PRACTICE-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
-  knowledge: [IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03, IT-SOUND-COME-02, IT-ETYMON-COME-03, IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04, IT-ETYMON-COME-STAI-02, IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02, IT-SOUND-COSI-COSI-02, IT-ETYMON-COSI-COSI-03, IT-GRAMMAR-COSI-COSI-04, IT-LEX-PRACTICE-02, IT-NOTICE-PRACTICE-03]
+  knowledge: [IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03, IT-SOUND-COME-02, IT-ETYMON-COME-03, IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04, IT-ETYMON-COME-STAI-02, IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02, IT-SOUND-COSI-COSI-02, IT-ETYMON-COSI-COSI-03, IT-GRAMMAR-COSI-COSI-04, IT-LEX-NON-CE-MALE-02, IT-LEX-PRACTICE-02, IT-NOTICE-PRACTICE-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -57,7 +60,7 @@ Italian twin of Spanish *¿y usted?* and French *et toi?*.
 ## What you've built this chapter
 <!-- hl-knowledge: introduces=[IT-NOTICE-PRACTICE-03]; assesses=[] -->
 
-- **prego** — you're welcome / please (← *pregare*, "to pray"; English
+- **prego** — you're welcome (← *pregare*, "to pray"; English
   *precarious*).
 - **come** — how (← *quōmodo*; sibling of *cómo* / *comment*).
 - **stare** — "to be" from *stand* (= Spanish *estar*); vs *essere* (identity).

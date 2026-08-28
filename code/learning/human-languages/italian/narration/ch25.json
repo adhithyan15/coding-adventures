@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Nose, Stomach, and Throat",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:58c18f6ff0de8d04",
+  "sourceHash": "fnv1a64:9152dc466a42ebd4",
   "lessons": [
     {
       "id": "IT-C25-naso",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37b2fafc712421df",
+      "sourceHash": "fnv1a64:0fa7aa00b2ed98c8",
       "notice": null,
       "blocks": [
         {
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1eaeb9f8e6f866d",
+      "sourceHash": "fnv1a64:c0d359b7da5dc01c",
       "notice": null,
       "blocks": [
         {
@@ -262,7 +262,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e31db783e499134f",
+      "sourceHash": "fnv1a64:5270748f571a45fa",
       "notice": null,
       "blocks": [
         {

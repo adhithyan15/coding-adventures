@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-LEX-MANO-02, IT-GRAMMAR-MANO-03, IT-LEX-TESTA-02, IT-SOUND-COSI-COSI-02, IT-GRAMMAR-COSI-COSI-04, IT-LEX-PERSONA-02, IT-GRAMMAR-PERSONA-04]
 introduces:
   knowledge: [IT-LEX-CUORE-02, IT-ETYMON-CUORE-03, IT-NOTICE-CUORE-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-LEX-MANO-02, IT-GRAMMAR-MANO-03, IT-LEX-TESTA-02, IT-SOUND-COSI-COSI-02, IT-GRAMMAR-COSI-COSI-04, IT-LEX-PERSONA-02, IT-GRAMMAR-PERSONA-04, IT-LEX-CUORE-02, IT-ETYMON-CUORE-03, IT-NOTICE-CUORE-04]
 skills: [listening, speaking, reading]

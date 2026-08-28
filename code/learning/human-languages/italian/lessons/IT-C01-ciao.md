@@ -17,6 +17,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [IT-PHONO-CIAO-01, IT-ETYMON-CIAO-02, IT-PRAGMATIC-CIAO-03]
+introduces_idioms: []
+introduces_senses: [IT-SENSE-CIAO-GOODBYE-01]
+introduces_culture_claims: [IT-CULTURE-CIAO-INFORMAL-REGISTER-01]
 practises:
   knowledge: [IT-PHONO-CIAO-01, IT-ETYMON-CIAO-02, IT-PRAGMATIC-CIAO-03]
 skills: [listening, speaking, reading, writing]

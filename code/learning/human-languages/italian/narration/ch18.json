@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d09734efe517ba07",
+  "sourceHash": "fnv1a64:e5f8e1e2a9334956",
   "lessons": [
     {
       "id": "IT-C18-pensare",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7fe3dd46f267ece",
+      "sourceHash": "fnv1a64:6833cffd0e46c90b",
       "notice": null,
       "blocks": [
         {
@@ -209,7 +209,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78085442ef080abe",
+      "sourceHash": "fnv1a64:31a9b78f8f33ccdd",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:122ad0f13825da67",
+      "sourceHash": "fnv1a64:3070b23e01b36ef6",
       "notice": null,
       "blocks": [
         {
@@ -575,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf859754b231bd29",
+      "sourceHash": "fnv1a64:ab477c128c9b47b6",
       "notice": null,
       "blocks": [
         {

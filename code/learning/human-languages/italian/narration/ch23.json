@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Friends, Family, and a Name",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8df82c6158f61973",
+  "sourceHash": "fnv1a64:c10c02b8e7198afe",
   "lessons": [
     {
       "id": "IT-C23-amico-amica",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a1e8d418f4d588ca",
+      "sourceHash": "fnv1a64:fb0741c78ac8d583",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98c56f9caecc0c4d",
+      "sourceHash": "fnv1a64:c49e85488bc88f48",
       "notice": null,
       "blocks": [
         {
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03ee965725c95b80",
+      "sourceHash": "fnv1a64:c893d0a92c17d565",
       "notice": null,
       "blocks": [
         {
@@ -442,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6acaa01005a8f4c7",
+      "sourceHash": "fnv1a64:5aa6ede049779ba4",
       "notice": null,
       "blocks": [
         {

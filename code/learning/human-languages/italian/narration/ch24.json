@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Heart, Eyes, Ears, and Mouth",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7670302fce0c6d70",
+  "sourceHash": "fnv1a64:0d843d31a84e75f6",
   "lessons": [
     {
       "id": "IT-C24-cuore",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acc2c6c3f8fe33fa",
+      "sourceHash": "fnv1a64:1971c1c12f429593",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0668c356a74be56",
+      "sourceHash": "fnv1a64:4deebb6a4b0c7ead",
       "notice": null,
       "blocks": [
         {
@@ -268,7 +268,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29d8d6f8328b13da",
+      "sourceHash": "fnv1a64:361181343b009413",
       "notice": null,
       "blocks": [
         {
@@ -411,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1249b42bd30d045c",
+      "sourceHash": "fnv1a64:ae912bc08c72a00d",
       "notice": null,
       "blocks": [
         {

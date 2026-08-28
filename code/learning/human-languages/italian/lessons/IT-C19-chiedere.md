@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-GRAMMAR-PRENDERE-04, IT-SOUND-MI-CHIAMO-02, IT-SOUND-ORA-02, IT-ETYMON-ORA-03, IT-ETYMON-MANO-04]
 introduces:
   knowledge: [IT-SOUND-CHIEDERE-02, IT-ETYMON-CHIEDERE-03, IT-GRAMMAR-CHIEDERE-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-GRAMMAR-PRENDERE-04, IT-SOUND-MI-CHIAMO-02, IT-SOUND-ORA-02, IT-ETYMON-ORA-03, IT-ETYMON-MANO-04, IT-SOUND-CHIEDERE-02, IT-ETYMON-CHIEDERE-03, IT-GRAMMAR-CHIEDERE-04]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04]
 introduces:
   knowledge: [IT-SOUND-ABITARE-02, IT-ETYMON-ABITARE-03, IT-GRAMMAR-ABITARE-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04, IT-SOUND-ABITARE-02, IT-ETYMON-ABITARE-03, IT-GRAMMAR-ABITARE-04]
 skills: [listening, speaking, reading]

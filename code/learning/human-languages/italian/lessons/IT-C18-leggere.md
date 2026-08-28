@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-LEX-CAPIRE-02, IT-GRAMMAR-CAPIRE-04, IT-SOUND-PIACERE-02]
 introduces:
   knowledge: [IT-SOUND-LEGGERE-02, IT-ETYMON-LEGGERE-03, IT-GRAMMAR-LEGGERE-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-LEX-CAPIRE-02, IT-GRAMMAR-CAPIRE-04, IT-SOUND-PIACERE-02, IT-SOUND-LEGGERE-02, IT-ETYMON-LEGGERE-03, IT-GRAMMAR-LEGGERE-04]
 skills: [listening, speaking, reading]

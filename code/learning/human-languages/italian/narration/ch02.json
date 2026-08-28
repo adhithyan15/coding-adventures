@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 2,
   "title": "How Are You?",
-  "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:ca661e84ba10f32a",
+  "drivablePrefix": 12,
+  "sourceHash": "fnv1a64:de201725b750a57a",
   "lessons": [
     {
       "id": "IT-C02-prego",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cbee97bd2d0ce6d",
+      "sourceHash": "fnv1a64:077e757f7bddc492",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "The grazie lesson already promised you this word. Someone says grazie; you reply prego. Like German bitte, it's a small word that does several jobs — and it comes straight from praying."
+              "text": "The grazie lesson already promised you this word. Someone says grazie; you reply prego. Hold that one exchange first. Later lessons will add the word's other jobs one at a time."
             }
           ]
         },
@@ -77,22 +77,11 @@
             },
             {
               "kind": "speech",
-              "text": "Like German bitte, prego stretches across situations, all of them a form of \"I pray you\":"
+              "text": "For now, keep one complete turn:"
             },
             {
-              "kind": "table",
-              "headers": [
-                "you say prego when…",
-                "it means"
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "you say prego when…: answering grazie. it means: you're welcome.",
-                "you say prego when…: offering a seat / letting someone pass. it means: please, go ahead / after you.",
-                "you say prego when…: handing something over. it means: here you are.",
-                "you say prego when…: you didn't catch it. it means: sorry, come again?"
-              ]
+              "kind": "speech",
+              "text": "Grazie. — Prego. — \"Thank you. — You're welcome.\""
             }
           ]
         },
@@ -140,7 +129,295 @@
             },
             {
               "kind": "speech",
-              "text": "What verb is prego the \"I\" form of? (pregare, \"to pray.\") What English word means \"held by prayer\" and so \"unstable\"? (Precarious.) Which German word does prego behave like? (bitte — one word, many courtesies.) Next: come, \"how.\""
+              "text": "What verb is prego the \"I\" form of? (pregare, \"to pray.\") What English word means \"held by prayer\" and so \"unstable\"? (Precarious.) What do you answer after grazie? (Prego.) Next, add one more use without losing this one."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C02-prego-go-ahead",
+      "sequence": 102,
+      "title": "prego — \"please, go ahead\"",
+      "headword": "prego — go ahead",
+      "romanization": "prego — go ahead",
+      "gloss": "please, go ahead, after you — the first extension beyond \"you're welcome\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:212926a3742fab75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer grazie first: prego. Keep that meaning. Now picture a doorway and add one nearby use."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know — One more job",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "When you let someone pass or offer a seat, prego means \"please, go ahead\" / \"after you.\" The polite invitation still grows from pregare, \"to pray or entreat.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You hold the door. Prego. — \"After you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Do not add another meaning yet. The same sound now owns two situations: after grazie, \"you're welcome\"; at a doorway, \"go ahead.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Grazie. — Prego.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Grazie. — Prego.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Prego\" while yielding a doorway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Prego\" while yielding a doorway]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "At a doorway, what does prego mean? (Please, go ahead / after you.) After grazie? (You're welcome.) Keep both; the next lesson adds only one more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C02-prego-here-you-are",
+      "sequence": 104,
+      "title": "prego — \"here you are\"",
+      "headword": "prego — here you are",
+      "romanization": "prego — here you are",
+      "gloss": "here you are — what prego says while handing something over",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:624e5bbd5204d527",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "At a doorway, prego invites a person forward. Move the same invitation into your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know — One more job",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "When you hand something to someone, prego means \"here you are.\" The object can be a cup, a ticket, or anything already requested."
+            },
+            {
+              "kind": "speech",
+              "text": "You pass over the cup. Prego. — \"Here you are.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The meanings stay tied to visible situations: thanks, doorway, offered object. You do not have to guess between them without context."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Prego\" while yielding a doorway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Prego\" while yielding a doorway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Prego\" while handing over an imaginary cup",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Prego\" while handing over an imaginary cup]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You hand someone a cup. What does prego mean? (Here you are.) At a doorway? (Go ahead.) After thanks? (You're welcome.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C02-prego-come-again",
+      "sequence": 106,
+      "title": "Prego? — \"sorry, come again?\"",
+      "headword": "Prego? — come again?",
+      "romanization": "Prego? — come again?",
+      "gloss": "sorry, come again? — the listening-repair use of prego",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d069b74a43a063a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know prego after thanks, at a doorway, and with an offered object. The last common use changes the voice, not the spelling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know — One more job",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "If you did not hear, lift your voice into a question:"
+            },
+            {
+              "kind": "speech",
+              "text": "Prego? — \"Sorry? Come again?\""
+            },
+            {
+              "kind": "speech",
+              "text": "The rising question sound separates this repair from a flat prego while handing something over. Listen to the situation and the voice together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "flat \"Prego\" — here you are",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: flat \"Prego\" — here you are]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ASK",
+              "instruction": "rising \"Prego?\" — come again?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ASK: rising \"Prego?\" — come again?]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You did not catch a sentence. What do you ask? (Prego?) What marks the listening-repair use? (Question intonation and the situation.)"
             }
           ]
         }
@@ -159,7 +436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ee18f6ecb61ad08",
+      "sourceHash": "fnv1a64:19f496b617226a81",
       "notice": null,
       "blocks": [
         {
@@ -293,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12dbb54d4f03c1e3",
+      "sourceHash": "fnv1a64:50443c7d0d357d8a",
       "notice": null,
       "blocks": [
         {
@@ -444,7 +721,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65cccc833c91609c",
+      "sourceHash": "fnv1a64:de7dd82da90f3fb9",
       "notice": null,
       "blocks": [
         {
@@ -580,7 +857,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ddc010272df8430",
+      "sourceHash": "fnv1a64:8bbec1c70fdf6237",
       "notice": null,
       "blocks": [
         {
@@ -721,7 +998,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:023ad2836fcaefdf",
+      "sourceHash": "fnv1a64:4f7567dab36a56c5",
       "notice": null,
       "blocks": [
         {
@@ -853,7 +1130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd34da0727862033",
+      "sourceHash": "fnv1a64:24d4953fcd5030b0",
       "notice": null,
       "blocks": [
         {
@@ -923,11 +1200,10 @@
                 "sense"
               ],
               "columns": 2,
-              "rowCount": 3,
+              "rowCount": 2,
               "utterances": [
                 "(Molto) bene, grazie means (very) well, thanks.",
-                "Così così means so-so.",
-                "Non c'è male means \"not bad\" (lit. \"there isn't bad\")."
+                "Così così means so-so."
               ]
             },
             {
@@ -959,11 +1235,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "answer \"Come stai?\" three ways — \"Bene\" / \"Così così\" / \"Non c'è male\"",
+              "instruction": "answer \"Come stai?\" two ways — \"Bene\" / \"Così così\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: answer \"Come stai?\" three ways — \"Bene\" / \"Così così\" / \"Non c'è male\"]"
+              "source": "[YOU SAY: answer \"Come stai?\" two ways — \"Bene\" / \"Così così\"]"
             },
             {
               "kind": "prompt",
@@ -996,6 +1272,98 @@
       ]
     },
     {
+      "id": "IT-C02-non-ce-male",
+      "sequence": 165,
+      "title": "non c'è male — \"not bad\"",
+      "headword": "non c'è male",
+      "romanization": "non c'è male",
+      "gloss": "not bad — a fixed wellbeing answer learned whole for now",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b64f332cfaf9ffd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can answer Come stai? with bene or così così. Add one more answer, on its own step."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know — The formula",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Non c'è male. — \"Not bad.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Learn the four sounds as one useful answer for now. The pieces behind it — negation and the c'è construction — belong to later lessons. You do not need their rules to answer honestly today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Come stai? — Così così.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Come stai? — Così così.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Come stai? — Non c'è male.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Come stai? — Non c'è male.\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the new \"not bad\" answer. (Non c'è male.) Must you explain each word yet? (No. It is an unanalyzed pre-A1 formula for now.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "IT-C02-practice",
       "sequence": 170,
       "title": "Practice — \"Come stai?\", start to finish",
@@ -1008,7 +1376,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e5af8c6039cec71",
+      "sourceHash": "fnv1a64:a7d06ebcbc5ff534",
       "notice": null,
       "blocks": [
         {
@@ -1062,7 +1430,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "prego — you're welcome / please ( from pregare, \"to pray\"; English precarious)."
+              "text": "prego — you're welcome ( from pregare, \"to pray\"; English precarious)."
             },
             {
               "kind": "speech",

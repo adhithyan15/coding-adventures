@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-LEX-NASO-02, IT-GRAMMAR-NASO-04, IT-GRAMMAR-ZUCCHERO-04, IT-LEX-ZUCCHERO-02]
 introduces:
   knowledge: [IT-LEX-STOMACO-02, IT-ETYMON-STOMACO-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-LEX-NASO-02, IT-GRAMMAR-NASO-04, IT-GRAMMAR-ZUCCHERO-04, IT-LEX-ZUCCHERO-02, IT-LEX-STOMACO-02, IT-ETYMON-STOMACO-03]
 skills: [listening, speaking, reading]

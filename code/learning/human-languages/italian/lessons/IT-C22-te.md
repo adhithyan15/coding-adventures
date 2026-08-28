@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-LEX-CAFFE-02, IT-ETYMON-CAFFE-03, IT-NOTICE-CAFFE-04]
 introduces:
   knowledge: [IT-LEX-TE-02, IT-ETYMON-TE-03, IT-NOTICE-TE-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-LEX-CAFFE-02, IT-ETYMON-CAFFE-03, IT-NOTICE-CAFFE-04, IT-LEX-TE-02, IT-ETYMON-TE-03, IT-NOTICE-TE-04]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [IT-SOUND-NUMERI-1-5-02, IT-ETYMON-NUMERI-1-5-03, IT-GRAMMAR-NUMERI-1-5-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-SOUND-NUMERI-1-5-02, IT-ETYMON-NUMERI-1-5-03, IT-GRAMMAR-NUMERI-1-5-04]
 skills: [listening, speaking, reading]

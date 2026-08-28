@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-SOUND-NUMERI-6-10-02, IT-ETYMON-NUMERI-6-10-03, IT-GRAMMAR-NUMERI-6-10-04, IT-ETYMON-ACQUA-VINO-02, IT-ETYMON-ACQUA-VINO-03]
 introduces:
   knowledge: [IT-GRAMMAR-NUMERI-11-16-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-SOUND-NUMERI-6-10-02, IT-ETYMON-NUMERI-6-10-03, IT-GRAMMAR-NUMERI-6-10-04, IT-ETYMON-ACQUA-VINO-02, IT-ETYMON-ACQUA-VINO-03, IT-GRAMMAR-NUMERI-11-16-02]
 skills: [listening, speaking, reading]

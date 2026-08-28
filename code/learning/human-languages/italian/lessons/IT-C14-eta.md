@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-LEX-AVERE-02, IT-GRAMMAR-AVERE-03, IT-ETYMON-AVERE-04, IT-GRAMMAR-NUMERI-17-20-02, IT-NOTICE-NUMERI-17-20-03]
 introduces:
   knowledge: [IT-LEX-ETA-02, IT-ETYMON-ETA-03, IT-GRAMMAR-ETA-04, IT-GRAMMAR-ETA-05]
+introduces_idioms: [IT-IDIOM-AVERE-AGE-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-LEX-AVERE-02, IT-GRAMMAR-AVERE-03, IT-ETYMON-AVERE-04, IT-GRAMMAR-NUMERI-17-20-02, IT-NOTICE-NUMERI-17-20-03, IT-LEX-ETA-02, IT-ETYMON-ETA-03, IT-GRAMMAR-ETA-04, IT-GRAMMAR-ETA-05]
 skills: [listening, speaking, reading]

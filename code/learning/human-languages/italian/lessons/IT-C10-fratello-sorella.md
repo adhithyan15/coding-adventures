@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-ETYMON-GENITORI-02, IT-ETYMON-GENITORI-03]
 introduces:
   knowledge: [IT-ETYMON-FRATELLO-SORELLA-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-ETYMON-GENITORI-02, IT-ETYMON-GENITORI-03, IT-ETYMON-FRATELLO-SORELLA-02]
 skills: [listening, speaking, reading]

@@ -2,7 +2,7 @@
 
 - Track: [Italian](../italian/README.md)
 - Family / script: Romance / Latin
-- Canonical lessons: 89
+- Canonical lessons: 93
 - Mapped lessons: 88
 - Book progress: 25 chapters; through Ch. 25; 24 generated
 

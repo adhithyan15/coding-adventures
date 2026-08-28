@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03]
 introduces:
   knowledge: [IT-ETYMON-GIORNI-2-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03, IT-ETYMON-GIORNI-2-02]
 skills: [listening, speaking, reading]

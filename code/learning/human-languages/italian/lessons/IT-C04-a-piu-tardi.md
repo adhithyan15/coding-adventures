@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-SOUND-ARRIVEDERCI-02, IT-ETYMON-ARRIVEDERCI-03]
 introduces:
   knowledge: [IT-SOUND-A-PIU-TARDI-02, IT-ETYMON-A-PIU-TARDI-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-SOUND-ARRIVEDERCI-02, IT-ETYMON-ARRIVEDERCI-03, IT-SOUND-A-PIU-TARDI-02, IT-ETYMON-A-PIU-TARDI-03]
 skills: [listening, speaking, reading]

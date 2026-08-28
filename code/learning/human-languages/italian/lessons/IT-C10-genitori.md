@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-ETYMON-STAGIONI-02]
 introduces:
   knowledge: [IT-ETYMON-GENITORI-02, IT-ETYMON-GENITORI-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-ETYMON-STAGIONI-02, IT-ETYMON-GENITORI-02, IT-ETYMON-GENITORI-03]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-SOUND-ORA-02, IT-ETYMON-ORA-03, IT-GRAMMAR-ORA-04]
 introduces:
   knowledge: [IT-SOUND-MEZZOGIORNO-MEZZANOTTE-02, IT-ETYMON-MEZZOGIORNO-MEZZANOTTE-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-SOUND-ORA-02, IT-ETYMON-ORA-03, IT-GRAMMAR-ORA-04, IT-SOUND-MEZZOGIORNO-MEZZANOTTE-02, IT-ETYMON-MEZZOGIORNO-MEZZANOTTE-03]
 skills: [listening, speaking, reading]

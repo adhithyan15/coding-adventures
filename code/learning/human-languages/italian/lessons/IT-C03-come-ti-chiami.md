@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-SOUND-MI-CHIAMO-02, IT-ETYMON-MI-CHIAMO-03, IT-GRAMMAR-MI-CHIAMO-04, IT-SOUND-COME-02, IT-ETYMON-COME-03]
 introduces:
   knowledge: [IT-ETYMON-COME-TI-CHIAMI-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [IT-CULTURE-NAME-QUESTION-REGISTER-01]
 practises:
   knowledge: [IT-SOUND-MI-CHIAMO-02, IT-ETYMON-MI-CHIAMO-03, IT-GRAMMAR-MI-CHIAMO-04, IT-SOUND-COME-02, IT-ETYMON-COME-03, IT-ETYMON-COME-TI-CHIAMI-02]
 skills: [listening, speaking, reading]
