@@ -568,4 +568,88 @@ export const entries: DuctusEntry[] = [
       source: kannadaIndependentVowelSource("ಒ"),
     },
   ],
+  // Gopala Krishna A's 28-frame animation writes independent vowel ಐ in one
+  // run: compact left spiral and lower bowl, broad right loop, then the high
+  // arch finishing at the open upper-left terminal. These three medians fit
+  // that zero-lift order to the bundled
+  // Noto Sans Kannada outline.
+  [
+    "kannada:ಐ",
+    {
+      script: "kannada",
+      glyph: "ಐ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "turn clockwise through the compact left spiral and around its lower bowl",
+              path: [
+                { x: 220, y: 185 },
+                { x: 240, y: 190 },
+                { x: 260, y: 210 },
+                { x: 260, y: 235 },
+                { x: 245, y: 260 },
+                { x: 210, y: 285 },
+                { x: 170, y: 295 },
+                { x: 135, y: 290 },
+                { x: 90, y: 270 },
+                { x: 65, y: 225 },
+                { x: 67, y: 165 },
+                { x: 100, y: 105 },
+                { x: 160, y: 55 },
+                { x: 230, y: 30 },
+                { x: 300, y: 35 },
+                { x: 340, y: 70 },
+                { x: 360, y: 110 },
+                { x: 375, y: 195 },
+              ],
+            },
+            {
+              label:
+                "sweep through the join and around the broad right loop",
+              path: [
+                { x: 375, y: 195 },
+                { x: 405, y: 120 },
+                { x: 465, y: 70 },
+                { x: 535, y: 45 },
+                { x: 610, y: 55 },
+                { x: 675, y: 105 },
+                { x: 720, y: 180 },
+                { x: 735, y: 270 },
+                { x: 720, y: 365 },
+                { x: 680, y: 445 },
+                { x: 615, y: 500 },
+                { x: 545, y: 525 },
+                { x: 485, y: 510 },
+                { x: 440, y: 475 },
+                { x: 417, y: 420 },
+              ],
+            },
+            {
+              label:
+                "carry the high arch leftward and finish at the open upper-left terminal",
+              path: [
+                { x: 417, y: 420 },
+                { x: 400, y: 430 },
+                { x: 385, y: 440 },
+                { x: 365, y: 445 },
+                { x: 350, y: 455 },
+                { x: 337, y: 470 },
+                { x: 320, y: 490 },
+                { x: 300, y: 510 },
+                { x: 280, y: 520 },
+                { x: 240, y: 525 },
+                { x: 210, y: 525 },
+                { x: 150, y: 490 },
+                { x: 100, y: 430 },
+                { x: 75, y: 370 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: kannadaIndependentVowelSource("ಐ"),
+    },
+  ],
 ];
