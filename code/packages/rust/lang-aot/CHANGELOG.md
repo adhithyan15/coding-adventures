@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.281.0 - 2026-08-28 (ALGOL exact tracked `entier` real-power exponents)
+
+The ALGOL matrix now proves on all seven standard backends that built-in
+`entier` may consume losslessly widened tracked integer arithmetic while
+retaining bounded real multiplication lowering and runtime result checks.
+
 ## 0.280.0 - 2026-08-28 (Macsyma universal-JIT parity)
 
 `run_macsyma_on_jit` drives Macsyma's v0 integer subset through the shared
