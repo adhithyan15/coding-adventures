@@ -123,7 +123,13 @@ npm run check:shards    # rebuilds in memory; fails if an aggregate returns
 ```
 
 Edit only the owning shard. A resurrected monolith is ignored by readers and
-therefore fails CI.
+therefore fails CI. The checker proves exact logical-owner completeness for the
+shared spine and all 23 chapter and curriculum ledgers from independent
+cross-ledger identities, rather than deriving expectations from whichever
+owners survived. Stable-id owners may use an intermediate ordinal such as
+`0015` without renaming neighbours. The four intentionally incomplete script
+inventories remain explicitly structural-only until #13381 adds independent
+per-glyph declarations; their safety and filename/body checks still run.
 
 The closed lesson `sounds:` vocabulary is also shard-only. `_meta.json` owns
 the stable registry version, while `core/sound-tags.d/<language>.json` owns one
