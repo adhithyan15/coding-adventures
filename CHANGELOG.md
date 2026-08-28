@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Language-neutral extra CI toolchain declarations
+
+- Expanded build-tool conformance with six inert platform/BUILD snapshot cases
+  covering exact canonical `# needs-toolchain:` comments, invalid decoys,
+  stable deduplication, affected-only and forced-full selection, and all three
+  platform precedence paths. The shared validator owns invalid-case and
+  aggregate-snapshot rejection; the Go consumer exercises every successful
+  decision case and refreshes declarations from the real platform-selected
+  BUILD front. `java-to-semantic-ir` now declares its real Python execution
+  dependency on both BUILD fronts.
+
 ### OCaml process-free build substrate
 
 - Added the OCAML04 contract and wired OCaml into canonical package/program

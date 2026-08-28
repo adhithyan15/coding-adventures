@@ -3,6 +3,8 @@ package discovery
 import (
 	"os"
 	"path/filepath"
+	"slices"
+	"strings"
 	"testing"
 )
 
@@ -109,6 +111,40 @@ func TestParseExtraToolchainsNoDirective(t *testing.T) {
 	got := parseExtraToolchains("cargo build\ncargo test\n")
 	if got != nil {
 		t.Fatalf("expected nil, got %v", got)
+	}
+}
+
+func TestParseExtraToolchainsIgnoresUnknownAndMalformedDirectives(t *testing.T) {
+	content := strings.Join([]string{
+		"# needs-toolchain: zig",
+		"# Needs-toolchain: java",
+		"# needs-toolchain:python",
+		"# needs-toolchain: java trailing",
+		"# needs-toolchain: rust # trailing comment",
+	}, "\n")
+	if got := parseExtraToolchains(content); got != nil {
+		t.Fatalf("expected unknown and malformed directives to be inert, got %v", got)
+	}
+}
+
+func TestParseExtraToolchainsAcceptsAsciiWhitespaceAndCRLF(t *testing.T) {
+	content := "  # needs-toolchain: python  \r\n\t# needs-toolchain:\tjava\t\r\n"
+	got := parseExtraToolchains(content)
+	if !slices.Equal(got, []string{"python", "java"}) {
+		t.Fatalf("expected [python java], got %v", got)
+	}
+}
+
+func TestParseExtraToolchainsFailsClosedAtResourceCeilings(t *testing.T) {
+	for name, content := range map[string]string{
+		"bytes": strings.Repeat("x", maxExtraToolchainBuildBytes+1),
+		"lines": strings.Repeat("\n", maxExtraToolchainBuildLines),
+	} {
+		t.Run(name, func(t *testing.T) {
+			if got := parseExtraToolchains(content); got != nil {
+				t.Fatalf("expected oversized content to be inert, got %v", got)
+			}
+		})
 	}
 }
 

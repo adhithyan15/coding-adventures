@@ -2,6 +2,15 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Both BUILD fronts now declare `# needs-toolchain: python`, so CI provisions
+  the pinned Python toolchain before running the crate's real Python-backend
+  execution proofs instead of allowing them to disappear behind their
+  unavailable-`python3` skip.
+
 ## [0.19.0] - 2026-08-26
 
 ### Added

@@ -133,6 +133,9 @@ TOOLCHAINS = (
     "swift",
     "typescript",
 )
+MAX_TOOLCHAIN_BUILD_BYTES = 65_536
+MAX_TOOLCHAIN_BUILD_LINES = 4_096
+MAX_TOOLCHAIN_SNAPSHOT_BYTES = 1_048_576
 LANGUAGE_TOOLCHAINS = {
     **{toolchain: toolchain for toolchain in TOOLCHAINS},
     "c": "cpp",
@@ -1445,6 +1448,29 @@ def _validate_pure_case_semantics(
     elif domain == "toolchain_detection":
         by_name = _package_index(options["packages"])
         selected = options["scheduled_packages"]
+        if options["force_full"] and selected is not None:
+            raise ConformanceError(
+                "CASE_TOOLCHAIN_FORCE_SELECTION_INVALID",
+                "force_full requires a null scheduled_packages selection",
+            )
+        snapshot_bytes = 0
+        for package in options["packages"]:
+            for content in package["build_files"].values():
+                content_bytes = len(content.encode("utf-8"))
+                snapshot_bytes += content_bytes
+                if (
+                    content_bytes > MAX_TOOLCHAIN_BUILD_BYTES
+                    or content.count("\n") + 1 > MAX_TOOLCHAIN_BUILD_LINES
+                ):
+                    raise ConformanceError(
+                        "CASE_TOOLCHAIN_SNAPSHOT_LIMIT_EXCEEDED",
+                        "a BUILD snapshot exceeds the per-file byte or line ceiling",
+                    )
+        if snapshot_bytes > MAX_TOOLCHAIN_SNAPSHOT_BYTES:
+            raise ConformanceError(
+                "CASE_TOOLCHAIN_SNAPSHOT_LIMIT_EXCEEDED",
+                "the aggregate BUILD snapshot exceeds the byte ceiling",
+            )
         if isinstance(selected, list):
             for name in selected:
                 if name not in by_name:
@@ -1672,15 +1698,56 @@ def _starlark_module_error(
     return None
 
 
+def _selected_toolchain_build_content(package: dict[str, Any], platform: str) -> str:
+    build_files = package["build_files"]
+    candidates = {
+        "darwin": ("BUILD_mac", "BUILD_mac_and_linux", "BUILD"),
+        "linux": ("BUILD_linux", "BUILD_mac_and_linux", "BUILD"),
+        "windows": ("BUILD_windows", "BUILD"),
+    }[platform]
+    for filename in candidates:
+        if filename in build_files:
+            return build_files[filename]
+    raise AssertionError("toolchain package schema requires generic BUILD")
+
+
+def _extra_toolchain_declarations(raw_content: str) -> list[str]:
+    prefix = "# needs-toolchain:"
+    declarations: list[str] = []
+    seen: set[str] = set()
+    for raw_line in raw_content.split("\n"):
+        line = raw_line.lstrip(" \t").rstrip(" \t")
+        if line.endswith("\r"):
+            line = line[:-1].rstrip(" \t")
+        if not line.startswith(prefix):
+            continue
+        suffix = line[len(prefix) :]
+        if not suffix or suffix[0] not in " \t":
+            continue
+        name = suffix.strip(" \t")
+        if name not in TOOLCHAINS or name in seen:
+            continue
+        seen.add(name)
+        declarations.append(name)
+    return declarations
+
+
 def _expected_toolchains(
     options: dict[str, Any],
 ) -> dict[str, bool]:
+    if options["force_full"]:
+        return {toolchain: True for toolchain in TOOLCHAINS}
     by_name = {package["name"]: package for package in options["packages"]}
     selected = options["scheduled_packages"]
     selected_names = sorted(by_name) if selected is None else selected
-    enabled = {
-        _toolchain_for_language(by_name[name]["language"]) for name in selected_names
-    }
+    enabled: set[str] = set()
+    for name in selected_names:
+        package = by_name[name]
+        enabled.add(_toolchain_for_language(package["language"]))
+        selected_content = _selected_toolchain_build_content(
+            package, options["platform"]
+        )
+        enabled.update(_extra_toolchain_declarations(selected_content))
     enabled.update(options["forced_toolchains"])
     return {toolchain: toolchain in enabled for toolchain in TOOLCHAINS}
 

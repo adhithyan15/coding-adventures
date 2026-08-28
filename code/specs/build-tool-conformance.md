@@ -719,7 +719,7 @@ structured command fields use the shared definitions in the corpus schema.
 | `starlark` | repository-contained entrypoint, v1 `_ctx`, and declared legacy fallback policy | sorted targets containing rule metadata, structured commands, deterministic display rendering, and the per-target command source |
 | `sharding` | package languages and build-command counts, dependency edges, scheduled packages, shard count, and optional shard index | stable prerequisite-closed shard records with assignments, package closure, toolchains, and estimated cost |
 | `validation` | platform, selected checks, normalized package declarations, dependency edges, and optional orphan-crate/ledger snapshots | `valid` plus sorted stable diagnostic codes |
-| `toolchain_detection` | package-language records, `null`/empty/explicit package selection, and forced toolchains | the complete canonical toolchain registry as a sorted boolean map |
+| `toolchain_detection` | target platform, package-language records with closed inline BUILD-front snapshots, `null`/empty/explicit package selection, explicit forced-full mode, and forced toolchains | the complete canonical toolchain registry as a sorted boolean map |
 | `cli` | a portable action, decision condition, and whether the action would require later execution | exit code only |
 
 These records intentionally model decisions, not host operations:
@@ -728,7 +728,7 @@ These records intentionally model decisions, not host operations:
 - hashing receives inline bytes; it never reads host metadata;
 - Starlark receives inline source and context; it never executes a command;
 - validation inspects inline repository data only;
-- toolchain detection never probes installed programs; and
+- toolchain detection never probes installed programs or reads a checkout; and
 - CLI fixtures parse a bounded, language-neutral `argv` grammar into a closed
   typed record and then classify an explicitly supplied post-parse outcome.
   They never invoke a front door or launch a build.
@@ -748,6 +748,35 @@ digest and `success` or `failed` status. A matching successful record is a
 `hit` with no invalidations. Missing, failed, or stale records are a `miss`;
 corrupt records are `recovered`. Every non-hit invalidates the package and its
 declared dependent closure.
+
+Toolchain detection v1 treats extra-CI declarations as inert BUILD metadata.
+Each package supplies a required generic `BUILD` string plus optional
+`BUILD_windows`, `BUILD_mac`, `BUILD_linux`, and `BUILD_mac_and_linux` strings.
+The target platform selects exactly one front: the platform-specific string,
+then `BUILD_mac_and_linux` for Darwin or Linux, then generic `BUILD`. No
+declaration in an unselected front has any effect. Each string is at most
+65,536 UTF-8 bytes and 4,096 logical lines; all BUILD strings in one input are
+at most 1 MiB. Exceeding a ceiling makes the case invalid before an adapter can
+run.
+
+After removing only leading and trailing ASCII space, tab, and a CR belonging
+to a CRLF line ending, a declaration line has the exact form
+`# needs-toolchain: NAME`. At least one ASCII space or tab separates the colon
+from `NAME`; `NAME` must be one lowercase key in the canonical toolchain
+registry, and nothing except trailing ASCII space or tab may follow it. Empty,
+unknown, wrong-case, fused, suffixed, and otherwise malformed lookalikes are
+inert comments. Valid declarations are retained in first-occurrence file order
+and stably deduplicated.
+
+Only explicitly scheduled packages contribute their inferred language and
+selected-front declarations. An empty selection contributes neither; `null`
+selects every supplied package. Forced toolchains union into either result.
+When `force_full` is true, `scheduled_packages` must be `null` and every
+canonical toolchain is enabled, matching a CI full-rebuild decision without
+parsing host state. Unsupported selected package languages and unsupported
+forced-toolchain values remain the stable `TOOLCHAIN_UNSUPPORTED` error;
+unknown declaration values are ignored. Every successful result contains all
+canonical keys, including false values, in deterministic key order.
 
 Sharding v1 normalizes package languages to the canonical toolchain registry
 before computing cost. Each package costs `1 + build_command_count` plus the

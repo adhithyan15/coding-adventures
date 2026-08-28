@@ -17,14 +17,22 @@
   "input": {
     "operation": "toolchain_detection",
     "options": {
+      "platform": "darwin",
+      "force_full": false,
       "packages": [
         {
           "name": "dart/app",
-          "language": "dart"
+          "language": "dart",
+          "build_files": {
+            "BUILD": ""
+          }
         },
         {
           "name": "ocaml/graph",
-          "language": "ocaml"
+          "language": "ocaml",
+          "build_files": {
+            "BUILD": ""
+          }
         }
       ],
       "scheduled_packages": null,
