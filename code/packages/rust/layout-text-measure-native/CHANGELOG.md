@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Replaced whitespace-only wrapping with shared Unicode break opportunities
+  and uniform-direction native shaping from `text-flow`.
+
 ## [0.2.0] — baseline metrics
 
 ### Changed

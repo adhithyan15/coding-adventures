@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added inherited bidi direction and host-neutral visual-run shaping while
+  preserving per-font fallback runs in paint order.
+
 ## [0.3.0]
 
 - Paint reusable underline, overline, and line-through decorations from

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Replaced whitespace/code-point fragmentation with host-neutral Unicode
+  line-break and grapheme analysis, including inherited HTML direction.
+
 ## [0.1.0] — initial release
 
 ### Added

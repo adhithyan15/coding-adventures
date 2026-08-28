@@ -8,6 +8,7 @@
 use std::collections::HashSet;
 
 use layout_ir::{Content, ExtValue, LayoutNode, PositionedNode, SizeValue, TextMeasurer};
+use text_flow::{BaseDirection, BreakKind, TextFlow};
 
 pub const VERSION: &str = "0.1.0";
 
@@ -208,19 +209,20 @@ where
 
                 let value = text_value(&node);
                 if break_all {
-                    for ch in value.chars() {
-                        if ch.is_whitespace() {
+                    let flow = TextFlow::analyze(value, base_direction(&node, &wrappers));
+                    for cluster in flow.graphemes {
+                        let piece = &value[cluster.bytes];
+                        if piece.chars().all(char::is_whitespace) {
                             pending_space = true;
                             continue;
                         }
-                        let piece = ch.to_string();
                         push_text_atom(
                             &mut line,
                             &mut lines,
                             &node,
                             key,
                             &wrappers,
-                            &piece,
+                            piece,
                             pending_space,
                             white_space != WhiteSpace::NoWrap,
                             max_width,
@@ -232,21 +234,20 @@ where
                     continue;
                 }
 
-                let starts_with_space = value.chars().next().is_some_and(char::is_whitespace);
-                for (index, word) in value.split_whitespace().enumerate() {
+                for piece in line_break_pieces(value, base_direction(&node, &wrappers)) {
                     push_text_atom(
                         &mut line,
                         &mut lines,
                         &node,
                         key,
                         &wrappers,
-                        word,
-                        pending_space || starts_with_space || index > 0,
+                        piece.value,
+                        pending_space || piece.leading_space,
                         white_space != WhiteSpace::NoWrap,
                         max_width,
                         measurer,
                     );
-                    pending_space = false;
+                    pending_space = piece.trailing_space;
                 }
                 if value.chars().last().is_some_and(char::is_whitespace) {
                     pending_space = true;
@@ -284,6 +285,69 @@ where
     flush_line(&mut line, &mut lines, false);
 
     position_lines(lines)
+}
+
+struct TextPiece<'a> {
+    value: &'a str,
+    leading_space: bool,
+    trailing_space: bool,
+}
+
+fn line_break_pieces(value: &str, direction: BaseDirection) -> Vec<TextPiece<'_>> {
+    let flow = TextFlow::analyze(value, direction);
+    let mut boundaries: Vec<_> = flow
+        .breaks
+        .iter()
+        .filter(|opportunity| opportunity.kind == BreakKind::Allowed)
+        .map(|opportunity| opportunity.byte_index)
+        .collect();
+    if boundaries.last().copied() != Some(value.len()) {
+        boundaries.push(value.len());
+    }
+
+    let mut pieces = Vec::new();
+    let mut start = 0;
+    let mut pending_space = false;
+    for end in boundaries {
+        let source = &value[start..end];
+        start = end;
+        let trimmed = source.trim_matches(char::is_whitespace);
+        if trimmed.is_empty() {
+            pending_space = true;
+            continue;
+        }
+        pieces.push(TextPiece {
+            value: trimmed,
+            leading_space: pending_space || source.chars().next().is_some_and(char::is_whitespace),
+            trailing_space: source.chars().last().is_some_and(char::is_whitespace),
+        });
+        pending_space = source.chars().last().is_some_and(char::is_whitespace);
+    }
+    pieces
+}
+
+fn base_direction(node: &LayoutNode, wrappers: &[Wrapper]) -> BaseDirection {
+    let direction = html_property(node, "dir").or_else(|| {
+        wrappers
+            .iter()
+            .rev()
+            .find_map(|wrapper| html_property(&wrapper.node, "dir"))
+    });
+    match direction {
+        Some("rtl") => BaseDirection::Rtl,
+        Some("ltr") => BaseDirection::Ltr,
+        _ => BaseDirection::Auto,
+    }
+}
+
+fn html_property<'a>(node: &'a LayoutNode, name: &str) -> Option<&'a str> {
+    let ExtValue::Map(html) = node.ext.get("html")? else {
+        return None;
+    };
+    let ExtValue::Str(value) = html.get(name)? else {
+        return None;
+    };
+    Some(value)
 }
 
 fn flatten(
@@ -765,6 +829,58 @@ mod tests {
             matches!(node.ext.get("html"), Some(ExtValue::Map(values)) if values.get("role") == Some(&ExtValue::Str("link".into())))
         }));
         assert!(layout.children.iter().all(|node| node.width <= 42.0));
+    }
+
+    #[test]
+    fn cjk_text_wraps_at_unicode_opportunities_without_spaces() {
+        let layout = layout_inline_run(
+            &[text("日本語文", 10.0)],
+            10.0,
+            &Mono,
+            |_, _| unreachable!(),
+        );
+        assert_eq!(layout.line_count, 2);
+        assert_eq!(
+            layout.children[0].content.as_ref().and_then(text_content),
+            Some("日本")
+        );
+        assert_eq!(
+            layout.children[1].content.as_ref().and_then(text_content),
+            Some("語文")
+        );
+    }
+
+    #[test]
+    fn break_all_keeps_extended_graphemes_together() {
+        let mut node = text("e\u{301}x", 10.0);
+        node.ext.insert(
+            "block".into(),
+            ExtValue::Map(HashMap::from([
+                ("display".into(), ExtValue::Str("inline".into())),
+                ("wordBreak".into(), ExtValue::Str("break-all".into())),
+            ])),
+        );
+        let layout = layout_inline_run(&[node], 10.0, &Mono, |_, _| unreachable!());
+        let values: Vec<_> = layout
+            .children
+            .iter()
+            .filter_map(|node| node.content.as_ref().and_then(text_content))
+            .collect();
+        assert_eq!(values, vec!["e\u{301}", "x"]);
+    }
+
+    #[test]
+    fn leading_unicode_whitespace_collapses_across_text_nodes() {
+        let layout = layout_inline_run(
+            &[text("one", 10.0), text("  two", 10.0)],
+            100.0,
+            &Mono,
+            |_, _| unreachable!(),
+        );
+        assert_eq!(
+            layout.children[1].content.as_ref().and_then(text_content),
+            Some(" two")
+        );
     }
 
     fn text_content(content: &Content) -> Option<&str> {

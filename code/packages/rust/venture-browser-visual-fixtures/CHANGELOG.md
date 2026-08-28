@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added an international real-page fixture for bidi shaping, CJK wrapping,
+  grapheme-safe content, and visible fallback-font run identities.
+
 ## 0.1.0
 
 - Add the reusable Mosaic-era page/resource corpus, deterministic geometry

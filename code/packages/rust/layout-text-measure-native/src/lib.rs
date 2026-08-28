@@ -53,9 +53,10 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 
 use layout_ir::{FontSpec, MeasureResult, TextMeasurer};
+use text_flow::{BaseDirection, BreakKind, Direction as FlowDirection, TextFlow};
 use text_interfaces::{
-    FontMetrics, FontQuery, FontResolver, FontStretch, FontStyle, FontWeight, ShapeOptions,
-    TextShaper,
+    Direction, FontMetrics, FontQuery, FontResolver, FontStretch, FontStyle, FontWeight,
+    ShapeOptions, TextShaper,
 };
 use text_native::{NativeHandle, NativeMetrics, NativeResolver, NativeShaper};
 
@@ -298,19 +299,13 @@ fn measure_wrapped(
     }
 }
 
-/// Split `segment` at whitespace, shape each word, pack into lines.
+/// Split `segment` at Unicode line-break opportunities and pack into lines.
 /// Returns the shaped width of each line in source order.
 ///
 /// The algorithm:
-///   1. Break the segment into words (split at ASCII whitespace, keep
-///      multi-char whitespace runs collapsed to a single space).
-///   2. For each word, shape it and record its width and the
-///      single-space width at the current font.
-///   3. Greedy fill: add word to current line if current + space +
-///      word fits; otherwise start a new line with that word.
-///
-/// This is intentionally simple for v1. A future version delegates to
-/// a UAX #14 line-break-opportunity package for non-English text.
+/// Whitespace remains collapsed for paragraph text, while CJK, soft-hyphen,
+/// and zero-width-space opportunities come from `text-flow`. Every candidate
+/// is measured as uniform bidi runs using the same native shaper as paint.
 fn greedy_wrap(
     shaper: &NativeShaper,
     handle: &NativeHandle,
@@ -322,28 +317,25 @@ fn greedy_wrap(
         return vec![0.0];
     }
 
-    let space_width = match shaper.shape(" ", handle, size, &ShapeOptions::default()) {
-        Ok(r) => r.total_advance() as f64,
-        Err(_) => (size as f64) * 0.25,
-    };
+    let space_width = shape_flow_width(shaper, handle, " ", size);
 
     let mut lines: Vec<f64> = Vec::new();
     let mut current_width: f64 = 0.0;
 
-    for word in segment.split_whitespace() {
-        // Words may themselves hit font fallback (e.g. a word containing
-        // a single-codepoint arrow); sum across segments.
-        let word_width = match shaper.shape(word, handle, size, &ShapeOptions::default()) {
-            Ok(r) => r.total_advance() as f64,
-            Err(_) => word.chars().count() as f64 * (size as f64) * 0.5,
+    for piece in wrap_pieces(segment) {
+        let word_width = shape_flow_width(shaper, handle, piece.value, size);
+        let gap = if piece.leading_space && current_width > 0.0 {
+            space_width
+        } else {
+            0.0
         };
 
         if current_width == 0.0 {
             // First word on a fresh line — always place it, even if it
             // exceeds max_width (word is unbreakable at this tier).
             current_width = word_width;
-        } else if current_width + space_width + word_width <= max_width {
-            current_width += space_width + word_width;
+        } else if current_width + gap + word_width <= max_width {
+            current_width += gap + word_width;
         } else {
             lines.push(current_width);
             current_width = word_width;
@@ -357,6 +349,63 @@ fn greedy_wrap(
         lines.push(0.0);
     }
     lines
+}
+
+struct WrapPiece<'a> {
+    value: &'a str,
+    leading_space: bool,
+}
+
+fn wrap_pieces(segment: &str) -> Vec<WrapPiece<'_>> {
+    let flow = TextFlow::analyze(segment, BaseDirection::Auto);
+    let mut boundaries: Vec<_> = flow
+        .breaks
+        .iter()
+        .filter(|opportunity| opportunity.kind == BreakKind::Allowed)
+        .map(|opportunity| opportunity.byte_index)
+        .collect();
+    if boundaries.last().copied() != Some(segment.len()) {
+        boundaries.push(segment.len());
+    }
+    let mut pieces = Vec::new();
+    let mut start = 0;
+    let mut pending_space = false;
+    for end in boundaries {
+        let source = &segment[start..end];
+        start = end;
+        let value = source.trim_matches(char::is_whitespace);
+        if value.is_empty() {
+            pending_space = true;
+            continue;
+        }
+        pieces.push(WrapPiece {
+            value,
+            leading_space: pending_space || source.chars().next().is_some_and(char::is_whitespace),
+        });
+        pending_space = source.chars().last().is_some_and(char::is_whitespace);
+    }
+    pieces
+}
+
+fn shape_flow_width(shaper: &NativeShaper, handle: &NativeHandle, text: &str, size: f32) -> f64 {
+    let flow = TextFlow::analyze(text, BaseDirection::Auto);
+    let mut width = 0.0;
+    for run in &flow.logical_runs {
+        let options = ShapeOptions {
+            direction: match run.direction {
+                FlowDirection::Ltr => Direction::Ltr,
+                FlowDirection::Rtl => Direction::Rtl,
+            },
+            ..ShapeOptions::default()
+        };
+        match shaper.shape(&text[run.bytes.clone()], handle, size, &options) {
+            Ok(shaped) => width += f64::from(shaped.total_advance()),
+            Err(_) => {
+                width += text[run.bytes.clone()].chars().count() as f64 * f64::from(size) * 0.5;
+            }
+        }
+    }
+    width
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

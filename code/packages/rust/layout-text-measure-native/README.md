@@ -22,8 +22,10 @@ shaping will use.
 
 - Handle caching by `(family, weight, italic)` — one FontSpec resolves
   once and is reused.
-- Word-boundary wrap when `max_width` is Some. Hard newlines in the
-  input produce separate line segments.
+- Unicode line-break wrapping when `max_width` is Some. Hard newlines in the
+  input produce separate line segments, and CJK can wrap without spaces.
+- Uniform-direction measurement through `text-flow`, preserving native
+  shaping and fallback-font advances for mixed-direction content.
 - Native font ascent is preserved as `MeasureResult.baseline` for shared
   inline line-box alignment.
 - Empty font family (`""`) remaps to the platform-default face
@@ -35,7 +37,8 @@ shaping will use.
 
 ## v2+ concerns
 
-- UAX #14 Unicode line-break opportunities (for CJK, Thai, etc.)
+- Generated full UAX #9/#14/#29 conformance tables and dictionary segmentation
+  for Thai, Lao, and Khmer.
 - Shaper feature tuning (liga / kern / features per FontSpec)
 - Send+Sync variant with `Mutex`-wrapped cache
 

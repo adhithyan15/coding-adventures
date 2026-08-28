@@ -63,9 +63,10 @@ use paint_instructions::{
     GlyphPosition, ImageSrc, PaintBase, PaintGlyphRun, PaintImage, PaintInstruction, PaintRect,
     PaintScene,
 };
+use text_flow::{BaseDirection, Direction as FlowDirection, TextFlow};
 use text_interfaces::{
-    FontMetrics, FontQuery, FontResolver, FontStretch, FontStyle, FontWeight, ShapeOptions,
-    ShapedText, TextShaper,
+    Direction, FontMetrics, FontQuery, FontResolver, FontStretch, FontStyle, FontWeight,
+    ShapeOptions, ShapedText, TextShaper,
 };
 
 pub const VERSION: &str = "0.3.0";
@@ -129,12 +130,14 @@ where
         node: root,
         parent_abs_x: 0.0,
         parent_abs_y: 0.0,
+        inherited_direction: BaseDirection::Auto,
     }];
     while let Some(frame) = stack.pop() {
         let abs_x = frame.parent_abs_x + frame.node.x;
         let abs_y = frame.parent_abs_y + frame.node.y;
         let box_w = frame.node.width;
         let box_h = frame.node.height;
+        let direction = node_direction(frame.node).unwrap_or(frame.inherited_direction);
 
         // Decorations before content (painter's algorithm).
         emit_box_decorations(frame.node, abs_x, abs_y, box_w, box_h, dpr, &mut out);
@@ -147,6 +150,7 @@ where
                     abs_y,
                     box_w,
                     dpr,
+                    direction,
                     options,
                     &mut font_cache,
                     &mut out,
@@ -173,6 +177,7 @@ where
                 node: child,
                 parent_abs_x: abs_x,
                 parent_abs_y: abs_y,
+                inherited_direction: direction,
             });
         }
     }
@@ -192,6 +197,22 @@ struct WalkFrame<'a> {
     node: &'a PositionedNode,
     parent_abs_x: f64,
     parent_abs_y: f64,
+    inherited_direction: BaseDirection,
+}
+
+fn node_direction(node: &PositionedNode) -> Option<BaseDirection> {
+    let ExtValue::Map(html) = node.ext.get("html")? else {
+        return None;
+    };
+    let ExtValue::Str(direction) = html.get("dir")? else {
+        return None;
+    };
+    match direction.as_str() {
+        "ltr" => Some(BaseDirection::Ltr),
+        "rtl" => Some(BaseDirection::Rtl),
+        "auto" => Some(BaseDirection::Auto),
+        _ => None,
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -286,6 +307,7 @@ fn emit_text_content<S, M, R>(
     box_y: f64,
     box_width: f64,
     dpr: f64,
+    direction: BaseDirection,
     options: &LayoutToPaintOptions<'_, S, M, R>,
     font_cache: &mut HashMap<FontCacheKey, CachedFont<S::Handle>>,
     out: &mut Vec<PaintInstruction>,
@@ -321,8 +343,6 @@ fn emit_text_content<S, M, R>(
     let ascent_dpr = compute_ascent_dpr(options.metrics, handle, &tc.font, dpr);
 
     let max_width_dpr = box_width * dpr;
-    let shape_opts = ShapeOptions::default();
-
     // First baseline y, in device-pixel scene coordinates.
     let box_x_dpr = box_x * dpr;
     let box_y_dpr = box_y * dpr;
@@ -332,7 +352,14 @@ fn emit_text_content<S, M, R>(
 
     for segment in tc.value.split('\n') {
         let wrapped = if tc.wrap {
-            wrap_line(options.shaper, handle, segment, size_dpr, max_width_dpr)
+            wrap_line(
+                options.shaper,
+                handle,
+                segment,
+                size_dpr,
+                max_width_dpr,
+                direction,
+            )
         } else {
             vec![segment.to_string()]
         };
@@ -343,7 +370,8 @@ fn emit_text_content<S, M, R>(
                 baseline_y += line_height_dpr;
                 continue;
             }
-            let shaped = match options.shaper.shape(&line, handle, size_dpr, &shape_opts) {
+            let shaped = match shape_visual_line(options.shaper, handle, &line, size_dpr, direction)
+            {
                 Ok(s) => s,
                 Err(_) => {
                     baseline_y += line_height_dpr;
@@ -375,6 +403,33 @@ fn emit_text_content<S, M, R>(
             baseline_y += line_height_dpr;
         }
     }
+}
+
+fn shape_visual_line<S: TextShaper>(
+    shaper: &S,
+    handle: &S::Handle,
+    line: &str,
+    size: f32,
+    direction: BaseDirection,
+) -> Result<ShapedText, text_interfaces::ShapingError> {
+    let flow = TextFlow::analyze(line, direction);
+    let mut runs = Vec::new();
+    for index in flow.visual_run_order {
+        let run = &flow.logical_runs[index];
+        let options = ShapeOptions {
+            direction: match run.direction {
+                FlowDirection::Ltr => Direction::Ltr,
+                FlowDirection::Rtl => Direction::Rtl,
+            },
+            ..ShapeOptions::default()
+        };
+        runs.extend(
+            shaper
+                .shape(&line[run.bytes.clone()], handle, size, &options)?
+                .runs,
+        );
+    }
+    Ok(ShapedText { runs })
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -512,6 +567,7 @@ fn wrap_line<S: TextShaper>(
     segment: &str,
     size: f32,
     max_width: f64,
+    direction: BaseDirection,
 ) -> Vec<String> {
     if segment.is_empty() {
         return vec![String::new()];
@@ -524,14 +580,13 @@ fn wrap_line<S: TextShaper>(
     // The greedy wrapper below intentionally collapses whitespace for paragraph
     // text, but ASCII art/code-like content should not be rewritten just because
     // it passed through UI04.
-    if let Ok(shaped) = shaper.shape(segment, handle, size, &ShapeOptions::default()) {
+    if let Ok(shaped) = shape_visual_line(shaper, handle, segment, size, direction) {
         if shaped.total_advance() as f64 <= max_width {
             return vec![segment.to_string()];
         }
     }
 
-    let space_width = shaper
-        .shape(" ", handle, size, &ShapeOptions::default())
+    let space_width = shape_visual_line(shaper, handle, " ", size, direction)
         .map(|r| r.total_advance() as f64)
         .unwrap_or((size as f64) * 0.25);
 
@@ -539,22 +594,28 @@ fn wrap_line<S: TextShaper>(
     let mut current = String::new();
     let mut current_width: f64 = 0.0;
 
-    for word in segment.split_whitespace() {
-        let word_width = shaper
-            .shape(word, handle, size, &ShapeOptions::default())
+    for piece in paint_wrap_pieces(segment, direction) {
+        let word_width = shape_visual_line(shaper, handle, piece.value, size, direction)
             .map(|r| r.total_advance() as f64)
-            .unwrap_or(word.chars().count() as f64 * (size as f64) * 0.5);
+            .unwrap_or(piece.value.chars().count() as f64 * (size as f64) * 0.5);
+        let gap = if piece.leading_space && !current.is_empty() {
+            space_width
+        } else {
+            0.0
+        };
 
         if current.is_empty() {
-            current.push_str(word);
+            current.push_str(piece.value);
             current_width = word_width;
-        } else if current_width + space_width + word_width <= max_width {
-            current.push(' ');
-            current.push_str(word);
-            current_width += space_width + word_width;
+        } else if current_width + gap + word_width <= max_width {
+            if gap > 0.0 {
+                current.push(' ');
+            }
+            current.push_str(piece.value);
+            current_width += gap + word_width;
         } else {
             lines.push(std::mem::take(&mut current));
-            current.push_str(word);
+            current.push_str(piece.value);
             current_width = word_width;
         }
     }
@@ -566,6 +627,42 @@ fn wrap_line<S: TextShaper>(
         lines.push(String::new());
     }
     lines
+}
+
+struct PaintWrapPiece<'a> {
+    value: &'a str,
+    leading_space: bool,
+}
+
+fn paint_wrap_pieces(segment: &str, direction: BaseDirection) -> Vec<PaintWrapPiece<'_>> {
+    let flow = TextFlow::analyze(segment, direction);
+    let mut boundaries: Vec<_> = flow
+        .breaks
+        .iter()
+        .filter(|opportunity| opportunity.kind == text_flow::BreakKind::Allowed)
+        .map(|opportunity| opportunity.byte_index)
+        .collect();
+    if boundaries.last().copied() != Some(segment.len()) {
+        boundaries.push(segment.len());
+    }
+    let mut pieces = Vec::new();
+    let mut start = 0;
+    let mut pending_space = false;
+    for end in boundaries {
+        let source = &segment[start..end];
+        start = end;
+        let value = source.trim_matches(char::is_whitespace);
+        if value.is_empty() {
+            pending_space = true;
+            continue;
+        }
+        pieces.push(PaintWrapPiece {
+            value,
+            leading_space: pending_space || source.chars().next().is_some_and(char::is_whitespace),
+        });
+        pending_space = source.chars().last().is_some_and(char::is_whitespace);
+    }
+    pieces
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1099,6 +1196,22 @@ mod tests {
             })
             .collect();
         assert_eq!(runs.len(), 3);
+    }
+
+    #[test]
+    fn emergency_wrapper_uses_cjk_break_opportunities() {
+        let leaf = positioned_leaf(text_content("日本語文"), 0.0, 0.0, 16.0, 40.0);
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_options(&shaper, &metrics, &resolver);
+        let scene = layout_to_paint(&leaf, &opts);
+        let runs: Vec<_> = scene
+            .instructions
+            .iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_)))
+            .collect();
+        assert_eq!(runs.len(), 2);
     }
 
     #[test]

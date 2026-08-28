@@ -1,0 +1,5 @@
+[package]
+name = "text-flow"
+version = "0.1.0"
+edition = "2021"
+description = "Device-independent Unicode text-flow analysis for grapheme geometry, bidi runs, and line-break opportunities."
