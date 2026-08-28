@@ -1,0 +1,10 @@
+[package]
+name = "pdp11-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "DEC PDP-11 functional simulator"
+license = "MIT"
+
+[lib]
+name = "pdp11_simulator"
+path = "src/lib.rs"

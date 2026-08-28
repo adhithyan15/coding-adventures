@@ -1161,4 +1161,5 @@ members = [
   "ge225-gatelevel",
   "cdc6600-simulator",
   "cdc6600-gatelevel",
+  "pdp11-simulator",
 ]

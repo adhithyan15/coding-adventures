@@ -4,7 +4,7 @@
 
 **Scope:** functional and gate-level Rust simulators for every CPU target in the
 07-series, followed by a complete cross-language port wave
-**Last reprioritized:** 2026-08-27
+**Last reprioritized:** 2026-08-28
 
 ## Definition of the matrix
 
@@ -69,7 +69,7 @@ according to the current prioritization run.
 | RCPU-003 / RCPU-004 | 1954 | IBM 704 | Complete: `ibm704-simulator` | Complete: `ibm704-gatelevel` |
 | RCPU-005 / RCPU-006 | 1961 | GE-225 | Complete: `ge225-simulator` | Complete: `ge225-gatelevel` |
 | RCPU-007 / RCPU-008 | 1964 | CDC 6600 | Complete: `cdc6600-simulator` | Complete: `cdc6600-gatelevel` |
-| RCPU-009 / RCPU-010 | 1970 | DEC PDP-11 | Missing | Missing |
+| RCPU-009 / RCPU-010 | 1970 | DEC PDP-11 | Complete: `pdp11-simulator` | Missing |
 | RCPU-011 / RCPU-012 | 1971 | Intel 4004 | Audit: `intel4004-simulator` | Audit: `intel4004-gatelevel` |
 | RCPU-013 / RCPU-014 | 1972 | Intel 8008 | Audit: `intel8008-simulator` | Audit: `intel8008-gatelevel` |
 | RCPU-015 / RCPU-016 | 1974 | Intel 8080 | Audit: `intel8080-simulator` | Audit: `intel8080-gatelevel` |
@@ -91,8 +91,8 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-009**, the DEC PDP-11 functional Rust simulator,
-ordered behind publication of the completed RCPU-008 gate-level simulator.
+Current selection: **RCPU-010**, the DEC PDP-11 gate-level Rust simulator,
+ordered behind publication of the completed RCPU-009 functional simulator.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -151,8 +151,8 @@ Python-oracle vectors. Core line coverage is 90.76% (324/357), above the
 completion floor. Its green required CI and squash auto-merge close the
 functional cell and unblock RCPU-008.
 
-RCPU-008 is implementation-complete and rebased atop merged RCPU-007. Its normative 07t2
-contract and `cdc6600-gatelevel` package put 246,529 persistent core-memory,
+RCPU-008 merged in PR #13391 at `4e56a500`. Its normative 07t2 contract and
+`cdc6600-gatelevel` package put 246,529 persistent core-memory,
 X/A/B/P, and halt bits in D flip-flops while keeping B0 hardwired to zero. A
 64-line one-hot decoder selects all 36 instructions; gate vectors implement
 boolean logic, 60/18-bit ripple add/subtract, signed compare, six-stage barrel
@@ -161,8 +161,21 @@ predicates, and P updates. Two unit and nine integration tests cover complete
 state/trace lockstep, seeded datapaths, all branch paths, exact topology,
 transport and public bounds, atomic decode/fetch/branch/memory failures, and
 bounded workloads. Core line coverage is 98.22% (441/449), above the completion
-floor. Publication closes RCPU-008 and advances the chronological queue to the
-PDP-11 functional oracle audit.
+floor. Its green required CI and squash auto-merge close the gate-level cell
+and advance the chronological queue to the PDP-11 functional oracle audit.
+
+RCPU-009 is implementation-complete and rebased atop merged RCPU-008. Its Rust
+package
+ports the full 59-mnemonic-variant Spec 07o/Python-oracle surface: all eight
+addressing modes, twelve double-operand variants, 25 single-operand variants,
+15 branch conditions, and HALT/NOP/RTI/RTS/JMP/JSR/SOB control over eight
+16-bit registers, NZVC, and 64 KiB little-endian memory. Seven integration
+tests cover every decode family, every addressing mode, byte/SP/PC stepping,
+word/byte result and flag edges, branch paths, subroutine/interrupt stacks,
+typed atomic failures, bounded loops, and three multi-instruction Python-oracle
+workloads. Core line coverage is 92.98% (477/513), above the completion floor.
+Publication is now the highest-priority work item; its merge closes RCPU-009
+and unblocks its gate-level partner.
 
 ## Cross-language wave
 
@@ -190,6 +203,9 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-27 | RCPU-010 planning audit found no separate PDP-11 gate-level specification or Rust package. The completed behavioral model's orthogonal operand machinery makes effective-address side effects and byte/word stepping the largest fidelity risk; its 64 KiB memory dominates persistent topology. | P0, chronological gate partner, follows RCPU-009 | Create normative `07o2` and one `pdp11-gatelevel` crate. Require DFF-backed memory/register/PSW/halt state; gate decode; 16/8-bit ALU and NZVC networks; gate-backed address increments/decrements/indexing, branch offsets, SP/PC paths, and byte sign extension; exact topology; complete state/trace differentials across all modes and 59 mnemonic variants; atomic failures; docs/build integration; and at least 80% core coverage. |
+| 2026-08-27 | RCPU-009 audit found a mature Python PDP-11 oracle and normative 07o spec but no Rust package. The oracle has 163 passing tests and 98.63% total line coverage. Its behavioral surface is 64 KiB little-endian memory, eight 16-bit registers, NZVC, all eight addressing modes, 12 double-operand word/byte variants, 25 single-operand variants, 15 branches, and HALT/NOP/RTI/RTS/JMP/JSR/SOB control. The Python package is not enrolled in the root uv workspace or repository BUILD graph, so its audit required an explicit local editable dependency on `simulator-protocol`. | P0, chronological functional oracle, blocks RCPU-010 | Port the complete specified/oracle surface in one `pdp11-simulator` Rust crate with typed atomic failures, bounded traces, immutable full-memory snapshots, public encoders, all addressing-mode side effects, byte-register MOV sign extension, exact NZVC edge rules, Python differential vectors, BUILD/workspace/docs integration, and at least 80% core coverage. Keep Python BUILD enrollment as a P1 infrastructure discovery; it does not block the Rust port. |
+| 2026-08-27 | The audited Python `pdp11-simulator` has a valid package manifest and comprehensive tests but is absent from the root uv workspace and has no BUILD recipe, so normal repository discovery does not exercise it. | P1, build-graph completeness, non-blocking | Add a dedicated follow-up infrastructure item after the chronological Rust pair is secure: enroll the package and its local `simulator-protocol` dependency in the supported Python build graph without displacing RCPU-009/RCPU-010. |
 | 2026-08-27 | RCPU-008 planning audit found no separate CDC 6600 gate-level specification or Rust package. The completed behavioral subset is nevertheless compact enough for one reviewable partner: 22 short and 14 long instructions over 60-bit X, 18-bit A/B, parcel P, and 4,096-word memory, with multiplication and variable shifts as its largest datapaths. | P0, chronological gate partner, follows RCPU-007 | Create a normative `07t2` gate contract and one `cdc6600-gatelevel` crate. Require DFF-backed persistent state except hardwired B0; one-hot gate decode; gate-vector add/subtract, compare, barrel shift, 60-stage partial-product multiply, address and branch networks; exact topology metrics; complete state/trace differentials; fail-closed preflight; documentation, BUILD/workspace integration, and at least 80% coverage. |
 | 2026-08-27 | RCPU-007 pre-push security review found that byte-transport decoding collected every caller parcel before checking the fixed 16,384-parcel memory capacity. An oversized input could therefore force an avoidable allocation before its deterministic rejection. | P0, allocation safety, blocks RCPU-007 | Validate the derived parcel count before decoding or allocating, preserve the loaded machine on failure, and pin the oversized canonical byte transport alongside the direct-parcel bound. |
 | 2026-08-27 | RCPU-007 audit found a complete Python CDC 6600 behavioral oracle but no Rust package. The oracle has 109 passing tests and 94.95% line coverage across 22 short and 14 long instructions, while its public spec intentionally bounds memory to 4,096 60-bit words and omits timing-only scoreboard, peripheral-processor, floating-point, and exchange-jump behavior. | P0, chronological functional oracle, blocks RCPU-008 | Port the entire specified behavioral surface to Rust with immutable snapshots, checked parcel fetch/branch/memory boundaries, exact 60/18-bit masking and signed comparisons, all instruction encoders, bounded execution, Python differential vectors, README/changelog/BUILD/workspace integration, and at least 80% Rust coverage before starting the gate-level partner. |
