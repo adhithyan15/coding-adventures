@@ -5,6 +5,18 @@
     {
       "id": "equals-participant-id",
       "source": "sequenceDiagram\nparticipant Alice=Wonderland\nparticipant Bob\nAlice=Wonderland->Bob:Hello Bob, how are - you?\nBob-->Alice=Wonderland:I am good thanks!"
+    },
+    {
+      "id": "create-participants-and-actors",
+      "source": "sequenceDiagram\nparticipant a as Alice\na ->>b: Hello Bob?\ncreate participant c\nb-->>c: Hello c!\nc ->> b: Hello b?\ncreate actor d as Donald\na ->> d: Hello Donald?"
+    },
+    {
+      "id": "destroy-participants",
+      "source": "sequenceDiagram\nparticipant a as Alice\na ->>b: Hello Bob?\ndestroy a\nb-->>a: Hello Alice!\nb ->> c: Where is Alice?\ndestroy c\nb ->> c: Where are you?"
+    },
+    {
+      "id": "create-and-destroy-participant",
+      "source": "sequenceDiagram\na ->>b: Hello Bob?\ncreate participant c\nb ->>c: Hello c!\nc ->> b: Hello b?\ndestroy c\nb ->> c : Bye c !"
     }
   ],
   "invalid": [
