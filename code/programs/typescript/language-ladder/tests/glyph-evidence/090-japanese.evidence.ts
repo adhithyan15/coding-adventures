@@ -177,4 +177,22 @@ export default [
       );
     },
   },
+  {
+    suite: "shared Perso-Arabic letters retain script-owned provenance",
+    suiteOrder: 50,
+    caseOrder: 180,
+    name: "keeps Japanese つ as a source-backed one-run hiragana path",
+    verify: ({ SCRIPTS }) => {
+      const japanese = SCRIPTS.find((script) => script.script === "japanese")!
+        .letters.find((entry) => entry.glyph === "つ")!;
+      expect(japanese.sound).toBe("tsu");
+      expect(japanese.role).toBe("hiragana");
+      expect(japanese.penLifts).toBe(0);
+      expect(japanese.strokeOrder).toHaveLength(1);
+      expect(japanese.strokeOrder[0]).toMatch(/upper left.*high arch.*outer right.*return left.*lower curve/i);
+      expect(japanese.strokeOrderSource?.url).toBe(
+        "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%A4_stroke_order_animation.gif",
+      );
+    },
+  },
 ] satisfies readonly GlyphEvidence[];

@@ -992,4 +992,40 @@ export const entries: DuctusEntry[] = [
         .strokeOrderSource!,
     },
   ],
+  // Sirgazil's 24-frame animation writes つ in one uninterrupted run: sweep
+  // right across the high arch, turn down around the outer right side, and
+  // return left along the broad lower curve. These medians preserve that
+  // zero-lift order in the bundled Noto Sans JP subset.
+  [
+    "japanese:つ",
+    {
+      script: "japanese",
+      glyph: "つ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep right from the upper left across the high arch",
+              path: [
+                { x: 85, y: 480 }, { x: 175, y: 505 }, { x: 270, y: 540 },
+                { x: 380, y: 570 }, { x: 495, y: 595 }, { x: 610, y: 610 },
+                { x: 700, y: 590 }, { x: 770, y: 545 }, { x: 820, y: 480 },
+              ],
+            },
+            {
+              label: "turn down around the right side and return left along the broad lower curve",
+              path: [
+                { x: 820, y: 480 }, { x: 860, y: 405 }, { x: 862, y: 330 },
+                { x: 835, y: 260 }, { x: 785, y: 205 }, { x: 720, y: 160 },
+                { x: 645, y: 125 }, { x: 560, y: 90 }, { x: 465, y: 65 },
+                { x: 365, y: 55 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: japanese.letters.find((letter) => letter.glyph === "つ")!
+        .strokeOrderSource!,
+    },
+  ],
 ];

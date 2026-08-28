@@ -28,6 +28,7 @@ const JAPANESE_WA = DUCTUS[ductusKey("japanese", "わ")];
 const JAPANESE_YU = DUCTUS[ductusKey("japanese", "ゆ")];
 const JAPANESE_YO = DUCTUS[ductusKey("japanese", "よ")];
 const JAPANESE_ME = DUCTUS[ductusKey("japanese", "め")];
+const JAPANESE_TSU = DUCTUS[ductusKey("japanese", "つ")];
 
 const OWNER_SCRIPTS = new Set(["japanese"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -324,6 +325,23 @@ describe("handwriting ductus", () => {
     );
     expect(JAPANESE_ME.source.citation).toMatch(
       /Sirgazil.*め.*32 frames.*3\.2 seconds.*1 October 2009/i,
+    );
+  });
+
+  it("Japanese つ completes its arch and lower return without lifting", () => {
+    expect(penLifts(JAPANESE_TSU)).toBe(0);
+    expect(JAPANESE_TSU.strokes).toHaveLength(1);
+    expect(
+      JAPANESE_TSU.strokes[0].segments.map((segment) => segment.label),
+    ).toEqual([
+      "sweep right from the upper left across the high arch",
+      "turn down around the right side and return left along the broad lower curve",
+    ]);
+    expect(JAPANESE_TSU.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%81%A4_stroke_order_animation.gif",
+    );
+    expect(JAPANESE_TSU.source.citation).toMatch(
+      /Sirgazil.*つ.*24 frames.*2\.4 seconds.*1 October 2009/i,
     );
   });
 });
