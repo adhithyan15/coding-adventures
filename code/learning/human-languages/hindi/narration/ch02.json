@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:864a92b2f2b445db",
+  "sourceHash": "fnv1a64:0c43cebd6c440fa6",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -2120,6 +2120,187 @@
             {
               "kind": "speech",
               "text": "Write नमस्ते (namaste). How many bars? (One — it is one word.) What does it literally mean? (A bowing to you: namas, \"bow,\" + te, \"to you.\") And namaskār? (The same namas + kāra, \"making a bow.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W05-namaste-delayed-copy",
+      "sequence": 251,
+      "title": "नमस्ते (namaste) — look, hide, write, compare",
+      "headword": "नमस्ते",
+      "romanization": "namaste",
+      "gloss": "look, hide, write, compare, and repair the known greeting",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9e6ed4429f12ea3d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at नमस्ते (namaste) for five seconds. Point to न, म, स्, and ते. Do not copy while the model is visible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cover नमस्ते (namaste)."
+            },
+            {
+              "kind": "speech",
+              "text": "wait five seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "write it once from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "uncover the model and compare the four known pieces."
+            },
+            {
+              "kind": "speech",
+              "text": "If one piece differs, circle it and repair only that place. Repair is part of the exercise, not a failure. There is no tracing and no romanized answer model."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read your repaired word aloud and remember its literal sense: a bow to you. Stop after one memory attempt."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-W05-namaste-delayed-copy-check",
+              "prompt": "After hiding the model for five seconds, write the familiar Hindi greeting and then compare it.",
+              "assesses": [
+                "HI-CONCEPT-W05-WRITE-NAMASTE-01",
+                "HI-CONCEPT-W05-WRITE-NAMASTE-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "नमस्ते"
+              ],
+              "feedback": {
+                "correct": "नमस्ते — the four known pieces are in place.",
+                "incorrect": "Uncover नमस्ते, repair only the differing piece, and stop after one memory attempt."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W05-namaste-dictation",
+      "sequence": 252,
+      "title": "One heard greeting — write what you know",
+      "headword": "नमस्ते",
+      "romanization": "namaste",
+      "gloss": "write the known greeting from a heard cue with no visible model",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:34f120b9eab3a174",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the answer lower on this page. You will hear one familiar greeting. No new Hindi and no new Devanagari shape is hiding in this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — short dictation",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "namaste — \"a bow to you\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *namaste* — \"a bow to you\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the Devanagari word from sound alone. Do not use a visible model, romanized answer, or tracing guide. Now uncover and compare: नमस्ते (namaste). Check न, म, स्, and ते in that order. Repair one place if needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Writing one known word from sound completes this first tiny stage runway. It does not complete Hindi writing: later lessons grow into phrases, messages, and timed assessment tasks."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-W05-namaste-dictation-answer",
+              "prompt": "From the heard cue namaste alone, write the familiar Hindi greeting.",
+              "assesses": [
+                "HI-CONCEPT-W05-WRITE-NAMASTE-01",
+                "HI-CONCEPT-W05-WRITE-NAMASTE-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "नमस्ते"
+              ],
+              "feedback": {
+                "correct": "नमस्ते — one familiar word written from sound.",
+                "incorrect": "Uncover नमस्ते, compare the four known pieces, and repair only one place."
+              }
             }
           ]
         }

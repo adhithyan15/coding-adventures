@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 2,
-  "sourceHash": "fnv1a64:864a92b2f2b445db",
+  "sourceHash": "fnv1a64:0c43cebd6c440fa6",
   "lessonIds": [
     "HI-C02-naam",
     "HI-C02-meraa",
@@ -18,13 +18,15 @@
     "HI-W05-virama-namaste",
     "HI-W05-conjuncts",
     "HI-W05-write-namaste",
+    "HI-W05-namaste-delayed-copy",
+    "HI-W05-namaste-dictation",
     "HI-C02-practice"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 0,
   "text": "hindi/narration/ch02.txt",
   "json": "hindi/narration/ch02.json",
-  "textHash": "fnv1a64:f67f045838e41941",
-  "jsonHash": "fnv1a64:7388f3c429b5160d",
+  "textHash": "fnv1a64:5c05db3c052c3713",
+  "jsonHash": "fnv1a64:795b3a69343fd259",
   "findings": []
 }

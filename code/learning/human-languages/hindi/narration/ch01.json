@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0ab8ecbe0da48a61",
+  "sourceHash": "fnv1a64:22f0827f18a4f9bb",
   "lessons": [
     {
       "id": "HI-C01-namaste",
@@ -881,17 +881,15 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:65436b58bd3572b4",
+      "sourceHash": "fnv1a64:baf2ab441e487f89",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -960,37 +958,8 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "the bar across नमस्ते (namaste), from left edge to right edge",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: the bar across **नमस्ते**, from left edge to right edge]"
-            },
-            {
-              "kind": "prompt",
-              "action": "GESTURE",
-              "instruction": "write letter bodies first, then cap the whole word",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU GESTURE: write letter bodies first, then cap the whole word]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"शिरोरेखा (shirorekhā) — the head-line\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"शिरोरेखा — the **head-line**\"]"
+              "kind": "speech",
+              "text": "Keep नमस्ते (namaste) visible. Finger-trace only its horizontal head-line once, from left edge to right edge. Then trace that same visible line once with a pencil. Do not copy the letter bodies yet. Say शिरोरेखा (shirorekhā) — head-line after your hand stops, and compare your traced line with the model immediately."
             }
           ]
         },
@@ -1008,6 +977,26 @@
             {
               "kind": "speech",
               "text": "What is the line across the top called, and what does the word literally mean? (Shirorekhā — \"head-line\".) When is it usually drawn? (Last — and as one line across the whole word. Usually: it is the common convention, not a rule.) What ancient root sits inside śiras, \"head\"? (PIE ḱerh₂-, also behind horn.) Next: hang your first two letters from it."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-W01-shirorekha-na-ma-observe-trace",
+              "prompt": "Keep नमस्ते (namaste) visible and trace its head-line once from left to right. What is that line called?",
+              "assesses": [
+                "HI-CONCEPT-W01-SHIROREKHA-NA-MA-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "शिरोरेखा",
+                "shirorekha",
+                "head-line",
+                "headline"
+              ],
+              "feedback": {
+                "correct": "Yes: शिरोरेखा is the visible head-line you traced.",
+                "incorrect": "Keep नमस्ते visible, trace only the top line once, and name it शिरोरेखा."
+              }
             },
             {
               "kind": "activity",
@@ -1045,16 +1034,14 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:006a46814990b7ee",
+      "sourceHash": "fnv1a64:65de23c5aa6aea34",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on"
         ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -1145,37 +1132,8 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "न — \"bowl, spine, bar last\"",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: न — \"bowl, spine, **bar last**\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "म — \"lower loop, upper loop, spine, bar last\"",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: म — \"lower loop, upper loop, spine, **bar last**\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "न and म side by side, then one single bar across both",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: न and म side by side, then **one single bar across both**]"
+              "kind": "speech",
+              "text": "Keep न म visible. Copy न once, looking back after any piece you need. Then copy म once the same way. Put them side by side and add one head-line across both. Compare each copy with the visible model immediately. Memory is not the task yet; one careful, supported copy is enough."
             }
           ]
         },
@@ -1193,6 +1151,28 @@
             {
               "kind": "speech",
               "text": "Draw न — its three pieces? (Bowl, spine, bar.) Draw म — what makes it different? (Two loops where न has one bowl.) Where does the spine sit in both? (On the right — though a minority of letters have none.) Next: the vowel already hiding inside each consonant."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-W01-na-ma-guided-copy",
+              "prompt": "Keep न म visible, copy each once, and name the shared frame.",
+              "assesses": [
+                "HI-CONCEPT-W01-NA-MA-01",
+                "HI-CONCEPT-W01-NA-MA-02",
+                "HI-CONCEPT-W01-NA-MA-03"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "right spine and top bar",
+                "spine on the right and a top bar",
+                "right-hand spine and headline",
+                "right spine, top bar"
+              ],
+              "feedback": {
+                "correct": "Good: both supported copies use a right spine and a top bar.",
+                "incorrect": "Look back at न म: each has a spine on the right and a bar across the top."
+              }
             }
           ]
         }

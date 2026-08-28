@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 2,
-  "sourceHash": "fnv1a64:a66fb031f07a0060",
+  "sourceHash": "fnv1a64:cb3a9310149be48d",
   "lessonIds": [
     "HI-C02-naam",
     "HI-C02-meraa",
@@ -18,6 +18,8 @@
     "HI-W05-virama-namaste",
     "HI-W05-conjuncts",
     "HI-W05-write-namaste",
+    "HI-W05-namaste-delayed-copy",
+    "HI-W05-namaste-dictation",
     "HI-C02-practice"
   ],
   "tex": "hindi/book/chapters/ch02-introductions.tex"
