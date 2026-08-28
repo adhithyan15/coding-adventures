@@ -17,6 +17,22 @@
     {
       "id": "create-and-destroy-participant",
       "source": "sequenceDiagram\na ->>b: Hello Bob?\ncreate participant c\nb ->>c: Hello c!\nc ->> b: Hello b?\ndestroy c\nb ->> c : Bye c !"
+    },
+    {
+      "id": "note-over-single-participant",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\nNote over Bob: Bob thinks"
+    },
+    {
+      "id": "note-over-participant-pairs",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\nNote over Alice,Bob: confusion\nNote over Bob,Alice: resolution"
+    },
+    {
+      "id": "note-left-of-participant",
+      "source": "sequenceDiagram\nparticipant Alice\nNote left of Alice: Alice thinks"
+    },
+    {
+      "id": "note-right-of-participant",
+      "source": "sequenceDiagram\nparticipant Alice\nNote right of Alice: Alice thinks"
     }
   ],
   "invalid": [
