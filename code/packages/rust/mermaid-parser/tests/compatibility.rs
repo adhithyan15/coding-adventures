@@ -100,7 +100,11 @@ fn pinned_sequence_visual_corpus_references_valid_syntax_fixtures() {
         .map(|id| id.as_str().expect("visual fixture id"))
         .collect::<BTreeSet<_>>();
     assert!(fixtures.is_subset(&valid));
-    assert_eq!(fixtures.len(), 1, "visual fixture ids must be unique");
+    assert_eq!(
+        fixtures.len(),
+        visual["fixtures"].as_array().expect("visual fixture array").len(),
+        "visual fixture ids must be unique"
+    );
 }
 
 #[test]
