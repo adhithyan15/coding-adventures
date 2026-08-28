@@ -1,0 +1,11 @@
+{
+  "language": "arabic",
+  "kind": "reinforcement",
+  "finding": {
+    "language": "arabic",
+    "kind": "reinforcement",
+    "count": 337,
+    "unit": "missed window(s)",
+    "detail": "add retrieval at the expanding R1-R4 intervals"
+  }
+}

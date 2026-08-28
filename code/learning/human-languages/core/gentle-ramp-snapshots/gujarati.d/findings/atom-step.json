@@ -1,0 +1,11 @@
+{
+  "language": "gujarati",
+  "kind": "atom-step",
+  "finding": {
+    "language": "gujarati",
+    "kind": "atom-step",
+    "count": 3,
+    "unit": "lesson/chapter spike(s)",
+    "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+  }
+}

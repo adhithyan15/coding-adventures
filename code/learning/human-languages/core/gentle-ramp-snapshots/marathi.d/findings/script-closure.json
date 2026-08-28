@@ -1,0 +1,11 @@
+{
+  "language": "marathi",
+  "kind": "script-closure",
+  "finding": {
+    "language": "marathi",
+    "kind": "script-closure",
+    "count": 24,
+    "unit": "glyph(s)",
+    "detail": "teach every load-bearing glyph before asking the learner to decode it"
+  }
+}

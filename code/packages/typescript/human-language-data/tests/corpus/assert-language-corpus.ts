@@ -2,7 +2,6 @@ import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { expect } from "vitest";
 import { measureContinuity, REINFORCEMENT_WINDOWS } from "../../src/continuity.js";
-import type { TrackGentleRamp } from "../../src/gentle-ramp.js";
 import {
   defaultCurriculumRoot,
   loadAssessmentPolicy,
@@ -18,6 +17,7 @@ import {
 } from "../../src/modality-manifest.js";
 import { modalityOwnerContents } from "../../src/modality-shards.js";
 import { measureRamp } from "../../src/ramp.js";
+import { readLedgerFile } from "../../src/shard.js";
 import { measureWritingStages, type TrackWritingStageCoverage } from "../../src/writing-stages.js";
 
 export function expectLanguageContinuity(language: string): void {
@@ -28,9 +28,46 @@ export function expectLanguageContinuity(language: string): void {
   const atomRamp = ramp.tracks[0]!;
   const scriptRamp = ramp.script.tracks[0]!;
   const track = report.tracks[0]!;
-  const snapshot = JSON.parse(
-    readFileSync(resolve(root, "core", "gentle-ramp-snapshots", `${language}.json`), "utf8"),
-  ) as TrackGentleRamp;
+  const metric = (name: string): unknown => {
+    const path = resolve(
+      root,
+      "core",
+      "gentle-ramp-snapshots",
+      `${language}.d`,
+      "metrics",
+      `${name}.json`,
+    );
+    const owner = readLedgerFile<Record<string, unknown>>(path);
+    expect(owner.language, `${language} gentle-ramp metric language`).toBe(language);
+    expect(owner.metric, `${language} gentle-ramp metric identity`).toBe(name);
+    expect(readFileSync(path, "utf8"), `${language} canonical gentle-ramp metric`).toBe(
+      `${JSON.stringify(owner, null, 2)}\n`,
+    );
+    return owner.value;
+  };
+  const snapshot = {
+    language,
+    lessonCount: lessons.length,
+    orderDefects: metric("orderDefects"),
+    lessonsWithoutSequence: metric("lessonsWithoutSequence"),
+    forwardPrerequisites: metric("forwardPrerequisites"),
+    forwardReviews: metric("forwardReviews"),
+    forwardReferences: metric("forwardReferences"),
+    atomsTaught: metric("atomsTaught"),
+    atomsNeverRevisited: metric("atomsNeverRevisited"),
+    reinforcementWindowMisses: metric("reinforcementWindowMisses"),
+    reinforcementMissesByWindow: Object.fromEntries(
+      REINFORCEMENT_WINDOWS.map((window) => [
+        window.name,
+        metric(`reinforcementMissesByWindow-${window.name}`),
+      ]),
+    ),
+    atomMeasurementBlindLessons: metric("atomMeasurementBlindLessons"),
+    atomLessonSpikes: metric("atomLessonSpikes"),
+    atomChapterSpikes: metric("atomChapterSpikes"),
+    glyphLessonSpikes: metric("glyphLessonSpikes"),
+    scriptSystemSpikes: metric("scriptSystemSpikes"),
+  };
   const reinforcementMissesByWindow = Object.fromEntries(
     REINFORCEMENT_WINDOWS.map((window) => [window.name, report.summary.missedByWindow[window.name]]),
   );

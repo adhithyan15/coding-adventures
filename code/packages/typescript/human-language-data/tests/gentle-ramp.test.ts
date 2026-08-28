@@ -3,13 +3,19 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { parseLesson } from "../src/parse.js";
 import { buildCurriculumGapReport } from "../src/report.js";
-import { GENTLE_RAMP_PRIORITIES, renderGentleRamp, type TrackGentleRamp } from "../src/gentle-ramp.js";
+import { GENTLE_RAMP_PRIORITIES, renderGentleRamp } from "../src/gentle-ramp.js";
 import { runGentleRampReport } from "../src/gentle-ramp-cli.js";
 import {
   GENTLE_RAMP_SNAPSHOT_DIR,
   generatedGentleRampSnapshotOutputsFromReport,
 } from "../src/gentle-ramp-snapshot-cli.js";
-import { defaultCurriculumRoot, loadChapterPolicy, loadEverything, loadTrackChapters } from "../src/loader.js";
+import {
+  defaultCurriculumRoot,
+  loadChapterPolicy,
+  loadEverything,
+  loadGentleRampSnapshotTracks,
+  loadTrackChapters,
+} from "../src/loader.js";
 import type { BookCorpus, ChapterPolicy, LanguageRegistry } from "../src/types.js";
 
 const registry: LanguageRegistry = {
@@ -113,7 +119,8 @@ describe("the corpus-wide super-gentle ramp", () => {
       expect(readFileSync(resolve(defaultCurriculumRoot(), relative), "utf8"), relative).toBe(expected);
     }
 
-    const snappedTracks = [...outputs.values()].map((value) => JSON.parse(value) as TrackGentleRamp);
+    expect(outputs.size).toBe(851);
+    const snappedTracks = loadGentleRampSnapshotTracks();
     const priority = new Map(GENTLE_RAMP_PRIORITIES.map((kind, index) => [kind, index]));
     const snappedQueue = snappedTracks.flatMap((track) => track.findings).sort(
       (a, b) =>
@@ -205,11 +212,11 @@ describe("the corpus-wide super-gentle ramp", () => {
     });
 
     const changed = structuredClone(report);
-    changed.tracks.find((track) => track.language === "german")!.lessonCount += 1;
+    changed.tracks.find((track) => track.language === "german")!.atomsTaught += 1;
     const changedOutputs = generatedGentleRampSnapshotOutputsFromReport(changed);
     expect(
       [...outputs.keys()].filter((path) => outputs.get(path) !== changedOutputs.get(path)),
-    ).toEqual([`${GENTLE_RAMP_SNAPSHOT_DIR}/german.json`]);
+    ).toEqual([`${GENTLE_RAMP_SNAPSHOT_DIR}/german.d/metrics/atomsTaught.json`]);
     expect(report.tracks.find((track) => track.language === "urdu")).toMatchObject({
       orderDefects: 0,
       forwardPrerequisites: 0,

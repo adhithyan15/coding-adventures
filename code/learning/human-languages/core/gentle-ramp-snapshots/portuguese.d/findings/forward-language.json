@@ -1,0 +1,11 @@
+{
+  "language": "portuguese",
+  "kind": "forward-language",
+  "finding": {
+    "language": "portuguese",
+    "kind": "forward-language",
+    "count": 65,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}

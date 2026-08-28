@@ -1,0 +1,11 @@
+{
+  "language": "italian",
+  "kind": "forward-language",
+  "finding": {
+    "language": "italian",
+    "kind": "forward-language",
+    "count": 31,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}

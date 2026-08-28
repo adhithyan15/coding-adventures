@@ -1,0 +1,11 @@
+{
+  "language": "french",
+  "kind": "forward-language",
+  "finding": {
+    "language": "french",
+    "kind": "forward-language",
+    "count": 51,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}

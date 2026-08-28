@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "kind": "atom-step",
+  "finding": {
+    "language": "sanskrit",
+    "kind": "atom-step",
+    "count": 4,
+    "unit": "lesson/chapter spike(s)",
+    "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+  }
+}

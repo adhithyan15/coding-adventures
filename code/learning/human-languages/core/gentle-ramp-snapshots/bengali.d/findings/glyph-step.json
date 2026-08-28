@@ -1,0 +1,11 @@
+{
+  "language": "bengali",
+  "kind": "glyph-step",
+  "finding": {
+    "language": "bengali",
+    "kind": "glyph-step",
+    "count": 3,
+    "unit": "lesson/system spike(s)",
+    "detail": "split new glyphs and writing systems across gentler steps"
+  }
+}

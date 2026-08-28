@@ -6,10 +6,11 @@ test. Keep the top-level test files for algorithm fixtures and genuine
 cross-language invariants; do not add another language's expected totals there.
 
 The generated continuity and ramp ledger lives in
-`core/gentle-ramp-snapshots/<language>.json`, while modality lives in
-`core/lesson-modality/<language>.json`. The shared assertion helper verifies
-both shards from one track at a time, so parallel language PRs update disjoint
-test and data files.
+`core/gentle-ramp-snapshots/<language>.d/{metrics,findings}/`, while modality lives in
+`core/lesson-modality/<language>.d/`. The shared assertion helper verifies the
+canonical direct owners for one track at a time, while the cross-language suites
+prove exact directory and identity closure. Parallel language and metric PRs therefore
+update disjoint test and data files.
 
 Exact writing-stage evidence, root-ledger payoffs, and compiled objective
 activity IDs belong in the same language-owned test file. Shared suites may

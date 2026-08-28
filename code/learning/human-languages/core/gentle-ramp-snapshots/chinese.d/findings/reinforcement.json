@@ -1,0 +1,11 @@
+{
+  "language": "chinese",
+  "kind": "reinforcement",
+  "finding": {
+    "language": "chinese",
+    "kind": "reinforcement",
+    "count": 234,
+    "unit": "missed window(s)",
+    "detail": "add retrieval at the expanding R1-R4 intervals"
+  }
+}

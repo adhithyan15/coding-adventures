@@ -547,10 +547,16 @@ export interface ReadLedgerOptions {
  * per-language — three shapes exist today — and inventing one would produce a
  * document no generator would ever emit.
  */
-export function readLedgerFile<T = unknown>(
+export interface ReadLedgerSource<T> {
+  value: T;
+  text: string;
+}
+
+/** Guarded ledger parse that also retains the exact bytes for canonical checks. */
+export function readLedgerFileWithSource<T = unknown>(
   path: string,
   options: ReadLedgerOptions = {},
-): T {
+): ReadLedgerSource<T> {
   // Only for a `.json` path, because only a `.json` path HAS an `X.d`:
   // `shardDirectoryFor` refuses anything else outright, and this guard must not
   // turn "you passed a .tex" into the confusing error that would produce.
@@ -578,7 +584,14 @@ export function readLedgerFile<T = unknown>(
     });
   }
   rejectDangerousKeys(value, `'${path}'`);
-  return value;
+  return { value, text };
+}
+
+export function readLedgerFile<T = unknown>(
+  path: string,
+  options: ReadLedgerOptions = {},
+): T {
+  return readLedgerFileWithSource<T>(path, options).value;
 }
 
 /**

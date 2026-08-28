@@ -161,7 +161,6 @@ export function summarizeGentleRamp(input: GentleRampInput): GentleRampReport {
   const scriptRampByTrack = new Map(input.ramp.script.tracks.map((track) => [track.language, track]));
   const continuityByTrack = new Map(input.continuity.tracks.map((track) => [track.language, track]));
   const closureByTrack = new Map(input.scriptClosure.tracks.map((track) => [track.language, track]));
-  const modalityByTrack = new Map(input.modality.tracks.map((track) => [track.language, track]));
 
   const tracks: TrackGentleRamp[] = [];
   for (const language of [...new Set(input.languages)].sort()) {
@@ -170,7 +169,6 @@ export function summarizeGentleRamp(input: GentleRampInput): GentleRampReport {
     const scriptRamp = scriptRampByTrack.get(language);
     const continuity = continuityByTrack.get(language);
     const closure = closureByTrack.get(language);
-    const modality = modalityByTrack.get(language);
     const trackOrder = order.get(language) ?? [];
     const writingPositions = ordered.flatMap((lesson, index) => (isWritingPractice(lesson) ? [index] : []));
     const firstWritingPracticeAt = writingPositions[0] ?? null;

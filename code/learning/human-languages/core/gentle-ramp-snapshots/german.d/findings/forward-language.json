@@ -1,0 +1,11 @@
+{
+  "language": "german",
+  "kind": "forward-language",
+  "finding": {
+    "language": "german",
+    "kind": "forward-language",
+    "count": 43,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}

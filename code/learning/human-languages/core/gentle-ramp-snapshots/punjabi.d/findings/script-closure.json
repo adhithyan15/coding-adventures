@@ -1,0 +1,11 @@
+{
+  "language": "punjabi",
+  "kind": "script-closure",
+  "finding": {
+    "language": "punjabi",
+    "kind": "script-closure",
+    "count": 36,
+    "unit": "glyph(s)",
+    "detail": "teach every load-bearing glyph before asking the learner to decode it"
+  }
+}

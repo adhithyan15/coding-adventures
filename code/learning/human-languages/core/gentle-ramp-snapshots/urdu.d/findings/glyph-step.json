@@ -1,0 +1,11 @@
+{
+  "language": "urdu",
+  "kind": "glyph-step",
+  "finding": {
+    "language": "urdu",
+    "kind": "glyph-step",
+    "count": 2,
+    "unit": "lesson/system spike(s)",
+    "detail": "split new glyphs and writing systems across gentler steps"
+  }
+}

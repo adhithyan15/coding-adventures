@@ -1,0 +1,11 @@
+{
+  "language": "urdu",
+  "kind": "forward-language",
+  "finding": {
+    "language": "urdu",
+    "kind": "forward-language",
+    "count": 6,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}

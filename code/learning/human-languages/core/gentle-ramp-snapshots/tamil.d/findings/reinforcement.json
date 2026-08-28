@@ -1,0 +1,11 @@
+{
+  "language": "tamil",
+  "kind": "reinforcement",
+  "finding": {
+    "language": "tamil",
+    "kind": "reinforcement",
+    "count": 949,
+    "unit": "missed window(s)",
+    "detail": "add retrieval at the expanding R1-R4 intervals"
+  }
+}

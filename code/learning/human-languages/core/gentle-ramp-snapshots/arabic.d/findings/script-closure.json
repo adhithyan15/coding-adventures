@@ -1,0 +1,11 @@
+{
+  "language": "arabic",
+  "kind": "script-closure",
+  "finding": {
+    "language": "arabic",
+    "kind": "script-closure",
+    "count": 15,
+    "unit": "glyph(s)",
+    "detail": "teach every load-bearing glyph before asking the learner to decode it"
+  }
+}

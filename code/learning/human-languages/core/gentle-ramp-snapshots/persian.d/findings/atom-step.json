@@ -1,0 +1,11 @@
+{
+  "language": "persian",
+  "kind": "atom-step",
+  "finding": {
+    "language": "persian",
+    "kind": "atom-step",
+    "count": 5,
+    "unit": "lesson/chapter spike(s)",
+    "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+  }
+}

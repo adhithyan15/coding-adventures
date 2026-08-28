@@ -1,0 +1,11 @@
+{
+  "language": "tamil",
+  "kind": "forward-language",
+  "finding": {
+    "language": "tamil",
+    "kind": "forward-language",
+    "count": 7,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}

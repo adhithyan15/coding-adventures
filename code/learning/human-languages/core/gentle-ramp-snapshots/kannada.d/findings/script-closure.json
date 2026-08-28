@@ -1,0 +1,11 @@
+{
+  "language": "kannada",
+  "kind": "script-closure",
+  "finding": {
+    "language": "kannada",
+    "kind": "script-closure",
+    "count": 18,
+    "unit": "glyph(s)",
+    "detail": "teach every load-bearing glyph before asking the learner to decode it"
+  }
+}

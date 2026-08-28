@@ -1,0 +1,11 @@
+{
+  "language": "russian",
+  "kind": "glyph-step",
+  "finding": {
+    "language": "russian",
+    "kind": "glyph-step",
+    "count": 4,
+    "unit": "lesson/system spike(s)",
+    "detail": "split new glyphs and writing systems across gentler steps"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "language": "german",
+  "kind": "measurement-blind",
+  "finding": {
+    "language": "german",
+    "kind": "measurement-blind",
+    "count": 65,
+    "unit": "lesson(s)",
+    "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+  }
+}
