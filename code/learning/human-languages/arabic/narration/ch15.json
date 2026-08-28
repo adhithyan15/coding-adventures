@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4c5d4820286e2376",
+  "sourceHash": "fnv1a64:b4a1d28b6f0cd49a",
   "lessons": [
     {
       "id": "AR-C15-ad-duhr-muntasaf-al-layl",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0411a0cb0f4f7c11",
+      "sourceHash": "fnv1a64:86bf1195fc44b2d1",
       "notice": null,
       "blocks": [
         {

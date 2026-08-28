@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-C08-AL-JUMUA-AS-SABT-01, AR-CONCEPT-C08-AL-JUMUA-AS-SABT-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [AR-CULTURE-FRIDAY-CONGREGATIONAL-PRAYER-01]
 practises:
   knowledge: [AR-CONCEPT-C08-AL-JUMUA-AS-SABT-01, AR-CONCEPT-C08-AL-JUMUA-AS-SABT-02]
 skills: [listening, speaking, reading]

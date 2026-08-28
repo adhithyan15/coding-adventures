@@ -19,6 +19,9 @@ requires:
   knowledge: [AR-CONCEPT-C30-AKALA-02]
 introduces:
   knowledge: [AR-CONCEPT-C31-FAHIMA-01, AR-CONCEPT-C31-FAHIMA-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C31-FAHIMA-01, AR-CONCEPT-C31-FAHIMA-02, AR-CONCEPT-C30-AKALA-01, AR-CONCEPT-C30-AKALA-02, AR-CONCEPT-C30-ARAFA-01, AR-CONCEPT-C30-ARAFA-02]
 skills: [listening, speaking, reading]

@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e9eab09aa7dbde6b",
+  "sourceHash": "fnv1a64:af1b615293fb14da",
   "lessons": [
     {
       "id": "AR-C12-al-fusul",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f49159243716b70",
+      "sourceHash": "fnv1a64:71e2d8f01567dcc3",
       "notice": null,
       "blocks": [
         {

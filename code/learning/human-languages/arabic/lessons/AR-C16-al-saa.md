@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-C16-AL-SAA-01, AR-CONCEPT-C16-AL-SAA-02]
+introduces_idioms: []
+introduces_senses: [AR-SENSE-SAA-CLOCK-WHILE-01]
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C16-AL-SAA-01, AR-CONCEPT-C16-AL-SAA-02]
 skills: [listening, speaking, reading]

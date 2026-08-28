@@ -19,6 +19,9 @@ requires:
   knowledge: [AR-CONCEPT-C33-QAHWA-02]
 introduces:
   knowledge: [AR-CONCEPT-C34-MILH-01, AR-CONCEPT-C34-MILH-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C34-MILH-01, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C33-QAHWA-01, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-C33-SUKKAR-02, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SUKKAR-01]
 skills: [listening, speaking, reading]

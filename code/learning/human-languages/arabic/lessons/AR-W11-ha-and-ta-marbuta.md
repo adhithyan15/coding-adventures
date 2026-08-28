@@ -17,6 +17,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-W11-HA-AND-TA-MARBUTA-01, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-W11-HA-AND-TA-MARBUTA-01, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02]
 skills: [speaking, reading, writing]

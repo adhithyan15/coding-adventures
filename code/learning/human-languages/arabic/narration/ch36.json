@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Cups, Plates, and More Than One",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9e09dda9d25a9e04",
+  "sourceHash": "fnv1a64:20901df6d4de1002",
   "lessons": [
     {
       "id": "AR-C36-zayt",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:389576737b14f3e0",
+      "sourceHash": "fnv1a64:c88f3fe2184c007d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -214,7 +214,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:51a3d21b81556a2a",
+      "sourceHash": "fnv1a64:a11ed389634636a3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -406,7 +406,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c79df8d04f7b28f9",
+      "sourceHash": "fnv1a64:007aef0af0773d58",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -593,7 +593,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:001d3e7108432439",
+      "sourceHash": "fnv1a64:68d94efb8bdb66bc",
       "notice": {
         "modality": "sight",
         "needs": [

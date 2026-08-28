@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-C10-AB-UMM-01, AR-CONCEPT-C10-AB-UMM-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C10-AB-UMM-01, AR-CONCEPT-C10-AB-UMM-02]
 skills: [listening, speaking, reading]

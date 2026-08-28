@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C06-MIN-FADLIK-02]
+introduces_idioms: [AR-IDIOM-LAW-SAMAHT-PLEASE-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C06-MIN-FADLIK-02]
 skills: [listening, speaking, reading]

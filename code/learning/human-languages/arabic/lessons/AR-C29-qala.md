@@ -19,6 +19,9 @@ requires:
   knowledge: [AR-CONCEPT-C28-JAA-02]
 introduces:
   knowledge: [AR-CONCEPT-C29-QALA-01, AR-CONCEPT-C29-QALA-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C29-QALA-01, AR-CONCEPT-C29-QALA-02]
 skills: [listening, speaking, reading]

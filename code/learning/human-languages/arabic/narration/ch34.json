@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Asking for Food",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:136f91c8179d610f",
+  "sourceHash": "fnv1a64:bbdf458104246edd",
   "lessons": [
     {
       "id": "AR-C34-milh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0f5ea9c24ee5e175",
+      "sourceHash": "fnv1a64:159b460cc4fe0068",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fc6790ceb65f68c5",
+      "sourceHash": "fnv1a64:12f17bdf25c20d6c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -394,7 +394,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:23468191710d0fc0",
+      "sourceHash": "fnv1a64:908d5b39d1839fbf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -577,7 +577,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4a7d4b03514270ed",
+      "sourceHash": "fnv1a64:82b37b1cea17c422",
       "notice": {
         "modality": "sight",
         "needs": [

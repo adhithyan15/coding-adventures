@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Saying and Seeing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3cd401a4e59d594a",
+  "sourceHash": "fnv1a64:b801e7640e9436c0",
   "lessons": [
     {
       "id": "AR-C29-qala",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce20844fd21afc59",
+      "sourceHash": "fnv1a64:396e669ee87451cc",
       "notice": null,
       "blocks": [
         {
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fef39f3ff85a08c5",
+      "sourceHash": "fnv1a64:c6508ebdb058ef96",
       "notice": null,
       "blocks": [
         {

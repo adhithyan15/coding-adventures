@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "You're Welcome",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e11413130f677c5e",
+  "sourceHash": "fnv1a64:5b09760fb7feec97",
   "lessons": [
     {
       "id": "AR-C23-afwan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:649e7fa3ce3a0668",
+      "sourceHash": "fnv1a64:49aae7d8cb564dcf",
       "notice": null,
       "blocks": [
         {

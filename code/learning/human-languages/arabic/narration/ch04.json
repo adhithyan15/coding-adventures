@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:eb0160369fc7b6f0",
+  "sourceHash": "fnv1a64:9563dd3c2f44136a",
   "lessons": [
     {
       "id": "AR-W10-ayn",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:41b676bb74266c30",
+      "sourceHash": "fnv1a64:4fe833a181bf8395",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -200,7 +200,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:849de7ad76378728",
+      "sourceHash": "fnv1a64:8d771cbb144bec87",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -368,7 +368,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:44b336c3ea8b6fcb",
+      "sourceHash": "fnv1a64:05b37c3821332dd2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -571,7 +571,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d6223a8157e97d3",
+      "sourceHash": "fnv1a64:3306f2422bf5157e",
       "notice": null,
       "blocks": [
         {
@@ -732,7 +732,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e310a26b87a53a68",
+      "sourceHash": "fnv1a64:4c15b2deaf663947",
       "notice": null,
       "blocks": [
         {
@@ -906,7 +906,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b227719d446dd21a",
+      "sourceHash": "fnv1a64:4fe7ab7d1b0254f7",
       "notice": null,
       "blocks": [
         {
@@ -1090,7 +1090,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e69d598f6d1990e8",
+      "sourceHash": "fnv1a64:c5f37317280287d1",
       "notice": null,
       "blocks": [
         {
@@ -1285,7 +1285,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:dc8602c69aa3d525",
+      "sourceHash": "fnv1a64:bef796c5f5af3150",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -19,6 +19,9 @@ requires:
   knowledge: [AR-CONCEPT-C34-LAHM-02]
 introduces:
   knowledge: [AR-CONCEPT-C34-JUBN-01, AR-CONCEPT-C34-JUBN-02]
+introduces_idioms: []
+introduces_senses: [AR-SENSE-JUBN-COWARDICE-HOMOGRAPH-01]
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C34-JUBN-01, AR-CONCEPT-C34-JUBN-02, AR-CONCEPT-C34-LAHM-01, AR-CONCEPT-C34-LAHM-02, AR-CONCEPT-C34-MILH-02, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-C34-MILH-01]
 skills: [listening, speaking, reading]

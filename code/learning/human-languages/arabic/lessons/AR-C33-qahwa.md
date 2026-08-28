@@ -19,6 +19,9 @@ requires:
   knowledge: [AR-CONCEPT-C33-SUKKAR-02]
 introduces:
   knowledge: [AR-CONCEPT-C33-QAHWA-01, AR-CONCEPT-C33-QAHWA-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C33-QAHWA-01, AR-CONCEPT-C33-QAHWA-02, AR-CONCEPT-C33-SUKKAR-01, AR-CONCEPT-C33-SUKKAR-02, AR-CONCEPT-C33-HALIB-02, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02, AR-CONCEPT-C04-AL-SALAMA-01, AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C23-AFWAN-01, AR-CONCEPT-C33-HALIB-01]
 skills: [listening, speaking, reading]

@@ -19,6 +19,9 @@ requires:
   knowledge: [AR-CONCEPT-C32-AHABBA-02]
 introduces:
   knowledge: [AR-CONCEPT-C33-SHAY-01, AR-CONCEPT-C33-SHAY-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C33-SHAY-01, AR-CONCEPT-C33-SHAY-02, AR-CONCEPT-C32-AHABBA-01, AR-CONCEPT-C32-AHABBA-02, AR-CONCEPT-C31-KATABA-02]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-C13-MAA-KHUBZ-01, AR-CONCEPT-C13-MAA-KHUBZ-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C13-MAA-KHUBZ-01, AR-CONCEPT-C13-MAA-KHUBZ-02]
 skills: [listening, speaking, reading]

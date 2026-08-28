@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:be01e1709d18c13b",
+  "sourceHash": "fnv1a64:256c818548f473c0",
   "lessons": [
     {
       "id": "AR-C21-kalb-qitt",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c58ecb89a42a062",
+      "sourceHash": "fnv1a64:8a59ae9aec12cf31",
       "notice": null,
       "blocks": [
         {

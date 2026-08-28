@@ -19,6 +19,9 @@ requires:
   knowledge: [AR-CONCEPT-C36-ZAYT-02]
 introduces:
   knowledge: [AR-CONCEPT-C36-KUB-01, AR-CONCEPT-C36-KUB-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C36-KUB-01, AR-CONCEPT-C36-KUB-02, AR-CONCEPT-C36-ZAYT-01, AR-CONCEPT-C36-ZAYT-02, AR-CONCEPT-C35-SADIQ-02, AR-CONCEPT-C13-MAA-KHUBZ-01, AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C23-AFWAN-01, AR-CONCEPT-C35-SADIQ-01, AR-CONCEPT-W08-KAF-AND-RA-01]
 skills: [listening, speaking, reading]

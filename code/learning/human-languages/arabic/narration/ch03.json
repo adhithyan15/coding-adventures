@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e987d72ec0053f7c",
+  "sourceHash": "fnv1a64:166630fbb1319806",
   "lessons": [
     {
       "id": "AR-W07-hook-family-ha-kha",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bd49196de3cd0a4a",
+      "sourceHash": "fnv1a64:033b3143ac074409",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -209,7 +209,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:12066b9d81273cbe",
+      "sourceHash": "fnv1a64:04487ef90e2dd6d7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -365,7 +365,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ff8640e312fa8991",
+      "sourceHash": "fnv1a64:51150a65ec1d038e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d4f0429a815bfd9",
+      "sourceHash": "fnv1a64:73038833f9bf8888",
       "notice": null,
       "blocks": [
         {
@@ -655,7 +655,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:017e0b4e62ce2300",
+      "sourceHash": "fnv1a64:4e18d4422368b989",
       "notice": null,
       "blocks": [
         {
@@ -798,7 +798,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ebca6f2afdb7274d",
+      "sourceHash": "fnv1a64:a25e4ef4183d839a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -965,7 +965,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3c11bb981abda92",
+      "sourceHash": "fnv1a64:815804bc30614305",
       "notice": null,
       "blocks": [
         {
@@ -1126,7 +1126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb4eafd54d45244e",
+      "sourceHash": "fnv1a64:56fb56016c78c612",
       "notice": null,
       "blocks": [
         {
@@ -1319,7 +1319,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ba0898bc3feaa45b",
+      "sourceHash": "fnv1a64:d9581a608a683218",
       "notice": {
         "modality": "sight",
         "needs": [

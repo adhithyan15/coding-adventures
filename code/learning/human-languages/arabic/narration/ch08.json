@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0014006ce34f9f4f",
+  "sourceHash": "fnv1a64:05aab835b77e96ec",
   "lessons": [
     {
       "id": "AR-C08-al-ahad-al-khamis",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:256f75fd5f1f3c3f",
+      "sourceHash": "fnv1a64:7da7ae9cb09d8dfc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35460220b0154ce3",
+      "sourceHash": "fnv1a64:91a910d35af6add4",
       "notice": null,
       "blocks": [
         {

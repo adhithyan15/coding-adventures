@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-01, AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [AR-CULTURE-DHUHR-PRAYER-RHYTHM-01]
 practises:
   knowledge: [AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-01, AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-02]
 skills: [listening, speaking, reading]

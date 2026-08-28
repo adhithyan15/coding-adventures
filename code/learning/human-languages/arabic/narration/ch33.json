@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Asking for a Drink",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3e7842268901fc1c",
+  "sourceHash": "fnv1a64:77bc08ced4c5f9b7",
   "lessons": [
     {
       "id": "AR-C33-shay",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d386b81660d43aa0",
+      "sourceHash": "fnv1a64:b0c9bb3a0fc4fb71",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -189,7 +189,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:28e14939b0409873",
+      "sourceHash": "fnv1a64:b8b0762737b151ec",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -372,7 +372,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:db0d13a9953e0c80",
+      "sourceHash": "fnv1a64:ed73d776b8b8ee89",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -556,7 +556,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:537116d3714fb966",
+      "sourceHash": "fnv1a64:2e1b0191f766aa53",
       "notice": {
         "modality": "sight",
         "needs": [

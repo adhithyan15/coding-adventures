@@ -17,6 +17,9 @@ requires:
   knowledge: [AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02]
 introduces:
   knowledge: [AR-SCRIPT-WRITE-SALAM-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03]
 skills: [reading, writing]

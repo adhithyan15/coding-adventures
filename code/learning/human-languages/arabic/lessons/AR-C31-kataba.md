@@ -19,6 +19,9 @@ requires:
   knowledge: [AR-CONCEPT-C31-SAALA-01, AR-CONCEPT-C31-QARAA-02]
 introduces:
   knowledge: [AR-CONCEPT-C31-KATABA-01, AR-CONCEPT-C31-KATABA-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C31-KATABA-01, AR-CONCEPT-C31-KATABA-02, AR-CONCEPT-C31-SAALA-01, AR-CONCEPT-C31-QARAA-02, AR-CONCEPT-C31-FAHIMA-02, AR-CONCEPT-C29-QALA-02, AR-CONCEPT-C28-DHAHABA-02]
 skills: [listening, speaking, reading]

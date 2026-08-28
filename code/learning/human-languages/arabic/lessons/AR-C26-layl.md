@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [AR-CONCEPT-C26-LAYL-01, AR-CONCEPT-C26-LAYL-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [AR-CONCEPT-C26-LAYL-01, AR-CONCEPT-C26-LAYL-02]
 skills: [listening, speaking, reading]
