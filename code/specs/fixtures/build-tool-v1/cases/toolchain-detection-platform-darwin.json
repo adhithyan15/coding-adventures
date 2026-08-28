@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "id": "toolchain-detection/platform-darwin",
+  "domain": "toolchain_detection",
+  "summary": "Darwin prefers BUILD_mac and otherwise falls back through BUILD_mac_and_linux before generic BUILD.",
+  "platforms": ["darwin"],
+  "capabilities": ["toolchain_detection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "toolchain_detection",
+    "options": {
+      "platform": "darwin",
+      "force_full": false,
+      "packages": [
+        {"name": "rust/mac-specific", "language": "rust", "build_files": {"BUILD": "# needs-toolchain: java\n", "BUILD_mac_and_linux": "# needs-toolchain: python\n", "BUILD_mac": "# needs-toolchain: kotlin\n"}},
+        {"name": "rust/mac-shared", "language": "rust", "build_files": {"BUILD": "# needs-toolchain: java\n", "BUILD_mac_and_linux": "# needs-toolchain: swift\n"}}
+      ],
+      "scheduled_packages": ["rust/mac-shared", "rust/mac-specific"],
+      "forced_toolchains": []
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "toolchain-detection/platform-darwin",
+    "domain": "toolchain_detection",
+    "outcome": "ok",
+    "result": {"toolchains": {"cpp": false, "dart": false, "dotnet": false, "elixir": false, "go": false, "haskell": false, "java": false, "kotlin": true, "lua": false, "ocaml": false, "perl": false, "python": false, "ruby": false, "rust": true, "swift": true, "typescript": false}},
+    "diagnostics": []
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

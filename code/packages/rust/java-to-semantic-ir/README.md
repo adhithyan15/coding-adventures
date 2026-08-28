@@ -470,14 +470,15 @@ mismatched branches the way `+` does.
   statement's expression after lowering — a test-harness convenience, not
   a frontend behavior change — so the backend's own unconditional
   `return <block.value>` epilogue gives it something to observe. This
-  test's `python3` dependency is unrelated to the JV02 spec's own
-  `needs_java` CI toolchain-detection gap (already fixed, in
-  `code/programs/go/build-tool`) — that gap is about getting a JDK for a
+  test's `python3` dependency is now declared on both package BUILD fronts as
+  `# needs-toolchain: python`, so affected CI runs provision the pinned Python
+  lane before executing it. It remains distinct from the JV02 spec's own
+  future `needs_java` comparison — that gap is about getting a JDK for a
   future milestone's own `javac`/`java` oracle comparison, which only
   becomes meaningful once real Java source can produce output to compare;
-  `python3` is a toolchain other cross-language backend tests in this
-  repo already depend on. Gracefully skips when `python3` is absent from
-  `PATH`.
+  `python3` is a toolchain other cross-language backend tests in this repo
+  already depend on. Direct local runs still skip gracefully when `python3`
+  is absent from `PATH`.
 - `tests/loop_control_java_execution.rs` (task #64): 6 `node`-execution-
   proof tests for `break`/`continue`, mirroring `e2e_python.rs`'s own
   "observe via `main`'s return value" harness but targeting the

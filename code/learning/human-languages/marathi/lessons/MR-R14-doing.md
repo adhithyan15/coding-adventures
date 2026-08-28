@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-GHENE, MR-LEX-VICHARNE, MR-LEX-MADAT-KARNE]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-GHENE, MR-LEX-VICHARNE, MR-LEX-MADAT-KARNE]
 skills: [listening, speaking, reading]

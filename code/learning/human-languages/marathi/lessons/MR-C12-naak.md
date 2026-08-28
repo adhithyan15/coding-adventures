@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-TOND, MR-GRAMMAR-TOND-MUKH-DOUBLET]
 introduces:
   knowledge: [MR-LEX-NAAK, MR-ETYMON-NAAK-NOSE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-NAAK, MR-ETYMON-NAAK-NOSE, MR-LEX-TOND, MR-GRAMMAR-TOND-MUKH-DOUBLET, MR-LEX-KAAN, MR-ETYMON-KAAN-DISPUTED, MR-SOUND-KARNA-GEMINATION, MR-LEX-DOLA, MR-ETYMON-DOLA-SWING, MR-LEX-PAHNE]
 skills: [listening, speaking, reading]

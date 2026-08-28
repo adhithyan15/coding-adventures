@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-PAANI, MR-LEX-CHAHA, MR-LEX-DUDH]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-PAANI, MR-LEX-CHAHA, MR-LEX-DUDH]
 skills: [listening, speaking, reading]

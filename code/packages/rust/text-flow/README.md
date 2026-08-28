@@ -14,8 +14,15 @@ The analyzer never resolves fonts or measures glyphs. Font fallback remains a
 `TextFlow::selection_spans` accepts a caller-owned cluster measurer and projects
 logical ranges into grapheme-safe visual spans split at bidi run boundaries.
 
-Version 0.1 implements the browser-oriented UAX #9, #14, and #29 profile used
-by Venture. Its conformance surface covers combining sequences, emoji ZWJ and
-regional-indicator clusters, Arabic/Hebrew runs, CJK boundaries, punctuation,
-non-breaking spaces, soft hyphens, and mandatory breaks. Additional generated
-Unicode tables can extend the classifiers without changing the public API.
+Version 0.2 keeps that API while replacing handwritten classifiers with
+generated Unicode data:
+
+- ICU4X's compiled UAX #29 grapheme state machine,
+- the UAX #9 resolver driven by ICU4X's generated `Bidi_Class` map, including
+  isolate, embedding, override, and pop controls, and
+- ICU4X's Unicode 17 UAX #14 state machine and full line-break pair data, with
+  dictionary segmentation for Thai, Lao, Khmer, and Myanmar.
+
+`CONFORMANCE_PROFILE` exposes the active data and algorithm profile for host
+diagnostics. Generated tables remain owned by the Unicode data dependencies;
+layout and paint only consume stable byte ranges and break opportunities.

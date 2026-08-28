@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Family Memory at Real Distance",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:a23497108ec8498f",
+  "sourceHash": "fnv1a64:c6ba4558991d9719",
   "lessons": [
     {
       "id": "MR-R14-mitra-r2",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:076193b33fa20694",
+      "sourceHash": "fnv1a64:32d0393e9f550239",
       "notice": null,
       "blocks": [
         {
@@ -108,7 +108,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f48ce17030bc369d",
+      "sourceHash": "fnv1a64:5a5de9eaa4b9fd88",
       "notice": null,
       "blocks": [
         {
@@ -196,7 +196,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d1db8e66ca824ca",
+      "sourceHash": "fnv1a64:4e5f573633751d2b",
       "notice": null,
       "blocks": [
         {
@@ -296,7 +296,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f674fbb5b01ab74f",
+      "sourceHash": "fnv1a64:f2af9dd62aa85f2a",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f170a48c1e9e4ffc",
+      "sourceHash": "fnv1a64:ee3210733ebb0653",
       "notice": null,
       "blocks": [
         {
@@ -474,7 +474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35b7a5a46e5fcaee",
+      "sourceHash": "fnv1a64:c219410de0c3cdfd",
       "notice": null,
       "blocks": [
         {
@@ -563,7 +563,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a976128ab00351ee",
+      "sourceHash": "fnv1a64:d7f932c115976e6b",
       "notice": null,
       "blocks": [
         {
@@ -652,7 +652,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa2d80d46e61a314",
+      "sourceHash": "fnv1a64:c4707ef4d942aeed",
       "notice": null,
       "blocks": [
         {
@@ -741,7 +741,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36b1fcdff8b2655c",
+      "sourceHash": "fnv1a64:7f0eb2de7439761b",
       "notice": null,
       "blocks": [
         {
@@ -830,7 +830,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:494352a5878e3021",
+      "sourceHash": "fnv1a64:6e565d825be00972",
       "notice": null,
       "blocks": [
         {
@@ -920,7 +920,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18c669b97cc16434",
+      "sourceHash": "fnv1a64:b0c4862bb603319f",
       "notice": null,
       "blocks": [
         {
@@ -1009,7 +1009,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fc2a1880434e5ed",
+      "sourceHash": "fnv1a64:de2c253ff64fe6e2",
       "notice": null,
       "blocks": [
         {

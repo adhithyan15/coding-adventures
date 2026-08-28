@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Six More Signs Make Thank You Readable",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a0b8b32f3c2c0dbb",
+  "sourceHash": "fnv1a64:052368e01db672aa",
   "lessons": [
     {
       "id": "MR-W03-da",
@@ -22,7 +22,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e489a8c09013a492",
+      "sourceHash": "fnv1a64:ad3c79f4b8986d7d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -121,7 +121,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f469931048658ca9",
+      "sourceHash": "fnv1a64:f432233c1b6292ac",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -219,7 +219,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ba2633458d06bd55",
+      "sourceHash": "fnv1a64:e57366cc62444376",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -327,7 +327,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7e3570d12bcc8b92",
+      "sourceHash": "fnv1a64:a7ad48959583049f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -438,7 +438,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0da761068c02c3e5",
+      "sourceHash": "fnv1a64:91218d39f391400a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -549,7 +549,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d01fef1827581520",
+      "sourceHash": "fnv1a64:352175ea2c51a1b7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -655,7 +655,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:630e03829b9964bd",
+      "sourceHash": "fnv1a64:33103e656144a8b8",
       "notice": {
         "modality": "pen",
         "needs": [

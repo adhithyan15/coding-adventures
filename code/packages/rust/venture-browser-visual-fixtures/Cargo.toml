@@ -1,6 +1,6 @@
 [package]
 name = "venture-browser-visual-fixtures"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Reusable deterministic visual fixtures and screenshot oracles for Venture browser hosts."
 

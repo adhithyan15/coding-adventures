@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Friend and Family",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:37104eeadc9280f0",
+  "sourceHash": "fnv1a64:b5bfc6a19d6e3cbf",
   "lessons": [
     {
       "id": "MR-C11-mitra",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a67894401e125ab7",
+      "sourceHash": "fnv1a64:8ba351322bbf8618",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82a20603dde73dd2",
+      "sourceHash": "fnv1a64:0e48cf408f5cfd77",
       "notice": null,
       "blocks": [
         {
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5984ce41e0b8fb53",
+      "sourceHash": "fnv1a64:9f76c4e5dcfec73e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc0b134e77242759",
+      "sourceHash": "fnv1a64:9f20647a3e5c0c80",
       "notice": null,
       "blocks": [
         {
@@ -545,7 +545,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d2d17e23ded6ba5e",
+      "sourceHash": "fnv1a64:a161e10a34257edf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -683,7 +683,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d6888c44be92d40b",
+      "sourceHash": "fnv1a64:829dcb910fee3bfe",
       "notice": {
         "modality": "sight",
         "needs": [

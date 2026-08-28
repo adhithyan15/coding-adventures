@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-BHAU, MR-ETYMON-BHAU-BROTHER]
 introduces:
   knowledge: [MR-LEX-BAHIN, MR-ETYMON-BAHIN-NOT-SISTER, MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-BAHIN, MR-ETYMON-BAHIN-NOT-SISTER, MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT, MR-LEX-BHAU, MR-ETYMON-BHAU-BROTHER, MR-LEX-KUTUMB, MR-GRAMMAR-KUTUMB-NEUTER, MR-LEX-MITRA, MR-ETYMON-MITRA-BIND]
 skills: [listening, speaking, reading]

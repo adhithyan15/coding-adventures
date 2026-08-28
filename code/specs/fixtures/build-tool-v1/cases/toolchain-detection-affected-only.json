@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "toolchain-detection/affected-only",
+  "domain": "toolchain_detection",
+  "summary": "Only scheduled packages contribute inferred or declared toolchains.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["toolchain_detection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "toolchain_detection",
+    "options": {
+      "platform": "linux",
+      "force_full": false,
+      "packages": [
+        {"name": "rust/selected", "language": "rust", "build_files": {"BUILD": "# needs-toolchain: python\n"}},
+        {"name": "go/unscheduled", "language": "go", "build_files": {"BUILD": "# needs-toolchain: java\n"}}
+      ],
+      "scheduled_packages": ["rust/selected"],
+      "forced_toolchains": []
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "toolchain-detection/affected-only",
+    "domain": "toolchain_detection",
+    "outcome": "ok",
+    "result": {
+      "toolchains": {
+        "cpp": false,
+        "dart": false,
+        "dotnet": false,
+        "elixir": false,
+        "go": false,
+        "haskell": false,
+        "java": false,
+        "kotlin": false,
+        "lua": false,
+        "ocaml": false,
+        "perl": false,
+        "python": true,
+        "ruby": false,
+        "rust": true,
+        "swift": false,
+        "typescript": false
+      }
+    },
+    "diagnostics": []
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

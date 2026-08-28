@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-VICHAR-KARNE, MR-GRAMMAR-DATIVE-KNOWLEDGE, MR-LEX-MAHIT-JANNE, MR-LEX-YENE, MR-ETYMON-AA-YAA-COME, MR-GRAMMAR-PRESENT-GENDER]
 introduces:
   knowledge: [MR-LEX-SAMAJNE, MR-ETYMON-BUDH-AWAKE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-VICHAR-KARNE, MR-GRAMMAR-DATIVE-KNOWLEDGE, MR-LEX-MAHIT-JANNE, MR-LEX-YENE, MR-ETYMON-AA-YAA-COME, MR-GRAMMAR-PRESENT-GENDER, MR-LEX-SAMAJNE, MR-ETYMON-BUDH-AWAKE]
 skills: [listening, speaking, reading]

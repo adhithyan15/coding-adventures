@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-VICHAR-KARNE, MR-LEX-SAMAJNE, MR-LEX-LIHINE]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-VICHAR-KARNE, MR-LEX-SAMAJNE, MR-LEX-LIHINE]
 skills: [listening, speaking, reading]

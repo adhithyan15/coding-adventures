@@ -2,6 +2,13 @@
 
 ## 2026-08-28
 
+- Added six process-free extra-CI toolchain declaration cases. A closed
+  platform/BUILD snapshot now pins exact canonical directive syntax, CRLF and
+  ASCII-whitespace boundaries, stable deduplication, invalid and unknown
+  decoys, affected-only selection, explicit forced-full behavior, and
+  Windows, Linux, and Darwin front precedence. The runner enforces per-file
+  byte/line and aggregate snapshot ceilings without reading a checkout or
+  probing host tools.
 - Added one process-free OCaml dependency-resolution case. It accepts only one
   unambiguous root opam `depends` field plus `libraries` fields from the fixed
   root Dune file set, exercises directory and declared aliases, collapses

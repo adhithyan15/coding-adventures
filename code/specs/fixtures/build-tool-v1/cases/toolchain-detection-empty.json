@@ -17,10 +17,15 @@
   "input": {
     "operation": "toolchain_detection",
     "options": {
+      "platform": "linux",
+      "force_full": false,
       "packages": [
         {
           "name": "python/app",
-          "language": "python"
+          "language": "python",
+          "build_files": {
+            "BUILD": ""
+          }
         }
       ],
       "scheduled_packages": [],

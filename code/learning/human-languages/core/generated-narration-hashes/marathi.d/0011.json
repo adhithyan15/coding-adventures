@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 11,
-  "sourceHash": "fnv1a64:16016b68a89a5f45",
+  "sourceHash": "fnv1a64:b4807b67fa14d5d9",
   "lessonIds": [
     "MR-C08-vichar-karne",
     "MR-C08-samajne",
@@ -13,6 +13,6 @@
   "text": "marathi/narration/ch11.txt",
   "json": "marathi/narration/ch11.json",
   "textHash": "fnv1a64:a3ec1bf7cc2dc66b",
-  "jsonHash": "fnv1a64:d12e7c79a3883faf",
+  "jsonHash": "fnv1a64:660950d524197228",
   "findings": []
 }

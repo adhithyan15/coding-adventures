@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-BHAU, MR-ETYMON-BHAU-BROTHER, MR-LEX-BAHIN]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-BHAU, MR-ETYMON-BHAU-BROTHER, MR-LEX-BAHIN]
 skills: [listening, speaking, reading]

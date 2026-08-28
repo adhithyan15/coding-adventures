@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-DOLA, MR-ETYMON-DOLA-SWING]
 introduces:
   knowledge: [MR-LEX-KAAN, MR-ETYMON-KAAN-DISPUTED, MR-SOUND-KARNA-GEMINATION]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-KAAN, MR-ETYMON-KAAN-DISPUTED, MR-SOUND-KARNA-GEMINATION, MR-LEX-DOLA, MR-SCRIPT-RETROFLEX-LA, MR-ETYMON-DON-ANALOGY, MR-LEX-BAHIN, MR-ETYMON-BAHIN-NOT-SISTER]
 skills: [listening, speaking, reading]

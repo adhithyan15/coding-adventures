@@ -79,11 +79,19 @@ can hide an absolute symlink that works only in its author's checkout.
 
 A package's CI toolchain is normally inferred purely from its path bucket
 (`packages/<language>/...`) — but a package whose own tests need a
-*different* toolchain (e.g. a Rust crate under `packages/rust/**` that
-shells out to a `javac`/`java` process) can declare that with a bare
-BUILD-file comment: `# needs-toolchain: java`. This is consulted alongside
-the inferred language, not instead of it, and multiple lines are supported
-for a package needing more than one extra toolchain.
+*different* toolchain can declare it with a bare BUILD-file comment such as
+`# needs-toolchain: python`. This is consulted alongside the inferred
+language, not instead of it, and multiple lines are supported for a package
+needing more than one extra toolchain. Only lowercase names from the canonical
+CI registry are accepted. Empty, unknown, wrong-case, fused, or suffixed
+lookalikes are inert; valid names retain first-occurrence order and are
+deduplicated. Parsing is bounded to 65,536 bytes and 4,096 logical lines.
+
+Only the platform-selected BUILD front contributes declarations:
+`BUILD_windows`; `BUILD_mac` or `BUILD_linux`; then the shared
+`BUILD_mac_and_linux` on Unix; then generic `BUILD`. A language-neutral
+in-memory fixture suite exercises that same precedence and the affected-only
+and forced-full decisions without reading a checkout or probing host tools.
 
 Build plans carry optional platform-specific dependency graphs and affected
 closures. The detect job resolves Linux, Darwin, and Windows BUILD metadata,

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Namaskar, Piece by Piece",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6dbbbbe08f10e3a9",
+  "sourceHash": "fnv1a64:7b2f6568739eb955",
   "lessons": [
     {
       "id": "MR-C01-namaskar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5c1d62e53fae6bab",
+      "sourceHash": "fnv1a64:5bd5f44a0a267fda",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -147,7 +147,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:91ae975d19bda384",
+      "sourceHash": "fnv1a64:70118ff984ab1695",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -279,7 +279,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2085493c97c7086a",
+      "sourceHash": "fnv1a64:d942360bec2833a9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -414,7 +414,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1c4cb736fe153107",
+      "sourceHash": "fnv1a64:3d8d89764e2e8ed4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -508,7 +508,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:11afb08c22049583",
+      "sourceHash": "fnv1a64:3c90f001ea8a662a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -594,7 +594,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8ecfee496b55f415",
+      "sourceHash": "fnv1a64:cb05a7806dfe1cbc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -710,7 +710,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7bd0dccda4ad7f18",
+      "sourceHash": "fnv1a64:a511d3283501fc4d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -830,7 +830,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:06e3176a57d3a5eb",
+      "sourceHash": "fnv1a64:897b83c89b4a8992",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -970,7 +970,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b53a28791fee5183",
+      "sourceHash": "fnv1a64:3bb74b1dcde0f71e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1090,7 +1090,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ed51fe011b8d859c",
+      "sourceHash": "fnv1a64:96fe9dce682e4f31",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1202,7 +1202,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fee289dcde6ded2a",
+      "sourceHash": "fnv1a64:8abc25caec85b88d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1318,7 +1318,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:067c12e85d82ee36",
+      "sourceHash": "fnv1a64:5ac4c0f490dfc211",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1446,7 +1446,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d9d5a78a4e8ff344",
+      "sourceHash": "fnv1a64:c94b2ade22eafb01",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1558,7 +1558,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ae4e80f7e5026426",
+      "sourceHash": "fnv1a64:8160fb58d0366bb5",
       "notice": {
         "modality": "pen",
         "needs": [

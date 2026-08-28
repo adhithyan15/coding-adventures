@@ -1475,8 +1475,8 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // ALGOL 60 — an implemented standard function may consume a tracked
-    // integer and provide a bounded exponent to exact real snapshot metadata.
+    // ALGOL 60 — a pure implemented standard function may consume a tracked
+    // integer and retain bounded real multiplication lowering.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -7857,7 +7857,7 @@ fn algol_tracked_arithmetic_real_power_exponents_run_on_every_available_standard
 }
 
 #[test]
-fn algol_tracked_function_exponent_metadata_runs_on_every_available_standard_backend() {
+fn algol_tracked_standard_function_real_power_exponents_run_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
         .find(|program| {
@@ -7873,7 +7873,7 @@ fn algol_tracked_function_exponent_metadata_runs_on_every_available_standard_bac
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
-                "{backend:?} toolchain is present but tracked function-exponent metadata did not run"
+                "{backend:?} toolchain is present but the tracked standard-function real-power exponent did not run"
             );
             continue;
         };

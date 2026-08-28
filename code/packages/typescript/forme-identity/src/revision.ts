@@ -1,6 +1,7 @@
 /**
- * Revision identity — `RevisionId` generation via BLAKE2b over the
- * canonical-JSON serialisation of a JsonValue.
+ * Revision identity — `RevisionId` generation via BLAKE2b over either the
+ * canonical-JSON serialisation of a JsonValue or domain-separated binary
+ * bytes.
  *
  * See FM01 §7.3.  The format is `<algo>:<hex>`; v0 uses `blake2b` because
  * the monorepo has a from-scratch BLAKE2b but no BLAKE3.  The prefix
@@ -30,6 +31,9 @@ export const REVISION_ALGORITHM = "blake2b" as const;
 /** Length of the digest in bytes.  256-bit BLAKE2b. */
 export const REVISION_DIGEST_BYTES = 32;
 
+/** Domain separator keeps raw bytes distinct from canonical JSON bytes. */
+const BINARY_REVISION_DOMAIN = new TextEncoder().encode("forme:binary-revision:v1\0");
+
 /**
  * Compute a deterministic content-addressed `RevisionId` for any
  * JsonValue.  Two logically equal values produce the same id; any
@@ -40,6 +44,22 @@ export function computeRevisionId(payload: JsonValue): RevisionId {
   const canonical = canonicalJson(payload);
   const bytes = new TextEncoder().encode(canonical);
   const hex = blake2bHex(bytes, { digestSize: REVISION_DIGEST_BYTES });
+  return `${REVISION_ALGORITHM}:${hex}` as RevisionId;
+}
+
+/**
+ * Compute a deterministic revision for an opaque binary payload.
+ *
+ * This avoids converting large files to JSON arrays while retaining the same
+ * revision-id shape as structured values. A fixed domain prefix prevents a
+ * binary file whose bytes happen to equal canonical JSON text from sharing a
+ * revision with that structured value.
+ */
+export function computeBinaryRevisionId(payload: Uint8Array): RevisionId {
+  const framed = new Uint8Array(BINARY_REVISION_DOMAIN.byteLength + payload.byteLength);
+  framed.set(BINARY_REVISION_DOMAIN, 0);
+  framed.set(payload, BINARY_REVISION_DOMAIN.byteLength);
+  const hex = blake2bHex(framed, { digestSize: REVISION_DIGEST_BYTES });
   return `${REVISION_ALGORITHM}:${hex}` as RevisionId;
 }
 

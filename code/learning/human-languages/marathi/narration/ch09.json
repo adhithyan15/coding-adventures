@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Numbers One to Five",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:1a17b339db0f39b2",
+  "sourceHash": "fnv1a64:19ac63ce061a0f84",
   "lessons": [
     {
       "id": "MR-R09-script-a-r3",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46a104d5bfb07892",
+      "sourceHash": "fnv1a64:4b8d9d606946cb29",
       "notice": null,
       "blocks": [
         {
@@ -79,7 +79,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3793f91d3a0b007",
+      "sourceHash": "fnv1a64:06d3805ee695cea6",
       "notice": null,
       "blocks": [
         {
@@ -138,7 +138,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b7af2db138f1c03",
+      "sourceHash": "fnv1a64:e3208c50becb52fc",
       "notice": null,
       "blocks": [
         {
@@ -197,7 +197,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ccc4a6abe004aa2",
+      "sourceHash": "fnv1a64:791548d87d3a77e3",
       "notice": null,
       "blocks": [
         {
@@ -256,7 +256,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17bc9a02767ca42c",
+      "sourceHash": "fnv1a64:75f6d343b299b9fd",
       "notice": null,
       "blocks": [
         {
@@ -402,7 +402,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6360c5d2e75a7cb",
+      "sourceHash": "fnv1a64:41afbb0812b0a17e",
       "notice": null,
       "blocks": [
         {
