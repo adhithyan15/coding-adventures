@@ -780,6 +780,12 @@ struct EmitCtx<'a> {
     /// generated Qt shell. Only canonical dynamic HostTable shapes consume an
     /// index; unsupported shapes retain the structural fallback.
     next_table_id: Rc<Cell<usize>>,
+    /// Monotonic id counter for `elevation`-shadowed elements (UI41, #12028
+    /// item 1) — every `MultiEffect { source: <id> }` sibling needs its
+    /// source item to carry a unique `id:`, and MIL/moslayout has no way to
+    /// author one, so this namespace is synthesized the same way
+    /// `next_drag_id`/`next_table_id` already are.
+    next_elevation_id: Rc<Cell<usize>>,
     /// Literal `group:` value → synthesized `ButtonGroup` QML id
     /// (`#13007`), for every group value shared by 2+ `HostRadio`s
     /// anywhere in the component. Computed once in `from_pipeline` via
@@ -1154,6 +1160,145 @@ fn qml_layout_container_lines(props: &[StyleProp]) -> Vec<String> {
     lines
 }
 
+/// The two `elevation` tiers (UI41, issue #12028 item 1), mapped to a
+/// QtQuick.Effects `MultiEffect` drop shadow. Qt 6.5+'s `MultiEffect` is the
+/// modern, non-deprecated shadow primitive (the older
+/// `Qt5Compat.GraphicalEffects DropShadow` needs an extra compatibility
+/// module) — it has no CSS-shaped blur/spread/color/opacity value either,
+/// just `shadowBlur`/`shadowColor`/`shadowVerticalOffset`, so each tier is a
+/// fixed set of constants, not a reproduction of any authored `box-shadow`
+/// value. The vertical offsets (4 / 16) match `mosaic-emit-xaml`'s
+/// `ElevationTier::translation_z` and `mosaic-emit-compose`'s `dp()` so a
+/// `raised`/`overlay` part reads the same "how far off the surface" intent
+/// on every backend.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ElevationTier {
+    /// A static "raised card" — cards, selected rows/tabs, static panels.
+    /// Every real `elevation` usage in this repo today is `Raised`.
+    Raised,
+    /// An element floating above everything else — modals, popovers,
+    /// tooltips, dropdowns, toasts. No real caller yet, wired up now so a
+    /// future overlay component doesn't need its own emitter change.
+    Overlay,
+}
+
+impl ElevationTier {
+    /// `(shadowColor, shadowBlur, shadowVerticalOffset)` — verified against
+    /// a real Qt 6.8.1 `qml` runtime via `Item.grabToImage`: these exact
+    /// values render a visible soft shadow under a white card (see this
+    /// PR's CHANGELOG for the screenshot narrative — an earlier probe with
+    /// a near-white probe background made the same values LOOK invisible,
+    /// which briefly looked like a rendering bug but was a probe-contrast
+    /// artifact, not an emitter defect).
+    fn shadow_params(self) -> (&'static str, &'static str, &'static str) {
+        match self {
+            ElevationTier::Raised => ("#40000000", "0.5", "4"),
+            ElevationTier::Overlay => ("#60000000", "0.8", "16"),
+        }
+    }
+}
+
+/// Read a part's `elevation` prop (UI41, issue #12028 item 1) — the signal
+/// that this element wants a native `MultiEffect` drop shadow. mosstyle's
+/// `validate()` already restricts `elevation` to exactly `raised`/`overlay`
+/// before this emitter ever sees it (any other value is a hard compile
+/// error), so an unrecognized value here is treated defensively as "no
+/// elevation" rather than panicking. Base props only — matches
+/// `mosaic-emit-xaml`/`mosaic-emit-compose`'s `part_elevation_tier`; no real
+/// part conditions elevation on a state today.
+fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
+    let value = base_props
+        .iter()
+        .find(|p| p.name == "elevation")?
+        .value
+        .as_str();
+    match value {
+        "raised" => Some(ElevationTier::Raised),
+        "overlay" => Some(ElevationTier::Overlay),
+        _ => None,
+    }
+}
+
+/// Allocate the next `mosaicElevation<N>` id — the unique `id:` a
+/// `MultiEffect`'s `source`/`anchors.fill` need to reference back to the
+/// element they shadow.
+fn next_elevation_id(ctx: &EmitCtx<'_>) -> String {
+    let value = ctx.next_elevation_id.get();
+    ctx.next_elevation_id.set(value + 1);
+    format!("mosaicElevation{value}")
+}
+
+/// Wrap `element_qml` — a fully-rendered element that already carries `id:
+/// {source_id}` (allocated by [`next_elevation_id`], or reused from an
+/// element like `HostDraggable`'s drag-source `Item` that already has one)
+/// — plus a `MultiEffect` shadow sibling inside ONE outer `Item`, or return
+/// `element_qml` unchanged when `elevation` is `None`.
+///
+/// Unlike XAML's `Translation`/`.Shadow` (attributes/property-elements on
+/// the SAME object) or Compose's `Modifier.shadow(...)` (one link in the
+/// SAME modifier chain), QtQuick's `MultiEffect` is a full, independent
+/// item. A naive "emit it as a plain sibling right after the element it
+/// shadows" shape (this function's first implementation) has two real bugs,
+/// both found only by actually launching the real generated TaskApp/
+/// ProjectNav packages with `qml`/`qmlscene` — `qmllint`'s static pass
+/// catches neither:
+///
+/// 1. Every `If`/`Else` branch lowers to a `Loader { sourceComponent:
+///    Component { <branch body> } }` (see `emit_if_qml`/`emit_branch_body`).
+///    `Component` accepts exactly ONE top-level child. A shadowed element
+///    that happens to be the sole child of a conditional branch — e.g. real
+///    `notes-row-on`/`project-on` toggle buttons — put TWO top-level
+///    siblings (the element + its `MultiEffect`) inside that one
+///    `Component`, which fails to LOAD (not merely lint) with "Invalid
+///    component body specification". Wrapping both in an `Item` makes the
+///    `Item` the sole Component root, fixing this unconditionally.
+/// 2. A `MultiEffect` that is a DIRECT child of a `RowLayout`/`ColumnLayout`
+///    triggers `qmllint`'s `Quick.layout-positioning` "undefined behavior"
+///    warning for its `anchors.fill`. Empirically (a real `grabToImage`
+///    screenshot) this still renders correctly on the pinned Qt 6.8.1, but
+///    avoiding a documented-undefined pattern outright beats relying on one
+///    version's observed behavior. The wrapping `Item` is never itself
+///    Layout-managed unless placed as a Layout child (which the wrapper's
+///    own `Layout.preferred*` lines below handle), so the inner element and
+///    its `MultiEffect` anchor to a plain `Item`, not to the ambient
+///    layout — fixing this too, as a side effect of the same wrapper.
+///
+/// The wrapper's `implicitWidth`/`implicitHeight`/`Layout.preferred*` all
+/// mirror `source_id`'s own already-computed implicit size via a live
+/// binding, so nothing about how each call site computes its own sizing
+/// needs to change or be duplicated; the extra `Layout.*` lines are inert
+/// (and harmless) when the wrapper isn't actually a `RowLayout`/
+/// `ColumnLayout` child.
+fn qml_elevation_wrap(
+    element_qml: String,
+    elevation: Option<ElevationTier>,
+    source_id: &str,
+    pad: &str,
+) -> String {
+    let Some(tier) = elevation else {
+        return element_qml;
+    };
+    let (color, blur, voffset) = tier.shadow_params();
+    let inner_pad = format!("{pad}    ");
+    format!(
+        "{pad}Item {{\n\
+         {inner_pad}implicitWidth: {source_id}.implicitWidth\n\
+         {inner_pad}implicitHeight: {source_id}.implicitHeight\n\
+         {inner_pad}Layout.preferredWidth: {source_id}.implicitWidth\n\
+         {inner_pad}Layout.preferredHeight: {source_id}.implicitHeight\n\
+         {element_qml}\
+         {inner_pad}MultiEffect {{\n\
+         {inner_pad}    source: {source_id}\n\
+         {inner_pad}    anchors.fill: {source_id}\n\
+         {inner_pad}    shadowEnabled: true\n\
+         {inner_pad}    shadowColor: \"{color}\"\n\
+         {inner_pad}    shadowBlur: {blur}\n\
+         {inner_pad}    shadowVerticalOffset: {voffset}\n\
+         {inner_pad}}}\n\
+         {pad}}}\n"
+    )
+}
+
 fn qml_rectangle_paint_lines(props: &[StyleProp]) -> Vec<String> {
     let mut lines = Vec::new();
     if let Some(background) = style_prop(props, "background")
@@ -1374,6 +1519,12 @@ fn needs_container_wrapper(props: &[StyleProp]) -> bool {
         || style_prop(props, "border-width")
             .and_then(qml_px_or_none)
             .is_some()
+        // UI41, #12028 item 1 — `MultiEffect` needs a real paintable
+        // element with an `id` to shadow; a `Row`/`Column`/`Stack` with
+        // ONLY `elevation` set (no background/border/padding) would
+        // otherwise stay a bare, un-wrapped RowLayout/ColumnLayout/Item
+        // with nothing to attach the shadow to.
+        || part_elevation_tier(props).is_some()
 }
 
 fn qml_font_family(v: &str) -> Option<String> {
@@ -1459,8 +1610,15 @@ fn emit_styled_layout_container_qml(
     let has_fixed_height = style_prop(props, "height")
         .and_then(qml_px_or_none)
         .is_some();
+    // UI41, #12028 item 1 — base props only (see `part_elevation_tier`'s
+    // doc comment).
+    let elevation = part_elevation_tier(props);
+    let elevation_id = elevation.is_some().then(|| next_elevation_id(ctx));
     let mut out = String::new();
     writeln!(out, "{pad}Rectangle {{").unwrap();
+    if let Some(id) = &elevation_id {
+        writeln!(out, "{inner_pad}id: {id}").unwrap();
+    }
     for line in qml_layout_size_lines(props) {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
@@ -1501,6 +1659,9 @@ fn emit_styled_layout_container_qml(
     )?);
     writeln!(out, "{inner_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
+    if let Some(id) = &elevation_id {
+        out = qml_elevation_wrap(out, elevation, id, &pad);
+    }
     Ok(Some(out))
 }
 
@@ -1704,6 +1865,17 @@ fn from_pipeline_with_runtime_policy(
     if tree_needs_shapes_import(&layout.root) {
         writeln!(out, "import QtQuick.Shapes").unwrap();
     }
+    // UI41, #12028 item 1 — `elevation` is a style property, not a layout
+    // tag, so it can't reuse `layout_contains_tag`/`tree_needs_*_import`'s
+    // tree walk; gate the `MultiEffect` import on whether any part's base
+    // props resolve to a real tier.
+    if style
+        .parts
+        .iter()
+        .any(|part| part_elevation_tier(&part.base).is_some())
+    {
+        writeln!(out, "import QtQuick.Effects").unwrap();
+    }
     writeln!(out).unwrap();
 
     // 3. Open the root `Item`. See the module-level doc for why the root
@@ -1860,6 +2032,7 @@ fn from_pipeline_with_runtime_policy(
         cell_fill_children: false,
         next_drag_id: Rc::new(Cell::new(0)),
         next_table_id: Rc::new(Cell::new(0)),
+        next_elevation_id: Rc::new(Cell::new(0)),
         radio_group_slugs: &radio_group_slugs,
     };
     writeln!(out).unwrap();
@@ -2103,8 +2276,18 @@ fn emit_qml_tree(
             let has_width_thread = ctx.col_widths_slot.is_some() && ctx.enclosing_index.is_some();
             if has_base || has_state || has_width_thread {
                 let styled = lower_styled_box(node, part, ctx);
+                // UI41, #12028 item 1 — base props only (see
+                // `part_elevation_tier`'s doc comment).
+                let elevation = ctx
+                    .part_styles
+                    .get(part)
+                    .and_then(|base| part_elevation_tier(base));
+                let elevation_id = elevation.is_some().then(|| next_elevation_id(ctx));
                 let mut out = String::new();
                 writeln!(out, "{pad}Rectangle {{").unwrap();
+                if let Some(id) = &elevation_id {
+                    writeln!(out, "{pad}    id: {id}").unwrap();
+                }
                 for line in &styled.rect_lines {
                     writeln!(out, "{pad}    {line}").unwrap();
                 }
@@ -2129,6 +2312,9 @@ fn emit_qml_tree(
                     &child_ctx,
                 )?);
                 writeln!(out, "{pad}}}").unwrap();
+                if let Some(id) = &elevation_id {
+                    out = qml_elevation_wrap(out, elevation, id, &pad);
+                }
                 return Ok(out);
             }
         }
@@ -2767,6 +2953,21 @@ fn emit_host_draggable_qml(
     writeln!(out, "{nested}enabled: !{source_id}.mosaicDragDisabled").unwrap();
     writeln!(out, "{inner}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
+    // UI41, #12028 item 1 — `HostDraggable`'s own part (e.g. TaskApp's
+    // `board-card`/`board-card-crit`) styles this wrapper `Item` directly,
+    // and it already carries a real `id:` (`source_id`, allocated above for
+    // the drag machinery), so no separate id-allocation is needed here —
+    // unlike XAML, which hit a real XamlCompiler bug on this exact
+    // primitive and needed a `DependencyProperty` workaround, Qt's
+    // `MultiEffect` has no such restriction: any `id`'d item, including
+    // this custom drag wrapper, works as a shadow source. Base props only
+    // (see `part_elevation_tier`'s doc comment).
+    let elevation = node
+        .part_name
+        .as_deref()
+        .and_then(|part| ctx.part_styles.get(part))
+        .and_then(|base| part_elevation_tier(base));
+    out = qml_elevation_wrap(out, elevation, &source_id, &pad);
     Ok(out)
 }
 
@@ -3564,8 +3765,21 @@ fn emit_host_button_qml(
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
+    // UI41, #12028 item 1 — shadow the `Button` element itself (not its
+    // nested `background: Rectangle { ... }`, which is a property VALUE
+    // position, not a place a sibling `MultiEffect` can attach to).
+    // Base props only (see `part_elevation_tier`'s doc comment).
+    let elevation = node
+        .part_name
+        .as_deref()
+        .and_then(|part| ctx.part_styles.get(part))
+        .and_then(|base| part_elevation_tier(base));
+    let elevation_id = elevation.is_some().then(|| next_elevation_id(ctx));
     let mut out = String::new();
     writeln!(out, "{pad}Button {{").unwrap();
+    if let Some(id) = &elevation_id {
+        writeln!(out, "{inner_pad}id: {id}").unwrap();
+    }
 
     if let Some(part) = node.part_name.as_deref() {
         writeln!(
@@ -3622,6 +3836,9 @@ fn emit_host_button_qml(
     }
 
     writeln!(out, "{pad}}}").unwrap();
+    if let Some(id) = &elevation_id {
+        out = qml_elevation_wrap(out, elevation, id, &pad);
+    }
     Ok(out)
 }
 
@@ -5933,8 +6150,17 @@ fn emit_host_surface_qml(
         "null".to_string()
     };
 
+    // UI41, #12028 item 1 — base props only (see `part_elevation_tier`'s
+    // doc comment). No real `HostSurface` part declares `elevation` today,
+    // but this mirrors `Row`/`Column`/`Stack`'s wiring for symmetry, since
+    // both share `qml_rectangle_paint_lines`.
+    let elevation = part_style_props(node, ctx).and_then(part_elevation_tier);
+    let elevation_id = elevation.is_some().then(|| next_elevation_id(ctx));
     let mut out = String::new();
     writeln!(out, "{pad}Rectangle {{").unwrap();
+    if let Some(id) = &elevation_id {
+        writeln!(out, "{inner}id: {id}").unwrap();
+    }
     writeln!(out, "{inner}objectName: \"mosaic-host-surface\"").unwrap();
     writeln!(out, "{inner}Layout.fillWidth: true").unwrap();
     writeln!(out, "{inner}Layout.fillHeight: true").unwrap();
@@ -5957,6 +6183,9 @@ fn emit_host_surface_qml(
     writeln!(out, "{loader_inner}sourceComponent: {source}").unwrap();
     writeln!(out, "{inner}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
+    if let Some(id) = &elevation_id {
+        out = qml_elevation_wrap(out, elevation, id, &pad);
+    }
     Ok(out)
 }
 
@@ -12732,6 +12961,297 @@ mod tests {
         assert!(
             out.contains("spacing: 16"),
             "missing native spacing:\n{out}"
+        );
+    }
+
+    // ── UI41, #12028 item 1: `elevation` -> `MultiEffect` drop shadow ──
+
+    fn box_layout_with_part(part: &str) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some(part.to_string()),
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("hi".to_string()))],
+                    children: vec![],
+                }],
+            },
+        }
+    }
+
+    #[test]
+    fn box_with_elevation_raised_emits_multieffect_shadow() {
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "task-card".to_string(),
+                base: vec![
+                    sp(
+                        "box-shadow",
+                        "0 1px 2px rgba(60,45,25,.05), 0 4px 14px rgba(60,45,25,.05)",
+                    ),
+                    sp("elevation", "raised"),
+                    sp("background", "#ffffff"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = box_layout_with_part("task-card");
+        let out = from_pipeline(&component("X", vec![], vec![]), &l, &style)
+            .unwrap()
+            .output;
+
+        assert!(
+            out.contains("import QtQuick.Effects"),
+            "missing MultiEffect import:\n{out}"
+        );
+        assert!(
+            out.contains("MultiEffect {"),
+            "missing MultiEffect block:\n{out}"
+        );
+        assert!(
+            out.contains("shadowVerticalOffset: 4"),
+            "raised tier must use offset 4:\n{out}"
+        );
+        assert!(
+            out.contains("shadowColor: \"#40000000\""),
+            "missing raised shadow color:\n{out}"
+        );
+        // The MultiEffect must reference the Rectangle's own id via
+        // `source`/`anchors.fill`.
+        let id_line = out
+            .lines()
+            .find(|l| l.trim_start().starts_with("id: mosaicElevation"))
+            .expect("Rectangle must carry a synthesized elevation id");
+        let id = id_line.trim().trim_start_matches("id: ");
+        assert!(
+            out.contains(&format!("source: {id}")),
+            "MultiEffect must reference the Rectangle's id:\n{out}"
+        );
+        // The raw box-shadow CSS value never leaks into the shadow block —
+        // `elevation` is the only signal Qt reads.
+        assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
+    }
+
+    #[test]
+    fn box_with_elevation_overlay_emits_deeper_shadow() {
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "toast".to_string(),
+                base: vec![sp("elevation", "overlay"), sp("background", "#ffffff")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = box_layout_with_part("toast");
+        let out = from_pipeline(&component("X", vec![], vec![]), &l, &style)
+            .unwrap()
+            .output;
+
+        assert!(
+            out.contains("shadowVerticalOffset: 16"),
+            "overlay tier must use offset 16:\n{out}"
+        );
+        assert!(
+            out.contains("shadowColor: \"#60000000\""),
+            "missing overlay shadow color:\n{out}"
+        );
+    }
+
+    #[test]
+    fn box_shadow_without_elevation_emits_no_multieffect() {
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "card".to_string(),
+                base: vec![
+                    sp("box-shadow", "0 1px 2px rgba(0,0,0,.1)"),
+                    sp("background", "#ffffff"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = box_layout_with_part("card");
+        let out = from_pipeline(&component("X", vec![], vec![]), &l, &style)
+            .unwrap()
+            .output;
+
+        assert!(!out.contains("MultiEffect"), "got:\n{out}");
+        assert!(
+            !out.contains("import QtQuick.Effects"),
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn inset_box_shadow_alongside_elevation_still_shadows_from_elevation_only() {
+        // The theme-toggle moon-icon `inset` hack: `elevation` is the only
+        // signal read, so an `inset` box-shadow value alongside a real
+        // `elevation` declaration behaves identically to any other
+        // box-shadow value -- it's ignored, not specially detected.
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "moon".to_string(),
+                base: vec![
+                    sp("box-shadow", "5px -5px 0 0 #000 inset"),
+                    sp("elevation", "raised"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = box_layout_with_part("moon");
+        let out = from_pipeline(&component("X", vec![], vec![]), &l, &style)
+            .unwrap()
+            .output;
+
+        assert!(out.contains("MultiEffect {"), "got:\n{out}");
+        assert!(out.contains("shadowVerticalOffset: 4"), "got:\n{out}");
+    }
+
+    /// #12028 item 1's XAML PR found a real gap: `Row`/`Column` never
+    /// wired up elevation at all in an early pass. Qt's `Row`/`Column`
+    /// share `emit_styled_layout_container_qml` with `Stack`, but that
+    /// function has its OWN separate paint-line builder
+    /// (`qml_rectangle_paint_lines`) from `Box`'s (`lower_styled_box`) --
+    /// this test locks in that the Row path was actually wired, not
+    /// assumed to inherit Box's wiring for free.
+    #[test]
+    fn row_with_elevation_only_forces_wrapper_and_emits_shadow() {
+        let style = StyleDef {
+            component_name: "Header".to_string(),
+            parts: vec![PartStyle {
+                name: "toolbar".to_string(),
+                base: vec![sp("elevation", "raised")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = LayoutDef {
+            component_name: "Header".to_string(),
+            root: LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("toolbar".to_string()),
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("hi".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let out = from_pipeline(&component("Header", vec![], vec![]), &layout, &style)
+            .unwrap()
+            .output;
+
+        assert!(
+            out.contains("Rectangle {"),
+            "elevation-only Row must still get a Rectangle wrapper:\n{out}"
+        );
+        assert!(out.contains("MultiEffect {"), "got:\n{out}");
+        assert!(out.contains("shadowVerticalOffset: 4"), "got:\n{out}");
+    }
+
+    /// `HostButton`'s styled background is a nested `background: Rectangle
+    /// { ... }` property VALUE, not a sibling in the object tree -- a
+    /// naive port of the Box wiring would try (and fail) to attach a
+    /// sibling `MultiEffect` to that nested Rectangle. This locks in that
+    /// the shadow instead attaches to the `Button` element itself.
+    #[test]
+    fn host_button_with_elevation_shadows_the_button_not_its_nested_background() {
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "danger".to_string(),
+                base: vec![sp("background", "#f87171"), sp("elevation", "raised")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("danger".to_string()),
+                props: vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::String("Delete".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+
+        assert!(
+            out.contains("background: Rectangle {"),
+            "existing nested background styling must be unaffected:\n{out}"
+        );
+        assert!(out.contains("MultiEffect {"), "got:\n{out}");
+        // The MultiEffect must come AFTER the Button's own closing brace,
+        // not inside the nested `background: Rectangle { ... }` block.
+        let button_close = out.find("}\n").unwrap();
+        let multieffect_pos = out.find("MultiEffect {").unwrap();
+        let button_open = out.find("Button {").unwrap();
+        assert!(
+            multieffect_pos > button_open,
+            "MultiEffect must appear after Button opens:\n{out}"
+        );
+        let _ = button_close; // sanity anchor only
+    }
+
+    /// `HostDraggable` already allocates a real `id:` for its drag-source
+    /// `Item` (needed by the drag machinery itself) -- elevation should
+    /// reuse that id rather than allocating a second one.
+    #[test]
+    fn host_draggable_with_elevation_reuses_existing_drag_source_id() {
+        let style = StyleDef {
+            component_name: "Board".to_string(),
+            parts: vec![PartStyle {
+                name: "board-card".to_string(),
+                base: vec![sp("elevation", "raised")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "Board".to_string(),
+            root: LayoutNode {
+                tag: "HostDraggable".to_string(),
+                part_name: Some("board-card".to_string()),
+                props: vec![LayoutProp {
+                    name: "drag-key".to_string(),
+                    value: LayoutPropValue::String("card-1".to_string()),
+                }],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("hi".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let out = from_pipeline(&component("Board", vec![], vec![]), &l, &style)
+            .unwrap()
+            .output;
+
+        assert!(out.contains("MultiEffect {"), "got:\n{out}");
+        assert!(
+            out.contains("source: mosaicDragSource0"),
+            "must reuse the drag machinery's existing id, not allocate a new one:\n{out}"
+        );
+        assert!(
+            !out.contains("mosaicElevation0"),
+            "must not allocate a redundant elevation id when a drag id already exists:\n{out}"
         );
     }
 
