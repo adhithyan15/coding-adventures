@@ -6036,7 +6036,7 @@ impl HtmlParser {
             }
             let whitespace = text
                 .chars()
-                .filter(|character| character.is_whitespace())
+                .filter(|character| is_html_whitespace(*character))
                 .collect::<String>();
             if !whitespace.is_empty() {
                 self.append_text_to_document_html(whitespace);
@@ -40364,12 +40364,13 @@ mod tests {
 
     #[test]
     fn top_level_frameset_keeps_filtered_trailing_html_text() {
-        let source = "<!DOCTYPE html><frameset></frameset> te st";
+        let source = "<!DOCTYPE html><frameset></frameset> \u{a0}t\u{2003}e\r\n st";
         let output = parse_html_with_diagnostics(source).unwrap();
 
-        let html = html(&output.document);
-        assert_eq!(element(&html.children[1]).name, "frameset");
-        assert_eq!(html.children[2], Node::text("  "));
+        let document_html = html(&output.document);
+        assert_eq!(element(&document_html.children[1]).name, "frameset");
+        assert_eq!(document_html.children[2], Node::text(" \n "));
+        assert!(source.len() > source.chars().count());
         assert_eq!(
             output.parser_diagnostics,
             vec![ParserDiagnostic::new(
@@ -40379,9 +40380,52 @@ mod tests {
             .at_emission(Some(SourcePosition {
                 byte_offset: source.len(),
                 char_offset: source.chars().count(),
-                line: 1,
-                column: source.chars().count() + 1,
+                line: 2,
+                column: 4,
             }))]
+        );
+
+        let noframes = parse_html_with_diagnostics(
+            "<!doctype html><frameset></frameset><noframes>\u{a0}\u{2003}</noframes>",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(find_first_element_in_nodes(
+                &noframes.document.children,
+                "noframes",
+            )
+            .unwrap()),
+            "\u{a0}\u{2003}"
+        );
+
+        let mut unpositioned = HtmlParser::new();
+        let unpositioned_document = unpositioned.parse_tokens([
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "frameset".to_string(),
+            },
+            Token::Text("\u{a0} \u{2003}".to_string()),
+            Token::Eof,
+        ]);
+        let document_html = html(&unpositioned_document);
+        assert_eq!(document_html.children[2], Node::text(" "));
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-char-after-frameset")
+                .unwrap()
+                .position,
+            None
         );
     }
 
