@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased] - narrow the `HostProgressRing` degradation to also exclude Compose (#13176)
+
+Compose now lowers `HostProgressRing` to a real native
+`CircularProgressIndicator` (`mosaic-emit-compose`). Narrowed the
+`("HostProgressRing", ...)` arm in `collect_native_degradations` from
+`!matches!(backend, Backend::Xaml | Backend::Flutter)` to also exclude
+`Backend::Compose`, matching `Path`'s own per-backend narrowing
+pattern. Qt (last — no off-the-shelf circular determinate control,
+needs its own research spike) and SwiftUI (tracked separately in
+#13206, unbuildable on this dev box) remain.
+
 ## [Unreleased] - narrow the `HostProgressRing` degradation to also exclude Flutter (#13176)
 
 Flutter now lowers `HostProgressRing` to a real native

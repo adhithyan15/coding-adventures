@@ -7,6 +7,29 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `HostProgressRing` native lowering (#13176, UI40). `HostProgressRing
+  [part] (value: ..., a11y-label: ...)` now lowers to a determinate
+  `androidx.compose.material.CircularProgressIndicator(progress =
+  (value).toFloat() / 100f, ...)` instead of reporting
+  `primitive.progress-ring-unimplemented`. `value` supports the full
+  `Number`/`SlotRef`/`Expr` three-way binding via the new
+  `required_progress_ring_value` helper (unlike `Path`'s coordinate
+  props, live binding is required from day one — the whole point is
+  rendering a live percent value). Sizing reuses
+  `compose_style_for_node`'s existing `.width().height()` modifier
+  chain; `a11y-label` appends a `.semantics { contentDescription =
+  ... }` suffix, matching `HostSlider`'s own accessibility pattern.
+  Widened the `CircularProgressIndicator` import gate — previously
+  scoped only to `uses_icon` (the indeterminate spinner case) — to
+  `uses_icon || uses_progress_ring`, since a component using
+  `HostProgressRing` without an `Icon` would otherwise reference an
+  unresolved Kotlin symbol. Verified against a real
+  `org.jetbrains.compose` 1.6.11 Gradle project: `gradle
+  compileKotlin` confirmed the plain-`Float` `progress:` overload
+  (this pinned Material1 version predates the newer `progress: () ->
+  Float` lambda form) with no deprecation warning, then `gradle run`
+  confirmed the widget mounts without crashing.
+
 - `Path` drawing primitive lowering (#12028 item 3, UI39). `Path [name]
   (kind: circle|line|curve, ...)` now lowers to real Compose vector
   geometry instead of reporting `primitive.path-unimplemented` on

@@ -1230,7 +1230,7 @@ fn collect_native_degradations(
         // control and needs its own spike).
         "HostProgressRing"
             if backend.is_native()
-                && !matches!(backend, Backend::Xaml | Backend::Flutter) =>
+                && !matches!(backend, Backend::Xaml | Backend::Flutter | Backend::Compose) =>
         {
             Some((
                 "primitive.progress-ring-unimplemented",
@@ -4999,11 +4999,12 @@ layout Ring {
         )
         .unwrap();
 
-        // XAML and Flutter land their lowerings in separate PRs — see
-        // host_progress_ring_xaml_now_has_a_native_lowering and
-        // host_progress_ring_flutter_now_has_a_native_lowering below.
-        // The remaining three still have no lowering at all.
-        for backend in [Backend::Compose, Backend::Qt, Backend::SwiftUI] {
+        // XAML, Flutter, and Compose land their lowerings in separate
+        // PRs — see host_progress_ring_xaml_now_has_a_native_lowering,
+        // host_progress_ring_flutter_now_has_a_native_lowering, and
+        // host_progress_ring_compose_now_has_a_native_lowering below.
+        // The remaining two still have no lowering at all.
+        for backend in [Backend::Qt, Backend::SwiftUI] {
             let out = TempDir::new().unwrap();
             let report = analyze_package_degradations(
                 &BuildOptions {
@@ -5099,6 +5100,40 @@ layout Ring {
         assert!(
             report.native_complete,
             "Flutter now has a native HostProgressRing lowering: {:?}",
+            report.degradations
+        );
+    }
+
+    #[test]
+    fn host_progress_ring_compose_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-ring-compose", &["Ring"]);
+        fs::write(
+            pkg.path().join("src/Ring.mll"),
+            r#"
+layout Ring {
+  HostProgressRing [ root ] (
+    value: 42
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Compose,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Compose progress ring capability analysis");
+        assert!(
+            report.native_complete,
+            "Compose now has a native HostProgressRing lowering: {:?}",
             report.degradations
         );
     }
