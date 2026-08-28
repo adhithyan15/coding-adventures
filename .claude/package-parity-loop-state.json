@@ -11,38 +11,31 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13418,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13418",
-    "branch": "codex/build-tool-csharp-extra-ci-toolchain-declaration-conformance",
-    "implementation_revision": "2d663dac3ea428fb61dc47b915e354486895aa4d",
-    "status": "checks-pending",
-    "opened_at": "2026-08-28T09:11:04Z"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-28T09:11:04Z",
+    "observed_at": "2026-08-28T10:01:38Z",
     "pr_number": 13418,
     "run_id": 33158464571,
     "attempt": 1,
-    "status": "opened-checks-pending",
-    "notes": "Opened ready-for-review PR #13418 from validated head 2d663dac3ea428fb61dc47b915e354486895aa4d. GitHub reports the branch mergeable and conflict-free; required checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged-next-selected",
+    "notes": "All 40 final checks reached terminal acceptable conclusions: 33 successes and seven expected skips. GitHub reported final head 0f4f64103081f39ce49536384f356688476a1d7e conflict-free. The loop enabled squash auto-merge, and GitHub merged PR #13418 as bb74da875cf8453c08ffe409522a7975b0b3134c without a manual merge command. The active parity slot is clear and the CRLF grammar hardening owner is selected."
   },
   "last_inventory": {
-    "revision": "5ffefdda23ad1c3ce0e3d285d859d3ed6bed2fc2",
+    "revision": "e054ea4bf22cfae28916b1ed2aa52203cecd37ea",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1386,
-    "implementation_package_slots": 4599,
-    "all_reported_identities": 1425,
+    "implementation_identities": 1388,
+    "implementation_package_slots": 4602,
+    "all_reported_identities": 1427,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
-    "two_to_four_packages": 169,
-    "two_to_four_missing_slots": 2126,
-    "singleton_packages": 919,
-    "singleton_missing_slots": 12866,
-    "rust_singletons": 730,
+    "two_to_four_packages": 170,
+    "two_to_four_missing_slots": 2139,
+    "singleton_packages": 920,
+    "singleton_missing_slots": 12880,
+    "rust_singletons": 731,
     "ocaml_packages": 0,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -201,10 +194,12 @@
     {
       "id": "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening",
       "title": "Pin CRLF-only carriage-return stripping across toolchain declaration consumers",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus"],
-      "branch": null,
+      "branch": "codex/build-tool-extra-ci-toolchain-crlf-grammar-hardening",
       "pr_number": null,
+      "selection_revision": "e054ea4bf22cfae28916b1ed2aa52203cecd37ea",
+      "selection_notes": "Selected immediately after PR #13418 merged because it is the highest-leverage ready dependency: repairing the language-neutral reference and canonical Go oracle unblocks F# plus nine other existing-engine declaration consumers without widening host authority. The collision-checked exact-main inventory records 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, zero collisions, zero unknown buckets, and OCaml still emerging at zero packages. Merged PRs #13405 and #13409 clear the PDP-11 functional and Forme owner blocks; merged PR #13422 adds the separately owned Rust-only pdp11-gatelevel identity. No eligible exact-main topology gap remains unowned.",
       "notes": "Discovered during independent review of the selected C# consumer before publication. The language-neutral Python reference and current Go declaration parser accept a lone terminal carriage return even though the merged grammar permits carriage-return stripping only as part of CRLF. Extend the neutral corpus with a CRLF positive case plus lone-CR and CR-before-trailing-space negatives, then repair the reference and Go oracle together before the remaining engines consume the hardened contract. The selected C# consumer already rejects lone CR directly, so this follow-up does not block its publication."
     },
     {
@@ -232,13 +227,17 @@
     {
       "id": "build-tool-csharp-extra-ci-toolchain-declaration-conformance",
       "title": "Make the C# build tool consume extra CI toolchain declarations",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus"],
       "branch": "codex/build-tool-csharp-extra-ci-toolchain-declaration-conformance",
       "pr_number": 13418,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13418",
       "opened_at": "2026-08-28T09:11:04Z",
       "opened_revision": "2d663dac3ea428fb61dc47b915e354486895aa4d",
+      "merged_head_revision": "0f4f64103081f39ce49536384f356688476a1d7e",
+      "merge_revision": "bb74da875cf8453c08ffe409522a7975b0b3134c",
+      "merged_at": "2026-08-28T10:01:38Z",
+      "merge_notes": "All 40 final checks reached terminal acceptable conclusions: 33 successes and seven expected skips. GitHub reported the final head conflict-free; the loop enabled squash auto-merge, and GitHub merged PR #13418 without a manual merge command.",
       "selection_revision": "c750c8a4e87b8f3f6f2d0d6a3179b6980b39ce0a",
       "selection_notes": "Selected after PR #13388 merged and the remaining-engine umbrella was decomposed, then refreshed over exact current main after the CDC 6600 gate-level merge. The collision-checked schema-3 inventory records 15 established lanes, 1,386 implementation identities, 4,599 slots, 1,425 all-reported identities, zero collisions, zero unknown buckets, and OCaml still emerging at zero packages. C# is the highest-leverage ready child because F# directly references its engine; current live PRs have zero exact overlap with the C# build-tool, shared corpus, state, roadmap, or changelog surfaces.",
       "implementation_revision": "bc8186a366aa8c64f392887ad1524e3c32578554",
@@ -1796,8 +1795,8 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "selection_blocked": true,
-      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, and asset/MIME derivation from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, and #13401 are merged. The collision-clean inventory adds TypeScript-only `forme-load-assets-fs`, while the earlier inventory already added `forme-theme-classless` and `forme-resolve-asset-refs-fs`; all remain covered by this family rather than creating duplicate singleton owners. Open PR #13409 prospectively adds TypeScript `forme-emit-site-fs` on the same family surfaces, so selection remains blocked without creating a duplicate owner."
+      "selection_blocked": false,
+      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, and asset/MIME derivation from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, #13401, #13409, and #13420 are merged. The collision-clean inventory includes TypeScript-only `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, and `forme-emit-site-fs`; all remain covered by this family rather than creating duplicate singleton owners. The former live-PR selection block is cleared."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -2654,8 +2653,17 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "selection_blocked": true,
-      "notes": "Discovered during the post-#13388 live-PR topology refresh. Exact main already contains Python `pdp11-simulator`, while open PR #13405 prospectively adds the Rust implementation beside it and would move the identity from the singleton band into the two-to-four-lane band without adding a new identity. Classify their deterministic CPU state, addressing modes, instruction semantics, stepping, traps, stable diagnostics, tracing, and resource limits; define a language-neutral simulator corpus and dependency-shaped applicable-lane rollout or record narrowly reviewed target-specific exceptions. Keep future gate-level PDP-11 work outside this functional-simulator owner, and do not select or modify the live package while PR #13405 is open."
+      "selection_blocked": false,
+      "notes": "Discovered during the post-#13388 live-PR topology refresh. Merged PR #13405 adds the Rust `pdp11-simulator` implementation beside Python and moves the identity from the singleton band into the two-to-four-lane band without adding a new identity. Classify their deterministic CPU state, addressing modes, instruction semantics, stepping, traps, stable diagnostics, tracing, and resource limits; define a language-neutral simulator corpus and dependency-shaped applicable-lane rollout or record narrowly reviewed target-specific exceptions. Keep the separately named gate-level PDP-11 work outside this functional-simulator owner. The former live-PR selection block is cleared."
+    },
+    {
+      "id": "pdp11-gatelevel-singleton-classification",
+      "title": "Classify PDP-11 gate-level simulator portability",
+      "status": "pending",
+      "depends_on": ["pdp11-simulator-two-lane-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean e054ea4bf2 inventory after merged PR #13422 added the independently named Rust-only `pdp11-gatelevel` package. Classify its deterministic D flip-flops, gate-backed register and bus state, instruction execution, clock phases, traces, stable diagnostics, topology bounds, and resource ceilings; define a language-neutral gate-level contract and applicable-lane rollout where portable or record a reviewed Rust-canonical exception. Use the Python/Rust functional simulator owner as the differential reference boundary while keeping gate-level topology separate from the higher-level `pdp11-simulator` identity."
     },
     {
       "id": "layout-inline-singleton-classification",

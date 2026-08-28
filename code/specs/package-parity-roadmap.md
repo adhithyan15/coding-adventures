@@ -9753,6 +9753,49 @@ and bounded inert inputs. The tranche adds no process, Git, environment,
 network, execution, or OCaml promotion authority and leaves F# for the next
 separately reviewed facade slice.
 
+## Post-#13418 Refresh and CRLF Declaration Grammar Selection
+
+All 40 final checks for PR #13418 reached terminal acceptable conclusions: 33
+successes and seven expected skips. GitHub reported final head
+`0f4f64103081f39ce49536384f356688476a1d7e` conflict-free. The loop enabled
+squash auto-merge, and GitHub merged the PR at 2026-08-28T10:01:38Z as
+`bb74da875cf8453c08ffe409522a7975b0b3134c` without a manual merge command.
+The active parity slot is therefore clear.
+
+The collision-checked schema-3 inventory on exact current `origin/main`
+`e054ea4bf22cfae28916b1ed2aa52203cecd37ea` records 15 established lanes,
+1,388 implementation identities, 4,602 package slots, and 1,427 all-reported
+identities. The four completion bands are 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and canonical collisions and unknown buckets remain zero.
+
+Merged PR #13405 adds Rust `pdp11-simulator` beside Python and clears the
+existing two-lane functional-simulator owner's live-PR block. Merged PRs
+#13409 and #13420 add `forme-emit-site-fs` and its routed-blog consumer within
+the existing Forme family, clearing that owner's live-PR block without a
+duplicate singleton owner. Merged PR #13422 adds the independently named
+Rust-only `pdp11-gatelevel` identity. New pending owner
+`pdp11-gatelevel-singleton-classification` records its deterministic
+gate-backed state, clock, trace, diagnostic, topology, resource-limit, and
+functional-differential review before selection. With that addition, no
+eligible exact-main topology gap remains unowned.
+
+The dependency/leverage pass selects
+`build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening` on branch
+`codex/build-tool-extra-ci-toolchain-crlf-grammar-hardening`. It is the sole
+ready dependency shared by F# and nine other unselected existing-engine
+declaration consumers. The tranche makes the neutral grammar byte-exact:
+only a CR immediately preceding an LF terminator is stripped, while a final
+lone CR or CR before trailing ASCII whitespace remains content and makes the
+lookalike inert. A dedicated language-neutral case, the Python reference, and
+the canonical Go oracle move together. The change remains process-free and
+adds no checkout, process, environment, network, filesystem-write, execution,
+or OCaml-promotion authority.
+
+After lifecycle reconciliation and selection, the complete graph contains
+566 owners: 167 merged, 398 pending, and exactly one in-progress owner. There
+is no active parity PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
