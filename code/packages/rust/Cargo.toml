@@ -840,6 +840,7 @@ members = [
     "tcp-runtime",
     "text-core",
     "text-interfaces",
+    "text-flow",
     "text-native",
     "text-native-coretext",
     "layout-ir",

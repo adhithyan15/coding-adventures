@@ -19,3 +19,7 @@ cargo run -p venture-browser-visual-fixtures --example capture -- target/venture
 Host launch tests should serve `fixture_response` from their existing local
 HTTP server and report the shared frame and scroll probes. They should not copy
 the fixture HTML or invent toolkit-specific visual baselines.
+
+`load_international_page` provides a second non-golden fixture for reusable
+text-flow acceptance. It covers inherited RTL content, CJK wrapping without
+spaces, combining and emoji graphemes, and script/symbol font-fallback runs.

@@ -40,6 +40,9 @@ strings.
 Underline geometry uses optional native font metrics when available and a
 device-pixel-safe fallback otherwise. Decorations therefore render consistently
 through every paint backend without teaching the backends about text styling.
+Inline direction metadata is inherited through positioned wrappers. Each line
+is resolved by `text-flow` into uniform-direction runs before shaping, while
+native font-fallback subruns retain their own bindings in visual paint order.
 
 ## v1 simplifications (documented in source, not hidden)
 

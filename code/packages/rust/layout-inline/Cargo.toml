@@ -6,3 +6,4 @@ description = "Reusable inline formatting contexts with text fragmentation, line
 
 [dependencies]
 layout-ir = { path = "../layout-ir" }
+text-flow = { path = "../text-flow" }

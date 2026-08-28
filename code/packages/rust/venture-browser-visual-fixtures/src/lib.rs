@@ -19,6 +19,7 @@ pub const VERSION: &str = "0.1.0";
 pub const FIXTURE_PATH: &str = "/visual.html";
 pub const IMAGE_PATH: &str = "/checker.gif";
 pub const MISSING_IMAGE_PATH: &str = "/missing.gif";
+pub const INTERNATIONAL_FIXTURE_PATH: &str = "/international.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 
@@ -36,6 +37,17 @@ preformatted columns stay aligned</pre>
   <p id="scroll-anchor"><a href="chapter.html">A wrapped chapter link remains hittable after scrolling through the viewport</a>.</p>
   <p>Venture composes parsing, layout, paint, images, and native presentation from reusable components.</p>
   <p id="tail">End of the deterministic visual fixture.</p>
+</body>
+</html>"#;
+
+pub const INTERNATIONAL_FIXTURE_HTML: &str = r#"<!doctype html>
+<html lang="en">
+<head><title>Venture international text fixture</title></head>
+<body>
+  <h1 id="international-title">International Inline Atlas</h1>
+  <p id="rtl-run" dir="rtl">שלום Venture مرحبا</p>
+  <p id="cjk-wrap" lang="ja">日本語の文章は空白がなくても共有行分割規則で複数行に折り返されます。</p>
+  <p id="cluster-run">Café 👩‍💻 🇺🇳 uses whole grapheme geometry and fallback → glyphs.</p>
 </body>
 </html>"#;
 
@@ -326,6 +338,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let origin = origin.trim_end_matches('/');
     let page_url = format!("{origin}{FIXTURE_PATH}");
     let image_url = format!("{origin}{IMAGE_PATH}");
+    let international_url = format!("{origin}{INTERNATIONAL_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -339,6 +352,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             Some("image/gif".into()),
             checker_gif(),
         )),
+        url if url == international_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            INTERNATIONAL_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
         }
@@ -346,6 +365,26 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             "unknown Venture visual fixture URL {requested_url}"
         )),
     }
+}
+
+pub fn load_international_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!(
+        "{}{INTERNATIONAL_FIXTURE_PATH}",
+        origin.trim_end_matches('/')
+    );
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
 }
 
 pub fn capture(origin: &str) -> Result<VisualFixtureCapture, String> {
@@ -655,30 +694,49 @@ impl TextShaper for DeterministicText {
         size: f32,
         options: &ShapeOptions,
     ) -> Result<ShapedText, ShapingError> {
-        if options.direction != Direction::Ltr {
+        let advance = size * 0.5;
+        let mut characters: Vec<_> = text.char_indices().collect();
+        if options.direction == Direction::Rtl {
+            characters.reverse();
+        } else if options.direction != Direction::Ltr {
             return Err(ShapingError::UnsupportedDirection(options.direction));
         }
-        let advance = size * 0.5;
-        let glyphs: Vec<_> = text
-            .char_indices()
-            .map(|(cluster, character)| Glyph {
+        let mut runs: Vec<ShapedRun> = Vec::new();
+        for (cluster, character) in characters {
+            let font_ref = deterministic_font_ref(character);
+            let glyph = Glyph {
                 glyph_id: character as u32,
                 cluster: cluster as u32,
                 x_advance: advance,
                 y_advance: 0.0,
                 x_offset: 0.0,
                 y_offset: 0.0,
-            })
-            .collect();
-        Ok(ShapedText::single(ShapedRun {
-            x_advance_total: glyphs.len() as f32 * advance,
-            glyphs,
-            font_ref: "sans".into(),
-        }))
+            };
+            if let Some(run) = runs.last_mut().filter(|run| run.font_ref == font_ref) {
+                run.glyphs.push(glyph);
+                run.x_advance_total += advance;
+            } else {
+                runs.push(ShapedRun {
+                    x_advance_total: advance,
+                    glyphs: vec![glyph],
+                    font_ref: font_ref.into(),
+                });
+            }
+        }
+        Ok(ShapedText { runs })
     }
 
     fn font_ref(&self, _: &Self::Handle) -> String {
         "sans".into()
+    }
+}
+
+fn deterministic_font_ref(character: char) -> &'static str {
+    match character as u32 {
+        0x0590..=0x08ff => "sans-rtl",
+        0x2e80..=0x9fff | 0x20000..=0x323af => "sans-cjk",
+        0x1f000..=0x1faff | 0x2192 => "sans-symbol",
+        _ => "sans",
     }
 }
 
@@ -702,6 +760,42 @@ mod tests {
         let image = fixture_response(origin, "http://venture.test/checker.gif").unwrap();
         assert_eq!(image.media_type.as_deref(), Some("image/gif"));
         assert!(fixture_response(origin, "http://venture.test/missing.gif").is_err());
+    }
+
+    #[test]
+    fn international_page_converges_direction_wrap_and_font_fallback() {
+        let page = load_international_page("http://venture.test").expect("international page");
+        for id in ["international-title", "rtl-run", "cjk-wrap", "cluster-run"] {
+            assert!(
+                find_positioned_id(&page.paint.positioned, id).is_some(),
+                "missing #{id}"
+            );
+        }
+        let cjk = find_positioned_id(&page.paint.positioned, "cjk-wrap").unwrap();
+        assert!(cjk.height > 14.0 * 1.4, "CJK fixture should wrap: {cjk:?}");
+
+        let font_refs: std::collections::HashSet<_> = page
+            .paint
+            .scene
+            .instructions
+            .iter()
+            .filter_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => Some(run.font_ref.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert!(font_refs.contains("sans-rtl"));
+        assert!(font_refs.contains("sans-cjk"));
+        assert!(font_refs.contains("sans-symbol"));
+    }
+
+    fn find_positioned_id<'a>(node: &'a PositionedNode, id: &str) -> Option<&'a PositionedNode> {
+        if node.id.as_deref() == Some(id) {
+            return Some(node);
+        }
+        node.children
+            .iter()
+            .find_map(|child| find_positioned_id(child, id))
     }
 
     #[test]

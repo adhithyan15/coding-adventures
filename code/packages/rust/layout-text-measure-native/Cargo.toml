@@ -8,3 +8,4 @@ description = "Bridge crate: implements layout-ir's TextMeasurer trait on top of
 layout-ir = { path = "../layout-ir" }
 text-interfaces = { path = "../text-interfaces" }
 text-native = { path = "../text-native" }
+text-flow = { path = "../text-flow" }

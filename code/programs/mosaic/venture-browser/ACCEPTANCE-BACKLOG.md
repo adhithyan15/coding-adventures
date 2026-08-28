@@ -33,10 +33,18 @@ cross-platform proving application. Items are ordered by risk and dependency.
   draw commands when mixed vector/image painter ordering, URI-backed sources,
   layer filters, and blend modes land. Preserve the current affine, clip,
   opacity, scaling, and alpha behavior as the backend-neutral contract.
-- [ ] **P2 browser convergence — international inline content.** Expand the
+- [x] **P2 browser convergence — international inline content.** Expand the
   representative real-page corpus through bidi text, script fallback,
   grapheme-aware selection geometry, and UAX #14 line-breaking without moving
-  language behavior into platform shells.
+  language behavior into platform shells. Completed with the reusable
+  `text-flow` analyzer, shared layout/measurement/paint integration, UTF-8
+  grapheme selection spans, uniform bidi shaping runs, preserved native font
+  fallback, and a deterministic international Venture page.
+- [ ] **P2 text convergence — generated Unicode conformance tables.** Extend
+  the browser-oriented text-flow profile with generated UAX #9/#14/#29 data,
+  isolate/embedding controls, the full line-break pair table, and dictionary
+  segmentation for Thai, Lao, and Khmer. Keep table generation independent of
+  layout and preserve the current analyzer API for all consumers.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a
