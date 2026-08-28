@@ -9803,6 +9803,70 @@ After lifecycle reconciliation and selection, the complete graph contains
 566 owners: 167 merged, 398 pending, and exactly one in-progress owner. There
 is no active parity PR.
 
+## Post-#13434 Refresh and F# Declaration-Facade Selection
+
+All 41 final checks for PR #13434 reached terminal acceptable conclusions: 34
+successes, six expected skips, and one neutral result. GitHub reported final
+head `c2a3408d06a9f8c558c5d1ade4bcec8ad649f2f8` conflict-free. The loop enabled
+squash auto-merge, and GitHub merged the PR at 2026-08-28T11:12:06Z as
+`e76f211644452f24dade7031c3573540e6b672c9` without a manual merge command.
+The active parity slot is therefore clear.
+
+The collision-checked schema-3 inventory, refreshed after a conflict-free
+rebase onto exact current `origin/main`
+`0668a379a94d8071388d8f2cba2a52327f0c8ab3`, remains 15 established lanes,
+1,388 implementation identities, 4,602 package slots, and 1,427 all-reported
+identities. The four completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and canonical collisions and unknown buckets remain zero.
+
+The intervening Intel 4004 functional and gate-level audits, Forme root-site
+generation, Mosaic Flutter elevation work, FLOW-MATIC fixture expansion,
+Mermaid sequence fixtures, and human-language owner sharding add no package
+identity. They remain within existing owners, so no duplicate or newly unowned
+topology work is added.
+
+Five later exact-main commits converge the Venture CSS cascade, add Kannada
+vocalic-r curriculum evidence, harden HTML frameset whitespace, add the
+Macsyma universal JIT, and track human-validated language mocks. They remain
+within their existing package, frontend, curriculum, language-parity, and
+human-language owners, add no build-tool identity or fixture contract, and
+have no exact overlap with this tranche.
+
+The dependency/leverage pass selects
+`build-tool-fsharp-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-fsharp-extra-ci-toolchain-declaration-conformance`. Its
+neutral corpus, CRLF grammar, and C# shared-engine dependencies are all merged.
+The tranche must expose the bounded snapshot evaluator through an F# symbol
+and independently consume every neutral toolchain-detection fixture; inherited
+C# coverage or CLI delegation alone does not count. This is the narrowest
+ready shared-engine lane proof and advances the remaining-engine umbrella
+without widening filesystem, Git, process, environment, network, execution,
+credential, or OCaml-promotion authority.
+
+The implemented F# symbol is a no-inline, process-free wrapper over the
+reviewed bounded C# snapshot evaluator. Its independent test dynamically
+discovers all 11 neutral toolchain-detection fixtures and compares each exact
+outcome, all 16 canonical toolchain flags, and diagnostics. After the final
+rebase, all 12 F# tests pass with 100% line, branch, and method coverage for
+the F# module. Fantomas 7.0.6, warning-as-error Release build, Release publish,
+the exact BUILD commands, 57 C# downstream tests, the 119-case/283-file neutral
+corpus, 84 schema and runner tests, the complete Go suite and vet, trimpath
+compilation, NuGet vulnerability inspection, and diff checks pass. A fresh Go
+build-tool binary evaluates all 45 Starlark BUILD files, discovers 5,112
+packages, keeps the five-entry orphan ledger clean, and completes the actual
+two-package affected build closure. The facade adds no discovery, Git,
+filesystem, process, environment, network, execution, credential, secret,
+dependency, or logging authority.
+
+After publication, the complete graph contains 566 owners: 168 merged, 397
+pending, and exactly one `pr-open` owner. Ready-for-review PR #13453 is the
+sole active parity PR at validated head
+`814cb3c1b3d616f8687e9a06a8865541b41093f4`. GitHub reports it mergeable;
+required CI and CodeQL checks are queued, so auto-merge remains disabled until
+every required check is terminal and acceptable and the branch remains
+conflict-free.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

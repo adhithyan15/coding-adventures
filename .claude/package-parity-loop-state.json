@@ -12,23 +12,23 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 13434,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13434",
-    "branch": "codex/build-tool-extra-ci-toolchain-crlf-grammar-hardening",
-    "implementation_revision": "9416ed64709ddbf50ffd87104449b4575754378e",
+    "number": 13453,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13453",
+    "branch": "codex/build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
+    "implementation_revision": "814cb3c1b3d616f8687e9a06a8865541b41093f4",
     "status": "checks-pending",
-    "opened_at": "2026-08-28T10:34:37Z"
+    "opened_at": "2026-08-28T11:46:12Z"
   },
   "last_ci_action": {
-    "observed_at": "2026-08-28T10:34:42Z",
-    "pr_number": 13434,
-    "run_id": 33163885754,
+    "observed_at": "2026-08-28T11:46:15Z",
+    "pr_number": 13453,
+    "run_id": null,
     "attempt": 1,
     "status": "checks-pending",
-    "notes": "Opened ready-for-review PR #13434 from validated head 9416ed64709ddbf50ffd87104449b4575754378e. GitHub has queued required CI and CodeQL checks; mergeability is still being calculated, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict."
+    "notes": "Opened ready-for-review PR #13453 from validated head 814cb3c1b3d616f8687e9a06a8865541b41093f4. GitHub reports the branch mergeable, but required CI and CodeQL checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
-    "revision": "b7178c248b66a0f84982c9ce0abd026979552d02",
+    "revision": "0668a379a94d8071388d8f2cba2a52327f0c8ab3",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -201,7 +201,7 @@
     {
       "id": "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening",
       "title": "Pin CRLF-only carriage-return stripping across toolchain declaration consumers",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus"],
       "branch": "codex/build-tool-extra-ci-toolchain-crlf-grammar-hardening",
       "pr_number": 13434,
@@ -218,6 +218,10 @@
       "security_review_notes": "The change grants no process, environment, network, filesystem-write, credential, secret, dependency, capability, or logging authority. Existing byte, line, aggregate, process, memory, CPU, and wall-time limits remain intact. A final scan finds no suspicious authority-bearing additions, no dependency or capability metadata changes, and zero exact path overlap across eight live pull requests.",
       "final_review_revision": "9416ed64709ddbf50ffd87104449b4575754378e",
       "publication_notes": "Opened ready-for-review PR #13434 from validated head 9416ed64709ddbf50ffd87104449b4575754378e. Required CI and CodeQL checks are queued and GitHub is still calculating mergeability, so auto-merge is intentionally disabled until every required check is terminal and acceptable and the PR is conflict-free. The tranche remains process-free, grants no new host or credential authority, and does not claim remaining-engine adoption or OCaml promotion.",
+      "final_revision": "c2a3408d06a9f8c558c5d1ade4bcec8ad649f2f8",
+      "merged_at": "2026-08-28T11:12:06Z",
+      "merge_commit": "e76f211644452f24dade7031c3573540e6b672c9",
+      "merge_notes": "All 41 final checks were acceptable: 34 successes, six expected skips, and one neutral result. GitHub reported the final head conflict-free; squash auto-merge was enabled and GitHub merged the PR without a manual merge command.",
       "selection_notes": "Selected immediately after PR #13418 merged because it is the highest-leverage ready dependency: repairing the language-neutral reference and canonical Go oracle unblocks F# plus nine other existing-engine declaration consumers without widening host authority. The collision-checked exact-main inventory records 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, zero collisions, zero unknown buckets, and OCaml still emerging at zero packages. Merged PRs #13405 and #13409 clear the PDP-11 functional and Forme owner blocks; merged PR #13422 adds the separately owned Rust-only pdp11-gatelevel identity. No eligible exact-main topology gap remains unowned.",
       "notes": "Discovered during independent review of the selected C# consumer before publication. The language-neutral Python reference and current Go declaration parser accept a lone terminal carriage return even though the merged grammar permits carriage-return stripping only as part of CRLF. Extend the neutral corpus with a CRLF positive case plus lone-CR and CR-before-trailing-space negatives, then repair the reference and Go oracle together before the remaining engines consume the hardened contract. The selected C# consumer already rejects lone CR directly, so this follow-up does not block its publication."
     },
@@ -270,10 +274,24 @@
     {
       "id": "build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
       "title": "Make the F# build-tool facade consume extra CI toolchain declarations",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-csharp-extra-ci-toolchain-declaration-conformance"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
+      "pr_number": 13453,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13453",
+      "opened_at": "2026-08-28T11:46:12Z",
+      "opened_revision": "814cb3c1b3d616f8687e9a06a8865541b41093f4",
+      "selection_revision": "e76f211644452f24dade7031c3573540e6b672c9",
+      "selection_notes": "Selected immediately after PR #13434 merged because all three dependencies are now complete and F# is the narrowest high-leverage shared-engine consumer: it turns the existing C# implementation into independently reviewable F# lane evidence before the remaining-engine umbrella can close. The collision-checked exact-main inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, zero collisions, zero unknown buckets, and OCaml emerging at zero packages. Intervening Intel 4004, Forme, Mosaic Flutter, FLOW-MATIC, Mermaid, and human-language merges do not change those counts and remain inside existing owners. No eligible exact-main topology gap is unowned.",
+      "implementation_revision": "3d06800f6aa544b7184b1f0447ce55019d3427bd",
+      "rebase_revision": "0668a379a94d8071388d8f2cba2a52327f0c8ab3",
+      "rebase_notes": "Rebased without conflict onto exact origin/main 0668a379a94d8071388d8f2cba2a52327f0c8ab3. The five intervening Venture CSS cascade, Kannada vocalic-r curriculum, HTML frameset whitespace, Macsyma universal-JIT, and human-validated mock commits stay inside their existing package, frontend, curriculum, language-parity, and human-language owners; they add no build-tool identity, fixture contract, or tranche-path overlap. The collision-checked report remains structurally unchanged, and focused F#, neutral-corpus, Go-oracle, state-graph, parity, format, diff, build-file, and security validation was rerun after the conflict-free rebases.",
+      "validation_revision": "3d06800f6aa544b7184b1f0447ce55019d3427bd",
+      "validation_notes": "The F# facade now exposes one no-inline native evaluateToolchainSnapshot symbol over caller-supplied bounded records and independently consumes all 11 neutral toolchain-detection fixtures, comparing exact outcomes, all 16 canonical toolchain flags, and diagnostics. The focused regression first failed on the absent symbol. After implementation and the final conflict-free rebase, all 12 F# tests pass; Coverlet reports 100% line, branch, and method coverage for the F# module. Fantomas 7.0.6, warning-as-error Release build, Release publish, both exact BUILD commands, the complete 57-test C# downstream suite, and NuGet vulnerable-package inspection pass. The neutral corpus validates schema 1 with 119 cases, 283 files, 16 implementations, and 15 established lanes; the schema and runner suites pass 84 tests. The complete Go build-tool suite and vet pass, trimpath compilation succeeds, and a production binary evaluates all 45 Starlark BUILD files, discovers 5,112 packages, keeps the five-entry orphan ledger clean, and completes the actual two-package affected build closure with 5,110 packages skipped. Published F# front-door plans exercise both affected selection and forced full scheduling with every canonical toolchain key. The post-rebase schema-3 parity report remains 15 lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The 566-owner, 833-edge state is unique, dependency-complete, and acyclic with exactly this item in progress; diff hygiene and the focused security review pass.",
+      "security_review_revision": "3d06800f6aa544b7184b1f0447ce55019d3427bd",
+      "security_review_notes": "The F# symbol delegates only to the already reviewed bounded C# snapshot evaluator and accepts caller-provided in-memory records. It adds no process, Git, environment, network, filesystem-read, filesystem-write, credential, secret, dependency, capability, execution, or logging authority. The neutral fixtures remain inert data, existing C# byte, line, aggregate, memory, CPU, and wall-time limits remain intact, and final live-PR path review found no exact overlap.",
+      "final_review_revision": "814cb3c1b3d616f8687e9a06a8865541b41093f4",
+      "publication_notes": "Opened ready-for-review PR #13453 from clean validated head 814cb3c1b3d616f8687e9a06a8865541b41093f4 after a normal first push from exact origin/main 0668a379a94d8071388d8f2cba2a52327f0c8ab3. Immediately before publication, all eight changed paths had zero exact overlap across nine other live open pull requests. GitHub reports the PR mergeable and non-draft; required CI and CodeQL checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Verify the F# facade and project-reference boundary over the remediated C# engine in an independently reviewable tranche, including native facade entry points and neutral declaration fixtures."
     },
     {

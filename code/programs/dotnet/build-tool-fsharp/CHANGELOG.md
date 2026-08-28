@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added `evaluateToolchainSnapshot`, a no-inline pure F# facade over the shared
+  .NET toolchain-decision engine, and independently consumed all 11 neutral
+  toolchain-detection fixtures through that symbol. The cases pin canonical
+  keys, platform-front precedence, affected/null/full scheduling, declarations,
+  CRLF-only carriage-return stripping, diagnostics, and resource ceilings
+  without adding host or execution authority.
 - Added a pure F# orphan-crate validation facade and independently consumed all
   four language-neutral orphan coverage and exemption-ledger fixtures through
   that F# boundary without adding filesystem, Git, process, environment, or

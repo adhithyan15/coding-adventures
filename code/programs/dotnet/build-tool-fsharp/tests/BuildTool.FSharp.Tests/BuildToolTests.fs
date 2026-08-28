@@ -47,6 +47,11 @@ let private writeFile (root: string) (relativePath: string) (content: string) =
     Directory.CreateDirectory(Path.GetDirectoryName(fullPath)) |> ignore
     File.WriteAllText(fullPath, content)
 
+let private stringsFrom (element: JsonElement) =
+    element.EnumerateArray()
+    |> Seq.map (fun value -> value.GetString())
+    |> Seq.toArray
+
 [<Fact>]
 let ``help exits successfully`` () =
     let exitCode = main [| "--help" |]
@@ -74,6 +79,90 @@ let ``force emit-plan writes a schema versioned plan`` () =
     finally
         if Directory.Exists(root) then
             Directory.Delete(root, true)
+
+[<Fact>]
+let ``toolchain detection matches every shared conformance fixture through F sharp`` () =
+    let fixtureDirectory =
+        Path.Combine(repositoryRoot, "code", "specs", "fixtures", "build-tool-v1", "cases")
+
+    let fixturePaths =
+        Directory.GetFiles(fixtureDirectory, "toolchain-detection-*.json")
+        |> Array.sortWith (fun left right -> StringComparer.Ordinal.Compare(left, right))
+
+    Assert.Equal(11, fixturePaths.Length)
+
+    for fixturePath in fixturePaths do
+        use fixture = JsonDocument.Parse(File.ReadAllText(fixturePath))
+        let options = fixture.RootElement.GetProperty("input").GetProperty("options")
+
+        let packages =
+            options.GetProperty("packages").EnumerateArray()
+            |> Seq.map (fun package ->
+                let buildFiles = Dictionary<string, string>(StringComparer.Ordinal)
+
+                for buildFile in package.GetProperty("build_files").EnumerateObject() do
+                    buildFiles.Add(buildFile.Name, buildFile.Value.GetString())
+
+                ToolchainPackageSnapshot(
+                    package.GetProperty("name").GetString(),
+                    package.GetProperty("language").GetString(),
+                    buildFiles
+                ))
+            |> Seq.toArray
+
+        let scheduledElement = options.GetProperty("scheduled_packages")
+
+        let scheduledPackages: IReadOnlyList<string> =
+            if scheduledElement.ValueKind = JsonValueKind.Null then
+                null
+            else
+                stringsFrom scheduledElement
+
+        let forcedToolchains: IReadOnlyList<string> =
+            stringsFrom (options.GetProperty("forced_toolchains"))
+
+        let actual =
+            evaluateToolchainSnapshot
+                (options.GetProperty("platform").GetString())
+                (options.GetProperty("force_full").GetBoolean())
+                (packages :> IReadOnlyList<ToolchainPackageSnapshot>)
+                scheduledPackages
+                forcedToolchains
+
+        let expected = fixture.RootElement.GetProperty("expected")
+        let expectedOutcome = expected.GetProperty("outcome").GetString()
+        Assert.Equal(expectedOutcome, actual.Outcome)
+
+        if expectedOutcome = "ok" then
+            let expectedToolchains = expected.GetProperty("result").GetProperty("toolchains")
+            Assert.Equal(expectedToolchains.EnumerateObject() |> Seq.length, actual.Toolchains.Count)
+
+            for expectedToolchain in expectedToolchains.EnumerateObject() do
+                let mutable actualNeeded = false
+                Assert.True(actual.Toolchains.TryGetValue(expectedToolchain.Name, &actualNeeded))
+                Assert.Equal(expectedToolchain.Value.GetBoolean(), actualNeeded)
+
+            Assert.Empty(actual.Diagnostics)
+        else
+            Assert.Empty(actual.Toolchains)
+            Assert.Empty(expected.GetProperty("result").EnumerateObject())
+
+            let expectedDiagnostic =
+                expected.GetProperty("diagnostics").EnumerateArray() |> Seq.exactlyOne
+
+            let actualDiagnostic = Assert.Single(actual.Diagnostics)
+            Assert.Equal(expectedDiagnostic.GetProperty("code").GetString(), actualDiagnostic.Code)
+            Assert.Equal(expectedDiagnostic.GetProperty("severity").GetString(), actualDiagnostic.Severity)
+
+            let expectedPackageElement = expectedDiagnostic.GetProperty("package")
+
+            let expectedPackage =
+                if expectedPackageElement.ValueKind = JsonValueKind.Null then
+                    null
+                else
+                    expectedPackageElement.GetString()
+
+            Assert.Equal<string>(expectedPackage, actualDiagnostic.Package)
 
 [<Theory>]
 [<InlineData("validation-orphan-crates-clean.json")>]

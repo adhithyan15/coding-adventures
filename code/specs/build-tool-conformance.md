@@ -55,6 +55,10 @@ implementation.
 Every shared-engine front door MUST expose a language-native adapter and
 independently consume each required conformance fixture. Transitive coverage
 from the shared engine does not count as front-door coverage for that lane.
+For toolchain detection, that adapter MUST accept the caller-supplied bounded
+snapshot through a language-native symbol and independently consume every
+`toolchain-detection-*.json` case. Merely executing a CLI that delegates to the
+shared engine is not independent lane evidence.
 
 C and C++ remain emerging implementation lanes. OCaml also begins as emerging
 and must implement this contract before promotion. WASM is an execution target,
