@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Walking, Running, Opening, Closing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3c0a3047e99d7026",
+  "sourceHash": "fnv1a64:4063761d2998eccf",
   "lessons": [
     {
       "id": "LA-C41-ambulo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e126460ce776ff0",
+      "sourceHash": "fnv1a64:a3cc9dcddcf6ca77",
       "notice": null,
       "blocks": [
         {
@@ -195,7 +195,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc6edcf40433f26f",
+      "sourceHash": "fnv1a64:95c22fa1512d377e",
       "notice": null,
       "blocks": [
         {
@@ -371,7 +371,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06626b6294c4415e",
+      "sourceHash": "fnv1a64:0a7baa17c369f671",
       "notice": null,
       "blocks": [
         {
@@ -551,7 +551,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7fda89b85277a5e",
+      "sourceHash": "fnv1a64:2e8775b9724ed8cf",
       "notice": null,
       "blocks": [
         {

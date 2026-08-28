@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-NUMBERS-1-5-01, LA-ETYMON-NUMBERS-1-5-02, LA-GRAMMAR-NUMBERS-1-5-03]
 introduces:
   knowledge: [LA-LEX-NUMBERS-6-10-01, LA-LEX-NUMBERS-6-10-02, LA-ETYMON-NUMBERS-6-10-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-NUMBERS-1-5-01, LA-ETYMON-NUMBERS-1-5-02, LA-GRAMMAR-NUMBERS-1-5-03, LA-LEX-NUMBERS-6-10-01, LA-LEX-NUMBERS-6-10-02, LA-ETYMON-NUMBERS-6-10-03]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-CURRO-01, LA-ETYMON-CURRO-02, LA-LEX-AMBULO-01]
 introduces:
   knowledge: [LA-LEX-APERIO-01, LA-ETYMON-APERIO-02, LA-ETYMON-APERIO-OPERIO-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-CURRO-01, LA-ETYMON-CURRO-02, LA-LEX-AMBULO-01, LA-LEX-APERIO-01, LA-ETYMON-APERIO-02, LA-ETYMON-APERIO-OPERIO-03]
 skills: [listening, speaking, reading]

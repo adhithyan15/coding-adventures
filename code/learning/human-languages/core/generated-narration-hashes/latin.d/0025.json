@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 25,
-  "sourceHash": "fnv1a64:909f8cccf78a29c4",
+  "sourceHash": "fnv1a64:8dd7c2f2f02808d3",
   "lessonIds": [
     "LA-C25-cras-te-videbo"
   ],
@@ -10,6 +10,6 @@
   "text": "latin/narration/ch25.txt",
   "json": "latin/narration/ch25.json",
   "textHash": "fnv1a64:c809e0721f59e599",
-  "jsonHash": "fnv1a64:87f9370681e888a1",
+  "jsonHash": "fnv1a64:e90af6ea205e5c50",
   "findings": []
 }

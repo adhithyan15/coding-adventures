@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f10d90cbc6a9bb23",
+  "sourceHash": "fnv1a64:b31476668fb4624d",
   "lessons": [
     {
       "id": "LA-C05-dies-lunae-veneris",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:daa7b2028c9eb763",
+      "sourceHash": "fnv1a64:8622b4ada164edc7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2deb3662d1d66b5",
+      "sourceHash": "fnv1a64:dfb87c91f25f87b4",
       "notice": null,
       "blocks": [
         {

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 30,
-  "sourceHash": "fnv1a64:f3a2478d1df2b1c2",
+  "sourceHash": "fnv1a64:78ed0862bacc54d8",
   "lessonIds": [
     "LA-C30-bonam-noctem"
   ],
@@ -10,6 +10,6 @@
   "text": "latin/narration/ch30.txt",
   "json": "latin/narration/ch30.json",
   "textHash": "fnv1a64:245dde847d83f2fa",
-  "jsonHash": "fnv1a64:fa25cbdf7e337787",
+  "jsonHash": "fnv1a64:5076c89a5eb155ad",
   "findings": []
 }

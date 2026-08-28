@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-ETYMON-PANIS-01, LA-LEX-PANIS-02, LA-PRAGMATICS-PANIS-03, LA-ETYMON-AQUA-VINUM-01, LA-LEX-AQUA-VINUM-02]
 introduces:
   knowledge: [LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [LA-CULTURE-QUINTILIS-SEXTILIS-RENAMING-01]
 practises:
   knowledge: [LA-ETYMON-PANIS-01, LA-LEX-PANIS-02, LA-PRAGMATICS-PANIS-03, LA-ETYMON-AQUA-VINUM-01, LA-LEX-AQUA-VINUM-02, LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02]
 skills: [listening, speaking, reading]

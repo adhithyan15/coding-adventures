@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-C45-WORLD-01, LA-LEX-C45-WORLD-02, LA-LEX-C45-WORLD-03, LA-LEX-C45-WORLD-04]
 introduces:
   knowledge: [LA-LEX-C45-WORLD-05]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-C45-WORLD-01, LA-LEX-C45-WORLD-02, LA-LEX-C45-WORLD-03, LA-LEX-C45-WORLD-04, LA-LEX-C45-WORLD-05]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-ETYMON-VESPER-01]
 introduces:
   knowledge: [LA-LEX-VESPER-AFTERLIVES-01, LA-ETYMON-VESPER-AFTERLIVES-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-ETYMON-VESPER-01, LA-LEX-VESPER-AFTERLIVES-01, LA-ETYMON-VESPER-AFTERLIVES-02]
 skills: [listening, speaking, reading]

@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Green and Yellow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cbc0896ad4cd0986",
+  "sourceHash": "fnv1a64:3d0c39748679d84b",
   "lessons": [
     {
       "id": "LA-C18-viridis-flavus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf10924d8df0911e",
+      "sourceHash": "fnv1a64:3b0e5b6aba668d67",
       "notice": null,
       "blocks": [
         {

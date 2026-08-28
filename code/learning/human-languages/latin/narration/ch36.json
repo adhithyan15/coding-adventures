@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Good Afternoon",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:467e8562c765f453",
+  "sourceHash": "fnv1a64:8990a52eb4eb0186",
   "lessons": [
     {
       "id": "LA-C36-salve-post-meridiem",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1679ce5fe3160f66",
+      "sourceHash": "fnv1a64:54bd5206bf66695e",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3738faa18f82389e",
+      "sourceHash": "fnv1a64:4da6150d00e5b3a8",
       "notice": null,
       "blocks": [
         {
@@ -240,7 +240,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b953d8c26b573452",
+      "sourceHash": "fnv1a64:e9f0755dce2b356b",
       "notice": null,
       "blocks": [
         {

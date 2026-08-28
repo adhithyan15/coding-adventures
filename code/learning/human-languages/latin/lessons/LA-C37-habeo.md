@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-SUM-01]
 introduces:
   knowledge: [LA-LEX-HABEO-01, LA-ETYMON-HABEO-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-SUM-01, LA-LEX-HABEO-01, LA-ETYMON-HABEO-02]
 skills: [listening, speaking, reading]

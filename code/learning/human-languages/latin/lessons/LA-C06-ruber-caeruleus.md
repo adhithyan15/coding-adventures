@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02]
 introduces:
   knowledge: [LA-ETYMON-RUBER-CAERULEUS-01, LA-ETYMON-RUBER-CAERULEUS-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02, LA-ETYMON-RUBER-CAERULEUS-01, LA-ETYMON-RUBER-CAERULEUS-02]
 skills: [listening, speaking, reading]

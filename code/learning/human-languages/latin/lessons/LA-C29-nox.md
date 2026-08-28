@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02, LA-LEX-DIES-01, LA-ETYMON-DIES-02]
 introduces:
   knowledge: [LA-LEX-NOX-01, LA-ETYMON-NOX-02, LA-GRAMMAR-NOX-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-MEDIUS-DIES-NOX-01, LA-PRAGMATICS-MEDIUS-DIES-NOX-02, LA-LEX-DIES-01, LA-ETYMON-DIES-02, LA-LEX-NOX-01, LA-ETYMON-NOX-02, LA-GRAMMAR-NOX-03]
 skills: [listening, speaking, reading]

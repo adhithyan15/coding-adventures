@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 43,
-  "sourceHash": "fnv1a64:71453eda34ec1745",
+  "sourceHash": "fnv1a64:dae23f946e30a652",
   "lessonIds": [
     "LA-C43-respondeo",
     "LA-C43-convenio",
@@ -12,6 +12,6 @@
   "text": "latin/narration/ch43.txt",
   "json": "latin/narration/ch43.json",
   "textHash": "fnv1a64:c3803f03eef8aafc",
-  "jsonHash": "fnv1a64:a97a2763013cd568",
+  "jsonHash": "fnv1a64:dd1a9fc54767fe17",
   "findings": []
 }

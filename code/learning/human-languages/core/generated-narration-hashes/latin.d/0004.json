@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 4,
-  "sourceHash": "fnv1a64:af8c86fea4e23dd8",
+  "sourceHash": "fnv1a64:d8cf40f126b7b659",
   "lessonIds": [
     "LA-C04-ignosce-mihi"
   ],
@@ -10,6 +10,6 @@
   "text": "latin/narration/ch04.txt",
   "json": "latin/narration/ch04.json",
   "textHash": "fnv1a64:0718ba78ac7a3c5d",
-  "jsonHash": "fnv1a64:aab19ccf16c63c5d",
+  "jsonHash": "fnv1a64:9ed8f462fe0691b3",
   "findings": []
 }

@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-HORA-01, LA-PRAGMATICS-HORA-02, LA-ETYMON-HORA-03]
 introduces:
   knowledge: [LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-HORA-01, LA-PRAGMATICS-HORA-02, LA-ETYMON-HORA-03, LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02]
 skills: [listening, speaking, reading]

@@ -3,23 +3,23 @@
   "language": "latin",
   "chapter": 19,
   "title": "How Are You?",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:b6d1686c248ae1e9",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:165cc5db5e3bb702",
   "lessons": [
     {
       "id": "LA-C19-quid-agis",
       "sequence": 400,
-      "title": "quid agis?, ut valēs? — \"how are you?\", two genuinely Roman ways",
-      "headword": "quid agis? / ut valēs?",
-      "romanization": "quid agis? / ut valēs?",
-      "gloss": "how are you? — two colloquial questions genuinely attested in Plautus and Terence, unlike a popular modern spoken-Latin alternative",
+      "title": "quid agis? — how are you?",
+      "headword": "quid agis?",
+      "romanization": "quid agis?",
+      "gloss": "how are you? — literally, what are you doing?",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3eb2b3813eaf89bf",
+      "sourceHash": "fnv1a64:c0a346474c2a0cc4",
       "notice": null,
       "blocks": [
         {
@@ -35,30 +35,26 @@
             },
             {
               "kind": "speech",
-              "text": "Modern languages often teach one fixed \"how are you?\" formula. Roman comedy gives you two ordinary questions instead."
+              "text": "Roman comedy gives you a short wellbeing question: quid agis?"
             }
           ]
         },
         {
           "index": 1,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way: Two real, attested questions — not modern invention",
+          "title": "Why it's said this way: one attested question",
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin has no single fixed idiom for \"how are you?\" the way Spanish has ¿cómo estás? — but it has two genuinely attested colloquial questions, both found repeatedly in Plautus and Terence's comedies (the closest thing Latin has to recorded everyday speech):"
+              "text": "Quid agis? literally means “What are you doing?” In the comedies of Plautus and Terence, it also works like “How are you?” or “How is it going?”"
             },
             {
               "kind": "speech",
-              "text": "Quid agis? — literally \"what are you doing?\", used idiomatically the way English uses \"what's up?\" or \"how's it going?\""
+              "text": "Say it in two pieces: quid … agis. Keep Latin qu as kw."
             },
             {
               "kind": "speech",
-              "text": "Ut valēs? — literally \"how do you fare?\", built on valēre, \"to be strong, to be well\" — the same verb as valē."
-            },
-            {
-              "kind": "speech",
-              "text": "A third phrase, quōmodo tē habēs? (\"how do you hold yourself?\"), shows up constantly in modern spoken-Latin teaching materials, and it's grammatically perfectly sound — but it is not actually found in any surviving classical text. Be careful with this one: it's a reasonable modern construction, not a Roman one."
+              "text": "That is the whole step. A second attested question comes next, after this one is comfortable."
             }
           ]
         },
@@ -76,29 +72,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"quid agis?\" — literally \"what are you doing?\"",
+              "instruction": "quid agis?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"quid agis?\" — literally \"what are you doing?\"]"
+              "source": "[YOU SAY: **quid agis?**]"
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ut valēs?\" — literally \"how do you fare?\"",
+              "action": "RECALL",
+              "instruction": "its literal meaning — “what are you doing?”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ut valēs?\" — literally \"how do you fare?\"]"
+              "source": "[YOU RECALL: its literal meaning — “what are you doing?”]"
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"quōmodo tē habēs?\" — grammatical today, but not classically attested",
+              "action": "RECALL",
+              "instruction": "its conversational use — “how are you?”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"quōmodo tē habēs?\" — grammatical today, but not classically attested]"
+              "source": "[YOU RECALL: its conversational use — “how are you?”]"
             }
           ]
         },
@@ -115,7 +111,114 @@
             },
             {
               "kind": "speech",
-              "text": "What does quid agis? literally mean? (\"What are you doing?\") What verb connects ut valēs?, valeō, and the valē you already knew from Chapter 1? (Valēre, \"to be strong/well.\") Is quōmodo tē habēs? genuinely attested in classical Latin? (No — grammatically sound, but a modern pedagogical construction, not found in surviving Roman texts.)"
+              "text": "Ask “How are you?” with today’s Roman question. (Quid agis?) What does it say literally? (What are you doing?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C19-ut-vales",
+      "sequence": 405,
+      "title": "ut valēs? — how do you fare?",
+      "headword": "ut valēs?",
+      "romanization": "ut valēs?",
+      "gloss": "how do you fare?",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6172d20f27b46741",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know quid agis? Add one alternative built from the farewell valē: ut valēs?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the valēre family",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ut valēs? literally asks “How do you fare?” Its verb is valēre, “to be strong or well,” the same family as valē, “be well.” Plautus and Terence use this question in ordinary dialogue."
+            },
+            {
+              "kind": "speech",
+              "text": "You may also meet modern quōmodo tē habēs? in spoken-Latin courses. It is grammatical, but it is not found in surviving classical texts. Keep that useful provenance distinction attached to the phrase."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ut valēs?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ut valēs?**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "valē — “be well”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **valē** — “be well”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "Which is classically attested: ut valēs? or quōmodo tē habēs? (Ut valēs?)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: Which is classically attested: **ut valēs?** or **quōmodo tē habēs?** (**Ut valēs?**)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask “How do you fare?” (Ut valēs?) Which familiar farewell shares its verb? (Valē.) Name the modern but unattested alternative. (Quōmodo tē habēs?)"
             }
           ]
         }
@@ -134,7 +237,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f0465f604011809",
+      "sourceHash": "fnv1a64:1738d8b68a13a750",
       "notice": null,
       "blocks": [
         {
@@ -257,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81aeafc0622aef52",
+      "sourceHash": "fnv1a64:7affb16c58bc8278",
       "notice": null,
       "blocks": [
         {

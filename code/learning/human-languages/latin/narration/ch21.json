@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Nice to Meet You",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:67e96b837e28d997",
+  "sourceHash": "fnv1a64:c9fbad46a8c3a685",
   "lessons": [
     {
       "id": "LA-C21-volup-est-convenisse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7fa4ed193474c2c",
+      "sourceHash": "fnv1a64:604581a8cf803a05",
       "notice": null,
       "blocks": [
         {
@@ -138,7 +138,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11d5e61c195c5fb4",
+      "sourceHash": "fnv1a64:9e2db87292cf8109",
       "notice": null,
       "blocks": [
         {
@@ -256,7 +256,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ecece80fdd47b3c",
+      "sourceHash": "fnv1a64:9134d1ebb0ee8cc7",
       "notice": null,
       "blocks": [
         {

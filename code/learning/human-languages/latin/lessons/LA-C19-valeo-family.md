@@ -8,30 +8,33 @@ type: etymology
 headword: valeō, valē
 gloss: I fare well and be well — one verb supplies the wellbeing answer and the Chapter 1 farewell
 concept_tag: STATE-HOW-ARE-YOU
-prerequisites: [LA-C19-quid-agis]
+prerequisites: [LA-C19-ut-vales]
 sounds: [macron-long-vowel]
 roots: [valere-latin]
 etymology_hook: "valeō ('I fare well') and valē ('be well!') are forms of valēre, 'to be strong or well'; Plautus also attests intensified replies such as valeō rēctē"
 duration:
   max_seconds: 240
 requires:
-  knowledge: [LA-PRAGMATICS-QUID-AGIS-01]
+  knowledge: [LA-PRAGMATICS-QUID-AGIS-01, LA-PRAGMATICS-UT-VALES-01]
 introduces:
   knowledge: [LA-LEX-VALEO-FAMILY-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
-  knowledge: [LA-PRAGMATICS-QUID-AGIS-01, LA-LEX-VALEO-FAMILY-01]
+  knowledge: [LA-PRAGMATICS-QUID-AGIS-01, LA-PRAGMATICS-UT-VALES-01, LA-LEX-VALEO-FAMILY-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: classical
-reviews_of: [LA-C19-quid-agis, LA-C01-vale]
+reviews_of: [LA-C19-quid-agis, LA-C19-ut-vales, LA-C01-vale]
 ---
 
 # valeō and valē — answer and farewell from one verb
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[LA-PRAGMATICS-QUID-AGIS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PRAGMATICS-QUID-AGIS-01, LA-PRAGMATICS-UT-VALES-01] -->
 
 [PAUSE 2s] You can ask **ut valēs?**, "how do you fare?" Its most direct
 answer is already hiding inside the first farewell you learned.
@@ -54,7 +57,7 @@ That last imperative became the Chapter 1 goodbye. Latin's farewell is
 therefore a wish for the other person to remain well.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[LA-PRAGMATICS-QUID-AGIS-01, LA-LEX-VALEO-FAMILY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PRAGMATICS-QUID-AGIS-01, LA-PRAGMATICS-UT-VALES-01, LA-LEX-VALEO-FAMILY-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ut valēs?" — how do you fare?]
@@ -62,7 +65,7 @@ therefore a wish for the other person to remain well.
 - [YOU SAY: "valē" — be well; goodbye]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[LA-PRAGMATICS-QUID-AGIS-01, LA-LEX-VALEO-FAMILY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PRAGMATICS-QUID-AGIS-01, LA-PRAGMATICS-UT-VALES-01, LA-LEX-VALEO-FAMILY-01] -->
 
 [PAUSE 3s] What verb unites **ut valēs?**, **valeō**, and **valē**?
 (**Valēre**, "to be strong or well.") Which form answers the question?

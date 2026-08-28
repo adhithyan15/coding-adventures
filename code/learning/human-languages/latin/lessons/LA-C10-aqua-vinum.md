@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-ANNI-TEMPORA-01, LA-PRAGMATICS-ANNI-TEMPORA-02]
 introduces:
   knowledge: [LA-ETYMON-AQUA-VINUM-01, LA-LEX-AQUA-VINUM-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-ANNI-TEMPORA-01, LA-PRAGMATICS-ANNI-TEMPORA-02, LA-ETYMON-AQUA-VINUM-01, LA-LEX-AQUA-VINUM-02]
 skills: [listening, speaking, reading]

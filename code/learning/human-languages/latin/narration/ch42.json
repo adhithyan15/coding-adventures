@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Bringing, Getting, Playing, Waiting",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fc771c52c879041e",
+  "sourceHash": "fnv1a64:880347127d2829a7",
   "lessons": [
     {
       "id": "LA-C42-fero",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c3ff0413083e69f",
+      "sourceHash": "fnv1a64:1c26fe101840de7f",
       "notice": null,
       "blocks": [
         {
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:693bd25529f49ec4",
+      "sourceHash": "fnv1a64:fd153055087caccb",
       "notice": null,
       "blocks": [
         {
@@ -356,7 +356,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1becf4360cbec2c",
+      "sourceHash": "fnv1a64:8fb229a68f6c19f5",
       "notice": null,
       "blocks": [
         {
@@ -519,7 +519,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59f2f1577cadbc50",
+      "sourceHash": "fnv1a64:3d226967b39ef2fb",
       "notice": null,
       "blocks": [
         {

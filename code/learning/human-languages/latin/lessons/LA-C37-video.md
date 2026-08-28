@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-DICO-01, LA-LEX-CRAS-TE-VIDEBO-01]
 introduces:
   knowledge: [LA-LEX-VIDEO-01, LA-ETYMON-VIDEO-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-DICO-01, LA-LEX-CRAS-TE-VIDEBO-01, LA-LEX-VIDEO-01, LA-ETYMON-VIDEO-02]
 skills: [listening, speaking, reading]

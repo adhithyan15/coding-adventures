@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Eight Verbs at the Core",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:83d4326c264a1aaa",
+  "sourceHash": "fnv1a64:978e180bdfbc99a4",
   "lessons": [
     {
       "id": "LA-C37-sum",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0ff6bb656fe9f58",
+      "sourceHash": "fnv1a64:75aadd5df7401b1b",
       "notice": null,
       "blocks": [
         {
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d12f0c2d1c2338a2",
+      "sourceHash": "fnv1a64:f92cae1d694c771b",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +337,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:742adb95f89d57d9",
+      "sourceHash": "fnv1a64:8f92d9021d717c82",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9526c8bb7d17bc1d",
+      "sourceHash": "fnv1a64:892693f13604948a",
       "notice": null,
       "blocks": [
         {
@@ -655,7 +655,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9d41fbe1f17b046",
+      "sourceHash": "fnv1a64:c5690363fcaa4061",
       "notice": null,
       "blocks": [
         {
@@ -818,7 +818,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52164a1c1090035b",
+      "sourceHash": "fnv1a64:34340ef92c678dac",
       "notice": null,
       "blocks": [
         {
@@ -977,7 +977,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b762d17dcef21c2",
+      "sourceHash": "fnv1a64:b2741a84d0000bc7",
       "notice": null,
       "blocks": [
         {
@@ -1144,7 +1144,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:051856f3e9c81534",
+      "sourceHash": "fnv1a64:c54ebb9e15c17f85",
       "notice": null,
       "blocks": [
         {

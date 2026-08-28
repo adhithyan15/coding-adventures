@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Light, Shadow, and Going to Sleep",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a3b9c2e3a75c56aa",
+  "sourceHash": "fnv1a64:4edabf19a98b9c4f",
   "lessons": [
     {
       "id": "LA-C46-lux",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8294d626f2149a26",
+      "sourceHash": "fnv1a64:86bef742ec83a927",
       "notice": null,
       "blocks": [
         {
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05f65daeb4c2b3c9",
+      "sourceHash": "fnv1a64:25da0637a356efdf",
       "notice": null,
       "blocks": [
         {
@@ -243,7 +243,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2a8de54a1d02cde",
+      "sourceHash": "fnv1a64:bafd844a7c3a4fe7",
       "notice": null,
       "blocks": [
         {
@@ -353,7 +353,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d7d31930e31509f",
+      "sourceHash": "fnv1a64:5c421350aad26ef4",
       "notice": null,
       "blocks": [
         {
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ee66fd60dff580c",
+      "sourceHash": "fnv1a64:79215c5a47c83d7f",
       "notice": null,
       "blocks": [
         {

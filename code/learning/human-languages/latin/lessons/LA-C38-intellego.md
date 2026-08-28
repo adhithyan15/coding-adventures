@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-LEGO-01, LA-ETYMON-LEGO-02]
 introduces:
   knowledge: [LA-LEX-INTELLEGO-01, LA-ETYMON-INTELLEGO-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-LEGO-01, LA-ETYMON-LEGO-02, LA-LEX-INTELLEGO-01, LA-ETYMON-INTELLEGO-02]
 skills: [listening, speaking, reading]

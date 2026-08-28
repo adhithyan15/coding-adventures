@@ -15,23 +15,26 @@ etymology_hook: "one root, valēre, does three jobs in four lines: the question 
 duration:
   max_seconds: 220
 requires:
-  knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PHONO-VALE-01, LA-ETYMON-VALE-02, LA-GRAMMAR-VALE-03, LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-PRAGMATICS-QUID-AGIS-01, LA-LEX-VALEO-FAMILY-01]
+  knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PHONO-VALE-01, LA-ETYMON-VALE-02, LA-GRAMMAR-VALE-03, LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-PRAGMATICS-QUID-AGIS-01, LA-PRAGMATICS-UT-VALES-01, LA-LEX-VALEO-FAMILY-01]
 introduces:
   knowledge: [LA-DIALOGUE-WELLBEING-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
-  knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PHONO-VALE-01, LA-ETYMON-VALE-02, LA-GRAMMAR-VALE-03, LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-PRAGMATICS-QUID-AGIS-01, LA-LEX-VALEO-FAMILY-01, LA-DIALOGUE-WELLBEING-01]
+  knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PHONO-VALE-01, LA-ETYMON-VALE-02, LA-GRAMMAR-VALE-03, LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-PRAGMATICS-QUID-AGIS-01, LA-PRAGMATICS-UT-VALES-01, LA-LEX-VALEO-FAMILY-01, LA-DIALOGUE-WELLBEING-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, fluency]
 register: neutral
 variety: classical
-reviews_of: [LA-C19-quid-agis, LA-C19-valeo-family, LA-C01-salve, LA-C01-vale, LA-C01-gratias]
+reviews_of: [LA-C19-quid-agis, LA-C19-ut-vales, LA-C19-valeo-family, LA-C01-salve, LA-C01-vale, LA-C01-gratias]
 ---
 
 # Practice — open, check, answer, close
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-PHONO-VALE-01, LA-PRAGMATICS-QUID-AGIS-01, LA-LEX-VALEO-FAMILY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-PHONO-VALE-01, LA-PRAGMATICS-QUID-AGIS-01, LA-PRAGMATICS-UT-VALES-01, LA-LEX-VALEO-FAMILY-01] -->
 
 [PAUSE 2s] Nothing new. You already own every word below; this lesson only
 puts them in order, so that for the first time you can carry a whole Latin
@@ -68,7 +71,7 @@ Roman greeting is a wish for the other person's health, coming and going.
 - [YOU SAY: the ending that already means "I" in *valeō* and *agō* — **-ō**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PHONO-VALE-01, LA-ETYMON-VALE-02, LA-GRAMMAR-VALE-03, LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-PRAGMATICS-QUID-AGIS-01, LA-LEX-VALEO-FAMILY-01, LA-DIALOGUE-WELLBEING-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PHONO-VALE-01, LA-ETYMON-VALE-02, LA-GRAMMAR-VALE-03, LA-PHONO-GRATIAS-01, LA-ETYMON-GRATIAS-02, LA-GRAMMAR-GRATIAS-03, LA-PRAGMATICS-QUID-AGIS-01, LA-PRAGMATICS-UT-VALES-01, LA-LEX-VALEO-FAMILY-01, LA-DIALOGUE-WELLBEING-01] -->
 <!-- hl-activity: {"id":"LA-C19-practice-answer-line","kind":"text","assesses":["LA-DIALOGUE-WELLBEING-01"],"prompt":"Someone has just asked you ut vales? Type the one-word Latin answer.","answer":"valeo","accepted":["valeō"],"feedback":{"correct":"Right: valeo — I fare well. Same verb as vale.","incorrect":"Answer valeo, I fare well — the same valere behind vale."},"response_seconds":8} -->
 
 [PAUSE 3s] Run the exchange once more without looking. Then: which single

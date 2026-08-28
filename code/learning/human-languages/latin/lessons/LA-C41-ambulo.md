@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-STO-01, LA-ETYMON-STO-02, LA-LEX-SEDEO-01]
 introduces:
   knowledge: [LA-LEX-AMBULO-01, LA-ETYMON-AMBULO-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-STO-01, LA-ETYMON-STO-02, LA-LEX-SEDEO-01, LA-LEX-AMBULO-01, LA-ETYMON-AMBULO-02]
 skills: [listening, speaking, reading]

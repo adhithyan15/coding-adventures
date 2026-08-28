@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "How",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f50df97989beb1d1",
+  "sourceHash": "fnv1a64:7a094870661d841d",
   "lessons": [
     {
       "id": "LA-C26-quomodo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37381c4bde4b1c99",
+      "sourceHash": "fnv1a64:b8c4664ec3562c00",
       "notice": null,
       "blocks": [
         {

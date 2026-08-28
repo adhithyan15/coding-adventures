@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-SUM-01, LA-LEX-HABEO-01, LA-LEX-EO-01, LA-LEX-VENIO-01, LA-LEX-DICO-01, LA-LEX-VIDEO-01, LA-LEX-SCIO-01]
 introduces:
   knowledge: [LA-LEX-DO-01, LA-ETYMON-DO-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-SUM-01, LA-LEX-HABEO-01, LA-LEX-EO-01, LA-LEX-VENIO-01, LA-LEX-DICO-01, LA-LEX-VIDEO-01, LA-LEX-SCIO-01, LA-LEX-DO-01, LA-ETYMON-DO-02]
 skills: [listening, speaking, reading]

@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d9f6f591d0ed8564",
+  "sourceHash": "fnv1a64:79a94d63abb15a58",
   "lessons": [
     {
       "id": "LA-C31-mane",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3ed059fad5a5a94",
+      "sourceHash": "fnv1a64:b27899492d745177",
       "notice": null,
       "blocks": [
         {

@@ -18,6 +18,9 @@ requires:
   knowledge: [LA-LEX-C45-WORLD-01, LA-LEX-C45-WORLD-02, LA-LEX-C45-WORLD-03]
 introduces:
   knowledge: [LA-LEX-C45-WORLD-04]
+introduces_idioms: []
+introduces_senses: [LA-SENSE-CAELUM-HEAVENS-01]
+introduces_culture_claims: []
 practises:
   knowledge: [LA-LEX-C45-WORLD-01, LA-LEX-C45-WORLD-02, LA-LEX-C45-WORLD-03, LA-LEX-C45-WORLD-04]
 skills: [listening, speaking, reading]

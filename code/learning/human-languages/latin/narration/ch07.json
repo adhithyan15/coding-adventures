@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cad110c49d4d24a0",
+  "sourceHash": "fnv1a64:3e2ba2a5bd68e8ab",
   "lessons": [
     {
       "id": "LA-C07-pater-mater",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2eb931af67e5883",
+      "sourceHash": "fnv1a64:0b284c1a248b58b2",
       "notice": null,
       "blocks": [
         {
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f740e6f8c7ea0bce",
+      "sourceHash": "fnv1a64:4226a374129e51eb",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:af8c86fea4e23dd8",
+  "sourceHash": "fnv1a64:d8cf40f126b7b659",
   "lessons": [
     {
       "id": "LA-C04-ignosce-mihi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1a8a89e50819218",
+      "sourceHash": "fnv1a64:c0ac8b3666a58f78",
       "notice": null,
       "blocks": [
         {

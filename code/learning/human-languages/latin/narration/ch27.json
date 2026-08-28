@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Well",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4f1ddd5d47387816",
+  "sourceHash": "fnv1a64:e8350eab9c5b7390",
   "lessons": [
     {
       "id": "LA-C27-bene",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e365929d7622073",
+      "sourceHash": "fnv1a64:73fe26f145769b20",
       "notice": null,
       "blocks": [
         {
