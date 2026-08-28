@@ -492,7 +492,22 @@ public static class ToolchainDetection
         IReadOnlyList<PackageSpec> packages,
         IReadOnlyCollection<string>? scheduledPackages,
         bool forceFull,
-        IReadOnlyCollection<string> forcedToolchains)
+        IReadOnlyCollection<string> forcedToolchains) =>
+        EvaluatePackagesCore(packages, scheduledPackages, forceFull, forcedToolchains, true);
+
+    public static ToolchainDetectionResult EvaluateProductionPackages(
+        IReadOnlyList<PackageSpec> packages,
+        IReadOnlyCollection<string>? scheduledPackages,
+        bool forceFull,
+        IReadOnlyCollection<string> forcedToolchains) =>
+        EvaluatePackagesCore(packages, scheduledPackages, forceFull, forcedToolchains, false);
+
+    private static ToolchainDetectionResult EvaluatePackagesCore(
+        IReadOnlyList<PackageSpec> packages,
+        IReadOnlyCollection<string>? scheduledPackages,
+        bool forceFull,
+        IReadOnlyCollection<string> forcedToolchains,
+        bool validateForceFullLanguages)
     {
         var toolchains = CanonicalToolchains.ToDictionary(
             toolchain => toolchain,
@@ -502,7 +517,7 @@ public static class ToolchainDetection
             ? packages
             : packages.Where(package => scheduledPackages.Contains(package.Name, StringComparer.Ordinal)).ToArray();
 
-        if (!forceFull)
+        if (!forceFull || validateForceFullLanguages)
         {
             foreach (var package in selected)
             {
@@ -516,10 +531,13 @@ public static class ToolchainDetection
                     return Unsupported(package.Name);
                 }
 
-                toolchains[toolchain] = true;
-                foreach (var extraToolchain in package.ExtraToolchains)
+                if (!forceFull)
                 {
-                    toolchains[extraToolchain] = true;
+                    toolchains[toolchain] = true;
+                    foreach (var extraToolchain in package.ExtraToolchains)
+                    {
+                        toolchains[extraToolchain] = true;
+                    }
                 }
             }
         }
@@ -2841,7 +2859,7 @@ public static class BuildToolApp
     public static readonly string[] AllToolchains = ToolchainDetection.CanonicalToolchains.ToArray();
 
     public static string ToolchainForLanguage(string language) =>
-        ToolchainDetection.ToolchainForLanguage(language);
+        language == "starlark" ? "go" : ToolchainDetection.ToolchainForLanguage(language);
 
     public static async Task<int> RunAsync(string[] args)
     {
@@ -2958,8 +2976,11 @@ public static class BuildToolApp
             }
         }
 
-        var toolchainDetection = ToolchainDetection.EvaluatePackages(
-            packages,
+        var toolchainPackages = packages
+            .Select(package => package.Language == "starlark" ? package with { Language = "go" } : package)
+            .ToArray();
+        var toolchainDetection = ToolchainDetection.EvaluateProductionPackages(
+            toolchainPackages,
             affectedSet,
             force || affectedSet is null,
             ciToolchains);

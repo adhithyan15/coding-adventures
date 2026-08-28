@@ -604,6 +604,43 @@ public sealed class BuildToolTests : IDisposable
     }
 
     [Fact]
+    public void ToolchainForceFullStillRejectsAnUnsupportedSelectedLanguage()
+    {
+        var result = ToolchainDetection.EvaluateSnapshot(
+            "linux",
+            true,
+            [new ToolchainPackageSnapshot("zig/app", "zig", new Dictionary<string, string> { ["BUILD"] = "" })],
+            null,
+            []);
+
+        Assert.Equal("error", result.Outcome);
+        Assert.Empty(result.Toolchains);
+        var diagnostic = Assert.Single(result.Diagnostics);
+        Assert.Equal("TOOLCHAIN_UNSUPPORTED", diagnostic.Code);
+        Assert.Equal("zig/app", diagnostic.Package);
+    }
+
+    [Fact]
+    public void ProductionToolchainMappingTreatsTheStarlarkBuildBucketAsGo()
+    {
+        Assert.Equal("go", BuildToolApp.ToolchainForLanguage("starlark"));
+    }
+
+    [Fact]
+    public void ProductionForceFullEnablesTheClosedRegistryWithoutClassifyingSpecialBuckets()
+    {
+        var result = ToolchainDetection.EvaluateProductionPackages(
+            [new PackageSpec("unknown/fixture", string.Empty, [], "unknown", [])],
+            null,
+            true,
+            []);
+
+        Assert.Equal("ok", result.Outcome);
+        Assert.All(result.Toolchains, entry => Assert.True(entry.Value, entry.Key));
+        Assert.Empty(result.Diagnostics);
+    }
+
+    [Fact]
     public void ProductionToolchainSchedulingConsultsOnlyAffectedPackageDeclarations()
     {
         var packages = new PackageSpec[]

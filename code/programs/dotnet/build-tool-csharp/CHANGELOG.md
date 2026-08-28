@@ -10,6 +10,10 @@
   platform-front discovery, canonical language mappings, and per-file plus
   aggregate resource ceilings, including strict CRLF acceptance and lone-CR
   rejection.
+- Kept forced-full neutral snapshots strict for unsupported selected languages
+  while production forced-full scheduling provisions the complete registry
+  without misclassifying repository-only special/fixture buckets; affected
+  Starlark BUILD packages use the existing Go bootstrap.
 - Added process-free orphan-crate snapshot validation with exact artifact
   exclusion, direct and ancestor BUILD coverage, invalid and stale exemption
   diagnostics, pending-debt accounting, hostile-path redaction, and direct

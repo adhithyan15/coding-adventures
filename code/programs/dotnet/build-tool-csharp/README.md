@@ -62,6 +62,11 @@ dotnet run -- --emit-plan --plan-file build-plan.json
   Production
   discovery records declarations from the same BUILD front whose shell commands
   it selects; unselected platform declarations remain inert.
+- Neutral snapshots validate every selected language even in forced-full mode.
+  Production forced-full orchestration already provisions all 16 canonical
+  toolchains, so it does not attempt to classify repository-only fixture and
+  special buckets; affected production packages remain strict, with the
+  repository's Starlark build-language bucket normalized to its Go bootstrap.
 - Declares the mixed MIT and Unicode-3.0 licensing of the engine and derived
   tables and copies the full `UNICODE-LICENSE.txt` notice beside build,
   publish, and package outputs.
