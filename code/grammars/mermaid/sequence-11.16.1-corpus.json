@@ -45,6 +45,26 @@
     {
       "id": "stacked-participant-activations",
       "source": "sequenceDiagram\nAlice-->>+Bob:Hello Bob, how are you?\nBob-->>+Carol:Carol, let me introduce Alice?\nBob-->>- Alice:Hello Alice, please meet Carol?\nCarol->>- Bob:Oh Bob, I'm so happy to be here!"
+    },
+    {
+      "id": "autonumber-disabled-by-default",
+      "source": "sequenceDiagram\nAlice->Bob:Hello Bob, how are you?\nNote right of Bob: Bob thinks\nBob-->Alice: I am good thanks!"
+    },
+    {
+      "id": "autonumber-enabled",
+      "source": "sequenceDiagram\nautonumber\nAlice->Bob:Hello Bob, how are you?\nNote right of Bob: Bob thinks\nBob-->Alice: I am good thanks!"
+    },
+    {
+      "id": "autonumber-decimal-hundredths",
+      "source": "sequenceDiagram\nautonumber 10.1 .01\nAlice->Bob:Hello Bob, how are you?\nNote right of Bob: Bob thinks\nBob-->Alice: I am good thanks!"
+    },
+    {
+      "id": "autonumber-increment-hundredths",
+      "source": "sequenceDiagram\nautonumber 10.01 .01\nAlice->Bob:Hello Bob, how are you?\nBob-->Alice: I am good thanks!\nAlice-->Bob: Have a good day!"
+    },
+    {
+      "id": "autonumber-increment-tenths",
+      "source": "sequenceDiagram\nautonumber 10.1 .1\nAlice->Bob:Hello Bob, how are you?\nBob-->Alice: I am good thanks!\nAlice-->Bob: Have a good day!"
     }
   ],
   "invalid": [
@@ -55,6 +75,10 @@
     {
       "id": "participant-activation-underflow",
       "source": "sequenceDiagram\nparticipant user as End User\nparticipant Server as Server\nparticipant System as System\nparticipant System2 as System2\nuser->>+Server: Test\nuser->>+Server: Test2\nuser->>System: Test\nServer->>-user: Test\nServer->>-user: Test2\nServer->>-user: Test3"
+    },
+    {
+      "id": "autonumber-rejects-thousandths",
+      "source": "sequenceDiagram\nautonumber 10.001\nAlice->Bob:Hello Bob, how are you?\nNote right of Bob: Bob thinks\nBob-->Alice: I am good thanks!"
     }
   ]
 }
