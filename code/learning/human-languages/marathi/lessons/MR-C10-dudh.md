@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-CHAHA, MR-ETYMON-CHAHA-OVERLAND]
 introduces:
   knowledge: [MR-LEX-DUDH, MR-ETYMON-DUDH-DUGDHA]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-DUDH, MR-ETYMON-DUDH-DUGDHA, MR-LEX-CHAHA, MR-LEX-PAANI, MR-PHRASE-KRUPAYA]
 skills: [listening, speaking, reading]

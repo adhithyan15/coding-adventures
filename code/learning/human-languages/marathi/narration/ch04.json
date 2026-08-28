@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Courtesy, Responses, and Leave-Taking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:95eb38d40980ffc2",
+  "sourceHash": "fnv1a64:bd91f46b75d1ce27",
   "lessons": [
     {
       "id": "MR-C01-ho",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b0d73a76cb150621",
+      "sourceHash": "fnv1a64:dc2f656183fbadd6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9ab5be1af187c0d5",
+      "sourceHash": "fnv1a64:ef1acb2bf5f2edd3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1de0505ecc9b260e",
+      "sourceHash": "fnv1a64:b1f02b7c6135d56c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:334708ed124fe49c",
+      "sourceHash": "fnv1a64:b5274ccc5a35219d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -510,7 +510,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1ec3d2a65fe37ef",
+      "sourceHash": "fnv1a64:b76e09a46926c12e",
       "notice": null,
       "blocks": [
         {

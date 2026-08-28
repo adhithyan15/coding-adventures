@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-BHAKARI, MR-ETYMON-BHAKARI-LUMP]
 introduces:
   knowledge: [MR-LEX-MITRA, MR-ETYMON-MITRA-BIND, MR-GRAMMAR-TATSAMA-BORROWING]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-MITRA, MR-ETYMON-MITRA-BIND, MR-GRAMMAR-TATSAMA-BORROWING, MR-LEX-BHAKARI, MR-ETYMON-BHAKARI-LUMP, MR-LEX-DUDH, MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER]
 skills: [listening, speaking, reading]

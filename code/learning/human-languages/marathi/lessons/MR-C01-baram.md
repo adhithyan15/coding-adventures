@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-HO-01]
 introduces:
   knowledge: [MR-LEX-BARAM-01]
+introduces_idioms: []
+introduces_senses: [MR-SENSE-BARAM-OKAY-GOOD-01]
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-BARAM-01, MR-LEX-HO-01]
 skills: [listening, speaking, reading]

@@ -19,6 +19,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA]
 skills: [listening, speaking, reading]

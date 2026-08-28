@@ -19,6 +19,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [MR-SCRIPT-HA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-SCRIPT-HA-01]
 skills: [reading, writing]

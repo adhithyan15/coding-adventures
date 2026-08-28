@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-JANE, MR-GRAMMAR-PRESENT-GENDER]
 introduces:
   knowledge: [MR-LEX-YENE, MR-ETYMON-AA-YAA-COME]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-JANE, MR-GRAMMAR-PRESENT-GENDER, MR-LEX-YENE, MR-ETYMON-AA-YAA-COME]
 skills: [listening, speaking, reading]

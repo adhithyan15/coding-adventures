@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-ASNE-AAHE, MR-LEX-JANE, MR-LEX-YENE]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-ASNE-AAHE, MR-LEX-JANE, MR-LEX-YENE]
 skills: [listening, speaking, reading]

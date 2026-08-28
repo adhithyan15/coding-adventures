@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-KUTUMB, MR-GRAMMAR-KUTUMB-NEUTER]
 introduces:
   knowledge: [MR-LEX-BHAU, MR-ETYMON-BHAU-BROTHER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-BHAU, MR-ETYMON-BHAU-BROTHER, MR-LEX-KUTUMB, MR-LEX-MITRA]
 skills: [listening, speaking, reading]

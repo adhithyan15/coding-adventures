@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01]
 introduces:
   knowledge: [MR-SCRIPT-SA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-NA-01, MR-SCRIPT-AA-MATRA-01, MR-SCRIPT-II-MATRA-01, MR-SCRIPT-MA-01, MR-SCRIPT-SA-01]
 skills: [reading, writing]

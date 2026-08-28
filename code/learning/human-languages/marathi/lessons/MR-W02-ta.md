@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-SCRIPT-ANUSVARA-01]
 introduces:
   knowledge: [MR-SCRIPT-TA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-SCRIPT-TA-01]
 skills: [reading, writing, speaking]

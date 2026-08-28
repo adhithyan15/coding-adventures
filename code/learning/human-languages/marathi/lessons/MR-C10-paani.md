@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-AVADNE, MR-GRAMMAR-DATIVE-LIKING, MR-LEX-PREM-KARNE]
 introduces:
   knowledge: [MR-LEX-PAANI, MR-PHRASE-KRUPAYA, MR-ETYMON-PAANI-DRINK]
+introduces_idioms: [MR-IDIOM-KRUPAYA-PLEASE-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-PAANI, MR-PHRASE-KRUPAYA, MR-ETYMON-PAANI-DRINK, MR-LEX-AVADNE, MR-GRAMMAR-DATIVE-LIKING, MR-LEX-PREM-KARNE]
 skills: [listening, speaking, reading]

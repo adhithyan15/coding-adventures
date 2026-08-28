@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-DHANYAVAD-01, MR-SCRIPT-DHANYAVAD-WRITE-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-DHANYAVAD-01, MR-SCRIPT-DHANYAVAD-WRITE-01]
 skills: [listening, speaking, reading, writing]

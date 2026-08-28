@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-KUTUMB, MR-GRAMMAR-KUTUMB-NEUTER]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-KUTUMB, MR-GRAMMAR-KUTUMB-NEUTER]
 skills: [listening, speaking, reading]

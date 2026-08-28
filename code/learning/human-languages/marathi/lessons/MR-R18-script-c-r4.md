@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-SCRIPT-DA-01, MR-SCRIPT-DHA-01, MR-SCRIPT-BA-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-SCRIPT-DA-01, MR-SCRIPT-DHA-01, MR-SCRIPT-BA-01]
 skills: [listening, reading, writing]

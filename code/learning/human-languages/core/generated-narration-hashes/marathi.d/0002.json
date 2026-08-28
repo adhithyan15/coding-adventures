@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 2,
-  "sourceHash": "fnv1a64:1cb7d7218495dc15",
+  "sourceHash": "fnv1a64:3a876d43d73fc045",
   "lessonIds": [
     "MR-C01-dhanyavad",
     "MR-W02-visarga",
@@ -16,6 +16,6 @@
   "text": "marathi/narration/ch02.txt",
   "json": "marathi/narration/ch02.json",
   "textHash": "fnv1a64:4c5208b3034c858d",
-  "jsonHash": "fnv1a64:c8e8eb1560ac5210",
+  "jsonHash": "fnv1a64:46b7ae7d9f13a692",
   "findings": []
 }

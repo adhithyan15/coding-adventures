@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-HO-01]
 introduces:
   knowledge: [MR-LEX-NAHI-01]
+introduces_idioms: []
+introduces_senses: [MR-SENSE-NAHI-NO-NOT-EXIST-01]
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-NAHI-01, MR-LEX-HO-01]
 skills: [listening, speaking, reading]

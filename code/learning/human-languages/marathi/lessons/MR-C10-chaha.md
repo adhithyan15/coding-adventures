@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-PAANI, MR-PHRASE-KRUPAYA, MR-ETYMON-PAANI-DRINK]
 introduces:
   knowledge: [MR-LEX-CHAHA, MR-ETYMON-CHAHA-OVERLAND]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [MR-CULTURE-CHAHA-OVERLAND-TRADE-ROUTE-01]
 practises:
   knowledge: [MR-LEX-CHAHA, MR-ETYMON-CHAHA-OVERLAND, MR-LEX-PAANI, MR-PHRASE-KRUPAYA]
 skills: [listening, speaking, reading]

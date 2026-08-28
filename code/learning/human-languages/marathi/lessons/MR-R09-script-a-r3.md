@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-SCRIPT-DHANYAVAD-WRITE-01, MR-SCRIPT-VISARGA-01, MR-SCRIPT-AA-INDEPENDENT-01, MR-SCRIPT-BHA-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-SCRIPT-DHANYAVAD-WRITE-01, MR-SCRIPT-VISARGA-01, MR-SCRIPT-AA-INDEPENDENT-01, MR-SCRIPT-BHA-01]
 skills: [listening, reading, writing]

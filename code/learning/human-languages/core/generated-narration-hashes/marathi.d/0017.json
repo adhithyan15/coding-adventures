@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 17,
-  "sourceHash": "fnv1a64:a23497108ec8498f",
+  "sourceHash": "fnv1a64:c6ba4558991d9719",
   "lessonIds": [
     "MR-R14-mitra-r2",
     "MR-R14-kutumb-r2",
@@ -21,6 +21,6 @@
   "text": "marathi/narration/ch17.txt",
   "json": "marathi/narration/ch17.json",
   "textHash": "fnv1a64:e9b216f0dda15c2a",
-  "jsonHash": "fnv1a64:0d28c3e8be489fa3",
+  "jsonHash": "fnv1a64:c19f1086e8fc2d12",
   "findings": []
 }

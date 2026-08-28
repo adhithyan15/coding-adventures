@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The Mind and the Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:16016b68a89a5f45",
+  "sourceHash": "fnv1a64:b4807b67fa14d5d9",
   "lessons": [
     {
       "id": "MR-C08-vichar-karne",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4cf04a726c4cd135",
+      "sourceHash": "fnv1a64:3d7f7b21fca76b34",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:75dbb1ace9a9967f",
+      "sourceHash": "fnv1a64:5c9a62f08bbab5ca",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -350,7 +350,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7efdb12c5b5b5571",
+      "sourceHash": "fnv1a64:fa48effba5348430",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -505,7 +505,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a1e633d41d2c7dc6",
+      "sourceHash": "fnv1a64:0ff7e9e521d26ef3",
       "notice": {
         "modality": "sight",
         "needs": [

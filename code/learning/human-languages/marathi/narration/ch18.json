@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "The Doorway Signs at Long Distance",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1edf54becda9527e",
+  "sourceHash": "fnv1a64:e6f424fb5a7f392f",
   "lessons": [
     {
       "id": "MR-R18-script-warmup",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1b39e7057f7f850",
+      "sourceHash": "fnv1a64:51c526c9afeea7af",
       "notice": null,
       "blocks": [
         {
@@ -77,7 +77,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b34346cb7081f0f2",
+      "sourceHash": "fnv1a64:2b3b694e84e91fdd",
       "notice": null,
       "blocks": [
         {
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a64cf23f8904acbc",
+      "sourceHash": "fnv1a64:294f2857aab3a971",
       "notice": null,
       "blocks": [
         {
@@ -196,7 +196,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6a159041c3d6a3f",
+      "sourceHash": "fnv1a64:f218c69d3557ada4",
       "notice": null,
       "blocks": [
         {
@@ -255,7 +255,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1951ce5fe09b6eef",
+      "sourceHash": "fnv1a64:c9913056aac7da0e",
       "notice": null,
       "blocks": [
         {

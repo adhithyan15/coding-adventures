@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-SAMAJNE, MR-LEX-VICHAR-KARNE, MR-LEX-PAHNE, MR-GRAMMAR-PRESENT-GENDER]
 introduces:
   knowledge: [MR-LEX-VACHNE, MR-ETYMON-VACH-VOICE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-SAMAJNE, MR-LEX-VICHAR-KARNE, MR-LEX-PAHNE, MR-GRAMMAR-PRESENT-GENDER, MR-LEX-VACHNE, MR-ETYMON-VACH-VOICE]
 skills: [listening, speaking, reading]

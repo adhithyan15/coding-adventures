@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-NAMASKAR-01, MR-LEX-NAHI-01]
 introduces:
   knowledge: [MR-PHRASE-YETO-YETE-01]
+introduces_idioms: [MR-IDIOM-YETO-YETE-LEAVE-TAKING-01]
+introduces_senses: []
+introduces_culture_claims: [MR-CULTURE-YETO-RETURN-FRAMED-GOODBYE-01]
 practises:
   knowledge: [MR-PHRASE-YETO-YETE-01, MR-LEX-NAMASKAR-01, MR-LEX-NAHI-01]
 skills: [listening, speaking, reading]

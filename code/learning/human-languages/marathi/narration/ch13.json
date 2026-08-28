@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Water, Tea, Milk, and Bhakri",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b78f797bb6fe25e2",
+  "sourceHash": "fnv1a64:85512d4a2fe18b2d",
   "lessons": [
     {
       "id": "MR-C10-paani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:978d6fdb9d8ce88a",
+      "sourceHash": "fnv1a64:e85285721bc424ce",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a3a55bd96abb802e",
+      "sourceHash": "fnv1a64:4b62329795f37700",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -318,7 +318,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:497c1a4907c8977a",
+      "sourceHash": "fnv1a64:fa77b97bc458dac3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -460,7 +460,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e3f8078a955347dc",
+      "sourceHash": "fnv1a64:e8291f5305e45591",
       "notice": {
         "modality": "sight",
         "needs": [

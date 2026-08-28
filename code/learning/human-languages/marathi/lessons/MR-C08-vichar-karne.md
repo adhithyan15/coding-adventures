@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-PAHNE, MR-ETYMON-PASH-SPEK, MR-GRAMMAR-PRESENT-GENDER, MR-GRAMMAR-NE-NEUTER-NOUN, MR-SOUND-CHA-TSAA]
 introduces:
   knowledge: [MR-LEX-VICHAR-KARNE, MR-ETYMON-VICHAR-TURN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-PAHNE, MR-ETYMON-PASH-SPEK, MR-GRAMMAR-PRESENT-GENDER, MR-GRAMMAR-NE-NEUTER-NOUN, MR-SOUND-CHA-TSAA, MR-LEX-VICHAR-KARNE, MR-ETYMON-VICHAR-TURN]
 skills: [listening, speaking, reading]
