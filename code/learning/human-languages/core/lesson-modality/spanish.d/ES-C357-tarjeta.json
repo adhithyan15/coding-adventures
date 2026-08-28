@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C357-tarjeta",
+    "language": "spanish",
+    "chapter": 357,
+    "sequence": 6810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed63eff45d2f7085"
+  },
+  "findings": []
+}

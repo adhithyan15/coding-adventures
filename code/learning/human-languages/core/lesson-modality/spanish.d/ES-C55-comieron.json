@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C55-comieron",
+    "language": "spanish",
+    "chapter": 201,
+    "sequence": 2240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cb5ee1a33161f7f"
+  },
+  "findings": []
+}

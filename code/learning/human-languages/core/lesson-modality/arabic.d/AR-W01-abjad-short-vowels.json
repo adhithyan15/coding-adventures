@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-W01-abjad-short-vowels",
+    "language": "arabic",
+    "chapter": 1,
+    "sequence": 100,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4afc7e8902435479"
+  },
+  "findings": []
+}

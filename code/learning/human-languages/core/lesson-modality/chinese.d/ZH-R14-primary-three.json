@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R14-primary-three",
+    "language": "chinese",
+    "chapter": 14,
+    "sequence": 1080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c33a9c7f5e2d420"
+  },
+  "findings": []
+}

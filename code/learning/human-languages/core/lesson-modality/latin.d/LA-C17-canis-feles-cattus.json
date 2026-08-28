@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C17-canis-feles-cattus",
+    "language": "latin",
+    "chapter": 17,
+    "sequence": 380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d68948574001385"
+  },
+  "findings": []
+}

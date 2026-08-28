@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "BN-C03-kemon",
+    "language": "bengali",
+    "chapter": 3,
+    "sequence": 160,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:078ba23a479b41a2",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

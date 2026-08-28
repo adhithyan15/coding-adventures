@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W11-qing",
+    "language": "chinese",
+    "chapter": 11,
+    "sequence": 650,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:07dacaf9c61f23e7",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

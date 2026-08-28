@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C14-xiaoxue",
+    "language": "chinese",
+    "chapter": 14,
+    "sequence": 1050,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5577901e994bbb7c"
+  },
+  "findings": []
+}

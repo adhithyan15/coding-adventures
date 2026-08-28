@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C398-interesante",
+    "language": "spanish",
+    "chapter": 398,
+    "sequence": 8710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7607f43ddb841eb0"
+  },
+  "findings": []
+}

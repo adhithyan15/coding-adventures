@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C44-fruit",
+    "language": "tamil",
+    "chapter": 44,
+    "sequence": 1410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d37ebae1c36d4caa"
+  },
+  "findings": []
+}

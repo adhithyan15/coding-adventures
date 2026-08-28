@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C65-repaso-parejas",
+    "language": "spanish",
+    "chapter": 256,
+    "sequence": 2515,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d6f71b65ff55137"
+  },
+  "findings": []
+}

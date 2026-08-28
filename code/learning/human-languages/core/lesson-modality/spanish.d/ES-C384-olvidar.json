@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C384-olvidar",
+    "language": "spanish",
+    "chapter": 384,
+    "sequence": 8120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:119470f28e838de7"
+  },
+  "findings": []
+}

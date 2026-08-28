@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C58-that-will-do",
+    "language": "malayalam",
+    "chapter": 58,
+    "sequence": 1830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:477dc29942606fee"
+  },
+  "findings": []
+}

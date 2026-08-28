@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C40-bhojanam",
+    "language": "telugu",
+    "chapter": 40,
+    "sequence": 870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d74b92dd75b2f5e1"
+  },
+  "findings": []
+}

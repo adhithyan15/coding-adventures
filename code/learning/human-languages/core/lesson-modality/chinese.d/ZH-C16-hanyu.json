@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C16-hanyu",
+    "language": "chinese",
+    "chapter": 16,
+    "sequence": 1390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b2156ed96c0a607"
+  },
+  "findings": []
+}

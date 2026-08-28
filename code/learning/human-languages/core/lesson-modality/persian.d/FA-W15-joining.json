@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "FA-W15-joining",
+    "language": "persian",
+    "chapter": 15,
+    "sequence": 640,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b7ea3986349b58c1",
+    "detachableSegments": [
+      "Script — the running line",
+      "Script — and the letters that refuse"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

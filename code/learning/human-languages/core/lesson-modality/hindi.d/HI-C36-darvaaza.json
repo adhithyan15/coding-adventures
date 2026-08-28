@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C36-darvaaza",
+    "language": "hindi",
+    "chapter": 36,
+    "sequence": 950,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf4ccc0cb3c4a4b6",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

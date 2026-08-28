@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C11-rangulu",
+    "language": "telugu",
+    "chapter": 11,
+    "sequence": 380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9887faa67f4d0a2"
+  },
+  "findings": []
+}

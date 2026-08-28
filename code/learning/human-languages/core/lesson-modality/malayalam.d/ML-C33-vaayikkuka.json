@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ML-C33-vaayikkuka",
+    "language": "malayalam",
+    "chapter": 33,
+    "sequence": 730,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08577a1a89d529ef",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

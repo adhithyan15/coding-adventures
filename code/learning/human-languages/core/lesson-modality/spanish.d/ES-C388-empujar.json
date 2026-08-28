@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C388-empujar",
+    "language": "spanish",
+    "chapter": 388,
+    "sequence": 8250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1465f11da9594ac"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C307-primo",
+    "language": "spanish",
+    "chapter": 307,
+    "sequence": 4500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0bebe0a3f39780c7"
+  },
+  "findings": []
+}

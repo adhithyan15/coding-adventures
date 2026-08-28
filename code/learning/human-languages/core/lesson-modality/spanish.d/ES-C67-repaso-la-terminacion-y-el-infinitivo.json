@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C67-repaso-la-terminacion-y-el-infinitivo",
+    "language": "spanish",
+    "chapter": 265,
+    "sequence": 2561,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1afec1769fee7b6"
+  },
+  "findings": []
+}

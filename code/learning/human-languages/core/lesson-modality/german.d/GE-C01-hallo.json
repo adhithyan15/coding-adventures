@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GE-C01-hallo",
+    "language": "german",
+    "chapter": 1,
+    "sequence": 5,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:740594c787b5a06e",
+    "detachableSegments": [
+      "Writing — follow one word you can see"
+    ]
+  },
+  "findings": []
+}

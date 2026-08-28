@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C58-window",
+    "language": "hindi",
+    "chapter": 58,
+    "sequence": 2020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba06d4287b34ca35"
+  },
+  "findings": []
+}

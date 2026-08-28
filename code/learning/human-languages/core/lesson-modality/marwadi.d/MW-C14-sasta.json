@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C14-sasta",
+    "language": "marwadi",
+    "chapter": 19,
+    "sequence": 1420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb240590ba20b00b"
+  },
+  "findings": []
+}

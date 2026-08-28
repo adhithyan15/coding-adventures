@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "GU-R04-first-four-r1",
+    "language": "gujarati",
+    "chapter": 4,
+    "sequence": 75,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:56ca33ac98733c4c",
+    "detachableSegments": [
+      "Writing — from sound or role"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

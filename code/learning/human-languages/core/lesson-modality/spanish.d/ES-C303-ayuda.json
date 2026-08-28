@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C303-ayuda",
+    "language": "spanish",
+    "chapter": 303,
+    "sequence": 4270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1265e7c208d48780"
+  },
+  "findings": []
+}

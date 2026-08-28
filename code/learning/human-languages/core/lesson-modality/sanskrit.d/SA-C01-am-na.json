@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-C01-am-na",
+    "language": "sanskrit",
+    "chapter": 1,
+    "sequence": 50,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a9824e38ca63b11",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

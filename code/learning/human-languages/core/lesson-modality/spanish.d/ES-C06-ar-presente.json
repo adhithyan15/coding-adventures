@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C06-ar-presente",
+    "language": "spanish",
+    "chapter": 19,
+    "sequence": 524,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:492908c359178db6"
+  },
+  "findings": []
+}

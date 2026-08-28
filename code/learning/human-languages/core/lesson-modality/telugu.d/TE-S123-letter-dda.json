@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S123-letter-dda",
+    "language": "telugu",
+    "chapter": 20,
+    "sequence": 481,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:58f10c0506a5c39e",
+    "detachableSegments": [
+      "Script you'll notice: డ",
+      "Writing: డ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

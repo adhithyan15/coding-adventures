@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C304-ocupado",
+    "language": "spanish",
+    "chapter": 304,
+    "sequence": 4350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fcef64da42444b4d"
+  },
+  "findings": []
+}

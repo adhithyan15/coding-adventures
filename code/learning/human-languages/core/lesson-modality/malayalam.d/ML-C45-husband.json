@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C45-husband",
+    "language": "malayalam",
+    "chapter": 45,
+    "sequence": 1170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63f7e81d7e5f109e"
+  },
+  "findings": []
+}

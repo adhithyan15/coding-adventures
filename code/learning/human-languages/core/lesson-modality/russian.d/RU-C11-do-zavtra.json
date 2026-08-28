@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C11-do-zavtra",
+    "language": "russian",
+    "chapter": 11,
+    "sequence": 450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fcfc9d7ce83574ae"
+  },
+  "findings": []
+}

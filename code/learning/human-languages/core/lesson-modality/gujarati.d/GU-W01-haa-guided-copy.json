@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "GU-W01-haa-guided-copy",
+    "language": "gujarati",
+    "chapter": 2,
+    "sequence": 43,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:93656ffc1f2617bf",
+    "detachableSegments": [
+      "Writing — guided copy",
+      "Script retrieval — one older consonant"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

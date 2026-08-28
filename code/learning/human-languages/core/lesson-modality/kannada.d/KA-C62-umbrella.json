@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C62-umbrella",
+    "language": "kannada",
+    "chapter": 62,
+    "sequence": 1980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55dad51ef6346e41"
+  },
+  "findings": []
+}

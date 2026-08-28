@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "HI-S111-letter-ka",
+    "language": "hindi",
+    "chapter": 7,
+    "sequence": 506,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f9784a940a84f7c6",
+    "detachableSegments": [
+      "Script you'll notice: क",
+      "Writing: क"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

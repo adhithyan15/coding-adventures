@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "GU-C01-practice",
+    "language": "gujarati",
+    "chapter": 2,
+    "sequence": 60,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4800ef74eac7514b",
+    "detachableSegments": [
+      "Script — the script and the language",
+      "Writing — three gentle retrievals"
+    ]
+  },
+  "findings": []
+}

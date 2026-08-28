@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C09-repaso-ocho",
+    "language": "spanish",
+    "chapter": 64,
+    "sequence": 1043,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cc3c3266ed2f096"
+  },
+  "findings": []
+}

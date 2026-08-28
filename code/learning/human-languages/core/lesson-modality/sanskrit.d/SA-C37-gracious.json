@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C37-gracious",
+    "language": "sanskrit",
+    "chapter": 37,
+    "sequence": 1800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca1591e75705340b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C302-huella",
+    "language": "spanish",
+    "chapter": 302,
+    "sequence": 4240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:195c953b719ad03f"
+  },
+  "findings": []
+}

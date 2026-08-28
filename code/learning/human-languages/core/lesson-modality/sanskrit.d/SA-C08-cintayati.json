@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C08-cintayati",
+    "language": "sanskrit",
+    "chapter": 8,
+    "sequence": 400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ecd71e50065d6f8"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C27-sayantram",
+    "language": "telugu",
+    "chapter": 27,
+    "sequence": 550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0b5c2e9078f4669"
+  },
+  "findings": []
+}

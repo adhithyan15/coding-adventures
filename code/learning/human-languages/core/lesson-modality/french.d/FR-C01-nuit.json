@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "FR-C01-nuit",
+    "language": "french",
+    "chapter": 1,
+    "sequence": 45,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:da7981a40d5b3788"
+  },
+  "findings": []
+}

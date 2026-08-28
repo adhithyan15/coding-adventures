@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C14-where",
+    "language": "sanskrit",
+    "chapter": 14,
+    "sequence": 650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccd35fddb2c36eb9"
+  },
+  "findings": []
+}

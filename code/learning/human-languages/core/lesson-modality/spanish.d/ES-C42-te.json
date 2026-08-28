@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C42-te",
+    "language": "spanish",
+    "chapter": 85,
+    "sequence": 1221,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:709c94a18968937d"
+  },
+  "findings": []
+}

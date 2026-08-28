@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C66-la-terminacion-dice-quien",
+    "language": "spanish",
+    "chapter": 258,
+    "sequence": 2525,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ee023b359bd924b"
+  },
+  "findings": []
+}

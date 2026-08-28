@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C02-ya",
+    "language": "russian",
+    "chapter": 2,
+    "sequence": 70,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08ce67b1314e3ac5"
+  },
+  "findings": []
+}

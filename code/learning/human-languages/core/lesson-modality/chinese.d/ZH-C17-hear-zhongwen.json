@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C17-hear-zhongwen",
+    "language": "chinese",
+    "chapter": 17,
+    "sequence": 1420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b00116650ee716e"
+  },
+  "findings": []
+}

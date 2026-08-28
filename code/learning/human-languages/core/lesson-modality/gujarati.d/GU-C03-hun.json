@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "GU-C03-hun",
+    "language": "gujarati",
+    "chapter": 9,
+    "sequence": 180,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9dbb9c0bd9884d5",
+    "detachableSegments": [
+      "The letters in this word",
+      "Script retrieval"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C44-speak",
+    "language": "malayalam",
+    "chapter": 44,
+    "sequence": 1130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bf2dff5b6f9a851"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C42-stand",
+    "language": "hindi",
+    "chapter": 42,
+    "sequence": 1250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93428151b71ddcc1"
+  },
+  "findings": []
+}

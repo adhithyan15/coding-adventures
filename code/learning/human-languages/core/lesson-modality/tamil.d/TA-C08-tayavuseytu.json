@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C08-tayavuseytu",
+    "language": "tamil",
+    "chapter": 8,
+    "sequence": 470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f617ae89e5cbc693"
+  },
+  "findings": []
+}

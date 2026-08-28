@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "RU-W02-false-friends-s-n",
+    "language": "russian",
+    "chapter": 1,
+    "sequence": 45,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "wide-table"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:828f00087bb353f2",
+    "detachableSegments": [
+      "Writing — break it apart, then write it",
+      "Script — the four false friends, together"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

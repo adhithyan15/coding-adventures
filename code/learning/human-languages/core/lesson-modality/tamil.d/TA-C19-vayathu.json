@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C19-vayathu",
+    "language": "tamil",
+    "chapter": 19,
+    "sequence": 670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7a729c0a3693e61"
+  },
+  "findings": []
+}

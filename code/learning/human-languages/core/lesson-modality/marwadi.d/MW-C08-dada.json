@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C08-dada",
+    "language": "marwadi",
+    "chapter": 11,
+    "sequence": 670,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:57e22948779b9bd6"
+  },
+  "findings": []
+}

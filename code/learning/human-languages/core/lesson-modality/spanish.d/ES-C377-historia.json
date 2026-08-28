@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C377-historia",
+    "language": "spanish",
+    "chapter": 377,
+    "sequence": 7800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1ef273adf4fcbd0"
+  },
+  "findings": []
+}

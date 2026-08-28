@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C282-abrazo",
+    "language": "spanish",
+    "chapter": 282,
+    "sequence": 3240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a95a08c1393daa7"
+  },
+  "findings": []
+}

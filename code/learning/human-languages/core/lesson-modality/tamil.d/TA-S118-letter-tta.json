@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S118-letter-tta",
+    "language": "tamil",
+    "chapter": 14,
+    "sequence": 581,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9aaa24dd68ca1336",
+    "detachableSegments": [
+      "Script you'll notice: ட",
+      "Writing: ட — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

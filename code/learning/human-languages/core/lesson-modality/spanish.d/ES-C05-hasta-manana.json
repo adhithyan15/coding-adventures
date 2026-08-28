@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C05-hasta-manana",
+    "language": "spanish",
+    "chapter": 13,
+    "sequence": 460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38d26730524f6cb4"
+  },
+  "findings": []
+}

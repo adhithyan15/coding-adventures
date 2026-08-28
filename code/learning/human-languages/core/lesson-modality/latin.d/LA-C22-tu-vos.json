@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C22-tu-vos",
+    "language": "latin",
+    "chapter": 22,
+    "sequence": 460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdfbcd2804a1d72c"
+  },
+  "findings": []
+}

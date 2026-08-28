@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C39-oru",
+    "language": "tamil",
+    "chapter": 39,
+    "sequence": 1190,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e44d69fb4d5bfdf6",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

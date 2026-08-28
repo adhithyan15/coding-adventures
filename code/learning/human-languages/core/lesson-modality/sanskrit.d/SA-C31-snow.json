@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C31-snow",
+    "language": "sanskrit",
+    "chapter": 31,
+    "sequence": 1520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a71bd111371b170"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C50-song",
+    "language": "sanskrit",
+    "chapter": 50,
+    "sequence": 2460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e30b24f8041fe094"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C27-well-done",
+    "language": "sanskrit",
+    "chapter": 27,
+    "sequence": 1290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:707bc7087c0eae98"
+  },
+  "findings": []
+}

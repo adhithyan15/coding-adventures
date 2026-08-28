@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C44-speak",
+    "language": "kannada",
+    "chapter": 44,
+    "sequence": 1080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de99de5c98f9c1aa"
+  },
+  "findings": []
+}

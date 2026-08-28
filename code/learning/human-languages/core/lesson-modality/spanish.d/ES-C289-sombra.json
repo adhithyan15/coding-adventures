@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C289-sombra",
+    "language": "spanish",
+    "chapter": 289,
+    "sequence": 3610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae06dd49f60d3e90"
+  },
+  "findings": []
+}

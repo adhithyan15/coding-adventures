@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "AR-C33-halib",
+    "language": "arabic",
+    "chapter": 33,
+    "sequence": 870,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8b0762737b151ec",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

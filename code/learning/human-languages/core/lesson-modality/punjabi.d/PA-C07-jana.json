@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C07-jana",
+    "language": "punjabi",
+    "chapter": 7,
+    "sequence": 370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8296a86ba7ff043"
+  },
+  "findings": []
+}

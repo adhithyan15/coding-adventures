@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C45-grandfather",
+    "language": "telugu",
+    "chapter": 45,
+    "sequence": 1090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87c2af1f77877d77"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C18-hear-haokan",
+    "language": "chinese",
+    "chapter": 18,
+    "sequence": 1660,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:18d0e9f329ce9320"
+  },
+  "findings": []
+}

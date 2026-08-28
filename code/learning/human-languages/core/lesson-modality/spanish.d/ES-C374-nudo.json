@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C374-nudo",
+    "language": "spanish",
+    "chapter": 374,
+    "sequence": 7660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bc3d1fd1fac8c22"
+  },
+  "findings": []
+}

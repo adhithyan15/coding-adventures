@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C49-oh",
+    "language": "sanskrit",
+    "chapter": 49,
+    "sequence": 2420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bd021dc56fc56ec"
+  },
+  "findings": []
+}

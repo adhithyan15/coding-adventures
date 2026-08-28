@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C54-box",
+    "language": "tamil",
+    "chapter": 54,
+    "sequence": 1950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:049f08e20934af01"
+  },
+  "findings": []
+}

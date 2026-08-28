@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C32-perro",
+    "language": "spanish",
+    "chapter": 150,
+    "sequence": 1860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20fa8683de25c041"
+  },
+  "findings": []
+}

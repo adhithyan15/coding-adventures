@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C47-sintesis-dos-a-la-vez",
+    "language": "spanish",
+    "chapter": 102,
+    "sequence": 1241,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6a910111251ae37a"
+  },
+  "findings": []
+}

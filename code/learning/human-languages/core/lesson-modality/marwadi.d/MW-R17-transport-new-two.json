@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R17-transport-new-two",
+    "language": "marwadi",
+    "chapter": 22,
+    "sequence": 1700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4313ce52dfba97d7"
+  },
+  "findings": []
+}

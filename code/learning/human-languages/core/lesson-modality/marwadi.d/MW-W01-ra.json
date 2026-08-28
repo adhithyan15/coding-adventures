@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MW-W01-ra",
+    "language": "marwadi",
+    "chapter": 1,
+    "sequence": 10,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:56ab212c5d743006",
+    "detachableSegments": [
+      "Script — notice the sign",
+      "Writing — guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

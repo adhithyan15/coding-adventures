@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C37-congratulations",
+    "language": "sanskrit",
+    "chapter": 37,
+    "sequence": 1810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33d8b67680f686ba"
+  },
+  "findings": []
+}

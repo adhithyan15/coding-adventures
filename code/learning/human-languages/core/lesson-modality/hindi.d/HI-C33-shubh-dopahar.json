@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C33-shubh-dopahar",
+    "language": "hindi",
+    "chapter": 33,
+    "sequence": 850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:843cef41c7488f23"
+  },
+  "findings": []
+}

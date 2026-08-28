@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C03-aap-tum-tu",
+    "language": "urdu",
+    "chapter": 3,
+    "sequence": 60,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:225a1b5b43282219"
+  },
+  "findings": []
+}

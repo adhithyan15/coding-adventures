@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C07-hablamos",
+    "language": "spanish",
+    "chapter": 38,
+    "sequence": 710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8775b8e253dfe647"
+  },
+  "findings": []
+}

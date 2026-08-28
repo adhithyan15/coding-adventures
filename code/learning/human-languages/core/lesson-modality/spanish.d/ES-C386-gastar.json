@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C386-gastar",
+    "language": "spanish",
+    "chapter": 386,
+    "sequence": 8190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47f2d701af1ba86a"
+  },
+  "findings": []
+}

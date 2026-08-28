@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ML-C02-aanu",
+    "language": "malayalam",
+    "chapter": 2,
+    "sequence": 90,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a261dfc63184a1a",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

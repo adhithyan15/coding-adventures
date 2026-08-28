@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C26-physician",
+    "language": "sanskrit",
+    "chapter": 26,
+    "sequence": 1270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0117dff0dfa24fe"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C362-aire",
+    "language": "spanish",
+    "chapter": 362,
+    "sequence": 7040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a69e40f64ffe5bcc"
+  },
+  "findings": []
+}

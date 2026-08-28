@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-C10-roti",
+    "language": "punjabi",
+    "chapter": 10,
+    "sequence": 530,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e28f6858db1647c",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

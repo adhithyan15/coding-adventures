@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C391-postre",
+    "language": "spanish",
+    "chapter": 391,
+    "sequence": 8370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e553d675df208391"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TE-C33-raayu",
+    "language": "telugu",
+    "chapter": 33,
+    "sequence": 700,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63e6d833dbf74823",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

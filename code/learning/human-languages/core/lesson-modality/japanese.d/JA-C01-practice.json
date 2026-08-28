@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C01-practice",
+    "language": "japanese",
+    "chapter": 7,
+    "sequence": 380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e4c71783a8a05b5"
+  },
+  "findings": []
+}

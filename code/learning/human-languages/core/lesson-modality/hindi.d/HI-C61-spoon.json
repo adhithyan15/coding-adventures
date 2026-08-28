@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C61-spoon",
+    "language": "hindi",
+    "chapter": 61,
+    "sequence": 2270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cffd09de4c360a9"
+  },
+  "findings": []
+}

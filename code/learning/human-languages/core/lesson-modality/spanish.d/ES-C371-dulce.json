@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C371-dulce",
+    "language": "spanish",
+    "chapter": 371,
+    "sequence": 7510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3309ad273443513"
+  },
+  "findings": []
+}

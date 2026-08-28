@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C313-boleto",
+    "language": "spanish",
+    "chapter": 313,
+    "sequence": 4770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7a8cbbf5c14793b"
+  },
+  "findings": []
+}

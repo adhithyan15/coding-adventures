@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C29-subhodayam",
+    "language": "telugu",
+    "chapter": 29,
+    "sequence": 570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2dd423abc55ec4e1"
+  },
+  "findings": []
+}

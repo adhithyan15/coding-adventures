@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C15-passato-remoto",
+    "language": "italian",
+    "chapter": 15,
+    "sequence": 520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:171fae4e477283da"
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S112-letter-ca",
+    "language": "telugu",
+    "chapter": 9,
+    "sequence": 366,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d5ae3090072853bf",
+    "detachableSegments": [
+      "Script you'll notice: చ",
+      "Writing: చ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

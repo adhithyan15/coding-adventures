@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C16-ser-imperfecto",
+    "language": "spanish",
+    "chapter": 109,
+    "sequence": 1366,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b0b6988377e832c"
+  },
+  "findings": []
+}

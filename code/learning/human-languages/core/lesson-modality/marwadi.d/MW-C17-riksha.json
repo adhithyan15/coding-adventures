@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C17-riksha",
+    "language": "marwadi",
+    "chapter": 22,
+    "sequence": 1670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95d34a943661aadc"
+  },
+  "findings": []
+}

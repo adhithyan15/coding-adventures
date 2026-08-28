@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C30-ohr",
+    "language": "german",
+    "chapter": 30,
+    "sequence": 940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52fc18b4830de0eb"
+  },
+  "findings": []
+}

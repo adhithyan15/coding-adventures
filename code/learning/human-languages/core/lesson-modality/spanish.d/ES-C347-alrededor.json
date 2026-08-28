@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C347-alrededor",
+    "language": "spanish",
+    "chapter": 347,
+    "sequence": 6310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e586776a4a1b7f0f"
+  },
+  "findings": []
+}

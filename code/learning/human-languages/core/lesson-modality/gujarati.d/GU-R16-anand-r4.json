@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-R16-anand-r4",
+    "language": "gujarati",
+    "chapter": 20,
+    "sequence": 740,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c181c7ca33f482bb",
+    "detachableSegments": [
+      "Writing — from sound"
+    ]
+  },
+  "findings": []
+}

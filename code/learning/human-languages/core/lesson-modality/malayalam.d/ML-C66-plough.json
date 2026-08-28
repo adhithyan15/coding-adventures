@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C66-plough",
+    "language": "malayalam",
+    "chapter": 66,
+    "sequence": 2220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9152bce5b8a73152"
+  },
+  "findings": []
+}

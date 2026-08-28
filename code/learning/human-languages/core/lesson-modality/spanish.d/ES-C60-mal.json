@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C60-mal",
+    "language": "spanish",
+    "chapter": 228,
+    "sequence": 2375,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d995ce48f1e732c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C30-flower",
+    "language": "sanskrit",
+    "chapter": 30,
+    "sequence": 1450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1da49ca5d3f010ec"
+  },
+  "findings": []
+}

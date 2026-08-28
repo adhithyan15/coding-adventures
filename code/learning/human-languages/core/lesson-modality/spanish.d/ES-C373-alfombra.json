@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C373-alfombra",
+    "language": "spanish",
+    "chapter": 373,
+    "sequence": 7590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a5de828adbee0b3"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C44-hortus",
+    "language": "latin",
+    "chapter": 44,
+    "sequence": 980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15cead6b4e57ffac"
+  },
+  "findings": []
+}

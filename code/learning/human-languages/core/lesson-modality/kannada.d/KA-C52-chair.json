@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C52-chair",
+    "language": "kannada",
+    "chapter": 52,
+    "sequence": 1450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:130f375f4a387635"
+  },
+  "findings": []
+}

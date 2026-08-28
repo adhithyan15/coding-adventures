@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-C10-kshiram",
+    "language": "sanskrit",
+    "chapter": 10,
+    "sequence": 490,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13fe21645e7188ce",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

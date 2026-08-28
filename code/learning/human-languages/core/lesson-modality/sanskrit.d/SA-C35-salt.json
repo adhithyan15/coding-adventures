@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C35-salt",
+    "language": "sanskrit",
+    "chapter": 35,
+    "sequence": 1700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1478a352bfaa733a"
+  },
+  "findings": []
+}

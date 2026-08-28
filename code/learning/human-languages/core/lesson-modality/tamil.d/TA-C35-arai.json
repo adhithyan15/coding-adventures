@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C35-arai",
+    "language": "tamil",
+    "chapter": 35,
+    "sequence": 1040,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52db51b4d7161024",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

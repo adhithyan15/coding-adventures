@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C12-mat",
+    "language": "russian",
+    "chapter": 12,
+    "sequence": 500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc0da10ad0d0dd7b"
+  },
+  "findings": []
+}

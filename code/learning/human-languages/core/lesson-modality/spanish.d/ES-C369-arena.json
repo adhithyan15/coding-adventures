@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C369-arena",
+    "language": "spanish",
+    "chapter": 369,
+    "sequence": 7380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c25310ce68ca379"
+  },
+  "findings": []
+}

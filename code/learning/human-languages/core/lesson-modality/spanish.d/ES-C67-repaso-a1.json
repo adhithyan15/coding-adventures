@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C67-repaso-a1",
+    "language": "spanish",
+    "chapter": 266,
+    "sequence": 2565,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:772d151d4845d417"
+  },
+  "findings": []
+}

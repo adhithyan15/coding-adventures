@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ML-W07-numbers-6-10-guided-copy",
+    "language": "malayalam",
+    "chapter": 7,
+    "sequence": 351,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c7b45b52d09df7d1",
+    "detachableSegments": [
+      "Writing — guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

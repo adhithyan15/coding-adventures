@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C03-comment-registers",
+    "language": "french",
+    "chapter": 3,
+    "sequence": 125,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ce5c0c03f42226a"
+  },
+  "findings": []
+}

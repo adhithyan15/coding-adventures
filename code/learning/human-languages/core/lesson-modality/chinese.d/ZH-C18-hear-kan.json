@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C18-hear-kan",
+    "language": "chinese",
+    "chapter": 18,
+    "sequence": 1590,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:efd58fca76bd0b36"
+  },
+  "findings": []
+}

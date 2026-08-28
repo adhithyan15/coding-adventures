@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C59-sugar",
+    "language": "tamil",
+    "chapter": 59,
+    "sequence": 2200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69d4e6af54605240"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C53-sintesis-frases-largas",
+    "language": "spanish",
+    "chapter": 190,
+    "sequence": 2205,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a44c360f8e1eef97"
+  },
+  "findings": []
+}

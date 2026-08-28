@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C41-good",
+    "language": "tamil",
+    "chapter": 41,
+    "sequence": 1290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14b6ac8d32b13a37"
+  },
+  "findings": []
+}

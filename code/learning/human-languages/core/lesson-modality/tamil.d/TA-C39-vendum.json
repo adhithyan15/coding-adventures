@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C39-vendum",
+    "language": "tamil",
+    "chapter": 39,
+    "sequence": 1170,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7f91d1c50b0387b",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

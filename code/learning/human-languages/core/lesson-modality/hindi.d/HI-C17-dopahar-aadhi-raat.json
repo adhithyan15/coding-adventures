@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C17-dopahar-aadhi-raat",
+    "language": "hindi",
+    "chapter": 17,
+    "sequence": 640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21a36ec06af8f804"
+  },
+  "findings": []
+}

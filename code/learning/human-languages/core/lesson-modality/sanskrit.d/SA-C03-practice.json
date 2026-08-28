@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C03-practice",
+    "language": "sanskrit",
+    "chapter": 3,
+    "sequence": 200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bc296d87696bd85"
+  },
+  "findings": []
+}

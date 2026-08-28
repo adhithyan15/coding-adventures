@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C50-threshold",
+    "language": "tamil",
+    "chapter": 50,
+    "sequence": 1710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9a04ead13b84967"
+  },
+  "findings": []
+}

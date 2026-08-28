@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C73-bitter",
+    "language": "telugu",
+    "chapter": 73,
+    "sequence": 2500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a1d208c61a765f2"
+  },
+  "findings": []
+}

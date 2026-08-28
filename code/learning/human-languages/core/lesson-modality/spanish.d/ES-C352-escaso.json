@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C352-escaso",
+    "language": "spanish",
+    "chapter": 352,
+    "sequence": 6560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:557d7d7d20a0e7a9"
+  },
+  "findings": []
+}

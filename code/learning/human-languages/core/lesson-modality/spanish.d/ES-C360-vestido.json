@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C360-vestido",
+    "language": "spanish",
+    "chapter": 360,
+    "sequence": 6930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:701504e473c71c1d"
+  },
+  "findings": []
+}

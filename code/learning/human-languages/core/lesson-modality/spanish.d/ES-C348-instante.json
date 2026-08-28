@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C348-instante",
+    "language": "spanish",
+    "chapter": 348,
+    "sequence": 6340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9a93ed67065e5fe"
+  },
+  "findings": []
+}

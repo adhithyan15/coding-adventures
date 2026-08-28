@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "FA-W15-alef",
+    "language": "persian",
+    "chapter": 15,
+    "sequence": 600,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:22c8ddc9881fc195",
+    "detachableSegments": [
+      "Script — first, which way the page runs",
+      "Script — the letter itself"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C08-tienen",
+    "language": "spanish",
+    "chapter": 67,
+    "sequence": 1048,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1162a7eedee699e5"
+  },
+  "findings": []
+}

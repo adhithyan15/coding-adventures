@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C65-vuestro",
+    "language": "spanish",
+    "chapter": 254,
+    "sequence": 2505,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a22620940d7c1a3"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C03-wie-geht-es",
+    "language": "german",
+    "chapter": 3,
+    "sequence": 120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:909da91a2d33162e"
+  },
+  "findings": []
+}

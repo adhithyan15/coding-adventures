@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C48-wolf",
+    "language": "sanskrit",
+    "chapter": 48,
+    "sequence": 2340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89d49dd16394fe93"
+  },
+  "findings": []
+}

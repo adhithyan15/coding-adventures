@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C66-grain",
+    "language": "hindi",
+    "chapter": 66,
+    "sequence": 2530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b891bb2f0bda9e8a"
+  },
+  "findings": []
+}

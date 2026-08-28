@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C286-boca",
+    "language": "spanish",
+    "chapter": 286,
+    "sequence": 3430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14e3696af03d8801"
+  },
+  "findings": []
+}

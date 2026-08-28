@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C06-number-differences",
+    "language": "marathi",
+    "chapter": 9,
+    "sequence": 370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41afbb0812b0a17e"
+  },
+  "findings": []
+}

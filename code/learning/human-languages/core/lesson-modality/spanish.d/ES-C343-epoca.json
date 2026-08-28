@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C343-epoca",
+    "language": "spanish",
+    "chapter": 343,
+    "sequence": 6100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e93b20c7983532c1"
+  },
+  "findings": []
+}

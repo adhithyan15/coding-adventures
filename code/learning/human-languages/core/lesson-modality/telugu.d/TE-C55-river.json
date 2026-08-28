@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C55-river",
+    "language": "telugu",
+    "chapter": 55,
+    "sequence": 1580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a50fdc65d519dcc"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C15-niiru-akki",
+    "language": "kannada",
+    "chapter": 15,
+    "sequence": 430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e75f2043dbe5a5b9"
+  },
+  "findings": []
+}

@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "RU-C01-practice",
+    "language": "russian",
+    "chapter": 1,
+    "sequence": 35,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7576070bd294d39f",
+    "detachableSegments": [
+      "Script — the four false friends, one more time",
+      "Script — read them cold"
+    ]
+  },
+  "findings": []
+}

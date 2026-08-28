@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C353-hospital",
+    "language": "spanish",
+    "chapter": 353,
+    "sequence": 6570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d4929432d8ed228"
+  },
+  "findings": []
+}

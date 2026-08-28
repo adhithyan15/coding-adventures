@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "ML-W02-santosham-guided-copy",
+    "language": "malayalam",
+    "chapter": 2,
+    "sequence": 145,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:302aa3f33ad582a2",
+    "detachableSegments": [
+      "Script — notice before moving",
+      "Writing — trace two visible shapes",
+      "Writing — one guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

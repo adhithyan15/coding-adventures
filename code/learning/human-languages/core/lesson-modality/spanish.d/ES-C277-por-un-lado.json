@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C277-por-un-lado",
+    "language": "spanish",
+    "chapter": 277,
+    "sequence": 3030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa02541ce8d2e9b0"
+  },
+  "findings": []
+}

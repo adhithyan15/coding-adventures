@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TE-C05-nenu-telugu-maatlaadataanu",
+    "language": "telugu",
+    "chapter": 5,
+    "sequence": 270,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f881422269e65d0",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

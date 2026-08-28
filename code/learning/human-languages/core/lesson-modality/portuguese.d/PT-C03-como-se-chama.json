@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C03-como-se-chama",
+    "language": "portuguese",
+    "chapter": 3,
+    "sequence": 200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7efa9629b173496"
+  },
+  "findings": []
+}

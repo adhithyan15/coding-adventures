@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C352-conjunto",
+    "language": "spanish",
+    "chapter": 352,
+    "sequence": 6520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3a5e8238e352c0d"
+  },
+  "findings": []
+}

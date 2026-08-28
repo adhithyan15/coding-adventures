@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C67-step",
+    "language": "telugu",
+    "chapter": 67,
+    "sequence": 2210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea2062c887d5f51f"
+  },
+  "findings": []
+}

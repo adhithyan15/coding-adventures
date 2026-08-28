@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C15-passato-prossimo",
+    "language": "italian",
+    "chapter": 15,
+    "sequence": 510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29b808ba7a19c3ca"
+  },
+  "findings": []
+}

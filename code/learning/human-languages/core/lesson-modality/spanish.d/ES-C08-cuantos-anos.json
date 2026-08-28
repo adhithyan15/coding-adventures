@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C08-cuantos-anos",
+    "language": "spanish",
+    "chapter": 47,
+    "sequence": 850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a900f759a6691b3"
+  },
+  "findings": []
+}

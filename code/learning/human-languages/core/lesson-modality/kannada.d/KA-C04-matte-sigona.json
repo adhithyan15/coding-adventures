@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-C04-matte-sigona",
+    "language": "kannada",
+    "chapter": 4,
+    "sequence": 240,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6090987658b368d5",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

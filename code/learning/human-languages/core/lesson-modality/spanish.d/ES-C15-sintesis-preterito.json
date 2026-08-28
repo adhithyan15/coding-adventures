@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C15-sintesis-preterito",
+    "language": "spanish",
+    "chapter": 106,
+    "sequence": 1348,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57329b4dd1ff98f6"
+  },
+  "findings": []
+}

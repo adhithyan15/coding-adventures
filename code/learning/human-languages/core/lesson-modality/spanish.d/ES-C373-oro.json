@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C373-oro",
+    "language": "spanish",
+    "chapter": 373,
+    "sequence": 7570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccd1f83c984f5980"
+  },
+  "findings": []
+}

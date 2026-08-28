@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C01-guten-tag",
+    "language": "german",
+    "chapter": 1,
+    "sequence": 25,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba5164b4c43b07bb"
+  },
+  "findings": []
+}

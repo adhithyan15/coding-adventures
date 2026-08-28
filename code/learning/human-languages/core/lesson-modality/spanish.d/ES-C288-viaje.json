@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C288-viaje",
+    "language": "spanish",
+    "chapter": 288,
+    "sequence": 3530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c4f73559a4cd1b6"
+  },
+  "findings": []
+}

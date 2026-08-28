@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C394-actividad",
+    "language": "spanish",
+    "chapter": 394,
+    "sequence": 8520,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:72196485ea37dc48"
+  },
+  "findings": []
+}

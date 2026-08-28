@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C17-ucha-paathira",
+    "language": "malayalam",
+    "chapter": 17,
+    "sequence": 450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:128d3273c3920f51"
+  },
+  "findings": []
+}

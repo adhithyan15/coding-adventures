@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C09-hear-patni",
+    "language": "marwadi",
+    "chapter": 13,
+    "sequence": 850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ddb9cb5e43cb778"
+  },
+  "findings": []
+}

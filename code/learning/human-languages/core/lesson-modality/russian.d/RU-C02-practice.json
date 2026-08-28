@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C02-practice",
+    "language": "russian",
+    "chapter": 2,
+    "sequence": 130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b61f4125cee98bf4"
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S113-letter-la",
+    "language": "tamil",
+    "chapter": 9,
+    "sequence": 511,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d76ec2092aa01b7c",
+    "detachableSegments": [
+      "Script you'll notice: ல",
+      "Writing: ல"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

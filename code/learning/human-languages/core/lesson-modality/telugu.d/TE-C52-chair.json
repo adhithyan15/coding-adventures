@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C52-chair",
+    "language": "telugu",
+    "chapter": 52,
+    "sequence": 1440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbd2e89021c98cc3"
+  },
+  "findings": []
+}

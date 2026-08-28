@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C356-repente",
+    "language": "spanish",
+    "chapter": 356,
+    "sequence": 6760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:051a9a166b6af0b7"
+  },
+  "findings": []
+}

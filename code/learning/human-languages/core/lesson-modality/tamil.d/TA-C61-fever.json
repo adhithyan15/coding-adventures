@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C61-fever",
+    "language": "tamil",
+    "chapter": 61,
+    "sequence": 2290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac2429be429b36d4"
+  },
+  "findings": []
+}

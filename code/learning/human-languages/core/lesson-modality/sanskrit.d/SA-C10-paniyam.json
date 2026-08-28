@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-C10-paniyam",
+    "language": "sanskrit",
+    "chapter": 10,
+    "sequence": 480,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbf67fc3ae1f717e",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

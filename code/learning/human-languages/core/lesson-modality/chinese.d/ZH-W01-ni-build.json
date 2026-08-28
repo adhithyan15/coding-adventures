@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ZH-W01-ni-build",
+    "language": "chinese",
+    "chapter": 2,
+    "sequence": 110,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f4f2811fa6744a06",
+    "detachableSegments": [
+      "Script — the assembly"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

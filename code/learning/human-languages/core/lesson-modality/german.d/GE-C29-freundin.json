@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C29-freundin",
+    "language": "german",
+    "chapter": 29,
+    "sequence": 910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a1447f9dcc0550f"
+  },
+  "findings": []
+}

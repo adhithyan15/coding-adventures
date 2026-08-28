@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C28-pirpakal",
+    "language": "tamil",
+    "chapter": 28,
+    "sequence": 820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d173c96694749db6"
+  },
+  "findings": []
+}

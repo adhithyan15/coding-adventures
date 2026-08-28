@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-R18-farewell-r4",
+    "language": "gujarati",
+    "chapter": 22,
+    "sequence": 860,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:754a287e8ca4dec1",
+    "detachableSegments": [
+      "Writing — from sound"
+    ]
+  },
+  "findings": []
+}

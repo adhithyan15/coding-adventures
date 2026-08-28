@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C51-uncle",
+    "language": "sanskrit",
+    "chapter": 51,
+    "sequence": 2520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0c08631066f37ba"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-R18-how-are-you-r4",
+    "language": "gujarati",
+    "chapter": 22,
+    "sequence": 820,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ec8da51099f8c3f",
+    "detachableSegments": [
+      "Writing — from sound"
+    ]
+  },
+  "findings": []
+}

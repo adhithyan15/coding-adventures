@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "ES-C03-como-acento",
+    "language": "spanish",
+    "chapter": 6,
+    "sequence": 200,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:182383cc4cfb6072",
+    "detachableSegments": [
+      "Script — the upside-down opener"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-C21-paisa",
+    "language": "gujarati",
+    "chapter": 25,
+    "sequence": 990,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a60d96237de12a24",
+    "delivery": "script",
+    "authored": "pen",
+    "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."
+  },
+  "findings": []
+}

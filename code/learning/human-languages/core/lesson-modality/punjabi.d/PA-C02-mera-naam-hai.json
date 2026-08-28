@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C02-mera-naam-hai",
+    "language": "punjabi",
+    "chapter": 2,
+    "sequence": 100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c89f616ac63cbd90"
+  },
+  "findings": []
+}

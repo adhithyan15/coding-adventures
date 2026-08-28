@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C54-basket",
+    "language": "tamil",
+    "chapter": 54,
+    "sequence": 1920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d57d933671d023c8"
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-W03-santosham-delayed-copy",
+    "language": "malayalam",
+    "chapter": 3,
+    "sequence": 215,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:388046eca08ab1d4",
+    "detachableSegments": [
+      "Writing — one try after a delay"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

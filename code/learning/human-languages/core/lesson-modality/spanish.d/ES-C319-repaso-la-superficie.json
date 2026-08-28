@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C319-repaso-la-superficie",
+    "language": "spanish",
+    "chapter": 319,
+    "sequence": 5060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbfcdf40f31b96a2"
+  },
+  "findings": []
+}

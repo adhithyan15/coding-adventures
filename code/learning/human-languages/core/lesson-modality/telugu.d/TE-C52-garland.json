@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C52-garland",
+    "language": "telugu",
+    "chapter": 52,
+    "sequence": 1470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a88098c380d0f6ed"
+  },
+  "findings": []
+}

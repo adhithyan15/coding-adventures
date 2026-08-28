@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C44-look",
+    "language": "telugu",
+    "chapter": 44,
+    "sequence": 1050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:430b93c4ff216a0f"
+  },
+  "findings": []
+}

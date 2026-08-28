@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C291-tronco",
+    "language": "spanish",
+    "chapter": 291,
+    "sequence": 3690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d7328473af3ee1d"
+  },
+  "findings": []
+}

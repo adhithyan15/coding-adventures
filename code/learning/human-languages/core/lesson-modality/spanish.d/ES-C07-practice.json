@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C07-practice",
+    "language": "spanish",
+    "chapter": 36,
+    "sequence": 690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a22c2a4f053ca3c2"
+  },
+  "findings": []
+}

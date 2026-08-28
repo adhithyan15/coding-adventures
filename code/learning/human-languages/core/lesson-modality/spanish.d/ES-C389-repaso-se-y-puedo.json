@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C389-repaso-se-y-puedo",
+    "language": "spanish",
+    "chapter": 389,
+    "sequence": 8295,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50fc43f033bb307e"
+  },
+  "findings": []
+}

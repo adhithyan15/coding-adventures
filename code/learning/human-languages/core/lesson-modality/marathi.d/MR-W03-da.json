@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "MR-W03-da",
+    "language": "marathi",
+    "chapter": 3,
+    "sequence": 27,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ad3c79f4b8986d7d",
+    "detachableSegments": [
+      "Script",
+      "Writing — delayed copy and retrieval"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

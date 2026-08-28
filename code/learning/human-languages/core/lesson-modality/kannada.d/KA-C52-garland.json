@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C52-garland",
+    "language": "kannada",
+    "chapter": 52,
+    "sequence": 1480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54a4194d7cabe4fe"
+  },
+  "findings": []
+}

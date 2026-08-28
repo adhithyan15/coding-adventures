@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C65-repaso-columna-vosotros",
+    "language": "spanish",
+    "chapter": 256,
+    "sequence": 2517,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:24f1704b5ffe3b25"
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-W20-read-onru",
+    "language": "tamil",
+    "chapter": 39,
+    "sequence": 1195,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:350b118dee1fea76",
+    "detachableSegments": [
+      "Script you'll notice: ஒ",
+      "Script you'll notice: build the word",
+      "Script you'll notice: the same letter, the shorter word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

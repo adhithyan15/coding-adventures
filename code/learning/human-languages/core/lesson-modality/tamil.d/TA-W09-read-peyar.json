@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-W09-read-peyar",
+    "language": "tamil",
+    "chapter": 23,
+    "sequence": 755,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c0ecc7c2b714e39e",
+    "detachableSegments": [
+      "Script you'll notice: ப and ய",
+      "Script you'll notice: the ெ sign",
+      "Script you'll notice: build the word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

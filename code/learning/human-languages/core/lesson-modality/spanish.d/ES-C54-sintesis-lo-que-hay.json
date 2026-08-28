@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C54-sintesis-lo-que-hay",
+    "language": "spanish",
+    "chapter": 195,
+    "sequence": 2210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f880e30194bf14e9"
+  },
+  "findings": []
+}

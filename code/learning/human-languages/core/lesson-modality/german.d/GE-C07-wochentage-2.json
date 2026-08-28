@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C07-wochentage-2",
+    "language": "german",
+    "chapter": 7,
+    "sequence": 230,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0cfaf7f430f0d8c2"
+  },
+  "findings": []
+}

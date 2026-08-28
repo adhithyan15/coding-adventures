@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C50-set-out",
+    "language": "telugu",
+    "chapter": 50,
+    "sequence": 1360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0f84523cc3f570c"
+  },
+  "findings": []
+}

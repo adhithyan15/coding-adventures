@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "ES-W00-hola-delayed-copy",
+    "language": "spanish",
+    "chapter": 1,
+    "sequence": 13,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b5f9bee794d5ff68",
+    "detachableSegments": [
+      "Writing — delayed copy"
+    ]
+  },
+  "findings": []
+}

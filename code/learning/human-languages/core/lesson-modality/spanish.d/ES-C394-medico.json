@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C394-medico",
+    "language": "spanish",
+    "chapter": 394,
+    "sequence": 8540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79e3fde34e24b912"
+  },
+  "findings": []
+}

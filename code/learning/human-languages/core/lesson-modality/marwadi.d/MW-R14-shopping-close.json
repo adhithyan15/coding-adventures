@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R14-shopping-close",
+    "language": "marwadi",
+    "chapter": 19,
+    "sequence": 1470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:437d75cdd3fa8013"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C40-here",
+    "language": "tamil",
+    "chapter": 40,
+    "sequence": 1220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4bd073ae46d486b"
+  },
+  "findings": []
+}

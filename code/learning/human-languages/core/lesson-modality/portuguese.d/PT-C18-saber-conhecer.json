@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C18-saber-conhecer",
+    "language": "portuguese",
+    "chapter": 18,
+    "sequence": 660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6103ca51eae35e55"
+  },
+  "findings": []
+}

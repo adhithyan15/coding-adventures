@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C03-mi-chiamo",
+    "language": "italian",
+    "chapter": 3,
+    "sequence": 190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73fc9f2501c60c1a"
+  },
+  "findings": []
+}

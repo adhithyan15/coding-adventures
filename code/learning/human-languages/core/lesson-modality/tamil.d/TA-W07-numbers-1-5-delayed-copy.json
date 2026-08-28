@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-W07-numbers-1-5-delayed-copy",
+    "language": "tamil",
+    "chapter": 7,
+    "sequence": 425,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:41bdbac590e878c9",
+    "detachableSegments": [
+      "Writing — delayed copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

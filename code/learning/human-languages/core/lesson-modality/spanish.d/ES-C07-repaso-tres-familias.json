@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "ES-C07-repaso-tres-familias",
+    "language": "spanish",
+    "chapter": 46,
+    "sequence": 814,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:66253971b27807e3"
+  },
+  "findings": []
+}

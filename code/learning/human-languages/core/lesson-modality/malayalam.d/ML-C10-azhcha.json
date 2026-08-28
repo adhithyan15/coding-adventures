@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C10-azhcha",
+    "language": "malayalam",
+    "chapter": 10,
+    "sequence": 380,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:52b95d56c392c026"
+  },
+  "findings": []
+}

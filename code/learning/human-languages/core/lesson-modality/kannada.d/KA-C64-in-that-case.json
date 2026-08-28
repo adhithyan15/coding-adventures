@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C64-in-that-case",
+    "language": "kannada",
+    "chapter": 64,
+    "sequence": 2080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:203a717725c5721e"
+  },
+  "findings": []
+}

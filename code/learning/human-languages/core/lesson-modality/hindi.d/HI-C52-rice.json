@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C52-rice",
+    "language": "hindi",
+    "chapter": 52,
+    "sequence": 1700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:903b186e07e8e5a8"
+  },
+  "findings": []
+}

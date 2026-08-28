@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S124-letter-pa",
+    "language": "kannada",
+    "chapter": 20,
+    "sequence": 491,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:10e668a8bbc69773",
+    "detachableSegments": [
+      "Script you'll notice: ಪ",
+      "Writing: ಪ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

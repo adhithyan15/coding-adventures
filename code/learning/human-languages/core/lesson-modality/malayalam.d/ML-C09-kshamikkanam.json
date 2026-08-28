@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C09-kshamikkanam",
+    "language": "malayalam",
+    "chapter": 9,
+    "sequence": 370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca5b8c14bd082b01"
+  },
+  "findings": []
+}

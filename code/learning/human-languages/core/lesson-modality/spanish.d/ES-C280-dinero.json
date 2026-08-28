@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C280-dinero",
+    "language": "spanish",
+    "chapter": 280,
+    "sequence": 3170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98b2e3d929747ac7"
+  },
+  "findings": []
+}

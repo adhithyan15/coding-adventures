@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C398-dificil",
+    "language": "spanish",
+    "chapter": 398,
+    "sequence": 8740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13e60620d8eee3b8"
+  },
+  "findings": []
+}

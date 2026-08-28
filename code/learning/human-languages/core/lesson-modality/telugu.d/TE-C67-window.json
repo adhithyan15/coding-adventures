@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C67-window",
+    "language": "telugu",
+    "chapter": 67,
+    "sequence": 2220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27e3c7db1c3a6c31"
+  },
+  "findings": []
+}

@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W00-sin-lam",
+    "language": "arabic",
+    "chapter": 1,
+    "sequence": 12,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:48398a48761a6dc0",
+    "detachableSegments": [
+      "Script — recall sīn and add lām",
+      "Writing — trace, then recall"
+    ]
+  },
+  "findings": []
+}

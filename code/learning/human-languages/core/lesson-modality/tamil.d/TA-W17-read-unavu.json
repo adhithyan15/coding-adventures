@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-W17-read-unavu",
+    "language": "tamil",
+    "chapter": 36,
+    "sequence": 1085,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:695185032432fcaf",
+    "detachableSegments": [
+      "Script you'll notice: உ",
+      "Script you'll notice: build the word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

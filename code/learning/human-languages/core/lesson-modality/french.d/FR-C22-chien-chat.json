@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C22-chien-chat",
+    "language": "french",
+    "chapter": 22,
+    "sequence": 690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0851e60415d9c5e3"
+  },
+  "findings": []
+}

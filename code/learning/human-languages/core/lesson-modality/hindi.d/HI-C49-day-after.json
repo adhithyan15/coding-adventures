@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C49-day-after",
+    "language": "hindi",
+    "chapter": 49,
+    "sequence": 1560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22e4e2d580455d8c"
+  },
+  "findings": []
+}

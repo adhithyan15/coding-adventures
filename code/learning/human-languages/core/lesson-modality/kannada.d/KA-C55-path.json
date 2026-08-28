@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C55-path",
+    "language": "kannada",
+    "chapter": 55,
+    "sequence": 1630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d5df260e7f676cd"
+  },
+  "findings": []
+}

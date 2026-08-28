@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C51-wife",
+    "language": "sanskrit",
+    "chapter": 51,
+    "sequence": 2490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:517b4df0563dd7fd"
+  },
+  "findings": []
+}

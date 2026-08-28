@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C39-amo",
+    "language": "latin",
+    "chapter": 39,
+    "sequence": 790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d214c62675f9668"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-C07-read-later",
+    "language": "marwadi",
+    "chapter": 9,
+    "sequence": 530,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d6061f67b3e7ff84",
+    "detachableSegments": [
+      "Script — join only known units"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

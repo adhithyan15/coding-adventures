@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C40-sedeo",
+    "language": "latin",
+    "chapter": 40,
+    "sequence": 820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:045d5c96743c23de"
+  },
+  "findings": []
+}

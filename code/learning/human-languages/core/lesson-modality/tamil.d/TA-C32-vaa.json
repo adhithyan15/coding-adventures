@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C32-vaa",
+    "language": "tamil",
+    "chapter": 32,
+    "sequence": 900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef0c7727ea1f5cb3"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-W01-repaso-acento",
+    "language": "spanish",
+    "chapter": 10,
+    "sequence": 365,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a336b13438a6ddd0"
+  },
+  "findings": []
+}

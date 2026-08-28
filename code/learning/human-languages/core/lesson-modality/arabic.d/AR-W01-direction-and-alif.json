@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-W01-direction-and-alif",
+    "language": "arabic",
+    "chapter": 1,
+    "sequence": 90,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7cdaf39db14b8cd3"
+  },
+  "findings": []
+}

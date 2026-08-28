@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "ES-W02-enye",
+    "language": "spanish",
+    "chapter": 11,
+    "sequence": 370,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2126771b111a322d",
+    "detachableSegments": [
+      "Script — how to write it"
+    ]
+  },
+  "findings": []
+}

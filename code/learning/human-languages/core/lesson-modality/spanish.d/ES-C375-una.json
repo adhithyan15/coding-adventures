@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C375-una",
+    "language": "spanish",
+    "chapter": 375,
+    "sequence": 7670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b350efcd13480efa"
+  },
+  "findings": []
+}

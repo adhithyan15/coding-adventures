@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-W08-sollungal-dictation",
+    "language": "tamil",
+    "chapter": 8,
+    "sequence": 475,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9b45aff374e63b4c",
+    "detachableSegments": [
+      "Writing — dictation"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

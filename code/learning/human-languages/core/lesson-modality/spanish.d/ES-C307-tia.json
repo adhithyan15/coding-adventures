@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C307-tia",
+    "language": "spanish",
+    "chapter": 307,
+    "sequence": 4490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13ef896d878b5583"
+  },
+  "findings": []
+}

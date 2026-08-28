@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C23-kutta-billi",
+    "language": "hindi",
+    "chapter": 23,
+    "sequence": 720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39afc849c1dbfaf1"
+  },
+  "findings": []
+}

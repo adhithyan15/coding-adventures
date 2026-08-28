@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C05-abitare",
+    "language": "italian",
+    "chapter": 5,
+    "sequence": 290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:293d9e3b989b8ce7"
+  },
+  "findings": []
+}

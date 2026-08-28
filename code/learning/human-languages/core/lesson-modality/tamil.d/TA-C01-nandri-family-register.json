@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C01-nandri-family-register",
+    "language": "tamil",
+    "chapter": 1,
+    "sequence": 60,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60338f1932bc98d3"
+  },
+  "findings": []
+}

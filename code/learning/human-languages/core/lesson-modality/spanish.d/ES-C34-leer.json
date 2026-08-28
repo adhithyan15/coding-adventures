@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C34-leer",
+    "language": "spanish",
+    "chapter": 155,
+    "sequence": 1910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4fcfe01c3a5315aa"
+  },
+  "findings": []
+}

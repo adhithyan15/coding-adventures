@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C49-certainly",
+    "language": "telugu",
+    "chapter": 49,
+    "sequence": 1300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fcf443942ac572b9"
+  },
+  "findings": []
+}

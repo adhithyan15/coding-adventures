@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C21-naayi-bekku",
+    "language": "kannada",
+    "chapter": 21,
+    "sequence": 500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfd9603009a0b0c5"
+  },
+  "findings": []
+}

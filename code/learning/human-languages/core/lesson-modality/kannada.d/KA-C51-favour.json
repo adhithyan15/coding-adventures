@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C51-favour",
+    "language": "kannada",
+    "chapter": 51,
+    "sequence": 1400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d893bf13ff5003c"
+  },
+  "findings": []
+}

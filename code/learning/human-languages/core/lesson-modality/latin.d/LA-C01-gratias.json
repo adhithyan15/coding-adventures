@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C01-gratias",
+    "language": "latin",
+    "chapter": 1,
+    "sequence": 130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:574ae9fd19f3d699"
+  },
+  "findings": []
+}

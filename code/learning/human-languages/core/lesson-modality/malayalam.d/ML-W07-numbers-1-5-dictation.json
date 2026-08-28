@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ML-W07-numbers-1-5-dictation",
+    "language": "malayalam",
+    "chapter": 7,
+    "sequence": 346,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2af87fe59195bc72",
+    "detachableSegments": [
+      "Writing — dictation"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C67-repaso-uno-otro-ninguno",
+    "language": "spanish",
+    "chapter": 263,
+    "sequence": 2552,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d43b091b7d59931"
+  },
+  "findings": []
+}

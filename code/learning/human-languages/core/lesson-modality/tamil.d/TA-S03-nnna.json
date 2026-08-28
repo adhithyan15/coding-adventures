@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "TA-S03-nnna",
+    "language": "tamil",
+    "chapter": 7,
+    "sequence": 445,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:68cb16365e7b3e60",
+    "detachableSegments": [
+      "Script you'll notice: ன",
+      "Writing: ன"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

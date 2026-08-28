@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C36-correr",
+    "language": "spanish",
+    "chapter": 165,
+    "sequence": 2000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef1c9554525f932a"
+  },
+  "findings": []
+}

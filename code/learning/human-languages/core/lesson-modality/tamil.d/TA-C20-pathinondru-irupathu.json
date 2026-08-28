@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C20-pathinondru-irupathu",
+    "language": "tamil",
+    "chapter": 20,
+    "sequence": 700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31182bc6d2e785e6"
+  },
+  "findings": []
+}

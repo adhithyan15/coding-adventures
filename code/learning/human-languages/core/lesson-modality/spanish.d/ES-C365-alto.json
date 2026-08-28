@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C365-alto",
+    "language": "spanish",
+    "chapter": 365,
+    "sequence": 7170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4663a2d61dfecf3"
+  },
+  "findings": []
+}

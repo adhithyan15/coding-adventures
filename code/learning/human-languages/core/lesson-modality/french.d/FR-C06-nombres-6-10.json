@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "FR-C06-nombres-6-10",
+    "language": "french",
+    "chapter": 6,
+    "sequence": 210,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b995cd448c777eef"
+  },
+  "findings": []
+}

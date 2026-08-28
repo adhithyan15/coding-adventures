@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C313-cambio",
+    "language": "spanish",
+    "chapter": 313,
+    "sequence": 4810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:346931538d6b85df"
+  },
+  "findings": []
+}

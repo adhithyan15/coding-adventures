@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C50-day-after",
+    "language": "kannada",
+    "chapter": 50,
+    "sequence": 1350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:676b4189817e86ae"
+  },
+  "findings": []
+}

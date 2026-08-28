@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W18-kan-observe",
+    "language": "chinese",
+    "chapter": 18,
+    "sequence": 1600,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3a2b15d8e09beb83",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

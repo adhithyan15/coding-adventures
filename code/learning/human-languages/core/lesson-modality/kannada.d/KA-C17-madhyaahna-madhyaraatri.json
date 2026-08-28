@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C17-madhyaahna-madhyaraatri",
+    "language": "kannada",
+    "chapter": 17,
+    "sequence": 450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3cd6c08f92c685e"
+  },
+  "findings": []
+}

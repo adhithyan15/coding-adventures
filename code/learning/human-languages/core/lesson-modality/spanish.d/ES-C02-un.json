@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C02-un",
+    "language": "spanish",
+    "chapter": 3,
+    "sequence": 122,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd85e24e27ac6115"
+  },
+  "findings": []
+}

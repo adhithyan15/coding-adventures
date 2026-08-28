@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C05-bolta-hun",
+    "language": "hindi",
+    "chapter": 5,
+    "sequence": 430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:926eab697b3d54c3"
+  },
+  "findings": []
+}

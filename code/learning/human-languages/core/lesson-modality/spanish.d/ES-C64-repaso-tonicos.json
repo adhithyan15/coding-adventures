@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C64-repaso-tonicos",
+    "language": "spanish",
+    "chapter": 250,
+    "sequence": 2485,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbabc0de79c6979a"
+  },
+  "findings": []
+}

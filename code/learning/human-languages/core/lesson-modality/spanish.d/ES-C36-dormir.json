@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C36-dormir",
+    "language": "spanish",
+    "chapter": 165,
+    "sequence": 1980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6c0b091e2b2dbe3"
+  },
+  "findings": []
+}

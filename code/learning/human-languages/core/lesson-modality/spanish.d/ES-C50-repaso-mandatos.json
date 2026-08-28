@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C50-repaso-mandatos",
+    "language": "spanish",
+    "chapter": 135,
+    "sequence": 1501,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:635c5443290b7071"
+  },
+  "findings": []
+}

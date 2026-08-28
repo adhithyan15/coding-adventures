@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R15-school-map-4",
+    "language": "chinese",
+    "chapter": 15,
+    "sequence": 1250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7f0db304babaa68"
+  },
+  "findings": []
+}

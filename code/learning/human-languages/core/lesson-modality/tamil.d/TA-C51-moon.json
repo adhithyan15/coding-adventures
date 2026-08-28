@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C51-moon",
+    "language": "tamil",
+    "chapter": 51,
+    "sequence": 1780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf6f82c652fa6be8"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ML-C40-oon",
+    "language": "malayalam",
+    "chapter": 40,
+    "sequence": 930,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd789335ab45db73",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

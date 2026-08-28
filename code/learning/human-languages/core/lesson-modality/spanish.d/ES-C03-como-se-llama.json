@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C03-como-se-llama",
+    "language": "spanish",
+    "chapter": 6,
+    "sequence": 230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:703702b6f121e529"
+  },
+  "findings": []
+}

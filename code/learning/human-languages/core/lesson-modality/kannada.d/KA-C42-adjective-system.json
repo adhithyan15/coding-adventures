@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C42-adjective-system",
+    "language": "kannada",
+    "chapter": 42,
+    "sequence": 1010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2df2ecf84504b44"
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "HI-S04-letter-aa",
+    "language": "hindi",
+    "chapter": 9,
+    "sequence": 525,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2bfb9c9a4b342e0d",
+    "detachableSegments": [
+      "Script you'll notice: आ",
+      "Writing: आ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

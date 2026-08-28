@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C01-sera",
+    "language": "italian",
+    "chapter": 1,
+    "sequence": 60,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1eb2fa43556aab91"
+  },
+  "findings": []
+}

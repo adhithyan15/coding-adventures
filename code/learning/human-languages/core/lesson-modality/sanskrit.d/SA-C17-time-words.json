@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C17-time-words",
+    "language": "sanskrit",
+    "chapter": 17,
+    "sequence": 840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc6d54d1783c0038"
+  },
+  "findings": []
+}

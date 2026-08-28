@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S122-letter-ta",
+    "language": "tamil",
+    "chapter": 18,
+    "sequence": 661,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8ab5ce68888b9fbc",
+    "detachableSegments": [
+      "Script you'll notice: த",
+      "Writing: த — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

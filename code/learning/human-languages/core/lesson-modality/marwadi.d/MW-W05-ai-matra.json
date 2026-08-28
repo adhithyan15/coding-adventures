@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W05-ai-matra",
+    "language": "marwadi",
+    "chapter": 5,
+    "sequence": 310,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:826fa97327f79d2a",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

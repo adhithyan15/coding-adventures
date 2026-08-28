@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C45-husband",
+    "language": "kannada",
+    "chapter": 45,
+    "sequence": 1120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3da9fc65afe28f68"
+  },
+  "findings": []
+}

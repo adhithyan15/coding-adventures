@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S113-letter-nna",
+    "language": "malayalam",
+    "chapter": 10,
+    "sequence": 386,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:40991c471a8d96f5",
+    "detachableSegments": [
+      "Script you'll notice: ണ",
+      "Writing: ണ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

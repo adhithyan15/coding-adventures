@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C48-enough",
+    "language": "hindi",
+    "chapter": 48,
+    "sequence": 1510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34a28ec47ce2a0c7"
+  },
+  "findings": []
+}

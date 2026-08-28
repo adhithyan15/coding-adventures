@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C09-mois",
+    "language": "french",
+    "chapter": 9,
+    "sequence": 235,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fa596e076338a9c"
+  },
+  "findings": []
+}

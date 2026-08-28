@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C18-ojala",
+    "language": "spanish",
+    "chapter": 129,
+    "sequence": 1488,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2a140e41d3d3219"
+  },
+  "findings": []
+}

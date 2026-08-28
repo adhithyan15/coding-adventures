@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C68-message",
+    "language": "telugu",
+    "chapter": 68,
+    "sequence": 2270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ff59e7edfc9d738"
+  },
+  "findings": []
+}

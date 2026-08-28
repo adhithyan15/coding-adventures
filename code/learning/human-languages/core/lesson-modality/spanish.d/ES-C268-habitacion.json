@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C268-habitacion",
+    "language": "spanish",
+    "chapter": 268,
+    "sequence": 2640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c4ec6caf162e20f"
+  },
+  "findings": []
+}

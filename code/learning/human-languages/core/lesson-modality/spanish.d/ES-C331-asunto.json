@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C331-asunto",
+    "language": "spanish",
+    "chapter": 331,
+    "sequence": 5710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64bb9912e5f6204c"
+  },
+  "findings": []
+}

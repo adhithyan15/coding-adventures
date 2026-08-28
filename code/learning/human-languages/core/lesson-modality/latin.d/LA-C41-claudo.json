@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C41-claudo",
+    "language": "latin",
+    "chapter": 41,
+    "sequence": 870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e8775b9724ed8cf"
+  },
+  "findings": []
+}

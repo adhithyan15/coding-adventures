@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C333-calma",
+    "language": "spanish",
+    "chapter": 333,
+    "sequence": 5790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76fe69f8b5d1aa77"
+  },
+  "findings": []
+}

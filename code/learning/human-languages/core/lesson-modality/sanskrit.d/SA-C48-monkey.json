@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C48-monkey",
+    "language": "sanskrit",
+    "chapter": 48,
+    "sequence": 2360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13fcebe1cff7a406"
+  },
+  "findings": []
+}

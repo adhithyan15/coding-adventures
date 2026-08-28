@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-W01-eszett",
+    "language": "german",
+    "chapter": 4,
+    "sequence": 175,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:eb6d5b012494ff66"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C03-tusi-kivein-ho",
+    "language": "punjabi",
+    "chapter": 3,
+    "sequence": 170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:926ee3e5c7115e73"
+  },
+  "findings": []
+}

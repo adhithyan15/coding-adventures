@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C05-hear-naam",
+    "language": "marwadi",
+    "chapter": 5,
+    "sequence": 270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0087eec68addd8b8"
+  },
+  "findings": []
+}

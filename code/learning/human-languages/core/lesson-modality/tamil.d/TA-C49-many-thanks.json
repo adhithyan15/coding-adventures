@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C49-many-thanks",
+    "language": "tamil",
+    "chapter": 49,
+    "sequence": 1700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c04219fe4af37ab"
+  },
+  "findings": []
+}

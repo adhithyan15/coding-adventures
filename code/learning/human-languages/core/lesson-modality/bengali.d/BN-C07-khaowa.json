@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C07-khaowa",
+    "language": "bengali",
+    "chapter": 7,
+    "sequence": 430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4af6db76d104a4ea"
+  },
+  "findings": []
+}

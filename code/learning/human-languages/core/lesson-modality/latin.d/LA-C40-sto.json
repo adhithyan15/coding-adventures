@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C40-sto",
+    "language": "latin",
+    "chapter": 40,
+    "sequence": 830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6ef0e82e22db7f2"
+  },
+  "findings": []
+}

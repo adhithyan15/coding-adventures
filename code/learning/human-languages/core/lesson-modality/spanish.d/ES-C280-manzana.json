@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C280-manzana",
+    "language": "spanish",
+    "chapter": 280,
+    "sequence": 3160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:134f0cb69c3f50cc"
+  },
+  "findings": []
+}

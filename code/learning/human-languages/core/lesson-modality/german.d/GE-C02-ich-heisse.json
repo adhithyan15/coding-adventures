@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C02-ich-heisse",
+    "language": "german",
+    "chapter": 2,
+    "sequence": 75,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c9792382585a965"
+  },
+  "findings": []
+}

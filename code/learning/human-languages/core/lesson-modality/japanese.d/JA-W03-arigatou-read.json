@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "JA-W03-arigatou-read",
+    "language": "japanese",
+    "chapter": 3,
+    "sequence": 200,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a4649118286c6353",
+    "detachableSegments": [
+      "Script — the assembly"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

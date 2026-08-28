@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C37-vaay",
+    "language": "malayalam",
+    "chapter": 37,
+    "sequence": 870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e62438e27a72e689"
+  },
+  "findings": []
+}

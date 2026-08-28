@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C05-bushi",
+    "language": "chinese",
+    "chapter": 5,
+    "sequence": 390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4c90d8496c3c06f"
+  },
+  "findings": []
+}

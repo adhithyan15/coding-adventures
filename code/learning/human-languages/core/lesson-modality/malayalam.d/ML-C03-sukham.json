@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ML-C03-sukham",
+    "language": "malayalam",
+    "chapter": 3,
+    "sequence": 190,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b07e99c2ee38a78",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C35-puchna",
+    "language": "hindi",
+    "chapter": 35,
+    "sequence": 910,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7661363329ff38a1",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

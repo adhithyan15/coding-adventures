@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MR-C12-dola",
+    "language": "marathi",
+    "chapter": 15,
+    "sequence": 600,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6380f0b349107d3f",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

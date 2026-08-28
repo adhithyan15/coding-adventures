@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C25-homem",
+    "language": "portuguese",
+    "chapter": 25,
+    "sequence": 910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc52ffe84ccb1bdb"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C25-shubha-rathri",
+    "language": "malayalam",
+    "chapter": 25,
+    "sequence": 570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9697f21d8b9e03c2"
+  },
+  "findings": []
+}

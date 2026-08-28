@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-C03-thik",
+    "language": "punjabi",
+    "chapter": 3,
+    "sequence": 190,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f8f6bf8688b9550",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

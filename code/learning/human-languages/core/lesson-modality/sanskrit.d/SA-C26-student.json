@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C26-student",
+    "language": "sanskrit",
+    "chapter": 26,
+    "sequence": 1240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05a98292e7eab1e2"
+  },
+  "findings": []
+}

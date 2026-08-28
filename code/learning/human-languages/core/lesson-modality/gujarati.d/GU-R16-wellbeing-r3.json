@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-R16-wellbeing-r3",
+    "language": "gujarati",
+    "chapter": 20,
+    "sequence": 750,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:523bedbc9d901429",
+    "detachableSegments": [
+      "Writing — from sound"
+    ]
+  },
+  "findings": []
+}

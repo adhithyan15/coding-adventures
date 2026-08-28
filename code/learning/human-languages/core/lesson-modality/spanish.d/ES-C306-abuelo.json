@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C306-abuelo",
+    "language": "spanish",
+    "chapter": 306,
+    "sequence": 4440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50af3e7bf411d792"
+  },
+  "findings": []
+}

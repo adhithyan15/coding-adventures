@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C10-van",
+    "language": "spanish",
+    "chapter": 68,
+    "sequence": 1054,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:267d357ec33570cf"
+  },
+  "findings": []
+}

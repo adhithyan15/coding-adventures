@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C06-niger-albus",
+    "language": "latin",
+    "chapter": 6,
+    "sequence": 220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3b169e6f6ff32ac"
+  },
+  "findings": []
+}

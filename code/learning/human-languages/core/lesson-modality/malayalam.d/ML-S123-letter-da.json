@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S123-letter-da",
+    "language": "malayalam",
+    "chapter": 20,
+    "sequence": 501,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:433c8db66eef87d9",
+    "detachableSegments": [
+      "Script you'll notice: ദ",
+      "Writing: ദ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

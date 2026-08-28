@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C67-roof",
+    "language": "telugu",
+    "chapter": 67,
+    "sequence": 2190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c470610f67ec1a59"
+  },
+  "findings": []
+}

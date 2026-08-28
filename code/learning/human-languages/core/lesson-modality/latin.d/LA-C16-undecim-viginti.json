@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C16-undecim-viginti",
+    "language": "latin",
+    "chapter": 16,
+    "sequence": 370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c4f4d0a6fbd5266"
+  },
+  "findings": []
+}

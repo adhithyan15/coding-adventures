@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ML-W01-na-ma-guided-copy",
+    "language": "malayalam",
+    "chapter": 1,
+    "sequence": 12,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d3ae5d0f8d3005d2",
+    "detachableSegments": [
+      "Writing — copy with help"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

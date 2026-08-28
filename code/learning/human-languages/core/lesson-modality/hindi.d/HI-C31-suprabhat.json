@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C31-suprabhat",
+    "language": "hindi",
+    "chapter": 31,
+    "sequence": 820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57363ed5674d335a"
+  },
+  "findings": []
+}

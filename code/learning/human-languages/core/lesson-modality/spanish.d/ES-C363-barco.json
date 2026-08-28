@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C363-barco",
+    "language": "spanish",
+    "chapter": 363,
+    "sequence": 7090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffe4fd74460ad976"
+  },
+  "findings": []
+}

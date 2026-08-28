@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S06-letter-chillu-ll",
+    "language": "malayalam",
+    "chapter": 11,
+    "sequence": 395,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c2ff431fe4b6d3a0",
+    "detachableSegments": [
+      "Script you'll notice: ൾ",
+      "Writing: ൾ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

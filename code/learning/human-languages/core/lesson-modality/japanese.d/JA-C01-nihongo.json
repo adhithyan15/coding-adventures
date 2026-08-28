@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "JA-C01-nihongo",
+    "language": "japanese",
+    "chapter": 5,
+    "sequence": 330,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89902cbc7dd1c0ae",
+    "detachableSegments": [
+      "Script — kanji, and the readings problem"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C04-practice",
+    "language": "marwadi",
+    "chapter": 4,
+    "sequence": 220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7132924a09257570"
+  },
+  "findings": []
+}

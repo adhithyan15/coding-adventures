@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C42-big",
+    "language": "malayalam",
+    "chapter": 42,
+    "sequence": 1010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4170d3e1af4c1a97"
+  },
+  "findings": []
+}

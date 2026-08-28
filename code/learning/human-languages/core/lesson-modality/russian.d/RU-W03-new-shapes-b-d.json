@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "RU-W03-new-shapes-b-d",
+    "language": "russian",
+    "chapter": 1,
+    "sequence": 50,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cc31d81c704366f2",
+    "detachableSegments": [
+      "Script — б (\"b\") — and how it differs from в",
+      "Script — д (\"d\") — the delta on little feet"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

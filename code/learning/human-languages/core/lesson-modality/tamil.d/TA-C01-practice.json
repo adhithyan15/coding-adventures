@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C01-practice",
+    "language": "tamil",
+    "chapter": 1,
+    "sequence": 90,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aac58ccad5a75246"
+  },
+  "findings": []
+}

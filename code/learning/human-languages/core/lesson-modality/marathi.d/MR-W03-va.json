@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W03-va",
+    "language": "marathi",
+    "chapter": 3,
+    "sequence": 32,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:352175ea2c51a1b7",
+    "detachableSegments": [
+      "Script",
+      "Writing — heard cue"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

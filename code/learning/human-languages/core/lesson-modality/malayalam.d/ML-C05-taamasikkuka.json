@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ML-C05-taamasikkuka",
+    "language": "malayalam",
+    "chapter": 5,
+    "sequence": 290,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7d34f29e68b54de",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

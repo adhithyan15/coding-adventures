@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C64-para-mi",
+    "language": "spanish",
+    "chapter": 246,
+    "sequence": 2465,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fcc9674d860abab5"
+  },
+  "findings": []
+}

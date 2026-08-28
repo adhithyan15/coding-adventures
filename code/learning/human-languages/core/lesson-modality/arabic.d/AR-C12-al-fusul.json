@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C12-al-fusul",
+    "language": "arabic",
+    "chapter": 12,
+    "sequence": 560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71e2d8f01567dcc3"
+  },
+  "findings": []
+}

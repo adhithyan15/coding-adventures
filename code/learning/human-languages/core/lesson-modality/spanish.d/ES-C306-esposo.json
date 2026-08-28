@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C306-esposo",
+    "language": "spanish",
+    "chapter": 306,
+    "sequence": 4460,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:90dd91d933cb209c"
+  },
+  "findings": []
+}

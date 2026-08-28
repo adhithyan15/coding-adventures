@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "JA-C01-iie",
+    "language": "japanese",
+    "chapter": 1,
+    "sequence": 60,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be3de3c917443851",
+    "detachableSegments": [
+      "Script — one new sign, three beats"
+    ]
+  },
+  "findings": []
+}

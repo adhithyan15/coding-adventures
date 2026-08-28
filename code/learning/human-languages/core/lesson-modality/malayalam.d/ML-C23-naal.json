@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C23-naal",
+    "language": "malayalam",
+    "chapter": 23,
+    "sequence": 540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c52f31160d246a7e"
+  },
+  "findings": []
+}

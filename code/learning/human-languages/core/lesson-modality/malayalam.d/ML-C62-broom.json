@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C62-broom",
+    "language": "malayalam",
+    "chapter": 62,
+    "sequence": 2020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0abcd5ced9bf3225"
+  },
+  "findings": []
+}

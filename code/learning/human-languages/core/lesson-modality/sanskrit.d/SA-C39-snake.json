@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C39-snake",
+    "language": "sanskrit",
+    "chapter": 39,
+    "sequence": 1920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7553ac2e515d5214"
+  },
+  "findings": []
+}

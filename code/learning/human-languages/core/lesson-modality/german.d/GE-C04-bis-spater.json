@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C04-bis-spater",
+    "language": "german",
+    "chapter": 4,
+    "sequence": 165,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6eb967cfba8dcf4f"
+  },
+  "findings": []
+}

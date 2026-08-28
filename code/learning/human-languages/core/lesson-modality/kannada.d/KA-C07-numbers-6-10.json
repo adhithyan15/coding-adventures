@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C07-numbers-6-10",
+    "language": "kannada",
+    "chapter": 7,
+    "sequence": 350,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ac529c2e35700a68"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C60-bastante",
+    "language": "spanish",
+    "chapter": 227,
+    "sequence": 2370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b097097667c06bc"
+  },
+  "findings": []
+}

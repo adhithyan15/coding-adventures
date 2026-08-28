@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-W08-sollungal-guided-copy",
+    "language": "tamil",
+    "chapter": 8,
+    "sequence": 473,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e59aea8c1e91fd32",
+    "detachableSegments": [
+      "Writing — guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

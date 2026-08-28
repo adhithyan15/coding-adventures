@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C04-phir-milaange",
+    "language": "punjabi",
+    "chapter": 4,
+    "sequence": 240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49e2d83eab58ca6e"
+  },
+  "findings": []
+}

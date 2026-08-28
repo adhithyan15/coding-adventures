@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C25-stomaco",
+    "language": "italian",
+    "chapter": 25,
+    "sequence": 870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0d359b7da5dc01c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C26-quomodo",
+    "language": "latin",
+    "chapter": 26,
+    "sequence": 500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8c4664ec3562c00"
+  },
+  "findings": []
+}

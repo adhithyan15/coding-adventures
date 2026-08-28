@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C12-pitaa-maataa",
+    "language": "hindi",
+    "chapter": 12,
+    "sequence": 570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33ad9c61c7bf4d19"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C37-kannu",
+    "language": "kannada",
+    "chapter": 37,
+    "sequence": 800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83e2044986919cd0"
+  },
+  "findings": []
+}

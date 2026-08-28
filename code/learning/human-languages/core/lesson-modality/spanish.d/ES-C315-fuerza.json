@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C315-fuerza",
+    "language": "spanish",
+    "chapter": 315,
+    "sequence": 4880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:166b904612f6edeb"
+  },
+  "findings": []
+}

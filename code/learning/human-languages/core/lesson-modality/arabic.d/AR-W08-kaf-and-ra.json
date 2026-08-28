@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "AR-W08-kaf-and-ra",
+    "language": "arabic",
+    "chapter": 3,
+    "sequence": 280,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:04487ef90e2dd6d7",
+    "detachableSegments": [
+      "Script — ك (kāf) — the angular k",
+      "Script — ر (rā) — the little downward curve that breaks"
+    ]
+  },
+  "findings": []
+}

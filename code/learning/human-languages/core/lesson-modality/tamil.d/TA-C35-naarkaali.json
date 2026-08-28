@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C35-naarkaali",
+    "language": "tamil",
+    "chapter": 35,
+    "sequence": 1050,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd96726728bb3047",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

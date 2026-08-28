@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C14-haben",
+    "language": "german",
+    "chapter": 14,
+    "sequence": 295,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:aa5e2c02abcc7d51"
+  },
+  "findings": []
+}

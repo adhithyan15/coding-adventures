@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C36-timeless-salve",
+    "language": "latin",
+    "chapter": 36,
+    "sequence": 620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4da6150d00e5b3a8"
+  },
+  "findings": []
+}

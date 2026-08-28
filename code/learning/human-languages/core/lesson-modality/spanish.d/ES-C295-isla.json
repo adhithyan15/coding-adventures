@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C295-isla",
+    "language": "spanish",
+    "chapter": 295,
+    "sequence": 3900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4abf4d1e2b32d3b1"
+  },
+  "findings": []
+}

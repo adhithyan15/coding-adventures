@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C26-marcher",
+    "language": "french",
+    "chapter": 26,
+    "sequence": 810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be4597c62b602a09"
+  },
+  "findings": []
+}

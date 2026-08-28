@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-W07-write-sari",
+    "language": "tamil",
+    "chapter": 19,
+    "sequence": 690,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e901b4d9eeba8fde",
+    "detachableSegments": [
+      "Script you'll notice: ச and ர",
+      "Script you'll notice: build the word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

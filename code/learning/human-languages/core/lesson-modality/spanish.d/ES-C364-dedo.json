@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C364-dedo",
+    "language": "spanish",
+    "chapter": 364,
+    "sequence": 7150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73ef942051c91c47"
+  },
+  "findings": []
+}

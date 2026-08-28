@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C06-numbers-1-5",
+    "language": "marathi",
+    "chapter": 9,
+    "sequence": 360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75f6d343b299b9fd"
+  },
+  "findings": []
+}

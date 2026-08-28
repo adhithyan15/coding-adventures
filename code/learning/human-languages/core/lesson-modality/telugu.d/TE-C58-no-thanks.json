@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C58-no-thanks",
+    "language": "telugu",
+    "chapter": 58,
+    "sequence": 1760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe988ea0ae9e37d7"
+  },
+  "findings": []
+}

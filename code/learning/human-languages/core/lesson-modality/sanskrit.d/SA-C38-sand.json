@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C38-sand",
+    "language": "sanskrit",
+    "chapter": 38,
+    "sequence": 1860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3e6c1ccb2fefc07"
+  },
+  "findings": []
+}

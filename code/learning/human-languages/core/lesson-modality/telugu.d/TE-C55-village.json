@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C55-village",
+    "language": "telugu",
+    "chapter": 55,
+    "sequence": 1610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f22ccb1b6d721d0"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C296-vaca",
+    "language": "spanish",
+    "chapter": 296,
+    "sequence": 3930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3c2a48e15cd7f0b"
+  },
+  "findings": []
+}

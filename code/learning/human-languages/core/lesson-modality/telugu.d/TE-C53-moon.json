@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C53-moon",
+    "language": "telugu",
+    "chapter": 53,
+    "sequence": 1500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1dfd0f612632436c"
+  },
+  "findings": []
+}

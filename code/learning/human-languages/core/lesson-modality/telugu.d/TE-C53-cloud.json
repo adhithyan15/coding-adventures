@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C53-cloud",
+    "language": "telugu",
+    "chapter": 53,
+    "sequence": 1520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd3b04447c20a7d1"
+  },
+  "findings": []
+}

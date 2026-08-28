@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C399-guapo",
+    "language": "spanish",
+    "chapter": 399,
+    "sequence": 8760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4686bdbac03f5112"
+  },
+  "findings": []
+}

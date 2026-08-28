@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C54-fish",
+    "language": "hindi",
+    "chapter": 54,
+    "sequence": 1820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f7097ad99c59320"
+  },
+  "findings": []
+}

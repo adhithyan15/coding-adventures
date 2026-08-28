@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C65-trust",
+    "language": "malayalam",
+    "chapter": 65,
+    "sequence": 2180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b343f50b587c174"
+  },
+  "findings": []
+}

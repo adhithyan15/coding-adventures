@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "MW-W04-nna",
+    "language": "marwadi",
+    "chapter": 4,
+    "sequence": 190,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5a5571b7e5f1d784",
+    "detachableSegments": [
+      "Script — one new consonant",
+      "Writing — observe, trace, copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

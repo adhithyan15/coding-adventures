@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ZH-C01-tones",
+    "language": "chinese",
+    "chapter": 1,
+    "sequence": 10,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dab90814614ce676",
+    "detachableSegments": [
+      "Writing — trace four visible paths"
+    ]
+  },
+  "findings": []
+}

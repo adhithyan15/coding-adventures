@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C392-agosto",
+    "language": "spanish",
+    "chapter": 392,
+    "sequence": 8440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6405394d464c14c4"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TE-C01-namaskaram",
+    "language": "telugu",
+    "chapter": 1,
+    "sequence": 10,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c3bf19b7a099589",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

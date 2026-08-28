@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C20-mausam",
+    "language": "hindi",
+    "chapter": 20,
+    "sequence": 680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd0a486ea0643f9b"
+  },
+  "findings": []
+}

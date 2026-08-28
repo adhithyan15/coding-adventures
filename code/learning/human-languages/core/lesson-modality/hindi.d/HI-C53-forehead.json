@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C53-forehead",
+    "language": "hindi",
+    "chapter": 53,
+    "sequence": 1770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b52a1b7a39e2acd1"
+  },
+  "findings": []
+}

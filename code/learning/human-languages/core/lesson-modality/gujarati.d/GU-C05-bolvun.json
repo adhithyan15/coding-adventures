@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-C05-bolvun",
+    "language": "gujarati",
+    "chapter": 11,
+    "sequence": 290,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0255320c1ce0d75f",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

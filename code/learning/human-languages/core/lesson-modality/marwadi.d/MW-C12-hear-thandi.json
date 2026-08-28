@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C12-hear-thandi",
+    "language": "marwadi",
+    "chapter": 17,
+    "sequence": 1250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0aa5f0275afddce2"
+  },
+  "findings": []
+}

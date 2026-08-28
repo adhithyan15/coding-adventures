@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C354-jardin",
+    "language": "spanish",
+    "chapter": 354,
+    "sequence": 6660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f38eecb3c47de21"
+  },
+  "findings": []
+}

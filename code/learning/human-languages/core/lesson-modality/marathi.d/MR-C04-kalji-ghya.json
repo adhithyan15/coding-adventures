@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MR-C04-kalji-ghya",
+    "language": "marathi",
+    "chapter": 7,
+    "sequence": 155,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7222c61c1dc86b53",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

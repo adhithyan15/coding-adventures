@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "UR-C15-garmi",
+    "language": "urdu",
+    "chapter": 15,
+    "sequence": 700,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f33d3c6a56f7292",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

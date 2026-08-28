@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C07-repaso-comer",
+    "language": "spanish",
+    "chapter": 34,
+    "sequence": 632,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b8985d315bebb970"
+  },
+  "findings": []
+}

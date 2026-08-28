@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "AR-W11-ha-and-ta-marbuta",
+    "language": "arabic",
+    "chapter": 4,
+    "sequence": 370,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8d771cbb144bec87",
+    "detachableSegments": [
+      "Script — ه (hāʾ) — the loop that never looks the same",
+      "Script — ة (tāʾ marbūṭa) — the \"tied tāʾ\""
+    ]
+  },
+  "findings": []
+}

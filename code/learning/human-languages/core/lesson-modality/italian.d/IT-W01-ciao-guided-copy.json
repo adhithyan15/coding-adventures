@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "IT-W01-ciao-guided-copy",
+    "language": "italian",
+    "chapter": 1,
+    "sequence": 15,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2313a64567a8c32e",
+    "detachableSegments": [
+      "Writing — one guided copy"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S116-letter-da",
+    "language": "telugu",
+    "chapter": 13,
+    "sequence": 406,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8f5538b3ea21001f",
+    "detachableSegments": [
+      "Script you'll notice: ద",
+      "Writing: ద — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

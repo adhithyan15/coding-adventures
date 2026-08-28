@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C20-name-case-variation",
+    "language": "latin",
+    "chapter": 20,
+    "sequence": 430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:afdc353ab82c07e7"
+  },
+  "findings": []
+}

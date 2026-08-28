@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W03-dha",
+    "language": "marathi",
+    "chapter": 3,
+    "sequence": 28,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f432233c1b6292ac",
+    "detachableSegments": [
+      "Script",
+      "Writing — delayed copy and a wider return"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

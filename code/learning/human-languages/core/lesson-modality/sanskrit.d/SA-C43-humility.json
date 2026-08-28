@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C43-humility",
+    "language": "sanskrit",
+    "chapter": 43,
+    "sequence": 2100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:146db672175857d0"
+  },
+  "findings": []
+}

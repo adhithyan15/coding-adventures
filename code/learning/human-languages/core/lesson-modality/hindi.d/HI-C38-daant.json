@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C38-daant",
+    "language": "hindi",
+    "chapter": 38,
+    "sequence": 1030,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30d47cc496069e6d",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

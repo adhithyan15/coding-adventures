@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ML-C01-nandi",
+    "language": "malayalam",
+    "chapter": 1,
+    "sequence": 20,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f09716a797ce7790",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

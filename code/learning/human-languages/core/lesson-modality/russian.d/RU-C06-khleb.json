@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "RU-C06-khleb",
+    "language": "russian",
+    "chapter": 6,
+    "sequence": 310,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a7e393e0212209b",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

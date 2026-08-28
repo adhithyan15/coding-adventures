@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C57-repaso-reportar",
+    "language": "spanish",
+    "chapter": 216,
+    "sequence": 2315,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e17f0f7b146772d0"
+  },
+  "findings": []
+}

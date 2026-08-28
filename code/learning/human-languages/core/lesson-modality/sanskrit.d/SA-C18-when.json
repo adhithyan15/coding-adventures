@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C18-when",
+    "language": "sanskrit",
+    "chapter": 18,
+    "sequence": 850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:112cf6f37e8910e3"
+  },
+  "findings": []
+}

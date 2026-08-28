@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C41-who",
+    "language": "telugu",
+    "chapter": 41,
+    "sequence": 920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfe6a66dd2561db5"
+  },
+  "findings": []
+}

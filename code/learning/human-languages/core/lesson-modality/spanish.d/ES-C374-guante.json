@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C374-guante",
+    "language": "spanish",
+    "chapter": 374,
+    "sequence": 7640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d113b79bce1b0458"
+  },
+  "findings": []
+}

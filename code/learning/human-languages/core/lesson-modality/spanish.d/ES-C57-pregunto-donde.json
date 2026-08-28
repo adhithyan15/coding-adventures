@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C57-pregunto-donde",
+    "language": "spanish",
+    "chapter": 215,
+    "sequence": 2310,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9b1818a953f20d93"
+  },
+  "findings": []
+}

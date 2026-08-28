@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C09-mou-ichido-onegaishimasu",
+    "language": "japanese",
+    "chapter": 9,
+    "sequence": 560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f71d53d907086f9"
+  },
+  "findings": []
+}

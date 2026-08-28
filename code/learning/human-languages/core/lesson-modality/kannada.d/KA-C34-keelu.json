@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C34-keelu",
+    "language": "kannada",
+    "chapter": 34,
+    "sequence": 720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ef27f7104452219"
+  },
+  "findings": []
+}

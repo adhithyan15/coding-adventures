@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C51-garland",
+    "language": "hindi",
+    "chapter": 51,
+    "sequence": 1660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5a15ff38e973861"
+  },
+  "findings": []
+}

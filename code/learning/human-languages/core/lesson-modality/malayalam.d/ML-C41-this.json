@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C41-this",
+    "language": "malayalam",
+    "chapter": 41,
+    "sequence": 940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8759b0e37b4727f7"
+  },
+  "findings": []
+}

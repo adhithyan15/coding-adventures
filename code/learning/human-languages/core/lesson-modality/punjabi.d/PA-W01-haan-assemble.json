@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-W01-haan-assemble",
+    "language": "punjabi",
+    "chapter": 1,
+    "sequence": 34,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af162bf222dea615",
+    "detachableSegments": [
+      "Script — assemble with no new sign"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ML-C34-sahaayikkuka",
+    "language": "malayalam",
+    "chapter": 34,
+    "sequence": 770,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d850225bac58ea53",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

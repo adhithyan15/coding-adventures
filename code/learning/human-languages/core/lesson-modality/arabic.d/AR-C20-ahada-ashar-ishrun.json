@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C20-ahada-ashar-ishrun",
+    "language": "arabic",
+    "chapter": 20,
+    "sequence": 640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2531c72ae5075f8"
+  },
+  "findings": []
+}

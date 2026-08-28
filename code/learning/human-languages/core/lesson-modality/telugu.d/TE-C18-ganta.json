@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C18-ganta",
+    "language": "telugu",
+    "chapter": 18,
+    "sequence": 450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76a79508d5a71fce"
+  },
+  "findings": []
+}

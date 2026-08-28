@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C286-dolor",
+    "language": "spanish",
+    "chapter": 286,
+    "sequence": 3450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b812b043327a3224"
+  },
+  "findings": []
+}

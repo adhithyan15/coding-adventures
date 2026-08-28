@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C291-raiz",
+    "language": "spanish",
+    "chapter": 291,
+    "sequence": 3680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdcc5e2d22131654"
+  },
+  "findings": []
+}

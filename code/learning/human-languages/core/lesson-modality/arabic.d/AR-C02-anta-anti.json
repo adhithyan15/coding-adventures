@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "AR-C02-anta-anti",
+    "language": "arabic",
+    "chapter": 2,
+    "sequence": 180,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0282512439f77104",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

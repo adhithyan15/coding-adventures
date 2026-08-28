@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C59-curd",
+    "language": "tamil",
+    "chapter": 59,
+    "sequence": 2160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32ff839f5042e02f"
+  },
+  "findings": []
+}

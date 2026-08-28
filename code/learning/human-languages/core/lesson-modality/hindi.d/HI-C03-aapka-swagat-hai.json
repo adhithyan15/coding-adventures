@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C03-aapka-swagat-hai",
+    "language": "hindi",
+    "chapter": 3,
+    "sequence": 320,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b569e69ad4ab9ad",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

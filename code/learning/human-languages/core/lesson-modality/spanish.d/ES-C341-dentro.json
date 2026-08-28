@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C341-dentro",
+    "language": "spanish",
+    "chapter": 341,
+    "sequence": 6010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b513b73b26fe1ae4"
+  },
+  "findings": []
+}

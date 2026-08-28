@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C296-caballo",
+    "language": "spanish",
+    "chapter": 296,
+    "sequence": 3920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a81a77ddc97f5263"
+  },
+  "findings": []
+}

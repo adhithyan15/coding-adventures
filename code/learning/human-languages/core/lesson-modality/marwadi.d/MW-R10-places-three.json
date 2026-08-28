@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R10-places-three",
+    "language": "marwadi",
+    "chapter": 14,
+    "sequence": 1010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:750a4c55ef301648"
+  },
+  "findings": []
+}

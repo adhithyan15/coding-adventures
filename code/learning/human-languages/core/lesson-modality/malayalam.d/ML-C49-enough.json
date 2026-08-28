@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C49-enough",
+    "language": "malayalam",
+    "chapter": 49,
+    "sequence": 1350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbca53e0ea7c7b4c"
+  },
+  "findings": []
+}

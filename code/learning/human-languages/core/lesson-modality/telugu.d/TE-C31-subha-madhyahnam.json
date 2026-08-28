@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C31-subha-madhyahnam",
+    "language": "telugu",
+    "chapter": 31,
+    "sequence": 590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be4e3b25d30485e7"
+  },
+  "findings": []
+}

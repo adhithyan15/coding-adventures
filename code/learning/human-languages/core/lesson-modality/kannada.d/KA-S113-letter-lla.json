@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S113-letter-lla",
+    "language": "kannada",
+    "chapter": 9,
+    "sequence": 376,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8f2afa7b2f5d07da",
+    "detachableSegments": [
+      "Script you'll notice: ಳ",
+      "Writing: ಳ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

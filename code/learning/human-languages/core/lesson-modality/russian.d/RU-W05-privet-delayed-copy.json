@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "RU-W05-privet-delayed-copy",
+    "language": "russian",
+    "chapter": 1,
+    "sequence": 63,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5016ad26550d21b1",
+    "detachableSegments": [
+      "Writing — delayed copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

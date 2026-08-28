@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "ZH-W18-shu-guided",
+    "language": "chinese",
+    "chapter": 18,
+    "sequence": 1710,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:74f0b1f638c6eb1e",
+    "delivery": "script"
+  },
+  "findings": []
+}

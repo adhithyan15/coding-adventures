@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C41-good",
+    "language": "hindi",
+    "chapter": 41,
+    "sequence": 1190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9514e0b8e8096a2"
+  },
+  "findings": []
+}

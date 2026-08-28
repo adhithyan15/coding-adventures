@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "FR-W01-salut-guided-copy",
+    "language": "french",
+    "chapter": 1,
+    "sequence": 7,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c83d1461b3819eda",
+    "detachableSegments": [
+      "Writing — guided copy"
+    ]
+  },
+  "findings": []
+}

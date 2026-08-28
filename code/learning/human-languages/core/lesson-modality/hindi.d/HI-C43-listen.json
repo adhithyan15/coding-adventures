@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C43-listen",
+    "language": "hindi",
+    "chapter": 43,
+    "sequence": 1280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76fc82916220c431"
+  },
+  "findings": []
+}

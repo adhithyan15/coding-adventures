@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C18-k-words",
+    "language": "sanskrit",
+    "chapter": 18,
+    "sequence": 890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c6b991fa7be6267"
+  },
+  "findings": []
+}

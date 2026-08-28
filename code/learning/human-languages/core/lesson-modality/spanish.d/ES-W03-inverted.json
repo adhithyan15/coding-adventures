@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "ES-W03-inverted",
+    "language": "spanish",
+    "chapter": 11,
+    "sequence": 390,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0a57f9f8027bab9d",
+    "detachableSegments": [
+      "Script — the two opening marks"
+    ]
+  },
+  "findings": []
+}

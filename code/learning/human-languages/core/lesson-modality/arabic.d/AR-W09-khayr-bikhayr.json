@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "AR-W09-khayr-bikhayr",
+    "language": "arabic",
+    "chapter": 3,
+    "sequence": 290,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:51150a65ec1d038e",
+    "detachableSegments": [
+      "Script — Assemble خير — right to left",
+      "Script — Then بخير — \"(I'm) well\""
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C18-pensare",
+    "language": "italian",
+    "chapter": 18,
+    "sequence": 590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6833cffd0e46c90b"
+  },
+  "findings": []
+}

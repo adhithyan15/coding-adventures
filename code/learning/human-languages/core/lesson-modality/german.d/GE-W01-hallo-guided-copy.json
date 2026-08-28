@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "GE-W01-hallo-guided-copy",
+    "language": "german",
+    "chapter": 1,
+    "sequence": 6,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:defd473a05618d23",
+    "detachableSegments": [
+      "Writing — one guided copy"
+    ]
+  },
+  "findings": []
+}

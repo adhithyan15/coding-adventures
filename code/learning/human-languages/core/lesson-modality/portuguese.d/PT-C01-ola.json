@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PT-C01-ola",
+    "language": "portuguese",
+    "chapter": 1,
+    "sequence": 10,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a485bd22e5f3726",
+    "detachableSegments": [
+      "Writing — follow the greeting you can see"
+    ]
+  },
+  "findings": []
+}

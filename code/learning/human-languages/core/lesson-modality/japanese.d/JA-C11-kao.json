@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C11-kao",
+    "language": "japanese",
+    "chapter": 11,
+    "sequence": 780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:094965451bf946a4"
+  },
+  "findings": []
+}

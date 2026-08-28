@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C08-caput",
+    "language": "latin",
+    "chapter": 8,
+    "sequence": 260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c06ab9c5756dca48"
+  },
+  "findings": []
+}

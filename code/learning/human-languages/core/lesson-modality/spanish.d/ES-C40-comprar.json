@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C40-comprar",
+    "language": "spanish",
+    "chapter": 174,
+    "sequence": 2150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1982168124b66d03"
+  },
+  "findings": []
+}

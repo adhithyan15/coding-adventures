@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C52-vegetable",
+    "language": "hindi",
+    "chapter": 52,
+    "sequence": 1740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:276439de07522f28"
+  },
+  "findings": []
+}

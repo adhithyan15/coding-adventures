@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "LA-W01-salve-guided-copy",
+    "language": "latin",
+    "chapter": 1,
+    "sequence": 105,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6239e406e5cd4c36",
+    "detachableSegments": [
+      "Writing — one guided copy"
+    ]
+  },
+  "findings": []
+}

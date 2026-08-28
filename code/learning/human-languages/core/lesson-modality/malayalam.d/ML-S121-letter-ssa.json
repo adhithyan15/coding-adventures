@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S121-letter-ssa",
+    "language": "malayalam",
+    "chapter": 18,
+    "sequence": 471,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:27c9ecc07b02f493",
+    "detachableSegments": [
+      "Script you'll notice: ഷ",
+      "Writing: ഷ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

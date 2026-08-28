@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C43-hospitality",
+    "language": "sanskrit",
+    "chapter": 43,
+    "sequence": 2080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4557fd54843fad1"
+  },
+  "findings": []
+}

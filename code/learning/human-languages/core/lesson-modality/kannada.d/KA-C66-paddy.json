@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C66-paddy",
+    "language": "kannada",
+    "chapter": 66,
+    "sequence": 2160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0868f858e28f726b"
+  },
+  "findings": []
+}

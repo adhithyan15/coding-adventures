@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C37-eo",
+    "language": "latin",
+    "chapter": 37,
+    "sequence": 660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f92d9021d717c82"
+  },
+  "findings": []
+}

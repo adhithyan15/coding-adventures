@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C48-student",
+    "language": "telugu",
+    "chapter": 48,
+    "sequence": 1240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:523016310b6bf816"
+  },
+  "findings": []
+}

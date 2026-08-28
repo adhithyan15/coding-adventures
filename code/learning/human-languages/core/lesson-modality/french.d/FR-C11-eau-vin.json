@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C11-eau-vin",
+    "language": "french",
+    "chapter": 11,
+    "sequence": 260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a87a57d56877dd01"
+  },
+  "findings": []
+}

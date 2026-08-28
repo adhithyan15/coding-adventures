@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C14-ser-ir-preterite",
+    "language": "spanish",
+    "chapter": 103,
+    "sequence": 1290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c156d248b93ac011"
+  },
+  "findings": []
+}

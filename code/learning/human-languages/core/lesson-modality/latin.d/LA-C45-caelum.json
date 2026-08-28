@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C45-caelum",
+    "language": "latin",
+    "chapter": 45,
+    "sequence": 1030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5182ea860ca46c0e"
+  },
+  "findings": []
+}

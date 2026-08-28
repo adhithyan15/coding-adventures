@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C28-tee",
+    "language": "german",
+    "chapter": 28,
+    "sequence": 880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:938eba3155e0975d"
+  },
+  "findings": []
+}

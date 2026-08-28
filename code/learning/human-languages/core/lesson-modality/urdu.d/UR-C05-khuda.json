@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C05-khuda",
+    "language": "urdu",
+    "chapter": 5,
+    "sequence": 170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9971d226c492c443"
+  },
+  "findings": []
+}

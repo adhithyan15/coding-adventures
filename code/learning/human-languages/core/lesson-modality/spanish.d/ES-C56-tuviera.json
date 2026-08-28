@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C56-tuviera",
+    "language": "spanish",
+    "chapter": 207,
+    "sequence": 2270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e21b65637450380"
+  },
+  "findings": []
+}

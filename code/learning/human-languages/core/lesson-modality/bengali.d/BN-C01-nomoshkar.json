@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "BN-C01-nomoshkar",
+    "language": "bengali",
+    "chapter": 1,
+    "sequence": 10,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37ad9c0ce50424d5",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

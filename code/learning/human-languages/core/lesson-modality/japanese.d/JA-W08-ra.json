@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "JA-W08-ra",
+    "language": "japanese",
+    "chapter": 8,
+    "sequence": 420,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d24535b05993d433",
+    "detachableSegments": [
+      "Script — one sign"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

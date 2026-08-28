@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MR-C02-naav",
+    "language": "marathi",
+    "chapter": 5,
+    "sequence": 60,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:476e95c5a9d2fdd4",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

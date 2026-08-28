@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C32-noodu",
+    "language": "kannada",
+    "chapter": 32,
+    "sequence": 650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24026ebada70e585"
+  },
+  "findings": []
+}

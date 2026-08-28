@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MR-C05-kaam-karne",
+    "language": "marathi",
+    "chapter": 8,
+    "sequence": 180,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efc2a0d808a8c7f1",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

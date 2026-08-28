@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C14-avere",
+    "language": "italian",
+    "chapter": 14,
+    "sequence": 490,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b5b7fec8dc8a290f"
+  },
+  "findings": []
+}

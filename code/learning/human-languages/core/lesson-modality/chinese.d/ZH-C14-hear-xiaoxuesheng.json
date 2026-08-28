@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C14-hear-xiaoxuesheng",
+    "language": "chinese",
+    "chapter": 14,
+    "sequence": 1060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5aff74ae374bf3e7"
+  },
+  "findings": []
+}

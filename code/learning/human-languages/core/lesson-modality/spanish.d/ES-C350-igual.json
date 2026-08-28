@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C350-igual",
+    "language": "spanish",
+    "chapter": 350,
+    "sequence": 6440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3abbec89686e9e94"
+  },
+  "findings": []
+}

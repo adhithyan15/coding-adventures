@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C03-govorit",
+    "language": "russian",
+    "chapter": 3,
+    "sequence": 170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8dc7b5afa8dc1ff"
+  },
+  "findings": []
+}

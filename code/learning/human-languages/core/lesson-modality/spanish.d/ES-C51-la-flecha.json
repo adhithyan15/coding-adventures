@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C51-la-flecha",
+    "language": "spanish",
+    "chapter": 178,
+    "sequence": 2193,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d9beafa275699e4"
+  },
+  "findings": []
+}

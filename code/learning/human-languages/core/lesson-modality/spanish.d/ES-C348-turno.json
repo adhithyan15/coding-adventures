@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C348-turno",
+    "language": "spanish",
+    "chapter": 348,
+    "sequence": 6360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52f9a020f47dabb9"
+  },
+  "findings": []
+}

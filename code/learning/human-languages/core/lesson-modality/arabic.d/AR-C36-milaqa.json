@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "AR-C36-milaqa",
+    "language": "arabic",
+    "chapter": 36,
+    "sequence": 1000,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68d94efb8bdb66bc",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C46-book",
+    "language": "malayalam",
+    "chapter": 46,
+    "sequence": 1230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1813f3380596d209"
+  },
+  "findings": []
+}

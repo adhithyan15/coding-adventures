@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C15-zhongxue",
+    "language": "chinese",
+    "chapter": 15,
+    "sequence": 1140,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:391373662cfeaa1d"
+  },
+  "findings": []
+}

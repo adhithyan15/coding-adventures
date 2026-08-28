@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C01-gute-nacht",
+    "language": "german",
+    "chapter": 1,
+    "sequence": 55,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c7e010108582b09"
+  },
+  "findings": []
+}

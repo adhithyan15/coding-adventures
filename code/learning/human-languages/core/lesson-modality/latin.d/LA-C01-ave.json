@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C01-ave",
+    "language": "latin",
+    "chapter": 1,
+    "sequence": 110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41aa314194bfcf7b"
+  },
+  "findings": []
+}

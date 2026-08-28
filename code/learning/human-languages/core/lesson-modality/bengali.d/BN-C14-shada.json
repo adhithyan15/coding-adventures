@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "BN-C14-shada",
+    "language": "bengali",
+    "chapter": 14,
+    "sequence": 1130,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dba53bdc0029abd3",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

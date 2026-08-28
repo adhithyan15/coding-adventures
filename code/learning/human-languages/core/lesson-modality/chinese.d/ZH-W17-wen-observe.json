@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W17-wen-observe",
+    "language": "chinese",
+    "chapter": 17,
+    "sequence": 1430,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c5cec9b9bc9b0022",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

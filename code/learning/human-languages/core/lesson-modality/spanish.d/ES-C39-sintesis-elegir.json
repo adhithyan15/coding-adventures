@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C39-sintesis-elegir",
+    "language": "spanish",
+    "chapter": 173,
+    "sequence": 2126,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:608a29257598a46b"
+  },
+  "findings": []
+}

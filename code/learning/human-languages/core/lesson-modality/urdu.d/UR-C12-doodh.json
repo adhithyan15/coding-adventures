@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "UR-C12-doodh",
+    "language": "urdu",
+    "chapter": 12,
+    "sequence": 450,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cbb9d36416b6317",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

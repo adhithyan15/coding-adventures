@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C08-semya",
+    "language": "russian",
+    "chapter": 8,
+    "sequence": 360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84a664d1e1f664cb"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C02-je",
+    "language": "french",
+    "chapter": 2,
+    "sequence": 60,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ff50c0c7a0372bad"
+  },
+  "findings": []
+}

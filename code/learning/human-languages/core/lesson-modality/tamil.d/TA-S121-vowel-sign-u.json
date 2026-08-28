@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S121-vowel-sign-u",
+    "language": "tamil",
+    "chapter": 17,
+    "sequence": 631,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a4eaea2ef39524b0",
+    "detachableSegments": [
+      "Script you'll notice: ◌ு",
+      "Writing: ◌ு — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

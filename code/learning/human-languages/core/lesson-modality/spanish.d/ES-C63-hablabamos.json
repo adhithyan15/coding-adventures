@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C63-hablabamos",
+    "language": "spanish",
+    "chapter": 243,
+    "sequence": 2450,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4599ba13a93cf342"
+  },
+  "findings": []
+}

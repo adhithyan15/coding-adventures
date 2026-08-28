@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C334-calor",
+    "language": "spanish",
+    "chapter": 334,
+    "sequence": 5850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab5b44218dbd2cf4"
+  },
+  "findings": []
+}

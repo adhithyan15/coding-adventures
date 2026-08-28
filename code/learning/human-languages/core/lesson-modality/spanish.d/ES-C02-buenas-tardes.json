@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C02-buenas-tardes",
+    "language": "spanish",
+    "chapter": 2,
+    "sequence": 90,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8075387db4da109"
+  },
+  "findings": []
+}

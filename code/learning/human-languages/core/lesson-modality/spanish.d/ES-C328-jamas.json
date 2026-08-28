@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C328-jamas",
+    "language": "spanish",
+    "chapter": 328,
+    "sequence": 5530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cc4643b0667dd44"
+  },
+  "findings": []
+}

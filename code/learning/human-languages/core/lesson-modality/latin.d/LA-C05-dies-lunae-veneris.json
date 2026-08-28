@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C05-dies-lunae-veneris",
+    "language": "latin",
+    "chapter": 5,
+    "sequence": 200,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8622b4ada164edc7"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C52-sugar",
+    "language": "hindi",
+    "chapter": 52,
+    "sequence": 1730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:970ee202377035c9"
+  },
+  "findings": []
+}

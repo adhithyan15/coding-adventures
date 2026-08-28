@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C48-dos-miradas",
+    "language": "spanish",
+    "chapter": 111,
+    "sequence": 1380,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d6167f2983623528"
+  },
+  "findings": []
+}

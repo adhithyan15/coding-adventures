@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C19-ut-vales",
+    "language": "latin",
+    "chapter": 19,
+    "sequence": 405,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6172d20f27b46741"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C24-lamp",
+    "language": "sanskrit",
+    "chapter": 24,
+    "sequence": 1170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee91ab98d432194c"
+  },
+  "findings": []
+}

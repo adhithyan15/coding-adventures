@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C292-pueblo",
+    "language": "spanish",
+    "chapter": 292,
+    "sequence": 3720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf4b4e4e25510a72"
+  },
+  "findings": []
+}

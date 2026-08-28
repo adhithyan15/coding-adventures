@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-C08-parhna",
+    "language": "punjabi",
+    "chapter": 8,
+    "sequence": 440,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9aac73fb66e0bf2",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

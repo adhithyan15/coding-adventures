@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C04-chetor",
+    "language": "persian",
+    "chapter": 4,
+    "sequence": 120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a4139c36e3bbff7"
+  },
+  "findings": []
+}

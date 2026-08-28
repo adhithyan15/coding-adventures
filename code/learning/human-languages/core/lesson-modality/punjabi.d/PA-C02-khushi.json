@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-C02-khushi",
+    "language": "punjabi",
+    "chapter": 2,
+    "sequence": 140,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b065f1d295493d60",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

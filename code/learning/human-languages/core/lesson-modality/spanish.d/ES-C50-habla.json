@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C50-habla",
+    "language": "spanish",
+    "chapter": 131,
+    "sequence": 1497,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d7c8dd4b4abe30be"
+  },
+  "findings": []
+}

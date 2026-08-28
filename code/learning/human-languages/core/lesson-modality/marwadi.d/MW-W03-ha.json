@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "MW-W03-ha",
+    "language": "marwadi",
+    "chapter": 3,
+    "sequence": 120,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5015b8f5a333e9cd",
+    "detachableSegments": [
+      "Script — one sign and one sound",
+      "Writing — observe, trace, copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

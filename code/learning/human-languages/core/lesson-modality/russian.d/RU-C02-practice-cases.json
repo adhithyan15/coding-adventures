@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C02-practice-cases",
+    "language": "russian",
+    "chapter": 2,
+    "sequence": 132,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ef48a871bd81bce3"
+  },
+  "findings": []
+}

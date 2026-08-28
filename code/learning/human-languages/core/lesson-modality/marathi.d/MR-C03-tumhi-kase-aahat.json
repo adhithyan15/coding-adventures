@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C03-tumhi-kase-aahat",
+    "language": "marathi",
+    "chapter": 6,
+    "sequence": 110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ea1329fb07f3519"
+  },
+  "findings": []
+}

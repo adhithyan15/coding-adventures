@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C67-repaso-cuando-dos-palabras-se-tocan",
+    "language": "spanish",
+    "chapter": 264,
+    "sequence": 2556,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0abe026e5ea20c2"
+  },
+  "findings": []
+}

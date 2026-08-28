@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C09-sintesis-ocho",
+    "language": "spanish",
+    "chapter": 65,
+    "sequence": 1045,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4f7aa596aac2d88"
+  },
+  "findings": []
+}

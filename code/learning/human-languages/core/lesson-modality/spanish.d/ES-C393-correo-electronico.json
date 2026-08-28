@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C393-correo-electronico",
+    "language": "spanish",
+    "chapter": 393,
+    "sequence": 8470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73ab628625a83d4a"
+  },
+  "findings": []
+}

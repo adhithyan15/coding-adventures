@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "RU-W04-privet-letters-p-i",
+    "language": "russian",
+    "chapter": 1,
+    "sequence": 55,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ff221b92e9b388b8",
+    "detachableSegments": [
+      "Script — п (\"p\") — the Greek gate",
+      "Script — и (\"ee\") — the backwards N"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

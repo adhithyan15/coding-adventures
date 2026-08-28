@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "GU-W01-haa-dictation",
+    "language": "gujarati",
+    "chapter": 2,
+    "sequence": 45,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4facf0e9a9cf73ea",
+    "detachableSegments": [
+      "Writing — short dictation"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C56-a-lot",
+    "language": "tamil",
+    "chapter": 56,
+    "sequence": 2020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c06fb61a6ba6e95d"
+  },
+  "findings": []
+}

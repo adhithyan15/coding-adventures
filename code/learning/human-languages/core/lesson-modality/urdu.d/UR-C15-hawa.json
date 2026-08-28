@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C15-hawa",
+    "language": "urdu",
+    "chapter": 15,
+    "sequence": 680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5340442e5f223d3f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C18-practice",
+    "language": "spanish",
+    "chapter": 129,
+    "sequence": 1492,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ddca8a23e004133f"
+  },
+  "findings": []
+}

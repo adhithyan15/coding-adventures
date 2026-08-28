@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W00-kaf-waw-alaykum",
+    "language": "arabic",
+    "chapter": 1,
+    "sequence": 44,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0c21e02f82fea71e",
+    "detachableSegments": [
+      "Script — observe two new shapes",
+      "Writing — guided copy, then delayed copy"
+    ]
+  },
+  "findings": []
+}

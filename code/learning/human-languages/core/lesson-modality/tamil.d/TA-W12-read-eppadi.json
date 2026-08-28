@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-W12-read-eppadi",
+    "language": "tamil",
+    "chapter": 29,
+    "sequence": 845,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4f8ae089758b39e5",
+    "detachableSegments": [
+      "Script you'll notice: ட",
+      "Script you'll notice: build the word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

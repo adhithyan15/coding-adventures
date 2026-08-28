@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W03-wu",
+    "language": "chinese",
+    "chapter": 3,
+    "sequence": 235,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:187c0467fb380378",
+    "detachableSegments": [
+      "Script — four, for five"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

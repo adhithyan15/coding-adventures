@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C05-practice",
+    "language": "malayalam",
+    "chapter": 5,
+    "sequence": 310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a15f78d01049ad15"
+  },
+  "findings": []
+}

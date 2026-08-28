@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "RU-W05-privet-observe",
+    "language": "russian",
+    "chapter": 1,
+    "sequence": 61,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:142d80f622f3e9ca",
+    "detachableSegments": [
+      "Writing — observe and trace"
+    ]
+  },
+  "findings": []
+}

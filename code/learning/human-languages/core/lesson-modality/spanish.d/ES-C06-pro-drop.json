@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C06-pro-drop",
+    "language": "spanish",
+    "chapter": 16,
+    "sequence": 517,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f089c891ee753dfc"
+  },
+  "findings": []
+}

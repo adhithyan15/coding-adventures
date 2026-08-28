@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C03-familia-qu",
+    "language": "spanish",
+    "chapter": 6,
+    "sequence": 210,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4f96f90fe4b39680"
+  },
+  "findings": []
+}

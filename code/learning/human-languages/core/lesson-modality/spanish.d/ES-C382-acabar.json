@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C382-acabar",
+    "language": "spanish",
+    "chapter": 382,
+    "sequence": 8020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12f77424b2fd704f"
+  },
+  "findings": []
+}

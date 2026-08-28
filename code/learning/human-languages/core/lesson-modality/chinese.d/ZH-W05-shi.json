@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W05-shi",
+    "language": "chinese",
+    "chapter": 5,
+    "sequence": 370,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9b2c30a9607e826b",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

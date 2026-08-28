@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C13-shopping-three",
+    "language": "marwadi",
+    "chapter": 18,
+    "sequence": 1390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb58d79f35186108"
+  },
+  "findings": []
+}

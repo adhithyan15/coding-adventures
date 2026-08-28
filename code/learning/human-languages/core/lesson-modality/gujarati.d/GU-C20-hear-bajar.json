@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C20-hear-bajar",
+    "language": "gujarati",
+    "chapter": 24,
+    "sequence": 880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4afb101e69cfb3cb"
+  },
+  "findings": []
+}

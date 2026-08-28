@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C67-comer-es-bueno",
+    "language": "spanish",
+    "chapter": 264,
+    "sequence": 2555,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3174604d9600cf75"
+  },
+  "findings": []
+}

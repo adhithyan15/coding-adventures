@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C28-dies",
+    "language": "latin",
+    "chapter": 28,
+    "sequence": 520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cecdc6bf919baf34"
+  },
+  "findings": []
+}

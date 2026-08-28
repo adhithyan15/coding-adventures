@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C09-yoku",
+    "language": "japanese",
+    "chapter": 9,
+    "sequence": 480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a93ca12a70a8949d"
+  },
+  "findings": []
+}

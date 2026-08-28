@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C07-comen-viven",
+    "language": "spanish",
+    "chapter": 45,
+    "sequence": 810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe65f653fb73bc37"
+  },
+  "findings": []
+}

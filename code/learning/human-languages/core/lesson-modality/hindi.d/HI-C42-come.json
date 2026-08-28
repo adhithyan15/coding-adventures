@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C42-come",
+    "language": "hindi",
+    "chapter": 42,
+    "sequence": 1230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01790514485d03e1"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "AR-C31-qaraa",
+    "language": "arabic",
+    "chapter": 31,
+    "sequence": 790,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95a2ed237b209731",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C57-fragrance",
+    "language": "hindi",
+    "chapter": 57,
+    "sequence": 1980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5e52c99a257d026"
+  },
+  "findings": []
+}

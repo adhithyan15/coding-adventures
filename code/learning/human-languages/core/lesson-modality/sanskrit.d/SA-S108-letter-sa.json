@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S108-letter-sa",
+    "language": "sanskrit",
+    "chapter": 9,
+    "sequence": 476,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c82d6bfae0e2444c",
+    "detachableSegments": [
+      "Script you'll notice: स",
+      "Writing: स"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

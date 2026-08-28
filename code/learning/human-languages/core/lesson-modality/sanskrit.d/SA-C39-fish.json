@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C39-fish",
+    "language": "sanskrit",
+    "chapter": 39,
+    "sequence": 1900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c19c4c96979428e8"
+  },
+  "findings": []
+}

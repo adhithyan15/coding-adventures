@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C298-en-efecto",
+    "language": "spanish",
+    "chapter": 298,
+    "sequence": 4040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3fa744a10d06edef"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C21-naaya-poocha",
+    "language": "malayalam",
+    "chapter": 21,
+    "sequence": 510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d55ae2fb36fe9cc7"
+  },
+  "findings": []
+}

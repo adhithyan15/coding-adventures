@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C319-repaso-respuestas",
+    "language": "spanish",
+    "chapter": 319,
+    "sequence": 5105,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:44e20177273a7596"
+  },
+  "findings": []
+}

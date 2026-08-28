@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C16-essere",
+    "language": "italian",
+    "chapter": 16,
+    "sequence": 530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b4c7c4e88ed6b3d"
+  },
+  "findings": []
+}

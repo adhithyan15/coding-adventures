@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C06-dative-ku",
+    "language": "telugu",
+    "chapter": 6,
+    "sequence": 310,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c99fd7445630aabe"
+  },
+  "findings": []
+}

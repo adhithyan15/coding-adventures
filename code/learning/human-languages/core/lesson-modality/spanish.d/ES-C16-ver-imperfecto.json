@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C16-ver-imperfecto",
+    "language": "spanish",
+    "chapter": 109,
+    "sequence": 1374,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32ad2ac7c5a1a541"
+  },
+  "findings": []
+}

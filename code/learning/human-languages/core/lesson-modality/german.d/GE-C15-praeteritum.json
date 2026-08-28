@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C15-praeteritum",
+    "language": "german",
+    "chapter": 15,
+    "sequence": 310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa4863ff03f5cd37"
+  },
+  "findings": []
+}

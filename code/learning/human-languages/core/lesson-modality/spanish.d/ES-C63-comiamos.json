@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C63-comiamos",
+    "language": "spanish",
+    "chapter": 244,
+    "sequence": 2455,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21a9d71d525e99f4"
+  },
+  "findings": []
+}

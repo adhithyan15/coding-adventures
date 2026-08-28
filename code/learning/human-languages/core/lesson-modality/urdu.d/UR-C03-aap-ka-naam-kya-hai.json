@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "UR-C03-aap-ka-naam-kya-hai",
+    "language": "urdu",
+    "chapter": 3,
+    "sequence": 80,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e25027a14ce306da",
+    "detachableSegments": [
+      "Script: the question mark"
+    ]
+  },
+  "findings": []
+}

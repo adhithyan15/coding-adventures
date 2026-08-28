@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C52-oil",
+    "language": "hindi",
+    "chapter": 52,
+    "sequence": 1720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3604cb96e3601550"
+  },
+  "findings": []
+}

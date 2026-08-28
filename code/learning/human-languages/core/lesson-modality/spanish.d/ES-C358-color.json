@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C358-color",
+    "language": "spanish",
+    "chapter": 358,
+    "sequence": 6820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ece8b7fca942ab97"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-C08-sochna",
+    "language": "punjabi",
+    "chapter": 8,
+    "sequence": 420,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4111148ac606e685",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

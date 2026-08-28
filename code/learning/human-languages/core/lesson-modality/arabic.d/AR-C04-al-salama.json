@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C04-al-salama",
+    "language": "arabic",
+    "chapter": 4,
+    "sequence": 400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c15b2deaf663947"
+  },
+  "findings": []
+}

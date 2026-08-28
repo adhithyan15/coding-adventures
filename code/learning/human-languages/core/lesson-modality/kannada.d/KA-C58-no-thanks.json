@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C58-no-thanks",
+    "language": "kannada",
+    "chapter": 58,
+    "sequence": 1770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbf633dabef06768"
+  },
+  "findings": []
+}

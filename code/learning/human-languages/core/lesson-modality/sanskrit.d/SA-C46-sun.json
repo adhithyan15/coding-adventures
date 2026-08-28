@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C46-sun",
+    "language": "sanskrit",
+    "chapter": 46,
+    "sequence": 2230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66ae4eb66c5bc23b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C04-mindum-sandippom",
+    "language": "tamil",
+    "chapter": 4,
+    "sequence": 260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f127eeb921f458c"
+  },
+  "findings": []
+}

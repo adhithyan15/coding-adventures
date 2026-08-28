@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C45-ignis",
+    "language": "latin",
+    "chapter": 45,
+    "sequence": 1010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:486ae1d3ccfca908"
+  },
+  "findings": []
+}

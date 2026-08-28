@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C393-ordenador",
+    "language": "spanish",
+    "chapter": 393,
+    "sequence": 8450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:615491809fc73126"
+  },
+  "findings": []
+}

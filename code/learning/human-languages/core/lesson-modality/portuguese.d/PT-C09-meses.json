@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C09-meses",
+    "language": "portuguese",
+    "chapter": 9,
+    "sequence": 390,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:edb745eb91697e5f"
+  },
+  "findings": []
+}

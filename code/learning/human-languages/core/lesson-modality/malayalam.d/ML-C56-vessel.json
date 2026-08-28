@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C56-vessel",
+    "language": "malayalam",
+    "chapter": 56,
+    "sequence": 1720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b23a8a9fdf8cf96d"
+  },
+  "findings": []
+}

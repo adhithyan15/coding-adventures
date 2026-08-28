@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C61-ni",
+    "language": "spanish",
+    "chapter": 234,
+    "sequence": 2405,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9025e32e74b39a9"
+  },
+  "findings": []
+}

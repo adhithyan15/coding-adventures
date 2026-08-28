@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C06-hablas",
+    "language": "spanish",
+    "chapter": 17,
+    "sequence": 519,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f765b8313bf965de"
+  },
+  "findings": []
+}

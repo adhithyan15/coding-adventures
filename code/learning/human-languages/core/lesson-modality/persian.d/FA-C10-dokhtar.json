@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C10-dokhtar",
+    "language": "persian",
+    "chapter": 10,
+    "sequence": 410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:200e3c16b4d3fea5"
+  },
+  "findings": []
+}

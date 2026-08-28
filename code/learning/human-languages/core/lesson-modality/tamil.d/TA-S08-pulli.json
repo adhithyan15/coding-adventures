@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "TA-S08-pulli",
+    "language": "tamil",
+    "chapter": 18,
+    "sequence": 645,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a586475de0c005cb",
+    "detachableSegments": [
+      "Script you'll notice: ்",
+      "Writing: ்"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

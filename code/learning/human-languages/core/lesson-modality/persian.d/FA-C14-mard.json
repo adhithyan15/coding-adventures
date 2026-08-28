@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C14-mard",
+    "language": "persian",
+    "chapter": 14,
+    "sequence": 570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4a506b2c5d015f4"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "JA-W01-konnichiwa-read",
+    "language": "japanese",
+    "chapter": 2,
+    "sequence": 120,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1ec9c3e62e816050",
+    "detachableSegments": [
+      "Script — the assembly"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

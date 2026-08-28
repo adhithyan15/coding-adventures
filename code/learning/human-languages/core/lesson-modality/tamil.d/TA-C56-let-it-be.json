@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C56-let-it-be",
+    "language": "tamil",
+    "chapter": 56,
+    "sequence": 2050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:565f96c0906be523"
+  },
+  "findings": []
+}

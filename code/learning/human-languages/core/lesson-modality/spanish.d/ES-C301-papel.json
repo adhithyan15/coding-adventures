@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C301-papel",
+    "language": "spanish",
+    "chapter": 301,
+    "sequence": 4210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7735586cca1e9645"
+  },
+  "findings": []
+}

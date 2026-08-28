@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C63-repaso-paradigmas",
+    "language": "spanish",
+    "chapter": 245,
+    "sequence": 2460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfc0e08c386a7426"
+  },
+  "findings": []
+}

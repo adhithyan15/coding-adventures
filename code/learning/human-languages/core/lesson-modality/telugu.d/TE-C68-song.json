@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C68-song",
+    "language": "telugu",
+    "chapter": 68,
+    "sequence": 2250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6793537b3da4ddf"
+  },
+  "findings": []
+}

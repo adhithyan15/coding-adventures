@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C04-practice",
+    "language": "italian",
+    "chapter": 4,
+    "sequence": 270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b60e63bf699d1e6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C46-les",
+    "language": "spanish",
+    "chapter": 94,
+    "sequence": 1233,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a14f18e333aaac2b"
+  },
+  "findings": []
+}

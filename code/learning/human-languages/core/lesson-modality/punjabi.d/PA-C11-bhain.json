@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-C11-bhain",
+    "language": "punjabi",
+    "chapter": 11,
+    "sequence": 570,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37b807e0900e53d9",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

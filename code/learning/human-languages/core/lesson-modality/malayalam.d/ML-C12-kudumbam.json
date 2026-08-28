@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C12-kudumbam",
+    "language": "malayalam",
+    "chapter": 12,
+    "sequence": 400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8f4b6bd85c63fb9"
+  },
+  "findings": []
+}

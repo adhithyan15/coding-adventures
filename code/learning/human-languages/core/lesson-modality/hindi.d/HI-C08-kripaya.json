@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C08-kripaya",
+    "language": "hindi",
+    "chapter": 8,
+    "sequence": 510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21bf316288fa186f"
+  },
+  "findings": []
+}

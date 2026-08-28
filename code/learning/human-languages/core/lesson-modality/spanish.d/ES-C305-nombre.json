@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C305-nombre",
+    "language": "spanish",
+    "chapter": 305,
+    "sequence": 4370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbd70f7ecd5b835e"
+  },
+  "findings": []
+}

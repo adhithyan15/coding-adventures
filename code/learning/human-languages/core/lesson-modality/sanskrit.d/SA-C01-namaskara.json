@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "SA-C01-namaskara",
+    "language": "sanskrit",
+    "chapter": 1,
+    "sequence": 20,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e839452682b7fb0f",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C24-propediem-te-videbo",
+    "language": "latin",
+    "chapter": 24,
+    "sequence": 480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59770f9c3cd8e6b7"
+  },
+  "findings": []
+}

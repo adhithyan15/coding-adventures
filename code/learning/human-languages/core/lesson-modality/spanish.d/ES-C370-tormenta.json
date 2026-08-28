@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C370-tormenta",
+    "language": "spanish",
+    "chapter": 370,
+    "sequence": 7420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ca34b81d37965a6"
+  },
+  "findings": []
+}

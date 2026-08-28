@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C56-cion",
+    "language": "spanish",
+    "chapter": 23,
+    "sequence": 533,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dee3ad24e61f188b"
+  },
+  "findings": []
+}

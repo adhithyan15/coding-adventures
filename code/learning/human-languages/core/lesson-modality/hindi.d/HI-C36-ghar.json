@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C36-ghar",
+    "language": "hindi",
+    "chapter": 36,
+    "sequence": 940,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d7cf3973b50e02f",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

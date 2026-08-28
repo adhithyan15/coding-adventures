@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-W01-virama",
+    "language": "marathi",
+    "chapter": 1,
+    "sequence": 16,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5ac4c0f490dfc211",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

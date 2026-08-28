@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C356-desde",
+    "language": "spanish",
+    "chapter": 356,
+    "sequence": 6720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a8852e78ed56859"
+  },
+  "findings": []
+}

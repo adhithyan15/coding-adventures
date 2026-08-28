@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C42-repaso-objeto",
+    "language": "spanish",
+    "chapter": 86,
+    "sequence": 1223,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:95a7d92583aeabfd"
+  },
+  "findings": []
+}

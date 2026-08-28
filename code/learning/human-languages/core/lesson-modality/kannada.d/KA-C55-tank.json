@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C55-tank",
+    "language": "kannada",
+    "chapter": 55,
+    "sequence": 1600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:969d89704394d95c"
+  },
+  "findings": []
+}

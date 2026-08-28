@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "UR-W16-kaf",
+    "language": "urdu",
+    "chapter": 16,
+    "sequence": 780,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a68f9c01eacd53a5",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

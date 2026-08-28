@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "GU-W20-gha",
+    "language": "gujarati",
+    "chapter": 24,
+    "sequence": 905,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f17408dedc946171",
+    "delivery": "script"
+  },
+  "findings": []
+}

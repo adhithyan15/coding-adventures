@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C59-mist",
+    "language": "kannada",
+    "chapter": 59,
+    "sequence": 1800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35807fefb75a0169"
+  },
+  "findings": []
+}

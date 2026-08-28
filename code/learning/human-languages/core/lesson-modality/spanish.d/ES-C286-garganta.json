@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C286-garganta",
+    "language": "spanish",
+    "chapter": 286,
+    "sequence": 3440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3779a17821631880"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C03-gehen",
+    "language": "german",
+    "chapter": 3,
+    "sequence": 115,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58b1addca54a1127"
+  },
+  "findings": []
+}

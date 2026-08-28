@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C01-practice",
+    "language": "telugu",
+    "chapter": 1,
+    "sequence": 60,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c593b7c329fbf4cc"
+  },
+  "findings": []
+}

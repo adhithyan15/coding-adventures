@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C10-hear-ghar",
+    "language": "marwadi",
+    "chapter": 14,
+    "sequence": 960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9aed861e2fbce076"
+  },
+  "findings": []
+}

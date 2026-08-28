@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C23-day-family-register",
+    "language": "tamil",
+    "chapter": 23,
+    "sequence": 750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66f11d4091607d07"
+  },
+  "findings": []
+}

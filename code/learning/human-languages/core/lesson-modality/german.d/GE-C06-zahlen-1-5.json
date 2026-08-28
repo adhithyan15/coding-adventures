@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C06-zahlen-1-5",
+    "language": "german",
+    "chapter": 6,
+    "sequence": 215,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:709327fa212ffb51"
+  },
+  "findings": []
+}

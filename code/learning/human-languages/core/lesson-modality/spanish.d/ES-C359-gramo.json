@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C359-gramo",
+    "language": "spanish",
+    "chapter": 359,
+    "sequence": 6880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dad2b07b3c3d5452"
+  },
+  "findings": []
+}

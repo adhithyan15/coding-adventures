@@ -44,8 +44,12 @@ backmatter and script sets live in independently owned section directories.
 The authored lesson-sound vocabulary uses `core/sound-tags.d/<language>.json`,
 one self-binding `{ language, tags }` owner per registered track plus a stable
 `_meta.json`; the former cross-language aggregate is not tracked.
-Language Ladder and Script Ductus fold bounded browser modules from the
-canonical shards at build time.
+Generated lesson modality uses the finer
+`core/lesson-modality/<language>.d/{_meta.json,<lesson-id>.json}` boundary. The
+metadata owner holds only stable derivation policy and each lesson file holds its
+own row and findings; flat per-language aggregates are forbidden.
+Browser consumers fold only their respective canonical shards behind bounded
+build-time modules. Language Ladder does not import the modality owner corpus.
 
 ```bash
 npm run check:shards
@@ -737,14 +741,17 @@ derivation currently moves no number; the regression test pins that.
 
 ### The modality manifest — two editions from one source (HL-C44)
 
-The derivation above is only useful to a *program* if it is data. `core/lesson-modality/*.json`
-holds one independently mergeable shard per language: one row per lesson, generated and drift-gated, so the complete book, the
-app, and the forthcoming dictation-friendly driving edition can each filter the same
-canonical corpus instead of maintaining three copies of it.
+The derivation above is only useful to a *program* if it is data.
+`core/lesson-modality/<language>.d/` holds one independently mergeable owner per
+lesson: `_meta.json` records stable `version`, language, hash algorithm, features,
+and policy, while `<lesson-id>.json` records `{ lesson, findings }`. On the current
+23-language corpus that is 4,485 owners for 4,462 lessons. The complete book, the
+app, and the forthcoming dictation-friendly driving edition can each filter the
+same canonical corpus instead of maintaining three copies of it.
 
 ```bash
 npm run build
-npm run generate:modality   # write core/lesson-modality/*.json
+npm run generate:modality   # write direct owners under core/lesson-modality/*.d/
 npm run check:modality      # fail (exit 1) if it drifted from the lessons
 ```
 
@@ -758,11 +765,24 @@ manifest.tracks[0].chapters[0].drivableLessonIds;      // the prefix, already in
 modalityManifestById(manifest).get("ES-C01-hola");     // a Map, never a plain object
 ```
 
-Each lesson row carries `id`, `language`, `chapter`, `sequence`, `modality`, `derived`,
-`drivable`, `reasons`, and the lesson AST's `sourceHash`; the three override fields
-(`authored`, `authoredReason`, `overridden`) appear only on the handful of lessons that
-have them. Chapters add the drivable prefix and the ids in it; tracks and a corpus
-`summary` roll those up.
+Each reconstructed lesson row carries `id`, `language`, `chapter`, `sequence`,
+`modality`, `derived`, `drivable`, `reasons`, and the lesson AST's `sourceHash`; the
+three override fields (`authored`, `authoredReason`, `overridden`) appear only on the
+handful of lessons that have them. Source hashes, chapter ordering and drivable
+prefixes, track summaries, and the corpus summary are reconstructed from direct
+owners. They are not additional tracked aggregates.
+
+The loader first requires exact language-directory equality with
+`core/languages.json`. Within every directory it requires exact owner-ID equality
+with parsed lesson sources and independently with generated narration-hash lesson
+IDs, before trusting owner content. Owners must be canonical JSON, direct regular
+files whose filename, embedded lesson id, and embedded language agree. Missing,
+unexpected, nested, symlinked, case-colliding, unsafe, or noncanonical owners fail;
+so does any resurrected `core/lesson-modality/<language>.json`. There is no aggregate
+fallback. The generator builds and validates a complete replacement under a private
+staging root, publishes it only after all three identity sets agree, and removes the
+old aggregate last. See
+[`HL32`](../../../specs/HL32-sharded-lesson-modality-ownership.md).
 
 Two design decisions are worth knowing before consuming it:
 
@@ -899,14 +919,15 @@ until the existing corpus has been split.
 | `modality.ts` | per-lesson channel (voice/sight/pen) and per-chapter drivable prefix | ✅ |
 | `speech.ts` | Markdown → speakable words; Markdown tables → spoken utterances or a reasoned refusal | ✅ |
 | `narration.ts` | typed lesson AST → narration segments and the continuous voice script | ✅ |
-| `modality-manifest.ts` | that derivation as an emittable, filterable JSON artifact | ✅ |
+| `modality-manifest.ts` | derived modality rows, rollups, and unchanged filterable public manifest | ✅ |
+| `modality-shards.ts` | strict direct-owner fold and filesystem boundary | ⛔ (fs) |
 | `report.ts` | deterministic duration, prerequisite, book, schema, and modality gap report | ✅ |
 | `lesson-budgets.ts` | explicit idiom, sense, and culture-claim budget measurement | ✅ |
 | `loader.ts` | reads the curriculum off disk | ⛔ (fs) |
 | `cli.ts` | `validate` command + report | ⛔ (fs) |
 | `report-cli.ts` | prints JSON or text for CI artifact capture | ⛔ (fs) |
 | `book-cli.ts` | writes or checks generated chapters and their hash manifest | ⛔ (fs) |
-| `modality-cli.ts` | writes or checks `core/lesson-modality/*.json` | ⛔ (fs) |
+| `modality-cli.ts` | writes or checks `core/lesson-modality/<language>.d/*.json` | ⛔ (fs) |
 | `narration-cli.ts` | writes or checks the narration export and its hash manifest | ⛔ (fs) |
 | `track-progress.ts` | registry/curriculum/book facts → per-language progress cards | ✅ |
 | `track-progress-cli.ts` | writes or checks `progress/*.md` | ⛔ (fs) |

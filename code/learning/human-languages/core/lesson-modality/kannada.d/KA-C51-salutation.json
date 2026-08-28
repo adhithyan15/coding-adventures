@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C51-salutation",
+    "language": "kannada",
+    "chapter": 51,
+    "sequence": 1430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:698cdc15eee22588"
+  },
+  "findings": []
+}

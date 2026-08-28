@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C15-dhoop",
+    "language": "urdu",
+    "chapter": 15,
+    "sequence": 660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3dbdf52e11cc1d79"
+  },
+  "findings": []
+}

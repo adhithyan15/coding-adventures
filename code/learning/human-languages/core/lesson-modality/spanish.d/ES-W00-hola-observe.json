@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "ES-W00-hola-observe",
+    "language": "spanish",
+    "chapter": 1,
+    "sequence": 11,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fc3c480f7549f656",
+    "detachableSegments": [
+      "Writing — trace with the model visible"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C14-deixis-system",
+    "language": "sanskrit",
+    "chapter": 14,
+    "sequence": 660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e4709d254aaabad"
+  },
+  "findings": []
+}

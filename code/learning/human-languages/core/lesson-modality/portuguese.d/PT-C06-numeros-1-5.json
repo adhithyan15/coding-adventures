@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C06-numeros-1-5",
+    "language": "portuguese",
+    "chapter": 6,
+    "sequence": 330,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:edfd6a4db5788329"
+  },
+  "findings": []
+}

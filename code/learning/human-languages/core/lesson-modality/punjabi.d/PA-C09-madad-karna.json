@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-C09-madad-karna",
+    "language": "punjabi",
+    "chapter": 9,
+    "sequence": 480,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb354ae47d72d452",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

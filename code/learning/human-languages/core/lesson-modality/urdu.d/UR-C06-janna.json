@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C06-janna",
+    "language": "urdu",
+    "chapter": 6,
+    "sequence": 250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34ae576a8b5a8ee8"
+  },
+  "findings": []
+}

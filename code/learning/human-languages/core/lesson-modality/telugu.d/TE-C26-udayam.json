@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C26-udayam",
+    "language": "telugu",
+    "chapter": 26,
+    "sequence": 540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b94e62a1611d43a6"
+  },
+  "findings": []
+}

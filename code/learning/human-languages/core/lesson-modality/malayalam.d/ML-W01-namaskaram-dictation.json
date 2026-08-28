@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ML-W01-namaskaram-dictation",
+    "language": "malayalam",
+    "chapter": 1,
+    "sequence": 18,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:336d7d27b37f5be5",
+    "detachableSegments": [
+      "Writing — whole-word dictation"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S117-letter-tta",
+    "language": "malayalam",
+    "chapter": 13,
+    "sequence": 416,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7523ffa9891f8f44",
+    "detachableSegments": [
+      "Script you'll notice: ട",
+      "Writing: ട — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C351-ambos",
+    "language": "spanish",
+    "chapter": 351,
+    "sequence": 6490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2f626a87a83233f"
+  },
+  "findings": []
+}

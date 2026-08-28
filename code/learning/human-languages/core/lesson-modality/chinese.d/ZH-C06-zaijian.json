@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C06-zaijian",
+    "language": "chinese",
+    "chapter": 6,
+    "sequence": 430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c9b07a2290b14e2"
+  },
+  "findings": []
+}

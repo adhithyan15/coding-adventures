@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C298-ni-hablar",
+    "language": "spanish",
+    "chapter": 298,
+    "sequence": 4060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d20bef2b18ce649"
+  },
+  "findings": []
+}

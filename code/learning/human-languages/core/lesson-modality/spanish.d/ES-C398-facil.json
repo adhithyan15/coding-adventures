@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C398-facil",
+    "language": "spanish",
+    "chapter": 398,
+    "sequence": 8730,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:240b86853a93d31e"
+  },
+  "findings": []
+}

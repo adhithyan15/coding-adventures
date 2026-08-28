@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C16-andare",
+    "language": "italian",
+    "chapter": 16,
+    "sequence": 550,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:04dd548d77d49253"
+  },
+  "findings": []
+}

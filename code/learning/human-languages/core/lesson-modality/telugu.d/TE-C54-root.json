@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C54-root",
+    "language": "telugu",
+    "chapter": 54,
+    "sequence": 1550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1bf39cc6e05449d"
+  },
+  "findings": []
+}

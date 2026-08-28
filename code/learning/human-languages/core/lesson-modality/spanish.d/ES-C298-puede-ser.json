@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C298-puede-ser",
+    "language": "spanish",
+    "chapter": 298,
+    "sequence": 4030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5f72275fa005aa3"
+  },
+  "findings": []
+}

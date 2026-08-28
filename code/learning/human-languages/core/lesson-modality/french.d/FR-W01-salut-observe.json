@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "FR-W01-salut-observe",
+    "language": "french",
+    "chapter": 1,
+    "sequence": 6,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f0f6c06ada169dd6",
+    "detachableSegments": [
+      "Writing — trace with the model visible"
+    ]
+  },
+  "findings": []
+}

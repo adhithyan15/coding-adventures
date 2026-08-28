@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C54-seedling",
+    "language": "telugu",
+    "chapter": 54,
+    "sequence": 1570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c60fcbc0fb28a80"
+  },
+  "findings": []
+}

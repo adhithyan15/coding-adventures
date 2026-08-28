@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C376-uva",
+    "language": "spanish",
+    "chapter": 376,
+    "sequence": 7730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb3a628141b08460"
+  },
+  "findings": []
+}

@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "ES-W03-question-span",
+    "language": "spanish",
+    "chapter": 11,
+    "sequence": 400,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5030c05f9703b84b",
+    "detachableSegments": [
+      "Script — bracket the spoken span"
+    ]
+  },
+  "findings": []
+}

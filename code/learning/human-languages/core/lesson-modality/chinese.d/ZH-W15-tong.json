@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W15-tong",
+    "language": "chinese",
+    "chapter": 15,
+    "sequence": 1190,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:19e12cdbf935ce51",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

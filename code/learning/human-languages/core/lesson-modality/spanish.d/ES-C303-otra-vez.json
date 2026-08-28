@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C303-otra-vez",
+    "language": "spanish",
+    "chapter": 303,
+    "sequence": 4290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b661e5e1d9491b7b"
+  },
+  "findings": []
+}

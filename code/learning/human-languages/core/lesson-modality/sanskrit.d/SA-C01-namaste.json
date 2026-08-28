@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-C01-namaste",
+    "language": "sanskrit",
+    "chapter": 1,
+    "sequence": 10,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:230c1999511e7459",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

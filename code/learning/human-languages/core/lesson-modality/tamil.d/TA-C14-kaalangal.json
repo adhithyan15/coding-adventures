@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C14-kaalangal",
+    "language": "tamil",
+    "chapter": 14,
+    "sequence": 580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c8ce6fb6a613930"
+  },
+  "findings": []
+}

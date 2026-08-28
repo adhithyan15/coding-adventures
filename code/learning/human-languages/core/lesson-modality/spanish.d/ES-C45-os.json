@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C45-os",
+    "language": "spanish",
+    "chapter": 90,
+    "sequence": 1229,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26c1fc64fce3bdc8"
+  },
+  "findings": []
+}

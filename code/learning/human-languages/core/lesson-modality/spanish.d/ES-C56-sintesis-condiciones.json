@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C56-sintesis-condiciones",
+    "language": "spanish",
+    "chapter": 210,
+    "sequence": 2285,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9df0087fddfbab7"
+  },
+  "findings": []
+}

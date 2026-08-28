@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C37-moogu",
+    "language": "kannada",
+    "chapter": 37,
+    "sequence": 820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4818ed2c32529fc7"
+  },
+  "findings": []
+}

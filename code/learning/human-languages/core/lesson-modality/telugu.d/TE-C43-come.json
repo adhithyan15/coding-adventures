@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C43-come",
+    "language": "telugu",
+    "chapter": 43,
+    "sequence": 1010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27002a14494145a5"
+  },
+  "findings": []
+}

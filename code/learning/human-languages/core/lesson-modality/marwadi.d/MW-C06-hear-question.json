@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C06-hear-question",
+    "language": "marwadi",
+    "chapter": 7,
+    "sequence": 410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a5b73a26d21bd8d"
+  },
+  "findings": []
+}

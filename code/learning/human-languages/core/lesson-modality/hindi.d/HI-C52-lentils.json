@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C52-lentils",
+    "language": "hindi",
+    "chapter": 52,
+    "sequence": 1710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ff11c17a097d5d3"
+  },
+  "findings": []
+}

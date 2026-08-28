@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C26-agua",
+    "language": "spanish",
+    "chapter": 143,
+    "sequence": 1720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c037864b17841d5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C273-por-lo-tanto",
+    "language": "spanish",
+    "chapter": 273,
+    "sequence": 2840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:779650b4b448159d"
+  },
+  "findings": []
+}

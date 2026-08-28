@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C21-comprar",
+    "language": "portuguese",
+    "chapter": 21,
+    "sequence": 780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:190a68953a575526"
+  },
+  "findings": []
+}

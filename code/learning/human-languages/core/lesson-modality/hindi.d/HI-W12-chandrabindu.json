@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "HI-W12-chandrabindu",
+    "language": "hindi",
+    "chapter": 59,
+    "sequence": 2160,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:35253c62f72a20a4",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C63-thirst",
+    "language": "hindi",
+    "chapter": 63,
+    "sequence": 2370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5670f9db1000aa03"
+  },
+  "findings": []
+}

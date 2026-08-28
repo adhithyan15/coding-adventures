@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C19-age-register-grammar",
+    "language": "tamil",
+    "chapter": 19,
+    "sequence": 680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e56e7a5816e08838"
+  },
+  "findings": []
+}

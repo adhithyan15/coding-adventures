@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "FA-W15-he",
+    "language": "persian",
+    "chapter": 15,
+    "sequence": 670,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f4f0540cd71cad03",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "AR-C36-zayt",
+    "language": "arabic",
+    "chapter": 36,
+    "sequence": 970,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c88f3fe2184c007d",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

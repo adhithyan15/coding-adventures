@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C24-prendre",
+    "language": "french",
+    "chapter": 24,
+    "sequence": 710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bea11b2f8fcee08"
+  },
+  "findings": []
+}

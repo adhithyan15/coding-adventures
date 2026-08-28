@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C01-buenos-dias",
+    "language": "spanish",
+    "chapter": 1,
+    "sequence": 60,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d4f1be4805ef6f4"
+  },
+  "findings": []
+}

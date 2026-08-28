@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C08-please-register",
+    "language": "tamil",
+    "chapter": 8,
+    "sequence": 480,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3da0ddc4024e92ff",
+    "detachableSegments": [
+      "Script you'll notice: Read the join in செய்து"
+    ]
+  },
+  "findings": []
+}

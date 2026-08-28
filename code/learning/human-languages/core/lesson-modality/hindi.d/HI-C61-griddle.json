@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C61-griddle",
+    "language": "hindi",
+    "chapter": 61,
+    "sequence": 2290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91eaa7d220ea3754"
+  },
+  "findings": []
+}

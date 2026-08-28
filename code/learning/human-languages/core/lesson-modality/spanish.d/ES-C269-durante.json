@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C269-durante",
+    "language": "spanish",
+    "chapter": 269,
+    "sequence": 2690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ee6ff92f058f81e"
+  },
+  "findings": []
+}

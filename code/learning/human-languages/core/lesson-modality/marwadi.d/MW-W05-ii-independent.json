@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W05-ii-independent",
+    "language": "marwadi",
+    "chapter": 6,
+    "sequence": 380,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f73ffa9fcd2f0e8b",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

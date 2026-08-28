@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C04-ate-logo",
+    "language": "portuguese",
+    "chapter": 4,
+    "sequence": 240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0393a2a7258d175"
+  },
+  "findings": []
+}

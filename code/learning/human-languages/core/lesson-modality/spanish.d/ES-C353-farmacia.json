@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C353-farmacia",
+    "language": "spanish",
+    "chapter": 353,
+    "sequence": 6590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a0049650067b0e3"
+  },
+  "findings": []
+}

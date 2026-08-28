@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C25-mulher",
+    "language": "portuguese",
+    "chapter": 25,
+    "sequence": 920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:436a8643d1e1bbde"
+  },
+  "findings": []
+}

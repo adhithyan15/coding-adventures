@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C40-sweet",
+    "language": "sanskrit",
+    "chapter": 40,
+    "sequence": 1970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03b98cfd974ca1eb"
+  },
+  "findings": []
+}

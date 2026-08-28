@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C379-tibio",
+    "language": "spanish",
+    "chapter": 379,
+    "sequence": 7900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98580c00a83cb2ca"
+  },
+  "findings": []
+}

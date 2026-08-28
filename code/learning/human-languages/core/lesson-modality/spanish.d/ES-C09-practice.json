@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C09-practice",
+    "language": "spanish",
+    "chapter": 48,
+    "sequence": 910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64d3454d71ddedcf"
+  },
+  "findings": []
+}

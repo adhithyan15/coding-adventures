@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C06-dative-stacking",
+    "language": "tamil",
+    "chapter": 6,
+    "sequence": 380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6735982d308a9b7"
+  },
+  "findings": []
+}

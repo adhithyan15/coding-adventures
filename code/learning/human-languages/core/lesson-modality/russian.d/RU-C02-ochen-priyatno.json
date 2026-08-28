@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C02-ochen-priyatno",
+    "language": "russian",
+    "chapter": 2,
+    "sequence": 125,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22181c22399bcd4e"
+  },
+  "findings": []
+}

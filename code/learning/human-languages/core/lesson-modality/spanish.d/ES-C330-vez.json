@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C330-vez",
+    "language": "spanish",
+    "chapter": 330,
+    "sequence": 5660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b5be8a4be2a6ee7"
+  },
+  "findings": []
+}

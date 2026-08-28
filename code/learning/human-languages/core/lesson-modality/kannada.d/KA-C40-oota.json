@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-C40-oota",
+    "language": "kannada",
+    "chapter": 40,
+    "sequence": 880,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2d7e84bc9e7b120",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

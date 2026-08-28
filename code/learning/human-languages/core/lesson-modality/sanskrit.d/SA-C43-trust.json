@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C43-trust",
+    "language": "sanskrit",
+    "chapter": 43,
+    "sequence": 2110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3dde6edf5ca5405"
+  },
+  "findings": []
+}

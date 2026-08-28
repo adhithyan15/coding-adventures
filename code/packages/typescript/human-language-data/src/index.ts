@@ -306,6 +306,7 @@ export {
   MODALITY_MANIFEST_VERSION,
   modalityCorpusHash,
   buildModalityManifest,
+  buildModalityManifestFromRows,
   mergeModalityManifests,
   serializeModalityManifest,
   type ModalityManifest,
@@ -315,7 +316,16 @@ export {
   type ModalityManifestChapter,
   type ModalityManifestTrack,
   type ModalityManifestSummary,
+  type ModalityManifestHeader,
 } from "./modality-manifest.js";
+export {
+  MODALITY_META_OWNER,
+  assertModalityManifestLanguages,
+  modalityNarrationLessonIds,
+  modalityOwnerContents,
+  readModalityManifestOwners,
+  type ModalityOwnerReadOptions,
+} from "./modality-shards.js";
 export {
   DURATION_THRESHOLD_SECONDS,
   estimateLessonDuration,

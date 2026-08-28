@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C04-practice",
+    "language": "arabic",
+    "chapter": 4,
+    "sequence": 430,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bef796c5f5af3150"
+  },
+  "findings": []
+}

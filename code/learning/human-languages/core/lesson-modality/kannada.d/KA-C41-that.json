@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C41-that",
+    "language": "kannada",
+    "chapter": 41,
+    "sequence": 900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6787c722ab39a25"
+  },
+  "findings": []
+}

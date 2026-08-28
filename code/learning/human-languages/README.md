@@ -57,7 +57,7 @@ core/spine.d/*.json             ordered, language-independent can-do spine: one 
 core/book-generation.d/*/*.json chapter, backmatter, and script-set book declarations
 core/sound-tags.d/<language>.json authored pronunciation vocabulary, one owner per language
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
-core/lesson-modality/*.json     generated per-language voice/sight/pen and chapter prefixes
+core/lesson-modality/<language>.d/*.json generated voice/sight/pen, one owner per lesson
 core/generated-book-hashes/<language>.d/ generated book hashes, one JSON owner per chapter
 core/generated-narration-hashes/<language>.d/ generated narration hashes, one JSON owner per chapter
 progress/*.md                   generated per-language progress cards for conflict-free authoring
@@ -155,20 +155,28 @@ recorded numbers, and a track recorded as `null` has not been measured yet, so i
 reported and never failed. Until this gate existed, every track's "builds with zero
 warnings" claim was prose that nothing checked.
 
-`core/lesson-modality/*.json` is generated, never authored. Each language owns one
-independently mergeable shard recording for every lesson
-whether it needs `voice`, `sight`, or a `pen`, and for every chapter how many of its
-lessons a commuter can do in the car before hitting the first that needs eyes. This is
-what lets **two editions build from one source**: the complete book keeps everything,
-including the handwriting instruction, while the planned dictation-friendly driving
-edition filters on `drivable` and keeps only what a driver can actually do. The same
-job that builds the books runs `check:modality`, so the manifest cannot drift away from
-the lessons it describes — a lesson that silently gained a paradigm table would
-otherwise still advertise itself as safe to learn at 70mph. Modality stays derived
-rather than written into every lesson frontmatter file, which would create one place
-per lesson for it to go stale; the authored `modality:` override with a
-`modality_reason:` remains available
-for the genuinely exceptional lesson.
+`core/lesson-modality/<language>.d/` is generated, never authored. `_meta.json`
+owns only stable format and derivation policy, while `<lesson-id>.json` owns that
+lesson's modality row and findings. The checked-in corpus therefore has 4,485
+independent files for 4,462 lessons: 4,462 lesson owners plus one metadata owner
+for each of 23 registered languages. Two agents changing two lessons in Spanish
+no longer regenerate the same Spanish aggregate.
+
+The strict loader derives its exact language-directory set from
+`core/languages.json`, then derives the exact lesson-owner set independently from
+both parsed lesson Markdown and generated narration hashes. It accepts canonical
+owner bytes only and rejects flat per-language aggregates; there is no compatibility
+fallback. It folds the owners in memory to reconstruct source hashes, summaries,
+chapter rollups, and the unchanged public manifest. This is what lets **two editions
+build from one source**: the complete book keeps everything, including handwriting
+instruction, while the planned dictation-friendly driving edition filters on
+`drivable`. `check:modality` prevents a lesson that silently gained a paradigm table
+from continuing to advertise itself as safe to learn at 70mph. See
+[`HL32`](../../specs/HL32-sharded-lesson-modality-ownership.md).
+
+Modality stays derived rather than written into every lesson frontmatter file, which
+would create one place per lesson for it to go stale. The authored `modality:` override
+with a `modality_reason:` remains available for the genuinely exceptional lesson.
 
 ### `book.tex` is generated (HL21 section 6)
 

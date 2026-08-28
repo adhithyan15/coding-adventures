@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TE-C03-baagaa",
+    "language": "telugu",
+    "chapter": 3,
+    "sequence": 180,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20732f1fd21978a4",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C01-giorno",
+    "language": "italian",
+    "chapter": 1,
+    "sequence": 40,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41d5c0fe0be4d53c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C50-set-out",
+    "language": "malayalam",
+    "chapter": 50,
+    "sequence": 1420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:125759b6ea4941b6"
+  },
+  "findings": []
+}

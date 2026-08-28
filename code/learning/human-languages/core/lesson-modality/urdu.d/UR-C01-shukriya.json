@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "UR-C01-shukriya",
+    "language": "urdu",
+    "chapter": 1,
+    "sequence": 20,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c76dd62e6985ed2",
+    "detachableSegments": [
+      "Script — add two shapes"
+    ]
+  },
+  "findings": []
+}

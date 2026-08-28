@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C10-mandir",
+    "language": "marwadi",
+    "chapter": 14,
+    "sequence": 1000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ee50608827d7c0a"
+  },
+  "findings": []
+}

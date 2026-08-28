@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C15-hear-tongxue",
+    "language": "chinese",
+    "chapter": 15,
+    "sequence": 1180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c65be4a4637bfce2"
+  },
+  "findings": []
+}

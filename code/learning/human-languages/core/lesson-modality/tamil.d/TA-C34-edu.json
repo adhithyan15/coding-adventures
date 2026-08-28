@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C34-edu",
+    "language": "tamil",
+    "chapter": 34,
+    "sequence": 980,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d6ea6f315808c33",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

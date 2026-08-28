@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-C02-nanna",
+    "language": "kannada",
+    "chapter": 2,
+    "sequence": 80,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63758b2ac00bd6df",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

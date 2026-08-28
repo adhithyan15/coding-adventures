@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C53-star",
+    "language": "malayalam",
+    "chapter": 53,
+    "sequence": 1570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e55c3c5bb365e27"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C12-roti",
+    "language": "urdu",
+    "chapter": 12,
+    "sequence": 460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7872a4c93be0619b"
+  },
+  "findings": []
+}

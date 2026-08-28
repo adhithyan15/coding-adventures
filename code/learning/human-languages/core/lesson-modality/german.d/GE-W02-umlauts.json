@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-W02-umlauts",
+    "language": "german",
+    "chapter": 4,
+    "sequence": 180,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cff48016d9149243"
+  },
+  "findings": []
+}

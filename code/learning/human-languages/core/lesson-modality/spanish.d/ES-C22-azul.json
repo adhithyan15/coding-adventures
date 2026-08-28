@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C22-azul",
+    "language": "spanish",
+    "chapter": 139,
+    "sequence": 1650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd94fa4cd1c2e884"
+  },
+  "findings": []
+}

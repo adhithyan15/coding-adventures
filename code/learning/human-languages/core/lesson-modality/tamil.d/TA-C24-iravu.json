@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C24-iravu",
+    "language": "tamil",
+    "chapter": 24,
+    "sequence": 760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:796ac5d8129c3245"
+  },
+  "findings": []
+}

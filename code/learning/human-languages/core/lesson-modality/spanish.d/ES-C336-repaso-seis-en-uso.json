@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C336-repaso-seis-en-uso",
+    "language": "spanish",
+    "chapter": 336,
+    "sequence": 5880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34e6caf544be748a"
+  },
+  "findings": []
+}

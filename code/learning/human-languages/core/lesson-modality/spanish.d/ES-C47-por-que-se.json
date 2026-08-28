@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C47-por-que-se",
+    "language": "spanish",
+    "chapter": 100,
+    "sequence": 1239,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a1f13aae1e58a8c"
+  },
+  "findings": []
+}

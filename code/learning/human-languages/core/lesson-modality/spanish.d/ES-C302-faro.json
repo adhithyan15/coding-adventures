@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C302-faro",
+    "language": "spanish",
+    "chapter": 302,
+    "sequence": 4260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9c3a05b2087d753"
+  },
+  "findings": []
+}

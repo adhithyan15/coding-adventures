@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C17-night",
+    "language": "sanskrit",
+    "chapter": 17,
+    "sequence": 800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f01f96357fc94d60"
+  },
+  "findings": []
+}

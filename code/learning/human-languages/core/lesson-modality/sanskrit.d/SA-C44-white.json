@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C44-white",
+    "language": "sanskrit",
+    "chapter": 44,
+    "sequence": 2130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e238e45c90aba0b9"
+  },
+  "findings": []
+}

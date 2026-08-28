@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C43-convenio",
+    "language": "latin",
+    "chapter": 43,
+    "sequence": 930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a9424c56ea02218"
+  },
+  "findings": []
+}

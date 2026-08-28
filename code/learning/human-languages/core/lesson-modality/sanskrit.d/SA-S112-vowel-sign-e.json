@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S112-vowel-sign-e",
+    "language": "sanskrit",
+    "chapter": 13,
+    "sequence": 596,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ec30b1a50d5bed36",
+    "detachableSegments": [
+      "Script you'll notice: ◌े",
+      "Writing: ◌े — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

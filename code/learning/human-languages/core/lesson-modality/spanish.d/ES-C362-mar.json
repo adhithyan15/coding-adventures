@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C362-mar",
+    "language": "spanish",
+    "chapter": 362,
+    "sequence": 7030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fba7a6ec22a41cc8"
+  },
+  "findings": []
+}

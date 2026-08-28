@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C07-numbers-1-5-family",
+    "language": "tamil",
+    "chapter": 7,
+    "sequence": 430,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:65a2c1abb1ffff6c"
+  },
+  "findings": []
+}

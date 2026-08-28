@@ -1,0 +1,32 @@
+{
+  "lesson": {
+    "id": "GU-W02-va",
+    "language": "gujarati",
+    "chapter": 2,
+    "sequence": 14,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:25bdb09f880398ee",
+    "detachableSegments": [
+      "Script — meet the shape",
+      "Writing — notice and trace",
+      "Writing — copy with the model",
+      "Writing — recall after hiding"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

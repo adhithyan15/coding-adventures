@@ -276,6 +276,12 @@ export interface ModalityManifest {
   findings: ModalityFinding[];
 }
 
+/** Stable fields carried by every language metadata owner. */
+export type ModalityManifestHeader = Pick<
+  ModalityManifest,
+  "version" | "algorithm" | "features" | "policy"
+>;
+
 // ---------------------------------------------------------------------------
 // Ordering
 // ---------------------------------------------------------------------------
@@ -535,6 +541,126 @@ export function serializeModalityManifest(manifest: ModalityManifest): string {
   return `${JSON.stringify(manifest, null, 2)}\n`;
 }
 
+function compareManifestLessons(
+  left: ModalityManifestLesson,
+  right: ModalityManifestLesson,
+): number {
+  return left.language.localeCompare(right.language) ||
+    (left.chapter ?? Number.POSITIVE_INFINITY) -
+      (right.chapter ?? Number.POSITIVE_INFINITY) ||
+    (left.sequence ?? Number.POSITIVE_INFINITY) -
+      (right.sequence ?? Number.POSITIVE_INFINITY) ||
+    left.id.localeCompare(right.id);
+}
+
+function manifestChapterFromRows(
+  chapter: number,
+  rows: readonly ModalityManifestLesson[],
+): ModalityManifestChapter {
+  const ordered = [...rows].sort(compareManifestLessons);
+  const drivableLessonIds: string[] = [];
+  for (const row of ordered) {
+    if (row.modality !== "voice") break;
+    drivableLessonIds.push(row.id);
+  }
+  const drivablePrefix = drivableLessonIds.length;
+  return {
+    chapter,
+    lessonCount: ordered.length,
+    voice: ordered.filter((row) => row.modality === "voice").length,
+    sight: ordered.filter((row) => row.modality === "sight").length,
+    pen: ordered.filter((row) => row.modality === "pen").length,
+    modalities: unionModalities(ordered.map((row) => row.modality)),
+    drivablePrefix,
+    firstNonVoiceLesson:
+      drivablePrefix < ordered.length ? (ordered[drivablePrefix]?.id ?? null) : null,
+    drivable: ordered.length > 0 && drivablePrefix === ordered.length,
+    drivableLessonIds,
+  };
+}
+
+/**
+ * Reconstruct every aggregate rollup from direct lesson owners.
+ *
+ * The owner tree stores no source hash, summary, track, or chapter aggregate. Keeping
+ * this fold beside the original builder gives generators and readers one definition of
+ * those public fields and prevents a derived rollup from becoming a new merge seam.
+ */
+export function buildModalityManifestFromRows(
+  header: ModalityManifestHeader,
+  inputLessons: readonly ModalityManifestLesson[],
+  inputFindings: readonly ModalityFinding[],
+): ModalityManifest {
+  const lessons = [...inputLessons].sort(compareManifestLessons);
+  const findings = [...inputFindings].sort(
+    (left, right) =>
+      left.language.localeCompare(right.language) ||
+      left.lessonId.localeCompare(right.lessonId) ||
+      left.code.localeCompare(right.code),
+  );
+  const byLanguage = new Map<string, ModalityManifestLesson[]>();
+  for (const lesson of lessons) {
+    const bucket = byLanguage.get(lesson.language);
+    if (bucket) bucket.push(lesson);
+    else byLanguage.set(lesson.language, [lesson]);
+  }
+
+  const tracks: ModalityManifestTrack[] = [];
+  for (const language of [...byLanguage.keys()].sort()) {
+    const trackLessons = byLanguage.get(language) ?? [];
+    const byChapter = new Map<number, ModalityManifestLesson[]>();
+    for (const lesson of trackLessons) {
+      if (lesson.chapter === null) continue;
+      const bucket = byChapter.get(lesson.chapter);
+      if (bucket) bucket.push(lesson);
+      else byChapter.set(lesson.chapter, [lesson]);
+    }
+    const chapters = [...byChapter.keys()]
+      .sort((left, right) => left - right)
+      .map((chapter) => manifestChapterFromRows(chapter, byChapter.get(chapter) ?? []));
+    const voice = trackLessons.filter((lesson) => lesson.modality === "voice").length;
+    tracks.push({
+      language,
+      lessonCount: trackLessons.length,
+      voice,
+      sight: trackLessons.filter((lesson) => lesson.modality === "sight").length,
+      pen: trackLessons.filter((lesson) => lesson.modality === "pen").length,
+      drivablePercent: percent(voice, trackLessons.length),
+      drivablePrefixTotal: chapters.reduce((sum, chapter) => sum + chapter.drivablePrefix, 0),
+      modalities: unionModalities(trackLessons.map((lesson) => lesson.modality)),
+      chapters,
+    });
+  }
+
+  const chapters = tracks.flatMap((track) => track.chapters);
+  const voice = lessons.filter((lesson) => lesson.modality === "voice").length;
+  return {
+    version: header.version,
+    algorithm: header.algorithm,
+    features: header.features,
+    policy: header.policy,
+    sourceHash: modalityRowsHash(lessons),
+    summary: {
+      totalLessons: lessons.length,
+      voice,
+      sight: lessons.filter((lesson) => lesson.modality === "sight").length,
+      pen: lessons.filter((lesson) => lesson.modality === "pen").length,
+      drivableLessons: voice,
+      drivablePercent: percent(voice, lessons.length),
+      trackCount: tracks.length,
+      chapterCount: chapters.length,
+      drivablePrefixTotal: chapters.reduce((sum, chapter) => sum + chapter.drivablePrefix, 0),
+      fullyDrivableChapters: chapters.filter((chapter) => chapter.drivable).length,
+      unstartableChapters: chapters.filter((chapter) => chapter.drivablePrefix === 0).length,
+      overriddenLessons: lessons.filter((lesson) => lesson.overridden).length,
+      lessonsWithoutChapter: lessons.filter((lesson) => lesson.chapter === null).length,
+    },
+    tracks,
+    lessons,
+    findings,
+  };
+}
+
 /**
  * Reassemble the public corpus view from independently committed language shards.
  *
@@ -558,49 +684,18 @@ export function mergeModalityManifests(
     }
   }
 
-  const tracks = manifests.flatMap((manifest) => manifest.tracks)
-    .sort((left, right) => left.language.localeCompare(right.language));
   const lessons = manifests.flatMap((manifest) => manifest.lessons)
-    .sort((left, right) =>
-      left.language.localeCompare(right.language) ||
-      (left.chapter ?? Number.POSITIVE_INFINITY) -
-        (right.chapter ?? Number.POSITIVE_INFINITY) ||
-      (left.sequence ?? Number.POSITIVE_INFINITY) -
-        (right.sequence ?? Number.POSITIVE_INFINITY) ||
-      left.id.localeCompare(right.id),
-    );
+    .sort(compareManifestLessons);
   const findings = manifests.flatMap((manifest) => manifest.findings)
     .sort((left, right) =>
       left.language.localeCompare(right.language) ||
       left.lessonId.localeCompare(right.lessonId) ||
       left.code.localeCompare(right.code),
     );
-  const chapters = tracks.flatMap((track) => track.chapters);
-  const voice = lessons.filter((entry) => entry.modality === "voice").length;
-
-  return {
+  return buildModalityManifestFromRows({
     version: first.version,
     algorithm: first.algorithm,
     features: first.features,
     policy: first.policy,
-    sourceHash: modalityRowsHash(lessons),
-    summary: {
-      totalLessons: lessons.length,
-      voice,
-      sight: lessons.filter((entry) => entry.modality === "sight").length,
-      pen: lessons.filter((entry) => entry.modality === "pen").length,
-      drivableLessons: voice,
-      drivablePercent: percent(voice, lessons.length),
-      trackCount: tracks.length,
-      chapterCount: chapters.length,
-      drivablePrefixTotal: chapters.reduce((sum, chapter) => sum + chapter.drivablePrefix, 0),
-      fullyDrivableChapters: chapters.filter((chapter) => chapter.drivable).length,
-      unstartableChapters: chapters.filter((chapter) => chapter.drivablePrefix === 0).length,
-      overriddenLessons: lessons.filter((entry) => entry.overridden).length,
-      lessonsWithoutChapter: lessons.filter((entry) => entry.chapter === null).length,
-    },
-    tracks,
-    lessons,
-    findings,
-  };
+  }, lessons, findings);
 }

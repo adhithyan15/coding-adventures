@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "PA-C05-rahna",
+    "language": "punjabi",
+    "chapter": 5,
+    "sequence": 290,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a481a7f420f50af5",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

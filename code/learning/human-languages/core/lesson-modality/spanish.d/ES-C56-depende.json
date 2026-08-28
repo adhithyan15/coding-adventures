@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C56-depende",
+    "language": "spanish",
+    "chapter": 210,
+    "sequence": 2287,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1a5d4fcb1659a11"
+  },
+  "findings": []
+}

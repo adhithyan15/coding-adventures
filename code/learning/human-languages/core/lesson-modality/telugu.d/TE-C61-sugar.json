@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C61-sugar",
+    "language": "telugu",
+    "chapter": 61,
+    "sequence": 1910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3c7b091442eeae8"
+  },
+  "findings": []
+}

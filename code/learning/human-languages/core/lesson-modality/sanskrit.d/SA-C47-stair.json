@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C47-stair",
+    "language": "sanskrit",
+    "chapter": 47,
+    "sequence": 2300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a8f151a7be8a154"
+  },
+  "findings": []
+}

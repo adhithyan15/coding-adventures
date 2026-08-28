@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W02-e-matra",
+    "language": "marathi",
+    "chapter": 2,
+    "sequence": 24,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:930499ba362ce7cf",
+    "detachableSegments": [
+      "Script",
+      "Writing — guided copy and first retrieval"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R16-identity-1",
+    "language": "chinese",
+    "chapter": 16,
+    "sequence": 1350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19ff5cec4a66b517"
+  },
+  "findings": []
+}

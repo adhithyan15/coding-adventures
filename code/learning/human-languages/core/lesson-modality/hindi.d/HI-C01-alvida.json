@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C01-alvida",
+    "language": "hindi",
+    "chapter": 1,
+    "sequence": 50,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33bfc4ea75cf3edf",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

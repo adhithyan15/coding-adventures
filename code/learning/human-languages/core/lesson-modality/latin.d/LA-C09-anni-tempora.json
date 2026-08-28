@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C09-anni-tempora",
+    "language": "latin",
+    "chapter": 9,
+    "sequence": 280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bcbf395c2d4e8ff"
+  },
+  "findings": []
+}

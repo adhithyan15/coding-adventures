@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C396-reparar",
+    "language": "spanish",
+    "chapter": 396,
+    "sequence": 8640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e5c9aef9a32ebfe"
+  },
+  "findings": []
+}

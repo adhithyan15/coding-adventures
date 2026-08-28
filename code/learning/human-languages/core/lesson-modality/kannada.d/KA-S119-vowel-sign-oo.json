@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S119-vowel-sign-oo",
+    "language": "kannada",
+    "chapter": 15,
+    "sequence": 431,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e3fa4d22e3edda28",
+    "detachableSegments": [
+      "Script you'll notice: ◌ೋ",
+      "Writing: ◌ೋ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

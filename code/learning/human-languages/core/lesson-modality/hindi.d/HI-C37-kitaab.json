@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C37-kitaab",
+    "language": "hindi",
+    "chapter": 37,
+    "sequence": 1010,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71d46996166c8448",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

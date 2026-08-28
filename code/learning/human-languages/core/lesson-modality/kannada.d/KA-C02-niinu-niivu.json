@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-C02-niinu-niivu",
+    "language": "kannada",
+    "chapter": 2,
+    "sequence": 100,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e177e57b6af6045",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C08-parivaar",
+    "language": "marwadi",
+    "chapter": 11,
+    "sequence": 720,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:585923814fcc5a50"
+  },
+  "findings": []
+}

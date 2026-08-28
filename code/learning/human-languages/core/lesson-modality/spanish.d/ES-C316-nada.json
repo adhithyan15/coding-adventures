@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C316-nada",
+    "language": "spanish",
+    "chapter": 316,
+    "sequence": 4960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c932273cd3e9485d"
+  },
+  "findings": []
+}

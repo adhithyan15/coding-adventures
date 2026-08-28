@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C02-non-ce-male",
+    "language": "italian",
+    "chapter": 2,
+    "sequence": 165,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d64ec33c1db54b5"
+  },
+  "findings": []
+}

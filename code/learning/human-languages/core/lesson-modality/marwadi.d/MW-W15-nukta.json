@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W15-nukta",
+    "language": "marwadi",
+    "chapter": 20,
+    "sequence": 1490,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:273ffbac111de2d4",
+    "detachableSegments": [
+      "Script — one mark"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

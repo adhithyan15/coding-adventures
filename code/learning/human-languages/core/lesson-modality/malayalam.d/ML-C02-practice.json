@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ML-C02-practice",
+    "language": "malayalam",
+    "chapter": 2,
+    "sequence": 150,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:114795962eddf610",
+    "detachableSegments": [
+      "Writing check — keep the model visible"
+    ]
+  },
+  "findings": []
+}

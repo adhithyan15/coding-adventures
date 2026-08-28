@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C322-semana",
+    "language": "spanish",
+    "chapter": 322,
+    "sequence": 5230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a522f088a8c70b08"
+  },
+  "findings": []
+}

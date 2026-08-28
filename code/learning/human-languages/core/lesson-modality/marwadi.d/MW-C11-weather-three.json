@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C11-weather-three",
+    "language": "marwadi",
+    "chapter": 16,
+    "sequence": 1160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64bfcf5c31170ca9"
+  },
+  "findings": []
+}

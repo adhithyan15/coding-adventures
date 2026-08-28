@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C06-dative-ge",
+    "language": "kannada",
+    "chapter": 6,
+    "sequence": 310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2992f91067cb3eae"
+  },
+  "findings": []
+}

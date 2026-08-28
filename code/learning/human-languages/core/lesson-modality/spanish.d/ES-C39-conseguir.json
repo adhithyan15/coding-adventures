@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C39-conseguir",
+    "language": "spanish",
+    "chapter": 169,
+    "sequence": 2100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:53af1d471920dd9c"
+  },
+  "findings": []
+}

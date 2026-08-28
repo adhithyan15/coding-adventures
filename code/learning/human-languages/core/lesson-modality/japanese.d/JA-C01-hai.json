@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "JA-C01-hai",
+    "language": "japanese",
+    "chapter": 1,
+    "sequence": 50,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02e5572b856c1fa3",
+    "detachableSegments": [
+      "Script — two signs, two beats"
+    ]
+  },
+  "findings": []
+}

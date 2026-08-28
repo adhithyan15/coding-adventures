@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "AR-C02-maa",
+    "language": "arabic",
+    "chapter": 2,
+    "sequence": 190,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87ddbb55d75eeb82",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

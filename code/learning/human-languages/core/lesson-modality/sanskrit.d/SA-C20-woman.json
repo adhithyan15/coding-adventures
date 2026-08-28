@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C20-woman",
+    "language": "sanskrit",
+    "chapter": 20,
+    "sequence": 970,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1a47bab5192f15df"
+  },
+  "findings": []
+}

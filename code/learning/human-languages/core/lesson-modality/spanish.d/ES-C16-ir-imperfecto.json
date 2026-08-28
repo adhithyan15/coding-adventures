@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C16-ir-imperfecto",
+    "language": "spanish",
+    "chapter": 109,
+    "sequence": 1370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44488cc020b8dfa0"
+  },
+  "findings": []
+}

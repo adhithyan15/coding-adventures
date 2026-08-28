@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C01-namaskar",
+    "language": "hindi",
+    "chapter": 1,
+    "sequence": 20,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb684ab95ec1df4b",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

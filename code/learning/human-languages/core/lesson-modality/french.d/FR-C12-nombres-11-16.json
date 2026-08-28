@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "FR-C12-nombres-11-16",
+    "language": "french",
+    "chapter": 12,
+    "sequence": 265,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e8a8f4123ad232b4"
+  },
+  "findings": []
+}

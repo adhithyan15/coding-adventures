@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C03-wu",
+    "language": "chinese",
+    "chapter": 3,
+    "sequence": 240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46cefe9456745693"
+  },
+  "findings": []
+}

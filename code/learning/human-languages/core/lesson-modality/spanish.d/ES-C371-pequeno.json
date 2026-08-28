@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C371-pequeno",
+    "language": "spanish",
+    "chapter": 371,
+    "sequence": 7470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02775322d8b1f83e"
+  },
+  "findings": []
+}

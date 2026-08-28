@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C02-practice",
+    "language": "marathi",
+    "chapter": 5,
+    "sequence": 100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6caf1f4491f5251e"
+  },
+  "findings": []
+}

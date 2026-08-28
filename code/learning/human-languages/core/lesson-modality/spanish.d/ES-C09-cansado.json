@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C09-cansado",
+    "language": "spanish",
+    "chapter": 59,
+    "sequence": 1020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e2900002b69c403"
+  },
+  "findings": []
+}

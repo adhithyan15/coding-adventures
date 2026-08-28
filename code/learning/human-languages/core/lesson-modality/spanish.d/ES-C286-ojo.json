@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C286-ojo",
+    "language": "spanish",
+    "chapter": 286,
+    "sequence": 3420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cd10d2b7edfb035"
+  },
+  "findings": []
+}

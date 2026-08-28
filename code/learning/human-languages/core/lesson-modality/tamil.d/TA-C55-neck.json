@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C55-neck",
+    "language": "tamil",
+    "chapter": 55,
+    "sequence": 1960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de253ae0714f536c"
+  },
+  "findings": []
+}

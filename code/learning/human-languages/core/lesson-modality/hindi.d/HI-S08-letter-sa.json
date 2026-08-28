@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "HI-S08-letter-sa",
+    "language": "hindi",
+    "chapter": 13,
+    "sequence": 605,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:836a50bb3049edbc",
+    "detachableSegments": [
+      "Script you'll notice: स",
+      "Writing: स — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

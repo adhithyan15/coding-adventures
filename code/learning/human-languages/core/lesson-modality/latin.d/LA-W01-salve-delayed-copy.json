@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "LA-W01-salve-delayed-copy",
+    "language": "latin",
+    "chapter": 1,
+    "sequence": 106,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:84b7fa3d31f3bb53",
+    "detachableSegments": [
+      "Writing — delayed copy"
+    ]
+  },
+  "findings": []
+}

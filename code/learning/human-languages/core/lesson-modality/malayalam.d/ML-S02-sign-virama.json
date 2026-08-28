@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S02-sign-virama",
+    "language": "malayalam",
+    "chapter": 7,
+    "sequence": 355,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a62861def2b487dc",
+    "detachableSegments": [
+      "Script you'll notice: ◌്",
+      "Writing: ◌് — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

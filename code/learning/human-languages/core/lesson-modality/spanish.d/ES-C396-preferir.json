@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C396-preferir",
+    "language": "spanish",
+    "chapter": 396,
+    "sequence": 8620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd39be04632c96f0"
+  },
+  "findings": []
+}

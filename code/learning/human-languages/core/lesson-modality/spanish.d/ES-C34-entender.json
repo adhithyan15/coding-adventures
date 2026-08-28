@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C34-entender",
+    "language": "spanish",
+    "chapter": 154,
+    "sequence": 1900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51f7c4166a2e14f6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C20-hear-mandir",
+    "language": "gujarati",
+    "chapter": 24,
+    "sequence": 920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a9b59635611544d"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C10-bajar",
+    "language": "marwadi",
+    "chapter": 14,
+    "sequence": 950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63bb340e1c48014e"
+  },
+  "findings": []
+}

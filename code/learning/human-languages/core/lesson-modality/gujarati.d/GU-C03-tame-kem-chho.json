@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-C03-tame-kem-chho",
+    "language": "gujarati",
+    "chapter": 9,
+    "sequence": 200,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c16852554e1ed5d3",
+    "detachableSegments": [
+      "Script retrieval"
+    ]
+  },
+  "findings": []
+}

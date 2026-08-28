@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-W05-conjuncts",
+    "language": "hindi",
+    "chapter": 2,
+    "sequence": 240,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8fb1652ba09974ca",
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C10-vaara",
+    "language": "kannada",
+    "chapter": 10,
+    "sequence": 380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc906a495b55c8c5"
+  },
+  "findings": []
+}

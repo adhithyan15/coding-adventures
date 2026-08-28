@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C07-khane",
+    "language": "marathi",
+    "chapter": 10,
+    "sequence": 410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d7f08ad782b3f0f"
+  },
+  "findings": []
+}

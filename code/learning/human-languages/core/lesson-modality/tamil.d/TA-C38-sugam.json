@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C38-sugam",
+    "language": "tamil",
+    "chapter": 38,
+    "sequence": 1150,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00918ca7669305da",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

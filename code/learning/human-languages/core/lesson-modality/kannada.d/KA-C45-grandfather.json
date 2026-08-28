@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C45-grandfather",
+    "language": "kannada",
+    "chapter": 45,
+    "sequence": 1100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:546ca5b8ae32eae4"
+  },
+  "findings": []
+}

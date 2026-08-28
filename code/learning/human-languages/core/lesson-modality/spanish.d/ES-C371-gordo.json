@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C371-gordo",
+    "language": "spanish",
+    "chapter": 371,
+    "sequence": 7480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd656dd2aa87f591"
+  },
+  "findings": []
+}

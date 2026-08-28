@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-W19-read-muunru",
+    "language": "tamil",
+    "chapter": 38,
+    "sequence": 1165,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fe1014ace1a33e35",
+    "detachableSegments": [
+      "Script you'll notice: the ூ sign",
+      "Script you'll notice: build the word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

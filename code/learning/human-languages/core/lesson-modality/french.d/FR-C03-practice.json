@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C03-practice",
+    "language": "french",
+    "chapter": 3,
+    "sequence": 135,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6312463456d34fe5"
+  },
+  "findings": []
+}

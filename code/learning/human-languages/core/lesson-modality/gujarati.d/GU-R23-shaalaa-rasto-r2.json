@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "GU-R23-shaalaa-rasto-r2",
+    "language": "gujarati",
+    "chapter": 27,
+    "sequence": 1150,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d1676db0588d241b",
+    "detachableSegments": [
+      "Writing — from meaning, with every model covered"
+    ],
+    "delivery": "script",
+    "authored": "pen",
+    "authoredReason": "The four separate retrieval checks end in required model-free dictation, so the complete lesson needs a pen."
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MR-C12-naak",
+    "language": "marathi",
+    "chapter": 15,
+    "sequence": 630,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:017da4308b3bca43",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

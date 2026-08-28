@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C267-verdad-no",
+    "language": "spanish",
+    "chapter": 267,
+    "sequence": 2600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd46fde5ee8afe6a"
+  },
+  "findings": []
+}

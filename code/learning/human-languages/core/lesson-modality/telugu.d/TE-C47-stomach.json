@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C47-stomach",
+    "language": "telugu",
+    "chapter": 47,
+    "sequence": 1220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0fe379232059a77"
+  },
+  "findings": []
+}

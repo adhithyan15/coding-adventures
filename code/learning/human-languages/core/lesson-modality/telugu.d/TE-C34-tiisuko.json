@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TE-C34-tiisuko",
+    "language": "telugu",
+    "chapter": 34,
+    "sequence": 710,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b912560c856ff200",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

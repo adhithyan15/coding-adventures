@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C365-lleno",
+    "language": "spanish",
+    "chapter": 365,
+    "sequence": 7210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b862f4c0f871eda2"
+  },
+  "findings": []
+}

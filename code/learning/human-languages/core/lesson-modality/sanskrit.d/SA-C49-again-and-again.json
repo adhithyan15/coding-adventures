@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C49-again-and-again",
+    "language": "sanskrit",
+    "chapter": 49,
+    "sequence": 2410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e061f0aa481e80a"
+  },
+  "findings": []
+}

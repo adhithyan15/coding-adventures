@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C09-nani",
+    "language": "marwadi",
+    "chapter": 12,
+    "sequence": 800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:202ece52fc7dbb3d"
+  },
+  "findings": []
+}

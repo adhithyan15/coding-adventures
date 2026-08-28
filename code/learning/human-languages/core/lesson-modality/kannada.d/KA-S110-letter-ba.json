@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S110-letter-ba",
+    "language": "kannada",
+    "chapter": 6,
+    "sequence": 336,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f2b4c7dd8f011b76",
+    "detachableSegments": [
+      "Script you'll notice: ಬ",
+      "Writing: ಬ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

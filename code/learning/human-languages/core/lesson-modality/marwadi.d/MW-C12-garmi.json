@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C12-garmi",
+    "language": "marwadi",
+    "chapter": 17,
+    "sequence": 1230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67a9517baa43582d"
+  },
+  "findings": []
+}

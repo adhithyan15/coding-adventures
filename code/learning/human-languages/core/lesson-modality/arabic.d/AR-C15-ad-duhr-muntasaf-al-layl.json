@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C15-ad-duhr-muntasaf-al-layl",
+    "language": "arabic",
+    "chapter": 15,
+    "sequence": 590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86bf1195fc44b2d1"
+  },
+  "findings": []
+}

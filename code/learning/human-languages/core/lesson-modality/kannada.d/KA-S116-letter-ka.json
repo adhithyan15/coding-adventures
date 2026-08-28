@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S116-letter-ka",
+    "language": "kannada",
+    "chapter": 12,
+    "sequence": 406,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bb62ac95be3cf08f",
+    "detachableSegments": [
+      "Script you'll notice: ಕ",
+      "Writing: ಕ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

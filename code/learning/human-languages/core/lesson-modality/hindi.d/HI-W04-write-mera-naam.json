@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "HI-W04-write-mera-naam",
+    "language": "hindi",
+    "chapter": 2,
+    "sequence": 220,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fb8f9b5730381090",
+    "delivery": "script"
+  },
+  "findings": []
+}

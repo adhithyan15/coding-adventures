@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C322-temprano",
+    "language": "spanish",
+    "chapter": 322,
+    "sequence": 5240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8aa6a42e22acd9e2"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C22-te",
+    "language": "italian",
+    "chapter": 22,
+    "sequence": 750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:679b6f1ed50f90d8"
+  },
+  "findings": []
+}

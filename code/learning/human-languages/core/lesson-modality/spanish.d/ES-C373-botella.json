@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C373-botella",
+    "language": "spanish",
+    "chapter": 373,
+    "sequence": 7580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:619c58d4cb4abae9"
+  },
+  "findings": []
+}

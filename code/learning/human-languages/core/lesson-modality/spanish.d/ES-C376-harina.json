@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C376-harina",
+    "language": "spanish",
+    "chapter": 376,
+    "sequence": 7720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3028a46d8ac587e7"
+  },
+  "findings": []
+}

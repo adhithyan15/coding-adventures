@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C31-afternoon-greeting-root",
+    "language": "tamil",
+    "chapter": 31,
+    "sequence": 870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd3bfbc73f95cbb9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C19-mi-piace",
+    "language": "italian",
+    "chapter": 19,
+    "sequence": 660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d2656dc84c2a2d3"
+  },
+  "findings": []
+}

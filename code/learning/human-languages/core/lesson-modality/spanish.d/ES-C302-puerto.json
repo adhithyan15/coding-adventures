@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C302-puerto",
+    "language": "spanish",
+    "chapter": 302,
+    "sequence": 4250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76cea58a689f0e72"
+  },
+  "findings": []
+}

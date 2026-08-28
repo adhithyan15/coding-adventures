@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C67-hoy-como-en-casa",
+    "language": "spanish",
+    "chapter": 265,
+    "sequence": 2560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a55f0bc0c69c93c9"
+  },
+  "findings": []
+}

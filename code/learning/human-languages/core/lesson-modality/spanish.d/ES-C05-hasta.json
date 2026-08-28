@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C05-hasta",
+    "language": "spanish",
+    "chapter": 12,
+    "sequence": 430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28199d08af639c9b"
+  },
+  "findings": []
+}

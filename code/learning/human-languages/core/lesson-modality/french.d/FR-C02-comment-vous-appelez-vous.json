@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C02-comment-vous-appelez-vous",
+    "language": "french",
+    "chapter": 2,
+    "sequence": 90,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a2dc2b867679377"
+  },
+  "findings": []
+}

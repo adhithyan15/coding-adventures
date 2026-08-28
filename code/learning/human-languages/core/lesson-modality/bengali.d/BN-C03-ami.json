@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "BN-C03-ami",
+    "language": "bengali",
+    "chapter": 3,
+    "sequence": 150,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:474fab755bbe5c90",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

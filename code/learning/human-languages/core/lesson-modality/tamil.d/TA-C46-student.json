@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C46-student",
+    "language": "tamil",
+    "chapter": 46,
+    "sequence": 1520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f92d66633526e21"
+  },
+  "findings": []
+}

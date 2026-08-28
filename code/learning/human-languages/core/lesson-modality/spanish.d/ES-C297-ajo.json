@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C297-ajo",
+    "language": "spanish",
+    "chapter": 297,
+    "sequence": 4000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a490b65ca9aed5b2"
+  },
+  "findings": []
+}

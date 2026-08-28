@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C11-hana",
+    "language": "japanese",
+    "chapter": 11,
+    "sequence": 770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:733e698c1f9a37b4"
+  },
+  "findings": []
+}

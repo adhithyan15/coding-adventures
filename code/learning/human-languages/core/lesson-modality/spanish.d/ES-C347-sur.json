@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C347-sur",
+    "language": "spanish",
+    "chapter": 347,
+    "sequence": 6280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ade9373ac78d9705"
+  },
+  "findings": []
+}

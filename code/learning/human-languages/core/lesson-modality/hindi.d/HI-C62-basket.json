@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C62-basket",
+    "language": "hindi",
+    "chapter": 62,
+    "sequence": 2330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37bbdf4de0810523"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C01-vale",
+    "language": "latin",
+    "chapter": 1,
+    "sequence": 120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f679d775cd6e1a52"
+  },
+  "findings": []
+}

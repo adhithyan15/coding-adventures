@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C39-aadmi",
+    "language": "hindi",
+    "chapter": 39,
+    "sequence": 1080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57d4d5259b48859f"
+  },
+  "findings": []
+}

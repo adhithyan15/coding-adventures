@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C46-repaso-dos-sistemas",
+    "language": "spanish",
+    "chapter": 96,
+    "sequence": 1235,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6ec85718a3d3f962"
+  },
+  "findings": []
+}

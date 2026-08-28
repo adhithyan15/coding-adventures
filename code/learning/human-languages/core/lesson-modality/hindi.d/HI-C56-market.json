@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C56-market",
+    "language": "hindi",
+    "chapter": 56,
+    "sequence": 1920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07c55f90e7c3a004"
+  },
+  "findings": []
+}

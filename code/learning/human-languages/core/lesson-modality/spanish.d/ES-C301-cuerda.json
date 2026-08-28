@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C301-cuerda",
+    "language": "spanish",
+    "chapter": 301,
+    "sequence": 4170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cb6999d7f8b62e9"
+  },
+  "findings": []
+}

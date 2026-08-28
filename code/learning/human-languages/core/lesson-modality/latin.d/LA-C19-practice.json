@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C19-practice",
+    "language": "latin",
+    "chapter": 19,
+    "sequence": 415,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7affb16c58bc8278"
+  },
+  "findings": []
+}

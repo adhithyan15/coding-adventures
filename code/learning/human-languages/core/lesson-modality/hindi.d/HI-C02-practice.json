@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C02-practice",
+    "language": "hindi",
+    "chapter": 2,
+    "sequence": 260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f038d9b402f85c9a"
+  },
+  "findings": []
+}

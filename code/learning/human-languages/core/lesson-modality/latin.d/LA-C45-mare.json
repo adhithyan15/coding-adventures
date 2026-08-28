@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C45-mare",
+    "language": "latin",
+    "chapter": 45,
+    "sequence": 1040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5eeeb23160ec0a33"
+  },
+  "findings": []
+}

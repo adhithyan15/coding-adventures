@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-C04-hoogi-baruttene",
+    "language": "kannada",
+    "chapter": 4,
+    "sequence": 220,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a699e8d1dec42ba7",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

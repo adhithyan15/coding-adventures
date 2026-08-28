@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W09-cha",
+    "language": "marwadi",
+    "chapter": 13,
+    "sequence": 880,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:24709a382a00e730",
+    "detachableSegments": [
+      "Script — one sign"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

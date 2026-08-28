@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C22-paccha-manja",
+    "language": "malayalam",
+    "chapter": 22,
+    "sequence": 520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c30a3f461f13e7c7"
+  },
+  "findings": []
+}

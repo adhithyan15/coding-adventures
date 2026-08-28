@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W00-ba-family-marhaba",
+    "language": "arabic",
+    "chapter": 1,
+    "sequence": 24,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e5d397833c65615c",
+    "detachableSegments": [
+      "Script — one skeleton, three letters",
+      "Writing — guided copy, then delayed copy"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C309-familia",
+    "language": "spanish",
+    "chapter": 309,
+    "sequence": 4570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4035e959e5e2fa80"
+  },
+  "findings": []
+}

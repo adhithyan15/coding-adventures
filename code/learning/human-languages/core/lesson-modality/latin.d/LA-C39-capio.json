@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C39-capio",
+    "language": "latin",
+    "chapter": 39,
+    "sequence": 760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c37b55f2c970878"
+  },
+  "findings": []
+}

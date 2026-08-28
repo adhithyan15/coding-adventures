@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "JA-W03-dakuten",
+    "language": "japanese",
+    "chapter": 3,
+    "sequence": 170,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fca3eb6654e313a2",
+    "detachableSegments": [
+      "Script — the mark"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

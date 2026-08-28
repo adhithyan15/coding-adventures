@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C04-como-estas-register",
+    "language": "spanish",
+    "chapter": 9,
+    "sequence": 320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8508297735e4090"
+  },
+  "findings": []
+}

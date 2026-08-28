@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C02-stare",
+    "language": "italian",
+    "chapter": 2,
+    "sequence": 120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50443c7d0d357d8a"
+  },
+  "findings": []
+}

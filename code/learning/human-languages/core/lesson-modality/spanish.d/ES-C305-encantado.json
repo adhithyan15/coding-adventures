@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C305-encantado",
+    "language": "spanish",
+    "chapter": 305,
+    "sequence": 4410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a3d92b90c924438"
+  },
+  "findings": []
+}

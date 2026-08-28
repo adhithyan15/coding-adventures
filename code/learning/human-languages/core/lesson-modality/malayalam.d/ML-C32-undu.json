@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C32-undu",
+    "language": "malayalam",
+    "chapter": 32,
+    "sequence": 650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:062041c5546f2372"
+  },
+  "findings": []
+}

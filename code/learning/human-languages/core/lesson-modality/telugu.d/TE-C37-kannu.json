@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C37-kannu",
+    "language": "telugu",
+    "chapter": 37,
+    "sequence": 790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac2e527a7160c5c5"
+  },
+  "findings": []
+}

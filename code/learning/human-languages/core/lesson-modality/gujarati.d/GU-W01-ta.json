@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "GU-W01-ta",
+    "language": "gujarati",
+    "chapter": 1,
+    "sequence": 8,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1c61ee530c01e057",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R09-script-b-r3",
+    "language": "marathi",
+    "chapter": 9,
+    "sequence": 336,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06d3805ee695cea6"
+  },
+  "findings": []
+}

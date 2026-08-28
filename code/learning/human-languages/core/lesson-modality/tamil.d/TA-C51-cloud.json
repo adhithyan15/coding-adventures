@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C51-cloud",
+    "language": "tamil",
+    "chapter": 51,
+    "sequence": 1800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:642ddc1bd7deba8b"
+  },
+  "findings": []
+}

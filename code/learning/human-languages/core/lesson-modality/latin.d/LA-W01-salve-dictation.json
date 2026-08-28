@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "LA-W01-salve-dictation",
+    "language": "latin",
+    "chapter": 1,
+    "sequence": 107,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7821bbef4f280a42",
+    "detachableSegments": [
+      "Writing — dictation and transcription"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C382-empezar",
+    "language": "spanish",
+    "chapter": 382,
+    "sequence": 8010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3bb3a18ff2ce8ef"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C01-answering",
+    "language": "tamil",
+    "chapter": 1,
+    "sequence": 80,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8b47a2a83f2b182"
+  },
+  "findings": []
+}

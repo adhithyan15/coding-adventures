@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C48-repaso-dos-pasados",
+    "language": "spanish",
+    "chapter": 114,
+    "sequence": 1383,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e8148ad28894189c"
+  },
+  "findings": []
+}

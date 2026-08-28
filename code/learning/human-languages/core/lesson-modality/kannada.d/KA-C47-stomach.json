@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C47-stomach",
+    "language": "kannada",
+    "chapter": 47,
+    "sequence": 1230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01f131e2c09a5a7e"
+  },
+  "findings": []
+}

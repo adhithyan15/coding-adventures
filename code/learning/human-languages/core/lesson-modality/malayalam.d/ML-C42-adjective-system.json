@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C42-adjective-system",
+    "language": "malayalam",
+    "chapter": 42,
+    "sequence": 1060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75a61d22341ccd9b"
+  },
+  "findings": []
+}

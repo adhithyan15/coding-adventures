@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ML-C01-sari",
+    "language": "malayalam",
+    "chapter": 1,
+    "sequence": 50,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6bfc9b26404a5c6",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

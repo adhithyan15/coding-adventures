@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C368-cerdo",
+    "language": "spanish",
+    "chapter": 368,
+    "sequence": 7340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84210d139339cb24"
+  },
+  "findings": []
+}

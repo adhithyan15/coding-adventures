@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C331-cosa",
+    "language": "spanish",
+    "chapter": 331,
+    "sequence": 5700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b556d3c04b5dde1"
+  },
+  "findings": []
+}

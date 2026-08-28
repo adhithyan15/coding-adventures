@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C55-tuvieron",
+    "language": "spanish",
+    "chapter": 202,
+    "sequence": 2245,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cc3fa4c8741033f"
+  },
+  "findings": []
+}

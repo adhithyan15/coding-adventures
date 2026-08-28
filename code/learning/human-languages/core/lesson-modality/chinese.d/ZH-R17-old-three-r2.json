@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R17-old-three-r2",
+    "language": "chinese",
+    "chapter": 17,
+    "sequence": 1540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:457c7ba2834019b1"
+  },
+  "findings": []
+}

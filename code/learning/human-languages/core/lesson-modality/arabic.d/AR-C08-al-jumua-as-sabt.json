@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C08-al-jumua-as-sabt",
+    "language": "arabic",
+    "chapter": 8,
+    "sequence": 490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91a910d35af6add4"
+  },
+  "findings": []
+}

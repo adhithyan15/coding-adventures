@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C18-mani",
+    "language": "tamil",
+    "chapter": 18,
+    "sequence": 640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d305720b49f4f434"
+  },
+  "findings": []
+}

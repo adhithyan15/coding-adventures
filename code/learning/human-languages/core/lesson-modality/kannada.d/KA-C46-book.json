@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C46-book",
+    "language": "kannada",
+    "chapter": 46,
+    "sequence": 1180,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:572365c5c68d92ab"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C03-shoma-to",
+    "language": "persian",
+    "chapter": 3,
+    "sequence": 60,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a85922eeffe5d79"
+  },
+  "findings": []
+}

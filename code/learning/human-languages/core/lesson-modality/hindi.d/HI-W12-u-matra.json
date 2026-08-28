@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "HI-W12-u-matra",
+    "language": "hindi",
+    "chapter": 59,
+    "sequence": 2120,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:91e5d78642127ce4",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

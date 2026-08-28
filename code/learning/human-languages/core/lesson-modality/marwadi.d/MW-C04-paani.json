@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MW-C04-paani",
+    "language": "marwadi",
+    "chapter": 4,
+    "sequence": 210,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47326b8d928417b0",
+    "detachableSegments": [
+      "Writing — guided, then delayed"
+    ]
+  },
+  "findings": []
+}

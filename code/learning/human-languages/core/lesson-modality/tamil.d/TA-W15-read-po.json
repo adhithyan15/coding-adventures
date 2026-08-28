@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-W15-read-po",
+    "language": "tamil",
+    "chapter": 35,
+    "sequence": 1025,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7b8a45f2c391781b",
+    "detachableSegments": [
+      "Script you'll notice: the ோ sign",
+      "Script you'll notice: build the word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

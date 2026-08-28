@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { expect } from "vitest";
 import { measureContinuity, REINFORCEMENT_WINDOWS } from "../../src/continuity.js";
@@ -15,8 +15,8 @@ import type { ParsedLesson } from "../../src/parse.js";
 import {
   MODALITY_MANIFEST_DIR,
   buildModalityManifest,
-  serializeModalityManifest,
 } from "../../src/modality-manifest.js";
+import { modalityOwnerContents } from "../../src/modality-shards.js";
 import { measureRamp } from "../../src/ramp.js";
 import { measureWritingStages, type TrackWritingStageCoverage } from "../../src/writing-stages.js";
 
@@ -80,9 +80,22 @@ export function expectLanguageContinuity(language: string): void {
 
 export function expectLanguageModality(language: string): void {
   const root = defaultCurriculumRoot();
-  const expected = serializeModalityManifest(buildModalityManifest(loadTrackLessons(language, root)));
-  const actual = readFileSync(resolve(root, MODALITY_MANIFEST_DIR, `${language}.json`), "utf8");
-  expect(actual, `${language} modality manifest`).toBe(expected);
+  const expected = modalityOwnerContents(
+    buildModalityManifest(loadTrackLessons(language, root)),
+  );
+  const ownerDirectory = `${language}.d`;
+  const expectedNames = [...expected.keys()]
+    .map((relative) => relative.slice(`${ownerDirectory}/`.length))
+    .sort((left, right) => left.localeCompare(right));
+  const actualNames = readdirSync(resolve(root, MODALITY_MANIFEST_DIR, ownerDirectory)).sort(
+    (left, right) => left.localeCompare(right),
+  );
+
+  expect(actualNames, `${language} modality owner names`).toEqual(expectedNames);
+  for (const [relative, contents] of expected) {
+    const actual = readFileSync(resolve(root, MODALITY_MANIFEST_DIR, relative), "utf8");
+    expect(actual, `${relative} canonical modality owner`).toBe(contents);
+  }
 }
 
 export interface LanguageLessonBudgetExpectation {

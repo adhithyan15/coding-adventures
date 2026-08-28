@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "BN-C08-pora",
+    "language": "bengali",
+    "chapter": 8,
+    "sequence": 520,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6efb067fd3a25df",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

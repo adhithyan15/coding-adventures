@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C47-hair",
+    "language": "telugu",
+    "chapter": 47,
+    "sequence": 1200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e375f7b991ee834"
+  },
+  "findings": []
+}

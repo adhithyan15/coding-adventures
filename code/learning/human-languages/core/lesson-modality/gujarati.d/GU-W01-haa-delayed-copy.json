@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "GU-W01-haa-delayed-copy",
+    "language": "gujarati",
+    "chapter": 2,
+    "sequence": 44,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8308ea6113bd3e0d",
+    "detachableSegments": [
+      "Writing — delayed copy",
+      "Script retrieval — one older vowel sign"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

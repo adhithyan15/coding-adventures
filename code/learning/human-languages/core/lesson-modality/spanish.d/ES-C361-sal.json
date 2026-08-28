@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C361-sal",
+    "language": "spanish",
+    "chapter": 361,
+    "sequence": 7000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:196e42623d6b1c40"
+  },
+  "findings": []
+}

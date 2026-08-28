@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-C01-illa",
+    "language": "kannada",
+    "chapter": 1,
+    "sequence": 40,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f4056f554b4767d",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

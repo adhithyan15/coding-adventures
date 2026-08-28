@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-W18-read-uur",
+    "language": "tamil",
+    "chapter": 37,
+    "sequence": 1115,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a4d00dabaf8d79bf",
+    "detachableSegments": [
+      "Script you'll notice: ஊ",
+      "Script you'll notice: build the word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

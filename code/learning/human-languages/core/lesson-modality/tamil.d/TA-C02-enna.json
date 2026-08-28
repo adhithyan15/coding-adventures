@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C02-enna",
+    "language": "tamil",
+    "chapter": 2,
+    "sequence": 150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:062d05f9bb347ae1"
+  },
+  "findings": []
+}

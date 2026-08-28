@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C330-camino",
+    "language": "spanish",
+    "chapter": 330,
+    "sequence": 5620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90b52688e53340cf"
+  },
+  "findings": []
+}

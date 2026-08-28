@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C62-rope",
+    "language": "hindi",
+    "chapter": 62,
+    "sequence": 2310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60fe47411e1b3f99"
+  },
+  "findings": []
+}

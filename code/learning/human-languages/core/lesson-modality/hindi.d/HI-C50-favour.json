@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C50-favour",
+    "language": "hindi",
+    "chapter": 50,
+    "sequence": 1610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c0346591969a2d3"
+  },
+  "findings": []
+}

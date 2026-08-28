@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W00-alif-mim-salam",
+    "language": "arabic",
+    "chapter": 1,
+    "sequence": 14,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1f0ce9bff579b36a",
+    "detachableSegments": [
+      "Script — observe two new shapes",
+      "Writing — guided copy, then delayed copy"
+    ]
+  },
+  "findings": []
+}

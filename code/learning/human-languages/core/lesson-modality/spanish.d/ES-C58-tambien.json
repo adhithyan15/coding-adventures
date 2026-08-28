@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C58-tambien",
+    "language": "spanish",
+    "chapter": 219,
+    "sequence": 2330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0321215bd1bc7850"
+  },
+  "findings": []
+}

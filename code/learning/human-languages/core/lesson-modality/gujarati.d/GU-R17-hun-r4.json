@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-R17-hun-r4",
+    "language": "gujarati",
+    "chapter": 21,
+    "sequence": 800,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:81940cfad120eac4",
+    "detachableSegments": [
+      "Writing — from sound"
+    ]
+  },
+  "findings": []
+}

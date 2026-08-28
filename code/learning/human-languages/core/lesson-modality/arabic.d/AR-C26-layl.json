@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C26-layl",
+    "language": "arabic",
+    "chapter": 26,
+    "sequence": 700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c103551f6178cf57"
+  },
+  "findings": []
+}

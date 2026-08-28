@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C326-solo",
+    "language": "spanish",
+    "chapter": 326,
+    "sequence": 5440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d77f86bc30178f50"
+  },
+  "findings": []
+}

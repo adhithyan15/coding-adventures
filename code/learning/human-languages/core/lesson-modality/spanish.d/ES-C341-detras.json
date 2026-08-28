@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C341-detras",
+    "language": "spanish",
+    "chapter": 341,
+    "sequence": 6000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:234f3bb4bdaa69c1"
+  },
+  "findings": []
+}

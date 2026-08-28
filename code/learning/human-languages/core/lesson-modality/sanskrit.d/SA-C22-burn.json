@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C22-burn",
+    "language": "sanskrit",
+    "chapter": 22,
+    "sequence": 1080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:81066cdb59c0fca8"
+  },
+  "findings": []
+}

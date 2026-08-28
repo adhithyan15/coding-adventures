@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W04-bu",
+    "language": "chinese",
+    "chapter": 4,
+    "sequence": 340,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4fb9f9f4171b1cad",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

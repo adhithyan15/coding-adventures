@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C308-nina",
+    "language": "spanish",
+    "chapter": 308,
+    "sequence": 4530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d248be34cd989d5"
+  },
+  "findings": []
+}

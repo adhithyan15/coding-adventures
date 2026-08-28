@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C55-tank",
+    "language": "telugu",
+    "chapter": 55,
+    "sequence": 1590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66a96fc8f8f1e4cb"
+  },
+  "findings": []
+}

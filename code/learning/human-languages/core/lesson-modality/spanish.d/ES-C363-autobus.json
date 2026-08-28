@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C363-autobus",
+    "language": "spanish",
+    "chapter": 363,
+    "sequence": 7100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ec4808e91cd0c13"
+  },
+  "findings": []
+}

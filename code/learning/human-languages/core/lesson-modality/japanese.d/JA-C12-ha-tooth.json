@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C12-ha-tooth",
+    "language": "japanese",
+    "chapter": 12,
+    "sequence": 850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c36cfb827ba99761"
+  },
+  "findings": []
+}

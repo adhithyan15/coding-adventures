@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C28-day-after",
+    "language": "sanskrit",
+    "chapter": 28,
+    "sequence": 1340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67ab752b23384db7"
+  },
+  "findings": []
+}

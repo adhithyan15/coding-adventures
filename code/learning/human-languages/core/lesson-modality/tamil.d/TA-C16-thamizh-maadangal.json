@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C16-thamizh-maadangal",
+    "language": "tamil",
+    "chapter": 16,
+    "sequence": 600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14dab8c9cd8fec07"
+  },
+  "findings": []
+}

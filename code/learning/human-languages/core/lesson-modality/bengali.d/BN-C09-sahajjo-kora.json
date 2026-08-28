@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "BN-C09-sahajjo-kora",
+    "language": "bengali",
+    "chapter": 9,
+    "sequence": 620,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b7790c25f7261f4",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C25-shubha-ratri",
+    "language": "telugu",
+    "chapter": 25,
+    "sequence": 530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83f579a6fb5c54f1"
+  },
+  "findings": []
+}

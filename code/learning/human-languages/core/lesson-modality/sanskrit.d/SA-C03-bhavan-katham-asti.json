@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C03-bhavan-katham-asti",
+    "language": "sanskrit",
+    "chapter": 3,
+    "sequence": 160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e8ed54663edb1f0"
+  },
+  "findings": []
+}

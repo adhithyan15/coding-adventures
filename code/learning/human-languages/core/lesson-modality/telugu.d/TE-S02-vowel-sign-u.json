@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S02-vowel-sign-u",
+    "language": "telugu",
+    "chapter": 7,
+    "sequence": 345,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4dececed840cf54d",
+    "detachableSegments": [
+      "Script you'll notice: ◌ు",
+      "Writing: ◌ు — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

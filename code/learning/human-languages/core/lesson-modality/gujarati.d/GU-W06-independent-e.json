@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "GU-W06-independent-e",
+    "language": "gujarati",
+    "chapter": 6,
+    "sequence": 82,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d88d5f5abb243c89",
+    "detachableSegments": [
+      "Script — meet one form",
+      "Writing — notice and trace",
+      "Writing — copy with the model",
+      "Writing — recall after hiding"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C37-cevi",
+    "language": "telugu",
+    "chapter": 37,
+    "sequence": 800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a3174f45d6690eb"
+  },
+  "findings": []
+}

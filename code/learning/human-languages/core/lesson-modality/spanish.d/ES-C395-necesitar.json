@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C395-necesitar",
+    "language": "spanish",
+    "chapter": 395,
+    "sequence": 8590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cf18f126d35e5f2"
+  },
+  "findings": []
+}

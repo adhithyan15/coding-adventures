@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "BN-C04-kal-dekha-hobe",
+    "language": "bengali",
+    "chapter": 4,
+    "sequence": 240,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cd8d6a17e79f31b",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

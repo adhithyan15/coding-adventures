@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "AR-W06-harakat-and-hamza",
+    "language": "arabic",
+    "chapter": 2,
+    "sequence": 250,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "wide-table"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:13bced16a8854a06"
+  },
+  "findings": []
+}

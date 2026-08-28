@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C03-aller",
+    "language": "french",
+    "chapter": 3,
+    "sequence": 115,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:397ee7ec6d58cafe"
+  },
+  "findings": []
+}

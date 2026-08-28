@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-W11-read-niingal",
+    "language": "tamil",
+    "chapter": 27,
+    "sequence": 815,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:32cfc1fb13f08bef",
+    "detachableSegments": [
+      "Script you'll notice: ங and ள",
+      "Script you'll notice: the ீ sign",
+      "Script you'll notice: build the word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

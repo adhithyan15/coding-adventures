@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C04-poy-varugiren",
+    "language": "tamil",
+    "chapter": 4,
+    "sequence": 250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa80fb4061e562bd"
+  },
+  "findings": []
+}

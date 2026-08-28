@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "JA-W11-small-tsu",
+    "language": "japanese",
+    "chapter": 11,
+    "sequence": 690,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:033672f13beb98d1",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

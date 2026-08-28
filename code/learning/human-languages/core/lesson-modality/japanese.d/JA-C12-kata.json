@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C12-kata",
+    "language": "japanese",
+    "chapter": 12,
+    "sequence": 860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5243f05aeb3eff3a"
+  },
+  "findings": []
+}
