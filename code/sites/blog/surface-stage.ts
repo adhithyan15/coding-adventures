@@ -17,6 +17,8 @@ import { generateSitemap } from "@coding-adventures/forme-aot-sitemap-emitter";
 import { generateMetaLinkTags } from "@coding-adventures/forme-aot-meta-link-tags";
 import { generateFeedDiscoveryLinks } from "@coding-adventures/forme-aot-rss-discovery-link";
 import { renderHtmlDocument, publicUrl } from "@coding-adventures/forme-render-static";
+import classlessTheme from "@coding-adventures/forme-theme-classless";
+import { slicePerPage } from "@coding-adventures/forme-aot-css-slicer";
 
 export interface BlogSurfaceConfig {
   readonly siteTitle: string;
@@ -91,12 +93,27 @@ const blogSurface = defineStage({
     const indexBody = [
       `<h1>${escapeText(config.siteTitle)}</h1>`,
       `<p>${escapeText(config.siteDescription)}</p>`,
-      renderIndexPage(indexItems, {
-        sortBy: "pubDate-desc",
-        showDate: true,
-        showSummary: true,
-      }),
+      [
+        '<section id="post-index" aria-label="Posts">',
+        renderIndexPage(indexItems, {
+          sortBy: "pubDate-desc",
+          showDate: true,
+          showSummary: true,
+        }),
+        "</section>",
+      ].join("\n"),
     ].join("\n");
+    // The index body is trusted generated HTML rather than a Document AST, so
+    // retain the complete theme conservatively and still compile it through
+    // the same AOT slice path as article pages.
+    const indexStyle = classlessTheme.rules.map((rule) => rule.id);
+    const indexCss = slicePerPage(classlessTheme, [{
+      id: config.indexRoute,
+      usedRuleIds: indexStyle,
+    }], {
+      activeContexts: ["dark", "narrow", "high-contrast"],
+      scopePrefix: () => "",
+    }).artefacts.get(config.indexRoute)!.css;
 
     yield page(
       config.indexRoute,
@@ -105,10 +122,13 @@ const blogSurface = defineStage({
         siteTitle: config.siteTitle,
         siteHref: indexUrl,
         headHtml: indexHead,
+        styleCss: indexCss,
+        supportsDarkMode: true,
         bodyHtml: indexBody,
       }),
       meta(config.siteTitle, config.siteDescription, indexUrl),
       provenance,
+      indexStyle,
     ) as never;
 
     yield page(
@@ -193,11 +213,12 @@ function page(
   html: string,
   pageMeta: PageMeta,
   provenance: OutputProvenance,
+  usedStyle: RenderedPage["usedStyle"] = [],
 ): RenderedPage {
   return {
     route,
     html,
-    usedStyle: [],
+    usedStyle,
     usedIslands: [],
     usedAssets: [],
     meta: pageMeta,

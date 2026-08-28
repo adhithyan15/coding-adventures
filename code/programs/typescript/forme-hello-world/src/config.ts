@@ -65,6 +65,7 @@ import sourceFs from "@coding-adventures/forme-source-fs";
 import parseMarkdown from "@coding-adventures/forme-parse-markdown";
 import router from "@coding-adventures/forme-router";
 import renderStatic from "@coding-adventures/forme-render-static";
+import classlessTheme from "@coding-adventures/forme-theme-classless";
 import emitFs from "@coding-adventures/forme-emit-fs";
 
 /** Inputs to {@link makePipelineConfig}. */
@@ -162,6 +163,8 @@ export function makePipelineConfig(
         stage:  renderStatic,
         config: {
           siteTitle: "forme-hello-world",
+          style: classlessTheme,
+          activeStyleContexts: ["dark", "narrow", "high-contrast"],
         },
       },
 

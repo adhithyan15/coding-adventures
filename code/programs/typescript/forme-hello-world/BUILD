@@ -51,6 +51,9 @@ cd ../../../packages/typescript/forme-capability && npm install --silent
 cd ../../../packages/typescript/forme-stage && npm install --silent
 cd ../../../packages/typescript/forme-aot-meta-link-tags && npm install --silent
 cd ../../../packages/typescript/forme-aot-rss-discovery-link && npm install --silent
+cd ../../../packages/typescript/forme-style-ir && npm install --silent
+cd ../../../packages/typescript/forme-style-to-css && npm install --silent
+cd ../../../packages/typescript/forme-aot-css-slicer && npm install --silent
 cd ../../../packages/typescript/blake2b && npm install --silent
 cd ../../../packages/typescript/forme-identity && npm install --silent
 cd ../../../packages/typescript/forme-cache && npm install --silent
@@ -64,6 +67,7 @@ cd ../../../packages/typescript/forme-source-fs && npm install --silent
 cd ../../../packages/typescript/forme-parse-markdown && npm install --silent
 cd ../../../packages/typescript/forme-router && npm install --silent
 cd ../../../packages/typescript/forme-render-static && npm install --silent
+cd ../../../packages/typescript/forme-theme-classless && npm install --silent
 cd ../../../packages/typescript/forme-emit-fs && npm install --silent
 npm install --silent
 npx vitest run

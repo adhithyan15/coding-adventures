@@ -1,8 +1,9 @@
 # @coding-adventures/forme-render-static
 
 Forme render stage: `Stream<ContentNode>` → `Stream<RenderedPage>`.
-Wraps [`@coding-adventures/document-ast-to-html`](../document-ast-to-html)
-and injects a minimal classless HTML5 theme.
+It wraps [`@coding-adventures/document-ast-to-html`](../document-ast-to-html),
+matches a resolved Style IR document, and compiles only the matched rules
+through Forme's AOT CSS slicer.
 
 Page-rendering branch of the Forme blog DAG. It consumes routed nodes
 and feeds the `forme-emit-fs` writer.
@@ -15,7 +16,7 @@ import render from "@coding-adventures/forme-render-static";
 render.consumes      // streamOf(Kinds.ContentNode)
 render.produces      // streamOf(Kinds.RenderedPage)
 render.capabilities  // []  ← pure transform
-render.configSchema  // siteTitle, siteUrl, siteHomeRoute, rssRoute, atomRoute
+render.configSchema  // style, activeStyleContexts, site metadata
 ```
 
 ## What it does
@@ -29,11 +30,14 @@ For each input `ContentNode`:
    `document-ast-to-html`.
 3. **Derive title** via the three-step fallback:
    `frontmatter.title` → first `<h1>` text → slug.
-4. **Compose public metadata** when `siteUrl` is configured: description,
+4. **Match Style IR** against the HTML element tree and record source-ordered
+   rule IDs in `RenderedPage.usedStyle`.
+5. **Slice CSS** through `forme-aot-css-slicer`, with only matched rules and
+   active contexts compiled for this page.
+6. **Compose public metadata** when `siteUrl` is configured: description,
    canonical URL, project-page-safe site navigation, and RSS/Atom discovery.
-5. **Wrap** the body in a self-contained HTML5 document with the
-   classless theme CSS inlined in `<style>`.
-6. **Emit** a `RenderedPage` carrying the route, full HTML, derived title,
+7. **Wrap** the body in a theme-agnostic HTML5 shell with sliced CSS inlined.
+8. **Emit** a `RenderedPage` carrying the route, full HTML, derived title,
    and revision-aware provenance for the input node. The legacy `source`
    identity is retained temporarily for v1.0 consumers.
 
@@ -49,16 +53,14 @@ parse → router ┬→ render → emit
 Both branches read the same `ContentNode.route`; URL templates belong only
 to `forme-router`.
 
-## v0 simplifications (documented)
+## Current boundaries
 
-- **Single hard-coded classless theme.** Replaced when FM04 (Style IR)
-  lands and a `forme-render-themed` sibling stage starts consuming a
-  `StyleDocument`.
+- **Themes must be resolved.** Compose named theme overlays before rendering;
+  a `StyleDocument` with non-null `theme` is rejected rather than guessed.
 - **Routed input is required.** This keeps one canonical URL decision across
   all product branches.
-- **`usedStyle` / `usedIslands` / `usedAssets` all empty.** Driving the
-  AOT bundler's smallest-artifact decisions (FM06) needs all three;
-  static rendering doesn't have the inputs yet.
+- **`usedIslands` / `usedAssets` remain empty.** Interactivity and asset
+  extraction are separate roadmap items.
 - **OpenGraph / structured metadata still empty.** Description and canonical
   URL are populated when configured; social cards and structured data remain
   later work.
@@ -79,23 +81,25 @@ frontmatter.title (non-empty string)
 `code`, `emphasis`, `strong`, soft/hard breaks → space). Less-common
 inline kinds fall through to recursion or are ignored.
 
-## Theme
+## Style IR and themes
 
-The classless CSS is a hand-rolled minimum:
+The renderer owns no visual defaults. Pass any resolved `StyleDocument`, or
+use [`forme-theme-classless`](../forme-theme-classless) for the reusable
+Coding Adventures prose theme. Matching is deterministic and supports Style
+IR identity, structural, position, and composition selectors. Trusted raw
+HTML conservatively retains the full theme because its elements are opaque to
+the Document AST.
 
-- System font stack (no web-font request)
-- `max-width: 38rem` reading column (60–75 character measure)
-- Defaults for headings, lists, code (inline + block), blockquote,
-  hr, table, images
-- Light-mode only (dark mode is a v0.2 concern)
-
-Inlined in `<style>` so a single-file build needs no external CSS
-request — important for first-paint on cold caches.
+The default active contexts are `screen` and `dark`. Configure
+`activeStyleContexts` to add `narrow`, `high-contrast`, or other declared
+contexts. Dark rules compile to `prefers-color-scheme: dark` media queries.
 
 ## Config
 
 ```ts
 interface RenderStaticConfig {
+  style?:               StyleDocument; // resolved (`theme: null`)
+  activeStyleContexts?: string[];      // defaults to screen + dark
   siteTitle?:     string;   // header anchor text; empty → no header
   siteUrl?:       string;   // public deployment base, including project prefix
   siteHomeRoute?: string;   // route used by the site-title link
@@ -115,6 +119,8 @@ interface RenderStaticConfig {
 - `@coding-adventures/forme-aot-meta-link-tags` — description and canonical
   head tags.
 - `@coding-adventures/forme-aot-rss-discovery-link` — RSS/Atom discovery tags.
+- `@coding-adventures/forme-style-ir` — validation and selector contracts.
+- `@coding-adventures/forme-aot-css-slicer` — per-page CSS compilation.
 - `@coding-adventures/gfm-parser` — **test only** (round-trip
   fixtures use the real parser).
 

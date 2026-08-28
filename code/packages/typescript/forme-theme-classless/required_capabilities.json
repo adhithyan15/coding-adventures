@@ -1,0 +1,5 @@
+{
+  "package": "typescript/forme-theme-classless",
+  "capabilities": [],
+  "justification": "Exports an immutable StyleDocument value and performs no I/O."
+}

@@ -33,6 +33,7 @@ import parseMarkdown  from "@coding-adventures/forme-parse-markdown";
 import router         from "@coding-adventures/forme-router";
 import collectChronological from "@coding-adventures/forme-collect-chronological";
 import renderStatic   from "@coding-adventures/forme-render-static";
+import classlessTheme from "@coding-adventures/forme-theme-classless";
 import emitFs         from "@coding-adventures/forme-emit-fs";
 import blogSurface    from "./surface-stage.ts";
 import type { PipelineConfig } from "@coding-adventures/forme-pipeline-config";
@@ -78,6 +79,8 @@ const config: PipelineConfig = {
         siteHomeRoute: "/blog/index.html",
         rssRoute: "/blog/rss.xml",
         atomRoute: "/blog/atom.xml",
+        style: classlessTheme,
+        activeStyleContexts: ["dark", "narrow", "high-contrast"],
       },
     },
     {
