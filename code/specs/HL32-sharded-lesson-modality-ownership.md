@@ -45,6 +45,11 @@ All three projections must agree exactly. Subset checks are insufficient: they l
 cleanly deleted lesson owner or a stale generated owner survive undetected. The
 reader checks directory and direct-child types, names, and case-fold uniqueness and
 compares these independent identity sets before it opens lesson owner bytes.
+The narration projection is the reusable
+`narrationLessonIdentityIndex(root, expectedLanguages)` API in
+`generated-hash-shards.ts`, rather than a modality-private filesystem reader.
+Future generated-owner gates consume the same exact-language, safe-identity, and
+global duplicate/case-fold boundary.
 
 Each opened file passes the guarded ledger boundary. Owners must be canonical
 two-space JSON with one trailing newline, contain exact safe keys, and be direct
