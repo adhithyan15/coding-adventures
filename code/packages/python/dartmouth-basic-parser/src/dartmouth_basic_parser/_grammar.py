@@ -253,28 +253,38 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=263,
+            line_number=264,
         ),
         GrammarRule(
             name='data_stmt',
             body=
             Sequence(elements=[
                 Literal(value='DATA'),
-                RuleReference(name='NUMBER', is_token=True),
+                Group(element=
+                    Alternation(choices=[
+                        RuleReference(name='NUMBER', is_token=True),
+                        RuleReference(name='STRING', is_token=True),
+                    ]),
+                ),
                 Repetition(element=
                     Sequence(elements=[
                         RuleReference(name='COMMA', is_token=True),
-                        RuleReference(name='NUMBER', is_token=True),
+                        Group(element=
+                            Alternation(choices=[
+                                RuleReference(name='NUMBER', is_token=True),
+                                RuleReference(name='STRING', is_token=True),
+                            ]),
+                        ),
                     ]),
                 ),
             ]),
-            line_number=265,
+            line_number=266,
         ),
         GrammarRule(
             name='restore_stmt',
             body=
             Literal(value='RESTORE'),
-            line_number=267,
+            line_number=268,
         ),
         GrammarRule(
             name='dim_stmt',
@@ -289,7 +299,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=280,
+            line_number=281,
         ),
         GrammarRule(
             name='dim_decl',
@@ -306,7 +316,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ),
                 RuleReference(name='RPAREN', is_token=True),
             ]),
-            line_number=282,
+            line_number=283,
         ),
         GrammarRule(
             name='def_stmt',
@@ -320,7 +330,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='EQ', is_token=True),
                 RuleReference(name='expr', is_token=False),
             ]),
-            line_number=295,
+            line_number=296,
         ),
         GrammarRule(
             name='variable',
@@ -340,7 +350,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ]),
                 RuleReference(name='NAME', is_token=True),
             ]),
-            line_number=312,
+            line_number=313,
         ),
         GrammarRule(
             name='expr',
@@ -359,7 +369,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=335,
+            line_number=336,
         ),
         GrammarRule(
             name='term',
@@ -378,7 +388,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=337,
+            line_number=338,
         ),
         GrammarRule(
             name='power',
@@ -392,7 +402,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
             ]),
-            line_number=343,
+            line_number=344,
         ),
         GrammarRule(
             name='unary',
@@ -404,7 +414,7 @@ PARSER_GRAMMAR = ParserGrammar(
                 ]),
                 RuleReference(name='primary', is_token=False),
             ]),
-            line_number=348,
+            line_number=349,
         ),
         GrammarRule(
             name='primary',
@@ -431,7 +441,7 @@ PARSER_GRAMMAR = ParserGrammar(
                     RuleReference(name='RPAREN', is_token=True),
                 ]),
             ]),
-            line_number=366,
+            line_number=367,
         ),
     ],
 )

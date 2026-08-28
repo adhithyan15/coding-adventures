@@ -200,24 +200,30 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "variable" },
         ] } },
     ] },
-    lineNumber: 263,
+    lineNumber: 264,
   },
   {
     name: "data_stmt",
     body: { type: "sequence", elements: [
       { type: "literal", value: "DATA" },
-      { type: "token_reference", name: "NUMBER" },
+      { type: "group", element: { type: "alternation", choices: [
+          { type: "token_reference", name: "NUMBER" },
+          { type: "token_reference", name: "STRING" },
+        ] } },
       { type: "repetition", element: { type: "sequence", elements: [
           { type: "token_reference", name: "COMMA" },
-          { type: "token_reference", name: "NUMBER" },
+          { type: "group", element: { type: "alternation", choices: [
+              { type: "token_reference", name: "NUMBER" },
+              { type: "token_reference", name: "STRING" },
+            ] } },
         ] } },
     ] },
-    lineNumber: 265,
+    lineNumber: 266,
   },
   {
     name: "restore_stmt",
     body: { type: "literal", value: "RESTORE" },
-    lineNumber: 267,
+    lineNumber: 268,
   },
   {
     name: "dim_stmt",
@@ -229,7 +235,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "dim_decl" },
         ] } },
     ] },
-    lineNumber: 280,
+    lineNumber: 281,
   },
   {
     name: "dim_decl",
@@ -243,7 +249,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "token_reference", name: "RPAREN" },
     ] },
-    lineNumber: 282,
+    lineNumber: 283,
   },
   {
     name: "def_stmt",
@@ -256,7 +262,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "EQ" },
       { type: "rule_reference", name: "expr" },
     ] },
-    lineNumber: 295,
+    lineNumber: 296,
   },
   {
     name: "variable",
@@ -273,7 +279,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       ] },
       { type: "token_reference", name: "NAME" },
     ] },
-    lineNumber: 312,
+    lineNumber: 313,
   },
   {
     name: "expr",
@@ -287,7 +293,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "term" },
         ] } },
     ] },
-    lineNumber: 335,
+    lineNumber: 336,
   },
   {
     name: "term",
@@ -301,7 +307,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "power" },
         ] } },
     ] },
-    lineNumber: 337,
+    lineNumber: 338,
   },
   {
     name: "power",
@@ -312,7 +318,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "power" },
         ] } },
     ] },
-    lineNumber: 343,
+    lineNumber: 344,
   },
   {
     name: "unary",
@@ -323,7 +329,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       ] },
       { type: "rule_reference", name: "primary" },
     ] },
-    lineNumber: 348,
+    lineNumber: 349,
   },
   {
     name: "primary",
@@ -349,7 +355,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         { type: "token_reference", name: "RPAREN" },
       ] },
     ] },
-    lineNumber: 366,
+    lineNumber: 367,
   },
 ],
 };
