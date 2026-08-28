@@ -1,5 +1,10 @@
 [package]
 name = "text-flow"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Device-independent Unicode text-flow analysis for grapheme geometry, bidi runs, and line-break opportunities."
+
+[dependencies]
+icu_properties = { version = "2.3.0", features = ["unicode_bidi"] }
+icu_segmenter = { version = "2.3.0", features = ["compiled_data", "unstable"] }
+unicode-bidi = "0.3.18"

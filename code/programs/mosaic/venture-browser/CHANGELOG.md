@@ -1,5 +1,13 @@
 # Changelog
 
+## Generated Unicode text conformance
+
+- Promoted shared text flow from handwritten browser heuristics to generated
+  UAX #9/#14/#29 data while preserving the host-neutral analyzer contract.
+- Added bidi isolate/embedding controls, the Unicode 17 full line-break state
+  machine, Thai/Lao/Khmer dictionary wrapping, diagnostics, and real-page
+  acceptance shared by every available host.
+
 ## [0.1.0] - Unreleased
 
 ### Fixed

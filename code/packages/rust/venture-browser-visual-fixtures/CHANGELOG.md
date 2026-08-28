@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Expanded the international page with bidi isolate/embedding controls and
+  no-space Thai, Lao, and Khmer paragraphs that must wrap through shared
+  Unicode dictionary boundaries.
+
 ## Unreleased
 
 - Added a reusable isolated GPU layer scene and pixel oracle covering overlap
