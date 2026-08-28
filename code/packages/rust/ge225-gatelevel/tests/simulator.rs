@@ -33,6 +33,9 @@ fn assert_core_matches(gate: &Ge225GateLevel, functional: &Functional) {
     assert_eq!(gate.ir, functional.ir);
     assert_eq!(gate.overflow, functional.overflow);
     assert_eq!(gate.parity_error, functional.parity_error);
+    assert_eq!(gate.decimal_mode, functional.decimal_mode);
+    assert_eq!(gate.decimal_carry, functional.decimal_carry);
+    assert_eq!(gate.clock_sixths, functional.clock_sixths);
     assert_eq!(gate.n_ready, functional.n_ready);
     assert_eq!(gate.selected_x_group, functional.selected_x_group);
     assert_eq!(gate.halted, functional.halted);
@@ -378,4 +381,200 @@ fn encoder_matches_the_functional_instruction_layout() {
     assert!(encode_instruction(0o40, 0, 0).is_none());
     assert!(encode_instruction(0, 4, 0).is_none());
     assert!(encode_instruction(0, 0, 0o20000).is_none());
+}
+
+fn bcd(negative: bool, flagged: bool, digits: i32) -> i32 {
+    let hundreds = digits / 100;
+    let tens = (digits / 10) % 10;
+    let ones = digits % 10;
+    (if negative { 1 << 19 } else { 0 })
+        | (if flagged { 1 << 18 } else { 0 })
+        | (hundreds << 12)
+        | (tens << 6)
+        | ones
+}
+
+#[test]
+fn decimal_single_add_subtract_and_one_words_use_gate_bcd() {
+    let program = [
+        assemble_fixed("SET_DECMODE").unwrap(),
+        instruction(0o00, 0, 0o400),
+        instruction(0o01, 0, 0o401),
+        instruction(0o00, 0, 0o400),
+        instruction(0o01, 0, 0o402),
+        assemble_fixed("SBO").unwrap(),
+        assemble_fixed("ADO").unwrap(),
+        assemble_fixed("SET_BINMODE").unwrap(),
+    ];
+    let (mut gate, mut functional) = machines(&program);
+    for (address, word) in [
+        (0o400, bcd(false, true, 444)),
+        (0o401, bcd(false, false, 333)),
+        (0o402, bcd(true, false, 667)),
+    ] {
+        gate.write_word(address, word).unwrap();
+        functional.write_word(address, word).unwrap();
+    }
+    run_lockstep(&mut gate, &mut functional, program.len());
+    assert!(!gate.get_state().decimal_mode);
+    assert_eq!(gate.get_state().a, bcd(false, true, 111));
+}
+
+#[test]
+fn decimal_double_operations_and_complements_run_in_lockstep() {
+    let program = [
+        assemble_fixed("SET_DECMODE").unwrap(),
+        instruction(0o10, 0, 0o400),
+        instruction(0o11, 0, 0o402),
+        instruction(0o10, 0, 0o400),
+        instruction(0o12, 0, 0o402),
+        instruction(0o10, 0, 0o400),
+        instruction(0o11, 0, 0o404),
+    ];
+    let (mut gate, mut functional) = machines(&program);
+    for (address, word) in [
+        (0o400, bcd(false, true, 543)),
+        (0o401, bcd(false, false, 210)),
+        (0o402, bcd(false, true, 123)),
+        (0o403, bcd(false, false, 456)),
+        (0o404, bcd(true, true, 876)),
+        (0o405, bcd(false, false, 544)),
+    ] {
+        gate.write_word(address, word).unwrap();
+        functional.write_word(address, word).unwrap();
+    }
+    run_lockstep(&mut gate, &mut functional, program.len());
+    assert_eq!(gate.get_state().a, bcd(false, true, 419));
+    assert_eq!(gate.get_state().q, bcd(false, false, 754));
+}
+
+#[test]
+fn decimal_carry_overflow_and_clear_latch_match_the_oracle() {
+    let program = [
+        assemble_fixed("SET_DECMODE").unwrap(),
+        instruction(0o00, 0, 0o400),
+        instruction(0o01, 0, 0o401),
+        instruction(0o00, 0, 0o402),
+        instruction(0o02, 0, 0o403),
+        instruction(0o00, 0, 0o404),
+        instruction(0o01, 0, 0o405),
+    ];
+    let (mut gate, mut functional) = machines(&program);
+    for (address, word) in [
+        (0o400, bcd(false, false, 999)),
+        (0o401, bcd(false, false, 1)),
+        (0o402, bcd(false, false, 0)),
+        (0o403, bcd(false, false, 1)),
+        (0o404, bcd(false, true, 999)),
+        (0o405, bcd(false, true, 1)),
+    ] {
+        gate.write_word(address, word).unwrap();
+        functional.write_word(address, word).unwrap();
+    }
+    run_lockstep(&mut gate, &mut functional, program.len());
+    assert!(gate.get_state().overflow);
+    gate.clear_decimal_carry();
+    functional.clear_decimal_carry();
+    assert_core_matches(&gate, &functional);
+}
+
+#[test]
+fn seeded_decimal_vectors_match_the_functional_oracle() {
+    let mut program = vec![assemble_fixed("SET_DECMODE").unwrap()];
+    let mut operands = Vec::new();
+    let mut seed = 0x225_u32;
+    for vector in 0..48_i32 {
+        seed = seed.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+        let left_digits = (seed % 1_000) as i32;
+        seed = seed.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+        let right_digits = (seed % 1_000) as i32;
+        let flagged = vector % 3 != 0;
+        let base = 0o3000 + vector * 2;
+        operands.push((base, bcd(flagged && vector & 1 != 0, flagged, left_digits)));
+        operands.push((
+            base + 1,
+            bcd(
+                flagged && vector & 2 != 0,
+                flagged && vector % 5 == 0,
+                right_digits,
+            ),
+        ));
+        program.push(instruction(0o00, 0, base));
+        program.push(instruction(
+            if vector & 1 == 0 { 0o01 } else { 0o02 },
+            0,
+            base + 1,
+        ));
+    }
+    let (mut gate, mut functional) = machines(&program);
+    for (address, word) in operands {
+        gate.write_word(address, word).unwrap();
+        functional.write_word(address, word).unwrap();
+    }
+    run_lockstep(&mut gate, &mut functional, program.len());
+}
+
+#[test]
+fn invalid_decimal_words_fail_before_clocking_any_state() {
+    for (accumulator, operand, expected) in [
+        (
+            bcd(false, true, 123),
+            (1 << 18) | (0x0a << 12),
+            Ge225GateError::InvalidBcd {
+                word: (1 << 18) | (0x0a << 12),
+            },
+        ),
+        (
+            bcd(false, false, 123),
+            bcd(false, true, 456),
+            Ge225GateError::FlaggedDecimalOperand { double: false },
+        ),
+    ] {
+        let program = [
+            assemble_fixed("SET_DECMODE").unwrap(),
+            instruction(0o00, 0, 0o400),
+            instruction(0o01, 0, 0o401),
+        ];
+        let (mut gate, _) = machines(&program);
+        gate.write_word(0o400, accumulator).unwrap();
+        gate.write_word(0o401, operand).unwrap();
+        gate.step().unwrap();
+        gate.step().unwrap();
+        let before = gate.get_state();
+        assert_eq!(gate.step().unwrap_err(), expected);
+        assert_eq!(gate.get_state(), before);
+    }
+}
+
+#[test]
+fn real_time_clock_register_and_wrap_match_the_oracle() {
+    let program = [
+        assemble_fixed("LAC").unwrap(),
+        instruction(0o00, 0, 0o400),
+        assemble_fixed("LCA").unwrap(),
+    ];
+    let (mut gate, mut functional) = machines(&program);
+    gate.set_clock_sixths(0o1205701).unwrap();
+    functional.set_clock_sixths(0o1205701).unwrap();
+    gate.write_word(0o400, (1 << 19) | 0o0772200).unwrap();
+    functional.write_word(0o400, (1 << 19) | 0o0772200).unwrap();
+    run_lockstep(&mut gate, &mut functional, program.len());
+    assert_eq!(gate.get_state().clock_sixths, 0o0772200);
+
+    for (start, ticks) in [
+        (24 * 60 * 60 * 6 - 1, 1),
+        ((1 << 19) - 1, 1),
+        (17, u64::MAX),
+    ] {
+        gate.set_clock_sixths(start).unwrap();
+        functional.set_clock_sixths(start).unwrap();
+        gate.advance_clock_sixths(ticks);
+        functional.advance_clock_sixths(ticks);
+        assert_core_matches(&gate, &functional);
+    }
+    assert!(matches!(
+        gate.set_clock_sixths(-1),
+        Err(Ge225GateError::InvalidClock { value: -1 })
+    ));
+    assert!(gate.set_clock_sixths(1 << 19).is_err());
 }
