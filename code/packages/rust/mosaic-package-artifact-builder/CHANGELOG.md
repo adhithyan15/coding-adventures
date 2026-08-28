@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - narrow the `HostProgressRing` degradation to also exclude Flutter (#13176)
+
+Flutter now lowers `HostProgressRing` to a real native
+`CircularProgressIndicator` (`mosaic-emit-flutter`). Narrowed the
+`("HostProgressRing", ...)` arm in `collect_native_degradations` from
+`backend != Backend::Xaml` to also exclude `Backend::Flutter`, matching
+`Path`'s own per-backend narrowing pattern. Compose and Qt (last — no
+off-the-shelf circular determinate control) remain to narrow in
+follow-up PRs.
+
 ## [Unreleased] - narrow the `HostProgressRing` degradation to exclude XAML (#13176)
 
 XAML now lowers `HostProgressRing` to a real native `ProgressRing`

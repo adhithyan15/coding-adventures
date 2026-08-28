@@ -2067,6 +2067,9 @@ fn emit_widget_tree(
     if node.tag == "HostSlider" {
         return emit_host_slider(node, indent, component, emits);
     }
+    if node.tag == "HostProgressRing" {
+        return emit_host_progress_ring(node, indent, part_styles);
+    }
     if node.tag == "HostScroll" {
         return emit_host_scroll(node, indent, part_styles, component, emits, ctx);
     }
@@ -3929,6 +3932,91 @@ fn host_slider_event_args(emit: &EmitDecl) -> Result<String, PipelineEmitError> 
         })
         .collect::<Result<Vec<_>, _>>()
         .map(|parts| parts.join(", "))
+}
+
+/// Lower `HostProgressRing` to Flutter's native `CircularProgressIndicator`
+/// in its determinate form (`value: fraction`) — the real accessible
+/// progress semantics and native visuals a `Box`+`Box` CSS conic-gradient
+/// trick can't provide (#13176). The same widget already renders
+/// indeterminate for `Icon(glyph: "spinner")` (see
+/// `semantic_glyph_flutter_widget`); the determinate form is the
+/// identical widget with an explicit `value:` argument.
+///
+/// Unlike WinUI's `ProgressRing` (real `Width`/`Height`
+/// DependencyProperties), `CircularProgressIndicator` has no size
+/// parameters of its own — it sizes to fill whatever constraints its
+/// parent gives it. `Path`'s `CustomPaint` circles hit an analogous
+/// gap; here that's `SizedBox(width:, height:, child: ...)`, reading
+/// the same `width`/`height` style props every other primitive's
+/// part-style lookup already resolves — omitted from the `SizedBox`
+/// args entirely when unset, matching how every other Box-style
+/// sizing prop in this file only emits what's actually styled.
+///
+/// `value` is required and supports the same `Number`/`SlotRef`/`Expr`
+/// three-way binding every other numeric prop has — unlike `Path`'s
+/// geometry props, this MUST support live binding, since the entire
+/// point is rendering a live `ring-percent-value`. Mosaic's `value` is
+/// a 0..100 percent; Flutter's `value` is a 0.0..1.0 fraction, so this
+/// divides by 100.0 in the generated Dart.
+fn emit_host_progress_ring(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let value_expr = required_progress_ring_value(node)?;
+
+    let style_props = node
+        .part_name
+        .as_deref()
+        .and_then(|p| part_styles.get(p).map(String::as_str))
+        .unwrap_or("");
+    let m = parse_style_props(style_props);
+    let mut sized_args = Vec::new();
+    if let Some(w) = m.get("width") {
+        sized_args.push(format!("width: {}", parse_pixel_value(w)));
+    }
+    if let Some(h) = m.get("height") {
+        sized_args.push(format!("height: {}", parse_pixel_value(h)));
+    }
+    sized_args.push(format!(
+        "child: CircularProgressIndicator(value: ({value_expr}).toDouble() / 100.0)"
+    ));
+    let sized = format!("SizedBox({})", sized_args.join(", "));
+
+    let output = match find_prop_value(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => format!(
+            "Semantics(label: \"{}\", child: {sized})",
+            escape_dart_string(label)
+        ),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field)?;
+            format!("Semantics(label: {field}, child: {sized})")
+        }
+        _ => sized,
+    };
+
+    Ok(format!("{pad}{output}\n"))
+}
+
+/// Read the required `value` prop's `Number`/`SlotRef`/`Expr` three-way
+/// binding — a missing prop is a clear compile error, not a silent
+/// default (unlike `HostSlider`'s optional `min`/`max`/`step`, which
+/// fall back to a sensible default when absent).
+fn required_progress_ring_value(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    match find_prop_value(node, "value") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field)?;
+            Ok(field)
+        }
+        Some(LayoutPropValue::Number(number)) => Ok(number.to_string()),
+        Some(LayoutPropValue::Expr(expression)) => Ok(expression.clone()),
+        _ => Err(PipelineEmitError::UnknownPrimitive(
+            "HostProgressRing missing required prop 'value:'".to_string(),
+        )),
+    }
 }
 
 /// `HostScroll` → `SingleChildScrollView`. Multi-child case wraps
@@ -10362,5 +10450,126 @@ mod tests {
         assert!(
             matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("not yet supported"))
         );
+    }
+
+    // ====================================================================
+    // #13176 — `HostProgressRing`
+    // ====================================================================
+
+    fn progress_ring_node(part: &str, props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: "HostProgressRing".into(),
+            part_name: Some(part.to_string()),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    fn value_prop(value: f64) -> LayoutProp {
+        LayoutProp {
+            name: "value".to_string(),
+            value: LayoutPropValue::Number(value),
+        }
+    }
+
+    #[test]
+    fn host_progress_ring_lowers_to_sized_circular_progress_indicator() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            progress_ring_node("ring-circle", vec![value_prop(42.0)]),
+        );
+        let s = style_with_part(
+            "X",
+            "ring-circle",
+            vec![
+                StyleProp {
+                    name: "width".into(),
+                    value: "34px".into(),
+                },
+                StyleProp {
+                    name: "height".into(),
+                    value: "34px".into(),
+                },
+            ],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(out.contains("SizedBox(width: 34"), "got:\n{out}");
+        assert!(out.contains("height: 34"), "got:\n{out}");
+        assert!(
+            out.contains("CircularProgressIndicator(value: (42).toDouble() / 100.0)"),
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_progress_ring_value_accepts_slot_binding() {
+        let m = component(
+            "X",
+            vec![slot("ring-percent-value", SlotType::Number, true)],
+            vec![],
+        );
+        let l = layout(
+            "X",
+            progress_ring_node(
+                "ring-circle",
+                vec![LayoutProp {
+                    name: "value".to_string(),
+                    value: LayoutPropValue::SlotRef("ring-percent-value".to_string()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("CircularProgressIndicator(value: (ringPercentValue).toDouble() / 100.0)"),
+            "value must accept a live slot binding (unlike Path's geometry props), got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_progress_ring_missing_value_is_a_clear_error() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", progress_ring_node("ring-circle", vec![]));
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnknownPrimitive(ref msg) if msg.contains("value")),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn host_progress_ring_a11y_label_lowers_to_semantics() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            progress_ring_node(
+                "ring-circle",
+                vec![
+                    value_prop(10.0),
+                    LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::String("Workspace progress".to_string()),
+                    },
+                ],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("Semantics(label: \"Workspace progress\", child: SizedBox("),
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_progress_ring_without_size_style_omits_sized_box_dimensions() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            progress_ring_node("ring-circle", vec![value_prop(50.0)]),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("SizedBox(child:"), "got:\n{out}");
+        assert!(!out.contains("width:"), "got:\n{out}");
+        assert!(!out.contains("height:"), "got:\n{out}");
     }
 }
