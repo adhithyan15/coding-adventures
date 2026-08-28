@@ -3449,7 +3449,7 @@ fn take_state_text(cursor: &mut TokenCursor) -> String {
             text.push_str(&value);
         }
     }
-    decode_state_line_breaks(text)
+    decode_mermaid_line_breaks(text)
 }
 
 fn decode_mermaid_entity(value: &str) -> String {
@@ -3462,7 +3462,7 @@ fn decode_mermaid_entity(value: &str) -> String {
     commonmark_parser::entities::decode_entity(&html_entity)
 }
 
-fn decode_state_line_breaks(text: String) -> String {
+fn decode_mermaid_line_breaks(text: String) -> String {
     let mut decoded = String::with_capacity(text.len());
     let mut remaining = text.as_str();
     while let Some(start) = remaining.find('<') {
@@ -3519,7 +3519,7 @@ fn take_state_multiline_note_text(cursor: &mut TokenCursor) -> Result<String, Pa
                 line.push_str(&value);
             }
         }
-        lines.push(decode_state_line_breaks(line));
+        lines.push(decode_mermaid_line_breaks(line));
         cursor.consume_if("NEWLINE");
     }
     cursor
@@ -4759,14 +4759,7 @@ fn take_sequence_line_text(cursor: &mut TokenCursor) -> String {
         text.push_str(&value);
         previous_end_column = Some(token.column + token.value.chars().count());
     }
-    let text = text
-        .replace("<br/>", "\n")
-        .replace("<br />", "\n")
-        .replace("<br>", "\n");
-    text.split('\n')
-        .map(str::trim)
-        .collect::<Vec<_>>()
-        .join("\n")
+    decode_mermaid_line_breaks(text)
 }
 
 fn take_sequence_wrapped_text(cursor: &mut TokenCursor) -> (String, SequenceTextWrap) {
@@ -9024,6 +9017,33 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_preserves_compact_wrap_punctuation_and_empty_messages() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nAlice->>Bob:wrap: Wrapped\nnote right of Bob:nowrap: Fixed\nBob->>Alice: -:<>,;# comment\nAlice->>Bob:\n",
+        )
+        .unwrap();
+
+        assert!(matches!(
+            &diagram.events[0],
+            SequenceEvent::Message { label, wrap: SequenceTextWrap::Wrap, .. }
+                if label == "Wrapped"
+        ));
+        assert!(matches!(
+            &diagram.events[1],
+            SequenceEvent::Note { text, wrap: SequenceTextWrap::NoWrap, .. }
+                if text == "Fixed"
+        ));
+        assert!(matches!(
+            &diagram.events[2],
+            SequenceEvent::Message { label, .. } if label == "-:<>,"
+        ));
+        assert!(matches!(
+            &diagram.events[3],
+            SequenceEvent::Message { label, .. } if label.is_empty()
+        ));
+    }
+
+    #[test]
     fn sequence_preserves_participant_alias_wrap_directives() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nparticipant API as wrap: A deliberately detailed public application programming interface\nactor User as nowrap: Banking User\n",
@@ -9036,6 +9056,24 @@ B//-A: reverse stick top
         assert_eq!(diagram.participants[0].label_wrap, SequenceTextWrap::Wrap);
         assert_eq!(diagram.participants[1].label.text, "Banking User");
         assert_eq!(diagram.participants[1].label_wrap, SequenceTextWrap::NoWrap);
+    }
+
+    #[test]
+    fn sequence_decodes_line_break_variants_in_participant_aliases() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant 1 as One<br>Two\nparticipant 2 as Three<br/>Four\nparticipant 3 as Five<br />Six\nparticipant 4 as Seven<br \t/>Eight\n",
+        )
+        .unwrap();
+
+        let labels: Vec<_> = diagram
+            .participants
+            .iter()
+            .map(|participant| participant.label.text.as_str())
+            .collect();
+        assert_eq!(
+            labels,
+            ["One\nTwo", "Three\nFour", "Five\nSix", "Seven\nEight"]
+        );
     }
 
     #[test]

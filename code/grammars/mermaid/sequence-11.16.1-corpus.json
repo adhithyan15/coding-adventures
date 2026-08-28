@@ -225,6 +225,30 @@
     {
       "id": "cross-central-connections",
       "source": "sequenceDiagram\nparticipant Alice\nparticipant Bob\nAlice ()-x() Bob: Cross message\nAlice ()--x() Bob: Dotted cross message"
+    },
+    {
+      "id": "line-break-variants",
+      "source": "sequenceDiagram\nparticipant 1 as multiline<br>text\nparticipant 2 as multiline<br/>text\nparticipant 3 as multiline<br />text\nparticipant 4 as multiline<br \t/>text\n1->>2: multiline<br>text\nnote right of 2: multiline<br>text\n2->>3: multiline<br/>text\nnote right of 3: multiline<br/>text\n3->>4: multiline<br />text\nnote right of 4: multiline<br />text\n4->>1: multiline<br \t/>text\nnote right of 1: multiline<br \t/>text"
+    },
+    {
+      "id": "nowrap-message-and-note-text",
+      "source": "sequenceDiagram\nparticipant 1\nparticipant 2\nparticipant 3\nparticipant 4\n1->>2: single-line text\nnote right of 2: single-line text\n2->>3:nowrap: single-line text\nnote right of 3:nowrap: single-line text\n3->>4: multiline<br/>text\nnote right of 4: multiline<br/>text\n4->>1:nowrap: multiline<br/>text\nnote right of 1:nowrap: multiline<br/>text"
+    },
+    {
+      "id": "wrapped-message-and-note-text",
+      "source": "sequenceDiagram\nparticipant 1\nparticipant 2\nparticipant 3\nparticipant 4\n1->>2:wrap: single-line text\nnote right of 2:wrap: single-line text\n2->>3:wrap: multiline<br/>text\nnote right of 3:wrap: multiline<br/>text"
+    },
+    {
+      "id": "special-character-message",
+      "source": "sequenceDiagram\nAlice->Bob: -:<>,;# comment"
+    },
+    {
+      "id": "special-character-note",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\nNote right of Bob: -:<>,;# comment"
+    },
+    {
+      "id": "empty-message-label",
+      "source": "sequenceDiagram\nAlice->>Bob:\nBob->>Alice:Got it!"
     }
   ],
   "invalid": [
