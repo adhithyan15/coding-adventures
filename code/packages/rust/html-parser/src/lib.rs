@@ -6196,7 +6196,7 @@ impl HtmlParser {
             }
             let whitespace = text
                 .chars()
-                .filter(|character| character.is_whitespace())
+                .filter(|character| is_html_whitespace(*character))
                 .collect::<String>();
             if whitespace.is_empty() {
                 return;
@@ -40288,6 +40288,65 @@ mod tests {
                 line: 1,
                 column: source.chars().count() + 1,
             })
+        );
+
+        let source = "<!doctype html><frameset> \u{a0}\u{2003}\r\n\t<frame></frameset>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let frameset = find_first_element_in_nodes(&output.document.children, "frameset").unwrap();
+        assert_eq!(frameset.children[0], Node::text(" \n\t"));
+        assert_eq!(element(&frameset.children[1]).name, "frame");
+        assert!(source.len() > source.chars().count());
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-char-in-frameset")
+                .count(),
+            1
+        );
+
+        let noframes = parse_html_with_diagnostics(
+            "<!doctype html><frameset><noframes>\u{a0}\u{2003}</noframes></frameset>",
+        )
+        .unwrap();
+        assert_eq!(
+            element_text_content(find_first_element_in_nodes(
+                &noframes.document.children,
+                "noframes",
+            )
+            .unwrap()),
+            "\u{a0}\u{2003}"
+        );
+
+        let mut unpositioned = HtmlParser::new();
+        let unpositioned_document = unpositioned.parse_tokens([
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("\u{a0} \u{2003}".to_string()),
+            Token::EndTag {
+                name: "frameset".to_string(),
+            },
+            Token::Eof,
+        ]);
+        let frameset =
+            find_first_element_in_nodes(&unpositioned_document.children, "frameset").unwrap();
+        assert_eq!(frameset.children, vec![Node::text(" ")]);
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-char-in-frameset")
+                .unwrap()
+                .position,
+            None
         );
     }
 
