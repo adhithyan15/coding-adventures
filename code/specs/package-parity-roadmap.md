@@ -9704,7 +9704,7 @@ squash auto-merge, and GitHub merged the PR at 2026-08-28T08:05:32Z as
 The active parity slot is therefore clear.
 
 The collision-checked schema-3 inventory on current exact `origin/main`
-`c750c8a4e87b8f3f6f2d0d6a3179b6980b39ce0a` records 15 established lanes,
+`5ffefdda23ad1c3ce0e3d285d859d3ed6bed2fc2` records 15 established lanes,
 1,386 implementation identities, 4,599 package slots, and 1,425 all-reported
 identities. The four bands are 175/265, 123/934, 169/2,126, and 919/12,866;
 Rust has 730 singletons, OCaml remains emerging at zero packages, and canonical
@@ -9728,10 +9728,11 @@ text-flow and Venture visual-fixture owners. No exact-main or live topology gap
 remains unowned, and current live PRs have zero exact overlap with the selected
 C# build-tool surfaces.
 
-The final pre-implementation refresh includes merged #13394, whose
-human-language-only changes leave the package inventory unchanged. Open #13403
-blocks the existing Venture visual-fixtures owner while it modifies that family;
-it creates no new package identity or owner.
+The final pre-implementation refresh includes merged #13394, #13402, #13403,
+and #13392. Their human-language and existing-package changes leave the package
+inventory unchanged. The #13403 merge clears the existing Venture
+visual-fixtures owner's live-path block without creating a new identity or
+owner.
 
 The dependency pass decomposes
 `build-tool-extra-ci-toolchain-declaration-remaining-engines` into eleven
