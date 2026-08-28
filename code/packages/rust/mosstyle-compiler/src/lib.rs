@@ -198,6 +198,11 @@ pub enum ErrorKind {
     UnresolvedToken,
     /// A transition names a property that is not declared in the part's base style.
     TransitionPropertyNotDeclared,
+    /// A property's value is not one of its restricted set of legal values
+    /// (currently only `elevation`, issue #12028 item 1) — distinct from
+    /// `UnknownProperty` (a bad property *name*), this is a bad *value* for
+    /// a property this compiler otherwise recognizes.
+    InvalidPropertyValue,
     /// The AST has an unexpected shape (internal error).
     InternalError,
 }
@@ -426,6 +431,20 @@ const VALID_STATES: &[&str] = &[
     // than from user input.
     "even", "odd",
 ];
+
+/// UI41 (issue #12028 item 1) — the two legal values of the `elevation`
+/// property, mosstyle's first typed/enum-restricted property. Every other
+/// property is freeform (a plain CSS-shaped string this compiler doesn't
+/// interpret); `elevation` expresses *intent* ("this part should look
+/// raised off the surface, or float above everything else") rather than a
+/// literal shadow shape, since native shadow primitives (WinUI's
+/// `ThemeShadow`, Compose's `Modifier.shadow`, Qt's `MultiEffect`) don't
+/// take CSS-style blur/spread/color parameters the way `box-shadow` does.
+/// `raised` covers every real usage in this repo today (cards, selected
+/// nav items, static panels); `overlay` has no current caller but is the
+/// natural second tier for modals/popovers/tooltips/dropdowns, which don't
+/// yet declare any shadow at all.
+const VALID_ELEVATION_VALUES: &[&str] = &["raised", "overlay"];
 
 // ===========================================================================
 // Tokenizer
@@ -847,6 +866,30 @@ pub fn validate(def: &StyleDef, part_map_json: Option<&str>) -> Result<(), Vec<C
                         state.state,
                         part.name,
                         VALID_STATES.join(", ")
+                    ),
+                });
+            }
+        }
+
+        // Validate `elevation`'s restricted value set (UI41, #12028 item 1)
+        // — the one property this compiler type-checks rather than passing
+        // through as a freeform string. Checked in both the base style and
+        // every state override, matching how every other per-part check
+        // above scans the whole part.
+        let elevation_props = part
+            .base
+            .iter()
+            .chain(part.states.iter().flat_map(|state| state.props.iter()));
+        for prop in elevation_props {
+            if prop.name == "elevation" && !VALID_ELEVATION_VALUES.contains(&prop.value.as_str())
+            {
+                errors.push(CompileError {
+                    kind: ErrorKind::InvalidPropertyValue,
+                    message: format!(
+                        "Invalid elevation value '{}' in part '{}' — valid values: {}",
+                        prop.value,
+                        part.name,
+                        VALID_ELEVATION_VALUES.join(", ")
                     ),
                 });
             }
@@ -1785,6 +1828,96 @@ mod tests {
         assert!(result.is_err());
         let errs = result.unwrap_err();
         assert!(errs.iter().any(|e| e.kind == ErrorKind::UnknownState));
+    }
+
+    /// UI41 (#12028 item 1) — `elevation: raised;` and `elevation:
+    /// overlay;` are the only two legal values, and compile cleanly.
+    #[test]
+    fn elevation_raised_and_overlay_are_valid() {
+        let src = r#"
+          style Card {
+            part root {
+              box-shadow: "0 1px 2px rgba(0,0,0,.15)" ;
+              elevation: raised ;
+            }
+            part popover {
+              elevation: overlay ;
+            }
+          }
+        "#;
+        let result = compile(src, None);
+        assert!(result.is_ok(), "expected clean compile, got {result:?}");
+    }
+
+    #[test]
+    fn elevation_invalid_value_is_a_clear_error() {
+        let src = r#"
+          style Card {
+            part root {
+              elevation: floating ;
+            }
+          }
+        "#;
+        let result = compile(src, None);
+        assert!(result.is_err());
+        let errs = result.unwrap_err();
+        assert!(errs
+            .iter()
+            .any(|e| e.kind == ErrorKind::InvalidPropertyValue));
+        assert!(errs.iter().any(|e| e.message.contains("floating")
+            && e.message.contains("raised")
+            && e.message.contains("overlay")));
+    }
+
+    /// A part with no `elevation` declared at all is unaffected — this is
+    /// today's behavior for every part in the codebase and must stay a
+    /// no-op, not an implicit default.
+    #[test]
+    fn elevation_absent_is_not_an_error() {
+        let src = r#"
+          style Card {
+            part root {
+              background: #ffffff ;
+            }
+          }
+        "#;
+        let result = compile(src, None);
+        assert!(result.is_ok(), "expected clean compile, got {result:?}");
+    }
+
+    /// `elevation` is checked in state overrides too, not just the base
+    /// style — the same "scan base + every state" shape every other
+    /// per-part check in `validate` already uses.
+    #[test]
+    fn elevation_is_validated_inside_state_overrides_too() {
+        let ok = r#"
+          style Card {
+            part root {
+              background: #ffffff ;
+              state hover {
+                elevation: overlay ;
+              }
+            }
+          }
+        "#;
+        assert!(compile(ok, None).is_ok());
+
+        let bad = r#"
+          style Card {
+            part root {
+              background: #ffffff ;
+              state hover {
+                elevation: sky-high ;
+              }
+            }
+          }
+        "#;
+        let result = compile(bad, None);
+        assert!(result.is_err());
+        assert!(result
+            .unwrap_err()
+            .iter()
+            .any(|e| e.kind == ErrorKind::InvalidPropertyValue));
     }
 
     #[test]

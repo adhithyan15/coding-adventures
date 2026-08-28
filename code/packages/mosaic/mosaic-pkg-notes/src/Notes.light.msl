@@ -63,6 +63,7 @@ style Notes {
     font-size      : 13 ;
     font-weight    : bold ;
     box-shadow     : "0 1px 2px rgba(60,45,25,.05), 0 4px 14px rgba(60,45,25,.05)" ;
+    elevation      : raised ;
   }
 
   part notes-row-off {
