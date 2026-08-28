@@ -36,6 +36,7 @@
     "datetime-saturday-weekend",
     "datetime-friday-weekend",
     "compact-display-mode",
+    "unpadded-day-only",
     "weekend-exclusions",
     "friday-start-weekend",
     "recurring-exclusions-leave-friday",

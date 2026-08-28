@@ -58,7 +58,7 @@
     {
       "id": "gantt",
       "headers": ["gantt"],
-      "status": "partial",
+      "status": "full",
       "ir": "temporal",
       "smoke_source": "gantt\ndateFormat YYYY-MM-DD\nsection Build\nTask :t1, 2026-01-01, 1d"
     },
