@@ -5632,10 +5632,22 @@
       "sound": "ai",
       "role": "vowel",
       "components": [
-        "ಐ  ai — independent vowel (word-initial)"
+        "a compact left spiral and lower bowl",
+        "a broad rounded right loop",
+        "a high arch ending at the open upper-left terminal"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn clockwise through the compact left spiral and around its lower bowl",
+        "without lifting, sweep through the join and around the broad right loop",
+        "without lifting, carry the high arch leftward and finish at the open upper-left terminal"
+      ],
+      "strokeOrderNote": "Three visible movements in one continuous pen-down run: the left spiral and bowl flow through the broad right loop before the high arch finishes at the open upper-left terminal.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-ai.gif, animation of Kannada independent vowel ಐ, 28 frames, 2.8 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ai.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಐ in one uninterrupted run: turn through the compact left spiral and lower bowl, sweep through the join and around the broad right loop, then carry the high arch leftward to the open upper-left terminal. The path is fitted to the bundled Noto Sans Kannada outline; handwritten spiral size, loop width, and arch height vary, but the zero-lift order remains the same."
+      }
     },
     {
       "glyph": "ಔ",

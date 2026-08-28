@@ -21,6 +21,7 @@ const KANNADA_U = DUCTUS[ductusKey("kannada", "ಉ")];
 const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
 const KANNADA_EE = DUCTUS[ductusKey("kannada", "ಏ")];
 const KANNADA_O = DUCTUS[ductusKey("kannada", "ಒ")];
+const KANNADA_AI = DUCTUS[ductusKey("kannada", "ಐ")];
 
 const OWNER_SCRIPTS = new Set(["kannada"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -146,6 +147,21 @@ describe("handwriting ductus", () => {
     ]);
     expect(KANNADA_O.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-o.gif",
+    );
+  });
+
+  it("Kannada ಐ carries its spiral, right loop, and high arch without lifting", () => {
+    expect(penLifts(KANNADA_AI)).toBe(0);
+    expect(KANNADA_AI.strokes).toHaveLength(1);
+    expect(
+      KANNADA_AI.strokes[0].segments.map((segment) => segment.label),
+    ).toEqual([
+      "turn clockwise through the compact left spiral and around its lower bowl",
+      "sweep through the join and around the broad right loop",
+      "carry the high arch leftward and finish at the open upper-left terminal",
+    ]);
+    expect(KANNADA_AI.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ai.gif",
     );
   });
 });
