@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-BOUCHE-05, FR-SOUND-MAIN-03, FR-LEX-TETE-02, FR-CULTURE-TETE-04, FR-SOUND-TETE-05, FR-CULTURE-OUI-04, FR-PRAGMATICS-SI-05]
 introduces:
   knowledge: [FR-LEX-VENTRE-07, FR-ETYMON-VENTRE-08]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-VENTRE-07, FR-ETYMON-VENTRE-08, FR-LEX-BOUCHE-05, FR-LEX-NEZ-03, FR-LEX-OEIL-01, FR-SOUND-MAIN-03, FR-LEX-CAFE-01, FR-LEX-AMI-01, FR-LEX-OEUF-07, FR-LEX-TETE-02, FR-CULTURE-TETE-04, FR-SOUND-TETE-05, FR-CULTURE-OUI-04, FR-PRAGMATICS-SI-05, FR-LEX-SEL-05, FR-LEX-PERSONNE-08]
 skills: [listening, speaking, reading]

@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fa131f9cfafc6f5b",
+  "sourceHash": "fnv1a64:2f5bd522d0d2e9d2",
   "lessons": [
     {
       "id": "FR-C25-comprendre",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3d0a8c0b84add36",
+      "sourceHash": "fnv1a64:6d8b262a4e6ebdd9",
       "notice": null,
       "blocks": [
         {
@@ -205,7 +205,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c31ea0673fa3e55",
+      "sourceHash": "fnv1a64:1d811e9afeacc5a4",
       "notice": null,
       "blocks": [
         {
@@ -379,7 +379,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bd9f6264e610bc4",
+      "sourceHash": "fnv1a64:b3c9f2695e2698b9",
       "notice": null,
       "blocks": [
         {
@@ -562,7 +562,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:003c5eab1ddf2f1b",
+      "sourceHash": "fnv1a64:e5b5c991c196e1a8",
       "notice": null,
       "blocks": [
         {

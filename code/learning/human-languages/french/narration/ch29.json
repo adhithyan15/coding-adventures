@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "The People You Introduce",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:220193efe18b704a",
+  "sourceHash": "fnv1a64:5f3289320f5d0980",
   "lessons": [
     {
       "id": "FR-C29-ami",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:062537a0241dafc9",
+      "sourceHash": "fnv1a64:c71f8a70f8667ac6",
       "notice": null,
       "blocks": [
         {
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2e90efec38020ec",
+      "sourceHash": "fnv1a64:10e13748637618a1",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9cf8f4ab6d04c4a",
+      "sourceHash": "fnv1a64:5b297e3ef5ff6b9f",
       "notice": null,
       "blocks": [
         {
@@ -398,7 +398,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cc3b4458e10daaa",
+      "sourceHash": "fnv1a64:7c1115beb11838c1",
       "notice": null,
       "blocks": [
         {

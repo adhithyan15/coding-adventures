@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bed21c4a10769e2e",
+  "sourceHash": "fnv1a64:c8088090a5484e16",
   "lessons": [
     {
       "id": "FR-C19-sil-vous-plait",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bf5f14296f59fbe",
+      "sourceHash": "fnv1a64:a96f28201509ab73",
       "notice": null,
       "blocks": [
         {

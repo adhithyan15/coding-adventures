@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03, FR-LEX-CHAT-04, FR-ETYMON-CHAT-05]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03, FR-LEX-CHAT-04, FR-ETYMON-CHAT-05]
 skills: [listening, speaking, reading]

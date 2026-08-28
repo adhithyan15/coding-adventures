@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-BEURRE-03, FR-LEX-FROMAGE-01]
 introduces:
   knowledge: [FR-LEX-SEL-05, FR-ETYMON-SEL-06]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-SEL-05, FR-ETYMON-SEL-06, FR-LEX-BEURRE-03, FR-LEX-FROMAGE-01]
 skills: [listening, speaking, reading]

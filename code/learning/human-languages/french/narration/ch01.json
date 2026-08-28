@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a89a44581b617bf4",
+  "sourceHash": "fnv1a64:fafd283a5ffbad32",
   "lessons": [
     {
       "id": "FR-C01-salut",
@@ -156,7 +156,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:640b9da0b3095721",
+      "sourceHash": "fnv1a64:f0f6c06ada169dd6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -259,7 +259,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:8c8cde1a6eb80361",
+      "sourceHash": "fnv1a64:c83d1461b3819eda",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -343,7 +343,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:11f19996e83bf254",
+      "sourceHash": "fnv1a64:1d4de683f6010fcf",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -436,7 +436,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:b0497135d19b0a65",
+      "sourceHash": "fnv1a64:a62601eb0e4706e4",
       "notice": {
         "modality": "pen",
         "needs": [

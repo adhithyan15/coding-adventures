@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Sitting, Standing, Opening, Closing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:caea5f6f319879ac",
+  "sourceHash": "fnv1a64:6ba5c0f753221d39",
   "lessons": [
     {
       "id": "FR-C27-sasseoir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f62364763b756bf2",
+      "sourceHash": "fnv1a64:8085079bccf724b4",
       "notice": null,
       "blocks": [
         {
@@ -236,7 +236,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d76fdc7c5ff27928",
+      "sourceHash": "fnv1a64:c28e70d764129151",
       "notice": null,
       "blocks": [
         {
@@ -441,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bca85177f6fa7951",
+      "sourceHash": "fnv1a64:9765b5a96abbf012",
       "notice": null,
       "blocks": [
         {
@@ -654,7 +654,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba99b875c7691d9b",
+      "sourceHash": "fnv1a64:dc6a120bc7e54756",
       "notice": null,
       "blocks": [
         {

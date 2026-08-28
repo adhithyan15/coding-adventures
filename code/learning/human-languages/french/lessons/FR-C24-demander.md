@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-PRENDRE-01, FR-ETYMON-MAIN-04, FR-LEX-MAIN-02]
 introduces:
   knowledge: [FR-LEX-DEMANDER-04, FR-ETYMON-DEMANDER-05, FR-FALSEFRIEND-DEMANDER-06]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-DEMANDER-04, FR-ETYMON-DEMANDER-05, FR-FALSEFRIEND-DEMANDER-06, FR-LEX-PRENDRE-01, FR-LEX-MAIN-02, FR-ETYMON-MAIN-04]
 skills: [listening, speaking, reading]

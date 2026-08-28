@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-VOULOIR-01]
 introduces:
   knowledge: [FR-LEX-POUVOIR-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [FR-CULTURE-POUVOIR-POLITE-REQUEST-01]
 practises:
   knowledge: [FR-LEX-POUVOIR-02, FR-LEX-VOULOIR-01]
 skills: [listening, speaking, reading]

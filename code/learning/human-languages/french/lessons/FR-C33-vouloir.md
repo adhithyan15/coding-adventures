@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-GRAMMAR-ESTCEQUE-02]
 introduces:
   knowledge: [FR-LEX-VOULOIR-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [FR-CULTURE-VOULOIR-REQUEST-REGISTER-01]
 practises:
   knowledge: [FR-LEX-VOULOIR-01, FR-GRAMMAR-ESTCEQUE-02]
 skills: [listening, speaking, reading]

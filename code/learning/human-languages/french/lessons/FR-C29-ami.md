@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-SUCRE-07, FR-ETYMON-SUCRE-08, FR-LEX-LAIT-05]
 introduces:
   knowledge: [FR-LEX-AMI-01, FR-GRAMMAR-ELISION-ARTICLE-02, FR-ETYMON-AMI-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-AMI-01, FR-GRAMMAR-ELISION-ARTICLE-02, FR-ETYMON-AMI-03, FR-LEX-SUCRE-07, FR-LEX-LAIT-05]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-LEVER-04, FR-LEX-DEBOUT-06, FR-LEX-ASSEOIR-01, FR-LEX-MARCHER-07, FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAINTENIR-05]
 introduces:
   knowledge: [FR-LEX-OUVRIR-07, FR-ETYMON-OUVRIR-08, FR-GRAMMAR-OUVRIR-ER-ENDINGS-09]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-OUVRIR-07, FR-ETYMON-OUVRIR-08, FR-GRAMMAR-OUVRIR-ER-ENDINGS-09, FR-LEX-LEVER-04, FR-LEX-DEBOUT-06, FR-LEX-ASSEOIR-01, FR-LEX-MARCHER-07, FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAINTENIR-05]
 skills: [listening, speaking, reading]

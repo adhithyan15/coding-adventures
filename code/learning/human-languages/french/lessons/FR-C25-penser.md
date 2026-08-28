@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-COMPRENDRE-01, FR-SOUND-NON-03]
 introduces:
   knowledge: [FR-LEX-PENSER-04, FR-ETYMON-PENSER-05]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-PENSER-04, FR-ETYMON-PENSER-05, FR-LEX-COMPRENDRE-01, FR-SOUND-NON-03]
 skills: [listening, speaking, reading]

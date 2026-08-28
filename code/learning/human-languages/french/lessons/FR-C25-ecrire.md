@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-COMPRENDRE-01, FR-LEX-PENSER-04, FR-LEX-LIRE-06, FR-ETYMON-LIRE-07, FR-LEX-MAIN-02, FR-ETYMON-MAIN-04, FR-LEX-PRENDRE-01, FR-LEX-AIMER-09]
 introduces:
   knowledge: [FR-LEX-ECRIRE-08, FR-ETYMON-ECRIRE-09]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-ECRIRE-08, FR-ETYMON-ECRIRE-09, FR-LEX-COMPRENDRE-01, FR-LEX-PENSER-04, FR-LEX-LIRE-06, FR-ETYMON-LIRE-07, FR-LEX-MAIN-02, FR-ETYMON-MAIN-04, FR-LEX-PRENDRE-01, FR-LEX-AIMER-09]
 skills: [listening, speaking, reading]

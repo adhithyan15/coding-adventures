@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-ENFANT-06, FR-SOUND-NON-03, FR-GRAMMAR-NEGATION-04, FR-LEX-AMI-01, FR-GRAMMAR-ELISION-ARTICLE-02, FR-LEX-FAMILLE-04]
 introduces:
   knowledge: [FR-LEX-PERSONNE-08, FR-ETYMON-PERSONNE-09]
+introduces_idioms: []
+introduces_senses: [FR-SENSE-PERSONNE-NOBODY-01]
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-PERSONNE-08, FR-ETYMON-PERSONNE-09, FR-SOUND-NON-03, FR-GRAMMAR-NEGATION-04, FR-LEX-ENFANT-06, FR-LEX-AMI-01, FR-GRAMMAR-ELISION-ARTICLE-02, FR-LEX-FAMILLE-04]
 skills: [listening, speaking, reading]

@@ -6,7 +6,7 @@
     {
       "language": "french",
       "chapter": 1,
-      "sourceHash": "fnv1a64:a89a44581b617bf4",
+      "sourceHash": "fnv1a64:fafd283a5ffbad32",
       "lessonIds": [
         "FR-C01-salut",
         "FR-W01-salut-observe",
@@ -29,7 +29,7 @@
       "text": "french/narration/ch01.txt",
       "json": "french/narration/ch01.json",
       "textHash": "fnv1a64:6831987d97e4d6b0",
-      "jsonHash": "fnv1a64:035d81f5d895a463"
+      "jsonHash": "fnv1a64:c44933c883b5e3c6"
     },
     {
       "language": "french",
@@ -282,7 +282,7 @@
     {
       "language": "french",
       "chapter": 17,
-      "sourceHash": "fnv1a64:8c6d326221123c15",
+      "sourceHash": "fnv1a64:a17d3639e3b5c5b7",
       "lessonIds": [
         "FR-C17-tete",
         "FR-C17-main"
@@ -292,12 +292,12 @@
       "text": "french/narration/ch17.txt",
       "json": "french/narration/ch17.json",
       "textHash": "fnv1a64:258ca14509c17685",
-      "jsonHash": "fnv1a64:62d0e3d81533f64d"
+      "jsonHash": "fnv1a64:090e2def729e2683"
     },
     {
       "language": "french",
       "chapter": 18,
-      "sourceHash": "fnv1a64:ae316f8e0976bf1a",
+      "sourceHash": "fnv1a64:e5e33f58fada17a0",
       "lessonIds": [
         "FR-C18-oui",
         "FR-C18-non"
@@ -307,12 +307,12 @@
       "text": "french/narration/ch18.txt",
       "json": "french/narration/ch18.json",
       "textHash": "fnv1a64:f9499173477cb6d8",
-      "jsonHash": "fnv1a64:4f041e7dbeef104c"
+      "jsonHash": "fnv1a64:688029fdd580446e"
     },
     {
       "language": "french",
       "chapter": 19,
-      "sourceHash": "fnv1a64:bed21c4a10769e2e",
+      "sourceHash": "fnv1a64:c8088090a5484e16",
       "lessonIds": [
         "FR-C19-sil-vous-plait"
       ],
@@ -321,12 +321,12 @@
       "text": "french/narration/ch19.txt",
       "json": "french/narration/ch19.json",
       "textHash": "fnv1a64:6b32f6eaf2a920b9",
-      "jsonHash": "fnv1a64:9a9aaa3404d66ebe"
+      "jsonHash": "fnv1a64:94b558bef31e3541"
     },
     {
       "language": "french",
       "chapter": 20,
-      "sourceHash": "fnv1a64:aaf2e4df4218e86b",
+      "sourceHash": "fnv1a64:868cc9f53978abd8",
       "lessonIds": [
         "FR-C20-je-suis-desole"
       ],
@@ -335,12 +335,12 @@
       "text": "french/narration/ch20.txt",
       "json": "french/narration/ch20.json",
       "textHash": "fnv1a64:50fe95c927349137",
-      "jsonHash": "fnv1a64:bd81f81eee4c1b7b"
+      "jsonHash": "fnv1a64:10e8e2147d4eea8f"
     },
     {
       "language": "french",
       "chapter": 21,
-      "sourceHash": "fnv1a64:9eab135f57a4f26d",
+      "sourceHash": "fnv1a64:7e75bbea32d4d7a6",
       "lessonIds": [
         "FR-C21-le-temps"
       ],
@@ -349,12 +349,12 @@
       "text": "french/narration/ch21.txt",
       "json": "french/narration/ch21.json",
       "textHash": "fnv1a64:b6b6643ea92e5448",
-      "jsonHash": "fnv1a64:e7f035bb0f6e2220"
+      "jsonHash": "fnv1a64:b0f844fa5559a099"
     },
     {
       "language": "french",
       "chapter": 22,
-      "sourceHash": "fnv1a64:023629163e002b64",
+      "sourceHash": "fnv1a64:b63f5af8a547ebf0",
       "lessonIds": [
         "FR-C22-chien-chat"
       ],
@@ -363,12 +363,12 @@
       "text": "french/narration/ch22.txt",
       "json": "french/narration/ch22.json",
       "textHash": "fnv1a64:22577b2b42dee2a4",
-      "jsonHash": "fnv1a64:47526865873ef6e5"
+      "jsonHash": "fnv1a64:1aec402aea96f17d"
     },
     {
       "language": "french",
       "chapter": 23,
-      "sourceHash": "fnv1a64:cb3845fade53c6da",
+      "sourceHash": "fnv1a64:1a8564ce5039677f",
       "lessonIds": [
         "FR-C23-vert-jaune"
       ],
@@ -377,12 +377,12 @@
       "text": "french/narration/ch23.txt",
       "json": "french/narration/ch23.json",
       "textHash": "fnv1a64:18f59d596b5f62a9",
-      "jsonHash": "fnv1a64:d45c6b1b7c74be33"
+      "jsonHash": "fnv1a64:d452f4ad9250f357"
     },
     {
       "language": "french",
       "chapter": 24,
-      "sourceHash": "fnv1a64:3f6a04a00b581f31",
+      "sourceHash": "fnv1a64:4ee9cdf417bf763d",
       "lessonIds": [
         "FR-C24-prendre",
         "FR-C24-demander",
@@ -394,12 +394,12 @@
       "text": "french/narration/ch24.txt",
       "json": "french/narration/ch24.json",
       "textHash": "fnv1a64:60ea88664f353cf6",
-      "jsonHash": "fnv1a64:d32e3439630cc825"
+      "jsonHash": "fnv1a64:1b3fad915a64fb5c"
     },
     {
       "language": "french",
       "chapter": 25,
-      "sourceHash": "fnv1a64:fa131f9cfafc6f5b",
+      "sourceHash": "fnv1a64:2f5bd522d0d2e9d2",
       "lessonIds": [
         "FR-C25-comprendre",
         "FR-C25-penser",
@@ -411,12 +411,12 @@
       "text": "french/narration/ch25.txt",
       "json": "french/narration/ch25.json",
       "textHash": "fnv1a64:df2e1890cd9841f0",
-      "jsonHash": "fnv1a64:c3d53f3881530dad"
+      "jsonHash": "fnv1a64:10db56cf492a3d07"
     },
     {
       "language": "french",
       "chapter": 26,
-      "sourceHash": "fnv1a64:4d5d9d38959e80ef",
+      "sourceHash": "fnv1a64:ecef97df0f365423",
       "lessonIds": [
         "FR-C26-entendre",
         "FR-C26-dormir",
@@ -428,12 +428,12 @@
       "text": "french/narration/ch26.txt",
       "json": "french/narration/ch26.json",
       "textHash": "fnv1a64:9bbe1f0d826a66e8",
-      "jsonHash": "fnv1a64:bbeec319e5654b0e"
+      "jsonHash": "fnv1a64:812ce7deb6cc965e"
     },
     {
       "language": "french",
       "chapter": 27,
-      "sourceHash": "fnv1a64:caea5f6f319879ac",
+      "sourceHash": "fnv1a64:6ba5c0f753221d39",
       "lessonIds": [
         "FR-C27-sasseoir",
         "FR-C27-se-lever",
@@ -445,12 +445,12 @@
       "text": "french/narration/ch27.txt",
       "json": "french/narration/ch27.json",
       "textHash": "fnv1a64:540928ae7f019d25",
-      "jsonHash": "fnv1a64:a40e3e7388014ea0"
+      "jsonHash": "fnv1a64:6d8917c11a498f06"
     },
     {
       "language": "french",
       "chapter": 28,
-      "sourceHash": "fnv1a64:d00ed4930d14c8e9",
+      "sourceHash": "fnv1a64:54b100e927f7b738",
       "lessonIds": [
         "FR-C28-cafe",
         "FR-C28-the",
@@ -462,12 +462,12 @@
       "text": "french/narration/ch28.txt",
       "json": "french/narration/ch28.json",
       "textHash": "fnv1a64:b2c109c46c98f6d8",
-      "jsonHash": "fnv1a64:0c5585236ad52f3e"
+      "jsonHash": "fnv1a64:c7164ccb63eda47a"
     },
     {
       "language": "french",
       "chapter": 29,
-      "sourceHash": "fnv1a64:220193efe18b704a",
+      "sourceHash": "fnv1a64:5f3289320f5d0980",
       "lessonIds": [
         "FR-C29-ami",
         "FR-C29-famille",
@@ -479,12 +479,12 @@
       "text": "french/narration/ch29.txt",
       "json": "french/narration/ch29.json",
       "textHash": "fnv1a64:d56fbf3d665b4d9d",
-      "jsonHash": "fnv1a64:1aa7e592da9927b9"
+      "jsonHash": "fnv1a64:ae9952251f337507"
     },
     {
       "language": "french",
       "chapter": 30,
-      "sourceHash": "fnv1a64:80da4be021458867",
+      "sourceHash": "fnv1a64:da6f69e8ad67d74a",
       "lessonIds": [
         "FR-C30-fromage",
         "FR-C30-beurre",
@@ -496,12 +496,12 @@
       "text": "french/narration/ch30.txt",
       "json": "french/narration/ch30.json",
       "textHash": "fnv1a64:01da32a9214c0415",
-      "jsonHash": "fnv1a64:5afda570a9f674bd"
+      "jsonHash": "fnv1a64:bea7f35f29f9053c"
     },
     {
       "language": "french",
       "chapter": 31,
-      "sourceHash": "fnv1a64:338fa1f1f48d96bb",
+      "sourceHash": "fnv1a64:8138898faa88cff1",
       "lessonIds": [
         "FR-C31-oeil",
         "FR-C31-nez",
@@ -513,12 +513,12 @@
       "text": "french/narration/ch31.txt",
       "json": "french/narration/ch31.json",
       "textHash": "fnv1a64:fbe5fa982de525fa",
-      "jsonHash": "fnv1a64:3ff87a738c13e9ba"
+      "jsonHash": "fnv1a64:4c072b0bdd6a61e3"
     },
     {
       "language": "french",
       "chapter": 32,
-      "sourceHash": "fnv1a64:4e14a8ba01008ac8",
+      "sourceHash": "fnv1a64:1bf458e5f324bb00",
       "lessonIds": [
         "FR-C32-intonation",
         "FR-C32-est-ce-que",
@@ -535,12 +535,12 @@
       "text": "french/narration/ch32.txt",
       "json": "french/narration/ch32.json",
       "textHash": "fnv1a64:f09f8d778d1153e2",
-      "jsonHash": "fnv1a64:dd2457530a36d0ba"
+      "jsonHash": "fnv1a64:09ff6492c2e4e0ac"
     },
     {
       "language": "french",
       "chapter": 33,
-      "sourceHash": "fnv1a64:abb9eee8ab13a632",
+      "sourceHash": "fnv1a64:6af7b0112e1b4493",
       "lessonIds": [
         "FR-C33-vouloir",
         "FR-C33-pouvoir",
@@ -552,7 +552,7 @@
       "text": "french/narration/ch33.txt",
       "json": "french/narration/ch33.json",
       "textHash": "fnv1a64:f353fa3c1f4aee07",
-      "jsonHash": "fnv1a64:c9df5a1930adc056"
+      "jsonHash": "fnv1a64:a54755ae0e3a9a7f"
     }
   ],
   "findings": []

@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [FR-GRAMMAR-INTONATION-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [FR-CULTURE-INTONATION-SPOKEN-DEFAULT-01]
 practises:
   knowledge: [FR-GRAMMAR-INTONATION-01]
 skills: [listening, speaking, reading]
