@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.224.0 — 2026-08-27 — tracked integer power exponents
+
+Bounded integer power lowering now accepts exact tracked local scalar
+exponents. User procedure calls, globals, invalidated values, overflow, and values
+above the existing expansion cap still retain the dynamic real-power path.
+
 ## 0.223.0 — 2026-08-27 — conditional integer subexpressions
 
 Exact integer snapshot evaluation now accepts conditional subexpressions when

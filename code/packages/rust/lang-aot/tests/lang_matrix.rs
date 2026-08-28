@@ -1474,6 +1474,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a known local integer may provide a bounded exponent while
+    // preserving integer power lowering and exact later snapshot output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer exponent, n, saved; exponent := 2; n := 6 ^ exponent + 6; saved := n; exponent := 3; output(saved + 0.5) end",
+        expect: Expect::Stdout("42.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a runtime condition may preserve assignment metadata when
     // both independently proven branches have exactly the same value. The
     // condition still lowers and executes; only the path-independent snapshot
@@ -7791,6 +7800,29 @@ fn algol_conditional_integer_subexpressions_run_on_every_available_standard_back
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but conditional integer metadata did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_tracked_integer_power_exponents_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("n := 6 ^ exponent + 6")
+        })
+        .expect("the ALGOL tracked integer-power exponent program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but tracked integer-power exponents did not run"
             );
             continue;
         };
