@@ -6,7 +6,7 @@ export default [
     suite: "independent (word-initial) vowels",
     suiteOrder: 10,
     caseOrder: 30,
-    name: "keeps Kannada independent ಅ, ಆ, ಇ, ಉ, ಎ, ಏ, ಒ, and ಐ sourced while the remaining vowels stay unverified",
+    name: "keeps Kannada independent ಅ, ಆ, ಇ, ಉ, ಎ, ಏ, ಒ, ಐ, and ಋ sourced while the remaining vowels stay unverified",
     verify: ({ SCRIPTS }) => {
       const kannada = SCRIPTS.find((s) => s.script === "kannada")!;
       const iv = kannada.independentVowels!;
@@ -58,7 +58,13 @@ export default [
       expect(iv[10]!.strokeOrderSource?.url).toBe(
         "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ai.gif",
       );
-      expect(iv.filter((_, index) => ![0, 1, 2, 4, 6, 7, 8, 10].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+      expect(iv[12]!.glyph).toBe("ಋ");
+      expect(iv[12]!.strokeOrder).toHaveLength(3);
+      expect(iv[12]!.penLifts).toBe(2);
+      expect(iv[12]!.strokeOrderSource?.url).toBe(
+        "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ru.gif",
+      );
+      expect(iv.filter((_, index) => ![0, 1, 2, 4, 6, 7, 8, 10, 12].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
     },
   },
   {
@@ -139,6 +145,26 @@ export default [
       expect(kannada.strokeOrder[2]).toMatch(/without lifting.*high arch.*upper-left terminal/i);
       expect(kannada.strokeOrderSource?.url).toBe(
         "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ai.gif",
+      );
+    },
+  },
+  {
+    suite: "shared Perso-Arabic letters retain script-owned provenance",
+    suiteOrder: 50,
+    caseOrder: 200,
+    name: "keeps Kannada ಋ as a source-backed three-run independent vowel",
+    verify: ({ SCRIPTS }) => {
+      const kannada = SCRIPTS.find((script) => script.script === "kannada")!
+        .independentVowels!.find((entry) => entry.glyph === "ಋ")!;
+      expect(kannada.sound).toBe("r̥");
+      expect(kannada.role).toBe("vowel");
+      expect(kannada.penLifts).toBe(2);
+      expect(kannada.strokeOrder).toHaveLength(3);
+      expect(kannada.strokeOrder[0]).toMatch(/upper-left spiral.*lower-left spiral.*middle bowl/i);
+      expect(kannada.strokeOrder[1]).toMatch(/lift.*inward bar.*high hook/i);
+      expect(kannada.strokeOrder[2]).toMatch(/lift.*rightward.*lower bowl.*open upper terminal/i);
+      expect(kannada.strokeOrderSource?.url).toBe(
+        "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ru.gif",
       );
     },
   },

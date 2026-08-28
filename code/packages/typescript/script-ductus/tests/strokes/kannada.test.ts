@@ -22,6 +22,7 @@ const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
 const KANNADA_EE = DUCTUS[ductusKey("kannada", "ಏ")];
 const KANNADA_O = DUCTUS[ductusKey("kannada", "ಒ")];
 const KANNADA_AI = DUCTUS[ductusKey("kannada", "ಐ")];
+const KANNADA_VOCALIC_R = DUCTUS[ductusKey("kannada", "ಋ")];
 
 const OWNER_SCRIPTS = new Set(["kannada"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -162,6 +163,33 @@ describe("handwriting ductus", () => {
     ]);
     expect(KANNADA_AI.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ai.gif",
+    );
+  });
+
+  it("Kannada ಋ separates its high hook and right bowl with two lifts", () => {
+    expect(penLifts(KANNADA_VOCALIC_R)).toBe(2);
+    expect(KANNADA_VOCALIC_R.strokes).toHaveLength(3);
+    expect(
+      KANNADA_VOCALIC_R.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "turn clockwise around the compact upper-left spiral",
+        "descend through the outer curve and curl around the lower-left spiral",
+        "sweep through the join and around the rounded middle bowl",
+      ],
+      [
+        "lift, then draw the inward bar from left to right",
+        "curl upward into the high hook",
+      ],
+      [
+        "lift, then sweep rightward around the lower bowl",
+        "climb the outer side and finish at the open upper terminal",
+      ],
+    ]);
+    expect(KANNADA_VOCALIC_R.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ru.gif",
     );
   });
 });
