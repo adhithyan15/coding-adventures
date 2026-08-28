@@ -759,8 +759,12 @@ declaration in an unselected front has any effect. Each string is at most
 at most 1 MiB. Exceeding a ceiling makes the case invalid before an adapter can
 run.
 
-After removing only leading and trailing ASCII space, tab, and a CR belonging
-to a CRLF line ending, a declaration line has the exact form
+Split BUILD content on LF bytes. For each LF-terminated logical line, remove
+the immediately preceding CR byte if and only if that CR and LF form the line
+terminator. A CR anywhere else is content: in particular, a final lone CR and
+a CR followed only by trailing ASCII spaces or tabs are never whitespace.
+After that line-ending step, remove only leading and trailing ASCII space and
+tab. A declaration line has the exact form
 `# needs-toolchain: NAME`. At least one ASCII space or tab separates the colon
 from `NAME`; `NAME` must be one lowercase key in the canonical toolchain
 registry, and nothing except trailing ASCII space or tab may follow it. Empty,

@@ -85,7 +85,10 @@ language, not instead of it, and multiple lines are supported for a package
 needing more than one extra toolchain. Only lowercase names from the canonical
 CI registry are accepted. Empty, unknown, wrong-case, fused, or suffixed
 lookalikes are inert; valid names retain first-occurrence order and are
-deduplicated. Parsing is bounded to 65,536 bytes and 4,096 logical lines.
+deduplicated. BUILD content splits on LF, and only a CR immediately before
+that LF is stripped. A final lone CR or CR before trailing ASCII whitespace
+remains content, so those lookalikes are inert. Parsing is bounded to 65,536
+bytes and 4,096 logical lines.
 
 Only the platform-selected BUILD front contributes declarations:
 `BUILD_windows`; `BUILD_mac` or `BUILD_linux`; then the shared

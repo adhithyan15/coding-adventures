@@ -4,6 +4,13 @@ All notable changes to the Go build tool will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Extra CI toolchain declarations strip carriage return only as part of
+  CRLF.** A final lone CR and a CR before trailing ASCII whitespace remain
+  content and make the lookalike inert. The Go parser now matches the hardened
+  language-neutral snapshot and Python reference exactly.
+
 ### Added
 
 - **Extra CI toolchain declarations now consume the language-neutral

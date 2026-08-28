@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 118)
+        self.assertEqual(summary["case_count"], 119)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -1134,6 +1134,7 @@ class PureDomainValidationTests(unittest.TestCase):
     ) -> None:
         filenames = (
             "toolchain-detection-declarations.json",
+            "toolchain-detection-crlf-grammar.json",
             "toolchain-detection-affected-only.json",
             "toolchain-detection-force-full.json",
             "toolchain-detection-platform-windows.json",
@@ -1148,6 +1149,20 @@ class PureDomainValidationTests(unittest.TestCase):
                     runner._expected_toolchains(case["input"]["options"]),
                     case["expected"]["result"]["toolchains"],
                 )
+
+    def test_toolchain_declarations_strip_only_crlf_carriage_return(self) -> None:
+        self.assertEqual(
+            runner._extra_toolchain_declarations("# needs-toolchain: python\r\n"),
+            ["python"],
+        )
+        self.assertEqual(
+            runner._extra_toolchain_declarations("# needs-toolchain: ruby\r"),
+            [],
+        )
+        self.assertEqual(
+            runner._extra_toolchain_declarations("# needs-toolchain: lua\r  "),
+            [],
+        )
 
     def test_toolchain_force_full_requires_null_selection(self) -> None:
         case = load_case("toolchain-detection-force-full.json")
@@ -1406,7 +1421,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 118)
+        self.assertEqual(summary["case_count"], 119)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"
