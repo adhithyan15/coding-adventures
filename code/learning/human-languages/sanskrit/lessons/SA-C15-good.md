@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C15-good
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 690

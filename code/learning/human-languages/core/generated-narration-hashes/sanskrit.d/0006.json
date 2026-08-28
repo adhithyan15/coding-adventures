@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 6,
-  "sourceHash": "fnv1a64:13ed263f4eceffa1",
+  "sourceHash": "fnv1a64:b71b55b764f4ae2d",
   "lessonIds": [
     "SA-C06-numbers-1-5",
     "SA-C06-number-cognates",
@@ -12,6 +12,6 @@
   "text": "sanskrit/narration/ch06.txt",
   "json": "sanskrit/narration/ch06.json",
   "textHash": "fnv1a64:228e07a40b686b75",
-  "jsonHash": "fnv1a64:2c9c89e62f05617b",
+  "jsonHash": "fnv1a64:2b143153db9dd8cb",
   "findings": []
 }

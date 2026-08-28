@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Courtesy Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6efd7b2a99d209b5",
+  "sourceHash": "fnv1a64:95bdf9889b9f746b",
   "lessons": [
     {
       "id": "SA-C29-please",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b711021d78e7301b",
+      "sourceHash": "fnv1a64:9c39bebec7a623fe",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70fb908322f609bf",
+      "sourceHash": "fnv1a64:7cc44c941c8d4eb3",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a45ff1eca8ff92da",
+      "sourceHash": "fnv1a64:799323baaaa9c906",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfa023567b52fcf3",
+      "sourceHash": "fnv1a64:29c42835dd5c9322",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5821073fa871d89b",
+      "sourceHash": "fnv1a64:a5a82103736019d4",
       "notice": null,
       "blocks": [
         {

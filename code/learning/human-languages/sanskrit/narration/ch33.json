@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "The River and the Road",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:80c59f8d2bc38a70",
+  "sourceHash": "fnv1a64:ffe306e23f34ff36",
   "lessons": [
     {
       "id": "SA-C33-river",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e5320545c955631",
+      "sourceHash": "fnv1a64:35b4b0dada532bfa",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67bfb45639503b08",
+      "sourceHash": "fnv1a64:dd3190b986a10d7f",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd65bbd8ad47ff74",
+      "sourceHash": "fnv1a64:3166a42966db4ad1",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2725b6710a515899",
+      "sourceHash": "fnv1a64:5fca959220c742fc",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8299834dffdac774",
+      "sourceHash": "fnv1a64:44901c67de76eb67",
       "notice": null,
       "blocks": [
         {

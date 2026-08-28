@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [SA-SENSE-PATHATI-READ-RECITE-01]
+introduces_culture_claims: [SA-CULTURE-PATHATI-TATSAMA-READING-01]
 id: SA-C08-pathati
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 420

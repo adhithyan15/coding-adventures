@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Things People Make",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:81af0ba7ab38b05b",
+  "sourceHash": "fnv1a64:dbaa82370227870a",
   "lessons": [
     {
       "id": "SA-C41-wheel",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b31adede7a12295",
+      "sourceHash": "fnv1a64:8253ed5fcaf1c2e6",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:731a7fd9f29f3666",
+      "sourceHash": "fnv1a64:e7f8ed9d6cb1f8a5",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e09628876cce9df3",
+      "sourceHash": "fnv1a64:fd85e7efa84d451c",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e42823d630d409c",
+      "sourceHash": "fnv1a64:8b5a0c2d314e7f59",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74fe07b35b4420ba",
+      "sourceHash": "fnv1a64:715ef6ea5cf581cf",
       "notice": null,
       "blocks": [
         {

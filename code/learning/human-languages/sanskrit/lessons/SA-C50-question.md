@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C50-question
 spine_node: SPINE-COURTESY-THANK
 sequence: 2440

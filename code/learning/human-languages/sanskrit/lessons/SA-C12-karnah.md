@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C12-karnah
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 560

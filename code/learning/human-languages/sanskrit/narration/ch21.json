@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "More Everyday Verbs",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f4763804d02be7a6",
+  "sourceHash": "fnv1a64:f7ad56d30294e518",
   "lessons": [
     {
       "id": "SA-C21-dance",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:083fb0bf036635bc",
+      "sourceHash": "fnv1a64:7986083539644d19",
       "notice": null,
       "blocks": [
         {
@@ -128,7 +128,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf784a85d2a3d42b",
+      "sourceHash": "fnv1a64:0f9a57e880be4126",
       "notice": null,
       "blocks": [
         {
@@ -246,7 +246,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9f01c85c4a50c03",
+      "sourceHash": "fnv1a64:5c7d8f68f860390e",
       "notice": null,
       "blocks": [
         {
@@ -364,7 +364,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f37f90e494073567",
+      "sourceHash": "fnv1a64:af30110090a7683e",
       "notice": null,
       "blocks": [
         {

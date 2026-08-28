@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C44-dark
 spine_node: SPINE-TAKE-LEAVE
 sequence: 2140

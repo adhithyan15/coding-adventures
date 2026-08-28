@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Naming Who Someone Is",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:08a58d31fdb8bbeb",
+  "sourceHash": "fnv1a64:2f2f1eeee251f4cf",
   "lessons": [
     {
       "id": "SA-C26-teacher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a86fdbc6ab46694",
+      "sourceHash": "fnv1a64:9f871e666fc04af7",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05a98292e7eab1e2",
+      "sourceHash": "fnv1a64:29b73d93d90e70dd",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a200930d9b387b08",
+      "sourceHash": "fnv1a64:2755141656fb1255",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0e4e5427b8378e5",
+      "sourceHash": "fnv1a64:3ff952012aa90dc9",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0117dff0dfa24fe",
+      "sourceHash": "fnv1a64:8bf2fbbdade95a2b",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Verbs of Mind and Motion",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:80a1806eac2c723e",
+  "sourceHash": "fnv1a64:98cbd50d4dee1376",
   "lessons": [
     {
       "id": "SA-C22-hear",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfed29fa095ab13d",
+      "sourceHash": "fnv1a64:12fdd64d6c004816",
       "notice": null,
       "blocks": [
         {
@@ -128,7 +128,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f1aeb37b6b70fbc",
+      "sourceHash": "fnv1a64:9c17557ad54be36b",
       "notice": null,
       "blocks": [
         {
@@ -246,7 +246,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1d5364a9d5b56ab",
+      "sourceHash": "fnv1a64:24244c71a556d2a0",
       "notice": null,
       "blocks": [
         {
@@ -364,7 +364,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81066cdb59c0fca8",
+      "sourceHash": "fnv1a64:39e35add44f74de9",
       "notice": null,
       "blocks": [
         {

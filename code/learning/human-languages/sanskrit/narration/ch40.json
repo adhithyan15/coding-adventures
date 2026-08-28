@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:18e3e724436b79dc",
+  "sourceHash": "fnv1a64:6bb2d7f9994ec44d",
   "lessons": [
     {
       "id": "SA-C40-curd",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c65000f7e026637c",
+      "sourceHash": "fnv1a64:6933e3187c385887",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66f51d1a8a95f3aa",
+      "sourceHash": "fnv1a64:cb35d492f78f98a1",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:263d6e9e16a3f032",
+      "sourceHash": "fnv1a64:9950d2fb0c0c970f",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72975622f3e4c31b",
+      "sourceHash": "fnv1a64:ce57180945005c00",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03b98cfd974ca1eb",
+      "sourceHash": "fnv1a64:a0f03bdb915f95f4",
       "notice": null,
       "blocks": [
         {

@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [SA-CULTURE-SHLOKA-VERSE-TRADITION-01]
 id: SA-C50-verse
 spine_node: SPINE-COURTESY-THANK
 sequence: 2470

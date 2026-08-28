@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C24-cloth
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 1160

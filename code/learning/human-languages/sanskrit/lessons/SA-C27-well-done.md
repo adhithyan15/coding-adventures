@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [SA-IDIOM-SADHU-PRAISE-01]
+introduces_senses: []
+introduces_culture_claims: [SA-CULTURE-SADHU-AUDIENCE-PRAISE-01]
 id: SA-C27-well-done
 spine_node: SPINE-RESPOND-BASIC
 sequence: 1290

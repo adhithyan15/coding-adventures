@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [SA-SENSE-PHALAM-FRUIT-RESULT-01]
+introduces_culture_claims: []
 id: SA-C24-fruit
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 1150

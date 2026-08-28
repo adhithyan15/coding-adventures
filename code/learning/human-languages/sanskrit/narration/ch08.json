@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "The Mind and the Palm Leaf",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a86dba7b2338d610",
+  "sourceHash": "fnv1a64:039ee820449af59a",
   "lessons": [
     {
       "id": "SA-C08-cintayati",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ecd71e50065d6f8",
+      "sourceHash": "fnv1a64:e9d094ae59750be1",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce0858a1cd760739",
+      "sourceHash": "fnv1a64:6d0b5f15bc4a15d5",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa49332607fc470a",
+      "sourceHash": "fnv1a64:657ebd125936f6a6",
       "notice": null,
       "blocks": [
         {
@@ -499,7 +499,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc4e998fa5735026",
+      "sourceHash": "fnv1a64:f00ddf129c4a377f",
       "notice": null,
       "blocks": [
         {
@@ -659,7 +659,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a3a031f78de6c184",
+      "sourceHash": "fnv1a64:c5f3c49ddd22256d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -848,7 +848,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0086ba84aa2ded30",
+      "sourceHash": "fnv1a64:255423f57d5d4ae1",
       "notice": {
         "modality": "pen",
         "needs": [

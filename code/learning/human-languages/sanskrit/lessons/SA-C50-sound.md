@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [SA-SENSE-SHABDA-SOUND-WORD-01]
+introduces_culture_claims: []
 id: SA-C50-sound
 spine_node: SPINE-COURTESY-THANK
 sequence: 2430

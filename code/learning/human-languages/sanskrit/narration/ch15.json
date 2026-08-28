@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:b0eb647fc2ec725d",
+  "sourceHash": "fnv1a64:4669b233ade94afe",
   "lessons": [
     {
       "id": "SA-C15-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37545f522fe7ae4c",
+      "sourceHash": "fnv1a64:d006611a4672cceb",
       "notice": null,
       "blocks": [
         {
@@ -121,7 +121,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9afadf01b2ff487",
+      "sourceHash": "fnv1a64:54f1251ab62486b6",
       "notice": null,
       "blocks": [
         {
@@ -227,7 +227,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cbb615e324e82a6",
+      "sourceHash": "fnv1a64:c3eeb19607daecc1",
       "notice": null,
       "blocks": [
         {
@@ -333,7 +333,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a9440134ca255f3",
+      "sourceHash": "fnv1a64:903316c6237baf12",
       "notice": null,
       "blocks": [
         {
@@ -439,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e809a8c5457514d6",
+      "sourceHash": "fnv1a64:443aa6d974834895",
       "notice": null,
       "blocks": [
         {
@@ -545,7 +545,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b4d1da8e344145e",
+      "sourceHash": "fnv1a64:8f5dd45e5692a87b",
       "notice": null,
       "blocks": [
         {
@@ -672,7 +672,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:db1e09b3f17ca983",
+      "sourceHash": "fnv1a64:8fe46b3068cef238",
       "notice": {
         "modality": "pen",
         "needs": [

@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [SA-SENSE-AKASHA-SKY-SPACE-01]
+introduces_culture_claims: []
 id: SA-C31-sky
 spine_node: SPINE-MEET-GREET
 sequence: 1480

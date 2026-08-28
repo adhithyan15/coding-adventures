@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C33-river
 spine_node: SPINE-TAKE-LEAVE
 sequence: 1580

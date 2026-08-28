@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C45-evening
 spine_node: SPINE-MEET-GREET
 sequence: 2200

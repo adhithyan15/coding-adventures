@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [SA-CULTURE-ASHIRVADA-ELDER-BLESSING-01]
 id: SA-C37-blessing
 spine_node: SPINE-COURTESY-THANK
 sequence: 1820

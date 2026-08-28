@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "The Hand and the Foot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:68be4c4a02fc726e",
+  "sourceHash": "fnv1a64:09672f05536caca2",
   "lessons": [
     {
       "id": "SA-C25-hand",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:575f1f3418a0e14d",
+      "sourceHash": "fnv1a64:58c8332dfc647c58",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24331d935ebe860c",
+      "sourceHash": "fnv1a64:6bbee7b325b49ef9",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0836b2627ceacbb7",
+      "sourceHash": "fnv1a64:b9451c40eb984826",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e7f7cbfb2d8d9d4",
+      "sourceHash": "fnv1a64:58f6ad30b241bc57",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5911aca09c0a9670",
+      "sourceHash": "fnv1a64:0c6a79024371938f",
       "notice": null,
       "blocks": [
         {

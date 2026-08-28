@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 25,
-  "sourceHash": "fnv1a64:68be4c4a02fc726e",
+  "sourceHash": "fnv1a64:09672f05536caca2",
   "lessonIds": [
     "SA-C25-hand",
     "SA-C25-foot",
@@ -14,6 +14,6 @@
   "text": "sanskrit/narration/ch25.txt",
   "json": "sanskrit/narration/ch25.json",
   "textHash": "fnv1a64:10e936a884296d74",
-  "jsonHash": "fnv1a64:37a045a8ef8e9efe",
+  "jsonHash": "fnv1a64:365feac3716d1bc1",
   "findings": []
 }

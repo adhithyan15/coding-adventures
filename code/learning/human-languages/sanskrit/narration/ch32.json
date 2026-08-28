@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Tree and What Grows",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3beefa46ef3ec7e7",
+  "sourceHash": "fnv1a64:5ae146cb4fdddbb6",
   "lessons": [
     {
       "id": "SA-C32-tree",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f89c2a7b73f84ed8",
+      "sourceHash": "fnv1a64:22138c588a194beb",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac89c3ba56203b36",
+      "sourceHash": "fnv1a64:7f1dfd63858bc75d",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef88a4a51a58aa16",
+      "sourceHash": "fnv1a64:375a432728790671",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b2c7ed6ab912585",
+      "sourceHash": "fnv1a64:2c85e36b2c31ab60",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc6ba698b4d186f3",
+      "sourceHash": "fnv1a64:4896549bfb77ad18",
       "notice": null,
       "blocks": [
         {

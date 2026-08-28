@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "More of the Family",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a0be78232ec466ac",
+  "sourceHash": "fnv1a64:85f8a5ca90ecec42",
   "lessons": [
     {
       "id": "SA-C51-husband",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95dfafc6f54aa580",
+      "sourceHash": "fnv1a64:623d9501a7ecb915",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:517b4df0563dd7fd",
+      "sourceHash": "fnv1a64:50b9bf4b72d106ec",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30059e18e6fb35ed",
+      "sourceHash": "fnv1a64:1670db238551213a",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09ea19850275df4e",
+      "sourceHash": "fnv1a64:4155bfbe9eedcb7f",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0c08631066f37ba",
+      "sourceHash": "fnv1a64:f37871e1160c3707",
       "notice": null,
       "blocks": [
         {

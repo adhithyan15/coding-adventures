@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8b6a479b95c7195b",
+  "sourceHash": "fnv1a64:2d5bb32f430668b7",
   "lessons": [
     {
       "id": "SA-C07-asti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da647236cc33b4bb",
+      "sourceHash": "fnv1a64:85f53ebc9d737f16",
       "notice": null,
       "blocks": [
         {
@@ -194,7 +194,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31e31234b5c9e20f",
+      "sourceHash": "fnv1a64:2cb0263562d55166",
       "notice": null,
       "blocks": [
         {
@@ -361,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17453d0de2125281",
+      "sourceHash": "fnv1a64:9c81e702c50f5c46",
       "notice": null,
       "blocks": [
         {
@@ -534,7 +534,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4464d06b060f1cd",
+      "sourceHash": "fnv1a64:10a5ac6c5ca7ffe4",
       "notice": null,
       "blocks": [
         {
@@ -696,7 +696,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e576e1f8abb9292c",
+      "sourceHash": "fnv1a64:76d962845a6c25a1",
       "notice": null,
       "blocks": [
         {
@@ -856,7 +856,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68e4987bf3a51ba2",
+      "sourceHash": "fnv1a64:baf874871c6b9fcd",
       "notice": null,
       "blocks": [
         {

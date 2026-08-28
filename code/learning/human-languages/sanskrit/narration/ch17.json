@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Time --- Day, Night, and When Things Happen",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:0074b178ebc6d4c1",
+  "sourceHash": "fnv1a64:ab3cfa7e85761303",
   "lessons": [
     {
       "id": "SA-C17-day",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5dc3430b8590e010",
+      "sourceHash": "fnv1a64:9e1e84535fef252b",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f01f96357fc94d60",
+      "sourceHash": "fnv1a64:0c1563707393142f",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a45b810d2b31f1f2",
+      "sourceHash": "fnv1a64:691cf98bce7e3ac7",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e97411fd6acc5160",
+      "sourceHash": "fnv1a64:ea80ceac92dc01b5",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:368d36b9c76b4dd8",
+      "sourceHash": "fnv1a64:41b328aac57c2a43",
       "notice": null,
       "blocks": [
         {
@@ -629,7 +629,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc6d54d1783c0038",
+      "sourceHash": "fnv1a64:c46b23f33a8fd683",
       "notice": null,
       "blocks": [
         {

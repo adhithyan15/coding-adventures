@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-S05-sign-virama
 spine_node: SPINE-MEET-GREET
 sequence: 575

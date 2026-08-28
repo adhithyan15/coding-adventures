@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C18-why
 spine_node: SPINE-NEGATE-AND-ASK
 sequence: 860

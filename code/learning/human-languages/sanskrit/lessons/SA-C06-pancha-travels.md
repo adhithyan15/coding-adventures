@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [SA-CULTURE-PANCHA-PUNJAB-PUNCH-HISTORY-01]
 id: SA-C06-pancha-travels
 spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 330

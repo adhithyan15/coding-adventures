@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C42-a-little
 spine_node: SPINE-RESPOND-BASIC
 sequence: 2060

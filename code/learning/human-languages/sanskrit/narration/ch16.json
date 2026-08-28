@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Places --- and the Two Noun Families",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:4efb7c6331b7c64c",
+  "sourceHash": "fnv1a64:f8aab831273e5c65",
   "lessons": [
     {
       "id": "SA-C16-house",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cbe2b5a481b7191",
+      "sourceHash": "fnv1a64:a7d6f918d909ac72",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:595ba6de16d65739",
+      "sourceHash": "fnv1a64:887ab8ab8cc51a1a",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b272a25822f37155",
+      "sourceHash": "fnv1a64:d5918b34cdb9641c",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29ed10c64bc942ff",
+      "sourceHash": "fnv1a64:ffdcdef42c571946",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c28a3b106fb8cfe9",
+      "sourceHash": "fnv1a64:63e0700a96330862",
       "notice": null,
       "blocks": [
         {
@@ -629,7 +629,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b3230182ef2a420",
+      "sourceHash": "fnv1a64:90c44b04a9b79625",
       "notice": null,
       "blocks": [
         {

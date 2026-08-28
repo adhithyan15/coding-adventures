@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 7,
-  "sourceHash": "fnv1a64:8b6a479b95c7195b",
+  "sourceHash": "fnv1a64:2d5bb32f430668b7",
   "lessonIds": [
     "SA-C07-asti",
     "SA-C07-gacchati",
@@ -15,6 +15,6 @@
   "text": "sanskrit/narration/ch07.txt",
   "json": "sanskrit/narration/ch07.json",
   "textHash": "fnv1a64:47301ded2c9a4c1a",
-  "jsonHash": "fnv1a64:7add2b99158343a9",
+  "jsonHash": "fnv1a64:1f8b1fb2213dac99",
   "findings": []
 }

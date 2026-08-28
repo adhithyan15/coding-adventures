@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2a345cef402c9cc3",
+  "sourceHash": "fnv1a64:e99d632cb33b1417",
   "lessons": [
     {
       "id": "SA-C14-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:776f0b2516dd50aa",
+      "sourceHash": "fnv1a64:529c3f27b4bca9ef",
       "notice": null,
       "blocks": [
         {
@@ -121,7 +121,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff2d5855996b0bc2",
+      "sourceHash": "fnv1a64:9f4b674429d9f7df",
       "notice": null,
       "blocks": [
         {
@@ -223,7 +223,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55066a6ead8e0577",
+      "sourceHash": "fnv1a64:981b9658ad515534",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:191ef154d13f0c9a",
+      "sourceHash": "fnv1a64:8ed7d498db165b8f",
       "notice": null,
       "blocks": [
         {
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68ff9f2abd8bb025",
+      "sourceHash": "fnv1a64:74f81523c6f9d710",
       "notice": null,
       "blocks": [
         {
@@ -529,7 +529,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ccd35fddb2c36eb9",
+      "sourceHash": "fnv1a64:5812a156c1ea8814",
       "notice": null,
       "blocks": [
         {
@@ -631,7 +631,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e4709d254aaabad",
+      "sourceHash": "fnv1a64:75112cae5f05dd92",
       "notice": null,
       "blocks": [
         {
@@ -766,7 +766,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ca8e34b46755226e",
+      "sourceHash": "fnv1a64:048b93594f37e1cd",
       "notice": {
         "modality": "pen",
         "needs": [

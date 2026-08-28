@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Things You Ask For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e790e2f50b471093",
+  "sourceHash": "fnv1a64:324ce87c5ce6ce22",
   "lessons": [
     {
       "id": "SA-C24-water",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c29789c44a896b3a",
+      "sourceHash": "fnv1a64:98bebd04a3e92fdd",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d3085a25d65097f",
+      "sourceHash": "fnv1a64:ec6373e56bfb2028",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:591db1c0370e1d15",
+      "sourceHash": "fnv1a64:2be3d7fc2d86640e",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ca316f30439854a",
+      "sourceHash": "fnv1a64:7b9e932a387ffcfb",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee91ab98d432194c",
+      "sourceHash": "fnv1a64:61b4674ea83c3f79",
       "notice": null,
       "blocks": [
         {
