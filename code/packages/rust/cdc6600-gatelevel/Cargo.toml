@@ -1,0 +1,14 @@
+[package]
+name = "cdc6600-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "CDC 6600 gate-level simulator"
+license = "MIT"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+cdc6600-simulator = { path = "../cdc6600-simulator" }
+logic-gates = { path = "../logic-gates" }
+
+[dev-dependencies]
+cdc6600-simulator = { path = "../cdc6600-simulator" }

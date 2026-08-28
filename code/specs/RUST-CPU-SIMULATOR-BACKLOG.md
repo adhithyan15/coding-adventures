@@ -68,7 +68,7 @@ according to the current prioritization run.
 | RCPU-001 / RCPU-002 | 1948 | Manchester Baby (SSEM) | Complete: `manchester-baby-simulator` | Complete: `manchester-baby-gatelevel` |
 | RCPU-003 / RCPU-004 | 1954 | IBM 704 | Complete: `ibm704-simulator` | Complete: `ibm704-gatelevel` |
 | RCPU-005 / RCPU-006 | 1961 | GE-225 | Complete: `ge225-simulator` | Complete: `ge225-gatelevel` |
-| RCPU-007 / RCPU-008 | 1964 | CDC 6600 | Complete: `cdc6600-simulator` | Missing |
+| RCPU-007 / RCPU-008 | 1964 | CDC 6600 | Complete: `cdc6600-simulator` | Complete: `cdc6600-gatelevel` |
 | RCPU-009 / RCPU-010 | 1970 | DEC PDP-11 | Missing | Missing |
 | RCPU-011 / RCPU-012 | 1971 | Intel 4004 | Audit: `intel4004-simulator` | Audit: `intel4004-gatelevel` |
 | RCPU-013 / RCPU-014 | 1972 | Intel 8008 | Audit: `intel8008-simulator` | Audit: `intel8008-gatelevel` |
@@ -91,8 +91,8 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-008**, the CDC 6600 gate-level Rust simulator,
-ordered behind publication of the completed RCPU-007 functional oracle.
+Current selection: **RCPU-009**, the DEC PDP-11 functional Rust simulator,
+ordered behind publication of the completed RCPU-008 gate-level simulator.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -141,28 +141,28 @@ memory rules, reset, and atomic boundaries. The 60 combined tests cover 85.61%
 of core lines (2,190/2,558), above the completion floor. Its green final build
 audit closes RCPU-006.
 
-RCPU-007 is implementation-complete and rebased atop merged P006C. Its 17 integration
+RCPU-007 merged in PR #13377 at `f540399`. Its 17 integration
 tests cover the repository's complete 22-short/14-long instruction surface,
 four big-endian 15-bit parcels per 60-bit word, all eight X/A/B registers with
 hardwired B0, 4,096 bounded memory words, parcel branches and subroutines,
 exact 60/18-bit wrap and signed comparisons, program encoders, immutable
 snapshots, atomic fetch/branch/memory errors, bounded execution, and seeded
 Python-oracle vectors. Core line coverage is 90.76% (324/357), above the
-completion floor. Its publication closes RCPU-007 and unblocks the RCPU-008
-gate-level partner.
+completion floor. Its green required CI and squash auto-merge close the
+functional cell and unblock RCPU-008.
 
-RCPU-008 is one auditable gate-level slice because the behavioral surface is
-bounded to 36 instructions and has no floating-point, scoreboard, peripheral-
-processor, or exchange-jump state. The package must put core memory, X/A/B/P,
-and halt state in flip-flops (with B0 implemented as a hardwired zero), use a
-one-hot gate decoder, and route every architectural boolean, 60/18-bit add or
-subtract, signed compare, B-controlled barrel shift, widened multiply, address
-calculation, branch predicate, and P increment through `logic-gates` and
-`arithmetic`. Host integers remain limited to checked memory selection, clock
-sequencing, transport conversion, and traces. Full-state step lockstep against
-`cdc6600-simulator`, seeded datapath vectors, exact topology counts, malformed
-transport, oversized bounds, and atomic last-parcel/memory failures are the
-acceptance boundary.
+RCPU-008 is implementation-complete and rebased atop merged RCPU-007. Its normative 07t2
+contract and `cdc6600-gatelevel` package put 246,529 persistent core-memory,
+X/A/B/P, and halt bits in D flip-flops while keeping B0 hardwired to zero. A
+64-line one-hot decoder selects all 36 instructions; gate vectors implement
+boolean logic, 60/18-bit ripple add/subtract, signed compare, six-stage barrel
+shift, 60-stage partial-product multiply, address calculation, branch
+predicates, and P updates. Two unit and nine integration tests cover complete
+state/trace lockstep, seeded datapaths, all branch paths, exact topology,
+transport and public bounds, atomic decode/fetch/branch/memory failures, and
+bounded workloads. Core line coverage is 98.22% (441/449), above the completion
+floor. Publication closes RCPU-008 and advances the chronological queue to the
+PDP-11 functional oracle audit.
 
 ## Cross-language wave
 
