@@ -4875,6 +4875,20 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // FLOW-MATIC — unified-matrix baseline (VM-020). A file-qualified field is
+    // initialised to zero, moved through the frontend's scalar-field path, and
+    // rendered by WRITE-ITEM through the shared recursive integer printer plus
+    // `putchar`. Expecting `0` proves source dispatch, field storage, MOVE, the
+    // synthesized call path, and stdout execution on all seven standard
+    // backends; this is deliberately stronger than a trivial STOP/exit-0 cell.
+    Prog {
+        lang: Language::FlowMatic,
+        ext: "fm",
+        src: "(0) OUTPUT REPORT FILE-C .\n\
+               (1) MOVE TOTAL (C) TO TOTAL (C) ; WRITE-ITEM FILE-C ; STOP .",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // COBOL-60 — literal `DISPLAY` (PL09 step 4, the `cobol-iir-compiler` minimal
     // slice). A four-division program whose PROCEDURE DIVISION `DISPLAY`s a string
     // literal lowers to the shared E4 `str_const` + `print_str` op pair (then a

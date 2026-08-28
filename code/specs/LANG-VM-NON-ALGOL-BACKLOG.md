@@ -35,8 +35,10 @@ one fresh worktree and one PR; remove the worktree after merge.
 | — | VM-010 | done ([#13380](https://github.com/adhithyan15/coding-adventures/pull/13380)) | Close the remaining Twig dynamic VM/JIT gaps: interned symbols/quote and forward-referenced globals, including boxed global arithmetic. | The existing symbol and dynamic-global matrix cells run on VM and JIT in addition to the five code-generation backends. |
 | — | VM-011 | decomposed | Close Dartmouth BASIC's non-ALGOL semantic tail: remaining math builtins and dynamic string data paths. | Split into VM-016 through VM-018 because deterministic transcendental wiring, mixed-type `DATA`, and portable randomness have independent designs and risk. |
 | — | VM-016 | done ([#13392](https://github.com/adhithyan15/coding-adventures/pull/13392)) | Wire Dartmouth BASIC's deterministic `SIN`, `COS`, `LOG`, and `EXP` builtins to the existing shared transcendental IIR ops. | One discriminating program executes all four functions on NativeAOT, LLVM, WASM, JVM, CLR, VM, and JIT. |
-| 1 | VM-019 | in progress | Reconcile the Dartmouth BASIC compiler README with landed general exponentiation, seven-backend string arrays, and current dynamic-string limitations. | The README no longer directs work toward already-landed power or string-array support and names only executed current gaps. |
-| 2 | VM-014 | queued | Extend the unified matrix to every wired frontend, especially FLOW-MATIC and Macsyma/JIT. | Every `Language` variant has an executed baseline on every applicable standard backend, with explicit exclusions only where architectural. |
+| — | VM-019 | done ([#13419](https://github.com/adhithyan15/coding-adventures/pull/13419)) | Reconcile the Dartmouth BASIC compiler README with landed general exponentiation, seven-backend string arrays, and current dynamic-string limitations. | The README no longer directs work toward already-landed power or string-array support and names only executed current gaps. |
+| — | VM-014 | decomposed | Extend the unified matrix to every wired frontend, especially FLOW-MATIC and Macsyma/JIT. | Split into VM-020 and VM-021 because FLOW-MATIC needs an executed matrix baseline while Macsyma needs new universal-JIT runtime glue. |
+| 1 | VM-020 | in progress | Add FLOW-MATIC's first unified matrix baseline. | A field `MOVE` plus `WRITE-ITEM` program prints `0` on NativeAOT, LLVM, WASM, JVM, CLR, VM, and JIT. |
+| 2 | VM-021 | queued | Add Macsyma to the universal JIT and its cross-backend conformance suite. | Macsyma's integer arithmetic corpus agrees across VM, NativeAOT, LLVM, WASM, JVM, CLR, and JIT. |
 | 3 | VM-017 | queued | Add mixed numeric/string Dartmouth BASIC `DATA`, `READ`, and `RESTORE` semantics. | Scalar and array string reads preserve source order with numeric values and execute on all applicable standard backends. |
 | 4 | VM-012 | queued | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
 | 5 | VM-018 | decision required | Define and implement portable Dartmouth BASIC `RND` semantics. | The accepted seed/repeatability contract is documented and executed consistently across all standard backends. |
@@ -98,6 +100,13 @@ one fresh worktree and one PR; remove the worktree after merge.
   `str_concat` over two runtime `INPUT` strings on all seven backends. Retained
   inside VM-019; the corrected limitation is mixed numeric/string `DATA` and
   `READ`, already tracked as VM-017.
+- **VM-D012 — confirmed 2026-08-28:** VM-014 combined two different gaps.
+  FLOW-MATIC is wired into `Language` and already has package-level JIT and
+  backend acceptance tests but no unified matrix cell. Macsyma's separate
+  conformance suite executes VM, NativeAOT, LLVM, WASM, JVM, and CLR while
+  explicitly excluding the universal JIT because its callback glue is still
+  McCarthy-specific. Decomposed into VM-020 and VM-021; selected VM-020 first
+  because it closes a zero-coverage frontend without changing runtime semantics.
 
 ## Ownership boundary
 
