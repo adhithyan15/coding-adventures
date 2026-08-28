@@ -1,0 +1,10 @@
+[package]
+name = "cdc6600-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "CDC 6600 functional simulator"
+license = "MIT"
+
+[lib]
+name = "cdc6600_simulator"
+path = "src/lib.rs"

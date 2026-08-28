@@ -68,7 +68,7 @@ according to the current prioritization run.
 | RCPU-001 / RCPU-002 | 1948 | Manchester Baby (SSEM) | Complete: `manchester-baby-simulator` | Complete: `manchester-baby-gatelevel` |
 | RCPU-003 / RCPU-004 | 1954 | IBM 704 | Complete: `ibm704-simulator` | Complete: `ibm704-gatelevel` |
 | RCPU-005 / RCPU-006 | 1961 | GE-225 | Complete: `ge225-simulator` | Complete: `ge225-gatelevel` |
-| RCPU-007 / RCPU-008 | 1964 | CDC 6600 | Missing | Missing |
+| RCPU-007 / RCPU-008 | 1964 | CDC 6600 | Complete: `cdc6600-simulator` | Missing |
 | RCPU-009 / RCPU-010 | 1970 | DEC PDP-11 | Missing | Missing |
 | RCPU-011 / RCPU-012 | 1971 | Intel 4004 | Audit: `intel4004-simulator` | Audit: `intel4004-gatelevel` |
 | RCPU-013 / RCPU-014 | 1972 | Intel 8008 | Audit: `intel8008-simulator` | Audit: `intel8008-gatelevel` |
@@ -91,8 +91,8 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-007**, the CDC 6600 functional Rust simulator,
-ordered behind publication of the completed GE-225 P006C gate-level final audit.
+Current selection: **RCPU-008**, the CDC 6600 gate-level Rust simulator,
+ordered behind publication of the completed RCPU-007 functional oracle.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -132,24 +132,37 @@ tests cover selector/status formats, modification, bounded opaque command
 capture, condition branches, disabled/deferred ready events, card participation,
 group-32 vector/return, SET PST/SET PBK, BRU target inhibition, reset, functional
 lockstep, and atomic memory edges. The 46 combined tests cover 84.92% of core
-lines (1,650/1,943), above the completion floor. P006C is implementation-complete
-locally atop P006B3: 167 additional DFF-backed bits model separate 40-bit
+lines (1,650/1,943), above the completion floor. P006C merged in PR #13365 at
+`ed442aa`: 167 additional DFF-backed bits model separate 40-bit
 AX/BX/QX/IX registers, mode/readiness, and four alert latches. Fourteen new
 functional-oracle tests cover all AAU memory/general/status families, fixed and
 floating arithmetic, normalization, signed/exponent edges, modification, odd
 memory rules, reset, and atomic boundaries. The 60 combined tests cover 85.61%
-of core lines (2,190/2,558), above the completion floor; P006C is the current
-publication slice and closes
-RCPU-006 when its final build audit merges green.
+of core lines (2,190/2,558), above the completion floor. Its green final build
+audit closes RCPU-006.
 
-RCPU-007 has no Rust package. Its Python behavioral oracle passes 109 tests at
-94.95% line coverage and fixes the repository acceptance surface at 22 short
-and 14 long instructions, four big-endian 15-bit parcels per 60-bit word,
-eight X/A/B registers with hardwired B0, 4,096 bounded memory words, parcel
-branches, deterministic bounded execution, and immutable state snapshots. The
-Rust port must preserve exact 60/18-bit wrap, signed comparisons, instruction
-packing, atomic memory errors, and seeded differential traces before RCPU-008
-begins the gate-level partner.
+RCPU-007 is implementation-complete and rebased atop merged P006C. Its 17 integration
+tests cover the repository's complete 22-short/14-long instruction surface,
+four big-endian 15-bit parcels per 60-bit word, all eight X/A/B registers with
+hardwired B0, 4,096 bounded memory words, parcel branches and subroutines,
+exact 60/18-bit wrap and signed comparisons, program encoders, immutable
+snapshots, atomic fetch/branch/memory errors, bounded execution, and seeded
+Python-oracle vectors. Core line coverage is 90.76% (324/357), above the
+completion floor. Its publication closes RCPU-007 and unblocks the RCPU-008
+gate-level partner.
+
+RCPU-008 is one auditable gate-level slice because the behavioral surface is
+bounded to 36 instructions and has no floating-point, scoreboard, peripheral-
+processor, or exchange-jump state. The package must put core memory, X/A/B/P,
+and halt state in flip-flops (with B0 implemented as a hardwired zero), use a
+one-hot gate decoder, and route every architectural boolean, 60/18-bit add or
+subtract, signed compare, B-controlled barrel shift, widened multiply, address
+calculation, branch predicate, and P increment through `logic-gates` and
+`arithmetic`. Host integers remain limited to checked memory selection, clock
+sequencing, transport conversion, and traces. Full-state step lockstep against
+`cdc6600-simulator`, seeded datapath vectors, exact topology counts, malformed
+transport, oversized bounds, and atomic last-parcel/memory failures are the
+acceptance boundary.
 
 ## Cross-language wave
 
@@ -177,6 +190,8 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-27 | RCPU-008 planning audit found no separate CDC 6600 gate-level specification or Rust package. The completed behavioral subset is nevertheless compact enough for one reviewable partner: 22 short and 14 long instructions over 60-bit X, 18-bit A/B, parcel P, and 4,096-word memory, with multiplication and variable shifts as its largest datapaths. | P0, chronological gate partner, follows RCPU-007 | Create a normative `07t2` gate contract and one `cdc6600-gatelevel` crate. Require DFF-backed persistent state except hardwired B0; one-hot gate decode; gate-vector add/subtract, compare, barrel shift, 60-stage partial-product multiply, address and branch networks; exact topology metrics; complete state/trace differentials; fail-closed preflight; documentation, BUILD/workspace integration, and at least 80% coverage. |
+| 2026-08-27 | RCPU-007 pre-push security review found that byte-transport decoding collected every caller parcel before checking the fixed 16,384-parcel memory capacity. An oversized input could therefore force an avoidable allocation before its deterministic rejection. | P0, allocation safety, blocks RCPU-007 | Validate the derived parcel count before decoding or allocating, preserve the loaded machine on failure, and pin the oversized canonical byte transport alongside the direct-parcel bound. |
 | 2026-08-27 | RCPU-007 audit found a complete Python CDC 6600 behavioral oracle but no Rust package. The oracle has 109 passing tests and 94.95% line coverage across 22 short and 14 long instructions, while its public spec intentionally bounds memory to 4,096 60-bit words and omits timing-only scoreboard, peripheral-processor, floating-point, and exchange-jump behavior. | P0, chronological functional oracle, blocks RCPU-008 | Port the entire specified behavioral surface to Rust with immutable snapshots, checked parcel fetch/branch/memory boundaries, exact 60/18-bit masking and signed comparisons, all instruction encoders, bounded execution, Python differential vectors, README/changelog/BUILD/workspace integration, and at least 80% Rust coverage before starting the gate-level partner. |
 | 2026-08-27 | P006C gate review found that a restoring divider's partial remainder must be one bit wider than its divisor. A same-width temporary can discard the carry while dividing by the most-negative fixed operand even though ordinary vectors pass. | P0, gate arithmetic fidelity, blocks P006C | Use 78-bit remainder/divisor wires for the 77-by-39 fixed divider and 65-bit wires for the 64-bit floating divider; retain fixed iteration bounds and signed quotient/remainder gates. |
 | 2026-08-27 | P006B3 gate-state audit found that API service selects special X group 32 at core 0200-0203, one beyond the ordinary five-bit SXG encoding. The P006A selected-group register could represent only groups 0-31. | P0, architectural state width, blocks P006B3 | Widen selected X-group state to six DFFs, retain ordinary SXG decode at five bits, add a separate six-bit interrupted-group latch, and pin group-32 vectoring plus restoration of the interrupted ordinary group. |
