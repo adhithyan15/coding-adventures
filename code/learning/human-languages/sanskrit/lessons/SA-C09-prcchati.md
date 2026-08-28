@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C09-prcchati
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 450

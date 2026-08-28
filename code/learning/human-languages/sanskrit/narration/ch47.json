@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Parts of a House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9790d02972a27ea4",
+  "sourceHash": "fnv1a64:83d188f56c5cb3e2",
   "lessons": [
     {
       "id": "SA-C47-wall",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45bba9d42bbfd540",
+      "sourceHash": "fnv1a64:48a9ce8e4657621f",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ff50263782bf639",
+      "sourceHash": "fnv1a64:52ac2ca305bfcf10",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a8f151a7be8a154",
+      "sourceHash": "fnv1a64:e991809d3f043391",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:246ba6f01efc81ab",
+      "sourceHash": "fnv1a64:5f0cc5aeadf8ca3e",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6e0aa033040c4d1",
+      "sourceHash": "fnv1a64:99226ee92f9b8e4e",
       "notice": null,
       "blocks": [
         {

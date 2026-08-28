@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [SA-IDIOM-KSHAMYATAM-APOLOGY-01]
+introduces_senses: []
+introduces_culture_claims: [SA-CULTURE-KSHAMYATAM-IMPERSONAL-APOLOGY-01]
 id: SA-C29-pardon
 spine_node: SPINE-COURTESY-THANK
 sequence: 1390

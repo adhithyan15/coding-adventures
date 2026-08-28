@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "What You'd Ask For",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:662ec360d6e0d8c4",
+  "sourceHash": "fnv1a64:20314ca1bf016963",
   "lessons": [
     {
       "id": "SA-C10-paniyam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dbf67fc3ae1f717e",
+      "sourceHash": "fnv1a64:3e23560ee2418a95",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:13fe21645e7188ce",
+      "sourceHash": "fnv1a64:2092391d562ed16f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b2a505852ac4b3a4",
+      "sourceHash": "fnv1a64:8853c2d6965dcd7d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -496,7 +496,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f77ce3e778901bc7",
+      "sourceHash": "fnv1a64:dac703da8c05ccda",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -705,7 +705,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:02858e396cbf3ea6",
+      "sourceHash": "fnv1a64:b5df7e5126ffccbf",
       "notice": {
         "modality": "pen",
         "needs": [

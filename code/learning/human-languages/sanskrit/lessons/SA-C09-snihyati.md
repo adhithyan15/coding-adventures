@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [SA-SENSE-SNIHYATI-LOVE-01]
+introduces_culture_claims: []
 id: SA-C09-snihyati
 spine_node: SPINE-SAY-WHAT-I-LIKE
 sequence: 470

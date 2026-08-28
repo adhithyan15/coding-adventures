@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Good Manners",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b47c87a5e8bee4b9",
+  "sourceHash": "fnv1a64:6146999a77810caf",
   "lessons": [
     {
       "id": "SA-C43-hospitality",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4557fd54843fad1",
+      "sourceHash": "fnv1a64:a5cd17a15c6fb404",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33f95b82938f3fbc",
+      "sourceHash": "fnv1a64:34b31829c8959fa5",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:146db672175857d0",
+      "sourceHash": "fnv1a64:11c7684f882c247f",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3dde6edf5ca5405",
+      "sourceHash": "fnv1a64:bd337116bbf6a648",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56e624423393ad81",
+      "sourceHash": "fnv1a64:b5e98f3b519ff800",
       "notice": null,
       "blocks": [
         {

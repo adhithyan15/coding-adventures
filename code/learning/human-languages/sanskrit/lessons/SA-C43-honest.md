@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C43-honest
 spine_node: SPINE-COURTESY-THANK
 sequence: 2120

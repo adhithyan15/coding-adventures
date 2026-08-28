@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [SA-CULTURE-MITRA-COVENANT-NAME-HISTORY-01]
 id: SA-C11-mitram
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 510

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 13,
-  "sourceHash": "fnv1a64:53411835a80421db",
+  "sourceHash": "fnv1a64:4b244db073f36444",
   "lessonIds": [
     "SA-C13-nasika",
     "SA-C13-hridayam",
@@ -13,6 +13,6 @@
   "text": "sanskrit/narration/ch13.txt",
   "json": "sanskrit/narration/ch13.json",
   "textHash": "fnv1a64:9889b96cf74971cb",
-  "jsonHash": "fnv1a64:2bd7e896f17b467c",
+  "jsonHash": "fnv1a64:9ccd685fb72acf6a",
   "findings": []
 }

@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [SA-IDIOM-PRANAMA-SALUTATION-01]
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C29-bow
 spine_node: SPINE-COURTESY-THANK
 sequence: 1400

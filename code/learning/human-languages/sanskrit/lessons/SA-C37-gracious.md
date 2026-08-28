@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [SA-SENSE-PRASANNA-PLEASED-CLEAR-01]
+introduces_culture_claims: []
 id: SA-C37-gracious
 spine_node: SPINE-COURTESY-THANK
 sequence: 1800

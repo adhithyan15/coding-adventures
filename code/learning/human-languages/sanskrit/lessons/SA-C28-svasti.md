@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [SA-IDIOM-SVASTI-FAREWELL-01]
+introduces_senses: []
+introduces_culture_claims: [SA-CULTURE-SVASTI-FAREWELL-HISTORY-01]
 id: SA-C28-svasti
 spine_node: SPINE-TAKE-LEAVE
 sequence: 1370

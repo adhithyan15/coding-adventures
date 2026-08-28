@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Five More Replies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ee993f58cf13a210",
+  "sourceHash": "fnv1a64:6436cff34595ccb7",
   "lessons": [
     {
       "id": "SA-C42-sometimes",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5d7ecebee189668",
+      "sourceHash": "fnv1a64:d51ee057fb519055",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f6c659cbbd89bf9",
+      "sourceHash": "fnv1a64:ab7037318285bc28",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e3bcc195e18894e",
+      "sourceHash": "fnv1a64:6b03f1988c894cf5",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95aede3f1b4aa1ae",
+      "sourceHash": "fnv1a64:7f9781d55d4c2f9f",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4398fd4a7486ddf",
+      "sourceHash": "fnv1a64:fef5cd4fe11cd890",
       "notice": null,
       "blocks": [
         {

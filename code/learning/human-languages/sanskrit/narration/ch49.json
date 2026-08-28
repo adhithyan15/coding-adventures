@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Five Small Answers",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:940b3df78e87691b",
+  "sourceHash": "fnv1a64:44e74ddbd62731d1",
   "lessons": [
     {
       "id": "SA-C49-then",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93bbbbd066b3b982",
+      "sourceHash": "fnv1a64:f75765762a41af73",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52dd3b8c263dad26",
+      "sourceHash": "fnv1a64:48148feed364d51b",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:414a533eef706c49",
+      "sourceHash": "fnv1a64:2fc3416834986278",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e061f0aa481e80a",
+      "sourceHash": "fnv1a64:5d3974eb08bf1eb9",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bd021dc56fc56ec",
+      "sourceHash": "fnv1a64:b4a1becf4b8da36b",
       "notice": null,
       "blocks": [
         {

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 9,
-  "sourceHash": "fnv1a64:c5be31315ce30ba4",
+  "sourceHash": "fnv1a64:80d7f0b650fb41a6",
   "lessonIds": [
     "SA-C09-grhnati",
     "SA-C09-prcchati",
@@ -15,6 +15,6 @@
   "text": "sanskrit/narration/ch09.txt",
   "json": "sanskrit/narration/ch09.json",
   "textHash": "fnv1a64:b3d646d7371bdaeb",
-  "jsonHash": "fnv1a64:a4517e570420dcad",
+  "jsonHash": "fnv1a64:e7b1a29e143e5825",
   "findings": []
 }

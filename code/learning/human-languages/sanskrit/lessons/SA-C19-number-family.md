@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [SA-CULTURE-NUMERALS-HISTORICAL-LINGUISTICS-01]
 id: SA-C19-number-family
 spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 950

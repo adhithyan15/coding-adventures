@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "More Animals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d811ed36294043c3",
+  "sourceHash": "fnv1a64:bf3713f5e29785ef",
   "lessons": [
     {
       "id": "SA-C48-lion",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49d9b0109796fbbc",
+      "sourceHash": "fnv1a64:a42ff1a166dd9b8f",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89d49dd16394fe93",
+      "sourceHash": "fnv1a64:9eef4f7c19f6c0c6",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff4e1ed703afbd29",
+      "sourceHash": "fnv1a64:61f4f2393b430014",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13fcebe1cff7a406",
+      "sourceHash": "fnv1a64:f11c577a38deb5ed",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4cdc43c8db576d2f",
+      "sourceHash": "fnv1a64:fed3e7118e780e16",
       "notice": null,
       "blocks": [
         {

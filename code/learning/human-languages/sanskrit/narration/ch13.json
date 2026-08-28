@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Face, Part Two",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:53411835a80421db",
+  "sourceHash": "fnv1a64:4b244db073f36444",
   "lessons": [
     {
       "id": "SA-C13-nasika",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:edb764e6f5bc94fd",
+      "sourceHash": "fnv1a64:7ccc250cc21dfec4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e40d196baed8339c",
+      "sourceHash": "fnv1a64:7fbba132677e3021",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -336,7 +336,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c22f0d95290784ea",
+      "sourceHash": "fnv1a64:422e451fe8dc76b5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -513,7 +513,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ec30b1a50d5bed36",
+      "sourceHash": "fnv1a64:d7453752877e2e41",
       "notice": {
         "modality": "pen",
         "needs": [

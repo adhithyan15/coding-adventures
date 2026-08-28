@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 31,
-  "sourceHash": "fnv1a64:53f2f918a9a9e5ab",
+  "sourceHash": "fnv1a64:af2240adafc6ffe6",
   "lessonIds": [
     "SA-C31-sky",
     "SA-C31-moon",
@@ -14,6 +14,6 @@
   "text": "sanskrit/narration/ch31.txt",
   "json": "sanskrit/narration/ch31.json",
   "textHash": "fnv1a64:12640e25e1d98a32",
-  "jsonHash": "fnv1a64:95dca8bd1243a44f",
+  "jsonHash": "fnv1a64:737481500e02232a",
   "findings": []
 }

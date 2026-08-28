@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [SA-IDIOM-AHO-EXCLAMATION-01]
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C49-oh
 spine_node: SPINE-RESPOND-BASIC
 sequence: 2420

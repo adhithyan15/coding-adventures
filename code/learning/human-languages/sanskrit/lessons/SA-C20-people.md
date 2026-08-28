@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C20-people
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 1000

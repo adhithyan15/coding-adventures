@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C27-true
 spine_node: SPINE-RESPOND-BASIC
 sequence: 1310

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 48,
-  "sourceHash": "fnv1a64:d811ed36294043c3",
+  "sourceHash": "fnv1a64:bf3713f5e29785ef",
   "lessonIds": [
     "SA-C48-lion",
     "SA-C48-wolf",
@@ -14,6 +14,6 @@
   "text": "sanskrit/narration/ch48.txt",
   "json": "sanskrit/narration/ch48.json",
   "textHash": "fnv1a64:3cde65d109429109",
-  "jsonHash": "fnv1a64:3b03e53623b76b64",
+  "jsonHash": "fnv1a64:fec531e6a124f890",
   "findings": []
 }

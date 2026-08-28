@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Sun and Shade",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4f0b0203af99c0ca",
+  "sourceHash": "fnv1a64:0585a1c36ced89e6",
   "lessons": [
     {
       "id": "SA-C46-sun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66ae4eb66c5bc23b",
+      "sourceHash": "fnv1a64:5b0d4041d608e31e",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5efe883a31e46cd5",
+      "sourceHash": "fnv1a64:0e62d9bbd3ca03ee",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c812e7e0410293a3",
+      "sourceHash": "fnv1a64:9852851a1c85159e",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b22a4c592e2f7a13",
+      "sourceHash": "fnv1a64:188007aeb72c2ba7",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:203d1eaa357de352",
+      "sourceHash": "fnv1a64:2249bfe24c9f5c9f",
       "notice": null,
       "blocks": [
         {

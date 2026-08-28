@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 29,
-  "sourceHash": "fnv1a64:6efd7b2a99d209b5",
+  "sourceHash": "fnv1a64:95bdf9889b9f746b",
   "lessonIds": [
     "SA-C29-please",
     "SA-C29-pardon",
@@ -14,6 +14,6 @@
   "text": "sanskrit/narration/ch29.txt",
   "json": "sanskrit/narration/ch29.json",
   "textHash": "fnv1a64:b983648aef9193d1",
-  "jsonHash": "fnv1a64:4192dd04d84386e5",
+  "jsonHash": "fnv1a64:1dfe30d52ec12916",
   "findings": []
 }

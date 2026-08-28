@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [SA-SENSE-AVAGACCHATI-UNDERSTAND-01]
+introduces_culture_claims: []
 id: SA-C08-avagacchati
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 410

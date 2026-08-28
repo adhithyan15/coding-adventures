@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:13ed263f4eceffa1",
+  "sourceHash": "fnv1a64:b71b55b764f4ae2d",
   "lessons": [
     {
       "id": "SA-C06-numbers-1-5",
@@ -20,7 +20,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:3168021dc7f91b41",
+      "sourceHash": "fnv1a64:0236934e5513189e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -169,7 +169,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57765fa65fcfe9d2",
+      "sourceHash": "fnv1a64:073f669b84372ee7",
       "notice": null,
       "blocks": [
         {
@@ -367,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5331f9d89fc516c1",
+      "sourceHash": "fnv1a64:a6fef3eab0243b98",
       "notice": null,
       "blocks": [
         {

@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [SA-CULTURE-ANJALI-GREETING-GESTURE-01]
 id: SA-C30-anjali
 spine_node: SPINE-MEET-GREET
 sequence: 1470

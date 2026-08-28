@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Fire and Stone",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9cb75d5b51116e33",
+  "sourceHash": "fnv1a64:49627413cda0f92a",
   "lessons": [
     {
       "id": "SA-C38-fire",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50958c0d02ee661d",
+      "sourceHash": "fnv1a64:f6c4dc546030205e",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49c10f2d89b6ae42",
+      "sourceHash": "fnv1a64:37091c0323ed18a7",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9dae239006cf295",
+      "sourceHash": "fnv1a64:bdcb0b703af2c284",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3e6c1ccb2fefc07",
+      "sourceHash": "fnv1a64:06939d55ab9a03a2",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e06c06b19c67af63",
+      "sourceHash": "fnv1a64:552805616f31e7b2",
       "notice": null,
       "blocks": [
         {

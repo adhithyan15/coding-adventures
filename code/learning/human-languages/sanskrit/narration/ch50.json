@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Sound and Song",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:771deca55754822c",
+  "sourceHash": "fnv1a64:8f35852ce9c016d5",
   "lessons": [
     {
       "id": "SA-C50-sound",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4fb04cd62707b3eb",
+      "sourceHash": "fnv1a64:40282770025b1386",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:911610b0ab05eae1",
+      "sourceHash": "fnv1a64:6495d8a65bb56c7c",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5eb038c088c70e3f",
+      "sourceHash": "fnv1a64:1bd98cf49cfdbbc4",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e30b24f8041fe094",
+      "sourceHash": "fnv1a64:6cb2d42f741513c3",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e0d5c29ad70d835",
+      "sourceHash": "fnv1a64:16038809f4117147",
       "notice": null,
       "blocks": [
         {
