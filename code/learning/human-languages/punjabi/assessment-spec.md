@@ -4,8 +4,8 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; task inventories, mocks, calibration, and human
-validation are still backlog
+**Status:** pre-A1 and A1 task inventories checked in; A2-C2 task inventories,
+mocks, calibration, and human validation are still backlog
 
 This specification names the assessment that the complete Punjabi book must
 eventually prepare a book-only learner to pass. It is not an external
