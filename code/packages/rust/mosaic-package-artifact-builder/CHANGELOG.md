@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - narrow the `HostProgressRing` degradation to also exclude Qt (#13176)
+
+Qt now lowers `HostProgressRing` to a hand-drawn native determinate arc
+(`Shape`/`ShapePath`/`PathAngleArc`, `mosaic-emit-qt`) — the last of
+the four native backends in this cascade. Narrowed the
+`("HostProgressRing", ...)` arm in `collect_native_degradations` from
+`!matches!(backend, Backend::Xaml | Backend::Flutter | Backend::Compose)`
+to also exclude `Backend::Qt`. Only SwiftUI (tracked separately in
+#13206, unbuildable on this dev box) remains.
+
 ## [Unreleased] - narrow the `HostProgressRing` degradation to also exclude Compose (#13176)
 
 Compose now lowers `HostProgressRing` to a real native
