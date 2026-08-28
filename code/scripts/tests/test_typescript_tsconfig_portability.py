@@ -411,8 +411,9 @@ console.log(prose, nested);
         # +1: canonical-cbor, the native CBR01 encoder/decoder lane.
         # +1: forme-theme-classless, the reusable resolved Style IR theme.
         # +1: forme-resolve-asset-refs-fs, the source-safe asset reference lane.
-        self.assertEqual(summary.total_projects, 467)
-        self.assertEqual(summary.shared_projects, 289)
+        # +1: forme-load-assets-fs, the canonical-contained Asset IR loader.
+        self.assertEqual(summary.total_projects, 468)
+        self.assertEqual(summary.shared_projects, 290)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
         self.assertEqual(summary.standalone_emit_projects, 148)
@@ -435,7 +436,8 @@ console.log(prose, nested);
         # they no longer touch any Node builtin API at all.
         # +1: forme-resolve-asset-refs-fs resolves paths and reads identity
         # sidecars through the Node filesystem API.
-        self.assertEqual(summary.node_api_projects, 65)
+        # +1: forme-load-assets-fs resolves canonical paths and reads bytes.
+        self.assertEqual(summary.node_api_projects, 66)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -443,7 +445,8 @@ console.log(prose, nested);
         # provider if it's a node API project, so the same 31 packages drop
         # out of both counts together.
         # +1: forme-resolve-asset-refs-fs owns its Node provider directly.
-        self.assertEqual(summary.node_provider_projects, 65)
+        # +1: forme-load-assets-fs owns its Node provider directly.
+        self.assertEqual(summary.node_provider_projects, 66)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -460,7 +463,8 @@ console.log(prose, nested);
         # +1: canonical-cbor locks the shared TypeScript compiler toolchain.
         # +1: forme-theme-classless locks its standalone compiler toolchain.
         # +1: forme-resolve-asset-refs-fs locks its compiler toolchain.
-        self.assertEqual(summary.locked_compilers, 461)
+        # +1: forme-load-assets-fs locks its compiler toolchain.
+        self.assertEqual(summary.locked_compilers, 462)
 
 
 if __name__ == "__main__":

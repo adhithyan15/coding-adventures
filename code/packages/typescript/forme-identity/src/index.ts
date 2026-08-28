@@ -18,6 +18,7 @@
 export { canonicalJson } from "./canonical-json.js";
 
 export {
+  computeBinaryRevisionId,
   computeRevisionId,
   isRevisionIdShape,
   REVISION_ALGORITHM,

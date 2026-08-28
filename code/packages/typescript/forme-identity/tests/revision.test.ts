@@ -6,6 +6,7 @@ import { describe, it, expect } from "vitest";
 import {
   REVISION_ALGORITHM,
   REVISION_DIGEST_BYTES,
+  computeBinaryRevisionId,
   computeRevisionId,
   isRevisionIdShape,
 } from "../src/index.js";
@@ -50,6 +51,27 @@ describe("computeRevisionId", () => {
     expect(id).toMatch(/^blake2b:[0-9a-f]{64}$/);
     // Same input must produce the same hash today and forever.
     expect(computeRevisionId({})).toBe(id);
+  });
+});
+
+describe("computeBinaryRevisionId", () => {
+  it("is deterministic and changes when any byte changes", () => {
+    const bytes = new Uint8Array([0, 1, 2, 255]);
+    const revision = computeBinaryRevisionId(bytes);
+    expect(isRevisionIdShape(revision)).toBe(true);
+    expect(computeBinaryRevisionId(bytes)).toBe(revision);
+    expect(computeBinaryRevisionId(new Uint8Array([0, 1, 3, 255]))).not.toBe(revision);
+  });
+
+  it("domain-separates binary bytes from canonical JSON", () => {
+    const canonicalEmptyObject = new TextEncoder().encode("{}");
+    expect(computeBinaryRevisionId(canonicalEmptyObject)).not.toBe(computeRevisionId({}));
+  });
+
+  it("does not mutate the caller's bytes", () => {
+    const bytes = new Uint8Array([9, 8, 7]);
+    computeBinaryRevisionId(bytes);
+    expect(bytes).toEqual(new Uint8Array([9, 8, 7]));
   });
 });
 
