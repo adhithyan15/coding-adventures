@@ -6,7 +6,7 @@
     {
       "language": "italian",
       "chapter": 1,
-      "sourceHash": "fnv1a64:f62735b515d964a2",
+      "sourceHash": "fnv1a64:2d6d888b44c53554",
       "lessonIds": [
         "IT-C01-ciao",
         "IT-W01-ciao-guided-copy",
@@ -24,33 +24,37 @@
       "text": "italian/narration/ch01.txt",
       "json": "italian/narration/ch01.json",
       "textHash": "fnv1a64:bb656ecf5aad27da",
-      "jsonHash": "fnv1a64:08fe26246dcc6010"
+      "jsonHash": "fnv1a64:280312934dc60af9"
     },
     {
       "language": "italian",
       "chapter": 2,
-      "sourceHash": "fnv1a64:ca661e84ba10f32a",
+      "sourceHash": "fnv1a64:e3c29e109805da79",
       "lessonIds": [
         "IT-C02-prego",
+        "IT-C02-prego-go-ahead",
+        "IT-C02-prego-here-you-are",
+        "IT-C02-prego-come-again",
         "IT-C02-come",
         "IT-C02-stare",
         "IT-C02-come-stai",
         "IT-C02-come-sta",
         "IT-C02-come-va",
         "IT-C02-cosi-cosi",
+        "IT-C02-non-ce-male",
         "IT-C02-practice"
       ],
-      "voiceLessons": 8,
-      "drivablePrefix": 8,
+      "voiceLessons": 12,
+      "drivablePrefix": 12,
       "text": "italian/narration/ch02.txt",
       "json": "italian/narration/ch02.json",
-      "textHash": "fnv1a64:6ee0180cf8679ec3",
-      "jsonHash": "fnv1a64:d559c3a3526ee1a0"
+      "textHash": "fnv1a64:18ae38d1d24bff33",
+      "jsonHash": "fnv1a64:9655a7f49dfb1b53"
     },
     {
       "language": "italian",
       "chapter": 3,
-      "sourceHash": "fnv1a64:2949f8ec4adec769",
+      "sourceHash": "fnv1a64:83f1390fd16977dd",
       "lessonIds": [
         "IT-C03-io",
         "IT-C03-mi-chiamo",
@@ -63,12 +67,12 @@
       "text": "italian/narration/ch03.txt",
       "json": "italian/narration/ch03.json",
       "textHash": "fnv1a64:9980c0eb2f0cba0d",
-      "jsonHash": "fnv1a64:0ee2060a5eee7e8f"
+      "jsonHash": "fnv1a64:20301ea598c2a19c"
     },
     {
       "language": "italian",
       "chapter": 4,
-      "sourceHash": "fnv1a64:ca5f394581f1d56b",
+      "sourceHash": "fnv1a64:534f394f345fb8a4",
       "lessonIds": [
         "IT-C04-arrivederci",
         "IT-C04-a-domani",
@@ -81,12 +85,12 @@
       "text": "italian/narration/ch04.txt",
       "json": "italian/narration/ch04.json",
       "textHash": "fnv1a64:90d94941e757ce54",
-      "jsonHash": "fnv1a64:f9fae0a23c4b2082"
+      "jsonHash": "fnv1a64:ccd5e50cf54aaad7"
     },
     {
       "language": "italian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:588a9facd5ea70ef",
+      "sourceHash": "fnv1a64:7577e64790f4e58f",
       "lessonIds": [
         "IT-C05-parlare",
         "IT-C05-abitare",
@@ -99,12 +103,12 @@
       "text": "italian/narration/ch05.txt",
       "json": "italian/narration/ch05.json",
       "textHash": "fnv1a64:6d44cdd003fa5243",
-      "jsonHash": "fnv1a64:ea97a1abbab7ee8d"
+      "jsonHash": "fnv1a64:055ab7a00ce209a4"
     },
     {
       "language": "italian",
       "chapter": 6,
-      "sourceHash": "fnv1a64:e98372b21a44469a",
+      "sourceHash": "fnv1a64:b02330f2e6d4a61c",
       "lessonIds": [
         "IT-C06-numeri-1-5",
         "IT-C06-numeri-6-10"
@@ -114,12 +118,12 @@
       "text": "italian/narration/ch06.txt",
       "json": "italian/narration/ch06.json",
       "textHash": "fnv1a64:da73b4c16423d941",
-      "jsonHash": "fnv1a64:a04094a77d394efc"
+      "jsonHash": "fnv1a64:a98ed162c5eedf20"
     },
     {
       "language": "italian",
       "chapter": 7,
-      "sourceHash": "fnv1a64:e411e61a0e42f98e",
+      "sourceHash": "fnv1a64:9bf7027d1fe20599",
       "lessonIds": [
         "IT-C07-giorni-1",
         "IT-C07-giorni-2"
@@ -129,12 +133,12 @@
       "text": "italian/narration/ch07.txt",
       "json": "italian/narration/ch07.json",
       "textHash": "fnv1a64:8e2526b733bb340c",
-      "jsonHash": "fnv1a64:9b81713337922740"
+      "jsonHash": "fnv1a64:1d2df003d415d248"
     },
     {
       "language": "italian",
       "chapter": 8,
-      "sourceHash": "fnv1a64:8c6f2fefca515e70",
+      "sourceHash": "fnv1a64:42ce63347a2a14e3",
       "lessonIds": [
         "IT-C08-ora",
         "IT-C08-mezzogiorno-mezzanotte"
@@ -144,12 +148,12 @@
       "text": "italian/narration/ch08.txt",
       "json": "italian/narration/ch08.json",
       "textHash": "fnv1a64:45846c44afde85f7",
-      "jsonHash": "fnv1a64:5c769600179ceb7a"
+      "jsonHash": "fnv1a64:8f82d720486e7672"
     },
     {
       "language": "italian",
       "chapter": 9,
-      "sourceHash": "fnv1a64:d030a0fa85b5678f",
+      "sourceHash": "fnv1a64:eb920ac85210535c",
       "lessonIds": [
         "IT-C09-mesi",
         "IT-C09-stagioni"
@@ -159,12 +163,12 @@
       "text": "italian/narration/ch09.txt",
       "json": "italian/narration/ch09.json",
       "textHash": "fnv1a64:29421d240bd03412",
-      "jsonHash": "fnv1a64:e53c2313a7872968"
+      "jsonHash": "fnv1a64:896f1030dc81227d"
     },
     {
       "language": "italian",
       "chapter": 10,
-      "sourceHash": "fnv1a64:408622844a141e06",
+      "sourceHash": "fnv1a64:19dbcedcb0ef5c37",
       "lessonIds": [
         "IT-C10-genitori",
         "IT-C10-fratello-sorella"
@@ -174,12 +178,12 @@
       "text": "italian/narration/ch10.txt",
       "json": "italian/narration/ch10.json",
       "textHash": "fnv1a64:bfb639300f0bc9a0",
-      "jsonHash": "fnv1a64:3bc4e0f99d8d11cc"
+      "jsonHash": "fnv1a64:49df4d34bd6b8cf5"
     },
     {
       "language": "italian",
       "chapter": 11,
-      "sourceHash": "fnv1a64:0ba39a1b7b3a0899",
+      "sourceHash": "fnv1a64:3075b31c8103dfd1",
       "lessonIds": [
         "IT-C11-pane",
         "IT-C11-acqua-vino"
@@ -189,12 +193,12 @@
       "text": "italian/narration/ch11.txt",
       "json": "italian/narration/ch11.json",
       "textHash": "fnv1a64:b1fd754c6cf12223",
-      "jsonHash": "fnv1a64:b5c31841d157d035"
+      "jsonHash": "fnv1a64:c8beea42da4a8a72"
     },
     {
       "language": "italian",
       "chapter": 12,
-      "sourceHash": "fnv1a64:e2431531c5358324",
+      "sourceHash": "fnv1a64:461878fa1e1686b6",
       "lessonIds": [
         "IT-C12-numeri-11-16",
         "IT-C12-numeri-17-20"
@@ -204,12 +208,12 @@
       "text": "italian/narration/ch12.txt",
       "json": "italian/narration/ch12.json",
       "textHash": "fnv1a64:bf244fa36181ae4b",
-      "jsonHash": "fnv1a64:99231c1cd93a408b"
+      "jsonHash": "fnv1a64:3e9fe5bd2d068480"
     },
     {
       "language": "italian",
       "chapter": 13,
-      "sourceHash": "fnv1a64:d158e4e3576da88e",
+      "sourceHash": "fnv1a64:64d43dd9fc525346",
       "lessonIds": [
         "IT-C13-nero-bianco",
         "IT-C13-rosso-blu"
@@ -219,12 +223,12 @@
       "text": "italian/narration/ch13.txt",
       "json": "italian/narration/ch13.json",
       "textHash": "fnv1a64:44888e2120d44934",
-      "jsonHash": "fnv1a64:1f41f74bf9449e3e"
+      "jsonHash": "fnv1a64:9e48cb4c3900cfa9"
     },
     {
       "language": "italian",
       "chapter": 14,
-      "sourceHash": "fnv1a64:0955fb9314cc86c0",
+      "sourceHash": "fnv1a64:107eaa34576d12bc",
       "lessonIds": [
         "IT-C14-avere",
         "IT-C14-eta"
@@ -234,12 +238,12 @@
       "text": "italian/narration/ch14.txt",
       "json": "italian/narration/ch14.json",
       "textHash": "fnv1a64:dcb61b2646ca0757",
-      "jsonHash": "fnv1a64:6a0bf3c4259fd233"
+      "jsonHash": "fnv1a64:d3bdab707dfb78a6"
     },
     {
       "language": "italian",
       "chapter": 15,
-      "sourceHash": "fnv1a64:50843bd9598574f7",
+      "sourceHash": "fnv1a64:afee5d08617a82c8",
       "lessonIds": [
         "IT-C15-passato-prossimo",
         "IT-C15-passato-remoto"
@@ -249,12 +253,12 @@
       "text": "italian/narration/ch15.txt",
       "json": "italian/narration/ch15.json",
       "textHash": "fnv1a64:4d432a2cb26f240c",
-      "jsonHash": "fnv1a64:95d66628525ba977"
+      "jsonHash": "fnv1a64:75068e2b7917d12e"
     },
     {
       "language": "italian",
       "chapter": 16,
-      "sourceHash": "fnv1a64:c5a3a23e7fecd54e",
+      "sourceHash": "fnv1a64:f1cfcbc3670e86e6",
       "lessonIds": [
         "IT-C16-essere",
         "IT-C16-essere-stato",
@@ -266,12 +270,12 @@
       "text": "italian/narration/ch16.txt",
       "json": "italian/narration/ch16.json",
       "textHash": "fnv1a64:e2376be5ee197120",
-      "jsonHash": "fnv1a64:a0a840f9d8435e3c"
+      "jsonHash": "fnv1a64:564732acecb2a340"
     },
     {
       "language": "italian",
       "chapter": 17,
-      "sourceHash": "fnv1a64:68aa89d6596eb587",
+      "sourceHash": "fnv1a64:34a887be239573b3",
       "lessonIds": [
         "IT-C17-testa",
         "IT-C17-mano"
@@ -281,12 +285,12 @@
       "text": "italian/narration/ch17.txt",
       "json": "italian/narration/ch17.json",
       "textHash": "fnv1a64:9cc2b7961d57ea5c",
-      "jsonHash": "fnv1a64:f77b9d6257065a55"
+      "jsonHash": "fnv1a64:87e4cad5a30c420b"
     },
     {
       "language": "italian",
       "chapter": 18,
-      "sourceHash": "fnv1a64:d09734efe517ba07",
+      "sourceHash": "fnv1a64:e5f8e1e2a9334956",
       "lessonIds": [
         "IT-C18-pensare",
         "IT-C18-capire",
@@ -298,12 +302,12 @@
       "text": "italian/narration/ch18.txt",
       "json": "italian/narration/ch18.json",
       "textHash": "fnv1a64:51c0fd04024c453b",
-      "jsonHash": "fnv1a64:6c9fe0b774806031"
+      "jsonHash": "fnv1a64:526fddfe2fb3d637"
     },
     {
       "language": "italian",
       "chapter": 19,
-      "sourceHash": "fnv1a64:77f28976c9d33821",
+      "sourceHash": "fnv1a64:6b3c3feae097854a",
       "lessonIds": [
         "IT-C19-prendere",
         "IT-C19-chiedere",
@@ -315,12 +319,12 @@
       "text": "italian/narration/ch19.txt",
       "json": "italian/narration/ch19.json",
       "textHash": "fnv1a64:15d2d42ad6328b16",
-      "jsonHash": "fnv1a64:ec23de50757d1957"
+      "jsonHash": "fnv1a64:ad12af6929012bef"
     },
     {
       "language": "italian",
       "chapter": 20,
-      "sourceHash": "fnv1a64:d908006fc7a74f00",
+      "sourceHash": "fnv1a64:2a67f4369f424713",
       "lessonIds": [
         "IT-C20-portare",
         "IT-C20-comprare",
@@ -332,12 +336,12 @@
       "text": "italian/narration/ch20.txt",
       "json": "italian/narration/ch20.json",
       "textHash": "fnv1a64:1939cafb88d0cbc1",
-      "jsonHash": "fnv1a64:e5e9f72f32879b24"
+      "jsonHash": "fnv1a64:6060445e96c236e3"
     },
     {
       "language": "italian",
       "chapter": 21,
-      "sourceHash": "fnv1a64:a761ac70bf7a393a",
+      "sourceHash": "fnv1a64:6fe0173bfa2c62f2",
       "lessonIds": [
         "IT-C21-giocare",
         "IT-C21-ottenere",
@@ -348,12 +352,12 @@
       "text": "italian/narration/ch21.txt",
       "json": "italian/narration/ch21.json",
       "textHash": "fnv1a64:61092490c4f28364",
-      "jsonHash": "fnv1a64:6cb1830b6592312d"
+      "jsonHash": "fnv1a64:c5d2a1b0ad955793"
     },
     {
       "language": "italian",
       "chapter": 22,
-      "sourceHash": "fnv1a64:77ad59126ebc23a1",
+      "sourceHash": "fnv1a64:e63e009b52422e59",
       "lessonIds": [
         "IT-C22-caffe",
         "IT-C22-te",
@@ -365,12 +369,12 @@
       "text": "italian/narration/ch22.txt",
       "json": "italian/narration/ch22.json",
       "textHash": "fnv1a64:3c328d60decec1f5",
-      "jsonHash": "fnv1a64:8a1fa07606ed99d1"
+      "jsonHash": "fnv1a64:c38416c9edc3c8dc"
     },
     {
       "language": "italian",
       "chapter": 23,
-      "sourceHash": "fnv1a64:8df82c6158f61973",
+      "sourceHash": "fnv1a64:c10c02b8e7198afe",
       "lessonIds": [
         "IT-C23-amico-amica",
         "IT-C23-famiglia",
@@ -382,12 +386,12 @@
       "text": "italian/narration/ch23.txt",
       "json": "italian/narration/ch23.json",
       "textHash": "fnv1a64:4c763763d2a5a3fa",
-      "jsonHash": "fnv1a64:d274b3f4431b7445"
+      "jsonHash": "fnv1a64:f45c6913c6a2d936"
     },
     {
       "language": "italian",
       "chapter": 24,
-      "sourceHash": "fnv1a64:7670302fce0c6d70",
+      "sourceHash": "fnv1a64:0d843d31a84e75f6",
       "lessonIds": [
         "IT-C24-cuore",
         "IT-C24-occhio",
@@ -399,12 +403,12 @@
       "text": "italian/narration/ch24.txt",
       "json": "italian/narration/ch24.json",
       "textHash": "fnv1a64:30372e50abd8906b",
-      "jsonHash": "fnv1a64:5245fdc651becec5"
+      "jsonHash": "fnv1a64:8520c73cc2f34d33"
     },
     {
       "language": "italian",
       "chapter": 25,
-      "sourceHash": "fnv1a64:58c18f6ff0de8d04",
+      "sourceHash": "fnv1a64:9152dc466a42ebd4",
       "lessonIds": [
         "IT-C25-naso",
         "IT-C25-stomaco",
@@ -415,7 +419,7 @@
       "text": "italian/narration/ch25.txt",
       "json": "italian/narration/ch25.json",
       "textHash": "fnv1a64:28b3b63f3eac83d2",
-      "jsonHash": "fnv1a64:86c0083dbc74c30a"
+      "jsonHash": "fnv1a64:c0708a180ac258ca"
     }
   ],
   "findings": []

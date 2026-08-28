@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-LEX-ESSERE-02, IT-GRAMMAR-ESSERE-03, IT-ETYMON-ESSERE-04]
 introduces:
   knowledge: [IT-GRAMMAR-ESSERE-STATO-02, IT-NOTICE-ESSERE-STATO-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-LEX-ESSERE-02, IT-GRAMMAR-ESSERE-03, IT-ETYMON-ESSERE-04, IT-GRAMMAR-ESSERE-STATO-02, IT-NOTICE-ESSERE-STATO-03]
 skills: [listening, speaking, reading]

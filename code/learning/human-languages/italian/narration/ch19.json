@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Taking, Asking, Helping — and Mi Piace",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:77f28976c9d33821",
+  "sourceHash": "fnv1a64:6b3c3feae097854a",
   "lessons": [
     {
       "id": "IT-C19-prendere",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a26fc49607ec8fe5",
+      "sourceHash": "fnv1a64:84a67f9516256dba",
       "notice": null,
       "blocks": [
         {
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac3baa0ecae085ec",
+      "sourceHash": "fnv1a64:7bcd09fa1a6bff0f",
       "notice": null,
       "blocks": [
         {
@@ -373,7 +373,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbbeb0b530219e69",
+      "sourceHash": "fnv1a64:9d0eb28b4a52dad6",
       "notice": null,
       "blocks": [
         {
@@ -561,7 +561,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:899f43a4edc49ac4",
+      "sourceHash": "fnv1a64:6d2656dc84c2a2d3",
       "notice": null,
       "blocks": [
         {

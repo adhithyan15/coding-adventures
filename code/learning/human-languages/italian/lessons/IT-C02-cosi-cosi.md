@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-ETYMON-COME-STAI-02]
 introduces:
   knowledge: [IT-SOUND-COSI-COSI-02, IT-ETYMON-COSI-COSI-03, IT-GRAMMAR-COSI-COSI-04]
+introduces_idioms: [IT-IDIOM-COSI-COSI-SO-SO-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-ETYMON-COME-STAI-02, IT-SOUND-COSI-COSI-02, IT-ETYMON-COSI-COSI-03, IT-GRAMMAR-COSI-COSI-04]
 skills: [listening, speaking, reading]
@@ -67,7 +70,6 @@ whole.
 |---|---|
 | **(Molto) bene, grazie** | (very) well, thanks |
 | **Così così** | so-so |
-| **Non c'è male** | "not bad" (lit. "there isn't bad") |
 
 The cross-track shrug set, now five deep: Italian **così così** ("so, so"),
 French **comme ci comme ça** ("like this, like that"), Spanish **más o menos**
@@ -78,7 +80,7 @@ French **comme ci comme ça** ("like this, like that"), Spanish **más o menos**
 
 [PAUSE 1s]
 - [YOU SAY: "così così" — *koh-ZEE koh-ZEE*, with a hand-wobble]
-- [YOU SAY: answer "Come stai?" three ways — "Bene" / "Così così" / "Non c'è male"]
+- [YOU SAY: answer "Come stai?" two ways — "Bene" / "Così così"]
 - [YOU SAY: "sic" in English — "thus" — the same *sīc*]
 
 ## Wrap-up Recall

@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Months and Seasons",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d030a0fa85b5678f",
+  "sourceHash": "fnv1a64:eb920ac85210535c",
   "lessons": [
     {
       "id": "IT-C09-mesi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:643084eb40befbc6",
+      "sourceHash": "fnv1a64:b1976e6af609af25",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -152,7 +152,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99951bab86392f1e",
+      "sourceHash": "fnv1a64:e34b3c689a6f13d1",
       "notice": null,
       "blocks": [
         {

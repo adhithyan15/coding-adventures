@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:408622844a141e06",
+  "sourceHash": "fnv1a64:19dbcedcb0ef5c37",
   "lessons": [
     {
       "id": "IT-C10-genitori",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6373589c2409a1af",
+      "sourceHash": "fnv1a64:8076eaa79a5dacfc",
       "notice": null,
       "blocks": [
         {
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b4dfcef93c43201",
+      "sourceHash": "fnv1a64:60f8b9d1658fd8b2",
       "notice": null,
       "blocks": [
         {

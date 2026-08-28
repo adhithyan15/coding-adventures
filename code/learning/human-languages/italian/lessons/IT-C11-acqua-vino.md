@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-ETYMON-PANE-02, IT-ETYMON-PANE-03]
 introduces:
   knowledge: [IT-ETYMON-ACQUA-VINO-02, IT-ETYMON-ACQUA-VINO-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-ETYMON-PANE-02, IT-ETYMON-PANE-03, IT-ETYMON-ACQUA-VINO-02, IT-ETYMON-ACQUA-VINO-03]
 skills: [listening, speaking, reading]

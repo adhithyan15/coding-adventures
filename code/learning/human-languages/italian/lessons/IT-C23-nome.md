@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-LEX-FAMIGLIA-02, IT-ETYMON-FAMIGLIA-03, IT-SOUND-MI-CHIAMO-02, IT-ETYMON-MI-CHIAMO-03]
 introduces:
   knowledge: [IT-LEX-NOME-02, IT-ETYMON-NOME-03, IT-NOTICE-NOME-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-LEX-FAMIGLIA-02, IT-ETYMON-FAMIGLIA-03, IT-SOUND-MI-CHIAMO-02, IT-ETYMON-MI-CHIAMO-03, IT-LEX-NOME-02, IT-ETYMON-NOME-03, IT-NOTICE-NOME-04]
 skills: [listening, speaking, reading]

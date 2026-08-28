@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f62735b515d964a2",
+  "sourceHash": "fnv1a64:2d6d888b44c53554",
   "lessons": [
     {
       "id": "IT-C01-ciao",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:7bd946e9a0911e43",
+      "sourceHash": "fnv1a64:39674ab3b9b351b1",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -165,7 +165,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:aabf5233b92fb743",
+      "sourceHash": "fnv1a64:2313a64567a8c32e",
       "notice": {
         "modality": "pen",
         "needs": [

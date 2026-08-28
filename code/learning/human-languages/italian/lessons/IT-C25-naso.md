@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-LEX-BOCCA-02, IT-ETYMON-BOCCA-03, IT-NOTICE-BOCCA-04]
 introduces:
   knowledge: [IT-LEX-NASO-02, IT-ETYMON-NASO-03, IT-GRAMMAR-NASO-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-LEX-BOCCA-02, IT-ETYMON-BOCCA-03, IT-NOTICE-BOCCA-04, IT-LEX-NASO-02, IT-ETYMON-NASO-03, IT-GRAMMAR-NASO-04]
 skills: [listening, speaking, reading]

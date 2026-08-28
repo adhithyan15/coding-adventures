@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-GRAMMAR-NUMERI-17-20-02, IT-NOTICE-NUMERI-17-20-03]
 introduces:
   knowledge: [IT-ETYMON-NERO-BIANCO-02, IT-ETYMON-NERO-BIANCO-03, IT-ETYMON-NERO-BIANCO-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-GRAMMAR-NUMERI-17-20-02, IT-NOTICE-NUMERI-17-20-03, IT-ETYMON-NERO-BIANCO-02, IT-ETYMON-NERO-BIANCO-03, IT-ETYMON-NERO-BIANCO-04]
 skills: [listening, speaking, reading]

@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Coffee, Tea, Milk, and Sugar",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:77ad59126ebc23a1",
+  "sourceHash": "fnv1a64:e63e009b52422e59",
   "lessons": [
     {
       "id": "IT-C22-caffe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd3d3e8c33a31297",
+      "sourceHash": "fnv1a64:3f139622494d33b1",
       "notice": null,
       "blocks": [
         {
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f8e82757295def7",
+      "sourceHash": "fnv1a64:679b6f1ed50f90d8",
       "notice": null,
       "blocks": [
         {
@@ -292,7 +292,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad2dbe38adfa3d9f",
+      "sourceHash": "fnv1a64:a4063751002911c0",
       "notice": null,
       "blocks": [
         {
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a694c02378e7707e",
+      "sourceHash": "fnv1a64:8a68c66f08282697",
       "notice": null,
       "blocks": [
         {

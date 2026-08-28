@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e2431531c5358324",
+  "sourceHash": "fnv1a64:461878fa1e1686b6",
   "lessons": [
     {
       "id": "IT-C12-numeri-11-16",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:3a0f27892fd984ce",
+      "sourceHash": "fnv1a64:8b6a037c017781e1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -152,7 +152,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:1f921aa293716744",
+      "sourceHash": "fnv1a64:f5b9211a18e5be8d",
       "notice": {
         "modality": "sight",
         "needs": [

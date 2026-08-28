@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-LEX-TESTA-02, IT-ETYMON-TESTA-03, IT-ETYMON-TESTA-04]
 introduces:
   knowledge: [IT-LEX-MANO-02, IT-GRAMMAR-MANO-03, IT-ETYMON-MANO-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-LEX-TESTA-02, IT-ETYMON-TESTA-03, IT-ETYMON-TESTA-04, IT-LEX-MANO-02, IT-GRAMMAR-MANO-03, IT-ETYMON-MANO-04]
 skills: [listening, speaking, reading]

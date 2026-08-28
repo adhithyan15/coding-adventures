@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-ETYMON-MESI-02]
 introduces:
   knowledge: [IT-ETYMON-STAGIONI-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-ETYMON-MESI-02, IT-ETYMON-STAGIONI-02]
 skills: [listening, speaking, reading]

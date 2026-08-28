@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8c6f2fefca515e70",
+  "sourceHash": "fnv1a64:42ce63347a2a14e3",
   "lessons": [
     {
       "id": "IT-C08-ora",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78d97facae92a855",
+      "sourceHash": "fnv1a64:2eb36e64123bc560",
       "notice": null,
       "blocks": [
         {
@@ -152,7 +152,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:765c17dfee4ea380",
+      "sourceHash": "fnv1a64:4340d59d12618a7d",
       "notice": {
         "modality": "sight",
         "needs": [

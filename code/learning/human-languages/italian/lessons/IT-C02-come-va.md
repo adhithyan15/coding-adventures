@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-GRAMMAR-COME-STA-02]
 introduces:
   knowledge: [IT-GRAMMAR-COME-VA-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [IT-CULTURE-COME-VA-REGISTER-NEUTRAL-01]
 practises:
   knowledge: [IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02]
 skills: [listening, speaking, reading]

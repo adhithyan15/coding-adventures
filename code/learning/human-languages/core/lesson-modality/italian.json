@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:cf4f32bc9cedb262",
+  "sourceHash": "fnv1a64:c807da86ec88eba8",
   "summary": {
-    "totalLessons": 89,
-    "voice": 74,
+    "totalLessons": 93,
+    "voice": 78,
     "sight": 13,
     "pen": 2,
-    "drivableLessons": 74,
-    "drivablePercent": 83,
+    "drivableLessons": 78,
+    "drivablePercent": 84,
     "trackCount": 1,
     "chapterCount": 25,
-    "drivablePrefixTotal": 58,
+    "drivablePrefixTotal": 62,
     "fullyDrivableChapters": 15,
     "unstartableChapters": 7,
     "overriddenLessons": 0,
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "italian",
-      "lessonCount": 89,
-      "voice": 74,
+      "lessonCount": 93,
+      "voice": 78,
       "sight": 13,
       "pen": 2,
-      "drivablePercent": 83,
-      "drivablePrefixTotal": 58,
+      "drivablePercent": 84,
+      "drivablePrefixTotal": 62,
       "modalities": [
         "voice",
         "sight",
@@ -56,24 +56,28 @@
         },
         {
           "chapter": 2,
-          "lessonCount": 8,
-          "voice": 8,
+          "lessonCount": 12,
+          "voice": 12,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 8,
+          "drivablePrefix": 12,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
             "IT-C02-prego",
+            "IT-C02-prego-go-ahead",
+            "IT-C02-prego-here-you-are",
+            "IT-C02-prego-come-again",
             "IT-C02-come",
             "IT-C02-stare",
             "IT-C02-come-stai",
             "IT-C02-come-sta",
             "IT-C02-come-va",
             "IT-C02-cosi-cosi",
+            "IT-C02-non-ce-male",
             "IT-C02-practice"
           ]
         },
@@ -492,7 +496,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7bd946e9a0911e43",
+      "sourceHash": "fnv1a64:39674ab3b9b351b1",
       "detachableSegments": [
         "Writing — follow the greeting you can see"
       ]
@@ -514,7 +518,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:aabf5233b92fb743",
+      "sourceHash": "fnv1a64:2313a64567a8c32e",
       "detachableSegments": [
         "Writing — one guided copy"
       ]
@@ -679,7 +683,61 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6cbee97bd2d0ce6d"
+      "sourceHash": "fnv1a64:077e757f7bddc492"
+    },
+    {
+      "id": "IT-C02-prego-go-ahead",
+      "language": "italian",
+      "chapter": 2,
+      "sequence": 102,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:212926a3742fab75"
+    },
+    {
+      "id": "IT-C02-prego-here-you-are",
+      "language": "italian",
+      "chapter": 2,
+      "sequence": 104,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:64d62ee9718166e7"
+    },
+    {
+      "id": "IT-C02-prego-come-again",
+      "language": "italian",
+      "chapter": 2,
+      "sequence": 106,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b95956e0aacaae19"
     },
     {
       "id": "IT-C02-come",
@@ -697,7 +755,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6ee18f6ecb61ad08"
+      "sourceHash": "fnv1a64:19f496b617226a81"
     },
     {
       "id": "IT-C02-stare",
@@ -715,7 +773,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:12dbb54d4f03c1e3"
+      "sourceHash": "fnv1a64:50443c7d0d357d8a"
     },
     {
       "id": "IT-C02-come-stai",
@@ -733,7 +791,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:65cccc833c91609c"
+      "sourceHash": "fnv1a64:de7dd82da90f3fb9"
     },
     {
       "id": "IT-C02-come-sta",
@@ -751,7 +809,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7ddc010272df8430"
+      "sourceHash": "fnv1a64:8bbec1c70fdf6237"
     },
     {
       "id": "IT-C02-come-va",
@@ -769,7 +827,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:023ad2836fcaefdf"
+      "sourceHash": "fnv1a64:4f7567dab36a56c5"
     },
     {
       "id": "IT-C02-cosi-cosi",
@@ -787,7 +845,25 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cd34da0727862033"
+      "sourceHash": "fnv1a64:24d4953fcd5030b0"
+    },
+    {
+      "id": "IT-C02-non-ce-male",
+      "language": "italian",
+      "chapter": 2,
+      "sequence": 165,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7d64ec33c1db54b5"
     },
     {
       "id": "IT-C02-practice",
@@ -805,7 +881,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6e5af8c6039cec71"
+      "sourceHash": "fnv1a64:0527551163af08cc"
     },
     {
       "id": "IT-C03-io",
@@ -823,7 +899,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8e8ba87b158cb6ff"
+      "sourceHash": "fnv1a64:551781cb5168a280"
     },
     {
       "id": "IT-C03-mi-chiamo",
@@ -841,7 +917,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:75a8a718c8139813"
+      "sourceHash": "fnv1a64:73fc9f2501c60c1a"
     },
     {
       "id": "IT-C03-come-ti-chiami",
@@ -859,7 +935,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b1afea564cd5d0cc"
+      "sourceHash": "fnv1a64:8486cecf03fc1cbe"
     },
     {
       "id": "IT-C03-piacere",
@@ -877,7 +953,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:016ae46fa1ec18fd"
+      "sourceHash": "fnv1a64:5ec6113c9b63f559"
     },
     {
       "id": "IT-C03-practice",
@@ -895,7 +971,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:23c7fd178ce62749"
+      "sourceHash": "fnv1a64:bf0fb9fc20b4d034"
     },
     {
       "id": "IT-C04-arrivederci",
@@ -913,7 +989,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b0700f74c0056643"
+      "sourceHash": "fnv1a64:d62cd0da69d000bb"
     },
     {
       "id": "IT-C04-a-domani",
@@ -931,7 +1007,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cc941c1f87d03f42"
+      "sourceHash": "fnv1a64:7f3ac78bbeddf185"
     },
     {
       "id": "IT-C04-a-presto",
@@ -949,7 +1025,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b0173d636bb9ca50"
+      "sourceHash": "fnv1a64:7cf771c00652fa71"
     },
     {
       "id": "IT-C04-a-piu-tardi",
@@ -967,7 +1043,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c20e7102d5095a8a"
+      "sourceHash": "fnv1a64:8c9adcc556323bc5"
     },
     {
       "id": "IT-C04-practice",
@@ -985,7 +1061,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:eaaa02873a656579"
+      "sourceHash": "fnv1a64:4b60e63bf699d1e6"
     },
     {
       "id": "IT-C05-parlare",
@@ -1003,7 +1079,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:099131cdde7c1d43"
+      "sourceHash": "fnv1a64:dc773e62fb84befc"
     },
     {
       "id": "IT-C05-abitare",
@@ -1021,7 +1097,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c4775635ebb63b52"
+      "sourceHash": "fnv1a64:293d9e3b989b8ce7"
     },
     {
       "id": "IT-C05-lavorare",
@@ -1039,7 +1115,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:bd73f59ecefa85a0"
+      "sourceHash": "fnv1a64:63ed1270e3ef48bb"
     },
     {
       "id": "IT-C05-parlo-italiano",
@@ -1057,7 +1133,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9c5c9c5e244117c4"
+      "sourceHash": "fnv1a64:4b8bea8ff85e9e19"
     },
     {
       "id": "IT-C05-practice",
@@ -1075,7 +1151,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:304effa7717adae1"
+      "sourceHash": "fnv1a64:60cd4762f7124cae"
     },
     {
       "id": "IT-C06-numeri-1-5",
@@ -1095,7 +1171,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:2e3db6f2ef1d7557"
+      "sourceHash": "fnv1a64:d566605e6e7dc462"
     },
     {
       "id": "IT-C06-numeri-6-10",
@@ -1113,7 +1189,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:c5f4da1a711d185c"
+      "sourceHash": "fnv1a64:a9c631deb4cc84cd"
     },
     {
       "id": "IT-C07-giorni-1",
@@ -1131,7 +1207,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b8ffb24763d86e84"
+      "sourceHash": "fnv1a64:4438599e8f2b7661"
     },
     {
       "id": "IT-C07-giorni-2",
@@ -1149,7 +1225,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:9a91f1d6dace1834"
+      "sourceHash": "fnv1a64:e15b4b918f73cdf5"
     },
     {
       "id": "IT-C08-ora",
@@ -1167,7 +1243,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:78d97facae92a855"
+      "sourceHash": "fnv1a64:2eb36e64123bc560"
     },
     {
       "id": "IT-C08-mezzogiorno-mezzanotte",
@@ -1185,7 +1261,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:765c17dfee4ea380"
+      "sourceHash": "fnv1a64:4340d59d12618a7d"
     },
     {
       "id": "IT-C09-mesi",
@@ -1203,7 +1279,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:643084eb40befbc6"
+      "sourceHash": "fnv1a64:b1976e6af609af25"
     },
     {
       "id": "IT-C09-stagioni",
@@ -1221,7 +1297,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:99951bab86392f1e"
+      "sourceHash": "fnv1a64:e34b3c689a6f13d1"
     },
     {
       "id": "IT-C10-genitori",
@@ -1239,7 +1315,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6373589c2409a1af"
+      "sourceHash": "fnv1a64:8076eaa79a5dacfc"
     },
     {
       "id": "IT-C10-fratello-sorella",
@@ -1257,7 +1333,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6b4dfcef93c43201"
+      "sourceHash": "fnv1a64:60f8b9d1658fd8b2"
     },
     {
       "id": "IT-C11-pane",
@@ -1275,7 +1351,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d24c93ec00cc8ea7"
+      "sourceHash": "fnv1a64:f7c8c87060279208"
     },
     {
       "id": "IT-C11-acqua-vino",
@@ -1293,7 +1369,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9dd6ff850d67f4ee"
+      "sourceHash": "fnv1a64:bb97f2ca160ba953"
     },
     {
       "id": "IT-C12-numeri-11-16",
@@ -1311,7 +1387,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:3a0f27892fd984ce"
+      "sourceHash": "fnv1a64:8b6a037c017781e1"
     },
     {
       "id": "IT-C12-numeri-17-20",
@@ -1329,7 +1405,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:1f921aa293716744"
+      "sourceHash": "fnv1a64:f5b9211a18e5be8d"
     },
     {
       "id": "IT-C13-nero-bianco",
@@ -1347,7 +1423,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d0b6f05b7cd86047"
+      "sourceHash": "fnv1a64:bbacb9501b6d4ac6"
     },
     {
       "id": "IT-C13-rosso-blu",
@@ -1365,7 +1441,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:81b850406f4d7c3f"
+      "sourceHash": "fnv1a64:aed74ea6ccec69b0"
     },
     {
       "id": "IT-C14-avere",
@@ -1383,7 +1459,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b141d3259442a09e"
+      "sourceHash": "fnv1a64:b5b7fec8dc8a290f"
     },
     {
       "id": "IT-C14-eta",
@@ -1401,7 +1477,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:263c4afa76e9f3db"
+      "sourceHash": "fnv1a64:b3248c5eb89f0a4e"
     },
     {
       "id": "IT-C15-passato-prossimo",
@@ -1419,7 +1495,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a7df067937bdc8ef"
+      "sourceHash": "fnv1a64:29b808ba7a19c3ca"
     },
     {
       "id": "IT-C15-passato-remoto",
@@ -1437,7 +1513,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:87e175498a57b50c"
+      "sourceHash": "fnv1a64:171fae4e477283da"
     },
     {
       "id": "IT-C16-essere",
@@ -1455,7 +1531,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d9680de18280bc9e"
+      "sourceHash": "fnv1a64:8b4c7c4e88ed6b3d"
     },
     {
       "id": "IT-C16-essere-stato",
@@ -1473,7 +1549,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:e22b778a121eae21"
+      "sourceHash": "fnv1a64:68bfeaba1054c2e2"
     },
     {
       "id": "IT-C16-andare",
@@ -1491,7 +1567,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:ba9428463c194f78"
+      "sourceHash": "fnv1a64:04dd548d77d49253"
     },
     {
       "id": "IT-C16-passato-prossimo-essere",
@@ -1509,7 +1585,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cf85c351b3611b7a"
+      "sourceHash": "fnv1a64:82b659f73e3e94d5"
     },
     {
       "id": "IT-C17-testa",
@@ -1527,7 +1603,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7ba8cdd3c8824ffc"
+      "sourceHash": "fnv1a64:96707b206b55c083"
     },
     {
       "id": "IT-C17-mano",
@@ -1545,7 +1621,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:30e82540daa65b92"
+      "sourceHash": "fnv1a64:dfaa374b856979bb"
     },
     {
       "id": "IT-C18-pensare",
@@ -1563,7 +1639,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b7fe3dd46f267ece"
+      "sourceHash": "fnv1a64:6833cffd0e46c90b"
     },
     {
       "id": "IT-C18-capire",
@@ -1581,7 +1657,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:78085442ef080abe"
+      "sourceHash": "fnv1a64:31a9b78f8f33ccdd"
     },
     {
       "id": "IT-C18-leggere",
@@ -1599,7 +1675,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:122ad0f13825da67"
+      "sourceHash": "fnv1a64:3070b23e01b36ef6"
     },
     {
       "id": "IT-C18-scrivere",
@@ -1617,7 +1693,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cf859754b231bd29"
+      "sourceHash": "fnv1a64:ab477c128c9b47b6"
     },
     {
       "id": "IT-C19-prendere",
@@ -1635,7 +1711,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a26fc49607ec8fe5"
+      "sourceHash": "fnv1a64:84a67f9516256dba"
     },
     {
       "id": "IT-C19-chiedere",
@@ -1653,7 +1729,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ac3baa0ecae085ec"
+      "sourceHash": "fnv1a64:7bcd09fa1a6bff0f"
     },
     {
       "id": "IT-C19-aiutare",
@@ -1671,7 +1747,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bbbeb0b530219e69"
+      "sourceHash": "fnv1a64:9d0eb28b4a52dad6"
     },
     {
       "id": "IT-C19-mi-piace",
@@ -1689,7 +1765,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:899f43a4edc49ac4"
+      "sourceHash": "fnv1a64:6d2656dc84c2a2d3"
     },
     {
       "id": "IT-C20-portare",
@@ -1707,7 +1783,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b7cfa7498b004291"
+      "sourceHash": "fnv1a64:882c99919f88f00c"
     },
     {
       "id": "IT-C20-comprare",
@@ -1725,7 +1801,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a6d50888a958631f"
+      "sourceHash": "fnv1a64:de79d36037cf3b30"
     },
     {
       "id": "IT-C20-aspettare",
@@ -1743,7 +1819,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:980daef53d3cec23"
+      "sourceHash": "fnv1a64:15bc07f4854fba91"
     },
     {
       "id": "IT-C20-incontrare",
@@ -1761,7 +1837,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0f6221e9edd39864"
+      "sourceHash": "fnv1a64:e27b278c9cce6aa3"
     },
     {
       "id": "IT-C21-giocare",
@@ -1779,7 +1855,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0e33387d3c0bd3f0"
+      "sourceHash": "fnv1a64:ba62d9dc3044c532"
     },
     {
       "id": "IT-C21-ottenere",
@@ -1797,7 +1873,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4eb78dfdee0371e3"
+      "sourceHash": "fnv1a64:c9168be3eddacdee"
     },
     {
       "id": "IT-C21-rispondere",
@@ -1815,7 +1891,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:275e5bcc1a3508a9"
+      "sourceHash": "fnv1a64:694d7aca0b73cb5c"
     },
     {
       "id": "IT-C22-caffe",
@@ -1833,7 +1909,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fd3d3e8c33a31297"
+      "sourceHash": "fnv1a64:3f139622494d33b1"
     },
     {
       "id": "IT-C22-te",
@@ -1851,7 +1927,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7f8e82757295def7"
+      "sourceHash": "fnv1a64:679b6f1ed50f90d8"
     },
     {
       "id": "IT-C22-latte",
@@ -1869,7 +1945,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ad2dbe38adfa3d9f"
+      "sourceHash": "fnv1a64:a4063751002911c0"
     },
     {
       "id": "IT-C22-zucchero",
@@ -1887,7 +1963,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a694c02378e7707e"
+      "sourceHash": "fnv1a64:8a68c66f08282697"
     },
     {
       "id": "IT-C23-amico-amica",
@@ -1905,7 +1981,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:a1e8d418f4d588ca"
+      "sourceHash": "fnv1a64:fb0741c78ac8d583"
     },
     {
       "id": "IT-C23-famiglia",
@@ -1923,7 +1999,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:98c56f9caecc0c4d"
+      "sourceHash": "fnv1a64:c49e85488bc88f48"
     },
     {
       "id": "IT-C23-nome",
@@ -1941,7 +2017,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:03ee965725c95b80"
+      "sourceHash": "fnv1a64:c893d0a92c17d565"
     },
     {
       "id": "IT-C23-persona",
@@ -1959,7 +2035,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6acaa01005a8f4c7"
+      "sourceHash": "fnv1a64:5aa6ede049779ba4"
     },
     {
       "id": "IT-C24-cuore",
@@ -1977,7 +2053,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:acc2c6c3f8fe33fa"
+      "sourceHash": "fnv1a64:1971c1c12f429593"
     },
     {
       "id": "IT-C24-occhio",
@@ -1995,7 +2071,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c0668c356a74be56"
+      "sourceHash": "fnv1a64:4deebb6a4b0c7ead"
     },
     {
       "id": "IT-C24-orecchio",
@@ -2013,7 +2089,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:29d8d6f8328b13da"
+      "sourceHash": "fnv1a64:361181343b009413"
     },
     {
       "id": "IT-C24-bocca",
@@ -2031,7 +2107,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1249b42bd30d045c"
+      "sourceHash": "fnv1a64:ae912bc08c72a00d"
     },
     {
       "id": "IT-C25-naso",
@@ -2049,7 +2125,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:37b2fafc712421df"
+      "sourceHash": "fnv1a64:0fa7aa00b2ed98c8"
     },
     {
       "id": "IT-C25-stomaco",
@@ -2067,7 +2143,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e1eaeb9f8e6f866d"
+      "sourceHash": "fnv1a64:c0d359b7da5dc01c"
     },
     {
       "id": "IT-C25-gola",
@@ -2085,7 +2161,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e31db783e499134f"
+      "sourceHash": "fnv1a64:5270748f571a45fa"
     }
   ],
   "findings": []

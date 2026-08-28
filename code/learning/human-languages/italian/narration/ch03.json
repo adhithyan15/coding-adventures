@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2949f8ec4adec769",
+  "sourceHash": "fnv1a64:83f1390fd16977dd",
   "lessons": [
     {
       "id": "IT-C03-io",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e8ba87b158cb6ff",
+      "sourceHash": "fnv1a64:551781cb5168a280",
       "notice": null,
       "blocks": [
         {
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75a8a718c8139813",
+      "sourceHash": "fnv1a64:73fc9f2501c60c1a",
       "notice": null,
       "blocks": [
         {
@@ -305,7 +305,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1afea564cd5d0cc",
+      "sourceHash": "fnv1a64:8486cecf03fc1cbe",
       "notice": null,
       "blocks": [
         {
@@ -449,7 +449,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:016ae46fa1ec18fd",
+      "sourceHash": "fnv1a64:5ec6113c9b63f559",
       "notice": null,
       "blocks": [
         {
@@ -602,7 +602,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23c7fd178ce62749",
+      "sourceHash": "fnv1a64:bf0fb9fc20b4d034",
       "notice": null,
       "blocks": [
         {
