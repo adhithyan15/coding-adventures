@@ -32,14 +32,13 @@ The implementation is substantial but not yet an end-to-end product:
 - 61 TypeScript `forme-*` packages and 180 package test files cover the kernel,
   stage contracts, a sequential orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
-- The blog proves an eight-stage routed DAG: source → parse → router fans out
-  to article rendering and chronological collection, then two filesystem sinks
-  emit articles plus an index, RSS, Atom, and sitemap. Public metadata composes
-  portable routes with the GitHub Pages project prefix. A reusable light/dark
-  Style IR theme now drives exact per-article AOT CSS slices. Local asset
-  references can now be resolved, loaded into Asset IR, and emitted through the
-  new fingerprinted site emitter; the blog DAG has not yet switched to that
-  complete asset path.
+- The blog proves a ten-stage routed DAG: source → parse → asset resolution →
+  router fans out to article rendering, asset loading, and chronological
+  collection. Typed page/asset fan-in writes fingerprinted local assets and
+  manifest entries while the second filesystem sink emits an index, RSS, Atom,
+  and sitemap. Public metadata and asset URLs compose portable routes with the
+  GitHub Pages project prefix. A reusable light/dark Style IR theme drives exact
+  per-article AOT CSS slices.
 - There is no general `forme` build/check/dev CLI, watch server, plugin host,
   runtime sandbox, authoring shell, or implemented deploy runner.
 - Interactivity IR has no numbered spec or package. The AOT implementation
@@ -85,8 +84,8 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 13 | FM-B027 | done | Load referenced filesystem assets into Asset IR | Depends on FM-B026. One collector invocation reads every unique referenced source, detects MIME type, preserves the resolved identity, hashes bytes into `revision`, emits deterministic `Asset` values, and diagnoses missing files or identity collisions without hidden state. |
 | 14 | FM-B030 | done | Make SVG MIME sniffing linear-time | Replace the uncontrolled-data backtracking expression found by CodeQL with a bounded prefix scanner; preserve XML declaration, comment, BOM, whitespace, and case-insensitive SVG detection; adversarial repeated-comment input and CodeQL pass. |
 | 15 | FM-B028 | done | Emit and rewrite fingerprinted assets | Depends on FM-B025 and FM-B027. An asset-aware filesystem emitter joins rendered pages with assets, writes content-hashed filenames, rewrites only Forme placeholders, includes bytes and `DeployAssetEntry` records in the artifact, and covers the complete path with an end-to-end pipeline test. |
-| 16 | FM-B006 | ready | Add a first-class asset pipeline | Depends on FM-B026–FM-B028. Referenced local assets are discovered, fingerprinted, copied, rewritten, cached, and included in the deploy manifest. |
-| 17 | FM-B007 | blocked | Generate the repository landing page with Forme | Depends on FM-B005 and FM-B006. Forme source and configuration reproduce the approved landing design; generated output replaces hand-maintained HTML and deploys through the existing Pages workflow. |
+| 16 | FM-B006 | done | Add a first-class asset pipeline | Depends on FM-B026–FM-B028. Referenced local assets are discovered, fingerprinted, copied, rewritten to cache-safe URLs, and included in the deploy manifest; the clean blog build verifies exact artifact and on-disk bytes. |
+| 17 | FM-B007 | ready | Generate the repository landing page with Forme | Depends on FM-B005 and FM-B006. Forme source and configuration reproduce the approved landing design; generated output replaces hand-maintained HTML and deploys through the existing Pages workflow. |
 | 18 | FM-B008 | ready | Implement the general headless CLI | `forme build`, `forme check`, and `forme clean` load a project config, produce stable diagnostics and exit codes, expose reproducible mode, and work outside the monorepo demo driver. |
 | 19 | FM-B009 | blocked | Implement watch mode and a dev server | Depends on FM-B008. File changes rebuild the correct affected set, browser refresh is reliable, cancellation is clean, and error pages preserve the last good output. |
 | 20 | FM-B010 | ready | Finish orchestrator incrementality and scheduling | Persistent cache hits skip unchanged stages; bounded streaming, backpressure, and `maxConcurrency` avoid draining every stream into memory; deterministic tests cover cancellation and reproducibility. |
@@ -163,6 +162,8 @@ work.
 | 2026-08-28 | CodeQL found that SVG MIME sniffing applied a backtracking regular expression to asset bytes, allowing repeated comment-shaped input to consume super-linear time. | Added and resolved FM-B030 ahead of FM-B028 with a bounded prefix scanner plus adversarial repeated-comment coverage. |
 | 2026-08-28 | Named input ports are intentionally required, so adding `assets` to the existing page-only emitter would break every current pipeline before the product DAG could be migrated. | Resolved in FM-B028 with a separate asset-aware `forme-emit-site-fs` stage; FM-B006 can now switch the blog atomically while the legacy emitter remains compatible. |
 | 2026-08-28 | A root-owned `/assets/...` URL works on a custom domain but breaks the repository's GitHub Pages project deployment beneath `/coding-adventures`. | Resolved in FM-B028 with a validated, segment-encoded `publicPathPrefix` option covered by the emitter tests. |
+| 2026-08-28 | Asset "caching" spans two distinct guarantees: immutable content-hashed public URLs and build-time stage reuse. The former is required for a complete deployable asset path; the latter belongs to orchestrator incrementality and must not be hidden inside a filesystem emitter. | FM-B006 proves cache-safe content URLs in the live blog path; persistent build reuse remains explicit in FM-B010. |
+| 2026-08-28 | The blog has two disjoint deploy sinks sharing `dist`: articles need page/asset fan-in, while collection-derived index/feed/sitemap output owns no assets. | Resolved in FM-B006 by migrating only `emit-articles` to `forme-emit-site-fs`; `emit-surface` remains the compatible page-only sink, and build assertions reject asset ownership drift. |
 
 ## Loop protocol
 

@@ -11,19 +11,22 @@ by `.github/workflows/deploy-blog.yml`.
 This repo is a GitHub Pages **project** page. Project pages are served
 from `https://<user>.github.io/<repo>/`, so the `coding-adventures/`
 segment of the live URL comes from the repo name (project-page prefix),
-not from anything in the build. The route template
-(`/blog/{slug}.html`) and the publish destination (`gh-pages:blog/`)
-both stay clean of that prefix; Pages composes it at the edge. If the
-repo ever gets a custom domain or moves to a user/org page, the route
-template and the destination don't need to change.
+not from the content route. The route template (`/blog/{slug}.html`),
+artifact paths, and publish destination (`gh-pages:blog/`) stay clean of
+that prefix. Public links compose it separately: `siteUrl` handles canonical
+metadata, feeds, and the sitemap, while `publicPathPrefix` handles emitted
+asset URLs. If the repo ever gets a custom domain or moves to a user/org page,
+only those deployment settings change; the routes and destination do not.
 
 ## Pipeline
 
 ```
 forme-source-fs           Void                → Stream<ContentSource>
 forme-parse-markdown      ContentSource       → ContentNode
+forme-resolve-asset-refs  Stream<ContentNode> → Stream<ContentNode>
 forme-router              Stream<ContentNode> → Stream<ContentNode>
-                         ├→ forme-render-static → forme-emit-fs (`articles`)
+                         ├→ forme-render-static ───────────┐
+                         ├→ forme-load-assets-fs ──────────┴→ forme-emit-site-fs (`articles`)
                          └→ forme-collect-chronological
                               → blog-surface → forme-emit-fs (`surface`)
 ```
@@ -47,10 +50,15 @@ dependency graph from leaves to the site, clears stale output, and runs the
 full pipeline. It writes article pages plus `index.html`, `rss.xml`, `atom.xml`,
 and `sitemap.xml` under `dist/blog/`. Subsequent builds can use `npm run build`;
 run `npm test` to exercise both the dependency planner and collection-derived
-surface. The build verifies both named deploy manifests and the exact aggregate
-route set. HTML files are self-contained documents with matched rules from the
+surface. The build verifies both named deploy manifests, the exact aggregate
+route set, the fingerprinted asset bytes, stable logical identity, SHA-256
+manifest entry, rewritten project-page URL, and absence of unresolved Forme
+placeholders. HTML files carry matched rules from the
 reusable classless Style IR theme compiled through the AOT slicer and inlined
 in `<style>` — including light/dark preferences, with no JS or external CSS.
+Local post images are emitted under `dist/blog/assets/` with complete content
+hashes, making changed bytes produce a new cache-safe URL while unchanged bytes
+keep the same URL.
 
 `tsx` is a devDependency — it strips TypeScript types at execution
 time so we don't need a separate `tsc` step just to drive the
@@ -62,8 +70,9 @@ site driver runs straight from source.
 - `data/` — Markdown posts. Frontmatter is `key: value` only (the v0
   parser is grammar-restricted; see
   `code/packages/typescript/forme-parse-markdown/README.md`).
-- `forme.config.ts` — `PipelineConfig` literal wiring eight named stage
-  instances, including two fan-outs and two deploy outputs.
+- `forme.config.ts` — `PipelineConfig` literal wiring ten named stage
+  instances, including routed content/asset fan-out, named asset fan-in, and
+  two deploy outputs.
 - `surface-stage.ts` — collection adapter that composes the reusable Forme
   index/feed/sitemap/head generators into deployable pages.
 - `build.ts` — driver: load config → `createOrchestrator`
@@ -107,9 +116,6 @@ The live URL is
 
 ## What's missing (intentional v0 scope)
 
-- No asset extraction. Posts that reference images today will
-  link to `data/`-relative paths; an asset stage will copy + hash
-  them.
 - Theme rules are sliced per article; the generated aggregate index retains
   the full theme conservatively because its trusted HTML bypasses Document AST
   matching.
