@@ -8,89 +8,117 @@
 <link rel="canonical" href="https://adhithyan15.github.io/coding-adventures/blog/2026-05-15-hello-forme.html">
 <link rel="alternate" type="application/rss+xml" title="Coding Adventures RSS" href="https://adhithyan15.github.io/coding-adventures/blog/rss.xml">
 <link rel="alternate" type="application/atom+xml" title="Coding Adventures Atom" href="https://adhithyan15.github.io/coding-adventures/blog/atom.xml">
+<meta name="color-scheme" content="light dark">
 <style>
-:root { color-scheme: light; }
-* { box-sizing: border-box; }
-html { font-size: 100%; -webkit-text-size-adjust: 100%; }
+html {
+  text-align: center;
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-               "Helvetica Neue", Arial, sans-serif;
-  color: #1f2328;
-  background: #ffffff;
-  line-height: 1.6;
-  margin: 0;
-  padding: 2rem 1rem 4rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: inline-block;
+  max-width: 72ch;
+  text-align: start;
+  font-family: ui-sans-serif, system-ui, "-apple-system", BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #1f2937;
+  background-color: #ffffff;
+  padding: 2rem 1.25rem 4rem 1.25rem;
 }
+
 main {
-  width: 100%;
-  max-width: 38rem;
+  max-width: 72ch;
 }
-header, footer {
-  width: 100%;
-  max-width: 38rem;
-  color: #57606a;
+
+header {
+  max-width: 72ch;
+  margin-bottom: 2rem;
+  color: #64748b;
   font-size: 0.9rem;
 }
-header { margin-bottom: 2rem; }
-footer { margin-top: 4rem; border-top: 1px solid #d0d7de; padding-top: 1rem; }
-header a, footer a { color: inherit; }
-.forme-index { list-style: none; padding: 0; }
-.forme-index li { padding: 1rem 0; border-bottom: 1px solid #d8dee4; }
-.forme-index a { font-size: 1.1rem; font-weight: 600; }
-.forme-index time { display: block; color: #57606a; font-size: 0.85rem; }
-.forme-index .summary { margin: 0.35rem 0 0; color: #57606a; }
+
 h1, h2, h3, h4, h5, h6 {
-  line-height: 1.25;
-  margin: 2rem 0 1rem;
-  font-weight: 600;
+  line-height: 1.2;
+  font-weight: 650;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
 }
-h1 { font-size: 2rem; margin-top: 0; }
-h2 { font-size: 1.5rem; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3rem; }
-h3 { font-size: 1.25rem; }
-h4 { font-size: 1rem; }
-p { margin: 0 0 1rem; }
-a { color: #0969da; text-decoration: underline; text-underline-offset: 2px; }
-a:hover { text-decoration-thickness: 2px; }
-strong { font-weight: 600; }
-em { font-style: italic; }
+
+h1 {
+  font-size: 2.25rem;
+  margin-top: 0px;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+a {
+  color: #2563eb;
+  text-decoration: underline 1px;
+}
+
+strong {
+  font-weight: 650;
+}
+
+em {
+  font-style: italic;
+}
+
 code {
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-               "Liberation Mono", monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.9em;
-  padding: 0.15em 0.35em;
-  background: #f6f8fa;
-  border-radius: 4px;
+  padding: 0.15em 0.35em 0.15em 0.35em;
+  background-color: #f1f5f9;
+  border-radius: 5px;
 }
-pre {
-  background: #f6f8fa;
-  padding: 1rem;
-  border-radius: 6px;
-  overflow-x: auto;
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-pre code {
-  background: transparent;
-  padding: 0;
-  border-radius: 0;
-  font-size: inherit;
-}
+
 blockquote {
-  margin: 1rem 0;
-  padding: 0.25rem 1rem;
-  color: #57606a;
-  border-left: 4px solid #d0d7de;
+  color: #64748b;
+  padding: 0.25rem 1rem 0.25rem 1rem;
+  border-left: 4px solid #cbd5e1;
 }
-ul, ol { padding-left: 1.5rem; margin: 0 0 1rem; }
-li { margin: 0.25rem 0; }
-hr { border: 0; border-top: 1px solid #d0d7de; margin: 2rem 0; }
-img { max-width: 100%; height: auto; }
-table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
-th, td { border: 1px solid #d0d7de; padding: 0.4rem 0.7rem; text-align: left; }
-th { background: #f6f8fa; }
+
+ul, ol {
+  padding: 0px 0px 0px 1.5rem;
+  margin-bottom: 1rem;
+}
+
+li {
+  margin-bottom: 0.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  body, main {
+    color: #e5e7eb;
+    background-color: #111827;
+  }
+  header, blockquote, #post-index time, #post-index p {
+    color: #a8b3c5;
+  }
+  a {
+    color: #7dd3fc;
+  }
+  code, pre, th {
+    background-color: #1f2937;
+  }
+  h2, blockquote, hr, th, td, #post-index li {
+    border-color: #475569;
+  }
+}
+
+@media (max-width: 40rem) {
+  body {
+    padding: 1.25rem 0.85rem 3rem 0.85rem;
+  }
+}
+
+@media (prefers-contrast: more) {
+  a {
+    text-decoration: underline 2px;
+  }
+}
 </style>
 </head>
 <body>
@@ -113,15 +141,17 @@ parsed the body as GFM, and emitted a <code>ContentNode</code>.</li>
 routed node out to the page and collection branches.</li>
 <li><strong><code>forme-collect-chronological</code></strong> sorted this and the other posts
 by date while preserving that canonical route.</li>
-<li><strong><code>forme-render-static</code></strong> wrapped the rendered body in a minimal
-classless HTML5 theme and emitted a <code>RenderedPage</code>.</li>
+<li><strong><code>forme-render-static</code></strong> matched the reusable classless Style IR theme,
+recorded <code>usedStyle</code>, compiled the page slice through the AOT path, and
+emitted a <code>RenderedPage</code>.</li>
 <li><strong><code>forme-emit-fs</code></strong> wrote the result to <code>dist/</code> and emitted a
 <code>DeployArtifact</code>.</li>
 </ol>
 <p>The point isn't the post — it's that everything between the parser
 and the deployer is <em>plug-compatible</em>. Want a different theme?
-Replace <code>forme-render-static</code>. Want to ship to S3 instead of disk?
-Replace <code>forme-emit-fs</code>. The other five stages don't change.</p>
+Pass a different resolved <code>StyleDocument</code>; the renderer does not change.
+Want to ship to S3 instead of disk? Replace <code>forme-emit-fs</code>. The rest of
+the DAG stays put.</p>
 <blockquote>
 <p>One pipeline, many surfaces. That's the Forme bet.</p>
 </blockquote>
