@@ -8436,6 +8436,7 @@ impl HtmlParser {
             || is_phrasing_container_element(name)
             || is_select_option_element(name)
             || name == "selectedcontent"
+            || name == "colgroup"
             || is_table_structure_end_tag_element(name)
             || is_state_boundary_element(name)
             || (is_tokenizer_mode_element(name)
@@ -28388,6 +28389,14 @@ mod tests {
         )))
     }
 
+    fn unmatched_column_group_end_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            "end tag `</colgroup>` did not match an open element",
+        )
+        .at_emission(Some(end_tag_position_at(source, "colgroup", occurrence)))
+    }
+
     fn unmatched_table_structure_end_tag(
         source: &str,
         name: &str,
@@ -45874,6 +45883,91 @@ mod tests {
     }
 
     #[test]
+    fn positions_unmatched_column_group_end_tags_at_token_emission() {
+        let source = "<!doctype html></colgroup><!--é-->\r\n</colgroup><table></colgroup>tail</table><p>end</p>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert!(source.len() > source.chars().count());
+        assert_eq!(element_text_content(body(&output.document)), "tailend");
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                unmatched_column_group_end_tag(source, 0),
+                unmatched_column_group_end_tag(source, 1),
+                unmatched_column_group_end_tag(source, 2),
+            ]
+        );
+
+        let fragment_source = "</colgroup>tail";
+        for context in [None, Some("table")] {
+            let fragment = match context {
+                Some(context) => parse_html_fragment_for_context_with_diagnostics(
+                    fragment_source,
+                    context,
+                )
+                .unwrap(),
+                None => parse_html_fragment_with_diagnostics(fragment_source).unwrap(),
+            };
+            assert_eq!(fragment.nodes, vec![Node::text("tail")]);
+            assert_eq!(
+                fragment
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                    .cloned()
+                    .collect::<Vec<_>>(),
+                vec![unmatched_column_group_end_tag(fragment_source, 0)]
+            );
+        }
+
+        let seeded =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "colgroup").unwrap();
+        assert!(seeded
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic == &fragment_context_end_tag(fragment_source, "colgroup", 0)));
+        assert!(seeded
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+        let matched = parse_html_with_diagnostics(
+            "<!doctype html><table><colgroup></colgroup></table>",
+        )
+        .unwrap();
+        assert!(matched
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+        let foreign = parse_html_with_diagnostics(
+            "<!doctype html><svg><foreignObject></colgroup>tail</foreignObject></svg>",
+        )
+        .unwrap();
+        assert!(foreign.parser_diagnostics.is_empty());
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        direct.process_token(Token::EndTag {
+            name: "colgroup".to_string(),
+        });
+        direct.process_token(Token::Eof);
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html></colgroup").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+    }
+
+    #[test]
     fn positions_unmatched_table_structure_end_tags_at_token_emission() {
         let names = [
             "caption", "table", "tbody", "td", "tfoot", "th", "thead", "tr",
@@ -51889,16 +51983,27 @@ mod tests {
                 vec![&table_foreign_end_tag_recovery(source, name)],
                 "source {source:?}"
             );
-            assert!(
-                output
-                    .parser_diagnostics
-                    .iter()
-                    .filter(|diagnostic| {
-                        diagnostic.code != "unexpected-table-end-tag-in-foreign-content"
-                    })
-                    .all(|diagnostic| diagnostic.position.is_none()),
-                "source {source:?}"
-            );
+            let other_diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code != "unexpected-table-end-tag-in-foreign-content"
+                })
+                .collect::<Vec<_>>();
+            if name == "colgroup" {
+                assert_eq!(
+                    other_diagnostics,
+                    vec![&unmatched_column_group_end_tag(source, 0)],
+                    "source {source:?}"
+                );
+            } else {
+                assert!(
+                    other_diagnostics
+                        .iter()
+                        .all(|diagnostic| diagnostic.position.is_none()),
+                    "source {source:?}"
+                );
+            }
         }
 
         for source in [
