@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:e2249d6471c396c3",
+  "sourceHash": "fnv1a64:932ab248180ca5c9",
   "summary": {
     "totalLessons": 172,
     "voice": 124,
@@ -475,7 +475,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b78e4f5768fbc249",
+      "sourceHash": "fnv1a64:56ab212c5d743006",
       "detachableSegments": [
         "Script — notice the sign",
         "Writing — guided copy"
@@ -500,7 +500,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:f27c34dde7229fbb",
+      "sourceHash": "fnv1a64:43e5f6503187a7d8",
       "detachableSegments": [
         "Script — add one mark",
         "Writing — guided copy"
@@ -524,7 +524,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e6652ecc529a071f",
+      "sourceHash": "fnv1a64:971fe266fac5f98a",
       "detachableSegments": [
         "Script — add म",
         "Writing — from copy to memory"
@@ -547,7 +547,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:8d376cf0652b9fbf",
+      "sourceHash": "fnv1a64:4d9ec243c3b749c0",
       "detachableSegments": [
         "Script — notice and copy"
       ],
@@ -571,7 +571,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:9f7b7e40a12feb9f",
+      "sourceHash": "fnv1a64:b37009d99d913d94",
       "detachableSegments": [
         "Script — assemble",
         "Writing — delayed copy"
@@ -594,7 +594,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3e647aa08c287903"
+      "sourceHash": "fnv1a64:84954cff2d1ec19e"
     },
     {
       "id": "MW-C01-practice",
@@ -612,7 +612,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3dcad37b006211fd"
+      "sourceHash": "fnv1a64:9a0e67d50d167f5c"
     },
     {
       "id": "MW-W02-aa-independent",
@@ -633,7 +633,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:64a32f92736a50df",
+      "sourceHash": "fnv1a64:2a9aabe8e5289198",
       "detachableSegments": [
         "Script — one new sign",
         "Writing — observe, trace, copy"
@@ -659,7 +659,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:496d994124c20134",
+      "sourceHash": "fnv1a64:0eb4d76ceb7ed2fb",
       "detachableSegments": [
         "Script — one new sign and sound",
         "Writing — observe, trace, copy"
@@ -683,7 +683,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:21b84f3790a00905",
+      "sourceHash": "fnv1a64:28ddd7bfa8bb6b3a",
       "detachableSegments": [
         "Script — build the word",
         "Writing — from guided to delayed copy"
@@ -705,7 +705,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4bc95709643763e8"
+      "sourceHash": "fnv1a64:1945e8230819625d"
     },
     {
       "id": "MW-W03-ha",
@@ -726,7 +726,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d46f24e6493198a2",
+      "sourceHash": "fnv1a64:5015b8f5a333e9cd",
       "detachableSegments": [
         "Script — one sign and one sound",
         "Writing — observe, trace, copy"
@@ -752,7 +752,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:88a1616289b3defe",
+      "sourceHash": "fnv1a64:53cddf6736b749d5",
       "detachableSegments": [
         "Script — one small new mark",
         "Writing — add only the mark"
@@ -775,7 +775,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:07c169b446527df8",
+      "sourceHash": "fnv1a64:de6ce767a9a93d97",
       "detachableSegments": [
         "Writing — guided, then delayed"
       ]
@@ -796,7 +796,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8aed844325e20928"
+      "sourceHash": "fnv1a64:1227c5bf6af59385"
     },
     {
       "id": "MW-C03-practice",
@@ -814,7 +814,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:83c3d94261a645d9"
+      "sourceHash": "fnv1a64:5a615ff20d6b70f8"
     },
     {
       "id": "MW-C04-hear-paani",
@@ -832,7 +832,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:aaccc85dd1586ef0"
+      "sourceHash": "fnv1a64:10138e81ee9069bf"
     },
     {
       "id": "MW-W04-pa",
@@ -853,7 +853,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:1a062d35651bf9ed",
+      "sourceHash": "fnv1a64:748011ea87f20546",
       "detachableSegments": [
         "Script — one new consonant",
         "Writing — observe, trace, copy"
@@ -879,7 +879,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:20444a4aaebcd2a7",
+      "sourceHash": "fnv1a64:5a5571b7e5f1d784",
       "detachableSegments": [
         "Script — one new consonant",
         "Writing — observe, trace, copy"
@@ -905,7 +905,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:7c6e12bac8c4fd11",
+      "sourceHash": "fnv1a64:02aafd8d98d6db0a",
       "detachableSegments": [
         "Script — one new vowel mark",
         "Writing — attach only the mark"
@@ -928,7 +928,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dccdb7fa2a7dc1c4",
+      "sourceHash": "fnv1a64:47326b8d928417b0",
       "detachableSegments": [
         "Writing — guided, then delayed"
       ]
@@ -949,7 +949,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6170378362027045"
+      "sourceHash": "fnv1a64:7132924a09257570"
     },
     {
       "id": "MW-C05-hear-mharo",
@@ -967,7 +967,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f3ad00b7cee2acf1"
+      "sourceHash": "fnv1a64:0d36649cf412a62c"
     },
     {
       "id": "MW-W05-virama",
@@ -986,7 +986,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:7ac7f3c232c6c739",
+      "sourceHash": "fnv1a64:34dd587cb77a00dc",
       "detachableSegments": [
         "Script"
       ],
@@ -1009,7 +1009,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:4d56bbbd4d28076a",
+      "sourceHash": "fnv1a64:e29ab1884293ad8b",
       "detachableSegments": [
         "Script"
       ],
@@ -1031,7 +1031,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:da249dd46b5d8dbf"
+      "sourceHash": "fnv1a64:9141ca73ca80acec"
     },
     {
       "id": "MW-C05-hear-naam",
@@ -1049,7 +1049,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:45f4caaa857c5dd1"
+      "sourceHash": "fnv1a64:0087eec68addd8b8"
     },
     {
       "id": "MW-W05-na",
@@ -1068,7 +1068,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:879fbcb78b98f3fa",
+      "sourceHash": "fnv1a64:2c1604708e09f3fb",
       "detachableSegments": [
         "Script"
       ],
@@ -1090,7 +1090,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8eea8117f320088d"
+      "sourceHash": "fnv1a64:54cf01a258a1c012"
     },
     {
       "id": "MW-C05-hear-hai",
@@ -1108,7 +1108,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f38a89889ee717f6"
+      "sourceHash": "fnv1a64:47ce944df5c6e88d"
     },
     {
       "id": "MW-W05-ai-matra",
@@ -1127,7 +1127,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:abf9ea4ae78fa189",
+      "sourceHash": "fnv1a64:826fa97327f79d2a",
       "detachableSegments": [
         "Script"
       ],
@@ -1149,7 +1149,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3b2e1743ae524c5b"
+      "sourceHash": "fnv1a64:7a8dfcb0cef6c50e"
     },
     {
       "id": "MW-C05-hear-tharo",
@@ -1167,7 +1167,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:79f8d2378e45fa0e"
+      "sourceHash": "fnv1a64:90f2928507b13cf9"
     },
     {
       "id": "MW-W05-tha",
@@ -1186,7 +1186,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:5e6bcc8211ee876d",
+      "sourceHash": "fnv1a64:9ac226884979fa32",
       "detachableSegments": [
         "Script"
       ],
@@ -1208,7 +1208,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:81cb5f0f3c847666"
+      "sourceHash": "fnv1a64:4e34182adedcb433"
     },
     {
       "id": "MW-C05-hear-kain",
@@ -1226,7 +1226,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5d0cd1c18740842a"
+      "sourceHash": "fnv1a64:0c4ed1c4e47c75a7"
     },
     {
       "id": "MW-W05-ka",
@@ -1245,7 +1245,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:bc63cf3db3242586",
+      "sourceHash": "fnv1a64:c679a332a7770ee1",
       "detachableSegments": [
         "Script"
       ],
@@ -1268,7 +1268,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:509ac5cf97a8c28e",
+      "sourceHash": "fnv1a64:f73ffa9fcd2f0e8b",
       "detachableSegments": [
         "Script"
       ],
@@ -1290,7 +1290,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:519a21196a8c9204"
+      "sourceHash": "fnv1a64:3c88e64064c5b245"
     },
     {
       "id": "MW-C05-practice",
@@ -1308,7 +1308,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9c47f3942c50897f"
+      "sourceHash": "fnv1a64:6feab596b08448f8"
     },
     {
       "id": "MW-C06-hear-question",
@@ -1326,7 +1326,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d7af2be142c8d046"
+      "sourceHash": "fnv1a64:4a5b73a26d21bd8d"
     },
     {
       "id": "MW-C06-question",
@@ -1344,7 +1344,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bf295d3bc8fa0fd7",
+      "sourceHash": "fnv1a64:88fcbd344901106c",
       "detachableSegments": [
         "Script — three known groups"
       ]
@@ -1365,7 +1365,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a926370a2742eae6"
+      "sourceHash": "fnv1a64:1d896e0dee12439f"
     },
     {
       "id": "MW-W06-uu-matra",
@@ -1384,7 +1384,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:5f227ede862c08b7",
+      "sourceHash": "fnv1a64:a10fcd4dd4440538",
       "detachableSegments": [
         "Script — one vowel mark"
       ],
@@ -1407,7 +1407,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:10746a44f9d36211",
+      "sourceHash": "fnv1a64:f86cdeed947ae14a",
       "detachableSegments": [
         "Script — one consonant"
       ],
@@ -1429,7 +1429,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6df3a77f362e3fb2",
+      "sourceHash": "fnv1a64:5a7d488e1bceacb9",
       "detachableSegments": [
         "Script — build three heard groups"
       ]
@@ -1450,7 +1450,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:920fdc110ecb88f1"
+      "sourceHash": "fnv1a64:acc80428869f163e"
     },
     {
       "id": "MW-C07-hear-later",
@@ -1468,7 +1468,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e4a4aefac408c939"
+      "sourceHash": "fnv1a64:19af7c7bbff31734"
     },
     {
       "id": "MW-W07-chha",
@@ -1487,7 +1487,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:608443db9f073b3e",
+      "sourceHash": "fnv1a64:569528120189a1b7",
       "detachableSegments": [
         "Script — one sign"
       ],
@@ -1510,7 +1510,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:7aef7dbbe1f8a367",
+      "sourceHash": "fnv1a64:3de27e1c91b735d6",
       "detachableSegments": [
         "Script — one vowel mark"
       ],
@@ -1533,7 +1533,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:1147e982285d226c",
+      "sourceHash": "fnv1a64:eb26df99c244cd2d",
       "detachableSegments": [
         "Script — one vowel mark"
       ],
@@ -1556,7 +1556,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:0822aa290d317765",
+      "sourceHash": "fnv1a64:b0a1cb0b94009a5c",
       "detachableSegments": [
         "Script — one sign"
       ],
@@ -1579,7 +1579,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:2674723a77a856cf",
+      "sourceHash": "fnv1a64:d6061f67b3e7ff84",
       "detachableSegments": [
         "Script — join only known units"
       ],
@@ -1601,7 +1601,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fde9431085efb7dd"
+      "sourceHash": "fnv1a64:8f6856aa773fa72a"
     },
     {
       "id": "MW-C08-hear-maa",
@@ -1619,7 +1619,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:351d9094ed4b0a38"
+      "sourceHash": "fnv1a64:c572f6a4c6ccae1d"
     },
     {
       "id": "MW-C08-maa",
@@ -1637,7 +1637,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:58c7e5780c2460a7"
+      "sourceHash": "fnv1a64:35917798a852be54"
     },
     {
       "id": "MW-C08-hear-baap",
@@ -1655,7 +1655,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4034c1f0e27b2e1b"
+      "sourceHash": "fnv1a64:1b3b252cace96d94"
     },
     {
       "id": "MW-W08-ba",
@@ -1674,7 +1674,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:a534ff27ddb70b01",
+      "sourceHash": "fnv1a64:25145653dba8f10c",
       "detachableSegments": [
         "Script — one sign"
       ],
@@ -1696,7 +1696,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:659c6c0c163cafec"
+      "sourceHash": "fnv1a64:da0232c39ee3a781"
     },
     {
       "id": "MW-C08-hear-bhai",
@@ -1714,7 +1714,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bf76aa69014096cb"
+      "sourceHash": "fnv1a64:d8557623924d14c8"
     },
     {
       "id": "MW-C08-bhai",
@@ -1732,7 +1732,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b77e7157163fcf4e"
+      "sourceHash": "fnv1a64:064dafd0afdebe81"
     },
     {
       "id": "MW-C08-hear-bahan",
@@ -1750,7 +1750,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4c4520e24be473c8"
+      "sourceHash": "fnv1a64:799d815b5fb1ec61"
     },
     {
       "id": "MW-C08-bahan",
@@ -1768,7 +1768,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8e63c854b6b2be06"
+      "sourceHash": "fnv1a64:87bcf80174a2d6ff"
     },
     {
       "id": "MW-C08-family-four",
@@ -1786,7 +1786,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ec5b5882ab318e83"
+      "sourceHash": "fnv1a64:266d48450b1eada2"
     },
     {
       "id": "MW-C08-hear-dada",
@@ -1804,7 +1804,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b8eabe4369a72351"
+      "sourceHash": "fnv1a64:45b75c03ae917ac2"
     },
     {
       "id": "MW-W08-da",
@@ -1823,7 +1823,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:760a70c6e9909a57",
+      "sourceHash": "fnv1a64:b6eb9f2066b3d3e0",
       "detachableSegments": [
         "Script — one sign"
       ],
@@ -1845,7 +1845,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b4cbaf56c772d45f"
+      "sourceHash": "fnv1a64:57e22948779b9bd6"
     },
     {
       "id": "MW-C08-hear-dadi",
@@ -1863,7 +1863,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b8e655bd46095a77"
+      "sourceHash": "fnv1a64:2998ea7566262a8c"
     },
     {
       "id": "MW-C08-dadi",
@@ -1881,7 +1881,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a40963cb51f5868b"
+      "sourceHash": "fnv1a64:ff37d6ed424770e6"
     },
     {
       "id": "MW-C08-hear-parivaar",
@@ -1899,7 +1899,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d5ed9cb50d8983fa"
+      "sourceHash": "fnv1a64:71bfb940fee47e07"
     },
     {
       "id": "MW-W08-va",
@@ -1918,7 +1918,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:5d9961e27c3b6d6d",
+      "sourceHash": "fnv1a64:f0543bd63db1a2b6",
       "detachableSegments": [
         "Script — one sign"
       ],
@@ -1940,7 +1940,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:2a8a3c8506c7798b"
+      "sourceHash": "fnv1a64:585923814fcc5a50"
     },
     {
       "id": "MW-R08-family-foundation",
@@ -1958,7 +1958,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d277b75697fa3c3f"
+      "sourceHash": "fnv1a64:825ccdcec5eeaea4"
     },
     {
       "id": "MW-R08-family-map",
@@ -1976,7 +1976,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:28a007856b4ee1d1"
+      "sourceHash": "fnv1a64:189ce17acdfce980"
     },
     {
       "id": "MW-C08-family-seven",
@@ -1994,7 +1994,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7ec0fff05268bd4e"
+      "sourceHash": "fnv1a64:c1308919a76c1e75"
     },
     {
       "id": "MW-R08-script-close",
@@ -2012,7 +2012,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:429b1560ba6f1e98"
+      "sourceHash": "fnv1a64:552ddbee013308c5"
     },
     {
       "id": "MW-C09-hear-nana",
@@ -2030,7 +2030,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0fbd648ca2c50a2d"
+      "sourceHash": "fnv1a64:ce09a425d5025236"
     },
     {
       "id": "MW-C09-nana",
@@ -2048,7 +2048,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a80f5155aa0c3b04"
+      "sourceHash": "fnv1a64:e24e32cf224a3e77"
     },
     {
       "id": "MW-C09-hear-nani",
@@ -2066,7 +2066,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ef5ad297e68f81db"
+      "sourceHash": "fnv1a64:b18791c3113d23f0"
     },
     {
       "id": "MW-C09-nani",
@@ -2084,7 +2084,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:695b1eaecd411884"
+      "sourceHash": "fnv1a64:202ece52fc7dbb3d"
     },
     {
       "id": "MW-C09-hear-pati",
@@ -2102,7 +2102,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f25a35b980dc2ec5"
+      "sourceHash": "fnv1a64:0bedaf8696f79012"
     },
     {
       "id": "MW-W09-ta",
@@ -2121,7 +2121,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:4b34b50cef98edd3",
+      "sourceHash": "fnv1a64:19da9f201f5d52a2",
       "detachableSegments": [
         "Script — one sign"
       ],
@@ -2143,7 +2143,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:710dec814c4ce481"
+      "sourceHash": "fnv1a64:af104609c367cf5e"
     },
     {
       "id": "MW-R09-maternal-three",
@@ -2161,7 +2161,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ae295f4e3f5830e6"
+      "sourceHash": "fnv1a64:a26a59f291a96473"
     },
     {
       "id": "MW-C09-hear-patni",
@@ -2179,7 +2179,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5a514bb076b9e9d6"
+      "sourceHash": "fnv1a64:6ddb9cb5e43cb778"
     },
     {
       "id": "MW-C09-patni",
@@ -2197,7 +2197,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dee5202abd2596c8"
+      "sourceHash": "fnv1a64:ec80d950ff0ce945"
     },
     {
       "id": "MW-C09-hear-bachcha",
@@ -2215,7 +2215,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2311ce5e2989fa80"
+      "sourceHash": "fnv1a64:48ad22dba3aae43f"
     },
     {
       "id": "MW-W09-cha",
@@ -2234,7 +2234,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:548e9b27958de819",
+      "sourceHash": "fnv1a64:24709a382a00e730",
       "detachableSegments": [
         "Script — one sign"
       ],
@@ -2256,7 +2256,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5348b319cdce7e27"
+      "sourceHash": "fnv1a64:5ab783a8e9fc33e0"
     },
     {
       "id": "MW-R09-family-new-five",
@@ -2274,7 +2274,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:eb610cddbef2ed5b"
+      "sourceHash": "fnv1a64:6e25e033fd4a01aa"
     },
     {
       "id": "MW-C09-family-twelve",
@@ -2292,7 +2292,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:00ec32019b21ec4c"
+      "sourceHash": "fnv1a64:4f37dd4e85cb3809"
     },
     {
       "id": "MW-R09-script-close",
@@ -2310,7 +2310,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6432559dacc17e4d"
+      "sourceHash": "fnv1a64:948474289e9d25c2"
     },
     {
       "id": "MW-C10-hear-bajar",
@@ -2328,7 +2328,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8f4d974a00bf7f9d"
+      "sourceHash": "fnv1a64:999c4872c8715192"
     },
     {
       "id": "MW-W10-ja",
@@ -2347,7 +2347,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:820c3321bf91695e",
+      "sourceHash": "fnv1a64:bb8aadad1df38025",
       "detachableSegments": [
         "Script — one sign"
       ],
@@ -2369,7 +2369,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:98ff5ba299e971c7"
+      "sourceHash": "fnv1a64:63bb340e1c48014e"
     },
     {
       "id": "MW-C10-hear-ghar",
@@ -2387,7 +2387,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:53a3342d3e7bb55c"
+      "sourceHash": "fnv1a64:9aed861e2fbce076"
     },
     {
       "id": "MW-W10-gha",
@@ -2406,7 +2406,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:0d234fc26781b394",
+      "sourceHash": "fnv1a64:10d1ad650b58f295",
       "detachableSegments": [
         "Script — one sign"
       ],
@@ -2428,7 +2428,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4e86d122223e47ba"
+      "sourceHash": "fnv1a64:abe8afb57b0fa0d5"
     },
     {
       "id": "MW-C10-hear-mandir",
@@ -2446,7 +2446,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bb913a0f1ce8cc5d"
+      "sourceHash": "fnv1a64:a5775f01c8ce1746"
     },
     {
       "id": "MW-C10-mandir",
@@ -2464,7 +2464,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4744b7e178aea0c5"
+      "sourceHash": "fnv1a64:1ee50608827d7c0a"
     },
     {
       "id": "MW-R10-places-three",
@@ -2482,7 +2482,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1b7b1c7d0b2f15f5"
+      "sourceHash": "fnv1a64:750a4c55ef301648"
     },
     {
       "id": "MW-C10-hear-haath",
@@ -2500,7 +2500,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a757d9fdad5b4e4d"
+      "sourceHash": "fnv1a64:dccef203960fd2bc"
     },
     {
       "id": "MW-C10-haath",
@@ -2518,7 +2518,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:97150b4162d030e9"
+      "sourceHash": "fnv1a64:4638add817ee9dd2"
     },
     {
       "id": "MW-C10-hear-paisa",
@@ -2536,7 +2536,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:93bbd6470e5e858e"
+      "sourceHash": "fnv1a64:dc2caaa05bd51811"
     },
     {
       "id": "MW-C10-paisa",
@@ -2554,7 +2554,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6fd9b423450cc5c8"
+      "sourceHash": "fnv1a64:2b7cb6da3b1c49f3"
     },
     {
       "id": "MW-R10-travel-five",
@@ -2572,7 +2572,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:807a0cc27e941112"
+      "sourceHash": "fnv1a64:17d170c127691269"
     },
     {
       "id": "MW-C10-travel-five",
@@ -2590,7 +2590,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:99403a22b359ad90"
+      "sourceHash": "fnv1a64:b4bb3b704e00926f"
     },
     {
       "id": "MW-R10-script-close",
@@ -2608,7 +2608,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2c4bcce729331fa5"
+      "sourceHash": "fnv1a64:bb055da2d5b6d446"
     },
     {
       "id": "MW-C11-hear-hawa",
@@ -2626,7 +2626,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a712989c004ac16b"
+      "sourceHash": "fnv1a64:0dcc03389705a7de"
     },
     {
       "id": "MW-C11-hawa",
@@ -2644,7 +2644,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:859102b879ef5497"
+      "sourceHash": "fnv1a64:2f14793b6148bb52"
     },
     {
       "id": "MW-C11-hear-baadal",
@@ -2662,7 +2662,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d26bcbc6868c6102"
+      "sourceHash": "fnv1a64:7dab26744cc68e0f"
     },
     {
       "id": "MW-C11-baadal",
@@ -2680,7 +2680,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c7ad5ae0070556fc"
+      "sourceHash": "fnv1a64:ea45b3a520fd2d13"
     },
     {
       "id": "MW-C11-hear-barsaat",
@@ -2698,7 +2698,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d0d2efe7063c8a9d"
+      "sourceHash": "fnv1a64:14134aef605bb5e2"
     },
     {
       "id": "MW-C11-barsaat",
@@ -2716,7 +2716,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e1dca5ebe59f04f8"
+      "sourceHash": "fnv1a64:b58ea9ef368d5427"
     },
     {
       "id": "MW-R11-weather-three",
@@ -2734,7 +2734,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a24693563284a055"
+      "sourceHash": "fnv1a64:f8e4e53a940011f6"
     },
     {
       "id": "MW-C11-weather-three",
@@ -2752,7 +2752,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fea7dcf633fd684a"
+      "sourceHash": "fnv1a64:64bfcf5c31170ca9"
     },
     {
       "id": "MW-R11-weather-close",
@@ -2770,7 +2770,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2fb4f6be6635694c"
+      "sourceHash": "fnv1a64:c313db0c58058d4d"
     },
     {
       "id": "MW-C12-hear-mausam",
@@ -2788,7 +2788,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:41377f9803eaed37"
+      "sourceHash": "fnv1a64:e10757be5768e6d6"
     },
     {
       "id": "MW-W12-au-matra",
@@ -2807,7 +2807,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d7a63195e168c502",
+      "sourceHash": "fnv1a64:e1ddc15de6ccbd09",
       "detachableSegments": [
         "Script — one sign"
       ],
@@ -2829,7 +2829,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b077c0d587e04283"
+      "sourceHash": "fnv1a64:5b7b9ee81bafef72"
     },
     {
       "id": "MW-C12-hear-garmi",
@@ -2847,7 +2847,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:546aa4939aa138aa"
+      "sourceHash": "fnv1a64:0839d8ff60533969"
     },
     {
       "id": "MW-W12-ga",
@@ -2866,7 +2866,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:5225cb79f8d76962",
+      "sourceHash": "fnv1a64:50d3b7755ea11245",
       "detachableSegments": [
         "Script — one sign"
       ],
@@ -2888,7 +2888,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3af20aa6e0504034"
+      "sourceHash": "fnv1a64:67a9517baa43582d"
     },
     {
       "id": "MW-R12-weather-first-two",
@@ -2906,7 +2906,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f9de8b3b623f5284"
+      "sourceHash": "fnv1a64:d101b0420d8261e9"
     },
     {
       "id": "MW-C12-hear-thandi",
@@ -2924,7 +2924,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4426d0e9956acfcd"
+      "sourceHash": "fnv1a64:0aa5f0275afddce2"
     },
     {
       "id": "MW-W12-dda",
@@ -2943,7 +2943,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:ae1b8fb1f10c2ba7",
+      "sourceHash": "fnv1a64:189ba4b81a8b7fb2",
       "detachableSegments": [
         "Script — one sign"
       ],
@@ -2965,7 +2965,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7e1d4da3196c463d"
+      "sourceHash": "fnv1a64:572183a20e1def9a"
     },
     {
       "id": "MW-R12-weather-new-three",
@@ -2983,7 +2983,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d94206ebdbb40e1f"
+      "sourceHash": "fnv1a64:55a7863fa335cad6"
     },
     {
       "id": "MW-C12-weather-six",
@@ -3001,7 +3001,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4a438415824d43db"
+      "sourceHash": "fnv1a64:a66bc71cebceeb12"
     },
     {
       "id": "MW-R12-script-close",
@@ -3019,7 +3019,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:49ff6b162224de28"
+      "sourceHash": "fnv1a64:40d7fccf0fe2de2f"
     },
     {
       "id": "MW-C13-hear-dukan",
@@ -3037,7 +3037,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0427eaa1542d9910"
+      "sourceHash": "fnv1a64:c35db5d173137329"
     },
     {
       "id": "MW-W13-u-matra",
@@ -3056,7 +3056,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b076618785134dbc",
+      "sourceHash": "fnv1a64:868a618e63559747",
       "detachableSegments": [
         "Script — one mark"
       ],
@@ -3078,7 +3078,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0ef8de73fed357d1"
+      "sourceHash": "fnv1a64:da22a03e74b3c0c2"
     },
     {
       "id": "MW-C13-hear-vastu",
@@ -3096,7 +3096,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:919c150a6fa65776"
+      "sourceHash": "fnv1a64:f85d65e97605560d"
     },
     {
       "id": "MW-C13-vastu",
@@ -3114,7 +3114,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:605005dd224ad897"
+      "sourceHash": "fnv1a64:7c513dcad1a57ccc"
     },
     {
       "id": "MW-C13-hear-bhaav",
@@ -3132,7 +3132,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:17fb35093869d064"
+      "sourceHash": "fnv1a64:5e04a78bdd90c769"
     },
     {
       "id": "MW-C13-bhaav",
@@ -3150,7 +3150,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e7c7b31f7e22da6c"
+      "sourceHash": "fnv1a64:1ace0076d9333b71"
     },
     {
       "id": "MW-R13-shopping-three",
@@ -3168,7 +3168,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:208c70132fa2f586"
+      "sourceHash": "fnv1a64:7eac70288c87050d"
     },
     {
       "id": "MW-C13-shopping-three",
@@ -3186,7 +3186,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:74f721a2bf0ad88b"
+      "sourceHash": "fnv1a64:bb58d79f35186108"
     },
     {
       "id": "MW-R13-shopping-close",
@@ -3204,7 +3204,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:14cef151a956ab64"
+      "sourceHash": "fnv1a64:ab33d14130ccdb7d"
     },
     {
       "id": "MW-C14-hear-sasta",
@@ -3222,7 +3222,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6c05fca4bb72c18b"
+      "sourceHash": "fnv1a64:d25f07cc6be786a4"
     },
     {
       "id": "MW-C14-sasta",
@@ -3240,7 +3240,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8e3e18765f9b19b4"
+      "sourceHash": "fnv1a64:fb240590ba20b00b"
     },
     {
       "id": "MW-C14-hear-samaan",
@@ -3258,7 +3258,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:86d2d44f5c2c5671"
+      "sourceHash": "fnv1a64:3a3fb5ae81461fc0"
     },
     {
       "id": "MW-C14-samaan",
@@ -3276,7 +3276,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5d141c7c3a25e4bd"
+      "sourceHash": "fnv1a64:1a5f92f681d787ac"
     },
     {
       "id": "MW-R14-shopping-new-two",
@@ -3294,7 +3294,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:db1ac09a038c3e08"
+      "sourceHash": "fnv1a64:a9663b86b645f8b5"
     },
     {
       "id": "MW-C14-shopping-five",
@@ -3312,7 +3312,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e4a403f13d7dc930"
+      "sourceHash": "fnv1a64:33c4690dae90610b"
     },
     {
       "id": "MW-R14-shopping-close",
@@ -3330,7 +3330,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6aa3353416b2d9f6"
+      "sourceHash": "fnv1a64:437d75cdd3fa8013"
     },
     {
       "id": "MW-C15-hear-kapda",
@@ -3348,7 +3348,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a521ef7950e839f4"
+      "sourceHash": "fnv1a64:832f840d61cda883"
     },
     {
       "id": "MW-W15-nukta",
@@ -3367,7 +3367,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:6e488cf65fdde8db",
+      "sourceHash": "fnv1a64:273ffbac111de2d4",
       "detachableSegments": [
         "Script — one mark"
       ],
@@ -3389,7 +3389,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c56ce22f810e503c"
+      "sourceHash": "fnv1a64:7f5c4717e3ce8f7b"
     },
     {
       "id": "MW-C15-hear-mahango",
@@ -3407,7 +3407,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3b1edb496e7ec723"
+      "sourceHash": "fnv1a64:6b6744438fc5ff74"
     },
     {
       "id": "MW-C15-mahango",
@@ -3425,7 +3425,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e7b562746777d461"
+      "sourceHash": "fnv1a64:8542779146d578da"
     },
     {
       "id": "MW-R15-shopping-new-two",
@@ -3443,7 +3443,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:09294c21fa2ca6be"
+      "sourceHash": "fnv1a64:239074d0f8a4363b"
     },
     {
       "id": "MW-C15-shopping-seven",
@@ -3461,7 +3461,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:be53e805fadeaecb"
+      "sourceHash": "fnv1a64:28522f759dd1a42e"
     },
     {
       "id": "MW-R15-shopping-close",
@@ -3479,7 +3479,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dc1c7e3c46d31a9c"
+      "sourceHash": "fnv1a64:6b462d18c93859a9"
     },
     {
       "id": "MW-C16-hear-bas",
@@ -3497,7 +3497,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dbc27e3abec046aa"
+      "sourceHash": "fnv1a64:9479f6b41e59fd53"
     },
     {
       "id": "MW-C16-bas",
@@ -3515,7 +3515,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ccfe088cc364ad49"
+      "sourceHash": "fnv1a64:cdf3250031727d3c"
     },
     {
       "id": "MW-C16-hear-gaadi",
@@ -3533,7 +3533,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ee307df55f0ca109"
+      "sourceHash": "fnv1a64:2097d1aa1584d32c"
     },
     {
       "id": "MW-C16-gaadi",
@@ -3551,7 +3551,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5c2e4ec84c428190"
+      "sourceHash": "fnv1a64:b638b0b5febe8157"
     },
     {
       "id": "MW-C16-hear-thela",
@@ -3569,7 +3569,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b4961d6322311a6d"
+      "sourceHash": "fnv1a64:6a0dd8193e4f9330"
     },
     {
       "id": "MW-C16-thela",
@@ -3587,7 +3587,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d52b4d8cc151830b"
+      "sourceHash": "fnv1a64:3ab1d49bc7decf8a"
     },
     {
       "id": "MW-R16-transport-three",
@@ -3605,7 +3605,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f2cde1d1cbe0d755"
+      "sourceHash": "fnv1a64:8de1c5cdbf709e26"
     },
     {
       "id": "MW-C16-transport-three",
@@ -3623,7 +3623,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3884e0f41ceceb51"
+      "sourceHash": "fnv1a64:b7a6a421fd5dd90a"
     },
     {
       "id": "MW-R16-transport-close",
@@ -3641,7 +3641,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:672e1ff5960bc24a"
+      "sourceHash": "fnv1a64:53fa0f4e6d8f43d3"
     },
     {
       "id": "MW-C17-hear-riksha",
@@ -3659,7 +3659,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dff82404cabc6eff"
+      "sourceHash": "fnv1a64:456f0eb9b2427856"
     },
     {
       "id": "MW-W17-sha",
@@ -3678,7 +3678,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:927055ccd98d1fb9",
+      "sourceHash": "fnv1a64:f2eab6392c9f2e78",
       "detachableSegments": [
         "Script — one sign"
       ],
@@ -3700,7 +3700,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:25da10500157e4ff"
+      "sourceHash": "fnv1a64:95d34a943661aadc"
     },
     {
       "id": "MW-C17-hear-ghodo",
@@ -3718,7 +3718,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0f2a4c644a1ed8ba"
+      "sourceHash": "fnv1a64:3d357af5aa50235b"
     },
     {
       "id": "MW-C17-ghodo",
@@ -3736,7 +3736,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ad886658ce92b41a"
+      "sourceHash": "fnv1a64:b4302bf1f44f417b"
     },
     {
       "id": "MW-R17-transport-new-two",
@@ -3754,7 +3754,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:45bf9ec3f0ae67de"
+      "sourceHash": "fnv1a64:4313ce52dfba97d7"
     },
     {
       "id": "MW-C17-transport-five",
@@ -3772,7 +3772,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:830f6eb8d187ee7f"
+      "sourceHash": "fnv1a64:1dfec7e0d8a312e2"
     },
     {
       "id": "MW-R17-script-close",
@@ -3790,7 +3790,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9e085566786dd644"
+      "sourceHash": "fnv1a64:b63b1fca8f1425ad"
     }
   ],
   "findings": []

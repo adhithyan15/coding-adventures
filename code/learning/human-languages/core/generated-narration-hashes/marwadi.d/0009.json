@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 9,
-  "sourceHash": "fnv1a64:b121afde028b4574",
+  "sourceHash": "fnv1a64:e9abd588eb05ac8b",
   "lessonIds": [
     "MW-C07-hear-later",
     "MW-W07-chha",
@@ -16,6 +16,6 @@
   "text": "marwadi/narration/ch09.txt",
   "json": "marwadi/narration/ch09.json",
   "textHash": "fnv1a64:eef02c40d84fb6ec",
-  "jsonHash": "fnv1a64:103d3a96fa314257",
+  "jsonHash": "fnv1a64:787b4bebb81419b6",
   "findings": []
 }

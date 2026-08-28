@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Maternal Grandparents and Husband: One New Sign",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:30bbfae27d80c60e",
+  "sourceHash": "fnv1a64:f4e866b660755f35",
   "lessons": [
     {
       "id": "MW-C09-hear-nana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fbd648ca2c50a2d",
+      "sourceHash": "fnv1a64:ce09a425d5025236",
       "notice": null,
       "blocks": [
         {
@@ -103,7 +103,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a80f5155aa0c3b04",
+      "sourceHash": "fnv1a64:e24e32cf224a3e77",
       "notice": null,
       "blocks": [
         {
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef5ad297e68f81db",
+      "sourceHash": "fnv1a64:b18791c3113d23f0",
       "notice": null,
       "blocks": [
         {
@@ -270,7 +270,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:695b1eaecd411884",
+      "sourceHash": "fnv1a64:202ece52fc7dbb3d",
       "notice": null,
       "blocks": [
         {
@@ -357,7 +357,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f25a35b980dc2ec5",
+      "sourceHash": "fnv1a64:0bedaf8696f79012",
       "notice": null,
       "blocks": [
         {
@@ -437,7 +437,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4b34b50cef98edd3",
+      "sourceHash": "fnv1a64:19da9f201f5d52a2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -533,7 +533,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:710dec814c4ce481",
+      "sourceHash": "fnv1a64:af104609c367cf5e",
       "notice": null,
       "blocks": [
         {
@@ -620,7 +620,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae295f4e3f5830e6",
+      "sourceHash": "fnv1a64:a26a59f291a96473",
       "notice": null,
       "blocks": [
         {

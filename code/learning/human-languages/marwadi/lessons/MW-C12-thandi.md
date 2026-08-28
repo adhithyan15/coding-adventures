@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-THANDI-01, MW-SCRIPT-TTHA-01, MW-SCRIPT-ANUSVARA-01, MW-SCRIPT-DDA-01, MW-SCRIPT-II-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-THANDI-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-THANDI-01, MW-SCRIPT-THANDI-01, MW-SCRIPT-TTHA-01, MW-SCRIPT-ANUSVARA-01, MW-SCRIPT-DDA-01, MW-SCRIPT-II-MATRA-01, MW-LEX-GARMI-01, MW-SCRIPT-GARMI-01, MW-LEX-MAUSAM-01, MW-DIALOGUE-WELLBEING-01, MW-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01]
 skills: [listening, speaking, reading, writing]

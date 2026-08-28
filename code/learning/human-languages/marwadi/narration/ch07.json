@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Kaiso Ho: Ask How Someone Is",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:83bef818d89813aa",
+  "sourceHash": "fnv1a64:eab36b939432f187",
   "lessons": [
     {
       "id": "MW-C06-hear-question",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7af2be142c8d046",
+      "sourceHash": "fnv1a64:4a5b73a26d21bd8d",
       "notice": null,
       "blocks": [
         {
@@ -114,7 +114,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bf295d3bc8fa0fd7",
+      "sourceHash": "fnv1a64:88fcbd344901106c",
       "notice": {
         "modality": "sight",
         "needs": [

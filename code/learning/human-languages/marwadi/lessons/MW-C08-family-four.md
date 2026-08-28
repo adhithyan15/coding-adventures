@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-MAA-01, MW-LEX-BAAP-01, MW-LEX-BHAI-01, MW-LEX-BAHAN-01, MW-SCRIPT-MAA-01, MW-SCRIPT-BAAP-01, MW-SCRIPT-BHAI-01, MW-SCRIPT-BAHAN-01]
 introduces:
   knowledge: [MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-MAA-01, MW-LEX-BAAP-01, MW-LEX-BHAI-01, MW-LEX-BAHAN-01, MW-SCRIPT-MAA-01, MW-SCRIPT-BAAP-01, MW-SCRIPT-BHAI-01, MW-SCRIPT-BAHAN-01, MW-SCRIPT-UU-MATRA-01, MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01]
 skills: [listening, speaking, reading, writing]

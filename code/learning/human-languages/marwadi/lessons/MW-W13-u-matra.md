@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-DUKAN-01, MW-SCRIPT-DA-01]
 introduces:
   knowledge: [MW-SCRIPT-U-MATRA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-DUKAN-01, MW-SCRIPT-U-MATRA-01, MW-SCRIPT-DA-01, MW-SCRIPT-UU-MATRA-01, MW-SCRIPT-AU-MATRA-01, MW-SCRIPT-DDA-01, MW-SCRIPT-PATNI-01, MW-SCRIPT-LA-01]
 skills: [reading, writing]

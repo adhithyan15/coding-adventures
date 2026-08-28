@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-LEX-MHARO-01, MW-LEX-NAAM-01]
 introduces:
   knowledge: [MW-LEX-HAI-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-MHARO-01, MW-LEX-NAAM-01, MW-LEX-HAI-01, MW-SCRIPT-AABHAAR-01]
 skills: [listening, speaking]

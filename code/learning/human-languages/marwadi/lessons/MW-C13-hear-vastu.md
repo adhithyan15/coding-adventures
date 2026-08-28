@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01]
 introduces:
   knowledge: [MW-LEX-VASTU-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-VASTU-01, MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-SCRIPT-U-MATRA-01, MW-LEX-PAISA-01, MW-SCRIPT-MANDIR-01, MW-LEX-THANDI-01, MW-PERFORMANCE-FAREWELL-LATER-FOUR-SKILL-01]
 skills: [listening, speaking]

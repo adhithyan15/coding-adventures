@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01]
 introduces:
   knowledge: [MW-LEX-GARMI-01]
+introduces_idioms: []
+introduces_senses: [MW-SENSE-GARMI-SUMMER-01]
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-GARMI-01, MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01, MW-SCRIPT-AU-MATRA-01, MW-LEX-BARSAAT-01, MW-SCRIPT-HAI-01, MW-LEX-AAP-01, MW-LEX-KAISO-01, MW-QUESTION-WELLBEING-HEARD-01, MW-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01]
 skills: [listening, speaking]

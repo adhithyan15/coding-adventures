@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-AAP-01, MW-LEX-KAISO-01, MW-QUESTION-WELLBEING-HEARD-01]
 introduces:
   knowledge: [MW-SCRIPT-WELLBEING-QUESTION-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-AAP-01, MW-LEX-KAISO-01, MW-QUESTION-WELLBEING-HEARD-01, MW-SCRIPT-WELLBEING-QUESTION-01, MW-SCRIPT-THARO-01, MW-SCRIPT-KAIN-01, MW-SCRIPT-KA-01, MW-PERFORMANCE-PAANI-FOUR-SKILL-01]
 skills: [listening, speaking, reading, writing]

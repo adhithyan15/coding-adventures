@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Paani: Hear Water, Then Write It Sign by Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6e3cb93f8705c380",
+  "sourceHash": "fnv1a64:2fe132c0973eed19",
   "lessons": [
     {
       "id": "MW-C04-hear-paani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aaccc85dd1586ef0",
+      "sourceHash": "fnv1a64:10138e81ee9069bf",
       "notice": null,
       "blocks": [
         {
@@ -116,7 +116,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1a062d35651bf9ed",
+      "sourceHash": "fnv1a64:748011ea87f20546",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -235,7 +235,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:20444a4aaebcd2a7",
+      "sourceHash": "fnv1a64:5a5571b7e5f1d784",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -352,7 +352,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:7c6e12bac8c4fd11",
+      "sourceHash": "fnv1a64:02aafd8d98d6db0a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -468,7 +468,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:dccdb7fa2a7dc1c4",
+      "sourceHash": "fnv1a64:47326b8d928417b0",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -597,7 +597,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6170378362027045",
+      "sourceHash": "fnv1a64:7132924a09257570",
       "notice": null,
       "blocks": [
         {

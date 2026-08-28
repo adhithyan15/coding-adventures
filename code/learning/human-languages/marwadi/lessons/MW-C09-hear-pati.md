@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-NANI-01]
 introduces:
   knowledge: [MW-LEX-PATI-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-PATI-01, MW-LEX-NANA-01, MW-LEX-NANI-01, MW-SCRIPT-NANI-01, MW-SCRIPT-RA-01, MW-SCRIPT-BHAI-01]
 skills: [listening, speaking]

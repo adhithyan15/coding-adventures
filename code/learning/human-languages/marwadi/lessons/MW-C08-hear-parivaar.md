@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-DADI-01]
 introduces:
   knowledge: [MW-LEX-PARIVAAR-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-DADA-01, MW-LEX-DADI-01, MW-SCRIPT-DADI-01, MW-LEX-PARIVAAR-01, MW-LEX-BAHAN-01, MW-SCRIPT-E-MATRA-01]
 skills: [listening, speaking]

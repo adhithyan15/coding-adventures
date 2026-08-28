@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-PATI-01]
 introduces:
   knowledge: [MW-SCRIPT-TA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-PATI-01, MW-SCRIPT-TA-01, MW-SCRIPT-TTHA-01, MW-SCRIPT-THA-01]
 skills: [reading, writing]

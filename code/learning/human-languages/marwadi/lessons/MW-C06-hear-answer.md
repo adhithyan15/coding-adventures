@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-SCRIPT-WELLBEING-QUESTION-01]
 introduces:
   knowledge: [MW-LEX-HOON-01, MW-LEX-THIK-01, MW-ANSWER-WELLBEING-HEARD-01]
+introduces_idioms: [MW-IDIOM-HOON-THIK-HOON-WELLBEING-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-SCRIPT-WELLBEING-QUESTION-01, MW-QUESTION-WELLBEING-HEARD-01, MW-SCRIPT-II-INDEPENDENT-01, MW-LEX-MHARO-01, MW-LEX-HOON-01, MW-LEX-THIK-01, MW-ANSWER-WELLBEING-HEARD-01]
 skills: [listening, speaking]

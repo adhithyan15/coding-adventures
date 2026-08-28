@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-HAWA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-HAWA-01, MW-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01, MW-LEX-GHAR-01, MW-SCRIPT-PATNI-01, MW-SCRIPT-BAJAR-01, MW-SCRIPT-NAAM-01]
 skills: [listening, speaking]

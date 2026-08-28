@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-LEX-BAS-01, MW-SCRIPT-BAS-01, MW-LEX-GAADI-01, MW-SCRIPT-GAADI-01, MW-LEX-THELA-01, MW-SCRIPT-THELA-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-BAS-01, MW-SCRIPT-BAS-01, MW-LEX-GAADI-01, MW-SCRIPT-GAADI-01, MW-LEX-THELA-01, MW-SCRIPT-THELA-01, MW-SCRIPT-RRA-01, MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01, MW-SCRIPT-TA-01, MW-SCRIPT-SASTA-01]
 skills: [listening, speaking, reading, writing]

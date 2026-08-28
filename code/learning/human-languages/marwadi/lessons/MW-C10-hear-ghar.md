@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-BAJAR-01]
 introduces:
   knowledge: [MW-LEX-GHAR-01]
+introduces_idioms: []
+introduces_senses: [MW-SENSE-GHAR-PHYSICAL-HOUSE-01]
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-GHAR-01, MW-LEX-BAJAR-01, MW-SCRIPT-BAJAR-01, MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01, MW-PERFORMANCE-FAMILY-TWELVE-FOUR-SKILL-01]
 skills: [listening, speaking]

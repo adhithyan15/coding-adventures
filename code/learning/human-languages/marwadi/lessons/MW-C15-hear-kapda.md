@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-PERFORMANCE-SHOPPING-FIVE-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-KAPDA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-KAPDA-01, MW-PERFORMANCE-SHOPPING-FIVE-FOUR-SKILL-01]
 skills: [listening, speaking]

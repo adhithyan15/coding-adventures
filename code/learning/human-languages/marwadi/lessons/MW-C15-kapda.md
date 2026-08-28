@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-KAPDA-01, MW-SCRIPT-KA-01, MW-SCRIPT-PA-01, MW-SCRIPT-RRA-01, MW-SCRIPT-AA-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-KAPDA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-KAPDA-01, MW-SCRIPT-KAPDA-01, MW-SCRIPT-NUKTA-01, MW-SCRIPT-RRA-01, MW-LEX-PARIVAAR-01]
 skills: [listening, speaking, reading, writing]

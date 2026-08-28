@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-PERFORMANCE-PAANI-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-MHARO-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-PAANI-01, MW-SCRIPT-PA-01, MW-PERFORMANCE-PAANI-FOUR-SKILL-01, MW-LEX-MHARO-01]
 skills: [listening, speaking]

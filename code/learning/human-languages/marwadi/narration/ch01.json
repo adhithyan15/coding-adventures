@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Ram-Ram Sa: A Greeting the Hand Can Make",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ac69312516661d42",
+  "sourceHash": "fnv1a64:559c8adffb9cc2ae",
   "lessons": [
     {
       "id": "MW-W01-ra",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b78e4f5768fbc249",
+      "sourceHash": "fnv1a64:56ab212c5d743006",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -128,7 +128,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f27c34dde7229fbb",
+      "sourceHash": "fnv1a64:43e5f6503187a7d8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -247,7 +247,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e6652ecc529a071f",
+      "sourceHash": "fnv1a64:971fe266fac5f98a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -374,7 +374,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8d376cf0652b9fbf",
+      "sourceHash": "fnv1a64:4d9ec243c3b749c0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -474,7 +474,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9f7b7e40a12feb9f",
+      "sourceHash": "fnv1a64:b37009d99d913d94",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e647aa08c287903",
+      "sourceHash": "fnv1a64:84954cff2d1ec19e",
       "notice": null,
       "blocks": [
         {
@@ -725,7 +725,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3dcad37b006211fd",
+      "sourceHash": "fnv1a64:9a0e67d50d167f5c",
       "notice": null,
       "blocks": [
         {

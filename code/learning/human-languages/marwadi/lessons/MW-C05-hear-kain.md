@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-LEX-THARO-01, MW-SCRIPT-THARO-01, MW-LEX-NAAM-01]
 introduces:
   knowledge: [MW-LEX-KAIN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-THARO-01, MW-SCRIPT-THARO-01, MW-LEX-NAAM-01, MW-LEX-KAIN-01, MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01, MW-SCRIPT-AI-MATRA-01]
 skills: [listening, speaking]

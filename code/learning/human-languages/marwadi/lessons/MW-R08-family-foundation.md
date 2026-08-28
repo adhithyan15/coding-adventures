@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-LEX-MAA-01, MW-LEX-BAAP-01, MW-LEX-DADI-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-MAA-01, MW-LEX-BAAP-01, MW-LEX-DADI-01, MW-LEX-PARIVAAR-01, MW-SCRIPT-PARIVAAR-01, MW-SCRIPT-BA-01, MW-SCRIPT-PACHHE-MILSOO-01]
 skills: [listening, speaking, reading, writing]

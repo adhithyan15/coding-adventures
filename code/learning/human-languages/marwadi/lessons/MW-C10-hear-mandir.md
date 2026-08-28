@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-GHAR-01]
 introduces:
   knowledge: [MW-LEX-MANDIR-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-MANDIR-01, MW-LEX-GHAR-01, MW-LEX-BAJAR-01, MW-SCRIPT-JA-01, MW-SCRIPT-NNA-01, MW-LEX-NANI-01]
 skills: [listening, speaking]

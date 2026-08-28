@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-SCRIPT-KAPDA-01, MW-LEX-SASTA-01]
 introduces:
   knowledge: [MW-LEX-MAHANGO-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-MAHANGO-01, MW-LEX-SASTA-01, MW-LEX-KAPDA-01, MW-SCRIPT-VA-01]
 skills: [listening, speaking]

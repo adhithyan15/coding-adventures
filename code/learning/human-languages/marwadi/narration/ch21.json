@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Bus, Vehicle, and Cart: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:eef5ca68be538974",
+  "sourceHash": "fnv1a64:b742931ccbdcba66",
   "lessons": [
     {
       "id": "MW-C16-hear-bas",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbc27e3abec046aa",
+      "sourceHash": "fnv1a64:9479f6b41e59fd53",
       "notice": null,
       "blocks": [
         {
@@ -98,7 +98,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ccfe088cc364ad49",
+      "sourceHash": "fnv1a64:cdf3250031727d3c",
       "notice": null,
       "blocks": [
         {
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee307df55f0ca109",
+      "sourceHash": "fnv1a64:2097d1aa1584d32c",
       "notice": null,
       "blocks": [
         {
@@ -266,7 +266,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c2e4ec84c428190",
+      "sourceHash": "fnv1a64:b638b0b5febe8157",
       "notice": null,
       "blocks": [
         {
@@ -354,7 +354,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4961d6322311a6d",
+      "sourceHash": "fnv1a64:6a0dd8193e4f9330",
       "notice": null,
       "blocks": [
         {
@@ -435,7 +435,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d52b4d8cc151830b",
+      "sourceHash": "fnv1a64:3ab1d49bc7decf8a",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2cde1d1cbe0d755",
+      "sourceHash": "fnv1a64:8de1c5cdbf709e26",
       "notice": null,
       "blocks": [
         {
@@ -601,7 +601,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3884e0f41ceceb51",
+      "sourceHash": "fnv1a64:b7a6a421fd5dd90a",
       "notice": null,
       "blocks": [
         {
@@ -692,7 +692,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:672e1ff5960bc24a",
+      "sourceHash": "fnv1a64:53fa0f4e6d8f43d3",
       "notice": null,
       "blocks": [
         {

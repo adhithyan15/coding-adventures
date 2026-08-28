@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-PERFORMANCE-FAREWELL-LATER-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-MAA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-PERFORMANCE-FAREWELL-LATER-FOUR-SKILL-01, MW-LEX-PACHHE-01, MW-LEX-MILSOO-01, MW-SCRIPT-E-MATRA-01, MW-SCRIPT-THARO-01, MW-LEX-MAA-01]
 skills: [listening, speaking]

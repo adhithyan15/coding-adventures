@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-SCRIPT-HA-01, MW-SCRIPT-AA-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-ANUSVARA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-SCRIPT-BHA-01, MW-SCRIPT-AABHAAR-01, MW-LEX-AABHAAR-01, MW-SCRIPT-HA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-ANUSVARA-01]
 skills: [listening, speaking, reading, writing]

@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-PARIVAAR-01]
 introduces:
   knowledge: [MW-SCRIPT-VA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-PARIVAAR-01, MW-SCRIPT-VA-01, MW-SCRIPT-DA-01, MW-LEX-DADI-01, MW-SCRIPT-I-MATRA-01]
 skills: [reading, writing]

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Haan Sa: A Respectful Yes, Sign by Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ab063e492a0daec8",
+  "sourceHash": "fnv1a64:4fbceec68899aa4e",
   "lessons": [
     {
       "id": "MW-W03-ha",
@@ -22,7 +22,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d46f24e6493198a2",
+      "sourceHash": "fnv1a64:5015b8f5a333e9cd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -138,7 +138,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:88a1616289b3defe",
+      "sourceHash": "fnv1a64:53cddf6736b749d5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -253,7 +253,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:07c169b446527df8",
+      "sourceHash": "fnv1a64:de6ce767a9a93d97",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -371,7 +371,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8aed844325e20928",
+      "sourceHash": "fnv1a64:1227c5bf6af59385",
       "notice": null,
       "blocks": [
         {
@@ -472,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83c3d94261a645d9",
+      "sourceHash": "fnv1a64:5a615ff20d6b70f8",
       "notice": null,
       "blocks": [
         {

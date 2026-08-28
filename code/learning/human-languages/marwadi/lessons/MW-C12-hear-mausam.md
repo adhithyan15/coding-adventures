@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-PERFORMANCE-WEATHER-THREE-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-MAUSAM-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-MAUSAM-01, MW-PERFORMANCE-WEATHER-THREE-FOUR-SKILL-01, MW-LEX-HAWA-01, MW-LEX-BAADAL-01, MW-LEX-BARSAAT-01, MW-SCRIPT-KAIN-01, MW-SCRIPT-II-INDEPENDENT-01, MW-SCRIPT-GHAR-01]
 skills: [listening, speaking]

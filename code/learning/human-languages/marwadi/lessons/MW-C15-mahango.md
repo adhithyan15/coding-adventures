@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-MAHANGO-01, MW-SCRIPT-MA-01, MW-SCRIPT-HA-01, MW-SCRIPT-ANUSVARA-01, MW-SCRIPT-GA-01, MW-SCRIPT-O-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-MAHANGO-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-MAHANGO-01, MW-SCRIPT-MAHANGO-01, MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01, MW-SCRIPT-PARIVAAR-01, MW-SCRIPT-U-MATRA-01]
 skills: [listening, speaking, reading, writing]

@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Thik Hoon: Answer in Two New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:662213f5ad3a5b77",
+  "sourceHash": "fnv1a64:c423ef3a7e5a92ae",
   "lessons": [
     {
       "id": "MW-C06-hear-answer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a926370a2742eae6",
+      "sourceHash": "fnv1a64:1d896e0dee12439f",
       "notice": null,
       "blocks": [
         {
@@ -116,7 +116,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5f227ede862c08b7",
+      "sourceHash": "fnv1a64:a10fcd4dd4440538",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -222,7 +222,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:10746a44f9d36211",
+      "sourceHash": "fnv1a64:f86cdeed947ae14a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -327,7 +327,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6df3a77f362e3fb2",
+      "sourceHash": "fnv1a64:5a7d488e1bceacb9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -441,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:920fdc110ecb88f1",
+      "sourceHash": "fnv1a64:acc80428869f163e",
       "notice": null,
       "blocks": [
         {

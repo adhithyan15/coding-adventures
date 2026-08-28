@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-MANDIR-01, MW-SCRIPT-MA-01, MW-SCRIPT-ANUSVARA-01, MW-SCRIPT-DA-01, MW-SCRIPT-I-MATRA-01, MW-SCRIPT-RA-01]
 introduces:
   knowledge: [MW-SCRIPT-MANDIR-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-MANDIR-01, MW-SCRIPT-MANDIR-01, MW-SCRIPT-MA-01, MW-SCRIPT-ANUSVARA-01, MW-SCRIPT-DA-01, MW-SCRIPT-I-MATRA-01, MW-SCRIPT-RA-01, MW-SCRIPT-GHAR-01, MW-SCRIPT-II-MATRA-01, MW-SCRIPT-NANI-01]
 skills: [listening, speaking, reading, writing]

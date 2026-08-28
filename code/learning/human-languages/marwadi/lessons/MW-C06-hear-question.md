@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-DIALOGUE-NAME-EXCHANGE-01]
 introduces:
   knowledge: [MW-LEX-AAP-01, MW-LEX-KAISO-01, MW-QUESTION-WELLBEING-HEARD-01]
+introduces_idioms: [MW-IDIOM-AAP-KAISO-HO-WELLBEING-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-QUESTION-NAME-01, MW-DIALOGUE-NAME-EXCHANGE-01, MW-SCRIPT-PAANI-01, MW-LEX-KAIN-01, MW-LEX-AAP-01, MW-LEX-KAISO-01, MW-QUESTION-WELLBEING-HEARD-01]
 skills: [listening, speaking]

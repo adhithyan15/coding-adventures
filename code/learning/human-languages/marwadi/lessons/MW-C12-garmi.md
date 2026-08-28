@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-GARMI-01, MW-SCRIPT-GA-01, MW-SCRIPT-VIRAMA-01, MW-SCRIPT-RA-01, MW-SCRIPT-MA-01, MW-SCRIPT-II-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-GARMI-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-GARMI-01, MW-SCRIPT-GARMI-01, MW-SCRIPT-GA-01, MW-SCRIPT-VIRAMA-01, MW-SCRIPT-RA-01, MW-SCRIPT-MA-01, MW-SCRIPT-II-MATRA-01, MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01, MW-LEX-HAWA-01, MW-ANSWER-WELLBEING-HEARD-01, MW-LEX-HOON-01, MW-LEX-THIK-01, MW-SCRIPT-HAATH-01]
 skills: [listening, speaking, reading, writing]

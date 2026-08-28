@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-PERFORMANCE-TRANSPORT-FIVE-FOUR-SKILL-01, MW-SCRIPT-RRA-01, MW-SCRIPT-SHA-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-PERFORMANCE-TRANSPORT-FIVE-FOUR-SKILL-01, MW-SCRIPT-NUKTA-01, MW-SCRIPT-RRA-01, MW-SCRIPT-SHA-01, MW-SCRIPT-KAPDA-01, MW-SCRIPT-GAADI-01, MW-SCRIPT-RIKSHA-01, MW-SCRIPT-GHODO-01, MW-SCRIPT-MAHANGO-01]
 skills: [reading, writing]

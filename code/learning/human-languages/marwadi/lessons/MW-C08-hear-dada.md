@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-BAHAN-01]
 introduces:
   knowledge: [MW-LEX-DADA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-BHAI-01, MW-LEX-BAHAN-01, MW-LEX-DADA-01, MW-LEX-NAAM-01, MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01, MW-SCRIPT-TTHA-01]
 skills: [listening, speaking]

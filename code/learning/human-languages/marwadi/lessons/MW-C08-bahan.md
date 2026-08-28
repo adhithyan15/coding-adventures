@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-BAHAN-01, MW-SCRIPT-BA-01, MW-SCRIPT-HA-01, MW-SCRIPT-NA-01]
 introduces:
   knowledge: [MW-SCRIPT-BAHAN-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-BAHAN-01, MW-SCRIPT-BAHAN-01, MW-SCRIPT-BA-01, MW-SCRIPT-HA-01, MW-SCRIPT-NA-01, MW-LEX-BHAI-01, MW-ANSWER-WELLBEING-HEARD-01, MW-LEX-HOON-01, MW-LEX-THIK-01]
 skills: [listening, speaking, reading, writing]

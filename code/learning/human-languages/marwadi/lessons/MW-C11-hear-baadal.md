@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01]
 introduces:
   knowledge: [MW-LEX-BAADAL-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-BAADAL-01, MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01, MW-LEX-MANDIR-01, MW-SCRIPT-HAATH-01, MW-LEX-NANI-01, MW-SCRIPT-AI-MATRA-01]
 skills: [listening, speaking]

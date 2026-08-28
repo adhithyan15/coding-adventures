@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01, MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01, MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01, MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01, MW-SCRIPT-U-MATRA-01, MW-SCRIPT-AU-MATRA-01, MW-SCRIPT-GA-01, MW-SCRIPT-DDA-01, MW-LEX-DADA-01, MW-LEX-THANDI-01]
 skills: [listening, speaking, reading, writing]

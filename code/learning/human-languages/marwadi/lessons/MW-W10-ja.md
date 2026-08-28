@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-BAJAR-01]
 introduces:
   knowledge: [MW-SCRIPT-JA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-BAJAR-01, MW-SCRIPT-JA-01, MW-SCRIPT-CHA-01, MW-LEX-HAAN-01, MW-SCRIPT-HAAN-01, MW-SCRIPT-BACHCHA-01]
 skills: [reading, writing]

@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-BARSAAT-01, MW-SCRIPT-BA-01, MW-SCRIPT-RA-01, MW-SCRIPT-SA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-TA-01]
 introduces:
   knowledge: [MW-SCRIPT-BARSAAT-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-BARSAAT-01, MW-SCRIPT-BARSAAT-01, MW-SCRIPT-BA-01, MW-SCRIPT-RA-01, MW-SCRIPT-SA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-TA-01, MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01, MW-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01, MW-SCRIPT-THA-01]
 skills: [listening, speaking, reading, writing]

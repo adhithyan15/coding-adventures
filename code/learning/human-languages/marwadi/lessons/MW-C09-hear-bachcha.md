@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-PATNI-01]
 introduces:
   knowledge: [MW-LEX-BACHCHA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-BACHCHA-01, MW-LEX-PATNI-01, MW-LEX-PATI-01, MW-LEX-NANA-01, MW-DIALOGUE-GREETING-01, MW-SCRIPT-DADA-01]
 skills: [listening, speaking]

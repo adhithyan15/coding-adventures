@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-SASTA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-SASTA-01, MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01, MW-LEX-BHAAV-01, MW-SCRIPT-U-MATRA-01, MW-SCRIPT-DUKAN-01, MW-SCRIPT-VASTU-01, MW-SCRIPT-BHAAV-01, MW-SCRIPT-BHAI-01, MW-LEX-GARMI-01]
 skills: [listening, speaking]

@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-MAUSAM-01, MW-LEX-GARMI-01]
 introduces:
   knowledge: [MW-LEX-THANDI-01]
+introduces_idioms: []
+introduces_senses: [MW-SENSE-THANDI-WINTER-01]
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-THANDI-01, MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01, MW-LEX-GARMI-01, MW-SCRIPT-GARMI-01, MW-LEX-BAADAL-01, MW-SCRIPT-BARSAAT-01, MW-SCRIPT-PAISA-01]
 skills: [listening, speaking]

@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-SCRIPT-BA-01, MW-SCRIPT-DA-01, MW-SCRIPT-VA-01, MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-SCRIPT-BA-01, MW-SCRIPT-DA-01, MW-SCRIPT-VA-01, MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01, MW-LEX-PARIVAAR-01, MW-SCRIPT-MAA-01]
 skills: [reading, writing]

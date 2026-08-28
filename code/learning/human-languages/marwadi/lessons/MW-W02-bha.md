@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-SCRIPT-AA-INDEPENDENT-01]
 introduces:
   knowledge: [MW-SCRIPT-BHA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-SCRIPT-SA-01, MW-SCRIPT-AA-INDEPENDENT-01, MW-SCRIPT-BHA-01]
 skills: [listening, speaking, reading, writing]

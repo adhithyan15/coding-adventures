@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-GHODO-01, MW-SCRIPT-GHA-01, MW-SCRIPT-O-MATRA-01, MW-SCRIPT-RRA-01]
 introduces:
   knowledge: [MW-SCRIPT-GHODO-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-GHODO-01, MW-SCRIPT-GHODO-01, MW-SCRIPT-GAADI-01, MW-SCRIPT-BACHCHA-01]
 skills: [listening, speaking, reading, writing]

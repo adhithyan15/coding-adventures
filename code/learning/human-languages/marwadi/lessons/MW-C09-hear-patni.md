@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-PATI-01, MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-PATNI-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [MW-CULTURE-WIFE-BAAI-SAA-ALTERNATIVE-01]
 practises:
   knowledge: [MW-LEX-PATNI-01, MW-LEX-PATI-01, MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01, MW-LEX-NANI-01, MW-SCRIPT-SAA-01]
 skills: [listening, speaking]

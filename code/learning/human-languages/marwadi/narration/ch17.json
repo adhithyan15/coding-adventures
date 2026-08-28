@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Weather, Heat, and Cold: Three New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:daedcb1295c8f545",
+  "sourceHash": "fnv1a64:10551a8a41fe9d22",
   "lessons": [
     {
       "id": "MW-C12-hear-mausam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41377f9803eaed37",
+      "sourceHash": "fnv1a64:e10757be5768e6d6",
       "notice": null,
       "blocks": [
         {
@@ -99,7 +99,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d7a63195e168c502",
+      "sourceHash": "fnv1a64:e1ddc15de6ccbd09",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -195,7 +195,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b077c0d587e04283",
+      "sourceHash": "fnv1a64:5b7b9ee81bafef72",
       "notice": null,
       "blocks": [
         {
@@ -282,7 +282,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:546aa4939aa138aa",
+      "sourceHash": "fnv1a64:0839d8ff60533969",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5225cb79f8d76962",
+      "sourceHash": "fnv1a64:50d3b7755ea11245",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3af20aa6e0504034",
+      "sourceHash": "fnv1a64:67a9517baa43582d",
       "notice": null,
       "blocks": [
         {
@@ -551,7 +551,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9de8b3b623f5284",
+      "sourceHash": "fnv1a64:d101b0420d8261e9",
       "notice": null,
       "blocks": [
         {
@@ -628,7 +628,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4426d0e9956acfcd",
+      "sourceHash": "fnv1a64:0aa5f0275afddce2",
       "notice": null,
       "blocks": [
         {
@@ -709,7 +709,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ae1b8fb1f10c2ba7",
+      "sourceHash": "fnv1a64:189ba4b81a8b7fb2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -810,7 +810,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e1d4da3196c463d",
+      "sourceHash": "fnv1a64:572183a20e1def9a",
       "notice": null,
       "blocks": [
         {
@@ -898,7 +898,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d94206ebdbb40e1f",
+      "sourceHash": "fnv1a64:55a7863fa335cad6",
       "notice": null,
       "blocks": [
         {
@@ -976,7 +976,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a438415824d43db",
+      "sourceHash": "fnv1a64:a66bc71cebceeb12",
       "notice": null,
       "blocks": [
         {
@@ -1073,7 +1073,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49ff6b162224de28",
+      "sourceHash": "fnv1a64:40d7fccf0fe2de2f",
       "notice": null,
       "blocks": [
         {

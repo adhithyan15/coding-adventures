@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01]
 introduces:
   knowledge: [MW-LEX-NANA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-NANA-01, MW-LEX-DADA-01, MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01, MW-SCRIPT-PARIVAAR-01]
 skills: [listening, speaking]

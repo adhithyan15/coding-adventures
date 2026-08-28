@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-PATNI-01, MW-SCRIPT-PATI-01, MW-SCRIPT-VIRAMA-01, MW-SCRIPT-NA-01, MW-SCRIPT-II-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-PATNI-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-PATNI-01, MW-SCRIPT-PATNI-01, MW-LEX-PATI-01, MW-SCRIPT-PATI-01, MW-SCRIPT-VIRAMA-01, MW-SCRIPT-NA-01, MW-SCRIPT-II-MATRA-01, MW-SCRIPT-NANI-01, MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA]
 skills: [listening, speaking, reading, writing]

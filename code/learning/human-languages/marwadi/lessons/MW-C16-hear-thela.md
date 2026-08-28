@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-SCRIPT-GAADI-01, MW-SCRIPT-TTHA-01]
 introduces:
   knowledge: [MW-LEX-THELA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-THELA-01, MW-LEX-GAADI-01, MW-LEX-BAS-01, MW-SCRIPT-TTHA-01, MW-SCRIPT-NANI-01]
 skills: [listening, speaking]

@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-LEX-MHARO-01, MW-SCRIPT-MHARO-01, MW-LEX-NAAM-01, MW-SCRIPT-NAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-RAAM-01, MW-LEX-HAI-01, MW-SCRIPT-HA-01, MW-SCRIPT-AI-MATRA-01]
 introduces:
   knowledge: [MW-SCRIPT-HAI-01, MW-PHRASE-MY-NAME-IS-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-MHARO-01, MW-SCRIPT-MHARO-01, MW-LEX-NAAM-01, MW-SCRIPT-NAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-RAAM-01, MW-LEX-HAI-01, MW-SCRIPT-HA-01, MW-SCRIPT-AI-MATRA-01, MW-SCRIPT-HAI-01, MW-PHRASE-MY-NAME-IS-01]
 skills: [listening, speaking, reading, writing]

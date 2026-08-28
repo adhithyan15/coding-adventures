@@ -19,6 +19,9 @@ requires:
   knowledge: [MW-LEX-BAADAL-01, MW-SCRIPT-BA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-DA-01, MW-SCRIPT-LA-01]
 introduces:
   knowledge: [MW-SCRIPT-BAADAL-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-LEX-BAADAL-01, MW-SCRIPT-BAADAL-01, MW-SCRIPT-BA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-DA-01, MW-SCRIPT-LA-01, MW-LEX-HAWA-01, MW-LEX-BAJAR-01, MW-SCRIPT-NANA-01, MW-PHRASE-MY-NAME-IS-01, MW-SCRIPT-HAI-01]
 skills: [listening, speaking, reading, writing]

@@ -18,6 +18,9 @@ requires:
   knowledge: [MW-SCRIPT-AA-MATRA-01, MW-DIALOGUE-GREETING-01]
 introduces:
   knowledge: [MW-SCRIPT-AA-INDEPENDENT-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-DIALOGUE-GREETING-01, MW-SCRIPT-AA-INDEPENDENT-01]
 skills: [reading, writing]
