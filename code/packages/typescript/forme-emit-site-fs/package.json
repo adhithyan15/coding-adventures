@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/forme-emit-site-fs",
+  "version": "0.1.0",
+  "description": "Join Forme rendered pages with Asset IR and emit a fingerprinted static site.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-types": "file:../forme-types",
+    "@coding-adventures/forme-identity": "file:../forme-identity",
+    "@coding-adventures/forme-stage": "file:../forme-stage"
+  },
+  "devDependencies": {
+    "@coding-adventures/forme-orchestrator": "file:../forme-orchestrator",
+    "@types/node": "^22.20.1",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

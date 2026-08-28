@@ -29,7 +29,7 @@ visible so a local optimization cannot quietly close the project early.
 
 The implementation is substantial but not yet an end-to-end product:
 
-- 60 TypeScript `forme-*` packages and 179 package test files cover the kernel,
+- 61 TypeScript `forme-*` packages and 180 package test files cover the kernel,
   stage contracts, a sequential orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
 - The blog proves an eight-stage routed DAG: source → parse → router fans out
@@ -37,8 +37,9 @@ The implementation is substantial but not yet an end-to-end product:
   emit articles plus an index, RSS, Atom, and sitemap. Public metadata composes
   portable routes with the GitHub Pages project prefix. A reusable light/dark
   Style IR theme now drives exact per-article AOT CSS slices. Local asset
-  references are resolved and loaded into Asset IR, but are not yet emitted or
-  rewritten into fingerprinted public paths.
+  references can now be resolved, loaded into Asset IR, and emitted through the
+  new fingerprinted site emitter; the blog DAG has not yet switched to that
+  complete asset path.
 - There is no general `forme` build/check/dev CLI, watch server, plugin host,
   runtime sandbox, authoring shell, or implemented deploy runner.
 - Interactivity IR has no numbered spec or package. The AOT implementation
@@ -83,8 +84,8 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 12 | FM-B026 | done | Resolve local asset references and renderer placeholders | A filesystem-backed transform discovers local `ImageNode` references, rejects root escapes, assigns one identity per normalized source path, records source locators in `AssetRef`, and preserves external/data/hash URLs. Static rendering replaces resolved references with collision-free placeholders and records exact `usedAssets`; focused tests cover nested AST paths, duplicate references, cancellation, and identity sidecars. |
 | 13 | FM-B027 | done | Load referenced filesystem assets into Asset IR | Depends on FM-B026. One collector invocation reads every unique referenced source, detects MIME type, preserves the resolved identity, hashes bytes into `revision`, emits deterministic `Asset` values, and diagnoses missing files or identity collisions without hidden state. |
 | 14 | FM-B030 | done | Make SVG MIME sniffing linear-time | Replace the uncontrolled-data backtracking expression found by CodeQL with a bounded prefix scanner; preserve XML declaration, comment, BOM, whitespace, and case-insensitive SVG detection; adversarial repeated-comment input and CodeQL pass. |
-| 15 | FM-B028 | ready | Emit and rewrite fingerprinted assets | Depends on FM-B025 and FM-B027. An asset-aware filesystem emitter joins rendered pages with assets, writes content-hashed filenames, rewrites only Forme placeholders, includes bytes and `DeployAssetEntry` records in the artifact, and covers the complete path with an end-to-end pipeline test. |
-| 16 | FM-B006 | blocked | Add a first-class asset pipeline | Depends on FM-B026–FM-B028. Referenced local assets are discovered, fingerprinted, copied, rewritten, cached, and included in the deploy manifest. |
+| 15 | FM-B028 | done | Emit and rewrite fingerprinted assets | Depends on FM-B025 and FM-B027. An asset-aware filesystem emitter joins rendered pages with assets, writes content-hashed filenames, rewrites only Forme placeholders, includes bytes and `DeployAssetEntry` records in the artifact, and covers the complete path with an end-to-end pipeline test. |
+| 16 | FM-B006 | ready | Add a first-class asset pipeline | Depends on FM-B026–FM-B028. Referenced local assets are discovered, fingerprinted, copied, rewritten, cached, and included in the deploy manifest. |
 | 17 | FM-B007 | blocked | Generate the repository landing page with Forme | Depends on FM-B005 and FM-B006. Forme source and configuration reproduce the approved landing design; generated output replaces hand-maintained HTML and deploys through the existing Pages workflow. |
 | 18 | FM-B008 | ready | Implement the general headless CLI | `forme build`, `forme check`, and `forme clean` load a project config, produce stable diagnostics and exit codes, expose reproducible mode, and work outside the monorepo demo driver. |
 | 19 | FM-B009 | blocked | Implement watch mode and a dev server | Depends on FM-B008. File changes rebuild the correct affected set, browser refresh is reliable, cancellation is clean, and error pages preserve the last good output. |
@@ -160,6 +161,8 @@ work.
 | 2026-08-28 | GitHub's automatic branch update superseded an in-flight PR run, while the obsolete run left its final gate queued and the same-head duplicate push suite left cancelled checks in the rollup. The required PR checks still auto-merged, but the intermediate state was misleading and consumed babysitting time. | Added FM-B029 as later delivery-infrastructure work. It does not displace the fingerprinted-asset critical path. |
 | 2026-08-28 | Existing structured revisions require canonical JSON, which would expand large asset bytes into costly number arrays. | Resolved in FM-B027 with a domain-separated binary revision primitive that hashes opaque bytes directly. |
 | 2026-08-28 | CodeQL found that SVG MIME sniffing applied a backtracking regular expression to asset bytes, allowing repeated comment-shaped input to consume super-linear time. | Added and resolved FM-B030 ahead of FM-B028 with a bounded prefix scanner plus adversarial repeated-comment coverage. |
+| 2026-08-28 | Named input ports are intentionally required, so adding `assets` to the existing page-only emitter would break every current pipeline before the product DAG could be migrated. | Resolved in FM-B028 with a separate asset-aware `forme-emit-site-fs` stage; FM-B006 can now switch the blog atomically while the legacy emitter remains compatible. |
+| 2026-08-28 | A root-owned `/assets/...` URL works on a custom domain but breaks the repository's GitHub Pages project deployment beneath `/coding-adventures`. | Resolved in FM-B028 with a validated, segment-encoded `publicPathPrefix` option covered by the emitter tests. |
 
 ## Loop protocol
 
