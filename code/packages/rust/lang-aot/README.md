@@ -4,10 +4,11 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, and Macsyma** to
 native executables through the shared LANG VM chain.
 
-> **macsyma-iir-vm.md Wave 4 — Macsyma runs on NativeAOT + LLVM + WASM + JVM + CLR (v0.228.0):**
+> **macsyma-iir-vm.md Wave 4 + VM-021 — Macsyma runs on NativeAOT + LLVM + WASM + JVM + CLR + JIT (v0.280.0):**
 > `tests/macsyma_conformance.rs` proves 21 v0 arithmetic/assignment Macsyma
 > programs (`2 + 3$`, `x: 3$\nx + 1$`, exact division, unary `-`/`+`, ...)
-> compute the identical integer result on the VM interpreter and all five
+> compute the identical integer result on the VM interpreter, universal JIT,
+> and all five
 > code-gen backends — the first math language on this platform to reach any
 > backend beyond the VM. Wiring needed no new codegen (Macsyma's IIR shape is
 > byte-identical to McCarthy Lisp's, already proven on all 8 backends), but
@@ -16,7 +17,10 @@ native executables through the shared LANG VM chain.
 > **unary** `call_builtin "-"` (only ever saw binary arithmetic before —
 > Macsyma is the first frontend to emit a one-operand arithmetic builtin),
 > and `clr-simulator` had no dispatch case for the CIL `neg` opcode at all.
-> Both fixed; see `code/specs/macsyma-aot-backends.md`.
+> Both fixed. The JIT extension reuses `lower_dynamic_arith`; its resulting
+> `box`/`unbox` operations are identities on generic VM/JIT values, so no
+> McCarthy-specific tagged-runtime callbacks are involved. See
+> `code/specs/macsyma-aot-backends.md`.
 
 > **LANG-FULL E4 — BASIC, ALGOL, and Twig string footholds run on all 7 backends (v0.133.0):**
 > `tests/lang_matrix.rs` now proves `10 PRINT "HELLO"` on native-AOT + LLVM + WASM + JVM + CLR + VM + JIT.
@@ -256,6 +260,12 @@ the VM's `Value::Int` as its bit pattern — `(CAR (CONS 7 9))` → 7, `(ATOM 7)
 nested `COND` → 44, `(EQ (QUOTE A) (QUOTE A))` → 1, `((LAMBDA (X) X) 5)` → 5, and a
 recursive `LABEL` → 7. **With the JIT, McCarthy 1960 LISP now runs on every LANG VM
 backend (F1–F7): VM, native AOT, JIT, WASM, JVM, CLR, BEAM, LLVM.**
+
+`run_macsyma_on_jit(source)` runs Macsyma's v0 integer subset on the same
+universal JIT. It applies the shared dynamic-arithmetic lowering, then executes
+typed arithmetic with generic identity `box`/`unbox` operations. The full
+21-program Macsyma conformance corpus agrees across VM, JIT, WASM, CLR, JVM,
+LLVM, and native AOT.
 
 `tests/conformance.rs` (W16) is the capstone: one shared table of **19** McCarthy
 programs (F1–F7) run through **all eight backends**, each asserting the identical

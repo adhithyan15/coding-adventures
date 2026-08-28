@@ -259,12 +259,12 @@ convention (CLAUDE.md rules #7/#12/#13).
   Python/Ruby/JS frontends) also ride, not something this crate pair owns.
 - **Wave 3.** Control-flow constructs (`if`/`while`/`for`/`block`) — needs a
   real evaluator loop in `macsyma-vm`, not just inert-data construction.
-- **Wave 4 — DELIVERED.** The other 6 IIR backends (NativeAOT arm64/x86_64,
-  LLVM, WASM, JVM, CLR). See
+- **Wave 4 — DELIVERED.** The other 7 applicable IIR backends (NativeAOT
+  arm64/x86_64, LLVM, WASM, JVM, CLR, and the universal JIT). See
   [`macsyma-aot-backends.md`](macsyma-aot-backends.md) for the full design,
   the two real cross-backend bugs it surfaced and fixed
   (`iir-builtin-lowering`'s unary-negate gap; `clr-simulator`'s missing
-  `neg` opcode), and the conformance suite that proves it
+  `neg` opcode), the VM-021 JIT extension, and the conformance suite that proves it
   (`lang-aot/tests/macsyma_conformance.rs`).
 - **Wave 5 — DELIVERED.** The other SIR23 CAS languages (Wolfram, Maple,
   Reduce, Derive, Axiom), each getting their own `<lang>-iir-compiler` (per

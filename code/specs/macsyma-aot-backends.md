@@ -1,6 +1,6 @@
-# Macsyma → the other 6 IIR backends (Wave 4)
+# Macsyma → the other 7 IIR backends (Wave 4 + VM-021)
 
-**Status:** Delivered — 2026-08-18
+**Status:** Delivered — 2026-08-18; universal-JIT parity added 2026-08-28
 **Depends on:** [`macsyma-iir-vm.md`](macsyma-iir-vm.md) — this is Wave 4. Read
 that spec first for the full v0 value-representation design (integer-only,
 inert `cons`-chain for symbolic data, the `/` exactness rule); this leaf spec
@@ -18,8 +18,8 @@ codegen** to reach these five backends — every one of `lang-aot`'s
 `compile_file_to_*_executable` functions already runs the same generic,
 language-agnostic `iir-builtin-lowering` pass sequence before invoking the
 actual backend, driven purely by which ops/type-hints are present in a
-module — not by which language produced it. BEAM and the universal JIT are
-explicitly out of scope (see §3).
+module — not by which language produced it. VM-021 extends that proof to the
+universal JIT; BEAM remains out of scope (see §3).
 
 What this wave actually did:
 
@@ -28,8 +28,8 @@ What this wave actually did:
    half of the work.
 2. Added a cross-backend conformance suite
    (`lang-aot/tests/macsyma_conformance.rs`) proving 21 arithmetic/assignment
-   Macsyma programs compute the identical integer result on all six backends
-   (VM + NativeAOT + LLVM + WASM + JVM + CLR).
+   Macsyma programs compute the identical integer result on all seven backends
+   (VM + JIT + NativeAOT + LLVM + WASM + JVM + CLR).
 3. That suite immediately surfaced two real, previously-latent bugs (§4) —
    genuine engineering work, not just wiring.
 
@@ -52,17 +52,14 @@ covers the one genuinely new case Macsyma's shape exercises.
 
 **In scope:** NativeAOT (arm64/x86_64 — proven cross-platform via
 `compile_file_to_{linux,macos,windows}_executable`, verified for real on this
-Windows box), LLVM, WASM, JVM, CLR. Matches `macsyma-iir-vm.md` §6's Wave 4
-definition exactly.
+Windows box), LLVM, WASM, JVM, CLR, and the universal JIT. The original Wave 4
+covered the five code generators; VM-021 adds JIT parity with a dedicated
+`run_macsyma_on_jit` entry point.
 
 **Out of scope:**
 - **BEAM.** Scoped out repo-wide for non-McCarthy languages
   (`code/specs/LANG-PLATFORM-MATRIX.md`'s own explicit BEAM exclusion); not
   named in Wave 4's own spec text.
-- **The universal JIT.** `lang_aot::run_mccarthy_on_jit` is McCarthy-hardcoded
-  today — there is no generic `run_on_jit(language, source)` yet
-  (`LANG-PLATFORM-MATRIX.md` notes the same gap for its own 6-language
-  worklist). Generalizing it is separate, larger work, not named in Wave 4.
 - **Wave 2 (Rational/Float) and Wave 3 (control flow)** — untouched. This
   wave only widens where the *existing* v0 value model runs.
 - **The other 5 CAS languages** (Wolfram/Derive/Reduce/Maple/Axiom) reaching
@@ -124,7 +121,7 @@ policy that fails loudly rather than letting an absent-tool `None` mask a
 real regression). 21 programs covering: integer literals; all 4 binary ops;
 operator precedence/chains; the `/` exactness rule; unary `-`/`+`; assignment
 and later reference; multi-statement chains with both `$`/`;` terminators.
-VM/WASM/CLR are the always-run floor; JVM/LLVM/native-AOT are tool-gated and
+VM/JIT/WASM/CLR are the always-run floor; JVM/LLVM/native-AOT are tool-gated and
 — on this development box, with `java`/`clang`/a Windows linker present — all
 three also ran and agreed. Bare-symbol/inert-cons results are intentionally
 not exercised here (their representation differs by backend), matching
@@ -133,7 +130,7 @@ from Wave 1 (`macsyma-iir-compiler/tests/oracle.rs`).
 
 ## 6. Verification
 
-- `cargo test -p lang-aot --test macsyma_conformance` — green, all 6 backends
+- `cargo test -p lang-aot --test macsyma_conformance` — green, all 7 backends
   exercised on this box.
 - `cargo test -p lang-aot -p iir-builtin-lowering -p clr-simulator` — full
   suites green except the pre-existing, unrelated `e6d7a_wasm_closures`

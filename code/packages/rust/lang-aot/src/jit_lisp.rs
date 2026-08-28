@@ -1,4 +1,4 @@
-//! # McCarthy Lisp on the universal JIT (LANG77 / McCarthy W15)
+//! # Lisp-family languages on the universal JIT
 //!
 //! The eighth and final backend. `jit-core`'s `GenericCirJit` is a *universal
 //! bytecode JIT*: any typed-IIR language plugs in by registering its builtins as
@@ -176,6 +176,41 @@ pub fn run_mccarthy_on_jit(source: &str) -> Result<Option<i64>, LangAotError> {
         .map_err(|e| LangAotError::JitBackendError(format!("{e:?}")))?;
 
     if let Some(msg) = error_handle.lock().unwrap_or_else(|e| e.into_inner()).clone() {
+        return Err(LangAotError::JitBackendError(msg));
+    }
+    Ok(result.and_then(|v| v.as_i64()))
+}
+
+/// Compile Macsyma `source` and run its scalar integer subset on the universal
+/// JIT, returning the entry point's integer result.
+///
+/// Macsyma v0 emits dynamic arithmetic as `call_builtin "+"/"-"/"*"/"/"`
+/// even when both operands are concrete integers. The shared
+/// [`iir_builtin_lowering::lower_dynamic_arith`] pass rewrites those calls to
+/// typed arithmetic plus `box`/`unbox`; those two representation operations are
+/// identities on the generic VM/JIT because [`Value::Int`] already carries the
+/// dynamic integer value. Unlike McCarthy Lisp, this scalar slice therefore
+/// needs no tagged-word runtime callbacks.
+///
+/// Returns `Ok(None)` if the entry point returns no value.
+pub fn run_macsyma_on_jit(source: &str) -> Result<Option<i64>, LangAotError> {
+    let mut module = compile_source_to_iir(Language::Macsyma, source, "jit")?;
+    iir_builtin_lowering::lower_dynamic_arith(&mut module);
+
+    let mut vm = VMCore::new();
+    let backend = GenericCirJit::new();
+    let error_handle = backend.error_handle();
+
+    let mut jit = JITCore::new(&mut vm, Box::new(backend));
+    let result = jit
+        .execute_with_jit(&mut vm, &mut module, "main", &[])
+        .map_err(|e| LangAotError::JitBackendError(format!("{e:?}")))?;
+
+    if let Some(msg) = error_handle
+        .lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .clone()
+    {
         return Err(LangAotError::JitBackendError(msg));
     }
     Ok(result.and_then(|v| v.as_i64()))
