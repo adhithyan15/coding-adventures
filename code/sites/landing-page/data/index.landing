@@ -106,9 +106,9 @@
       { "label": "Deploy", "detail": "clean build · GitHub Pages" }
     ],
     "status": [
-      { "value": "61", "label": "TypeScript Forme packages" },
+      { "value": "62", "label": "TypeScript Forme packages" },
       { "value": "2", "label": "End-to-end product sites" },
-      { "value": "Next", "label": "Headless CLI and preview" }
+      { "value": "Next", "label": "Preview and watch mode" }
     ]
   },
   "workshop": [

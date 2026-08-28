@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { spawn } from "node:child_process";
@@ -23,12 +25,12 @@ export async function localInstallOrder(projectDirectory) {
     }
 
     visiting.add(directory);
-    const manifestPath = path.join(directory, "package.json");
-    const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
-
+    const manifest = JSON.parse(
+      await readFile(path.join(directory, "package.json"), "utf8"),
+    );
     const localDependencies = dependencyFields.flatMap((field) =>
       Object.entries(manifest[field] ?? {})
-        .filter(([, version]) => version.startsWith("file:"))
+        .filter(([, version]) => typeof version === "string" && version.startsWith("file:"))
         .map(([name, version]) => ({
           name,
           directory: path.resolve(directory, version.slice("file:".length)),
@@ -36,9 +38,7 @@ export async function localInstallOrder(projectDirectory) {
     );
 
     localDependencies.sort((left, right) => left.name.localeCompare(right.name));
-    for (const dependency of localDependencies) {
-      await visit(dependency.directory);
-    }
+    for (const dependency of localDependencies) await visit(dependency.directory);
 
     visiting.delete(directory);
     visited.add(directory);
@@ -49,42 +49,35 @@ export async function localInstallOrder(projectDirectory) {
   return ordered;
 }
 
-function run(command, args, cwd) {
+export function runCommand(command, args, cwd) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, { cwd, stdio: "inherit" });
     child.once("error", reject);
     child.once("exit", (code, signal) => {
-      if (code === 0) {
-        resolve();
-        return;
-      }
-      reject(
-        new Error(
-          signal
-            ? `${command} terminated by ${signal} in ${cwd}`
-            : `${command} exited with status ${code} in ${cwd}`,
-        ),
-      );
+      if (code === 0) return resolve();
+      reject(new Error(signal
+        ? `${command} terminated by ${signal} in ${cwd}`
+        : `${command} exited with status ${code} in ${cwd}`));
     });
   });
 }
 
-export async function bootstrap(projectDirectory) {
-  const npm = process.platform === "win32" ? "npm.cmd" : "npm";
-  const installOrder = await localInstallOrder(projectDirectory);
-
-  for (const directory of installOrder) {
+export async function bootstrap(projectDirectory, options = {}) {
+  const npm = options.npmCommand ?? (process.platform === "win32" ? "npm.cmd" : "npm");
+  const install = options.install ?? runCommand;
+  const log = options.log ?? console.log;
+  for (const directory of await localInstallOrder(projectDirectory)) {
     const manifest = JSON.parse(
       await readFile(path.join(directory, "package.json"), "utf8"),
     );
-    console.log(`[bootstrap] ${manifest.name ?? directory}`);
-    await run(npm, ["install", "--silent", "--package-lock=false"], directory);
+    log(`[bootstrap] ${manifest.name ?? directory}`);
+    await install(npm, ["install", "--silent", "--package-lock=false"], directory);
   }
 }
 
 const scriptPath = fileURLToPath(import.meta.url);
 if (process.argv[1] && path.resolve(process.argv[1]) === scriptPath) {
-  const projectDirectory = path.resolve(path.dirname(scriptPath), "..");
+  const projectDirectory = path.resolve(process.argv[2] ?? process.cwd());
   bootstrap(projectDirectory).catch((error) => {
     console.error(error instanceof Error ? error.message : error);
     process.exitCode = 1;

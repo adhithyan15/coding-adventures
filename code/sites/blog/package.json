@@ -5,11 +5,12 @@
   "description": "The Coding Adventures blog — a complete ten-stage Forme surface with fingerprinted assets, deployed to /coding-adventures/blog/ on GitHub Pages.",
   "type": "module",
   "scripts": {
-    "bootstrap": "node scripts/bootstrap.mjs",
-    "build": "tsx build.ts",
+    "bootstrap": "node ../../packages/typescript/forme-cli/bin/bootstrap.mjs .",
+    "build": "forme build --report dist/.forme-build-report.json && tsx verify.ts",
+    "check": "forme check",
     "build:clean": "npm run bootstrap && npm run clean && npm run build",
-    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
-    "test": "node --test scripts/bootstrap.test.mjs && vitest run surface-stage.test.ts"
+    "clean": "forme clean",
+    "test": "vitest run surface-stage.test.ts"
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
@@ -37,6 +38,8 @@
     "@coding-adventures/forme-emit-site-fs":         "file:../../packages/typescript/forme-emit-site-fs"
   },
   "devDependencies": {
+    "@coding-adventures/forme-cli": "file:../../packages/typescript/forme-cli",
+    "@types/node": "^22.0.0",
     "typescript": "^5.0.0",
     "tsx": "^4.0.0",
     "vitest": "^4.1.0"

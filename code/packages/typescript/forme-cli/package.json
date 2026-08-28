@@ -1,0 +1,39 @@
+{
+  "name": "@coding-adventures/forme-cli",
+  "version": "0.1.0",
+  "description": "Headless Forme build, check, clean, and local-workspace bootstrap CLI.",
+  "type": "module",
+  "main": "src/index.ts",
+  "files": [
+    "bin",
+    "src",
+    "forme.cli.json",
+    "CHANGELOG.md",
+    "README.md",
+    "required_capabilities.json"
+  ],
+  "bin": {
+    "forme": "bin/forme.mjs",
+    "forme-local-bootstrap": "bin/bootstrap.mjs"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/cli-builder": "file:../cli-builder",
+    "@coding-adventures/forme-orchestrator": "file:../forme-orchestrator",
+    "@coding-adventures/forme-pipeline-config": "file:../forme-pipeline-config",
+    "@coding-adventures/forme-stage": "file:../forme-stage",
+    "tsx": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0"
+  }
+}

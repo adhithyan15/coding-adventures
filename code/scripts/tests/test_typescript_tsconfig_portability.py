@@ -412,8 +412,9 @@ console.log(prose, nested);
         # +1: forme-theme-classless, the reusable resolved Style IR theme.
         # +1: forme-resolve-asset-refs-fs, the source-safe asset reference lane.
         # +1: forme-load-assets-fs, the canonical-contained Asset IR loader.
-        self.assertEqual(summary.total_projects, 469)
-        self.assertEqual(summary.shared_projects, 291)
+        # +1: forme-cli, the shared-config headless project driver.
+        self.assertEqual(summary.total_projects, 470)
+        self.assertEqual(summary.shared_projects, 292)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
         self.assertEqual(summary.standalone_emit_projects, 148)
@@ -437,10 +438,11 @@ console.log(prose, nested);
         # +1: forme-resolve-asset-refs-fs resolves paths and reads identity
         # sidecars through the Node filesystem API.
         # +1: forme-load-assets-fs resolves canonical paths and reads bytes.
+        # +1: forme-cli reads its declarative CLI specification from disk.
         # -1: parser trace diagnostics now use a browser-safe console fallback
         # and access process only through globalThis, so the package no longer
         # requires ambient Node types in its compiler inputs.
-        self.assertEqual(summary.node_api_projects, 66)
+        self.assertEqual(summary.node_api_projects, 67)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -449,8 +451,9 @@ console.log(prose, nested);
         # out of both counts together.
         # +1: forme-resolve-asset-refs-fs owns its Node provider directly.
         # +1: forme-load-assets-fs owns its Node provider directly.
+        # +1: forme-cli owns its runtime and test Node provider directly.
         # -1: see node_api_projects -- parser no longer needs a Node provider.
-        self.assertEqual(summary.node_provider_projects, 66)
+        self.assertEqual(summary.node_provider_projects, 67)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -468,9 +471,10 @@ console.log(prose, nested);
         # +1: forme-theme-classless locks its standalone compiler toolchain.
         # +1: forme-resolve-asset-refs-fs locks its compiler toolchain.
         # +1: forme-load-assets-fs locks its compiler toolchain.
+        # +1: forme-cli locks its compiler and shared CLI Builder graph.
         # +1: the TypeScript build tool locks the compiler that now gates its
         # generic BUILD front before coverage.
-        self.assertEqual(summary.locked_compilers, 464)
+        self.assertEqual(summary.locked_compilers, 465)
 
 
 if __name__ == "__main__":

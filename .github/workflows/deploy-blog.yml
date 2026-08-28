@@ -24,9 +24,9 @@
 #                               ├→ load-assets ──────────────┴→ emit-articles
 #                               └→ collect-chronological → blog-surface → emit-surface
 #
-# `npm run build:clean` is the canonical clean-checkout entry point. Its
-# bootstrap script discovers the `file:`-linked dependency graph recursively,
-# so this workflow and the local instructions cannot drift apart.
+# `npm run build:clean` is the canonical clean-checkout entry point. The shared
+# Forme CLI bootstraps the `file:` graph and drives clean/build, so the live site
+# proves the same product entry point external projects use.
 
 name: Deploy Coding Adventures Blog
 
@@ -35,6 +35,7 @@ on:
     paths:
       - "code/sites/blog/**"
       - "code/packages/typescript/forme-types/**"
+      - "code/packages/typescript/forme-cli/**"
       - "code/packages/typescript/forme-errors/**"
       - "code/packages/typescript/forme-capability/**"
       - "code/packages/typescript/forme-stage/**"
@@ -68,6 +69,7 @@ on:
     paths:
       - "code/sites/blog/**"
       - "code/packages/typescript/forme-types/**"
+      - "code/packages/typescript/forme-cli/**"
       - "code/packages/typescript/forme-errors/**"
       - "code/packages/typescript/forme-capability/**"
       - "code/packages/typescript/forme-stage/**"

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-cli",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "packaged CLI specification, project Forme config, and local package manifests",
+      "justification": "Loads the declarative CLI Builder specification, the selected project config, and local file dependencies for the repository bootstrap helper."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "configured cache and DeployArtifact output directories beneath the project root",
+      "justification": "Implements the explicit forme clean command with containment checks."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "user-selected deterministic JSON build report",
+      "justification": "Writes the optional --report manifest and file-hash summary after a successful build."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "parent directories for the user-selected build report",
+      "justification": "Creates missing parent directories before writing the explicitly requested --report path."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "npm install for local file dependencies",
+      "justification": "The repository-only bootstrap helper installs local file dependencies in deterministic leaf-first order."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "SIGINT",
+      "justification": "Observes Ctrl-C and propagates cooperative cancellation through the running pipeline."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "stdout and stderr",
+      "justification": "Prints command summaries and stable machine-coded diagnostics for terminal and CI consumers."
+    }
+  ],
+  "justification": "The headless CLI loads project configuration, removes explicitly configured build state, handles SIGINT, and provides a repository bootstrap helper. It does not access the network except indirectly when the user invokes the bootstrap helper and npm resolves declared dependencies."
+}
