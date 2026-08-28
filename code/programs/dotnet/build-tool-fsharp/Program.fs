@@ -23,6 +23,27 @@ let validateTrackedArtifactSnapshot (unicodeVersion: string) (entries: IReadOnly
 let validateOrphanCrateSnapshot (snapshot: OrphanCrateSnapshot) =
     Validator.ValidateOrphanCrateSnapshot(snapshot)
 
+// Toolchain declarations are BUILD metadata, not executable commands. This
+// native F# symbol accepts only the already-bounded, caller-supplied snapshot
+// records defined by the shared .NET engine. It deliberately does not discover
+// a checkout, inspect Git, read the environment, or launch the CLI; the F#
+// fixture surface can therefore prove the portable decision contract directly.
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let evaluateToolchainSnapshot
+    (platform: string)
+    (forceFull: bool)
+    (packages: IReadOnlyList<ToolchainPackageSnapshot>)
+    (scheduledPackages: IReadOnlyList<string>)
+    (forcedToolchains: IReadOnlyList<string>)
+    =
+    ToolchainDetection.EvaluateSnapshot(
+        platform,
+        forceFull,
+        packages,
+        scheduledPackages,
+        forcedToolchains
+    )
+
 [<EntryPoint>]
 let main argv =
     BuildToolApp.RunAsync(argv) |> Async.AwaitTask |> Async.RunSynchronously
