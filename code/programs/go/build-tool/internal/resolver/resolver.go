@@ -637,6 +637,278 @@ func inDependencyScope(packageLanguage, scope string) bool {
 	}
 }
 
+// parseOCamlDeps unions the process-free local dependency declarations from
+// one unambiguous root opam manifest and the fixed Dune files owned by OCAML04.
+// It never follows pins or referenced paths and never executes opam or Dune.
+func parseOCamlDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	seen := make(map[string]bool)
+	add := func(candidate string) {
+		candidate = strings.ToLower(strings.TrimSpace(candidate))
+		if dependency, ok := knownNames[candidate]; ok && dependency != pkg.Name {
+			seen[dependency] = true
+		}
+	}
+
+	if manifest := findOCamlOpamFile(pkg.Path); manifest != "" {
+		data, err := os.ReadFile(manifest)
+		if err == nil {
+			if body, ok := opamListField(string(data), "depends"); ok {
+				for _, candidate := range opamDependencyNames(body) {
+					add(candidate)
+				}
+			}
+		}
+	}
+
+	for _, relative := range []string{"dune", "src/dune", "bin/dune", "test/dune"} {
+		manifestPath := filepath.Join(pkg.Path, filepath.FromSlash(relative))
+		info, infoErr := os.Lstat(manifestPath)
+		if infoErr != nil || !info.Mode().IsRegular() {
+			continue
+		}
+		data, readErr := os.ReadFile(manifestPath)
+		if readErr != nil {
+			continue
+		}
+		for _, candidate := range duneLibraryCandidates(string(data)) {
+			add(candidate)
+		}
+	}
+
+	deps := make([]string, 0, len(seen))
+	for dependency := range seen {
+		deps = append(deps, dependency)
+	}
+	sort.Strings(deps)
+	return deps
+}
+
+func findOCamlOpamFile(pkgPath string) string {
+	entries, err := os.ReadDir(pkgPath)
+	if err != nil {
+		return ""
+	}
+	var manifest string
+	for _, entry := range entries {
+		info, infoErr := entry.Info()
+		if infoErr != nil || !info.Mode().IsRegular() || !strings.HasSuffix(strings.ToLower(entry.Name()), ".opam") {
+			continue
+		}
+		if manifest != "" {
+			return ""
+		}
+		manifest = filepath.Join(pkgPath, entry.Name())
+	}
+	return manifest
+}
+
+func readOCamlPackageNames(pkgPath string) []string {
+	manifest := findOCamlOpamFile(pkgPath)
+	if manifest == "" {
+		return nil
+	}
+	names := []string{strings.ToLower(strings.TrimSuffix(filepath.Base(manifest), filepath.Ext(manifest)))}
+	data, err := os.ReadFile(manifest)
+	if err != nil {
+		return names
+	}
+	visible := stripOpamComments(string(data))
+	re := regexp.MustCompile(`(?m)^name[ \t]*:[ \t]*"([^"\r\n]+)"[ \t]*$`)
+	if match := re.FindStringSubmatch(visible); len(match) == 2 {
+		names = append(names, strings.ToLower(match[1]))
+	}
+	return names
+}
+
+func stripOpamComments(source string) string {
+	var result strings.Builder
+	inString := false
+	escaped := false
+	inComment := false
+	for index := 0; index < len(source); index++ {
+		character := source[index]
+		if inComment {
+			if character == '\n' {
+				inComment = false
+				result.WriteByte(character)
+			}
+			continue
+		}
+		if inString {
+			result.WriteByte(character)
+			if escaped {
+				escaped = false
+			} else if character == '\\' {
+				escaped = true
+			} else if character == '"' {
+				inString = false
+			}
+			continue
+		}
+		switch character {
+		case '#':
+			inComment = true
+		case '"':
+			inString = true
+			result.WriteByte(character)
+		default:
+			result.WriteByte(character)
+		}
+	}
+	return result.String()
+}
+
+func opamListField(source, field string) (string, bool) {
+	visible := stripOpamComments(source)
+	re := regexp.MustCompile(`(?m)^` + regexp.QuoteMeta(field) + `[ \t]*:[ \t]*\[`)
+	location := re.FindStringIndex(visible)
+	if location == nil {
+		return "", false
+	}
+	open := strings.LastIndex(visible[location[0]:location[1]], "[") + location[0]
+	depth := 0
+	inString := false
+	escaped := false
+	for index := open; index < len(visible); index++ {
+		character := visible[index]
+		if inString {
+			if escaped {
+				escaped = false
+			} else if character == '\\' {
+				escaped = true
+			} else if character == '"' {
+				inString = false
+			}
+			continue
+		}
+		if character == '"' {
+			inString = true
+			continue
+		}
+		switch character {
+		case '[':
+			depth++
+		case ']':
+			depth--
+			if depth == 0 {
+				return visible[open+1 : index], true
+			}
+		}
+	}
+	return "", false
+}
+
+// opamDependencyNames returns quoted package atoms while excluding quoted
+// strings inside dependency filters and version constraints. The caller has
+// already isolated the top-level depends list.
+func opamDependencyNames(source string) []string {
+	var values []string
+	braceDepth := 0
+	for index := 0; index < len(source); index++ {
+		switch source[index] {
+		case '{':
+			braceDepth++
+			continue
+		case '}':
+			if braceDepth > 0 {
+				braceDepth--
+			}
+			continue
+		}
+		if source[index] != '"' {
+			continue
+		}
+		var value strings.Builder
+		for index++; index < len(source); index++ {
+			if source[index] == '\\' && index+1 < len(source) {
+				index++
+				value.WriteByte(source[index])
+				continue
+			}
+			if source[index] == '"' {
+				if braceDepth == 0 {
+					values = append(values, value.String())
+				}
+				break
+			}
+			value.WriteByte(source[index])
+		}
+	}
+	return values
+}
+
+type duneToken struct {
+	value string
+	paren byte
+}
+
+func tokenizeDune(source string) []duneToken {
+	var tokens []duneToken
+	for index := 0; index < len(source); {
+		switch source[index] {
+		case ' ', '\t', '\r', '\n':
+			index++
+		case ';':
+			for index < len(source) && source[index] != '\n' {
+				index++
+			}
+		case '(', ')':
+			tokens = append(tokens, duneToken{paren: source[index]})
+			index++
+		case '"':
+			index++
+			var value strings.Builder
+			for index < len(source) {
+				if source[index] == '\\' && index+1 < len(source) {
+					index++
+					value.WriteByte(source[index])
+					index++
+					continue
+				}
+				if source[index] == '"' {
+					index++
+					break
+				}
+				value.WriteByte(source[index])
+				index++
+			}
+			tokens = append(tokens, duneToken{value: value.String()})
+		default:
+			start := index
+			for index < len(source) && !strings.ContainsRune("() \t\r\n;", rune(source[index])) {
+				index++
+			}
+			tokens = append(tokens, duneToken{value: source[start:index]})
+		}
+	}
+	return tokens
+}
+
+func duneLibraryCandidates(source string) []string {
+	tokens := tokenizeDune(source)
+	var candidates []string
+	for index := 0; index+1 < len(tokens); index++ {
+		if tokens[index].paren != '(' || tokens[index+1].value != "libraries" {
+			continue
+		}
+		depth := 1
+		for cursor := index + 2; cursor < len(tokens) && depth > 0; cursor++ {
+			token := tokens[cursor]
+			switch token.paren {
+			case '(':
+				depth++
+			case ')':
+				depth--
+			default:
+				if depth == 1 && token.value != "" && !strings.HasPrefix(token.value, ":") && !strings.HasPrefix(token.value, "%{") {
+					candidates = append(candidates, token.value)
+				}
+			}
+		}
+	}
+	return candidates
+}
+
 // parseElixirDeps extracts internal dependencies from an Elixir mix.exs file.
 //
 // Elixir mix.exs declares internal path dependencies usually like:
@@ -1725,7 +1997,7 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 		case !existingIsProgram && currentIsProgram:
 			return
 		}
-		if scope == "dart" && existing != value {
+		if (scope == "dart" || scope == "ocaml") && existing != value {
 			delete(known, key)
 			delete(knownLanguage, key)
 			ambiguous[key] = true
@@ -1904,6 +2176,17 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 				setKnown(cabalName, pkg.Name, pkg.Path, pkg.Language)
 			}
 
+		case "ocaml":
+			// OCaml local packages may be referenced by their directory, their
+			// conventional repository package name, or the sole root opam file.
+			dirBase := strings.ToLower(filepath.Base(pkg.Path))
+			setKnown(dirBase, pkg.Name, pkg.Path, pkg.Language)
+			setKnown("coding-adventures-"+dirBase, pkg.Name, pkg.Path, pkg.Language)
+			setKnown("coding_adventures_"+strings.ReplaceAll(dirBase, "-", "_"), pkg.Name, pkg.Path, pkg.Language)
+			for _, declaredName := range readOCamlPackageNames(pkg.Path) {
+				setKnown(declaredName, pkg.Name, pkg.Path, pkg.Language)
+			}
+
 		case "java", "kotlin":
 			// Java and Kotlin packages use Gradle composite builds. Dependencies
 			// are referenced by directory name in settings.gradle.kts via
@@ -2042,6 +2325,8 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 			deps = parseSwiftDeps(pkg, knownNames)
 		case "haskell":
 			deps = parseHaskellDeps(pkg, knownNames)
+		case "ocaml":
+			deps = parseOCamlDeps(pkg, knownNames)
 		case "java", "kotlin":
 			deps = parseGradleDeps(pkg, knownGradlePathsByLanguage[pkg.Language])
 		case "dotnet", "csharp", "fsharp":

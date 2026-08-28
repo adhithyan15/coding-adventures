@@ -9573,6 +9573,48 @@ GitHub reports it non-draft and mergeable, while required checks are still
 queued or in progress, so auto-merge remains disabled until all checks are
 terminal and acceptable and the branch is conflict-free.
 
+## Post-#13287 Refresh and OCaml Process-Free Substrate Selection
+
+All 43 final checks for PR #13287 reached terminal acceptable conclusions and
+GitHub reported final head `fffa84a555b74e0e4f95c6f7f8eac9fc9a023f4e`
+conflict-free. The loop enabled squash auto-merge, and GitHub merged the PR at
+2026-08-28T04:12:40Z as
+`548477ac8975894fd60a1f08878d81e0dfa0c692` without a manual merge command.
+The active parity slot is therefore clear.
+
+The collision-checked schema-3 inventory on current exact `origin/main`
+`e6d99bc6997d0c4fae3b00b76653e0a824d6dc98` records 15 established
+lanes, 1,383 implementation identities, 4,595 package slots, and 1,422
+all-reported identities. The four bands are 175/265, 123/934, 168/2,113,
+and 917/12,838; Rust has 729 singletons, OCaml remains emerging at zero
+packages, and canonical collisions and unknown buckets remain zero. The final
+main advance after the Elixir merge is human-language-only and does not change
+these counts.
+
+Four new singleton identities and one new implementation slot explain the
+topology delta. New pending owners classify the Rust-only `ge225-gatelevel`,
+pure device-independent `text-flow`, and mixed neutral/native
+`venture-browser-visual-fixtures` packages. Live PR #13357 currently blocks the
+GE-225 owner. TypeScript-only `forme-theme-classless` belongs to the existing
+Forme portable-core family owner. Merged external PR #12149 added the Swift
+`paint-vm-ascii` package and closed the last package-directory gap, but the
+package still lacks the required explicit empty capability profile, so its
+existing owner remains pending rather than being credited as complete.
+
+The dependency/leverage pass selects
+`ocaml-build-substrate-process-free-core` on branch
+`codex/ocaml-build-substrate-process-free-core`. Its infrastructure, CI
+toolchain, and pure-domain-corpus prerequisites are all merged; former overlap
+blockers #12149 and #12162 are merged; and every current open PR has zero
+exact overlap with the prospective Go build-tool, OCaml specification,
+workflow, state, or roadmap surfaces. This tranche adds repository-owned OCaml
+package/program discovery, field-aware opam/Dune local dependency resolution,
+source hashing, build-file validation, shard cost, affected-node behavior, and
+workflow markers. It remains process-free: opam-switch serialization,
+execution conformance, native OCaml build-tool implementation, package
+promotion, and entry into the established-language denominator stay with their
+existing downstream owners.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

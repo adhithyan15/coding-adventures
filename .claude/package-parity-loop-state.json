@@ -11,36 +11,31 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13287,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13287",
-    "branch": "codex/elixir-windows-build-front-toolchain-contract",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-28T03:11:00Z",
+    "observed_at": "2026-08-28T04:17:15Z",
     "pr_number": 13287,
     "run_id": 33114267618,
     "attempt": 1,
-    "status": "conflict-rebase-validated",
-    "notes": "All 41 replacement checks completed successfully, but main advanced again and GitHub reported a merge conflict. Rebased onto exact origin/main 42fd823bace6896dcba08a570a1a1ee52a3a60f1; the only conflict was the setup-beam explanatory comment in ci.yml, resolved by preserving the new Windows 2025 / VS 2026 pin evidence and this tranche's narrow machine-reported NIF and Metal exception contract. Prior conflict rebases passed all 38 twig-to-beam tests/doc-tests, clippy, Go build-tool tests and vet, the 12-test Elixir Windows audit suite, the 285-root fail-closed validator, actionlint, JSON parsing, and diff checks. Auto-merge remains disabled until the newest replacement checks pass."
+    "status": "merged-after-auto-merge",
+    "notes": "All 43 final checks reached terminal acceptable conclusions and GitHub reported the final head fffa84a555b74e0e4f95c6f7f8eac9fc9a023f4e conflict-free. The loop enabled squash auto-merge; GitHub merged PR #13287 at 2026-08-28T04:12:40Z as 548477ac8975894fd60a1f08878d81e0dfa0c692 without a manual merge command."
   },
   "last_inventory": {
-    "revision": "0f22582f5a0ddaceaae4f8f6ba56f3b2d5a4fd30",
+    "revision": "e6d99bc6997d0c4fae3b00b76653e0a824d6dc98",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1379,
-    "implementation_package_slots": 4590,
-    "all_reported_identities": 1418,
+    "implementation_identities": 1383,
+    "implementation_package_slots": 4595,
+    "all_reported_identities": 1422,
     "high_consensus_packages": 175,
-    "high_consensus_missing_slots": 266,
+    "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 168,
     "two_to_four_missing_slots": 2113,
-    "singleton_packages": 913,
-    "singleton_missing_slots": 12782,
-    "rust_singletons": 726,
+    "singleton_packages": 917,
+    "singleton_missing_slots": 12838,
+    "rust_singletons": 729,
     "ocaml_packages": 0,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -1264,7 +1259,7 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Wire structured Starlark context/commands and complete the B05 Windows executor contract. The orphan-corpus audit additionally owns three pure conformance repairs here: classify an existing exemption directory whose Cargo.toml disappeared as stale, reject rather than clean portable ledger syntax containing backslashes, dot segments, redundant separators, or normalized aliases, and treat blank, # comment-only, or REM comment-only platform BUILD files as empty. Open PRs #12162 and #12149 temporarily own overlapping Go validator and entry-point surfaces; their dependency-comment parsing, BuildContent plan reconstruction, worktree .git-file root discovery, and raw Windows command-line semantics remain part of this canonical Go contract rather than a new portable family. Host no-follow, reparse, and regular-file collection remains separately owned by the selection-blocked scanner security review."
+      "notes": "Wire structured Starlark context/commands and complete the B05 Windows executor contract. The orphan-corpus audit additionally owns three pure conformance repairs here: classify an existing exemption directory whose Cargo.toml disappeared as stale, reject rather than clean portable ledger syntax containing backslashes, dot segments, redundant separators, or normalized aliases, and treat blank, # comment-only, or REM comment-only platform BUILD files as empty. PRs #12162 and #12149 are merged; their dependency-comment parsing, BuildContent plan reconstruction, worktree .git-file root discovery, and raw Windows command-line semantics remain part of this canonical Go contract rather than a new portable family. Host no-follow, reparse, and regular-file collection remains separately owned by the selection-blocked scanner security review."
     },
     {
       "id": "build-tool-existing-remediation",
@@ -1344,11 +1339,14 @@
     {
       "id": "ocaml-build-substrate-process-free-core",
       "title": "Integrate OCaml discovery, resolution, hashing, and validation into the process-free Go substrate",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["ocaml-infrastructure", "ocaml-ci-toolchain", "build-tool-pure-domain-corpus"],
-      "branch": null,
+      "branch": "codex/ocaml-build-substrate-process-free-core",
       "pr_number": null,
-      "notes": "Discovered during the 41622fa7 post-merge security and leverage audit. Deliver the repository-owned, process-free OCaml build substrate now: language detection, package discovery, opam/Dune dependency resolution, source hashing, validator support, shard cost, affected-node behavior, and CI workflow markers. Correct code/specs/OCAML03-ci-toolchain.md from its stale in-progress label to the already merged PR #9354 status within this owner; the documentation drift does not need a separate implementation node. Do not claim execution conformance, opam-switch serialization, or promotion; those remain gated on the canonical Go oracle and execution contract."
+      "selection_revision": "e6d99bc6997d0c4fae3b00b76653e0a824d6dc98",
+      "selection_notes": "Selected after PR #13287 completed all 43 final checks and merged through squash auto-merge as 548477ac8975894fd60a1f08878d81e0dfa0c692 without a manual merge command. The exact-current-main collision report records 15 established lanes, 1,383 identities, 4,595 slots, 1,422 all-reported identities, bands 175/265, 123/934, 168/2,113, and 917/12,838, 729 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Newly discovered GE-225 gate-level, text-flow, and Venture visual-fixture identities have explicit pending owners; forme-theme-classless is covered by the Forme family; and the Swift paint-vm-ascii owner remains pending solely for its missing empty capability profile. All three OCaml process-free prerequisites are merged, former blockers #12149 and #12162 are merged, and every live PR has zero exact overlap with the prospective Go build-tool, OCaml specification, workflow, state, or roadmap surfaces. This tranche has the highest dependency leverage because it unlocks the execution-coupled OCaml substrate and representative package chain without claiming process execution, native OCaml build-tool conformance, or promotion.",
+      "notes": "Discovered during the 41622fa7 post-merge security and leverage audit. Deliver the repository-owned, process-free OCaml build substrate now: language detection, package discovery, opam/Dune dependency resolution, source hashing, validator support, shard cost, affected-node behavior, and CI workflow markers. Correct code/specs/OCAML03-ci-toolchain.md from its stale in-progress label to the already merged PR #9354 status within this owner; the documentation drift does not need a separate implementation node. Do not claim execution conformance, opam-switch serialization, or promotion; those remain gated on the canonical Go oracle and execution contract.",
+      "validation_notes": "OCAML04 now defines the process-free boundary and the canonical Go tool consumes it for exact package/program discovery with Dune _build exclusion, regular single-root opam aliases and depends parsing, fixed regular Dune libraries fields, self-edge and alias-ambiguity safety, source hashing, standalone prerequisite validation, prerequisite-closed shard cost, toolchain detection, and needs_ocaml CI normalization. The neutral corpus validates 112 cases and 283 files, including the new resolver case plus paired OCaml discovery and generated-output decoy. All Go package tests, race tests, vet, trimpath build, 79.5% aggregate statement coverage, fixture schema/runner tests, package-parity collision checks, capability and OCaml lock tests, real BUILD validation, JSON/YAML parsing, strict state DAG, diff hygiene, and credential-pattern scan pass. The direct Ruff invocation reproduces seven unrelated pre-existing style findings in unchanged Python lines; this tranche changes only two numeric test expectations there. No dependency changed, no process or network authority was added, and opam/Dune are never executed."
     },
     {
       "id": "ocaml-build-substrate",
@@ -1638,7 +1636,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, and provenance behavior from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, and #13268 are merged, so the earlier live-path block has cleared."
+      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, and immutable classless-theme behavior from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, and #13268 are merged, so the earlier live-path block has cleared. The collision-clean e6d99bc699 inventory adds TypeScript-only `forme-theme-classless`; it is covered here rather than creating a duplicate singleton owner."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -2398,13 +2396,16 @@
     {
       "id": "elixir-windows-build-front-toolchain-classification",
       "title": "Classify and harden Elixir Windows build fronts",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-contract"],
       "branch": "codex/elixir-windows-build-front-toolchain-contract",
       "pr_number": 13287,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13287",
       "opened_at": "2026-08-27T20:36:32Z",
       "implementation_revision": "b17e72130edc097b7f0cbe2483431513408b91f5",
+      "final_revision": "fffa84a555b74e0e4f95c6f7f8eac9fc9a023f4e",
+      "merged_at": "2026-08-28T04:12:40Z",
+      "merge_revision": "548477ac8975894fd60a1f08878d81e0dfa0c692",
       "selection_revision": "c2981e655697bd9a9ba82c9b78f20edc9fed31d1",
       "prepublication_revision": "0f22582f5a0ddaceaae4f8f6ba56f3b2d5a4fd30",
       "prepublication_notes": "Rebased conflict-free twice, finally onto exact origin/main 0f22582f5a0ddaceaae4f8f6ba56f3b2d5a4fd30. The final collision-checked inventory records 1,379 implementation identities, 4,590 slots, 1,418 all-reported identities, bands 175/266, 123/934, 168/2,113, and 913/12,782, 726 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. New pending owners classify the Rust-only browser-bookmarks portable core and its separately named native file adapter in dependency order. Live PR #13285 shares ci.yml and PR #12149 shares the Go entry point, but their current hunks are line-distinct from this tranche; recheck mergeability if either lands first.",
@@ -3968,7 +3969,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The afa7975 inventory records new Dart, Java, and Kotlin paint-vm-ascii implementations, leaving Swift as the sole missing established slot. Port the deterministic ASCII renderer against the shared paint VM behavior and add explicit empty capability metadata without introducing terminal I/O into the library."
+      "notes": "The afa7975 inventory recorded new Dart, Java, and Kotlin paint-vm-ascii implementations, leaving Swift as the sole missing established slot. Merged external PR #12149 added the Swift implementation and closed the package-directory gap, but it omitted the required explicit empty capability metadata. Keep this owner pending until that truthful library profile is added and validated; do not duplicate the already merged renderer implementation or introduce terminal I/O into the library."
     },
     {
       "id": "ct-compare-remaining-lane-parity",
@@ -6368,6 +6369,35 @@
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. The Ruby tracked-artifact consumer extends the same native generator boundary to PATH-resolved `ruby`, temporary Ruby source and runner files, inherited `RUBYOPT`/`RUBYLIB` and other environment state, buffered child output, and child diagnostics. The merged Elixir consumer adds PATH-resolved `elixir`, temporary emitted modules and runners, inherited `ERL_AFLAGS`/`ERL_FLAGS`/`ELIXIR_ERL_OPTIONS` and related runtime state, buffered child output, and child diagnostics. The merged Lua and Perl slices close their corresponding risks with explicit pinned executable identities, runtime isolation flags, minimal environments, bounded retained output, and unconditional descendant cleanup through a Windows kill-on-close Job Object or POSIX process group, with real timeout and early-root-exit tests. The merged Haskell consumer reuses that hardened runner with explicit exact GHC/runghc identities, no user package or project environment, bounded output, and descendant cleanup. The merged Swift consumer closes that reviewed boundary with exact runner-provided Swift 6.3.3 swift/swiftc identity gates, lexical driver entrypoint preservation plus resolved-target validation, isolated temporary source and module-cache state, fixed root-owned /usr/bin:/bin linker lookup on POSIX, and on Windows pinned-toolchain runtime and SDK discovery plus registered host MSVC and Windows Kits linker libraries under bounded Job Object execution; full emitted-runtime verification owns those generator changes while the validator remains process-free. Review the still-open executable identity, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, bounded output and diagnostics, process failures and process-tree cleanup, offline determinism, credential redaction, and truthful capabilities across the remaining emitted runtimes separately from the pure runtime validators. This native generator-shell authority work is excluded from autonomous portable selection."
+    },
+    {
+      "id": "ge225-gatelevel-singleton-classification",
+      "title": "Classify and fixture the portable GE-225 gate-level simulator",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "classification_notes": "Live PR #13357 currently owns the Rust GE-225 gate-level package and controller API, so this owner is registered but collision-blocked until that PR reaches a terminal merged or closed state.",
+      "notes": "Discovered in the collision-clean e6d99bc699 inventory after the new Rust-only ge225-gatelevel identity appeared. Audit its deterministic machine state, instruction behavior, queues, resource ceilings, logic-gates and arithmetic dependencies, and controller surface; define language-neutral fixtures and stable errors before any applicable-lane rollout. Keep host clocks, terminals, files, processes, and hardware authority outside the portable core."
+    },
+    {
+      "id": "text-flow-portable-conformance",
+      "title": "Fixture the portable text-flow analysis core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean e6d99bc699 inventory after the Rust-only text-flow identity appeared. Define a bounded language-neutral contract for UTF-8 byte offsets, Unicode grapheme clusters, bidirectional runs, line-break opportunities, cursor and selection mapping, deterministic ordering, stable diagnostics, and malformed or oversized inputs. The current package is device-independent and production-dependency-free; keep fonts, shaping engines, files, windows, and device measurement outside this portable owner."
+    },
+    {
+      "id": "venture-browser-visual-fixtures-applicable-lane-classification",
+      "title": "Classify Venture browser visual fixture and capture applicability",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean e6d99bc699 inventory after the Rust-only venture-browser-visual-fixtures identity appeared. Separate reusable deterministic HTML/resources, text measurement, geometry, RGBA, structural screenshot oracles, and resource bounds from Rust Venture integration plus Cairo and Apple native capture adapters. Define the language-neutral fixture contract and explicit applicable-lane exceptions; do not manufacture native screenshot hosts in every lane."
     }
   ]
 }

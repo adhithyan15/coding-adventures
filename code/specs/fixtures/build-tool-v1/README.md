@@ -35,12 +35,12 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 111-case bootstrap corpus covers every process-free v1 domain:
+The 112-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical package and program membership, language-registry classification
-  with paired C#, F#, Haskell, Java, and Kotlin package/program identities, a
-  Dart program identity, plus Cabal `dist-newstyle` and Dart `.dart_tool`
-  exclusion,
+  with paired C#, F#, Haskell, Java, Kotlin, and OCaml package/program
+  identities, a Dart program identity, plus Cabal `dist-newstyle`, Dune
+  `_build`, and Dart `.dart_tool` exclusion,
   fixture-tree exclusion, fail-closed duplicate package identities, plus
   Windows, macOS, and Linux BUILD precedence;
 - the shared Python dependency diamond, distinct package/program identities,
@@ -48,11 +48,13 @@ The 111-case bootstrap corpus covers every process-free v1 domain:
   positive UTF-8 plus fail-closed invalid-UTF-8 Lua rockspec resolution;
 - ecosystem-scoped same-name aliases across Lua, Perl, Python, and Haskell,
   with only exact qualified BUILD comments admitting cross-language edges;
-- field-aware Cabal, Gradle, .NET, and Dart resolution, including plain and declared
+- field-aware Cabal, Gradle, .NET, Dart, and OCaml resolution, including plain and declared
   Cabal names, ambiguous-manifest rejection, multiline composite builds,
   literal root `ProjectReference` paths, lexical scoped path matching,
   direct `pubspec.yaml` dependency fields, ambiguous-alias rejection,
-  nested source-map exclusion,
+  nested source-map exclusion, one unambiguous root opam `depends` field,
+  fixed-root Dune `libraries` fields, OCaml aliases, self-edge rejection,
+  ambiguous-opam rejection, and comment or unrelated-field decoys,
   duplicate collapse, and nested-comment or XML-markup examples;
 - deterministic diamond graph levels;
 - the build-plan distinction between `affected_packages: null` and `[]`, plus

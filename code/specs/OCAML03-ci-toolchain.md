@@ -1,6 +1,6 @@
 # OCAML03 — Cross-platform CI toolchain and solver evidence
 
-Status: in progress
+Status: complete in PR #9354
 
 ## Purpose
 

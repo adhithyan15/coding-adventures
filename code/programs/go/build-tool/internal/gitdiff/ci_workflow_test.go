@@ -23,6 +23,23 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedDotnetChanges(t *testing.T) 
 	}
 }
 
+func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedOCamlChanges(t *testing.T) {
+	patch := `
+@@ -84,0 +85,2 @@
++      needs_ocaml: ${{ steps.toolchains.outputs.needs_ocaml }}
++          printf '%s\n' 'needs_ocaml=true' >> "$GITHUB_OUTPUT"
+`
+
+	change := AnalyzeCIWorkflowPatch(patch)
+	if change.RequiresFullRebuild {
+		t.Fatal("expected OCaml marker-only change to stay incremental")
+	}
+	got := SortedToolchains(change.Toolchains)
+	if len(got) != 1 || got[0] != "ocaml" {
+		t.Fatalf("expected OCaml toolchain only, got %v", got)
+	}
+}
+
 func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedSwiftChanges(t *testing.T) {
 	patch := `
 @@ -300,0 +301,54 @@

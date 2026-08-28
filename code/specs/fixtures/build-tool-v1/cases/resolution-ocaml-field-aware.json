@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "id": "resolution/ocaml-field-aware",
+  "domain": "resolution",
+  "summary": "OCaml resolution unions the root opam depends field with fixed Dune libraries fields while ignoring comments, metadata, self references, and ambiguous manifests.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/ocaml/alpha/BUILD",
+        "content_utf8": "opam pin add --no-action -y coding-adventures-beta ../beta\nopam pin add --no-action -y coding-adventures-delta ../delta\nopam install . --deps-only --with-test --with-dev-setup -y\n"
+      },
+      {
+        "path": "code/packages/ocaml/alpha/coding-adventures-alpha.opam",
+        "content_utf8": "opam-version: \"2.0\"\nname: \"coding-adventures-alpha\"\nsynopsis: \"coding-adventures-gamma is documentation only\"\ndepends: [\n  \"coding-adventures-beta\" {= \"0.1.0\"}\n  \"coding-adventures-alpha\" {= \"0.1.0\"}\n  # \"coding-adventures-gamma\" is a comment\n]\nbuild: [[\"coding-adventures-gamma\"]]\n"
+      },
+      {
+        "path": "code/packages/ocaml/alpha/src/dune",
+        "content_utf8": "; (libraries coding_adventures_gamma)\n(library\n (name coding_adventures_alpha)\n (libraries coding_adventures_delta alcotest coding_adventures_alpha))\n(rule (action (echo \"(libraries coding_adventures_gamma)\")))\n"
+      },
+      {
+        "path": "code/packages/ocaml/beta/BUILD",
+        "content_utf8": "opam install . --deps-only -y\n"
+      },
+      {
+        "path": "code/packages/ocaml/beta/coding-adventures-beta.opam",
+        "content_utf8": "opam-version: \"2.0\"\nname: \"coding-adventures-beta\"\ndepends: []\n"
+      },
+      {
+        "path": "code/packages/ocaml/delta/BUILD",
+        "content_utf8": "opam install . --deps-only -y\n"
+      },
+      {
+        "path": "code/packages/ocaml/delta/coding-adventures-delta.opam",
+        "content_utf8": "opam-version: \"2.0\"\nname: \"coding-adventures-delta\"\ndepends: []\n"
+      },
+      {
+        "path": "code/packages/ocaml/gamma/BUILD",
+        "content_utf8": "opam install . --deps-only -y\n"
+      },
+      {
+        "path": "code/packages/ocaml/gamma/coding-adventures-gamma.opam",
+        "content_utf8": "opam-version: \"2.0\"\nname: \"coding-adventures-gamma\"\ndepends: []\n"
+      },
+      {
+        "path": "code/packages/ocaml/ambiguous/BUILD",
+        "content_utf8": "opam install . --deps-only -y\n"
+      },
+      {
+        "path": "code/packages/ocaml/ambiguous/first.opam",
+        "content_utf8": "opam-version: \"2.0\"\nname: \"ambiguous-first\"\ndepends: [\"coding-adventures-beta\"]\n"
+      },
+      {
+        "path": "code/packages/ocaml/ambiguous/second.opam",
+        "content_utf8": "opam-version: \"2.0\"\nname: \"ambiguous-second\"\ndepends: [\"coding-adventures-delta\"]\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "ocaml"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/ocaml-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "ocaml/beta",
+          "ocaml/alpha"
+        ],
+        [
+          "ocaml/delta",
+          "ocaml/alpha"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}
