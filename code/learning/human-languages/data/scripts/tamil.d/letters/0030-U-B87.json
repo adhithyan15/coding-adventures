@@ -1,0 +1,27 @@
+{
+  "glyph": "இ",
+  "sound": "i",
+  "role": "independent-vowel",
+  "components": [
+    "an inner curl",
+    "two crossing lower loops",
+    "a large outer arch ending in a right descender"
+  ],
+  "strokeOrder": [
+    "start inside the upper curl and sweep around it",
+    "without lifting, sweep down the inner right curve",
+    "without lifting, carry left across the middle and turn around the lower-left loop",
+    "without lifting, climb the lower diagonal back to the left crossing",
+    "without lifting, carry right across the middle and turn around the lower-right loop — then lift once",
+    "set the pen at the lower outer-left side and climb it",
+    "without lifting again, arch over the top and down the far right — and only now lift"
+  ],
+  "strokeOrderNote": "two strokes — five joined inner-and-lower movements, one pen lift, then the joined outer-left climb and arch; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 4, இ",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, இ (Univ. of Texas at Austin), p. 192",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+  },
+  "notes": "The compact curl, crossing lower loops, and large outside arch are seven named movements, not seven separate strokes. The first five stay connected; after one lift, the outside climb flows straight into the final arch as the second pen-down run."
+}

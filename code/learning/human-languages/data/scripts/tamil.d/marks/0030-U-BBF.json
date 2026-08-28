@@ -1,0 +1,11 @@
+{
+  "mark": "ி",
+  "sound": "i",
+  "role": "vowel-sign",
+  "attachesAs": "a hook written above and to the right of the consonant",
+  "example": {
+    "base": "ற",
+    "combined": "றி",
+    "sound": "ṟi"
+  }
+}

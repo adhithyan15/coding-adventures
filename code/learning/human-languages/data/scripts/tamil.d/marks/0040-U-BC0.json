@@ -1,0 +1,20 @@
+{
+  "mark": "ீ",
+  "sound": "ī",
+  "role": "vowel-sign",
+  "attachesAs": "a dependent long-i sign that joins to or shifts beside the consonant carrier",
+  "example": {
+    "base": "ட",
+    "combined": "டீ",
+    "sound": "ṭī"
+  },
+  "compositionOrder": [
+    "write the Tamil consonant carrier first",
+    "add the ī vowel sign to replace its inherent vowel"
+  ],
+  "compositionSource": {
+    "citation": "The Unicode Standard, Version 17.0, §12.6.3 Tamil Ligatures, Ligatures with Vowel i and Figure 12-21: U+0BC0 TAMIL VOWEL SIGN II forms consonant-vowel ligatures; ட + ீ → டீ and ல + ீ → லீ (2025)",
+    "url": "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+    "variation": "Unicode verifies encoded carrier-first composition and shows that the ii sign can change shape or position to join cursively with its consonant. This is not a universal handwriting direction, and the source supports no standalone ductus claim or pen-lift count."
+  }
+}

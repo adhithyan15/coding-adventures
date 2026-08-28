@@ -1,0 +1,29 @@
+{
+  "glyph": "ண",
+  "sound": "ṇa",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "a spiral loop on the left",
+    "TWO rounded inner arches",
+    "a straight top bar",
+    "a separate straight vertical on the right, down to the baseline"
+  ],
+  "strokeOrder": [
+    "start in the lower-left curl and spiral outward, climbing the outer left side",
+    "without lifting, arch over the top of the left loop to the first junction",
+    "without lifting, descend around the outside of the first inner arch",
+    "without lifting, turn through its bottom and climb the inside back to the first junction",
+    "without lifting, sweep through the extra inner arch — over its top, around its outside and bottom, then up its inside to the right junction",
+    "without lifting, carry the top bar to the right edge — then lift once",
+    "set the pen at the top of the separate right upright and draw straight down — and only now lift"
+  ],
+  "strokeOrderNote": "two strokes — six joined loop, double-arch, and top-bar movements, one pen lift, then the right upright; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 13, ண",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 13, ண (Univ. of Texas at Austin), p. 195",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+  },
+  "notes": "The RETROFLEX n — tongue curled back to the roof of the mouth. Learn it beside ன: ண is ன WITH ONE EXTRA ARCH. Frame 13's adjacent row numbers seven movements, not seven strokes: its first six stay connected through the left spiral, two inner arches, and top bar; only the separate right upright requires a lift. Tamil writes three n-sounds with three letters (ந, ன, ண)."
+}

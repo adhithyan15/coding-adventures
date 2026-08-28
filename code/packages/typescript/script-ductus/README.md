@@ -32,7 +32,7 @@ data/scripts/*.{json,d/} ─► scriptdata.ts ─┐
 
 | module | what it knows |
 |---|---|
-| `scriptdata.ts` | the curriculum's canonical script data; ordinary JSON is imported directly and the three sharded inventories arrive through one fixed build-time virtual module |
+| `scriptdata.ts` | the curriculum's canonical script data; ordinary JSON is imported directly and the four sharded inventories arrive through one fixed build-time virtual module |
 | `strokes.ts` + `strokes/*.ts` | **how** a letter is written — a fixed public registry assembled from writing-system-owned pen-path modules |
 | `truetype.ts` | **what** the letter looks like — a zero-dependency TrueType reader pulling the real outline out of the shipped font |
 | `ductusview.ts` | the join — the filmstrip, as a tree of plain objects plus a serialiser |
@@ -114,9 +114,11 @@ npm install && npx vitest run
 ```
 
 Authored paths and their exact geometry/filmstrip evidence use the same owner
-name under `src/strokes/`, `tests/strokes/`, and `tests/ductusview/`. Adding an
-ordinary glyph changes only those owner files; `strokes.ts` remains the bounded
-public facade and duplicate-rejecting assembly point.
+name under `src/strokes/`, `tests/strokes/`, and `tests/ductusview/`. Tamil goes
+one level deeper: every existing record and both evidence suites use the same
+ASCII `U-<CODEPOINT>` owner below `tamil/`, while `tamil.ts` remains assembly
+only. Adding an ordinary glyph changes only its owner files; `strokes.ts`
+remains the bounded public facade and duplicate-rejecting assembly point.
 
 More than 2,200 tests cover the registry, paths, font fit, provenance, and
 rendering. `jsdom` is a devDependency for exactly two of them: the SVG

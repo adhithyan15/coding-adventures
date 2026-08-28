@@ -102,6 +102,7 @@ import os
 import re
 import sys
 import unicodedata
+from sharded_ledger import load_script
 
 from sharded_ledger import load_curriculum, write_curriculum
 
@@ -288,7 +289,7 @@ def voicing(entry, sound):
 
 
 def build(cfg):
-    S = json.load(open(os.path.join(HL, f"data/scripts/{cfg['script']}.json"), encoding="utf-8"))
+    S = load_script(HL, cfg["script"])
     L = json.load(open(os.path.join(HL, f"data/scripts/{cfg['ledger']}-ledger.json"), encoding="utf-8"))
     lessons = load_lessons(cfg["track"])
 

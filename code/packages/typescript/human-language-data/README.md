@@ -25,7 +25,7 @@ book chapters cannot leave its counts stale.
 lessons/*.md frontmatter    ─┐
 <track>/curriculum.d/**/*   ─┼─►  Dataset + local realization paths
 concepts/taxonomy.json      ─┤         + validate() / validateCurriculum()
-data/scripts/*.json         ─┘         + independent frontier planning
+data/scripts/*.{json,d/}    ─┘         + independent frontier planning
 ```
 
 The core is the **concept**: a language-independent idea (`GREETING-HELLO`). Each
@@ -36,10 +36,10 @@ learning."
 ### Authoring sharded ledgers
 
 Every track's chapter and curriculum ledgers are conflict-resistant shards, as
-are the shared spine, book-generation manifest, and Japanese, Perso-Arabic, and
-Urdu-Nastaliq script inventories. Edit the owning file under `X.d/`; their
-monoliths do not exist. Language Ladder and Script Ductus fold bounded browser
-modules from the canonical shards at build time.
+are the shared spine, book-generation manifest, and Japanese, Perso-Arabic,
+Tamil, and Urdu-Nastaliq script inventories. Edit the owning file under `X.d/`;
+their monoliths do not exist. Language Ladder and Script Ductus fold bounded
+browser modules from the canonical shards at build time.
 
 ```bash
 npm run check:shards

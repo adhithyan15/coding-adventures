@@ -1,0 +1,28 @@
+{
+  "glyph": "ஊ",
+  "sound": "ū",
+  "role": "independent-vowel",
+  "components": [
+    "the whole of உ",
+    "the three-run ள form written over its baseline"
+  ],
+  "strokeOrder": [
+    "write உ first: sweep outward around its compact upper spiral",
+    "without lifting, descend through its broad outer curve and turn left onto the baseline",
+    "without lifting, carry the long baseline straight to the right — then lift once",
+    "write ள over that base: curl around its added left loop",
+    "without lifting, turn inward through the loop",
+    "without lifting, descend around its inner curl — then lift a second time",
+    "set the pen at the bottom of the adjoining upright and draw upward",
+    "without lifting, carry the top bar to the right — then lift a third time",
+    "set the pen at the top of the separate right upright and draw straight down"
+  ],
+  "strokeOrderNote": "four strokes — first write the three joined movements of உ, then add ள in its familiar three-run order (joined movements 1–3, joined 4–5, and separate 6); cited to Radhakrishnan, Tamil Script Learners Manual, Module 17 with Appendix I Frames 17, 16, and 12",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Module 17, ஊ construction, with Appendix I: Hand-movements, Frames 17, 16, and 12 (University of Texas at Austin), pp. 195–196",
+    "url": "https://sites.la.utexas.edu/tamilscript/frame-17/92",
+    "variation": "Module 17 identifies ஊ as long ū and explicitly constructs it from two familiar letters: write உ first, then write ள over it. Appendix I Frame 16 keeps உ's three movements joined, while Frame 12 groups ள's six movements into three pen-down runs. The resulting four-run learner order is fitted to the bundled Noto Sans Tamil ஊ outline; Tamil handwriting varies by school."
+  },
+  "notes": "Independent long ū opens words such as ஊர் (ūr, native place) and ஊசி (ūsi, needle). The manual teaches the letter compositionally: write short உ first, then overlay the already learned ள form."
+}

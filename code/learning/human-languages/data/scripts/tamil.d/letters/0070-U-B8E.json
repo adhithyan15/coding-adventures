@@ -1,0 +1,28 @@
+{
+  "glyph": "எ",
+  "sound": "e",
+  "role": "independent-vowel",
+  "components": [
+    "a left outer climb and top bar",
+    "an inner descent and spiral",
+    "a lower foot",
+    "a separate right upright"
+  ],
+  "strokeOrder": [
+    "start at the lower left and climb the outer side",
+    "without lifting, carry the top bar to the right",
+    "without lifting, retrace left to the inner corner and drop the inner upright",
+    "without lifting, turn left into the inner spiral",
+    "without lifting, sweep around the broad outer curve",
+    "without lifting, carry the lower foot right — then lift once",
+    "set the pen at the bottom of the separate right upright and draw straight up"
+  ],
+  "strokeOrderNote": "two strokes — six joined body movements, one pen lift, then the separate right upright; cited to Radhakrishnan, Tamil Script Learners Manual, Appendix I, Frame 5, எ",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 5, எ (University of Texas at Austin), p. 193",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Appendix I Frame 5 numbers எ's first six movements as one connected body and its upward right upright as movement 7 after one lift. Tamil handwriting varies by school; this is one attested two-run order fitted to the bundled Noto Sans Tamil outline."
+  },
+  "notes": "Independent short e is the second row of Appendix I Frame 5. Its numbered movements stay connected from the left climb through the spiral and lower foot; only the right upright begins after a lift. The dependent short-e sign ெ is a different learner row written before a consonant."
+}

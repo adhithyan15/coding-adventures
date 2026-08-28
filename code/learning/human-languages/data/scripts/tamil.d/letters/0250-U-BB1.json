@@ -1,0 +1,25 @@
+{
+  "glyph": "ற",
+  "sound": "ṟa",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "two arches side by side, giving three legs down to the baseline",
+    "the right leg continues BELOW the baseline, sweeps left, and drops into a long descender"
+  ],
+  "strokeOrder": [
+    "start at the lower left, climb the left side, and arch to the middle",
+    "without lifting, descend the first middle upright — then lift once",
+    "set the pen at the adjacent middle upright and descend — then lift a second time",
+    "set the pen at the middle top, arch over, and descend the right side",
+    "without lifting again, sweep left below the baseline and drop into the long descender — and only now lift"
+  ],
+  "strokeOrderNote": "three strokes — two joined movements, one pen lift, the adjacent middle descent, a second lift, then two joined movements; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 10, ற",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 10, ற (Univ. of Texas at Austin), p. 194",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+  },
+  "notes": "The hard/trilled r, distinct from ர. Frame 10's five numbered movements form three pen-down runs: movements 1–2 join, movement 3 restarts on the neighboring middle descent, and movements 4–5 join the right arch to the sweep and descender. In நன்றி the pair ன் + ற is said as a single cluster."
+}

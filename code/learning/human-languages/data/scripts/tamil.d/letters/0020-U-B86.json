@@ -1,0 +1,25 @@
+{
+  "glyph": "ஆ",
+  "sound": "ā",
+  "role": "independent-vowel",
+  "components": [
+    "the whole of அ",
+    "a tail added on the right"
+  ],
+  "strokeOrder": [
+    "start inside the upper curl and sweep around it",
+    "without lifting, continue down the outer curve",
+    "without lifting, turn around the lower loop",
+    "without lifting, carry the horizontal to the right edge — then lift once",
+    "set the pen at the top of the separate right upright and draw straight down",
+    "without lifting again, continue into the long-vowel loop, curve right and around the bottom, then finish inside — and only now lift"
+  ],
+  "strokeOrderNote": "two strokes — four joined body movements, one pen lift, then the joined upright and long-vowel loop; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 4, ஆ",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 4, ஆ (Univ. of Texas at Austin), p. 192",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+  },
+  "notes": "Long ā is short அ plus a tail — the same lengthening idea that appears as the ா sign on consonants. The அ-shaped body is the first pen-down run; after the one lift, the upright and long-vowel loop stay connected as the second."
+}

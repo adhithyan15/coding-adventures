@@ -1,0 +1,26 @@
+{
+  "glyph": "ம",
+  "sound": "ma",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "a straight vertical stroke on the LEFT",
+    "a horizontal along the bottom",
+    "a rounded arch closing it on the RIGHT"
+  ],
+  "strokeOrder": [
+    "start at the top left and draw the left upright straight DOWN to the baseline",
+    "without lifting, turn right and run along the bottom to the far right",
+    "without lifting, turn up and rise up the right side",
+    "without lifting, curve over the top and back towards the left",
+    "without lifting, come down the middle to the bottom bar — and only now lift"
+  ],
+  "strokeOrderNote": "one unbroken stroke — five movements, no pen lift; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 1",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 1 (Univ. of Texas at Austin)",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+  },
+  "notes": "The upright is on the left and the curve on the right — the reverse of what a learner coming from Devanagari tends to assume. The whole letter is ONE motion: the five movements above are parts of a single pen-down run, not five strokes, so the hand does not leave the paper until the last one ends."
+}

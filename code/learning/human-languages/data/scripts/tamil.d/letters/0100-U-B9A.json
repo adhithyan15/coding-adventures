@@ -1,0 +1,24 @@
+{
+  "glyph": "ச",
+  "sound": "ca",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "an upper square frame ending in a short middle bar",
+    "a rounded lower-left bowl"
+  ],
+  "strokeOrder": [
+    "start at the middle left and climb the left upright",
+    "without lifting, carry the top bar to the right and return along it to the inner corner",
+    "without lifting, drop the inner upright and carry the middle bar right — then lift once",
+    "set the pen at the inner crossing, curve down and around the lower-left bowl, return up its outer left side, and close the bowl at the crossing — and only now lift"
+  ],
+  "strokeOrderNote": "two strokes — three joined upper-frame movements, one lift, then the lower-left bowl; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 3, ச",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 3, ச (University of Texas at Austin), p. 191",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Frame 3 numbers the three joined upper-frame movements before the separate fourth movement turns around ச's lower-left bowl. Tamil handwriting varies by school; this is one attested two-run order fitted to the bundled Noto Sans Tamil outline."
+  },
+  "notes": "Ca is the simpler sibling of க: both begin with the same upper frame, but ச keeps only the rounded lower-left bowl and lets the middle bar project to the right. The final movement closes that bowl back at the crossing. The numbered movements form two pen-down runs, not four separate strokes."
+}

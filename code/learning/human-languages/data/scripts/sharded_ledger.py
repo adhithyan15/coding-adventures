@@ -212,6 +212,26 @@ def load_script_inventory(root, script):
     }
 
 
+def load_script(root, script):
+    """Load a monolithic or shard-native canonical script inventory.
+
+    The logical provenance remains ``<script>.json`` for callers and reports;
+    the sibling ``<script>.d`` directory merely changes the storage boundary.
+    If the shard path exists, it must be a real directory and becomes the only
+    source of truth rather than falling back to a possibly stale aggregate.
+    """
+    script = _safe_script(script)
+    scripts = _directory(root, "data", "scripts")
+    shard_directory = os.path.join(scripts, f"{script}.d")
+    try:
+        info = os.lstat(shard_directory)
+    except FileNotFoundError:
+        return _read(root, "data", "scripts", f"{script}.json")
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+        raise ValueError(f"refusing non-directory ledger ancestor: {shard_directory}")
+    return load_script_inventory(root, script)
+
+
 def _chapter_entries(root, track):
     entries = []
     seen = set()

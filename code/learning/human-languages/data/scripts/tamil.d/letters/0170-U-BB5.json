@@ -1,0 +1,26 @@
+{
+  "glyph": "வ",
+  "sound": "va",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "a spiral loop on the left",
+    "a bottom bar",
+    "a tall right upright"
+  ],
+  "strokeOrder": [
+    "start at the inner curl and spiral outward, climbing the left side",
+    "without lifting, arch over the top and descend on the right",
+    "without lifting, turn down to the baseline",
+    "without lifting, carry the bottom bar to the right",
+    "without lifting, rise up the right upright — and only now lift"
+  ],
+  "strokeOrderNote": "one unbroken stroke — five joined movements, no pen lift; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 9, வ",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 9, வ (Univ. of Texas at Austin), p. 194",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+  },
+  "notes": "One of the plainer shapes, and a reasonable first letter to draw. Frame 9's five numbered movements are parts of one continuous spiral-to-upright motion, not five strokes: the pen stays down until the right upright ends."
+}

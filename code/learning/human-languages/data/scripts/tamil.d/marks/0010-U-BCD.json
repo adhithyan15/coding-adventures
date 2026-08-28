@@ -1,0 +1,11 @@
+{
+  "mark": "்",
+  "sound": "(vowel killer)",
+  "role": "virama",
+  "attachesAs": "a DOT written above the letter, removing the inherent vowel; unlike Devanagari's virama it does not trigger a conjunct — both letters keep their full shape and the dot stays visible",
+  "example": {
+    "base": "க",
+    "combined": "க்",
+    "sound": "k"
+  }
+}

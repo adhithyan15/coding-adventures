@@ -6,10 +6,14 @@ import { defaultCurriculumRoot, loadScripts } from "../src/loader.js";
 import {
   JAPANESE_SCRIPT_PLAN,
   PERSO_ARABIC_SCRIPT_PLAN,
+  TAMIL_SCRIPT_PLAN,
   URDU_NASTALIQ_SCRIPT_PLAN,
   runShardCli,
 } from "../src/shard-cli.js";
-import { mergeScriptInventoryShards, scriptEntryId } from "../src/script-shards.js";
+import {
+  mergeScriptInventoryShards,
+  scriptEntryId,
+} from "../src/script-shards.js";
 import { readShards, type Shard } from "../src/shard.js";
 
 function shard(name: string, value: unknown): Shard {
@@ -56,6 +60,16 @@ const INVENTORIES = [
     digest: "a4c339e47e75ffdd1aa7111d1cde5017ad6d70c9a9499b91694c6a3384d63d19",
   },
   {
+    name: "tamil",
+    plan: TAMIL_SCRIPT_PLAN,
+    letters: 25,
+    marks: 9,
+    identityDigest:
+      "12edac447f5a0ae29f2b89a88d326b7893cbd7176ac1809c9dffad1f1f260421",
+    metadataDigest:
+      "738d50ab1ce59e4b9ef40123c4c4d07d2f59ddef8347f857937b1274d0153e53",
+  },
+  {
     name: "urdu-nastaliq",
     plan: URDU_NASTALIQ_SCRIPT_PLAN,
     letters: 29,
@@ -72,70 +86,95 @@ describe("Japanese script inventory shards", () => {
   });
 
   it("rejects a filename id that does not match its glyph", () => {
-    expect(() => mergeScriptInventoryShards([
-      meta,
-      shard("letters/0010-U-3044.json", letter("あ")),
-    ])).toThrow(/does not match.*U-3042/);
+    expect(() =>
+      mergeScriptInventoryShards([
+        meta,
+        shard("letters/0010-U-3044.json", letter("あ")),
+      ]),
+    ).toThrow(/does not match.*U-3042/);
   });
 
   it("rejects malformed names and unknown entry kinds", () => {
-    expect(() => mergeScriptInventoryShards([
-      meta,
-      shard("letters/U-3042.json", letter("あ")),
-    ])).toThrow(/expected letters\/NNNN/);
-    expect(() => mergeScriptInventoryShards([
-      meta,
-      shard("tones/0010-U-3042.json", letter("あ")),
-    ])).toThrow(/expected letters\/NNNN/);
+    expect(() =>
+      mergeScriptInventoryShards([
+        meta,
+        shard("letters/U-3042.json", letter("あ")),
+      ]),
+    ).toThrow(/expected letters\/NNNN/);
+    expect(() =>
+      mergeScriptInventoryShards([
+        meta,
+        shard("tones/0010-U-3042.json", letter("あ")),
+      ]),
+    ).toThrow(/expected letters\/NNNN/);
   });
 
   it("rejects duplicate ordinals before filename ordering can become ambiguous", () => {
-    expect(() => mergeScriptInventoryShards([
-      meta,
-      shard("letters/0010-U-3042.json", letter("あ")),
-      shard("letters/0010-U-3044.json", letter("い")),
-    ])).toThrow(/duplicate letters ordinal '0010'/);
+    expect(() =>
+      mergeScriptInventoryShards([
+        meta,
+        shard("letters/0010-U-3042.json", letter("あ")),
+        shard("letters/0010-U-3044.json", letter("い")),
+      ]),
+    ).toThrow(/duplicate letters ordinal '0010'/);
   });
 
   it("gives each glyph exactly one owner across letters and marks", () => {
-    expect(() => mergeScriptInventoryShards([
-      meta,
-      shard("letters/0010-U-30FC.json", letter("ー")),
-      shard("marks/0010-U-30FC.json", mark("ー")),
-    ])).toThrow(/already owned/);
+    expect(() =>
+      mergeScriptInventoryShards([
+        meta,
+        shard("letters/0010-U-30FC.json", letter("ー")),
+        shard("marks/0010-U-30FC.json", mark("ー")),
+      ]),
+    ).toThrow(/already owned/);
   });
 
   it("requires one entry object with the section's identity field", () => {
-    expect(() => mergeScriptInventoryShards([
-      meta,
-      shard("letters/0010-U-3042.json", []),
-    ])).toThrow(/one JSON object/);
-    expect(() => mergeScriptInventoryShards([
-      meta,
-      shard("marks/0010-U-309B.json", { sound: "voicing" }),
-    ])).toThrow(/non-empty 'mark'/);
+    expect(() =>
+      mergeScriptInventoryShards([meta, shard("letters/0010-U-3042.json", [])]),
+    ).toThrow(/one JSON object/);
+    expect(() =>
+      mergeScriptInventoryShards([
+        meta,
+        shard("marks/0010-U-309B.json", { sound: "voicing" }),
+      ]),
+    ).toThrow(/non-empty 'mark'/);
   });
 });
 
 describe("shard-native script inventories", () => {
-  it.each(INVENTORIES)("reconstructs $name exactly and forbids its aggregate", ({
-    name,
-    plan,
-    letters,
-    marks,
-    digest,
-  }) => {
-    const root = defaultCurriculumRoot();
-    const monolithPath = join(root, "data", "scripts", `${name}.json`);
-    expect(existsSync(monolithPath)).toBe(false);
-    const shards = readShards(monolithPath);
-    expect(shards).not.toBeNull();
-    const assembled = mergeScriptInventoryShards(shards!);
-    expect(assembled.letters).toHaveLength(letters);
-    expect(assembled.marks).toHaveLength(marks);
-    expect(createHash("sha256").update(JSON.stringify(assembled)).digest("hex")).toBe(digest);
-    expect(loadScripts(root)[name]).toEqual(assembled);
-    expect(plan.monolith).toBe("removed");
-    expect(runShardCli(["--check", plan.path], root)).toBe(0);
-  });
+  it.each(INVENTORIES)(
+    "reconstructs $name exactly and forbids its aggregate",
+    (inventory) => {
+      const { name, plan, letters, marks } = inventory;
+      const root = defaultCurriculumRoot();
+      const monolithPath = join(root, "data", "scripts", `${name}.json`);
+      expect(existsSync(monolithPath)).toBe(false);
+      const shards = readShards(monolithPath);
+      expect(shards).not.toBeNull();
+      const assembled = mergeScriptInventoryShards(shards!);
+      expect(assembled.letters).toHaveLength(letters);
+      expect(assembled.marks).toHaveLength(marks);
+      if ("digest" in inventory) {
+        expect(
+          createHash("sha256").update(JSON.stringify(assembled)).digest("hex"),
+        ).toBe(inventory.digest);
+      } else {
+        const identities = [
+          ...assembled.letters.map((entry) => entry.glyph),
+          ...(assembled.marks ?? []).map((entry) => entry.mark),
+        ];
+        const { letters: _letters, marks: _marks, ...metadata } = assembled;
+        expect(
+          createHash("sha256").update(JSON.stringify(identities)).digest("hex"),
+        ).toBe(inventory.identityDigest);
+        expect(
+          createHash("sha256").update(JSON.stringify(metadata)).digest("hex"),
+        ).toBe(inventory.metadataDigest);
+      }
+      expect(loadScripts(root)[name]).toEqual(assembled);
+      expect(plan.monolith).toBe("removed");
+      expect(runShardCli(["--check", plan.path], root)).toBe(0);
+    },
+  );
 });

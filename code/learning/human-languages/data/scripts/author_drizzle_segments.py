@@ -28,10 +28,11 @@ or stroke order is typed here, because none of it is mine to assert.
 """
 
 import json, os, textwrap
+from sharded_ledger import load_script
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 HL = os.path.normpath(os.path.join(HERE, "..", ".."))
-SCRIPT = json.load(open(os.path.join(HL, "data/scripts/tamil.json"), encoding="utf-8"))
+SCRIPT = load_script(HL, "tamil")
 BY = {l["glyph"]: l for l in SCRIPT["letters"]}
 MARKS = {m["mark"]: m for m in SCRIPT.get("marks", [])}
 

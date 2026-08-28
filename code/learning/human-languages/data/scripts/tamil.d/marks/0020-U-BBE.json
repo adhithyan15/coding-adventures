@@ -1,0 +1,11 @@
+{
+  "mark": "ா",
+  "sound": "ā",
+  "role": "vowel-sign",
+  "attachesAs": "a vertical stroke with a small top hook, written after the consonant",
+  "example": {
+    "base": "ம",
+    "combined": "மா",
+    "sound": "mā"
+  }
+}
