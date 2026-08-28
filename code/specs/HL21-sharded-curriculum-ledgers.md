@@ -46,14 +46,14 @@ book and nothing failed.
 
 ### 1.2 This is not a new direction
 
-PR #12443 already did this once, for the generated hash ledgers. Today these are
-per-language directories rather than monoliths:
+PR #12443 first did this for generated hash ledgers. The generated families have
+since moved from language aggregates to stable direct-owner directories:
 
 ```text
-core/generated-book-hashes/<lang>.json       24 files
-core/generated-narration-hashes/<lang>.json  24 files
-core/lesson-modality/<lang>.json             23 files
-core/gentle-ramp-snapshots/<lang>.json       23 files
+core/generated-book-hashes/<lang>.d/         metadata + one owner per chapter
+core/generated-narration-hashes/<lang>.d/    metadata + one owner per chapter
+core/lesson-modality/<lang>.d/               metadata + one owner per lesson
+core/gentle-ramp-snapshots/<lang>.d/          metadata + metric/finding owners
 ```
 
 HL21 generalises that shape rather than adding a second one beside it.

@@ -1,0 +1,11 @@
+{
+  "language": "telugu",
+  "kind": "glyph-step",
+  "finding": {
+    "language": "telugu",
+    "kind": "glyph-step",
+    "count": 5,
+    "unit": "lesson/system spike(s)",
+    "detail": "split new glyphs and writing systems across gentler steps"
+  }
+}

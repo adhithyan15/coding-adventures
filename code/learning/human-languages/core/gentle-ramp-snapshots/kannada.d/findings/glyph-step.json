@@ -1,0 +1,11 @@
+{
+  "language": "kannada",
+  "kind": "glyph-step",
+  "finding": {
+    "language": "kannada",
+    "kind": "glyph-step",
+    "count": 6,
+    "unit": "lesson/system spike(s)",
+    "detail": "split new glyphs and writing systems across gentler steps"
+  }
+}

@@ -42,6 +42,8 @@ import {
 import {
   readModalityManifestOwners,
 } from "./modality-shards.js";
+import { readGentleRampOwners } from "./gentle-ramp-shards.js";
+import type { TrackGentleRamp } from "./gentle-ramp.js";
 import { narrationLessonIdentityIndex } from "./generated-hash-shards.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
 import {
@@ -653,6 +655,33 @@ export function loadModalityManifest(
   return readModalityManifestOwners(root, {
     expectedLanguages: languages,
     expectedLessonIds,
+  });
+}
+
+/**
+ * Read the generated gentle-ramp direct owners and reconstruct the historical
+ * per-language TrackGentleRamp snapshots without a flat-aggregate fallback.
+ */
+export function loadGentleRampSnapshotTracks(
+  root = defaultCurriculumRoot(),
+  registry = loadLanguageRegistry(root),
+): TrackGentleRamp[] {
+  const languages = registry.languages.map((language) => language.id);
+  const sourceIds = new Map(languages.map((language) => [language, [] as string[]]));
+  for (const lesson of loadLessons(root)) {
+    const id = lesson.frontmatter.id;
+    if (typeof id !== "string" || id.length === 0) {
+      throw new Error(`lesson in '${lesson.language}' has no usable id`);
+    }
+    const ids = sourceIds.get(lesson.language);
+    if (ids === undefined) throw new Error(`lesson '${id}' has unregistered language '${lesson.language}'`);
+    ids.push(id);
+  }
+  for (const ids of sourceIds.values()) ids.sort();
+  return readGentleRampOwners(root, {
+    expectedLanguages: languages,
+    expectedLessonIds: sourceIds,
+    expectedNarrationLessonIds: narrationLessonIdentityIndex(root, languages),
   });
 }
 

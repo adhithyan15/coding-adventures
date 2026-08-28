@@ -1,0 +1,11 @@
+{
+  "language": "punjabi",
+  "kind": "glyph-step",
+  "finding": {
+    "language": "punjabi",
+    "kind": "glyph-step",
+    "count": 3,
+    "unit": "lesson/system spike(s)",
+    "detail": "split new glyphs and writing systems across gentler steps"
+  }
+}

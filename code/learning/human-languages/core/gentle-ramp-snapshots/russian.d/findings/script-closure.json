@@ -1,0 +1,11 @@
+{
+  "language": "russian",
+  "kind": "script-closure",
+  "finding": {
+    "language": "russian",
+    "kind": "script-closure",
+    "count": 23,
+    "unit": "glyph(s)",
+    "detail": "teach every load-bearing glyph before asking the learner to decode it"
+  }
+}

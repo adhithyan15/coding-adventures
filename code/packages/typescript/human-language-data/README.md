@@ -375,18 +375,23 @@ opening defect cannot be averaged away. Writing exposure does not count as writi
 practice, and the report names how many opening lessons precede the first real
 writing/script lesson or block.
 
-The exact corpus regression lives in one generated snapshot per language rather
-than six hand-edited totals in the test body:
+The exact corpus regression lives in stable generated owners rather than full-track
+language aggregates or hand-edited totals in the test body:
 
 ```bash
-npm run generate:gentle-snapshots  # write core/gentle-ramp-snapshots/*.json
-npm run check:gentle-snapshots     # fail if any language shard is stale or orphaned
+npm run generate:gentle-snapshots  # write direct owners under core/gentle-ramp-snapshots/*.d/
+npm run check:gentle-snapshots     # fail on owner drift, deletion, or aggregate resurrection
 ```
 
-The test reconstructs the global summary and priority queue from those full track
-snapshots. A Tamil-only change therefore updates `tamil.json`; it cannot collide
-with a simultaneous Punjabi-only change, while a hidden debt increase still changes
-the responsible shard and fails the byte-for-byte drift gate.
+Each `<language>.d/` has immutable `_meta.json`, 26 fixed metric owners (the R1-R4
+reinforcement windows have separate identities), and ten always-present finding-kind
+owners. `lessonCount` is derived from exact parsed and narration lesson identities;
+`next`, the global queue, and summaries are reconstructed in memory. Thus two agents
+can change different dimensions of Tamil without sharing a generated file. The checker
+requires the exact registered-language tree, exact fixed filenames, canonical bytes,
+and exact public `TrackGentleRamp` reconstruction. It rejects a resurrected flat
+aggregate, and generation validates a complete staged replacement before removing the
+old tree. See [`HL33`](../../../specs/HL33-sharded-gentle-ramp-ownership.md).
 
 Level coverage uses the same conflict-resistant shape. Each shard pins that track's
 exact lesson count, complete pre-A1-to-C2 histogram, unmapped count and highest
@@ -929,6 +934,7 @@ until the existing corpus has been split.
 | `narration.ts` | typed lesson AST → narration segments and the continuous voice script | ✅ |
 | `modality-manifest.ts` | derived modality rows, rollups, and unchanged filterable public manifest | ✅ |
 | `modality-shards.ts` | strict direct-owner fold and filesystem boundary | ⛔ (fs) |
+| `gentle-ramp-shards.ts` | strict metric/finding owner fold and filesystem boundary | ⛔ (fs) |
 | `report.ts` | deterministic duration, prerequisite, book, schema, and modality gap report | ✅ |
 | `lesson-budgets.ts` | explicit idiom, sense, and culture-claim budget measurement | ✅ |
 | `loader.ts` | reads the curriculum off disk | ⛔ (fs) |
@@ -936,6 +942,7 @@ until the existing corpus has been split.
 | `report-cli.ts` | prints JSON or text for CI artifact capture | ⛔ (fs) |
 | `book-cli.ts` | writes or checks generated chapters and their hash manifest | ⛔ (fs) |
 | `modality-cli.ts` | writes or checks `core/lesson-modality/<language>.d/*.json` | ⛔ (fs) |
+| `gentle-ramp-snapshot-cli.ts` | stages, writes, or checks `core/gentle-ramp-snapshots/<language>.d/` | ⛔ (fs) |
 | `narration-cli.ts` | writes or checks the narration export and its hash manifest | ⛔ (fs) |
 | `track-progress.ts` | registry/curriculum/book facts → per-language progress cards | ✅ |
 | `track-progress-cli.ts` | writes or checks `progress/*.md` | ⛔ (fs) |

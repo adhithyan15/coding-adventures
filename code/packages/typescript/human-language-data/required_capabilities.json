@@ -7,13 +7,13 @@
       "category": "fs",
       "action": "read",
       "target": "../../learning/human-languages/**",
-      "justification": "The loader/CLI read the curriculum's lesson Markdown, concept taxonomy, per-language sound-tag owners, per-lesson modality owners, and script JSON from the repo working tree to build and validate the cross-language dataset."
+      "justification": "The loader/CLI read the curriculum's lesson Markdown, concept taxonomy, per-language sound-tag owners, per-lesson modality owners, gentle-ramp metric/finding owners, and script JSON from the repo working tree to build and validate the cross-language dataset."
     },
     {
       "category": "fs",
       "action": "list",
       "target": "../../learning/human-languages/**",
-      "justification": "The loader enumerates each track's lessons/ directory, core/sound-tags.d/, core/lesson-modality/*.d/, and data/scripts/ to discover and verify the exact files to parse."
+      "justification": "The loader enumerates each track's lessons/ directory, core/sound-tags.d/, core/lesson-modality/*.d/, core/gentle-ramp-snapshots/*.d/, and data/scripts/ to discover and verify the exact files to parse."
     },
     {
       "category": "fs",
@@ -32,6 +32,24 @@
       "action": "write",
       "target": "../../learning/human-languages/core/lesson-modality/*.d/*.json",
       "justification": "The explicit generate:modality command refreshes only direct per-language metadata and per-lesson modality owners; it cannot write the removed flat aggregates. CI normally uses the read-only check:modality drift gate."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../learning/human-languages/core/gentle-ramp-snapshots/*.d/_meta.json",
+      "justification": "The explicit generate:gentle-snapshots command refreshes stable per-language metadata owners after validating a complete staged tree; no flat aggregate path is granted."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../learning/human-languages/core/gentle-ramp-snapshots/*.d/metrics/*.json",
+      "justification": "The explicit generate:gentle-snapshots command refreshes only fixed metric identities; CI normally uses the read-only check:gentle-snapshots drift gate."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../learning/human-languages/core/gentle-ramp-snapshots/*.d/findings/*.json",
+      "justification": "The explicit generate:gentle-snapshots command refreshes only fixed finding-kind identities; CI normally uses the read-only check:gentle-snapshots drift gate."
     },
     {
       "category": "fs",
@@ -58,5 +76,5 @@
       "justification": "The explicit generate:progress command refreshes one independently mergeable progress card per registered language; CI normally uses the read-only check:progress drift gate."
     }
   ],
-  "justification": "Filesystem access stays in loader-backed CLI entry points. Validation/reporting are read-only; the explicit generators write only configured LaTeX chapters, per-chapter narration scripts, chapter-owned generated-hash files, direct per-lesson modality owners, and per-language progress cards. No network or process access is needed."
+  "justification": "Filesystem access stays in loader-backed CLI entry points. Validation/reporting are read-only; the explicit generators write only configured LaTeX chapters, per-chapter narration scripts, chapter-owned generated-hash files, direct per-lesson modality owners, direct gentle-ramp metric/finding owners, and per-language progress cards. No network or process access is needed."
 }

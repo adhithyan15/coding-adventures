@@ -1,0 +1,11 @@
+{
+  "language": "persian",
+  "kind": "glyph-step",
+  "finding": {
+    "language": "persian",
+    "kind": "glyph-step",
+    "count": 1,
+    "unit": "lesson/system spike(s)",
+    "detail": "split new glyphs and writing systems across gentler steps"
+  }
+}

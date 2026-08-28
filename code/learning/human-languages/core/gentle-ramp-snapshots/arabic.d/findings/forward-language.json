@@ -1,0 +1,11 @@
+{
+  "language": "arabic",
+  "kind": "forward-language",
+  "finding": {
+    "language": "arabic",
+    "kind": "forward-language",
+    "count": 14,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "language": "russian",
+  "kind": "forward-language",
+  "finding": {
+    "language": "russian",
+    "kind": "forward-language",
+    "count": 8,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}

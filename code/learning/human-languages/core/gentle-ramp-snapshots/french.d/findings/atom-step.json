@@ -1,0 +1,11 @@
+{
+  "language": "french",
+  "kind": "atom-step",
+  "finding": {
+    "language": "french",
+    "kind": "atom-step",
+    "count": 6,
+    "unit": "lesson/chapter spike(s)",
+    "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+  }
+}

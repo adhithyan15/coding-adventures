@@ -1,0 +1,11 @@
+{
+  "language": "german",
+  "kind": "atom-step",
+  "finding": {
+    "language": "german",
+    "kind": "atom-step",
+    "count": 8,
+    "unit": "lesson/chapter spike(s)",
+    "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+  }
+}

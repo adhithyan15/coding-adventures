@@ -1,0 +1,11 @@
+{
+  "language": "arabic",
+  "kind": "payoff-surprise",
+  "finding": {
+    "language": "arabic",
+    "kind": "payoff-surprise",
+    "count": 3,
+    "unit": "chapter payoff finding(s)",
+    "detail": "make each chapter payoff assess only taught, representative material"
+  }
+}

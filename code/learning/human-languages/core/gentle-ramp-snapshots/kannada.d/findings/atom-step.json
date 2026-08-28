@@ -1,0 +1,11 @@
+{
+  "language": "kannada",
+  "kind": "atom-step",
+  "finding": {
+    "language": "kannada",
+    "kind": "atom-step",
+    "count": 1,
+    "unit": "lesson/chapter spike(s)",
+    "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+  }
+}

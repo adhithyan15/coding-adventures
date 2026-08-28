@@ -1,0 +1,11 @@
+{
+  "language": "french",
+  "kind": "reinforcement",
+  "finding": {
+    "language": "french",
+    "kind": "reinforcement",
+    "count": 232,
+    "unit": "missed window(s)",
+    "detail": "add retrieval at the expanding R1-R4 intervals"
+  }
+}

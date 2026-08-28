@@ -1,0 +1,11 @@
+{
+  "language": "chinese",
+  "kind": "glyph-step",
+  "finding": {
+    "language": "chinese",
+    "kind": "glyph-step",
+    "count": 1,
+    "unit": "lesson/system spike(s)",
+    "detail": "split new glyphs and writing systems across gentler steps"
+  }
+}

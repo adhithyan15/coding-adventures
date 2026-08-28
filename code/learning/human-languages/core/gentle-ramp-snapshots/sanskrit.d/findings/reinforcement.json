@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "kind": "reinforcement",
+  "finding": {
+    "language": "sanskrit",
+    "kind": "reinforcement",
+    "count": 716,
+    "unit": "missed window(s)",
+    "detail": "add retrieval at the expanding R1-R4 intervals"
+  }
+}

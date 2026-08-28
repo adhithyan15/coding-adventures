@@ -58,6 +58,7 @@ core/book-generation.d/*/*.json chapter, backmatter, and script-set book declara
 core/sound-tags.d/<language>.json authored pronunciation vocabulary, one owner per language
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 core/lesson-modality/<language>.d/*.json generated voice/sight/pen, one owner per lesson
+core/gentle-ramp-snapshots/<language>.d/ generated metric/finding owners; no flat aggregate
 core/generated-book-hashes/<language>.d/ generated book hashes, one JSON owner per chapter
 core/generated-narration-hashes/<language>.d/ generated narration hashes, one JSON owner per chapter
 progress/*.md                   generated per-language progress cards for conflict-free authoring
@@ -66,6 +67,12 @@ core/generated-figure-hashes.json generated: figure source/SVG drift fingerprint
 concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```
+
+Gentle-ramp snapshots reconstruct the unchanged per-language report in memory from
+one stable metadata owner, 26 metric owners, and ten finding-kind owners. Exact
+registry/source/narration identity checks and `check:gentle-snapshots` reject missing,
+extra, unsafe, noncanonical, or flat aggregate state. See
+[`HL33`](../../specs/HL33-sharded-gentle-ramp-ownership.md).
 
 The two generated-hash families use stable four-digit chapter owners rather
 than per-language arrays: `_meta.json` carries document-wide fields and

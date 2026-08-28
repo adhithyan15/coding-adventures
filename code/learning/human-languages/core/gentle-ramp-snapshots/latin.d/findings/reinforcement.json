@@ -1,0 +1,11 @@
+{
+  "language": "latin",
+  "kind": "reinforcement",
+  "finding": {
+    "language": "latin",
+    "kind": "reinforcement",
+    "count": 436,
+    "unit": "missed window(s)",
+    "detail": "add retrieval at the expanding R1-R4 intervals"
+  }
+}

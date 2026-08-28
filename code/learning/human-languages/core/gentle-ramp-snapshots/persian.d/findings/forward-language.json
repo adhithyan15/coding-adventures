@@ -1,0 +1,11 @@
+{
+  "language": "persian",
+  "kind": "forward-language",
+  "finding": {
+    "language": "persian",
+    "kind": "forward-language",
+    "count": 4,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}

@@ -163,6 +163,7 @@ export {
   loadBookCorpus,
   loadLessons,
   loadModalityManifest,
+  loadGentleRampSnapshotTracks,
   modalityManifestById,
   loadScripts,
   loadLetterLedgers,

@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "kind": "forward-language",
+  "finding": {
+    "language": "sanskrit",
+    "kind": "forward-language",
+    "count": 3,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}
