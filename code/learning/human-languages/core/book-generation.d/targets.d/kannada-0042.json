@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 42,
+  "output": "kannada/book/chapters/ch42-describing-things.tex",
+  "scriptSet": "kannada-comparisons"
+}

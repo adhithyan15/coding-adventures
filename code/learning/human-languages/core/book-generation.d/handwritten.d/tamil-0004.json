@@ -1,0 +1,8 @@
+{
+  "language": "tamil",
+  "chapter": 4,
+  "output": "tamil/book/chapters/ch04-farewells.tex",
+  "embeddedLessonIds": [
+    "TA-W01-curves-va-ka"
+  ]
+}

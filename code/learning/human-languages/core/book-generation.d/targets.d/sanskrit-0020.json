@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 20,
+  "output": "sanskrit/book/chapters/ch20-people.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

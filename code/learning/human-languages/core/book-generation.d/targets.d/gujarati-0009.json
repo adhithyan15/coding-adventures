@@ -1,0 +1,7 @@
+{
+  "language": "gujarati",
+  "chapter": 9,
+  "output": "gujarati/book/chapters/ch09-responding.tex",
+  "unicodeScript": "Gujarati",
+  "scriptCommand": "gu"
+}

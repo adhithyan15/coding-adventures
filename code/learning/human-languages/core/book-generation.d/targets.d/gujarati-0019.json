@@ -1,0 +1,7 @@
+{
+  "language": "gujarati",
+  "chapter": 19,
+  "output": "gujarati/book/chapters/ch19-r4-script-names.tex",
+  "unicodeScript": "Gujarati",
+  "scriptCommand": "gu"
+}

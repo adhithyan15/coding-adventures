@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 31,
+  "output": "sanskrit/book/chapters/ch31-the-sky.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

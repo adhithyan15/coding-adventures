@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 19,
+  "output": "sanskrit/book/chapters/ch19-numbers.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

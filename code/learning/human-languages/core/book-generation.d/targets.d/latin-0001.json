@@ -1,0 +1,5 @@
+{
+  "language": "latin",
+  "chapter": 1,
+  "output": "latin/book/chapters/ch01-greetings.tex"
+}

@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 16,
+  "output": "kannada/book/chapters/ch16-months.tex",
+  "scriptSet": "kannada-comparisons"
+}

@@ -1,0 +1,6 @@
+{
+  "language": "tamil",
+  "chapter": 10,
+  "output": "tamil/book/chapters/ch10-days.tex",
+  "scriptSet": "tamil-comparisons"
+}

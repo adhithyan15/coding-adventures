@@ -1,0 +1,6 @@
+{
+  "language": "arabic",
+  "chapter": 3,
+  "output": "arabic/book/chapters/ch03-how-are-you.tex",
+  "scriptSet": "arabic-main"
+}

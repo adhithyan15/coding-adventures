@@ -1,0 +1,6 @@
+{
+  "language": "arabic",
+  "chapter": 12,
+  "output": "arabic/book/chapters/ch12-seasons.tex",
+  "scriptSet": "arabic-main"
+}

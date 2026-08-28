@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 8,
+  "output": "chinese/book/chapters/ch08-mingzi.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

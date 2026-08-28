@@ -1,0 +1,7 @@
+{
+  "language": "gujarati",
+  "chapter": 8,
+  "output": "gujarati/book/chapters/ch08-introductions.tex",
+  "unicodeScript": "Gujarati",
+  "scriptCommand": "gu"
+}

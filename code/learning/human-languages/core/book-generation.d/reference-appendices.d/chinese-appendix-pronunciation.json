@@ -1,0 +1,8 @@
+{
+  "language": "chinese",
+  "title": "Pronunciation & Character Guide",
+  "source": "chinese/pronunciation-reference.md",
+  "output": "chinese/book/chapters/appendix-pronunciation.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

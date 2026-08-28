@@ -1,0 +1,6 @@
+{
+  "language": "arabic",
+  "chapter": 16,
+  "output": "arabic/book/chapters/ch16-telling-time.tex",
+  "scriptSet": "arabic-main"
+}

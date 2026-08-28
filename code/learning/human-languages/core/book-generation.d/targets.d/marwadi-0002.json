@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 2,
+  "output": "marwadi/book/chapters/ch02-aabhaar.tex",
+  "scriptSet": "marwadi-main"
+}

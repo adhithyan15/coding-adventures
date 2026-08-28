@@ -1,0 +1,6 @@
+{
+  "language": "bengali",
+  "output": "bengali/book/chapters/appendix-answer-key.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

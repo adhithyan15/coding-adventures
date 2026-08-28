@@ -1,0 +1,6 @@
+{
+  "language": "japanese",
+  "chapter": 9,
+  "output": "japanese/book/chapters/ch09-repeat-please.tex",
+  "scriptSet": "japanese-main"
+}

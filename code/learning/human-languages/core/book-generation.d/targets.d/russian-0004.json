@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 4,
+  "output": "russian/book/chapters/ch04-verbs-of-the-mind.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

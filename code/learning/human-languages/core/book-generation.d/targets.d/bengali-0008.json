@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 8,
+  "output": "bengali/book/chapters/ch08-mind-and-page.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

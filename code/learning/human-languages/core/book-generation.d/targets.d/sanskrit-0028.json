@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 28,
+  "output": "sanskrit/book/chapters/ch28-taking-leave.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 32,
+  "output": "telugu/book/chapters/ch32-core-verbs.tex",
+  "scriptSet": "telugu-comparisons"
+}

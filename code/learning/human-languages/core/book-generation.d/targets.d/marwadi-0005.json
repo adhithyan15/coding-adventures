@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 5,
+  "output": "marwadi/book/chapters/ch05-name-answer.tex",
+  "scriptSet": "marwadi-main"
+}

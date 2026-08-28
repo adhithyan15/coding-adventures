@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 16,
+  "output": "sanskrit/book/chapters/ch16-places.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

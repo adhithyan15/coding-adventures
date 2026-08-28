@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 26,
+  "output": "telugu/book/chapters/ch26-morning.tex",
+  "scriptSet": "telugu-comparisons"
+}

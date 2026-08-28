@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 18,
+  "output": "chinese/book/chapters/ch18-looking-reading.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

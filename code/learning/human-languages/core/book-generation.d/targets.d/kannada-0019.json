@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 19,
+  "output": "kannada/book/chapters/ch19-age.tex",
+  "scriptSet": "kannada-comparisons"
+}

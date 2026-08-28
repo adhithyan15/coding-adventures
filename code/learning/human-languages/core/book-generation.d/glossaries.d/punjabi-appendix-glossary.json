@@ -1,0 +1,6 @@
+{
+  "language": "punjabi",
+  "output": "punjabi/book/chapters/appendix-glossary.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

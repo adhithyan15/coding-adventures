@@ -1,241 +1,271 @@
-// The GROUPED split (HL21 §5.3): several parallel arrays partitioned into one
-// file per language, rather than one file per element.
-//
-// ---------------------------------------------------------------------------
-// The two blockers this ledger had, and what now keeps them shut
-// ---------------------------------------------------------------------------
-//
-// `core/book-generation.json` is the only ledger this projection is for, and it
-// took longer than the others because it had two separate blockers.
-//
-// The one HL21 §5.3 recorded — `targets` split across 27 runs for 23 languages,
-// needing a one-time re-sort — RESOLVED ITSELF, as later tranches inserted into
-// the existing runs. It is 23-for-23 now. The test below pins that contiguity,
-// because a tranche appending to the END of `targets` would reopen it.
-//
-// The one that replaced it was formatting: twelve `marwadi` entries indented two
-// spaces deeper than canonical, so the committed file did not round-trip at all.
-// That was re-indented in its own commit, proved whitespace-only by
-// deep-comparing the parsed structures rather than by reading a 6,693-line diff.
-// The test that used to assert "this file does NOT round-trip" is now inverted
-// and asserts it STAYS canonical — so a hand-edit reintroducing stray
-// indentation, the same way the first one arrived, fails here immediately.
-
-import { existsSync, readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import {
+  mkdtempSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
+import {
+  BOOK_GENERATION_DIRECTORY,
+  BOOK_GENERATION_SECTION_DIRECTORIES,
+  assertBookGenerationIdentitySets,
+  bookGenerationIdentitySets,
+  bookGenerationOwnerContents,
+  readBookGenerationOwners,
+  type BookGenerationDocument,
+} from "../src/book-generation-shards.js";
 import {
   BOOK_GENERATION_PLAN,
   SHARD_PLANS,
   runShardCli,
   shardContents,
+  shardLedger,
   unshardContents,
 } from "../src/shard-cli.js";
 import { defaultCurriculumRoot } from "../src/loader.js";
-import {
-  BOOK_GENERATION_GROUPED_KEYS,
-  listShardNames,
-  mergeGroupedShards,
-} from "../src/shard.js";
 
 const root = defaultCurriculumRoot();
-const codeUnit = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
-const serialize = (v: unknown) => `${JSON.stringify(v, null, 2)}\n`;
+const temporary: string[] = [];
+const serialize = (value: unknown) => `${JSON.stringify(value, null, 2)}\n`;
 
-/** Read the real ledger, shard it in memory, and fold it straight back. */
-function roundTrip(document: Record<string, unknown>): {
-  names: string[];
-  rebuilt: string;
-  meta: Record<string, unknown>;
-} {
-  const contents = shardContents(document, BOOK_GENERATION_PLAN);
-  const names = [...contents.keys()].sort(codeUnit);
-  const shards = names.map((name) => ({
-    name,
-    path: name,
-    value: JSON.parse(contents.get(name)!) as unknown,
-  }));
+afterEach(() => {
+  for (const path of temporary.splice(0))
+    rmSync(path, { recursive: true, force: true });
+});
+
+function smallDocument(): BookGenerationDocument {
   return {
-    names,
-    rebuilt: serialize(mergeGroupedShards(shards, BOOK_GENERATION_GROUPED_KEYS)),
-    meta: JSON.parse(contents.get("_meta.json")!) as Record<string, unknown>,
+    version: 1,
+    sourceBaseUrl: "https://example.test/curriculum",
+    scriptSets: { "test-main": [{ unicodeScript: "Latin" }] },
+    referenceAppendices: [],
+    glossaries: [],
+    answerKeys: [],
+    indexes: [],
+    targets: [
+      {
+        language: "test",
+        chapter: 1,
+        output: "test/book/chapters/ch01-first.tex",
+        scriptSet: "test-main",
+      },
+    ],
+    handwritten: [],
   };
 }
 
-const document = JSON.parse(unshardContents(root, BOOK_GENERATION_PLAN)) as Record<string, unknown>;
+function writeOwners(sandbox: string, document = smallDocument()): void {
+  const directory = join(sandbox, BOOK_GENERATION_DIRECTORY);
+  for (const section of BOOK_GENERATION_SECTION_DIRECTORIES)
+    mkdirSync(join(directory, section), { recursive: true });
+  for (const [name, body] of bookGenerationOwnerContents(document)) {
+    writeFileSync(join(directory, name), body);
+  }
+}
 
-describe("the grouped split of the real core/book-generation.json", () => {
-  it("writes one file per language plus _meta.json", () => {
-    const { names } = roundTrip(document);
-    expect(names[0]).toBe("_meta.json");
-    expect(names).toHaveLength(24);
-    expect(names).toContain("spanish.json");
-    // Sorted filename order IS alphabetical language order, which is the
-    // property that makes the rebuild reproduce authored order without any
-    // ordinal prefix.
-    expect(names.slice(1)).toEqual([...names.slice(1)].sort(codeUnit));
+function sandbox(): string {
+  const path = mkdtempSync(join(tmpdir(), "book-generation-owners-"));
+  temporary.push(path);
+  return path;
+}
+
+describe("the chapter-owned real book-generation ledger", () => {
+  it("reconstructs the exact fresh-main canonical bytes", () => {
+    const bytes = unshardContents(root, BOOK_GENERATION_PLAN);
+    expect(Buffer.byteLength(bytes)).toBe(188_438);
+    expect(createHash("sha256").update(bytes).digest("hex")).toBe(
+      "960826bab96d7cf2c30cd6a5d0287cfa83b13170808a3e13671469548628ad07",
+    );
   });
 
-  it("keeps version, sourceBaseUrl and scriptSets in _meta.json", () => {
-    // `scriptSets` is keyed by SCRIPT SET, not by language, so it is genuinely
-    // shared and has no per-language home. Confirmed rather than assumed: no
-    // element of it carries a `language`.
-    const { meta } = roundTrip(document);
-    expect(Object.keys(meta)).toEqual(["version", "sourceBaseUrl", "scriptSets"]);
-    // and no `_keys`, because the six grouped arrays are already a suffix.
-    expect(Object.hasOwn(meta, "_keys")).toBe(false);
+  it("has the measured stable owner counts", () => {
+    const directory = join(root, BOOK_GENERATION_DIRECTORY);
+    expect(readdirSync(join(directory, "script-sets.d"))).toHaveLength(8);
+    expect(readdirSync(join(directory, "reference-appendices.d"))).toHaveLength(6);
+    expect(readdirSync(join(directory, "glossaries.d"))).toHaveLength(23);
+    expect(readdirSync(join(directory, "answer-keys.d"))).toHaveLength(23);
+    expect(readdirSync(join(directory, "indexes.d"))).toHaveLength(23);
+    expect(readdirSync(join(directory, "targets.d"))).toHaveLength(1_088);
+    expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(69);
   });
 
-  it("loses no element from any of the six arrays", () => {
-    const { rebuilt } = roundTrip(document);
-    const after = JSON.parse(rebuilt) as Record<string, unknown[]>;
-    for (const key of BOOK_GENERATION_GROUPED_KEYS) {
-      expect(after[key], key).toHaveLength((document[key] as unknown[]).length);
-    }
-    // A FLOOR, not an equality. `targets` grows with every tranche — it was 949
-    // when HL21 was written, 1,007 when this projection was built, and 1,014 by
-    // the time the suite next ran. Pinning the exact number would make every
-    // content PR edit this line, which teaches people to edit it.
-    expect(after.targets.length).toBeGreaterThanOrEqual(1007);
+  it("uses no routine flat language aggregates", () => {
+    const entries = readdirSync(join(root, BOOK_GENERATION_DIRECTORY)).sort();
+    expect(entries).toEqual(
+      ["_meta.json", ...BOOK_GENERATION_SECTION_DIRECTORIES].sort(),
+    );
+    expect(entries.filter((entry) => entry.endsWith(".json"))).toEqual([
+      "_meta.json",
+    ]);
   });
 
-  it("reproduces the canonical serialization byte for byte", () => {
-    // The real assertion: the projection itself is lossless and order-preserving.
-    const { rebuilt } = roundTrip(document);
-    expect(rebuilt).toBe(serialize(document));
-  });
-
-  it("preserves the data exactly", () => {
-    const { rebuilt } = roundTrip(document);
-    expect(JSON.parse(rebuilt)).toEqual(document);
-  });
-});
-
-describe("the spec's recorded blocker has resolved itself", () => {
-  it("targets is contiguous by language — 23 runs for 23 languages", () => {
-    // HL21 §5.3 measured 27 runs for 23 languages at 949 entries and concluded a
-    // one-time re-sort was needed before this ledger could be sharded losslessly.
-    // At 1,007 entries it is 23 for 23: the split runs for hindi, kannada,
-    // spanish and telugu closed as later tranches inserted into them.
-    //
-    // Pinned as a test because it is the thing that would silently re-break: a
-    // tranche appending to the END of `targets` rather than into its language's
-    // run reopens the blocker, and this says so immediately instead of at the
-    // moment somebody tries to enable the plan.
-    for (const key of BOOK_GENERATION_GROUPED_KEYS) {
-      const seen: string[] = [];
-      let previous: string | undefined;
-      for (const element of document[key] as { language: string }[]) {
-        if (element.language !== previous) seen.push(element.language);
-        previous = element.language;
-      }
-      expect(new Set(seen).size, `${key} is not contiguous by language`).toBe(seen.length);
-      // and the runs are in alphabetical order, which is sorted-filename order
-      expect(seen, `${key} runs are not alphabetical`).toEqual([...seen].sort(codeUnit));
-    }
-  });
-});
-
-describe("the grouped merge validates its _meta.json like its siblings do", () => {
-  // Three guards `mergeSectionedShards` and `mergeMetaAndList` had and this one
-  // did not. Without the shape check a `_meta.json` holding `["a","b"]` spreads
-  // to `{0:"a",1:"b"}` and those fabricated numeric keys flow into the rebuilt
-  // document instead of raising anything.
-  const keys = ["targets"];
-  const shard = { name: "spanish.json", path: "x", value: { targets: [] } };
-
-  it.each([
-    ["an array", ["a", "b"]],
-    ["a string", "abc"],
-    ["null", null],
-  ])("refuses a _meta.json that is %s", (_label, value) => {
-    expect(() =>
-      mergeGroupedShards([{ name: "_meta.json", path: "m", value }, shard], keys),
-    ).toThrow(/must be a JSON object/);
-  });
-
-  it("refuses a _meta.json that carries a grouped array", () => {
-    // Otherwise merge order silently decides whether the meta copy or the
-    // shards win, and one of those is always a stale duplicate.
-    expect(() =>
-      mergeGroupedShards(
-        [{ name: "_meta.json", path: "m", value: { version: 1, targets: [] } }, shard],
-        keys,
-      ),
-    ).toThrow(/must not carry 'targets'/);
-  });
-
-  it("refuses a shard in a subdirectory, which would duplicate a language", () => {
-    // A grouped ledger is flat. `book-generation.d/sub/spanish.json` would
-    // otherwise be consumed as a second Spanish slice, silently duplicating
-    // every one of that language's entries into all six arrays.
-    expect(() =>
-      mergeGroupedShards(
-        [
-          { name: "_meta.json", path: "m", value: { version: 1 } },
-          { name: "sub/spanish.json", path: "x", value: { targets: [] } },
-        ],
-        keys,
-      ),
-    ).toThrow(/no subdirectories/);
-  });
-});
-
-describe("the plan is enabled and the ledger is sharded on disk", () => {
-  it("is in SHARD_PLANS", () => {
-    expect(SHARD_PLANS.some((p) => p.path === "core/book-generation.json")).toBe(true);
-  });
-
-  it("passes --check", () => {
+  it("is enabled and passes the full independent-set check", () => {
+    expect(SHARD_PLANS).toContain(BOOK_GENERATION_PLAN);
     expect(runShardCli(["--check", "core/book-generation.json"])).toBe(0);
   });
 
-  it("has one shard per language plus _meta.json, on disk", () => {
-    const names = listShardNames(join(root, "core", "book-generation.json"));
-    expect(names[0]).toBe("_meta.json");
-    expect(names).toHaveLength(24);
-    expect(names).toContain("spanish.json");
-    // Flat: a grouped ledger has no subdirectories, and a shard in one would be
-    // consumed as a second slice for that language.
-    for (const name of names) expect(name).not.toContain("/");
+  it("uses the same language/chapter identity convention as hash owners", () => {
+    const identities = bookGenerationIdentitySets(
+      readBookGenerationOwners(root).document,
+    );
+    expect(identities.targets.size).toBe(1_088);
+    expect(identities.handwritten.size).toBe(69);
+    expect(identities.combined.size).toBe(1_157);
+    expect(identities.languages.size).toBe(23);
+  });
+});
+
+describe("book-generation owner projection", () => {
+  it("splits directly to stable chapter and metadata owners", () => {
+    const contents = shardContents(
+      smallDocument() as unknown as Record<string, unknown>,
+      BOOK_GENERATION_PLAN,
+    );
+    expect([...contents.keys()].sort()).toEqual(
+      [
+        "_meta.json",
+        "script-sets.d/0010-test-main.json",
+        "targets.d/test-0001.json",
+      ].sort(),
+    );
   });
 
-  it("keeps the compatibility monolith absent", () => {
-    const plan = SHARD_PLANS.find((p) => p.path === "core/book-generation.json")!;
-    expect(plan.monolith).toBe("removed");
-    expect(existsSync(join(root, plan.path))).toBe(false);
+  it("detects a clean owner deletion against an independent expected set", () => {
+    const document = smallDocument();
+    const expected = bookGenerationIdentitySets(document).targets;
+    document.targets = [];
+    expect(() =>
+      assertBookGenerationIdentitySets(document, { targets: expected }),
+    ).toThrow(/missing \[test\/0001\]/);
   });
 
-  it("gives a Spanish tranche exactly one file to touch", () => {
-    // The property the whole projection exists for. Spanish's slice of all six
-    // arrays lives in one file, so a tranche appending a chapter target writes
-    // `spanish.json` and collides with nobody working on another language.
-    const spanish = JSON.parse(
-      readFileSync(join(root, "core", "book-generation.d", "spanish.json"), "utf8"),
-    ) as Record<string, { language: string }[]>;
-    for (const [key, entries] of Object.entries(spanish)) {
-      expect(BOOK_GENERATION_GROUPED_KEYS, `unexpected key ${key}`).toContain(key);
-      for (const entry of entries) expect(entry.language).toBe("spanish");
-    }
-    expect(spanish.targets.length).toBeGreaterThan(0);
+  it("detects a clean backmatter-owner deletion against an independent set", () => {
+    const document = smallDocument();
+    document.glossaries = [{
+      language: "test",
+      output: "test/book/chapters/appendix-glossary.tex",
+    }];
+    const expected = bookGenerationIdentitySets(document).glossaries;
+    document.glossaries = [];
+    expect(() =>
+      assertBookGenerationIdentitySets(document, { glossaries: expected }),
+    ).toThrow(/missing \[test\/appendix-glossary\]/);
   });
 
-  it("STAYS round-trippable, so it never blocks the plan again", () => {
-    // This test used to assert the opposite. `core/book-generation.json` had
-    // twelve `marwadi` entries in `targets` indented two spaces deeper than
-    // canonical — a hand-merge artifact at lines 2911-2984 — so the file could
-    // not be sharded losslessly, and the test stated that blocker as an
-    // executable fact that would fail the day somebody re-indented it.
-    //
-    // Somebody did. The re-indent landed as its own commit, proved
-    // whitespace-only by deep-comparing the parsed structures rather than by
-    // reading the diff, and the assertion is now inverted: the file must STAY
-    // canonical.
-    //
-    // That inversion is the point. A hand-edit that reintroduces stray
-    // indentation — the same way the first one arrived, through a merge nobody
-    // looked at closely — now fails here immediately, rather than surfacing
-    // months later as a `--check` failure nobody can account for.
-    expect(unshardContents(root, BOOK_GENERATION_PLAN)).toBe(serialize(document));
+  it("rejects an output owned by a different language tree", () => {
+    const document = smallDocument();
+    document.targets[0].output = "other/book/chapters/ch01-first.tex";
+    expect(() => bookGenerationOwnerContents(document)).toThrow(
+      /must stay within the 'test' track/,
+    );
+  });
+
+  it.each([
+    "test/../other/book/chapters/ch01-first.tex",
+    "test\\book\\chapters\\ch01-first.tex",
+    "test//book/chapters/ch01-first.tex",
+  ])("rejects non-canonical owner output %s", (output) => {
+    const document = smallDocument();
+    document.targets[0].output = output;
+    expect(() => bookGenerationOwnerContents(document)).toThrow(/unsafe/);
+  });
+
+  it("migrates the legacy grouped shape exactly once", () => {
+    const path = sandbox();
+    const directory = join(path, BOOK_GENERATION_DIRECTORY);
+    mkdirSync(directory, { recursive: true });
+    const document = smallDocument();
+    writeFileSync(
+      join(directory, "_meta.json"),
+      serialize({
+        version: 1,
+        sourceBaseUrl: document.sourceBaseUrl,
+        scriptSets: document.scriptSets,
+      }),
+    );
+    writeFileSync(
+      join(directory, "test.json"),
+      serialize({
+        referenceAppendices: [],
+        glossaries: [],
+        answerKeys: [],
+        indexes: [],
+        targets: document.targets,
+        handwritten: [],
+      }),
+    );
+    expect(shardLedger(path, BOOK_GENERATION_PLAN)).toHaveLength(3);
+    expect(readBookGenerationOwners(path).document).toEqual(document);
+    expect(() => shardLedger(path, BOOK_GENERATION_PLAN)).toThrow(
+      /already uses chapter-owned/,
+    );
+  });
+
+  it("refuses a resurrected aggregate without touching canonical owners", () => {
+    const path = sandbox();
+    writeOwners(path);
+    const owner = join(path, BOOK_GENERATION_DIRECTORY, "targets.d", "test-0001.json");
+    const before = readFileSync(owner, "utf8");
+    mkdirSync(join(path, "core"), { recursive: true });
+    writeFileSync(
+      join(path, "core", "book-generation.json"),
+      serialize({ ...smallDocument(), targets: [] }),
+    );
+    expect(() => shardLedger(path, BOOK_GENERATION_PLAN)).toThrow(
+      /already uses chapter-owned/,
+    );
+    expect(readFileSync(owner, "utf8")).toBe(before);
+  });
+
+  it("imports an explicitly supplied monolith through a staged owner tree", () => {
+    const path = sandbox();
+    mkdirSync(join(path, "core"), { recursive: true });
+    writeFileSync(
+      join(path, "core", "book-generation.json"),
+      serialize(smallDocument()),
+    );
+    expect(shardLedger(path, BOOK_GENERATION_PLAN)).toHaveLength(3);
+    expect(readBookGenerationOwners(path).document).toEqual(smallDocument());
+  });
+});
+
+describe("strict owner tree", () => {
+  it("rejects a filename/record identity mismatch", () => {
+    const path = sandbox();
+    writeOwners(path);
+    const owner = join(path, BOOK_GENERATION_DIRECTORY, "targets.d", "test-0001.json");
+    const value = JSON.parse(readFileSync(owner, "utf8"));
+    value.chapter = 2;
+    writeFileSync(owner, serialize(value));
+    expect(() => readBookGenerationOwners(path)).toThrow(/does not match its record identity/);
+  });
+
+  it("rejects unexpected nested entries", () => {
+    const path = sandbox();
+    writeOwners(path);
+    mkdirSync(join(path, BOOK_GENERATION_DIRECTORY, "targets.d", "nested"));
+    expect(() => readBookGenerationOwners(path)).toThrow(/malformed name/);
+  });
+
+  it("rejects a symlinked section", () => {
+    const path = sandbox();
+    writeOwners(path);
+    const section = join(path, BOOK_GENERATION_DIRECTORY, "targets.d");
+    rmSync(section, { recursive: true });
+    symlinkSync(join(path, BOOK_GENERATION_DIRECTORY, "handwritten.d"), section);
+    expect(() => readBookGenerationOwners(path)).toThrow(/symbolic link|real directory/);
+  });
+
+  it("rejects a resurrected monolith", () => {
+    const path = sandbox();
+    writeOwners(path);
+    writeFileSync(join(path, "core", "book-generation.json"), "{}\n");
+    expect(() => readBookGenerationOwners(path)).toThrow(/resurrected monolith/);
   });
 });

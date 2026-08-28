@@ -1,0 +1,6 @@
+{
+  "language": "sanskrit",
+  "output": "sanskrit/book/chapters/appendix-glossary.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

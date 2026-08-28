@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 19,
+  "output": "telugu/book/chapters/ch19-age.tex",
+  "scriptSet": "telugu-comparisons"
+}

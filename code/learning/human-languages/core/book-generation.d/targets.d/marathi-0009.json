@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 9,
+  "output": "marathi/book/chapters/ch09-numbers-1-5.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

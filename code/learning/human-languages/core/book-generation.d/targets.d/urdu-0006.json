@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 6,
+  "output": "urdu/book/chapters/ch06-core-verbs.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

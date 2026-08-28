@@ -1,0 +1,6 @@
+{
+  "language": "russian",
+  "output": "russian/book/chapters/appendix-answer-key.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

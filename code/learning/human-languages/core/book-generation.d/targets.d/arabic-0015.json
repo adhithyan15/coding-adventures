@@ -1,0 +1,6 @@
+{
+  "language": "arabic",
+  "chapter": 15,
+  "output": "arabic/book/chapters/ch15-noon-and-midnight.tex",
+  "scriptSet": "arabic-main"
+}

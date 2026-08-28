@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 15,
+  "output": "sanskrit/book/chapters/ch15-describing-things.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

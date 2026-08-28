@@ -1,0 +1,9 @@
+{
+  "language": "italian",
+  "chapter": 1,
+  "output": "italian/book/chapters/ch01-greetings.tex",
+  "embeddedLessonIds": [
+    "IT-C01-ciao",
+    "IT-W01-ciao-guided-copy"
+  ]
+}

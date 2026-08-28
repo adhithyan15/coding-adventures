@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 41,
+  "output": "sanskrit/book/chapters/ch41-things-people-make.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

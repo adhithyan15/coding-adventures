@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 11,
+  "output": "marwadi/book/chapters/ch11-family-seven.tex",
+  "scriptSet": "marwadi-main"
+}

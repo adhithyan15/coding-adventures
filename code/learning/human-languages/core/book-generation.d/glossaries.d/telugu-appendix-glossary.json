@@ -1,0 +1,5 @@
+{
+  "language": "telugu",
+  "output": "telugu/book/chapters/appendix-glossary.tex",
+  "scriptSet": "telugu-comparisons"
+}

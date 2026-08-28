@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 1,
+  "output": "russian/book/chapters/ch01-greetings-and-courtesy.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

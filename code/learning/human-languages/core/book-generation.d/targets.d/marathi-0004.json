@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 4,
+  "output": "marathi/book/chapters/ch04-courtesy-responses.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

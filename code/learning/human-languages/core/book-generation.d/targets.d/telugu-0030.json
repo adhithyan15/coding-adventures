@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 30,
+  "output": "telugu/book/chapters/ch30-good-evening.tex",
+  "scriptSet": "telugu-comparisons"
+}

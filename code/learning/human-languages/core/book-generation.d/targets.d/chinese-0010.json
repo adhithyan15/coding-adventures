@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 10,
+  "output": "chinese/book/chapters/ch10-xiexie.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

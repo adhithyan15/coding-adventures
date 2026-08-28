@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 22,
+  "output": "telugu/book/chapters/ch22-green-and-yellow.tex",
+  "scriptSet": "telugu-comparisons"
+}

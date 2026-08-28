@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 8,
+  "output": "urdu/book/chapters/ch08-social-verbs.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

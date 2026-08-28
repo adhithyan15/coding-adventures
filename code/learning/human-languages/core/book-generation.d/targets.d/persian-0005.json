@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 5,
+  "output": "persian/book/chapters/ch05-take-leave.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

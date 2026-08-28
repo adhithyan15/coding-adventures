@@ -1,0 +1,7 @@
+{
+  "language": "gujarati",
+  "chapter": 11,
+  "output": "gujarati/book/chapters/ch11-first-verbs.tex",
+  "unicodeScript": "Gujarati",
+  "scriptCommand": "gu"
+}

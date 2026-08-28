@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 18,
+  "output": "kannada/book/chapters/ch18-telling-time.tex",
+  "scriptSet": "kannada-comparisons"
+}

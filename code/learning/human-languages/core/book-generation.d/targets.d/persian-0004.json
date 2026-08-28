@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 4,
+  "output": "persian/book/chapters/ch04-how-are-you.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

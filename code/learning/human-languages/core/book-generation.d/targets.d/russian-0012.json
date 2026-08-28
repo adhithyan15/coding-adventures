@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 12,
+  "output": "russian/book/chapters/ch12-mother-and-father.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

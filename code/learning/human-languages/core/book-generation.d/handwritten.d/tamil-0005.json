@@ -1,0 +1,8 @@
+{
+  "language": "tamil",
+  "chapter": 5,
+  "output": "tamil/book/chapters/ch05-first-verbs.tex",
+  "embeddedLessonIds": [
+    "TA-W01-abugida-va-ka"
+  ]
+}

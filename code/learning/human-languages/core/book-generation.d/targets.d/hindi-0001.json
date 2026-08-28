@@ -1,0 +1,6 @@
+{
+  "language": "hindi",
+  "chapter": 1,
+  "output": "hindi/book/chapters/ch01-greetings.tex",
+  "scriptSet": "hindi-main"
+}

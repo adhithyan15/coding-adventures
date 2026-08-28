@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 2,
+  "output": "russian/book/chapters/ch02-introducing-yourself.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

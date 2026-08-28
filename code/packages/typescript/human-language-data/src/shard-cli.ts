@@ -57,9 +57,11 @@
 // compile error rather than a judgement call.
 import {
   lstatSync,
+  mkdtempSync,
   mkdirSync,
   readFileSync,
   realpathSync,
+  renameSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
@@ -73,7 +75,11 @@ import {
   resolve,
 } from "node:path";
 import { pathToFileURL } from "node:url";
-import { defaultCurriculumRoot } from "./loader.js";
+import {
+  defaultCurriculumRoot,
+  loadLanguageRegistry,
+  loadTrackChapters,
+} from "./loader.js";
 import { assertRelativeManifestPath } from "./manifest-path.js";
 import { scriptEntryId } from "./script-shards.js";
 import {
@@ -90,6 +96,19 @@ import {
   readShards,
   shardDirectoryFor,
 } from "./shard.js";
+import {
+  BOOK_GENERATION_SECTION_DIRECTORIES,
+  assertBookGenerationIdentitySets,
+  bookGenerationOwnerContents,
+  readBookGenerationOwners,
+  type BookGenerationDocument,
+} from "./book-generation-shards.js";
+import {
+  GENERATED_BOOK_HASH_DIR,
+  GENERATED_NARRATION_HASH_DIR,
+  readGeneratedBookHashManifest,
+  readGeneratedNarrationHashManifest,
+} from "./generated-hash-shards.js";
 
 /**
  * What happens to `X.json` once `X.d/` exists.
@@ -176,15 +195,11 @@ export interface ShardSection {
 }
 
 /**
- * How several parallel arrays split into one file per GROUP.
+ * Legacy migration description for parallel arrays split by GROUP.
  *
- * The other projection. A `ShardSection` turns one array into one file per
- * element; this turns six arrays into one file per language, holding each
- * array's slice of that language.
- *
- * `core/book-generation.json` is the ledger that needs it. Element-wise it
- * would be 1,153 files nobody wants to open individually; what an author
- * actually touches is "Spanish's slice of everything", so that is the file.
+ * No canonical plan uses this shape now. It remains narrowly available so the
+ * book-generation migration can read the former `<language>.json` aggregates
+ * once and project them into stable direct owners.
  */
 export interface ShardGrouping {
   /** The top-level arrays that get partitioned. All must be arrays. */
@@ -212,6 +227,8 @@ export interface ShardPlan {
    * the other, and a plan claiming both would have two rules for the same bytes.
    */
   readonly grouping?: ShardGrouping;
+  /** Bespoke owner projection for a ledger whose stable identity is not an ordinal. */
+  readonly projection?: "book-generation";
   /** What becomes of `X.json` once `X.d/` exists. See `MonolithDisposition`. */
   readonly monolith: MonolithDisposition;
 }
@@ -426,50 +443,20 @@ function curriculumPlan(track: string): ShardPlan {
 }
 
 /**
- * `core/book-generation.json` -> `core/book-generation.d/<language>.json`.
+ * `core/book-generation.json` -> stable direct owners beneath
+ * `core/book-generation.d/`.
  *
- * ## Why it is the odd one out
- *
- * The only GROUPED ledger, and the only one with no ordinal prefix. Both follow
- * from one measurement: all six arrays are already contiguous by language and
- * in the same alphabetical order, which is also sorted filename order for
- * `<language>.json`. A per-language split reproduces authored order exactly, so
- * there is nothing for an ordinal to fix.
- *
- * Element-wise it would be over a thousand files nobody opens individually.
- * What an author touches is "Spanish's slice of everything", so that is the
- * file: a Spanish tranche edits `spanish.json` and nothing else.
- *
- * ## Both blockers are cleared
- *
- * HL21 §5.3 recorded that `targets` spanned 27 runs for 23 languages and needed
- * a one-time re-sort before a per-language split could be lossless. That
- * resolved ITSELF: re-measured at 1,007 entries (the spec was written at 949) it
- * is 23 runs for 23 languages, the split runs for hindi, kannada, spanish and
- * telugu having closed as later tranches inserted into them. A test pins the
- * contiguity so an append to the END of `targets` reopens the question loudly.
- *
- * The blocker that replaced it was formatting: twelve `marwadi` entries in
- * `targets` were indented two spaces deeper than canonical, so the committed
- * file did not round-trip at all. That was re-indented in its own commit, proved
- * whitespace-only by deep-comparing the parsed structures rather than by reading
- * the diff. `grouped-shards.test.ts` now asserts the file STAYS canonical, so a
- * hand-edit that reintroduces stray indentation fails immediately.
- *
- * That exemption was specific and is worth not generalising: this is a BUILD
- * MANIFEST, a list of `(language, chapter, output, scriptSet)` triples nobody
- * reads for meaning. The curriculum ledgers that needed normalization were
- * handled in a separate commit so their whitespace-only diff stayed auditable.
+ * Chapter bodies use `<language>-<NNNN>.json`, while each backmatter output and
+ * script set owns one file. Ten agents extending different chapters therefore
+ * edit different canonical paths. The projection also exposes exact identity
+ * sets so `--check` can compare the surviving owners against independent
+ * chapter, book-hash, narration-hash, and language-registry ledgers.
  */
 export const BOOK_GENERATION_PLAN: ShardPlan = {
   path: "core/book-generation.json",
   sections: [],
-  grouping: {
-    keys: BOOK_GENERATION_GROUPED_KEYS,
-    groupOf: (element) =>
-      (element as { language?: unknown }).language as string,
-  },
-  // Filesystem and Python consumers merge the grouped shards directly.
+  projection: "book-generation",
+  // Filesystem, TypeScript, and Python consumers read the owner tree directly.
   monolith: "removed",
 };
 
@@ -851,6 +838,11 @@ export function shardContents(
   document: Record<string, unknown>,
   plan: ShardPlan,
 ): Map<string, string> {
+  if (plan.projection === "book-generation") {
+    return bookGenerationOwnerContents(
+      document as unknown as BookGenerationDocument,
+    );
+  }
   if (plan.grouping !== undefined)
     return groupedShardContents(document, plan, plan.grouping);
 
@@ -952,7 +944,7 @@ export function shardContents(
 }
 
 /**
- * One file per group, each holding that group's slice of every grouped array.
+ * Legacy one-file-per-group projection used only for one-time migrations.
  *
  * The order within each per-language file is the order the elements appeared in
  * the monolith, and the order BETWEEN files is sorted filename order. Those two
@@ -1035,6 +1027,9 @@ function groupedShardContents(
  * nobody can read.
  */
 export function unshardContents(root: string, plan: ShardPlan): string {
+  if (plan.projection === "book-generation") {
+    return serialize(readBookGenerationOwners(root).document);
+  }
   const monolith = safeLedgerPath(root, plan.path);
   const shards = readShards(monolith);
   if (shards === null) {
@@ -1074,6 +1069,12 @@ function assertShardable(
   document: Record<string, unknown>,
   plan: ShardPlan,
 ): void {
+  if (plan.projection === "book-generation") {
+    bookGenerationOwnerContents(
+      document as unknown as BookGenerationDocument,
+    );
+    return;
+  }
   if (Object.hasOwn(document, KEY_ORDER_FIELD)) {
     throw new Error(
       `${plan.path}: has a top-level '${KEY_ORDER_FIELD}' key, which shard-cli ` +
@@ -1123,6 +1124,50 @@ function assertShardable(
   }
 }
 
+function installBookGenerationProjection(
+  destination: string,
+  contents: ReadonlyMap<string, string>,
+  replaceLegacyDirectory: boolean,
+): { written: string[]; stagingRoot: string } {
+  // Build below a private mkdtemp directory first. This preserves the legacy
+  // representation until every write succeeds and prevents a concurrent
+  // section-directory symlink swap from redirecting a leaf opened with `wx`.
+  const stagingRoot = mkdtempSync(
+    join(dirname(destination), ".book-generation-stage-"),
+  );
+  const staged = join(stagingRoot, "core", "book-generation.d");
+  mkdirSync(staged, { recursive: true });
+  for (const directory of BOOK_GENERATION_SECTION_DIRECTORIES) {
+    mkdirSync(join(staged, directory));
+  }
+  const written: string[] = [];
+  try {
+    for (const [name, body] of contents) {
+      writeFileSync(join(staged, name), body, { encoding: "utf8", flag: "wx" });
+      written.push(name);
+    }
+    // Validate the bytes actually written before anything canonical moves.
+    readBookGenerationOwners(stagingRoot);
+
+    if (replaceLegacyDirectory) {
+      const backup = join(stagingRoot, "legacy-book-generation.d");
+      renameSync(destination, backup);
+      try {
+        renameSync(staged, destination);
+      } catch (cause) {
+        renameSync(backup, destination);
+        throw cause;
+      }
+    } else {
+      renameSync(staged, destination);
+    }
+    return { written, stagingRoot };
+  } catch (cause) {
+    rmSync(stagingRoot, { recursive: true, force: true });
+    throw cause;
+  }
+}
+
 /**
  * Split a monolith into its `.d/` directory.
  *
@@ -1147,11 +1192,28 @@ function assertShardable(
  */
 export function shardLedger(root: string, plan: ShardPlan): string[] {
   const monolith = safeLedgerPath(root, plan.path);
+  const dir = shardDirectoryFor(monolith);
+  let legacyBookGenerationDirectory = false;
+  if (plan.projection === "book-generation" && isSharded(monolith)) {
+    const names = listShardNames(monolith);
+    if (names.some((name) => name !== META_SHARD && name.includes("/"))) {
+      throw new Error(
+        `${plan.path}: already uses chapter-owned book-generation shards; edit their owners directly`,
+      );
+    }
+    if (statIfPresent(monolith) !== undefined) {
+      throw new Error(
+        `${plan.path}: a legacy aggregate and flat grouped shards coexist; refuse the ambiguous migration source`,
+      );
+    }
+    legacyBookGenerationDirectory = true;
+  }
   // A `"removed"` ledger has no monolith to read once it has been migrated, so
   // say that plainly instead of letting `readLedgerFile` report ENOENT on a
   // file the migration deleted on purpose. Without this the second `--shard`
   // reads as "the checkout is broken" when it actually means "this is done".
   if (
+    plan.projection !== "book-generation" &&
     plan.monolith === "removed" &&
     statIfPresent(monolith) === undefined &&
     isSharded(monolith)
@@ -1174,12 +1236,40 @@ export function shardLedger(root: string, plan: ShardPlan): string[] {
   // ordinary case here rather than the error. The `"removed"` branch above has
   // already ruled out the one shape where reading it WOULD be wrong — a
   // migrated ledger whose monolith is gone on purpose.
-  const document = readLedgerFile<Record<string, unknown>>(monolith, {
-    allowShardedSibling: true,
-  });
+  let document: Record<string, unknown>;
+  if (plan.projection === "book-generation" && legacyBookGenerationDirectory) {
+    const legacy = readShards(monolith);
+    if (legacy === null) {
+      throw new Error(`${plan.path}: legacy grouped shards are missing`);
+    }
+    document = mergeGroupedShards(
+      legacy,
+      BOOK_GENERATION_GROUPED_KEYS,
+    );
+  } else {
+    document = readLedgerFile<Record<string, unknown>>(monolith, {
+      allowShardedSibling: true,
+    });
+  }
   assertShardable(document, plan);
   const contents = shardContents(document, plan);
-  const dir = shardDirectoryFor(monolith);
+
+  if (plan.projection === "book-generation") {
+    const installation = installBookGenerationProjection(
+      dir,
+      contents,
+      legacyBookGenerationDirectory,
+    );
+    // The aggregate remains until the validated owner tree is installed. If
+    // this cleanup fails, both representations survive and `--check` loudly
+    // rejects the aggregate; no authored data was deleted before replacement.
+    if (statIfPresent(monolith) !== undefined) {
+      assertRealFile(monolith);
+      rmSync(monolith);
+    }
+    rmSync(installation.stagingRoot, { recursive: true, force: true });
+    return installation.written;
+  }
 
   // Remove shards that the monolith no longer produces. Leaving them behind
   // would make the next `--check` fail with a node nobody can find in the
@@ -1282,6 +1372,70 @@ export function unshardLedger(root: string, plan: ShardPlan): string {
   return body;
 }
 
+function stableChapterIdentity(language: string, chapter: number): string {
+  return `${language}/${String(chapter).padStart(4, "0")}`;
+}
+
+/**
+ * Completeness for this removed monolith comes from independent ledgers, never
+ * from whichever owner files survived the checkout. This is the local closure
+ * for #13353's generic missing-owner gap.
+ */
+function assertBookGenerationCrossLedgerIdentities(
+  root: string,
+  document: BookGenerationDocument,
+): void {
+  const registered = new Set(
+    loadLanguageRegistry(root).languages.map((language) => language.id),
+  );
+  const capabilities = new Set<string>();
+  for (const track of loadTrackChapters(root)) {
+    for (const chapter of track.chapters) {
+      capabilities.add(stableChapterIdentity(track.language, chapter.chapter));
+    }
+  }
+  const generatedBook = new Set<string>();
+  const generatedNarration = new Set<string>();
+  const generatedReferenceAppendices = new Set<string>();
+  for (const language of [...registered].sort()) {
+    for (const chapter of readGeneratedBookHashManifest(
+      join(root, GENERATED_BOOK_HASH_DIR, `${language}.json`),
+    ).manifest.chapters) {
+      generatedBook.add(stableChapterIdentity(language, chapter.chapter));
+    }
+    for (const chapter of readGeneratedNarrationHashManifest(
+      join(root, GENERATED_NARRATION_HASH_DIR, `${language}.json`),
+    ).manifest.chapters) {
+      generatedNarration.add(stableChapterIdentity(language, chapter.chapter));
+    }
+    const appendix = join(
+      root,
+      language,
+      "book",
+      "chapters",
+      "appendix-pronunciation.tex",
+    );
+    if (statIfPresent(appendix) !== undefined) {
+      assertRealFile(appendix);
+      if (readFileSync(appendix, "utf8").startsWith("% GENERATED FILE.")) {
+        generatedReferenceAppendices.add(`${language}/appendix-pronunciation`);
+      }
+    }
+  }
+  assertBookGenerationIdentitySets(document, {
+    targets: generatedBook,
+    combined: generatedNarration,
+    languages: registered,
+  });
+  assertBookGenerationIdentitySets(document, { combined: capabilities });
+  assertBookGenerationIdentitySets(document, {
+    referenceAppendices: generatedReferenceAppendices,
+    glossaries: new Set([...registered].map((language) => `${language}/appendix-glossary`)),
+    answerKeys: new Set([...registered].map((language) => `${language}/appendix-answer-key`)),
+    indexes: new Set([...registered].map((language) => `${language}/appendix-index`)),
+  });
+}
+
 export function runShardCli(
   args = process.argv.slice(2),
   root = defaultCurriculumRoot(),
@@ -1339,6 +1493,12 @@ export function runShardCli(
       continue;
     }
     const expected = unshardContents(root, plan);
+    if (plan.projection === "book-generation") {
+      assertBookGenerationCrossLedgerIdentities(
+        root,
+        JSON.parse(expected) as BookGenerationDocument,
+      );
+    }
 
     // A `"removed"` ledger is checked for the OPPOSITE thing: the monolith must
     // not be there. Resurrection is not hypothetical — it is what a bad merge

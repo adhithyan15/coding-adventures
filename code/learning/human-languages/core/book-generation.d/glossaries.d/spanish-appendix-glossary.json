@@ -1,0 +1,6 @@
+{
+  "language": "spanish",
+  "output": "spanish/book/chapters/appendix-glossary.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "esar"
+}

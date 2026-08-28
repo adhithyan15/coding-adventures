@@ -1,0 +1,6 @@
+{
+  "language": "japanese",
+  "chapter": 6,
+  "output": "japanese/book/chapters/ch06-koohii-katakana.tex",
+  "scriptSet": "japanese-main"
+}

@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 8,
+  "output": "persian/book/chapters/ch08-doing-verbs.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

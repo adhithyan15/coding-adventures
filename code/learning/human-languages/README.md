@@ -54,7 +54,7 @@ The machine-readable layer alongside the tracks is:
 ```text
 core/languages.json             complete active-language registry and default mix order
 core/spine.d/*.json             ordered, language-independent can-do spine: one file per node
-core/book-generation.d/*.json  per-language generated-book declarations
+core/book-generation.d/*/*.json chapter, backmatter, and script-set book declarations
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 core/lesson-modality/*.json     generated per-language voice/sight/pen and chapter prefixes
 core/generated-book-hashes/<language>.d/ generated book hashes, one JSON owner per chapter
@@ -73,6 +73,16 @@ aggregate. This lets independent agents regenerate different chapters of the
 same language without sharing a manifest; `check:books` and `check:narration`
 still fold and verify the complete corpus in memory. See
 [`HL29`](../../specs/HL29-sharded-generated-chapter-hash-ownership.md).
+
+The authored book-generation manifest uses the same stable chapter identity.
+`targets.d/<language>-<NNNN>.json` and
+`handwritten.d/<language>-<NNNN>.json` own one chapter declaration each;
+backmatter kinds and ordered script sets have their own section directories.
+Only `_meta.json` is shared, and it holds just the schema version and source URL.
+The former per-language files and flat manifest are forbidden. Exact gates tie
+targets to generated book hashes and tie all declared chapters to narration
+hashes, chapter capabilities, and the active registry. See
+[`HL30`](../../specs/HL30-sharded-book-generation-ownership.md).
 
 ### Sharded ledgers: `X.d/` (HL21)
 
@@ -171,9 +181,10 @@ It is now split by **origin**, not by size:
 Edit the authored halves; never `book.tex` itself. `npm run generate:books`
 rebuilds it and `npm run check:books` gates it, exactly like the chapters.
 
-The chapter list comes from `core/book-generation.json` — **both** `targets[]`
-and `handwritten[]`, merged by chapter number. Using `targets` alone silently
-drops every hand-authored chapter.
+The chapter list is folded from `core/book-generation.d/` — **both**
+`targets.d/` and `handwritten.d/`, merged by chapter number. Using generated
+targets alone silently drops every hand-authored chapter. Edit the one owning
+`<language>-<NNNN>.json`; no compatibility aggregate is tracked.
 
 Handwritten chapters also fail closed against canonical schema-v2 lessons. Each
 such lesson must appear in exactly one manifest state:

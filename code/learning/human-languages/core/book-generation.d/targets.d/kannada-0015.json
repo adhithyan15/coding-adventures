@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 15,
+  "output": "kannada/book/chapters/ch15-water-and-rice.tex",
+  "scriptSet": "kannada-comparisons"
+}

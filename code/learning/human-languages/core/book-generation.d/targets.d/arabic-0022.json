@@ -1,0 +1,6 @@
+{
+  "language": "arabic",
+  "chapter": 22,
+  "output": "arabic/book/chapters/ch22-green-and-yellow.tex",
+  "scriptSet": "arabic-main"
+}

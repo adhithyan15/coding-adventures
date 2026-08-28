@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 14,
+  "output": "sanskrit/book/chapters/ch14-pointing-and-asking.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

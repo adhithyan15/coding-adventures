@@ -1,0 +1,6 @@
+{
+  "language": "japanese",
+  "chapter": 1,
+  "output": "japanese/book/chapters/ch01-three-scripts.tex",
+  "scriptSet": "japanese-main"
+}

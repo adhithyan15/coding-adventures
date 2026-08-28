@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 14,
+  "output": "chinese/book/chapters/ch14-primary-three.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

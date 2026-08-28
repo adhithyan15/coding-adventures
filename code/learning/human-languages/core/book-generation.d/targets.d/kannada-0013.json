@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 13,
+  "output": "kannada/book/chapters/ch13-head-and-hand.tex",
+  "scriptSet": "kannada-comparisons"
+}

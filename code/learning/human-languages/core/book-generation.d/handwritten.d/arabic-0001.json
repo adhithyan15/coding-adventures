@@ -1,0 +1,18 @@
+{
+  "language": "arabic",
+  "chapter": 1,
+  "output": "arabic/book/chapters/ch01-greetings.tex",
+  "embeddedLessonIds": [
+    "AR-C01-salam",
+    "AR-W00-sin-lam",
+    "AR-W00-alif-mim-salam",
+    "AR-C01-marhaba",
+    "AR-W00-ra-ha",
+    "AR-W00-ba-family-marhaba",
+    "AR-C01-as-salamu-alaykum",
+    "AR-W00-ayn-ya",
+    "AR-W00-kaf-waw-alaykum",
+    "AR-W00-full-greeting-recall",
+    "AR-C01-practice"
+  ]
+}
