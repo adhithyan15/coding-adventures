@@ -2698,39 +2698,34 @@ impl Compiler {
         })
     }
 
-    /// Admit a tracked exponent for a real base only when the exponent operand
-    /// is one optionally signed bare local integer. Unary signs are pure, so
-    /// this retains the real multiplication path without erasing a call,
-    /// conditional, or arithmetic expression from runtime IIR.
-    fn static_nonnegative_signed_tracked_integer_power_chain(
+    /// Admit tracked exponent arithmetic for a real base only when every
+    /// operand is a literal or exact local integer snapshot and every operator
+    /// is checked, side-effect-free integer arithmetic. This retains the real
+    /// multiplication path without erasing calls or conditionals from IIR.
+    fn static_nonnegative_tracked_integer_arithmetic_power_chain(
         &self,
         nodes: &[&GrammarASTNode],
     ) -> Option<u32> {
         self.static_nonnegative_power_chain_with(nodes, &|node| {
             let dependencies = self.static_predicate_dependencies(node)?;
             if dependencies.is_empty() {
-                let value = self.static_integer_scalar_value(node)?;
-                return (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64)
-                    .then_some(value as u32);
-            }
-            let (negative, name) = exact_signed_bare_variable_expression(node)?;
-            if dependencies.len() != 1 || !dependencies.contains(&name) {
                 return None;
             }
-            let binding = self.require_var(&name).ok()?;
-            if binding.ty != ScalarType::Integer
-                || binding.is_global
-                || binding.array.is_some()
-                || self.active_by_name_binding(&name).is_some()
-            {
+            if !exact_tracked_integer_arithmetic_expression(node) {
                 return None;
             }
-            let value = *self.static_integer_slots.get(&binding.slot)?;
-            let value = if negative {
-                value.checked_neg()?
-            } else {
-                value
-            };
+            for name in dependencies {
+                let binding = self.require_var(&name).ok()?;
+                if binding.ty != ScalarType::Integer
+                    || binding.is_global
+                    || binding.array.is_some()
+                    || self.active_by_name_binding(&name).is_some()
+                    || !self.static_integer_slots.contains_key(&binding.slot)
+                {
+                    return None;
+                }
+            }
+            let value = self.static_integer_scalar_value(node)?;
             (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64).then_some(value as u32)
         })
     }
@@ -7276,7 +7271,9 @@ impl Compiler {
             .or_else(|| {
                 (base.ty == ScalarType::Real)
                     .then(|| {
-                        self.static_nonnegative_signed_tracked_integer_power_chain(exponent_nodes)
+                        self.static_nonnegative_tracked_integer_arithmetic_power_chain(
+                            exponent_nodes,
+                        )
                     })
                     .flatten()
             });
@@ -8709,6 +8706,45 @@ fn exact_signed_bare_variable_expression(node: &GrammarASTNode) -> Option<(bool,
     (child_nodes.len() == 1)
         .then(|| exact_signed_bare_variable_expression(child_nodes[0]))
         .flatten()
+}
+
+fn exact_tracked_integer_arithmetic_expression(node: &GrammarASTNode) -> bool {
+    if exact_signed_bare_variable_expression(node).is_some() {
+        return true;
+    }
+    if let Some(child) = single_parenthesized_child(node) {
+        return exact_tracked_integer_arithmetic_expression(child);
+    }
+    if let Some((_, child)) = single_signed_child(node) {
+        return exact_tracked_integer_arithmetic_expression(child);
+    }
+    let tokens = direct_tokens(node);
+    if tokens.len() == 1 && tokens[0].effective_type_name() == "INTEGER_LIT" {
+        return true;
+    }
+    let sequence = pieces(node);
+    if sequence.len() >= 3
+        && !sequence.len().is_multiple_of(2)
+        && sequence.iter().skip(1).step_by(2).all(|piece| {
+            matches!(
+                piece,
+                Piece::Op(op)
+                    if matches!(op.as_str(), "+" | "-" | "*" | "div" | "mod" | "^" | "**")
+            )
+        })
+    {
+        return sequence
+            .iter()
+            .step_by(2)
+            .all(|piece| match piece {
+                Piece::Node(operand) => exact_tracked_integer_arithmetic_expression(operand),
+                Piece::Op(_) => false,
+            });
+    }
+    let child_nodes = direct_nodes(node);
+    tokens.is_empty()
+        && child_nodes.len() == 1
+        && exact_tracked_integer_arithmetic_expression(child_nodes[0])
 }
 
 fn literal_boolean_value(node: &GrammarASTNode) -> Option<bool> {
@@ -10419,12 +10455,28 @@ mod tests {
     }
 
     #[test]
-    fn al4_arithmetic_tracked_integer_exponents_remain_dynamic_for_real_powers() {
+    fn al4_tracked_integer_arithmetic_exponents_unroll_real_powers() {
         let module = compile_source(
-            "begin integer exponent; real saved; exponent := -2; saved := 6.0 ^ (0 - exponent) end",
+            "begin integer exponent; real saved; exponent := -2; saved := 6.0 ^ (0 - exponent) + 6.0; exponent := 3; output(saved + 0.5) end",
             "test",
         )
-        .expect("tracked exponent arithmetic retains runtime real-power lowering");
+        .expect("checked tracked exponent arithmetic may retain real multiplication lowering");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+    }
+
+    #[test]
+    fn al4_invalid_tracked_integer_arithmetic_exponents_remain_dynamic_for_real_powers() {
+        let module = compile_source(
+            "begin integer exponent; real saved; exponent := 0; saved := 6.0 ^ (1 div exponent) end",
+            "test",
+        )
+        .expect("invalid tracked exponent arithmetic retains runtime real-power lowering");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
     }
