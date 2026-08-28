@@ -18,14 +18,17 @@ pub const DATA_MASK: i32 = (1 << 19) - 1;
 pub const SIGN_BIT: i32 = 1 << 19;
 pub const ADDRESS_MASK: i32 = 0x1fff;
 const X_MASK: i32 = 0x7fff;
+const CLOCK_DAY_SIXTHS: i32 = 24 * 60 * 60 * 6;
 
-/// Persistent non-memory bits in the P006A central binary model.
-pub const CENTRAL_FLIP_FLOPS: usize = 110;
+/// Persistent non-memory bits in the P006B1 central binary/decimal/clock model.
+pub const CENTRAL_FLIP_FLOPS: usize = 132;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 struct BitRegister<const WIDTH: usize> {
     state: [FlipFlopState; WIDTH],
 }
+
+type DecimalPairResult = ([u8; 20], [u8; 20], [u8; 2], u8);
 
 impl<const WIDTH: usize> BitRegister<WIDTH> {
     fn zero() -> Self {
@@ -63,6 +66,9 @@ pub struct Ge225GateState {
     pub ir: i32,
     pub overflow: bool,
     pub parity_error: bool,
+    pub decimal_mode: bool,
+    pub decimal_carry: i32,
+    pub clock_sixths: i32,
     pub n_ready: bool,
     pub selected_x_group: usize,
     pub halted: bool,
@@ -92,6 +98,9 @@ pub enum Ge225GateError {
     UnknownInstruction { word: i32, pc: i32 },
     InvalidAutomaticModification { word: i32 },
     ShiftCountOutOfRange { count: i32 },
+    InvalidBcd { word: i32 },
+    FlaggedDecimalOperand { double: bool },
+    InvalidClock { value: i32 },
 }
 
 impl Display for Ge225GateError {
@@ -124,6 +133,24 @@ impl Display for Ge225GateError {
             ),
             Self::ShiftCountOutOfRange { count } => {
                 write!(formatter, "modified GE-225 shift count exceeds 31: {count}")
+            }
+            Self::InvalidBcd { word } => {
+                write!(
+                    formatter,
+                    "invalid GE-225 BCD digits in word {:07o}",
+                    word & WORD_MASK
+                )
+            }
+            Self::FlaggedDecimalOperand { double } => write!(
+                formatter,
+                "GE-225 {}decimal operand is flagged while A is unflagged",
+                if *double { "double-" } else { "" }
+            ),
+            Self::InvalidClock { value } => {
+                write!(
+                    formatter,
+                    "GE-225 clock must fit its 19-bit C register, got {value}"
+                )
             }
         }
     }
@@ -169,6 +196,10 @@ enum Operation {
     Maq,
     Ado,
     Sbo,
+    Lac,
+    Lca,
+    SetDecimalMode,
+    SetBinaryMode,
     Bod,
     Bev,
     Bmi,
@@ -203,6 +234,9 @@ pub struct Ge225GateLevel {
     ir: BitRegister<20>,
     overflow: BitRegister<1>,
     parity_error: BitRegister<1>,
+    decimal_mode: BitRegister<1>,
+    decimal_carry: BitRegister<2>,
+    clock_sixths: BitRegister<19>,
     n_ready: BitRegister<1>,
     selected_x_group: BitRegister<5>,
     halted: BitRegister<1>,
@@ -225,6 +259,9 @@ impl Ge225GateLevel {
             ir: BitRegister::zero(),
             overflow: BitRegister::zero(),
             parity_error: BitRegister::zero(),
+            decimal_mode: BitRegister::zero(),
+            decimal_carry: BitRegister::zero(),
+            clock_sixths: BitRegister::zero(),
             n_ready: BitRegister::new(&[1]),
             selected_x_group: BitRegister::zero(),
             halted: BitRegister::zero(),
@@ -243,6 +280,9 @@ impl Ge225GateLevel {
         self.ir.write(&[0; 20]);
         self.overflow.write(&[0]);
         self.parity_error.write(&[0]);
+        self.decimal_mode.write(&[0]);
+        self.decimal_carry.write(&[0; 2]);
+        self.clock_sixths.write(&[0; 19]);
         self.n_ready.write(&[1]);
         self.selected_x_group.write(&[0; 5]);
         self.halted.write(&[0]);
@@ -378,6 +418,7 @@ impl Ge225GateLevel {
         if skip != 0 {
             self.checked_address(sequential + skip)?;
         }
+        self.preflight_decimal(operation, effective_address)?;
         if ir_word == instruction && modifier != 0 {
             if let Some(modified) = effective_address
                 .map(|effective| (instruction & !ADDRESS_MASK) | (effective & ADDRESS_MASK))
@@ -426,6 +467,9 @@ impl Ge225GateLevel {
             ir: bits_to_i32(&self.ir.read()),
             overflow: self.overflow.read()[0] == 1,
             parity_error: self.parity_error.read()[0] == 1,
+            decimal_mode: self.decimal_mode.read()[0] == 1,
+            decimal_carry: decode_decimal_carry(self.decimal_carry.read()),
+            clock_sixths: bits_to_i32(&self.clock_sixths.read()),
             n_ready: self.n_ready.read()[0] == 1,
             selected_x_group: bits_to_i32(&self.selected_x_group.read()) as usize,
             halted: self.halted.read()[0] == 1,
@@ -439,6 +483,100 @@ impl Ge225GateLevel {
 
     pub fn flip_flop_count(&self) -> usize {
         self.memory.len() * 20 + CENTRAL_FLIP_FLOPS
+    }
+
+    pub fn set_clock_sixths(&mut self, value: i32) -> Result<(), Ge225GateError> {
+        if !(0..=DATA_MASK).contains(&value) {
+            return Err(Ge225GateError::InvalidClock { value });
+        }
+        self.clock_sixths.write(&i32_to_bits::<19>(value));
+        Ok(())
+    }
+
+    pub fn advance_clock_sixths(&mut self, ticks: u64) {
+        let current = zero_extend::<19, 65>(self.clock_sixths.read());
+        let ticks = u64_to_bits::<65>(ticks);
+        let day = zero_extend::<20, 65>(i32_to_bits::<20>(CLOCK_DAY_SIXTHS));
+        let word_modulus = zero_extend::<20, 65>(i32_to_bits::<20>(1 << 19));
+
+        let normal_sum = gate_add(current, gate_divide_constant(ticks, CLOCK_DAY_SIXTHS).1).0;
+        let normal = mux_bits(
+            greater_or_equal(&normal_sum, &day),
+            normal_sum,
+            gate_subtract(normal_sum, day).0,
+        );
+
+        let until_word_wrap = gate_subtract(word_modulus, current).0;
+        let before_word_wrap = gate_add(current, ticks).0;
+        let after_word_wrap =
+            gate_divide_constant(gate_subtract(ticks, until_word_wrap).0, CLOCK_DAY_SIXTHS).1;
+        let exceptional = mux_bits(
+            not_gate(greater_or_equal(&ticks, &until_word_wrap)),
+            after_word_wrap,
+            before_word_wrap,
+        );
+        let next = mux_bits(
+            not_gate(greater_or_equal(&current, &day)),
+            exceptional,
+            normal,
+        );
+        let clock: [u8; 19] = next[..19]
+            .try_into()
+            .expect("the reduced GE-225 clock fits nineteen bits");
+        self.clock_sixths.write(&clock);
+    }
+
+    pub fn clear_decimal_carry(&mut self) {
+        self.decimal_carry.write(&[0; 2]);
+    }
+
+    fn preflight_decimal(
+        &self,
+        operation: Operation,
+        effective_address: Option<i32>,
+    ) -> Result<(), Ge225GateError> {
+        if self.decimal_mode.read()[0] == 0 {
+            return Ok(());
+        }
+        let carry = self.decimal_carry.read();
+        match operation {
+            Operation::Add | Operation::Sub => {
+                let operand = self.read_word(effective_address.expect("memory operation"))?;
+                gate_decimal_word(
+                    self.a.read(),
+                    i32_to_bits(operand),
+                    operation == Operation::Sub,
+                    carry,
+                )?;
+            }
+            Operation::Dad | Operation::Dsu => {
+                let address = effective_address.expect("memory operation");
+                let first = self.read_word(address)?;
+                let second = if address & 1 == 0 {
+                    self.read_word(self.following_address(address)?)?
+                } else {
+                    first
+                };
+                gate_decimal_pair(
+                    self.a.read(),
+                    self.q.read(),
+                    i32_to_bits(first),
+                    i32_to_bits(second),
+                    operation == Operation::Dsu,
+                    carry,
+                )?;
+            }
+            Operation::Ado | Operation::Sbo => {
+                gate_decimal_word(
+                    self.a.read(),
+                    decimal_one_bits(),
+                    operation == Operation::Sbo,
+                    carry,
+                )?;
+            }
+            _ => {}
+        }
+        Ok(())
     }
 
     fn checked_address(&self, address: i32) -> Result<usize, Ge225GateError> {
@@ -604,13 +742,26 @@ impl Ge225GateLevel {
                 let operand = self.read_word(address)?;
                 let left = self.a.read();
                 let right = i32_to_bits::<20>(operand);
-                let (result, overflow) = if operation == Operation::Add {
-                    gate_add(left, right)
+                let (result, carry, overflow) = if self.decimal_mode.read()[0] == 1 {
+                    let (result, carry, overflow) = gate_decimal_word(
+                        left,
+                        right,
+                        operation == Operation::Sub,
+                        self.decimal_carry.read(),
+                    )?;
+                    (result, Some(carry), overflow)
+                } else if operation == Operation::Add {
+                    let (result, overflow) = gate_add(left, right);
+                    (result, None, overflow)
                 } else {
-                    gate_subtract(left, right)
+                    let (result, overflow) = gate_subtract(left, right);
+                    (result, None, overflow)
                 };
                 self.m.write(&right);
                 self.a.write(&result);
+                if let Some(carry) = carry {
+                    self.decimal_carry.write(&carry);
+                }
                 if overflow == 1 {
                     self.overflow.write(&[1]);
                 }
@@ -657,18 +808,35 @@ impl Ge225GateLevel {
                 } else {
                     first
                 };
-                let left = join_double(self.a.read(), self.q.read());
-                let right = join_double(i32_to_bits::<20>(first), i32_to_bits::<20>(second));
-                let (result, overflow) = if operation == Operation::Dad {
-                    gate_add(left, right)
+                if self.decimal_mode.read()[0] == 1 {
+                    let (a, q, carry, overflow) = gate_decimal_pair(
+                        self.a.read(),
+                        self.q.read(),
+                        i32_to_bits(first),
+                        i32_to_bits(second),
+                        operation == Operation::Dsu,
+                        self.decimal_carry.read(),
+                    )?;
+                    self.a.write(&a);
+                    self.q.write(&q);
+                    self.decimal_carry.write(&carry);
+                    if overflow == 1 {
+                        self.overflow.write(&[1]);
+                    }
                 } else {
-                    gate_subtract(left, right)
-                };
-                let (a, q) = split_double(result);
-                self.a.write(&a);
-                self.q.write(&q);
-                if overflow == 1 {
-                    self.overflow.write(&[1]);
+                    let left = join_double(self.a.read(), self.q.read());
+                    let right = join_double(i32_to_bits::<20>(first), i32_to_bits::<20>(second));
+                    let (result, overflow) = if operation == Operation::Dad {
+                        gate_add(left, right)
+                    } else {
+                        gate_subtract(left, right)
+                    };
+                    let (a, q) = split_double(result);
+                    self.a.write(&a);
+                    self.q.write(&q);
+                    if overflow == 1 {
+                        self.overflow.write(&[1]);
+                    }
                 }
             }
             Operation::Dst => {
@@ -813,17 +981,38 @@ impl Ge225GateLevel {
             }
             Operation::Ado | Operation::Sbo => {
                 let before = self.a.read();
-                let one = i32_to_bits::<20>(1);
-                let (result, overflow) = if operation == Operation::Ado {
-                    gate_add(before, one)
+                let (result, carry, overflow) = if self.decimal_mode.read()[0] == 1 {
+                    let (result, carry, overflow) = gate_decimal_word(
+                        before,
+                        decimal_one_bits(),
+                        operation == Operation::Sbo,
+                        self.decimal_carry.read(),
+                    )?;
+                    (result, Some(carry), overflow)
+                } else if operation == Operation::Ado {
+                    let (result, overflow) = gate_add(before, i32_to_bits::<20>(1));
+                    (result, None, overflow)
                 } else {
-                    gate_subtract(before, one)
+                    let (result, overflow) = gate_subtract(before, i32_to_bits::<20>(1));
+                    (result, None, overflow)
                 };
                 self.a.write(&result);
+                if let Some(carry) = carry {
+                    self.decimal_carry.write(&carry);
+                }
                 if overflow == 1 {
                     self.overflow.write(&[1]);
                 }
             }
+            Operation::Lac => self.a.write(&with_sign_bits(self.clock_sixths.read(), 0)),
+            Operation::Lca => {
+                let clock: [u8; 19] = self.a.read()[..19]
+                    .try_into()
+                    .expect("the GE-225 clock receives A's nineteen data bits");
+                self.clock_sixths.write(&clock);
+            }
+            Operation::SetDecimalMode => self.decimal_mode.write(&[1]),
+            Operation::SetBinaryMode => self.decimal_mode.write(&[0]),
             Operation::Sra
             | Operation::Sna
             | Operation::Sca
@@ -1113,6 +1302,10 @@ const FIXED_OPERATIONS: &[(i32, Operation)] = &[
     (0o2504006, Operation::Maq),
     (0o2504032, Operation::Ado),
     (0o2504112, Operation::Sbo),
+    (0o2504202, Operation::Lac),
+    (0o2504210, Operation::Lca),
+    (0o2506011, Operation::SetDecimalMode),
+    (0o2506012, Operation::SetBinaryMode),
     (0o2514000, Operation::Bod),
     (0o2516000, Operation::Bev),
     (0o2514001, Operation::Bmi),
@@ -1180,6 +1373,10 @@ fn is_fixed(operation: Operation) -> bool {
             | Operation::Maq
             | Operation::Ado
             | Operation::Sbo
+            | Operation::Lac
+            | Operation::Lca
+            | Operation::SetDecimalMode
+            | Operation::SetBinaryMode
             | Operation::Bod
             | Operation::Bev
             | Operation::Bmi
@@ -1282,6 +1479,10 @@ fn operation_name(operation: Operation) -> &'static str {
         Operation::Maq => "MAQ",
         Operation::Ado => "ADO",
         Operation::Sbo => "SBO",
+        Operation::Lac => "LAC",
+        Operation::Lca => "LCA",
+        Operation::SetDecimalMode => "SET_DECMODE",
+        Operation::SetBinaryMode => "SET_BINMODE",
         Operation::Bod => "BOD",
         Operation::Bev => "BEV",
         Operation::Bmi => "BMI",
@@ -1303,6 +1504,252 @@ fn operation_name(operation: Operation) -> &'static str {
         Operation::Nor => "NOR",
         Operation::Dno => "DNO",
         Operation::Sxg => "SXG",
+    }
+}
+
+fn decimal_one_bits() -> [u8; 20] {
+    let mut word = [0; 20];
+    word[0] = 1;
+    word
+}
+
+fn gate_decimal_digits<const WIDTH: usize>(word: [u8; 20]) -> Result<[u8; WIDTH], Ge225GateError> {
+    let ones: [u8; 4] = word[..4].try_into().expect("ones digit width");
+    let tens: [u8; 4] = word[6..10].try_into().expect("tens digit width");
+    let hundreds: [u8; 4] = word[12..16].try_into().expect("hundreds digit width");
+    let ten = i32_to_bits::<4>(10);
+    if [ones, tens, hundreds]
+        .iter()
+        .any(|digit| greater_or_equal(digit, &ten) == 1)
+    {
+        return Err(Ge225GateError::InvalidBcd {
+            word: bits_to_i32(&word),
+        });
+    }
+    let ones = zero_extend::<4, WIDTH>(ones);
+    let tens = gate_multiply_constant(zero_extend::<4, WIDTH>(tens), 10);
+    let hundreds = gate_multiply_constant(zero_extend::<4, WIDTH>(hundreds), 100);
+    Ok(gate_add(gate_add(hundreds, tens).0, ones).0)
+}
+
+fn gate_decimal_word(
+    accumulator: [u8; 20],
+    operand: [u8; 20],
+    subtract: bool,
+    carry: [u8; 2],
+) -> Result<([u8; 20], [u8; 2], u8), Ge225GateError> {
+    let left_raw = gate_decimal_digits::<13>(accumulator)?;
+    let right_raw = gate_decimal_digits::<13>(operand)?;
+    let flagged = accumulator[18];
+    if operand[18] == 1 && flagged == 0 {
+        return Err(Ge225GateError::FlaggedDecimalOperand { double: false });
+    }
+    let total = gate_decimal_total(
+        left_raw,
+        and_gate(accumulator[19], flagged),
+        right_raw,
+        and_gate(operand[19], flagged),
+        subtract,
+        carry,
+        1_000,
+    );
+    let (raw, negative, next_carry, overflow) = gate_normalize_decimal(total, flagged, 1_000);
+    Ok((
+        gate_encode_decimal(raw, negative, flagged),
+        next_carry,
+        overflow,
+    ))
+}
+
+fn gate_decimal_pair(
+    a: [u8; 20],
+    q: [u8; 20],
+    high_operand: [u8; 20],
+    low_operand: [u8; 20],
+    subtract: bool,
+    carry: [u8; 2],
+) -> Result<DecimalPairResult, Ge225GateError> {
+    let a_high = gate_decimal_digits::<23>(a)?;
+    let a_low = gate_decimal_digits::<23>(q)?;
+    let operand_high = gate_decimal_digits::<23>(high_operand)?;
+    let operand_low = gate_decimal_digits::<23>(low_operand)?;
+    let flagged = a[18];
+    if high_operand[18] == 1 && flagged == 0 {
+        return Err(Ge225GateError::FlaggedDecimalOperand { double: true });
+    }
+    let left_raw = gate_add(gate_multiply_constant(a_high, 1_000), a_low).0;
+    let right_raw = gate_add(gate_multiply_constant(operand_high, 1_000), operand_low).0;
+    let total = gate_decimal_total(
+        left_raw,
+        and_gate(a[19], flagged),
+        right_raw,
+        and_gate(high_operand[19], flagged),
+        subtract,
+        carry,
+        1_000_000,
+    );
+    let (raw, negative, next_carry, overflow) = gate_normalize_decimal(total, flagged, 1_000_000);
+    let (high, low) = gate_divide_constant(raw, 1_000);
+    Ok((
+        gate_encode_decimal(high, negative, flagged),
+        gate_encode_decimal(low, 0, 0),
+        next_carry,
+        overflow,
+    ))
+}
+
+fn gate_decimal_total<const WIDTH: usize>(
+    left_raw: [u8; WIDTH],
+    left_negative: u8,
+    right_raw: [u8; WIDTH],
+    right_negative: u8,
+    subtract: bool,
+    carry: [u8; 2],
+    modulus: i32,
+) -> [u8; WIDTH] {
+    let modulus_bits = i32_to_bits::<WIDTH>(modulus);
+    let left_signed = mux_bits(
+        and_gate(left_negative, not_gate(is_zero(&left_raw))),
+        left_raw,
+        gate_subtract(left_raw, modulus_bits).0,
+    );
+    let right_signed = mux_bits(
+        and_gate(right_negative, not_gate(is_zero(&right_raw))),
+        right_raw,
+        gate_subtract(right_raw, modulus_bits).0,
+    );
+    let combined = if subtract {
+        gate_subtract(left_signed, right_signed).0
+    } else {
+        gate_add(left_signed, right_signed).0
+    };
+    gate_add(combined, sign_extend::<2, WIDTH>(carry)).0
+}
+
+fn gate_normalize_decimal<const WIDTH: usize>(
+    total: [u8; WIDTH],
+    flagged: u8,
+    modulus: i32,
+) -> ([u8; WIDTH], u8, [u8; 2], u8) {
+    let modulus_bits = i32_to_bits::<WIDTH>(modulus);
+    let twice_modulus = i32_to_bits::<WIDTH>(modulus * 2);
+    let negative_modulus = gate_subtract([0; WIDTH], modulus_bits).0;
+    let at_least_modulus = signed_greater_or_equal(&total, &modulus_bits);
+    let at_most_negative_modulus = signed_greater_or_equal(&negative_modulus, &total);
+    let negative = total[WIDTH - 1];
+    let middle_negative = and_gate(negative, not_gate(at_most_negative_modulus));
+
+    let plus_modulus = gate_add(total, modulus_bits).0;
+    let plus_twice_modulus = gate_add(total, twice_modulus).0;
+    let minus_modulus = gate_subtract(total, modulus_bits).0;
+    let mut raw = mux_bits(middle_negative, total, plus_modulus);
+    raw = mux_bits(at_most_negative_modulus, raw, plus_twice_modulus);
+    raw = mux_bits(at_least_modulus, raw, minus_modulus);
+
+    let flagged_negative = or_gate(
+        at_least_modulus,
+        and_gate(negative, not_gate(at_most_negative_modulus)),
+    );
+    let overflow = and_gate(flagged, or_gate(at_least_modulus, at_most_negative_modulus));
+    let unflagged = not_gate(flagged);
+    let positive_carry = and_gate(unflagged, at_least_modulus);
+    let negative_carry = and_gate(unflagged, negative);
+    let carry = [or_gate(positive_carry, negative_carry), negative_carry];
+    (raw, and_gate(flagged, flagged_negative), carry, overflow)
+}
+
+fn gate_encode_decimal<const WIDTH: usize>(
+    raw: [u8; WIDTH],
+    negative: u8,
+    flagged: u8,
+) -> [u8; 20] {
+    let (hundreds, remainder) = gate_divide_constant(raw, 100);
+    let (tens, ones) = gate_divide_constant(remainder, 10);
+    let mut word = [0; 20];
+    word[..4].copy_from_slice(&ones[..4]);
+    word[6..10].copy_from_slice(&tens[..4]);
+    word[12..16].copy_from_slice(&hundreds[..4]);
+    word[18] = flagged;
+    word[19] = negative;
+    word
+}
+
+fn gate_divide_constant<const WIDTH: usize>(
+    dividend: [u8; WIDTH],
+    divisor: i32,
+) -> ([u8; WIDTH], [u8; WIDTH]) {
+    let divisor = u64_to_bits::<WIDTH>(divisor as u64);
+    let mut quotient = [0; WIDTH];
+    let mut remainder = [0; WIDTH];
+    for bit in (0..WIDTH).rev() {
+        remainder = std::array::from_fn(|position| {
+            if position == 0 {
+                dividend[bit]
+            } else {
+                remainder[position - 1]
+            }
+        });
+        let subtract = greater_or_equal(&remainder, &divisor);
+        remainder = mux_bits(subtract, remainder, gate_subtract(remainder, divisor).0);
+        quotient[bit] = subtract;
+    }
+    (quotient, remainder)
+}
+
+fn gate_multiply_constant<const WIDTH: usize>(value: [u8; WIDTH], multiplier: u32) -> [u8; WIDTH] {
+    let mut product = [0; WIDTH];
+    for bit in 0..32 {
+        if (multiplier >> bit) & 1 == 1 {
+            let partial = std::array::from_fn(|position| {
+                if position >= bit {
+                    value[position - bit]
+                } else {
+                    0
+                }
+            });
+            product = gate_add(product, partial).0;
+        }
+    }
+    product
+}
+
+fn mux_bits<const WIDTH: usize>(select: u8, zero: [u8; WIDTH], one: [u8; WIDTH]) -> [u8; WIDTH] {
+    std::array::from_fn(|bit| {
+        or_gate(
+            and_gate(not_gate(select), zero[bit]),
+            and_gate(select, one[bit]),
+        )
+    })
+}
+
+fn zero_extend<const FROM: usize, const TO: usize>(value: [u8; FROM]) -> [u8; TO] {
+    std::array::from_fn(|bit| if bit < FROM { value[bit] } else { 0 })
+}
+
+fn sign_extend<const FROM: usize, const TO: usize>(value: [u8; FROM]) -> [u8; TO] {
+    std::array::from_fn(|bit| {
+        if bit < FROM {
+            value[bit]
+        } else {
+            value[FROM - 1]
+        }
+    })
+}
+
+fn signed_greater_or_equal<const WIDTH: usize>(left: &[u8; WIDTH], right: &[u8; WIDTH]) -> u8 {
+    let signs_differ = xor_gate(left[WIDTH - 1], right[WIDTH - 1]);
+    let left_positive = and_gate(not_gate(left[WIDTH - 1]), right[WIDTH - 1]);
+    or_gate(
+        and_gate(signs_differ, left_positive),
+        and_gate(not_gate(signs_differ), greater_or_equal(left, right)),
+    )
+}
+
+fn decode_decimal_carry(bits: [u8; 2]) -> i32 {
+    match bits {
+        [1, 1] => -1,
+        [1, 0] => 1,
+        _ => 0,
     }
 }
 
@@ -1496,6 +1943,16 @@ fn decode_bits<const WIDTH: usize>(bits: [u8; WIDTH]) -> Vec<u8> {
 
 fn i32_to_bits<const WIDTH: usize>(value: i32) -> [u8; WIDTH] {
     std::array::from_fn(|bit| ((value >> bit) & 1) as u8)
+}
+
+fn u64_to_bits<const WIDTH: usize>(value: u64) -> [u8; WIDTH] {
+    std::array::from_fn(|bit| {
+        if bit < 64 {
+            ((value >> bit) & 1) as u8
+        } else {
+            0
+        }
+    })
 }
 
 fn bits_to_i32(bits: &[u8]) -> i32 {

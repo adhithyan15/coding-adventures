@@ -67,7 +67,7 @@ according to the current prioritization run.
 |---|---:|---|---|---|
 | RCPU-001 / RCPU-002 | 1948 | Manchester Baby (SSEM) | Complete: `manchester-baby-simulator` | Complete: `manchester-baby-gatelevel` |
 | RCPU-003 / RCPU-004 | 1954 | IBM 704 | Complete: `ibm704-simulator` | Complete: `ibm704-gatelevel` |
-| RCPU-005 / RCPU-006 | 1961 | GE-225 | Complete: `ge225-simulator` | Missing |
+| RCPU-005 / RCPU-006 | 1961 | GE-225 | Complete: `ge225-simulator` | In progress: `ge225-gatelevel` |
 | RCPU-007 / RCPU-008 | 1964 | CDC 6600 | Missing | Missing |
 | RCPU-009 / RCPU-010 | 1970 | DEC PDP-11 | Missing | Missing |
 | RCPU-011 / RCPU-012 | 1971 | Intel 4004 | Audit: `intel4004-simulator` | Audit: `intel4004-gatelevel` |
@@ -91,29 +91,33 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-P006A**, the GE-225 gate-level substrate and central
-binary core. RCPU-005 is complete after the AAU/final-audit slice added separate
+Current selection: **RCPU-P006B1**, the GE-225 gate-level central decimal and
+clock option. RCPU-005 is complete after the AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
 transient/hold alerts, modification, and fail-closed preflight. The functional
 oracle has 91 simulator tests and 88.81% core line coverage (2,152/2,423), above
 the 80% completion floor.
 
-RCPU-006 is split into three gate-auditable slices. P006A establishes flip-flop
+RCPU-006 is split into gate-auditable slices. P006A establishes flip-flop
 memory/registers, gate decode, the 20-bit and one-sign-plus-38-data-bit central
 binary datapaths, modification, control flow, shifts, compares, and lifecycle
-differentials. P006B adds central decimal/clock state plus direct I/O,
-controller-selector, and API signals/state. P006C adds the separate AAU
+differentials. P006B1 adds central decimal/clock state. P006B2 adds direct I/O,
+and P006B3 adds controller-selector and API signals/state. P006C adds the separate AAU
 register file and fixed/normalized/unnormalized datapaths, then runs the final
 instruction-family differential and coverage audit. The chronological queue
 does not advance to the CDC 6600 until all three close RCPU-006.
 
-P006A is implementation-complete locally: its 17 tests cover gate-backed
+P006A merged in PR #13330: its 17 tests cover gate-backed
 lifecycle, one-hot fixed/opcode decode, core-memory X groups, automatic
 modification, all central single/double binary operations, multiply/divide,
 all twelve shift/normalize paths, `MOV`, and atomic bounds failures. Core line
-coverage is 86.11% (682/792), above the completion floor. It remains selected
-until it is published and auto-merged.
+coverage was 86.11% (682/792), above the completion floor. P006B1 is next; its
+acceptance boundary is DFF-backed decimal mode/carry and 19-bit clock state,
+gate-only single/double BCD arithmetic and clock advancement, exact fixed-word
+decode, oracle differentials, fail-closed validation, and above-floor coverage.
+P006B1 is implementation-complete locally with 23 combined tests, including 48
+seeded decimal vectors; core line coverage is 89.91% (1,257/1,398).
 
 ## Cross-language wave
 
@@ -141,6 +145,8 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-27 | P006B fidelity review found two independently auditable hardware domains inside the original optional-I/O slice: decimal/clock is a combinational central datapath, while direct devices and selector/API are bounded event-driven state machines. Combining them would make gate provenance and atomic error review unnecessarily difficult. | P0, scope clarity, blocks RCPU-006 | Split P006B into P006B1 decimal/clock, P006B2 direct card/paper-tape/typewriter, and P006B3 selector/API. Preserve chronological order and keep all three ahead of the AAU/final audit. |
+| 2026-08-27 | P006B1 implementation review found that the deterministic clock API accepts a 64-bit tick count, including `u64::MAX`; host modulo would violate the gate-level arithmetic contract even though instruction stepping remained gate-backed. | P0, gate fidelity, blocks P006B1 | Reduce and advance the external tick vector through a 65-bit restoring-division/add/subtract gate network, preserving both daily wrap and the documented 19-bit out-of-day recovery path. |
 | 2026-08-27 | P006A pre-push security review found that `run(max_steps)` passed the caller-controlled bound directly to `Vec::with_capacity`, so `usize::MAX` panicked before executing even one fail-closed instruction. | P0, allocation/panic safety, blocks P006A | Grow traces only as accepted instructions execute, and pin an oversized bound that must report the first unknown instruction instead of preallocating from the bound. |
 | 2026-08-27 | AAU pre-push security review found that normalized floating divide tried to normalize an exact zero quotient by left-shifting zero forever. A caller could load a noncanonical AX/QX pair and make one `FDV` step consume an unbounded CPU loop. | P0, denial-of-service safety, blocks AAU publication | Stop zero before the normalization loop, preserve its deterministic quotient/remainder result, and pin the externally loaded zero-quotient case. |
 | 2026-08-27 | Propagating the P005C atomic core preflight into the AAU slice exposed the same late-failure shape in all sixteen AAU status branches: a not-taken skip beyond installed memory could update IX or clear overflow/underflow holds before failing. | P0, state-corruption safety, blocks AAU/final audit | Share a pure AAU status predicate between preflight and execution, validate the exact skip target before accepting the instruction, and pin full-state end-of-memory atomicity. |
