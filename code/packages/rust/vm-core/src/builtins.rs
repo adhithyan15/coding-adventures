@@ -143,6 +143,21 @@ impl BuiltinRegistry {
             Ok(Value::Bool(args[0] == args[1]))
         });
 
+        // `equal?` — the lisp-family spelling of dynamic value equality. Symbol
+        // literals are interned before the generic VM sees them, so same-name
+        // symbols are the same `Value::Int` and distinct names are different ints.
+        // Keeping this beside `=` also makes the VM reusable by any frontend that
+        // emits the Scheme spelling instead of requiring a language-specific runner.
+        reg.register("equal?", |args| {
+            if args.len() != 2 {
+                return Err(VMError::Custom(format!(
+                    "`equal?` requires exactly 2 arguments, got {}",
+                    args.len()
+                )));
+            }
+            Ok(Value::Bool(args[0] == args[1]))
+        });
+
         // Dynamic arithmetic primitives (E6d-2) — the same `any`-typed `+`/`-`/`*`
         // the frontend emits as a `call_builtin` when an operand's static type is
         // `any` (e.g. a value read from a cons cell or a bound `match` field). The
@@ -232,6 +247,14 @@ mod tests {
         assert_eq!(reg.call("=", &[Value::Int(1), Value::Int(2)]).unwrap(), Value::Bool(false));
         // Cross-kind values are simply unequal, never an error (dynamic equality).
         assert_eq!(reg.call("=", &[Value::Int(0), Value::Null]).unwrap(), Value::Bool(false));
+        assert_eq!(
+            reg.call("equal?", &[Value::Int(1 << 29), Value::Int(1 << 29)]).unwrap(),
+            Value::Bool(true)
+        );
+        assert_eq!(
+            reg.call("equal?", &[Value::Int(1 << 29), Value::Int((1 << 29) + 1)]).unwrap(),
+            Value::Bool(false)
+        );
     }
 
     #[test]
@@ -251,6 +274,7 @@ mod tests {
         let reg = BuiltinRegistry::new();
         assert!(reg.call("+", &[Value::Int(1)]).is_err(), "wrong arity");
         assert!(reg.call("=", &[Value::Int(1)]).is_err(), "wrong arity");
+        assert!(reg.call("equal?", &[Value::Int(1)]).is_err(), "wrong arity");
         assert!(
             matches!(reg.call("*", &[Value::Int(1), Value::Null]), Err(VMError::TypeError { .. })),
             "non-numeric operand is a clean type error"

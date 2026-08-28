@@ -1232,6 +1232,14 @@ fn concretize_scalar_any_for_beam(module: &mut IIRModule) {
             func.return_type = "i64".to_string();
         }
         for instr in &mut func.instructions {
+            // BEAM values are already dynamically typed Erlang terms. The generic
+            // dynamic-arithmetic pass emits `box`/`unbox` for structural/tagged
+            // targets, but both operations are identity moves on BEAM integers.
+            // Erase the representation-only boundary before validation rather than
+            // teaching the backend a fake boxing scheme it does not need.
+            if instr.op == "box" || instr.op == "unbox" {
+                instr.op = "mov".to_string();
+            }
             if to_i64(&instr.type_hint) {
                 instr.type_hint = "i64".to_string();
             }

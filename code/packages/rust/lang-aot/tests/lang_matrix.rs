@@ -374,7 +374,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(equal? 'a 'a)",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Beam],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E6d-4: two DISTINCT symbols are not `equal?` (different interned ids),
     // so `(equal? 'a 'b)` = #f → exit 0 — the discriminating half of the proof.
@@ -383,7 +383,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(equal? 'a 'b)",
         expect: Expect::Exit(0),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Beam],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-5: records (TW6 part 1) on the code-gen backends.** A `(record
     // Name (f : T) …)` erases to a constructor `Name(…)` that builds a cons chain
@@ -487,15 +487,25 @@ const PROGRAMS: &[Prog] = &[
     // did), so a dynamic global reached the backend as an unsupported `call_builtin`.
     // Adding `lower_global_io` to those pipelines makes the set+get roundtrip work:
     // `main` sets `g = 42` (`global_store`), `f` reads it (`global_load`), `(f)` = 42.
-    // (A dynamic global flowing into *dynamic arithmetic* still needs the global slot
-    // widened to a boxed `any` — a follow-up; here the roundtrip value is returned
-    // directly.)
+    // The generic VM/JIT run the same lowered module-global ops; their `Value` slots
+    // retain the stored runtime kind, so the forward roundtrip is representation-safe.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (f) g) (define g 42) (f)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Beam],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // Twig — E6d-8: a forward-referenced dynamic global also composes with
+    // arithmetic. This is the discriminating boxed-slot proof: `f` loads `g` through
+    // the dynamic global path and feeds it to `+`, rather than merely returning it.
+    // `g = 41`, so `(f)` = 42 on every standard backend.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f) (+ g 1)) (define g 41) (f)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-7: closures (TW5) on all 5 code-gen backends** (the last E6
     // backend gap). `((lambda (x) (+ x 1)) 41)` allocates a closure and applies
@@ -6934,6 +6944,11 @@ fn lower_dynamic_for_generic_engine(module: &mut interpreter_ir::IIRModule) {
     iir_builtin_lowering::lower_global_io(module);
     iir_builtin_lowering::lower_closures_to_heap(module);
     iir_builtin_lowering::lower_heap_builtins(module);
+    // A symbol literal is still encoded as `const Var(name) : symbol` after the
+    // structural heap pass. The code-generation pipelines intern that form before
+    // execution; do the same here so VM/JIT receive stable integer identities rather
+    // than treating the name as a register reference.
+    iir_builtin_lowering::intern_symbols_structural(module);
 }
 
 fn run_vm(p: &Prog) -> Option<RunResult> {
@@ -7164,6 +7179,13 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     let input = Arc::clone(&stdin_buf);
     backend.register_builtin("input_str", move |_args: &[Value]| {
         Value::Str(drain_stdin_line(&input))
+    });
+    // The generic JIT intentionally starts with an empty, caller-owned builtin
+    // registry. Twig's symbol equality is direct dynamic Value equality, matching
+    // VMCore's default `equal?` builtin and the code-generation backends' interned-id
+    // comparison.
+    backend.register_builtin("equal?", |args: &[Value]| {
+        Value::Bool(args.len() == 2 && args[0] == args[1])
     });
 
     // `JITCore::new` takes `&mut vm` only to thread thresholds — it does not hold the

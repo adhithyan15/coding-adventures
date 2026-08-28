@@ -11,3 +11,6 @@ paint-vm-gpu-core = { path = "../paint-vm-gpu-core" }
 paint-vm-runtime = { path = "../paint-vm-runtime" }
 pollster = "0.3"
 wgpu = "0.19"
+
+[dev-dependencies]
+venture-browser-visual-fixtures = { path = "../venture-browser-visual-fixtures" }

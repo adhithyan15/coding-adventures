@@ -27,4 +27,7 @@ spaces, combining and emoji graphemes, and script/symbol font-fallback runs.
 `isolated_gpu_layer_scene` and `assert_isolated_gpu_layer_pixels` form a
 backend-neutral GPU composition oracle. The fixture catches flattened child
 opacity, reordered filters, and incorrect destination-aware blending without
-depending on a host toolkit or platform screenshot baseline.
+depending on a host toolkit or platform screenshot baseline. Both Metal and
+WGPU consume this oracle; WGPU runs it whenever an offscreen adapter is
+available, covering Metal, Vulkan, DX12, and software implementations through
+one executor contract.

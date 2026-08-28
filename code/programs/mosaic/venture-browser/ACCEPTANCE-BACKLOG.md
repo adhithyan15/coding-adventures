@@ -42,11 +42,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
   with balanced shared layer commands, capability profiles, validated filters,
   Metal ping-pong render/compute surfaces, all shared blend modes, native error
   diagnostics, and a reusable pixel oracle.
-- [ ] **P2 paint convergence — portable isolated GPU executor.** Execute the
+- [x] **P2 paint convergence — portable isolated GPU executor.** Execute the
   shared layer commands in WGPU with offscreen render/compute passes and the
-  existing cross-backend pixel oracle. Preserve the current explicit rejection
-  until opacity, filter ordering, and destination-aware blends all converge;
-  then reuse that executor shape for Vulkan, OpenGL, and Mesa profiles.
+  existing cross-backend pixel oracle. Completed with owned texture arenas,
+  nested render scopes, ordered filter passes, post-filter opacity, clip-aware
+  destination blends, stable shader parameter layouts, and adapter-conditional
+  acceptance shared with Metal. Reuse this executor shape for explicit Vulkan,
+  OpenGL, and Mesa profiles.
 - [x] **P2 browser convergence — international inline content.** Expand the
   representative real-page corpus through bidi text, script fallback,
   grapheme-aware selection geometry, and UAX #14 line-breaking without moving

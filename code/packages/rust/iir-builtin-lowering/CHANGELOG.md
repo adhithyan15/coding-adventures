@@ -1,5 +1,15 @@
 # Changelog — iir-builtin-lowering
 
+## 0.42.0 - 2026-08-27 - propagate boxed dynamic returns through call signatures
+
+`lower_dynamic_arith` now widens a function return and every matching call
+result to `ref<any>` when the rewritten return value is produced by a dynamic
+`box`. This keeps the IIR signature aligned with the value that actually
+crosses the boundary, so the tagged native/LLVM exit pass unboxes a helper's
+dynamic integer result instead of exposing the tagged word as the process exit
+code. A fixed-point propagation covers wrappers that return another dynamic
+helper's result.
+
 ## 0.41.0 - 2026-08-26 - fix: raw-model closure body with no heap evidence of its own never got concretized
 
 `closure_identity_returns_captured_value` (`lang-aot`'s

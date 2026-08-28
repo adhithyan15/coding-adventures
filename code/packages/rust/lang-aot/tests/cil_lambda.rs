@@ -10,7 +10,7 @@
 //! and the JVM `invokestatic`/`aload`. Verified by RUNNING on the simulator.
 
 use clr_simulator::{CLRSimulator, MethodCode, Value};
-use lang_aot::{compile_source_to_cil_artifact, Language};
+use lang_aot::{compile_source_to_cil_artifact, compile_source_to_cil_text, Language};
 
 fn run(src: &str) -> i32 {
     let artifact = compile_source_to_cil_artifact(Language::McCarthyLisp, src, "Main")
@@ -50,4 +50,16 @@ fn scalar_and_cons_still_run_after_call_frames() {
     // The call-frame refactor must not regress single-method programs (no calls).
     assert_eq!(run("42"), 42, "scalar still runs through load_program");
     assert_eq!(run("(CAR (CONS 7 9))"), 7, "cons still runs");
+}
+
+#[test]
+fn twig_forward_global_arithmetic_emits_for_real_clr() {
+    let il = compile_source_to_cil_text(
+        Language::Twig,
+        "(define (f) (+ g 1)) (define g 41) (f)",
+        "Main",
+    )
+    .expect("compile Twig forward global arithmetic");
+    assert!(il.contains("stsfld"), "main must store the global: {il}");
+    assert!(il.contains("ldsfld"), "f must load the global: {il}");
 }
