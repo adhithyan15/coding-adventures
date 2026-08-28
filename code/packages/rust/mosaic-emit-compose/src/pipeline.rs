@@ -113,6 +113,11 @@ pub fn from_pipeline(
     let uses_text_heading = layout_has_text_role(&layout.root, "heading");
     let uses_text_replacement_semantics = layout_has_text_replacement_semantics(&layout.root);
     let uses_icon = layout_contains_tag(&layout.root, "Icon");
+    // #13176 — `HostProgressRing` reuses `CircularProgressIndicator`,
+    // the same widget the `Icon(glyph: "spinner")` indeterminate case
+    // already imports; widen that import gate rather than duplicating
+    // an unconditional second import.
+    let uses_progress_ring = layout_contains_tag(&layout.root, "HostProgressRing");
     let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget");
     let uses_checkbox_indeterminate = layout_has_checkbox_indeterminate(&layout.root);
@@ -197,12 +202,14 @@ pub fn from_pipeline(
     .unwrap();
     writeln!(out, "import androidx.compose.material.Button").unwrap();
     writeln!(out, "import androidx.compose.material.Checkbox").unwrap();
-    if uses_icon {
+    if uses_icon || uses_progress_ring {
         writeln!(
             out,
             "import androidx.compose.material.CircularProgressIndicator"
         )
         .unwrap();
+    }
+    if uses_icon {
         writeln!(out, "import androidx.compose.material.LocalContentColor").unwrap();
     }
     writeln!(out, "import androidx.compose.material.RadioButton").unwrap();
@@ -2617,6 +2624,7 @@ fn emit_compose_tree(
             emit_host_number_input(node, depth, component_name, emits, part_styles, text_ctx)
         }
         "HostSlider" => emit_host_slider(node, depth, component_name, emits, part_styles, text_ctx),
+        "HostProgressRing" => emit_host_progress_ring(node, depth, part_styles),
         "HostTooltip" => emit_host_tooltip(
             node,
             depth,
@@ -4701,6 +4709,89 @@ fn emit_host_slider(
     writeln!(out, "{inner}steps = {steps},").unwrap();
     writeln!(out, "{pad})").unwrap();
     Ok(out)
+}
+
+/// Lower `HostProgressRing` to Jetpack Compose's native
+/// `CircularProgressIndicator` in its determinate form (`progress:
+/// Float`) — the real accessible progress semantics and native visuals
+/// a `Box`+`Box` CSS conic-gradient trick can't provide (#13176). The
+/// same widget already renders indeterminate (no `progress:` argument)
+/// for `Icon(glyph: "spinner")` (see `_mosaicIcon` in the emitted
+/// preamble); the determinate form is the identical widget with an
+/// explicit `progress:` argument.
+///
+/// Unlike `HostSlider`, `HostProgressRing` is display-only (no
+/// `onChange`/`onCommit`), so this reuses `compose_style_for_node` for
+/// sizing (the same `.width()`/`.height()` `Modifier` chain every other
+/// primitive's part-style lookup already resolves) and `text_prop_expr`
+/// for `a11y-label`, mirroring `HostSlider`'s own `.semantics {
+/// contentDescription = ... }` accessibility pattern exactly.
+///
+/// `value` is required and supports the same `Number`/`SlotRef`/`Expr`
+/// three-way binding every other numeric prop has — unlike `Path`'s
+/// geometry props, this MUST support live binding, since the entire
+/// point is rendering a live `ring-percent-value`. Mosaic's `value` is
+/// a 0..100 percent; Compose's `progress` is a 0f..1f `Float`, so this
+/// divides by 100f in the generated Kotlin.
+///
+/// Verified against the real toolchain before writing this function: a
+/// `gradle compileKotlin` build (JetBrains Compose Multiplatform
+/// Desktop, `org.jetbrains.compose` 1.6.11 — the version this repo
+/// pins) with both a literal `progress = (42).toFloat() / 100f` and a
+/// bound `progress = (ringPercentValue).toFloat() / 100f` compiled
+/// cleanly with no deprecation warning, confirming the plain-`Float`
+/// determinate overload (not the newer `progress: () -> Float` lambda
+/// form) is what this repo's pinned Compose Material1 version expects.
+fn emit_host_progress_ring(
+    node: &LayoutNode,
+    depth: usize,
+    part_styles: &PartStyleMap,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let chain_indent = (depth + 2) * 4;
+
+    let value_expr = required_progress_ring_value(node)?;
+    let style = compose_style_for_node(node, part_styles, None, chain_indent, None);
+    let style_modifier = style
+        .as_ref()
+        .map(|style| style.modifier.as_str())
+        .unwrap_or_default();
+    let accessibility_label = text_prop_expr(node, "a11y-label")?;
+
+    let mut out = String::new();
+    writeln!(out, "{pad}CircularProgressIndicator(").unwrap();
+    writeln!(out, "{inner}progress = ({value_expr}).toFloat() / 100f,").unwrap();
+    if let Some(label) = accessibility_label {
+        writeln!(
+            out,
+            "{inner}modifier = Modifier{style_modifier}.semantics {{ contentDescription = {label} }},"
+        )
+        .unwrap();
+    } else if !style_modifier.is_empty() {
+        writeln!(out, "{inner}modifier = Modifier{style_modifier},").unwrap();
+    }
+    writeln!(out, "{pad})").unwrap();
+    Ok(out)
+}
+
+/// Read the required `value` prop's `Number`/`SlotRef`/`Expr` three-way
+/// binding — a missing prop is a clear compile error, not a silent
+/// default (unlike `HostSlider`'s optional `min`/`max`/`step`, which
+/// fall back to a sensible default when absent).
+fn required_progress_ring_value(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    match find_prop_value(node, "value") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(camel)
+        }
+        Some(LayoutPropValue::Number(number)) => Ok(number.to_string()),
+        Some(LayoutPropValue::Expr(expr)) => Ok(expr.clone()),
+        _ => Err(PipelineEmitError::UnknownPrimitive(
+            "HostProgressRing missing required prop 'value:'".to_string(),
+        )),
+    }
 }
 
 fn emit_host_number_input(
@@ -6867,6 +6958,133 @@ mod tests {
         ));
         assert!(out.contains("tint = Color(0xFF0D6EFD),"));
         assert!(out.contains("fontSize = (24).sp,"));
+    }
+
+    /// #13176 — literal `value:` and a sized `ring-circle` part lower to a
+    /// determinate `CircularProgressIndicator` with a `.width().height()`
+    /// modifier chain, no `.semantics` suffix since no `a11y-label` is set.
+    #[test]
+    fn host_progress_ring_lowers_to_determinate_progress_indicator() {
+        let m = component("Ring", vec![], vec![]);
+        let l = layout(
+            "Ring",
+            styled_node(
+                "HostProgressRing",
+                "ring-circle",
+                vec![LayoutProp {
+                    name: "value".into(),
+                    value: LayoutPropValue::Number(42.0),
+                }],
+                vec![],
+            ),
+        );
+        let s = style_def(
+            "Ring",
+            vec![part(
+                "ring-circle",
+                vec![sprop("width", "34px"), sprop("height", "34px")],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+
+        assert!(out.contains("import androidx.compose.material.CircularProgressIndicator"));
+        assert!(out.contains("CircularProgressIndicator("));
+        assert!(out.contains("progress = (42).toFloat() / 100f,"));
+        assert!(out.contains(".width(34.dp)"));
+        assert!(out.contains(".height(34.dp)"));
+        assert!(
+            !out.contains(".semantics {"),
+            "no a11y-label was set, so no .semantics suffix should be emitted, got:\n{out}"
+        );
+    }
+
+    /// #13176 — `value:` MUST support live `SlotRef` binding from day one
+    /// (unlike `Path`'s geometry props): the whole point is rendering a
+    /// live `ring-percent-value`.
+    #[test]
+    fn host_progress_ring_value_accepts_slot_binding() {
+        let m = component("Ring", vec![slot("percent", SlotType::Number, true)], vec![]);
+        let l = layout(
+            "Ring",
+            node(
+                "HostProgressRing",
+                vec![slot_prop("value", "percent")],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Ring")).unwrap().output;
+        assert!(out.contains("progress = (percent).toFloat() / 100f,"));
+    }
+
+    #[test]
+    fn host_progress_ring_missing_value_is_a_clear_error() {
+        let m = component("Ring", vec![], vec![]);
+        let l = layout("Ring", node("HostProgressRing", vec![], vec![]));
+        let err = from_pipeline(&m, &l, &empty_style("Ring")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnknownPrimitive(msg) if msg.contains("value")));
+    }
+
+    #[test]
+    fn host_progress_ring_a11y_label_lowers_to_content_description() {
+        let m = component("Ring", vec![], vec![]);
+        let l = layout(
+            "Ring",
+            node(
+                "HostProgressRing",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::Number(75.0),
+                    },
+                    LayoutProp {
+                        name: "a11y-label".into(),
+                        value: LayoutPropValue::String("Workspace progress".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Ring")).unwrap().output;
+        assert!(out.contains("import androidx.compose.ui.semantics.semantics"));
+        assert!(out.contains(
+            "modifier = Modifier.semantics { contentDescription = \"Workspace progress\" },"
+        ));
+    }
+
+    /// A component using `HostProgressRing` without any `Icon` must still
+    /// get the `CircularProgressIndicator` import — it was previously
+    /// gated only behind `uses_icon`.
+    #[test]
+    fn host_progress_ring_without_icon_still_imports_circular_progress_indicator() {
+        let m = component("Ring", vec![], vec![]);
+        let l = layout(
+            "Ring",
+            node(
+                "HostProgressRing",
+                vec![LayoutProp {
+                    name: "value".into(),
+                    value: LayoutPropValue::Number(10.0),
+                }],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Ring")).unwrap().output;
+        assert!(out.contains("import androidx.compose.material.CircularProgressIndicator"));
+        assert!(
+            !out.contains("import androidx.compose.material.LocalContentColor"),
+            "LocalContentColor is Icon-spinner-specific and unneeded here, got:\n{out}"
+        );
+    }
+
+    /// A layout using neither `Icon` nor `HostProgressRing` must not pay
+    /// for the `CircularProgressIndicator` import.
+    #[test]
+    fn layout_without_icon_or_progress_ring_gets_no_circular_progress_import() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", node("Box", vec![], vec![]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(!out.contains("import androidx.compose.material.CircularProgressIndicator"));
     }
 
     #[test]
