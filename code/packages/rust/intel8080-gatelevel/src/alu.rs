@@ -19,9 +19,9 @@
 //! | Flag | Source                     |
 //! |------|----------------------------|
 //! | CY   | carry out of bit 7         |
-//! | Z    | NOR(S[0]..S[7])            |
-//! | S    | S[7] (MSB of result)       |
-//! | P    | XNOR(S[0]..S[7]) = NOT(XOR_N) |
+//! | Z    | NOR(S\[0\]..S\[7\])            |
+//! | S    | S\[7\] (MSB of result)       |
+//! | P    | XNOR(S\[0\]..S\[7\]) = NOT(XOR_N) |
 //! | AC   | carry out of bit 3         |
 //!
 //! # ANA Auxiliary Carry Quirk
@@ -171,7 +171,7 @@ impl GateAlu8080 {
 
     // ── Logical operations ───────────────────────────────────────────────────
 
-    /// ANA: A & B. CY=0; AC = OR(A[3], B[3]) per 8080 spec quirk.
+    /// ANA: A & B. CY=0; AC = OR(A\[3\], B\[3\]) per 8080 spec quirk.
     pub fn ana(a: u8, b: u8) -> AluResult {
         let a_bits = int_to_bits8(a);
         let b_bits = int_to_bits8(b);
@@ -247,7 +247,10 @@ impl GateAlu8080 {
         new_bits.extend_from_slice(&bits[..7]);
         AluResult {
             value: bits_to_u8(&new_bits),
-            flags: AluFlags { cy: msb != 0, ..AluFlags::default() },
+            flags: AluFlags {
+                cy: msb != 0,
+                ..AluFlags::default()
+            },
             updates_cy: true,
         }
     }
@@ -260,7 +263,10 @@ impl GateAlu8080 {
         new_bits.push(lsb);
         AluResult {
             value: bits_to_u8(&new_bits),
-            flags: AluFlags { cy: lsb != 0, ..AluFlags::default() },
+            flags: AluFlags {
+                cy: lsb != 0,
+                ..AluFlags::default()
+            },
             updates_cy: true,
         }
     }
@@ -273,7 +279,10 @@ impl GateAlu8080 {
         new_bits.extend_from_slice(&bits[..7]);
         AluResult {
             value: bits_to_u8(&new_bits),
-            flags: AluFlags { cy: msb != 0, ..AluFlags::default() },
+            flags: AluFlags {
+                cy: msb != 0,
+                ..AluFlags::default()
+            },
             updates_cy: true,
         }
     }
@@ -286,7 +295,10 @@ impl GateAlu8080 {
         new_bits.push(cy as u8);
         AluResult {
             value: bits_to_u8(&new_bits),
-            flags: AluFlags { cy: lsb != 0, ..AluFlags::default() },
+            flags: AluFlags {
+                cy: lsb != 0,
+                ..AluFlags::default()
+            },
             updates_cy: true,
         }
     }
@@ -302,7 +314,10 @@ impl GateAlu8080 {
 
     /// STC: set carry. CY=1. No other flags affected.
     pub fn stc() -> AluFlags {
-        AluFlags { cy: true, ..AluFlags::default() }
+        AluFlags {
+            cy: true,
+            ..AluFlags::default()
+        }
     }
 
     /// CMC: complement carry. CY = NOT(CY). No other flags affected.
@@ -330,7 +345,7 @@ impl GateAlu8080 {
         }
 
         // Step 2: high nibble correction (check after tentative step-1 apply)
-        let temp = a.wrapping_add(correction);
+        let temp = add_8bit(a, correction, 0).0;
         let high = temp >> 4;
         if high > 9 || cy {
             correction |= 0x60;
@@ -475,7 +490,7 @@ mod tests {
     #[test]
     fn ral_through_carry() {
         let r = GateAlu8080::ral(0x55, true); // 0101_0101, CY=1
-        // Shift left: 0xAA, old CY (1) → bit 0, old bit7 (0) → new CY
+                                              // Shift left: 0xAA, old CY (1) → bit 0, old bit7 (0) → new CY
         assert_eq!(r.value, 0xAB); // 1010_1011
         assert!(!r.flags.cy); // old bit7 was 0
     }

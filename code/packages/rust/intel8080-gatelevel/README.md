@@ -3,8 +3,8 @@
 Gate-level simulator for the **Intel 8080A** (1974) microprocessor.
 
 Every arithmetic and logic operation routes through real gate primitives from the
-`logic-gates` and `arithmetic` crates — no host integer arithmetic in the execution
-path. Registers are modelled as D flip-flop arrays.
+`logic-gates` and `arithmetic` crates. Every persistent bit—including memory,
+registers, flags, control latches, and I/O ports—is stored in a D flip-flop.
 
 ## Architecture
 
@@ -14,6 +14,7 @@ alu.rs       — GateAlu8080: ADD/SUB/AND/OR/XOR/rotate through gate chains
 decoder.rs   — combinational AND/NOT/OR gate tree → control signals
 registers.rs — 7×8-bit flip-flop arrays + 16-bit PC and SP
 cpu.rs       — fetch-decode-execute loop; 244 Intel 8080A instructions
+state.rs     — DFF-backed byte memory and state-register primitives
 ```
 
 ## Quick start
@@ -23,24 +24,31 @@ use coding_adventures_intel8080_gatelevel::GateLevelCpu;
 
 let mut cpu = GateLevelCpu::new();
 // MVI A,10 ; MVI B,5 ; ADD B ; HLT
-let (traces, state) = cpu.run(&[0x3E, 0x0A, 0x06, 0x05, 0x80, 0x76], 100);
-assert_eq!(state.a, 15);
-assert!(!state.flag_cy);
+let result = cpu
+    .run(&[0x3E, 0x0A, 0x06, 0x05, 0x80, 0x76], 100)
+    .unwrap();
+assert_eq!(result.final_state.regs.a, 15);
+assert!(!result.final_state.flags.cy);
 ```
 
-## Gate count estimate
+## Persistent topology
 
-| Component               | Gates |
-|-------------------------|-------|
-| 8-bit ALU (add/sub/log) | ~104  |
-| Register file (7×8-bit) | 336   |
-| PC + SP (2×16-bit)      | 192   |
-| 16-bit adder (DAD/INX)  | 80    |
-| Instruction decoder     | ~80   |
-| Control + wiring        | ~300  |
-| **Total**               | **~1,092** |
+| Component | D flip-flops |
+|-----------|-------------:|
+| 64 KiB memory | 524,288 |
+| Register file | 56 |
+| PC + SP | 32 |
+| Flags + control | 7 |
+| Input + output ports | 4,096 |
+| **Total** | **528,479** |
 
 Real 8080A: ~6,000 transistors (NMOS, ~1,500 gate equivalents).
+
+The public lifecycle matches `intel8080-simulator`: typed atomic failures,
+transactional bounded runs, complete owned snapshots, and before/after traces.
+The completion suite differentially checks the full state of every one of the
+244 defined first-byte encodings against that functional implementation. Core
+line coverage is 95.53% (855/895).
 
 ## Key differences from 8008
 

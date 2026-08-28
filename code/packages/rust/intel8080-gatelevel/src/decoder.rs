@@ -105,13 +105,21 @@ pub fn decode(opcode: u8) -> Decoded {
     let is_g2 = and_gate(b7, nb6);
     let is_g3 = and_gate(b7, b6);
 
-    let group = if is_g3 != 0 { 3 } else if is_g2 != 0 { 2 } else if is_g1 != 0 { 1 } else { 0 };
+    let group = if is_g3 != 0 {
+        3
+    } else if is_g2 != 0 {
+        2
+    } else if is_g1 != 0 {
+        1
+    } else {
+        0
+    };
 
     // ── Field extraction ──────────────────────────────────────────────────────
-    let dst = (b5 << 2) | (b4 << 1) | b3;     // bits 5–3
-    let src = (b2 << 2) | (b1 << 1) | b0;     // bits 2–0
-    let alu_op = dst;                           // group-2: ALU op = bits 5–3
-    let reg_pair = (b5 << 1) | b4;             // bits 5–4
+    let dst = (b5 << 2) | (b4 << 1) | b3; // bits 5–3
+    let src = (b2 << 2) | (b1 << 1) | b0; // bits 2–0
+    let alu_op = dst; // group-2: ALU op = bits 5–3
+    let reg_pair = (b5 << 1) | b4; // bits 5–4
 
     // ── HLT detection: opcode 0x76 = 0b01110110 ──────────────────────────────
     // b7=0 b6=1 b5=1 b4=1 b3=0 b2=1 b1=1 b0=0
@@ -162,24 +170,40 @@ pub fn decode(opcode: u8) -> Decoded {
 fn extra_bytes(opcode: u8, is_g0: u8, is_g3: u8) -> u8 {
     if is_g0 != 0 {
         // LXI rp,d16 — pattern 00rp0001
-        if (opcode & 0x0F) == 0x01 { return 2; }
+        if (opcode & 0x0F) == 0x01 {
+            return 2;
+        }
         // MVI r,d8 — pattern 00ddd110 (src=6), but not HLT (0x76)
-        if (opcode & 0x07) == 0x06 && opcode != 0x76 { return 1; }
+        if (opcode & 0x07) == 0x06 && opcode != 0x76 {
+            return 1;
+        }
         // LDA (0x3A), STA (0x32), LHLD (0x2A), SHLD (0x22)
-        if matches!(opcode, 0x3A | 0x32 | 0x2A | 0x22) { return 2; }
+        if matches!(opcode, 0x3A | 0x32 | 0x2A | 0x22) {
+            return 2;
+        }
         return 0;
     }
     if is_g3 != 0 {
         // Unconditional JMP (0xC3), CALL (0xCD) → 3 bytes
-        if matches!(opcode, 0xC3 | 0xCD) { return 2; }
+        if matches!(opcode, 0xC3 | 0xCD) {
+            return 2;
+        }
         // Conditional JMP: Ccc010 pattern
-        if (opcode & 0xC7) == 0xC2 { return 2; }
+        if (opcode & 0xC7) == 0xC2 {
+            return 2;
+        }
         // Conditional CALL: Ccc100 pattern
-        if (opcode & 0xC7) == 0xC4 { return 2; }
+        if (opcode & 0xC7) == 0xC4 {
+            return 2;
+        }
         // IN (0xDB), OUT (0xD3) → 2 bytes
-        if matches!(opcode, 0xDB | 0xD3) { return 1; }
+        if matches!(opcode, 0xDB | 0xD3) {
+            return 1;
+        }
         // Immediate ALU: ADI/ACI/SUI/SBI/ANI/XRI/ORI/CPI → low 3 bits = 110
-        if (opcode & 0x07) == 0x06 { return 1; }
+        if (opcode & 0x07) == 0x06 {
+            return 1;
+        }
         return 0;
     }
     // Groups 1 (MOV) and 2 (ALU register) are all 1-byte
