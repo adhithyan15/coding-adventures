@@ -1465,6 +1465,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — equal branches of a runtime conditional may participate
+    // inside exact integer snapshot arithmetic while the branch still lowers.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer gate, n, saved; n := (if gate = 0 then 40 else 40) + 2; saved := n; n := 9; output(saved + 0.5) end",
+        expect: Expect::Stdout("42.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a runtime condition may preserve assignment metadata when
     // both independently proven branches have exactly the same value. The
     // condition still lowers and executes; only the path-independent snapshot
@@ -7759,6 +7768,29 @@ fn algol_conditional_exponent_metadata_runs_on_every_available_standard_backend(
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but conditional exponent metadata did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_integer_subexpressions_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("if gate = 0 then 40 else 40")
+        })
+        .expect("the ALGOL conditional-integer-subexpression program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional integer metadata did not run"
             );
             continue;
         };

@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.270.0 - 2026-08-27 (ALGOL conditional integer subexpressions)
+
+The ALGOL matrix now proves on all seven standard backends that equal branches
+of a runtime conditional can participate inside exact integer snapshot
+arithmetic without removing the runtime branch.
+
 ## 0.269.0 - 2026-08-27 (preserve wide JVM decimal intermediates)
 
 The JVM scalar concretization pass now keeps a module on its `i64`/Java `long`
