@@ -20,9 +20,27 @@ function record(value: unknown, label: string): Record<string, unknown> {
   return value as Record<string, unknown>;
 }
 
-/** Parse and shape-check `core/sound-tags.json` at the filesystem boundary. */
+function exactKeys(
+  value: Record<string, unknown>,
+  expected: readonly string[],
+  label: string,
+): void {
+  const actual = Object.keys(value).sort();
+  const wanted = [...expected].sort();
+  if (
+    actual.length !== wanted.length ||
+    actual.some((key, index) => key !== wanted[index])
+  ) {
+    throw new Error(
+      `sound-tag registry: ${label} must contain exactly: ${wanted.join(", ")}`,
+    );
+  }
+}
+
+/** Parse and shape-check the reconstructed sound-tag registry. */
 export function parseSoundTagRegistry(value: unknown): SoundTagRegistry {
   const root = record(value, "root");
+  exactKeys(root, ["version", "tracks"], "root");
   if (root.version !== 1) {
     throw new Error("sound-tag registry: version must be 1");
   }

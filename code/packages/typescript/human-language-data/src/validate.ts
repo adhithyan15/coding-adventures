@@ -65,7 +65,7 @@ export function validate(input: ValidateInput): Issue[] {
         if (!missingSoundTracks.has(r.language)) {
           err(
             "missing-sound-tag-track",
-            `${r.language}: lessons use sounds tags but core/sound-tags.json has no track`,
+            `${r.language}: lessons use sounds tags but core/sound-tags.d has no track owner`,
           );
           missingSoundTracks.add(r.language);
         }

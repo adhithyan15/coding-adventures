@@ -55,6 +55,7 @@ The machine-readable layer alongside the tracks is:
 core/languages.json             complete active-language registry and default mix order
 core/spine.d/*.json             ordered, language-independent can-do spine: one file per node
 core/book-generation.d/*/*.json chapter, backmatter, and script-set book declarations
+core/sound-tags.d/<language>.json authored pronunciation vocabulary, one owner per language
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 core/lesson-modality/*.json     generated per-language voice/sight/pen and chapter prefixes
 core/generated-book-hashes/<language>.d/ generated book hashes, one JSON owner per chapter
@@ -116,6 +117,13 @@ npm run check:shards    # rebuilds in memory; fails if an aggregate returns
 
 Edit only the owning shard. A resurrected monolith is ignored by readers and
 therefore fails CI.
+
+The closed lesson `sounds:` vocabulary is also shard-only. `_meta.json` owns
+the stable registry version, while `core/sound-tags.d/<language>.json` owns one
+track's sorted tags and repeats the language identity inside the record. The
+loader requires the exact filename set from `core/languages.json` before it
+opens owner bytes, so deleting a language owner cannot silently shrink the
+vocabulary. There is no `core/sound-tags.json` compatibility aggregate.
 
 Generated Class-B figures live beside the book that consumes them under
 `<language>/book/figures/`. The data package renders them from canonical lesson

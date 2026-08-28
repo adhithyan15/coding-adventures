@@ -109,6 +109,14 @@ import {
   readGeneratedBookHashManifest,
   readGeneratedNarrationHashManifest,
 } from "./generated-hash-shards.js";
+import {
+  assertSoundTagRegistryLanguages,
+  readSoundTagRegistryOwners,
+  serializeSoundTagRegistry,
+  soundTagOwnerContents,
+  type SoundTagOwnerReadOptions,
+} from "./sound-tag-shards.js";
+import type { SoundTagRegistry } from "./sound-tags.js";
 
 /**
  * What happens to `X.json` once `X.d/` exists.
@@ -228,7 +236,7 @@ export interface ShardPlan {
    */
   readonly grouping?: ShardGrouping;
   /** Bespoke owner projection for a ledger whose stable identity is not an ordinal. */
-  readonly projection?: "book-generation";
+  readonly projection?: "book-generation" | "sound-tags";
   /** What becomes of `X.json` once `X.d/` exists. See `MonolithDisposition`. */
   readonly monolith: MonolithDisposition;
 }
@@ -492,6 +500,14 @@ export const PERSO_ARABIC_SCRIPT_PLAN = scriptInventoryPlan("perso-arabic");
 export const TAMIL_SCRIPT_PLAN = scriptInventoryPlan("tamil");
 export const URDU_NASTALIQ_SCRIPT_PLAN = scriptInventoryPlan("urdu-nastaliq");
 
+/** One authored owner per registered language, plus stable version metadata. */
+export const SOUND_TAG_PLAN: ShardPlan = {
+  path: "core/sound-tags.json",
+  sections: [],
+  projection: "sound-tags",
+  monolith: "removed",
+};
+
 /** Ledgers HL21 has migrated so far. Grows one entry per follow-on PR. */
 export const SHARD_PLANS: readonly ShardPlan[] = [
   {
@@ -507,6 +523,7 @@ export const SHARD_PLANS: readonly ShardPlan[] = [
   ...CHAPTER_SHARDED_TRACKS.map(chaptersPlan),
   ...CURRICULUM_SHARDED_TRACKS.map(curriculumPlan),
   BOOK_GENERATION_PLAN,
+  SOUND_TAG_PLAN,
   JAPANESE_SCRIPT_PLAN,
   PERSO_ARABIC_SCRIPT_PLAN,
   TAMIL_SCRIPT_PLAN,
@@ -843,6 +860,11 @@ export function shardContents(
       document as unknown as BookGenerationDocument,
     );
   }
+  if (plan.projection === "sound-tags") {
+    return soundTagOwnerContents(
+      document as unknown as SoundTagRegistry,
+    );
+  }
   if (plan.grouping !== undefined)
     return groupedShardContents(document, plan, plan.grouping);
 
@@ -1030,6 +1052,15 @@ export function unshardContents(root: string, plan: ShardPlan): string {
   if (plan.projection === "book-generation") {
     return serialize(readBookGenerationOwners(root).document);
   }
+  if (plan.projection === "sound-tags") {
+    return serializeSoundTagRegistry(
+      readSoundTagRegistryOwners(root, {
+        expectedLanguages: loadLanguageRegistry(root).languages.map(
+          (language) => language.id,
+        ),
+      }),
+    );
+  }
   const monolith = safeLedgerPath(root, plan.path);
   const shards = readShards(monolith);
   if (shards === null) {
@@ -1073,6 +1104,10 @@ function assertShardable(
     bookGenerationOwnerContents(
       document as unknown as BookGenerationDocument,
     );
+    return;
+  }
+  if (plan.projection === "sound-tags") {
+    soundTagOwnerContents(document as unknown as SoundTagRegistry);
     return;
   }
   if (Object.hasOwn(document, KEY_ORDER_FIELD)) {
@@ -1168,6 +1203,66 @@ function installBookGenerationProjection(
   }
 }
 
+function installSoundTagProjection(
+  root: string,
+  destination: string,
+  contents: ReadonlyMap<string, string>,
+  expectedRegistry: SoundTagRegistry,
+  expectedLanguages: readonly string[],
+): { written: string[]; stagingRoot: string } {
+  const destinationStat = statIfPresent(destination);
+  if (
+    destinationStat !== undefined &&
+    (destinationStat.isSymbolicLink() || !destinationStat.isDirectory())
+  ) {
+    throw new Error(
+      `sound-tag owner directory '${destination}' must be a real directory`,
+    );
+  }
+
+  const stagingRoot = mkdtempSync(join(root, ".sound-tags-stage-"));
+  const staged = join(stagingRoot, "core", "sound-tags.d");
+  mkdirSync(staged, { recursive: true });
+  const written: string[] = [];
+  try {
+    for (const [name, body] of contents) {
+      writeFileSync(join(staged, name), body, { encoding: "utf8", flag: "wx" });
+      written.push(name);
+    }
+    const options: SoundTagOwnerReadOptions = {
+      expectedLanguages,
+      rejectMonolith: true,
+      requireCanonicalBytes: true,
+    };
+    const stagedRegistry = readSoundTagRegistryOwners(stagingRoot, options);
+    if (
+      serializeSoundTagRegistry(stagedRegistry) !==
+      serializeSoundTagRegistry(expectedRegistry)
+    ) {
+      throw new Error(
+        `core/sound-tags.json: staged direct owners do not reconstruct the source aggregate`,
+      );
+    }
+
+    if (destinationStat !== undefined) {
+      const backup = join(stagingRoot, "previous-sound-tags.d");
+      renameSync(destination, backup);
+      try {
+        renameSync(staged, destination);
+      } catch (cause) {
+        renameSync(backup, destination);
+        throw cause;
+      }
+    } else {
+      renameSync(staged, destination);
+    }
+    return { written, stagingRoot };
+  } catch (cause) {
+    rmSync(stagingRoot, { recursive: true, force: true });
+    throw cause;
+  }
+}
+
 /**
  * Split a monolith into its `.d/` directory.
  *
@@ -1207,6 +1302,14 @@ export function shardLedger(root: string, plan: ShardPlan): string[] {
       );
     }
     legacyBookGenerationDirectory = true;
+  }
+  if (plan.projection === "sound-tags" && isSharded(monolith)) {
+    if (statIfPresent(monolith) !== undefined) {
+      throw new Error(
+        `${plan.path}: a resurrected aggregate cannot overwrite canonical direct owners; ` +
+          `move its edits into ${shardDirectoryFor(plan.path)} and remove it`,
+      );
+    }
   }
   // A `"removed"` ledger has no monolith to read once it has been migrated, so
   // say that plainly instead of letting `readLedgerFile` report ENOENT on a
@@ -1263,6 +1366,33 @@ export function shardLedger(root: string, plan: ShardPlan): string[] {
     // The aggregate remains until the validated owner tree is installed. If
     // this cleanup fails, both representations survive and `--check` loudly
     // rejects the aggregate; no authored data was deleted before replacement.
+    if (statIfPresent(monolith) !== undefined) {
+      assertRealFile(monolith);
+      rmSync(monolith);
+    }
+    rmSync(installation.stagingRoot, { recursive: true, force: true });
+    return installation.written;
+  }
+  if (plan.projection === "sound-tags") {
+    const registry = document as unknown as SoundTagRegistry;
+    const expectedLanguages = loadLanguageRegistry(root).languages.map(
+      (language) => language.id,
+    );
+    assertSoundTagRegistryLanguages(registry, expectedLanguages);
+    assertRealFile(monolith);
+    const sourceBytes = readFileSync(monolith, "utf8");
+    if (sourceBytes !== serializeSoundTagRegistry(registry)) {
+      throw new Error(
+        `${plan.path}: source aggregate is not canonical, so byte-preserving migration is impossible`,
+      );
+    }
+    const installation = installSoundTagProjection(
+      root,
+      dir,
+      contents,
+      registry,
+      expectedLanguages,
+    );
     if (statIfPresent(monolith) !== undefined) {
       assertRealFile(monolith);
       rmSync(monolith);
