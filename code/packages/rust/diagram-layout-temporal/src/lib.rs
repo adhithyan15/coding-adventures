@@ -12,7 +12,7 @@
 //! place commit nodes and merge arcs.
 
 use diagram_ir::{
-    DiagramDirection, GanttDateFormat, GanttDateFormatPart, GitCommitSymbol, GitCommitType, GitDiagram, GitEvent, JourneyDiagram,
+    DiagramDirection, GanttDateFormat, GanttDateFormatPart, GanttDisplayMode, GitCommitSymbol, GitCommitType, GitDiagram, GitEvent, JourneyDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalInteraction, LayoutedTemporalItem, TaskEnd, TaskStart,
     TemporalBody, TemporalDiagram,
 };
@@ -805,6 +805,7 @@ fn layout_gantt(
 
     let mut vertical_markers = Vec::new();
     let mut vertical_marker_ids = BTreeSet::new();
+    let compact = diagram.config.display_mode == GanttDisplayMode::Compact;
     // Sections and tasks.
     for section in &diagram.sections {
         if let Some(ref lbl) = section.label {
@@ -814,6 +815,8 @@ fn layout_gantt(
             });
             y += section_height;
         }
+        let section_tasks_y = y;
+        let mut compact_lane_ends: Vec<f64> = Vec::new();
         for task in &section.tasks {
             let task_height = multiline_height(&task.label, TASK_H, 14.0);
             let start_day = starts.get(&task.id).copied().unwrap_or(t_min) - t_min;
@@ -829,17 +832,30 @@ fn layout_gantt(
                         task.link.clone(),
                         task.callback.clone(),
                         task.callback_args.clone(),
-                    ));
+                ));
                 }
                 continue;
             }
+            let task_y = if compact {
+                let end_day = start_day + elapsed_duration;
+                let lane = compact_lane_ends.iter().position(|end| start_day >= *end)
+                    .unwrap_or(compact_lane_ends.len());
+                if lane == compact_lane_ends.len() {
+                    compact_lane_ends.push(end_day);
+                } else {
+                    compact_lane_ends[lane] = end_day;
+                }
+                section_tasks_y + lane as f64 * (TASK_H + TASK_GAP)
+            } else {
+                y
+            };
             if task.tags.milestone {
                 items.push(LayoutedTemporalItem::MilestoneMarker {
-                    x: bx, y: y + task_height / 2.0, tags: task.tags.clone(), label: task.label.clone(),
+                    x: bx, y: task_y + task_height / 2.0, tags: task.tags.clone(), label: task.label.clone(),
                 });
             } else {
                 items.push(LayoutedTemporalItem::TaskBar {
-                    x: bx, y, width: bw, height: task_height,
+                    x: bx, y: task_y, width: bw, height: task_height,
                     tags: task.tags.clone(),
                     label: task.label.clone(),
                 });
@@ -847,13 +863,18 @@ fn layout_gantt(
             if task.link.is_some() || task.callback.is_some() {
                 interactions.push(LayoutedTemporalInteraction {
                     task_id: task.id.clone(),
-                    bounds: (bx, y, bw.max(16.0), task_height),
+                    bounds: (bx, task_y, bw.max(16.0), task_height),
                     link: task.link.clone(),
                     callback: task.callback.clone(),
                     callback_args: task.callback_args.clone(),
                 });
             }
-            y += task_height + TASK_GAP;
+            if !compact {
+                y += task_height + TASK_GAP;
+            }
+        }
+        if compact {
+            y += compact_lane_ends.len() as f64 * (TASK_H + TASK_GAP);
         }
     }
 
@@ -1749,6 +1770,29 @@ mod tests {
         assert!(layout.items.iter().any(|item| matches!(
             item, LayoutedTemporalItem::TimeAxisTick { label_above: false, .. }
         )));
+    }
+
+    #[test]
+    fn gantt_compact_mode_reuses_non_overlapping_section_lanes() {
+        let mut diagram = simple_gantt();
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.config.display_mode = GanttDisplayMode::Compact;
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        let ys = layout.items.iter().filter_map(|item| match item {
+            LayoutedTemporalItem::TaskBar { y, .. } => Some(*y),
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(ys.len(), 2);
+        assert_eq!(ys[0], ys[1]);
+
+        let TemporalBody::Gantt(gantt) = &mut diagram.body else { unreachable!() };
+        gantt.sections[0].tasks[1].start = gantt.sections[0].tasks[0].start.clone();
+        let overlapping = layout_temporal_diagram(&diagram, 800.0);
+        let ys = overlapping.items.iter().filter_map(|item| match item {
+            LayoutedTemporalItem::TaskBar { y, .. } => Some(*y),
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert_ne!(ys[0], ys[1]);
     }
 
     #[test]
