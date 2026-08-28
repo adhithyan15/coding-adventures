@@ -36,13 +36,7 @@ let evaluateToolchainSnapshot
     (scheduledPackages: IReadOnlyList<string>)
     (forcedToolchains: IReadOnlyList<string>)
     =
-    ToolchainDetection.EvaluateSnapshot(
-        platform,
-        forceFull,
-        packages,
-        scheduledPackages,
-        forcedToolchains
-    )
+    ToolchainDetection.EvaluateSnapshot(platform, forceFull, packages, scheduledPackages, forcedToolchains)
 
 [<EntryPoint>]
 let main argv =

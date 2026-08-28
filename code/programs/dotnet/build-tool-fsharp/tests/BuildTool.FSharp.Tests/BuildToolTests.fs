@@ -146,7 +146,10 @@ let ``toolchain detection matches every shared conformance fixture through F sha
         else
             Assert.Empty(actual.Toolchains)
             Assert.Empty(expected.GetProperty("result").EnumerateObject())
-            let expectedDiagnostic = expected.GetProperty("diagnostics").EnumerateArray() |> Seq.exactlyOne
+
+            let expectedDiagnostic =
+                expected.GetProperty("diagnostics").EnumerateArray() |> Seq.exactlyOne
+
             let actualDiagnostic = Assert.Single(actual.Diagnostics)
             Assert.Equal(expectedDiagnostic.GetProperty("code").GetString(), actualDiagnostic.Code)
             Assert.Equal(expectedDiagnostic.GetProperty("severity").GetString(), actualDiagnostic.Severity)
