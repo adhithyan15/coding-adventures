@@ -4619,6 +4619,18 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("7"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — deterministic transcendental builtins (VM-016).
+    // The exact-value inputs separate frontend dispatch from floating-point
+    // approximation: SIN(0)=0, COS(0)=1, LOG(1)=0, and EXP(0)=1. Each spelling
+    // must reach its distinct shared AL8 IIR op, and the resulting four lines
+    // run through BA7 formatting on all seven standard backends.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 PRINT SIN(0)\n20 PRINT COS(0)\n30 PRINT LOG(1)\n40 PRINT EXP(0)\n50 END\n",
+        expect: Expect::Stdout("0\n1\n0\n1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — `INT` (floor) built-in (LANG-FULL BA-builtins).
     // INT(X) = ⌊X⌋, returned as a real.  Lowers to real_to_int_floor +
     // int_to_real (both E8 ops).  INT(3.7) → 3.0, printed as `3`.

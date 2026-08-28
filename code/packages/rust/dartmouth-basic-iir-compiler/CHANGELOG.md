@@ -1,5 +1,16 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## [0.38.0] — 2026-08-28 (deterministic transcendental builtins)
+
+`SIN`, `COS`, `LOG`, and `EXP` now lower directly to the shared `f64_sin`,
+`f64_cos`, `f64_ln`, and `f64_exp` IIR operations. Dartmouth `LOG` retains its
+natural-logarithm meaning. All four operations were already implemented by the
+seven standard backends, so this closes the frontend gap without adding a new
+runtime ABI or backend-specific path.
+
+`RND` remains separate: portable randomness needs an explicit seed and
+repeatability contract rather than being conflated with deterministic math.
+
 ## [0.37.0] — 2026-07-10 (LANG-FULL E4-dyn — E4d-BA-arr: BASIC string arrays)
 
 `DIM A$(n)` string arrays now lower to the shared E5 aggregate substrate carrying
