@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e411e61a0e42f98e",
+  "sourceHash": "fnv1a64:9bf7027d1fe20599",
   "lessons": [
     {
       "id": "IT-C07-giorni-1",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:b8ffb24763d86e84",
+      "sourceHash": "fnv1a64:4438599e8f2b7661",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:9a91f1d6dace1834",
+      "sourceHash": "fnv1a64:e15b4b918f73cdf5",
       "notice": {
         "modality": "sight",
         "needs": [

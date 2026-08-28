@@ -5,15 +5,19 @@
     {
       "language": "italian",
       "chapter": 2,
-      "sourceHash": "fnv1a64:16f4c96995eed5af",
+      "sourceHash": "fnv1a64:85e1ee27d63559db",
       "lessonIds": [
         "IT-C02-prego",
+        "IT-C02-prego-go-ahead",
+        "IT-C02-prego-here-you-are",
+        "IT-C02-prego-come-again",
         "IT-C02-come",
         "IT-C02-stare",
         "IT-C02-come-stai",
         "IT-C02-come-sta",
         "IT-C02-come-va",
         "IT-C02-cosi-cosi",
+        "IT-C02-non-ce-male",
         "IT-C02-practice"
       ],
       "tex": "italian/book/chapters/ch02-how-are-you.tex"
@@ -21,7 +25,7 @@
     {
       "language": "italian",
       "chapter": 3,
-      "sourceHash": "fnv1a64:8d3d0e2730f3d0ac",
+      "sourceHash": "fnv1a64:31898bd4820a6171",
       "lessonIds": [
         "IT-C03-io",
         "IT-C03-mi-chiamo",
@@ -34,7 +38,7 @@
     {
       "language": "italian",
       "chapter": 4,
-      "sourceHash": "fnv1a64:a284207b767d3740",
+      "sourceHash": "fnv1a64:be30b04ecffa8e52",
       "lessonIds": [
         "IT-C04-arrivederci",
         "IT-C04-a-domani",
@@ -47,7 +51,7 @@
     {
       "language": "italian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:0596b890e045c368",
+      "sourceHash": "fnv1a64:00c623becfc1883b",
       "lessonIds": [
         "IT-C05-parlare",
         "IT-C05-abitare",
@@ -60,7 +64,7 @@
     {
       "language": "italian",
       "chapter": 6,
-      "sourceHash": "fnv1a64:b1ad69ff5fd80687",
+      "sourceHash": "fnv1a64:ea76fa2794ca2791",
       "lessonIds": [
         "IT-C06-numeri-1-5",
         "IT-C06-numeri-6-10"
@@ -70,7 +74,7 @@
     {
       "language": "italian",
       "chapter": 7,
-      "sourceHash": "fnv1a64:a209e03a899e2a50",
+      "sourceHash": "fnv1a64:f57c62b8fac9d0f7",
       "lessonIds": [
         "IT-C07-giorni-1",
         "IT-C07-giorni-2"
@@ -80,7 +84,7 @@
     {
       "language": "italian",
       "chapter": 8,
-      "sourceHash": "fnv1a64:cfe7fe329f6da535",
+      "sourceHash": "fnv1a64:087885552d8aa7a4",
       "lessonIds": [
         "IT-C08-ora",
         "IT-C08-mezzogiorno-mezzanotte"
@@ -90,7 +94,7 @@
     {
       "language": "italian",
       "chapter": 9,
-      "sourceHash": "fnv1a64:006037dc0c5378bb",
+      "sourceHash": "fnv1a64:47ee8445e9e6b019",
       "lessonIds": [
         "IT-C09-mesi",
         "IT-C09-stagioni"
@@ -100,7 +104,7 @@
     {
       "language": "italian",
       "chapter": 10,
-      "sourceHash": "fnv1a64:80269505a9d96956",
+      "sourceHash": "fnv1a64:edfbd547f7ef2a44",
       "lessonIds": [
         "IT-C10-genitori",
         "IT-C10-fratello-sorella"
@@ -110,7 +114,7 @@
     {
       "language": "italian",
       "chapter": 11,
-      "sourceHash": "fnv1a64:a6d727c9c1ff9da3",
+      "sourceHash": "fnv1a64:f5693284c4d671be",
       "lessonIds": [
         "IT-C11-pane",
         "IT-C11-acqua-vino"
@@ -120,7 +124,7 @@
     {
       "language": "italian",
       "chapter": 12,
-      "sourceHash": "fnv1a64:7658a727a5dd7531",
+      "sourceHash": "fnv1a64:80b1554fd2cf8868",
       "lessonIds": [
         "IT-C12-numeri-11-16",
         "IT-C12-numeri-17-20"
@@ -130,7 +134,7 @@
     {
       "language": "italian",
       "chapter": 13,
-      "sourceHash": "fnv1a64:e901c12ea0b5f7db",
+      "sourceHash": "fnv1a64:98ae575fd9c0a1be",
       "lessonIds": [
         "IT-C13-nero-bianco",
         "IT-C13-rosso-blu"
@@ -140,7 +144,7 @@
     {
       "language": "italian",
       "chapter": 14,
-      "sourceHash": "fnv1a64:69eb58a60251751b",
+      "sourceHash": "fnv1a64:66514ac82fd9d570",
       "lessonIds": [
         "IT-C14-avere",
         "IT-C14-eta"
@@ -150,7 +154,7 @@
     {
       "language": "italian",
       "chapter": 15,
-      "sourceHash": "fnv1a64:fc012ec218893c1f",
+      "sourceHash": "fnv1a64:88430bd49466d29d",
       "lessonIds": [
         "IT-C15-passato-prossimo",
         "IT-C15-passato-remoto"
@@ -160,7 +164,7 @@
     {
       "language": "italian",
       "chapter": 16,
-      "sourceHash": "fnv1a64:0f5faff137d3cd32",
+      "sourceHash": "fnv1a64:f5b5749d658db006",
       "lessonIds": [
         "IT-C16-essere",
         "IT-C16-essere-stato",
@@ -172,7 +176,7 @@
     {
       "language": "italian",
       "chapter": 17,
-      "sourceHash": "fnv1a64:647d07d5ef1de615",
+      "sourceHash": "fnv1a64:38fbb7d3e9c236bd",
       "lessonIds": [
         "IT-C17-testa",
         "IT-C17-mano"
@@ -182,7 +186,7 @@
     {
       "language": "italian",
       "chapter": 18,
-      "sourceHash": "fnv1a64:fc854473dbf94440",
+      "sourceHash": "fnv1a64:3ae006c8d50dfd6f",
       "lessonIds": [
         "IT-C18-pensare",
         "IT-C18-capire",
@@ -194,7 +198,7 @@
     {
       "language": "italian",
       "chapter": 19,
-      "sourceHash": "fnv1a64:161081713c61031c",
+      "sourceHash": "fnv1a64:04b83a8cd684a4a7",
       "lessonIds": [
         "IT-C19-prendere",
         "IT-C19-chiedere",
@@ -206,7 +210,7 @@
     {
       "language": "italian",
       "chapter": 20,
-      "sourceHash": "fnv1a64:716c7815a2869728",
+      "sourceHash": "fnv1a64:ca470d1004a7ad26",
       "lessonIds": [
         "IT-C20-portare",
         "IT-C20-comprare",
@@ -218,7 +222,7 @@
     {
       "language": "italian",
       "chapter": 21,
-      "sourceHash": "fnv1a64:19d25bda021d06cb",
+      "sourceHash": "fnv1a64:e28479285826ccf7",
       "lessonIds": [
         "IT-C21-giocare",
         "IT-C21-ottenere",
@@ -229,7 +233,7 @@
     {
       "language": "italian",
       "chapter": 22,
-      "sourceHash": "fnv1a64:39b3f86269bab280",
+      "sourceHash": "fnv1a64:cc65b1cd09bf85ef",
       "lessonIds": [
         "IT-C22-caffe",
         "IT-C22-te",
@@ -241,7 +245,7 @@
     {
       "language": "italian",
       "chapter": 23,
-      "sourceHash": "fnv1a64:5aa5b0eb8af311c6",
+      "sourceHash": "fnv1a64:9c586999e1d4d5ce",
       "lessonIds": [
         "IT-C23-amico-amica",
         "IT-C23-famiglia",
@@ -253,7 +257,7 @@
     {
       "language": "italian",
       "chapter": 24,
-      "sourceHash": "fnv1a64:d666110adeca9700",
+      "sourceHash": "fnv1a64:a4eb113cfc3cec34",
       "lessonIds": [
         "IT-C24-cuore",
         "IT-C24-occhio",
@@ -265,7 +269,7 @@
     {
       "language": "italian",
       "chapter": 25,
-      "sourceHash": "fnv1a64:a1871a19968da040",
+      "sourceHash": "fnv1a64:c277ec60087059ec",
       "lessonIds": [
         "IT-C25-naso",
         "IT-C25-stomaco",

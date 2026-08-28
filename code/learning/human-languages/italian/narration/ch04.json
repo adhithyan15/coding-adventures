@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ca5f394581f1d56b",
+  "sourceHash": "fnv1a64:534f394f345fb8a4",
   "lessons": [
     {
       "id": "IT-C04-arrivederci",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0700f74c0056643",
+      "sourceHash": "fnv1a64:d62cd0da69d000bb",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc941c1f87d03f42",
+      "sourceHash": "fnv1a64:7f3ac78bbeddf185",
       "notice": null,
       "blocks": [
         {
@@ -305,7 +305,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0173d636bb9ca50",
+      "sourceHash": "fnv1a64:7cf771c00652fa71",
       "notice": null,
       "blocks": [
         {
@@ -434,7 +434,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c20e7102d5095a8a",
+      "sourceHash": "fnv1a64:8c9adcc556323bc5",
       "notice": null,
       "blocks": [
         {
@@ -564,7 +564,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eaaa02873a656579",
+      "sourceHash": "fnv1a64:4b60e63bf699d1e6",
       "notice": null,
       "blocks": [
         {

@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-ETYMON-COME-TI-CHIAMI-02]
 introduces:
   knowledge: [IT-SOUND-PIACERE-02, IT-ETYMON-PIACERE-03, IT-GRAMMAR-PIACERE-04]
+introduces_idioms: [IT-IDIOM-PIACERE-MEETING-FORMULA-01]
+introduces_senses: []
+introduces_culture_claims: [IT-CULTURE-PIACERE-MEETING-GESTURE-01]
 practises:
   knowledge: [IT-ETYMON-COME-TI-CHIAMI-02, IT-SOUND-PIACERE-02, IT-ETYMON-PIACERE-03, IT-GRAMMAR-PIACERE-04]
 skills: [listening, speaking, reading]

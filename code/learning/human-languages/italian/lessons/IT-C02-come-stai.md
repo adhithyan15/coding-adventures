@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04, IT-SOUND-COME-02, IT-ETYMON-COME-03]
 introduces:
   knowledge: [IT-ETYMON-COME-STAI-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04, IT-SOUND-COME-02, IT-ETYMON-COME-03, IT-ETYMON-COME-STAI-02]
 skills: [listening, speaking, reading]

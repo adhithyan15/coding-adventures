@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-LEX-NASO-02, IT-ETYMON-NASO-03, IT-LEX-STOMACO-02, IT-ETYMON-STOMACO-03, IT-LEX-BOCCA-02, IT-LEX-CUORE-02]
 introduces:
   knowledge: [IT-LEX-GOLA-02, IT-ETYMON-GOLA-03, IT-NOTICE-GOLA-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-LEX-NASO-02, IT-ETYMON-NASO-03, IT-LEX-STOMACO-02, IT-ETYMON-STOMACO-03, IT-LEX-BOCCA-02, IT-LEX-CUORE-02, IT-LEX-GOLA-02, IT-ETYMON-GOLA-03, IT-NOTICE-GOLA-04]
 skills: [listening, speaking, reading]

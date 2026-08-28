@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-ETYMON-PANE-02, IT-LEX-PRENDERE-02, IT-LEX-MI-PIACE-02, IT-LEX-PARLO-ITALIANO-02, IT-LEX-PARLO-ITALIANO-03]
 introduces:
   knowledge: [IT-LEX-CAFFE-02, IT-ETYMON-CAFFE-03, IT-NOTICE-CAFFE-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [IT-CULTURE-CAFFE-ESPRESSO-DEFAULT-01]
 practises:
   knowledge: [IT-ETYMON-PANE-02, IT-LEX-PRENDERE-02, IT-LEX-MI-PIACE-02, IT-LEX-PARLO-ITALIANO-02, IT-LEX-PARLO-ITALIANO-03, IT-LEX-CAFFE-02, IT-ETYMON-CAFFE-03, IT-NOTICE-CAFFE-04]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03]
 skills: [listening, speaking, reading]
@@ -33,8 +36,8 @@ reviews_of: [IT-C01-grazie]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The *grazie* lesson already promised you this word. Someone says
-**grazie**; you reply **prego**. Like German *bitte*, it's a small word that does
-several jobs — and it comes straight from **praying**.
+**grazie**; you reply **prego**. Hold that one exchange first. Later lessons
+will add the word's other jobs one at a time.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[IT-SOUND-PREGO-02]; assesses=[] -->
@@ -57,15 +60,9 @@ That root **prec-** ("pray, entreat") gives English a surprising family:
 - **deprecate** ("pray *away*, ward off") and **imprecation** ("a prayer
   *against* — a curse").
 
-Like German **bitte**, *prego* stretches across situations, all of them a form
-of "I pray you":
+For now, keep one complete turn:
 
-| you say *prego* when… | it means |
-|---|---|
-| answering *grazie* | **you're welcome** |
-| offering a seat / letting someone pass | **please, go ahead / after you** |
-| handing something over | **here you are** |
-| you didn't catch it | **sorry, come again?** |
+> **Grazie. — Prego.** — "Thank you. — You're welcome."
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03] -->
@@ -78,6 +75,6 @@ of "I pray you":
 <!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-PREGO-02, IT-ETYMON-PREGO-03] -->
 
 [PAUSE 3s] What verb is *prego* the "I" form of? (*pregare*, "to pray.") What
-English word means "held by prayer" and so "unstable"? (*Precarious*.) Which
-German word does *prego* behave like? (*bitte* — one word, many courtesies.)
-Next: **come**, "how."
+English word means "held by prayer" and so "unstable"? (*Precarious*.) What do
+you answer after **grazie**? (**Prego.**) Next, add one more use without losing
+this one.

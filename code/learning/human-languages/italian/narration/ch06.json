@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e98372b21a44469a",
+  "sourceHash": "fnv1a64:b02330f2e6d4a61c",
   "lessons": [
     {
       "id": "IT-C06-numeri-1-5",
@@ -20,7 +20,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:2e3db6f2ef1d7557",
+      "sourceHash": "fnv1a64:d566605e6e7dc462",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:c5f4da1a711d185c",
+      "sourceHash": "fnv1a64:a9c631deb4cc84cd",
       "notice": {
         "modality": "sight",
         "needs": [

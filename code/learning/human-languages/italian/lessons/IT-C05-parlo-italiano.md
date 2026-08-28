@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04]
 introduces:
   knowledge: [IT-LEX-PARLO-ITALIANO-02, IT-LEX-PARLO-ITALIANO-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04, IT-LEX-PARLO-ITALIANO-02, IT-LEX-PARLO-ITALIANO-03]
 skills: [listening, speaking, reading]

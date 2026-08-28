@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-ETYMON-COME-STAI-02]
 introduces:
   knowledge: [IT-GRAMMAR-COME-STA-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [IT-CULTURE-LEI-FORMAL-ADDRESS-01]
 practises:
   knowledge: [IT-ETYMON-COME-STAI-02, IT-GRAMMAR-COME-STA-02]
 skills: [listening, speaking, reading]

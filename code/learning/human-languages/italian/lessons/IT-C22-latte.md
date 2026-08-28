@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-LEX-TE-02, IT-ETYMON-TE-03, IT-NOTICE-TE-04]
 introduces:
   knowledge: [IT-LEX-LATTE-02, IT-ETYMON-LATTE-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-LEX-TE-02, IT-ETYMON-TE-03, IT-NOTICE-TE-04, IT-LEX-LATTE-02, IT-ETYMON-LATTE-03]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-ETYMON-FRATELLO-SORELLA-02]
 introduces:
   knowledge: [IT-ETYMON-PANE-02, IT-ETYMON-PANE-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-ETYMON-FRATELLO-SORELLA-02, IT-ETYMON-PANE-02, IT-ETYMON-PANE-03]
 skills: [listening, speaking, reading]

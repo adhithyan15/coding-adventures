@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-GRAMMAR-PENSARE-04, IT-GRAMMAR-PARLARE-04, IT-ETYMON-TESTA-04]
 introduces:
   knowledge: [IT-LEX-CAPIRE-02, IT-ETYMON-CAPIRE-03, IT-GRAMMAR-CAPIRE-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-GRAMMAR-PENSARE-04, IT-GRAMMAR-PARLARE-04, IT-ETYMON-TESTA-04, IT-LEX-CAPIRE-02, IT-ETYMON-CAPIRE-03, IT-GRAMMAR-CAPIRE-04]
 skills: [listening, speaking, reading]

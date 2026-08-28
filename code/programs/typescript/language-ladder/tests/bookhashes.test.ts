@@ -321,7 +321,7 @@ describe("generated book source hashes", () => {
   );
 
   it.each([
-    [2, 8],
+    [2, 12],
     [3, 5],
     [4, 5],
     [5, 5],

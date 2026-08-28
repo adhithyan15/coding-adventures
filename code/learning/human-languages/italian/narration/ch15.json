@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Two Italian Pasts",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:50843bd9598574f7",
+  "sourceHash": "fnv1a64:afee5d08617a82c8",
   "lessons": [
     {
       "id": "IT-C15-passato-prossimo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7df067937bdc8ef",
+      "sourceHash": "fnv1a64:29b808ba7a19c3ca",
       "notice": null,
       "blocks": [
         {
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87e175498a57b50c",
+      "sourceHash": "fnv1a64:171fae4e477283da",
       "notice": null,
       "blocks": [
         {

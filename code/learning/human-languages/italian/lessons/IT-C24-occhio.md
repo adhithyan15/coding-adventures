@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-LEX-CUORE-02, IT-ETYMON-CUORE-03, IT-NOTICE-CUORE-04, IT-LEX-PERSONA-02, IT-GRAMMAR-PERSONA-04, IT-LEX-NOME-02, IT-NOTICE-NOME-04]
 introduces:
   knowledge: [IT-LEX-OCCHIO-02, IT-ETYMON-OCCHIO-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-LEX-CUORE-02, IT-ETYMON-CUORE-03, IT-NOTICE-CUORE-04, IT-LEX-PERSONA-02, IT-GRAMMAR-PERSONA-04, IT-LEX-NOME-02, IT-NOTICE-NOME-04, IT-LEX-OCCHIO-02, IT-ETYMON-OCCHIO-03]
 skills: [listening, speaking, reading]

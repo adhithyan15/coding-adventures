@@ -18,6 +18,9 @@ requires:
   knowledge: [IT-LEX-AMICO-AMICA-02, IT-ETYMON-AMICO-AMICA-03, IT-GRAMMAR-AMICO-AMICA-04]
 introduces:
   knowledge: [IT-LEX-FAMIGLIA-02, IT-ETYMON-FAMIGLIA-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [IT-LEX-AMICO-AMICA-02, IT-ETYMON-AMICO-AMICA-03, IT-GRAMMAR-AMICO-AMICA-04, IT-LEX-FAMIGLIA-02, IT-ETYMON-FAMIGLIA-03]
 skills: [listening, speaking, reading]
