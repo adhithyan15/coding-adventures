@@ -96,6 +96,10 @@ describe("MIME detection", () => {
     expect(detectMimeType("x.bin", new TextEncoder().encode("0000ftypisom"))).toBe("video/mp4");
     expect(detectMimeType("x.bin", new TextEncoder().encode(" <?xml version='1.0'?><svg/>")))
       .toBe("image/svg+xml");
+    expect(detectMimeType("x.bin", new TextEncoder().encode("\uFEFF<!-- one --><!-- two -->\n<SVG viewBox='0 0 1 1'>")))
+      .toBe("image/svg+xml");
+    expect(detectMimeType("x.bin", new TextEncoder().encode(`<!--${"<!---->".repeat(100)}--><not-svg>`)))
+      .toBe("application/octet-stream");
   });
 
   it("falls back to a case-insensitive extension and then octet-stream", () => {
