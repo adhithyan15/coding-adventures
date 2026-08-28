@@ -89,6 +89,10 @@ li {
   margin-bottom: 0.25rem;
 }
 
+img {
+  max-width: 100%;
+}
+
 @media (prefers-color-scheme: dark) {
   body, main {
     color: #e5e7eb;
@@ -137,20 +141,26 @@ shape laid out in the FM00 spec:</p>
 <code>ContentSource</code>.</li>
 <li><strong><code>forme-parse-markdown</code></strong> split off the frontmatter you see above,
 parsed the body as GFM, and emitted a <code>ContentNode</code>.</li>
+<li><strong><code>forme-resolve-asset-refs-fs</code></strong> discovered the local diagram below,
+assigned its stable logical identity, and preserved its fragment target.</li>
 <li><strong><code>forme-router</code></strong> assigned one canonical route, then fanned the
 routed node out to the page and collection branches.</li>
 <li><strong><code>forme-collect-chronological</code></strong> sorted this and the other posts
 by date while preserving that canonical route.</li>
 <li><strong><code>forme-render-static</code></strong> matched the reusable classless Style IR theme,
 recorded <code>usedStyle</code>, compiled the page slice through the AOT path, and
-emitted a <code>RenderedPage</code>.</li>
-<li><strong><code>forme-emit-fs</code></strong> wrote the result to <code>dist/</code> and emitted a
-<code>DeployArtifact</code>.</li>
+emitted a <code>RenderedPage</code> with an asset placeholder.</li>
+<li><strong><code>forme-load-assets-fs</code></strong> loaded and hashed the SVG bytes while enforcing
+canonical storage-root containment.</li>
+<li><strong><code>forme-emit-site-fs</code></strong> joined the rendered page and asset streams,
+replaced the placeholder with a fingerprinted public URL, copied the SVG,
+and recorded it in the <code>DeployArtifact</code> manifest.</li>
 </ol>
+<p><img src="/coding-adventures/blog/assets/forme-pipeline.72ffee2452eee26dbb2457bb00401bb5ab2abfb903f2d9da1a0cd710fabfa8e5.svg#pipeline" alt="Forme turns source content into reusable IR and many output surfaces." /></p>
 <p>The point isn't the post — it's that everything between the parser
 and the deployer is <em>plug-compatible</em>. Want a different theme?
 Pass a different resolved <code>StyleDocument</code>; the renderer does not change.
-Want to ship to S3 instead of disk? Replace <code>forme-emit-fs</code>. The rest of
+Want to ship to S3 instead of disk? Replace <code>forme-emit-site-fs</code>. The rest of
 the DAG stays put.</p>
 <blockquote>
 <p>One pipeline, many surfaces. That's the Forme bet.</p>
