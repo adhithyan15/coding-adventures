@@ -1,10 +1,11 @@
 {
   "language": "portuguese",
   "chapter": 22,
-  "sourceHash": "fnv1a64:e2b121520b2ba435",
+  "sourceHash": "fnv1a64:85b57c889f48126f",
   "lessonIds": [
     "PT-C22-responder",
     "PT-C22-encontrar",
+    "PT-C22-encontrar-meet",
     "PT-C22-jogar-brincar-tocar"
   ],
   "tex": "portuguese/book/chapters/ch22-answering-meeting-playing.tex"

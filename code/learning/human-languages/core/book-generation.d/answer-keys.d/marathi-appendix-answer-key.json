@@ -1,0 +1,6 @@
+{
+  "language": "marathi",
+  "output": "marathi/book/chapters/appendix-answer-key.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

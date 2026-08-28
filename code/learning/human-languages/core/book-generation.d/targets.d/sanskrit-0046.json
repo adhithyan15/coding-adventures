@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 46,
+  "output": "sanskrit/book/chapters/ch46-sun-and-shade.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

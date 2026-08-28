@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e76e77a13fe3855a",
+  "sourceHash": "fnv1a64:7e425a335bd8e04d",
   "lessons": [
     {
       "id": "PT-C05-falar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9142f96e86f2df49",
+      "sourceHash": "fnv1a64:574af1f2d3828ae2",
       "notice": null,
       "blocks": [
         {
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d828ba686501d94c",
+      "sourceHash": "fnv1a64:fffb4fd05f791e67",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +337,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ec7af1dc5f87985",
+      "sourceHash": "fnv1a64:af4bede84c0cbe24",
       "notice": null,
       "blocks": [
         {
@@ -487,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cc2b0d894096c3b",
+      "sourceHash": "fnv1a64:d434c449f02a2cbe",
       "notice": null,
       "blocks": [
         {
@@ -637,7 +637,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4afa69ed94e21dae",
+      "sourceHash": "fnv1a64:f8a1b837676f71fd",
       "notice": null,
       "blocks": [
         {

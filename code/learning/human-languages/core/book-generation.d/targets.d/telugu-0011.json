@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 11,
+  "output": "telugu/book/chapters/ch11-colours.tex",
+  "scriptSet": "telugu-comparisons"
+}

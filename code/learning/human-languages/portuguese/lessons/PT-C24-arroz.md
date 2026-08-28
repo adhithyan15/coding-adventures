@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-OVO-02, PT-ETYMON-OVO-03]
 introduces:
   knowledge: [PT-LEX-ARROZ-02, PT-ETYMON-ARROZ-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-OVO-02, PT-ETYMON-OVO-03, PT-LEX-ARROZ-02, PT-ETYMON-ARROZ-03, PT-ETYMON-VERMELHO-AZUL-03]
 skills: [listening, speaking, reading]

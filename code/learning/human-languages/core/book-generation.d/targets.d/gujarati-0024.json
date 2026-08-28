@@ -1,0 +1,7 @@
+{
+  "language": "gujarati",
+  "chapter": 24,
+  "output": "gujarati/book/chapters/ch24-first-three-places.tex",
+  "unicodeScript": "Gujarati",
+  "scriptCommand": "gu"
+}

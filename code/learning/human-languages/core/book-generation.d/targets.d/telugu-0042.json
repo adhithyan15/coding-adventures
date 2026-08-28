@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 42,
+  "output": "telugu/book/chapters/ch42-describing-things.tex",
+  "scriptSet": "telugu-comparisons"
+}

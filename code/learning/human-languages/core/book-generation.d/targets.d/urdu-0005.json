@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 5,
+  "output": "urdu/book/chapters/ch05-take-leave.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 7,
+  "output": "sanskrit/book/chapters/ch07-core-verbs.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

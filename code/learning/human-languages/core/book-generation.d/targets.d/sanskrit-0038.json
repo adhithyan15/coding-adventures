@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 38,
+  "output": "sanskrit/book/chapters/ch38-fire-and-stone.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

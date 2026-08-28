@@ -170,6 +170,8 @@ Pinned lifecycle fixtures also gate participant and actor creation, destruction,
 and create-then-destroy ordering through dynamic headers, footers, and lifelines.
 Pinned note fixtures cover left, right, centered, and ordered participant-pair
 placements through resolved note bounds and backend-neutral Paint geometry.
+Pinned activation fixtures gate explicit, suffix-based, and nested activation
+stacks, including upstream rejection of deactivation underflow.
 Both single-line accessibility statements and multiline `accDescr` blocks
 lower to PaintScene metadata.
 Newlines and semicolons are interchangeable sequence statement terminators,

@@ -78,6 +78,7 @@ jobs:
       needs_perl: ${{ steps.toolchains.outputs.needs_perl }}
       needs_dart: ${{ steps.toolchains.outputs.needs_dart }}
       needs_haskell: ${{ steps.toolchains.outputs.needs_haskell }}
+      needs_ocaml: ${{ steps.toolchains.outputs.needs_ocaml }}
       needs_dotnet: ${{ steps.toolchains.outputs.needs_dotnet }}
       needs_java: ${{ steps.toolchains.outputs.needs_java }}
       needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
@@ -327,6 +328,7 @@ jobs:
               'needs_perl=true' \
               'needs_dart=true' \
               'needs_haskell=true' \
+              'needs_ocaml=true' \
               'needs_dotnet=true' >> "$GITHUB_OUTPUT"
             printf '%s\n' \
               'needs_java=true' \
@@ -347,6 +349,7 @@ jobs:
               'needs_perl=${{ steps.detect.outputs.needs_perl }}' \
               'needs_dart=${{ steps.detect.outputs.needs_dart }}' \
               'needs_haskell=${{ steps.detect.outputs.needs_haskell }}' \
+              'needs_ocaml=${{ steps.detect.outputs.needs_ocaml }}' \
               'needs_dotnet=${{ steps.detect.outputs.needs_dotnet }}' >> "$GITHUB_OUTPUT"
             printf '%s\n' \
               'needs_java=${{ steps.detect.outputs.needs_java }}' \

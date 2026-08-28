@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 3,
-  "sourceHash": "fnv1a64:a2cd3c5b3556d9b7",
+  "sourceHash": "fnv1a64:7a4d396535d73c14",
   "lessonIds": [
     "PT-C03-eu",
     "PT-C03-me-chamo",
@@ -14,6 +14,6 @@
   "text": "portuguese/narration/ch03.txt",
   "json": "portuguese/narration/ch03.json",
   "textHash": "fnv1a64:87481ae18c63b798",
-  "jsonHash": "fnv1a64:e76cb5011bbb6cb0",
+  "jsonHash": "fnv1a64:ee6fc7d3e01105e4",
   "findings": []
 }

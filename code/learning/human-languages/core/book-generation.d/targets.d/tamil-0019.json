@@ -1,0 +1,6 @@
+{
+  "language": "tamil",
+  "chapter": 19,
+  "output": "tamil/book/chapters/ch19-age.tex",
+  "scriptSet": "tamil-comparisons"
+}

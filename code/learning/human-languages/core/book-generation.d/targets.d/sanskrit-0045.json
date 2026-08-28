@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 45,
+  "output": "sanskrit/book/chapters/ch45-times-of-the-day.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

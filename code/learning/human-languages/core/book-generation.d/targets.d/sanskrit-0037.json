@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 37,
+  "output": "sanskrit/book/chapters/ch37-more-courtesy.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

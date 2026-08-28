@@ -16,6 +16,9 @@ requires:
   knowledge: [PT-PHONO-OLA-01, PT-ETYMON-OLA-02, PT-PRAGMATIC-OLA-03]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-PHONO-OLA-01, PT-ETYMON-OLA-02, PT-PRAGMATIC-OLA-03]
 skills: [reading, writing]

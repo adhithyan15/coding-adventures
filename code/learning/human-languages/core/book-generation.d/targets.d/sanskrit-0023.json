@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 23,
+  "output": "sanskrit/book/chapters/ch23-kinship.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 8,
-  "sourceHash": "fnv1a64:bcad5cb560fb13f6",
+  "sourceHash": "fnv1a64:1130d3126e93a47a",
   "lessonIds": [
     "PT-C08-hora",
     "PT-C08-meio-dia-meia-noite"
@@ -11,6 +11,6 @@
   "text": "portuguese/narration/ch08.txt",
   "json": "portuguese/narration/ch08.json",
   "textHash": "fnv1a64:821b48a77fb7a281",
-  "jsonHash": "fnv1a64:c555ff61e1aefd6e",
+  "jsonHash": "fnv1a64:6a5a76e81a4d0d04",
   "findings": []
 }

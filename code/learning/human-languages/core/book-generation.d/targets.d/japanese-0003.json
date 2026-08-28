@@ -1,0 +1,6 @@
+{
+  "language": "japanese",
+  "chapter": 3,
+  "output": "japanese/book/chapters/ch03-thanks.tex",
+  "scriptSet": "japanese-main"
+}

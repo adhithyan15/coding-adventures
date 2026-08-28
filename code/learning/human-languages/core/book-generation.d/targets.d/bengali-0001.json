@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 1,
+  "output": "bengali/book/chapters/ch01-greetings.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 23,
+  "output": "telugu/book/chapters/ch23-day.tex",
+  "scriptSet": "telugu-comparisons"
+}

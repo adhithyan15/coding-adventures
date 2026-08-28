@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 60,
+  "output": "telugu/book/chapters/ch60-animals.tex",
+  "scriptSet": "telugu-comparisons"
+}

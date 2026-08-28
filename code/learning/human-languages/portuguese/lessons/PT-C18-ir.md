@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-TER-HAVER-02, PT-ETYMON-SER-ROOTS-02]
 introduces:
   knowledge: [PT-LEX-IR-02, PT-ETYMON-IR-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-TER-HAVER-02, PT-ETYMON-SER-ROOTS-02, PT-LEX-IR-02, PT-ETYMON-IR-03]
 skills: [listening, speaking, reading]

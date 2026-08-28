@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b049ba0d513a814b",
+  "sourceHash": "fnv1a64:706b9a9010923573",
   "lessons": [
     {
       "id": "PT-C19-pensar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:022d6eed8b617498",
+      "sourceHash": "fnv1a64:bbcc12df639b2783",
       "notice": null,
       "blocks": [
         {
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da9952c537a9bc43",
+      "sourceHash": "fnv1a64:f5101a65a2419f3e",
       "notice": null,
       "blocks": [
         {
@@ -320,7 +320,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cb73323fccfa24f",
+      "sourceHash": "fnv1a64:d7dc8d7cd3aac9aa",
       "notice": null,
       "blocks": [
         {
@@ -469,7 +469,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83015b006049d677",
+      "sourceHash": "fnv1a64:c1b149106c91bf9e",
       "notice": null,
       "blocks": [
         {

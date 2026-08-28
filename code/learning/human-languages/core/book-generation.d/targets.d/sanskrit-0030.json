@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 30,
+  "output": "sanskrit/book/chapters/ch30-welcoming-a-guest.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

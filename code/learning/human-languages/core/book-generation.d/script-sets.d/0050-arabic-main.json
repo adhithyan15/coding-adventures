@@ -1,0 +1,10 @@
+[
+  {
+    "unicodeScript": "Arabic",
+    "scriptCommand": "ar"
+  },
+  {
+    "unicodeScript": "Hebrew",
+    "scriptCommand": "he"
+  }
+]

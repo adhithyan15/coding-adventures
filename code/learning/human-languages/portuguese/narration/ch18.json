@@ -3,8 +3,8 @@
   "language": "portuguese",
   "chapter": 18,
   "title": "Verbs at the Core",
-  "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:4c8c2a31c3bfd7fb",
+  "drivablePrefix": 9,
+  "sourceHash": "fnv1a64:386822e6d2fb2e47",
   "lessons": [
     {
       "id": "PT-C18-ser-estar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6280fefbd37ea75",
+      "sourceHash": "fnv1a64:70923ff7140f2464",
       "notice": null,
       "blocks": [
         {
@@ -157,17 +157,17 @@
     {
       "id": "PT-C18-ter-haver",
       "sequence": 610,
-      "title": "ter / haver — the verb that took the job",
+      "title": "ter and há — have, and there is",
       "headword": "ter / haver",
       "romanization": "ter / haver",
-      "gloss": "to have — the verb that took the job, and the one it pushed aside",
+      "gloss": "to have, and there is",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49979a10a3a6ec74",
+      "sourceHash": "fnv1a64:9b1a5b2f48ca0f41",
       "notice": null,
       "blocks": [
         {
@@ -183,54 +183,45 @@
             },
             {
               "kind": "speech",
-              "text": "Portuguese has two candidates for \"to have.\" Only one of them does the everyday work; the other kept a single very useful shape."
+              "text": "You already know ter, “to have.” Today you will add one small, high-frequency shape from haver: há, “there is” or “there are.”"
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: What each one does now",
+          "title": "You'll want to know: Two short patterns",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "ter — the working verb",
-                "haver — what is left of it"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "ter — the working verb: tenho, tens, tem, temos, têm. haver — what is left of it: há, and little else.",
-                "ter — the working verb: Tenho pão. — I have bread. haver — what is left of it: Há pão. — There is bread."
-              ]
+              "kind": "speech",
+              "text": "Tenho pão. — I have bread. Há pão. — There is bread."
             },
             {
               "kind": "speech",
-              "text": "Há never changes for number: há um livro, há dois livros — \"there is,\" \"there are.\" It also measures elapsed time: há três anos means \"three years ago.\""
+              "text": "Use ter when someone has something. Use há when something exists or is present. Há does not change before a plural:"
             },
             {
               "kind": "speech",
-              "text": "Ter que plus an infinitive is how Portuguese states obligation: Tenho que falar com ele — \"I have to speak with him.\""
+              "text": "Há um livro. — There is one book. Há dois livros. — There are two books."
             },
             {
               "kind": "speech",
-              "text": "And here is the divergence worth naming. Portuguese builds its compound past on ter: tenho falado. Spanish keeps its haber for that job: he hablado. Two languages, the same two inherited verbs, opposite winners."
+              "text": "That is enough for today: tenho points to an owner; há points to what is there."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: the family haver left behind",
+          "title": "The word, taken apart: a small family story",
           "segments": [
             {
               "kind": "speech",
-              "text": "haver from Latin habēre, \"to have, to hold.\" Portuguese demoted the verb, but English is stuffed with its relatives: habit (habitus, \"what one has on\"), inhabit, habitat, exhibit (ex-, \"to hold out\"), prohibit (pro-, \"to hold in front of\"), able and ability (habilis, \"easy to handle\") — and, through dē plus habēre, \"to have from someone,\" the words debt, debit, and due."
+              "text": "Haver comes from Latin habēre, “to have.” English habit, inhabit and habitat belong to that family. Portuguese gradually gave most everyday “have” work to ter, but kept há for existence."
             },
             {
               "kind": "speech",
-              "text": "Now the trap. English have is not a descendant of habēre, however much the two look alike. It is Germanic, from an older root meaning \"to seize\" — the same root that gave Latin capere and so English capture and capable. A resemblance can be pure coincidence, and this is the famous one."
+              "text": "English have only looks related to habēre: it comes from a different, Germanic family."
             }
           ]
         },
@@ -248,38 +239,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tenho, tens, tem, temos, têm\"",
+              "instruction": "“I have bread” — Tenho pão.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tenho, tens, tem, temos, têm\"]"
+              "source": "[YOU SAY: “I have bread” — **Tenho pão.**]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tenho pão\", \"Há pão\"",
+              "instruction": "“There is bread” — Há pão.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tenho pão\" · \"Há pão\"]"
+              "source": "[YOU SAY: “There is bread” — **Há pão.**]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tenho que falar com ele\"",
+              "instruction": "“There are two books” — Há dois livros.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tenho que falar com ele\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the habēre family — \"habit, inhabit, able, debt\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the *habēre* family — \"habit · inhabit · able · debt\"]"
+              "source": "[YOU SAY: “There are two books” — **Há dois livros.**]"
             }
           ]
         },
@@ -296,7 +278,241 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb carries everyday \"have\"? (Ter.) What is left of haver? (Há — \"there is,\" \"there are,\" and \"ago.\") How do you say \"I have to speak\"? (Tenho que falar.) Which verb does Spanish use to build its compound past? (Haber — Portuguese uses ter.) Is English have related to habēre? (No — a coincidence.) Next: going."
+              "text": "Which verb says that someone has something? (Ter.) Which fixed shape says “there is” or “there are”? (Há.) Say “There are two books.” (Há dois livros.) Next, you will reuse há for one new meaning."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C18-ha-time-ago",
+      "sequence": 612,
+      "title": "há três anos — three years ago",
+      "headword": "há três anos",
+      "romanization": "há três anos",
+      "gloss": "three years ago",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6461c650c80be122",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know há as “there is.” Add one nearby meaning: before a length of time, há can mean “ago.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: One reusable frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "há três anos — three years ago há dois dias — two days ago."
+            },
+            {
+              "kind": "speech",
+              "text": "Build it as há + amount of time. Keep há fixed; the number and time word tell you how far back to look."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the frame slowly: há … três … anos. Then say it as one small unit: há três anos."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“two days ago” — há dois dias",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “two days ago” — **há dois dias**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“three years ago” — há três anos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “three years ago” — **há três anos**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "Does há change? (No.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: Does **há** change? (**No.**)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What comes after há in this pattern? (An amount of time.) Say “three years ago.” (Há três anos.) You have added one meaning without mixing it into the earlier existence lesson."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C18-ter-que",
+      "sequence": 614,
+      "title": "ter que — to have to",
+      "headword": "ter que",
+      "romanization": "ter que",
+      "gloss": "to have to",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4c86e2c733765d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know tenho, “I have.” Add que and a verb to express one obligation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: One reusable frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tenho que falar. — I have to speak."
+            },
+            {
+              "kind": "speech",
+              "text": "Build it in three pieces:"
+            },
+            {
+              "kind": "speech",
+              "text": "tenho — I have."
+            },
+            {
+              "kind": "speech",
+              "text": "que — the link."
+            },
+            {
+              "kind": "speech",
+              "text": "falar — to speak."
+            },
+            {
+              "kind": "speech",
+              "text": "Only ter changes with the person. The following action stays in its dictionary form: temos que falar, “we have to speak.”"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“I have to speak” — Tenho que falar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “I have to speak” — **Tenho que falar.**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“We have to speak” — Temos que falar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “We have to speak” — **Temos que falar.**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "Does falar change here? (No.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: Does **falar** change here? (**No.**)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Complete the frame: tenho … falar. (Que.) Say “We have to speak.” (Temos que falar.) One new construction, practised in one small step."
             }
           ]
         }
@@ -315,7 +531,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f107891d41421a8e",
+      "sourceHash": "fnv1a64:107a7d5a7d081b87",
       "notice": null,
       "blocks": [
         {
@@ -472,7 +688,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:421e6ad4cbc0253e",
+      "sourceHash": "fnv1a64:2e85a3a7ab3a1cc5",
       "notice": null,
       "blocks": [
         {
@@ -625,7 +841,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ee9217699dedf09",
+      "sourceHash": "fnv1a64:bff1d4499dfaa806",
       "notice": null,
       "blocks": [
         {
@@ -782,7 +998,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c977c7d335aaebaf",
+      "sourceHash": "fnv1a64:8ab176140f5d1b9c",
       "notice": null,
       "blocks": [
         {
@@ -935,7 +1151,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00842329cad02770",
+      "sourceHash": "fnv1a64:6103ca51eae35e55",
       "notice": null,
       "blocks": [
         {

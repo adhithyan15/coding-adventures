@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [PT-SOUND-TUDO-02, PT-ETYMON-TUDO-03, PT-GRAMMAR-TUDO-04]
+introduces_idioms: []
+introduces_senses: [PT-SENSE-TUDO-ALL-01]
+introduces_culture_claims: [PT-CULTURE-TUDO-BEM-BRAZILIAN-OPENER-01]
 practises:
   knowledge: [PT-SOUND-TUDO-02, PT-ETYMON-TUDO-03, PT-GRAMMAR-TUDO-04]
 skills: [listening, speaking, reading]

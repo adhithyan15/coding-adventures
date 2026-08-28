@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 11,
-  "sourceHash": "fnv1a64:45ea90ec38957e5b",
+  "sourceHash": "fnv1a64:d1dda65508a8e580",
   "lessonIds": [
     "PT-C11-pao",
     "PT-C11-agua-vinho"
@@ -11,6 +11,6 @@
   "text": "portuguese/narration/ch11.txt",
   "json": "portuguese/narration/ch11.json",
   "textHash": "fnv1a64:e94ca107cea67c19",
-  "jsonHash": "fnv1a64:8b338d24729aa8c4",
+  "jsonHash": "fnv1a64:7515015831ded3ce",
   "findings": []
 }

@@ -623,3 +623,23 @@ func TestDiscoverSkipsSpecificationFixtureTrees(t *testing.T) {
 		t.Errorf("expected python/pkg-a, got %s", packages[0].Name)
 	}
 }
+
+func TestDiscoverOCamlPackagesAndProgramsButNotFixtures(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"packages/ocaml/graph/BUILD":                    "opam exec -- dune build\n",
+		"programs/ocaml/graph-cli/BUILD":                "opam exec -- dune build\n",
+		"specs/fixtures/scaffold-generator/ocaml/BUILD": "opam exec -- dune build\n",
+		"packages/ocaml/generated/_build/decoy/BUILD":   "echo generated\n",
+	})
+
+	packages := mustDiscoverPackages(t, root)
+	if len(packages) != 2 {
+		t.Fatalf("expected package and program only, got %d: %#v", len(packages), packages)
+	}
+	if packages[0].Name != "ocaml/graph" || packages[0].Language != "ocaml" {
+		t.Fatalf("unexpected OCaml package identity: %#v", packages[0])
+	}
+	if packages[1].Name != "ocaml/programs/graph-cli" || packages[1].Language != "ocaml" {
+		t.Fatalf("unexpected OCaml program identity: %#v", packages[1])
+	}
+}

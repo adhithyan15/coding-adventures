@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 7,
+  "output": "telugu/book/chapters/ch07-numbers-1-10.tex",
+  "scriptSet": "telugu-comparisons"
+}

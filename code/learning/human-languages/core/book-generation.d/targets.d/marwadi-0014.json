@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 14,
+  "output": "marwadi/book/chapters/ch14-three-places.tex",
+  "scriptSet": "marwadi-main"
+}

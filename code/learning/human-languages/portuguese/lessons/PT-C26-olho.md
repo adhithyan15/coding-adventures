@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-MULHER-02, PT-ETYMON-VERMELHO-AZUL-02]
 introduces:
   knowledge: [PT-LEX-OLHO-02, PT-ETYMON-OLHO-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-MULHER-02, PT-ETYMON-VERMELHO-AZUL-02, PT-LEX-OLHO-02, PT-ETYMON-OLHO-03, PT-SOUND-CABECA-02, PT-GRAMMAR-MAO-04, PT-LEX-MAO-02, PT-LEX-HOMEM-02, PT-NOTICE-C25-PESSOAS-04]
 skills: [listening, speaking, reading]

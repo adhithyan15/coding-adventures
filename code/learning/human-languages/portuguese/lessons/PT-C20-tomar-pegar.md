@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-ESCREVER-02, PT-LEX-TER-HAVER-02]
 introduces:
   knowledge: [PT-LEX-TOMAR-PEGAR-02, PT-ETYMON-TOMAR-PEGAR-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [PT-CULTURE-PEGAR-OBJECT-PATTERN-01]
 practises:
   knowledge: [PT-LEX-ESCREVER-02, PT-LEX-TER-HAVER-02, PT-LEX-TOMAR-PEGAR-02, PT-ETYMON-TOMAR-PEGAR-03]
 skills: [listening, speaking, reading]

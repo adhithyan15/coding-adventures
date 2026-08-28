@@ -769,7 +769,7 @@ func run() int {
 
 // allToolchains is the canonical list of build toolchains we may need in CI.
 // The order is stable and matches the order used in CI setup.
-var allToolchains = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "dart", "java", "kotlin", "haskell", "dotnet", "cpp"}
+var allToolchains = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "dart", "java", "kotlin", "haskell", "ocaml", "dotnet", "cpp"}
 
 func toolchainForPackageLanguage(language string) string {
 	switch language {

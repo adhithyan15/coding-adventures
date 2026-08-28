@@ -33,12 +33,28 @@
     {
       "id": "note-right-of-participant",
       "source": "sequenceDiagram\nparticipant Alice\nNote right of Alice: Alice thinks"
+    },
+    {
+      "id": "explicit-participant-activation",
+      "source": "sequenceDiagram\nAlice-->>Bob:Hello Bob, how are you?\nactivate Bob\nBob-->>Alice:Hello Alice, I'm fine and  you?\ndeactivate Bob"
+    },
+    {
+      "id": "inline-participant-activation",
+      "source": "sequenceDiagram\nAlice-->>+Bob:Hello Bob, how are you?\nBob-->>- Alice:Hello Alice, I'm fine and  you?"
+    },
+    {
+      "id": "stacked-participant-activations",
+      "source": "sequenceDiagram\nAlice-->>+Bob:Hello Bob, how are you?\nBob-->>+Carol:Carol, let me introduce Alice?\nBob-->>- Alice:Hello Alice, please meet Carol?\nCarol->>- Bob:Oh Bob, I'm so happy to be here!"
     }
   ],
   "invalid": [
     {
       "id": "participant-config-missing-colon",
       "source": "sequenceDiagram\nparticipant C@{ \"type\" \"control\" }\nC ->> C: action"
+    },
+    {
+      "id": "participant-activation-underflow",
+      "source": "sequenceDiagram\nparticipant user as End User\nparticipant Server as Server\nparticipant System as System\nparticipant System2 as System2\nuser->>+Server: Test\nuser->>+Server: Test2\nuser->>System: Test\nServer->>-user: Test\nServer->>-user: Test2\nServer->>-user: Test3"
     }
   ]
 }

@@ -23,7 +23,13 @@ P006B3 slice adds 1,085 DFF-backed controller/API bits: eight controller status
 banks, bounded selector commands, condition branches, ready-event latches,
 special X-group 32 vectoring/return, and BRU target inhibition. Its 13 new tests
 bring the combined suite to 46 tests and 84.92% core line coverage
-(1,650/1,943). P006C adds the separate AAU datapaths and final full-family audit.
+(1,650/1,943). P006C completes the model with 167 AAU DFFs: separate 40-bit
+AX/BX/QX/IX registers, calculation mode and ready state, transient and hold
+alerts, gate-vector fixed and floating add/subtract, partial-product multiply,
+widened-remainder restoring divide, normalization, all exact memory/general/
+status words, and atomic preflight. Fourteen AAU oracle tests bring the combined
+suite to 60 tests, cover 85.61% of core lines (2,190/2,558), and close the final
+full-family differential audit.
 
 Run from `code/packages/rust`:
 

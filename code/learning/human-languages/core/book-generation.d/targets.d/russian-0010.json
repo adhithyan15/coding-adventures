@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 10,
+  "output": "russian/book/chapters/ch10-heart.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

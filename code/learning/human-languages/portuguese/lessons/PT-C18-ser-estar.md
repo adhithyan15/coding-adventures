@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-GRAMMAR-SER-VS-ESTAR-02, PT-ETYMON-SER-ESTAR-MEANING-02]
 introduces:
   knowledge: [PT-LEX-SER-ESTAR-02, PT-ETYMON-SER-ESTAR-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-GRAMMAR-SER-VS-ESTAR-02, PT-ETYMON-SER-ESTAR-MEANING-02, PT-LEX-SER-ESTAR-02, PT-ETYMON-SER-ESTAR-03]
 skills: [listening, speaking, reading]

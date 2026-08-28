@@ -1,0 +1,8 @@
+{
+  "language": "urdu",
+  "title": "Pronunciation & Script Reference",
+  "source": "urdu/pronunciation-reference.md",
+  "output": "urdu/book/chapters/appendix-pronunciation.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 9,
+  "output": "sanskrit/book/chapters/ch09-doing-verbs.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

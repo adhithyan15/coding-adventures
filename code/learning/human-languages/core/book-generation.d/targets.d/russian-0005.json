@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 5,
+  "output": "russian/book/chapters/ch05-verbs-of-the-hand.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

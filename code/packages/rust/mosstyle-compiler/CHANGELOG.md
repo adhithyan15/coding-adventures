@@ -2,6 +2,32 @@
 
 ## [Unreleased]
 
+### Added - `elevation` property, mosstyle's first typed/enum value (#12028 item 1, UI41)
+
+New `elevation: raised | overlay;` property, validated in `validate()`
+against a restricted value set (`VALID_ELEVATION_VALUES`) — the
+compiler's first property with anything other than freeform string
+values. Any other value is a new `ErrorKind::InvalidPropertyValue`
+compile error naming the bad value and the two legal ones, checked in
+both a part's base style and every state override.
+
+No grammar changes were needed: the existing generic `property: value;`
+rule already lexes `raised`/`overlay` as plain `NAME` tokens like any
+other keyword-valued property (`text-align: center;`, etc.) —
+`elevation`'s type-checking is entirely a post-parse semantic check.
+
+Motivation: native shadow primitives (WinUI `ThemeShadow`, Compose
+`Modifier.shadow`, Qt `MultiEffect`) don't take CSS-shaped
+blur/spread/color/opacity parameters the way `box-shadow` does, and
+every real `box-shadow` usage in this codebase already reduces to one
+visual intent ("this part looks raised") expressed as near-identical
+rgba pairs differing only by theme. `elevation` states that intent
+directly instead of having every native backend re-infer it from a CSS
+property that was never designed to carry it. Deliberately additive,
+not a replacement — parts keep their existing `box-shadow:` (still
+drives correct CSS on web backends), `elevation` is the new
+native-semantic-intent channel only native backends read.
+
 ### Added - versioned application token palettes
 
 - Added strict schema-v1 JSON token-palette parsing with global values and

@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Months and Seasons",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:565993042600b26d",
+  "sourceHash": "fnv1a64:ebd86939f62e7889",
   "lessons": [
     {
       "id": "PT-C09-meses",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:61f1e8e8650bebd8",
+      "sourceHash": "fnv1a64:edb745eb91697e5f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -152,7 +152,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7afb2c35ee6edff",
+      "sourceHash": "fnv1a64:028a00015a6349ec",
       "notice": null,
       "blocks": [
         {

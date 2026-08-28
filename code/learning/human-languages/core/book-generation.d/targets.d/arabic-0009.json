@@ -1,0 +1,6 @@
+{
+  "language": "arabic",
+  "chapter": 9,
+  "output": "arabic/book/chapters/ch09-colours.tex",
+  "scriptSet": "arabic-main"
+}

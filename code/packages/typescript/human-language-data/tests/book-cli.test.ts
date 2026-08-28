@@ -12,15 +12,26 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  assertHandwrittenLessonCoverage,
-  generatedBookOutputs,
-  handwrittenBookChapters,
-  loadBookGenerationConfig,
-  runBookGeneration,
+  assertHandwrittenLessonCoverage as assertHandwrittenLessonCoverageImpl,
+  generatedBookOutputs as generatedBookOutputsImpl,
+  handwrittenBookChapters as handwrittenBookChaptersImpl,
+  loadBookGenerationConfig as loadBookGenerationConfigImpl,
+  runBookGeneration as runBookGenerationImpl,
 } from "../src/book-cli.js";
 import { defaultCurriculumRoot, loadTrackChapters } from "../src/loader.js";
 
 const roots: string[] = [];
+const legacyFixture = { allowLegacyMonolith: true } as const;
+const assertHandwrittenLessonCoverage = (root?: string) =>
+  assertHandwrittenLessonCoverageImpl(root, legacyFixture);
+const generatedBookOutputs = (root?: string) =>
+  generatedBookOutputsImpl(root, legacyFixture);
+const handwrittenBookChapters = (root?: string) =>
+  handwrittenBookChaptersImpl(root, legacyFixture);
+const loadBookGenerationConfig = (root: string) =>
+  loadBookGenerationConfigImpl(root, legacyFixture);
+const runBookGeneration = (args?: string[], root?: string) =>
+  runBookGenerationImpl(args, root, legacyFixture);
 
 function fixture(output = "test/book/chapters/ch01-first.tex"): string {
   const root = mkdtempSync(join(tmpdir(), "human-language-book-"));
@@ -97,6 +108,20 @@ Read the [curriculum guide](../guide.md) and the
   );
   return root;
 }
+
+describe("book-generation storage boundary", () => {
+  it("requires an explicit opt-in before reading a legacy monolith fixture", () => {
+    const root = fixture();
+    expect(() => loadBookGenerationConfigImpl(root)).toThrow(/owner directory .* is missing/);
+    expect(loadBookGenerationConfig(root).targets).toHaveLength(1);
+  });
+
+  it("does not hide a dangling owner-directory symlink behind a legacy monolith", () => {
+    const root = fixture();
+    symlinkSync(join(root, "missing-owner-tree"), join(root, "core", "book-generation.d"));
+    expect(() => loadBookGenerationConfig(root)).toThrow(/real owner directory|symbolic link/);
+  });
+});
 
 afterEach(() => {
   vi.restoreAllMocks();

@@ -1,0 +1,6 @@
+{
+  "language": "japanese",
+  "chapter": 2,
+  "output": "japanese/book/chapters/ch02-hiragana-eight.tex",
+  "scriptSet": "japanese-main"
+}

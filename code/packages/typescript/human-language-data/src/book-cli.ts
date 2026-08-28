@@ -15,11 +15,11 @@ import {
   sep,
 } from "node:path";
 import { assertRelativeManifestPath } from "./manifest-path.js";
+import { readLedgerFile } from "./shard.js";
 import {
-  BOOK_GENERATION_GROUPED_KEYS,
-  mergeGroupedShards,
-  readMaybeSharded,
-} from "./shard.js";
+  readBookGenerationOwners,
+  type BookGenerationDocument,
+} from "./book-generation-shards.js";
 import { pathToFileURL } from "node:url";
 import {
   renderBookAnswerKey,
@@ -144,23 +144,43 @@ interface BookGenerationConfig {
   handwritten?: ConfiguredHandwrittenBookChapter[];
 }
 
+export interface BookGenerationLoadOptions {
+  /** Migration-fixture compatibility only; production reads stay shard-native. */
+  allowLegacyMonolith?: boolean;
+}
+
 export const BOOK_HASH_MANIFEST_DIR = GENERATED_BOOK_HASH_DIR;
 
-export function loadBookGenerationConfig(root: string): BookGenerationConfig {
-  // Through the shard reader, not a bare `readFileSync`. This was the only
-  // non-loader read of any of the three HL21 ledgers left in `src/`, and once
-  // `core/book-generation.d/` became the source of truth a direct read of the
-  // monolith would have served this generator a file that is merely DERIVED
-  // from it — correct while `--check` is green and quietly stale the moment it
-  // is not, which is exactly the window `--check` exists to close.
-  const config = readMaybeSharded<BookGenerationConfig>(
-    join(root, "core", "book-generation.json"),
-    (shards) =>
-      mergeGroupedShards(
-        shards,
-        BOOK_GENERATION_GROUPED_KEYS,
-      ) as unknown as BookGenerationConfig,
-  );
+export function loadBookGenerationConfig(
+  root: string,
+  options: BookGenerationLoadOptions = {},
+): BookGenerationConfig {
+  let config: BookGenerationConfig;
+  const ownerDirectory = join(root, "core", "book-generation.d");
+  let ownerDirectoryPresent = true;
+  try {
+    lstatSync(ownerDirectory);
+  } catch (cause) {
+    if ((cause as NodeJS.ErrnoException).code === "ENOENT") {
+      ownerDirectoryPresent = false;
+    } else {
+      throw cause;
+    }
+  }
+  if (ownerDirectoryPresent) {
+    config = readBookGenerationOwners(root)
+      .document as unknown as BookGenerationConfig;
+  } else {
+    // Migration/test compatibility only. The fallback is absent-directory-only:
+    // a malformed, hostile, or incomplete owner tree must fail at the strict
+    // reader above rather than being hidden by an older aggregate.
+    if (options.allowLegacyMonolith !== true) {
+      throw new Error(`book-generation owner directory '${ownerDirectory}' is missing`);
+    }
+    config = readLedgerFile<BookGenerationDocument>(
+      join(root, "core", "book-generation.json"),
+    ) as unknown as BookGenerationConfig;
+  }
   for (const [kind, entries] of [
     ["target", config.targets ?? []],
     ["handwritten chapter", config.handwritten ?? []],
@@ -248,8 +268,9 @@ function safeMarkdownSource(root: string, relative: string): string {
  */
 export function handwrittenBookChapters(
   root = defaultCurriculumRoot(),
+  options: BookGenerationLoadOptions = {},
 ): HandwrittenBookChapter[] {
-  const handwritten = loadBookGenerationConfig(root).handwritten ?? [];
+  const handwritten = loadBookGenerationConfig(root, options).handwritten ?? [];
   const capabilities = chapterCapabilityIndex(root);
   // Nothing here is written today, only read — but `output` is still a path, and the
   // containment rule it has to satisfy is exactly the one `targets[]` already obeys.
@@ -421,19 +442,21 @@ function assertHandwrittenLessonCoverageFrom(
 /** Public audit entry point used by focused tests and maintenance tooling. */
 export function assertHandwrittenLessonCoverage(
   root = defaultCurriculumRoot(),
+  options: BookGenerationLoadOptions = {},
 ): void {
   assertHandwrittenLessonCoverageFrom(
     root,
-    loadBookGenerationConfig(root),
+    loadBookGenerationConfig(root, options),
     loadLessons(root),
   );
 }
 
 export function generatedBookOutputs(
   root = defaultCurriculumRoot(),
+  options: BookGenerationLoadOptions = {},
 ): Map<string, string> {
   const capabilities = chapterCapabilityIndex(root);
-  const config = loadBookGenerationConfig(root);
+  const config = loadBookGenerationConfig(root, options);
   if (config.version !== 1 || config.targets.length === 0) {
     throw new Error(
       "book-generation.json must declare version 1 and at least one target",
@@ -729,6 +752,7 @@ export function generatedBookOutputs(
 export function runBookGeneration(
   args = process.argv.slice(2),
   root = defaultCurriculumRoot(),
+  options: BookGenerationLoadOptions = {},
 ): number {
   const mode = args.length === 1 ? args[0] : undefined;
   if (mode !== "--check" && mode !== "--write") {
@@ -736,7 +760,7 @@ export function runBookGeneration(
     return 2;
   }
   let mismatch = false;
-  const outputs = generatedBookOutputs(root);
+  const outputs = generatedBookOutputs(root, options);
   if (mode === "--check") {
     try {
       assertGeneratedHashOwnerNames(

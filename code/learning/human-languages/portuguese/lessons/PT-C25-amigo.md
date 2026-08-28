@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-SOUND-PRAZER-02, PT-GRAMMAR-PRAZER-04]
 introduces:
   knowledge: [PT-LEX-AMIGO-02, PT-ETYMON-AMIGO-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-SOUND-PRAZER-02, PT-GRAMMAR-PRAZER-04, PT-LEX-AMIGO-02, PT-ETYMON-AMIGO-03, PT-LEX-ARROZ-02, PT-LEX-ACUCAR-02, PT-NOTICE-C24-COMIDA-04]
 skills: [listening, speaking, reading]

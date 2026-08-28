@@ -427,6 +427,17 @@ export {
 } from "./completion-plan.js";
 export { generatedBookOutputs, runBookGeneration } from "./book-cli.js";
 export {
+  BOOK_GENERATION_DIRECTORY,
+  BOOK_GENERATION_SECTION_DIRECTORIES,
+  assertBookGenerationIdentitySets,
+  assertBookGenerationOwnerNames,
+  bookGenerationIdentitySets,
+  bookGenerationOwnerContents,
+  readBookGenerationOwners,
+  type BookGenerationDocument,
+  type BookGenerationIdentitySets,
+} from "./book-generation-shards.js";
+export {
   FIGURE_CONFIG_PATH,
   FIGURE_HASH_MANIFEST_PATH,
   safeFigureOutput,

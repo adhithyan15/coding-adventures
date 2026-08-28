@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 3,
+  "output": "russian/book/chapters/ch03-first-verbs.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

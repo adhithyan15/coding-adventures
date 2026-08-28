@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 16,
+  "output": "telugu/book/chapters/ch16-months.tex",
+  "scriptSet": "telugu-comparisons"
+}

@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-ETYMON-SER-ROOTS-02, PT-LEX-COMO-VAI-ESTA-01, PT-SOUND-MORAR-02, PT-ETYMON-MORAR-03, PT-GRAMMAR-MORAR-04]
 introduces:
   knowledge: [PT-GRAMMAR-SER-VS-ESTAR-02, PT-NOTICE-SER-VS-ESTAR-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-ETYMON-SER-ROOTS-02, PT-LEX-COMO-VAI-ESTA-01, PT-SOUND-MORAR-02, PT-ETYMON-MORAR-03, PT-GRAMMAR-MORAR-04, PT-GRAMMAR-SER-VS-ESTAR-02, PT-NOTICE-SER-VS-ESTAR-03]
 skills: [listening, speaking, reading]

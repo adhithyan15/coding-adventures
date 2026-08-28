@@ -67,7 +67,7 @@ DOT source text
 | `PaintPath`       | Shared flattened fill/stroke GPU meshes                        |
 | `PaintText`       | Requires producer shaping; layout scenes emit glyph runs       |
 | `PaintGlyphRun`   | Ordered CoreText raster texture for `coretext:` fonts          |
-| `PaintLayer`      | Normal layers flatten; isolated filters/blends remain planned  |
+| `PaintLayer`      | Isolated offscreen surfaces, ordered filters, post-filter opacity, and all shared blend modes |
 | `PaintGradient`   | Shared linear/radial texture ramps                             |
 | `PaintImage`      | Ordered textures with affine transform, clip, opacity, scaling |
 
@@ -88,16 +88,19 @@ PaintScene
   ├─ CoreText glyph rasterization
   │    one transparent texture per ordered shaped run
   │
-  └─ Metal render pass
-       textured/solid meshes + nested scissors → RGBA8 readback
+  └─ Metal render and compute passes
+       ordered meshes + nested scissors + ping-pong isolated layers
+       + filter/composite kernels → RGBA8 readback
 ```
 
 `render_with_image_resolver` and
 `render_to_metal_layer_with_image_resolver` accept caller-supplied URI policy.
 The default `render` path remains deterministic and expects decoded
 `PaintImage::Pixels`, as Venture's browser resource pipeline already provides.
-Isolated filtered layers and non-normal blend modes are the remaining ordered
-composition gap and belong in the shared GPU command contract.
+Layer filters execute in declaration order on transparent offscreen textures.
+Composition uses separate source, backdrop, and destination textures so nested
+layers never depend on in-place texture read/write behavior. Metal shader and
+command-buffer failures include the native compiler/runtime diagnostic.
 
 ## font_ref format (PaintText)
 

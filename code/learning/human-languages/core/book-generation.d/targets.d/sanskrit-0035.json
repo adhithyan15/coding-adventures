@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 35,
+  "output": "sanskrit/book/chapters/ch35-in-the-house.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

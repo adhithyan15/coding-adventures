@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04]
 introduces:
   knowledge: [PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04, PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04]
 skills: [listening, speaking, reading]

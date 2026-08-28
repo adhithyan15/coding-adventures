@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-TOMAR-PEGAR-02, PT-ETYMON-TOMAR-PEGAR-03, PT-LEX-GOSTAR-02, PT-ETYMON-GOSTAR-03, PT-GRAMMAR-GOSTAR-DE-04]
 introduces:
   knowledge: [PT-LEX-TRAZER-02, PT-ETYMON-TRAZER-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-TOMAR-PEGAR-02, PT-ETYMON-TOMAR-PEGAR-03, PT-LEX-GOSTAR-02, PT-ETYMON-GOSTAR-03, PT-GRAMMAR-GOSTAR-DE-04, PT-LEX-TRAZER-02, PT-ETYMON-TRAZER-03]
 skills: [listening, speaking, reading]

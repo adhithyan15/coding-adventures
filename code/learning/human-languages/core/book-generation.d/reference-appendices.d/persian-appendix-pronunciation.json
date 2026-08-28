@@ -1,0 +1,8 @@
+{
+  "language": "persian",
+  "title": "Pronunciation & Script Reference",
+  "source": "persian/pronunciation-reference.md",
+  "output": "persian/book/chapters/appendix-pronunciation.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

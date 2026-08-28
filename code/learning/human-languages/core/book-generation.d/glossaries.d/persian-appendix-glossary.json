@@ -1,0 +1,6 @@
+{
+  "language": "persian",
+  "output": "persian/book/chapters/appendix-glossary.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

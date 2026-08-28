@@ -1,8 +1,8 @@
 Portuguese, chapter 18: Verbs at the Core.
-7 lessons. All 7 can be done entirely by ear.
+9 lessons. All 9 can be done entirely by ear.
 
 
-Lesson 1 of 7.
+Lesson 1 of 9.
 ser / estar — one English verb, two Portuguese ones.
 
 Warm-up.
@@ -37,42 +37,93 @@ Wrap-up Recall.
 Which verb names what something is, and which its condition? (Ser; estar.) Which one does Portuguese use for "I am married"? (Ser — sou casado.) What did estar's Latin source mean? ("To stand" — stāre.) Name two English words from it. (State, status, estate, circumstance.) Next: the verb for having.
 
 
-Lesson 2 of 7.
-ter / haver — the verb that took the job.
+Lesson 2 of 9.
+ter and há — have, and there is.
 
 Warm-up.
 [pause 2 seconds]
-Portuguese has two candidates for "to have." Only one of them does the everyday work; the other kept a single very useful shape.
+You already know ter, “to have.” Today you will add one small, high-frequency shape from haver: há, “there is” or “there are.”
 
-You'll want to know: What each one does now.
-[a table of 2 rows, read aloud]
-ter — the working verb: tenho, tens, tem, temos, têm. haver — what is left of it: há, and little else.
-ter — the working verb: Tenho pão. — I have bread. haver — what is left of it: Há pão. — There is bread.
-Há never changes for number: há um livro, há dois livros — "there is," "there are." It also measures elapsed time: há três anos means "three years ago."
-Ter que plus an infinitive is how Portuguese states obligation: Tenho que falar com ele — "I have to speak with him."
-And here is the divergence worth naming. Portuguese builds its compound past on ter: tenho falado. Spanish keeps its haber for that job: he hablado. Two languages, the same two inherited verbs, opposite winners.
+You'll want to know: Two short patterns.
+Tenho pão. — I have bread. Há pão. — There is bread.
+Use ter when someone has something. Use há when something exists or is present. Há does not change before a plural:
+Há um livro. — There is one book. Há dois livros. — There are two books.
+That is enough for today: tenho points to an owner; há points to what is there.
 
-The word, taken apart: the family haver left behind.
-haver from Latin habēre, "to have, to hold." Portuguese demoted the verb, but English is stuffed with its relatives: habit (habitus, "what one has on"), inhabit, habitat, exhibit (ex-, "to hold out"), prohibit (pro-, "to hold in front of"), able and ability (habilis, "easy to handle") — and, through dē plus habēre, "to have from someone," the words debt, debit, and due.
-Now the trap. English have is not a descendant of habēre, however much the two look alike. It is Germanic, from an older root meaning "to seize" — the same root that gave Latin capere and so English capture and capable. A resemblance can be pure coincidence, and this is the famous one.
+The word, taken apart: a small family story.
+Haver comes from Latin habēre, “to have.” English habit, inhabit and habitat belong to that family. Portuguese gradually gave most everyday “have” work to ter, but kept há for existence.
+English have only looks related to habēre: it comes from a different, Germanic family.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "tenho, tens, tem, temos, têm"]
+[your turn — say: “I have bread” — Tenho pão.]
 [pause 8 seconds for the answer]
-[your turn — say: "Tenho pão", "Há pão"]
+[your turn — say: “There is bread” — Há pão.]
 [pause 8 seconds for the answer]
-[your turn — say: "Tenho que falar com ele"]
-[pause 8 seconds for the answer]
-[your turn — say: the habēre family — "habit, inhabit, able, debt"]
+[your turn — say: “There are two books” — Há dois livros.]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which verb carries everyday "have"? (Ter.) What is left of haver? (Há — "there is," "there are," and "ago.") How do you say "I have to speak"? (Tenho que falar.) Which verb does Spanish use to build its compound past? (Haber — Portuguese uses ter.) Is English have related to habēre? (No — a coincidence.) Next: going.
+Which verb says that someone has something? (Ter.) Which fixed shape says “there is” or “there are”? (Há.) Say “There are two books.” (Há dois livros.) Next, you will reuse há for one new meaning.
 
 
-Lesson 3 of 7.
+Lesson 3 of 9.
+há três anos — three years ago.
+
+Warm-up.
+[pause 2 seconds]
+You know há as “there is.” Add one nearby meaning: before a length of time, há can mean “ago.”
+
+You'll want to know: One reusable frame.
+há três anos — three years ago há dois dias — two days ago.
+Build it as há + amount of time. Keep há fixed; the number and time word tell you how far back to look.
+Say the frame slowly: há … três … anos. Then say it as one small unit: há três anos.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “two days ago” — há dois dias]
+[pause 8 seconds for the answer]
+[your turn — say: “three years ago” — há três anos]
+[pause 8 seconds for the answer]
+[your turn — choose: Does há change? (No.)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What comes after há in this pattern? (An amount of time.) Say “three years ago.” (Há três anos.) You have added one meaning without mixing it into the earlier existence lesson.
+
+
+Lesson 4 of 9.
+ter que — to have to.
+
+Warm-up.
+[pause 2 seconds]
+You know tenho, “I have.” Add que and a verb to express one obligation.
+
+You'll want to know: One reusable frame.
+Tenho que falar. — I have to speak.
+Build it in three pieces:
+tenho — I have.
+que — the link.
+falar — to speak.
+Only ter changes with the person. The following action stays in its dictionary form: temos que falar, “we have to speak.”
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “I have to speak” — Tenho que falar.]
+[pause 8 seconds for the answer]
+[your turn — say: “We have to speak” — Temos que falar.]
+[pause 8 seconds for the answer]
+[your turn — choose: Does falar change here? (No.)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Complete the frame: tenho … falar. (Que.) Say “We have to speak.” (Temos que falar.) One new construction, practised in one small step.
+
+
+Lesson 5 of 9.
 ir — two letters, three ancestors.
 
 Warm-up.
@@ -110,7 +161,7 @@ Wrap-up Recall.
 Give the present of ir. (Vou, vais, vai, vamos, vão.) How do you say "I am going to speak"? (Vou falar.) Which verb lends ir its preterite? (Ser — fui, foste, foi.) Which Latin verb gives the infinitive? (Īre.) Name two English words from it. (Exit, transit, initial, ambition, perish.) Next: coming.
 
 
-Lesson 4 of 7.
+Lesson 6 of 9.
 vir — coming, and the n that dissolved.
 
 Warm-up.
@@ -147,7 +198,7 @@ Wrap-up Recall.
 Give the present of vir. (Venho, vens, vem, vimos, vêm.) What separates vem from vêm? (The circumflex — singular against plural.) Why is the infinitive only three letters? (The -n- dissolved between vowels, as in mão.) Name two English words from venīre. (Venue, advent, convene, prevent, event.) Next: saying.
 
 
-Lesson 5 of 7.
+Lesson 7 of 9.
 dizer — saying, and the verb that judges.
 
 Warm-up.
@@ -185,7 +236,7 @@ Wrap-up Recall.
 Give the present of dizer. (Digo, dizes, diz, dizemos, dizem.) Which form breaks the pattern? (Digo, with a hard g.) How do you ask how something is said? (Como se diz…?) What is a verdict, taken apart? (Vērum dictum — "a true saying".) Where does judge come from? (Iūs plus dīcere — "he who speaks the law".) Next: seeing.
 
 
-Lesson 6 of 7.
+Lesson 8 of 9.
 ver — seeing, and a form that means two things.
 
 Warm-up.
@@ -222,7 +273,7 @@ Wrap-up Recall.
 Give the present of ver. (Vejo, vês, vê, vemos, veem.) What two things can vimos mean? ("We saw" and "we come".) What happened to vidēre's -d-? (It wore away between vowels.) Which English word is providens worn down? (Prudent.) Is very part of this family? (No — that is vērus, "true".) Next: knowing, in two flavours.
 
 
-Lesson 7 of 7.
+Lesson 9 of 9.
 saber / conhecer — two ways to know.
 
 Warm-up.

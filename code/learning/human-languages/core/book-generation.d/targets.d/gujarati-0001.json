@@ -1,0 +1,7 @@
+{
+  "language": "gujarati",
+  "chapter": 1,
+  "output": "gujarati/book/chapters/ch01-namaste-script.tex",
+  "unicodeScript": "Gujarati",
+  "scriptCommand": "gu"
+}

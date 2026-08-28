@@ -78,6 +78,18 @@ pub const VERSION: &str = "0.7.0";
 pub use paint_instructions::PixelContainer;
 pub use paint_vm_gpu_core::GpuImageResolver;
 
+/// Describe the shared GPU-plan features executed by this backend.
+pub const fn profile() -> paint_vm_gpu_core::GpuBackendProfile {
+    paint_vm_gpu_core::GpuBackendProfile::tier1_textured(
+        "paint-metal",
+        paint_vm_gpu_core::GpuApiFamily::Metal,
+        paint_vm_gpu_core::GpuRenderPath::GraphicsPipeline,
+        "MSL",
+        paint_vm_gpu_core::GpuReadbackStrategy::TextureCopyToBuffer,
+    )
+    .with_isolated_layers()
+}
+
 #[cfg(not(target_vendor = "apple"))]
 pub fn render(_scene: &paint_instructions::PaintScene) -> PixelContainer {
     panic!(
@@ -98,11 +110,12 @@ use paint_instructions::{
 };
 #[cfg(target_vendor = "apple")]
 use paint_vm_gpu_core::{
-    plan_scene, plan_scene_with_image_resolver, GpuColor, GpuCommand, GpuImageUpload, GpuMesh,
-    GpuPaintPlan, GpuPoint, GpuRect, GpuTextureFilter, GpuVertex,
+    plan_scene, plan_scene_with_image_resolver, GpuBlendMode, GpuColor, GpuCommand, GpuFilter,
+    GpuImageUpload, GpuLayer, GpuMesh, GpuPaintPlan, GpuPoint, GpuRect, GpuTextureFilter,
+    GpuVertex,
 };
 #[allow(unused_imports)]
-use std::ffi::{c_int, c_ulong};
+use std::ffi::{c_int, c_ulong, CStr};
 #[allow(unused_imports)]
 use std::ptr;
 
@@ -163,6 +176,236 @@ fragment float4 paint_fragment(
     sampler image_sampler [[sampler(0)]]
 ) {
     return image.sample(image_sampler, in.uv) * in.color;
+}
+"#;
+
+/// Compute kernels for ordered layer filters and destination-aware blending.
+///
+/// Render targets store premultiplied RGBA. Color filters temporarily
+/// unpremultiply, while blur and compositing stay in premultiplied space.
+#[cfg(target_vendor = "apple")]
+const LAYER_SHADER_SOURCE: &str = r#"
+#include <metal_stdlib>
+using namespace metal;
+
+struct FilterParams {
+    uint kind;
+    uint padding0;
+    uint padding1;
+    uint padding2;
+    float4 params;
+    float4 color;
+    float4 matrix0;
+    float4 matrix1;
+    float4 matrix2;
+    float4 matrix3;
+    float4 bias;
+};
+
+struct CompositeParams {
+    uint blend_mode;
+    uint padding0;
+    uint padding1;
+    uint padding2;
+    float opacity;
+    float clip_x;
+    float clip_y;
+    float clip_width;
+    float clip_height;
+};
+
+float4 straight_color(float4 value) {
+    return value.a > 0.000001 ? float4(value.rgb / value.a, value.a) : float4(0.0);
+}
+
+float4 premultiplied_color(float4 value) {
+    return float4(value.rgb * value.a, value.a);
+}
+
+float3 hue_rotated(float3 color, float degrees) {
+    float angle = degrees * (3.14159265358979323846f / 180.0f);
+    float c = cos(angle);
+    float s = sin(angle);
+    return float3(
+        dot(color, float3(0.213 + c * 0.787 - s * 0.213,
+                          0.715 - c * 0.715 - s * 0.715,
+                          0.072 - c * 0.072 + s * 0.928)),
+        dot(color, float3(0.213 - c * 0.213 + s * 0.143,
+                          0.715 + c * 0.285 + s * 0.140,
+                          0.072 - c * 0.072 - s * 0.283)),
+        dot(color, float3(0.213 - c * 0.213 - s * 0.787,
+                          0.715 - c * 0.715 + s * 0.715,
+                          0.072 + c * 0.928 + s * 0.072))
+    );
+}
+
+kernel void paint_filter(
+    texture2d<float, access::read> source [[texture(0)]],
+    texture2d<float, access::write> destination [[texture(1)]],
+    constant FilterParams& filter [[buffer(0)]],
+    uint2 gid [[thread_position_in_grid]]
+) {
+    uint width = source.get_width();
+    uint height = source.get_height();
+    if (gid.x >= width || gid.y >= height) return;
+
+    if (filter.kind == 0) {
+        int radius = min(int(round(filter.params.x)), 32);
+        float4 total = float4(0.0);
+        uint count = 0;
+        for (int y = -radius; y <= radius; ++y) {
+            for (int x = -radius; x <= radius; ++x) {
+                int2 sample_position = int2(gid) + int2(x, y);
+                if (sample_position.x >= 0 && sample_position.y >= 0 &&
+                    sample_position.x < int(width) && sample_position.y < int(height)) {
+                    total += source.read(uint2(sample_position));
+                }
+                count += 1;
+            }
+        }
+        destination.write(total / max(float(count), 1.0), gid);
+        return;
+    }
+
+    float4 input = source.read(gid);
+    if (filter.kind == 1) {
+        int radius = min(int(round(filter.params.w)), 32);
+        int2 center = int2(gid) - int2(round(filter.params.xy));
+        float alpha = 0.0;
+        uint count = 0;
+        for (int y = -radius; y <= radius; ++y) {
+            for (int x = -radius; x <= radius; ++x) {
+                int2 sample_position = center + int2(x, y);
+                if (sample_position.x >= 0 && sample_position.y >= 0 &&
+                    sample_position.x < int(width) && sample_position.y < int(height)) {
+                    alpha += source.read(uint2(sample_position)).a;
+                }
+                count += 1;
+            }
+        }
+        alpha = alpha / max(float(count), 1.0) * filter.color.a;
+        float4 shadow = float4(filter.color.rgb * alpha, alpha);
+        destination.write(input + shadow * (1.0 - input.a), gid);
+        return;
+    }
+
+    float4 straight = straight_color(input);
+    if (filter.kind == 2) {
+        float4 channels = straight;
+        straight = float4(
+            dot(filter.matrix0, channels) + filter.bias.x,
+            dot(filter.matrix1, channels) + filter.bias.y,
+            dot(filter.matrix2, channels) + filter.bias.z,
+            dot(filter.matrix3, channels) + filter.bias.w
+        );
+    } else if (filter.kind == 3) {
+        straight.rgb *= filter.params.x;
+    } else if (filter.kind == 4) {
+        straight.rgb = (straight.rgb - 0.5) * filter.params.x + 0.5;
+    } else if (filter.kind == 5) {
+        float luminance = dot(straight.rgb, float3(0.2126, 0.7152, 0.0722));
+        straight.rgb = mix(float3(luminance), straight.rgb, filter.params.x);
+    } else if (filter.kind == 6) {
+        straight.rgb = hue_rotated(straight.rgb, filter.params.x);
+    } else if (filter.kind == 7) {
+        straight.rgb = mix(straight.rgb, 1.0 - straight.rgb, filter.params.x);
+    } else if (filter.kind == 8) {
+        straight.a *= filter.params.x;
+    }
+    destination.write(premultiplied_color(clamp(straight, 0.0, 1.0)), gid);
+}
+
+float luminance(float3 color) {
+    return dot(color, float3(0.3, 0.59, 0.11));
+}
+
+float saturation(float3 color) {
+    return max(color.r, max(color.g, color.b)) - min(color.r, min(color.g, color.b));
+}
+
+float3 clip_color(float3 color) {
+    float l = luminance(color);
+    float minimum = min(color.r, min(color.g, color.b));
+    float maximum = max(color.r, max(color.g, color.b));
+    if (minimum < 0.0) color = l + ((color - l) * l) / max(l - minimum, 0.000001);
+    if (maximum > 1.0) color = l + ((color - l) * (1.0 - l)) / max(maximum - l, 0.000001);
+    return color;
+}
+
+float3 set_luminance(float3 color, float value) {
+    return clip_color(color + (value - luminance(color)));
+}
+
+float3 set_saturation(float3 color, float value) {
+    float minimum = min(color.r, min(color.g, color.b));
+    float maximum = max(color.r, max(color.g, color.b));
+    if (maximum <= minimum) return float3(0.0);
+    return (color - minimum) * (value / (maximum - minimum));
+}
+
+float soft_light(float backdrop, float source) {
+    if (source <= 0.5) return backdrop - (1.0 - 2.0 * source) * backdrop * (1.0 - backdrop);
+    float d = backdrop <= 0.25
+        ? ((16.0 * backdrop - 12.0) * backdrop + 4.0) * backdrop
+        : sqrt(backdrop);
+    return backdrop + (2.0 * source - 1.0) * (d - backdrop);
+}
+
+float3 blend_rgb(uint mode, float3 backdrop, float3 source) {
+    if (mode == 1) return backdrop * source;
+    if (mode == 2) return backdrop + source - backdrop * source;
+    if (mode == 3) return select(2.0 * backdrop * source,
+                                 1.0 - 2.0 * (1.0 - backdrop) * (1.0 - source),
+                                 backdrop >= 0.5);
+    if (mode == 4) return min(backdrop, source);
+    if (mode == 5) return max(backdrop, source);
+    if (mode == 6) return select(backdrop / max(1.0 - source, 0.000001),
+                                 float3(1.0), source >= 1.0);
+    if (mode == 7) return select(1.0 - (1.0 - backdrop) / max(source, 0.000001),
+                                 float3(0.0), source <= 0.0);
+    if (mode == 8) return select(2.0 * backdrop * source,
+                                 1.0 - 2.0 * (1.0 - backdrop) * (1.0 - source),
+                                 source >= 0.5);
+    if (mode == 9) return float3(soft_light(backdrop.r, source.r),
+                                 soft_light(backdrop.g, source.g),
+                                 soft_light(backdrop.b, source.b));
+    if (mode == 10) return abs(backdrop - source);
+    if (mode == 11) return backdrop + source - 2.0 * backdrop * source;
+    if (mode == 12) return set_luminance(set_saturation(source, saturation(backdrop)), luminance(backdrop));
+    if (mode == 13) return set_luminance(set_saturation(backdrop, saturation(source)), luminance(backdrop));
+    if (mode == 14) return set_luminance(source, luminance(backdrop));
+    if (mode == 15) return set_luminance(backdrop, luminance(source));
+    return source;
+}
+
+kernel void paint_composite(
+    texture2d<float, access::read> source [[texture(0)]],
+    texture2d<float, access::read> backdrop [[texture(1)]],
+    texture2d<float, access::write> destination [[texture(2)]],
+    constant CompositeParams& params [[buffer(0)]],
+    uint2 gid [[thread_position_in_grid]]
+) {
+    if (gid.x >= source.get_width() || gid.y >= source.get_height()) return;
+    float4 source_pixel = source.read(gid);
+    float4 destination_pixel = backdrop.read(gid);
+    if (float(gid.x) < params.clip_x || float(gid.y) < params.clip_y ||
+        float(gid.x) >= params.clip_x + params.clip_width ||
+        float(gid.y) >= params.clip_y + params.clip_height) {
+        destination.write(destination_pixel, gid);
+        return;
+    }
+    float source_alpha = clamp(source_pixel.a * params.opacity, 0.0, 1.0);
+    float destination_alpha = destination_pixel.a;
+    float3 source_color = source_pixel.a > 0.000001 ? source_pixel.rgb / source_pixel.a : float3(0.0);
+    float3 destination_color = destination_alpha > 0.000001
+        ? destination_pixel.rgb / destination_alpha
+        : float3(0.0);
+    float3 blended = clamp(blend_rgb(params.blend_mode, destination_color, source_color), 0.0, 1.0);
+    float3 result = (1.0 - source_alpha) * destination_pixel.rgb
+        + (1.0 - destination_alpha) * source_color * source_alpha
+        + source_alpha * destination_alpha * blended;
+    float alpha = source_alpha + destination_alpha * (1.0 - source_alpha);
+    destination.write(float4(clamp(result, 0.0, 1.0), alpha), gid);
 }
 "#;
 
@@ -1094,6 +1337,44 @@ struct PreparedTexture {
 
 #[cfg(target_vendor = "apple")]
 #[repr(C)]
+struct LayerFilterParams {
+    kind: u32,
+    padding: [u32; 3],
+    params: [f32; 4],
+    color: [f32; 4],
+    matrix: [[f32; 4]; 4],
+    bias: [f32; 4],
+}
+
+#[cfg(target_vendor = "apple")]
+#[repr(C)]
+struct LayerCompositeParams {
+    blend_mode: u32,
+    padding: [u32; 3],
+    opacity: f32,
+    clip: [f32; 4],
+}
+
+#[cfg(target_vendor = "apple")]
+struct MetalLayerFrame {
+    parent_target: Id,
+    descriptor: GpuLayer,
+    composite_clip: GpuRect,
+}
+
+#[cfg(target_vendor = "apple")]
+struct MetalLayerCompute {
+    command_buffer: Id,
+    device: Id,
+    filter_pipeline: Id,
+    composite_pipeline: Id,
+    width: u32,
+    height: u32,
+    owned_textures: Vec<Id>,
+}
+
+#[cfg(target_vendor = "apple")]
+#[repr(C)]
 #[derive(Clone, Copy)]
 struct MetalScissorRect {
     x: usize,
@@ -1121,6 +1402,9 @@ unsafe fn render_plan_unsafe(plan: GpuPaintPlan) -> PixelContainer {
     assert!(!command_queue.is_null(), "Failed to create command queue");
     let target = create_offscreen_texture(device, plan.width, plan.height);
     let pipeline = create_rect_pipeline(device);
+    let layer_library = compile_shader_library(device, LAYER_SHADER_SOURCE);
+    let filter_pipeline = create_compute_pipeline(device, layer_library, "paint_filter");
+    let composite_pipeline = create_compute_pipeline(device, layer_library, "paint_composite");
 
     let white_upload = GpuImageUpload {
         width: 1,
@@ -1136,37 +1420,15 @@ unsafe fn render_plan_unsafe(plan: GpuPaintPlan) -> PixelContainer {
         .map(|upload| prepare_texture(device, upload))
         .collect();
 
-    let pass_desc_class = class("MTLRenderPassDescriptor");
-    let pass_desc: Id = msg_send_class(pass_desc_class, "renderPassDescriptor");
-    let color_attachments = msg_send_id(pass_desc, "colorAttachments");
-    let attachment0: Id = msg!(color_attachments, "objectAtIndexedSubscript:", 0usize);
-    msg!(attachment0, "setTexture:", target);
-    msg!(
-        attachment0,
-        "setLoadAction:",
-        MTL_LOAD_ACTION_CLEAR as usize
-    );
-    msg!(
-        attachment0,
-        "setStoreAction:",
-        MTL_STORE_ACTION_STORE as usize
-    );
     let clear_color = MTLClearColor {
         red: plan.background.r as f64,
         green: plan.background.g as f64,
         blue: plan.background.b as f64,
         alpha: plan.background.a as f64,
     };
-    let set_clear_color: unsafe extern "C" fn(Id, Sel, MTLClearColor) =
-        std::mem::transmute(objc_msgSend as *const ());
-    set_clear_color(attachment0, sel("setClearColor:"), clear_color);
-
     let command_buffer = msg_send_id(command_queue, "commandBuffer");
-    let encoder: Id = msg!(
-        command_buffer,
-        "renderCommandEncoderWithDescriptor:",
-        pass_desc
-    );
+    let mut current_target = target;
+    let mut encoder = begin_render_encoder(command_buffer, target, true, clear_color);
     msg!(encoder, "setRenderPipelineState:", pipeline);
 
     let viewport = [plan.width as f32, plan.height as f32];
@@ -1177,6 +1439,16 @@ unsafe fn render_plan_unsafe(plan: GpuPaintPlan) -> PixelContainer {
         height: plan.height as f32,
     };
     let mut clip_stack = vec![full_clip];
+    let mut layer_stack: Vec<MetalLayerFrame> = Vec::new();
+    let mut layer_compute = MetalLayerCompute {
+        command_buffer,
+        device,
+        filter_pipeline,
+        composite_pipeline,
+        width: plan.width,
+        height: plan.height,
+        owned_textures: Vec::new(),
+    };
     set_scissor(encoder, full_clip, plan.width, plan.height);
 
     for command in &plan.commands {
@@ -1237,6 +1509,68 @@ unsafe fn render_plan_unsafe(plan: GpuPaintPlan) -> PixelContainer {
                     plan.height,
                 );
             }
+            GpuCommand::BeginLayer(descriptor) => {
+                msg!(encoder, "endEncoding");
+                let layer_target = layer_compute.create_target();
+                layer_stack.push(MetalLayerFrame {
+                    parent_target: current_target,
+                    descriptor: descriptor.clone(),
+                    composite_clip: *clip_stack.last().unwrap(),
+                });
+                current_target = layer_target;
+                encoder = begin_render_encoder(
+                    command_buffer,
+                    current_target,
+                    true,
+                    MTLClearColor {
+                        red: 0.0,
+                        green: 0.0,
+                        blue: 0.0,
+                        alpha: 0.0,
+                    },
+                );
+                msg!(encoder, "setRenderPipelineState:", pipeline);
+                set_scissor(
+                    encoder,
+                    *clip_stack.last().unwrap(),
+                    plan.width,
+                    plan.height,
+                );
+            }
+            GpuCommand::EndLayer => {
+                let Some(frame) = layer_stack.pop() else {
+                    continue;
+                };
+                msg!(encoder, "endEncoding");
+                let mut filtered = current_target;
+                for filter in &frame.descriptor.filters {
+                    filtered = layer_compute.apply_filter(filtered, filter);
+                }
+                current_target = layer_compute.composite(
+                    filtered,
+                    frame.parent_target,
+                    &frame.descriptor,
+                    frame.composite_clip,
+                );
+                encoder = begin_render_encoder(
+                    command_buffer,
+                    current_target,
+                    false,
+                    MTLClearColor {
+                        red: 0.0,
+                        green: 0.0,
+                        blue: 0.0,
+                        alpha: 0.0,
+                    },
+                );
+                msg!(encoder, "setRenderPipelineState:", pipeline);
+                set_scissor(
+                    encoder,
+                    *clip_stack.last().unwrap(),
+                    plan.width,
+                    plan.height,
+                );
+            }
             // PaintText requires shaping before it can become a GPU command.
             // Layout-backed browser scenes emit GlyphRun, which is ordered above.
             GpuCommand::DrawText(_) => {}
@@ -1246,19 +1580,269 @@ unsafe fn render_plan_unsafe(plan: GpuPaintPlan) -> PixelContainer {
     msg!(encoder, "endEncoding");
     msg!(command_buffer, "commit");
     msg!(command_buffer, "waitUntilCompleted");
-    let pixels = read_back_pixels(target, plan.width, plan.height);
+    assert_command_buffer_completed(command_buffer);
+    let pixels = read_back_pixels(current_target, plan.width, plan.height);
 
     for prepared in textures {
         release(prepared.texture);
         release(prepared.sampler);
     }
+    for texture in layer_compute.owned_textures {
+        release(texture);
+    }
     release(white.texture);
     release(white.sampler);
     release(target);
+    release(composite_pipeline);
+    release(filter_pipeline);
+    release(layer_library);
     release(pipeline);
     release(command_queue);
     release(device);
     pixels
+}
+
+#[cfg(target_vendor = "apple")]
+unsafe fn assert_command_buffer_completed(command_buffer: Id) {
+    let send_status: unsafe extern "C" fn(Id, Sel) -> usize =
+        std::mem::transmute(objc_msgSend as *const ());
+    let status = send_status(command_buffer, sel("status"));
+    if status == 5 {
+        let error: Id = msg!(command_buffer, "error");
+        let message = if error.is_null() {
+            "Metal returned no command-buffer diagnostic".to_string()
+        } else {
+            let description: Id = msg!(error, "localizedDescription");
+            let utf8 = msg!(description, "UTF8String") as *const std::ffi::c_char;
+            if utf8.is_null() {
+                "Metal returned an unreadable command-buffer diagnostic".to_string()
+            } else {
+                CStr::from_ptr(utf8).to_string_lossy().into_owned()
+            }
+        };
+        panic!("Metal command buffer failed: {message}");
+    }
+    assert_eq!(status, 4, "Metal command buffer ended with status {status}");
+}
+
+#[cfg(target_vendor = "apple")]
+unsafe fn begin_render_encoder(
+    command_buffer: Id,
+    target: Id,
+    clear: bool,
+    clear_color: MTLClearColor,
+) -> Id {
+    let pass_desc = msg_send_class(class("MTLRenderPassDescriptor"), "renderPassDescriptor");
+    let attachments = msg_send_id(pass_desc, "colorAttachments");
+    let attachment: Id = msg!(attachments, "objectAtIndexedSubscript:", 0usize);
+    msg!(attachment, "setTexture:", target);
+    msg!(
+        attachment,
+        "setLoadAction:",
+        if clear {
+            MTL_LOAD_ACTION_CLEAR as usize
+        } else {
+            MTL_LOAD_ACTION_LOAD as usize
+        }
+    );
+    msg!(
+        attachment,
+        "setStoreAction:",
+        MTL_STORE_ACTION_STORE as usize
+    );
+    if clear {
+        let set_clear_color: unsafe extern "C" fn(Id, Sel, MTLClearColor) =
+            std::mem::transmute(objc_msgSend as *const ());
+        set_clear_color(attachment, sel("setClearColor:"), clear_color);
+    }
+    msg!(
+        command_buffer,
+        "renderCommandEncoderWithDescriptor:",
+        pass_desc
+    )
+}
+
+#[cfg(target_vendor = "apple")]
+unsafe fn create_compute_pipeline(device: Id, library: Id, function_name: &str) -> Id {
+    let name = nsstring(function_name);
+    let function: Id = msg!(library, "newFunctionWithName:", name);
+    CFRelease(name);
+    assert!(!function.is_null(), "{function_name} shader not found");
+    let mut error: Id = ptr::null_mut();
+    let pipeline: Id = msg!(
+        device,
+        "newComputePipelineStateWithFunction:error:",
+        function,
+        &mut error as *mut Id
+    );
+    release(function);
+    assert!(
+        !pipeline.is_null(),
+        "failed to create {function_name} compute pipeline"
+    );
+    pipeline
+}
+
+#[cfg(target_vendor = "apple")]
+impl MetalLayerCompute {
+    unsafe fn create_target(&mut self) -> Id {
+        let texture = create_offscreen_texture(self.device, self.width, self.height);
+        self.owned_textures.push(texture);
+        texture
+    }
+
+    unsafe fn apply_filter(&mut self, source: Id, filter: &GpuFilter) -> Id {
+        let destination = self.create_target();
+        let params = metal_filter_params(filter);
+        let encoder = msg_send_id(self.command_buffer, "computeCommandEncoder");
+        msg!(encoder, "setComputePipelineState:", self.filter_pipeline);
+        msg!(encoder, "setTexture:atIndex:", source, 0usize);
+        msg!(encoder, "setTexture:atIndex:", destination, 1usize);
+        msg!(
+            encoder,
+            "setBytes:length:atIndex:",
+            &params as *const LayerFilterParams as Id,
+            std::mem::size_of::<LayerFilterParams>(),
+            0usize
+        );
+        self.dispatch(encoder);
+        destination
+    }
+
+    unsafe fn composite(
+        &mut self,
+        source: Id,
+        backdrop: Id,
+        layer: &GpuLayer,
+        clip: GpuRect,
+    ) -> Id {
+        let destination = self.create_target();
+        let params = LayerCompositeParams {
+            blend_mode: metal_blend_mode(layer.blend_mode),
+            padding: [0; 3],
+            opacity: layer.opacity,
+            clip: [clip.x, clip.y, clip.width, clip.height],
+        };
+        let encoder = msg_send_id(self.command_buffer, "computeCommandEncoder");
+        msg!(encoder, "setComputePipelineState:", self.composite_pipeline);
+        msg!(encoder, "setTexture:atIndex:", source, 0usize);
+        msg!(encoder, "setTexture:atIndex:", backdrop, 1usize);
+        msg!(encoder, "setTexture:atIndex:", destination, 2usize);
+        msg!(
+            encoder,
+            "setBytes:length:atIndex:",
+            &params as *const LayerCompositeParams as Id,
+            std::mem::size_of::<LayerCompositeParams>(),
+            0usize
+        );
+        self.dispatch(encoder);
+        destination
+    }
+
+    unsafe fn dispatch(&self, encoder: Id) {
+        let grid = MTLSize {
+            width: self.width as c_ulong,
+            height: self.height as c_ulong,
+            depth: 1,
+        };
+        let threads = MTLSize {
+            width: 8,
+            height: 8,
+            depth: 1,
+        };
+        let dispatch: unsafe extern "C" fn(Id, Sel, MTLSize, MTLSize) =
+            std::mem::transmute(objc_msgSend as *const ());
+        dispatch(
+            encoder,
+            sel("dispatchThreads:threadsPerThreadgroup:"),
+            grid,
+            threads,
+        );
+        msg!(encoder, "endEncoding");
+    }
+}
+
+#[cfg(target_vendor = "apple")]
+fn metal_filter_params(filter: &GpuFilter) -> LayerFilterParams {
+    let mut params = LayerFilterParams {
+        kind: 0,
+        padding: [0; 3],
+        params: [0.0; 4],
+        color: [0.0; 4],
+        matrix: [[0.0; 4]; 4],
+        bias: [0.0; 4],
+    };
+    match filter {
+        GpuFilter::Blur { radius } => {
+            params.kind = 0;
+            params.params[0] = *radius;
+        }
+        GpuFilter::DropShadow {
+            dx,
+            dy,
+            blur,
+            color,
+        } => {
+            params.kind = 1;
+            params.params = [*dx, *dy, 0.0, *blur];
+            params.color = [color.r, color.g, color.b, color.a];
+        }
+        GpuFilter::ColorMatrix { matrix } => {
+            params.kind = 2;
+            for row in 0..4 {
+                let offset = row * 5;
+                params.matrix[row].copy_from_slice(&matrix[offset..offset + 4]);
+                params.bias[row] = matrix[offset + 4];
+            }
+        }
+        GpuFilter::Brightness { amount } => {
+            params.kind = 3;
+            params.params[0] = *amount;
+        }
+        GpuFilter::Contrast { amount } => {
+            params.kind = 4;
+            params.params[0] = *amount;
+        }
+        GpuFilter::Saturate { amount } => {
+            params.kind = 5;
+            params.params[0] = *amount;
+        }
+        GpuFilter::HueRotate { angle_degrees } => {
+            params.kind = 6;
+            params.params[0] = *angle_degrees;
+        }
+        GpuFilter::Invert { amount } => {
+            params.kind = 7;
+            params.params[0] = *amount;
+        }
+        GpuFilter::Opacity { amount } => {
+            params.kind = 8;
+            params.params[0] = *amount;
+        }
+    }
+    params
+}
+
+#[cfg(target_vendor = "apple")]
+fn metal_blend_mode(mode: GpuBlendMode) -> u32 {
+    match mode {
+        GpuBlendMode::Normal => 0,
+        GpuBlendMode::Multiply => 1,
+        GpuBlendMode::Screen => 2,
+        GpuBlendMode::Overlay => 3,
+        GpuBlendMode::Darken => 4,
+        GpuBlendMode::Lighten => 5,
+        GpuBlendMode::ColorDodge => 6,
+        GpuBlendMode::ColorBurn => 7,
+        GpuBlendMode::HardLight => 8,
+        GpuBlendMode::SoftLight => 9,
+        GpuBlendMode::Difference => 10,
+        GpuBlendMode::Exclusion => 11,
+        GpuBlendMode::Hue => 12,
+        GpuBlendMode::Saturation => 13,
+        GpuBlendMode::Color => 14,
+        GpuBlendMode::Luminosity => 15,
+    }
 }
 
 #[cfg(target_vendor = "apple")]
@@ -1637,7 +2221,9 @@ unsafe fn create_offscreen_texture(device: Id, width: u32, height: u32) -> Id {
     // MTLTextureType2D = 2
     msg!(desc, "setTextureType:", MTL_TEXTURE_TYPE_2D as usize);
 
-    let usage = MTL_TEXTURE_USAGE_RENDER_TARGET | MTL_TEXTURE_USAGE_SHADER_READ;
+    let usage = MTL_TEXTURE_USAGE_RENDER_TARGET
+        | MTL_TEXTURE_USAGE_SHADER_READ
+        | MTL_TEXTURE_USAGE_SHADER_WRITE;
     msg!(desc, "setUsage:", usage as usize);
 
     let texture: Id = msg!(device, "newTextureWithDescriptor:", desc);
@@ -1661,7 +2247,18 @@ unsafe fn compile_shader_library(device: Id, source: &str) -> Id {
     CFRelease(source_ns);
 
     if library.is_null() {
-        panic!("Metal shader compilation failed — check MSL source");
+        let message = if error.is_null() {
+            "Metal returned no compiler diagnostic".to_string()
+        } else {
+            let description: Id = msg!(error, "localizedDescription");
+            let utf8 = msg!(description, "UTF8String") as *const std::ffi::c_char;
+            if utf8.is_null() {
+                "Metal returned an unreadable compiler diagnostic".to_string()
+            } else {
+                CStr::from_ptr(utf8).to_string_lossy().into_owned()
+            }
+        };
+        panic!("Metal shader compilation failed: {message}");
     }
     library
 }
@@ -2339,13 +2936,81 @@ mod live_present {
 mod tests {
     use super::*;
     use paint_instructions::{
-        GradientKind, GradientStop, ImageSrc, PaintBase, PaintEllipse, PaintGradient, PaintImage,
-        PaintInstruction, PaintPath, PaintRect, PaintScene, PathCommand,
+        BlendMode, FilterEffect, GradientKind, GradientStop, ImageSrc, PaintBase, PaintClip,
+        PaintEllipse, PaintGradient, PaintImage, PaintInstruction, PaintLayer, PaintPath,
+        PaintRect, PaintScene, PathCommand,
     };
 
     #[test]
     fn version_exists() {
         assert_eq!(VERSION, "0.7.0");
+    }
+
+    #[test]
+    fn profile_declares_full_isolated_layer_execution() {
+        let profile = profile();
+        assert!(profile.supports_isolated_layers);
+        assert!(profile.supports_layer_filters);
+        assert!(profile.supports_layer_blend_modes);
+    }
+
+    #[test]
+    fn shared_blend_modes_have_stable_shader_discriminants() {
+        let modes = [
+            GpuBlendMode::Normal,
+            GpuBlendMode::Multiply,
+            GpuBlendMode::Screen,
+            GpuBlendMode::Overlay,
+            GpuBlendMode::Darken,
+            GpuBlendMode::Lighten,
+            GpuBlendMode::ColorDodge,
+            GpuBlendMode::ColorBurn,
+            GpuBlendMode::HardLight,
+            GpuBlendMode::SoftLight,
+            GpuBlendMode::Difference,
+            GpuBlendMode::Exclusion,
+            GpuBlendMode::Hue,
+            GpuBlendMode::Saturation,
+            GpuBlendMode::Color,
+            GpuBlendMode::Luminosity,
+        ];
+        for (expected, mode) in modes.into_iter().enumerate() {
+            assert_eq!(metal_blend_mode(mode), expected as u32);
+        }
+    }
+
+    #[test]
+    fn shared_filters_keep_stable_shader_parameter_layouts() {
+        let matrix = std::array::from_fn(|index| index as f32);
+        let cases = [
+            GpuFilter::Blur { radius: 2.0 },
+            GpuFilter::DropShadow {
+                dx: 1.0,
+                dy: 2.0,
+                blur: 3.0,
+                color: GpuColor {
+                    r: 0.1,
+                    g: 0.2,
+                    b: 0.3,
+                    a: 0.4,
+                },
+            },
+            GpuFilter::ColorMatrix { matrix },
+            GpuFilter::Brightness { amount: 1.1 },
+            GpuFilter::Contrast { amount: 1.2 },
+            GpuFilter::Saturate { amount: 1.3 },
+            GpuFilter::HueRotate {
+                angle_degrees: 45.0,
+            },
+            GpuFilter::Invert { amount: 0.6 },
+            GpuFilter::Opacity { amount: 0.7 },
+        ];
+        for (expected, filter) in cases.iter().enumerate() {
+            assert_eq!(metal_filter_params(filter).kind, expected as u32);
+        }
+        let encoded = metal_filter_params(&GpuFilter::ColorMatrix { matrix });
+        assert_eq!(encoded.matrix[0], [0.0, 1.0, 2.0, 3.0]);
+        assert_eq!(encoded.bias, [4.0, 9.0, 14.0, 19.0]);
     }
 
     // ─── Color parser tests ──────────────────────────────────────────────────
@@ -2605,6 +3270,184 @@ mod tests {
         assert_eq!(g, 255, "green channel at corner (background)");
         assert_eq!(b, 255, "blue channel at corner (background)");
         assert_eq!(a, 255, "alpha at corner (background)");
+    }
+
+    fn isolated_layer(
+        children: Vec<PaintInstruction>,
+        filters: Vec<FilterEffect>,
+        blend_mode: BlendMode,
+        opacity: f64,
+    ) -> PaintInstruction {
+        PaintInstruction::Layer(PaintLayer {
+            base: PaintBase::default(),
+            children,
+            filters: Some(filters),
+            blend_mode: Some(blend_mode),
+            opacity: Some(opacity),
+            transform: None,
+        })
+    }
+
+    fn assert_channel_near(actual: u8, expected: u8, tolerance: u8, label: &str) {
+        assert!(
+            actual.abs_diff(expected) <= tolerance,
+            "{label}: expected {expected} +/- {tolerance}, got {actual}"
+        );
+    }
+
+    #[test]
+    fn isolated_layer_opacity_is_applied_once_after_children_overlap() {
+        let mut scene = PaintScene::new(12.0, 8.0);
+        scene.instructions.push(isolated_layer(
+            vec![
+                PaintInstruction::Rect(PaintRect::filled(1.0, 1.0, 7.0, 6.0, "#ff0000")),
+                PaintInstruction::Rect(PaintRect::filled(4.0, 1.0, 7.0, 6.0, "#ff0000")),
+            ],
+            vec![],
+            BlendMode::Normal,
+            0.5,
+        ));
+
+        let pixels = render(&scene);
+        let single = pixels.pixel_at(2, 4);
+        let overlap = pixels.pixel_at(6, 4);
+        assert_eq!(
+            single, overlap,
+            "isolated overlap must not compound opacity"
+        );
+        assert_channel_near(single.0, 255, 1, "red");
+        assert_channel_near(single.1, 128, 2, "green");
+        assert_channel_near(single.2, 128, 2, "blue");
+        assert_eq!(single.3, 255);
+    }
+
+    #[test]
+    fn isolated_layer_multiply_blends_with_the_parent_surface() {
+        let mut scene = PaintScene::new(8.0, 8.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 8.0, 8.0, "#808080",
+            )));
+        scene.instructions.push(isolated_layer(
+            vec![PaintInstruction::Rect(PaintRect::filled(
+                1.0, 1.0, 6.0, 6.0, "#ff0000",
+            ))],
+            vec![],
+            BlendMode::Multiply,
+            1.0,
+        ));
+
+        let pixel = render(&scene).pixel_at(4, 4);
+        assert_channel_near(pixel.0, 128, 2, "red");
+        assert_channel_near(pixel.1, 0, 1, "green");
+        assert_channel_near(pixel.2, 0, 1, "blue");
+        assert_eq!(pixel.3, 255);
+    }
+
+    #[test]
+    fn isolated_layer_filters_execute_in_declared_order() {
+        let make_scene = |filters| {
+            let mut scene = PaintScene::new(6.0, 6.0);
+            scene.instructions.push(isolated_layer(
+                vec![PaintInstruction::Rect(PaintRect::filled(
+                    1.0, 1.0, 4.0, 4.0, "#404040",
+                ))],
+                filters,
+                BlendMode::Normal,
+                1.0,
+            ));
+            scene
+        };
+        let brightness_then_invert = render(&make_scene(vec![
+            FilterEffect::Brightness { amount: 2.0 },
+            FilterEffect::Invert { amount: 1.0 },
+        ]))
+        .pixel_at(3, 3);
+        let invert_then_brightness = render(&make_scene(vec![
+            FilterEffect::Invert { amount: 1.0 },
+            FilterEffect::Brightness { amount: 2.0 },
+        ]))
+        .pixel_at(3, 3);
+
+        assert!(
+            brightness_then_invert.0 < invert_then_brightness.0,
+            "filter order must remain observable: {brightness_then_invert:?} vs {invert_then_brightness:?}"
+        );
+    }
+
+    #[test]
+    fn isolated_layer_blur_spreads_alpha_before_compositing() {
+        let mut scene = PaintScene::new(9.0, 9.0);
+        scene.instructions.push(isolated_layer(
+            vec![PaintInstruction::Rect(PaintRect::filled(
+                4.0, 4.0, 1.0, 1.0, "#000000",
+            ))],
+            vec![FilterEffect::Blur { radius: 1.0 }],
+            BlendMode::Normal,
+            1.0,
+        ));
+
+        let pixels = render(&scene);
+        let neighbor = pixels.pixel_at(3, 4);
+        assert!(neighbor.0 < 255, "blur should darken a neighboring pixel");
+        assert!(neighbor.0 > 0, "blur should remain partially transparent");
+        assert_eq!(neighbor.3, 255);
+    }
+
+    #[test]
+    fn isolated_layer_filters_remain_inside_the_active_clip() {
+        let mut scene = PaintScene::new(9.0, 9.0);
+        scene.instructions.push(PaintInstruction::Clip(PaintClip {
+            base: PaintBase::default(),
+            x: 4.0,
+            y: 3.0,
+            width: 2.0,
+            height: 3.0,
+            children: vec![isolated_layer(
+                vec![PaintInstruction::Rect(PaintRect::filled(
+                    4.0, 4.0, 1.0, 1.0, "#000000",
+                ))],
+                vec![FilterEffect::Blur { radius: 1.0 }],
+                BlendMode::Normal,
+                1.0,
+            )],
+        }));
+
+        let pixels = render(&scene);
+        assert!(pixels.pixel_at(4, 4).0 < 255, "blur should render in clip");
+        assert_eq!(
+            pixels.pixel_at(3, 4),
+            (255, 255, 255, 255),
+            "filter must not escape its outer clip"
+        );
+    }
+
+    #[test]
+    fn nested_isolated_layers_composite_each_opacity_once() {
+        let inner = isolated_layer(
+            vec![PaintInstruction::Rect(PaintRect::filled(
+                1.0, 1.0, 6.0, 6.0, "#ff0000",
+            ))],
+            vec![],
+            BlendMode::Normal,
+            0.5,
+        );
+        let mut scene = PaintScene::new(8.0, 8.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 8.0, 8.0, "#808080",
+            )));
+        scene
+            .instructions
+            .push(isolated_layer(vec![inner], vec![], BlendMode::Normal, 0.5));
+
+        let pixel = render(&scene).pixel_at(4, 4);
+        assert_channel_near(pixel.0, 160, 2, "red");
+        assert_channel_near(pixel.1, 96, 2, "green");
+        assert_channel_near(pixel.2, 96, 2, "blue");
+        assert_eq!(pixel.3, 255);
     }
 
     #[test]

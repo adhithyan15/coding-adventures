@@ -1,0 +1,7 @@
+{
+  "language": "gujarati",
+  "chapter": 13,
+  "output": "gujarati/book/chapters/ch13-core-verbs.tex",
+  "unicodeScript": "Gujarati",
+  "scriptCommand": "gu"
+}

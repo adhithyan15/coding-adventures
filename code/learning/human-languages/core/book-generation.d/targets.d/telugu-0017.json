@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 17,
+  "output": "telugu/book/chapters/ch17-noon-and-midnight.tex",
+  "scriptSet": "telugu-comparisons"
+}

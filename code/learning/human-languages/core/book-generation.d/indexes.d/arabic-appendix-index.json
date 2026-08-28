@@ -1,0 +1,5 @@
+{
+  "language": "arabic",
+  "output": "arabic/book/chapters/appendix-index.tex",
+  "scriptSet": "arabic-main"
+}

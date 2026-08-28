@@ -186,6 +186,18 @@ package hash. The two shared field-boundary fixtures cover direct and nested
 paths plus adversarial decoys; the complete Java and Kotlin lanes resolve
 exactly 186 and 166 edges respectively.
 
+OCaml dependency resolution is process-free. It reads the `depends` field from
+one unambiguous root `.opam` file and top-level `libraries` fields from the
+fixed `dune`, `src/dune`, `bin/dune`, and `test/dune` files. Comments, other
+opam fields, Dune strings outside `libraries`, multiple root opam manifests,
+unknown names, and self references cannot invent graph edges. Directory,
+conventional repository, and declared opam names are aliases, with library
+packages preferred over same-named programs. OCaml source, interface,
+manifest, Dune, formatting, and BUILD files participate in hashing while
+generated `_build` trees do not. Build plans expose `needs_ocaml`, validate
+standalone prerequisite declarations, and charge the pinned OCaml toolchain
+cost without executing opam or Dune.
+
 C#, F#, and shared .NET dependency resolution reads only literal `Include`
 attributes on unqualified `ProjectReference` start elements in root `.csproj`
 and `.fsproj` files. Relative paths use portable separators, normalize
@@ -203,7 +215,9 @@ Discovery uses only the exact bucket immediately below a `packages` or
 `programs` path component. It recognizes every established implementation
 lane, the emerging C, C++, and OCaml lanes, the WASM target, the Mosaic and
 Twig domain languages, the Starlark build language, and the retained shared
-`.NET` host bucket. Programs keep a `programs` segment, such as
+`.NET` host bucket. Generated Dune `_build` trees are excluded before BUILD
+membership, alongside the existing ecosystem output directories. Programs
+keep a `programs` segment, such as
 `go/programs/build-tool`, so they cannot collide with a library of the same
 name. Specification fixture trees are not buildable packages.
 

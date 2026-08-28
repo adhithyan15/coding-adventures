@@ -1,0 +1,5 @@
+{
+  "language": "sanskrit",
+  "chapter": 1,
+  "output": "sanskrit/book/chapters/ch01-greetings.tex"
+}

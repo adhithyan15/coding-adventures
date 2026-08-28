@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-SOUND-ME-CHAMO-02, PT-ETYMON-ME-CHAMO-03, PT-GRAMMAR-ME-CHAMO-04, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04]
 introduces:
   knowledge: [PT-ETYMON-COMO-SE-CHAMA-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [PT-CULTURE-NAME-QUESTION-REGISTER-01]
 practises:
   knowledge: [PT-SOUND-ME-CHAMO-02, PT-ETYMON-ME-CHAMO-03, PT-GRAMMAR-ME-CHAMO-04, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04, PT-ETYMON-COMO-SE-CHAMA-02]
 skills: [listening, speaking, reading]

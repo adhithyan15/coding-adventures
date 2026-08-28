@@ -1,0 +1,7 @@
+{
+  "language": "gujarati",
+  "chapter": 2,
+  "output": "gujarati/book/chapters/ch02-courtesy-responses.tex",
+  "unicodeScript": "Gujarati",
+  "scriptCommand": "gu"
+}

@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 18,
+  "output": "telugu/book/chapters/ch18-telling-time.tex",
+  "scriptSet": "telugu-comparisons"
+}

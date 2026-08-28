@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 26,
+  "output": "sanskrit/book/chapters/ch26-roles.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

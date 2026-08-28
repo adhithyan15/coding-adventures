@@ -1,0 +1,26 @@
+[
+  {
+    "unicodeScript": "Malayalam",
+    "scriptCommand": "ml"
+  },
+  {
+    "unicodeScript": "Tamil",
+    "scriptCommand": "ta"
+  },
+  {
+    "unicodeScript": "Telugu",
+    "scriptCommand": "te"
+  },
+  {
+    "unicodeScript": "Kannada",
+    "scriptCommand": "ka"
+  },
+  {
+    "unicodeScript": "Devanagari",
+    "scriptCommand": "dv"
+  },
+  {
+    "unicodeScript": "Arabic",
+    "scriptCommand": "ar"
+  }
+]

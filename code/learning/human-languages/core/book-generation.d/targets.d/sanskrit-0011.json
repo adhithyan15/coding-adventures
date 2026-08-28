@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 11,
+  "output": "sanskrit/book/chapters/ch11-people-nouns.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 12,
+  "output": "bengali/book/chapters/ch12-eye-mouth-nose-heart.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

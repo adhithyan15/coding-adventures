@@ -1,0 +1,7 @@
+{
+  "language": "marwadi",
+  "title": "Pronunciation & Writing Reference",
+  "source": "marwadi/pronunciation-reference.md",
+  "output": "marwadi/book/chapters/appendix-pronunciation.tex",
+  "scriptSet": "marwadi-main"
+}

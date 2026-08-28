@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 11,
+  "output": "russian/book/chapters/ch11-parting-words.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

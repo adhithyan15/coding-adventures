@@ -1,0 +1,6 @@
+{
+  "language": "russian",
+  "output": "russian/book/chapters/appendix-glossary.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

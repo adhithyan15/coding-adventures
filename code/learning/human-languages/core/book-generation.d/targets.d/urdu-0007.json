@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 7,
+  "output": "urdu/book/chapters/ch07-mind-verbs.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

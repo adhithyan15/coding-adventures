@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 11,
+  "output": "chinese/book/chapters/ch11-qing.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

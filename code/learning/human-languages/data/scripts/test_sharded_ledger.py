@@ -5,9 +5,11 @@ import unittest
 from pathlib import Path
 
 from sharded_ledger import (
+    load_book_generation,
     load_curriculum,
     load_script,
     load_script_inventory,
+    write_book_generation_language,
     write_chapters,
     write_curriculum,
 )
@@ -61,6 +63,74 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
         )
         write_json(directory / "letters" / "0010-U-3042.json", {"glyph": "あ"})
         write_json(directory / "marks" / "0010-U-309B.json", {"mark": "゛"})
+        return directory
+
+    def book_generation_tree(self):
+        directory = self.root / "core" / "book-generation.d"
+        write_json(
+            directory / "_meta.json",
+            {
+                "version": 1,
+                "sourceBaseUrl": "https://example.test/human-languages/",
+            },
+        )
+        for section in (
+            "reference-appendices.d",
+            "glossaries.d",
+            "answer-keys.d",
+            "indexes.d",
+            "targets.d",
+            "handwritten.d",
+            "script-sets.d",
+        ):
+            (directory / section).mkdir(parents=True, exist_ok=True)
+        write_json(
+            directory / "script-sets.d" / "0010-spanish-main.json",
+            [{"unicodeScript": "Latin", "scriptCommand": "es"}],
+        )
+        write_json(
+            directory / "glossaries.d" / "spanish-appendix-glossary.json",
+            {
+                "language": "spanish",
+                "output": "spanish/book/chapters/appendix-glossary.tex",
+                "scriptSet": "spanish-main",
+            },
+        )
+        write_json(
+            directory / "targets.d" / "french-0001.json",
+            {
+                "language": "french",
+                "chapter": 1,
+                "output": "french/book/chapters/ch01-greetings.tex",
+            },
+        )
+        write_json(
+            directory / "targets.d" / "spanish-0001.json",
+            {
+                "language": "spanish",
+                "chapter": 1,
+                "output": "spanish/book/chapters/ch01-first-words.tex",
+                "scriptSet": "spanish-main",
+            },
+        )
+        write_json(
+            directory / "targets.d" / "spanish-0002.json",
+            {
+                "language": "spanish",
+                "chapter": 2,
+                "output": "spanish/book/chapters/ch02-greetings.tex",
+                "scriptSet": "spanish-main",
+            },
+        )
+        write_json(
+            directory / "handwritten.d" / "spanish-0004.json",
+            {
+                "language": "spanish",
+                "chapter": 4,
+                "output": "spanish/book/chapters/ch04-handwritten.tex",
+                "embeddedLessonIds": ["ES-LESSON-004"],
+            },
+        )
         return directory
 
     def test_dangling_shard_symlink_cannot_create_its_target(self):
@@ -162,6 +232,181 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
         write_json(directory / "letters" / "0010-U-3044.json", {"glyph": "い"})
         with self.assertRaisesRegex(ValueError, "duplicate letters ordinal"):
             load_script_inventory(self.root, "japanese")
+
+    def test_book_generation_reconstructs_direct_owners_in_filename_order(self):
+        self.book_generation_tree()
+        document = load_book_generation(
+            self.root,
+            expected_target_identities={"french/0001", "spanish/0001", "spanish/0002"},
+            expected_handwritten_identities={"spanish/0004"},
+        )
+
+        self.assertEqual(
+            list(document),
+            [
+                "version",
+                "sourceBaseUrl",
+                "scriptSets",
+                "referenceAppendices",
+                "glossaries",
+                "answerKeys",
+                "indexes",
+                "targets",
+                "handwritten",
+            ],
+        )
+        self.assertEqual(list(document["scriptSets"]), ["spanish-main"])
+        self.assertEqual(
+            [(entry["language"], entry["chapter"]) for entry in document["targets"]],
+            [("french", 1), ("spanish", 1), ("spanish", 2)],
+        )
+
+    def test_book_generation_expected_set_detects_clean_owner_deletion(self):
+        directory = self.book_generation_tree()
+        (directory / "targets.d" / "spanish-0002.json").unlink()
+
+        with self.assertRaisesRegex(
+            ValueError, "target owner set mismatch.*spanish/0002"
+        ):
+            load_book_generation(
+                self.root,
+                expected_target_identities={
+                    "french/0001",
+                    "spanish/0001",
+                    "spanish/0002",
+                },
+            )
+
+    def test_book_generation_expected_handwritten_set_is_independent(self):
+        directory = self.book_generation_tree()
+        (directory / "handwritten.d" / "spanish-0004.json").unlink()
+
+        with self.assertRaisesRegex(
+            ValueError, "handwritten owner set mismatch.*spanish/0004"
+        ):
+            load_book_generation(
+                self.root,
+                expected_handwritten_identities={"spanish/0004"},
+            )
+
+    def test_book_generation_rejects_unexpected_nested_owner(self):
+        directory = self.book_generation_tree()
+        nested = directory / "targets.d" / "spanish"
+        nested.mkdir()
+        write_json(nested / "0003.json", {"language": "spanish", "chapter": 3})
+
+        with self.assertRaisesRegex(ValueError, "unexpected nested.*targets.d/spanish"):
+            load_book_generation(self.root)
+
+    def test_book_generation_rejects_symlinked_section_component(self):
+        directory = self.book_generation_tree()
+        (directory / "indexes.d").rmdir()
+        os.symlink(self.outside, directory / "indexes.d")
+
+        with self.assertRaisesRegex(ValueError, "symbolic-link book-generation owner"):
+            load_book_generation(self.root)
+
+    def test_book_generation_rejects_resurrected_monolith(self):
+        self.book_generation_tree()
+        write_json(self.root / "core" / "book-generation.json", {"version": 1})
+
+        with self.assertRaisesRegex(ValueError, "resurrected book-generation monolith"):
+            load_book_generation(self.root)
+
+    def test_book_generation_rejects_noncanonical_script_set_ordinal(self):
+        directory = self.book_generation_tree()
+        owner = directory / "script-sets.d" / "0010-spanish-main.json"
+        owner.rename(directory / "script-sets.d" / "0000-spanish-main.json")
+
+        with self.assertRaisesRegex(ValueError, "ordinal is out of canonical order"):
+            load_book_generation(self.root)
+
+    def test_book_generation_rejects_filename_identity_mismatch(self):
+        directory = self.book_generation_tree()
+        path = directory / "targets.d" / "spanish-0002.json"
+        value = json.loads(path.read_text())
+        value["chapter"] = 3
+        write_json(path, value)
+
+        with self.assertRaisesRegex(ValueError, "identity does not match owner name"):
+            load_book_generation(self.root)
+
+    def test_book_generation_rejects_output_traversal_and_dangerous_keys(self):
+        directory = self.book_generation_tree()
+        path = directory / "glossaries.d" / "spanish-appendix-glossary.json"
+        value = json.loads(path.read_text())
+        value["output"] = "spanish/../appendix-glossary.tex"
+        write_json(path, value)
+        with self.assertRaisesRegex(ValueError, "unsafe output path"):
+            load_book_generation(self.root)
+
+        value["output"] = "spanish/book/chapters/appendix-glossary.tex"
+        value["nested"] = {"__proto__": {"polluted": True}}
+        write_json(path, value)
+        with self.assertRaisesRegex(ValueError, "dangerous key"):
+            load_book_generation(self.root)
+
+    def test_book_generation_writer_only_changes_selected_language_owners(self):
+        directory = self.book_generation_tree()
+        document = load_book_generation(self.root)
+        stable_paths = [
+            directory / "targets.d" / "french-0001.json",
+            directory / "targets.d" / "spanish-0001.json",
+            directory / "glossaries.d" / "spanish-appendix-glossary.json",
+            directory / "script-sets.d" / "0010-spanish-main.json",
+            directory / "_meta.json",
+        ]
+        for index, path in enumerate(stable_paths):
+            timestamp = 1_700_000_000_000_000_000 + index
+            os.utime(path, ns=(timestamp, timestamp))
+        before = {
+            path: (path.read_bytes(), path.stat().st_mtime_ns) for path in stable_paths
+        }
+
+        document["targets"] = [
+            entry
+            for entry in document["targets"]
+            if not (entry["language"] == "spanish" and entry["chapter"] == 2)
+        ]
+        document["targets"].append(
+            {
+                "language": "spanish",
+                "chapter": 3,
+                "output": "spanish/book/chapters/ch03-thanks.tex",
+                "scriptSet": "spanish-main",
+            }
+        )
+        document["targets"].sort(
+            key=lambda entry: (entry["language"], entry["chapter"])
+        )
+        write_book_generation_language(
+            self.root,
+            "spanish",
+            document,
+            expected_target_identities={"french/0001", "spanish/0001", "spanish/0003"},
+            expected_handwritten_identities={"spanish/0004"},
+        )
+
+        self.assertFalse((directory / "targets.d" / "spanish-0002.json").exists())
+        self.assertTrue((directory / "targets.d" / "spanish-0003.json").is_file())
+        for path in stable_paths:
+            self.assertEqual((path.read_bytes(), path.stat().st_mtime_ns), before[path])
+
+    def test_book_generation_writer_prevalidates_expected_set_before_writes(self):
+        directory = self.book_generation_tree()
+        document = load_book_generation(self.root)
+        path = directory / "targets.d" / "spanish-0001.json"
+        before = path.read_bytes()
+        document["targets"][1]["output"] = "spanish/book/chapters/changed.tex"
+
+        with self.assertRaisesRegex(ValueError, "target owner set mismatch"):
+            write_book_generation_language(
+                self.root,
+                "spanish",
+                document,
+                expected_target_identities={"spanish/0001"},
+            )
+        self.assertEqual(path.read_bytes(), before)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,8 @@
+{
+  "language": "malayalam",
+  "chapter": 2,
+  "output": "malayalam/book/chapters/ch02-introductions.tex",
+  "embeddedLessonIds": [
+    "ML-W02-santosham-guided-copy"
+  ]
+}

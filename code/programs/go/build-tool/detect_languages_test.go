@@ -18,7 +18,7 @@ func TestAllToolchainsConstant(t *testing.T) {
 	expected := map[string]bool{
 		"python": true, "ruby": true, "go": true,
 		"typescript": true, "rust": true, "elixir": true, "lua": true, "perl": true,
-		"swift": true, "dart": true, "java": true, "kotlin": true, "haskell": true, "dotnet": true,
+		"swift": true, "dart": true, "java": true, "kotlin": true, "haskell": true, "ocaml": true, "dotnet": true,
 		// "cpp" installs the C/C++ compilers (gcc/g++, clang/clang++, cl.exe)
 		// and serves both the "c" and "cpp" package languages.
 		"cpp": true,
@@ -176,6 +176,7 @@ func TestCollectAffectedLanguages(t *testing.T) {
 		{Name: "wasm/graph", Language: "wasm"},
 		{Name: "csharp/graph", Language: "csharp"},
 		{Name: "fsharp/graph", Language: "fsharp"},
+		{Name: "ocaml/graph", Language: "ocaml"},
 	}
 
 	tests := []struct {
@@ -190,8 +191,8 @@ func TestCollectAffectedLanguages(t *testing.T) {
 		},
 		{
 			name:        "multiple languages affected",
-			affectedSet: map[string]bool{"python/logic-gates": true, "rust/starlark-vm": true, "dart/hello-world": true},
-			wantLangs:   map[string]bool{"python": true, "rust": true, "dart": true},
+			affectedSet: map[string]bool{"python/logic-gates": true, "rust/starlark-vm": true, "dart/hello-world": true, "ocaml/graph": true},
+			wantLangs:   map[string]bool{"python": true, "rust": true, "dart": true, "ocaml": true},
 		},
 		{
 			name:        "empty affected set",
@@ -273,6 +274,7 @@ func TestToolchainForPackageLanguage(t *testing.T) {
 		"kotlin":  "kotlin",
 		"python":  "python",
 		"swift":   "swift",
+		"ocaml":   "ocaml",
 		"c":       "cpp",
 		"cpp":     "cpp",
 		"unknown": "unknown",

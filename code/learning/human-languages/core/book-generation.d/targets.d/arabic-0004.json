@@ -1,0 +1,6 @@
+{
+  "language": "arabic",
+  "chapter": 4,
+  "output": "arabic/book/chapters/ch04-farewells.tex",
+  "scriptSet": "arabic-main"
+}

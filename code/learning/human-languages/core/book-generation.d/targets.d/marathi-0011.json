@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 11,
+  "output": "marathi/book/chapters/ch11-mind-and-page.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 3,
+  "output": "marwadi/book/chapters/ch03-haan-saa.tex",
+  "scriptSet": "marwadi-main"
+}

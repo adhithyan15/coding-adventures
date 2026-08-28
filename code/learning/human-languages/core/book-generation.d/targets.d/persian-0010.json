@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 10,
+  "output": "persian/book/chapters/ch10-family.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

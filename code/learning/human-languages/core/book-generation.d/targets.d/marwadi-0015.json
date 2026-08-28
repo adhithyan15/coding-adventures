@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 15,
+  "output": "marwadi/book/chapters/ch15-hand-and-money.tex",
+  "scriptSet": "marwadi-main"
+}

@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Bread, Water, and Wine",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:45ea90ec38957e5b",
+  "sourceHash": "fnv1a64:d1dda65508a8e580",
   "lessons": [
     {
       "id": "PT-C11-pao",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:978f1cc1949e0eda",
+      "sourceHash": "fnv1a64:e2b654438e1fee03",
       "notice": null,
       "blocks": [
         {
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89864126fd6d8ed4",
+      "sourceHash": "fnv1a64:9820602c5703cc6b",
       "notice": null,
       "blocks": [
         {

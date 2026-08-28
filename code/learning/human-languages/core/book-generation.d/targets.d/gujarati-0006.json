@@ -1,0 +1,7 @@
+{
+  "language": "gujarati",
+  "unicodeScript": "Gujarati",
+  "scriptCommand": "gu",
+  "chapter": 6,
+  "output": "gujarati/book/chapters/ch06-final-script-closure-a.tex"
+}

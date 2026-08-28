@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 15,
+  "output": "russian/book/chapters/ch15-script-eight.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

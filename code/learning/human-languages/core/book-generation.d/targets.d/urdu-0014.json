@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 14,
+  "output": "urdu/book/chapters/ch14-clothing.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

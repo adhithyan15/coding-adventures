@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 11,
+  "output": "kannada/book/chapters/ch11-colours.tex",
+  "scriptSet": "kannada-comparisons"
+}

@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 4,
+  "output": "urdu/book/chapters/ch04-how-are-you.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

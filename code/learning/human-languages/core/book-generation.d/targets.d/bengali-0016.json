@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 16,
+  "output": "bengali/book/chapters/ch16-script-first.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

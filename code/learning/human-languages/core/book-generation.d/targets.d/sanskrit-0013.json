@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 13,
+  "output": "sanskrit/book/chapters/ch13-face-nouns-2.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

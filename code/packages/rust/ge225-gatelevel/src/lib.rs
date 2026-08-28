@@ -42,9 +42,31 @@ const CONTROLLER_STATUS_CLEAR_BASE: i32 = 0o2516000;
 const API_SAVED_PC_ADDRESS: i32 = 0o201;
 const API_VECTOR_ADDRESS: i32 = 0o204;
 const API_X_GROUP: usize = 32;
+const AAU_FIXED_WORD_BITS: usize = 39;
 
-/// Persistent non-memory bits in the P006B2 central/direct-I/O model.
-pub const CENTRAL_FLIP_FLOPS: usize = 1_270;
+/// Persistent non-memory bits in the complete P006 GE-225 model.
+pub const CENTRAL_FLIP_FLOPS: usize = 1_437;
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum AauMode {
+    FixedPoint,
+    NormalizedFloatingPoint,
+    UnnormalizedFloatingPoint,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct AauState {
+    pub mode: Option<AauMode>,
+    pub ready: bool,
+    pub ax: u64,
+    pub bx: u64,
+    pub qx: u64,
+    pub ix: u64,
+    pub overflow: bool,
+    pub underflow: bool,
+    pub overflow_hold: bool,
+    pub underflow_hold: bool,
+}
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum CardFormat {
@@ -192,6 +214,7 @@ pub struct Ge225GateState {
     pub controller_selector_alarm: bool,
     pub selected_controller: Option<u8>,
     pub controllers: Vec<ControllerStatus>,
+    pub aau: AauState,
     pub memory: Vec<i32>,
 }
 
@@ -210,28 +233,76 @@ pub struct StepTrace {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Ge225GateError {
-    InvalidMemorySize { words: usize },
-    InvalidOrigin { origin: usize },
-    ProgramTooLarge { words: usize, capacity: usize },
-    AddressOutOfRange { address: i32, capacity: usize },
+    InvalidMemorySize {
+        words: usize,
+    },
+    InvalidOrigin {
+        origin: usize,
+    },
+    ProgramTooLarge {
+        words: usize,
+        capacity: usize,
+    },
+    AddressOutOfRange {
+        address: i32,
+        capacity: usize,
+    },
     Halted,
-    UnknownInstruction { word: i32, pc: i32 },
-    InvalidAutomaticModification { word: i32 },
-    ShiftCountOutOfRange { count: i32 },
-    InvalidBcd { word: i32 },
-    FlaggedDecimalOperand { double: bool },
-    InvalidClock { value: i32 },
-    InvalidCardRecordLength { format: CardFormat, words: usize },
+    UnknownInstruction {
+        word: i32,
+        pc: i32,
+    },
+    InvalidAutomaticModification {
+        word: i32,
+    },
+    ShiftCountOutOfRange {
+        count: i32,
+    },
+    InvalidBcd {
+        word: i32,
+    },
+    FlaggedDecimalOperand {
+        double: bool,
+    },
+    InvalidClock {
+        value: i32,
+    },
+    InvalidCardRecordLength {
+        format: CardFormat,
+        words: usize,
+    },
     CardReaderQueueFull,
-    InvalidCardAddress { address: i32 },
-    InvalidCharacter { code: i32 },
+    InvalidCardAddress {
+        address: i32,
+    },
+    InvalidCharacter {
+        code: i32,
+    },
     CharacterQueueFull,
-    DeviceNotActive { device: &'static str },
-    ControllerPlugOutOfRange { plug: usize },
-    ControllerConditionOutOfRange { condition: u8 },
+    DeviceNotActive {
+        device: &'static str,
+    },
+    ControllerPlugOutOfRange {
+        plug: usize,
+    },
+    ControllerConditionOutOfRange {
+        condition: u8,
+    },
     ControllerReadyCannotBeError,
-    ControllerOffline { plug: usize },
+    ControllerOffline {
+        plug: usize,
+    },
     ControllerCommandQueueFull,
+    AauNotReady {
+        instruction: &'static str,
+    },
+    AauModeRequired {
+        instruction: &'static str,
+    },
+    InvalidAauAddress {
+        instruction: &'static str,
+        address: i32,
+    },
 }
 
 impl Display for Ge225GateError {
@@ -322,6 +393,19 @@ impl Display for Ge225GateError {
             Self::ControllerCommandQueueFull => write!(
                 formatter,
                 "GE-225 controller command capture is full at {MAX_CONTROLLER_COMMANDS} commands"
+            ),
+            Self::AauNotReady { instruction } => {
+                write!(formatter, "GE-225 AAU is not ready for {instruction}")
+            }
+            Self::AauModeRequired { instruction } => {
+                write!(formatter, "GE-225 AAU {instruction} requires a calculation mode")
+            }
+            Self::InvalidAauAddress {
+                instruction,
+                address,
+            } => write!(
+                formatter,
+                "GE-225 AAU {instruction} requires an unmodified address greater than 15: {address:o}"
             ),
         }
     }
@@ -420,6 +504,39 @@ enum Operation {
     BcsClear,
     SetPst,
     SetPbk,
+    Fld,
+    Fad,
+    Fsu,
+    Fst,
+    Fmp,
+    Fdv,
+    AauSetFixpoint,
+    AauSetNflpoint,
+    AauSetUflpoint,
+    AauLaq,
+    AauLqa,
+    AauMaq,
+    AauXaq,
+    AauRov,
+    AauRun,
+    AauRin,
+    AauNox,
+    AauBar,
+    AauBan,
+    AauBmi,
+    AauBpl,
+    AauBze,
+    AauBnz,
+    AauBov,
+    AauBno,
+    AauBuf,
+    AauBnu,
+    AauBoo,
+    AauBon,
+    AauBuo,
+    AauBun,
+    AauBer,
+    AauBne,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -482,6 +599,16 @@ pub struct Ge225GateLevel {
     api_branch_inhibit: BitRegister<1>,
     interrupted_x_group: BitRegister<6>,
     automatic_interrupt_mode: BitRegister<1>,
+    aau_mode: BitRegister<2>,
+    aau_ready: BitRegister<1>,
+    aau_ax: BitRegister<40>,
+    aau_bx: BitRegister<40>,
+    aau_qx: BitRegister<40>,
+    aau_ix: BitRegister<40>,
+    aau_overflow: BitRegister<1>,
+    aau_underflow: BitRegister<1>,
+    aau_overflow_hold: BitRegister<1>,
+    aau_underflow_hold: BitRegister<1>,
 }
 
 impl Ge225GateLevel {
@@ -552,6 +679,16 @@ impl Ge225GateLevel {
             api_branch_inhibit: BitRegister::zero(),
             interrupted_x_group: BitRegister::zero(),
             automatic_interrupt_mode: BitRegister::zero(),
+            aau_mode: BitRegister::zero(),
+            aau_ready: BitRegister::new(&[1]),
+            aau_ax: BitRegister::zero(),
+            aau_bx: BitRegister::zero(),
+            aau_qx: BitRegister::zero(),
+            aau_ix: BitRegister::zero(),
+            aau_overflow: BitRegister::zero(),
+            aau_underflow: BitRegister::zero(),
+            aau_overflow_hold: BitRegister::zero(),
+            aau_underflow_hold: BitRegister::zero(),
         })
     }
 
@@ -619,6 +756,16 @@ impl Ge225GateLevel {
         self.api_branch_inhibit.write(&[0]);
         self.interrupted_x_group.write(&[0; 6]);
         self.automatic_interrupt_mode.write(&[0]);
+        self.aau_mode.write(&[0; 2]);
+        self.aau_ready.write(&[1]);
+        self.aau_ax.write(&[0; 40]);
+        self.aau_bx.write(&[0; 40]);
+        self.aau_qx.write(&[0; 40]);
+        self.aau_ix.write(&[0; 40]);
+        self.aau_overflow.write(&[0]);
+        self.aau_underflow.write(&[0]);
+        self.aau_overflow_hold.write(&[0]);
+        self.aau_underflow_hold.write(&[0]);
     }
 
     pub fn load_words(&mut self, words: &[i32], origin: usize) -> Result<(), Ge225GateError> {
@@ -1020,6 +1167,17 @@ impl Ge225GateLevel {
         self.halted.write(&[direct_alarm]);
     }
 
+    pub fn set_aau_ready(&mut self, ready: bool) {
+        self.aau_ready.write(&[u8::from(ready)]);
+    }
+
+    pub fn clear_aau_alerts(&mut self) {
+        self.aau_overflow.write(&[0]);
+        self.aau_underflow.write(&[0]);
+        self.aau_overflow_hold.write(&[0]);
+        self.aau_underflow_hold.write(&[0]);
+    }
+
     pub fn set_program_counter(&mut self, address: i32) -> Result<(), Ge225GateError> {
         self.checked_address(address)?;
         self.pc.write(&i32_to_bits::<15>(address));
@@ -1135,6 +1293,7 @@ impl Ge225GateLevel {
         self.preflight_decimal(operation, effective_address)?;
         self.preflight_direct_io(operation, effective_address)?;
         self.preflight_controller(operation, address, sequential)?;
+        self.preflight_aau(operation, modifier, address, effective_address)?;
         if ir_word == instruction && modifier != 0 {
             if let Some(modified) = effective_address.map(|effective| {
                 if is_card_operation(operation) {
@@ -1264,6 +1423,18 @@ impl Ge225GateLevel {
                     api_enabled: self.controller_api_enabled[plug].read()[0] == 1,
                 })
                 .collect(),
+            aau: AauState {
+                mode: decode_aau_mode(self.aau_mode.read()),
+                ready: self.aau_ready.read()[0] == 1,
+                ax: bits_to_u64(&self.aau_ax.read()),
+                bx: bits_to_u64(&self.aau_bx.read()),
+                qx: bits_to_u64(&self.aau_qx.read()),
+                ix: bits_to_u64(&self.aau_ix.read()),
+                overflow: self.aau_overflow.read()[0] == 1,
+                underflow: self.aau_underflow.read()[0] == 1,
+                overflow_hold: self.aau_overflow_hold.read()[0] == 1,
+                underflow_hold: self.aau_underflow_hold.read()[0] == 1,
+            },
             memory: self
                 .memory
                 .iter()
@@ -1526,6 +1697,44 @@ impl Ge225GateLevel {
         Ok(())
     }
 
+    fn preflight_aau(
+        &self,
+        operation: Operation,
+        modifier: i32,
+        raw_address: i32,
+        effective_address: Option<i32>,
+    ) -> Result<(), Ge225GateError> {
+        if (is_aau_memory(operation) || is_aau_general(operation)) && self.aau_ready.read()[0] == 0
+        {
+            return Err(Ge225GateError::AauNotReady {
+                instruction: operation_name(operation),
+            });
+        }
+        if !is_aau_memory(operation) {
+            return Ok(());
+        }
+        if modifier == 0 && raw_address <= 0o17 {
+            return Err(Ge225GateError::InvalidAauAddress {
+                instruction: operation_name(operation),
+                address: raw_address,
+            });
+        }
+        if matches!(
+            operation,
+            Operation::Fad | Operation::Fsu | Operation::Fmp | Operation::Fdv
+        ) && decode_aau_mode(self.aau_mode.read()).is_none()
+        {
+            return Err(Ge225GateError::AauModeRequired {
+                instruction: operation_name(operation),
+            });
+        }
+        let address = effective_address.expect("AAU memory operations have an effective address");
+        if address & 1 == 0 {
+            self.following_address(address)?;
+        }
+        Ok(())
+    }
+
     fn reader_alarm(&mut self) {
         self.card_reader_alarm.write(&[1]);
         self.priority_alarm.write(&[1]);
@@ -1771,6 +1980,9 @@ impl Ge225GateLevel {
                 };
                 i32::from(branch == 0)
             }
+            operation if is_aau_branch(operation) => {
+                i32::from(self.aau_branch_condition(operation) == 0)
+            }
             _ => 0,
         })
     }
@@ -1785,6 +1997,15 @@ impl Ge225GateLevel {
     ) -> Result<(), Ge225GateError> {
         let address = effective_address.unwrap_or(raw_address);
         match operation {
+            operation if is_aau_memory(operation) => {
+                self.execute_aau_memory(operation, address)?;
+            }
+            operation if is_aau_general(operation) => {
+                self.execute_aau_general(operation)?;
+            }
+            operation if is_aau_branch(operation) => {
+                self.execute_aau_branch(operation)?;
+            }
             Operation::Lda => {
                 let operand = self.read_word(address)?;
                 self.m.write(&i32_to_bits::<20>(operand));
@@ -2333,8 +2554,405 @@ impl Ge225GateLevel {
                     self.parity_error.write(&[0]);
                 }
             }
+            _ => unreachable!("the AAU operation guards cover every remaining operation"),
         }
         Ok(())
+    }
+
+    fn read_aau_operand(&mut self, address: i32) -> Result<[u8; 40], Ge225GateError> {
+        let first = i32_to_bits::<20>(self.read_word(address)?);
+        let second = if address & 1 == 0 {
+            i32_to_bits::<20>(self.read_word(self.following_address(address)?)?)
+        } else {
+            first
+        };
+        self.m.write(&second);
+        Ok(join_aau_words(first, second))
+    }
+
+    fn write_aau_operand(&mut self, address: i32, value: [u8; 40]) -> Result<(), Ge225GateError> {
+        let (first, second) = split_aau_words(value);
+        let index = self.checked_address(address)?;
+        if address & 1 == 0 {
+            let following = self.following_address(address)?;
+            let following_index = self.checked_address(following)?;
+            self.memory[index].write(&first);
+            self.memory[following_index].write(&second);
+        } else {
+            self.memory[index].write(&second);
+        }
+        self.m.write(&second);
+        Ok(())
+    }
+
+    fn accept_aau_instruction(&mut self) {
+        self.aau_overflow.write(&[0]);
+        self.aau_underflow.write(&[0]);
+    }
+
+    fn set_aau_overflow(&mut self) {
+        self.aau_overflow.write(&[1]);
+        self.aau_overflow_hold.write(&[1]);
+    }
+
+    fn set_aau_underflow(&mut self) {
+        self.aau_underflow.write(&[1]);
+        self.aau_underflow_hold.write(&[1]);
+    }
+
+    fn capture_aau_ix(&mut self) {
+        self.aau_ix.write(&zero_extend::<20, 40>(self.ir.read()));
+    }
+
+    fn execute_aau_general(&mut self, operation: Operation) -> Result<(), Ge225GateError> {
+        self.capture_aau_ix();
+        self.accept_aau_instruction();
+        match operation {
+            Operation::AauSetFixpoint => self.aau_mode.write(&encode_aau_mode(AauMode::FixedPoint)),
+            Operation::AauSetNflpoint => self
+                .aau_mode
+                .write(&encode_aau_mode(AauMode::NormalizedFloatingPoint)),
+            Operation::AauSetUflpoint => self
+                .aau_mode
+                .write(&encode_aau_mode(AauMode::UnnormalizedFloatingPoint)),
+            Operation::AauLaq => self.aau_ax.write(&self.aau_qx.read()),
+            Operation::AauLqa => self.aau_qx.write(&self.aau_ax.read()),
+            Operation::AauMaq => {
+                self.aau_qx.write(&self.aau_ax.read());
+                self.aau_ax.write(&[0; 40]);
+            }
+            Operation::AauXaq => {
+                let ax = self.aau_ax.read();
+                let qx = self.aau_qx.read();
+                self.aau_ax.write(&qx);
+                self.aau_qx.write(&ax);
+            }
+            Operation::AauRov => self.aau_overflow_hold.write(&[0]),
+            Operation::AauRun => self.aau_underflow_hold.write(&[0]),
+            Operation::AauRin => {
+                self.aau_overflow_hold.write(&[0]);
+                self.aau_underflow_hold.write(&[0]);
+            }
+            Operation::AauNox => {
+                let (exponent, mantissa) =
+                    aau_float_pair_parts(self.aau_ax.read(), self.aau_qx.read());
+                self.finish_aau_float_pair(exponent, sign_extend::<61, 64>(mantissa), true);
+            }
+            _ => unreachable!("the caller accepts only AAU general operations"),
+        }
+        Ok(())
+    }
+
+    fn aau_branch_condition(&self, operation: Operation) -> u8 {
+        let mode = decode_aau_mode(self.aau_mode.read());
+        let ax = self.aau_ax.read();
+        let floating = u8::from(matches!(
+            mode,
+            Some(AauMode::NormalizedFloatingPoint | AauMode::UnnormalizedFloatingPoint)
+        ));
+        let minus = mux_bit(floating, ax[39], ax[19]);
+        let zero = is_zero(&ax);
+        let overflow = self.aau_overflow.read()[0];
+        let underflow = self.aau_underflow.read()[0];
+        let overflow_hold = self.aau_overflow_hold.read()[0];
+        let underflow_hold = self.aau_underflow_hold.read()[0];
+        match operation {
+            Operation::AauBar => self.aau_ready.read()[0],
+            Operation::AauBan => not_gate(self.aau_ready.read()[0]),
+            Operation::AauBmi => minus,
+            Operation::AauBpl => not_gate(minus),
+            Operation::AauBze => zero,
+            Operation::AauBnz => not_gate(zero),
+            Operation::AauBov => overflow,
+            Operation::AauBno => not_gate(overflow),
+            Operation::AauBuf => underflow,
+            Operation::AauBnu => not_gate(underflow),
+            Operation::AauBoo => overflow_hold,
+            Operation::AauBon => not_gate(overflow_hold),
+            Operation::AauBuo => underflow_hold,
+            Operation::AauBun => not_gate(underflow_hold),
+            Operation::AauBer => or_gate(overflow, underflow),
+            Operation::AauBne => not_gate(or_gate(overflow, underflow)),
+            _ => unreachable!("the caller accepts only AAU status branches"),
+        }
+    }
+
+    fn execute_aau_branch(&mut self, operation: Operation) -> Result<(), Ge225GateError> {
+        self.capture_aau_ix();
+        let condition = self.aau_branch_condition(operation);
+        if matches!(operation, Operation::AauBoo | Operation::AauBon)
+            && self.aau_overflow_hold.read()[0] == 1
+        {
+            self.aau_overflow_hold.write(&[0]);
+        }
+        if matches!(operation, Operation::AauBuo | Operation::AauBun)
+            && self.aau_underflow_hold.read()[0] == 1
+        {
+            self.aau_underflow_hold.write(&[0]);
+        }
+        if condition == 0 {
+            self.advance_pc(1)?;
+        }
+        Ok(())
+    }
+
+    fn execute_aau_memory(
+        &mut self,
+        operation: Operation,
+        address: i32,
+    ) -> Result<(), Ge225GateError> {
+        self.capture_aau_ix();
+        self.accept_aau_instruction();
+        match operation {
+            Operation::Fld => {
+                let operand = self.read_aau_operand(address)?;
+                self.aau_ax.write(&operand);
+            }
+            Operation::Fst => self.write_aau_operand(address, self.aau_ax.read())?,
+            Operation::Fad | Operation::Fsu
+                if decode_aau_mode(self.aau_mode.read()) == Some(AauMode::FixedPoint) =>
+            {
+                let operand = self.read_aau_operand(address)?;
+                self.aau_bx.write(&operand);
+                let left = aau_fixed_bits(self.aau_ax.read());
+                let right = aau_fixed_bits(operand);
+                let (result, alert) = if operation == Operation::Fad {
+                    gate_add(left, right)
+                } else {
+                    gate_subtract(left, right)
+                };
+                if alert == 1 {
+                    if left[AAU_FIXED_WORD_BITS - 1] == 0 {
+                        self.set_aau_overflow();
+                    } else {
+                        self.set_aau_underflow();
+                    }
+                }
+                self.aau_ax.write(&aau_fixed_raw(result));
+            }
+            Operation::Fmp
+                if decode_aau_mode(self.aau_mode.read()) == Some(AauMode::FixedPoint) =>
+            {
+                let operand = self.read_aau_operand(address)?;
+                self.aau_bx.write(&operand);
+                let product = gate_signed_multiply::<39, 77>(
+                    aau_fixed_bits(self.aau_qx.read()),
+                    aau_fixed_bits(operand),
+                );
+                let (ax, qx) = split_aau_fixed_pair(product);
+                self.aau_ax.write(&ax);
+                self.aau_qx.write(&qx);
+            }
+            Operation::Fdv
+                if decode_aau_mode(self.aau_mode.read()) == Some(AauMode::FixedPoint) =>
+            {
+                let operand = self.read_aau_operand(address)?;
+                self.aau_bx.write(&operand);
+                let divisor = aau_fixed_bits(operand);
+                let dividend = join_aau_fixed_pair(self.aau_ax.read(), self.aau_qx.read());
+                let high = aau_fixed_bits(self.aau_ax.read());
+                if is_zero(&divisor) == 1
+                    || greater_or_equal(&gate_absolute(high), &gate_absolute(divisor)) == 1
+                {
+                    if dividend[76] == 1 {
+                        let magnitude = gate_twos_complement(dividend);
+                        let (ax, qx) = split_aau_fixed_pair(magnitude);
+                        self.aau_ax.write(&ax);
+                        self.aau_qx.write(&qx);
+                    }
+                    self.set_aau_overflow();
+                } else {
+                    let (quotient, remainder) = gate_aau_fixed_divide(dividend, divisor)
+                        .expect("AAU fixed divide preflight rejects zero divisors");
+                    self.aau_ax.write(&aau_fixed_raw(quotient));
+                    self.aau_qx.write(&aau_fixed_raw(remainder));
+                }
+            }
+            Operation::Fad | Operation::Fsu | Operation::Fmp | Operation::Fdv => {
+                self.execute_aau_floating(operation, address)?;
+            }
+            _ => unreachable!("the caller accepts only AAU memory operations"),
+        }
+        Ok(())
+    }
+
+    fn finish_aau_float_pair(
+        &mut self,
+        mut exponent: i32,
+        mut mantissa: [u8; 64],
+        normalize: bool,
+    ) {
+        if is_zero(&mantissa) == 1 {
+            self.aau_ax.write(&[0; 40]);
+            self.aau_qx.write(&[0; 40]);
+            return;
+        }
+        while !fits_signed_width(&mantissa, 61) {
+            mantissa = arithmetic_shift_right_bits(mantissa, 1);
+            exponent = gate_i32_add(exponent, 1);
+        }
+        if normalize {
+            while is_zero(&mantissa) == 0
+                && gate_absolute(mantissa)[59..].iter().all(|bit| *bit == 0)
+            {
+                mantissa = shift_left_bits(mantissa, 1);
+                exponent = gate_i32_subtract(exponent, 1);
+            }
+        }
+        if exponent > 255 {
+            self.set_aau_overflow();
+        } else if exponent < -256 {
+            self.set_aau_underflow();
+            self.aau_ax.write(&[0; 40]);
+            self.aau_qx.write(&[0; 40]);
+            return;
+        }
+        let pair: [u8; 61] = mantissa[..61]
+            .try_into()
+            .expect("the bounded AAU floating pair is sixty-one bits");
+        let (ax, qx) = aau_float_pair_raw(exponent, pair);
+        self.aau_ax.write(&ax);
+        self.aau_qx.write(&qx);
+    }
+
+    fn execute_aau_floating(
+        &mut self,
+        operation: Operation,
+        address: i32,
+    ) -> Result<(), Ge225GateError> {
+        let normalized =
+            decode_aau_mode(self.aau_mode.read()) == Some(AauMode::NormalizedFloatingPoint);
+        let operand = self.read_aau_operand(address)?;
+        self.aau_bx.write(&operand);
+        let (bx_exponent, bx_mantissa) = aau_float_parts(operand);
+        match operation {
+            Operation::Fad | Operation::Fsu => {
+                let (ax_exponent, ax_mantissa) = aau_float_parts(self.aau_ax.read());
+                let target_exponent = ax_exponent.max(bx_exponent);
+                let left = arithmetic_shift_right_bits(
+                    shift_left_bits(sign_extend::<31, 64>(ax_mantissa), 30),
+                    (target_exponent - ax_exponent).max(0) as usize,
+                );
+                let right = arithmetic_shift_right_bits(
+                    shift_left_bits(sign_extend::<31, 64>(bx_mantissa), 30),
+                    (target_exponent - bx_exponent).max(0) as usize,
+                );
+                let result = if operation == Operation::Fad {
+                    gate_add(left, right).0
+                } else {
+                    gate_subtract(left, right).0
+                };
+                self.finish_aau_float_pair(target_exponent, result, normalized);
+            }
+            Operation::Fmp => {
+                let (qx_exponent, qx_mantissa) = aau_float_parts(self.aau_qx.read());
+                let product = gate_signed_multiply::<31, 64>(qx_mantissa, bx_mantissa);
+                self.finish_aau_float_pair(
+                    gate_i32_add(qx_exponent, bx_exponent),
+                    product,
+                    normalized,
+                );
+            }
+            Operation::Fdv => self.execute_aau_float_divide(bx_exponent, bx_mantissa, normalized),
+            _ => unreachable!("the caller accepts only AAU floating arithmetic"),
+        }
+        Ok(())
+    }
+
+    fn execute_aau_float_divide(
+        &mut self,
+        bx_exponent: i32,
+        bx_mantissa: [u8; 31],
+        normalized: bool,
+    ) {
+        let (mut ax_exponent, dividend_pair) =
+            aau_float_pair_parts(self.aau_ax.read(), self.aau_qx.read());
+        let dividend = sign_extend::<61, 64>(dividend_pair);
+        let divisor = sign_extend::<31, 64>(bx_mantissa);
+        if is_zero(&divisor) == 1 {
+            if dividend[63] == 1 {
+                let (ax, qx) = aau_float_pair_raw(
+                    ax_exponent,
+                    gate_absolute(dividend)[..61]
+                        .try_into()
+                        .expect("an AAU pair has sixty-one data bits"),
+                );
+                self.aau_ax.write(&ax);
+                self.aau_qx.write(&qx);
+            }
+            self.set_aau_overflow();
+            return;
+        }
+        if is_zero(&dividend) == 1 {
+            self.aau_ax.write(&[0; 40]);
+            self.aau_qx.write(&[0; 40]);
+            return;
+        }
+        let dividend_negative = dividend[63];
+        let divisor_negative = divisor[63];
+        let mut dividend_magnitude = gate_absolute(dividend);
+        let divisor_magnitude = gate_absolute(divisor);
+        if greater_or_equal(
+            &shift_right_bits(dividend_magnitude, 30),
+            &divisor_magnitude,
+        ) == 1
+        {
+            dividend_magnitude = shift_right_bits(dividend_magnitude, 1);
+            ax_exponent = gate_i32_add(ax_exponent, 1);
+            if greater_or_equal(
+                &shift_right_bits(dividend_magnitude, 30),
+                &divisor_magnitude,
+            ) == 1
+            {
+                let pair: [u8; 61] = dividend_magnitude[..61]
+                    .try_into()
+                    .expect("the AAU dividend pair is sixty-one bits");
+                let (ax, qx) = aau_float_pair_raw(ax_exponent, pair);
+                self.aau_ax.write(&ax);
+                self.aau_qx.write(&qx);
+                self.set_aau_overflow();
+                return;
+            }
+        }
+        let mut quotient_exponent = gate_i32_subtract(ax_exponent, bx_exponent);
+        let (quotient_magnitude, remainder_magnitude) =
+            gate_unsigned_divide_64(dividend_magnitude, divisor_magnitude)
+                .expect("AAU floating divide rejects zero divisors");
+        let quotient_sign = xor_gate(dividend_negative, divisor_negative);
+        let mut quotient = apply_sign(quotient_magnitude, quotient_sign);
+        while !fits_signed_width(&quotient, 31) {
+            quotient = arithmetic_shift_right_bits(quotient, 1);
+            quotient_exponent = gate_i32_add(quotient_exponent, 1);
+        }
+        if normalized {
+            while is_zero(&quotient) == 0
+                && gate_absolute(quotient)[29..].iter().all(|bit| *bit == 0)
+            {
+                quotient = shift_left_bits(quotient, 1);
+                quotient_exponent = gate_i32_subtract(quotient_exponent, 1);
+            }
+        }
+        if quotient_exponent > 255 {
+            self.set_aau_overflow();
+        } else if quotient_exponent < -256 {
+            self.set_aau_underflow();
+            self.aau_ax.write(&[0; 40]);
+            self.aau_qx.write(&[0; 40]);
+        } else {
+            let remainder = apply_sign(remainder_magnitude, dividend_negative);
+            let quotient: [u8; 31] = quotient[..31]
+                .try_into()
+                .expect("the bounded AAU quotient is thirty-one bits");
+            let remainder: [u8; 31] = remainder[..31]
+                .try_into()
+                .expect("the bounded AAU remainder is thirty-one bits");
+            self.aau_ax
+                .write(&aau_float_raw(quotient_exponent, quotient));
+            self.aau_qx.write(&aau_float_raw(
+                gate_i32_subtract(quotient_exponent, 30),
+                remainder,
+            ));
+        }
     }
 
     fn execute_shift(&mut self, operation: Operation, count: i32) -> Result<(), Ge225GateError> {
@@ -2664,6 +3282,9 @@ fn typewriter_char(code: i32) -> Option<&'static str> {
 
 fn decode(word: i32, _n_device: NRegisterDevice) -> Option<(Operation, i32, i32)> {
     let normalized = word & WORD_MASK;
+    if let Some(operation) = aau_exact_operation(normalized) {
+        return Some((operation, 0, 0));
+    }
     let modifier = (normalized >> 13) & 0x03;
     let canonical = normalized & !(0x03 << 13);
     let canonical_bits = i32_to_bits::<20>(canonical);
@@ -2741,6 +3362,39 @@ fn decode(word: i32, _n_device: NRegisterDevice) -> Option<(Operation, i32, i32)
     Some((operation, modifier, normalized & ADDRESS_MASK))
 }
 
+fn aau_exact_operation(word: i32) -> Option<Operation> {
+    Some(match word {
+        0o3500010 => Operation::AauSetFixpoint,
+        0o3100010 => Operation::AauSetNflpoint,
+        0o3200010 => Operation::AauSetUflpoint,
+        0o3600002 => Operation::AauLaq,
+        0o3200002 => Operation::AauLqa,
+        0o3100002 => Operation::AauMaq,
+        0o3500002 => Operation::AauXaq,
+        0o3100004 => Operation::AauRov,
+        0o3200004 => Operation::AauRun,
+        0o3500004 => Operation::AauRin,
+        0o3100005 => Operation::AauNox,
+        0o2514720 => Operation::AauBar,
+        0o2516720 => Operation::AauBan,
+        0o2514721 => Operation::AauBmi,
+        0o2516721 => Operation::AauBpl,
+        0o2514722 => Operation::AauBze,
+        0o2516722 => Operation::AauBnz,
+        0o2514723 => Operation::AauBov,
+        0o2516723 => Operation::AauBno,
+        0o2514724 => Operation::AauBuf,
+        0o2516724 => Operation::AauBnu,
+        0o2514725 => Operation::AauBoo,
+        0o2516725 => Operation::AauBon,
+        0o2514726 => Operation::AauBuo,
+        0o2516726 => Operation::AauBun,
+        0o2514727 => Operation::AauBer,
+        0o2516727 => Operation::AauBne,
+        _ => return None,
+    })
+}
+
 const FIXED_OPERATIONS: &[(i32, Operation)] = &[
     (0o2500004, Operation::Hcr),
     (0o2500005, Operation::Off),
@@ -2811,6 +3465,12 @@ const MEMORY_OPERATIONS: &[(usize, Operation)] = &[
     (0o24, Operation::Mov),
     (0o26, Operation::Bru),
     (0o27, Operation::Sto),
+    (0o30, Operation::Fld),
+    (0o31, Operation::Fad),
+    (0o32, Operation::Fsu),
+    (0o33, Operation::Fst),
+    (0o35, Operation::Fmp),
+    (0o36, Operation::Fdv),
 ];
 
 const SHIFT_OPERATIONS: &[(i32, Operation)] = &[
@@ -2890,6 +3550,33 @@ fn is_fixed(operation: Operation) -> bool {
             | Operation::BcsClear
             | Operation::SetPst
             | Operation::SetPbk
+            | Operation::AauSetFixpoint
+            | Operation::AauSetNflpoint
+            | Operation::AauSetUflpoint
+            | Operation::AauLaq
+            | Operation::AauLqa
+            | Operation::AauMaq
+            | Operation::AauXaq
+            | Operation::AauRov
+            | Operation::AauRun
+            | Operation::AauRin
+            | Operation::AauNox
+            | Operation::AauBar
+            | Operation::AauBan
+            | Operation::AauBmi
+            | Operation::AauBpl
+            | Operation::AauBze
+            | Operation::AauBnz
+            | Operation::AauBov
+            | Operation::AauBno
+            | Operation::AauBuf
+            | Operation::AauBnu
+            | Operation::AauBoo
+            | Operation::AauBon
+            | Operation::AauBuo
+            | Operation::AauBun
+            | Operation::AauBer
+            | Operation::AauBne
     )
 }
 
@@ -2908,6 +3595,57 @@ fn is_shift(operation: Operation) -> bool {
             | Operation::Sld
             | Operation::Nor
             | Operation::Dno
+    )
+}
+
+fn is_aau_memory(operation: Operation) -> bool {
+    matches!(
+        operation,
+        Operation::Fld
+            | Operation::Fad
+            | Operation::Fsu
+            | Operation::Fst
+            | Operation::Fmp
+            | Operation::Fdv
+    )
+}
+
+fn is_aau_general(operation: Operation) -> bool {
+    matches!(
+        operation,
+        Operation::AauSetFixpoint
+            | Operation::AauSetNflpoint
+            | Operation::AauSetUflpoint
+            | Operation::AauLaq
+            | Operation::AauLqa
+            | Operation::AauMaq
+            | Operation::AauXaq
+            | Operation::AauRov
+            | Operation::AauRun
+            | Operation::AauRin
+            | Operation::AauNox
+    )
+}
+
+fn is_aau_branch(operation: Operation) -> bool {
+    matches!(
+        operation,
+        Operation::AauBar
+            | Operation::AauBan
+            | Operation::AauBmi
+            | Operation::AauBpl
+            | Operation::AauBze
+            | Operation::AauBnz
+            | Operation::AauBov
+            | Operation::AauBno
+            | Operation::AauBuf
+            | Operation::AauBnu
+            | Operation::AauBoo
+            | Operation::AauBon
+            | Operation::AauBuo
+            | Operation::AauBun
+            | Operation::AauBer
+            | Operation::AauBne
     )
 }
 
@@ -2937,6 +3675,12 @@ fn is_memory_reference(operation: Operation) -> bool {
             | Operation::Rcf
             | Operation::Rcm
             | Operation::Wcf
+            | Operation::Fld
+            | Operation::Fad
+            | Operation::Fsu
+            | Operation::Fst
+            | Operation::Fmp
+            | Operation::Fdv
     )
 }
 
@@ -3030,6 +3774,39 @@ fn operation_name(operation: Operation) -> &'static str {
         Operation::BcsSet | Operation::BcsClear => "BCS",
         Operation::SetPst => "SET_PST",
         Operation::SetPbk => "SET_PBK",
+        Operation::Fld => "FLD",
+        Operation::Fad => "FAD",
+        Operation::Fsu => "FSU",
+        Operation::Fst => "FST",
+        Operation::Fmp => "FMP",
+        Operation::Fdv => "FDV",
+        Operation::AauSetFixpoint => "SET_FIXPOINT",
+        Operation::AauSetNflpoint => "SET_NFLPOINT",
+        Operation::AauSetUflpoint => "SET_UFLPOINT",
+        Operation::AauLaq => "LAQ",
+        Operation::AauLqa => "LQA",
+        Operation::AauMaq => "MAQ",
+        Operation::AauXaq => "XAQ",
+        Operation::AauRov => "ROV",
+        Operation::AauRun => "RUN",
+        Operation::AauRin => "RIN",
+        Operation::AauNox => "NOX",
+        Operation::AauBar => "BAR",
+        Operation::AauBan => "BAN",
+        Operation::AauBmi => "BMI",
+        Operation::AauBpl => "BPL",
+        Operation::AauBze => "BZE",
+        Operation::AauBnz => "BNZ",
+        Operation::AauBov => "BOV",
+        Operation::AauBno => "BNO",
+        Operation::AauBuf => "BUF",
+        Operation::AauBnu => "BNU",
+        Operation::AauBoo => "BOO",
+        Operation::AauBon => "BON",
+        Operation::AauBuo => "BUO",
+        Operation::AauBun => "BUN",
+        Operation::AauBer => "BER",
+        Operation::AauBne => "BNE",
     }
 }
 
@@ -3279,6 +4056,270 @@ fn decode_decimal_carry(bits: [u8; 2]) -> i32 {
     }
 }
 
+fn encode_aau_mode(mode: AauMode) -> [u8; 2] {
+    match mode {
+        AauMode::FixedPoint => [1, 0],
+        AauMode::NormalizedFloatingPoint => [0, 1],
+        AauMode::UnnormalizedFloatingPoint => [1, 1],
+    }
+}
+
+fn decode_aau_mode(bits: [u8; 2]) -> Option<AauMode> {
+    match bits {
+        [1, 0] => Some(AauMode::FixedPoint),
+        [0, 1] => Some(AauMode::NormalizedFloatingPoint),
+        [1, 1] => Some(AauMode::UnnormalizedFloatingPoint),
+        _ => None,
+    }
+}
+
+fn mux_bit(select: u8, zero: u8, one: u8) -> u8 {
+    or_gate(and_gate(not_gate(select), zero), and_gate(select, one))
+}
+
+fn join_aau_words(first: [u8; 20], second: [u8; 20]) -> [u8; 40] {
+    std::array::from_fn(|bit| {
+        if bit < 20 {
+            second[bit]
+        } else {
+            first[bit - 20]
+        }
+    })
+}
+
+fn split_aau_words(value: [u8; 40]) -> ([u8; 20], [u8; 20]) {
+    let first = std::array::from_fn(|bit| value[bit + 20]);
+    let second = std::array::from_fn(|bit| value[bit]);
+    (first, second)
+}
+
+fn aau_fixed_bits(raw: [u8; 40]) -> [u8; 39] {
+    std::array::from_fn(|bit| if bit < 19 { raw[bit] } else { raw[bit + 1] })
+}
+
+fn aau_fixed_raw(value: [u8; 39]) -> [u8; 40] {
+    std::array::from_fn(|bit| match bit {
+        0..=18 => value[bit],
+        19 => value[38],
+        _ => value[bit - 1],
+    })
+}
+
+fn join_aau_fixed_pair(ax: [u8; 40], qx: [u8; 40]) -> [u8; 77] {
+    let ax = aau_fixed_bits(ax);
+    let qx = aau_fixed_bits(qx);
+    std::array::from_fn(|bit| if bit < 38 { qx[bit] } else { ax[bit - 38] })
+}
+
+fn split_aau_fixed_pair(value: [u8; 77]) -> ([u8; 40], [u8; 40]) {
+    let ax: [u8; 39] = std::array::from_fn(|bit| value[bit + 38]);
+    let qx: [u8; 39] = std::array::from_fn(|bit| if bit < 38 { value[bit] } else { ax[38] });
+    (aau_fixed_raw(ax), aau_fixed_raw(qx))
+}
+
+fn aau_float_parts(raw: [u8; 40]) -> (i32, [u8; 31]) {
+    let magnitude = bits_to_i32(&raw[31..39]);
+    let exponent = if raw[39] == 0 {
+        magnitude
+    } else if magnitude == 0 {
+        -256
+    } else {
+        -magnitude
+    };
+    let mantissa = std::array::from_fn(|bit| match bit {
+        0..=18 => raw[bit],
+        19..=29 => raw[bit + 1],
+        _ => raw[19],
+    });
+    (exponent, mantissa)
+}
+
+fn aau_exponent_bits(exponent: i32) -> [u8; 9] {
+    let encoded = if (0..=255).contains(&exponent) {
+        exponent
+    } else if (-256..=-1).contains(&exponent) {
+        0x100 | (-exponent & 0xff)
+    } else if exponent < -256 {
+        (-exponent) & 0xff
+    } else {
+        0x100 | ((exponent - 256) & 0xff)
+    };
+    i32_to_bits(encoded)
+}
+
+fn aau_float_raw(exponent: i32, mantissa: [u8; 31]) -> [u8; 40] {
+    let exponent = aau_exponent_bits(exponent);
+    std::array::from_fn(|bit| match bit {
+        0..=18 => mantissa[bit],
+        19 => mantissa[30],
+        20..=30 => mantissa[bit - 1],
+        _ => exponent[bit - 31],
+    })
+}
+
+fn aau_float_pair_parts(ax: [u8; 40], qx: [u8; 40]) -> (i32, [u8; 61]) {
+    let (exponent, ax_mantissa) = aau_float_parts(ax);
+    let (_, qx_mantissa) = aau_float_parts(qx);
+    let pair = std::array::from_fn(|bit| {
+        if bit < 30 {
+            qx_mantissa[bit]
+        } else {
+            ax_mantissa[bit - 30]
+        }
+    });
+    (exponent, pair)
+}
+
+fn aau_float_pair_raw(exponent: i32, mantissa: [u8; 61]) -> ([u8; 40], [u8; 40]) {
+    let ax_mantissa: [u8; 31] = std::array::from_fn(|bit| mantissa[bit + 30]);
+    let qx_mantissa: [u8; 31] = std::array::from_fn(|bit| {
+        if bit < 30 {
+            mantissa[bit]
+        } else {
+            mantissa[60]
+        }
+    });
+    (
+        aau_float_raw(exponent, ax_mantissa),
+        aau_float_raw(gate_i32_subtract(exponent, 30), qx_mantissa),
+    )
+}
+
+fn shift_left_bits<const WIDTH: usize>(value: [u8; WIDTH], count: usize) -> [u8; WIDTH] {
+    if count >= WIDTH {
+        return [0; WIDTH];
+    }
+    std::array::from_fn(|bit| if bit >= count { value[bit - count] } else { 0 })
+}
+
+fn shift_right_bits<const WIDTH: usize>(value: [u8; WIDTH], count: usize) -> [u8; WIDTH] {
+    if count >= WIDTH {
+        return [0; WIDTH];
+    }
+    std::array::from_fn(|bit| {
+        if bit + count < WIDTH {
+            value[bit + count]
+        } else {
+            0
+        }
+    })
+}
+
+fn arithmetic_shift_right_bits<const WIDTH: usize>(
+    value: [u8; WIDTH],
+    count: usize,
+) -> [u8; WIDTH] {
+    let sign = value[WIDTH - 1];
+    if count >= WIDTH {
+        return [sign; WIDTH];
+    }
+    std::array::from_fn(|bit| {
+        if bit + count < WIDTH {
+            value[bit + count]
+        } else {
+            sign
+        }
+    })
+}
+
+fn fits_signed_width<const WIDTH: usize>(value: &[u8; WIDTH], bits: usize) -> bool {
+    value[bits..].iter().all(|bit| *bit == value[bits - 1])
+}
+
+fn apply_sign<const WIDTH: usize>(magnitude: [u8; WIDTH], sign: u8) -> [u8; WIDTH] {
+    mux_bits(sign, magnitude, gate_twos_complement(magnitude))
+}
+
+fn gate_signed_multiply<const WIDTH: usize, const OUT: usize>(
+    left: [u8; WIDTH],
+    right: [u8; WIDTH],
+) -> [u8; OUT] {
+    let left_magnitude = gate_absolute(left);
+    let right_magnitude = gate_absolute(right);
+    let mut product = [0; OUT];
+    for multiplier_bit in 0..WIDTH {
+        let partial = std::array::from_fn(|bit| {
+            if bit >= multiplier_bit && bit - multiplier_bit < WIDTH {
+                and_gate(
+                    left_magnitude[bit - multiplier_bit],
+                    right_magnitude[multiplier_bit],
+                )
+            } else {
+                0
+            }
+        });
+        product = gate_add(product, partial).0;
+    }
+    apply_sign(product, xor_gate(left[WIDTH - 1], right[WIDTH - 1]))
+}
+
+fn gate_unsigned_divide_64(dividend: [u8; 64], divisor: [u8; 64]) -> Option<([u8; 64], [u8; 64])> {
+    if is_zero(&divisor) == 1 {
+        return None;
+    }
+    let divisor_wide = zero_extend::<64, 65>(divisor);
+    let mut quotient = [0; 64];
+    let mut remainder = [0; 65];
+    for dividend_bit in (0..64).rev() {
+        remainder = shift_left_bits(remainder, 1);
+        remainder[0] = dividend[dividend_bit];
+        let subtract = greater_or_equal(&remainder, &divisor_wide);
+        remainder = mux_bits(
+            subtract,
+            remainder,
+            gate_subtract(remainder, divisor_wide).0,
+        );
+        quotient[dividend_bit] = subtract;
+    }
+    Some((
+        quotient,
+        remainder[..64]
+            .try_into()
+            .expect("a divide remainder is smaller than its 64-bit divisor"),
+    ))
+}
+
+fn gate_aau_fixed_divide(dividend: [u8; 77], divisor: [u8; 39]) -> Option<([u8; 39], [u8; 39])> {
+    if is_zero(&divisor) == 1 {
+        return None;
+    }
+    let dividend_sign = dividend[76];
+    let divisor_sign = divisor[38];
+    let dividend_magnitude = gate_absolute(dividend);
+    let divisor_wide = zero_extend::<39, 78>(gate_absolute(divisor));
+    let mut quotient_wide = [0; 77];
+    let mut remainder = [0; 78];
+    for dividend_bit in (0..77).rev() {
+        remainder = shift_left_bits(remainder, 1);
+        remainder[0] = dividend_magnitude[dividend_bit];
+        let subtract = greater_or_equal(&remainder, &divisor_wide);
+        remainder = mux_bits(
+            subtract,
+            remainder,
+            gate_subtract(remainder, divisor_wide).0,
+        );
+        quotient_wide[dividend_bit] = subtract;
+    }
+    let quotient_magnitude: [u8; 39] = quotient_wide[..39]
+        .try_into()
+        .expect("the preflight-bounded AAU quotient fits its register");
+    let remainder_magnitude: [u8; 39] = remainder[..39]
+        .try_into()
+        .expect("the AAU remainder fits its divisor width");
+    Some((
+        apply_sign(quotient_magnitude, xor_gate(dividend_sign, divisor_sign)),
+        apply_sign(remainder_magnitude, dividend_sign),
+    ))
+}
+
+fn gate_i32_add(left: i32, right: i32) -> i32 {
+    bits_to_i32(&gate_add(i32_to_bits::<32>(left), i32_to_bits::<32>(right)).0)
+}
+
+fn gate_i32_subtract(left: i32, right: i32) -> i32 {
+    bits_to_i32(&gate_subtract(i32_to_bits::<32>(left), i32_to_bits::<32>(right)).0)
+}
+
 fn gate_add<const WIDTH: usize>(left: [u8; WIDTH], right: [u8; WIDTH]) -> ([u8; WIDTH], u8) {
     let result = ripple_carry_adder_with_carry(&left, &right, 0);
     let sum: [u8; WIDTH] = result.sum.try_into().expect("ripple adder preserves width");
@@ -3501,4 +4542,72 @@ pub fn encode_instruction(opcode: i32, modifier: i32, address: i32) -> Option<i3
         return None;
     }
     Some((opcode << 15) | (modifier << 13) | address)
+}
+
+pub fn assemble_aau_general(mnemonic: &str) -> Result<i32, String> {
+    Ok(match mnemonic {
+        "SET_FIXPOINT" => 0o3500010,
+        "SET_NFLPOINT" => 0o3100010,
+        "SET_UFLPOINT" => 0o3200010,
+        "LAQ" => 0o3600002,
+        "LQA" => 0o3200002,
+        "MAQ" => 0o3100002,
+        "XAQ" => 0o3500002,
+        "ROV" => 0o3100004,
+        "RUN" => 0o3200004,
+        "RIN" => 0o3500004,
+        "NOX" => 0o3100005,
+        _ => {
+            return Err(format!(
+                "unknown GE-225 AAU general instruction: {mnemonic}"
+            ))
+        }
+    })
+}
+
+pub fn assemble_aau_memory(mnemonic: &str, address: i32, modifier: i32) -> Result<i32, String> {
+    let opcode = match mnemonic {
+        "FLD" => 0o30,
+        "FAD" => 0o31,
+        "FSU" => 0o32,
+        "FST" => 0o33,
+        "FMP" => 0o35,
+        "FDV" => 0o36,
+        _ => return Err(format!("unknown GE-225 AAU memory instruction: {mnemonic}")),
+    };
+    encode_instruction(opcode, modifier, address)
+        .ok_or_else(|| format!("invalid GE-225 AAU memory operand: {address:o}/{modifier}"))
+}
+
+pub fn assemble_aau_branch(mnemonic: &str) -> Result<i32, String> {
+    Ok(match mnemonic {
+        "BAR" => 0o2514720,
+        "BAN" => 0o2516720,
+        "BMI" => 0o2514721,
+        "BPL" => 0o2516721,
+        "BZE" => 0o2514722,
+        "BNZ" => 0o2516722,
+        "BOV" => 0o2514723,
+        "BNO" => 0o2516723,
+        "BUF" => 0o2514724,
+        "BNU" => 0o2516724,
+        "BOO" => 0o2514725,
+        "BON" => 0o2516725,
+        "BUO" => 0o2514726,
+        "BUN" => 0o2516726,
+        "BER" => 0o2514727,
+        "BNE" => 0o2516727,
+        _ => return Err(format!("unknown GE-225 AAU branch instruction: {mnemonic}")),
+    })
+}
+
+pub fn pack_aau_words(first: i32, second: i32) -> u64 {
+    ((first as u64 & WORD_MASK as u64) << 20) | (second as u64 & WORD_MASK as u64)
+}
+
+pub fn unpack_aau_words(value: u64) -> (i32, i32) {
+    (
+        ((value >> 20) & WORD_MASK as u64) as i32,
+        (value & WORD_MASK as u64) as i32,
+    )
 }

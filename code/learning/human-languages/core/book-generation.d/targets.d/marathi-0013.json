@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 13,
+  "output": "marathi/book/chapters/ch13-request-food-drink.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

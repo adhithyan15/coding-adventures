@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 48,
+  "output": "telugu/book/chapters/ch48-roles.tex",
+  "scriptSet": "telugu-comparisons"
+}

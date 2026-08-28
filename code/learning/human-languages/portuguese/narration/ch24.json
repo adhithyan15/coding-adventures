@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Cheese, Egg, Rice, and Sugar",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5aa37243ee8e4e17",
+  "sourceHash": "fnv1a64:72e3a05685290fca",
   "lessons": [
     {
       "id": "PT-C24-queijo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfa5a967ba99fb12",
+      "sourceHash": "fnv1a64:17db95b6297ae313",
       "notice": null,
       "blocks": [
         {
@@ -146,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b410179fd3142c54",
+      "sourceHash": "fnv1a64:2aab3e73516fc7d3",
       "notice": null,
       "blocks": [
         {
@@ -277,7 +277,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39120ddcf68415d4",
+      "sourceHash": "fnv1a64:b8b663f4c5704b63",
       "notice": null,
       "blocks": [
         {
@@ -404,7 +404,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cb901127c211eb1",
+      "sourceHash": "fnv1a64:89f6456d2d013e72",
       "notice": null,
       "blocks": [
         {

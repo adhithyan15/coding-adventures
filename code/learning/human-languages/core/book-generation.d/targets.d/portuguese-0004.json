@@ -1,0 +1,7 @@
+{
+  "language": "portuguese",
+  "chapter": 4,
+  "output": "portuguese/book/chapters/ch04-farewells.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ptar"
+}

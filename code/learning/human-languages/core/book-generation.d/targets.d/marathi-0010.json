@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 10,
+  "output": "marathi/book/chapters/ch10-core-verbs.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

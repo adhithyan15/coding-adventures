@@ -1,0 +1,6 @@
+{
+  "language": "tamil",
+  "chapter": 6,
+  "output": "tamil/book/chapters/ch06-dative-case.tex",
+  "scriptSet": "tamil-comparisons"
+}

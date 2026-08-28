@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 15,
+  "output": "telugu/book/chapters/ch15-water-and-rice.tex",
+  "scriptSet": "telugu-comparisons"
+}

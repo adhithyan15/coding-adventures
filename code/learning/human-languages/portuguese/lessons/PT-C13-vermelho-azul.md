@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-ETYMON-PRETO-BRANCO-02, PT-ETYMON-PRETO-BRANCO-03, PT-ETYMON-PRETO-BRANCO-04]
 introduces:
   knowledge: [PT-ETYMON-VERMELHO-AZUL-02, PT-ETYMON-VERMELHO-AZUL-03, PT-NOTICE-VERMELHO-AZUL-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-ETYMON-PRETO-BRANCO-02, PT-ETYMON-PRETO-BRANCO-03, PT-ETYMON-PRETO-BRANCO-04, PT-ETYMON-VERMELHO-AZUL-02, PT-ETYMON-VERMELHO-AZUL-03, PT-NOTICE-VERMELHO-AZUL-04]
 skills: [listening, speaking, reading]

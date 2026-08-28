@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [PT-SOUND-DE-NADA-02, PT-ETYMON-DE-NADA-03]
+introduces_idioms: [PT-IDIOM-DE-NADA-YOURE-WELCOME-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-SOUND-DE-NADA-02, PT-ETYMON-DE-NADA-03]
 skills: [listening, speaking, reading]

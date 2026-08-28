@@ -4,6 +4,20 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - `elevation: raised;` on every raised-card part (#12028 item 1, UI41)
+
+`TaskApp.{light,dark}.msl`'s 13 raised-card-style parts (Kanban cards,
+task rows, selected tab/nav buttons, the composer/label-composer input
+rows, the Gantt timeline panel) now each declare `elevation: raised;`
+alongside their existing `box-shadow:`. Additive, not a replacement —
+`box-shadow` is unchanged and still drives correct CSS shadow rendering
+on web; `elevation` is the new channel native backends will read to
+render their own native shadow primitive (mosstyle-compiler's
+`elevation` property, #12028 item 1, UI41). The `theme-toggle-moon`
+part's `inset` `box-shadow` (a decorative crescent-moon cutout, not
+elevation) is untouched. No native backend reads `elevation` yet — see
+`code/specs/UI41-elevation-tokens.md` for the rollout.
+
 ### Added - progress ring's percent-complete now flows to every host as typed data (#12028 item 2)
 
 The workspace-progress ring's percent-complete was computed by the

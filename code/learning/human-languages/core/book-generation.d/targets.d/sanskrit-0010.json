@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 10,
+  "output": "sanskrit/book/chapters/ch10-request-nouns.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 16,
+  "output": "marathi/book/chapters/ch16-heart.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

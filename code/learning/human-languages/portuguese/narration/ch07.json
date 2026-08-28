@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b504ffa532cad313",
+  "sourceHash": "fnv1a64:0540a9bac445d486",
   "lessons": [
     {
       "id": "PT-C07-dias-1",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:c0fda7f81e770a79",
+      "sourceHash": "fnv1a64:013fdf4f6d027633",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:e9ed04ba035c46c6",
+      "sourceHash": "fnv1a64:b1ec6cff9663161b",
       "notice": {
         "modality": "sight",
         "needs": [

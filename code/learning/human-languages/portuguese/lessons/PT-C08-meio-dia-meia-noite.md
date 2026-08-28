@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-SOUND-HORA-02, PT-ETYMON-HORA-03, PT-GRAMMAR-HORA-04]
 introduces:
   knowledge: [PT-ETYMON-MEIO-DIA-MEIA-NOITE-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-SOUND-HORA-02, PT-ETYMON-HORA-03, PT-GRAMMAR-HORA-04, PT-ETYMON-MEIO-DIA-MEIA-NOITE-02]
 skills: [listening, speaking, reading]

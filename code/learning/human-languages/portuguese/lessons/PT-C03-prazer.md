@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-ETYMON-COMO-SE-CHAMA-02]
 introduces:
   knowledge: [PT-SOUND-PRAZER-02, PT-ETYMON-PRAZER-03, PT-GRAMMAR-PRAZER-04]
+introduces_idioms: [PT-IDIOM-PRAZER-MEETING-FORMULA-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-ETYMON-COMO-SE-CHAMA-02, PT-SOUND-PRAZER-02, PT-ETYMON-PRAZER-03, PT-GRAMMAR-PRAZER-04]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-TER-02, PT-ETYMON-TER-03, PT-LEX-PRETERITO-PERFEITO-02, PT-PRAGMATICS-PRETERITO-PERFEITO-03]
 introduces:
   knowledge: [PT-LEX-SER-02, PT-LEX-SER-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-TER-02, PT-ETYMON-TER-03, PT-LEX-PRETERITO-PERFEITO-02, PT-PRAGMATICS-PRETERITO-PERFEITO-03, PT-LEX-SER-02, PT-LEX-SER-03]
 skills: [listening, speaking, reading]

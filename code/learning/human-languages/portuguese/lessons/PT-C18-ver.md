@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-DIZER-02, PT-LEX-VIR-02]
 introduces:
   knowledge: [PT-LEX-VER-02, PT-ETYMON-VER-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-DIZER-02, PT-LEX-VIR-02, PT-LEX-VER-02, PT-ETYMON-VER-03]
 skills: [listening, speaking, reading]

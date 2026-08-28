@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 12,
+  "output": "persian/book/chapters/ch12-name-heart-door-book.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

@@ -1,0 +1,6 @@
+{
+  "language": "japanese",
+  "chapter": 5,
+  "output": "japanese/book/chapters/ch05-nihongo-kanji.tex",
+  "scriptSet": "japanese-main"
+}

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added balanced `BeginLayer` / `EndLayer` GPU commands with reusable layer
+  opacity, all Paint blend modes, and validated ordered filter descriptors.
+- Added backend-profile declarations for isolated layers, filters, and blend
+  modes so partial GPU executors fail capability selection honestly.
+- Preserve child alpha inside isolated layers and apply layer opacity once
+  after filtering instead of flattening it into each child draw.
 - Added `GpuImageResolver` and `plan_scene_with_image_resolver` so host-owned
   resource pipelines can lower URI-backed images without moving fetch or codec
   policy into a GPU backend.

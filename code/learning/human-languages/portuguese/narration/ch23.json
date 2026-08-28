@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Asking for Something to Drink",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:728dab4d688bf937",
+  "sourceHash": "fnv1a64:ee3ae87a3826894a",
   "lessons": [
     {
       "id": "PT-C23-cafe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a2ba130519186ce",
+      "sourceHash": "fnv1a64:55a4b48ef731ee13",
       "notice": null,
       "blocks": [
         {
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43ee81275f75dcc3",
+      "sourceHash": "fnv1a64:5ccac98bc4bd0787",
       "notice": null,
       "blocks": [
         {
@@ -292,7 +292,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:952b395903d15cfb",
+      "sourceHash": "fnv1a64:d06615a2aee734a4",
       "notice": null,
       "blocks": [
         {

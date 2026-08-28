@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 2,
+  "output": "punjabi/book/chapters/ch02-introductions.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

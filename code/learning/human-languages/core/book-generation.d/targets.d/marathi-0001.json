@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 1,
+  "output": "marathi/book/chapters/ch01-namaskar-script.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

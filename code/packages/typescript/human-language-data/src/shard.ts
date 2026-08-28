@@ -737,24 +737,12 @@ export const CURRICULUM_SECTIONS: readonly MergeSection[] = [
 ];
 
 /**
- * `core/book-generation.d/`'s shape: one file per LANGUAGE, not per element.
+ * Keys in the former grouped book-generation projection.
  *
- * A different projection from every other ledger here, and the difference is
- * the point. `book-generation.json` is six parallel arrays — `targets` alone is
- * 1,007 entries — each of whose elements carries a `language`. Sharding them
- * element-wise would produce 1,153 files that no author ever wants to open one
- * at a time. What an author actually touches is "Spanish's slice of everything",
- * so that is the file: `core/book-generation.d/spanish.json` holds Spanish's
- * entries from all six arrays, and a Spanish tranche edits exactly one file.
- *
- * Per-language order is authored order because every one of the six arrays is
- * already grouped by language, contiguously, in the SAME alphabetical order —
- * which is also sorted-filename order for `<language>.json`. That was measured
- * across all six, not assumed, and it is why no ordinal prefix is needed here
- * while every other ledger in HL21 needs one.
- *
- * `scriptSets` stays in `_meta.json`: it is keyed by script set rather than by
- * language and is genuinely shared.
+ * Canonical data now uses chapter/output-owned subdirectories and is read by
+ * `book-generation-shards.ts`. These keys and `mergeGroupedShards` remain only
+ * so `shard-cli --shard core/book-generation.json` can migrate the immediately
+ * preceding flat `<language>.json` layout without losing authored bytes.
  */
 export const BOOK_GENERATION_GROUPED_KEYS: readonly string[] = [
   "referenceAppendices",
@@ -766,7 +754,8 @@ export const BOOK_GENERATION_GROUPED_KEYS: readonly string[] = [
 ];
 
 /**
- * Fold `core/book-generation.d/<language>.json` back into the six arrays.
+ * Fold the legacy `core/book-generation.d/<language>.json` layout back into its
+ * six arrays for one-time migration.
  *
  * Each array is rebuilt by walking the language shards in sorted filename order
  * and concatenating each one's slice. That reproduces authored order only
@@ -820,10 +809,9 @@ export function mergeGroupedShards(
   for (const key of groupedKeys) assembled.set(key, []);
   for (const shard of shards) {
     if (shard.name === META_SHARD) continue;
-    // A grouped ledger is FLAT: one `<group>.json` per group, no
-    // subdirectories. Without this, `book-generation.d/sub/spanish.json` would
-    // be consumed as a second Spanish slice and silently duplicate every one of
-    // that language's entries into all six arrays.
+    // The legacy grouped layout is FLAT: one `<group>.json` per group, no
+    // subdirectories. This also keeps the migration reader from mistaking the
+    // new direct-owner projection for the old aggregate shape.
     if (shard.name.includes("/")) {
       throw new Error(
         `shard '${shard.name}' in '${metaShard.path}': a grouped ledger holds one ` +

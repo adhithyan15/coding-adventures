@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 22,
+  "output": "sanskrit/book/chapters/ch22-more-verbs.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

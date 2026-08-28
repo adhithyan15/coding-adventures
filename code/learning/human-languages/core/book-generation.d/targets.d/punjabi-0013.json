@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 13,
+  "output": "punjabi/book/chapters/ch13-heart-and-head.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-ETYMON-CABECA-CAPUT-02]
 introduces:
   knowledge: [PT-LEX-MAO-02, PT-ETYMON-MAO-03, PT-GRAMMAR-MAO-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-ETYMON-CABECA-CAPUT-02, PT-LEX-MAO-02, PT-ETYMON-MAO-03, PT-GRAMMAR-MAO-04]
 skills: [listening, speaking, reading]

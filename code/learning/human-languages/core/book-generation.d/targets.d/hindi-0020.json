@@ -1,0 +1,6 @@
+{
+  "language": "hindi",
+  "chapter": 20,
+  "output": "hindi/book/chapters/ch20-weather.tex",
+  "scriptSet": "hindi-main"
+}

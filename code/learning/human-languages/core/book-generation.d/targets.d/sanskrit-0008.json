@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 8,
+  "output": "sanskrit/book/chapters/ch08-mind-verbs.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

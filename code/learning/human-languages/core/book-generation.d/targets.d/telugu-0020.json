@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 20,
+  "output": "telugu/book/chapters/ch20-numbers-and-weather.tex",
+  "scriptSet": "telugu-comparisons"
+}

@@ -67,7 +67,7 @@ according to the current prioritization run.
 |---|---:|---|---|---|
 | RCPU-001 / RCPU-002 | 1948 | Manchester Baby (SSEM) | Complete: `manchester-baby-simulator` | Complete: `manchester-baby-gatelevel` |
 | RCPU-003 / RCPU-004 | 1954 | IBM 704 | Complete: `ibm704-simulator` | Complete: `ibm704-gatelevel` |
-| RCPU-005 / RCPU-006 | 1961 | GE-225 | Complete: `ge225-simulator` | In progress: `ge225-gatelevel` |
+| RCPU-005 / RCPU-006 | 1961 | GE-225 | Complete: `ge225-simulator` | Complete: `ge225-gatelevel` |
 | RCPU-007 / RCPU-008 | 1964 | CDC 6600 | Missing | Missing |
 | RCPU-009 / RCPU-010 | 1970 | DEC PDP-11 | Missing | Missing |
 | RCPU-011 / RCPU-012 | 1971 | Intel 4004 | Audit: `intel4004-simulator` | Audit: `intel4004-gatelevel` |
@@ -91,8 +91,9 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-P006C**, the GE-225 gate-level AAU and final
-instruction-family differential audit. RCPU-005 is complete after its AAU/final-audit slice added separate
+Current selection: **RCPU-007**, the CDC 6600 functional Rust simulator,
+ordered behind publication of the completed GE-225 P006C gate-level final audit.
+RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
 transient/hold alerts, modification, and fail-closed preflight. The functional
@@ -106,7 +107,7 @@ differentials. P006B1 adds central decimal/clock state. P006B2 adds direct I/O,
 and P006B3 adds controller-selector and API signals/state. P006C adds the separate AAU
 register file and fixed/normalized/unnormalized datapaths, then runs the final
 instruction-family differential and coverage audit. The chronological queue
-does not advance to the CDC 6600 until all three close RCPU-006.
+advances to the CDC 6600 only after the ordered P006C publication closes RCPU-006.
 
 P006A merged in PR #13330: its 17 tests cover gate-backed
 lifecycle, one-hot fixed/opcode decode, core-memory X groups, automatic
@@ -124,15 +125,31 @@ card modes, continuous DMA slots and sync/status words, shared N-device routing,
 readiness branches, parity/overrun/priority alarms, atomic failures, and an
 instruction-sequence differential against the functional oracle. The 33 combined
 tests cover 83.48% of core lines (1,339/1,604), above the completion floor.
-P006B3 is the current publication slice and is implementation-complete locally:
-1,085 additional DFF-backed bits model eight controller banks, selector/API
-latches, group-32 interrupt state, and widened X-group selection. Thirteen new
+P006B3 merged in PR #13357 at `72e33f4`: its 1,085 additional DFF-backed bits
+model eight controller banks, selector/API latches, group-32 interrupt state,
+and widened X-group selection. Thirteen new
 tests cover selector/status formats, modification, bounded opaque command
 capture, condition branches, disabled/deferred ready events, card participation,
 group-32 vector/return, SET PST/SET PBK, BRU target inhibition, reset, functional
 lockstep, and atomic memory edges. The 46 combined tests cover 84.92% of core
-lines (1,650/1,943), above the completion floor. P006C remains dependency-stacked
-behind P006B3 and is the next publication slice.
+lines (1,650/1,943), above the completion floor. P006C is implementation-complete
+locally atop P006B3: 167 additional DFF-backed bits model separate 40-bit
+AX/BX/QX/IX registers, mode/readiness, and four alert latches. Fourteen new
+functional-oracle tests cover all AAU memory/general/status families, fixed and
+floating arithmetic, normalization, signed/exponent edges, modification, odd
+memory rules, reset, and atomic boundaries. The 60 combined tests cover 85.61%
+of core lines (2,190/2,558), above the completion floor; P006C is the current
+publication slice and closes
+RCPU-006 when its final build audit merges green.
+
+RCPU-007 has no Rust package. Its Python behavioral oracle passes 109 tests at
+94.95% line coverage and fixes the repository acceptance surface at 22 short
+and 14 long instructions, four big-endian 15-bit parcels per 60-bit word,
+eight X/A/B registers with hardwired B0, 4,096 bounded memory words, parcel
+branches, deterministic bounded execution, and immutable state snapshots. The
+Rust port must preserve exact 60/18-bit wrap, signed comparisons, instruction
+packing, atomic memory errors, and seeded differential traces before RCPU-008
+begins the gate-level partner.
 
 ## Cross-language wave
 
@@ -160,6 +177,8 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-27 | RCPU-007 audit found a complete Python CDC 6600 behavioral oracle but no Rust package. The oracle has 109 passing tests and 94.95% line coverage across 22 short and 14 long instructions, while its public spec intentionally bounds memory to 4,096 60-bit words and omits timing-only scoreboard, peripheral-processor, floating-point, and exchange-jump behavior. | P0, chronological functional oracle, blocks RCPU-008 | Port the entire specified behavioral surface to Rust with immutable snapshots, checked parcel fetch/branch/memory boundaries, exact 60/18-bit masking and signed comparisons, all instruction encoders, bounded execution, Python differential vectors, README/changelog/BUILD/workspace integration, and at least 80% Rust coverage before starting the gate-level partner. |
+| 2026-08-27 | P006C gate review found that a restoring divider's partial remainder must be one bit wider than its divisor. A same-width temporary can discard the carry while dividing by the most-negative fixed operand even though ordinary vectors pass. | P0, gate arithmetic fidelity, blocks P006C | Use 78-bit remainder/divisor wires for the 77-by-39 fixed divider and 65-bit wires for the 64-bit floating divider; retain fixed iteration bounds and signed quotient/remainder gates. |
 | 2026-08-27 | P006B3 gate-state audit found that API service selects special X group 32 at core 0200-0203, one beyond the ordinary five-bit SXG encoding. The P006A selected-group register could represent only groups 0-31. | P0, architectural state width, blocks P006B3 | Widen selected X-group state to six DFFs, retain ordinary SXG decode at five bits, add a separate six-bit interrupted-group latch, and pin group-32 vectoring plus restoration of the interrupted ordinary group. |
 | 2026-08-27 | P006B fidelity review found two independently auditable hardware domains inside the original optional-I/O slice: decimal/clock is a combinational central datapath, while direct devices and selector/API are bounded event-driven state machines. Combining them would make gate provenance and atomic error review unnecessarily difficult. | P0, scope clarity, blocks RCPU-006 | Split P006B into P006B1 decimal/clock, P006B2 direct card/paper-tape/typewriter, and P006B3 selector/API. Preserve chronological order and keep all three ahead of the AAU/final audit. |
 | 2026-08-27 | P006B1 implementation review found that the deterministic clock API accepts a 64-bit tick count, including `u64::MAX`; host modulo would violate the gate-level arithmetic contract even though instruction stepping remained gate-backed. | P0, gate fidelity, blocks P006B1 | Reduce and advance the external tick vector through a 65-bit restoring-division/add/subtract gate network, preserving both daily wrap and the documented 19-bit out-of-day recovery path. |
