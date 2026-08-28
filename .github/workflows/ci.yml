@@ -897,11 +897,17 @@ jobs:
 
       # MSVC on Windows serves two consumers: Lua (needs the MSVC linker) and
       # the C/C++ lane (needs `cl.exe` for the MSVC arm of the pure-ISO check).
-      # A single msvc-dev-cmd invocation covers both — invoking the action twice
-      # would double-prepend the MSVC environment.
+      # A single bootstrap invocation covers both — invoking it twice would
+      # double-prepend the MSVC environment.
+      - name: Test MSVC environment bootstrap
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: python -m unittest discover -s code/scripts/tests -p 'test_setup_msvc_dev_cmd.py'
+
       - name: Set up MSVC (Lua linker + C/C++ cl.exe + Venture browser)
         if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
+        shell: pwsh
+        run: python code/scripts/setup_msvc_dev_cmd.py --arch x64
 
       - name: Restore pinned Lua 5.4.7 cache
         id: lua-cache
@@ -983,6 +989,7 @@ jobs:
 
       - name: Set up Ruby
         if: needs.detect.outputs.needs_ruby == 'true'
+        id: setup-ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4'
@@ -1089,12 +1096,11 @@ jobs:
         run: cargo install cargo-tarpaulin
 
       - name: Set up Elixir
-        # Elixir NIF packages skip Windows (BEAM import-library linkage isn't
-        # wired up — see each Elixir package's BUILD_windows), and
-        # erlef/setup-beam can't map newer Windows runner images (e.g.
-        # win25-vs2026), so don't install Elixir on Windows at all.
-        if: needs.detect.outputs.needs_elixir == 'true' && runner.os != 'Windows'
-        uses: erlef/setup-beam@v1
+        # Pure-BEAM packages have executable BUILD_windows fronts. Pin the
+        # setup-beam revision proven on the Windows 2025 / VS 2026 image; NIF
+        # packages retain their package-level BUILD_windows exclusions.
+        if: needs.detect.outputs.needs_elixir == 'true'
+        uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124
         with:
           elixir-version: '1.18.4'
           otp-version: '27.3.4.11'
@@ -1216,7 +1222,7 @@ jobs:
 
       - name: Set up Gradle
         if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6.3.0
 
       - name: Disable long-lived Gradle services on Windows CI
         if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Windows'
@@ -1300,6 +1306,25 @@ jobs:
             npm install -g jest
           fi
 
+      - name: Restore selected Ruby to Windows PATH
+        if: needs.detect.outputs.needs_ruby == 'true' && runner.os == 'Windows'
+        shell: pwsh
+        env:
+          RUBY_PREFIX: ${{ steps.setup-ruby.outputs.ruby-prefix }}
+        run: |
+          if (-not $env:RUBY_PREFIX) {
+            throw "ruby/setup-ruby did not report its installation prefix"
+          }
+          @(
+            (Join-Path $env:RUBY_PREFIX 'bin')
+            (Join-Path $env:RUBY_PREFIX 'msys64\ucrt64\bin')
+            (Join-Path $env:RUBY_PREFIX 'msys64\usr\bin')
+          ) | ForEach-Object {
+            if (Test-Path $_) {
+              Add-Content -Path $env:GITHUB_PATH -Value $_
+            }
+          }
+
       # ── Verify toolchains ────────────────────────────────────
       - name: Verify tools
         shell: bash
@@ -1312,6 +1337,7 @@ jobs:
           if [ "${{ needs.detect.outputs.needs_ruby }}" = "true" ]; then
             echo "Ruby: $(ruby --version)"
             echo "Bundler: $(bundle --version)"
+            ruby -e 'require "rubygems"; required = Gem::Version.new("3.4"); current = Gem::Version.new(RUBY_VERSION); abort "Ruby #{required}+ required, got #{current}" if current < required'
           fi
           if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ]; then
             echo "Node: $(node --version)"
@@ -1324,7 +1350,7 @@ jobs:
           if [ "${{ needs.detect.outputs.needs_swift }}" = "true" ]; then
             echo "Swift: $(swift --version | head -1)"
           fi
-          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
+          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ]; then
             echo "Elixir: $(elixir --version)"
             echo "Mix: $(mix --version)"
           fi

@@ -35,7 +35,7 @@ def test_analyze_ci_workflow_patch_allows_shared_jvm_toolchain_changes():
 +          java-version: '21'
 +      - name: Set up Gradle
 +        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
-+        uses: gradle/actions/setup-gradle@v4
++        uses: gradle/actions/setup-gradle@v6.3.0
 +      - name: Disable long-lived Gradle services on Windows CI
 +        if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true') && runner.os == 'Windows'
 +        shell: bash
