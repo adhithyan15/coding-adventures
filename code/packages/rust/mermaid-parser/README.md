@@ -174,6 +174,8 @@ Pinned activation fixtures gate explicit, suffix-based, and nested activation
 stacks, including upstream rejection of deactivation underflow.
 Pinned automatic-numbering fixtures gate default visibility, integer numbering,
 decimal starts and increments, and upstream rejection beyond hundredths precision.
+Pinned control-block fixtures gate loops, optionals, alternate and parallel
+branches, critical options, breaks, overlapping annotations, and nested rects.
 Both single-line accessibility statements and multiline `accDescr` blocks
 lower to PaintScene metadata.
 Newlines and semicolons are interchangeable sequence statement terminators,
