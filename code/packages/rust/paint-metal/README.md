@@ -2,9 +2,10 @@
 
 Metal GPU renderer for the paint-instructions scene model — spec P2D01.
 
-Takes a `PaintScene` and renders it to a `PixelContainer` using Apple's Metal GPU API
-plus a CoreText overlay for text instructions. This is the GPU renderer in the `paint-*`
-stack, replacing the older `draw-instructions-metal` crate.
+Takes a `PaintScene`, lowers it through the shared `paint-vm-gpu-core` command
+plan, and renders it to a `PixelContainer` using Apple's Metal GPU API. Shaped
+CoreText glyph runs become transient textures, so vectors, images, gradients,
+clips, and glyphs retain painter order.
 
 ## Requirements
 
@@ -15,7 +16,7 @@ stack, replacing the older `draw-instructions-metal` crate.
 
 ```rust
 use paint_metal;
-use paint_instructions::{PaintScene, PaintInstruction, PaintRect, PaintEllipse, PaintText, PaintBase, TextAlign};
+use paint_instructions::{PaintScene, PaintInstruction, PaintRect, PaintEllipse, PaintBase};
 use paint_codec_png::encode_png;
 
 // Build a diagram scene
@@ -30,17 +31,7 @@ scene.instructions.push(PaintInstruction::Ellipse(PaintEllipse {
     stroke: Some("#2c5f8a".to_string()),
     stroke_width: Some(2.0),
 }));
-scene.instructions.push(PaintInstruction::Text(PaintText {
-    base: PaintBase::default(),
-    x: 200.0, y: 155.0,
-    text: "My Node".to_string(),
-    font_ref: Some("canvas:system-ui@14:400".to_string()),
-    font_size: 14.0,
-    fill: Some("#ffffff".to_string()),
-    text_align: Some(TextAlign::Center),
-}));
-
-// Render on GPU (+ CoreText text overlay)
+// Render the ordered GPU command stream
 let pixels = paint_metal::render(&scene);   // → PixelContainer
 
 // Encode to PNG
@@ -70,15 +61,15 @@ DOT source text
 |-------------------|---------------------------------------------------------------|
 | `PaintRect`       | Fully implemented — fill + 4-edge stroke quads                |
 | `PaintLine`       | Fully implemented — rendered as thin perpendicular rectangle  |
-| `PaintGroup`      | Fully implemented — recurses into children                    |
-| `PaintClip`       | Partial — children rendered, no stencil buffer yet            |
-| `PaintEllipse`    | Implemented — 64-triangle fan fill + 64-quad stroke ring      |
-| `PaintPath`       | Implemented — fan fill (convex) + segment stroke + Bézier approx |
-| `PaintText`       | Implemented — CoreText CTLine overlay into CGBitmapContext     |
-| `PaintGlyphRun`   | Implemented — CoreText CTFontDrawGlyphs overlay               |
-| `PaintLayer`      | Planned (offscreen texture + composite pass)                  |
-| `PaintGradient`   | Planned (MSL gradient shader)                                 |
-| `PaintImage`      | Decoded pixels: affine transform, clip, opacity, scaling       |
+| `PaintGroup`      | Shared-plan transforms and inherited opacity                   |
+| `PaintClip`       | Nested rectangular Metal scissor clips                         |
+| `PaintEllipse`    | Shared indexed GPU mesh                                        |
+| `PaintPath`       | Shared flattened fill/stroke GPU meshes                        |
+| `PaintText`       | Requires producer shaping; layout scenes emit glyph runs       |
+| `PaintGlyphRun`   | Ordered CoreText raster texture for `coretext:` fonts          |
+| `PaintLayer`      | Normal layers flatten; isolated filters/blends remain planned  |
+| `PaintGradient`   | Shared linear/radial texture ramps                             |
+| `PaintImage`      | Ordered textures with affine transform, clip, opacity, scaling |
 
 All 2D barcode formats (QR Code, Data Matrix, Aztec, PDF417) produce only
 `PaintRect` instructions — the current implementation is complete for that use case.
@@ -88,27 +79,25 @@ All 2D barcode formats (QR Code, Data Matrix, Aztec, PDF417) produce only
 ```text
 PaintScene
   │
-  ├─ GPU pass (Metal)
-  │    collect_geometry() → triangle vertex buffers
-  │    rect, line, ellipse (fan), path (fan + stroke segs)
-  │    → PixelContainer (RGBA8)
+  ├─ paint-vm-gpu-core
+  │    ordered meshes + image/gradient uploads + clip commands
   │
-  ├─ decoded-image compositor (PaintImage::Pixels)
-  │    inverse affine sampling + rectangular clips + source-over alpha
+  ├─ optional host GpuImageResolver
+  │    URI → decoded PixelContainer (host owns policy and caching)
   │
-  ├─ CoreText overlay (PaintText)
-  │    CTLineCreateWithAttributedString + CTLineDraw
-  │    → drawn directly into CGBitmapContext wrapping pixel buffer
+  ├─ CoreText glyph rasterization
+  │    one transparent texture per ordered shaped run
   │
-  └─ CoreText overlay (PaintGlyphRun)
-       CTFontDrawGlyphs (pre-positioned glyph IDs)
-       → drawn directly into CGBitmapContext wrapping pixel buffer
+  └─ Metal render pass
+       textured/solid meshes + nested scissors → RGBA8 readback
 ```
 
-Decoded pixel images are composited after Metal readback and before CoreText
-glyphs. URI resolution, filtered layers, blend modes, and fully interleaved
-vector/image painter ordering remain future renderer work; the compositor is
-kept isolated so those additions do not leak into browser or toolkit hosts.
+`render_with_image_resolver` and
+`render_to_metal_layer_with_image_resolver` accept caller-supplied URI policy.
+The default `render` path remains deterministic and expects decoded
+`PaintImage::Pixels`, as Venture's browser resource pipeline already provides.
+Isolated filtered layers and non-normal blend modes are the remaining ordered
+composition gap and belong in the shared GPU command contract.
 
 ## font_ref format (PaintText)
 

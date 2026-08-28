@@ -15,6 +15,9 @@ paint-vm-cairo = { path = "../paint-vm-cairo" }
 text-interfaces = { path = "../text-interfaces" }
 venture-browser-core = { path = "../venture-browser-core" }
 
+[target.'cfg(target_vendor = "apple")'.dev-dependencies]
+paint-metal = { path = "../paint-metal" }
+
 [[example]]
 name = "capture"
 path = "examples/capture.rs"

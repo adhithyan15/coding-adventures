@@ -387,25 +387,25 @@ pub fn load_international_page(origin: &str) -> Result<BrowserPage, String> {
         .map_err(|error| error.to_string())
 }
 
-pub fn capture(origin: &str) -> Result<VisualFixtureCapture, String> {
+pub fn load_fixture_page(origin: &str) -> Result<BrowserPage, String> {
     let theme = mosaic_html_theme();
-    let measurer = DeterministicText;
-    let shaper = DeterministicText;
-    let metrics = DeterministicText;
-    let resolver = DeterministicText;
+    let text = DeterministicText;
     let pipeline = BrowserPagePipeline::new(
         &theme,
         HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
-        &measurer,
-        &shaper,
-        &metrics,
-        &resolver,
+        &text,
+        &text,
+        &text,
+        &text,
     );
     let page_url = format!("{}{FIXTURE_PATH}", origin.trim_end_matches('/'));
-    let page = pipeline
+    pipeline
         .load(&page_url, &|url: &str| fixture_response(origin, url))
-        .map_err(|error| error.to_string())?;
-    capture_page(page)
+        .map_err(|error| error.to_string())
+}
+
+pub fn capture(origin: &str) -> Result<VisualFixtureCapture, String> {
+    capture_page(load_fixture_page(origin)?)
 }
 
 pub fn capture_page(page: BrowserPage) -> Result<VisualFixtureCapture, String> {
@@ -749,6 +749,25 @@ mod tests {
         let capture = capture("http://venture.test").expect("capture fixture");
         capture.assert_valid();
         eprintln!("{}", capture.describe());
+    }
+
+    #[cfg(target_vendor = "apple")]
+    #[test]
+    fn representative_page_keeps_decoded_images_in_the_metal_command_stream() {
+        let page = load_fixture_page("http://venture.test").expect("fixture page");
+        let mut viewport = BrowserViewport::new(page, VIEWPORT_HEIGHT);
+        viewport.set_scroll_offset_y(154.0);
+
+        let pixels = paint_metal::render(&viewport.viewport_scene());
+        let evidence = probe(&pixels);
+
+        assert_eq!(
+            (evidence.width, evidence.height),
+            (VIEWPORT_WIDTH as u32, VIEWPORT_HEIGHT as u32)
+        );
+        assert!(evidence.magenta_pixels > 0, "{evidence:?}");
+        assert!(evidence.cyan_pixels > 0, "{evidence:?}");
+        assert!(evidence.ink_pixels > 0, "{evidence:?}");
     }
 
     #[test]

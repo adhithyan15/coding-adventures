@@ -1,11 +1,12 @@
 [package]
 name = "paint-metal"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
 description = "Metal GPU renderer for paint-instructions scenes (P2D01): PaintScene → PixelContainer via Apple's Metal API"
 
 [dependencies]
 paint-instructions = { path = "../paint-instructions" }
+paint-vm-gpu-core = { path = "../paint-vm-gpu-core" }
 objc-bridge = { path = "../objc-bridge" }
 
 [dev-dependencies]

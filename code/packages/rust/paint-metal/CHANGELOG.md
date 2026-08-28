@@ -2,9 +2,17 @@
 
 ## Unreleased
 
-- Composite decoded `PaintImage::Pixels` sources over Metal output with affine
-  transforms, nested rectangular clips, inherited opacity, nearest-neighbor
-  scaling, and source-over alpha before the CoreText glyph pass.
+- Consume `paint-vm-gpu-core`'s ordered mesh/texture/clip command stream instead
+  of maintaining a Metal-only scene walker and tessellator.
+- Draw decoded images and gradient ramps as Metal textures in painter order,
+  preserving affine transforms, nested clips, inherited opacity, scaling, and
+  source-over alpha when mixed with vector content.
+- Rasterize CoreText glyph runs to transient transparent textures so glyphs,
+  images, and vectors remain in one command order rather than applying text as
+  a final post-readback overlay.
+- Add host-neutral `GpuImageResolver` entry points for URI-backed image scenes;
+  fetch, cache, security, and codec policy remain owned by the caller.
+- Add real-page Venture acceptance for decoded images through the Metal path.
 
 ## 0.4.0 — 2026-08-13
 
