@@ -34,7 +34,7 @@ reviews_of: [IT-C02-prego, IT-C02-prego-go-ahead, IT-C02-prego-here-you-are]
 # Prego? — "sorry, come again?"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[IT-PRAGMATIC-PREGO-HERE-YOU-ARE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-PREGO-03, IT-PRAGMATIC-PREGO-HERE-YOU-ARE-05] -->
 
 [PAUSE 2s] You know **prego** after thanks, at a doorway, and with an offered
 object. The last common use changes the voice, not the spelling.

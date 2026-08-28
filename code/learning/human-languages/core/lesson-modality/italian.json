@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ff1eafb4682e90ed",
+  "sourceHash": "fnv1a64:c06bce129f730f68",
   "summary": {
     "totalLessons": 93,
     "voice": 78,
@@ -719,7 +719,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:624e5bbd5204d527"
+      "sourceHash": "fnv1a64:e7e25e10a97a2b39"
     },
     {
       "id": "IT-C02-prego-come-again",
@@ -737,7 +737,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d069b74a43a063a5"
+      "sourceHash": "fnv1a64:89ee2c6e4d6081ab"
     },
     {
       "id": "IT-C02-come",
@@ -863,7 +863,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1b64f332cfaf9ffd"
+      "sourceHash": "fnv1a64:f79473d237874a91"
     },
     {
       "id": "IT-C02-practice",
@@ -881,7 +881,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a7d06ebcbc5ff534"
+      "sourceHash": "fnv1a64:fe8b5c205c5a17b0"
     },
     {
       "id": "IT-C03-io",

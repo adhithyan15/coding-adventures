@@ -34,7 +34,7 @@ reviews_of: [IT-C02-cosi-cosi, IT-C02-come-stai]
 # non c'è male — "not bad"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-COSI-COSI-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-COSI-COSI-02, IT-ETYMON-COSI-COSI-03, IT-GRAMMAR-COSI-COSI-04] -->
 
 [PAUSE 2s] You can answer **Come stai?** with **bene** or **così così**. Add one
 more answer, on its own step.

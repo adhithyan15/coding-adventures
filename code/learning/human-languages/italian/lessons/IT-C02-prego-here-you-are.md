@@ -34,7 +34,7 @@ reviews_of: [IT-C02-prego, IT-C02-prego-go-ahead]
 # prego — "here you are"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[IT-PRAGMATIC-PREGO-GO-AHEAD-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-PREGO-03, IT-PRAGMATIC-PREGO-GO-AHEAD-04] -->
 
 [PAUSE 2s] At a doorway, **prego** invites a person forward. Move the same
 invitation into your hand.

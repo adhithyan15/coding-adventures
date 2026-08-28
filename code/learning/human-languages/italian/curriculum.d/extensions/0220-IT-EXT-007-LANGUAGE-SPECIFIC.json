@@ -1,14 +1,13 @@
 {
-  "id": "IT-EXT-008-LANGUAGE-SPECIFIC",
+  "id": "IT-EXT-007-LANGUAGE-SPECIFIC",
   "stage": "pre-A1",
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can use the additional Italian material required at this point in the path.",
   "prerequisites": [],
   "lessons": [
-    "IT-C02-stare",
-    "IT-C02-come-sta",
-    "IT-C02-come-va",
-    "IT-C02-non-ce-male"
+    "IT-C02-prego-go-ahead",
+    "IT-C02-prego-here-you-are",
+    "IT-C02-prego-come-again"
   ]
 }
