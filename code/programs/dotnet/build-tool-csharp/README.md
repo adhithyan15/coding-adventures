@@ -15,6 +15,8 @@ the repo:
 6. Emit build plans and CI toolchain flags when requested
 7. Validate caller-supplied orphan-crate and tracked-artifact snapshots without
    consulting Git or the filesystem
+8. Parse exact `# needs-toolchain: NAME` metadata from the selected platform
+   BUILD front and schedule canonical extra CI toolchains for affected packages
 
 ## Usage
 
@@ -50,6 +52,14 @@ dotnet run -- --emit-plan --plan-file build-plan.json
   coverage, redacted invalid-exemption diagnostics, stale-ledger detection,
   and deterministic pending-debt accounting without walking a checkout or
   invoking Git, a process, the environment, or the network.
+- `ToolchainDetection.EvaluateSnapshot` consumes all successful neutral
+  toolchain-detection fixtures entirely in memory. It applies the canonical
+  16-key registry, `c`/`cpp`, .NET, and WASM language normalization, exact
+  declaration grammar, stable deduplication, platform-front precedence,
+  affected-only and forced-full scheduling, deterministic unsupported-language
+  diagnostics, and the 64-KiB/4,096-line/1-MiB input ceilings. Production
+  discovery records declarations from the same BUILD front whose shell commands
+  it selects; unselected platform declarations remain inert.
 - Declares the mixed MIT and Unicode-3.0 licensing of the engine and derived
   tables and copies the full `UNICODE-LICENSE.txt` notice beside build,
   publish, and package outputs.

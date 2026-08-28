@@ -9694,6 +9694,64 @@ unknown buckets, and OCaml packages remain zero. The existing Forme family
 owner covers the new filesystem-authority child, so this refresh adds no
 eligible unowned gap and does not change the selected tranche.
 
+## Post-#13388 Refresh and C# Declaration Consumer Selection
+
+All 41 final checks for PR #13388 reached terminal acceptable conclusions: 35
+successes and six expected skips. GitHub reported final head
+`96eaf214e75b3dff458ef104f3f9fb31a9505acb` conflict-free. The loop enabled
+squash auto-merge, and GitHub merged the PR at 2026-08-28T08:05:32Z as
+`b8b2282996b6983f4d2b2de87889300900bd37dd` without a manual merge command.
+The active parity slot is therefore clear.
+
+The collision-checked schema-3 inventory on current exact `origin/main`
+`c750c8a4e87b8f3f6f2d0d6a3179b6980b39ce0a` records 15 established lanes,
+1,386 implementation identities, 4,599 package slots, and 1,425 all-reported
+identities. The four bands are 175/265, 123/934, 169/2,126, and 919/12,866;
+Rust has 730 singletons, OCaml remains emerging at zero packages, and canonical
+collisions and unknown buckets remain zero. Merged PR #13377 adds one Rust
+`cdc6600-simulator` slot beside Python, moving that identity from singleton to
+the two-to-four band and clearing its existing owner's collision block. Merged
+PR #13391 adds independently named Rust-only `cdc6600-gatelevel`, which is now
+recorded by its dedicated pending classification owner. Merged PRs #13395 and
+#13401 add and harden TypeScript-only `forme-load-assets-fs`; the existing Forme
+family owner covers its mixed deterministic asset/MIME and filesystem authority
+boundaries.
+
+The live topology audit registers every prospective package change before
+selection. Open PR #13405 would add Rust `pdp11-simulator` beside the existing
+Python package, moving the identity from singleton into the two-to-four-lane
+band without adding a new identity; the dedicated PDP-11 two-lane owner is
+blocked while that PR remains open. Open PR #13409 prospectively adds
+TypeScript `forme-emit-site-fs`, so the existing Forme family owner is blocked
+again without creating a duplicate. Merged PR #13390 extends the existing
+text-flow and Venture visual-fixture owners. No exact-main or live topology gap
+remains unowned, and current live PRs have zero exact overlap with the selected
+C# build-tool surfaces.
+
+The final pre-implementation refresh includes merged #13394, whose
+human-language-only changes leave the package inventory unchanged. Open #13403
+blocks the existing Venture visual-fixtures owner while it modifies that family;
+it creates no new package identity or owner.
+
+The dependency pass decomposes
+`build-tool-extra-ci-toolchain-declaration-remaining-engines` into eleven
+independently reviewable C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust,
+Swift, and TypeScript children. F# depends on the C# child because its native
+facade directly references that engine; every child depends on the merged
+process-free corpus. Independent C# review also found that the neutral Python
+reference and current Go parser accept lone carriage returns outside CRLF. A
+new cross-runtime hardening owner pins CRLF-positive and lone-CR-negative corpus
+cases and blocks the ten unselected engine children until the reference and Go
+oracle are repaired; the selected C# consumer already rejects lone CR directly.
+Exactly one item is selected on branch
+`codex/build-tool-csharp-extra-ci-toolchain-declaration-conformance`: make the
+C# engine consume the neutral snapshots with canonical registry and language
+mapping, selected platform-front precedence, exact stable declarations,
+affected and forced-full scheduling, deterministic unsupported diagnostics,
+and bounded inert inputs. The tranche adds no process, Git, environment,
+network, execution, or OCaml promotion authority and leaves F# for the next
+separately reviewed facade slice.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

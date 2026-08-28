@@ -11,38 +11,31 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13388,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13388",
-    "branch": "codex/build-tool-extra-ci-toolchain-declaration-corpus",
-    "implementation_revision": "9d5b9269885ab99eaccc7500d52b3dcbb1d52947",
-    "status": "checks-pending",
-    "opened_at": "2026-08-28T07:19:33Z"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-28T07:19:47Z",
+    "observed_at": "2026-08-28T08:15:00Z",
     "pr_number": 13388,
     "run_id": 33151040429,
     "attempt": 1,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #13388 is mergeable and conflict-free at published head 9d5b9269885ab99eaccc7500d52b3dcbb1d52947. Required CI and CodeQL checks are queued or running, so auto-merge remains disabled and the loop is monitor-only after this lifecycle publication update."
+    "status": "merged-after-auto-merge",
+    "notes": "All 41 final checks reached terminal acceptable conclusions: 35 successes and six expected skips. GitHub reported final head 96eaf214e75b3dff458ef104f3f9fb31a9505acb conflict-free; the loop enabled squash auto-merge, and GitHub merged PR #13388 at 2026-08-28T08:05:32Z as b8b2282996b6983f4d2b2de87889300900bd37dd without a manual merge command."
   },
   "last_inventory": {
-    "revision": "d751dfa23a4cdfbefe1c9f637de67a2c8003d02d",
+    "revision": "c750c8a4e87b8f3f6f2d0d6a3179b6980b39ce0a",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1384,
-    "implementation_package_slots": 4596,
-    "all_reported_identities": 1423,
+    "implementation_identities": 1386,
+    "implementation_package_slots": 4599,
+    "all_reported_identities": 1425,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
-    "two_to_four_packages": 168,
-    "two_to_four_missing_slots": 2113,
-    "singleton_packages": 918,
-    "singleton_missing_slots": 12852,
-    "rust_singletons": 729,
+    "two_to_four_packages": 169,
+    "two_to_four_missing_slots": 2126,
+    "singleton_packages": 919,
+    "singleton_missing_slots": 12866,
+    "rust_singletons": 730,
     "ocaml_packages": 0,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -180,7 +173,7 @@
     {
       "id": "build-tool-extra-ci-toolchain-declaration-corpus",
       "title": "Define language-neutral extra CI toolchain declaration fixtures",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": "codex/build-tool-extra-ci-toolchain-declaration-corpus",
       "pr_number": 13388,
@@ -188,6 +181,10 @@
       "opened_at": "2026-08-28T07:19:33Z",
       "opened_revision": "9d5b9269885ab99eaccc7500d52b3dcbb1d52947",
       "implementation_revision": "9d5b9269885ab99eaccc7500d52b3dcbb1d52947",
+      "merged_head_revision": "96eaf214e75b3dff458ef104f3f9fb31a9505acb",
+      "merge_revision": "b8b2282996b6983f4d2b2de87889300900bd37dd",
+      "merged_at": "2026-08-28T08:05:32Z",
+      "merge_notes": "All 41 final checks reached terminal acceptable conclusions: 35 successes and six expected skips. GitHub reported the branch conflict-free; the loop enabled squash auto-merge, and GitHub merged PR #13388 without a manual merge command.",
       "selection_revision": "d751dfa23a4cdfbefe1c9f637de67a2c8003d02d",
       "selection_notes": "Selected after PR #13366 merged and a collision-checked schema-3 refresh confirmed 15 established lanes, 1,383 identities, 4,595 slots, 1,422 all-reported identities, zero collisions, zero unknown buckets, and OCaml still emerging at zero packages. Before implementation, the branch rebased over later unrelated merges; the final pre-publication base is d751dfa23a4cdfbefe1c9f637de67a2c8003d02d. Merged PR #13368 adds the pre-classified TypeScript-only forme-resolve-asset-refs-fs identity, moving the inventory to 1,384 identities, 4,596 slots, 1,423 all-reported identities, 918 singletons, and 12,852 singleton gaps while preserving every other band, zero collisions, zero unknown buckets, and zero OCaml packages. It remains owned by the existing Forme family and clears that owner's live-PR block, so no eligible unowned gap was discovered. This process-free corpus is the highest-leverage ready dependency because it closes the only immediately actionable Go-oracle prerequisite and advances the Go-oracle-to-OCaml execution-substrate chain without claiming execution authority. A live open-PR path audit found no overlap with the shared fixture/schema/runner, Go discovery and toolchain tests, state, roadmap, or documentation surfaces.",
       "validation_notes": "The closed schema and semantic runner pass 22 schema tests and 61 complete runner tests; the corpus validates 118 cases and 283 files across 16 implementations and 15 established lanes. The complete Go suite, coverage, vet, and trimpath build pass; discovery reaches 89.7% coverage and validator 82.6%. A real Windows platform-plan run evaluates 45 Starlark BUILD files, discovers 5,105 packages, keeps the orphan-crate gate clean, and proves the selected java-to-semantic-ir BUILD_windows front emits needs_python=true. A Python-3.10-backed python3 shim makes all 41 Java-to-SIR Python execution proofs run rather than skip; its 2 bounded flat-scoping, 6 Node loop, 312 lowering, and 1 doctest cases also pass. Cargo audit reports no vulnerabilities and two reviewed pre-existing unmaintained advisories; Bandit and changed-runner formatting pass, Ruff adds no finding beyond the exact origin/main baseline, and diff hygiene passes. The 551-owner/799-edge state remains complete and acyclic, and the collision report remains 1,384 identities, 4,596 slots, zero collisions, zero unknown buckets, and zero OCaml packages. An independent final review found and the branch fixed the production platform-refresh gap and stale Forme roadmap wording before publication; documentation now accurately assigns invalid-case and aggregate-limit enforcement to the shared validator while the Go consumer exercises successful cases.",
@@ -195,14 +192,136 @@
       "notes": "Discovered when the C# orphan consumer rebased over merged PR #12687. Go now recognizes shell BUILD comments of the form '# needs-toolchain: NAME' and adds those names only for affected packages, but the behavior has no language-neutral toolchain-detection fixture or cross-engine contract. The post-#12819 audit also found that java-to-semantic-ir's Python execution proof silently skips when python3 is unavailable while its unchanged BUILD files declare no Python marker; merged PR #12838 adds two more classic/enhanced loop proofs behind that same undeclared toolchain boundary. Cover this concrete consumer in the corpus and remaining-engine adoption rather than creating a duplicate owner. Define a closed process-free snapshot for exact directive syntax, canonical toolchain names, empty and unknown values, stable deduplication, multiple declarations, platform BUILD precedence, affected-only selection, forced-full behavior, and deterministic results; then make the canonical Go oracle consume it without consulting a checkout, process, environment, or network."
     },
     {
-      "id": "build-tool-extra-ci-toolchain-declaration-remaining-engines",
-      "title": "Implement extra CI toolchain declarations in every supported build-tool engine",
+      "id": "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening",
+      "title": "Pin CRLF-only carriage-return stripping across toolchain declaration consumers",
       "status": "pending",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus"],
       "branch": null,
       "pr_number": null,
+      "notes": "Discovered during independent review of the selected C# consumer before publication. The language-neutral Python reference and current Go declaration parser accept a lone terminal carriage return even though the merged grammar permits carriage-return stripping only as part of CRLF. Extend the neutral corpus with a CRLF positive case plus lone-CR and CR-before-trailing-space negatives, then repair the reference and Go oracle together before the remaining engines consume the hardened contract. The selected C# consumer already rejects lone CR directly, so this follow-up does not block its publication."
+    },
+    {
+      "id": "build-tool-extra-ci-toolchain-declaration-remaining-engines",
+      "title": "Implement extra CI toolchain declarations in every supported build-tool engine",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-csharp-extra-ci-toolchain-declaration-conformance",
+        "build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
+        "build-tool-elixir-extra-ci-toolchain-declaration-conformance",
+        "build-tool-haskell-extra-ci-toolchain-declaration-conformance",
+        "build-tool-lua-extra-ci-toolchain-declaration-conformance",
+        "build-tool-perl-extra-ci-toolchain-declaration-conformance",
+        "build-tool-python-extra-ci-toolchain-declaration-conformance",
+        "build-tool-ruby-extra-ci-toolchain-declaration-conformance",
+        "build-tool-rust-extra-ci-toolchain-declaration-conformance",
+        "build-tool-swift-extra-ci-toolchain-declaration-conformance",
+        "build-tool-typescript-extra-ci-toolchain-declaration-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
       "selection_blocked": true,
-      "notes": "Completion umbrella for the C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript engines after the neutral declaration corpus closes. Decompose the umbrella into independently reviewable engine children before implementation, and route later Dart, JVM, and promoted OCaml engines through the same inert toolchain-detection contract rather than copying Go-only BUILD parsing."
+      "notes": "Completion umbrella for the eleven independently reviewable existing-engine children. The post-#13388 dependency pass decomposed C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript before selecting implementation work; F# follows the C# shared engine while every child consumes the same merged inert corpus. Route later Dart, JVM, and promoted OCaml engines through the same contract rather than copying Go-only BUILD parsing."
+    },
+    {
+      "id": "build-tool-csharp-extra-ci-toolchain-declaration-conformance",
+      "title": "Make the C# build tool consume extra CI toolchain declarations",
+      "status": "in-progress",
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus"],
+      "branch": "codex/build-tool-csharp-extra-ci-toolchain-declaration-conformance",
+      "pr_number": null,
+      "selection_revision": "c750c8a4e87b8f3f6f2d0d6a3179b6980b39ce0a",
+      "selection_notes": "Selected after PR #13388 merged and the remaining-engine umbrella was decomposed, then refreshed over exact current main after the CDC 6600 gate-level merge. The collision-checked schema-3 inventory records 15 established lanes, 1,386 implementation identities, 4,599 slots, 1,425 all-reported identities, zero collisions, zero unknown buckets, and OCaml still emerging at zero packages. C# is the highest-leverage ready child because F# directly references its engine; current live PRs have zero exact overlap with the C# build-tool, shared corpus, state, roadmap, or changelog surfaces.",
+      "notes": "Consume the successful neutral toolchain-detection snapshots in the C# engine. Add canonical cpp and ocaml registry entries, c/cpp language mapping, exact selected-front declaration parsing, stable deduplication and unsupported diagnostics, platform precedence, affected/forced-full scheduling, and bounded process-free input handling. Do not add process, environment, network, Git, or execution authority; keep the F# facade as a separately reviewed dependent child."
+    },
+    {
+      "id": "build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
+      "title": "Make the F# build-tool facade consume extra CI toolchain declarations",
+      "status": "pending",
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-csharp-extra-ci-toolchain-declaration-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Verify the F# facade and project-reference boundary over the remediated C# engine in an independently reviewable tranche, including native facade entry points and neutral declaration fixtures."
+    },
+    {
+      "id": "build-tool-elixir-extra-ci-toolchain-declaration-conformance",
+      "title": "Make the Elixir build tool consume extra CI toolchain declarations",
+      "status": "pending",
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Adopt the merged process-free declaration corpus in the Elixir engine without widening execution authority."
+    },
+    {
+      "id": "build-tool-haskell-extra-ci-toolchain-declaration-conformance",
+      "title": "Make the Haskell build tool consume extra CI toolchain declarations",
+      "status": "pending",
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Adopt the merged process-free declaration corpus in the Haskell engine without widening execution authority."
+    },
+    {
+      "id": "build-tool-lua-extra-ci-toolchain-declaration-conformance",
+      "title": "Make the Lua build tool consume extra CI toolchain declarations",
+      "status": "pending",
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Adopt the merged process-free declaration corpus in the Lua engine without widening execution authority."
+    },
+    {
+      "id": "build-tool-perl-extra-ci-toolchain-declaration-conformance",
+      "title": "Make the Perl build tool consume extra CI toolchain declarations",
+      "status": "pending",
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Adopt the merged process-free declaration corpus in the Perl engine without widening execution authority."
+    },
+    {
+      "id": "build-tool-python-extra-ci-toolchain-declaration-conformance",
+      "title": "Make the Python build tool consume extra CI toolchain declarations",
+      "status": "pending",
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Adopt the merged process-free declaration corpus in the Python engine without widening execution authority."
+    },
+    {
+      "id": "build-tool-ruby-extra-ci-toolchain-declaration-conformance",
+      "title": "Make the Ruby build tool consume extra CI toolchain declarations",
+      "status": "pending",
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Adopt the merged process-free declaration corpus in the Ruby engine without widening execution authority."
+    },
+    {
+      "id": "build-tool-rust-extra-ci-toolchain-declaration-conformance",
+      "title": "Make the Rust build tool consume extra CI toolchain declarations",
+      "status": "pending",
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Adopt the merged process-free declaration corpus in the Rust engine without widening execution authority."
+    },
+    {
+      "id": "build-tool-swift-extra-ci-toolchain-declaration-conformance",
+      "title": "Make the Swift build tool consume extra CI toolchain declarations",
+      "status": "pending",
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Adopt the merged process-free declaration corpus in the Swift engine without widening execution authority."
+    },
+    {
+      "id": "build-tool-typescript-extra-ci-toolchain-declaration-conformance",
+      "title": "Make the TypeScript build tool consume extra CI toolchain declarations",
+      "status": "pending",
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Adopt the merged process-free declaration corpus in the TypeScript engine without widening execution authority."
     },
     {
       "id": "build-tool-typescript-dist-newstyle-discovery-exclusion",
@@ -1661,7 +1780,8 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, and immutable classless-theme behavior from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, and #13368 are merged, so the earlier live-path blocks have cleared. The collision-clean inventories add TypeScript-only `forme-theme-classless` and filesystem-authority `forme-resolve-asset-refs-fs`; both remain covered by this family rather than creating duplicate singleton owners."
+      "selection_blocked": true,
+      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, and asset/MIME derivation from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, and #13401 are merged. The collision-clean inventory adds TypeScript-only `forme-load-assets-fs`, while the earlier inventory already added `forme-theme-classless` and `forme-resolve-asset-refs-fs`; all remain covered by this family rather than creating duplicate singleton owners. Open PR #13409 prospectively adds TypeScript `forme-emit-site-fs` on the same family surfaces, so selection remains blocked without creating a duplicate owner."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -2500,8 +2620,26 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
+      "notes": "Discovered during the post-#13366 live-PR audit. Merged PR #13377 adds code/packages/rust/cdc6600-simulator beside the existing Python implementation, moving the identity from the singleton band into the two-to-four-lane band. Compare deterministic CPU state, instructions, stepping, diagnostics, and resource limits; define a language-neutral simulator corpus and dependency-shaped rollout or record narrowly reviewed target-specific exceptions. The former live-PR collision block is cleared."
+    },
+    {
+      "id": "cdc6600-gatelevel-singleton-classification",
+      "title": "Classify CDC 6600 gate-level simulator portability",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the post-#13388 live-PR topology audit. Merged PR #13391 adds the independently named Rust-only cdc6600-gatelevel package. Classify its deterministic DFF and gate-backed state, 36-instruction datapaths, traces, stable diagnostics, topology bounds, resource ceilings, and shared Python/Rust functional-oracle differentials; define a neutral gate-level contract and applicable-lane rollout where portable or record a reviewed Rust-canonical exception. Keep it separate from the higher-level cdc6600-simulator owner. The former live-PR collision block is cleared."
+    },
+    {
+      "id": "pdp11-simulator-two-lane-classification",
+      "title": "Classify PDP-11 functional simulator two-lane portability",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered during the post-#13366 live-PR audit. Open PR #13377 adds code/packages/rust/cdc6600-simulator beside the existing Python implementation and would move the identity from the singleton band into the two-to-four-lane band. If it merges, compare deterministic CPU state, instructions, stepping, diagnostics, and resource limits; define a language-neutral simulator corpus and dependency-shaped rollout or record narrowly reviewed target-specific exceptions. Do not modify the prospective Rust package or select this owner while PR #13377 remains open."
+      "notes": "Discovered during the post-#13388 live-PR topology refresh. Exact main already contains Python `pdp11-simulator`, while open PR #13405 prospectively adds the Rust implementation beside it and would move the identity from the singleton band into the two-to-four-lane band without adding a new identity. Classify their deterministic CPU state, addressing modes, instruction semantics, stepping, traps, stable diagnostics, tracing, and resource limits; define a language-neutral simulator corpus and dependency-shaped applicable-lane rollout or record narrowly reviewed target-specific exceptions. Keep future gate-level PDP-11 work outside this functional-simulator owner, and do not select or modify the live package while PR #13405 is open."
     },
     {
       "id": "layout-inline-singleton-classification",
@@ -6432,7 +6570,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered in the collision-clean e6d99bc699 inventory after the Rust-only venture-browser-visual-fixtures identity appeared. Separate reusable deterministic HTML/resources, text measurement, geometry, RGBA, structural screenshot oracles, and resource bounds from Rust Venture integration plus Cairo and Apple native capture adapters. Define the language-neutral fixture contract and explicit applicable-lane exceptions; do not manufacture native screenshot hosts in every lane. Live PR #13371 currently owns the Venture visual-fixture README and isolated WGPU integration, so this classification owner remains collision-blocked while that PR is open."
+      "notes": "Discovered in the collision-clean e6d99bc699 inventory after the Rust-only venture-browser-visual-fixtures identity appeared. Separate reusable deterministic HTML/resources, text measurement, geometry, RGBA, structural screenshot oracles, and resource bounds from Rust Venture integration plus Cairo, WGPU, and Apple native capture adapters. Define the language-neutral fixture contract and explicit applicable-lane exceptions; do not manufacture native screenshot hosts in every lane. PRs #13371 and #13390 are merged and remain inside this owner. Open PR #13403 modifies the same Venture visual-resource family, so selection is blocked until that live path clears."
     }
   ]
 }
