@@ -91,15 +91,29 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-006**, the GE-225 gate-level simulator. RCPU-005 is
-complete after the AAU/final-audit slice added separate 40-bit AX/BX/QX/IX
-state, all three calculation modes, exact general/arithmetic/data-transfer and
-plug-7 status words, deterministic integer floating-point, transient/hold
-alerts, modification, and fail-closed preflight. The functional oracle has 91
-simulator tests and 88.81% core line coverage (2,152/2,423), above the 80%
-completion floor. RCPU-006 must route datapath arithmetic and logic through the
-Rust gate/arithmetic primitives and differentially cover every functional
-instruction family before the chronological queue advances to the CDC 6600.
+Current selection: **RCPU-P006A**, the GE-225 gate-level substrate and central
+binary core. RCPU-005 is complete after the AAU/final-audit slice added separate
+40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
+data-transfer and plug-7 status words, deterministic integer floating-point,
+transient/hold alerts, modification, and fail-closed preflight. The functional
+oracle has 91 simulator tests and 88.81% core line coverage (2,152/2,423), above
+the 80% completion floor.
+
+RCPU-006 is split into three gate-auditable slices. P006A establishes flip-flop
+memory/registers, gate decode, the 20-bit and one-sign-plus-38-data-bit central
+binary datapaths, modification, control flow, shifts, compares, and lifecycle
+differentials. P006B adds central decimal/clock state plus direct I/O,
+controller-selector, and API signals/state. P006C adds the separate AAU
+register file and fixed/normalized/unnormalized datapaths, then runs the final
+instruction-family differential and coverage audit. The chronological queue
+does not advance to the CDC 6600 until all three close RCPU-006.
+
+P006A is implementation-complete locally: its 17 tests cover gate-backed
+lifecycle, one-hot fixed/opcode decode, core-memory X groups, automatic
+modification, all central single/double binary operations, multiply/divide,
+all twelve shift/normalize paths, `MOV`, and atomic bounds failures. Core line
+coverage is 86.11% (682/792), above the completion floor. It remains selected
+until it is published and auto-merged.
 
 ## Cross-language wave
 
@@ -127,10 +141,13 @@ queue:
 
 | Date | Item | Priority | Disposition |
 |---|---|---|---|
+| 2026-08-27 | P006A pre-push security review found that `run(max_steps)` passed the caller-controlled bound directly to `Vec::with_capacity`, so `usize::MAX` panicked before executing even one fail-closed instruction. | P0, allocation/panic safety, blocks P006A | Grow traces only as accepted instructions execute, and pin an oversized bound that must report the first unknown instruction instead of preallocating from the bound. |
 | 2026-08-27 | AAU pre-push security review found that normalized floating divide tried to normalize an exact zero quotient by left-shifting zero forever. A caller could load a noncanonical AX/QX pair and make one `FDV` step consume an unbounded CPU loop. | P0, denial-of-service safety, blocks AAU publication | Stop zero before the normalization loop, preserve its deterministic quotient/remainder result, and pin the externally loaded zero-quotient case. |
 | 2026-08-27 | Propagating the P005C atomic core preflight into the AAU slice exposed the same late-failure shape in all sixteen AAU status branches: a not-taken skip beyond installed memory could update IX or clear overflow/underflow holds before failing. | P0, state-corruption safety, blocks AAU/final audit | Share a pure AAU status predicate between preflight and execution, validate the exact skip target before accepting the instruction, and pin full-state end-of-memory atomicity. |
 | 2026-08-27 | Each CPU feature-branch push and pull-request event starts a separate full CI workflow, but branch protection accepts only the pull-request `CI gate`; the redundant push matrices can remain queued after merge and delay the next chronological slice. | P1, CI throughput, non-blocking | During the simulator wave, cancel only superseded push-event runs after confirming the corresponding pull-request run is retained. Schedule a dedicated workflow-trigger/concurrency audit without displacing architecture-correctness work. |
 | 2026-08-27 | Final P005C fail-closed review found that an out-of-range second word or decision skip was detected only after I/P and, for some instructions, operand state had changed. The affected paths included even double-word operations, BXL/BXH, CAB/DCB, fixed readiness/register branches, and controller `BCS`; raw LDX/STX, SPB, and MOV also relied on execution-time checks. | P0, state-corruption safety, blocks RCPU-P005C | Add a single pre-execution core preflight for pair/raw/X/branch/MOV destinations and the exact taken skip, share pure branch predicates with execution, and pin full-state atomicity at installed-memory boundaries before publishing P005C. |
+| 2026-08-27 | P006A lifecycle review found that its initial gate loader rejected a zero-word load exactly at installed-memory end, while the functional oracle accepts that empty half-open range; the same boundary matters to zero-length `MOV`. | P0, lifecycle parity, blocks P006A | Accept exactly-at-end empty loads and empty checked ranges, continue rejecting non-empty or beyond-end ranges without mutation, and pin end/oversized-origin regressions before publication. |
+| 2026-08-27 | RCPU-006 inherits a much larger fidelity surface than the earlier gate-level machines: the completed GE-225 oracle includes central single/double arithmetic, modification and shifts, decimal/clock options, three direct devices, selector/API control, and a separate AAU with 40-bit fixed/floating datapaths. Treating that as one PR would make gate provenance and differential completeness difficult to audit. | P0, scope clarity, blocks RCPU-006 | Split RCPU-006 into P006A gate storage/decode and central binary core, P006B optional central/direct-I/O/controller/API state, and P006C AAU plus final full-family differential audit. Every persistent architectural bit is flip-flop-backed; arithmetic and logic results use `logic-gates`/`arithmetic`; host integers remain limited to addresses, loop/control sequencing, queues, and trace bookkeeping. |
 | 2026-08-27 | The AAU manual makes the final functional slice a distinct coprocessor model rather than aliases over central A/Q. It has separate 40-bit AX/BX/QX/IX registers; fixed, normalized floating, and unnormalized floating modes; exact `30`/`31`/`32`/`33`/`35`/`36` arithmetic/data-transfer opcodes; eleven general words; and sixteen plug-7 `BAR` words. Overflow/underflow indicators are transient, their hold indicators persist, and hold tests conditionally clear the corresponding hold. | P0, architecture completeness, blocks RCPU-005 and RCPU-006 | Implement the separate public AAU state and exact encodings, paired/odd memory behavior, CPU X modification and IX capture, deterministic integer mantissa/exponent arithmetic, readiness/mode/address preflight, normalization and exponent alerts, all status branches, reset behavior, and signed regression vectors. Close RCPU-005 only after the combined package remains above the coverage floor. |
 | 2026-08-27 | The API hardware description adds two control-flow constraints beyond basic ready-event vectoring: the optional priority X group is the special group 32 at core 0200-0203 (not encodable by ordinary `SXG`), and an interrupt may not occur between any `BRU` and its target—so even `BRU *` is uninterruptible. Priority return requires `SET PST` followed by a modified `BRU`; inserting `SET PBK` after `SET PST` must still leave priority mode while returning to the main program with API disabled. | P0, architecture/control-flow correctness, blocks RCPU-P005C | Reserve and select special group 32 only during API service, save P at 0201 and vector to 0204, restore the interrupted X group on the armed modified branch, retain the return arm across `SET PBK`, and suppress interrupt recognition for the first target access after every `BRU`. Pin immediate, deferred, disabled-return, and `BRU *` regressions. |
 | 2026-08-27 | The primary manual makes RCPU-P005C a controller-selector **and API** slice, not just a generic device bus. The selector has eight fixed-priority plugs (0 highest), must alert-halt if `SEL P,X` (`2500P20`) is issued while busy, transmits the following two words without CPU execution, leaves P at the third sequential word, and clears controller errors on selection. `BCS` conditions are controller-specific. Optional API must remember enabled devices' not-ready-to-ready transitions even while interrupts are disabled, interrupt only at instruction boundaries, select X-group 32, store the main-program continuation at octal 0201, branch to octal 0204, enter priority mode with interrupts disabled, and require `SET PST` plus a modified branch to leave priority mode; card reader and punch participate, while typewriter and paper tape do not. | P0, architecture/control-flow correctness, blocks RCPU-005 | Make selection/busy/error behavior, opaque two-word command delivery, per-plug priority and readiness, controller-specific `BCS` predicates, API masks/latches/modes, exact group-32 save/vector behavior, deferred interrupts, and card ready transitions the acceptance boundary of RCPU-P005C. Keep controller timing deterministic through explicit service events and expose a public generic controller adapter before adding device-specific controller manuals. |
