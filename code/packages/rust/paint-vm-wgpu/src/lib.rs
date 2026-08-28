@@ -1360,6 +1360,15 @@ mod tests {
         PaintInstruction, PaintLayer, PaintRect, PaintText,
     };
     use paint_vm_runtime::{PaintBackendPreference, PaintBackendRegistry, PaintRenderOptions};
+    use std::sync::{Mutex, MutexGuard, OnceLock};
+
+    fn adapter_test_guard() -> MutexGuard<'static, ()> {
+        static ADAPTER_TEST: OnceLock<Mutex<()>> = OnceLock::new();
+        ADAPTER_TEST
+            .get_or_init(|| Mutex::new(()))
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner())
+    }
 
     #[test]
     fn exposes_tier1_descriptor() {
@@ -1487,6 +1496,7 @@ mod tests {
 
     #[test]
     fn isolated_layers_match_the_shared_visual_oracle_when_an_adapter_is_available() {
+        let _guard = adapter_test_guard();
         let scene = venture_browser_visual_fixtures::isolated_gpu_layer_scene();
         let pixels = match render(&scene) {
             Ok(pixels) => pixels,
@@ -1499,6 +1509,7 @@ mod tests {
 
     #[test]
     fn nested_layers_apply_each_scope_opacity_once_when_an_adapter_is_available() {
+        let _guard = adapter_test_guard();
         let inner = PaintLayer {
             base: PaintBase::default(),
             children: vec![PaintInstruction::Rect(PaintRect::filled(
