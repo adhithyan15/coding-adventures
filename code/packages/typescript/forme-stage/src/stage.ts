@@ -46,6 +46,31 @@ import type { StageContext, StageInitContext } from "./context.js";
 /** A JSON-Schema-shaped value; the orchestrator runs the actual validator. */
 export type JsonSchema = JsonValue;
 
+/** Required named side inputs declared by a multi-input stage. */
+export type InputPortMap = Readonly<Record<string, KindDescriptor>>;
+
+/**
+ * Runtime input passed to a stage that declares `inputPorts`.
+ *
+ * `default` is the payload described by `consumes`; every other key is a
+ * required named side input. Stream descriptors map to AsyncIterable payloads
+ * through `KindPayload`, exactly like a legacy stream-consuming stage.
+ */
+export type PortInputs<
+  In extends KindDescriptor,
+  Ports extends InputPortMap,
+> = Readonly<{
+  default: KindPayload<In>;
+} & {
+  [Name in keyof Ports]: KindPayload<Ports[Name]>;
+}>;
+
+/** Input payload selected from the stage's optional named-port declaration. */
+export type StageInput<
+  In extends KindDescriptor,
+  Ports extends InputPortMap | undefined,
+> = Ports extends InputPortMap ? PortInputs<In, Ports> : KindPayload<In>;
+
 /** The three valid output shapes (FM01 §3.6). */
 export type StageOutput<Out extends KindDescriptor> =
   | KindPayload<Out>
@@ -60,6 +85,7 @@ export type StageOutput<Out extends KindDescriptor> =
 export interface Stage<
   In extends KindDescriptor = KindDescriptor,
   Out extends KindDescriptor = KindDescriptor,
+  Ports extends InputPortMap | undefined = undefined,
 > {
   // ─── Static identification ──────────────────────────────────────────
   /** Package-qualified name, e.g. `"@forme/parse-markdown"`. */
@@ -74,6 +100,13 @@ export interface Stage<
   // ─── Type contract ──────────────────────────────────────────────────
   readonly consumes: In;
   readonly produces: Out;
+  /**
+   * Required named side inputs in addition to the default `consumes` input.
+   * Every named port is wired explicitly; only the default input participates
+   * in declaration-order inference. When present, `run` receives one object
+   * containing `default` plus every named port and is invoked exactly once.
+   */
+  readonly inputPorts?: Ports;
 
   // ─── Capability declarations ────────────────────────────────────────
   /**
@@ -100,7 +133,7 @@ export interface Stage<
    * references to context APIs after `run` resolves.
    */
   run(
-    input: KindPayload<In>,
+    input: StageInput<In, Ports>,
     config: unknown,
     ctx: StageContext,
   ): StageOutput<Out>;
@@ -147,6 +180,7 @@ export interface Stage<
 export function defineStage<
   In extends KindDescriptor,
   Out extends KindDescriptor,
->(stage: Stage<In, Out>): Stage<In, Out> {
+  Ports extends InputPortMap | undefined = undefined,
+>(stage: Stage<In, Out, Ports>): Stage<In, Out, Ports> {
   return stage;
 }

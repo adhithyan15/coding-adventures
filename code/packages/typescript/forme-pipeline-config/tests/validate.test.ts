@@ -373,6 +373,60 @@ describe("validateConfig — instance ID resolution", () => {
 // ─── Wires & outputs ──────────────────────────────────────────────────────
 
 describe("validateConfig — wires", () => {
+  const makeJoin = () => defineStage({
+    name: "join",
+    version: "0.1.0",
+    apiVersion: KERNEL_API_VERSION,
+    description: "join a default content input with an asset side input",
+    consumes: Kinds.ContentSource,
+    inputPorts: { assets: Kinds.Asset },
+    produces: Kinds.DeployArtifact,
+    capabilities: [],
+    configSchema: null,
+    async run() { throw new Error("not invoked in validation tests"); },
+  });
+
+  it("rejects an empty inputPorts declaration", () => {
+    const malformed = { ...makeJoin(), inputPorts: {} } as never;
+    try {
+      validateConfig(config([{ stage: malformed, id: "join" }]));
+      throw new Error("expected empty inputPorts to fail");
+    } catch (error) {
+      expect(error).toBeInstanceOf(ConfigError);
+      expect((error as ConfigError).errors).toEqual(expect.arrayContaining([
+        expect.objectContaining({
+          path: "stages[0].stage.inputPorts",
+          code: CONFIG_ERROR_CODES.INVALID_STAGE_VALUE,
+        }),
+      ]));
+    }
+  });
+
+  it("rejects reserved port names and malformed kind descriptors", () => {
+    const malformed = {
+      ...makeJoin(),
+      inputPorts: {
+        default: Kinds.Asset,
+        "": Kinds.Asset,
+        broken: { name: "", version: "" },
+      },
+    } as never;
+    try {
+      validateConfig(config([{ stage: malformed, id: "join" }]));
+      throw new Error("expected malformed inputPorts to fail");
+    } catch (error) {
+      expect(error).toBeInstanceOf(ConfigError);
+      const failures = (error as ConfigError).errors.filter(
+        entry => entry.code === CONFIG_ERROR_CODES.INVALID_STAGE_VALUE,
+      );
+      expect(failures.map(entry => entry.path)).toEqual(expect.arrayContaining([
+        "stages[0].stage.inputPorts.default",
+        "stages[0].stage.inputPorts.<empty>",
+        "stages[0].stage.inputPorts.broken",
+      ]));
+    }
+  });
+
   it("rejects edge from unknown instance", () => {
     expect(() => validateConfig(config([
       { stage: makeStage("a", Kinds.Void, Kinds.ContentSource), id: "a" },
@@ -400,6 +454,77 @@ describe("validateConfig — wires", () => {
       expect(error).toBeInstanceOf(ConfigError);
       expect((error as ConfigError).errors).toEqual(expect.arrayContaining([
         expect.objectContaining({ code: CONFIG_ERROR_CODES.MULTIPLE_INPUT_WIRES }),
+      ]));
+    }
+  });
+
+  it("accepts one default wire plus one wire per declared named input", () => {
+    const c = config([
+      { stage: makeStage("page", Kinds.Void, Kinds.ContentSource), id: "page" },
+      { stage: makeStage("asset", Kinds.Void, Kinds.Asset), id: "asset" },
+      { stage: makeJoin(), id: "join" },
+    ], { wires: [
+      { from: { id: "page" }, to: { id: "join" } },
+      { from: { id: "asset" }, to: { id: "join", port: "assets" } },
+    ] });
+    expect(() => validateConfig(c)).not.toThrow();
+  });
+
+  it("rejects two producers targeting the same named input port", () => {
+    try {
+      validateConfig(config([
+        { stage: makeStage("page", Kinds.Void, Kinds.ContentSource), id: "page" },
+        { stage: makeStage("asset-a", Kinds.Void, Kinds.Asset), id: "asset-a" },
+        { stage: makeStage("asset-b", Kinds.Void, Kinds.Asset), id: "asset-b" },
+        { stage: makeJoin(), id: "join" },
+      ], { wires: [
+        { from: { id: "page" }, to: { id: "join" } },
+        { from: { id: "asset-a" }, to: { id: "join", port: "assets" } },
+        { from: { id: "asset-b" }, to: { id: "join", port: "assets" } },
+      ] }));
+      throw new Error("expected duplicate named-port wire to fail");
+    } catch (error) {
+      expect(error).toBeInstanceOf(ConfigError);
+      expect((error as ConfigError).errors).toEqual(expect.arrayContaining([
+        expect.objectContaining({ code: CONFIG_ERROR_CODES.MULTIPLE_INPUT_WIRES }),
+      ]));
+    }
+  });
+
+  it("requires an explicit producer for every named input port", () => {
+    try {
+      validateConfig(config([
+        { stage: makeStage("page", Kinds.Void, Kinds.ContentSource), id: "page" },
+        { stage: makeJoin(), id: "join" },
+      ], { wires: [
+        { from: { id: "page" }, to: { id: "join" } },
+      ] }));
+      throw new Error("expected missing named-port wire to fail");
+    } catch (error) {
+      expect(error).toBeInstanceOf(ConfigError);
+      expect((error as ConfigError).errors).toEqual(expect.arrayContaining([
+        expect.objectContaining({ code: CONFIG_ERROR_CODES.MISSING_INPUT_PORT_WIRE }),
+      ]));
+    }
+  });
+
+  it("rejects unknown target ports and named output ports", () => {
+    try {
+      validateConfig(config([
+        { stage: makeStage("page", Kinds.Void, Kinds.ContentSource), id: "page" },
+        { stage: makeStage("asset", Kinds.Void, Kinds.Asset), id: "asset" },
+        { stage: makeJoin(), id: "join" },
+      ], { wires: [
+        { from: { id: "page", port: "html" }, to: { id: "join" } },
+        { from: { id: "asset" }, to: { id: "join", port: "missing" } },
+      ] }));
+      throw new Error("expected unsupported ports to fail");
+    } catch (error) {
+      expect(error).toBeInstanceOf(ConfigError);
+      expect((error as ConfigError).errors).toEqual(expect.arrayContaining([
+        expect.objectContaining({ code: CONFIG_ERROR_CODES.OUTPUT_PORT_UNSUPPORTED }),
+        expect.objectContaining({ code: CONFIG_ERROR_CODES.UNKNOWN_INPUT_PORT }),
+        expect.objectContaining({ code: CONFIG_ERROR_CODES.MISSING_INPUT_PORT_WIRE }),
       ]));
     }
   });

@@ -18,8 +18,8 @@
  *   6. Stages with non-null `configSchema` need a non-undefined config.
  *      (Full JSON-Schema validation is deferred to the orchestrator;
  *      we only enforce the presence rule here.)
- *   7. Wires/outputs reference real instance IDs, and a stage's
- *      single input has at most one explicit producer.
+ *   7. Wires/outputs reference real instance IDs; each default or named
+ *      input port has at most one producer; every named port is wired.
  *   8. If more than one terminal stage exists (no consumer), each
  *      must have a corresponding `OutputSpec`.
  *
@@ -84,7 +84,7 @@ export function validateConfig(config: PipelineConfig): ResolvedPipelineConfig {
 
   // ID-dependent rules require the resolution pass to have run first.
   const idSet = new Set(resolvedIds);
-  validateWires(config, idSet, errors);
+  validateWires(config, resolvedIds, idSet, errors);
   validateOutputs(config, idSet, errors);
   validateMultipleTerminals(config, resolvedIds, idSet, errors);
 
@@ -199,6 +199,42 @@ function validateStageInstance(
       }
     }
   }
+  if (stage.inputPorts !== undefined) {
+    if (typeof stage.inputPorts !== "object" || stage.inputPorts === null
+        || Array.isArray(stage.inputPorts)) {
+      errors.push({
+        path: `${path}.stage.inputPorts`,
+        code: CONFIG_ERROR_CODES.INVALID_STAGE_VALUE,
+        message: "stage.inputPorts must be an object mapping names to KindDescriptors",
+      });
+    } else {
+      if (Object.keys(stage.inputPorts).length === 0) {
+        errors.push({
+          path: `${path}.stage.inputPorts`,
+          code: CONFIG_ERROR_CODES.INVALID_STAGE_VALUE,
+          message: "stage.inputPorts must declare at least one named input; omit it for a legacy single-input stage",
+        });
+      }
+      for (const [name, descriptor] of Object.entries(stage.inputPorts)) {
+        if (name.length === 0 || name === "default") {
+          errors.push({
+            path: `${path}.stage.inputPorts.${name || "<empty>"}`,
+            code: CONFIG_ERROR_CODES.INVALID_STAGE_VALUE,
+            message: `${JSON.stringify(name)} is not a valid named input port; "default" and the empty name are reserved`,
+          });
+        }
+        if (typeof descriptor !== "object" || descriptor === null
+            || typeof descriptor.name !== "string" || descriptor.name.length === 0
+            || typeof descriptor.version !== "string" || descriptor.version.length === 0) {
+          errors.push({
+            path: `${path}.stage.inputPorts.${name}`,
+            code: CONFIG_ERROR_CODES.INVALID_STAGE_VALUE,
+            message: "input port must declare a KindDescriptor with non-empty name and version",
+          });
+        }
+      }
+    }
+  }
   // Config presence rule (FM03 §2.4 #3) + JSON-Schema validation.
   // We surface BOTH halves at config-validate time:
   //   - presence: stage declares a schema → config must be present;
@@ -287,13 +323,16 @@ function resolveInstanceIds(
 
 function validateWires(
   c: PipelineConfig,
+  resolvedIds: readonly string[],
   idSet: ReadonlySet<string>,
   errors: ConfigErrorEntry[],
 ): void {
-  if (!c.wires) return;
+  const stageById = new Map(
+    resolvedIds.map((id, index) => [id, c.stages[index]?.stage] as const),
+  );
   const incoming = new Map<string, number[]>();
-  for (let i = 0; i < c.wires.length; i++) {
-    const w = c.wires[i]!;
+  for (let i = 0; i < (c.wires ?? []).length; i++) {
+    const w = c.wires![i]!;
     if (!idSet.has(w.from.id)) {
       errors.push({
         path: `wires[${i}].from.id`,
@@ -308,21 +347,77 @@ function validateWires(
         message: `Edge references unknown instance ${JSON.stringify(w.to.id)}.`,
       });
     }
-    const indices = incoming.get(w.to.id);
+    if (w.from.port !== undefined) {
+      errors.push({
+        path: `wires[${i}].from.port`,
+        code: CONFIG_ERROR_CODES.OUTPUT_PORT_UNSUPPORTED,
+        message:
+          `Stage ${JSON.stringify(w.from.id)} exposes one output; omit from.port. ` +
+          `Named output ports are reserved for a future kernel version.`,
+      });
+    }
+
+    const port = w.to.port ?? "default";
+    if (w.to.port !== undefined && idSet.has(w.to.id)) {
+      const target = stageById.get(w.to.id);
+      if (!isStageRef(target) && !hasInputPort(target, w.to.port)) {
+        errors.push({
+          path: `wires[${i}].to.port`,
+          code: CONFIG_ERROR_CODES.UNKNOWN_INPUT_PORT,
+          message:
+            `Stage ${JSON.stringify(w.to.id)} does not declare named input port ` +
+            `${JSON.stringify(w.to.port)}. Declare it in stage.inputPorts or omit to.port ` +
+            `to target the default input.`,
+        });
+      }
+    }
+
+    const key = inputKey(w.to.id, port);
+    const indices = incoming.get(key);
     if (indices) indices.push(i);
-    else incoming.set(w.to.id, [i]);
+    else incoming.set(key, [i]);
   }
 
-  for (const [instanceId, indices] of incoming) {
+  for (const [key, indices] of incoming) {
     if (indices.length < 2) continue;
+    const [instanceId, port] = JSON.parse(key) as [string, string];
     errors.push({
       path: indices.map(index => `wires[${index}].to`).join(", "),
       code: CONFIG_ERROR_CODES.MULTIPLE_INPUT_WIRES,
       message:
-        `Instance ${JSON.stringify(instanceId)} has ${indices.length} incoming wires, ` +
-        `but stages expose one input. Remove all but one producer wire.`,
+        `Instance ${JSON.stringify(instanceId)} input ${JSON.stringify(port)} has ` +
+        `${indices.length} incoming wires. Remove all but one producer wire for that port.`,
     });
   }
+
+  for (const [instanceId, stage] of stageById) {
+    if (isStageRef(stage) || typeof stage?.inputPorts !== "object"
+        || stage.inputPorts === null || Array.isArray(stage.inputPorts)) continue;
+    for (const port of Object.keys(stage.inputPorts)) {
+      if (!incoming.has(inputKey(instanceId, port))) {
+        errors.push({
+          path: `stages[${resolvedIds.indexOf(instanceId)}].stage.inputPorts.${port}`,
+          code: CONFIG_ERROR_CODES.MISSING_INPUT_PORT_WIRE,
+          message:
+            `Required named input port ${JSON.stringify(port)} on instance ` +
+            `${JSON.stringify(instanceId)} has no producer. Add an explicit wire with ` +
+            `to.port=${JSON.stringify(port)}.`,
+        });
+      }
+    }
+  }
+}
+
+function inputKey(instanceId: string, port: string): string {
+  return JSON.stringify([instanceId, port]);
+}
+
+function hasInputPort(stage: unknown, port: string): boolean {
+  if (typeof stage !== "object" || stage === null) return false;
+  const inputPorts = (stage as { inputPorts?: unknown }).inputPorts;
+  return typeof inputPorts === "object" && inputPorts !== null
+    && !Array.isArray(inputPorts)
+    && Object.prototype.hasOwnProperty.call(inputPorts, port);
 }
 
 function validateOutputs(

@@ -29,14 +29,15 @@ visible so a local optimization cannot quietly close the project early.
 
 The implementation is substantial but not yet an end-to-end product:
 
-- 57 TypeScript `forme-*` packages and 174 package test files cover the kernel,
+- 58 TypeScript `forme-*` packages and 177 package test files cover the kernel,
   stage contracts, a sequential orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
 - The blog proves an eight-stage routed DAG: source → parse → router fans out
   to article rendering and chronological collection, then two filesystem sinks
   emit articles plus an index, RSS, Atom, and sitemap. Public metadata composes
-  portable routes with the GitHub Pages project prefix. Assets and a Style IR
-  theme are not yet integrated.
+  portable routes with the GitHub Pages project prefix. A reusable light/dark
+  Style IR theme now drives exact per-article AOT CSS slices; assets are not yet
+  integrated.
 - There is no general `forme` build/check/dev CLI, watch server, plugin host,
   runtime sandbox, authoring shell, or implemented deploy runner.
 - Interactivity IR has no numbered spec or package. The AOT implementation
@@ -77,26 +78,28 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 8 | FM-B022 | done | Modernize CI actions and warning-producing test config | Workflows use action releases supported on the current runner runtime, cache steps point at real dependency files, Vitest 4 configuration uses its current schema, and representative PR CI is free of the repeated runtime, missing dependency-file, and deprecated-config warnings. |
 | 9 | FM-B024 | done | Finish the third-party Node 24 workflow closure | Gradle uses a current Node 24 action, the unmaintained Node 20 MSVC action is replaced by a tested repository-owned bootstrap, generated CI workflow contracts stay current, and final PR logs contain no Node 20 runtime warning. |
 | 10 | FM-B005 | done | Make static rendering consume Style IR | The renderer accepts a resolved theme, records `usedStyle`, emits sliced CSS through the AOT path, supports light/dark preferences, and removes its hard-coded theme. |
-| 11 | FM-B006 | ready | Add a first-class asset pipeline | Referenced local assets are discovered, fingerprinted, copied, rewritten, cached, and included in the deploy manifest. |
-| 12 | FM-B007 | blocked | Generate the repository landing page with Forme | Depends on FM-B005 and FM-B006. Forme source and configuration reproduce the approved landing design; generated output replaces hand-maintained HTML and deploys through the existing Pages workflow. |
-| 13 | FM-B008 | ready | Implement the general headless CLI | `forme build`, `forme check`, and `forme clean` load a project config, produce stable diagnostics and exit codes, expose reproducible mode, and work outside the monorepo demo driver. |
-| 14 | FM-B009 | blocked | Implement watch mode and a dev server | Depends on FM-B008. File changes rebuild the correct affected set, browser refresh is reliable, cancellation is clean, and error pages preserve the last good output. |
-| 15 | FM-B010 | ready | Finish orchestrator incrementality and scheduling | Persistent cache hits skip unchanged stages; bounded streaming, backpressure, and `maxConcurrency` avoid draining every stream into memory; deterministic tests cover cancellation and reproducibility. |
-| 16 | FM-B011 | ready | Reconcile the FM spec map | Resolve the FM05 numbering collision, publish the missing Interactivity IR/AOT/CLI spec locations, repair stale cross-links, and add an implementation-status ledger to every FM spec. |
-| 17 | FM-B012 | ready | Implement the deploy runner | Build the FM05 core, filesystem adapter, GitHub Pages adapter, dry-run/reporting path, rollback/idempotency tests, and `forme deploy` composition. |
-| 18 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
-| 19 | FM-B014 | blocked | Implement the plugin host and wire protocol | Depends on FM-B011 and the existing manifest parser. Stage discovery, handshake, typed streaming, capability mediation, diagnostics, cancellation, and crash isolation pass cross-process contract tests. |
-| 20 | FM-B015 | blocked | Ship plugin installation, runtimes, and sandboxes | Depends on FM-B014. Signed/trusted install flow, grants persistence, TypeScript/Python/Rust runners, and macOS/Linux/Windows sandbox profiles pass adversarial filesystem/network/process tests. |
-| 21 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
-| 22 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
-| 23 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
+| 11 | FM-B025 | done | Implement typed named input ports and deterministic fan-in | A stage can declare required named side-input kinds in addition to its default input; explicit wires validate one producer per port, the DAG orders every dependency, and the scheduler invokes the join once with stable materialized inputs. Focused tests prove `Stream<RenderedPage>` + `Stream<Asset>` fan-in without filesystem or event-bus side channels. |
+| 12 | FM-B006 | ready | Add a first-class asset pipeline | Referenced local assets are discovered, fingerprinted, copied, rewritten, cached, and included in the deploy manifest. |
+| 13 | FM-B007 | blocked | Generate the repository landing page with Forme | Depends on FM-B005 and FM-B006. Forme source and configuration reproduce the approved landing design; generated output replaces hand-maintained HTML and deploys through the existing Pages workflow. |
+| 14 | FM-B008 | ready | Implement the general headless CLI | `forme build`, `forme check`, and `forme clean` load a project config, produce stable diagnostics and exit codes, expose reproducible mode, and work outside the monorepo demo driver. |
+| 15 | FM-B009 | blocked | Implement watch mode and a dev server | Depends on FM-B008. File changes rebuild the correct affected set, browser refresh is reliable, cancellation is clean, and error pages preserve the last good output. |
+| 16 | FM-B010 | ready | Finish orchestrator incrementality and scheduling | Persistent cache hits skip unchanged stages; bounded streaming, backpressure, and `maxConcurrency` avoid draining every stream into memory; deterministic tests cover cancellation and reproducibility. |
+| 17 | FM-B011 | ready | Reconcile the FM spec map | Resolve the FM05 numbering collision, publish the missing Interactivity IR/AOT/CLI spec locations, repair stale cross-links, and add an implementation-status ledger to every FM spec. |
+| 18 | FM-B012 | ready | Implement the deploy runner | Build the FM05 core, filesystem adapter, GitHub Pages adapter, dry-run/reporting path, rollback/idempotency tests, and `forme deploy` composition. |
+| 19 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
+| 20 | FM-B014 | blocked | Implement the plugin host and wire protocol | Depends on FM-B011 and the existing manifest parser. Stage discovery, handshake, typed streaming, capability mediation, diagnostics, cancellation, and crash isolation pass cross-process contract tests. |
+| 21 | FM-B015 | blocked | Ship plugin installation, runtimes, and sandboxes | Depends on FM-B014. Signed/trusted install flow, grants persistence, TypeScript/Python/Rust runners, and macOS/Linux/Windows sandbox profiles pass adversarial filesystem/network/process tests. |
+| 22 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
+| 23 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
+| 24 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
 
 ## Dependency path
 
 The shortest path to the current release target is:
 
 `FM-B002 → FM-B019 → FM-B003 → FM-B004`, alongside `FM-B005` and
-`FM-B006`, then `FM-B007 → FM-B008 → FM-B009/FM-B010 → FM-B012`.
+`FM-B025 → FM-B006`, then
+`FM-B007 → FM-B008 → FM-B009/FM-B010 → FM-B012`.
 FM-B020 retires the temporary compatibility path after the routed product DAG
 is proven, but it does not block FM-B004.
 
@@ -144,6 +147,7 @@ work.
 | 2026-08-27 | A workflow-wide build plan scheduled pure-BEAM packages on Windows while the canonical matrix deliberately skipped Elixir setup, so `mix` was unavailable. | #13287's latest Windows CI proved the reviewed setup-beam revision on Windows 2025. FM-B024 adopts only that prerequisite and enables tool verification; #13287 retains ownership of the broader BUILD_windows protocol and package-front work. |
 | 2026-08-27 | Style IR can match document and shell selectors, but generated aggregate HTML has no AST to inspect. | Resolved in FM-B005 by conservatively retaining the complete theme for trusted generated index HTML while article pages receive exact AST-derived slices. |
 | 2026-08-27 | The renderer-owned CSS fallback hid whether Style IR and the AOT slicer were actually connected, and it prevented theme replacement without changing renderer code. | Resolved in FM-B005 by moving the reusable light/dark theme to `forme-theme-classless`; unconfigured rendering is intentionally unstyled. |
+| 2026-08-27 | Asset emission must join rendered pages with processed asset bytes, but stages expose one input and config validation rejects every second incoming wire even though `EdgeSpec` already carries an unused target port. | Resolved in FM-B025 with typed named side inputs and deterministic scheduler fan-in; cross-stage data stays out of frontmatter, the event bus, and hidden filesystem side channels. |
 
 ## Loop protocol
 
