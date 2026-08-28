@@ -134,16 +134,17 @@ identified legacy owners.
 
 `loadBookGenerationConfig` folds the owner tree directly and returns the same
 public configuration shape consumed by book generation, narration generation,
-progress reporting, handwritten parity, and `book.tex` generation. Callers do
-not reconstruct a second projection or read a compatibility aggregate.
+progress reporting, handwritten parity, and `book.tex` generation. Default and
+production callers do not reconstruct a second projection or read a
+compatibility aggregate.
 
-One migration/test-only compatibility path remains: when
-`core/book-generation.d/` is entirely absent, the loader may read a legacy
-monolith fixture. The presence of any owner directory commits the read to the
-canonical projection. A malformed, hostile, or incomplete `.d/` tree fails
-closed and must never fall back to a nearby monolith. In the repository,
-`check:shards` requires the complete owner tree and requires the monolith to be
-absent.
+One migration/test-only compatibility path remains: a caller that explicitly
+passes `{ allowLegacyMonolith: true }` may read a legacy monolith fixture only
+when `core/book-generation.d/` is entirely absent. The presence of any owner
+directory commits the read to the canonical projection. A malformed, hostile,
+or incomplete `.d/` tree fails closed and must never fall back to a nearby
+monolith. In the repository, `check:shards` requires the complete owner tree and
+requires the monolith to be absent.
 
 `npm run check:shards` validates both the structural owner contract and the
 byte-exact reconstructed document. `npm run shard -- core/book-generation.json`
