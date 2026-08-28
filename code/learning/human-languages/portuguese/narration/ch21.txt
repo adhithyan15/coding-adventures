@@ -1,8 +1,8 @@
 Portuguese, chapter 21: Bringing, Getting, Waiting, Buying.
-4 lessons. All 4 can be done entirely by ear.
+6 lessons. All 6 can be done entirely by ear.
 
 
-Lesson 1 of 4.
+Lesson 1 of 6.
 trazer — bringing, and the dragging behind it.
 
 Warm-up.
@@ -41,7 +41,7 @@ Wrap-up Recall.
 Give the present of trazer. (Trago, trazes, traz, trazemos, trazem.) Which two forms were learned whole? (Trago, with its g, and bare traz.) What did trahere mean? ("To drag" — so a tractor pulls.) Which small word does gostar keep before a verb, and what did its root gustāre mean? (De; "to taste".) Which verb of taking came from "to coat with pitch," and which has no settled root at all? (Pegar, from picāre; tomar.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 6.
 conseguir / obter — getting, and managing to.
 
 Warm-up.
@@ -82,47 +82,89 @@ Wrap-up Recall.
 Say "I manage to help" and "I bring the bread." (Consigo ajudar; trago o pão.) What did sequī mean, and which number is named from it? ("To follow" — second, secundus.) Which verb is obter built on, and what did that root mean? (Ter, from tenēre, "to hold".) Which verb came from adiūtāre, its i hardening into a j? (Ajudar.) And the polite address for a stranger? (O senhor.)
 
 
-Lesson 3 of 4.
-esperar — waiting, hoping, expecting.
+Lesson 3 of 6.
+esperar — to wait.
 
 Warm-up.
 [pause 2 seconds]
-Portuguese has sometimes answered one English verb with two. Here it goes the other way: one Portuguese verb answers three English ones.
+One ordinary -ar verb lets you say that you wait: esperar.
 
-You'll want to know: A plain -ar verb.
+You'll want to know: The present tense.
 [a table of 3 rows, read aloud]
 eu espero, nós esperamos.
 tu esperas, vocês/eles esperam.
 ele/ela/você espera, blank.
-Nothing new in the endings — esperar runs like every -ar verb you have met.
+The endings are familiar. Portuguese normally puts the thing or person waited for directly after the verb:
+Espero o meu irmão. — I am waiting for my brother.
+English needs “for”; Portuguese does not add a preposition here.
 
-Grammar Lens: Three English verbs, one Portuguese one.
-Espero o meu irmão. — "I am waiting for my brother." Espero que sim. — "I hope so." Espero um livro. — "I expect a book."
-Waiting, hoping, expecting. Portuguese does not choose between them; the sentence around the verb decides. That is less strange than it looks — the three are one idea seen from three angles, since to wait for a thing is to expect it, and to expect a good thing is to hope for it.
-Espero que sim is worth banking whole. It sits beside penso que sim, "I think so," and is the softer of the two.
-
-The word, taken apart: hope, and the propped-up e-.
-esperar from Latin spērāre, "to hope," built on spēs, "hope." The waiting sense is the newcomer; hoping came first, which is why one verb still holds all three jobs.
-English has the family only in the negative: to despair is dē-spērāre, "to be down from hope," and so is desperate, and the desperado who has none left. The cheerful half stayed on the far side of the Channel. It surfaces in one famous English word: Esperanto, the pen name its inventor published under, which means "one who is hoping."
-Now the e at the front. Latin spērāre began with s plus a consonant, and no Iberian mouth would start a word that way, so an e- was propped in front: spērāre becomes esperar. The same prop turned scrībere into escrever and stāre into estar. Three words, one habit.
+The word, taken apart.
+Esperar comes from Latin spērāre, “to hope.” Its front e- props up an older sp- beginning, just as escrever grew from Latin scrībere.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "espero, esperas, espera, esperamos, esperam"]
+[your turn — say: espero, esperas, espera, esperamos, esperam]
 [pause 8 seconds for the answer]
-[your turn — say: the three jobs — "Espero o meu irmão", "Espero que sim"]
-[pause 8 seconds for the answer]
-[your turn — say: hoping to manage it — "Espero conseguir"]
-[pause 8 seconds for the answer]
-[your turn — say: the propped e- — "esperar, escrever, estar"]
+[your turn — say: “I am waiting for my brother” — Espero o meu irmão.]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Name the three English verbs esperar covers. (Wait, hope, expect.) Say "I hope so" and "I hope to manage it." (Espero que sim; espero conseguir.) Which of the three senses did spērāre mean first? (Hope — from spēs.) Why is there an e on the front of esperar? (Latin sp- could not open a word here, so an e- was propped on — as in escrever from scrībere and estar from stāre.) And what did sequī mean? ("To follow".)
+Say “I wait.” (Espero.) Say “We wait.” (Esperamos.) Does Portuguese add a word matching English “for” in Espero o meu irmão? (No.) Next, the same verb will take one carefully separated new meaning.
 
 
-Lesson 4 of 4.
+Lesson 4 of 6.
+espero que sim — I hope so.
+
+Warm-up.
+[pause 2 seconds]
+Espero first meant “I hope.” Learn that meaning in one useful answer: Espero que sim, “I hope so.”
+
+You'll want to know: Bank the whole answer.
+— Vai chover? — Is it going to rain? — Espero que sim. — I hope so.
+You do not need to take the answer apart yet. Hear and say the four beats: es-pe-ro que sim.
+The earlier meaning, “wait,” is still available. The sentence around esperar selects the meaning.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “I hope so” — Espero que sim.]
+[pause 8 seconds for the answer]
+[your turn — choose: In Espero que sim, does espero mean wait or hope? (Hope.)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say “I hope so.” (Espero que sim.) Which meaning came first in the word’s Latin history? (Hope.)
+
+
+Lesson 5 of 6.
+esperar — to expect.
+
+Warm-up.
+[pause 2 seconds]
+You have used esperar for waiting and hoping. Its third common meaning gets its own short lesson: “to expect.”
+
+Grammar Lens: Let the object choose the meaning.
+Espero um livro. — I expect a book.
+Here espero is about what you think will arrive. Compare the three meanings:
+Espero o meu irmão. — I wait for my brother.
+Espero que sim. — I hope so.
+Espero um livro. — I expect a book.
+Do not memorise three new verbs. Notice how the rest of the sentence guides you.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “I expect a book” — Espero um livro.]
+[pause 8 seconds for the answer]
+[your turn — choose: In that sentence, wait, hope or expect? (Expect.)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say “I expect a book.” (Espero um livro.) What helps you choose the English meaning? (The rest of the sentence.)
+
+
+Lesson 6 of 6.
 comprar — buying, and a Latin twin that is not a twin.
 
 Warm-up.

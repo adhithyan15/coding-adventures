@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-ETYMON-PAIS-02, PT-GRAMMAR-PAIS-03]
 introduces:
   knowledge: [PT-ETYMON-IRMAOS-02, PT-ETYMON-IRMAOS-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-ETYMON-PAIS-02, PT-GRAMMAR-PAIS-03, PT-ETYMON-IRMAOS-02, PT-ETYMON-IRMAOS-03]
 skills: [listening, speaking, reading]

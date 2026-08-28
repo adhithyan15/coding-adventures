@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-TER-02, PT-ETYMON-TER-03, PT-GRAMMAR-NUMEROS-16-20-02, PT-NOTICE-NUMEROS-16-20-03]
 introduces:
   knowledge: [PT-LEX-IDADE-02, PT-ETYMON-IDADE-03, PT-GRAMMAR-IDADE-04]
+introduces_idioms: [PT-IDIOM-TER-AGE-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-TER-02, PT-ETYMON-TER-03, PT-GRAMMAR-NUMEROS-16-20-02, PT-NOTICE-NUMEROS-16-20-03, PT-LEX-IDADE-02, PT-ETYMON-IDADE-03, PT-GRAMMAR-IDADE-04]
 skills: [listening, speaking, reading]

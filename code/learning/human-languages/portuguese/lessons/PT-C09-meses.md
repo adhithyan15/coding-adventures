@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04, PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03]
 introduces:
   knowledge: [PT-ETYMON-MESES-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04, PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03, PT-ETYMON-MESES-02]
 skills: [listening, speaking, reading]

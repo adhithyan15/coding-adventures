@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-CAFE-02, PT-ETYMON-CAFE-03]
 introduces:
   knowledge: [PT-LEX-CHA-02, PT-ETYMON-CHA-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [PT-CULTURE-CHA-MACAU-TRADE-ROUTE-01]
 practises:
   knowledge: [PT-LEX-CAFE-02, PT-SOUND-CAFE-02, PT-ETYMON-CAFE-03, PT-LEX-CHA-02, PT-ETYMON-CHA-03]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04]
 introduces:
   knowledge: [PT-SOUND-MORAR-02, PT-ETYMON-MORAR-03, PT-GRAMMAR-MORAR-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04, PT-SOUND-MORAR-02, PT-ETYMON-MORAR-03, PT-GRAMMAR-MORAR-04]
 skills: [listening, speaking, reading]

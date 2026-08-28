@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bcad5cb560fb13f6",
+  "sourceHash": "fnv1a64:1130d3126e93a47a",
   "lessons": [
     {
       "id": "PT-C08-hora",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa3cae359e8a5ad7",
+      "sourceHash": "fnv1a64:7b04c4b782b31cec",
       "notice": null,
       "blocks": [
         {
@@ -153,7 +153,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:82df5e19c047fe50",
+      "sourceHash": "fnv1a64:d5fc9bf426fbe033",
       "notice": {
         "modality": "sight",
         "needs": [

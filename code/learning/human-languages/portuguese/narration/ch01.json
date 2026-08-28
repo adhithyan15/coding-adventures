@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a33ac1ea92dc0dc0",
+  "sourceHash": "fnv1a64:6a9877657a0b02cb",
   "lessons": [
     {
       "id": "PT-C01-ola",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:12e372d0a813a012",
+      "sourceHash": "fnv1a64:0a485bd22e5f3726",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -156,7 +156,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:5c31fb61ea5c27d4",
+      "sourceHash": "fnv1a64:67f5190aea8d7181",
       "notice": {
         "modality": "pen",
         "needs": [

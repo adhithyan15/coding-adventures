@@ -2,7 +2,9 @@
   "id": "PT-PATH-025-C",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "PT-C21-esperar"
+    "PT-C21-esperar",
+    "PT-C21-esperar-hope",
+    "PT-C21-esperar-expect"
   ],
   "before": [],
   "inline": [

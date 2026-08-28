@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-BOCA-02, PT-GRAMMAR-MAO-04]
 introduces:
   knowledge: [PT-LEX-CORACAO-02, PT-ETYMON-CORACAO-03, PT-NOTICE-C26-CORPO-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-BOCA-02, PT-GRAMMAR-MAO-04, PT-LEX-CORACAO-02, PT-ETYMON-CORACAO-03, PT-NOTICE-C26-CORPO-04, PT-LEX-C02-PRACTICE-02, PT-NOTICE-C02-PRACTICE-03, PT-LEX-FORMAL-PRACTICE-02]
 skills: [listening, speaking, reading]

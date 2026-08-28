@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04]
 introduces:
   knowledge: [PT-LEX-FALO-PORTUGUES-02, PT-LEX-FALO-PORTUGUES-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04, PT-LEX-FALO-PORTUGUES-02, PT-LEX-FALO-PORTUGUES-03]
 skills: [listening, speaking, reading]

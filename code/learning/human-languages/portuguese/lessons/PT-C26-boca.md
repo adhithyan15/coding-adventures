@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-ORELHA-02, PT-ETYMON-ORELHA-03]
 introduces:
   knowledge: [PT-LEX-BOCA-02, PT-ETYMON-BOCA-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-ORELHA-02, PT-ETYMON-ORELHA-03, PT-LEX-BOCA-02, PT-ETYMON-BOCA-03, PT-GRAMMAR-MAIS-OU-MENOS-04, PT-SOUND-MAIS-OU-MENOS-02]
 skills: [listening, speaking, reading]

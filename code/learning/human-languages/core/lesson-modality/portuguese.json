@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:adbaa96d99a507c5",
+  "sourceHash": "fnv1a64:cc4e9e6d45480baf",
   "summary": {
-    "totalLessons": 97,
-    "voice": 86,
+    "totalLessons": 102,
+    "voice": 91,
     "sight": 9,
     "pen": 2,
-    "drivableLessons": 86,
+    "drivableLessons": 91,
     "drivablePercent": 89,
     "trackCount": 1,
     "chapterCount": 26,
-    "drivablePrefixTotal": 78,
+    "drivablePrefixTotal": 83,
     "fullyDrivableChapters": 20,
     "unstartableChapters": 5,
     "overriddenLessons": 0,
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "portuguese",
-      "lessonCount": 97,
-      "voice": 86,
+      "lessonCount": 102,
+      "voice": 91,
       "sight": 9,
       "pen": 2,
       "drivablePercent": 89,
-      "drivablePrefixTotal": 78,
+      "drivablePrefixTotal": 83,
       "modalities": [
         "voice",
         "sight",
@@ -335,19 +335,21 @@
         },
         {
           "chapter": 18,
-          "lessonCount": 7,
-          "voice": 7,
+          "lessonCount": 9,
+          "voice": 9,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 7,
+          "drivablePrefix": 9,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
             "PT-C18-ser-estar",
             "PT-C18-ter-haver",
+            "PT-C18-ha-time-ago",
+            "PT-C18-ter-que",
             "PT-C18-ir",
             "PT-C18-vir",
             "PT-C18-dizer",
@@ -395,6 +397,27 @@
         },
         {
           "chapter": 21,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "PT-C21-trazer",
+            "PT-C21-conseguir",
+            "PT-C21-esperar",
+            "PT-C21-esperar-hope",
+            "PT-C21-esperar-expect",
+            "PT-C21-comprar"
+          ]
+        },
+        {
+          "chapter": 22,
           "lessonCount": 4,
           "voice": 4,
           "sight": 0,
@@ -406,27 +429,9 @@
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
-            "PT-C21-trazer",
-            "PT-C21-conseguir",
-            "PT-C21-esperar",
-            "PT-C21-comprar"
-          ]
-        },
-        {
-          "chapter": 22,
-          "lessonCount": 3,
-          "voice": 3,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 3,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
             "PT-C22-responder",
             "PT-C22-encontrar",
+            "PT-C22-encontrar-meet",
             "PT-C22-jogar-brincar-tocar"
           ]
         },
@@ -525,7 +530,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:12e372d0a813a012",
+      "sourceHash": "fnv1a64:0a485bd22e5f3726",
       "detachableSegments": [
         "Writing — follow the greeting you can see"
       ]
@@ -547,7 +552,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:5c31fb61ea5c27d4",
+      "sourceHash": "fnv1a64:67f5190aea8d7181",
       "detachableSegments": [
         "Writing — one guided copy"
       ]
@@ -712,7 +717,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:52cbdef0857d72fc"
+      "sourceHash": "fnv1a64:d9db25f6cae40c7d"
     },
     {
       "id": "PT-C02-como",
@@ -730,7 +735,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4f94e3dd7241a606"
+      "sourceHash": "fnv1a64:8dbf653867168ffe"
     },
     {
       "id": "PT-C02-tudo",
@@ -748,7 +753,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f4a8709237abf25d"
+      "sourceHash": "fnv1a64:d9b331478ad86930"
     },
     {
       "id": "PT-C02-tudo-bem",
@@ -766,7 +771,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fc322bb39b699414"
+      "sourceHash": "fnv1a64:b82290f797999a3c"
     },
     {
       "id": "PT-C02-como-vai-esta",
@@ -784,7 +789,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a02e9d4188bd98d6"
+      "sourceHash": "fnv1a64:8e4d0120e0b027e5"
     },
     {
       "id": "PT-C02-mais-ou-menos",
@@ -802,7 +807,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:86de033159d18fc0"
+      "sourceHash": "fnv1a64:0b3396bb6e906f63"
     },
     {
       "id": "PT-C02-practice",
@@ -820,7 +825,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0ded2b44e7c3dc08"
+      "sourceHash": "fnv1a64:aca1be415cde7665"
     },
     {
       "id": "PT-C02-formal-practice",
@@ -838,7 +843,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:097a53e55e7299bb"
+      "sourceHash": "fnv1a64:f718ed94c477a750"
     },
     {
       "id": "PT-C03-eu",
@@ -856,7 +861,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9fe6fac8bed4989c"
+      "sourceHash": "fnv1a64:26f2b21b5fc97efd"
     },
     {
       "id": "PT-C03-me-chamo",
@@ -874,7 +879,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e37b7cc427686d4f"
+      "sourceHash": "fnv1a64:c7d0d2b77da79854"
     },
     {
       "id": "PT-C03-como-se-chama",
@@ -892,7 +897,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:19d80603dcf4fd33"
+      "sourceHash": "fnv1a64:d7efa9629b173496"
     },
     {
       "id": "PT-C03-prazer",
@@ -910,7 +915,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:90e51bff189b5067"
+      "sourceHash": "fnv1a64:11024327f435e8bd"
     },
     {
       "id": "PT-C03-practice",
@@ -928,7 +933,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:83eef7581fe19f49"
+      "sourceHash": "fnv1a64:9bc6dea69ededfdc"
     },
     {
       "id": "PT-C04-adeus",
@@ -946,7 +951,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c97b23b8a6808e1c"
+      "sourceHash": "fnv1a64:7eb30aa1a8e50f2d"
     },
     {
       "id": "PT-C04-ate-logo",
@@ -964,7 +969,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9830b40389d38856"
+      "sourceHash": "fnv1a64:b0393a2a7258d175"
     },
     {
       "id": "PT-C04-ate-amanha",
@@ -982,7 +987,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ac782f096e52d36a"
+      "sourceHash": "fnv1a64:b59dc1a6ec8551f1"
     },
     {
       "id": "PT-C04-ate-breve",
@@ -1000,7 +1005,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b71370b7fd65a597"
+      "sourceHash": "fnv1a64:12f07b0704caf03e"
     },
     {
       "id": "PT-C04-practice",
@@ -1018,7 +1023,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:da806e06899b5675"
+      "sourceHash": "fnv1a64:e1bc90956cb7e8f8"
     },
     {
       "id": "PT-C05-falar",
@@ -1036,7 +1041,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9142f96e86f2df49"
+      "sourceHash": "fnv1a64:574af1f2d3828ae2"
     },
     {
       "id": "PT-C05-morar",
@@ -1054,7 +1059,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d828ba686501d94c"
+      "sourceHash": "fnv1a64:fffb4fd05f791e67"
     },
     {
       "id": "PT-C05-trabalhar",
@@ -1072,7 +1077,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1ec7af1dc5f87985"
+      "sourceHash": "fnv1a64:af4bede84c0cbe24"
     },
     {
       "id": "PT-C05-falo-portugues",
@@ -1090,7 +1095,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7cc2b0d894096c3b"
+      "sourceHash": "fnv1a64:d434c449f02a2cbe"
     },
     {
       "id": "PT-C05-practice",
@@ -1108,7 +1113,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4afa69ed94e21dae"
+      "sourceHash": "fnv1a64:f8a1b837676f71fd"
     },
     {
       "id": "PT-C06-numeros-1-5",
@@ -1126,7 +1131,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:594c1134cb80d6c4"
+      "sourceHash": "fnv1a64:edfd6a4db5788329"
     },
     {
       "id": "PT-C06-numeros-6-10",
@@ -1144,7 +1149,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b4daae3921b6de2e"
+      "sourceHash": "fnv1a64:568b1c011f73adb3"
     },
     {
       "id": "PT-C07-dias-1",
@@ -1162,7 +1167,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:c0fda7f81e770a79"
+      "sourceHash": "fnv1a64:013fdf4f6d027633"
     },
     {
       "id": "PT-C07-dias-2",
@@ -1180,7 +1185,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:e9ed04ba035c46c6"
+      "sourceHash": "fnv1a64:b1ec6cff9663161b"
     },
     {
       "id": "PT-C08-hora",
@@ -1198,7 +1203,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:aa3cae359e8a5ad7"
+      "sourceHash": "fnv1a64:7b04c4b782b31cec"
     },
     {
       "id": "PT-C08-meio-dia-meia-noite",
@@ -1218,7 +1223,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:82df5e19c047fe50"
+      "sourceHash": "fnv1a64:d5fc9bf426fbe033"
     },
     {
       "id": "PT-C09-meses",
@@ -1236,7 +1241,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:61f1e8e8650bebd8"
+      "sourceHash": "fnv1a64:edb745eb91697e5f"
     },
     {
       "id": "PT-C09-estacoes",
@@ -1254,7 +1259,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f7afb2c35ee6edff"
+      "sourceHash": "fnv1a64:028a00015a6349ec"
     },
     {
       "id": "PT-C10-pais",
@@ -1272,7 +1277,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c95ddcf9efd42694"
+      "sourceHash": "fnv1a64:a515b21ebd62f6e5"
     },
     {
       "id": "PT-C10-irmaos",
@@ -1290,7 +1295,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ca89807f7cb84ee2"
+      "sourceHash": "fnv1a64:9d88cf9a8030ad65"
     },
     {
       "id": "PT-C11-pao",
@@ -1308,7 +1313,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:978f1cc1949e0eda"
+      "sourceHash": "fnv1a64:e2b654438e1fee03"
     },
     {
       "id": "PT-C11-agua-vinho",
@@ -1326,7 +1331,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:89864126fd6d8ed4"
+      "sourceHash": "fnv1a64:9820602c5703cc6b"
     },
     {
       "id": "PT-C12-numeros-11-15",
@@ -1344,7 +1349,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:e97ba5a3eb90b0f4"
+      "sourceHash": "fnv1a64:3649ed312201b851"
     },
     {
       "id": "PT-C12-numeros-16-20",
@@ -1362,7 +1367,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:afd007780ea26424"
+      "sourceHash": "fnv1a64:f1e185fdf95fe4c3"
     },
     {
       "id": "PT-C13-preto-branco",
@@ -1380,7 +1385,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9bff2a85a1efcf44"
+      "sourceHash": "fnv1a64:ea941f2d7ab5cd0b"
     },
     {
       "id": "PT-C13-vermelho-azul",
@@ -1398,7 +1403,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:62f1d856582b2f75"
+      "sourceHash": "fnv1a64:101e5c18b9129d16"
     },
     {
       "id": "PT-C14-ter",
@@ -1416,7 +1421,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c6b81a7f8eef85bd"
+      "sourceHash": "fnv1a64:5f6a18870fe8da10"
     },
     {
       "id": "PT-C14-idade",
@@ -1434,7 +1439,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0e1b449764858e32"
+      "sourceHash": "fnv1a64:37f1c6b35f0f3d76"
     },
     {
       "id": "PT-C15-preterito-perfeito",
@@ -1452,7 +1457,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:04e67acb90f29799"
+      "sourceHash": "fnv1a64:3768c8879d55a468"
     },
     {
       "id": "PT-C15-tenho-falado",
@@ -1470,7 +1475,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dc425e1b1bcff9a2"
+      "sourceHash": "fnv1a64:88473b948dd3c3bd"
     },
     {
       "id": "PT-C16-ser",
@@ -1488,7 +1493,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:edbb93f449017570"
+      "sourceHash": "fnv1a64:99acbf7abc4291b9"
     },
     {
       "id": "PT-C16-ser-roots",
@@ -1506,7 +1511,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fdf8381298bfb94b"
+      "sourceHash": "fnv1a64:1294352bb1259676"
     },
     {
       "id": "PT-C16-ser-vs-estar",
@@ -1524,7 +1529,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c97bb700d6b120b4"
+      "sourceHash": "fnv1a64:219924dff3f3fe9b"
     },
     {
       "id": "PT-C16-ser-estar-meaning",
@@ -1542,7 +1547,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8a88df5726f51052"
+      "sourceHash": "fnv1a64:090994bb004c6153"
     },
     {
       "id": "PT-C17-cabeca",
@@ -1560,7 +1565,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ad67a92c860441ca"
+      "sourceHash": "fnv1a64:3d1fe5fb9c851463"
     },
     {
       "id": "PT-C17-cabeca-caput",
@@ -1578,7 +1583,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1b677a14fdff6ebe"
+      "sourceHash": "fnv1a64:87b979e83167bc55"
     },
     {
       "id": "PT-C17-mao",
@@ -1596,7 +1601,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cb7201caca5af86d"
+      "sourceHash": "fnv1a64:14b67e82c9a63a1a"
     },
     {
       "id": "PT-C18-ser-estar",
@@ -1614,7 +1619,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b6280fefbd37ea75"
+      "sourceHash": "fnv1a64:70923ff7140f2464"
     },
     {
       "id": "PT-C18-ter-haver",
@@ -1632,7 +1637,43 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:49979a10a3a6ec74"
+      "sourceHash": "fnv1a64:9b1a5b2f48ca0f41"
+    },
+    {
+      "id": "PT-C18-ha-time-ago",
+      "language": "portuguese",
+      "chapter": 18,
+      "sequence": 612,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6461c650c80be122"
+    },
+    {
+      "id": "PT-C18-ter-que",
+      "language": "portuguese",
+      "chapter": 18,
+      "sequence": 614,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b4c86e2c733765d1"
     },
     {
       "id": "PT-C18-ir",
@@ -1650,7 +1691,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f107891d41421a8e"
+      "sourceHash": "fnv1a64:107a7d5a7d081b87"
     },
     {
       "id": "PT-C18-vir",
@@ -1668,7 +1709,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:421e6ad4cbc0253e"
+      "sourceHash": "fnv1a64:2e85a3a7ab3a1cc5"
     },
     {
       "id": "PT-C18-dizer",
@@ -1686,7 +1727,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5ee9217699dedf09"
+      "sourceHash": "fnv1a64:bff1d4499dfaa806"
     },
     {
       "id": "PT-C18-ver",
@@ -1704,7 +1745,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c977c7d335aaebaf"
+      "sourceHash": "fnv1a64:8ab176140f5d1b9c"
     },
     {
       "id": "PT-C18-saber-conhecer",
@@ -1722,7 +1763,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:00842329cad02770"
+      "sourceHash": "fnv1a64:6103ca51eae35e55"
     },
     {
       "id": "PT-C19-pensar",
@@ -1740,7 +1781,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:022d6eed8b617498"
+      "sourceHash": "fnv1a64:bbcc12df639b2783"
     },
     {
       "id": "PT-C19-entender-compreender",
@@ -1758,7 +1799,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:da9952c537a9bc43"
+      "sourceHash": "fnv1a64:f5101a65a2419f3e"
     },
     {
       "id": "PT-C19-ler",
@@ -1776,7 +1817,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7cb73323fccfa24f"
+      "sourceHash": "fnv1a64:d7dc8d7cd3aac9aa"
     },
     {
       "id": "PT-C19-escrever",
@@ -1794,7 +1835,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:83015b006049d677"
+      "sourceHash": "fnv1a64:c1b149106c91bf9e"
     },
     {
       "id": "PT-C20-tomar-pegar",
@@ -1812,7 +1853,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:79c7eb13ce008985"
+      "sourceHash": "fnv1a64:156c1dcc37a3891a"
     },
     {
       "id": "PT-C20-perguntar",
@@ -1830,7 +1871,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9426bcac3e9a9c3a"
+      "sourceHash": "fnv1a64:c2acef4d1413f05f"
     },
     {
       "id": "PT-C20-ajudar",
@@ -1848,7 +1889,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fd54d3307eb823b6"
+      "sourceHash": "fnv1a64:01831769b4d3dfcb"
     },
     {
       "id": "PT-C20-gostar",
@@ -1866,7 +1907,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e5de9b118953fe17"
+      "sourceHash": "fnv1a64:688a495ade770344"
     },
     {
       "id": "PT-C21-trazer",
@@ -1884,7 +1925,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7b14d556604d719e"
+      "sourceHash": "fnv1a64:ac9abf4e68b2cb2d"
     },
     {
       "id": "PT-C21-conseguir",
@@ -1902,7 +1943,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3742b8b2544dccc1"
+      "sourceHash": "fnv1a64:6394a2e9a2b3612b"
     },
     {
       "id": "PT-C21-esperar",
@@ -1920,7 +1961,43 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:31120d6c1e64d76a"
+      "sourceHash": "fnv1a64:76f160adbaf02669"
+    },
+    {
+      "id": "PT-C21-esperar-hope",
+      "language": "portuguese",
+      "chapter": 21,
+      "sequence": 772,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c9bec00139077ca6"
+    },
+    {
+      "id": "PT-C21-esperar-expect",
+      "language": "portuguese",
+      "chapter": 21,
+      "sequence": 774,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3419d11a49edadca"
     },
     {
       "id": "PT-C21-comprar",
@@ -1938,7 +2015,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8b11425cdff3787b"
+      "sourceHash": "fnv1a64:190a68953a575526"
     },
     {
       "id": "PT-C22-responder",
@@ -1956,7 +2033,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:91891c6856a502dc"
+      "sourceHash": "fnv1a64:33d1d4f37baae8dd"
     },
     {
       "id": "PT-C22-encontrar",
@@ -1974,7 +2051,25 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:63bdfa7d69a61baa"
+      "sourceHash": "fnv1a64:7d54069fe23131f3"
+    },
+    {
+      "id": "PT-C22-encontrar-meet",
+      "language": "portuguese",
+      "chapter": 22,
+      "sequence": 802,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3ef563960a8707d2"
     },
     {
       "id": "PT-C22-jogar-brincar-tocar",
@@ -1992,7 +2087,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c0bdfdf3c3d4552c"
+      "sourceHash": "fnv1a64:17ca3fc2cc2dc615"
     },
     {
       "id": "PT-C23-cafe",
@@ -2010,7 +2105,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3a2ba130519186ce"
+      "sourceHash": "fnv1a64:55a4b48ef731ee13"
     },
     {
       "id": "PT-C23-cha",
@@ -2028,7 +2123,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:43ee81275f75dcc3"
+      "sourceHash": "fnv1a64:5ccac98bc4bd0787"
     },
     {
       "id": "PT-C23-leite",
@@ -2046,7 +2141,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:952b395903d15cfb"
+      "sourceHash": "fnv1a64:d06615a2aee734a4"
     },
     {
       "id": "PT-C24-queijo",
@@ -2064,7 +2159,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cfa5a967ba99fb12"
+      "sourceHash": "fnv1a64:17db95b6297ae313"
     },
     {
       "id": "PT-C24-ovo",
@@ -2082,7 +2177,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b410179fd3142c54"
+      "sourceHash": "fnv1a64:2aab3e73516fc7d3"
     },
     {
       "id": "PT-C24-arroz",
@@ -2100,7 +2195,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:39120ddcf68415d4"
+      "sourceHash": "fnv1a64:b8b663f4c5704b63"
     },
     {
       "id": "PT-C24-acucar",
@@ -2118,7 +2213,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2cb901127c211eb1"
+      "sourceHash": "fnv1a64:89f6456d2d013e72"
     },
     {
       "id": "PT-C25-amigo",
@@ -2136,7 +2231,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:82b32ebf2fcddb0b"
+      "sourceHash": "fnv1a64:c0d9c0df34554276"
     },
     {
       "id": "PT-C25-familia",
@@ -2154,7 +2249,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6c64f312d29c7d17"
+      "sourceHash": "fnv1a64:ab7e8608d769fb60"
     },
     {
       "id": "PT-C25-homem",
@@ -2172,7 +2267,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c880de3d69cf74c6"
+      "sourceHash": "fnv1a64:bc52ffe84ccb1bdb"
     },
     {
       "id": "PT-C25-mulher",
@@ -2190,7 +2285,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e1ac77f2bef2e483"
+      "sourceHash": "fnv1a64:436a8643d1e1bbde"
     },
     {
       "id": "PT-C26-olho",
@@ -2208,7 +2303,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fcebc8bdf7de4788"
+      "sourceHash": "fnv1a64:331d9cb5d982f5eb"
     },
     {
       "id": "PT-C26-orelha",
@@ -2226,7 +2321,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9e973ec0714feacd"
+      "sourceHash": "fnv1a64:dbefeba3acaf1152"
     },
     {
       "id": "PT-C26-boca",
@@ -2244,7 +2339,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3b6f35f9cc02e502"
+      "sourceHash": "fnv1a64:590fab9e3290356b"
     },
     {
       "id": "PT-C26-coracao",
@@ -2262,7 +2357,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b39f1cf1104a200b"
+      "sourceHash": "fnv1a64:bbd040eee0f3ca42"
     }
   ],
   "findings": []

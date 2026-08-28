@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-GRAMMAR-NUMEROS-11-15-02, PT-NOTICE-NUMEROS-11-15-03]
 introduces:
   knowledge: [PT-GRAMMAR-NUMEROS-16-20-02, PT-NOTICE-NUMEROS-16-20-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-GRAMMAR-NUMEROS-11-15-02, PT-NOTICE-NUMEROS-11-15-03, PT-GRAMMAR-NUMEROS-16-20-02, PT-NOTICE-NUMEROS-16-20-03]
 skills: [listening, speaking, reading]

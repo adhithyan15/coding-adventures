@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-SOUND-EU-02, PT-ETYMON-EU-03, PT-GRAMMAR-EU-04, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04]
 introduces:
   knowledge: [PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-SOUND-EU-02, PT-ETYMON-EU-03, PT-GRAMMAR-EU-04, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04, PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-CHA-02, PT-ETYMON-CHA-03]
 introduces:
   knowledge: [PT-LEX-LEITE-02, PT-ETYMON-LEITE-03, PT-NOTICE-C23-BEBIDAS-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-CAFE-02, PT-SOUND-CAFE-02, PT-ETYMON-CAFE-03, PT-LEX-CHA-02, PT-ETYMON-CHA-03, PT-LEX-LEITE-02, PT-ETYMON-LEITE-03, PT-NOTICE-C23-BEBIDAS-04, PT-ETYMON-PAO-02, PT-ETYMON-AGUA-VINHO-02, PT-LEX-FALO-PORTUGUES-02, PT-LEX-FALO-PORTUGUES-03, PT-GRAMMAR-TRABALHAR-04, PT-SOUND-TRABALHAR-02, PT-NOTICE-C05-PRACTICE-04]
 skills: [listening, speaking, reading]

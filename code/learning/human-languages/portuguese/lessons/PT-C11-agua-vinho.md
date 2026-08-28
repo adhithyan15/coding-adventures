@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-ETYMON-PAO-02, PT-ETYMON-PAO-03]
 introduces:
   knowledge: [PT-ETYMON-AGUA-VINHO-02, PT-ETYMON-AGUA-VINHO-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-ETYMON-PAO-02, PT-ETYMON-PAO-03, PT-ETYMON-AGUA-VINHO-02, PT-ETYMON-AGUA-VINHO-03]
 skills: [listening, speaking, reading]
