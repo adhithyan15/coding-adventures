@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Expose native begin-navigation and incremental image-completion helpers over
+  the shared cancellable subresource lifecycle.
 - Forward core-owned View Source auxiliary documents through the generated
   SwiftUI host response without refetching the current page.
 

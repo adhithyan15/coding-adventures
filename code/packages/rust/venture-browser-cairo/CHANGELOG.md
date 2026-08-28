@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Expose the shared document-first navigation and incremental image completion
+  seam for the Qt, Flutter, and Compose host family.
 - Serialize shared View Source auxiliary-document effects for Qt, Flutter, and
   Compose hosts without moving source construction into toolkit adapters.
 

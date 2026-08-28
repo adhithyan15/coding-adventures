@@ -8,6 +8,8 @@
 
 ## Unreleased
 
+- Add document-first and reverse-completion image lifecycle capture with
+  scheduler diagnostics and converged visual assertions.
 - Added a reusable isolated GPU layer scene and pixel oracle covering overlap
   isolation, layer opacity, ordered filters, and multiply blending, with Metal
   acceptance and a stable seam for future WGPU/native backends.

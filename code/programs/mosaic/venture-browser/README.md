@@ -119,7 +119,11 @@ font-raster screenshots are retained as diagnostics while exact structural
 screenshots mask platform glyph pixels. Production adapter tests sweep the
 same fixture through Cairo (shared by Qt, Flutter, and Compose), Metal, and
 Direct2D, using portable frame probes instead of toolkit-owned HTML or golden
-files. Generate the six inspectable PNGs with:
+files. The same fixture also drives document-first subresource acceptance. It
+records the pending placeholder frame, dispatches deduplicated image requests
+through the host-neutral scheduler contract, applies completions out of order,
+and requires deterministic convergence without refetching retained page state.
+Generate the six inspectable PNGs with:
 
 ```sh
 cargo run -p venture-browser-visual-fixtures --example capture -- target/venture-visuals

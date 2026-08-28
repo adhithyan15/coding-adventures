@@ -15,6 +15,10 @@ and installs its package-owned `host/xaml/MosaicHost.cs` adapter into the
 generated project shell. That adapter calls this crate's C ABI and mounts the
 pixel surface in Mosaic's `content-surface` slot.
 
+The bridge's begin-navigation and completion methods expose the shared
+ordered/cancellable image lifecycle for WinUI scheduling. Decoding and repaint
+decisions stay in core rather than entering the C# adapter.
+
 The same ABI returns View Source as a typed auxiliary-document effect. The
 WinUI adapter clones and publishes that document before disposing the response,
 leaving window ownership in the shell while source construction remains shared.

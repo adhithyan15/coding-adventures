@@ -1,5 +1,13 @@
 # Changelog
 
+## Asynchronous subresource lifecycle
+
+- Added document-first image scheduling with deterministic requests,
+  cancellation effects, stale-result rejection, retained resource state, and
+  incremental repaint across shared browser and available native host seams.
+- Extended the real-page fixture with pending-frame and reverse-completion
+  acceptance while preserving failure fallback and final visual baselines.
+
 ## Generated Unicode text conformance
 
 - Promoted shared text flow from handwritten browser heuristics to generated

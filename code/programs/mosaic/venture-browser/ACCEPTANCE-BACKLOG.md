@@ -65,12 +65,23 @@ cross-platform proving application. Items are ordered by risk and dependency.
   machines, ICU bidi properties feeding the UAX #9 resolver, complex-script
   dictionaries, profile diagnostics, focused conformance tests, and a shared
   international real-page fixture.
-- [ ] **P2 browser convergence — asynchronous subresource lifecycle.** Replace
+- [x] **P2 browser convergence — asynchronous subresource lifecycle.** Replace
   blocking inline-image fetch/decode with a host-neutral request, cancellation,
   completion, and incremental-repaint contract owned by the browser pipeline.
   Preserve retained document/layout state, deterministic ordering, failure
   fallback, navigation cancellation, and one reusable scheduler seam across
   native and web hosts rather than introducing toolkit-specific loaders.
+  Completed with document-first page commits, ordered/deduplicated scheduler
+  effects, navigation cancellation generations, retained ready/failed image
+  state, incremental repaint outcomes, compatibility draining, native bridge
+  entry points, and deterministic visual lifecycle acceptance.
+- [ ] **P2 browser convergence — external stylesheets and computed cascade.**
+  Consume the parser's stylesheet plans through the shared subresource
+  scheduler, then replace `html-to-layout`'s theme-only visual defaults with a
+  reusable author/UA cascade and computed-style boundary. Preserve ordered
+  stylesheet blocking, media/failure fallback, navigation cancellation,
+  retained-document restyle, and backend-neutral layout/paint integration;
+  avoid CSS parsing or property policy in host toolkits.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

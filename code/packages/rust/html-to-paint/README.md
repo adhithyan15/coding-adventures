@@ -10,8 +10,9 @@ BrowserRenderTree
   -> layout-block
   -> layout-to-paint
   -> HtmlPaintOutput { positioned, links, scene }
-  -> resolve_scene_image_resources(host_fetcher)
-  -> PaintScene with decoded image pixels
+  -> scene_image_resource_uris
+  -> resolve_scene_image_resources_incrementally(browser_resolver)
+  -> PaintScene with pending, decoded, or failed images
 ```
 
 The package keeps the individual parser, adapter, layout, and paint stages
@@ -58,6 +59,12 @@ Browser hosts can instead call
 `resolve_scene_image_resources_with_mosaic_fallback`. That tolerant path keeps
 successful images, replaces each failure with a clipped black border and its
 HTML `alt` text, and returns the failures for host diagnostics.
+
+Incremental browsers use `scene_image_resource_uris` for stable first-paint
+request order and `resolve_scene_image_resources_incrementally` with the
+tri-state `HtmlImageResource` contract. Pending images preserve geometry with
+an alt-text placeholder but do not produce failures; ready bytes decode to
+pixels, and failed/decode states reuse the normal recoverable fallback.
 
 ## Current boundary
 

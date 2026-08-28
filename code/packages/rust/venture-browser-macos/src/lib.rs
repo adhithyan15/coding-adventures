@@ -15,8 +15,9 @@ use std::fmt;
 use std::{cell::RefCell, rc::Rc};
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
-    BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
-    BrowserScrollCommand, BrowserSession,
+    BrowserLoadError, BrowserNavigation, BrowserNavigationUpdate, BrowserPagePipeline,
+    BrowserResourceFetcher, BrowserScrollCommand, BrowserSession, BrowserSubresourceCompletion,
+    BrowserSubresourceUpdate,
 };
 use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, WindowEvent};
 
@@ -385,6 +386,56 @@ where
     Ok(session.execute(navigation, &pipeline, fetcher)?.is_some())
 }
 
+/// Commit a native navigation before inline image requests complete.
+pub fn begin_navigate_session<F>(
+    session: &mut BrowserSession,
+    navigation: BrowserNavigation,
+    width: f64,
+    height: f64,
+    document_fetcher: &F,
+) -> Result<BrowserNavigationUpdate, BrowserLoadError>
+where
+    F: BrowserResourceFetcher,
+{
+    let theme = mosaic_html_theme();
+    let measurer = NativeMeasurer::new();
+    let shaper = NativeShaper::new();
+    let metrics = NativeMetrics::new();
+    let resolver = NativeResolver::new();
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(width, height, 1.0),
+        &measurer,
+        &shaper,
+        &metrics,
+        &resolver,
+    );
+    session.begin_execute(navigation, &pipeline, document_fetcher)
+}
+
+/// Repaint a retained native page after one scheduler completion.
+pub fn complete_session_subresource(
+    session: &mut BrowserSession,
+    completion: BrowserSubresourceCompletion,
+    width: f64,
+    height: f64,
+) -> BrowserSubresourceUpdate {
+    let theme = mosaic_html_theme();
+    let measurer = NativeMeasurer::new();
+    let shaper = NativeShaper::new();
+    let metrics = NativeMetrics::new();
+    let resolver = NativeResolver::new();
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(width, height, 1.0),
+        &measurer,
+        &shaper,
+        &metrics,
+        &resolver,
+    );
+    session.complete_subresource(completion, &pipeline)
+}
+
 /// The concrete adapter behind Venture's generated Mosaic SwiftUI shell.
 ///
 /// Chrome is still authored by MIL/MLL/MSL and navigation is still reduced by
@@ -508,6 +559,31 @@ impl MacBrowserHost {
 
     pub fn update_hover(&mut self, x: f64, y: f64) -> bool {
         self.controller.update_hover(x, y)
+    }
+
+    pub fn begin_navigation(
+        &mut self,
+        navigation: BrowserNavigation,
+    ) -> Result<BrowserNavigationUpdate, BrowserLoadError> {
+        begin_navigate_session(
+            self.controller.session_mut(),
+            navigation,
+            self.width,
+            self.height,
+            &self.fetcher,
+        )
+    }
+
+    pub fn complete_subresource(
+        &mut self,
+        completion: BrowserSubresourceCompletion,
+    ) -> BrowserSubresourceUpdate {
+        complete_session_subresource(
+            self.controller.session_mut(),
+            completion,
+            self.width,
+            self.height,
+        )
     }
 
     /// Reflow the retained page for a new logical content-surface size.

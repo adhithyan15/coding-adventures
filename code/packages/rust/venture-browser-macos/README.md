@@ -54,6 +54,9 @@ text input, and bookmark toggles all dispatch through the shared host reducer.
 View Source dispatches through that reducer as well; the Swift adapter forwards
 the core-owned synthetic document through `VentureOpenAuxiliaryDocument` so a
 window presenter never needs to escape or parse page source itself.
+The public begin-navigation and completion helpers expose the same ordered,
+cancellable image lifecycle to the SwiftUI/AppKit event loop while keeping
+CoreText/Metal composition behind the existing native pipeline seam.
 Arrow, Page Up/Down, Home/End, and Space key events now drive the same shared
 clamped viewport and Metal repaint path. Command-Left/Right reload Back/Forward
 history entries through the transactional browser session, update the title,
