@@ -989,6 +989,7 @@ jobs:
 
       - name: Set up Ruby
         if: needs.detect.outputs.needs_ruby == 'true'
+        id: setup-ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4'
@@ -1306,6 +1307,25 @@ jobs:
             npm install -g jest
           fi
 
+      - name: Restore selected Ruby to Windows PATH
+        if: needs.detect.outputs.needs_ruby == 'true' && runner.os == 'Windows'
+        shell: pwsh
+        env:
+          RUBY_PREFIX: ${{ steps.setup-ruby.outputs.ruby-prefix }}
+        run: |
+          if (-not $env:RUBY_PREFIX) {
+            throw "ruby/setup-ruby did not report its installation prefix"
+          }
+          @(
+            (Join-Path $env:RUBY_PREFIX 'bin')
+            (Join-Path $env:RUBY_PREFIX 'msys64\ucrt64\bin')
+            (Join-Path $env:RUBY_PREFIX 'msys64\usr\bin')
+          ) | ForEach-Object {
+            if (Test-Path $_) {
+              Add-Content -Path $env:GITHUB_PATH -Value $_
+            }
+          }
+
       # ── Verify toolchains ────────────────────────────────────
       - name: Verify tools
         shell: bash
@@ -1318,6 +1338,7 @@ jobs:
           if [ "${{ needs.detect.outputs.needs_ruby }}" = "true" ]; then
             echo "Ruby: $(ruby --version)"
             echo "Bundler: $(bundle --version)"
+            ruby -e 'require "rubygems"; required = Gem::Version.new("3.4"); current = Gem::Version.new(RUBY_VERSION); abort "Ruby #{required}+ required, got #{current}" if current < required'
           fi
           if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ]; then
             echo "Node: $(node --version)"
