@@ -133,6 +133,22 @@
     {
       "id": "half-arrow-families",
       "source": "sequenceDiagram\nactor Bob\nactor Alice\nBob -|\\ Alice: Hello Alice, how are you?\nBob -|/ Alice: Hello Alice, how are you?\nBob -// Alice: Hello Alice, how are you?\nBob -\\\\ Alice: Hello Alice, how are you?\nBob \\|- Alice: Hello Alice, how are you?\nBob /|- Alice: Hello Alice, how are you?\nBob //- Alice: Hello Alice, how are you?\nBob \\\\- Alice: Hello Alice, how are you?"
+    },
+    {
+      "id": "named-color-participant-group",
+      "source": "sequenceDiagram\nbox green Group 1\nparticipant a as Alice\nparticipant b as Bob\nend\nparticipant c as Charlie\nlinks a: { \"Repo\": \"https://repo.contoso.com/\", \"Dashboard\": \"https://dashboard.contoso.com/\" }\nlinks b: { \"Dashboard\": \"https://dashboard.contoso.com/\" }\nlinks a: { \"On-Call\": \"https://oncall.contoso.com/?svc=alice\" }\nlink a: Endpoint @ https://alice.contoso.com\nlink a: Swagger @ https://swagger.contoso.com\nlink a: Tests @ https://tests.contoso.com/?svc=alice@contoso.com"
+    },
+    {
+      "id": "transparent-participant-group",
+      "source": "sequenceDiagram\nbox Group 1\nparticipant a as Alice\nparticipant b as Bob\nend\nparticipant c as Charlie\nlinks a: { \"Repo\": \"https://repo.contoso.com/\", \"Dashboard\": \"https://dashboard.contoso.com/\" }\nlinks b: { \"Dashboard\": \"https://dashboard.contoso.com/\" }\nlinks a: { \"On-Call\": \"https://oncall.contoso.com/?svc=alice\" }\nlink a: Endpoint @ https://alice.contoso.com\nlink a: Swagger @ https://swagger.contoso.com\nlink a: Tests @ https://tests.contoso.com/?svc=alice@contoso.com"
+    },
+    {
+      "id": "unlabeled-participant-group",
+      "source": "sequenceDiagram\nbox aqua\nparticipant a as Alice\nparticipant b as Bob\nend\nparticipant c as Charlie\nlinks a: { \"Repo\": \"https://repo.contoso.com/\", \"Dashboard\": \"https://dashboard.contoso.com/\" }\nlinks b: { \"Dashboard\": \"https://dashboard.contoso.com/\" }\nlinks a: { \"On-Call\": \"https://oncall.contoso.com/?svc=alice\" }\nlink a: Endpoint @ https://alice.contoso.com\nlink a: Swagger @ https://swagger.contoso.com\nlink a: Tests @ https://tests.contoso.com/?svc=alice@contoso.com"
+    },
+    {
+      "id": "rgb-participant-group",
+      "source": "sequenceDiagram\nbox rgb(34, 56, 0) Group1\nparticipant Alice\nparticipant Bob\nend\nAlice->Bob: Hello Bob, how are you?"
     }
   ],
   "invalid": [
