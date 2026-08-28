@@ -5487,6 +5487,27 @@ fn clang_ok() -> bool {
         .unwrap_or(false)
 }
 
+/// System libraries required by LLVM executables emitted by the matrix.
+///
+/// Linux keeps `pow`, `floor`, `trunc`, and the other C math entry points in a
+/// separate `libm`; macOS exposes them through `libSystem`, and Windows clang
+/// resolves them through its normal CRT link. Keep this pure so the host matrix
+/// contract can be tested even when the test itself is running on another OS.
+fn llvm_system_link_args(target_os: &str) -> &'static [&'static str] {
+    if target_os == "linux" {
+        &["-lm"]
+    } else {
+        &[]
+    }
+}
+
+#[test]
+fn t7_differential_random_basic_llvm_link_args_include_linux_libm() {
+    assert_eq!(llvm_system_link_args("linux"), &["-lm"]);
+    assert!(llvm_system_link_args("macos").is_empty());
+    assert!(llvm_system_link_args("windows").is_empty());
+}
+
 /// A minimal C runtime providing the generic print primitives that `iir-to-llvm`
 /// emits for I/O languages. `__print_i64` backs scalar BASIC `PRINT`, and
 /// `__print_str` backs the E4 string literal-output foothold. It is not
@@ -5628,7 +5649,16 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
         std::fs::write(&rt_path, MISC_IO_RUNTIME_C).expect("llvm: write misc-io runtime");
         cmd.arg("-x").arg("c").arg(&rt_path);
     }
-    let built = cmd.arg("-x").arg("none").arg("-o").arg(&exe).output().expect("llvm: spawn clang");
+    // Library ordering matters on ELF linkers: append `-lm` after every emitted
+    // IR/runtime input so its symbols satisfy `pow`/`floor`/`trunc` references.
+    let built = cmd
+        .arg("-x")
+        .arg("none")
+        .args(llvm_system_link_args(std::env::consts::OS))
+        .arg("-o")
+        .arg(&exe)
+        .output()
+        .expect("llvm: spawn clang");
     if !built.status.success() {
         // Reaching here means clang was present and rejected our own output — the
         // exact shape of the stale-link-line bug that silently disabled the McCarthy
