@@ -4,6 +4,16 @@ All notable changes to `mosaic-pkg-calendar` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and
 the package follows semantic versioning.
 
+## [Unreleased]
+
+### Added
+
+- `elevation: raised;` on the `calendar-root` part in both themes,
+  alongside its existing `box-shadow:` — additive, not a replacement.
+  mosstyle's new `elevation` property (#12028 item 1, UI41) is the
+  channel native backends will read to render their own native shadow
+  primitive; no backend reads it yet.
+
 ## 0.1.0 — 2026-08-06 — initial release
 
 ### Added

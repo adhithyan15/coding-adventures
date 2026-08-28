@@ -45,7 +45,7 @@
 import type {
   KindDescriptor,
 } from "@coding-adventures/forme-types";
-import type { Stage } from "@coding-adventures/forme-stage";
+import type { InputPortMap, Stage } from "@coding-adventures/forme-stage";
 import type { Capability } from "@coding-adventures/forme-capability";
 
 // ─── Settings ─────────────────────────────────────────────────────────────
@@ -101,7 +101,9 @@ export interface StageInstanceSpec {
    * The stage value or a deferred `StageRef` for the plugin host to
    * resolve.  Direct-import flows pass values; manifest flows pass refs.
    */
-  readonly stage: Stage<KindDescriptor, KindDescriptor> | StageRef;
+  readonly stage:
+    | Stage<KindDescriptor, KindDescriptor, InputPortMap | undefined>
+    | StageRef;
   /**
    * Stable, user-chosen instance ID.  Defaults to `stage.name` when
    * no other instance shares it; required when collisions exist.

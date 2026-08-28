@@ -5,9 +5,13 @@
 ### Added
 
 - `validateConfig` rejects multiple explicit wires targeting the same stage
-  input with `MULTIPLE_INPUT_WIRES`. Stage contracts expose one input, while a
-  producer may still fan out to any number of consumers.
-- Validation tests pin the error code and aggregate-error surface.
+  input port with `MULTIPLE_INPUT_WIRES`. Different named ports may each have
+  one producer, while a producer may still fan out to any number of consumers.
+- Named target ports must be declared by `stage.inputPorts`, every declared
+  port must have an explicit wire, and named output ports remain fail-closed.
+  The new diagnostics are `UNKNOWN_INPUT_PORT`, `MISSING_INPUT_PORT_WIRE`, and
+  `OUTPUT_PORT_UNSUPPORTED`.
+- Validation tests pin default + named fan-in and every error surface.
 
 ## 0.2.0 — 2026-05-16
 

@@ -74,6 +74,51 @@ describe("defineStage — type narrowing", () => {
     });
     expect(stage.produces.name).toBe("ContentSource");
   });
+
+  it("infers a typed default input plus named side inputs", async () => {
+    const stage = defineStage({
+      name: "join",
+      version: "0.1.0",
+      apiVersion: 1,
+      description: "joins content and an asset",
+      consumes: Kinds.ContentSource,
+      inputPorts: { asset: Kinds.Asset },
+      produces: Kinds.Collection,
+      capabilities: [],
+      configSchema: null,
+      async run(input) {
+        return {
+          name: input.default.path,
+          entries: [],
+          discriminant: input.asset.mimeType,
+          meta: {},
+        };
+      },
+    });
+    const result = await stage.run({
+      default: {
+        path: "post.md",
+        bytes: new Uint8Array(),
+        mimeType: "text/markdown",
+        identity: "01952c0d-7e63-7000-8000-000000000000" as never,
+        revision: "blake2b:00" as never,
+        providerMeta: {},
+      },
+      asset: {
+        identity: "01952c0d-7e63-7000-8000-000000000001" as never,
+        revision: "blake2b:01" as never,
+        role: "image",
+        mimeType: "image/png",
+        bytes: new Uint8Array(),
+        byteLength: 0,
+        dimensions: null,
+        durationMs: null,
+        derivedFrom: null,
+        meta: {},
+      },
+    }, null, makeContext());
+    expect(result).toMatchObject({ name: "post.md", discriminant: "image/png" });
+  });
 });
 
 describe("Stage execution paths", () => {

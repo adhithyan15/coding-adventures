@@ -23,3 +23,8 @@ the fixture HTML or invent toolkit-specific visual baselines.
 `load_international_page` provides a second non-golden fixture for reusable
 text-flow acceptance. It covers inherited RTL content, CJK wrapping without
 spaces, combining and emoji graphemes, and script/symbol font-fallback runs.
+
+`isolated_gpu_layer_scene` and `assert_isolated_gpu_layer_pixels` form a
+backend-neutral GPU composition oracle. The fixture catches flattened child
+opacity, reordered filters, and incorrect destination-aware blending without
+depending on a host toolkit or platform screenshot baseline.

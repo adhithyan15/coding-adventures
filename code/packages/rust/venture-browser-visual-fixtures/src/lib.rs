@@ -5,7 +5,10 @@ use html_to_paint::{HtmlPaintViewport, LinkRegion};
 use image_codec_gif::encode_gif;
 use layout_ir::{FontSpec, MeasureResult, PositionedNode, TextMeasurer};
 use paint_codec_png::encode_png;
-use paint_instructions::{PaintInstruction, PaintScene, PixelContainer};
+use paint_instructions::{
+    BlendMode, FilterEffect, PaintBase, PaintInstruction, PaintLayer, PaintRect, PaintScene,
+    PixelContainer,
+};
 use std::path::Path;
 use text_interfaces::{
     Direction, FontMetrics, FontQuery, FontResolutionError, FontResolver, Glyph, ShapeOptions,
@@ -22,6 +25,8 @@ pub const MISSING_IMAGE_PATH: &str = "/missing.gif";
 pub const INTERNATIONAL_FIXTURE_PATH: &str = "/international.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
+pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
+pub const GPU_LAYER_FIXTURE_HEIGHT: u32 = 8;
 
 pub const FIXTURE_HTML: &str = r#"<!doctype html>
 <html>
@@ -50,6 +55,97 @@ pub const INTERNATIONAL_FIXTURE_HTML: &str = r#"<!doctype html>
   <p id="cluster-run">Café 👩‍💻 🇺🇳 uses whole grapheme geometry and fallback → glyphs.</p>
 </body>
 </html>"#;
+
+/// A compact backend-neutral oracle for isolated GPU composition.
+///
+/// The first layer contains overlapping children under one opacity and
+/// multiply blend. The second layer's ordered filters intentionally produce a
+/// different result if their order is reversed.
+pub fn isolated_gpu_layer_scene() -> PaintScene {
+    let mut scene = PaintScene::new(
+        GPU_LAYER_FIXTURE_WIDTH as f64,
+        GPU_LAYER_FIXTURE_HEIGHT as f64,
+    );
+    scene
+        .instructions
+        .push(PaintInstruction::Rect(PaintRect::filled(
+            0.0,
+            0.0,
+            GPU_LAYER_FIXTURE_WIDTH as f64,
+            GPU_LAYER_FIXTURE_HEIGHT as f64,
+            "#808080",
+        )));
+    scene.instructions.push(PaintInstruction::Layer(PaintLayer {
+        base: PaintBase::default(),
+        children: vec![
+            PaintInstruction::Rect(PaintRect::filled(1.0, 1.0, 7.0, 6.0, "#ff0000")),
+            PaintInstruction::Rect(PaintRect::filled(4.0, 1.0, 7.0, 6.0, "#ff0000")),
+        ],
+        filters: None,
+        blend_mode: Some(BlendMode::Multiply),
+        opacity: Some(0.5),
+        transform: None,
+    }));
+    scene.instructions.push(PaintInstruction::Layer(PaintLayer {
+        base: PaintBase::default(),
+        children: vec![PaintInstruction::Rect(PaintRect::filled(
+            12.0, 1.0, 3.0, 6.0, "#404040",
+        ))],
+        filters: Some(vec![
+            FilterEffect::Brightness { amount: 2.0 },
+            FilterEffect::Invert { amount: 1.0 },
+        ]),
+        blend_mode: Some(BlendMode::Normal),
+        opacity: None,
+        transform: None,
+    }));
+    scene
+}
+
+/// Validate stable sample points from [`isolated_gpu_layer_scene`].
+pub fn assert_isolated_gpu_layer_pixels(pixels: &PixelContainer) -> Result<(), String> {
+    if (pixels.width, pixels.height) != (GPU_LAYER_FIXTURE_WIDTH, GPU_LAYER_FIXTURE_HEIGHT) {
+        return Err(format!(
+            "layer fixture dimensions: expected {}x{}, got {}x{}",
+            GPU_LAYER_FIXTURE_WIDTH, GPU_LAYER_FIXTURE_HEIGHT, pixels.width, pixels.height
+        ));
+    }
+    let single = pixels.pixel_at(2, 4);
+    let overlap = pixels.pixel_at(6, 4);
+    if single != overlap {
+        return Err(format!(
+            "isolated opacity compounded across child overlap: {single:?} != {overlap:?}"
+        ));
+    }
+    assert_pixel_near(single, (128, 64, 64, 255), 2, "multiply/opacity sample")?;
+    assert_pixel_near(
+        pixels.pixel_at(13, 4),
+        (127, 127, 127, 255),
+        2,
+        "ordered filter sample",
+    )
+}
+
+fn assert_pixel_near(
+    actual: (u8, u8, u8, u8),
+    expected: (u8, u8, u8, u8),
+    tolerance: u8,
+    label: &str,
+) -> Result<(), String> {
+    let actual_channels = [actual.0, actual.1, actual.2, actual.3];
+    let expected_channels = [expected.0, expected.1, expected.2, expected.3];
+    if actual_channels
+        .iter()
+        .zip(expected_channels)
+        .all(|(actual, expected)| actual.abs_diff(expected) <= tolerance)
+    {
+        Ok(())
+    } else {
+        Err(format!(
+            "{label}: expected {expected:?} +/- {tolerance}, got {actual:?}"
+        ))
+    }
+}
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct RectFixture {
@@ -768,6 +864,25 @@ mod tests {
         assert!(evidence.magenta_pixels > 0, "{evidence:?}");
         assert!(evidence.cyan_pixels > 0, "{evidence:?}");
         assert!(evidence.ink_pixels > 0, "{evidence:?}");
+    }
+
+    #[cfg(target_vendor = "apple")]
+    #[test]
+    fn isolated_gpu_layers_match_the_shared_visual_oracle_on_metal() {
+        let pixels = paint_metal::render(&isolated_gpu_layer_scene());
+        assert_isolated_gpu_layer_pixels(&pixels).expect("Metal isolated layer fixture");
+    }
+
+    #[test]
+    fn isolated_gpu_layer_fixture_keeps_explicit_layer_semantics() {
+        let scene = isolated_gpu_layer_scene();
+        assert_eq!(scene.instructions.len(), 3);
+        let PaintInstruction::Layer(layer) = &scene.instructions[1] else {
+            panic!("second instruction must be the overlap layer");
+        };
+        assert_eq!(layer.children.len(), 2);
+        assert_eq!(layer.opacity, Some(0.5));
+        assert_eq!(layer.blend_mode, Some(BlendMode::Multiply));
     }
 
     #[test]

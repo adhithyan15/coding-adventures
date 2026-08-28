@@ -23,9 +23,12 @@ The user-authored description of *what to build* — `PipelineConfig` types, val
 5. **`CAPABILITY_NOT_DECLARED`** — per-instance grants must be a subset of the stage's declared capabilities (FM01 §5.5).
 6. **`CONFIG_REQUIRED`** — stage with non-null `configSchema` was given no config.
 7. **`UNKNOWN_INSTANCE_ID`** — `EdgeSpec` or `OutputSpec` references a non-existent instance.
-8. **`MULTIPLE_INPUT_WIRES`** — more than one wire targets a stage's single input.
-9. **`MULTIPLE_OUTPUTS_UNNAMED`** — pipeline has 2+ terminal stages but doesn't name them in `outputs`.
-10. **`MALFORMED`** — top-level fields or settings have wrong types.
+8. **`MULTIPLE_INPUT_WIRES`** — more than one wire targets the same default or named input port.
+9. **`UNKNOWN_INPUT_PORT`** — `to.port` does not name a declared `stage.inputPorts` entry.
+10. **`MISSING_INPUT_PORT_WIRE`** — a required named input has no explicit producer.
+11. **`OUTPUT_PORT_UNSUPPORTED`** — `from.port` is set; stages currently expose one output.
+12. **`MULTIPLE_OUTPUTS_UNNAMED`** — pipeline has 2+ terminal stages but doesn't name them in `outputs`.
+13. **`MALFORMED`** — top-level fields or settings have wrong types.
 
 The validator collects ALL violations rather than stopping at the first. `ConfigError.errors` carries the full list; `ConfigError.message` is a multi-line summary.
 

@@ -200,6 +200,11 @@ export interface OutputSpec {
 }
 ```
 
+An omitted `to.port` targets the stage's default `consumes` input. A named
+`to.port` must match a required entry in `stage.inputPorts`; every named input
+is wired explicitly and has exactly one producer. `from.port` is reserved for
+future multi-output stages and is rejected while stages expose one output.
+
 ### 2.2 TypeScript form (canonical)
 
 A pipeline is a TypeScript file that default-exports a
@@ -429,8 +434,10 @@ stage; capability mismatch between request and manifest.
 Inputs: `ResolvedPipeline`. Outputs: a `TypedPipeline` with every
 edge's I/O compatibility verified per FM01 §2.6.
 
-Invariant at exit: for every edge `(A → B)`, `A.produces` and
-`B.consumes` are compatible. The DAG has no cycles.
+Invariant at exit: for every default edge `(A → B)`, `A.produces` and
+`B.consumes` are compatible; for every named edge `(A → B.port)`,
+`A.produces` and `B.inputPorts[port]` are compatible. Every required named
+port is wired, each port has one producer, and the complete DAG has no cycles.
 
 Failure modes: incompatible kinds; cycle detected; ambiguous wiring
 (multiple producers of the same kind feed one consumer without an
@@ -474,14 +481,16 @@ Given a `TypedPipeline` (resolve + typecheck phases complete), the
 DAG is built as follows:
 
 1. **Compute kind providers and consumers.** For every instance,
-   record which kind it produces and which it consumes.
+   record which kind it produces, its default consumed kind, and every
+   declared named input kind.
 2. **Match by kind.** For each consumer, find the most recent
    declared producer of a compatible kind. "Most recent" is the
    instance appearing latest in the `stages` array before the
    consumer, with fallback to any prior instance if none follows.
-3. **Honor explicit `wires`.** If `wires` are given, they override
-   inference. Conflicts with inferred wires are an error unless the
-   explicit wire is a strict subset.
+3. **Honor explicit `wires`.** An unported target overrides default-input
+   inference. A ported target supplies one required named input; named inputs
+   are never inferred. Two wires may target different ports, but two wires to
+   the same default or named port are an error.
 4. **Verify acyclicity.** Topological sort; if it fails, error
    pointing at the offending cycle.
 5. **Identify outputs.** Stages that produce `DeployArtifact`,
@@ -489,10 +498,11 @@ DAG is built as follows:
    are output sinks. They must each appear in `OutputSpec` if more
    than one exists.
 
-Multiple consumers of one producer's output are allowed and treated
-as fan-out. The producer's stream is replayed once per consumer in
-the simple implementation; clever implementations may multiplex with
-backpressure.
+Multiple consumers of one producer's output are allowed and treated as
+fan-out. Multiple producers feeding distinct ports of one consumer are fan-in.
+The v0 scheduler materializes each producer once and creates an independently
+replayable iterator for every stream port. FM-B010 replaces eager
+materialization with bounded multiplexing and backpressure.
 
 ### 3.4 Type compatibility checking
 
@@ -546,6 +556,11 @@ that lazily yields the upstream's values.
 Fan-out: if N stages consume the producer's output, the orchestrator
 provides each with its own iterator. Implementations should multiplex
 internally to avoid recomputing the producer.
+
+Fan-in: a stage with `inputPorts` is invoked once with a stable object whose
+`default` property carries its `consumes` input and whose other properties are
+the declared named inputs in lexical order. Stream shape must match at every
+port; per-item stream promotion applies only to legacy single-input stages.
 
 ### 4.3 Parallelism control
 

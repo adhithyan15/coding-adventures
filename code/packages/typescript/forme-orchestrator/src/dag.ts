@@ -13,28 +13,35 @@
  * Sources (`consumes: Void`) have no incoming edge.  Sinks (no
  * downstream consumer) are marked as terminal.
  *
- * A stage has one input, but a producer may feed any number of
- * consumers.  The scheduler materializes each producer once, so this
- * graph-level fan-out is deterministic and does not consume a stream
- * once per branch.  Explicit wires may point forward in declaration
- * order; a stable topological sort determines execution order.
+ * Every stage has one default input and may declare required named side
+ * inputs. A producer may feed any number of consumers and ports. The
+ * scheduler materializes each producer once, so fan-out and fan-in are
+ * deterministic and do not consume a stream once per branch. Explicit
+ * wires may point forward in declaration order; a stable topological sort
+ * determines execution order.
  */
 
 import { isStageRef } from "@coding-adventures/forme-pipeline-config";
 import type { ResolvedPipelineConfig } from "@coding-adventures/forme-pipeline-config";
 import type { Capability } from "@coding-adventures/forme-capability";
 import type { KindDescriptor } from "@coding-adventures/forme-types";
-import type { Stage } from "@coding-adventures/forme-stage";
+import type { InputPortMap, Stage } from "@coding-adventures/forme-stage";
 import { areKindsCompatible } from "./typecheck.js";
 
 /** A resolved stage instance ready to run. */
 export interface ResolvedInstance {
   readonly id: string;
-  readonly stage: Stage<KindDescriptor, KindDescriptor>;
+  readonly stage: Stage<
+    KindDescriptor,
+    KindDescriptor,
+    InputPortMap | undefined
+  >;
   readonly config: unknown;
   readonly capabilities: readonly Capability[];
-  /** Producer instance id whose output feeds this instance, or null for sources. */
+  /** Producer for the default input, or null when the default consumes Void. */
   readonly producer: string | null;
+  /** Explicit producer for each declared named side-input port. */
+  readonly inputProducers: ReadonlyMap<string, string>;
 }
 
 export interface PipelineDag {
@@ -44,7 +51,7 @@ export interface PipelineDag {
   readonly topoOrder: readonly string[];
   /** Stages with no consumer — produce final outputs. */
   readonly sinks: readonly string[];
-  /** Stages with no producer (consumes: Void). */
+  /** Stages with no default or named input producer. */
   readonly sources: readonly string[];
 }
 
@@ -70,18 +77,30 @@ export function buildDag(resolved: ResolvedPipelineConfig): PipelineDag {
       config: spec.config,
       capabilities: spec.capabilities ?? spec.stage.capabilities,
       producer: null,
+      inputProducers: new Map(),
     });
   }
 
-  // Index explicit wires by consumer. validateConfig has already
-  // rejected unknown IDs and multiple incoming wires.
+  // Index explicit wires by consumer + port. validateConfig has already
+  // rejected unknown IDs, unknown ports, and duplicate wires per port.
   const explicitProducer = new Map<string, string>();
+  const explicitInputProducers = new Map<string, Map<string, string>>();
   for (const wire of resolved.config.wires ?? []) {
-    explicitProducer.set(wire.to.id, wire.from.id);
+    if (wire.from.port !== undefined) {
+      throw new Error("buildDag: named output ports are not supported");
+    }
+    if (wire.to.port === undefined) {
+      explicitProducer.set(wire.to.id, wire.from.id);
+    } else {
+      const ports = explicitInputProducers.get(wire.to.id) ?? new Map<string, string>();
+      ports.set(wire.to.port, wire.from.id);
+      explicitInputProducers.set(wire.to.id, ports);
+    }
   }
 
   const declarationIndex = new Map(ids.map((id, index) => [id, index]));
   const producerById = new Map<string, string | null>();
+  const inputProducersById = new Map<string, ReadonlyMap<string, string>>();
   const effectiveProduces = new Map<string, KindDescriptor>();
   const resolving = new Set<string>();
 
@@ -137,7 +156,10 @@ export function buildDag(resolved: ResolvedPipelineConfig): PipelineDag {
     }
 
     const producerKind = effectiveKind(producerId);
-    if (!areKindsCompatible(producerKind, consumes)) {
+    const compatible = inst.stage.inputPorts !== undefined
+      ? arePortKindsCompatible(producerKind, consumes)
+      : areKindsCompatible(producerKind, consumes);
+    if (!compatible) {
       const edgeDescription = wiredProducer === undefined ? "inferred edge" : "explicit wire";
       throw new Error(
         `buildDag: ${edgeDescription} ${JSON.stringify(producerId)} → ${JSON.stringify(id)} ` +
@@ -148,6 +170,45 @@ export function buildDag(resolved: ResolvedPipelineConfig): PipelineDag {
     producerById.set(id, producerId);
     resolving.delete(id);
     return producerId;
+  }
+
+  /** Resolve and type-check every required named side input. */
+  function resolveInputProducers(id: string): ReadonlyMap<string, string> {
+    const cached = inputProducersById.get(id);
+    if (cached) return cached;
+    const inst = instances.get(id)!;
+    const declared: InputPortMap = inst.stage.inputPorts ?? {};
+    const wired = explicitInputProducers.get(id) ?? new Map<string, string>();
+    const resolvedPorts = new Map<string, string>();
+
+    for (const [port, consumes] of Object.entries(declared)) {
+      const producerId = wired.get(port);
+      if (producerId === undefined) {
+        throw new Error(
+          `buildDag: instance ${JSON.stringify(id)} named input ${JSON.stringify(port)} ` +
+          `has no explicit producer wire`,
+        );
+      }
+      const producerKind = effectiveKind(producerId);
+      if (!arePortKindsCompatible(producerKind, consumes)) {
+        throw new Error(
+          `buildDag: explicit wire ${JSON.stringify(producerId)} → ` +
+          `${JSON.stringify(id)}.${port} is incompatible: ` +
+          `${describeKind(producerKind)} cannot feed ${describeKind(consumes)}`,
+        );
+      }
+      resolvedPorts.set(port, producerId);
+    }
+
+    for (const port of wired.keys()) {
+      if (!Object.prototype.hasOwnProperty.call(declared, port)) {
+        throw new Error(
+          `buildDag: instance ${JSON.stringify(id)} does not declare named input ${JSON.stringify(port)}`,
+        );
+      }
+    }
+    inputProducersById.set(id, resolvedPorts);
+    return resolvedPorts;
   }
 
   /** Effective output includes stream promotion for per-item stages. */
@@ -163,6 +224,7 @@ export function buildDag(resolved: ResolvedPipelineConfig): PipelineDag {
     }
     const producerKind = effectiveKind(producerId);
     const promoted: KindDescriptor =
+      inst.stage.inputPorts === undefined &&
       producerKind.name === "Stream" &&
       inst.stage.consumes.name !== "Stream" &&
       declared.name !== "Stream"
@@ -172,19 +234,27 @@ export function buildDag(resolved: ResolvedPipelineConfig): PipelineDag {
     return promoted;
   }
 
-  for (const id of ids) resolveProducer(id);
+  for (const id of ids) {
+    resolveProducer(id);
+    resolveInputProducers(id);
+  }
 
   // Stable Kahn topological sort. Declaration order breaks ties, but
   // explicit forward wires are free to reorder dependent instances.
-  const consumers = new Map<string, string[]>();
+  const consumers = new Map<string, Set<string>>();
   const indegree = new Map<string, number>();
   for (const id of ids) {
-    const producerId = producerById.get(id)!;
-    indegree.set(id, producerId === null ? 0 : 1);
-    if (producerId !== null) {
+    const dependencies = new Set<string>();
+    const defaultProducer = producerById.get(id)!;
+    if (defaultProducer !== null) dependencies.add(defaultProducer);
+    for (const producerId of inputProducersById.get(id)?.values() ?? []) {
+      dependencies.add(producerId);
+    }
+    indegree.set(id, dependencies.size);
+    for (const producerId of dependencies) {
       const list = consumers.get(producerId);
-      if (list) list.push(id);
-      else consumers.set(producerId, [id]);
+      if (list) list.add(id);
+      else consumers.set(producerId, new Set([id]));
     }
   }
   const ready = ids.filter(id => indegree.get(id) === 0);
@@ -209,14 +279,24 @@ export function buildDag(resolved: ResolvedPipelineConfig): PipelineDag {
   // Replace map entries with resolved producer information.
   for (const id of ids) {
     const inst = instances.get(id)!;
-    instances.set(id, { ...inst, producer: producerById.get(id)! });
+    instances.set(id, {
+      ...inst,
+      producer: producerById.get(id)!,
+      inputProducers: inputProducersById.get(id) ?? new Map(),
+    });
   }
 
-  const consumedAsProducer = new Set(
-    Array.from(producerById.values()).filter((id): id is string => id !== null),
-  );
+  const consumedAsProducer = new Set<string>();
+  for (const producerId of producerById.values()) {
+    if (producerId !== null) consumedAsProducer.add(producerId);
+  }
+  for (const ports of inputProducersById.values()) {
+    for (const producerId of ports.values()) consumedAsProducer.add(producerId);
+  }
   const sinks = ids.filter(id => !consumedAsProducer.has(id));
-  const sources = ids.filter(id => producerById.get(id) === null);
+  const sources = ids.filter(id =>
+    producerById.get(id) === null && (inputProducersById.get(id)?.size ?? 0) === 0,
+  );
 
   return {
     instances,
@@ -231,4 +311,16 @@ function describeKind(k: KindDescriptor): string {
     return `Stream<${k.inner.name}>`;
   }
   return k.name;
+}
+
+/**
+ * Named fan-in is invoked once, so stream shape must match exactly. Legacy
+ * default inputs retain stream-to-item promotion and per-item invocation.
+ */
+function arePortKindsCompatible(
+  produces: KindDescriptor,
+  consumes: KindDescriptor,
+): boolean {
+  if ((produces.name === "Stream") !== (consumes.name === "Stream")) return false;
+  return areKindsCompatible(produces, consumes);
 }

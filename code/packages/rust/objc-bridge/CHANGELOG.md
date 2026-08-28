@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Metal shader-write texture usage and render-pass load-action constants for
+  reusable offscreen layer execution.
 - CoreText underline position and thickness bindings for backend-independent
   text-decoration paint.
 - Typed `msg_bool!`, including one-argument calls, and architecture-correct

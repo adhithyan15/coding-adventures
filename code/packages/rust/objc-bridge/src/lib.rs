@@ -195,8 +195,10 @@ pub const MTL_PIXEL_FORMAT_BGRA8_UNORM: c_ulong = 80;
 // Metal texture usage flags
 pub const MTL_TEXTURE_USAGE_RENDER_TARGET: c_ulong = 0x0004;
 pub const MTL_TEXTURE_USAGE_SHADER_READ: c_ulong = 0x0001;
+pub const MTL_TEXTURE_USAGE_SHADER_WRITE: c_ulong = 0x0002;
 
 // Metal load/store action constants
+pub const MTL_LOAD_ACTION_LOAD: c_ulong = 1;
 pub const MTL_LOAD_ACTION_CLEAR: c_ulong = 2;
 pub const MTL_STORE_ACTION_STORE: c_ulong = 1;
 

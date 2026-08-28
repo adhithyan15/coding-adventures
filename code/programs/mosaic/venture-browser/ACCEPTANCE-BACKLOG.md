@@ -34,11 +34,19 @@ cross-platform proving application. Items are ordered by risk and dependency.
   adding a host-owned URI resolver, texture-backed CoreText ordering, gradient
   textures, nested scissor clips, and real-page acceptance while preserving
   affine, opacity, scaling, and source-over behavior.
-- [ ] **P2 paint convergence — isolated GPU layers.** Extend the shared GPU
+- [x] **P2 paint convergence — isolated GPU layers.** Extend the shared GPU
   command plan with explicit offscreen layer boundaries, then implement ordered
   filter chains and non-normal blend modes in Metal without flattening layer
   opacity into child draws. Reuse the command contract in WGPU and future GPU
-  backends instead of introducing backend-specific scene traversal.
+  backends instead of introducing backend-specific scene traversal. Completed
+  with balanced shared layer commands, capability profiles, validated filters,
+  Metal ping-pong render/compute surfaces, all shared blend modes, native error
+  diagnostics, and a reusable pixel oracle.
+- [ ] **P2 paint convergence — portable isolated GPU executor.** Execute the
+  shared layer commands in WGPU with offscreen render/compute passes and the
+  existing cross-backend pixel oracle. Preserve the current explicit rejection
+  until opacity, filter ordering, and destination-aware blends all converge;
+  then reuse that executor shape for Vulkan, OpenGL, and Mesa profiles.
 - [x] **P2 browser convergence — international inline content.** Expand the
   representative real-page corpus through bidi text, script fallback,
   grapheme-aware selection geometry, and UAX #14 line-breaking without moving
