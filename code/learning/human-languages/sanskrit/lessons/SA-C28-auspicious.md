@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [SA-IDIOM-SHUBHAM-WELL-WISH-01]
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C28-auspicious
 spine_node: SPINE-TAKE-LEAVE
 sequence: 1360

@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [SA-IDIOM-ALAM-ENOUGH-01]
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C27-enough
 spine_node: SPINE-RESPOND-BASIC
 sequence: 1300

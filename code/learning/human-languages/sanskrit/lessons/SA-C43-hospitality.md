@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [SA-CULTURE-ATITHYA-GUEST-OBLIGATION-01]
 id: SA-C43-hospitality
 spine_node: SPINE-COURTESY-THANK
 sequence: 2080

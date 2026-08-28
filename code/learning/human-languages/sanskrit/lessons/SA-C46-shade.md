@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [SA-SENSE-CHAYA-SHADE-SHADOW-01]
+introduces_culture_claims: []
 id: SA-C46-shade
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 2260

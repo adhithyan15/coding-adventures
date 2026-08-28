@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Answering With More Than Yes",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5f9d309a5e7f4742",
+  "sourceHash": "fnv1a64:c0a0e66774408a9c",
   "lessons": [
     {
       "id": "SA-C27-so-be-it",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:002e857524f36fd0",
+      "sourceHash": "fnv1a64:9f930357d99bdf05",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:707bc7087c0eae98",
+      "sourceHash": "fnv1a64:c57fcb9768f8bb7c",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc76d72757c3a020",
+      "sourceHash": "fnv1a64:7b2d8df78a69a4e5",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a33f4a3194459a7",
+      "sourceHash": "fnv1a64:5b2cba1ca64ed744",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69e3ff310085c42a",
+      "sourceHash": "fnv1a64:325f1e7e30ab7585",
       "notice": null,
       "blocks": [
         {

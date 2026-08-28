@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 41,
-  "sourceHash": "fnv1a64:81af0ba7ab38b05b",
+  "sourceHash": "fnv1a64:dbaa82370227870a",
   "lessonIds": [
     "SA-C41-wheel",
     "SA-C41-pot",
@@ -14,6 +14,6 @@
   "text": "sanskrit/narration/ch41.txt",
   "json": "sanskrit/narration/ch41.json",
   "textHash": "fnv1a64:601f9b7f2fedfd06",
-  "jsonHash": "fnv1a64:1edb17b0e2cfca63",
+  "jsonHash": "fnv1a64:30c181a8f1d8bcf8",
   "findings": []
 }

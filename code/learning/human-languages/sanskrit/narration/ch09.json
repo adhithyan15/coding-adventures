@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:c5be31315ce30ba4",
+  "sourceHash": "fnv1a64:80d7f0b650fb41a6",
   "lessons": [
     {
       "id": "SA-C09-grhnati",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efd8062df83fcba7",
+      "sourceHash": "fnv1a64:4a3d36ceb42838cc",
       "notice": null,
       "blocks": [
         {
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3991546af057fc9d",
+      "sourceHash": "fnv1a64:86937ed3c41bdcac",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4f76b819e253f84",
+      "sourceHash": "fnv1a64:b22ac8868f8e5b17",
       "notice": null,
       "blocks": [
         {
@@ -486,7 +486,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40cf7e91615b9b8f",
+      "sourceHash": "fnv1a64:0ebf7f3c25ede260",
       "notice": null,
       "blocks": [
         {
@@ -650,7 +650,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1988525ae1e6f1f6",
+      "sourceHash": "fnv1a64:3e97c84c934cf2c7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -835,7 +835,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c82d6bfae0e2444c",
+      "sourceHash": "fnv1a64:afb515e7c023d82d",
       "notice": {
         "modality": "pen",
         "needs": [

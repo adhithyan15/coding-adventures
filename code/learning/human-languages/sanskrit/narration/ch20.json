@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "People --- and the Four Noun Endings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:370475346b7cdc30",
+  "sourceHash": "fnv1a64:f768c7e6a618437e",
   "lessons": [
     {
       "id": "SA-C20-man",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0d856f7023ac723",
+      "sourceHash": "fnv1a64:97dd0d702c7947c7",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1a47bab5192f15df",
+      "sourceHash": "fnv1a64:6e6f155cc31eaec0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -270,7 +270,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93b2801553ccb59c",
+      "sourceHash": "fnv1a64:af021472c9478897",
       "notice": null,
       "blocks": [
         {
@@ -392,7 +392,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1a21cd207ba0c7a",
+      "sourceHash": "fnv1a64:2966059227299b25",
       "notice": null,
       "blocks": [
         {
@@ -518,7 +518,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff636ca674808c3d",
+      "sourceHash": "fnv1a64:48fcdcc3c2c01c60",
       "notice": null,
       "blocks": [
         {

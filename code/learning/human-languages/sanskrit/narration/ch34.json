@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e0cdf01f279990de",
+  "sourceHash": "fnv1a64:bebd01f558f73cb4",
   "lessons": [
     {
       "id": "SA-C34-arm",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:829b95f459b8a0ee",
+      "sourceHash": "fnv1a64:b40e2b0dc0881bd9",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aedab3949aacded3",
+      "sourceHash": "fnv1a64:8b30f332e16a43e6",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8c483ec99a1edfa",
+      "sourceHash": "fnv1a64:ae30ccc047fbf9eb",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5daedb16d64e6a64",
+      "sourceHash": "fnv1a64:0b556226b5e8563d",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72fe3895b95b7fde",
+      "sourceHash": "fnv1a64:b1be11deaf2d20db",
       "notice": null,
       "blocks": [
         {

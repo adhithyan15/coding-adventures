@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C22-lead
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1060

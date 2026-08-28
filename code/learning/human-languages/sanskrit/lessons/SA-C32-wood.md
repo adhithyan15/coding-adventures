@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C32-wood
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 1570

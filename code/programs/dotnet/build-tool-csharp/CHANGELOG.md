@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Consumed the language-neutral extra-CI-toolchain declaration contract with a
+  bounded process-free snapshot evaluator, exact selected-front parsing,
+  canonical `cpp` and `ocaml` keys, C/C++ language normalization, stable
+  unsupported-language diagnostics, and production affected-package scheduling.
+- Added direct xUnit coverage for all ten neutral toolchain fixtures, real
+  platform-front discovery, canonical language mappings, and per-file plus
+  aggregate resource ceilings, including strict CRLF acceptance and lone-CR
+  rejection.
+- Kept forced-full neutral snapshots strict for unsupported selected languages
+  while production forced-full scheduling provisions the complete registry
+  without misclassifying repository-only special/fixture buckets; affected
+  Starlark BUILD packages use the existing Go bootstrap.
 - Added process-free orphan-crate snapshot validation with exact artifact
   exclusion, direct and ancestor BUILD coverage, invalid and stale exemption
   diagnostics, pending-debt accounting, hostile-path redaction, and direct

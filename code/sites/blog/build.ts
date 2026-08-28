@@ -14,6 +14,8 @@
  */
 
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
+import { readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import {
   createOrchestrator,
@@ -67,6 +69,48 @@ try {
   if (articleRoutes.length === 0 || articleRoutes.some((route) => !route.endsWith(".html"))) {
     throw new Error("Article sink must contain at least one HTML route");
   }
+  if (articles.manifest.assets.length !== 1) {
+    throw new Error(`Article sink must contain exactly one asset, got ${articles.manifest.assets.length}`);
+  }
+  if (surface.manifest.assets.length !== 0) {
+    throw new Error("Collection-derived surface sink must not claim article assets");
+  }
+
+  const [asset] = articles.manifest.assets;
+  if (
+    asset === undefined ||
+    asset.id !== "01952c0d-7e63-7000-8000-000000000201" ||
+    !asset.path.startsWith("blog/assets/forme-pipeline.") ||
+    !asset.path.endsWith(".svg") ||
+    asset.mime !== "image/svg+xml"
+  ) {
+    throw new Error(`Article asset manifest entry differs: ${JSON.stringify(asset)}`);
+  }
+  const artifactAssetBytes = articles.files[asset.path];
+  if (artifactAssetBytes === undefined) {
+    throw new Error(`Article artifact is missing manifest asset ${asset.path}`);
+  }
+  const actualSha256 = createHash("sha256").update(artifactAssetBytes).digest("hex");
+  if (actualSha256 !== asset.sha256) {
+    throw new Error(`Article asset sha256 differs: ${actualSha256} !== ${asset.sha256}`);
+  }
+
+  const helloPath = "blog/2026-05-15-hello-forme.html";
+  const helloBytes = articles.files[helloPath];
+  if (helloBytes === undefined) {
+    throw new Error(`Article artifact is missing ${helloPath}`);
+  }
+  const helloHtml = new TextDecoder().decode(helloBytes);
+  const expectedAssetUrl = `/coding-adventures/${asset.path}#pipeline`;
+  if (!helloHtml.includes(expectedAssetUrl) || helloHtml.includes("forme-asset:")) {
+    throw new Error(`Article HTML did not contain the rewritten asset URL ${expectedAssetUrl}`);
+  }
+  const diskHtml = await readFile(resolve(here, "dist", helloPath), "utf8");
+  const diskAssetBytes = new Uint8Array(await readFile(resolve(here, "dist", asset.path)));
+  const diskAssetSha256 = createHash("sha256").update(diskAssetBytes).digest("hex");
+  if (diskHtml !== helloHtml || diskAssetSha256 !== asset.sha256) {
+    throw new Error("On-disk article or asset bytes differ from the DeployArtifact");
+  }
 
   logger.info("Build complete", {
     outcome: result.outcome,
@@ -74,6 +118,7 @@ try {
     buildId: result.buildId,
     stages: result.stages.length,
     articles: articleRoutes.length,
+    assets: articles.manifest.assets.length,
     surfaceFiles: surfaceRoutes.length,
   });
 

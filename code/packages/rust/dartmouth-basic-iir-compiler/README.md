@@ -43,10 +43,14 @@ output (`PRINT 6.0 * 7.0`) and ordinary fixed-decimal fractional output (`3.14`,
 `.25`, `-2.5`), six-significant-digit rounding, and `E` notation run through the
 shared E3/E8 backends. Integer `i64` remains explicit at structural boundaries:
 line numbers, `DIM` bounds, array subscripts, DATA read pointers, and GOSUB
-return stacks. Integer-valued literal exponentiation (`6 ^ 2`) lowers to
-repeated `f64` multiplication and runs on all seven backends; variable,
-fractional, negative, nested, and large exponents still need a runtime math
-helper. String literal `PRINT`, literal-backed string variables
+return stacks. Small nonnegative integer-literal exponentiation (`6 ^ 2`)
+keeps its deterministic repeated-`f64`-multiplication fast path; variable,
+fractional, negative, nested, and large exponent shapes lower to the shared
+`f64_pow` operation. Both paths run on all seven backends. The implemented
+numeric builtins are `SQR`, `INT`, `ABS`, `SGN`, `TAN`, `ATN`, `SIN`, `COS`,
+`LOG` (natural logarithm), and `EXP`; `RND` remains separate pending a portable
+seed and repeatability contract. String literal `PRINT`, literal-backed string
+variables
 (`LET A$ = "HI"` / `PRINT A$`), literal reassignment
 (`LET A$ = "NO"; LET A$ = "OK"; PRINT A$`), and `IF A$ = "Y"` / `IF A$ <> "Y"`
 string branches now lower through the shared E4 path on all seven matrix
@@ -74,9 +78,11 @@ cannot fold it, so `PRINT A$` prints whatever stdin supplied; it is proven on
 (E4d-BA-arr) lower `DIM A$(n)` to an `array<str>` — the same E5 aggregate as a
 numeric array but carrying an E4-dyn string handle per element — so `A$(i) = s`
 is a `str`-typed `array_set` and `A$(i)` reads a `str`-typed `array_get` that
-feeds PRINT / `+` concat; part 1 runs on [Llvm, Wasm, Vm, Jit] with
-NativeAot/JVM/CLR (native element-size + managed reference arrays) to follow.
-Richer dynamic string expressions and string `READ`/`DATA` remain follow-ups.
+feeds PRINT / `+` concat on all seven backends. The matrix also executes
+`str_concat` over two independently read `INPUT` strings on all seven, proving
+the operation is not limited to compile-time-backed operands. Mixed
+numeric/string `DATA`, `READ`, and `RESTORE` remain the documented string-data
+gap; the current DATA pool is numeric-only.
 See [CHANGELOG.md](CHANGELOG.md) for the full table.
 
 `LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`

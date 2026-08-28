@@ -8,20 +8,25 @@ requested URL
   -> BrowserResourceFetcher
   -> final fetched URL + HTML bytes
   -> html-parser
-  -> html-to-paint
+  -> ordered stylesheet plans + computed author/UA cascade
+  -> html-to-layout -> html-to-paint
   -> ordered BrowserSubresourceRequest effects
-  -> incremental GIF/JPEG completions and repaint
-  -> BrowserPage { document, source, links, scene, image_resources }
+  -> incremental CSS/GIF/JPEG completions and repaint
+  -> BrowserPage { document, source, links, scene, stylesheet_resources, image_resources }
 ```
 
 `BrowserPagePipeline::load` uses the final fetched document URL as the base for
-relative links and images. `begin_execute` commits the retained document before
-images and emits deduplicated requests in paint order. Hosts dispatch those
+relative links, stylesheets, and images. `begin_execute` commits the retained
+document before subresources and emits typed requests in deterministic
+stylesheet-then-image order. Hosts dispatch those
 effects through `BrowserSubresourceScheduler`; each completion recomposes only
 from retained document/resource state and reports whether repaint is required.
 Navigation emits cancellation effects, and generation IDs make late or
-duplicate completions harmless. Image failures remain recoverable Mosaic-style
-bordered `alt` text.
+duplicate completions harmless. Stylesheets remain blocked in parser-defined
+document order even when completions arrive out of order; failed or
+media-inactive sheets unblock later author rules without discarding the
+retained document. Image failures remain recoverable Mosaic-style bordered
+`alt` text.
 
 The default `HttpBrowserFetcher` adapts `http1-client`, but tests and platform
 hosts can inject any transport. Font measurement, shaping, metrics, resolution,

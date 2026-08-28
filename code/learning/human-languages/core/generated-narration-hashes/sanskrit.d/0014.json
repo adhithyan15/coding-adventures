@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 14,
-  "sourceHash": "fnv1a64:2a345cef402c9cc3",
+  "sourceHash": "fnv1a64:e99d632cb33b1417",
   "lessonIds": [
     "SA-C14-this",
     "SA-C14-that",
@@ -17,6 +17,6 @@
   "text": "sanskrit/narration/ch14.txt",
   "json": "sanskrit/narration/ch14.json",
   "textHash": "fnv1a64:cdc4b5bcfe1dd735",
-  "jsonHash": "fnv1a64:effd4f401930d0a3",
+  "jsonHash": "fnv1a64:81102cda1badf815",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Colours",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6c286fb414b9813c",
+  "sourceHash": "fnv1a64:dfb35c363da4e2f6",
   "lessons": [
     {
       "id": "SA-C44-white",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e238e45c90aba0b9",
+      "sourceHash": "fnv1a64:ae841f0b0038615e",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b463cfcea8f3d28c",
+      "sourceHash": "fnv1a64:36c40cb45336a1af",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4db3c876b3ea774",
+      "sourceHash": "fnv1a64:87261b17dd244c27",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91a77034ea0aa231",
+      "sourceHash": "fnv1a64:763cc9971ee72fc8",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebc4c86509b2e007",
+      "sourceHash": "fnv1a64:71a73bbae91558cc",
       "notice": null,
       "blocks": [
         {

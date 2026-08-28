@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Asking --- Every Question Begins with K",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c34324b4e7d3ac5d",
+  "sourceHash": "fnv1a64:4364d1f5901569fa",
   "lessons": [
     {
       "id": "SA-C18-when",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:112cf6f37e8910e3",
+      "sourceHash": "fnv1a64:be33189c9ca44da4",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74b05ff64afc500b",
+      "sourceHash": "fnv1a64:cf5ac11592e2101e",
       "notice": null,
       "blocks": [
         {
@@ -275,7 +275,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32274ebf1f6dc3bf",
+      "sourceHash": "fnv1a64:c839b9f7a5d767f0",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55c16ee16eb9e092",
+      "sourceHash": "fnv1a64:f3e695609ba8fec7",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c6b991fa7be6267",
+      "sourceHash": "fnv1a64:421e48ea68a70d88",
       "notice": null,
       "blocks": [
         {

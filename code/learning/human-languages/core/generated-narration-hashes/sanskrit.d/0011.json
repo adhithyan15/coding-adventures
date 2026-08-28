@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 11,
-  "sourceHash": "fnv1a64:1a6c6c3f5058300d",
+  "sourceHash": "fnv1a64:fa35fbbe185e023e",
   "lessonIds": [
     "SA-C11-mitram",
     "SA-C11-kutumbam",
@@ -15,6 +15,6 @@
   "text": "sanskrit/narration/ch11.txt",
   "json": "sanskrit/narration/ch11.json",
   "textHash": "fnv1a64:dfe6a5fcdac1454d",
-  "jsonHash": "fnv1a64:c10a4ff4a1e3246f",
+  "jsonHash": "fnv1a64:88eec056a96b7369",
   "findings": []
 }

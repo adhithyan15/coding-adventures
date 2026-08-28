@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [SA-IDIOM-SADARAM-RESPECTFULLY-01]
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C37-respectfully
 spine_node: SPINE-COURTESY-THANK
 sequence: 1790

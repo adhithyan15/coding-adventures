@@ -75,13 +75,24 @@ cross-platform proving application. Items are ordered by risk and dependency.
   effects, navigation cancellation generations, retained ready/failed image
   state, incremental repaint outcomes, compatibility draining, native bridge
   entry points, and deterministic visual lifecycle acceptance.
-- [ ] **P2 browser convergence — external stylesheets and computed cascade.**
+- [x] **P2 browser convergence — external stylesheets and computed cascade.**
   Consume the parser's stylesheet plans through the shared subresource
   scheduler, then replace `html-to-layout`'s theme-only visual defaults with a
   reusable author/UA cascade and computed-style boundary. Preserve ordered
   stylesheet blocking, media/failure fallback, navigation cancellation,
   retained-document restyle, and backend-neutral layout/paint integration;
-  avoid CSS parsing or property policy in host toolkits.
+  avoid CSS parsing or property policy in host toolkits. Completed with a
+  grammar-validated author/UA style context, specificity and source-order
+  resolution, typed shared CSS/image scheduler effects, ordered blocking,
+  screen-media filtering, failure fallback, navigation-safe completions,
+  retained-page restyle, and a real-page fixture consumed by available hosts.
+- [ ] **P2 CSS convergence — imported and element-authored cascade.** Extend
+  the new computed-style boundary with element `style` declarations,
+  attribute/structural selector matching, inherited custom properties,
+  shorthand/value resolution, viewport media evaluation, and ordered
+  `@import` graph scheduling. Keep parser data generation and fetch/cycle
+  policy independent from layout, then ratchet the profile with a compact CSS
+  conformance corpus shared by every Venture host.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

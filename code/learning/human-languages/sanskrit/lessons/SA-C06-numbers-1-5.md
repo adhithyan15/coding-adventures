@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C06-numbers-1-5
 spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 310

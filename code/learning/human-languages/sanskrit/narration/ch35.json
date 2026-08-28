@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "In the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b3aa123df2611289",
+  "sourceHash": "fnv1a64:12792f7844466516",
   "lessons": [
     {
       "id": "SA-C35-milk",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:267756f0ba0bb0e6",
+      "sourceHash": "fnv1a64:aed8a246018dd9bf",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:217f798434635e60",
+      "sourceHash": "fnv1a64:529f8d48d09da677",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1478a352bfaa733a",
+      "sourceHash": "fnv1a64:943d970a6bd6baed",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d77f843bdfca025",
+      "sourceHash": "fnv1a64:4da2fba324f3f4e8",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04c2437dd78b0e37",
+      "sourceHash": "fnv1a64:c260dab2a7bed0e6",
       "notice": null,
       "blocks": [
         {

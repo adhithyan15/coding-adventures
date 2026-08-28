@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C39-fish
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 1900

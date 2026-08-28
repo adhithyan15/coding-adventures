@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "The Sky and Its Lights",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:53f2f918a9a9e5ab",
+  "sourceHash": "fnv1a64:af2240adafc6ffe6",
   "lessons": [
     {
       "id": "SA-C31-sky",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74c892681d6cbe34",
+      "sourceHash": "fnv1a64:ba7f57230d045517",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41634a53e1a0b594",
+      "sourceHash": "fnv1a64:0d0d3147d0a668ab",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6f7b2ad96fb8133",
+      "sourceHash": "fnv1a64:c768e5ea621f5afa",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63cbdd05069bac15",
+      "sourceHash": "fnv1a64:2031139acebcf9d2",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a71bd111371b170",
+      "sourceHash": "fnv1a64:25c71651718ed63f",
       "notice": null,
       "blocks": [
         {

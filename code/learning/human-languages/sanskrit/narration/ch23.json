@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "The Four Oldest Kinship Words",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b4f4ad8cb69dc56a",
+  "sourceHash": "fnv1a64:470b3b4c31ccc370",
   "lessons": [
     {
       "id": "SA-C23-father",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4723fa9e25d1bf59",
+      "sourceHash": "fnv1a64:539cac5cc1565352",
       "notice": null,
       "blocks": [
         {
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0eb8108873c8ea0",
+      "sourceHash": "fnv1a64:aa2b88b14f889009",
       "notice": null,
       "blocks": [
         {
@@ -255,7 +255,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eddd1c1f67b7d275",
+      "sourceHash": "fnv1a64:b4d11c1b8bd70766",
       "notice": null,
       "blocks": [
         {
@@ -373,7 +373,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b7438fb17cc64e1",
+      "sourceHash": "fnv1a64:a18228c99269fea4",
       "notice": null,
       "blocks": [
         {

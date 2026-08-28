@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [SA-CULTURE-ATITHI-GUEST-TRADITION-01]
 id: SA-C26-guest
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 1260

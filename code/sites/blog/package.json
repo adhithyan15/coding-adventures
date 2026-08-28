@@ -2,7 +2,7 @@
   "name": "@coding-adventures/blog-site",
   "version": "0.1.0",
   "private": true,
-  "description": "The Coding Adventures blog — a complete eight-stage Forme surface deployed to /coding-adventures/blog/ on GitHub Pages.",
+  "description": "The Coding Adventures blog — a complete ten-stage Forme surface with fingerprinted assets, deployed to /coding-adventures/blog/ on GitHub Pages.",
   "type": "module",
   "scripts": {
     "bootstrap": "node scripts/bootstrap.mjs",
@@ -21,9 +21,11 @@
     "@coding-adventures/forme-orchestrator":         "file:../../packages/typescript/forme-orchestrator",
     "@coding-adventures/forme-source-fs":            "file:../../packages/typescript/forme-source-fs",
     "@coding-adventures/forme-parse-markdown":       "file:../../packages/typescript/forme-parse-markdown",
+    "@coding-adventures/forme-resolve-asset-refs-fs":"file:../../packages/typescript/forme-resolve-asset-refs-fs",
     "@coding-adventures/forme-router":               "file:../../packages/typescript/forme-router",
     "@coding-adventures/forme-collect-chronological":"file:../../packages/typescript/forme-collect-chronological",
     "@coding-adventures/forme-render-static":        "file:../../packages/typescript/forme-render-static",
+    "@coding-adventures/forme-load-assets-fs":       "file:../../packages/typescript/forme-load-assets-fs",
     "@coding-adventures/forme-theme-classless":      "file:../../packages/typescript/forme-theme-classless",
     "@coding-adventures/forme-aot-css-slicer":       "file:../../packages/typescript/forme-aot-css-slicer",
     "@coding-adventures/forme-index-renderer":       "file:../../packages/typescript/forme-index-renderer",
@@ -31,7 +33,8 @@
     "@coding-adventures/forme-aot-sitemap-emitter":  "file:../../packages/typescript/forme-aot-sitemap-emitter",
     "@coding-adventures/forme-aot-meta-link-tags":    "file:../../packages/typescript/forme-aot-meta-link-tags",
     "@coding-adventures/forme-aot-rss-discovery-link":"file:../../packages/typescript/forme-aot-rss-discovery-link",
-    "@coding-adventures/forme-emit-fs":              "file:../../packages/typescript/forme-emit-fs"
+    "@coding-adventures/forme-emit-fs":              "file:../../packages/typescript/forme-emit-fs",
+    "@coding-adventures/forme-emit-site-fs":         "file:../../packages/typescript/forme-emit-site-fs"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [SA-SENSE-MUKHAM-MOUTH-FACE-01]
+introduces_culture_claims: []
 id: SA-C12-mukham
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 570

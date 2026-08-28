@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Add grammar-validated author stylesheets, selector specificity/source-order
+  cascade, inherited computed styles, media-independent style contexts, and a
+  reusable layout boundary for display, color, backgrounds, typography,
+  decoration, dimensions, margin, and padding.
+
 ## [0.4.0] - 2026-08-27
 
 ### Added

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add composition through a pre-parsed `HtmlStyleContext`, preserving the
+  existing theme-only and visited-link entry points as compatibility wrappers.
 - Add stable URI discovery and tri-state incremental image resolution so
   pending resources preserve geometry without becoming failure diagnostics.
 

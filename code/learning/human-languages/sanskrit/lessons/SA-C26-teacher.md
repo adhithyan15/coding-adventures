@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [SA-SENSE-GURU-TEACHER-HEAVY-01]
+introduces_culture_claims: []
 id: SA-C26-teacher
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 1230

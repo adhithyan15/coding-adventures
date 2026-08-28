@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The People You'd Introduce",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1a6c6c3f5058300d",
+  "sourceHash": "fnv1a64:fa35fbbe185e023e",
   "lessons": [
     {
       "id": "SA-C11-mitram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6ef1f7ef5e087913",
+      "sourceHash": "fnv1a64:08188ccb93593c91",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -178,7 +178,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d0b8b998f9c37f6e",
+      "sourceHash": "fnv1a64:f7fbe6b6b2aefdb8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -326,7 +326,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c1ad6275067f4371",
+      "sourceHash": "fnv1a64:42ac7e82c439bf5c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -482,7 +482,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eb00a80ad07f65d3",
+      "sourceHash": "fnv1a64:bc9ee0db2f373a6c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -651,7 +651,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:abbb7355612130a6",
+      "sourceHash": "fnv1a64:8f0d1b8cda979bef",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -864,7 +864,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e083048617d082a2",
+      "sourceHash": "fnv1a64:02403de96791520d",
       "notice": {
         "modality": "pen",
         "needs": [

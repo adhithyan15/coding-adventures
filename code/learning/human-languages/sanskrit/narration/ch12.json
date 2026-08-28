@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "The Face, Part One",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:71d9e91f007f92f2",
+  "sourceHash": "fnv1a64:e17d715069dbfa88",
   "lessons": [
     {
       "id": "SA-C12-akshi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5301b376028e7b2d",
+      "sourceHash": "fnv1a64:cd08febb8ac0d388",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:65afbb8a807510b4",
+      "sourceHash": "fnv1a64:b35aab82efe51fc5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -323,7 +323,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:577149aa3fbaf3f3",
+      "sourceHash": "fnv1a64:dc313f334e2fdb3f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -477,7 +477,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:85d661b3a2000aa6",
+      "sourceHash": "fnv1a64:99914d44a1db00ad",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -654,7 +654,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:88224ad3dfa3652f",
+      "sourceHash": "fnv1a64:67a50ba6e5f9274e",
       "notice": {
         "modality": "pen",
         "needs": [

@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C50-song
 spine_node: SPINE-COURTESY-THANK
 sequence: 2460

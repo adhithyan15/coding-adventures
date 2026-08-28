@@ -880,7 +880,7 @@ mod tests {
     }
 
     #[test]
-    fn cairo_host_exposes_the_shared_incremental_image_lifecycle() {
+    fn cairo_host_exposes_the_shared_incremental_subresource_lifecycle() {
         let origin = "http://venture.test";
         let start_url = format!("{origin}{FIXTURE_PATH}");
         let fetcher = move |url: &str| fixture_response(origin, url);
@@ -891,7 +891,7 @@ mod tests {
         let navigation = host
             .begin_navigation(BrowserNavigation::Reload)
             .expect("document-first reload commits");
-        assert_eq!(navigation.requests.len(), 2);
+        assert_eq!(navigation.requests.len(), 3);
         let (_, _, pending_rgba) = host.render_rgba().expect("pending page renders");
         let pending = probe_rgba(240, 120, &pending_rgba).unwrap();
         assert_eq!(pending.magenta_pixels, 0);

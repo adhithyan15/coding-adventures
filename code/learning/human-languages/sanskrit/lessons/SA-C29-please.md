@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [SA-IDIOM-KRIPAYA-PLEASE-01]
+introduces_senses: []
+introduces_culture_claims: []
 id: SA-C29-please
 spine_node: SPINE-COURTESY-THANK
 sequence: 1380

@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:37caf6316eb491f8",
+  "sourceHash": "fnv1a64:6133e4ed9fb27fe7",
   "lessons": [
     {
       "id": "SA-C30-door",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b65a27dbd7cac7f1",
+      "sourceHash": "fnv1a64:60fb92c4dfec47f0",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6adda01ee07364db",
+      "sourceHash": "fnv1a64:4c1fa050d49d672e",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1da49ca5d3f010ec",
+      "sourceHash": "fnv1a64:0ad7e6764cdf555b",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac8a469ff7cc0b4e",
+      "sourceHash": "fnv1a64:4515529e79774d03",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87a65d41f4e139d4",
+      "sourceHash": "fnv1a64:1139eebdf1cc2d58",
       "notice": null,
       "blocks": [
         {

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 44,
-  "sourceHash": "fnv1a64:6c286fb414b9813c",
+  "sourceHash": "fnv1a64:dfb35c363da4e2f6",
   "lessonIds": [
     "SA-C44-white",
     "SA-C44-dark",
@@ -14,6 +14,6 @@
   "text": "sanskrit/narration/ch44.txt",
   "json": "sanskrit/narration/ch44.json",
   "textHash": "fnv1a64:2ef4d97354c9491f",
-  "jsonHash": "fnv1a64:e047d7b81d4ae2e5",
+  "jsonHash": "fnv1a64:09717debf5ac4b8c",
   "findings": []
 }

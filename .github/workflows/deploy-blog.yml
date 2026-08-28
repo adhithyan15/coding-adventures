@@ -2,7 +2,7 @@
 # Deploy Coding Adventures Blog to GitHub Pages
 # ================================================================
 #
-# Builds the Forme pipeline (8 stages, FM00 §5 demo) and deploys the
+# Builds the Forme pipeline (10 stages, FM00 §5 demo) and deploys the
 # generated dist/blog/ tree to the gh-pages branch under blog/,
 # preserving other content on Pages.
 #
@@ -18,8 +18,10 @@
 # Pipeline shape (see code/sites/blog/forme.config.ts):
 #   forme-source-fs          Stream<ContentSource>
 #   forme-parse-markdown     ContentSource → ContentNode
+#   forme-resolve-asset-refs Stream<ContentNode> → Stream<ContentNode>
 #   forme-router             Stream<ContentNode> → Stream<ContentNode>
-#                               ├→ render-static → emit-articles
+#                               ├→ render-static ────────────┐
+#                               ├→ load-assets ──────────────┴→ emit-articles
 #                               └→ collect-chronological → blog-surface → emit-surface
 #
 # `npm run build:clean` is the canonical clean-checkout entry point. Its
@@ -42,15 +44,18 @@ on:
       - "code/packages/typescript/forme-orchestrator/**"
       - "code/packages/typescript/forme-source-fs/**"
       - "code/packages/typescript/forme-parse-markdown/**"
+      - "code/packages/typescript/forme-resolve-asset-refs-fs/**"
       - "code/packages/typescript/forme-router/**"
       - "code/packages/typescript/forme-collect-chronological/**"
       - "code/packages/typescript/forme-render-static/**"
+      - "code/packages/typescript/forme-load-assets-fs/**"
       - "code/packages/typescript/forme-index-renderer/**"
       - "code/packages/typescript/forme-feeds/**"
       - "code/packages/typescript/forme-aot-sitemap-emitter/**"
       - "code/packages/typescript/forme-aot-meta-link-tags/**"
       - "code/packages/typescript/forme-aot-rss-discovery-link/**"
       - "code/packages/typescript/forme-emit-fs/**"
+      - "code/packages/typescript/forme-emit-site-fs/**"
       - "code/packages/typescript/document-ast/**"
       - "code/packages/typescript/document-ast-to-html/**"
       - "code/packages/typescript/gfm-parser/**"
@@ -72,15 +77,18 @@ on:
       - "code/packages/typescript/forme-orchestrator/**"
       - "code/packages/typescript/forme-source-fs/**"
       - "code/packages/typescript/forme-parse-markdown/**"
+      - "code/packages/typescript/forme-resolve-asset-refs-fs/**"
       - "code/packages/typescript/forme-router/**"
       - "code/packages/typescript/forme-collect-chronological/**"
       - "code/packages/typescript/forme-render-static/**"
+      - "code/packages/typescript/forme-load-assets-fs/**"
       - "code/packages/typescript/forme-index-renderer/**"
       - "code/packages/typescript/forme-feeds/**"
       - "code/packages/typescript/forme-aot-sitemap-emitter/**"
       - "code/packages/typescript/forme-aot-meta-link-tags/**"
       - "code/packages/typescript/forme-aot-rss-discovery-link/**"
       - "code/packages/typescript/forme-emit-fs/**"
+      - "code/packages/typescript/forme-emit-site-fs/**"
       - "code/packages/typescript/document-ast/**"
       - "code/packages/typescript/document-ast-to-html/**"
       - "code/packages/typescript/gfm-parser/**"
@@ -119,6 +127,8 @@ jobs:
           test -f code/sites/blog/dist/blog/rss.xml
           test -f code/sites/blog/dist/blog/atom.xml
           test -f code/sites/blog/dist/blog/sitemap.xml
+          test -n "$(find code/sites/blog/dist/blog/assets -type f -name 'forme-pipeline.*.svg' -print -quit)"
+          ! grep -R "forme-asset:" code/sites/blog/dist/blog
 
       - name: Deploy to GitHub Pages (blog/ on gh-pages, served at <user>.github.io/<repo>/blog/)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

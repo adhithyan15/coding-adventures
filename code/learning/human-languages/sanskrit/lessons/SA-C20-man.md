@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [SA-SENSE-NARA-MAN-PERSON-01]
+introduces_culture_claims: []
 id: SA-C20-man
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 960

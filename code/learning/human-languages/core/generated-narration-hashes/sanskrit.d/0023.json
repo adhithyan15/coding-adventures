@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 23,
-  "sourceHash": "fnv1a64:b4f4ad8cb69dc56a",
+  "sourceHash": "fnv1a64:470b3b4c31ccc370",
   "lessonIds": [
     "SA-C23-father",
     "SA-C23-mother",
@@ -13,6 +13,6 @@
   "text": "sanskrit/narration/ch23.txt",
   "json": "sanskrit/narration/ch23.json",
   "textHash": "fnv1a64:d26c52856e9600b3",
-  "jsonHash": "fnv1a64:7c1d1f8b05e38342",
+  "jsonHash": "fnv1a64:214f25438c74c87a",
   "findings": []
 }

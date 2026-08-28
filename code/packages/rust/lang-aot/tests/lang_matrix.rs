@@ -1484,6 +1484,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — checked exponent arithmetic may compose pure implemented
+    // standard functions over tracked local integer snapshots.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer exponent; real saved; exponent := -2; saved := 6.0 ^ (abs(exponent) + sign(exponent) + 1) + 6.0; exponent := 3; if saved = 42.0 then output(42) else output(1) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — equal branches of a runtime conditional may provide a
     // bounded exponent to metadata while the branch and f64_pow still lower.
     Prog {
@@ -7886,6 +7895,32 @@ fn algol_tracked_standard_function_real_power_exponents_run_on_every_available_s
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the tracked standard-function real-power exponent did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_composed_standard_function_real_power_exponents_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("abs(exponent) + sign(exponent) + 1")
+        })
+        .expect("the ALGOL composed standard-function exponent program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the composed standard-function real-power exponent did not run"
             );
             continue;
         };

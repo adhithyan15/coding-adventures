@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 27,
-  "sourceHash": "fnv1a64:5f9d309a5e7f4742",
+  "sourceHash": "fnv1a64:c0a0e66774408a9c",
   "lessonIds": [
     "SA-C27-so-be-it",
     "SA-C27-well-done",
@@ -14,6 +14,6 @@
   "text": "sanskrit/narration/ch27.txt",
   "json": "sanskrit/narration/ch27.json",
   "textHash": "fnv1a64:7e048b8590710576",
-  "jsonHash": "fnv1a64:2cf82f0797ef5d5f",
+  "jsonHash": "fnv1a64:969006c15ed89406",
   "findings": []
 }
