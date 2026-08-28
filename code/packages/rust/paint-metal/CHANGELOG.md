@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Execute shared isolated layer scopes with transparent offscreen targets,
+  ping-pong filter surfaces, post-filter opacity, and all shared non-normal
+  blend modes.
+- Add deterministic Metal pixel acceptance for child-overlap isolation,
+  ordered filters, blur spread, and destination-aware blending.
+- Surface native MSL compiler and command-buffer diagnostics on failure.
 - Consume `paint-vm-gpu-core`'s ordered mesh/texture/clip command stream instead
   of maintaining a Metal-only scene walker and tessellator.
 - Draw decoded images and gradient ramps as Metal textures in painter order,
