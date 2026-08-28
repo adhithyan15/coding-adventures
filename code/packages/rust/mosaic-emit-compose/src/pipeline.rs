@@ -129,6 +129,13 @@ pub fn from_pipeline(
     // pay for the Canvas imports it never uses.
     let uses_path = layout_contains_tag(&layout.root, "Path");
     let uses_path_canvas = uses_path && tree_needs_path_canvas(&layout.root);
+    // UI41, #12028 item 1 — `elevation` is a style property, not a layout
+    // tag, so it can't reuse `layout_contains_tag`; gate the `shadow`
+    // import on whether any part's base props resolve to a real tier.
+    let uses_elevation = style
+        .parts
+        .iter()
+        .any(|part| part_elevation_tier(&part.base).is_some());
 
     writeln!(out, "import androidx.compose.foundation.background").unwrap();
     writeln!(out, "import androidx.compose.foundation.border").unwrap();
@@ -300,6 +307,9 @@ pub fn from_pipeline(
             "import androidx.compose.ui.platform.LocalLayoutDirection"
         )
         .unwrap();
+    }
+    if uses_elevation {
+        writeln!(out, "import androidx.compose.ui.draw.shadow").unwrap();
     }
     if uses_checkbox_indeterminate {
         writeln!(out, "import androidx.compose.ui.state.ToggleableState").unwrap();
@@ -2056,6 +2066,55 @@ fn layer_value(
     inner
 }
 
+/// The two `elevation` tiers (UI41, issue #12028 item 1), mapped to a
+/// Compose `Modifier.shadow` elevation. `androidx.compose.ui.draw.shadow`
+/// takes a `Dp` directly (not a CSS-shaped blur/spread/color/opacity
+/// value) — same shape as XAML's `ThemeShadow` Z-depth — so each tier is a
+/// fixed `Dp` constant, not a reproduction of any authored `box-shadow`
+/// value. Numbers match `mosaic-emit-xaml`'s `ElevationTier::translation_z`
+/// so a `raised`/`overlay` part reads the same "how far off the surface"
+/// intent on both backends.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ElevationTier {
+    /// A static "raised card" — cards, selected rows/tabs, static panels.
+    /// Every real `elevation` usage in this repo today is `Raised`.
+    Raised,
+    /// An element floating above everything else — modals, popovers,
+    /// tooltips, dropdowns, toasts. No real caller yet, wired up now so a
+    /// future overlay component doesn't need its own emitter change.
+    Overlay,
+}
+
+impl ElevationTier {
+    fn dp(self) -> &'static str {
+        match self {
+            ElevationTier::Raised => "4",
+            ElevationTier::Overlay => "16",
+        }
+    }
+}
+
+/// Read a part's `elevation` prop (UI41, issue #12028 item 1) — the signal
+/// that this element wants a native `Modifier.shadow`. mosstyle's
+/// `validate()` already restricts `elevation` to exactly `raised`/`overlay`
+/// before this emitter ever sees it (any other value is a hard compile
+/// error), so an unrecognized value here is treated defensively as "no
+/// elevation" rather than panicking. Base props only — matches
+/// `mosaic-emit-xaml`'s `part_elevation_tier`; no real part conditions
+/// elevation on a state today.
+fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
+    let value = base_props
+        .iter()
+        .find(|p| p.name == "elevation")?
+        .value
+        .as_str();
+    match value {
+        "raised" => Some(ElevationTier::Raised),
+        "overlay" => Some(ElevationTier::Overlay),
+        _ => None,
+    }
+}
+
 /// The Compose styling derived from a part's base props + state layers,
 /// split into the two places it lands:
 ///   * `modifier` — the `.background/.border/.width/.height/.padding`
@@ -2082,6 +2141,7 @@ struct ComposeStyle {
 /// |--------------------------------|------------------------------------------------------|
 /// | `width: Npx` / injected        | `.width(N.dp)` / `.width(columnWidths[_kotlinIdxc].dp)` |
 /// | `height: Npx`                  | `.height(N.dp)`                                       |
+/// | `elevation: raised\|overlay`   | `.shadow(4.dp)` / `.shadow(16.dp)` (UI41, #12028 item 1) |
 /// | `background: <color>` (+state) | `.background(if (..) C else ..)`                     |
 /// | `border-width` (+ `border-color`)| `.border(N.dp, <color>)`                           |
 /// | `padding: Npx`                 | `.padding(N.dp)` (emitted LAST)                      |
@@ -2089,13 +2149,20 @@ struct ComposeStyle {
 /// | `color: <color>` (+state)      | child `Text(color = ..)`                            |
 /// | `font-family: monospace`       | child `Text(fontFamily = FontFamily.Monospace)`     |
 /// | `font-size: Npx`               | child `Text(fontSize = N.sp)`                       |
+/// | `box-shadow`                   | silently skipped — `elevation` is the native-shadow-intent channel now |
 /// | anything else                  | silently skipped (matches React/SwiftUI v1)         |
 ///
 /// ## Modifier ORDER (load-bearing)
 ///
-/// `.width` → `.height` → `.background` → `.border` → `.padding`.  Size
-/// first so the background fills and the border strokes the full cell;
-/// padding LAST so the content insets inside the bordered box.
+/// `.width` → `.height` → `.shadow` → `.background` → `.border` →
+/// `.padding`. Size first so the background fills and the border strokes
+/// the full cell; `.shadow` comes right after sizing and BEFORE
+/// `.background`/`.border` — Compose draws a `shadow` modifier's shadow
+/// layer behind whatever comes after it in the chain, so a background
+/// placed after the shadow paints on top of it instead of clipping it
+/// (confirmed against the real `org.jetbrains.compose` 1.6.11 toolchain —
+/// see the CHANGELOG entry for this PR); padding LAST so the content
+/// insets inside the bordered box.
 ///
 /// ## `injected_width`
 ///
@@ -2228,6 +2295,13 @@ fn compose_box_style(
     if !height.empty() {
         let expr = layer_value(&height, state_layers, "0");
         modifier.push_str(&format!("\n{cpad}.height({expr}.dp)"));
+    }
+
+    // .shadow — UI41, #12028 item 1. Base-only (see `part_elevation_tier`);
+    // must come before `.background`/`.border` so the shadow layer isn't
+    // painted over by them (see the Modifier ORDER doc comment above).
+    if let Some(tier) = part_elevation_tier(base_props) {
+        modifier.push_str(&format!("\n{cpad}.shadow({}.dp)", tier.dp()));
     }
 
     // .background — fills the sized box.  State that overrides
@@ -6123,6 +6197,193 @@ mod tests {
             out.contains("textStyle = TextStyle(color = Color(0xFFF8FAFC)),"),
             "got:\n{out}"
         );
+    }
+
+    // ── UI41, #12028 item 1: `elevation` → `Modifier.shadow` ───────────
+
+    #[test]
+    fn box_with_elevation_raised_emits_shadow_before_background() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            styled_node("Box", "task-card", vec![], vec![node("Text", vec![], vec![])]),
+        );
+        let s = style_def(
+            "X",
+            vec![part(
+                "task-card",
+                vec![
+                    sprop(
+                        "box-shadow",
+                        "0 1px 2px rgba(60,45,25,.05), 0 4px 14px rgba(60,45,25,.05)",
+                    ),
+                    sprop("elevation", "raised"),
+                    sprop("background", "#ffffff"),
+                ],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            out.contains("import androidx.compose.ui.draw.shadow"),
+            "got:\n{out}"
+        );
+        assert!(out.contains(".shadow(4.dp)"), "got:\n{out}");
+        let shadow_idx = out.find(".shadow(4.dp)").unwrap();
+        let background_idx = out.find(".background(Color(0xFFFFFFFF))").unwrap();
+        assert!(
+            shadow_idx < background_idx,
+            ".shadow must precede .background so the shadow isn't painted \
+             over — got:\n{out}"
+        );
+        // The raw box-shadow CSS value never leaks into the modifier
+        // chain — `elevation` is the only signal Compose reads.
+        assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
+    }
+
+    #[test]
+    fn box_with_elevation_overlay_emits_deeper_shadow() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            styled_node("Box", "toast", vec![], vec![node("Text", vec![], vec![])]),
+        );
+        let s = style_def(
+            "X",
+            vec![part("toast", vec![sprop("elevation", "overlay")], vec![])],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(out.contains(".shadow(16.dp)"), "got:\n{out}");
+    }
+
+    #[test]
+    fn box_shadow_without_elevation_emits_no_shadow_modifier() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            styled_node("Box", "card", vec![], vec![node("Text", vec![], vec![])]),
+        );
+        let s = style_def(
+            "X",
+            vec![part(
+                "card",
+                vec![sprop("box-shadow", "0 1px 2px rgba(0,0,0,.1)")],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(!out.contains(".shadow("), "got:\n{out}");
+        assert!(
+            !out.contains("import androidx.compose.ui.draw.shadow"),
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn inset_box_shadow_alongside_elevation_still_emits_shadow_from_elevation_only() {
+        // The theme-toggle moon-icon `inset` hack: `elevation` is the only
+        // signal read, so an `inset` box-shadow value alongside a real
+        // `elevation` declaration behaves identically to any other
+        // box-shadow value — it's ignored, not specially detected.
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            styled_node("Box", "moon", vec![], vec![node("Text", vec![], vec![])]),
+        );
+        let s = style_def(
+            "X",
+            vec![part(
+                "moon",
+                vec![
+                    sprop("box-shadow", "5px -5px 0 0 #000 inset"),
+                    sprop("elevation", "raised"),
+                ],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(out.contains(".shadow(4.dp)"), "got:\n{out}");
+    }
+
+    #[test]
+    fn part_with_no_elevation_omits_shadow_import_entirely() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            styled_node(
+                "Box",
+                "plain",
+                vec![],
+                vec![node("Text", vec![], vec![])],
+            ),
+        );
+        let s = style_def(
+            "X",
+            vec![part("plain", vec![sprop("background", "#eeeeee")], vec![])],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(
+            !out.contains("import androidx.compose.ui.draw.shadow"),
+            "got:\n{out}"
+        );
+    }
+
+    /// #12028 item 1's XAML PR found a real gap: `Row`/`Column` and
+    /// `HostDraggable` never wired up elevation because XAML has
+    /// per-primitive emitter functions. Compose's `Box`/`Row`/`Column` all
+    /// share one `emit_container`, so a `Row` with `elevation` must pick
+    /// up `.shadow` for free — this test locks in that architectural
+    /// difference rather than assuming it.
+    #[test]
+    fn row_with_elevation_emits_shadow_same_as_box() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            styled_node(
+                "Row",
+                "toolbar",
+                vec![],
+                vec![node("Text", vec![], vec![])],
+            ),
+        );
+        let s = style_def(
+            "X",
+            vec![part("toolbar", vec![sprop("elevation", "raised")], vec![])],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(out.contains(".shadow(4.dp)"), "got:\n{out}");
+    }
+
+    /// Same architectural claim as the `Row` test above, for
+    /// `HostDraggable` — XAML's other real gap (a custom `ContentControl`
+    /// subclass that couldn't use the shared shadow syntax at all).
+    /// `emit_host_draggable` delegates straight to `emit_container("Column",
+    /// ...)`, so no Compose-specific workaround is needed.
+    #[test]
+    fn host_draggable_with_elevation_emits_shadow() {
+        let m = component("Board", vec![], vec![]);
+        let l = layout(
+            "Board",
+            styled_node(
+                "HostDraggable",
+                "drag-card",
+                vec![LayoutProp {
+                    name: "drag-key".into(),
+                    value: LayoutPropValue::String("card-1".into()),
+                }],
+                vec![node("Text", vec![], vec![])],
+            ),
+        );
+        let s = style_def(
+            "Board",
+            vec![part(
+                "drag-card",
+                vec![sprop("elevation", "raised")],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(out.contains(".shadow(4.dp)"), "got:\n{out}");
     }
 
     #[test]

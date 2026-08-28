@@ -7,6 +7,69 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `elevation` native shadow lowering (#12028 item 1, UI41). A part
+  declaring `elevation: raised;` or `elevation: overlay;` (mosstyle's new
+  typed shadow-intent property, #13358) now gets a real
+  `androidx.compose.ui.draw.shadow(N.dp)` modifier instead of the shadow
+  silently vanishing. New `ElevationTier` enum (`Raised` → `4.dp`,
+  `Overlay` → `16.dp`, matching `mosaic-emit-xaml`'s `ElevationTier`
+  numbers so a part reads the same "how far off the surface" intent on
+  both backends) + `part_elevation_tier` helper, read directly inside
+  `compose_box_style` — the ONE function every styled container/control in
+  this crate already funnels through (`emit_container`'s `Box`/`Row`/
+  `Column`, `emit_host_button`, `emit_host_draggable`'s delegation to
+  `emit_container("Column", ...)`, etc.). Unlike the XAML PR for the same
+  feature, which found `Row`/`Column`/`HostDraggable` needed their own
+  separate shadow wiring because XAML has per-primitive emitter functions,
+  Compose's centralized `compose_box_style` meant implementing `elevation`
+  once covered every call site for free — confirmed, not assumed, by
+  compiling the real `TaskApp`/`ProjectNav`/`Notes`/`Calendar` packages
+  (all 4 real components declaring `elevation` today) and finding every
+  one of `TaskApp.light.msl`'s 13 `elevation`-declaring parts produces at
+  least one `.shadow(...)` in the generated Kotlin — including a `Box`
+  (`brand-mark`), several `Row`/`Column` containers, and a `HostButton`
+  (`notes-row-on`), and even confirming `ProjectNav`'s own `elevation`
+  part flows through correctly when TaskApp composes `ProjectNav` as a
+  child package.
+
+  Modifier order is load-bearing: `.shadow` must be emitted right after
+  `.width`/`.height` and BEFORE `.background`/`.border` — otherwise the
+  background paints over the shadow layer instead of the shadow appearing
+  behind it. Confirmed empirically (not assumed) against a real
+  `org.jetbrains.compose` Gradle Desktop probe: `.shadow(...).background(...)`
+  compiles and matches Compose's own documented usage pattern;
+  `.background(...).shadow(...)` also compiles (both orders are valid
+  Kotlin) but visually the shadow layer would be occluded, so the emitter
+  always emits `.shadow` first.
+
+  `box-shadow` itself is still silently skipped by `compose_box_style` (as
+  it always has been — this crate never read it before this PR either);
+  `elevation` is the only native-shadow signal Compose reads, mirroring
+  the XAML PR's "no `elevation` declared → no native shadow, regardless of
+  `box-shadow`" posture. The `androidx.compose.ui.draw.shadow` import is
+  gated behind a whole-`StyleDef` walk (`uses_elevation`) rather than
+  `layout_contains_tag`, since `elevation` is a style property, not a
+  layout tag.
+
+  Verified against the real toolchain, and a real version correction along
+  the way: an initial scratch probe (matching the `org.jetbrains.compose`
+  1.6.11 pin cited in this crate's own `HostProgressRing`/`Path` CHANGELOG
+  entries) compiled `Modifier.shadow(...)` cleanly, but
+  `mosaic-compile pkg --backend compose --emit-project` against the real
+  `task-app` package revealed the *actual* generated project now pins
+  `org.jetbrains.compose` **1.11.1** / Kotlin **2.3.21** (version drift
+  since those earlier PRs landed) — a discrepancy that would have gone
+  unnoticed without re-deriving the pin from the real generator instead of
+  trusting an older CHANGELOG citation. Re-verified against the real pin:
+  `gradle compileKotlin` on the real generated `TaskApp.kt` inside the
+  real generated project scaffold (`build.gradle.kts`, `Main.kt`,
+  `MosaicRuntimeHost.kt`, all emitted by `--emit-project`) —
+  `BUILD SUCCESSFUL`, no new warnings beyond pre-existing, unrelated
+  "redundant conversion method" ones. `gradle run` launched the real
+  window with no crash or exception from Compose (the only output was the
+  expected "native library not found" warning from omitting
+  `--runtime-library`, unrelated to this change).
+
 - `HostProgressRing` native lowering (#13176, UI40). `HostProgressRing
   [part] (value: ..., a11y-label: ...)` now lowers to a determinate
   `androidx.compose.material.CircularProgressIndicator(progress =
