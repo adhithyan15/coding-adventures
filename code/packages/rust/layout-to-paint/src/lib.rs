@@ -237,8 +237,24 @@ fn emit_box_decorations(
     let border_color = read_color(paint_map, "borderColor");
     let border_width = read_float(paint_map, "borderWidth");
     let corner_radius = read_float(paint_map, "cornerRadius");
+    let side_borders = [
+        ("borderTopWidth", "borderTopColor"),
+        ("borderRightWidth", "borderRightColor"),
+        ("borderBottomWidth", "borderBottomColor"),
+        ("borderLeftWidth", "borderLeftColor"),
+    ]
+    .map(|(width, color)| {
+        (
+            read_float(paint_map, width).unwrap_or(0.0),
+            read_color(paint_map, color),
+        )
+    });
 
-    if bg.is_none() && border_color.is_none() && border_width.unwrap_or(0.0) == 0.0 {
+    if bg.is_none()
+        && border_color.is_none()
+        && border_width.unwrap_or(0.0) == 0.0
+        && side_borders.iter().all(|(width, _)| *width == 0.0)
+    {
         return;
     }
 
@@ -246,23 +262,49 @@ fn emit_box_decorations(
         return;
     }
 
-    out.push(PaintInstruction::Rect(PaintRect {
-        base: PaintBase::default(),
-        x: x * dpr,
-        y: y * dpr,
-        width: w * dpr,
-        height: h * dpr,
-        fill: bg.map(color_to_css),
-        stroke: if border_width.unwrap_or(0.0) > 0.0 {
-            border_color.map(color_to_css)
-        } else {
-            None
-        },
-        stroke_width: border_width.map(|v| v * dpr),
-        corner_radius: corner_radius.map(|v| v * dpr),
-        stroke_dash: None,
-        stroke_dash_offset: None,
-    }));
+    if bg.is_some() || border_width.unwrap_or(0.0) > 0.0 {
+        out.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: x * dpr,
+            y: y * dpr,
+            width: w * dpr,
+            height: h * dpr,
+            fill: bg.map(color_to_css),
+            stroke: if border_width.unwrap_or(0.0) > 0.0 {
+                border_color.map(color_to_css)
+            } else {
+                None
+            },
+            stroke_width: border_width.map(|v| v * dpr),
+            corner_radius: corner_radius.map(|v| v * dpr),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+    }
+    let [(top, top_color), (right, right_color), (bottom, bottom_color), (left, left_color)] =
+        side_borders;
+    for (rx, ry, rw, rh, width, color) in [
+        (x, y, w, top, top, top_color),
+        (x + w - right, y, right, h, right, right_color),
+        (x, y + h - bottom, w, bottom, bottom, bottom_color),
+        (x, y, left, h, left, left_color),
+    ] {
+        if width > 0.0 {
+            let fill = color_to_css(color.unwrap_or(Color {
+                r: 0,
+                g: 0,
+                b: 0,
+                a: 255,
+            }));
+            out.push(PaintInstruction::Rect(PaintRect::filled(
+                rx * dpr,
+                ry * dpr,
+                rw * dpr,
+                rh * dpr,
+                &fill,
+            )));
+        }
+    }
 }
 
 fn read_color(m: &HashMap<String, ExtValue>, key: &str) -> Option<Color> {

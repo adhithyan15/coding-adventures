@@ -20,7 +20,8 @@ Handles:
 - Text leaves — width/height resolved by the supplied measurer with
   wrap-at-max-width semantics.
 - Image leaves — sized from node's `width`/`height` hints.
-- Size hints: `Fill` / `Wrap` / `Fixed(v)` with `min_width` / `max_width`
+- Size hints: `Fill` / `Wrap` / `Fixed(v)` / containing-block `Percent(v)`,
+  horizontal auto-margin distribution, and `min_width` / `max_width`
   / `min_height` / `max_height` clamping.
 
 Out of scope for v1 (per UI07):

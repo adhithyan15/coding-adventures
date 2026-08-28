@@ -11,7 +11,8 @@ Spec: [code/specs/UI02-layout-ir.md](../../../specs/UI02-layout-ir.md).
 
 ## Exports
 
-- **Geometry types:** `SizeValue`, `Edges`, `Constraints`
+- **Geometry types:** `SizeValue` (`Fixed`, containing-block `Percent`, `Fill`,
+  and `Wrap`), `Edges`, `Constraints`
 - **Visual types:** `Color`, `FontSpec`, `TextAlign`, `TextDecoration`,
   `TextDecorationLines`, `ImageFit`; `TextContent` independently controls soft
   wrapping and decoration while preserving hard line breaks.

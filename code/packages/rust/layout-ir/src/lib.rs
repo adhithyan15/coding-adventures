@@ -47,12 +47,17 @@ pub const VERSION: &str = "0.4.0";
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum SizeValue {
     Fixed(f64),
+    /// Fraction of the containing block's available inline size.
+    Percent(f64),
     Fill,
     Wrap,
 }
 
 pub fn size_fixed(v: f64) -> SizeValue {
     SizeValue::Fixed(v)
+}
+pub fn size_percent(v: f64) -> SizeValue {
+    SizeValue::Percent(v)
 }
 pub fn size_fill() -> SizeValue {
     SizeValue::Fill

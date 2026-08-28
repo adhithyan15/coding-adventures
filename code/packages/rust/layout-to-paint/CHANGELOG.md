@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Paint independent top/right/bottom/left border widths and colors from the
+  backend-neutral paint extension while retaining the uniform stroke contract.
+
+## Unreleased
+
 - Added inherited bidi direction and host-neutral visual-run shaping while
   preserving per-font fallback runs in paint order.
 

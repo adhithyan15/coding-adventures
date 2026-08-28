@@ -8,6 +8,8 @@
 
 ## Unreleased
 
+- Ratchet the real-page stylesheet with a centered percentage border-box card,
+  font-relative padding, min/max constraints, and aligned wrapping geometry.
 - Extend the real-page stylesheet corpus with a scheduler-discovered import,
   viewport media, inline styles, inherited custom properties, attribute and
   structural selectors, and shorthand-driven geometry baselines.

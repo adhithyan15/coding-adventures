@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add `SizeValue::Percent` and `size_percent` so reusable layout engines resolve
+  containing-block-relative inline sizes without producer or backend coupling.
+
 ## [0.4.0] — reusable text decoration
 
 ### Added

@@ -37,9 +37,10 @@ selectors by importance, specificity, and source order. Element `style`
 declarations share that cascade, inherited custom properties resolve `var()`
 values, and viewport dimensions evaluate screen media without coupling layout
 to fetch policy. The property profile covers display, foreground/background,
-typography, decoration, fixed pixel dimensions, and four-side margin/padding
-shorthands and longhands. Parsed `@import` metadata remains transport-neutral
-for browser schedulers.
+typography, decoration, fixed and percentage dimensions, `em`/`rem` values,
+min/max constraints, `auto` horizontal margins, border/content box sizing,
+per-side spacing and borders, text alignment, and white-space flow. Parsed
+`@import` metadata remains transport-neutral for browser schedulers.
 
 This bridge intentionally keeps CSS syntax in `css-parser`, browser loading in
 `venture-browser-core`, and inline geometry in the layout engines. It projects

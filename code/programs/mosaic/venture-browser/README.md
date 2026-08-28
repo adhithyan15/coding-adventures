@@ -116,6 +116,8 @@ Mosaic-era page and resource corpus that fixes deterministic geometry and
 structural RGBA screenshots for mixed inline text, preformatted blocks,
 external and imported author CSS, element style attributes, custom properties,
 viewport media, attribute/structural selectors, shorthand box geometry,
+percentage and font-relative lengths, min/max and auto sizing, border-box and
+per-side border paint, text alignment, and white-space flow,
 decoded and failed images, wrapped links, and multiple scroll states. Full
 font-raster screenshots are retained as diagnostics while exact structural
 screenshots mask platform glyph pixels. Production adapter tests sweep the
