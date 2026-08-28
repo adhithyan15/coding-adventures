@@ -105523,13 +105523,13 @@
   },
   "lessonBudgets": {
     "lessons": 4452,
-    "measuredLessons": 352,
-    "idiomMeasuredLessons": 352,
-    "senseMeasuredLessons": 352,
-    "cultureClaimMeasuredLessons": 352,
-    "idioms": 9,
-    "senses": 19,
-    "cultureClaims": 32,
+    "measuredLessons": 410,
+    "idiomMeasuredLessons": 410,
+    "senseMeasuredLessons": 410,
+    "cultureClaimMeasuredLessons": 410,
+    "idioms": 12,
+    "senses": 26,
+    "cultureClaims": 42,
     "overBudgetLessons": 0
   },
   "metalanguage": {
