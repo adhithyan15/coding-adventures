@@ -392,8 +392,15 @@ fn module_name_embedded_in_binary() {
 fn fib_executes_via_beam_runtime() {
     use twig_to_beam::compile_twig_to_beam;
 
-    // Check whether erl is available; skip if not.
-    if std::process::Command::new("erl").arg("-h").output().is_err() {
+    // Check whether erl is available; skip if not.  Do not use `erl -h` as
+    // the probe: on Windows that starts an interactive shell and never exits.
+    // A no-shell halt exercises the same executable while remaining bounded
+    // on every supported host.
+    if std::process::Command::new("erl")
+        .args(["-noshell", "-eval", "halt()."])
+        .output()
+        .is_err()
+    {
         eprintln!("erl not found on PATH — skipping BEAM execution test");
         return;
     }
@@ -418,9 +425,13 @@ fn fib_executes_via_beam_runtime() {
     // arbitrary code into the `erl -eval` argument.
     let path_str = beam_stem
         .to_str()
-        .expect("temp path is not valid UTF-8");
+        .expect("temp path is not valid UTF-8")
+        .replace(std::path::MAIN_SEPARATOR, "/");
     assert!(
-        !path_str.contains('"') && !path_str.contains('\\'),
+        !path_str.contains('"')
+            && !path_str.contains('\\')
+            && !path_str.contains('\n')
+            && !path_str.contains('\r'),
         "temp path contains characters unsafe for Erlang string interpolation: {path_str}"
     );
 

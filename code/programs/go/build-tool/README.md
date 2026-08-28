@@ -92,7 +92,28 @@ platform-only work cannot disappear from the matrix. Each build runner then
 selects only its own graph and affected set. A Windows-only native prerequisite
 is therefore installed and ordered on Windows without causing unrelated Unix
 packages to build. Older v1 plans without platform overrides continue to use
-the top-level graph and affected set.
+the top-level graph and affected set. Deleting a selected platform override is
+also a platform-scoped change: that runner schedules the package so the newly
+selected canonical fallback cannot escape validation.
+
+### Machine-readable platform exceptions
+
+A platform-specific BUILD front that cannot exist on that target must not use
+a free-form `echo` and then appear as `BUILT`. Reviewed exceptions use one
+closed command:
+
+```text
+echo BUILD_TOOL_UNSUPPORTED:STABLE_DIAGNOSTIC_CODE -- skipped
+```
+
+The executor recognizes the complete command as data and does not run a shell.
+The package is reported as `UNSUPPORTED` with the exact reason code and is not
+written to the success cache. A dependent that does not declare its own
+reviewed exception is `DEP-UNSUPPORTED` with `DEPENDENCY_UNSUPPORTED`. Extra
+commands, shell operators, lowercase codes, and free-form skip prose do not
+match the protocol. Repository-specific exception manifests additionally bind
+each authorized package path to its code; the command alone is not permission
+to add a new exception.
 
 Text package metadata is decoded according to the language-neutral build-tool
 contract. In particular, Lua `.rockspec` files must be strict UTF-8. Invalid

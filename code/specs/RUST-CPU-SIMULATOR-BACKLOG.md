@@ -91,8 +91,8 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-P006B1**, the GE-225 gate-level central decimal and
-clock option. RCPU-005 is complete after the AAU/final-audit slice added separate
+Current selection: **RCPU-P006B2**, the GE-225 gate-level direct card,
+paper-tape, and typewriter slice. RCPU-005 is complete after the AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
 transient/hold alerts, modification, and fail-closed preflight. The functional
@@ -112,12 +112,19 @@ P006A merged in PR #13330: its 17 tests cover gate-backed
 lifecycle, one-hot fixed/opcode decode, core-memory X groups, automatic
 modification, all central single/double binary operations, multiply/divide,
 all twelve shift/normalize paths, `MOV`, and atomic bounds failures. Core line
-coverage was 86.11% (682/792), above the completion floor. P006B1 is next; its
+coverage was 86.11% (682/792), above the completion floor. P006B1 merged in PR
+#13339 at `8992e9b`: its
 acceptance boundary is DFF-backed decimal mode/carry and 19-bit clock state,
 gate-only single/double BCD arithmetic and clock advancement, exact fixed-word
 decode, oracle differentials, fail-closed validation, and above-floor coverage.
-P006B1 is implementation-complete locally with 23 combined tests, including 48
-seeded decimal vectors; core line coverage is 89.91% (1,257/1,398).
+Its 23 combined tests include 48 seeded decimal vectors; core line coverage is
+89.91% (1,257/1,398). P006B2 is implementation-complete locally with 53 new
+DFF-backed state bits and ten direct-I/O conformance tests spanning all seven
+card modes, continuous DMA slots and sync/status words, shared N-device routing,
+readiness branches, parity/overrun/priority alarms, atomic failures, and an
+instruction-sequence differential against the functional oracle. The 33 combined
+tests cover 83.48% of core lines (1,339/1,604), above the completion floor. P006B3 remains
+the next chronological item after P006B2 merges.
 
 ## Cross-language wave
 

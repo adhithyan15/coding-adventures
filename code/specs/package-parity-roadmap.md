@@ -9492,6 +9492,87 @@ and 797 dependency edges: 162 merged, 379 pending, and exactly one pr-open
 owner, with active parity PR #13252. The fresh worktree and branch start from
 exact `origin/main` `0302e4e8f35a6e79d7bd385ae91fde710176a53c`.
 
+## Post-#13252 Refresh and Elixir Windows BUILD-Front Implementation
+
+Final repair head `70d5f2847e6df41d5b72bd941ebf24bbf7c1fc89`
+completed all 41 reported checks: 39 succeeded and two were expected skips,
+with no failure or pending check. GitHub reported `MERGEABLE/CLEAN`; the loop
+enabled squash auto-merge, and GitHub merged PR #13252 as
+`1606285f832b9e2cc0743a5339b4309925f323c5` at
+2026-08-27T19:30:54Z without a manual merge command.
+
+The collision-checked schema-3 inventory on exact selected `origin/main`
+`c2981e655697bd9a9ba82c9b78f20edc9fed31d1` records 15 established
+lanes, 1,377 implementation identities, 4,588 package slots, and 1,416
+all-reported identities. The four bands are 175/266, 123/934, 168/2,113,
+and 911/12,754; Rust has 724 singletons, OCaml remains emerging at zero
+packages, and canonical collisions and unknown buckets remain zero. Merged
+IBM 704 work adds the Python/Rust simulator slot and the separately named
+Rust-only gate-level identity. Pending owners
+`ibm704-simulator-two-lane-classification` and
+`ibm704-gatelevel-singleton-classification` record both topology deltas before
+selection.
+
+The dependency/leverage pass selects
+`elixir-windows-build-front-toolchain-classification` on branch
+`codex/elixir-windows-build-front-toolchain-contract`. Its build-tool contract
+dependency is merged, and one pinned toolchain boundary turns an entire lane
+from latent missing-tool or false-green behavior into native Windows evidence.
+The collision audit finds no live PR overlap with the selected workflow,
+Elixir BUILD-front, audit, fixture, or Go executor/reporter surfaces. The
+strategic OCaml process-free substrate remains collision-blocked while open PR
+#12149 owns its required Go validator and entry-point paths.
+
+The implementation audits all 285 Elixir package/program BUILD roots. It
+provisions Elixir 1.18.4 and OTP 27.3.4.11 through an exact setup-action commit
+on the explicit `windows-2025` job; keeps 278 roots as real native evidence;
+repairs the inherited POSIX-only `http1` and `zip` fronts with CMD-safe
+overrides; and removes the temporary Atbash, Scytale, and Vigenere skips. Seven
+reviewed NIF, transitive-NIF, or Metal exclusions use a closed declarative
+protocol whose stable code is reported as `UNSUPPORTED`; downstream consumers
+become `DEP-UNSUPPORTED`, and neither result is a passing shell command or a
+success-cache entry. A language-neutral schema/contract fixture plus a bounded,
+Git-visible, symlink-rejecting audit pins the corpus, workflow, runner,
+toolchain, action digest, front syntax, counts, and exact exception registry.
+
+The same audit discovers three tracked Mix projects outside BUILD discovery:
+`activation_functions`, `matrix`, and `perceptron`. New pending owner
+`elixir-activation-matrix-perceptron-build-front-coverage` depends on this
+toolchain tranche and requires missing tests before those roots become honest
+cross-platform build evidence.
+
+Before publication the branch rebased conflict-free twice, finally onto exact
+`origin/main` `0f22582f5a0ddaceaae4f8f6ba56f3b2d5a4fd30`.
+Real Windows plan emission found one additional build-tool edge case: deleting
+the three temporary cipher overrides initially failed to select their canonical
+fallbacks. Platform change detection now treats deletion of a selected override
+as a platform-scoped package change. The regenerated closure contains all three
+ciphers and completed 16 native builds, seven exact unsupported results, one
+dependency-unsupported result, and 261 unaffected skips with no failure.
+
+The final schema-3 inventory records 1,379 implementation identities, 4,590
+slots, and 1,418 all-reported identities. The bands are 175/266, 123/934,
+168/2,113, and 913/12,782; Rust has 726 singletons, OCaml remains emerging at
+zero packages, and collisions and unknown buckets remain zero. Merged PR #13264
+adds the Rust-only `browser-bookmarks` portable core and separately named
+`browser-bookmarks-file` native adapter. New pending owners
+`browser-bookmarks-singleton-classification` and
+`browser-bookmarks-file-applicable-lane-classification` record those gaps in
+dependency order before publication.
+
+A final live-PR path audit finds no package, fixture, audit, state, roadmap, or
+changelog overlap. PR #13285 concurrently edits `ci.yml` for Forme workflow
+modernization and PR #12149 edits the Go entry point for a Swift native-dep
+validator path; their current hunks are line-distinct from this tranche, but the
+loop must recheck conflicts if either merges first. With the new owners
+registered, the selected graph contains 547 owners and 799 dependency edges:
+163 merged, 383 pending, and exactly one pr-open owner. Ready-for-review PR
+#13287 was opened from validated head
+`b17e72130edc097b7f0cbe2483431513408b91f5`; it is the sole active parity PR.
+GitHub reports it non-draft and mergeable, while required checks are still
+queued or in progress, so auto-merge remains disabled until all checks are
+terminal and acceptable and the branch is conflict-free.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

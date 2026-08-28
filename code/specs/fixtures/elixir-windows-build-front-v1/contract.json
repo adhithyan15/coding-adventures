@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "workflow": {
+    "pr_windows_runner": "windows-2025",
+    "setup_action": "erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124",
+    "elixir_version": "1.18.4",
+    "otp_version": "27.3.4.11",
+    "version_type": "strict",
+    "setup_condition": "needs.detect.outputs.needs_elixir == 'true'",
+    "affected_build_condition": "needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true')"
+  },
+  "unsupported_protocol": {
+    "directive_prefix": "# build-tool: unsupported=",
+    "command_prefix": "echo BUILD_TOOL_UNSUPPORTED:",
+    "command_suffix": " -- skipped"
+  },
+  "exceptions": [
+    {
+      "root": "code/packages/elixir/conduit",
+      "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
+      "class": "nif-erts-import-library"
+    },
+    {
+      "root": "code/packages/elixir/gf256_native",
+      "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
+      "class": "nif-erts-import-library"
+    },
+    {
+      "root": "code/packages/elixir/irc-server-native",
+      "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
+      "class": "nif-erts-import-library"
+    },
+    {
+      "root": "code/packages/elixir/paint_codec_png_native",
+      "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
+      "class": "nif-erts-import-library"
+    },
+    {
+      "root": "code/packages/elixir/paint_vm_metal_native",
+      "code": "ELIXIR_WINDOWS_METAL_UNAVAILABLE",
+      "class": "target-specific-metal"
+    },
+    {
+      "root": "code/packages/elixir/polynomial_native",
+      "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
+      "class": "nif-erts-import-library"
+    },
+    {
+      "root": "code/programs/elixir/conduit-hello",
+      "code": "ELIXIR_WINDOWS_NIF_DEPENDENCY_UNAVAILABLE",
+      "class": "nif-erts-import-library"
+    }
+  ]
+}

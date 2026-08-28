@@ -29,6 +29,12 @@ import {
   type StageContext,
 } from "@coding-adventures/forme-stage";
 import { parse as parseGfm } from "@coding-adventures/gfm-parser";
+import {
+  emptyStyleDocument,
+  sel,
+  styleRuleId,
+  type StyleDocument,
+} from "@coding-adventures/forme-style-ir";
 import renderStatic from "../src/index.js";
 
 function makeCtx(overrides: Partial<StageContext> = {}): StageContext {
@@ -136,7 +142,7 @@ describe("renderStatic — single-node rendering", () => {
     expect(page!.html).toMatch(/^<!DOCTYPE html>/);
     expect(page!.html).toContain("<h1>Hello</h1>");
     expect(page!.html).toContain("<p>Body.</p>");
-    expect(page!.html).toContain("<style>");
+    expect(page!.html).not.toContain("<style>");
   });
 
   it("uses the canonical ContentNode route", async () => {
@@ -198,13 +204,58 @@ describe("renderStatic — single-node rendering", () => {
     expect(page!.provenance.revision).toMatch(/^blake2b:[0-9a-f]{64}$/);
   });
 
-  it("usedStyle / usedIslands / usedAssets are all empty in v0", async () => {
+  it("leaves usage accumulators empty when no style or assets are configured", async () => {
     const [page] = await runRender([
       makeNode({ sourcePath: "p.md", markdown: "# x\n" }),
     ]);
     expect(page!.usedStyle).toEqual([]);
     expect(page!.usedIslands).toEqual([]);
     expect(page!.usedAssets).toEqual([]);
+  });
+
+  it("matches Style IR in source order and inlines an AOT per-page slice", async () => {
+    const empty = emptyStyleDocument();
+    const style: StyleDocument = {
+      ...empty,
+      contexts: ["dark"],
+      rules: [
+        {
+          id: styleRuleId("paragraph"),
+          selector: sel.type("p"),
+          properties: [{ kind: "color", value: { kind: "named", name: "navy" } }],
+        },
+        {
+          id: styleRuleId("unused-table"),
+          selector: sel.type("table"),
+          properties: [{ kind: "color", value: { kind: "named", name: "red" } }],
+        },
+        {
+          id: styleRuleId("paragraph-dark"),
+          selector: sel.type("p"),
+          properties: [{ kind: "color", value: { kind: "named", name: "white" } }],
+          context: "dark",
+        },
+      ],
+    };
+    const [page] = await runRender([
+      makeNode({ sourcePath: "p.md", markdown: "# Heading\n\nBody.\n" }),
+    ], { style, activeStyleContexts: ["dark"] });
+
+    expect(page!.usedStyle).toEqual(["paragraph", "paragraph-dark"]);
+    expect(page!.html).toContain("p {\n  color: navy;");
+    expect(page!.html).toContain("@media (prefers-color-scheme: dark)");
+    expect(page!.html).not.toContain("unused-table");
+    expect(page!.html).not.toContain("color: red");
+    expect(page!.html).toContain('<meta name="color-scheme" content="light dark">');
+  });
+
+  it("rejects an unresolved named theme", async () => {
+    const style = { ...emptyStyleDocument(), theme: "night" };
+    await expect(runRender([
+      makeNode({ sourcePath: "p.md", markdown: "Body.\n" }),
+    ], { style })).rejects.toThrow(
+      'forme-render-static: StyleDocument theme "night" is unresolved; compose it before rendering',
+    );
   });
 
   it("leaves optional metadata null without public-site config", async () => {

@@ -22,8 +22,10 @@
 # in CI. A bare `cargo test -p lang-aot` would make an accidental omission harder
 # to review.
 #
-# ONE TARGET IS DELIBERATELY EXCLUDED because it is red today:
+# ONE FULL TARGET IS DELIBERATELY EXCLUDED because it is red today:
 #
-#   lang_matrix          Linux exposes cross-language LLVM libm-link gaps
-#                        (VM-005) plus ALGOL-owned native-AOT refusals (VM-D005).
+#   lang_matrix          ALGOL-owned native-AOT four-dimensional-array cases
+#                        remain red on Linux (VM-D005). Its focused non-ALGOL
+#                        BASIC/libm differential is protected separately below.
 cargo test -p lang-aot --lib --test array_ref_tracing --test beam_cons --test beam_emit --test beam_predicates --test beam_symbols_lambda --test cil_cons --test cil_emit --test cil_lambda --test cil_predicates --test cil_symbols --test clr_real_cons --test clr_real_lambda --test clr_real_predicates --test clr_real_scalar --test clr_real_symbols --test conformance --test e6d2b_dynamic_arith --test end_to_end_smoke --test e6d6_llvm_records --test e6d6b_union_match_tagged --test e6d7a_wasm_closures --test historical_round_trip --test jit_mccarthy --test jvm_cons --test jvm_emit --test jvm_lambda --test jvm_predicates --test jvm_symbols --test llvm_cond --test llvm_cons --test llvm_gc_completion --test llvm_gc_write_barrier --test llvm_lambda --test llvm_predicates --test llvm_scalar --test llvm_symbols --test macos_native_lisp --test macsyma_conformance --test metacircular --test vm_gc_reclamation --test wasm_emit --test wasm_memory_growth
+cargo test -p lang-aot --test lang_matrix t7_differential_random_basic_

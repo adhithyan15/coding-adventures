@@ -409,12 +409,13 @@ console.log(prose, nested);
         # +1: chief-of-staff-channel-store, the durable D18P profile.
         # +1: chief-of-staff-channel-epoch-activation, the D18T coordinator.
         # +1: canonical-cbor, the native CBR01 encoder/decoder lane.
-        self.assertEqual(summary.total_projects, 465)
+        # +1: forme-theme-classless, the reusable resolved Style IR theme.
+        self.assertEqual(summary.total_projects, 466)
         self.assertEqual(summary.shared_projects, 288)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
-        self.assertEqual(summary.standalone_emit_projects, 147)
-        self.assertEqual(summary.isolated_standalone_projects, 147)
+        self.assertEqual(summary.standalone_emit_projects, 148)
+        self.assertEqual(summary.isolated_standalone_projects, 148)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -453,7 +454,8 @@ console.log(prose, nested);
         # runtime-grammar-loading fix) had no package-lock.json committed
         # before; running `npm install` to test them produced one.
         # +1: canonical-cbor locks the shared TypeScript compiler toolchain.
-        self.assertEqual(summary.locked_compilers, 459)
+        # +1: forme-theme-classless locks its standalone compiler toolchain.
+        self.assertEqual(summary.locked_compilers, 460)
 
 
 if __name__ == "__main__":

@@ -4,6 +4,65 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - lower `HostProgressRing` to a hand-drawn determinate arc (#13176, UI40)
+
+Fourth (and final native-backend) of the `HostProgressRing` cascade
+(kernel contract → XAML → Flutter → Compose → Qt). Qt Quick Controls 2
+has no off-the-shelf circular *determinate* progress control —
+`ProgressBar` is linear, and `BusyIndicator` (already used for the
+`Icon(glyph: "spinner")` case) is indeterminate-only with no `value`
+property — so this draws the arc by hand with
+`Shape`/`ShapePath`/`PathAngleArc` from `QtQuick.Shapes`, the same
+module already imported for `Path`'s `line`/`curve` kinds.
+`centerX`/`centerY`/`radiusX`/`radiusY` are computed as literal numbers
+in Rust from the part's `width`/`height` style (falling back to
+TaskApp's own 34px `ring-circle` size when unstyled), matching `Path`'s
+`circle` kind's "compute geometry as plain numbers at emit time"
+approach.
+
+That literal-number approach isn't just style — it's required. A first
+draft read `width`/`height` back from the `Shape` itself via QML
+property bindings so the arc would track live resizes, verified against
+an isolated hand-written `qmllint`/`qml`-runtime probe. Compiling a real
+`.mil`/`.mll`/`.msl` triple through `mosaic-compile --backend qt` and
+running the *actual* generated output (not the isolated probe) surfaced
+two real bugs the isolated probe couldn't: `Shape` derives its own
+`implicitWidth`/`implicitHeight` from its contained path's rendered
+bounding box by default, and that bounding box depended on
+`PathAngleArc`'s radii, which read `Shape.width`/`.height`, which (via
+Shape's default `width: implicitWidth` binding) depended back on the
+bounding box — a genuine circular binding loop, confirmed by a real
+`qml` runtime run reporting "Binding loop detected for property
+implicitWidth" and rendering a garbage near-zero ring. Separately, the
+first draft's unqualified `width`/`height`/`value` references inside
+`PathAngleArc` — legal and correctly resolved in the isolated
+single-component probe — threw a runtime `ReferenceError: value is not
+defined` once embedded in the real generated file's deeper structure
+under `pragma ComponentBehavior: Bound`. Computing the geometry as
+literal Rust numbers (mosstyle `width`/`height` are always static
+literal pixel values anyway — there's no live-resizing-ring case this
+loses) sidesteps both bugs at the root. Re-verified against the real
+generated output after the fix: `qmllint` clean with zero warnings, and
+a real `qml` runtime window rendered without crashing while cycling
+`value` through 0, 50, 100, and a fractional 33.5.
+
+`value` supports the full `Number`/`SlotRef`/`Expr` three-way binding
+from day one via a new `required_progress_ring_value` helper (unlike
+`Path`'s coordinate props, live binding is required — the whole point
+is rendering a live `ring-percent-value`). A sibling `property real
+value` is declared directly on the `Shape` for Qt's generic
+accessibility bridge (`QAccessibleQuickItem`, which wraps every
+`QQuickItem`) to pick up via `QAccessibleValueInterface` property
+introspection. `a11y-label` reuses the existing
+`build_text_accessible_name_attribute` helper (`Accessible.name`),
+matching `HostSlider`'s own accessibility pattern. Widened
+`tree_needs_shapes_import` so a `HostProgressRing`-only layout (no
+`Path`) still imports `QtQuick.Shapes`.
+
+Narrowed `mosaic-package-artifact-builder`'s `HostProgressRing`
+degradation arm to also exclude `Backend::Qt` — only SwiftUI (tracked
+separately in #13206, unbuildable on this dev box) remains.
+
 ### Added - lower `Path` to real QML vector geometry (#12028 item 3, UI39)
 
 Qt is the second backend to render the new kernel drawing primitive

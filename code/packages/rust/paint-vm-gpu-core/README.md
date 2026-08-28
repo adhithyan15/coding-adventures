@@ -7,7 +7,8 @@ Instead, it converts `paint-instructions::PaintScene` into a backend-neutral
 `GpuPaintPlan`:
 
 - Solid vector primitives become indexed triangle meshes.
-- Pixel images become texture-upload records plus textured quads.
+- Pixel images become texture-upload records plus textured quads; URI-backed
+  images use an optional host-owned `GpuImageResolver`.
 - Linear gradients become sampled ramp textures plus gradient UVs on meshes.
 - Radial gradients become sampled 2D textures plus radial UVs on meshes.
 - Rectangular clips become push/pop clip commands.
@@ -29,7 +30,7 @@ backend interprets the PaintScene geometry.
 | `PaintClip` | Push/pop axis-aligned clip bounding rect |
 | `PaintGroup` | Transform and opacity folded into children |
 | `PaintLayer` | Transform and opacity folded into children; filters/blends diagnosed |
-| `PaintImage` | Texture upload plus textured quad |
+| `PaintImage` | Texture upload plus textured quad; URI resolution is caller-owned |
 | `PaintText` | Preserved text command |
 | `PaintGlyphRun` | Preserved positioned glyph command |
 | `PaintGradient` | Linear fills become ramp textures; radial fills become sampled 2D textures |
@@ -39,3 +40,4 @@ backend interprets the PaintScene geometry.
 - Replace simple fan path filling with a robust tessellator.
 - Carry dashed join topology across closed-contour seams.
 - Add glyph atlas planning once text shaping/font metrics are finalized.
+- Add explicit offscreen layer commands for filters and non-normal blend modes.

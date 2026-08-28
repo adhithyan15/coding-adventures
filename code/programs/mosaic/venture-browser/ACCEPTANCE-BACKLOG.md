@@ -28,11 +28,17 @@ cross-platform proving application. Items are ordered by risk and dependency.
   structural screenshot oracle, PNG diagnostics, package-contract coverage,
   and production Cairo, Metal, and Direct2D adapter sweeps. The sweep also
   closed decoded-image rendering in `paint-metal`.
-- [ ] **P2 paint convergence — fully ordered Metal image composition.** Promote
+- [x] **P2 paint convergence — fully ordered Metal image composition.** Promote
   decoded images from the isolated post-readback compositor into ordered Metal
-  draw commands when mixed vector/image painter ordering, URI-backed sources,
-  layer filters, and blend modes land. Preserve the current affine, clip,
-  opacity, scaling, and alpha behavior as the backend-neutral contract.
+  draw commands. Completed by moving Metal onto the shared GPU command plan,
+  adding a host-owned URI resolver, texture-backed CoreText ordering, gradient
+  textures, nested scissor clips, and real-page acceptance while preserving
+  affine, opacity, scaling, and source-over behavior.
+- [ ] **P2 paint convergence — isolated GPU layers.** Extend the shared GPU
+  command plan with explicit offscreen layer boundaries, then implement ordered
+  filter chains and non-normal blend modes in Metal without flattening layer
+  opacity into child draws. Reuse the command contract in WGPU and future GPU
+  backends instead of introducing backend-specific scene traversal.
 - [x] **P2 browser convergence — international inline content.** Expand the
   representative real-page corpus through bidi text, script fallback,
   grapheme-aware selection geometry, and UAX #14 line-breaking without moving

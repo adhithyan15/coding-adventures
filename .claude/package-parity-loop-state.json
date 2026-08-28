@@ -12,35 +12,35 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 13252,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13252",
-    "branch": "codex/atbash-neutral-fixture-consumers",
+    "number": 13287,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13287",
+    "branch": "codex/elixir-windows-build-front-toolchain-contract",
     "status": "open"
   },
   "last_ci_action": {
-    "observed_at": "2026-08-27T18:18:01Z",
-    "pr_number": 13252,
-    "run_id": 33098332700,
+    "observed_at": "2026-08-28T03:11:00Z",
+    "pr_number": 13287,
+    "run_id": 33114267618,
     "attempt": 1,
-    "status": "ci-failure-repair-validated",
-    "notes": "Windows build job 98615097826 failed after 26 affected packages passed because elixir/atbash_cipher had no BUILD_windows override and invoked the fallback BUILD even though the workflow intentionally does not install Erlang/Elixir on Windows. The focused repair adds the same explicit truthful hosted-Windows skip used by the established Scytale and Vigenere Elixir packages; an isolated-cache current Windows build selects one changed and affected package and passes, while Ubuntu job 98615097905 provides real native Mix evidence. Auto-merge remains disabled until the repair head completes CI acceptably."
+    "status": "conflict-rebase-validated",
+    "notes": "All 41 replacement checks completed successfully, but main advanced again and GitHub reported a merge conflict. Rebased onto exact origin/main 42fd823bace6896dcba08a570a1a1ee52a3a60f1; the only conflict was the setup-beam explanatory comment in ci.yml, resolved by preserving the new Windows 2025 / VS 2026 pin evidence and this tranche's narrow machine-reported NIF and Metal exception contract. Prior conflict rebases passed all 38 twig-to-beam tests/doc-tests, clippy, Go build-tool tests and vet, the 12-test Elixir Windows audit suite, the 285-root fail-closed validator, actionlint, JSON parsing, and diff checks. Auto-merge remains disabled until the newest replacement checks pass."
   },
   "last_inventory": {
-    "revision": "a45a88e98a50fb363eb68d441926e59a523a9106",
+    "revision": "0f22582f5a0ddaceaae4f8f6ba56f3b2d5a4fd30",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1376,
-    "implementation_package_slots": 4586,
-    "all_reported_identities": 1415,
+    "implementation_identities": 1379,
+    "implementation_package_slots": 4590,
+    "all_reported_identities": 1418,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 266,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
-    "two_to_four_packages": 167,
-    "two_to_four_missing_slots": 2100,
-    "singleton_packages": 911,
-    "singleton_missing_slots": 12754,
-    "rust_singletons": 723,
+    "two_to_four_packages": 168,
+    "two_to_four_missing_slots": 2113,
+    "singleton_packages": 913,
+    "singleton_missing_slots": 12782,
+    "rust_singletons": 726,
     "ocaml_packages": 0,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -1638,7 +1638,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, and rendering kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate browser/Vite/filesystem/UI hosts from deterministic portable cores, define fixtures and dependency order, and record narrow applicability exceptions before any port. PR #13244 merged as f7d0b913d3175096197b1d325863012dff90741b without changing package topology; live PR #13251 now owns the overlapping forme-collect-chronological, forme-render-static, and Forme roadmap surfaces, so do not select or implement this owner until that collision clears."
+      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, and provenance behavior from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, and #13268 are merged, so the earlier live-path block has cleared."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -2379,28 +2379,48 @@
     {
       "id": "atbash-language-neutral-fixture-established-lane-consumers",
       "title": "Execute the normative Atbash corpus in every established lane",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["classical-cipher-language-neutral-fixtures-and-analysis-contract"],
       "branch": "codex/atbash-neutral-fixture-consumers",
       "pr_number": 13252,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13252",
       "opened_at": "2026-08-27T17:24:17Z",
       "implementation_revision": "0706144dd19da3d34a0059f0c5b7e5cf1501407b",
+      "merged_revision": "1606285f832b9e2cc0743a5339b4309925f323c5",
+      "merged_at": "2026-08-27T19:30:54Z",
       "selection_revision": "0302e4e8f35a6e79d7bd385ae91fde710176a53c",
       "selection_notes": "Selected after PR #13224 completed all 41 terminal acceptable checks and squash auto-merge merged its final head as 0302e4e8f35a6e79d7bd385ae91fde710176a53c without a manual merge command. The exact-main schema-3 inventory is unchanged at 15 established lanes, 1,375 implementation identities, 4,585 slots, 1,414 all-reported identities, bands 175/266, 123/934, 167/2,100, and 910/12,740, 722 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets; no inventory-driven gap is newly unowned. This dependency-ready owner reaches all 15 established lanes with the six complete CR01 objects through the bounded dependency-free generated-consumer pattern already proven for Scytale and Vigenere. It is selected ahead of disconnected single-package contracts while the now dependency-complete five-front Vigenere BUILD hardening remains the immediate operational sibling. OCaml remains collision-blocked by open PR #12149 on required Go validator and entry-point paths, and the newly specific Forme family owner remains path-blocked by open PR #13244. A live open-PR scan found zero exact overlap with Atbash packages, CR01, the classical-cipher fixture, prospective generator/CI surfaces, state, roadmap, or root changelog.",
       "rebase_notes": "Rebased conflict-free twice before publication, finally onto exact origin/main a45a88e98a50fb363eb68d441926e59a523a9106. Intervening Persian, Japanese, and Spanish curriculum work, ALGOL negative-exponent folding, merged Forme PR #13244, Venture navigation convergence, HTML parser recovery, Mermaid Gantt calendar formats, and Language Ladder ownership sharding have no exact overlap with the Atbash package, fixture, generator, CI, state, roadmap, or changelog implementation surfaces. The refreshed collision-checked schema-3 inventory records 15 established lanes, 1,376 implementation identities, 4,586 slots, 1,415 all-reported identities, bands 175/266, 123/934, 167/2,100, and 911/12,754, 723 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The newly exposed Rust-only browser-navigation identity has a dedicated pending classification owner; live PR #13251 now collision-blocks the registered Forme owner without overlapping this Atbash tranche.",
       "validation_notes": "A dependency-free bounded generator validates the exact classical-ciphers-v1 profile and ordered six-object Atbash roster, strict UTF-8/JSON, duplicate keys, non-finite numbers, surrogates, closed case shapes, source-safe IDs, fixture SHA-256, 131,072-byte/depth-8/8,193-scalar ceilings, and renders one native consumer for every established lane. Thirteen generator tests cover all renderers, hostile interpolation-like text, complete expected-object projection, bounded stale-output reads, and fail-closed drift of F# and Haskell's explicit package-test registrations; generator check, Ruff check/format, Bandit, credential/diff checks, and the central parity/fixture/state suites pass. Native suites pass in C# (7/7; 100% line/branch/method), Dart (9 plus analyze/format/coverage), Elixir (36; 100% coverage), F# (7/7; 86.66% line, 75% branch, 100% method), Go (all six generated; 100% coverage plus vet/format), Haskell (17 examples), Java (19), Kotlin (25), Lua (30), Perl (99 assertions), Python (34; 100% coverage), Ruby (31 runs/96 assertions), Rust (27 unit, six generated assertions, four doctests plus format), Swift (29), and TypeScript (30; 100% coverage plus typecheck). The exact CI Windows diff plan evaluates 45 Starlark files, discovers 5,092 packages, validates five orphan exceptions, and selects 15 changed Atbash roots plus 27 affected packages. Its first run passed 26 and exposed that hosted Windows intentionally lacks Erlang/Elixir; the focused repair adds a truthful BUILD_windows platform skip while Linux and direct Mix tests remain executable evidence. An isolated-cache current Windows plan then selects one changed/affected Elixir Atbash root and passes, and Ubuntu CI job 98615097905 records the package natively BUILT via Mix. NuGet vulnerability checks and the production TypeScript audit report no vulnerabilities; cargo audit reports no vulnerabilities and two allowed workspace-wide unmaintained warnings; Python exports no runtime dependency beyond the editable package itself. Independent correctness review found and drove fail-closed registration drift checks plus validation-artifact cleanup; final security/authority review reports no actionable finding and no production authority or dependency expansion. The exact rebased schema-3 report is collision-clean with the inventory recorded above.",
-      "publication_notes": "Opened ready-for-review PR #13252 at 2026-08-27T17:24:17Z from fully validated implementation head 0706144dd19da3d34a0059f0c5b7e5cf1501407b after a normal first push and confirmation that no parity PR was active. GitHub reports the PR non-draft and MERGEABLE; required checks are queued and mergeStateStatus is BLOCKED, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict.",
+      "publication_notes": "Opened ready-for-review PR #13252 at 2026-08-27T17:24:17Z from fully validated implementation head 0706144dd19da3d34a0059f0c5b7e5cf1501407b after a normal first push and confirmation that no parity PR was active. Focused repair head 70d5f2847e6df41d5b72bd941ebf24bbf7c1fc89 completed all 41 reported checks with 39 successes and two expected skips. GitHub reported MERGEABLE/CLEAN; the loop enabled squash auto-merge, and GitHub merged the PR as 1606285f832b9e2cc0743a5339b4309925f323c5 at 2026-08-27T19:30:54Z without a manual merge command.",
       "notes": "Discovered during the post-#13172 fixture-consumer audit before successor selection. The neutral classical-ciphers-v1 corpus pins six complete Atbash objects, but no established Atbash lane currently references the corpus or compares every complete expected object. Add bounded dependency-free generated consumers or test-only adapters across all 15 established packages, preserving empty production capability profiles and the fixture README's rule that schema validation alone is not conformance."
     },
     {
       "id": "elixir-windows-build-front-toolchain-classification",
       "title": "Classify and harden Elixir Windows build fronts",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-contract"],
+      "branch": "codex/elixir-windows-build-front-toolchain-contract",
+      "pr_number": 13287,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13287",
+      "opened_at": "2026-08-27T20:36:32Z",
+      "implementation_revision": "b17e72130edc097b7f0cbe2483431513408b91f5",
+      "selection_revision": "c2981e655697bd9a9ba82c9b78f20edc9fed31d1",
+      "prepublication_revision": "0f22582f5a0ddaceaae4f8f6ba56f3b2d5a4fd30",
+      "prepublication_notes": "Rebased conflict-free twice, finally onto exact origin/main 0f22582f5a0ddaceaae4f8f6ba56f3b2d5a4fd30. The final collision-checked inventory records 1,379 implementation identities, 4,590 slots, 1,418 all-reported identities, bands 175/266, 123/934, 168/2,113, and 913/12,782, 726 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. New pending owners classify the Rust-only browser-bookmarks portable core and its separately named native file adapter in dependency order. Live PR #13285 shares ci.yml and PR #12149 shares the Go entry point, but their current hunks are line-distinct from this tranche; recheck mergeability if either lands first.",
+      "publication_notes": "Opened ready-for-review PR #13287 at 2026-08-27T20:36:32Z from fully validated implementation head b17e72130edc097b7f0cbe2483431513408b91f5 after a normal first push and confirmation that no parity PR was active. GitHub reports the PR non-draft and MERGEABLE; required checks from two trigger runs are queued or in progress and mergeStateStatus is BLOCKED, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict.",
+      "selection_notes": "Selected after PR #13252 completed 41 terminal acceptable checks and squash auto-merge merged its final head as 1606285f832b9e2cc0743a5339b4309925f323c5 without a manual merge command. The exact collision-checked current-main inventory records 15 established lanes, 1,377 implementation identities, 4,588 slots, 1,416 all-reported identities, bands 175/266, 123/934, 168/2,113, and 911/12,754, 724 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Newly explicit IBM 704 simulator and gate-level owners cover the only topology deltas. The lane-wide Windows audit found 285 Elixir package/program BUILD roots, 158 canonical fallbacks, 127 Windows overrides, and ten explicit echo skips while CI intentionally provisions no Windows BEAM toolchain. This dependency-ready operational contract outranks the five-front Vigenere sibling and classification-only portable families because one pinned toolchain boundary converts the entire pure-BEAM lane from latent false-green or missing-tool failures into native Windows evidence. Open PR #12149 still collision-blocks OCaml's required Go validator and entry-point paths; no live PR overlaps the selected Elixir or workflow surfaces.",
+      "implementation_notes": "The closed v1 fixture and fail-closed validator now audit all 285 discovered Elixir package/program BUILD roots: 278 are native Windows evidence, seven are reviewed stable-code exceptions, 126 use BUILD_windows, 159 fall back to canonical BUILD, and nine are declarative Starlark. CI pins Elixir 1.18.4, OTP 27.3.4.11, windows-2025, and erlef/setup-beam commit 54075bcc5e249e4758d363f27d099f55d843f124. The Go executor reports exact unsupported markers without a shell or success-cache entry and propagates dependency unavailability. Platform planning now schedules a package when deleting its selected platform override changes selection to the canonical fallback. CMD-native overrides repair http1 and zip; Atbash, Scytale, and Vigenere return to real Mix execution. The emitted Windows closure contained all three deleted cipher overrides and completed 16 native builds, seven exact unsupported results, one dependency-unsupported result, and 261 unaffected skips. Local evidence also includes 36/36 Atbash tests at 100%, 20/20 Scytale at 100%, 64/64 Vigenere at 98.9%, 9/9 http1 at 81.16%, 69/69 zip at 92.23%, 12 audit tests with 84% validator coverage, and executor/reporter tests with 90.3% combined coverage. The audit separately registered activation_functions, matrix, and perceptron as a pending missing-BUILD-front owner.",
+      "notes": "Discovered when PR #13252's Windows diff build reached the Elixir Atbash root and failed because the workflow intentionally omitted a Windows BEAM toolchain while the package lacked a BUILD_windows override. This tranche replaces temporary pure-BEAM skips with pinned native execution, preserves only seven reviewed native or Metal exclusions through a machine-readable unsupported protocol, and makes the full lane fail closed against workflow, syntax, count, and exception drift."
+    },
+    {
+      "id": "elixir-activation-matrix-perceptron-build-front-coverage",
+      "title": "Add tested BUILD fronts for the unwatched Elixir neural primitives",
+      "status": "pending",
+      "depends_on": ["elixir-windows-build-front-toolchain-classification"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered when PR #13252's Windows diff build reached the Elixir Atbash root and failed because the workflow intentionally omits erlef/setup-beam on newer Windows hosted-runner images while the package lacked a BUILD_windows override. The focused PR repair records the same truthful skip already used by Scytale and Vigenere, with real Mix evidence retained on Linux and local supported hosts. Audit all Elixir BUILD_windows fronts, define the supported-platform contract, and either provision a pinned validated Windows Erlang/Elixir toolchain or enforce narrow fail-closed skips consistently; do not treat an unconditional echo as native execution evidence."
+      "notes": "Discovered by the selected Elixir lane-wide audit after inventory refresh but before publication. The tracked Mix projects code/packages/elixir/activation_functions, matrix, and perceptron have no BUILD file, so discovery cannot schedule them on any platform. Matrix has a native ExUnit suite; activation_functions and perceptron need package tests before their BUILD fronts can provide evidence. Add tests, canonical CMD-portable BUILD fronts, dependency ordering for perceptron, capability validation, documentation, and real downstream execution without widening the current toolchain/exception tranche."
     },
     {
       "id": "browser-navigation-singleton-classification",
@@ -2410,6 +2430,42 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the collision-checked pre-publication refresh after merged PR #13209 added the Rust-only browser-navigation identity, increasing the implementation inventory by one identity and slot and Rust singletons from 722 to 723. The package is explicitly host-neutral and deterministic: it owns in-memory Back/Forward/Home/Reload history plus fragment-insensitive visited-link identity over canonical url-parser forms, with only the Rust Cargo build capability. Define neutral fixtures for stack boundaries, transactional navigation, reload/home behavior, canonical URL equivalence, fragments, and visited membership; then classify dependency order against url-parser and expand across applicable established lanes or record narrowly reviewed exceptions. Browser fetch, storage, rendering, window, and native paint authority remain outside this owner."
+    },
+    {
+      "id": "browser-bookmarks-singleton-classification",
+      "title": "Classify and fixture the portable browser-bookmarks core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the final collision-checked pre-publication refresh after merged PR #13264 added the Rust-only browser-bookmarks identity. The package is explicitly storage-neutral and deterministic: canonical fragment-preserving BookmarkUrl values, ordered in-memory catalog operations, duplicate persisted-identity rejection, and transactional repository semantics over an object-safe load/save boundary. Define neutral fixtures for canonical equivalence, fragment identity, ordering, update/remove behavior, duplicate recovery, candidate-save failure, bounded catalogs, and normalized errors; then classify dependency order against url-parser and expand across applicable established lanes or record narrowly reviewed exceptions. Native files, JSON, environment variables, profile directories, symlinks, and host persistence remain outside this owner."
+    },
+    {
+      "id": "browser-bookmarks-file-applicable-lane-classification",
+      "title": "Classify the native browser-bookmarks file adapter",
+      "status": "pending",
+      "depends_on": ["browser-bookmarks-singleton-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered with browser-bookmarks after merged PR #13264 added the separately named Rust-only browser-bookmarks-file adapter. Classify its bounded versioned JSON format and crash-safe atomic-replace behavior separately from the portable catalog core; define neutral serialization and failure fixtures where host-independent, then identify applicable desktop lanes for owner-only temporary files, fsync, directory sync, symlink rejection, native profile paths, and VENTURE_BOOKMARKS_PATH handling. Record reviewed not-applicable exceptions where a lane cannot provide the required filesystem guarantees rather than weakening them."
+    },
+    {
+      "id": "ibm704-simulator-two-lane-classification",
+      "title": "Classify IBM 704 simulator portability across Python and Rust",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#13252 refresh after merged PR #13254 added code/packages/rust/ibm704-simulator beside the existing Python implementation. This adds one implementation slot without adding an identity, moves IBM 704 simulator from the singleton band into the two-to-four-lane band, and leaves thirteen established lanes unclassified. Compare the deterministic CPU state, instruction, stepping, error, and resource-limit contracts; then define a portable corpus and dependency-shaped applicable-lane rollout or record a reviewed target-specific exception. Keep the separately named gate-level simulator outside this package owner."
+    },
+    {
+      "id": "ibm704-gatelevel-singleton-classification",
+      "title": "Classify the Rust-only IBM 704 gate-level simulator",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the late collision-checked post-#13252 refresh after merged PR #13270 added the independently named Rust-only ibm704-gatelevel package. Classify its deterministic transistor, netlist, clock, machine-state, instruction, diagnostic, and resource-limit behavior; define a neutral gate-level contract and applicable-lane rollout where portable, or record a reviewed Rust-canonical simulator exception. Keep it separate from the higher-level ibm704-simulator two-lane classification owner."
     },
     {
       "id": "layout-inline-singleton-classification",

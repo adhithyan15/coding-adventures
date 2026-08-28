@@ -28,7 +28,10 @@
 // # Failure propagation
 //
 // If a package fails, all its transitive dependents are marked "dep-skipped".
-// There is no point building something whose dependency is broken.
+// A package with a closed platform-unsupported BUILD protocol is reported as
+// "unsupported" without invoking a shell; its dependents are marked
+// "dep-unsupported". There is no point building something whose dependency is
+// broken or unavailable on this platform.
 //
 // # Progress tracking
 //
@@ -58,11 +61,32 @@ import (
 // BuildResult holds the outcome of building a single package.
 type BuildResult struct {
 	PackageName string  // Qualified name, e.g. "python/logic-gates"
-	Status      string  // "built", "failed", "skipped", "dep-skipped", "would-build"
+	Status      string  // built, failed, skipped, dep-skipped, unsupported, dep-unsupported, or would-build
+	ReasonCode  string  // Stable machine code for unsupported outcomes
 	Duration    float64 // Wall-clock seconds spent building
 	Stdout      string  // Combined stdout from all BUILD commands
 	Stderr      string  // Combined stderr from all BUILD commands
 	ReturnCode  int     // Exit code of the last failing command, or 0
+}
+
+var unsupportedBuildCommandRe = regexp.MustCompile(
+	`^echo BUILD_TOOL_UNSUPPORTED:([A-Z][A-Z0-9_]{2,63}) -- skipped$`,
+)
+
+// unsupportedBuildCode recognizes the complete platform-unsupported protocol.
+// It is deliberately closed: exactly one command, no shell operators, and one
+// bounded uppercase diagnostic code. The caller does not execute the command;
+// the echo-shaped record survives plan serialization while remaining harmless
+// to older build-tool readers.
+func unsupportedBuildCode(commands []string) (string, bool) {
+	if len(commands) != 1 {
+		return "", false
+	}
+	match := unsupportedBuildCommandRe.FindStringSubmatch(strings.TrimSpace(commands[0]))
+	if len(match) != 2 {
+		return "", false
+	}
+	return match[1], true
 }
 
 // runPackageBuild executes all BUILD commands for a single package.
@@ -76,6 +100,13 @@ type BuildResult struct {
 // On Windows, we use "cmd /C"; on Unix, "sh -c".
 func runPackageBuild(pkg discovery.Package, clippy bool) BuildResult {
 	start := time.Now()
+	if code, ok := unsupportedBuildCode(pkg.BuildCommands); ok {
+		return BuildResult{
+			PackageName: pkg.Name,
+			Status:      "unsupported",
+			ReasonCode:  code,
+		}
+	}
 
 	return runCommands(pkg, clippyGatedCommands(pkg, clippy), start)
 }
@@ -358,6 +389,7 @@ func ExecuteBuilds(
 
 	failedPackages := make(map[string]bool)
 	var failedMu sync.Mutex // protects failedPackages
+	unsupportedPackages := make(map[string]bool)
 
 	for _, level := range groups {
 		// Determine what to build in this level.
@@ -368,12 +400,14 @@ func ExecuteBuilds(
 			if !ok {
 				continue
 			}
+			unsupportedCode, selfUnsupported := unsupportedBuildCode(pkg.BuildCommands)
 
 			// Check if any dependency of this package failed.
 			// In our graph, edge A→B means B depends on A. So B's deps
 			// are its predecessors. We check if any predecessor (transitively)
 			// has failed.
 			depFailed := false
+			depUnsupported := false
 			preds := collectTransitivePredecessors(name, graph)
 			failedMu.Lock()
 			for dep := range preds {
@@ -381,16 +415,31 @@ func ExecuteBuilds(
 					depFailed = true
 					break
 				}
+				if unsupportedPackages[dep] {
+					depUnsupported = true
+				}
 			}
 			failedMu.Unlock()
 
-			if depFailed {
+			if depFailed && !selfUnsupported {
 				resultsMu.Lock()
 				results[name] = BuildResult{
 					PackageName: name,
 					Status:      "dep-skipped",
 				}
 				resultsMu.Unlock()
+				tracker.Send(progress.Event{Type: progress.Skipped, Name: name})
+				continue
+			}
+			if depUnsupported && !selfUnsupported {
+				resultsMu.Lock()
+				results[name] = BuildResult{
+					PackageName: name,
+					Status:      "dep-unsupported",
+					ReasonCode:  "DEPENDENCY_UNSUPPORTED",
+				}
+				resultsMu.Unlock()
+				unsupportedPackages[name] = true
 				tracker.Send(progress.Event{Type: progress.Skipped, Name: name})
 				continue
 			}
@@ -419,6 +468,19 @@ func ExecuteBuilds(
 					Status:      "skipped",
 				}
 				resultsMu.Unlock()
+				tracker.Send(progress.Event{Type: progress.Skipped, Name: name})
+				continue
+			}
+
+			if selfUnsupported {
+				resultsMu.Lock()
+				results[name] = BuildResult{
+					PackageName: name,
+					Status:      "unsupported",
+					ReasonCode:  unsupportedCode,
+				}
+				resultsMu.Unlock()
+				unsupportedPackages[name] = true
 				tracker.Send(progress.Event{Type: progress.Skipped, Name: name})
 				continue
 			}
