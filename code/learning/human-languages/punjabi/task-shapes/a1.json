@@ -1,0 +1,246 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "level": "A1",
+  "target": {
+    "name": "Coding Adventures Punjabi A1 Assessment — project-defined equivalent",
+    "basis": "project-defined"
+  },
+  "sources": [
+    {
+      "id": "ca-hl16-assessment-policy",
+      "title": "HL16 — Exam-ready books and the gentle writing ramp",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL16-exam-ready-books-and-writing-ramp.md",
+      "published": "2026-08-20",
+      "accessed": "2026-08-21"
+    },
+    {
+      "id": "ca-hl18-task-shapes",
+      "title": "HL18 — Four-skill task shapes",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL18-four-skill-task-shapes.md",
+      "published": "2026-08-20",
+      "accessed": "2026-08-21"
+    },
+    {
+      "id": "ca-punjabi-assessment",
+      "title": "Coding Adventures Punjabi Assessment Specification",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/punjabi/assessment-spec.md",
+      "published": "2026-08-21",
+      "accessed": "2026-08-21"
+    }
+  ],
+  "administration": {
+    "writtenMinutes": 58,
+    "speakingMinutes": 10,
+    "speakingGroupMaximum": 1,
+    "speakingPreparationMinutes": 5,
+    "deliveryModes": ["paper", "recorded-audio", "live-interlocutor"]
+  },
+  "passRule": {
+    "maximumPoints": 400,
+    "passPoints": 240,
+    "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {
+      "reading": 0.6,
+      "listening": 0.6,
+      "writing": 0.6,
+      "speaking": 0.6
+    },
+    "note": "Each skill is a separate 100-point paper and must independently reach 60/100; the 240-point headline sum cannot compensate for a failed paper."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 20,
+      "parts": [
+        {
+          "id": "a1-reading-signs-and-forms",
+          "promptModes": ["written-gurmukhi", "written-icon-supported-instruction"],
+          "promptGenres": ["sign and label set; no source over 90 words", "practical form extract; no source over 90 words"],
+          "responseModes": ["selection", "detail match"],
+          "items": 7,
+          "stimulusLength": { "unit": "words", "minimum": 70, "maximum": 90, "approximate": false },
+          "responseLength": { "unit": "items", "minimum": 1, "maximum": 1, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 35, "criteria": ["meaning selection", "practical-detail recognition", "script recognition"] },
+          "aids": { "allowed": ["marking on the question paper"], "forbidden": ["romanization", "dictionary", "translator"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-punjabi-assessment"]
+        },
+        {
+          "id": "a1-reading-short-messages",
+          "promptModes": ["written-gurmukhi"],
+          "promptGenres": ["short personal message set; no source over 90 words", "short public notice set; no source over 90 words"],
+          "responseModes": ["selection", "short detail match"],
+          "items": 7,
+          "stimulusLength": { "unit": "words", "minimum": 90, "maximum": 120, "approximate": false },
+          "responseLength": { "unit": "items", "minimum": 1, "maximum": 1, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 35, "criteria": ["gist recognition", "detail recognition", "communicative-purpose recognition"] },
+          "aids": { "allowed": ["marking on the question paper"], "forbidden": ["romanization", "dictionary", "translator"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-punjabi-assessment"]
+        },
+        {
+          "id": "a1-reading-personal-descriptions",
+          "promptModes": ["written-gurmukhi"],
+          "promptGenres": ["personal description set; no source over 90 words", "everyday profile set; no source over 90 words"],
+          "responseModes": ["selection", "person-to-detail match"],
+          "items": 6,
+          "stimulusLength": { "unit": "words", "minimum": 90, "maximum": 140, "approximate": false },
+          "responseLength": { "unit": "items", "minimum": 1, "maximum": 1, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 30, "criteria": ["person-detail association", "explicit-information recognition", "simple inference"] },
+          "aids": { "allowed": ["marking on the question paper"], "forbidden": ["romanization", "dictionary", "translator"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-punjabi-assessment"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "listening",
+      "minutes": 18,
+      "parts": [
+        {
+          "id": "a1-listening-announcements",
+          "promptModes": ["recorded Punjabi at 90-110 words per minute"],
+          "promptGenres": ["short public announcement", "practical recorded notice"],
+          "responseModes": ["selection", "picture match"],
+          "items": 6,
+          "stimulusLength": { "unit": "seconds", "minimum": 60, "maximum": 90, "approximate": false },
+          "responseLength": { "unit": "items", "minimum": 1, "maximum": 1, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 35, "criteria": ["gist recognition", "time-place-detail recognition"] },
+          "aids": { "allowed": ["nonverbal picture cue", "notes on the question paper"], "forbidden": ["transcript", "dictionary", "translator"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-punjabi-assessment"]
+        },
+        {
+          "id": "a1-listening-short-exchanges",
+          "promptModes": ["recorded Punjabi at 90-110 words per minute"],
+          "promptGenres": ["short everyday exchange", "simple transaction"],
+          "responseModes": ["selection", "speaker-intention match"],
+          "items": 6,
+          "stimulusLength": { "unit": "seconds", "minimum": 90, "maximum": 120, "approximate": false },
+          "responseLength": { "unit": "items", "minimum": 1, "maximum": 1, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 35, "criteria": ["exchange gist", "speaker intention", "specific detail"] },
+          "aids": { "allowed": ["nonverbal picture cue", "notes on the question paper"], "forbidden": ["transcript", "dictionary", "translator"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-punjabi-assessment"]
+        },
+        {
+          "id": "a1-listening-personal-account",
+          "promptModes": ["recorded Punjabi at 90-110 words per minute"],
+          "promptGenres": ["short personal account", "familiar daily-routine description"],
+          "responseModes": ["selection", "sequence match"],
+          "items": 5,
+          "stimulusLength": { "unit": "seconds", "minimum": 120, "maximum": 180, "approximate": false },
+          "responseLength": { "unit": "items", "minimum": 1, "maximum": 1, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 30, "criteria": ["account gist", "event sequence", "personal detail"] },
+          "aids": { "allowed": ["nonverbal picture cue", "notes on the question paper"], "forbidden": ["transcript", "dictionary", "translator"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-punjabi-assessment"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "writing",
+      "minutes": 20,
+      "parts": [
+        {
+          "id": "a1-writing-practical-form",
+          "promptModes": ["written-gurmukhi", "written support-language instruction"],
+          "promptGenres": ["practical personal-information form"],
+          "responseModes": ["handwritten form completion in Gurmukhi"],
+          "items": 1,
+          "stimulusLength": { "unit": "words", "minimum": 40, "maximum": 70, "approximate": false },
+          "responseLength": { "unit": "items", "minimum": 6, "maximum": 8, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 40, "criteria": ["task fulfilment", "requested content", "Punjabi control", "orthographic control"] },
+          "aids": { "allowed": ["unscored example field"], "forbidden": ["copyable answer model", "romanization", "dictionary", "translator", "spell-checker"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-punjabi-assessment"]
+        },
+        {
+          "id": "a1-writing-reader-purpose-message",
+          "promptModes": ["written-gurmukhi", "written support-language instruction"],
+          "promptGenres": ["named-reader everyday message", "purpose-led personal note"],
+          "responseModes": ["independent handwritten message in Gurmukhi"],
+          "items": 1,
+          "stimulusLength": { "unit": "words", "minimum": 25, "maximum": 50, "approximate": false },
+          "responseLength": { "unit": "words", "minimum": 30, "maximum": 40, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 60, "criteria": ["task fulfilment and relevant content", "comprehensibility and organisation", "Punjabi vocabulary and grammar", "orthographic control"] },
+          "aids": { "allowed": ["unscored task example"], "forbidden": ["copyable answer model", "romanization", "dictionary", "translator", "spell-checker"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-punjabi-assessment"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "speaking",
+      "minutes": 10,
+      "parts": [
+        {
+          "id": "a1-speaking-personal-interview",
+          "promptModes": ["live-speech"],
+          "promptGenres": ["familiar personal interview"],
+          "responseModes": ["short spoken personal responses"],
+          "items": 5,
+          "stimulusLength": { "unit": "seconds", "minimum": 10, "maximum": 45, "approximate": false },
+          "responseLength": { "unit": "seconds", "minimum": 60, "maximum": 120, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 30, "criteria": ["task fulfilment and relevant content", "interaction", "Punjabi vocabulary and grammar", "pronunciation and fluency"] },
+          "aids": { "allowed": [], "forbidden": ["written answer script", "romanization", "dictionary", "translator"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-punjabi-assessment"]
+        },
+        {
+          "id": "a1-speaking-prepared-description",
+          "promptModes": ["written-gurmukhi", "nonverbal picture cue"],
+          "promptGenres": ["familiar person, place, object, or routine"],
+          "responseModes": ["one-minute prepared spoken description"],
+          "items": 1,
+          "stimulusLength": { "unit": "words", "minimum": 10, "maximum": 30, "approximate": false },
+          "responseLength": { "unit": "seconds", "minimum": 60, "maximum": 60, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 30, "criteria": ["task fulfilment and relevant content", "organisation", "Punjabi vocabulary and grammar", "pronunciation and fluency"] },
+          "aids": { "allowed": ["examiner-provided prompt card", "paper notes made during preparation"], "forbidden": ["written answer script", "romanization", "dictionary", "translator"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-punjabi-assessment"]
+        },
+        {
+          "id": "a1-speaking-transactional-role-play",
+          "promptModes": ["live-speech", "nonverbal situation cue"],
+          "promptGenres": ["simple everyday transaction"],
+          "responseModes": ["spoken transactional role-play"],
+          "items": 1,
+          "stimulusLength": { "unit": "seconds", "minimum": 10, "maximum": 30, "approximate": false },
+          "responseLength": { "unit": "seconds", "minimum": 60, "maximum": 120, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 40, "criteria": ["task fulfilment and relevant content", "interaction and repair", "Punjabi vocabulary and grammar", "pronunciation and fluency"] },
+          "aids": { "allowed": ["examiner-provided situation cue"], "forbidden": ["written answer script", "romanization", "dictionary", "translator"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-punjabi-assessment"]
+        }
+      ],
+      "variants": []
+    }
+  ]
+}
