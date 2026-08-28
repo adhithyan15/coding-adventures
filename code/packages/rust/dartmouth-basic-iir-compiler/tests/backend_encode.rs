@@ -158,6 +158,25 @@ fn basic_for_loop_lowers_to_clr_il() {
         "FOR loop must emit a conditional branch; got:\n{il}");
 }
 
+#[test]
+fn basic_transcendentals_lower_to_clr_math_calls() {
+    use iir_to_cil_bytecode::{emit_il, validate_iir_for_clr, IIRClrConfig};
+    let m = compile_source(
+        "10 LET A = SIN(0)\n20 LET B = COS(0)\n30 LET C = LOG(1)\n40 LET D = EXP(0)\n50 END\n",
+        "basic_transcendentals",
+    )
+    .expect("BASIC transcendental program compiles to IIR");
+    assert!(validate_iir_for_clr(&m).is_empty());
+    let il = emit_il(&m, &IIRClrConfig::default())
+        .expect("transcendental IIR lowers to textual CLR IL");
+    for method in ["Sin", "Cos", "Log", "Exp"] {
+        assert!(
+            il.contains(&format!("System.Math::{method}")),
+            "expected System.Math::{method} call in:\n{il}",
+        );
+    }
+}
+
 // ===========================================================================
 // BEAM
 // ===========================================================================

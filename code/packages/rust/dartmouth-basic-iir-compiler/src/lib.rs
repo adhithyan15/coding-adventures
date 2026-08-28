@@ -1794,11 +1794,13 @@ impl Compiler {
     /// | `INT(X)` | `real_to_int_floor` → `int_to_real` | floor, result is f64 |
     /// | `ABS(X)` | inline if/neg/jmp    | store-per-branch, no phi          |
     /// | `SGN(X)` | inline 3-way if/jmp  | -1.0 / 0.0 / 1.0 per BA7 model   |
+    /// | `SIN(X)` | `f64_sin`            | radians                            |
+    /// | `COS(X)` | `f64_cos`            | radians                            |
+    /// | `LOG(X)` | `f64_ln`             | natural logarithm                  |
+    /// | `EXP(X)` | `f64_exp`            | natural exponential                |
     /// | `ATN(X)` | `f64_atan`           | arctan via libm/Math.atan etc.     |
     /// | `TAN(X)` | `f64_tan`            | tangent via libm/Math.tan etc.     |
     ///
-    /// `TAN` and `ATN` now also map to `f64_tan`/`f64_atan` IIR ops (AL8-arctan
-    /// infrastructure, same pattern as SIN/COS/LOG/EXP from BA-trig).
     /// `RND` still needs a cross-backend RNG and is rejected with a clear error.
     fn emit_builtin_fn(&mut self, name: &str, node: &GrammarASTNode)
         -> Result<ExprValue, CompileError>
@@ -1898,6 +1900,22 @@ impl Compiler {
                 self.emit("label", None, vec![Operand::Var(zero_lbl)], "void");
                 self.emit("const", Some(&dest), vec![Operand::Float(0.0)], "f64");
                 self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
+                Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
+            }
+
+            // Dartmouth's deterministic transcendental family maps directly to
+            // the AL8 IIR substrate every standard backend already implements.
+            // LOG is the natural logarithm in the 1964 BASIC function set.
+            "sin" | "cos" | "log" | "exp" => {
+                let op = match name {
+                    "sin" => "f64_sin",
+                    "cos" => "f64_cos",
+                    "log" => "f64_ln",
+                    "exp" => "f64_exp",
+                    _ => unreachable!(),
+                };
+                let dest = self.fresh_temp();
+                self.emit(op, Some(&dest), vec![Operand::Var(arg.slot)], "f64");
                 Ok(ExprValue { slot: dest, ty: BasicScalarType::Real })
             }
 
@@ -2997,6 +3015,24 @@ mod tests {
             && i.type_hint == "f64"
             && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == widened)),
             "expected widened input temp to move into X");
+    }
+
+    /// Dartmouth's deterministic transcendental builtins reuse the shared AL8
+    /// f64 operations; the frontend contributes only the spelling-to-op map.
+    #[test]
+    fn compiles_deterministic_transcendental_builtins() {
+        let m = compile(
+            "10 PRINT SIN(0)\n20 PRINT COS(0)\n30 PRINT LOG(1)\n40 PRINT EXP(0)\n50 END\n",
+        )
+        .expect("deterministic transcendental builtins compile");
+        let body = &m.functions[0].instructions;
+        for op in ["f64_sin", "f64_cos", "f64_ln", "f64_exp"] {
+            assert_eq!(
+                body.iter().filter(|instr| instr.op == op).count(),
+                1,
+                "expected exactly one {op} instruction",
+            );
+        }
     }
 
     /// E4-dyn: `INPUT A$` reads a whole line as a *runtime string* via the
