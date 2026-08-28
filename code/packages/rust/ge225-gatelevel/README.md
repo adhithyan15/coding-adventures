@@ -19,8 +19,11 @@ words, continuous reader slots, bounded card/paper-tape/typewriter queues,
 shared N-command routing, readiness branches, parity/overrun/priority alarms,
 atomic transfer validation, and functional-oracle lockstep coverage. The 33
 combined tests cover 83.48% of core lines (1,339/1,604). The later
-P006B3 and P006C slices add selector/API state, then the separate AAU datapaths
-and a full instruction-family differential audit.
+P006B3 slice adds 1,085 DFF-backed controller/API bits: eight controller status
+banks, bounded selector commands, condition branches, ready-event latches,
+special X-group 32 vectoring/return, and BRU target inhibition. Its 13 new tests
+bring the combined suite to 46 tests and 84.92% core line coverage
+(1,650/1,943). P006C adds the separate AAU datapaths and final full-family audit.
 
 Run from `code/packages/rust`:
 
