@@ -19,6 +19,26 @@ variable-length instructions (1, 2, or 3 bytes) and its address space and stack 
 differ enough from the generic VM that building on top of it would require more adapters
 than the implementation itself.
 
+## Rust lifecycle contract
+
+The normative Rust package is `coding-adventures-intel8008-simulator`. It exposes
+checked `load_program`, `step`, and caller-bounded `run` operations plus an owned
+`Intel8008State` snapshot containing registers, all 16 KiB of memory, all eight
+push-down stack words, stack depth, flags, halt state, and every I/O latch.
+
+Lifecycle and port failures use `Intel8008Error`. An oversized or overflowing
+load, an undefined opcode, a variable-length instruction crossing address
+`0x3FFF`, a step after HLT, or an invalid input/output port is detected before
+the failing operation mutates state. `run` validates the image before reset,
+clears memory and CPU outputs, loads at zero, and executes no more than the
+caller-provided instruction limit. External input latches survive reset so a
+host can establish deterministic stimuli before execution.
+
+The conformance boundary classifies every one of the 256 first-byte encodings,
+checks each defined encoding's exact 1/2/3-byte fetch width, and requires the
+gate-level partner to compare complete owned states and traces against this
+functional oracle.
+
 ## Layer Position
 
 ```

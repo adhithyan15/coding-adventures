@@ -54,10 +54,10 @@
 //!
 //! ## The push-down stack
 //!
-//! The 8008 stack is unique: entry[0] IS the program counter. On CALL, the
-//! stack rotates down (entry[0]→entry[1], …) and the target is loaded into
-//! entry[0]. On RETURN, the stack rotates up, restoring the saved return address
-//! into entry[0]. Programs can nest calls at most 7 levels deep before the
+//! The 8008 stack is unique: `entry[0]` IS the program counter. On CALL, the
+//! stack rotates down (`entry[0]`→`entry[1]`, …) and the target is loaded into
+//! `entry[0]`. On RETURN, the stack rotates up, restoring the saved return address
+//! into `entry[0]`. Programs can nest calls at most 7 levels deep before the
 //! oldest saved address is silently overwritten.
 //!
 //! ## Example
@@ -71,10 +71,11 @@
 //! // ADD B    (0x80)
 //! // HLT      (0x76)
 //! let program = &[0x06u8, 0x01, 0x3E, 0x02, 0x80, 0x76];
-//! let traces = sim.run(program, 100);
+//! let traces = sim.run(program, 100)?;
 //! assert_eq!(sim.a(), 3);
 //! assert!(!sim.flags().carry);
 //! assert!(!sim.flags().zero);
+//! # Ok::<(), coding_adventures_intel8008_simulator::Intel8008Error>(())
 //! ```
 
 // ============================================================================
@@ -104,7 +105,12 @@ pub struct Flags {
 
 impl Flags {
     fn zero_state() -> Self {
-        Flags { carry: false, zero: false, sign: false, parity: false }
+        Flags {
+            carry: false,
+            zero: false,
+            sign: false,
+            parity: false,
+        }
     }
 }
 
@@ -112,7 +118,7 @@ impl Flags {
 ///
 /// Produced by `step()` and collected by `run()`. Useful for debugging,
 /// testing, and cross-validating against the gate-level simulator.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Trace {
     /// Address in memory where this instruction was fetched (14-bit).
     pub address: u16,
@@ -132,6 +138,82 @@ pub struct Trace {
     pub mem_address: Option<u16>,
     /// Memory value read or written, if applicable.
     pub mem_value: Option<u8>,
+}
+
+/// A checked simulator failure.
+///
+/// Every failure is detected before the instruction or lifecycle operation
+/// mutates architectural state.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Intel8008Error {
+    /// A program does not fit in the 16 KiB address space at the requested origin.
+    ProgramOutOfRange { start: usize, length: usize },
+    /// The current instruction extends beyond the end of memory.
+    TruncatedInstruction {
+        address: u16,
+        expected: usize,
+        available: usize,
+    },
+    /// The byte at `address` is not a defined Intel 8008 instruction.
+    UnknownOpcode { address: u16, opcode: u8 },
+    /// The CPU has already executed HLT.
+    Halted,
+    /// An input port index was outside 0–7.
+    InputPortOutOfRange { port: usize },
+    /// An output port index was outside 0–23.
+    OutputPortOutOfRange { port: usize },
+}
+
+impl std::fmt::Display for Intel8008Error {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::ProgramOutOfRange { start, length } => write!(
+                formatter,
+                "program of {length} bytes at origin {start:#06X} exceeds 16 KiB memory"
+            ),
+            Self::TruncatedInstruction {
+                address,
+                expected,
+                available,
+            } => write!(
+                formatter,
+                "instruction at {address:#06X} needs {expected} bytes but only {available} remain"
+            ),
+            Self::UnknownOpcode { address, opcode } => {
+                write!(formatter, "unknown opcode {opcode:#04X} at {address:#06X}")
+            }
+            Self::Halted => formatter.write_str("CPU is halted"),
+            Self::InputPortOutOfRange { port } => {
+                write!(formatter, "input port {port} is outside 0..=7")
+            }
+            Self::OutputPortOutOfRange { port } => {
+                write!(formatter, "output port {port} is outside 0..=23")
+            }
+        }
+    }
+}
+
+impl std::error::Error for Intel8008Error {}
+
+/// Complete immutable architectural state owned by the caller.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Intel8008State {
+    /// Physical B, C, D, E, H, L, unused-M-slot, and A register storage.
+    pub registers: [u8; 8],
+    /// Complete 16 KiB unified memory image.
+    pub memory: Box<[u8; 16384]>,
+    /// Push-down stack; entry zero is the live program counter.
+    pub stack: [u16; 8],
+    /// Number of active saved return addresses.
+    pub stack_depth: usize,
+    /// Condition flags.
+    pub flags: Flags,
+    /// Whether HLT has executed.
+    pub halted: bool,
+    /// External input-port latches.
+    pub input_ports: [u8; 8],
+    /// External output-port latches.
+    pub output_ports: [u8; 24],
 }
 
 // ============================================================================
@@ -179,6 +261,7 @@ const ALU_IMM_MNEMONICS: [&str; 8] = ["ADI", "ACI", "SUI", "SBI", "ANI", "XRI", 
 /// `stack[0]` is ALWAYS the current program counter. `stack[1..=7]` hold
 /// saved return addresses in LIFO order. `stack_depth` tracks how many
 /// CALL levels are currently active (0 = no active calls).
+#[derive(Clone)]
 pub struct Simulator {
     /// General-purpose registers indexed by 3-bit opcode field.
     /// Index 6 (M) is unused here; M accesses go through hl_address().
@@ -226,22 +309,38 @@ impl Simulator {
     // -------------------------------------------------------------------------
 
     /// Accumulator (register A).
-    pub fn a(&self) -> u8 { self.regs[REG_A] }
+    pub fn a(&self) -> u8 {
+        self.regs[REG_A]
+    }
     /// Register B.
-    pub fn b(&self) -> u8 { self.regs[REG_B] }
+    pub fn b(&self) -> u8 {
+        self.regs[REG_B]
+    }
     /// Register C.
-    pub fn c(&self) -> u8 { self.regs[REG_C] }
+    pub fn c(&self) -> u8 {
+        self.regs[REG_C]
+    }
     /// Register D.
-    pub fn d(&self) -> u8 { self.regs[REG_D] }
+    pub fn d(&self) -> u8 {
+        self.regs[REG_D]
+    }
     /// Register E.
-    pub fn e(&self) -> u8 { self.regs[REG_E] }
+    pub fn e(&self) -> u8 {
+        self.regs[REG_E]
+    }
     /// Register H (high byte of address pair).
-    pub fn h(&self) -> u8 { self.regs[REG_H] }
+    pub fn h(&self) -> u8 {
+        self.regs[REG_H]
+    }
     /// Register L (low byte of address pair).
-    pub fn l(&self) -> u8 { self.regs[REG_L] }
+    pub fn l(&self) -> u8 {
+        self.regs[REG_L]
+    }
 
     /// Current 14-bit program counter (always `stack[0] & 0x3FFF`).
-    pub fn pc(&self) -> u16 { self.stack[0] & 0x3FFF }
+    pub fn pc(&self) -> u16 {
+        self.stack[0] & 0x3FFF
+    }
 
     /// 14-bit effective address for the M pseudo-register: `(H & 0x3F) << 8 | L`.
     ///
@@ -252,13 +351,19 @@ impl Simulator {
     }
 
     /// Current condition flags.
-    pub fn flags(&self) -> Flags { self.flags }
+    pub fn flags(&self) -> Flags {
+        self.flags
+    }
 
     /// Number of active CALL frames (0 = no calls outstanding).
-    pub fn stack_depth(&self) -> usize { self.stack_depth }
+    pub fn stack_depth(&self) -> usize {
+        self.stack_depth
+    }
 
     /// True if a HLT instruction has executed.
-    pub fn halted(&self) -> bool { self.halted }
+    pub fn halted(&self) -> bool {
+        self.halted
+    }
 
     // -------------------------------------------------------------------------
     // I/O ports
@@ -266,16 +371,35 @@ impl Simulator {
 
     /// Set the value of an input port (port 0–7).
     /// The value will be read by the IN instruction.
-    pub fn set_input_port(&mut self, port: usize, value: u8) {
-        assert!(port < 8, "input port number must be 0–7, got {port}");
+    pub fn set_input_port(&mut self, port: usize, value: u8) -> Result<(), Intel8008Error> {
+        if port >= self.input_ports.len() {
+            return Err(Intel8008Error::InputPortOutOfRange { port });
+        }
         self.input_ports[port] = value;
+        Ok(())
     }
 
     /// Read the current value of an output port (port 0–23).
     /// Updated whenever an OUT instruction executes.
-    pub fn get_output_port(&self, port: usize) -> u8 {
-        assert!(port < 24, "output port number must be 0–23, got {port}");
-        self.output_ports[port]
+    pub fn get_output_port(&self, port: usize) -> Result<u8, Intel8008Error> {
+        self.output_ports
+            .get(port)
+            .copied()
+            .ok_or(Intel8008Error::OutputPortOutOfRange { port })
+    }
+
+    /// Return an owned snapshot of every architecturally visible state bit.
+    pub fn snapshot(&self) -> Intel8008State {
+        Intel8008State {
+            registers: self.regs,
+            memory: self.memory.clone(),
+            stack: self.stack,
+            stack_depth: self.stack_depth,
+            flags: self.flags,
+            halted: self.halted,
+            input_ports: self.input_ports,
+            output_ports: self.output_ports,
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -404,7 +528,11 @@ impl Simulator {
             3 => self.flags.parity,
             _ => unreachable!(),
         };
-        if sense { flag_val } else { !flag_val }
+        if sense {
+            flag_val
+        } else {
+            !flag_val
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -419,36 +547,44 @@ impl Simulator {
     /// - `clear_carry` — true for ANA/XRA/ORA which always clear carry
     fn alu_op(alu_code: u8, a: u8, b: u8, carry_in: bool) -> (u8, bool, bool) {
         match alu_code {
-            0 => { // ADD
+            0 => {
+                // ADD
                 let (r, c) = a.overflowing_add(b);
                 (r, c, false)
             }
-            1 => { // ADC — add with carry
+            1 => {
+                // ADC — add with carry
                 let ci = if carry_in { 1u8 } else { 0u8 };
                 let (r1, c1) = a.overflowing_add(b);
                 let (r2, c2) = r1.overflowing_add(ci);
                 (r2, c1 || c2, false)
             }
-            2 => { // SUB — CY=1 means borrow occurred
+            2 => {
+                // SUB — CY=1 means borrow occurred
                 let (r, c) = a.overflowing_sub(b);
                 (r, c, false)
             }
-            3 => { // SBB — subtract with borrow
+            3 => {
+                // SBB — subtract with borrow
                 let bi = if carry_in { 1u8 } else { 0u8 };
                 let (r1, c1) = a.overflowing_sub(b);
                 let (r2, c2) = r1.overflowing_sub(bi);
                 (r2, c1 || c2, false)
             }
-            4 => { // ANA — AND, always clears carry
+            4 => {
+                // ANA — AND, always clears carry
                 (a & b, false, true)
             }
-            5 => { // XRA — XOR, always clears carry
+            5 => {
+                // XRA — XOR, always clears carry
                 (a ^ b, false, true)
             }
-            6 => { // ORA — OR, always clears carry
+            6 => {
+                // ORA — OR, always clears carry
                 (a | b, false, true)
             }
-            7 => { // CMP — compare (set flags for A-B, A unchanged)
+            7 => {
+                // CMP — compare (set flags for A-B, A unchanged)
                 let (r, c) = a.overflowing_sub(b);
                 (r, c, false) // result used for flags only
             }
@@ -520,10 +656,24 @@ impl Simulator {
     // Load / run
     // -------------------------------------------------------------------------
 
-    /// Load a program into memory starting at `start`.
-    pub fn load_program(&mut self, program: &[u8], start: usize) {
-        let end = (start + program.len()).min(16384);
-        self.memory[start..end].copy_from_slice(&program[..end - start]);
+    /// Load a program into memory starting at `start` without clearing memory.
+    ///
+    /// The operation is atomic: an invalid range leaves all state unchanged.
+    pub fn load_program(&mut self, program: &[u8], start: usize) -> Result<(), Intel8008Error> {
+        let end = start
+            .checked_add(program.len())
+            .ok_or(Intel8008Error::ProgramOutOfRange {
+                start,
+                length: program.len(),
+            })?;
+        if end > self.memory.len() {
+            return Err(Intel8008Error::ProgramOutOfRange {
+                start,
+                length: program.len(),
+            });
+        }
+        self.memory[start..end].copy_from_slice(program);
+        Ok(())
     }
 
     /// Reset all CPU state to power-on defaults (memory is NOT cleared).
@@ -533,22 +683,52 @@ impl Simulator {
         self.stack_depth = 0;
         self.flags = Flags::zero_state();
         self.halted = false;
+        self.output_ports = [0u8; 24];
+    }
+
+    /// Return the encoded length of an instruction, rejecting undefined bytes.
+    fn instruction_length(address: u16, opcode: u8) -> Result<usize, Intel8008Error> {
+        let group = opcode >> 6;
+        let ddd = (opcode >> 3) & 0x07;
+        let sss = opcode & 0x07;
+        match group {
+            0 if sss == 4 => Err(Intel8008Error::UnknownOpcode { address, opcode }),
+            0 if sss == 6 => Ok(2),
+            0 => Ok(1),
+            1 if opcode == 0x7C || opcode == 0x7E => Ok(3),
+            1 if ddd <= 3 && matches!(sss, 0 | 2 | 4 | 6) => Ok(3),
+            1 | 2 => Ok(1),
+            3 if opcode == 0xFF => Ok(1),
+            3 if sss == 4 => Ok(2),
+            _ => Err(Intel8008Error::UnknownOpcode { address, opcode }),
+        }
     }
 
     /// Execute one instruction and return a trace record.
     ///
     /// Returns `Err` if the CPU is already halted or if an unrecognized opcode
     /// is encountered. On success, the trace captures full before/after state.
-    pub fn step(&mut self) -> Result<Trace, String> {
+    pub fn step(&mut self) -> Result<Trace, Intel8008Error> {
         if self.halted {
-            return Err("CPU is halted".to_string());
+            return Err(Intel8008Error::Halted);
         }
 
         let fetch_pc = self.stack[0] & 0x3FFF;
+        let opcode = self.memory[fetch_pc as usize];
+        let instruction_length = Self::instruction_length(fetch_pc, opcode)?;
+        let available = self.memory.len() - fetch_pc as usize;
+        if instruction_length > available {
+            return Err(Intel8008Error::TruncatedInstruction {
+                address: fetch_pc,
+                expected: instruction_length,
+                available,
+            });
+        }
         let a_before = self.regs[REG_A];
         let flags_before = self.flags;
 
-        let opcode = self.fetch_byte();
+        let fetched_opcode = self.fetch_byte();
+        debug_assert_eq!(opcode, fetched_opcode);
         let mut raw = vec![opcode];
         let mut mem_address: Option<u16> = None;
         let mut mem_value: Option<u8> = None;
@@ -556,7 +736,7 @@ impl Simulator {
         // Decode top 2 bits for group selection
         let group = (opcode >> 6) & 0x03;
         let ddd = (opcode >> 3) & 0x07; // bits 5–3
-        let sss = opcode & 0x07;        // bits 2–0
+        let sss = opcode & 0x07; // bits 2–0
 
         let mnemonic: String;
 
@@ -632,31 +812,36 @@ impl Simulator {
                     // -------------------------------------------------------
                     2 => {
                         match ddd {
-                            0 => { // RLC — rotate A left circular (0x02)
+                            0 => {
+                                // RLC — rotate A left circular (0x02)
                                 let (r, c) = Self::rlc(self.regs[REG_A]);
                                 self.regs[REG_A] = r;
                                 self.flags.carry = c;
                                 mnemonic = "RLC".to_string();
                             }
-                            1 => { // RRC — rotate A right circular (0x0A)
+                            1 => {
+                                // RRC — rotate A right circular (0x0A)
                                 let (r, c) = Self::rrc(self.regs[REG_A]);
                                 self.regs[REG_A] = r;
                                 self.flags.carry = c;
                                 mnemonic = "RRC".to_string();
                             }
-                            2 => { // RAL — rotate left through carry (0x12)
+                            2 => {
+                                // RAL — rotate left through carry (0x12)
                                 let (r, c) = Self::ral(self.regs[REG_A], self.flags.carry);
                                 self.regs[REG_A] = r;
                                 self.flags.carry = c;
                                 mnemonic = "RAL".to_string();
                             }
-                            3 => { // RAR — rotate right through carry (0x1A)
+                            3 => {
+                                // RAR — rotate right through carry (0x1A)
                                 let (r, c) = Self::rar(self.regs[REG_A], self.flags.carry);
                                 self.regs[REG_A] = r;
                                 self.flags.carry = c;
                                 mnemonic = "RAR".to_string();
                             }
-                            _ => { // OUT — output A to port (ddd=4,5,6,7)
+                            _ => {
+                                // OUT — output A to port (ddd=4,5,6,7)
                                 let port = ((opcode >> 1) & 0x1F) as usize;
                                 if port < 24 {
                                     self.output_ports[port] = self.regs[REG_A];
@@ -750,9 +935,7 @@ impl Simulator {
                     }
 
                     // sss=4 is undefined in the standard 8008 instruction set
-                    _ => {
-                        return Err(format!("Unknown opcode 0x{:02X} at 0x{:04X}", opcode, fetch_pc));
-                    }
+                    _ => unreachable!("undefined opcodes are rejected by preflight"),
                 }
             }
 
@@ -879,8 +1062,7 @@ impl Simulator {
                     }
                     mnemonic = format!(
                         "MOV {}, {}",
-                        REG_NAMES[ddd as usize],
-                        REG_NAMES[sss as usize]
+                        REG_NAMES[ddd as usize], REG_NAMES[sss as usize]
                     );
                 }
             }
@@ -892,14 +1074,15 @@ impl Simulator {
             // =================================================================
             2 => {
                 let alu_code = ddd; // operation (3 bits)
-                let src = sss;     // source register
+                let src = sss; // source register
                 let src_val = self.reg_read(src as usize);
                 if src as usize == REG_M {
                     mem_address = Some(self.hl_address());
                     mem_value = Some(src_val);
                 }
                 let a = self.regs[REG_A];
-                let (result, carry, clear_carry) = Self::alu_op(alu_code, a, src_val, self.flags.carry);
+                let (result, carry, clear_carry) =
+                    Self::alu_op(alu_code, a, src_val, self.flags.carry);
                 if clear_carry {
                     self.flags = Self::compute_flags(result, false, true, self.flags);
                 } else {
@@ -909,7 +1092,10 @@ impl Simulator {
                 if alu_code != 7 {
                     self.regs[REG_A] = result;
                 }
-                mnemonic = format!("{} {}", ALU_MNEMONICS[alu_code as usize], REG_NAMES[src as usize]);
+                mnemonic = format!(
+                    "{} {}",
+                    ALU_MNEMONICS[alu_code as usize], REG_NAMES[src as usize]
+                );
             }
 
             // =================================================================
@@ -929,7 +1115,8 @@ impl Simulator {
                     raw.push(data);
                     let alu_code = ddd;
                     let a = self.regs[REG_A];
-                    let (result, carry, clear_carry) = Self::alu_op(alu_code, a, data, self.flags.carry);
+                    let (result, carry, clear_carry) =
+                        Self::alu_op(alu_code, a, data, self.flags.carry);
                     if clear_carry {
                         self.flags = Self::compute_flags(result, false, true, self.flags);
                     } else {
@@ -940,7 +1127,7 @@ impl Simulator {
                     }
                     mnemonic = format!("{} 0x{:02X}", ALU_IMM_MNEMONICS[alu_code as usize], data);
                 } else {
-                    return Err(format!("Unknown opcode 0x{:02X} at 0x{:04X}", opcode, fetch_pc));
+                    unreachable!("undefined opcodes are rejected by preflight");
                 }
             }
 
@@ -962,8 +1149,8 @@ impl Simulator {
 
     /// Load a program and run it for up to `max_steps` instructions.
     ///
-    /// Stops early if the CPU halts (HLT) or an error occurs. Returns all
-    /// executed instruction traces in order.
+    /// Stops early if the CPU halts (HLT). Returns all executed instruction
+    /// traces in order, or the first checked execution failure.
     ///
     /// # Example
     ///
@@ -971,24 +1158,31 @@ impl Simulator {
     /// use coding_adventures_intel8008_simulator::Simulator;
     /// let mut sim = Simulator::new();
     /// // ADI 42 (0xC4 0x2A), HLT (0x76)
-    /// let traces = sim.run(&[0xC4, 0x2A, 0x76], 100);
+    /// let traces = sim.run(&[0xC4, 0x2A, 0x76], 100)?;
     /// assert_eq!(sim.a(), 42);
+    /// # Ok::<(), coding_adventures_intel8008_simulator::Intel8008Error>(())
     /// ```
-    pub fn run(&mut self, program: &[u8], max_steps: usize) -> Vec<Trace> {
-        self.reset();
-        self.load_program(program, 0);
+    pub fn run(&mut self, program: &[u8], max_steps: usize) -> Result<Vec<Trace>, Intel8008Error> {
+        if program.len() > self.memory.len() {
+            return Err(Intel8008Error::ProgramOutOfRange {
+                start: 0,
+                length: program.len(),
+            });
+        }
+        let mut candidate = Self::new();
+        candidate.input_ports = self.input_ports;
+        candidate.load_program(program, 0)?;
         let mut traces = Vec::new();
         for _ in 0..max_steps {
-            match self.step() {
-                Ok(t) => {
-                    let halted = self.halted;
-                    traces.push(t);
-                    if halted { break; }
-                }
-                Err(_) => break,
+            let trace = candidate.step()?;
+            let halted = candidate.halted;
+            traces.push(trace);
+            if halted {
+                break;
             }
         }
-        traces
+        *self = candidate;
+        Ok(traces)
     }
 
     // -------------------------------------------------------------------------
@@ -1033,7 +1227,7 @@ mod tests {
         // 0x06 0x01  0x3E 0x02  0x80  0x76
         let mut sim = Simulator::new();
         let program = &[0x06u8, 0x01, 0x3E, 0x02, 0x80, 0x76];
-        let traces = sim.run(program, 100);
+        let traces = sim.run(program, 100).unwrap();
         assert_eq!(traces.len(), 4, "expected 4 instructions");
         assert_eq!(sim.a(), 3);
         assert!(!sim.flags().carry);
@@ -1048,7 +1242,7 @@ mod tests {
         // MVI A, 0xFF; ADI 1 → A=0x00, CY=1, Z=1
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0xFF, 0xC4, 0x01, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 0x00);
         assert!(sim.flags().carry, "0xFF+1 should set carry");
         assert!(sim.flags().zero, "result is 0");
@@ -1062,7 +1256,7 @@ mod tests {
         // MVI A, 0x00; SUI 1 → A=0xFF, CY=1 (borrow), S=1, Z=0, P=1
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0x00, 0xD4, 0x01, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 0xFF);
         assert!(sim.flags().carry, "0x00-1 borrows → CY=1");
         assert!(sim.flags().sign, "0xFF has bit7 set");
@@ -1081,7 +1275,7 @@ mod tests {
         let mut sim = Simulator::new();
         // 0x3E 0xFE  0xC4 0x01  0xCC 0x01  0x76
         let program = &[0x3Eu8, 0xFE, 0xC4, 0x01, 0xCC, 0x01, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 0x00);
         assert!(sim.flags().carry);
         assert!(sim.flags().zero);
@@ -1098,7 +1292,7 @@ mod tests {
         // ANA A opcode: 10 100 111 = 0xA7
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0xFF, 0xC4, 0x01, 0xA7, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert!(!sim.flags().carry, "ANA always clears carry");
         assert_eq!(sim.a(), 0x00, "ANA A with A=0 gives 0");
     }
@@ -1109,7 +1303,7 @@ mod tests {
         // MVI A, 0xAB; XRA A (0xAF); HLT
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0xAB, 0xAF, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 0x00);
         assert!(sim.flags().zero);
         assert!(!sim.flags().carry);
@@ -1122,7 +1316,7 @@ mod tests {
         // ORA B = 10 110 000 = 0xB0
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0x0F, 0x06, 0xF0, 0xB0, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 0xFF);
         assert!(!sim.flags().carry);
         assert!(sim.flags().parity, "0xFF has even parity");
@@ -1138,11 +1332,13 @@ mod tests {
         // INR B = 00 000 000 = 0x00
         let mut sim = Simulator::new();
         // Set carry first so we can verify it's preserved
-        let program = &[0x3Eu8, 0xFF, 0xC4, 0x01, // A=0xFF+1=0x00, CY=1
-                         0x06, 0xFF,                // MVI B, 0xFF
-                         0x00,                      // INR B
-                         0x76];
-        sim.run(program, 100);
+        let program = &[
+            0x3Eu8, 0xFF, 0xC4, 0x01, // A=0xFF+1=0x00, CY=1
+            0x06, 0xFF, // MVI B, 0xFF
+            0x00, // INR B
+            0x76,
+        ];
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.b(), 0x00);
         assert!(sim.flags().zero);
         assert!(sim.flags().carry, "INR must not change carry");
@@ -1154,7 +1350,7 @@ mod tests {
         // DCR A = 00 111 001 = 0x39
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0x00, 0x39, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 0xFF);
         assert!(sim.flags().sign);
         assert!(!sim.flags().zero);
@@ -1170,7 +1366,7 @@ mod tests {
         // MVI A, 0x80; RLC → A=0x01, CY=1
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0x80, 0x02, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 0x01);
         assert!(sim.flags().carry);
     }
@@ -1180,7 +1376,7 @@ mod tests {
         // MVI A, 0x01; RRC → A=0x80, CY=1
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0x01, 0x0A, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 0x80);
         assert!(sim.flags().carry);
     }
@@ -1191,7 +1387,7 @@ mod tests {
         // Start with A=0xFF, CY should be 0 initially
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0xFF, 0x12, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 0xFE);
         assert!(sim.flags().carry, "bit 7 of 0xFF shifts into carry");
     }
@@ -1202,10 +1398,12 @@ mod tests {
         // First set CY=1 via ADD overflow, then load 0x01, then RAR
         // MVI A, 0xFF; ADI 1 (CY=1); MVI A, 0x01; RAR
         let mut sim = Simulator::new();
-        let program = &[0x3Eu8, 0xFF, 0xC4, 0x01, // set CY=1
-                         0x3E, 0x01,               // MVI A, 0x01
-                         0x1A, 0x76];              // RAR; HLT
-        sim.run(program, 100);
+        let program = &[
+            0x3Eu8, 0xFF, 0xC4, 0x01, // set CY=1
+            0x3E, 0x01, // MVI A, 0x01
+            0x1A, 0x76,
+        ]; // RAR; HLT
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 0x80);
         assert!(sim.flags().carry, "bit 0 of 0x01 shifts into carry");
     }
@@ -1222,13 +1420,17 @@ mod tests {
         let mut sim = Simulator::new();
         let mut program = vec![0u8; 0x14];
         // main at 0x00: MVI A,0; CAL 0x0010; HLT
-        program[0] = 0x3E; program[1] = 0x00;
-        program[2] = 0x7E; program[3] = 0x10; program[4] = 0x00;
+        program[0] = 0x3E;
+        program[1] = 0x00;
+        program[2] = 0x7E;
+        program[3] = 0x10;
+        program[4] = 0x00;
         program[5] = 0x76;
         // sub at 0x10: MVI A,42; RET
-        program[0x10] = 0x3E; program[0x11] = 0x2A;
+        program[0x10] = 0x3E;
+        program[0x11] = 0x2A;
         program[0x12] = 0x3F;
-        sim.run(&program, 100);
+        sim.run(&program, 100).unwrap();
         assert_eq!(sim.a(), 42);
     }
 
@@ -1238,17 +1440,23 @@ mod tests {
         // f2 sets A=99, returns; f1 returns; main HLTs
         let mut program = vec![0u8; 0x50];
         // main at 0x00: MVI A,0; CAL 0x0020; HLT
-        program[0] = 0x3E; program[1] = 0x00;
-        program[2] = 0x7E; program[3] = 0x20; program[4] = 0x00;
+        program[0] = 0x3E;
+        program[1] = 0x00;
+        program[2] = 0x7E;
+        program[3] = 0x20;
+        program[4] = 0x00;
         program[5] = 0x76;
         // f1 at 0x20: CAL 0x0040; RET
-        program[0x20] = 0x7E; program[0x21] = 0x40; program[0x22] = 0x00;
+        program[0x20] = 0x7E;
+        program[0x21] = 0x40;
+        program[0x22] = 0x00;
         program[0x23] = 0x3F;
         // f2 at 0x40: MVI A, 99; RET
-        program[0x40] = 0x3E; program[0x41] = 99;
+        program[0x40] = 0x3E;
+        program[0x41] = 99;
         program[0x42] = 0x3F;
         let mut sim = Simulator::new();
-        sim.run(&program, 200);
+        sim.run(&program, 200).unwrap();
         assert_eq!(sim.a(), 99);
     }
 
@@ -1271,13 +1479,15 @@ mod tests {
         // MVI L = 00 101 110 = 0x2E
         // MVI M = 00 110 110 = 0x36
         let mut sim = Simulator::new();
-        let program = &[0x26u8, 0x00,  // MVI H, 0       → H=0
-                         0x2E, 0x20,   // MVI L, 0x20    → L=0x20; HL=0x0020
-                         0x36, 0x55,   // MVI M, 0x55    → mem[0x0020]=0x55
-                         0x6E,         // MOV L, M       → L = mem[HL] = 0x55
-                         0x7D,         // MOV A, L       → A = L = 0x55
-                         0x76];        // HLT
-        sim.run(program, 100);
+        let program = &[
+            0x26u8, 0x00, // MVI H, 0       → H=0
+            0x2E, 0x20, // MVI L, 0x20    → L=0x20; HL=0x0020
+            0x36, 0x55, // MVI M, 0x55    → mem[0x0020]=0x55
+            0x6E, // MOV L, M       → L = mem[HL] = 0x55
+            0x7D, // MOV A, L       → A = L = 0x55
+            0x76,
+        ]; // HLT
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 0x55, "should read 0x55 from memory via M register");
     }
 
@@ -1291,15 +1501,21 @@ mod tests {
         // target: MVI A,42; HLT
         // JTZ = 01 001 100 = 0x4C; jump to 0x0010
         let mut program = vec![0u8; 0x14];
-        program[0] = 0x3E; program[1] = 0x00;   // MVI A,0
-        program[2] = 0xC4; program[3] = 0x00;   // ADI 0 → Z=1
-        program[4] = 0x4C; program[5] = 0x10; program[6] = 0x00; // JTZ 0x10
-        program[7] = 0x3E; program[8] = 99;      // MVI A,99 (should be skipped)
-        program[9] = 0x76;                        // HLT (should be skipped)
-        program[0x10] = 0x3E; program[0x11] = 42; // MVI A,42
-        program[0x12] = 0x76;                      // HLT
+        program[0] = 0x3E;
+        program[1] = 0x00; // MVI A,0
+        program[2] = 0xC4;
+        program[3] = 0x00; // ADI 0 → Z=1
+        program[4] = 0x4C;
+        program[5] = 0x10;
+        program[6] = 0x00; // JTZ 0x10
+        program[7] = 0x3E;
+        program[8] = 99; // MVI A,99 (should be skipped)
+        program[9] = 0x76; // HLT (should be skipped)
+        program[0x10] = 0x3E;
+        program[0x11] = 42; // MVI A,42
+        program[0x12] = 0x76; // HLT
         let mut sim = Simulator::new();
-        sim.run(&program, 100);
+        sim.run(&program, 100).unwrap();
         assert_eq!(sim.a(), 42, "JTZ should have jumped");
     }
 
@@ -1308,14 +1524,19 @@ mod tests {
         // MVI A,1; JTZ target (Z=0, not taken); MVI A,99; HLT
         // JTZ = 0x4C
         let mut program = vec![0u8; 0x14];
-        program[0] = 0x3E; program[1] = 0x01;   // MVI A,1
-        program[2] = 0x4C; program[3] = 0x10; program[4] = 0x00; // JTZ 0x10 (not taken)
-        program[5] = 0x3E; program[6] = 99;      // MVI A,99
-        program[7] = 0x76;                        // HLT
-        program[0x10] = 0x3E; program[0x11] = 42; // MVI A,42 (not reached)
+        program[0] = 0x3E;
+        program[1] = 0x01; // MVI A,1
+        program[2] = 0x4C;
+        program[3] = 0x10;
+        program[4] = 0x00; // JTZ 0x10 (not taken)
+        program[5] = 0x3E;
+        program[6] = 99; // MVI A,99
+        program[7] = 0x76; // HLT
+        program[0x10] = 0x3E;
+        program[0x11] = 42; // MVI A,42 (not reached)
         program[0x12] = 0x76;
         let mut sim = Simulator::new();
-        sim.run(&program, 100);
+        sim.run(&program, 100).unwrap();
         assert_eq!(sim.a(), 99, "JTZ should NOT have jumped");
     }
 
@@ -1328,7 +1549,7 @@ mod tests {
         // 0x03 = 0b00000011 → 2 ones → even parity → P=true
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0x03, 0xF4, 0x00, 0x76]; // MVI A,3; ORI 0 (set flags); HLT
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert!(sim.flags().parity, "0x03 has even parity");
     }
 
@@ -1337,7 +1558,7 @@ mod tests {
         // 0x01 = 0b00000001 → 1 one → odd parity → P=false
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0x01, 0xF4, 0x00, 0x76]; // MVI A,1; ORI 0; HLT
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert!(!sim.flags().parity, "0x01 has odd parity");
     }
 
@@ -1346,7 +1567,7 @@ mod tests {
         // 0xFF → 8 ones → even parity → P=true
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0xFF, 0xF4, 0x00, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert!(sim.flags().parity, "0xFF has even parity (8 ones)");
     }
 
@@ -1360,7 +1581,7 @@ mod tests {
         // CPI = 11 111 100 = 0xFC
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0x05, 0xFC, 0x05, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 5, "CMP must not change A");
         assert!(sim.flags().zero);
         assert!(!sim.flags().carry);
@@ -1371,7 +1592,7 @@ mod tests {
         // MVI A, 3; CPI 5 → A=3, CY=1 (borrow: 3<5)
         let mut sim = Simulator::new();
         let program = &[0x3Eu8, 0x03, 0xFC, 0x05, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 3);
         assert!(sim.flags().carry, "3 < 5 means borrow");
         assert!(!sim.flags().zero);
@@ -1407,9 +1628,9 @@ mod tests {
         // IN 3=0x59: bits 5-3 = (0x59>>3)&7 = 0x0B&7 = 3 ✓
         // Good! So port = ddd (bits 5-3). That's what the decoder uses.
         let mut sim = Simulator::new();
-        sim.set_input_port(3, 0xAB);
+        sim.set_input_port(3, 0xAB).unwrap();
         let program = &[0x59u8, 0x76]; // IN 3; HLT
-        sim.run(program, 10);
+        sim.run(program, 10).unwrap();
         assert_eq!(sim.a(), 0xAB);
     }
 
@@ -1428,11 +1649,17 @@ mod tests {
         //
         // Test port 17 via opcode 0x22:
         let mut sim = Simulator::new();
-        let program = &[0x3Eu8, 0x77, // MVI A, 0x77
-                         0x22,        // OUT 17 (00 100 010, ddd=4>3, sss=2)
-                         0x76];       // HLT
-        sim.run(program, 10);
-        assert_eq!(sim.get_output_port(17), 0x77, "OUT 17 should write A=0x77 to port 17");
+        let program = &[
+            0x3Eu8, 0x77, // MVI A, 0x77
+            0x22, // OUT 17 (00 100 010, ddd=4>3, sss=2)
+            0x76,
+        ]; // HLT
+        sim.run(program, 10).unwrap();
+        assert_eq!(
+            sim.get_output_port(17).unwrap(),
+            0x77,
+            "OUT 17 should write A=0x77 to port 17"
+        );
     }
 
     // -------------------------------------------------------------------------
@@ -1454,20 +1681,28 @@ mod tests {
         // RET = 0x3F
         let mut program = vec![0u8; 0x40];
         // main at 0x00
-        program[0] = 0x3E; program[1] = 0xF6; // MVI A, 0xF6 (-10)
-        program[2] = 0xF4; program[3] = 0x00; // ORI 0 — sets S=1 because bit7 of 0xF6 is set
-        program[4] = 0x7E; program[5] = 0x20; program[6] = 0x00; // CAL 0x20
+        program[0] = 0x3E;
+        program[1] = 0xF6; // MVI A, 0xF6 (-10)
+        program[2] = 0xF4;
+        program[3] = 0x00; // ORI 0 — sets S=1 because bit7 of 0xF6 is set
+        program[4] = 0x7E;
+        program[5] = 0x20;
+        program[6] = 0x00; // CAL 0x20
         program[7] = 0x76; // HLT
 
         // ABS_VAL at 0x20: if S=0, jump to DONE at 0x30
-        program[0x20] = 0x50; program[0x21] = 0x30; program[0x22] = 0x00; // JFS 0x30
-        program[0x23] = 0xEC; program[0x24] = 0xFF; // XRI 0xFF
-        program[0x25] = 0xC4; program[0x26] = 0x01; // ADI 1
-        // DONE at 0x30
+        program[0x20] = 0x50;
+        program[0x21] = 0x30;
+        program[0x22] = 0x00; // JFS 0x30
+        program[0x23] = 0xEC;
+        program[0x24] = 0xFF; // XRI 0xFF
+        program[0x25] = 0xC4;
+        program[0x26] = 0x01; // ADI 1
+                              // DONE at 0x30
         program[0x30] = 0x3F; // RET
 
         let mut sim = Simulator::new();
-        sim.run(&program, 200);
+        sim.run(&program, 200).unwrap();
         assert_eq!(sim.a(), 10, "abs(-10) should be 10");
     }
 
@@ -1488,17 +1723,22 @@ mod tests {
         // JFZ = 01 001 000 = 0x48 (jump if Z=0, i.e. carry false on zero)
         // LOOP is at offset 6
         let mut program = vec![0u8; 20];
-        program[0] = 0x06; program[1] = 0x05;  // MVI B,5
-        program[2] = 0x0E; program[3] = 0x04;  // MVI C,4
-        program[4] = 0x3E; program[5] = 0x00;  // MVI A,0
-        // LOOP at 6:
-        program[6] = 0x80;                      // ADD B
-        program[7] = 0x09;                      // DCR C
-        program[8] = 0x48; program[9] = 0x06; program[10] = 0x00; // JFZ 6
-        program[11] = 0x76;                     // HLT
+        program[0] = 0x06;
+        program[1] = 0x05; // MVI B,5
+        program[2] = 0x0E;
+        program[3] = 0x04; // MVI C,4
+        program[4] = 0x3E;
+        program[5] = 0x00; // MVI A,0
+                           // LOOP at 6:
+        program[6] = 0x80; // ADD B
+        program[7] = 0x09; // DCR C
+        program[8] = 0x48;
+        program[9] = 0x06;
+        program[10] = 0x00; // JFZ 6
+        program[11] = 0x76; // HLT
 
         let mut sim = Simulator::new();
-        sim.run(&program, 200);
+        sim.run(&program, 200).unwrap();
         assert_eq!(sim.a(), 20, "4 × 5 = 20");
     }
 
@@ -1511,13 +1751,14 @@ mod tests {
         // RST 3 jumps to 0x18; put MVI A,77 there, then RET back
         // RST 3 = 00 011 101 = 0x1D
         let mut program = vec![0u8; 0x20];
-        program[0] = 0x1D;   // RST 3 → jump to 0x18
-        program[1] = 0x76;   // HLT (after return)
-        program[0x18] = 0x3E; program[0x19] = 77; // MVI A, 77
+        program[0] = 0x1D; // RST 3 → jump to 0x18
+        program[1] = 0x76; // HLT (after return)
+        program[0x18] = 0x3E;
+        program[0x19] = 77; // MVI A, 77
         program[0x1A] = 0x3F; // RET
 
         let mut sim = Simulator::new();
-        sim.run(&program, 100);
+        sim.run(&program, 100).unwrap();
         assert_eq!(sim.a(), 77, "RST 3 should jump to 0x18");
     }
 
@@ -1530,11 +1771,13 @@ mod tests {
         // MVI A, 5; ADI 0xFF (A=4, CY=1); SBI 1 (A=4-1-1=2)
         // SBI = 11 011 100 = 0xDC
         let mut sim = Simulator::new();
-        let program = &[0x3Eu8, 0x05,   // MVI A, 5
-                         0xC4, 0xFF,    // ADI 0xFF → A=4, CY=1
-                         0xDC, 0x01,    // SBI 1 → A = 4-1-1 = 2
-                         0x76];
-        sim.run(program, 100);
+        let program = &[
+            0x3Eu8, 0x05, // MVI A, 5
+            0xC4, 0xFF, // ADI 0xFF → A=4, CY=1
+            0xDC, 0x01, // SBI 1 → A = 4-1-1 = 2
+            0x76,
+        ];
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 2);
     }
 
@@ -1548,7 +1791,7 @@ mod tests {
         // MOV A,B = 01 111 000 = 0x78
         let mut sim = Simulator::new();
         let program = &[0x06u8, 0x42, 0x78, 0x76];
-        sim.run(program, 100);
+        sim.run(program, 100).unwrap();
         assert_eq!(sim.a(), 0x42);
     }
 
@@ -1561,7 +1804,7 @@ mod tests {
         let mut sim = Simulator::new();
         // MVI A, 5; HLT
         let program = &[0x3Eu8, 0x05, 0x76];
-        let traces = sim.run(program, 100);
+        let traces = sim.run(program, 100).unwrap();
         assert_eq!(traces.len(), 2);
         // First trace: MVI A, 5
         assert_eq!(traces[0].address, 0);
