@@ -1892,7 +1892,7 @@ mod glyph_run_overlay {
     }
 
     fn unpremultiply_rgba(data: &mut [u8]) {
-        for pixel in data.chunks_exact_mut(4) {
+        for pixel in data.as_chunks_mut::<4>().0 {
             let alpha = u32::from(pixel[3]);
             if alpha == 0 {
                 pixel[..3].fill(0);
