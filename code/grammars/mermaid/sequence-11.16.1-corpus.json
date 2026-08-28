@@ -65,6 +65,38 @@
     {
       "id": "autonumber-increment-tenths",
       "source": "sequenceDiagram\nautonumber 10.1 .1\nAlice->Bob:Hello Bob, how are you?\nBob-->Alice: I am good thanks!\nAlice-->Bob: Have a good day!"
+    },
+    {
+      "id": "loop-block",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\n%% Comment\nNote right of Bob: Bob thinks\nloop Multiple happy responses\nBob-->Alice: I am good thanks!\nend"
+    },
+    {
+      "id": "nested-rect-blocks",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\n%% Comment\nrect rgb(200, 255, 200)\nrect rgb(0, 0, 0)\nNote right of Bob: Bob thinks\nend\nBob-->Alice: I am good thanks\nend"
+    },
+    {
+      "id": "opt-block",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\n%% Comment\nNote right of Bob: Bob thinks\nopt Perhaps a happy response\nBob-->Alice: I am good thanks!\nend"
+    },
+    {
+      "id": "alt-multiple-branches",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\n%% Comment\nNote right of Bob: Bob thinks\nalt isWell\nBob-->Alice: I am good thanks!\nelse isSick\nBob-->Alice: Feel sick...\nelse default\nBob-->Alice: :-)\nend"
+    },
+    {
+      "id": "critical-with-options",
+      "source": "sequenceDiagram\ncritical Establish a connection to the DB\nService-->DB: connect\noption Network timeout\nService-->Service: Log error\noption Credentials rejected\nService-->Service: Log different error\nend"
+    },
+    {
+      "id": "break-block",
+      "source": "sequenceDiagram\nConsumer-->API: Book something\nAPI-->BookingService: Start booking process\nbreak when the booking process fails\nAPI-->Consumer: show failure\nend\nAPI-->BillingService: Start billing process"
+    },
+    {
+      "id": "parallel-branches",
+      "source": "sequenceDiagram\npar Parallel one\nAlice->>Bob: Hello Bob, how are you?\nBob-->>Alice: I am good thanks!\nand Parallel two\nAlice->>Bob: Are you OK?\nBob-->>Alice: Fine!\nand Parallel three\nAlice->>Bob: What do you think about it?\nBob-->>Alice: It's good!\nend"
+    },
+    {
+      "id": "parallel-overlap",
+      "source": "sequenceDiagram\npar_over Parallel overlap\nAlice ->> Bob: Message\nNote left of Alice: Alice note\nNote right of Bob: Bob note\nend"
     }
   ],
   "invalid": [
