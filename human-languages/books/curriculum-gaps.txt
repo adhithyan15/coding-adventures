@@ -1,20 +1,20 @@
 Human Languages curriculum gap report
 ====================================
-23 tracks, 4456 lessons, 23 books
+23 tracks, 4462 lessons, 23 books
 0 lessons over 300 effective seconds
 0 unknown prerequisites; 73 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 14 mixed, 9 version-2 schema tracks
-3719 drivable lessons (83% of the corpus)
-levels: 2848 pre-A1, 1064 A1, 402 A2, 39 B1, 17 B2, 10 C1, 18 C2; 58 unmapped (99% placed)
+3725 drivable lessons (83% of the corpus)
+levels: 2849 pre-A1, 1066 A1, 405 A2, 39 B1, 17 B2, 10 C1, 18 C2; 58 unmapped (99% placed)
 ramp: 40 lessons above 3 new atoms (400 unmeasurable, 91% measurable); 23 chapters above 12
 script ramp: 39 lessons above 3 new glyphs; 0 opening more than 1 writing system at once; steepest RU-C01-privet at 14
 cousin layer: 217 lessons show another script (max 26 glyphs) — context, never charged to the budget
 script closure: 646 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 274 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1895 glyphs and makes 223 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
-reinforcement: 571 of 5577 atoms never revisited (10%); missed windows R1 1162, R2 4083, R3 4080, R4 2687
-forward references: 635 uses of material a later lesson teaches
+reinforcement: 579 of 5583 atoms never revisited (10%); missed windows R1 1167, R2 4088, R3 4095, R4 2700
+forward references: 641 uses of material a later lesson teaches
 writing stages: 13/23 tracks prove the cumulative pre-A1 ladder; 434 evidence blocks, 0 invalid; 596 missing (track, level, stage) pairs
 super-gentle ramp: 21/23 tracks carry detected or unmeasured debt; 119 named track/debt items
 writing ramp: 0 track(s) never practise writing; 6 start after lesson one
@@ -27,9 +27,9 @@ levels with STRUCTURAL COVERAGE COMPLETE (HL09 §3.1 — coverage complete, perf
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  3241 voice, 590 sight, 625 pen of 4456 lessons; 83% drivable
+  3247 voice, 590 sight, 625 pen of 4462 lessons; 83% drivable
   tables of more than 3 column(s) count as sight
-  3719 lessons have a voice CORE; 326 carry a detachable writing segment (478 rescued for the hands-free view)
+  3725 lessons have a voice CORE; 326 carry a detachable writing segment (478 rescued for the hands-free view)
   arabic: 47 voice, 36 sight, 25 pen; 74% drivable; 36 chapters, 64 lessons reachable in chapter-prefix order; 33 rescued by a detachable writing segment
   bengali: 15 voice, 55 sight, 10 pen; 88% drivable; 16 chapters, 70 lessons reachable in chapter-prefix order; 55 rescued by a detachable writing segment
   chinese: 98 voice, 21 sight, 56 pen; 58% drivable; 18 chapters, 15 lessons reachable in chapter-prefix order; 4 rescued by a detachable writing segment
@@ -40,12 +40,12 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   italian: 78 voice, 13 sight, 2 pen; 85% drivable; 25 chapters, 63 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
   japanese: 60 voice, 8 sight, 49 pen; 59% drivable; 13 chapters, 23 lessons reachable in chapter-prefix order; 9 rescued by a detachable writing segment
   kannada: 187 voice, 31 sight, 24 pen; 87% drivable; 66 chapters, 207 lessons reachable in chapter-prefix order; 24 rescued by a detachable writing segment
-  latin: 104 voice, 3 sight, 4 pen; 95% drivable; 47 chapters, 99 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
+  latin: 105 voice, 3 sight, 4 pen; 95% drivable; 47 chapters, 100 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
   malayalam: 186 voice, 35 sight, 49 pen; 81% drivable; 66 chapters, 213 lessons reachable in chapter-prefix order; 34 rescued by a detachable writing segment
   marathi: 45 voice, 40 sight, 26 pen; 76% drivable; 18 chapters, 82 lessons reachable in chapter-prefix order; 39 rescued by a detachable writing segment
   marwadi: 124 voice, 6 sight, 42 pen; 76% drivable; 22 chapters, 54 lessons reachable in chapter-prefix order; 6 rescued by a detachable writing segment
   persian: 58 voice, 2 sight, 11 pen; 86% drivable; 15 chapters, 56 lessons reachable in chapter-prefix order; 3 rescued by a detachable writing segment
-  portuguese: 86 voice, 9 sight, 2 pen; 90% drivable; 26 chapters, 79 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
+  portuguese: 91 voice, 9 sight, 2 pen; 90% drivable; 26 chapters, 84 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
   punjabi: 25 voice, 39 sight, 14 pen; 82% drivable; 14 chapters, 58 lessons reachable in chapter-prefix order; 39 rescued by a detachable writing segment
   russian: 46 voice, 14 sight, 28 pen; 66% drivable; 15 chapters, 51 lessons reachable in chapter-prefix order; 12 rescued by a detachable writing segment
   sanskrit: 215 voice, 37 sight, 14 pen; 94% drivable; 51 chapters, 240 lessons reachable in chapter-prefix order; 34 rescued by a detachable writing segment
@@ -93,17 +93,17 @@ grammar cells (spanish): 18 of 231 regular cells taught (8%), against 231 univer
   ES-C07-vivir: teaches ES-CELL-IND-PRES-3SG-CONJ3 before ES-CELL-IND-PRES-2SG-CONJ3
   ES-C07-hablan: teaches ES-CELL-IND-PRES-3PL-CONJ1 before ES-CELL-IND-PRES-2PL-CONJ1
 
-root ledger: 3521 roots, 3388 spent fewer than 3 times (96%), 2370 never spent at all
+root ledger: 3521 roots, 3389 spent fewer than 3 times (96%), 2367 never spent at all
   taught once and never returned to: a-dios-latin (ES-C05-adios), a-k-l (AR-C30-akala), a-kh-dh (AR-C32-akhadha)
   best-spent root: stare-latin with 13 payoffs
 
-info dump (report-only): 121 of 4456 lessons -- 30 rule statements, 95 paradigm tables (22 full grids)
+info dump (report-only): 121 of 4462 lessons -- 30 rule statements, 95 paradigm tables (22 full grids)
   complete paradigms presented at once: FR-C05-parler (7-row table with 6 person rows), FR-C16-passe-compose-etre (5-row table with 5 person rows), GE-C05-wohnen (7-row table with 6 person rows)
 
-lesson content budgets (report-only): 495 of 4456 lessons measured -- 16 idioms, 35 senses, 52 culture claims; 0 lessons over budget
-  annotation coverage: idioms 495, senses 495, culture claims 495
+lesson content budgets (report-only): 941 of 4462 lessons measured -- 50 idioms, 54 senses, 91 culture claims; 0 lessons over budget
+  annotation coverage: idioms 941, senses 941, culture claims 941
 
-metalanguage: 53 of 54 grammar terms appear in 4194 lessons; 14404 uses come before introduction, of which 3605 are technical terms across 1938 lessons
-  most-used-before-introduction: verb (1144 lessons), noun (644 lessons), adjective (186 lessons), tense (163 lessons), regular (159 lessons), pronoun (151 lessons)
-literal markup: none in 4456 lessons or any generated book
+metalanguage: 53 of 54 grammar terms appear in 4199 lessons; 14415 uses come before introduction, of which 3609 are technical terms across 1941 lessons
+  most-used-before-introduction: verb (1147 lessons), noun (644 lessons), adjective (186 lessons), tense (165 lessons), regular (159 lessons), pronoun (151 lessons)
+literal markup: none in 4462 lessons or any generated book
 glyph coverage: every character renders -- 126 main-font and 721 script characters across 1341 generated files
