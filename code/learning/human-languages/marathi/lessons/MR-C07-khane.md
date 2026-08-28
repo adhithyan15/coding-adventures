@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-YENE, MR-LEX-JANE]
 introduces:
   knowledge: [MR-LEX-KHANE, MR-GRAMMAR-NE-NEUTER-NOUN]
+introduces_idioms: []
+introduces_senses: [MR-SENSE-KHANE-EAT-EATING-01]
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-JANE, MR-LEX-YENE, MR-LEX-KHANE, MR-GRAMMAR-NE-NEUTER-NOUN]
 skills: [listening, speaking, reading]

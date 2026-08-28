@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-BAHIN, MR-ETYMON-BAHIN-NOT-SISTER]
 introduces:
   knowledge: [MR-LEX-DOLA, MR-SCRIPT-RETROFLEX-LA, MR-ETYMON-DOLA-SWING]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-DOLA, MR-SCRIPT-RETROFLEX-LA, MR-ETYMON-DOLA-SWING, MR-LEX-BAHIN, MR-LEX-BHAU, MR-ETYMON-PASH-SPEK, MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT, MR-GRAMMAR-KUTUMB-NEUTER]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [MR-LEX-NAMASKAR-01]
+introduces_idioms: [MR-IDIOM-NAMASKAR-ALL-PURPOSE-GREETING-01]
+introduces_senses: []
+introduces_culture_claims: [MR-CULTURE-NAMASKAR-MARATHI-DEFAULT-GREETING-01]
 practises:
   knowledge: [MR-LEX-NAMASKAR-01]
 skills: [listening, speaking, reading]

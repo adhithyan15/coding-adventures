@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-NAMASKAR-01, MR-SCRIPT-NAMASKAR-READ-01]
 introduces:
   knowledge: [MR-LEX-DHANYAVAD-01]
+introduces_idioms: [MR-IDIOM-DHANYAVAD-FORMAL-THANKS-01]
+introduces_senses: []
+introduces_culture_claims: [MR-CULTURE-DHANYAVAD-FORMAL-SPOKEN-ALTERNATIVE-01]
 practises:
   knowledge: [MR-LEX-DHANYAVAD-01, MR-LEX-NAMASKAR-01]
 skills: [listening, speaking, reading]

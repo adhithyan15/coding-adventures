@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-SCRIPT-VISARGA-01, MR-SCRIPT-AA-INDEPENDENT-01, MR-SCRIPT-BHA-01]
 introduces:
   knowledge: [MR-SCRIPT-E-MATRA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-SCRIPT-E-MATRA-01, MR-SCRIPT-VISARGA-01, MR-SCRIPT-AA-INDEPENDENT-01, MR-SCRIPT-BHA-01]
 skills: [reading, writing]

@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-VICHARNE, MR-LEX-VICHAR-KARNE, MR-LEX-MAHIT-JANNE, MR-GRAMMAR-PRESENT-GENDER]
 introduces:
   knowledge: [MR-LEX-MADAT-KARNE, MR-ETYMON-MADAT-ARABIC]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-VICHARNE, MR-LEX-VICHAR-KARNE, MR-LEX-MAHIT-JANNE, MR-GRAMMAR-PRESENT-GENDER, MR-LEX-MADAT-KARNE, MR-ETYMON-MADAT-ARABIC]
 skills: [listening, speaking, reading]

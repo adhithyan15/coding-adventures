@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-NAAK, MR-ETYMON-NAAK-NOSE]
 introduces:
   knowledge: [MR-LEX-HRUDAYA, MR-ETYMON-HRUDAYA-KERD]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-HRUDAYA, MR-ETYMON-HRUDAYA-KERD, MR-LEX-NAAK, MR-ETYMON-NAAK-NOSE, MR-LEX-TOND, MR-LEX-KAAN, MR-LEX-DOLA, MR-ETYMON-VACH-VOICE, MR-ETYMON-BUDH-AWAKE, MR-ETYMON-DOLA-SWING]
 skills: [listening, speaking, reading]

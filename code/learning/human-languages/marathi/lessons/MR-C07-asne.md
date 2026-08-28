@@ -19,6 +19,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [MR-LEX-ASNE-AAHE, MR-GRAMMAR-AAHE-LAST]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-ASNE-AAHE, MR-GRAMMAR-AAHE-LAST]
 skills: [listening, speaking, reading]

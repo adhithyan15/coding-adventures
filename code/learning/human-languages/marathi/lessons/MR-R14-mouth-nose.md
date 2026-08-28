@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-TOND, MR-GRAMMAR-TOND-MUKH-DOUBLET, MR-LEX-NAAK]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-TOND, MR-GRAMMAR-TOND-MUKH-DOUBLET, MR-LEX-NAAK]
 skills: [listening, speaking, reading]

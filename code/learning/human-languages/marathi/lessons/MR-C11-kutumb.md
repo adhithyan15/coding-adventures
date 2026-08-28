@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-MITRA, MR-ETYMON-MITRA-BIND, MR-GRAMMAR-TATSAMA-BORROWING]
 introduces:
   knowledge: [MR-LEX-KUTUMB, MR-GRAMMAR-KUTUMB-NEUTER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-KUTUMB, MR-GRAMMAR-KUTUMB-NEUTER, MR-LEX-MITRA, MR-GRAMMAR-TATSAMA-BORROWING, MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER, MR-LEX-BHAKARI]
 skills: [listening, speaking, reading]

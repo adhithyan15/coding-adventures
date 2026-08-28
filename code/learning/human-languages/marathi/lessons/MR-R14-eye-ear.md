@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-DOLA, MR-SCRIPT-RETROFLEX-LA, MR-LEX-KAAN]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-DOLA, MR-SCRIPT-RETROFLEX-LA, MR-LEX-KAAN]
 skills: [listening, speaking, reading]

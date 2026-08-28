@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-DHANYAVAD-01, MR-SCRIPT-DA-01, MR-SCRIPT-DHA-01, MR-SCRIPT-YA-01, MR-SCRIPT-VA-01]
 introduces:
   knowledge: [MR-SCRIPT-DHANYAVAD-WRITE-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-DHANYAVAD-01, MR-SCRIPT-DHANYAVAD-WRITE-01, MR-SCRIPT-DA-01, MR-SCRIPT-DHA-01, MR-SCRIPT-YA-01, MR-SCRIPT-LLA-01, MR-SCRIPT-VA-01]
 skills: [listening, speaking, reading, writing]

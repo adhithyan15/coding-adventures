@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-LIHINE, MR-ETYMON-LIKH-SCRATCH, MR-LEX-VACHNE, MR-GRAMMAR-PRESENT-GENDER, MR-GRAMMAR-NE-NEUTER-NOUN]
 introduces:
   knowledge: [MR-LEX-GHENE, MR-ETYMON-GRAH-GRAB]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-LIHINE, MR-ETYMON-LIKH-SCRATCH, MR-LEX-VACHNE, MR-GRAMMAR-PRESENT-GENDER, MR-GRAMMAR-NE-NEUTER-NOUN, MR-LEX-GHENE, MR-ETYMON-GRAH-GRAB]
 skills: [listening, speaking, reading]

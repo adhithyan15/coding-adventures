@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 12,
-  "sourceHash": "fnv1a64:8e1edded36eafd9b",
+  "sourceHash": "fnv1a64:7d5c0d8371241f77",
   "lessonIds": [
     "MR-C09-ghene",
     "MR-C09-vicharne",
@@ -13,6 +13,6 @@
   "text": "marathi/narration/ch12.txt",
   "json": "marathi/narration/ch12.json",
   "textHash": "fnv1a64:330d538828f25c5d",
-  "jsonHash": "fnv1a64:2cb30213bfa80290",
+  "jsonHash": "fnv1a64:1d2faf10995c4ead",
   "findings": []
 }

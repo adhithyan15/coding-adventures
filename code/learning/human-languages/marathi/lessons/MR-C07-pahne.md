@@ -19,6 +19,9 @@ requires:
   knowledge: [MR-LEX-KHANE, MR-GRAMMAR-PRESENT-GENDER]
 introduces:
   knowledge: [MR-LEX-PAHNE, MR-ETYMON-PASH-SPEK]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-KHANE, MR-GRAMMAR-PRESENT-GENDER, MR-LEX-PAHNE, MR-ETYMON-PASH-SPEK]
 skills: [listening, speaking, reading]

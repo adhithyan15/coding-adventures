@@ -18,6 +18,9 @@ requires:
   knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SOUND-CHA-TSAA, MR-HISTORY-SELECTIVE-RETENTION]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SOUND-CHA-TSAA, MR-HISTORY-SELECTIVE-RETENTION]
 skills: [listening, speaking, reading]

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Hear Thanks, Then Meet Six Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1cb7d7218495dc15",
+  "sourceHash": "fnv1a64:3a876d43d73fc045",
   "lessons": [
     {
       "id": "MR-C01-dhanyavad",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45cd4b877fb0ab2e",
+      "sourceHash": "fnv1a64:3c2e3f6ad09c8836",
       "notice": null,
       "blocks": [
         {
@@ -126,7 +126,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:01b5d2824e802af5",
+      "sourceHash": "fnv1a64:e777283b00e6a382",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -237,7 +237,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f60ec639cc16576f",
+      "sourceHash": "fnv1a64:327a418d60ee68c4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -342,7 +342,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0e2242681967347c",
+      "sourceHash": "fnv1a64:9f8ddb9820b62b1b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -447,7 +447,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:519f5d3a61c40dd4",
+      "sourceHash": "fnv1a64:930499ba362ce7cf",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -555,7 +555,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fd644070796ff6a0",
+      "sourceHash": "fnv1a64:38cb3ee572f66c7d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -661,7 +661,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a66c9d6e9adff3a8",
+      "sourceHash": "fnv1a64:cc814b2147906897",
       "notice": {
         "modality": "pen",
         "needs": [
