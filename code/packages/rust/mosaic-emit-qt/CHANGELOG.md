@@ -4,6 +4,98 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - drive a `MultiEffect` drop shadow from `elevation` (#12028 item 1, UI41)
+
+Fourth of five in the elevation-tokens cascade (mosstyle-compiler contract →
+XAML → Compose → **Qt** → Flutter). A part declaring `elevation: raised;`
+or `elevation: overlay;` now gets a real `QtQuick.Effects.MultiEffect` drop
+shadow instead of the shadow silently vanishing — Qt 6.5+'s `MultiEffect` is
+the modern, non-deprecated shadow primitive (the older `Qt5Compat.
+GraphicalEffects DropShadow` needs an extra compatibility module). New
+`ElevationTier` enum (`Raised` → 4px vertical offset, `Overlay` → 16px,
+matching `mosaic-emit-xaml`'s `ElevationTier::translation_z` and
+`mosaic-emit-compose`'s `dp()`) + `part_elevation_tier` helper.
+
+Unlike XAML's `Translation`/`.Shadow` (attributes on the same object) or
+Compose's `Modifier.shadow(...)` (one link in the same modifier chain),
+`MultiEffect` is a full, independent QtQuick item that must reference its
+shadow *source* by `id`. Qt's styling is also architecturally the most
+fragmented of the three backends implemented so far: three separate
+paint-line builders (`lower_styled_box` for `Box`, `qml_rectangle_paint_lines`
+for `Row`/`Column`/`Stack`/`HostSurface`, `host_button_style_qml_lines` for
+`HostButton`) plus `HostDraggable`'s own hand-built `Item`, none sharing a
+single style function the way Compose's `compose_box_style` does — so
+`elevation` needed wiring into five call sites individually: `Box`,
+`Row`/`Column`/`Stack` (via `emit_styled_layout_container_qml` — also
+updated `needs_container_wrapper` to force the Rectangle wrapper for a part
+with elevation but no background/border/padding), `HostButton` (shadows the
+`Button` element itself, not its nested `background: Rectangle { ... }`
+property-value position), `HostDraggable` (reuses the `id` its drag
+machinery already allocates — no separate id needed, unlike XAML, which hit
+a real XamlCompiler bug on this exact primitive), and `HostSurface` (no real
+caller today, wired for symmetry with `Row`/`Column`/`Stack`'s shared
+paint-line function).
+
+**Two real bugs found via a real `qml`/`qmlscene` launch of the actual
+generated `TaskApp`/`ProjectNav` packages — `qmllint`'s static pass caught
+neither:**
+
+1. Every `If`/`Else` branch lowers to `Loader { sourceComponent: Component
+   { <branch body> } }`, and `Component` accepts exactly ONE top-level
+   child. The first implementation emitted the shadowed element and its
+   `MultiEffect` as two plain siblings — fine as a `RowLayout`/`ColumnLayout`
+   child, but a hard LOAD failure ("Invalid component body specification",
+   not caught by `qmllint`) whenever the shadowed element was the sole
+   child of a conditional branch — which real `notes-row-on`/`project-on`
+   toggle buttons are. Reproduced on the real generated `TaskApp.qml`
+   *and* the much smaller `ProjectNav.qml`/`Notes.qml` (ruling out "just a
+   scale/complexity limit of one huge file").
+2. A `MultiEffect` that is a direct child of a `RowLayout`/`ColumnLayout`
+   triggers `qmllint`'s `Quick.layout-positioning` "undefined behavior"
+   warning for its `anchors.fill`. A real `Item.grabToImage` screenshot of
+   an isolated `RowLayout`-nested repro showed it *does* render correctly
+   on the pinned Qt 6.8.1, but relying on one version's empirically-observed
+   behavior for a documented-undefined pattern is fragile.
+
+Both are fixed the same way: `qml_elevation_wrap` wraps the shadowed
+element plus its `MultiEffect` inside ONE outer `Item`, whose
+`implicitWidth`/`implicitHeight`/`Layout.preferred*` mirror the shadowed
+element's own already-computed implicit size via a live binding (no need to
+duplicate or move any call site's own sizing logic). The wrapper is the
+sole `Component` root (fixes bug 1) and is never itself layout-managed
+unless placed as one, so the inner element and its `MultiEffect` anchor to
+a plain `Item`, not the ambient layout (fixes bug 2), as a side effect of
+the same change.
+
+Also found along the way, via a real `Item.grabToImage` screenshot: an
+initial probe with subtle shadow values (`shadowBlur: 0.5`, ~25% alpha) on
+a near-white probe background rendered as a completely invisible shadow —
+briefly looking like the `MultiEffect` mechanism itself was broken. A
+second probe against a higher-contrast (medium grey) background showed the
+exact same values rendering a clearly visible soft shadow, confirming this
+was a probe-background-contrast artifact, not a rendering defect; the real
+`TaskApp`/`ProjectNav` cards sit on a genuinely contrasting app background
+so the effect is visible in practice (confirmed via a `grabToImage`
+screenshot of the actual compiled `TaskApp` — the brand-mark icon and the
+task-composer card both show a visible soft shadow).
+
+Verified against the real toolchain, end to end: `mosaic-compile pkg
+--backend qt --profile native-complete` against all four real components
+(`TaskApp`, `ProjectNav`, `Notes`, `Calendar`) — all succeed with zero
+degradations; the real generated `TaskApp.qml` produces a `MultiEffect` for
+every one of its 13 real `elevation`-declaring parts (confirmed via 16
+total `MultiEffect` instances across 16 distinct source ids — some part
+names render at more than one layout site, e.g. collapsed/expanded rail
+states — matching the identical 16-instance count `mosaic-emit-compose`
+found against the same source, a useful cross-backend consistency check),
+including coverage across `Box` (`brand-mark`), `Row`/`Column`
+(several containers), `HostButton` (`notes-row-on`), and `HostDraggable`
+(`board-card`/`board-card-crit`); re-verified with `qmllint` (only the
+pre-existing, unrelated `Divider` `height:`-on-layout-child warning
+remains — no new warnings) and a real `qmlscene` launch of all four
+regenerated packages (zero errors, down from the "Invalid component body
+specification" failure on three of them before the wrapper fix).
+
 ### Added - lower `HostProgressRing` to a hand-drawn determinate arc (#13176, UI40)
 
 Fourth (and final native-backend) of the `HostProgressRing` cascade
