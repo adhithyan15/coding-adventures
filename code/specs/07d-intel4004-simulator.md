@@ -12,9 +12,9 @@ This is a **behavioral simulator** — it executes 4004 machine code directly, p
 correct results without modeling internal hardware. For a gate-level simulation that
 routes every operation through actual logic gates, see `07d2-intel4004-gatelevel.md`.
 
-The simulator uses **GenericVM** from the `virtual-machine` package as its execution
-engine. Each 4004 opcode is registered as a handler, giving us the dispatch loop,
-tracing, and step/run infrastructure for free.
+The Rust simulator owns its architectural state and uses a direct checked
+fetch-decode-execute loop. Each accepted instruction produces a bounded trace;
+invalid loads, fetches, encodings, and targets return typed errors atomically.
 
 ## Layer Position
 
@@ -256,73 +256,47 @@ For 2-byte instructions, the second byte is the data or address low byte.
 - **RDR (0xEA):** Read ROM I/O port into A.
 - **WPM (0xE3):** Write program RAM. Not simulated (was for EPROM programming).
 
-## Execution Engine: GenericVM Integration
+## Execution Engine
 
-The simulator uses `GenericVM` from the `virtual-machine` package. This provides:
+The simulator provides:
 
-1. **Opcode dispatch** — each 4004 opcode is registered as a handler
-2. **Fetch-decode-execute loop** — GenericVM's `execute()` drives the main loop
-3. **Step/run API** — single-step debugging comes free
-4. **Tracing** — every instruction execution produces a `VMTrace` snapshot
+1. **Opcode dispatch** — the instruction byte selects the complete 4004 family
+2. **Checked fetch-decode-execute** — both bytes and accepted targets are
+   validated before architectural mutation
+3. **Step/run API** — typed single-step errors and caller-bounded execution
+4. **Tracing and state** — every accepted instruction returns a trace, while an
+   owned snapshot exposes the complete immutable architectural state
 
 ### Loader
 
-Raw ROM bytes are pre-parsed into `Instruction` objects:
-- 1-byte instructions: `Instruction(opcode=raw_byte, operand=None)`
-- 2-byte instructions: `Instruction(opcode=first_byte, operand=second_byte)`
-- The loader detects 2-byte instructions by checking the upper nibble
-
-The resulting `CodeObject` is passed to `GenericVM.execute()`.
+Raw ROM bytes remain byte-addressable. The loader rejects images larger than
+the configured ROM before clearing or copying memory. Step detects two-byte
+instructions from the first byte and rejects a missing second byte atomically.
 
 ### State
 
-4004-specific state is stored as attributes on the `Intel4004Simulator` instance:
+4004-specific state is stored on the `Intel4004Simulator` instance:
 - `accumulator`, `registers`, `carry` — CPU registers
 - `hw_stack`, `stack_pointer` — 3-level hardware call stack
 - `ram`, `ram_bank`, `ram_address` — RAM with bank selection
 - `rom_port` — I/O port for WRR/RDR
 - `output_port` — RAM output port for WMP
 
-The `GenericVM` stack is unused (4004 is accumulator-based, not stack-based).
-
 ## Public API
 
-```python
-class Intel4004Simulator:
-    def __init__(self) -> None: ...
-
-    # --- CPU State ---
-    @property
-    def accumulator(self) -> int: ...       # 0–15
-    @property
-    def registers(self) -> list[int]: ...   # 16 values, each 0–15
-    @property
-    def carry(self) -> bool: ...
-    @property
-    def pc(self) -> int: ...                # 0–4095
-
-    # --- Memory ---
-    @property
-    def ram(self) -> list[list[list[int]]]: ...  # banks × registers × nibbles
-    @property
-    def rom(self) -> bytearray: ...              # 4096 bytes
-
-    # --- Execution ---
-    def load_program(self, rom: bytes, start_address: int = 0) -> None: ...
-    def step(self) -> Intel4004Trace: ...
-    def run(self, program: bytes, max_steps: int = 10000) -> list[Intel4004Trace]: ...
-    def reset(self) -> None: ...
-
-@dataclass
-class Intel4004Trace:
-    address: int                # PC where this instruction was fetched
-    raw: int                    # Raw first byte
-    raw2: int | None            # Raw second byte (for 2-byte instructions)
-    mnemonic: str               # "LDM 5", "JUN 0x100", "ADD R3"
-    accumulator_before: int
-    accumulator_after: int
-    carry_before: bool
-    carry_after: bool
+```rust
+impl Intel4004Simulator {
+    pub fn new(memory_size: usize) -> Self;
+    pub fn reset(&mut self);
+    pub fn load_program(&mut self, rom: &[u8]) -> Result<(), Intel4004Error>;
+    pub fn step(&mut self) -> Result<Intel4004Trace, Intel4004Error>;
+    pub fn run(
+        &mut self,
+        program: &[u8],
+        max_steps: usize,
+    ) -> Result<Vec<Intel4004Trace>, Intel4004Error>;
+    pub fn snapshot(&self) -> Intel4004State;
+}
 ```
 
 ## Example Programs

@@ -78,7 +78,7 @@ mod tests {
         let result = compile_source("fn main() { let x: u4 = 5; }").unwrap();
         let decoded = decode_hex(&result.hex_text).unwrap();
         let mut sim = Intel4004Simulator::new(4096);
-        let traces = sim.run(&decoded.binary, 100);
+        let traces = sim.run(&decoded.binary, 100).unwrap();
         assert!(!traces.is_empty());
         assert!(sim.halted);
         assert_eq!(sim.registers[2], 5, "assembly was:\n{}", result.assembly);

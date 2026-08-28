@@ -85,7 +85,7 @@ let program = vec![
     encode_daa(),    // Decimal adjust: A = 3, carry = 1
     encode_hlt(),
 ];
-sim.run(&program, 100);
+sim.run(&program, 100).unwrap();
 assert_eq!(sim.accumulator, 3);
 assert!(sim.carry);
 ```
@@ -107,6 +107,15 @@ program[2] = encode_hlt();
 program[0x010] = encode_bbl(7);
 
 let mut sim = Intel4004Simulator::new(4096);
-sim.run(&program, 100);
+sim.run(&program, 100).unwrap();
 assert_eq!(sim.accumulator, 7);
 ```
+
+## Checked execution contract
+
+`load_program`, `step`, and `run` return `Result` and reject oversized ROM
+images, truncated two-byte instructions, unknown opcodes, invalid jump/fetch
+targets, halted execution, and invalid legacy selector state without changing
+architectural state. `snapshot()` returns an owned `Intel4004State`, including
+the complete ROM, RAM, register, stack, port, selector, PC, carry, and halt
+state. `run` records at most the caller's bounded instruction count.
