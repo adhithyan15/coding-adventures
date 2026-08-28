@@ -184,6 +184,8 @@ Pinned participant-configuration fixtures gate quote variants, aliases, mixed
 implicit lanes, all six stereotypes, and malformed or unterminated definitions.
 Pinned central-connection fixtures gate source, destination, and dual endpoint
 markers across solid, dotted, bidirectional, and cross message families.
+Pinned text fixtures gate HTML break variants, explicit wrapping intent,
+punctuation next to comments, and empty message labels through native shaping.
 Both single-line accessibility statements and multiline `accDescr` blocks
 lower to PaintScene metadata.
 Newlines and semicolons are interchangeable sequence statement terminators,

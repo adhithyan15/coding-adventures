@@ -208,6 +208,9 @@ pub fn tokenize_mermaid_sequence(source: &str) -> Vec<Token> {
             };
             if allowed {
                 token.value.clone_from(&keyword);
+                if keyword == "as" {
+                    token.type_name = Some("AS".to_string());
+                }
                 context = match (context.as_deref(), keyword.as_str()) {
                     (Some("create"), "participant" | "actor") => Some(keyword),
                     (Some("note"), "left" | "right") => Some("note-placement".to_string()),
@@ -1098,21 +1101,24 @@ A\\-B: reverse stick bottom
     #[test]
     fn tokenizes_sequence_line_break_variants() {
         let tokens = tokenize_mermaid_sequence(
-            "sequenceDiagram\nAlice->>Bob: One<br>Two<br/>Three<br />Four\n",
+            "sequenceDiagram\nparticipant Alice as One<br>Two<br/>Three<br />Four\nAlice->>Bob: One<br>Two<br/>Three<br />Four\n",
         );
         assert_eq!(
             tokens
                 .iter()
                 .filter(|token| token.type_name.as_deref() == Some("LINE_BREAK"))
                 .count(),
-            3
+            6
         );
+        assert!(tokens
+            .iter()
+            .any(|token| token.value == "as" && token.type_name.as_deref() == Some("AS")));
     }
 
     #[test]
     fn tokenizes_sequence_wrap_directives() {
         let tokens = tokenize_mermaid_sequence(
-            "sequenceDiagram\nAlice->>Bob: wrap: A long message\nnote over Alice,Bob: nowrap: A note\n",
+            "sequenceDiagram\nAlice->>Bob:wrap: A long message\nnote over Alice,Bob: nowrap: A note\n",
         );
         let directives: Vec<_> = tokens
             .iter()
@@ -1120,6 +1126,13 @@ A\\-B: reverse stick bottom
             .map(|token| token.value.as_str())
             .collect();
         assert_eq!(directives, vec!["wrap:", "nowrap:"]);
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_ == lexer::token::TokenType::Colon)
+                .count(),
+            2
+        );
     }
 
     #[test]
