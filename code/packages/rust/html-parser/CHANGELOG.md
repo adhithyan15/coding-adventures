@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser content and render nodes now retain the authored `style` attribute
+  for the shared computed-style boundary without interpreting CSS in HTML
+  parsing.
 - Non-whitespace character data rejected after a template-owned `col` now
   reports the required column-group parse error while remaining ignored.
   ASCII whitespace is retained, while ordinary content, real column groups and

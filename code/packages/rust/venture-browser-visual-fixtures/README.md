@@ -21,8 +21,11 @@ HTTP server and report the shared frame and scroll probes. They should not copy
 the fixture HTML or invent toolkit-specific visual baselines.
 
 `capture_subresource_lifecycle` records the document-first placeholder frame,
-ordered requests, reverse-order completion diagnostics, and converged visual
-capture. It is the shared acceptance seam for scheduler and repaint behavior.
+ordered requests, reverse-order completion diagnostics, completion-discovered
+imports, and converged visual capture. The page combines imported/inline CSS,
+custom properties, viewport media, structural/attribute selectors, and edge
+shorthands, making it the shared acceptance seam for scheduler, cascade, and
+repaint behavior.
 
 `load_international_page` provides a second non-golden fixture for reusable
 text-flow acceptance. It covers inherited RTL content, isolate and embedding

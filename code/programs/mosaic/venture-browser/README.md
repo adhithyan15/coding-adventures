@@ -114,17 +114,19 @@ interprets `BUILD` contents itself; Bash-specific logic remains in
 The package contract also runs `venture-browser-visual-fixtures`, a reusable
 Mosaic-era page and resource corpus that fixes deterministic geometry and
 structural RGBA screenshots for mixed inline text, preformatted blocks,
-external author CSS, decoded and failed images, wrapped links, and multiple
-scroll states. Full
+external and imported author CSS, element style attributes, custom properties,
+viewport media, attribute/structural selectors, shorthand box geometry,
+decoded and failed images, wrapped links, and multiple scroll states. Full
 font-raster screenshots are retained as diagnostics while exact structural
 screenshots mask platform glyph pixels. Production adapter tests sweep the
 same fixture through Cairo (shared by Qt, Flutter, and Compose), Metal, and
 Direct2D, using portable frame probes instead of toolkit-owned HTML or golden
 files. The same fixture also drives document-first subresource acceptance. It
 records the pending placeholder frame, dispatches typed stylesheet/image
-requests through the host-neutral scheduler contract, applies completions out
-of order, and requires deterministic convergence without refetching retained
-page state. CSS syntax, cascade policy, media filtering, and computed values
+requests through the host-neutral scheduler contract, enqueues imports exposed
+by completion effects, applies results out of order, and requires deterministic
+convergence without refetching retained page state. CSS syntax, import/cycle
+policy, cascade order, media filtering, and computed values
 remain in shared Rust packages; native and web toolkits only schedule bytes and
 present the resulting scene.
 Generate the six inspectable PNGs with:

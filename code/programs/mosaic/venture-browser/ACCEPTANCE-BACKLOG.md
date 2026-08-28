@@ -86,13 +86,23 @@ cross-platform proving application. Items are ordered by risk and dependency.
   resolution, typed shared CSS/image scheduler effects, ordered blocking,
   screen-media filtering, failure fallback, navigation-safe completions,
   retained-page restyle, and a real-page fixture consumed by available hosts.
-- [ ] **P2 CSS convergence — imported and element-authored cascade.** Extend
+- [x] **P2 CSS convergence — imported and element-authored cascade.** Extend
   the new computed-style boundary with element `style` declarations,
   attribute/structural selector matching, inherited custom properties,
   shorthand/value resolution, viewport media evaluation, and ordered
   `@import` graph scheduling. Keep parser data generation and fetch/cycle
   policy independent from layout, then ratchet the profile with a compact CSS
-  conformance corpus shared by every Venture host.
+  conformance corpus shared by every Venture host. Completed with retained
+  style attributes, inline specificity, inherited custom properties and
+  `var()` fallback, four-edge shorthands, attribute/first/last/nth-child
+  selectors, viewport media, append-only import requests, depth-first cascade,
+  ancestor-cycle diagnostics, and shared real-page host acceptance.
+- [ ] **P2 CSS convergence — computed box and flow values.** Extend the same
+  computed-style boundary with percentages and `em`/`rem`, `auto`, min/max
+  sizing, borders, `box-sizing`, per-side longhands, text alignment and white
+  space, and display-aware block/inline flow. Keep value computation reusable
+  and independent from layout engines, then add compact cross-host geometry
+  and paint cases before broadening into flex or grid layout.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

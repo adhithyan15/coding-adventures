@@ -32,10 +32,14 @@ The optional visited callback receives only resolved URLs. It selects theme
 colors and inherited link decoration without exposing history or persistence
 policy to this producer adapter. `HtmlStyleContext` adds a host-neutral
 computed-style boundary: grammar-validated author rules resolve type, class,
-ID, descendant/child, `:link`, and `:visited` selectors by importance,
-specificity, and source order, then inherit typography and color into Layout
-IR. The initial property profile covers display, foreground/background,
-typography, decoration, fixed pixel dimensions, margin, and padding.
+ID, attribute, descendant/child, structural child, `:link`, and `:visited`
+selectors by importance, specificity, and source order. Element `style`
+declarations share that cascade, inherited custom properties resolve `var()`
+values, and viewport dimensions evaluate screen media without coupling layout
+to fetch policy. The property profile covers display, foreground/background,
+typography, decoration, fixed pixel dimensions, and four-side margin/padding
+shorthands and longhands. Parsed `@import` metadata remains transport-neutral
+for browser schedulers.
 
 This bridge intentionally keeps CSS syntax in `css-parser`, browser loading in
 `venture-browser-core`, and inline geometry in the layout engines. It projects

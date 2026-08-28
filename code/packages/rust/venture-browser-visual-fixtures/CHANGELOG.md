@@ -8,6 +8,9 @@
 
 ## Unreleased
 
+- Extend the real-page stylesheet corpus with a scheduler-discovered import,
+  viewport media, inline styles, inherited custom properties, attribute and
+  structural selectors, and shorthand-driven geometry baselines.
 - Extend the real-page router and reverse-completion capture with an external
   author stylesheet so every available backend exercises retained-page
   restyling through the shared scheduler and computed cascade.

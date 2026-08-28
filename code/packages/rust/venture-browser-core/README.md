@@ -20,12 +20,16 @@ relative links, stylesheets, and images. `begin_execute` commits the retained
 document before subresources and emits typed requests in deterministic
 stylesheet-then-image order. Hosts dispatch those
 effects through `BrowserSubresourceScheduler`; each completion recomposes only
-from retained document/resource state and reports whether repaint is required.
+from retained document/resource state, reports whether repaint is required,
+and exposes newly discovered import requests for the same scheduler.
 Navigation emits cancellation effects, and generation IDs make late or
 duplicate completions harmless. Stylesheets remain blocked in parser-defined
 document order even when completions arrive out of order; failed or
 media-inactive sheets unblock later author rules without discarding the
-retained document. Image failures remain recoverable Mosaic-style bordered
+retained document. Imports use append-only stable request ordinals while the
+cascade walks them depth-first before their parent; ancestor cycles become
+diagnostics rather than fetch loops. Link, import, and rule media all evaluate
+against the pipeline's logical viewport. Image failures remain recoverable Mosaic-style bordered
 `alt` text.
 
 The default `HttpBrowserFetcher` adapts `http1-client`, but tests and platform
