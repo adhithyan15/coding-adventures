@@ -149,6 +149,46 @@
     {
       "id": "rgb-participant-group",
       "source": "sequenceDiagram\nbox rgb(34, 56, 0) Group1\nparticipant Alice\nparticipant Bob\nend\nAlice->Bob: Hello Bob, how are you?"
+    },
+    {
+      "id": "participant-config-quote-styles",
+      "source": "sequenceDiagram\nparticipant Alice@{ \"type\" : \"database\" }\nparticipant Bob@{ \"type\" : \"database\" }\nparticipant Carl@{ type: \"database\" }\nparticipant David@{ \"type\" : 'database' }\nparticipant Eve@{ type: 'database' }\nparticipant Favela@{ \"type\" : \"database\"    }\nBob->>+Alice: Hi Alice\nAlice->>+Bob: Hi Bob"
+    },
+    {
+      "id": "mixed-participant-types",
+      "source": "sequenceDiagram\nparticipant lead\nparticipant dsa@{ \"type\" : \"queue\" }\nAPI->>+Database: getUserb\nDatabase-->>-API: userb\ndsa --> Database: hello"
+    },
+    {
+      "id": "boundary-participant",
+      "source": "sequenceDiagram\nparticipant boundary@{ \"type\" : \"boundary\" }\nboundary->boundary: test"
+    },
+    {
+      "id": "control-participant",
+      "source": "sequenceDiagram\nparticipant C@{ \"type\" : \"control\" }\nC->C: test"
+    },
+    {
+      "id": "entity-participant",
+      "source": "sequenceDiagram\nparticipant E@{ \"type\" : \"entity\" }\nE->E: test"
+    },
+    {
+      "id": "database-participant",
+      "source": "sequenceDiagram\nparticipant D@{ \"type\" : \"database\" }\nD->D: test"
+    },
+    {
+      "id": "collections-participant",
+      "source": "sequenceDiagram\nparticipant L@{ \"type\" : \"collections\" }\nL->L: test"
+    },
+    {
+      "id": "queue-participant",
+      "source": "sequenceDiagram\nparticipant Q@{ \"type\" : \"queue\" }\nQ->Q: test"
+    },
+    {
+      "id": "participant-stereotypes-with-aliases",
+      "source": "sequenceDiagram\nparticipant Alice@{ \"type\" : \"boundary\" } as Public API\nparticipant Bob@{ \"type\" : \"control\" } as Controller\nAlice->>Bob: Request\nBob-->>Alice: Response"
+    },
+    {
+      "id": "actor-stereotypes-with-aliases",
+      "source": "sequenceDiagram\nactor A@{ \"type\" : \"database\" } AS Database Server\nactor B@{ \"type\" : \"queue\" } as Message Queue\nA->>B: Send message"
     }
   ],
   "invalid": [
@@ -163,6 +203,14 @@
     {
       "id": "autonumber-rejects-thousandths",
       "source": "sequenceDiagram\nautonumber 10.001\nAlice->Bob:Hello Bob, how are you?\nNote right of Bob: Bob thinks\nBob-->Alice: I am good thanks!"
+    },
+    {
+      "id": "participant-config-malformed-json",
+      "source": "sequenceDiagram\nparticipant D@{ \"type: \"entity\" }\nparticipant E@{ \"type\": \"dat\nabase }"
+    },
+    {
+      "id": "participant-config-missing-closing-brace",
+      "source": "sequenceDiagram\nparticipant E@{ \"type\": \"entity\"\nE ->> E: process"
     }
   ]
 }

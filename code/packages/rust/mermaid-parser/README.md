@@ -180,6 +180,8 @@ Pinned message fixtures gate solid and dotted cross, point, filled,
 bidirectional, and all eight half-arrow orientations through native Paint paths.
 Pinned participant-group fixtures gate named, transparent, unlabeled, and RGB
 boxes while preserving group membership and actor metadata through the scene.
+Pinned participant-configuration fixtures gate quote variants, aliases, mixed
+implicit lanes, all six stereotypes, and malformed or unterminated definitions.
 Both single-line accessibility statements and multiline `accDescr` blocks
 lower to PaintScene metadata.
 Newlines and semicolons are interchangeable sequence statement terminators,
