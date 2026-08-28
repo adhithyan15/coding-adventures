@@ -1,0 +1,6 @@
+{
+  "language": "hindi",
+  "chapter": 11,
+  "output": "hindi/book/chapters/ch11-colours.tex",
+  "scriptSet": "hindi-main"
+}

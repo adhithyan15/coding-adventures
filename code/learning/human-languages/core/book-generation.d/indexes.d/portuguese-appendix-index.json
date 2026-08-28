@@ -1,0 +1,6 @@
+{
+  "language": "portuguese",
+  "output": "portuguese/book/chapters/appendix-index.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ptar"
+}

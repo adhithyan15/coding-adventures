@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 8,
+  "output": "punjabi/book/chapters/ch08-mind-and-tone.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

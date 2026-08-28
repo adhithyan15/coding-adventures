@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 7,
+  "output": "punjabi/book/chapters/ch07-core-verbs.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

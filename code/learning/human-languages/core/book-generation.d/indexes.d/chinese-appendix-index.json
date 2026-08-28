@@ -1,0 +1,6 @@
+{
+  "language": "chinese",
+  "output": "chinese/book/chapters/appendix-index.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

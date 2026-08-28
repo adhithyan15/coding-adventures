@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 7,
+  "output": "persian/book/chapters/ch07-mind-verbs.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

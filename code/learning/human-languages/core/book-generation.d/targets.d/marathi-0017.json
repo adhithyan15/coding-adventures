@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 17,
+  "output": "marathi/book/chapters/ch17-family-memory.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

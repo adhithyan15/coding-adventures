@@ -1,0 +1,6 @@
+{
+  "language": "arabic",
+  "chapter": 21,
+  "output": "arabic/book/chapters/ch21-dog-and-cat.tex",
+  "scriptSet": "arabic-main"
+}

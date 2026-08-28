@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 3,
+  "output": "marathi/book/chapters/ch03-thanks-script-b.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

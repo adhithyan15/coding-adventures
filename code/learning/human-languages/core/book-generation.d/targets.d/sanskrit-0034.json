@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 34,
+  "output": "sanskrit/book/chapters/ch34-more-of-the-body.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

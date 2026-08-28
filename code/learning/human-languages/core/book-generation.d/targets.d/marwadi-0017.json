@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 17,
+  "output": "marwadi/book/chapters/ch17-weather-six.tex",
+  "scriptSet": "marwadi-main"
+}

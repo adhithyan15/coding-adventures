@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 32,
+  "output": "kannada/book/chapters/ch32-core-verbs.tex",
+  "scriptSet": "kannada-comparisons"
+}

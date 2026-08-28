@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 21,
+  "output": "marwadi/book/chapters/ch21-transport-three.tex",
+  "scriptSet": "marwadi-main"
+}

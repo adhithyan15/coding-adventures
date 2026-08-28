@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 14,
+  "output": "persian/book/chapters/ch14-people-words.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

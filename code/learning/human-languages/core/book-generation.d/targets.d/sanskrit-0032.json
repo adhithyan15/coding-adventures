@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 32,
+  "output": "sanskrit/book/chapters/ch32-the-tree.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

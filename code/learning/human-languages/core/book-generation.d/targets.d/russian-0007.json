@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 7,
+  "output": "russian/book/chapters/ch07-friend-and-siblings.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

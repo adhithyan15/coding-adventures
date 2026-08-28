@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 13,
+  "output": "persian/book/chapters/ch13-sky-words.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

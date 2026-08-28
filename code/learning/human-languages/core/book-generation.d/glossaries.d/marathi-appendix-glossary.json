@@ -1,0 +1,6 @@
+{
+  "language": "marathi",
+  "output": "marathi/book/chapters/appendix-glossary.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

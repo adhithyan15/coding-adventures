@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 39,
+  "output": "sanskrit/book/chapters/ch39-animals.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

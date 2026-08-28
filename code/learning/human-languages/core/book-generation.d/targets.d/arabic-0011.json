@@ -1,0 +1,6 @@
+{
+  "language": "arabic",
+  "chapter": 11,
+  "output": "arabic/book/chapters/ch11-head-and-hand.tex",
+  "scriptSet": "arabic-main"
+}

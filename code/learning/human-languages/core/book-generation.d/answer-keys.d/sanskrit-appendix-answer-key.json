@@ -1,0 +1,6 @@
+{
+  "language": "sanskrit",
+  "output": "sanskrit/book/chapters/appendix-answer-key.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

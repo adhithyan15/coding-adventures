@@ -1,0 +1,6 @@
+{
+  "language": "japanese",
+  "chapter": 10,
+  "output": "japanese/book/chapters/ch10-slower-please.tex",
+  "scriptSet": "japanese-main"
+}

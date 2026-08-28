@@ -1,0 +1,6 @@
+{
+  "language": "arabic",
+  "chapter": 13,
+  "output": "arabic/book/chapters/ch13-water-and-bread.tex",
+  "scriptSet": "arabic-main"
+}

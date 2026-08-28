@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 33,
+  "output": "sanskrit/book/chapters/ch33-river-and-road.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

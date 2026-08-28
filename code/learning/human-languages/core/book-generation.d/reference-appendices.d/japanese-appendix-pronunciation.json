@@ -1,0 +1,7 @@
+{
+  "language": "japanese",
+  "title": "Pronunciation & Writing Reference",
+  "source": "japanese/pronunciation-reference.md",
+  "output": "japanese/book/chapters/appendix-pronunciation.tex",
+  "scriptSet": "japanese-main"
+}

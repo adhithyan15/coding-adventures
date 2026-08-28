@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 4,
+  "output": "chinese/book/chapters/ch04-negation.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

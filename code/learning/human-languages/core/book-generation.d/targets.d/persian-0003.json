@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 3,
+  "output": "persian/book/chapters/ch03-ask-and-answer-names.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

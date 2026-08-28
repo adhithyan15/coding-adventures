@@ -1,0 +1,8 @@
+{
+  "language": "russian",
+  "title": "Pronunciation & Cyrillic Reference",
+  "source": "russian/pronunciation-reference.md",
+  "output": "russian/book/chapters/appendix-pronunciation.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

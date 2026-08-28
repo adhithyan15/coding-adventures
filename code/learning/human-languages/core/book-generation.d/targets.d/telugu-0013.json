@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 13,
+  "output": "telugu/book/chapters/ch13-head-and-hand.tex",
+  "scriptSet": "telugu-comparisons"
+}

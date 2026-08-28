@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 49,
+  "output": "sanskrit/book/chapters/ch49-small-answers.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

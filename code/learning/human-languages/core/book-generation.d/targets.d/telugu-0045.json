@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 45,
+  "output": "telugu/book/chapters/ch45-grandparents.tex",
+  "scriptSet": "telugu-comparisons"
+}

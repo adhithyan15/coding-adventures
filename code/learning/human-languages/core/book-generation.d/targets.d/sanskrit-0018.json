@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 18,
+  "output": "sanskrit/book/chapters/ch18-asking.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

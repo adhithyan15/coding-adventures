@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 25,
+  "output": "sanskrit/book/chapters/ch25-hand-and-foot.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

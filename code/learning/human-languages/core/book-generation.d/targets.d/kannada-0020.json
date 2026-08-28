@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 20,
+  "output": "kannada/book/chapters/ch20-numbers-and-weather.tex",
+  "scriptSet": "kannada-comparisons"
+}

@@ -1,0 +1,6 @@
+{
+  "language": "marwadi",
+  "chapter": 1,
+  "output": "marwadi/book/chapters/ch01-ram-ram-sa.tex",
+  "scriptSet": "marwadi-main"
+}

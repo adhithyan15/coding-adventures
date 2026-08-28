@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 10,
+  "output": "punjabi/book/chapters/ch10-request-food-drink.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

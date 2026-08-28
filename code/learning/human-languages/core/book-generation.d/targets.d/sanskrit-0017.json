@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 17,
+  "output": "sanskrit/book/chapters/ch17-time.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

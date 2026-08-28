@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 8,
+  "output": "kannada/book/chapters/ch08-please.tex",
+  "scriptSet": "kannada-comparisons"
+}

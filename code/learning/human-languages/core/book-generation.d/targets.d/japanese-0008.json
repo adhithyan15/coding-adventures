@@ -1,0 +1,6 @@
+{
+  "language": "japanese",
+  "chapter": 8,
+  "output": "japanese/book/chapters/ch08-sayounara.tex",
+  "scriptSet": "japanese-main"
+}

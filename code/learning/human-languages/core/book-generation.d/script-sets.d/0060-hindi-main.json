@@ -1,0 +1,14 @@
+[
+  {
+    "unicodeScript": "Devanagari",
+    "scriptCommand": "hi"
+  },
+  {
+    "unicodeScript": "Arabic",
+    "scriptCommand": "ar"
+  },
+  {
+    "unicodeScript": "Cyrillic",
+    "scriptCommand": "ru"
+  }
+]

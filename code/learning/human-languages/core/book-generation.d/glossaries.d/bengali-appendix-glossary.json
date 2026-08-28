@@ -1,0 +1,6 @@
+{
+  "language": "bengali",
+  "output": "bengali/book/chapters/appendix-glossary.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

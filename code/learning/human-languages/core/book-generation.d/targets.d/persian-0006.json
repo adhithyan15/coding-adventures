@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 6,
+  "output": "persian/book/chapters/ch06-core-verbs.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

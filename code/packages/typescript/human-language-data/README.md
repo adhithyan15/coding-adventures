@@ -38,8 +38,11 @@ learning."
 Every track's chapter and curriculum ledgers are conflict-resistant shards, as
 are the shared spine, book-generation manifest, and Japanese, Perso-Arabic,
 Tamil, and Urdu-Nastaliq script inventories. Edit the owning file under `X.d/`;
-their monoliths do not exist. Language Ladder and Script Ductus fold bounded
-browser modules from the canonical shards at build time.
+their monoliths do not exist. Book-generation chapters use stable
+`<language>-<NNNN>.json` owners rather than per-language slices, and its
+backmatter and script sets live in independently owned section directories.
+Language Ladder and Script Ductus fold bounded browser modules from the
+canonical shards at build time.
 
 ```bash
 npm run check:shards
@@ -834,12 +837,23 @@ npm run generate:progress
 npm run check:progress
 ```
 
-`core/book-generation.d/<language>.json` declares each generated chapter's language, number,
-output path, and script-rendering options. Its title and label come only from that
-track's `chapters.d/` capability ledger; the config is rejected if it tries to
-repeat either field, and a declaration without canonical chapter metadata fails
-closed. The generator orders schema-v2 lessons by `sequence`, writes the LaTeX
-chapter, and records a stable FNV-1a fingerprint in
+`core/book-generation.d/targets.d/<language>-<NNNN>.json` declares one
+generated chapter's language, number, output path, and script-rendering options.
+Hand-authored chapters use the same identity under `handwritten.d/`; reference
+appendices, glossaries, answer keys, indexes, and ordered script sets have their
+own direct-record section directories. `_meta.json` holds only `version` and
+`sourceBaseUrl`. No per-language slice or flat compatibility manifest exists.
+
+A chapter declaration's title and label come only from that track's
+`chapters.d/` capability ledger; the config is rejected if it tries to repeat
+either field, and a declaration without canonical chapter metadata fails
+closed. Exact identity gates require targets to equal the generated-book hash
+owners, targets plus handwritten chapters to equal both the generated-narration
+owners and chapter capabilities, and the owner languages to equal the registry.
+Registry-derived glossary, answer-key, and index identities and generated
+pronunciation-reference artifacts independently close the backmatter owner sets.
+The generator orders schema-v2 lessons by `sequence`, writes the LaTeX chapter,
+and records a stable FNV-1a fingerprint in
 `core/generated-book-hashes/<language>.d/NNNN.json`. The fingerprint covers the
 chapter's lessons
 **and the capability fields the book prints** (`title`, `label`, `canDo`, and

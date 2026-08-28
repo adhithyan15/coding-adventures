@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 11,
+  "output": "bengali/book/chapters/ch11-friend-family-brother-sister.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

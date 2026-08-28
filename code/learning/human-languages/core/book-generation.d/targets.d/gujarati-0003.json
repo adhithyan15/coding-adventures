@@ -1,0 +1,7 @@
+{
+  "language": "gujarati",
+  "chapter": 3,
+  "output": "gujarati/book/chapters/ch03-doorway-glyphs.tex",
+  "unicodeScript": "Gujarati",
+  "scriptCommand": "gu"
+}

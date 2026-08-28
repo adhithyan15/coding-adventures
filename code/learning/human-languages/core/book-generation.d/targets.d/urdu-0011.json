@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 11,
+  "output": "urdu/book/chapters/ch11-heart.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

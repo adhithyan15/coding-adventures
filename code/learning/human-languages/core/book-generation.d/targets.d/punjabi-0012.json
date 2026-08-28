@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 12,
+  "output": "punjabi/book/chapters/ch12-face-parts.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

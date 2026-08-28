@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 6,
+  "output": "telugu/book/chapters/ch06-dative-case.tex",
+  "scriptSet": "telugu-comparisons"
+}

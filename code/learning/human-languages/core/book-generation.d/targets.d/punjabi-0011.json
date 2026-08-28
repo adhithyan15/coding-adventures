@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 11,
+  "output": "punjabi/book/chapters/ch11-friend-and-family.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

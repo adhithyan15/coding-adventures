@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 2,
+  "output": "urdu/book/chapters/ch02-give-your-name.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

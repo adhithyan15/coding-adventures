@@ -1,0 +1,6 @@
+{
+  "language": "urdu",
+  "output": "urdu/book/chapters/appendix-glossary.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

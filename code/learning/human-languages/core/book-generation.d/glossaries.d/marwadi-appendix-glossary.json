@@ -1,0 +1,5 @@
+{
+  "language": "marwadi",
+  "output": "marwadi/book/chapters/appendix-glossary.tex",
+  "scriptSet": "marwadi-main"
+}

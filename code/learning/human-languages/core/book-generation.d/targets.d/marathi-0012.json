@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 12,
+  "output": "marathi/book/chapters/ch12-doing-verbs.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

@@ -1,0 +1,6 @@
+{
+  "language": "portuguese",
+  "output": "portuguese/book/chapters/appendix-answer-key.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ptar"
+}

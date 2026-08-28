@@ -1,0 +1,6 @@
+{
+  "language": "tamil",
+  "chapter": 11,
+  "output": "tamil/book/chapters/ch11-colours.tex",
+  "scriptSet": "tamil-comparisons"
+}

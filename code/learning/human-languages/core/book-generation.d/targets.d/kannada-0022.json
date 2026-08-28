@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 22,
+  "output": "kannada/book/chapters/ch22-green-and-yellow.tex",
+  "scriptSet": "kannada-comparisons"
+}

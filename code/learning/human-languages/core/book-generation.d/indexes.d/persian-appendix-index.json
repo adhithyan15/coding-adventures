@@ -1,0 +1,6 @@
+{
+  "language": "persian",
+  "output": "persian/book/chapters/appendix-index.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

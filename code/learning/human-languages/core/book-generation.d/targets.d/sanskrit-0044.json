@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 44,
+  "output": "sanskrit/book/chapters/ch44-colours.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

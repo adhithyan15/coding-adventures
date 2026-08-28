@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 7,
+  "output": "bengali/book/chapters/ch07-core-verbs.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

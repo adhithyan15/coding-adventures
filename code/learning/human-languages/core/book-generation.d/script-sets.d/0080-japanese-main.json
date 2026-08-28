@@ -1,0 +1,14 @@
+[
+  {
+    "unicodeScript": "Katakana",
+    "scriptCommand": "ja"
+  },
+  {
+    "unicodeScript": "Hiragana",
+    "scriptCommand": "ja"
+  },
+  {
+    "unicodeScript": "Han",
+    "scriptCommand": "ja"
+  }
+]

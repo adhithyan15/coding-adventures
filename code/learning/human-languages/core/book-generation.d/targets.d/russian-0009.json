@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 9,
+  "output": "russian/book/chapters/ch09-face-parts.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

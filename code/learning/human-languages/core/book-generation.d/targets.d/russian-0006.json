@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 6,
+  "output": "russian/book/chapters/ch06-water-coffee-tea-bread.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

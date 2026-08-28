@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 50,
+  "output": "sanskrit/book/chapters/ch50-sound-and-song.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

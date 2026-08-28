@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 40,
+  "output": "telugu/book/chapters/ch40-a-meal.tex",
+  "scriptSet": "telugu-comparisons"
+}
