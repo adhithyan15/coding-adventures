@@ -1438,8 +1438,8 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // ALGOL 60 — tracked integer exponents contribute to exact real snapshot
-    // metadata without changing their runtime f64_pow lowering.
+    // ALGOL 60 — an exact bare tracked integer exponent retains bounded real
+    // multiplication lowering and exact later snapshot output.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -7710,7 +7710,7 @@ fn algol_integer_function_exponent_snapshot_runs_on_every_available_standard_bac
 }
 
 #[test]
-fn algol_tracked_integer_exponent_metadata_runs_on_every_available_standard_backend() {
+fn algol_bare_tracked_real_power_exponents_run_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
         .find(|program| {
@@ -7719,14 +7719,14 @@ fn algol_tracked_integer_exponent_metadata_runs_on_every_available_standard_back
                     .src
                     .contains("saved := 6.0 ^ exponent + 6.0; exponent := 3")
         })
-        .expect("the ALGOL tracked integer exponent program must remain in the matrix");
+        .expect("the ALGOL bare tracked real-power exponent program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
         let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
-                "{backend:?} toolchain is present but tracked integer exponent metadata did not run"
+                "{backend:?} toolchain is present but the bare tracked real-power exponent did not run"
             );
             continue;
         };
