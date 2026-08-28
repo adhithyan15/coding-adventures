@@ -9803,6 +9803,43 @@ After lifecycle reconciliation and selection, the complete graph contains
 566 owners: 167 merged, 398 pending, and exactly one in-progress owner. There
 is no active parity PR.
 
+## Post-#13434 Refresh and F# Declaration-Facade Selection
+
+All 41 final checks for PR #13434 reached terminal acceptable conclusions: 34
+successes, six expected skips, and one neutral result. GitHub reported final
+head `c2a3408d06a9f8c558c5d1ade4bcec8ad649f2f8` conflict-free. The loop enabled
+squash auto-merge, and GitHub merged the PR at 2026-08-28T11:12:06Z as
+`e76f211644452f24dade7031c3573540e6b672c9` without a manual merge command.
+The active parity slot is therefore clear.
+
+The collision-checked schema-3 inventory on exact current `origin/main`
+`e76f211644452f24dade7031c3573540e6b672c9` remains 15 established lanes,
+1,388 implementation identities, 4,602 package slots, and 1,427 all-reported
+identities. The four completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and canonical collisions and unknown buckets remain zero.
+
+The intervening Intel 4004 functional and gate-level audits, Forme root-site
+generation, Mosaic Flutter elevation work, FLOW-MATIC fixture expansion,
+Mermaid sequence fixtures, and human-language owner sharding add no package
+identity. They remain within existing owners, so no duplicate or newly unowned
+topology work is added.
+
+The dependency/leverage pass selects
+`build-tool-fsharp-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-fsharp-extra-ci-toolchain-declaration-conformance`. Its
+neutral corpus, CRLF grammar, and C# shared-engine dependencies are all merged.
+The tranche must expose the bounded snapshot evaluator through an F# symbol
+and independently consume every neutral toolchain-detection fixture; inherited
+C# coverage or CLI delegation alone does not count. This is the narrowest
+ready shared-engine lane proof and advances the remaining-engine umbrella
+without widening filesystem, Git, process, environment, network, execution,
+credential, or OCaml-promotion authority.
+
+After lifecycle reconciliation and selection, the complete graph contains
+566 owners: 168 merged, 397 pending, and exactly one in-progress owner. There
+is no active parity PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

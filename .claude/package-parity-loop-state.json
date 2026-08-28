@@ -11,24 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13434,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13434",
-    "branch": "codex/build-tool-extra-ci-toolchain-crlf-grammar-hardening",
-    "implementation_revision": "9416ed64709ddbf50ffd87104449b4575754378e",
-    "status": "checks-pending",
-    "opened_at": "2026-08-28T10:34:37Z"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-28T10:34:42Z",
+    "observed_at": "2026-08-28T11:12:06Z",
     "pr_number": 13434,
     "run_id": 33163885754,
     "attempt": 1,
-    "status": "checks-pending",
-    "notes": "Opened ready-for-review PR #13434 from validated head 9416ed64709ddbf50ffd87104449b4575754378e. GitHub has queued required CI and CodeQL checks; mergeability is still being calculated, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict."
+    "status": "merged-next-selected",
+    "notes": "All 41 final checks reached terminal acceptable conclusions: 34 successes, six expected skips, and one neutral result. GitHub reported final head c2a3408d06a9f8c558c5d1ade4bcec8ad649f2f8 conflict-free. The loop enabled squash auto-merge, and GitHub merged PR #13434 as e76f211644452f24dade7031c3573540e6b672c9 without a manual merge command. The active parity slot is clear and the F# shared-engine declaration facade is selected."
   },
   "last_inventory": {
-    "revision": "b7178c248b66a0f84982c9ce0abd026979552d02",
+    "revision": "e76f211644452f24dade7031c3573540e6b672c9",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -201,7 +194,7 @@
     {
       "id": "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening",
       "title": "Pin CRLF-only carriage-return stripping across toolchain declaration consumers",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus"],
       "branch": "codex/build-tool-extra-ci-toolchain-crlf-grammar-hardening",
       "pr_number": 13434,
@@ -218,6 +211,10 @@
       "security_review_notes": "The change grants no process, environment, network, filesystem-write, credential, secret, dependency, capability, or logging authority. Existing byte, line, aggregate, process, memory, CPU, and wall-time limits remain intact. A final scan finds no suspicious authority-bearing additions, no dependency or capability metadata changes, and zero exact path overlap across eight live pull requests.",
       "final_review_revision": "9416ed64709ddbf50ffd87104449b4575754378e",
       "publication_notes": "Opened ready-for-review PR #13434 from validated head 9416ed64709ddbf50ffd87104449b4575754378e. Required CI and CodeQL checks are queued and GitHub is still calculating mergeability, so auto-merge is intentionally disabled until every required check is terminal and acceptable and the PR is conflict-free. The tranche remains process-free, grants no new host or credential authority, and does not claim remaining-engine adoption or OCaml promotion.",
+      "final_revision": "c2a3408d06a9f8c558c5d1ade4bcec8ad649f2f8",
+      "merged_at": "2026-08-28T11:12:06Z",
+      "merge_commit": "e76f211644452f24dade7031c3573540e6b672c9",
+      "merge_notes": "All 41 final checks were acceptable: 34 successes, six expected skips, and one neutral result. GitHub reported the final head conflict-free; squash auto-merge was enabled and GitHub merged the PR without a manual merge command.",
       "selection_notes": "Selected immediately after PR #13418 merged because it is the highest-leverage ready dependency: repairing the language-neutral reference and canonical Go oracle unblocks F# plus nine other existing-engine declaration consumers without widening host authority. The collision-checked exact-main inventory records 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, zero collisions, zero unknown buckets, and OCaml still emerging at zero packages. Merged PRs #13405 and #13409 clear the PDP-11 functional and Forme owner blocks; merged PR #13422 adds the separately owned Rust-only pdp11-gatelevel identity. No eligible exact-main topology gap remains unowned.",
       "notes": "Discovered during independent review of the selected C# consumer before publication. The language-neutral Python reference and current Go declaration parser accept a lone terminal carriage return even though the merged grammar permits carriage-return stripping only as part of CRLF. Extend the neutral corpus with a CRLF positive case plus lone-CR and CR-before-trailing-space negatives, then repair the reference and Go oracle together before the remaining engines consume the hardened contract. The selected C# consumer already rejects lone CR directly, so this follow-up does not block its publication."
     },
@@ -270,10 +267,12 @@
     {
       "id": "build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
       "title": "Make the F# build-tool facade consume extra CI toolchain declarations",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-csharp-extra-ci-toolchain-declaration-conformance"],
-      "branch": null,
+      "branch": "codex/build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
       "pr_number": null,
+      "selection_revision": "e76f211644452f24dade7031c3573540e6b672c9",
+      "selection_notes": "Selected immediately after PR #13434 merged because all three dependencies are now complete and F# is the narrowest high-leverage shared-engine consumer: it turns the existing C# implementation into independently reviewable F# lane evidence before the remaining-engine umbrella can close. The collision-checked exact-main inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, zero collisions, zero unknown buckets, and OCaml emerging at zero packages. Intervening Intel 4004, Forme, Mosaic Flutter, FLOW-MATIC, Mermaid, and human-language merges do not change those counts and remain inside existing owners. No eligible exact-main topology gap is unowned.",
       "notes": "Verify the F# facade and project-reference boundary over the remediated C# engine in an independently reviewable tranche, including native facade entry points and neutral declaration fixtures."
     },
     {
