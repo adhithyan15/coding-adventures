@@ -1,0 +1,10 @@
+{
+  "language": "arabic",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:2cfb9ad1025fc84a",
+  "lessonIds": [
+    "AR-C10-ab-umm",
+    "AR-C10-akh-ukht"
+  ],
+  "tex": "arabic/book/chapters/ch10-family.tex"
+}

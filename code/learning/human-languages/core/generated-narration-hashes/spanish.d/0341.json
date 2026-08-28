@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:354c93f5a2cbf6b9",
+  "lessonIds": [
+    "ES-C341-arriba",
+    "ES-C341-abajo",
+    "ES-C341-delante",
+    "ES-C341-detras",
+    "ES-C341-dentro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch341.txt",
+  "json": "spanish/narration/ch341.json",
+  "textHash": "fnv1a64:a54f9715b0d2e63b",
+  "jsonHash": "fnv1a64:0f71f8ca230db932",
+  "findings": []
+}

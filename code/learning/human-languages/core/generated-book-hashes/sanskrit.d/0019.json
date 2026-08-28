@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:8bcd1d9a6175fbf0",
+  "lessonIds": [
+    "SA-C19-six",
+    "SA-C19-seven",
+    "SA-C19-eight",
+    "SA-C19-nine",
+    "SA-C19-ten",
+    "SA-C19-number-family"
+  ],
+  "tex": "sanskrit/book/chapters/ch19-numbers.tex"
+}

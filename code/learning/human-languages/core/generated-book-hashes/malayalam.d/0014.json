@@ -1,0 +1,10 @@
+{
+  "language": "malayalam",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:cd32d83148c996d7",
+  "lessonIds": [
+    "ML-C14-kaalangal",
+    "ML-S118-letter-llla"
+  ],
+  "tex": "malayalam/book/chapters/ch14-seasons.tex"
+}

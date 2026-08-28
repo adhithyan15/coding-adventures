@@ -1,0 +1,18 @@
+{
+  "language": "japanese",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:3c3914237ff34f56",
+  "lessonIds": [
+    "JA-W06-ko-katakana",
+    "JA-W06-long-mark",
+    "JA-W06-hi-katakana",
+    "JA-C01-koohii"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "japanese/narration/ch06.txt",
+  "json": "japanese/narration/ch06.json",
+  "textHash": "fnv1a64:209fe8f245728883",
+  "jsonHash": "fnv1a64:2190ee436a8e68c3",
+  "findings": []
+}

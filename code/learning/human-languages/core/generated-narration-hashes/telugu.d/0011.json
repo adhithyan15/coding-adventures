@@ -1,0 +1,17 @@
+{
+  "language": "telugu",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:b87d88f980c9b000",
+  "lessonIds": [
+    "TE-C11-rangulu",
+    "TE-S06-letter-ra",
+    "TE-S114-letter-la"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch11.txt",
+  "json": "telugu/narration/ch11.json",
+  "textHash": "fnv1a64:0a3953fec8cc1c5c",
+  "jsonHash": "fnv1a64:5cb365d29ccc24c9",
+  "findings": []
+}

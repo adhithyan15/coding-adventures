@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:a214964635afbf75",
+  "lessonIds": [
+    "KA-C54-tree",
+    "KA-C54-branch",
+    "KA-C54-leaf",
+    "KA-C54-root",
+    "KA-C54-seed"
+  ],
+  "tex": "kannada/book/chapters/ch54-the-tree.tex"
+}

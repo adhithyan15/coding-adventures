@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:38f58df481aeaec5",
+  "lessonIds": [
+    "KA-C46-fruit",
+    "KA-C46-cloth",
+    "KA-C46-lamp",
+    "KA-C46-salt",
+    "KA-C46-book"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "kannada/narration/ch46.txt",
+  "json": "kannada/narration/ch46.json",
+  "textHash": "fnv1a64:7c74708e1d3f7ded",
+  "jsonHash": "fnv1a64:50e8a7d7d5c27e5e",
+  "findings": []
+}

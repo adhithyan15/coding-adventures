@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:736bcc1a1ae1b674",
+  "lessonIds": [
+    "ES-C33-verde",
+    "ES-C33-amarillo"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch151.txt",
+  "json": "spanish/narration/ch151.json",
+  "textHash": "fnv1a64:f99cd8ee0e90f881",
+  "jsonHash": "fnv1a64:4e67bffae3954f96",
+  "findings": []
+}

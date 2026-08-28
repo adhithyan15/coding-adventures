@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:af7d89902975fb89",
+  "lessonIds": [
+    "ES-C16-ser-imperfecto",
+    "ES-C16-ir-imperfecto",
+    "ES-C16-ver-imperfecto"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch109.txt",
+  "json": "spanish/narration/ch109.json",
+  "textHash": "fnv1a64:c8ec0b2cfb791c73",
+  "jsonHash": "fnv1a64:a208cfc1116cc3e6",
+  "findings": []
+}

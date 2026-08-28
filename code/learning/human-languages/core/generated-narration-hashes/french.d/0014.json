@@ -1,0 +1,16 @@
+{
+  "language": "french",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:a3300ab0ba96729b",
+  "lessonIds": [
+    "FR-C14-avoir",
+    "FR-C14-age"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "french/narration/ch14.txt",
+  "json": "french/narration/ch14.json",
+  "textHash": "fnv1a64:4197b60d2dea3e09",
+  "jsonHash": "fnv1a64:82655632a9d368b9",
+  "findings": []
+}

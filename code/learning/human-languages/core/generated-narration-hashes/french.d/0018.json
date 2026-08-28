@@ -1,0 +1,16 @@
+{
+  "language": "french",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:e5e33f58fada17a0",
+  "lessonIds": [
+    "FR-C18-oui",
+    "FR-C18-non"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "french/narration/ch18.txt",
+  "json": "french/narration/ch18.json",
+  "textHash": "fnv1a64:f9499173477cb6d8",
+  "jsonHash": "fnv1a64:688029fdd580446e",
+  "findings": []
+}

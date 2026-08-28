@@ -1,0 +1,18 @@
+{
+  "language": "french",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:54b100e927f7b738",
+  "lessonIds": [
+    "FR-C28-cafe",
+    "FR-C28-the",
+    "FR-C28-lait",
+    "FR-C28-sucre"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "french/narration/ch28.txt",
+  "json": "french/narration/ch28.json",
+  "textHash": "fnv1a64:b2c109c46c98f6d8",
+  "jsonHash": "fnv1a64:c7164ccb63eda47a",
+  "findings": []
+}

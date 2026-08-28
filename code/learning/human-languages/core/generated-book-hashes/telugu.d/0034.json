@@ -1,0 +1,12 @@
+{
+  "language": "telugu",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:40033eb742ac09f8",
+  "lessonIds": [
+    "TE-C34-tiisuko",
+    "TE-C34-adugu",
+    "TE-C34-sahayam-ceyu",
+    "TE-C34-ishtam"
+  ],
+  "tex": "telugu/book/chapters/ch34-verbs-between-people.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:55e732bfc8570da1",
+  "lessonIds": [
+    "FA-C06-budan",
+    "FA-C06-raftan",
+    "FA-C06-amadan",
+    "FA-C06-goftan",
+    "FA-C06-danestan"
+  ],
+  "tex": "persian/book/chapters/ch06-core-verbs.tex"
+}

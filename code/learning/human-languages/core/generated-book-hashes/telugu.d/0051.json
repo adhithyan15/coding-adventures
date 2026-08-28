@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:a379408e09cd4d72",
+  "lessonIds": [
+    "TE-C51-gratitude",
+    "TE-C51-favour",
+    "TE-C51-respect",
+    "TE-C51-blessing",
+    "TE-C51-salutation"
+  ],
+  "tex": "telugu/book/chapters/ch51-courtesy.tex"
+}

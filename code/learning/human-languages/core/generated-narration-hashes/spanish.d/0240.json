@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:96ab68b2c614430f",
+  "lessonIds": [
+    "ES-C62-repaso-gerundio"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch240.txt",
+  "json": "spanish/narration/ch240.json",
+  "textHash": "fnv1a64:1f6f1827b0c3519f",
+  "jsonHash": "fnv1a64:3e4d3c9aa71e7d1e",
+  "findings": []
+}

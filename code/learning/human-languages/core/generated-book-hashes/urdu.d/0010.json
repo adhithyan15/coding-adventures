@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:cdf392821d8af2f4",
+  "lessonIds": [
+    "UR-C10-kaan",
+    "UR-C10-naak",
+    "UR-C10-aankh",
+    "UR-C10-munh"
+  ],
+  "tex": "urdu/book/chapters/ch10-face-words.tex"
+}

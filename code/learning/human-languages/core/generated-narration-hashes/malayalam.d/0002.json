@@ -1,0 +1,24 @@
+{
+  "language": "malayalam",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:6928ba9fa0a57b17",
+  "lessonIds": [
+    "ML-C02-peru",
+    "ML-C02-enre",
+    "ML-C02-aanu",
+    "ML-C02-enre-peru-aanu",
+    "ML-C02-nii-ningal",
+    "ML-C02-entu",
+    "ML-C02-ninre-peru-entaanu",
+    "ML-C02-santosham",
+    "ML-W02-santosham-guided-copy",
+    "ML-C02-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "malayalam/narration/ch02.txt",
+  "json": "malayalam/narration/ch02.json",
+  "textHash": "fnv1a64:fcac8a1bf395115a",
+  "jsonHash": "fnv1a64:5d8c0351fb248940",
+  "findings": []
+}

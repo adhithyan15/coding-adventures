@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:d4e064366d7d6cf2",
+  "lessonIds": [
+    "ES-C18-subjuntivo",
+    "ES-C18-comer-subjuntivo",
+    "ES-C18-vivir-subjuntivo"
+  ],
+  "tex": "spanish/book/chapters/ch127-subjuntivo-regular.tex"
+}

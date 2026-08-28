@@ -1,0 +1,18 @@
+{
+  "language": "portuguese",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:5bbd061e447e39b8",
+  "lessonIds": [
+    "PT-C20-tomar-pegar",
+    "PT-C20-perguntar",
+    "PT-C20-ajudar",
+    "PT-C20-gostar"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "portuguese/narration/ch20.txt",
+  "json": "portuguese/narration/ch20.json",
+  "textHash": "fnv1a64:1efac2aced68056f",
+  "jsonHash": "fnv1a64:86c28cdcef4b511b",
+  "findings": []
+}

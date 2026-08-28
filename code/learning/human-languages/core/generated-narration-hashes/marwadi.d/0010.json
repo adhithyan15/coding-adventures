@@ -1,0 +1,24 @@
+{
+  "language": "marwadi",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:af7dedf43105a26b",
+  "lessonIds": [
+    "MW-C08-hear-maa",
+    "MW-C08-maa",
+    "MW-C08-hear-baap",
+    "MW-W08-ba",
+    "MW-C08-baap",
+    "MW-C08-hear-bhai",
+    "MW-C08-bhai",
+    "MW-C08-hear-bahan",
+    "MW-C08-bahan",
+    "MW-C08-family-four"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 1,
+  "text": "marwadi/narration/ch10.txt",
+  "json": "marwadi/narration/ch10.json",
+  "textHash": "fnv1a64:5b4764ed576614a4",
+  "jsonHash": "fnv1a64:409694221c8a3157",
+  "findings": []
+}

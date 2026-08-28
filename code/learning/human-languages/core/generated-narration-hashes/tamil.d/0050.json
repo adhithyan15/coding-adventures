@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:e4075edd14f098ed",
+  "lessonIds": [
+    "TA-C50-threshold",
+    "TA-C50-kolam",
+    "TA-C50-flower",
+    "TA-C50-betel-leaf",
+    "TA-C50-welcome"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch50.txt",
+  "json": "tamil/narration/ch50.json",
+  "textHash": "fnv1a64:44394ee595c90483",
+  "jsonHash": "fnv1a64:88ee567a9a0c9671",
+  "findings": []
+}

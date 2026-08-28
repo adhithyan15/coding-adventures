@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:9f9e8209ae3e3d28",
+  "lessonIds": [
+    "ES-C56-repaso-amigos"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch26.txt",
+  "json": "spanish/narration/ch26.json",
+  "textHash": "fnv1a64:e02c7bd99324c854",
+  "jsonHash": "fnv1a64:75b1ad1b48d2622b",
+  "findings": []
+}

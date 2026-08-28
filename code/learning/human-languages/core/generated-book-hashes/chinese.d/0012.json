@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:bdbc7ba7be6933c0",
+  "lessonIds": [
+    "ZH-C12-ren",
+    "ZH-C12-nu",
+    "ZH-C12-hear-erzi",
+    "ZH-W12-er",
+    "ZH-C12-erzi",
+    "ZH-C12-hear-nuer",
+    "ZH-C12-nuer",
+    "ZH-C12-hear-jia",
+    "ZH-W12-jia",
+    "ZH-C12-jia",
+    "ZH-C12-hear-jiaren",
+    "ZH-C12-jiaren",
+    "ZH-R12-family-six",
+    "ZH-C12-practice"
+  ],
+  "tex": "chinese/book/chapters/ch12-family-six.tex"
+}

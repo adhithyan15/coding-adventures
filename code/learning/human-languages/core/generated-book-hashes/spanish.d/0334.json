@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:ab80435761d4d495",
+  "lessonIds": [
+    "ES-C334-salud",
+    "ES-C334-hambre",
+    "ES-C334-frio",
+    "ES-C334-calor",
+    "ES-C334-edad"
+  ],
+  "tex": "spanish/book/chapters/ch334-salud-y-edad.tex"
+}

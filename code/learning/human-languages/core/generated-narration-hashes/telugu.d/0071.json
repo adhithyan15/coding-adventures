@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:d0877f93206c1754",
+  "lessonIds": [
+    "TE-C71-uncle",
+    "TE-C71-aunt",
+    "TE-C71-brother-in-law",
+    "TE-C71-sister-in-law",
+    "TE-C71-son-in-law"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch71.txt",
+  "json": "telugu/narration/ch71.json",
+  "textHash": "fnv1a64:f31a36024e104b89",
+  "jsonHash": "fnv1a64:38fc98b470b3796b",
+  "findings": []
+}

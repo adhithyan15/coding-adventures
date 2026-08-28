@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:d3377b6f9b153394",
+  "lessonIds": [
+    "ML-C64-then",
+    "ML-C64-soon",
+    "ML-C64-sometimes",
+    "ML-C64-only",
+    "ML-C64-but"
+  ],
+  "tex": "malayalam/book/chapters/ch64-five-words-that-join.tex"
+}

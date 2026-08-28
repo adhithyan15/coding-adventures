@@ -1,0 +1,24 @@
+{
+  "language": "italian",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:2d6d888b44c53554",
+  "lessonIds": [
+    "IT-C01-ciao",
+    "IT-W01-ciao-guided-copy",
+    "IT-C01-buono",
+    "IT-C01-il-la-lo",
+    "IT-C01-giorno",
+    "IT-C01-buongiorno",
+    "IT-C01-sera",
+    "IT-C01-notte",
+    "IT-C01-grazie",
+    "IT-C01-practice"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 0,
+  "text": "italian/narration/ch01.txt",
+  "json": "italian/narration/ch01.json",
+  "textHash": "fnv1a64:bb656ecf5aad27da",
+  "jsonHash": "fnv1a64:280312934dc60af9",
+  "findings": []
+}

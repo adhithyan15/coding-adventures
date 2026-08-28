@@ -1,0 +1,11 @@
+{
+  "language": "telugu",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:56c3ed22f55d01eb",
+  "lessonIds": [
+    "TE-C20-padakondu-iravai",
+    "TE-C20-vatavaranam",
+    "TE-S123-letter-dda"
+  ],
+  "tex": "telugu/book/chapters/ch20-numbers-and-weather.tex"
+}

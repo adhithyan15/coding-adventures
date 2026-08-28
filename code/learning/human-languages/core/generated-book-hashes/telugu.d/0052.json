@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:a1ad25b1b3de9a18",
+  "lessonIds": [
+    "TE-C52-door",
+    "TE-C52-chair",
+    "TE-C52-muggu",
+    "TE-C52-flower",
+    "TE-C52-garland"
+  ],
+  "tex": "telugu/book/chapters/ch52-welcoming-a-guest.tex"
+}

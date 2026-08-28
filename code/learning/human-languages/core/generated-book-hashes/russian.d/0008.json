@@ -1,0 +1,9 @@
+{
+  "language": "russian",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:b784d2ec9d3ea874",
+  "lessonIds": [
+    "RU-C08-semya"
+  ],
+  "tex": "russian/book/chapters/ch08-family.tex"
+}

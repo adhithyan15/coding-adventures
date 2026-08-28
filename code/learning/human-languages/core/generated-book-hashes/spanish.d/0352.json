@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:ae75ca8766286818",
+  "lessonIds": [
+    "ES-C352-conjunto",
+    "ES-C352-entero",
+    "ES-C352-mayoria",
+    "ES-C352-resto",
+    "ES-C352-escaso"
+  ],
+  "tex": "spanish/book/chapters/ch352-el-conjunto-y-el-resto.tex"
+}

@@ -1,0 +1,10 @@
+{
+  "language": "portuguese",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:f14cd6d541e4b306",
+  "lessonIds": [
+    "PT-C07-dias-1",
+    "PT-C07-dias-2"
+  ],
+  "tex": "portuguese/book/chapters/ch07-days-of-the-week.tex"
+}

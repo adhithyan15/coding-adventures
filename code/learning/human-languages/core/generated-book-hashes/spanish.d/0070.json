@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:7feff06b2d6fce20",
+  "lessonIds": [
+    "ES-C12-hacer",
+    "ES-C12-decir",
+    "ES-C12-yo-go",
+    "ES-C12-practice"
+  ],
+  "tex": "spanish/book/chapters/ch70-yo-go-verbs.tex"
+}

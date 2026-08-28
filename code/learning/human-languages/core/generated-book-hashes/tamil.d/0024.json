@@ -1,0 +1,10 @@
+{
+  "language": "tamil",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:4949e9ab31d17899",
+  "lessonIds": [
+    "TA-C24-iravu",
+    "TA-C24-night-register-darkness"
+  ],
+  "tex": "tamil/book/chapters/ch24-night.tex"
+}

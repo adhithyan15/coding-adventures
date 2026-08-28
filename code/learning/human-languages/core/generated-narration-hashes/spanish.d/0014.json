@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:5709849dd20fd8a0",
+  "lessonIds": [
+    "ES-C06-cafe",
+    "ES-C06-por-favor",
+    "ES-C06-repaso-cafe"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch14.txt",
+  "json": "spanish/narration/ch14.json",
+  "textHash": "fnv1a64:eea30294c1ede3c5",
+  "jsonHash": "fnv1a64:37dd358b4691b316",
+  "findings": []
+}

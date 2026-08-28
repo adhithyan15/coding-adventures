@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:35e11539b70daa41",
+  "lessonIds": [
+    "ZH-W10-yan",
+    "ZH-W10-xie",
+    "ZH-C10-xiexie",
+    "ZH-C10-buxie",
+    "ZH-C10-practice"
+  ],
+  "tex": "chinese/book/chapters/ch10-xiexie.tex"
+}

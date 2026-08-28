@@ -1,0 +1,16 @@
+{
+  "language": "latin",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:c5cf4ddfd577bd3b",
+  "lessonIds": [
+    "LA-C10-aqua-vinum",
+    "LA-C10-panis"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "latin/narration/ch10.txt",
+  "json": "latin/narration/ch10.json",
+  "textHash": "fnv1a64:31f40c3db4aba7fe",
+  "jsonHash": "fnv1a64:da42d02adba2a603",
+  "findings": []
+}

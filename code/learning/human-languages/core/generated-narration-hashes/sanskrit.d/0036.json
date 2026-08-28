@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:f93a42631b63abcd",
+  "lessonIds": [
+    "SA-C36-also",
+    "SA-C36-all",
+    "SA-C36-likewise",
+    "SA-C36-slowly",
+    "SA-C36-rightly"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch36.txt",
+  "json": "sanskrit/narration/ch36.json",
+  "textHash": "fnv1a64:30d1346d9cef77ef",
+  "jsonHash": "fnv1a64:2b8b1f3fe542323c",
+  "findings": []
+}

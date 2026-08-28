@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:c865b2be7fcac92f",
+  "lessonIds": [
+    "ML-C06-dative-ikku",
+    "ML-C06-dative-subject",
+    "ML-S01-letter-ka",
+    "ML-S109-letter-ra"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "malayalam/narration/ch06.txt",
+  "json": "malayalam/narration/ch06.json",
+  "textHash": "fnv1a64:f621f69e2caaafe7",
+  "jsonHash": "fnv1a64:25e7c9c8a0b13888",
+  "findings": []
+}

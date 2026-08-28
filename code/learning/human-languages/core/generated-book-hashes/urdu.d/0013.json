@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:1f344c2f35806273",
+  "lessonIds": [
+    "UR-C13-lal",
+    "UR-C13-safed",
+    "UR-C13-kala",
+    "UR-C13-nila"
+  ],
+  "tex": "urdu/book/chapters/ch13-colors.tex"
+}

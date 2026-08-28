@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:a7181f2d7972b24f",
+  "lessonIds": [
+    "HI-C66-seed",
+    "HI-C66-crop",
+    "HI-C66-grain",
+    "HI-C66-grass",
+    "HI-C66-well"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch66.txt",
+  "json": "hindi/narration/ch66.json",
+  "textHash": "fnv1a64:24d787644697334f",
+  "jsonHash": "fnv1a64:1ed0199368e6c4d5",
+  "findings": []
+}

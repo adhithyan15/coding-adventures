@@ -1,0 +1,12 @@
+{
+  "language": "kannada",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:b4846b978fe3fe7c",
+  "lessonIds": [
+    "KA-C44-look",
+    "KA-C44-listen",
+    "KA-C44-speak",
+    "KA-C44-write"
+  ],
+  "tex": "kannada/book/chapters/ch44-see-say.tex"
+}

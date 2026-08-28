@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:ad2edddfabf3d7a8",
+  "lessonIds": [
+    "KA-C05-maatanaadu",
+    "KA-C05-naanu-kannada-maatanaaduttene",
+    "KA-C05-iru",
+    "KA-C05-kelasa-maadu",
+    "KA-C05-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch05.txt",
+  "json": "kannada/narration/ch05.json",
+  "textHash": "fnv1a64:deb6c20d888297ac",
+  "jsonHash": "fnv1a64:22ffef9706ff4e3c",
+  "findings": []
+}

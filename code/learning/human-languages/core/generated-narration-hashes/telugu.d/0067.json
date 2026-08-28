@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:65df7d9b6d34d095",
+  "lessonIds": [
+    "TE-C67-wall",
+    "TE-C67-roof",
+    "TE-C67-threshold",
+    "TE-C67-step",
+    "TE-C67-window"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch67.txt",
+  "json": "telugu/narration/ch67.json",
+  "textHash": "fnv1a64:0a14430bfb44a175",
+  "jsonHash": "fnv1a64:2b3b885458af22da",
+  "findings": []
+}

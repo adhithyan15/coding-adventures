@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:cac453291b9c3c79",
+  "lessonIds": [
+    "ES-C64-maria-ven"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch249.txt",
+  "json": "spanish/narration/ch249.json",
+  "textHash": "fnv1a64:6b1463fe486e0bf7",
+  "jsonHash": "fnv1a64:566ad5b2125bf705",
+  "findings": []
+}

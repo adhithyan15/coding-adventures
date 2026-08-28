@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:000d4b540fa7f49a",
+  "lessonIds": [
+    "ES-C361-carne",
+    "ES-C361-pescado",
+    "ES-C361-leche",
+    "ES-C361-sal",
+    "ES-C361-aceite"
+  ],
+  "tex": "spanish/book/chapters/ch361-la-carne-y-la-leche.tex"
+}

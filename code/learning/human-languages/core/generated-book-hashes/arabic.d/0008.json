@@ -1,0 +1,10 @@
+{
+  "language": "arabic",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:544ce3a8dd2bd464",
+  "lessonIds": [
+    "AR-C08-al-ahad-al-khamis",
+    "AR-C08-al-jumua-as-sabt"
+  ],
+  "tex": "arabic/book/chapters/ch08-days.tex"
+}

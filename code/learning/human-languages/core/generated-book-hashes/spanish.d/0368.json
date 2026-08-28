@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:181803044a7f3764",
+  "lessonIds": [
+    "ES-C368-abeja",
+    "ES-C368-mosca",
+    "ES-C368-cerdo",
+    "ES-C368-lobo",
+    "ES-C368-toro"
+  ],
+  "tex": "spanish/book/chapters/ch368-la-abeja-y-la-mosca.tex"
+}

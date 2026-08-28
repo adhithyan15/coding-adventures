@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:07e2cba5e31df43a",
+  "lessonIds": [
+    "TE-C25-shubha-ratri"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch25.txt",
+  "json": "telugu/narration/ch25.json",
+  "textHash": "fnv1a64:a81a921ce69a0c92",
+  "jsonHash": "fnv1a64:bb62a6907b20a022",
+  "findings": []
+}

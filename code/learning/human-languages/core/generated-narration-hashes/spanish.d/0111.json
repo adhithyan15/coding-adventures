@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:ccb2867041b365e7",
+  "lessonIds": [
+    "ES-C48-dos-miradas"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch111.txt",
+  "json": "spanish/narration/ch111.json",
+  "textHash": "fnv1a64:7bd7cfe11d43750d",
+  "jsonHash": "fnv1a64:59ed2afcc890307e",
+  "findings": []
+}

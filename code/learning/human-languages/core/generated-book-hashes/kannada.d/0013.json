@@ -1,0 +1,11 @@
+{
+  "language": "kannada",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:53b9bfd00638892c",
+  "lessonIds": [
+    "KA-C13-dehada-bhagagalu",
+    "KA-S08-vowel-sign-aa",
+    "KA-S117-letter-ya"
+  ],
+  "tex": "kannada/book/chapters/ch13-head-and-hand.tex"
+}

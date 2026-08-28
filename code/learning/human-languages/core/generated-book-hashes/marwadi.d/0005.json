@@ -1,0 +1,18 @@
+{
+  "language": "marwadi",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:5c23f0c58fd24483",
+  "lessonIds": [
+    "MW-C05-hear-mharo",
+    "MW-W05-virama",
+    "MW-W05-o-matra",
+    "MW-C05-mharo",
+    "MW-C05-hear-naam",
+    "MW-W05-na",
+    "MW-C05-naam",
+    "MW-C05-hear-hai",
+    "MW-W05-ai-matra",
+    "MW-C05-answer"
+  ],
+  "tex": "marwadi/book/chapters/ch05-name-answer.tex"
+}

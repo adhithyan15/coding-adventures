@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:39b806b71087494c",
+  "lessonIds": [
+    "ES-C36-oir",
+    "ES-C36-dormir",
+    "ES-C36-caminar",
+    "ES-C36-correr"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch165.txt",
+  "json": "spanish/narration/ch165.json",
+  "textHash": "fnv1a64:b9d42a6e21689c8b",
+  "jsonHash": "fnv1a64:cbaa63acf9ffebc9",
+  "findings": []
+}

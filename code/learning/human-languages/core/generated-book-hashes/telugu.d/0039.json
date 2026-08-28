@@ -1,0 +1,10 @@
+{
+  "language": "telugu",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:6ea0add02531a0cc",
+  "lessonIds": [
+    "TE-C39-tii",
+    "TE-C39-paalu"
+  ],
+  "tex": "telugu/book/chapters/ch39-tea-and-milk.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:597d17b2e7927ba5",
+  "lessonIds": [
+    "TA-C05-pesu",
+    "TA-C05-naan-tamizh-pesugiren",
+    "TA-W01-abugida-va-ka",
+    "TA-C05-vaazh",
+    "TA-C05-velai-sey",
+    "TA-C05-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch05.txt",
+  "json": "tamil/narration/ch05.json",
+  "textHash": "fnv1a64:024c77620084e291",
+  "jsonHash": "fnv1a64:094e0e5b9cf82070",
+  "findings": []
+}

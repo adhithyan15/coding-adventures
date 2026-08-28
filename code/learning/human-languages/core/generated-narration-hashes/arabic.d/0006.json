@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:0fc7430f7fb91f9b",
+  "lessonIds": [
+    "AR-C06-min-fadlik"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch06.txt",
+  "json": "arabic/narration/ch06.json",
+  "textHash": "fnv1a64:8bb2fc4854d56d62",
+  "jsonHash": "fnv1a64:5a9b845e7bab315b",
+  "findings": []
+}

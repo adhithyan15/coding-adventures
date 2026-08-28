@@ -1,0 +1,23 @@
+{
+  "language": "marwadi",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:b79982949dde6149",
+  "lessonIds": [
+    "MW-C11-hear-hawa",
+    "MW-C11-hawa",
+    "MW-C11-hear-baadal",
+    "MW-C11-baadal",
+    "MW-C11-hear-barsaat",
+    "MW-C11-barsaat",
+    "MW-R11-weather-three",
+    "MW-C11-weather-three",
+    "MW-R11-weather-close"
+  ],
+  "voiceLessons": 9,
+  "drivablePrefix": 9,
+  "text": "marwadi/narration/ch16.txt",
+  "json": "marwadi/narration/ch16.json",
+  "textHash": "fnv1a64:40d61c1497cd2654",
+  "jsonHash": "fnv1a64:debda46c944867c0",
+  "findings": []
+}

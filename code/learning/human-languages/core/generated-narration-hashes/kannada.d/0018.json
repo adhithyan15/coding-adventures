@@ -1,0 +1,16 @@
+{
+  "language": "kannada",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:4f255850c2b4e0fb",
+  "lessonIds": [
+    "KA-C18-gante",
+    "KA-S122-letter-ca"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch18.txt",
+  "json": "kannada/narration/ch18.json",
+  "textHash": "fnv1a64:1e928a5cafc982d4",
+  "jsonHash": "fnv1a64:49774b95ccd7c46c",
+  "findings": []
+}

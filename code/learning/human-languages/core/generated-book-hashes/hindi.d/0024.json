@@ -1,0 +1,10 @@
+{
+  "language": "hindi",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:c0bbf83ae7f67aeb",
+  "lessonIds": [
+    "HI-C24-hara-pila",
+    "HI-C24-pila-history"
+  ],
+  "tex": "hindi/book/chapters/ch24-green-and-yellow.tex"
+}

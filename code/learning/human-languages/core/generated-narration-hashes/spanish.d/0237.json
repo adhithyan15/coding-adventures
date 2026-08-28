@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:87985fd5b090c2b0",
+  "lessonIds": [
+    "ES-C62-comiendo"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch237.txt",
+  "json": "spanish/narration/ch237.json",
+  "textHash": "fnv1a64:73e7962eb723c2a0",
+  "jsonHash": "fnv1a64:c2337d77ee5406cb",
+  "findings": []
+}

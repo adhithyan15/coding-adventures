@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:898c9d1a34a8f102",
+  "lessonIds": [
+    "ES-C46-repaso-dos-sistemas"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch96.txt",
+  "json": "spanish/narration/ch96.json",
+  "textHash": "fnv1a64:f29fbe1bc0e4a154",
+  "jsonHash": "fnv1a64:35d1cf80f579f918",
+  "findings": []
+}

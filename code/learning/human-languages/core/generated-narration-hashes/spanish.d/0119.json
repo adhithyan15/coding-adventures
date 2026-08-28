@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:d0569bd463011dd6",
+  "lessonIds": [
+    "ES-C49-participios-irregulares"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch119.txt",
+  "json": "spanish/narration/ch119.json",
+  "textHash": "fnv1a64:e34b018848a673a0",
+  "jsonHash": "fnv1a64:4dfdbaabe731c3e6",
+  "findings": []
+}

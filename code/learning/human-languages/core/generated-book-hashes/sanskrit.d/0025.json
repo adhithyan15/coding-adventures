@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:e4ff3ac7e40d4494",
+  "lessonIds": [
+    "SA-C25-hand",
+    "SA-C25-foot",
+    "SA-C25-head",
+    "SA-C25-tooth",
+    "SA-C25-hair"
+  ],
+  "tex": "sanskrit/book/chapters/ch25-hand-and-foot.tex"
+}

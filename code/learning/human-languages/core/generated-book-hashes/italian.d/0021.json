@@ -1,0 +1,11 @@
+{
+  "language": "italian",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:e28479285826ccf7",
+  "lessonIds": [
+    "IT-C21-giocare",
+    "IT-C21-ottenere",
+    "IT-C21-rispondere"
+  ],
+  "tex": "italian/book/chapters/ch21-play-get-answer.tex"
+}

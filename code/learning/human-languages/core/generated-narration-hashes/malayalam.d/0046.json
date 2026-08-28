@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:81257f5d7fc03bcb",
+  "lessonIds": [
+    "ML-C46-fruit",
+    "ML-C46-cloth",
+    "ML-C46-lamp",
+    "ML-C46-salt",
+    "ML-C46-book"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch46.txt",
+  "json": "malayalam/narration/ch46.json",
+  "textHash": "fnv1a64:8adea428692b0db7",
+  "jsonHash": "fnv1a64:b551dcc599cd3984",
+  "findings": []
+}

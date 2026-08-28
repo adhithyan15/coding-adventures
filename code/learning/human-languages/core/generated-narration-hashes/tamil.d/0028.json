@@ -1,0 +1,16 @@
+{
+  "language": "tamil",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:fe6e5f28d3d432e4",
+  "lessonIds": [
+    "TA-C28-pirpakal",
+    "TA-C28-afternoon-boundary"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch28.txt",
+  "json": "tamil/narration/ch28.json",
+  "textHash": "fnv1a64:1e9b4062c1fe2d7e",
+  "jsonHash": "fnv1a64:081e7cd0875f3a05",
+  "findings": []
+}

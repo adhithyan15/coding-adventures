@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:d38359628a3e71bd",
+  "lessonIds": [
+    "ES-C284-de-acuerdo",
+    "ES-C284-seguro",
+    "ES-C284-cierto",
+    "ES-C284-exacto",
+    "ES-C284-por-supuesto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch284.txt",
+  "json": "spanish/narration/ch284.json",
+  "textHash": "fnv1a64:c72d2d518d6fb3bc",
+  "jsonHash": "fnv1a64:990568d5b92ac29c",
+  "findings": []
+}

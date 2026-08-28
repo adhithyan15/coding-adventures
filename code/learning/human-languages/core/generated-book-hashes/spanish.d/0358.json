@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:ad1958dc5e8223d7",
+  "lessonIds": [
+    "ES-C358-color",
+    "ES-C358-tamano",
+    "ES-C358-forma",
+    "ES-C358-clase",
+    "ES-C358-marca"
+  ],
+  "tex": "spanish/book/chapters/ch358-el-color-y-el-tamano.tex"
+}

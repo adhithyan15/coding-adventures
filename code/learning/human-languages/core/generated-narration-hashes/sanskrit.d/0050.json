@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:771deca55754822c",
+  "lessonIds": [
+    "SA-C50-sound",
+    "SA-C50-question",
+    "SA-C50-voice",
+    "SA-C50-song",
+    "SA-C50-verse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch50.txt",
+  "json": "sanskrit/narration/ch50.json",
+  "textHash": "fnv1a64:5e1e36a8c8bc293d",
+  "jsonHash": "fnv1a64:d1e41509e510ec9b",
+  "findings": []
+}

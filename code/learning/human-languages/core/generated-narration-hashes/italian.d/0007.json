@@ -1,0 +1,16 @@
+{
+  "language": "italian",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:9bf7027d1fe20599",
+  "lessonIds": [
+    "IT-C07-giorni-1",
+    "IT-C07-giorni-2"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "italian/narration/ch07.txt",
+  "json": "italian/narration/ch07.json",
+  "textHash": "fnv1a64:8e2526b733bb340c",
+  "jsonHash": "fnv1a64:1d2df003d415d248",
+  "findings": []
+}

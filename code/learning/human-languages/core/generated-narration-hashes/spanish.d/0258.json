@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:2a4a2f85c0380807",
+  "lessonIds": [
+    "ES-C66-la-terminacion-dice-quien"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch258.txt",
+  "json": "spanish/narration/ch258.json",
+  "textHash": "fnv1a64:79c9df988a8dc1d6",
+  "jsonHash": "fnv1a64:4e8a56723743d7bb",
+  "findings": []
+}

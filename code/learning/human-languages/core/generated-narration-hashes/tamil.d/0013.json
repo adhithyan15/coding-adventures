@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:a2e697d5f3b739af",
+  "lessonIds": [
+    "TA-C13-udal-uruppugal",
+    "TA-S06-ka",
+    "TA-W04-i-sign-write-nandri",
+    "TA-S117-letter-ra"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch13.txt",
+  "json": "tamil/narration/ch13.json",
+  "textHash": "fnv1a64:c0ee6b8be1aeaf06",
+  "jsonHash": "fnv1a64:e3f3ac9ac8af01ce",
+  "findings": []
+}

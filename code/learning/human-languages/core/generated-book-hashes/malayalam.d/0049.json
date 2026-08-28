@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:d3cd0efe5d15e2c5",
+  "lessonIds": [
+    "ML-C49-true",
+    "ML-C49-enough",
+    "ML-C49-certainly",
+    "ML-C49-perhaps",
+    "ML-C49-just-so"
+  ],
+  "tex": "malayalam/book/chapters/ch49-replies.tex"
+}

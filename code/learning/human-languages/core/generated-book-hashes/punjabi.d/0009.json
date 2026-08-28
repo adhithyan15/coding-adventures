@@ -1,0 +1,12 @@
+{
+  "language": "punjabi",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:c0720cf036822547",
+  "lessonIds": [
+    "PA-C09-laina",
+    "PA-C09-puchhna",
+    "PA-C09-madad-karna",
+    "PA-C09-pasand"
+  ],
+  "tex": "punjabi/book/chapters/ch09-taking-and-liking.tex"
+}

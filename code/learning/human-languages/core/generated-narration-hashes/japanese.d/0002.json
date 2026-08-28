@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:4738d9e25fd92f72",
+  "lessonIds": [
+    "JA-W01-ko",
+    "JA-W01-n",
+    "JA-W01-ni",
+    "JA-W01-chi",
+    "JA-W01-wa",
+    "JA-W01-konnichiwa-read",
+    "JA-C01-konnichiwa"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "japanese/narration/ch02.txt",
+  "json": "japanese/narration/ch02.json",
+  "textHash": "fnv1a64:419b22b6c702c57e",
+  "jsonHash": "fnv1a64:21da5d2733fdc42c",
+  "findings": []
+}

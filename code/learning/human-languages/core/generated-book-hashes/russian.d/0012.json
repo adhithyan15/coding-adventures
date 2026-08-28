@@ -1,0 +1,12 @@
+{
+  "language": "russian",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:c00077be294e0d3a",
+  "lessonIds": [
+    "RU-C12-mama",
+    "RU-C12-papa",
+    "RU-C12-mat",
+    "RU-C12-otets"
+  ],
+  "tex": "russian/book/chapters/ch12-mother-and-father.tex"
+}

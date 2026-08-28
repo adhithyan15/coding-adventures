@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:44bb40c61ce1c81b",
+  "lessonIds": [
+    "ES-C02-un",
+    "ES-C02-una",
+    "ES-C02-repaso-articulos"
+  ],
+  "tex": "spanish/book/chapters/ch03-un-una.tex"
+}

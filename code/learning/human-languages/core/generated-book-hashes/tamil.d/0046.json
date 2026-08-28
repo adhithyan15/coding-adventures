@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:5ebc67e4eafe881a",
+  "lessonIds": [
+    "TA-C46-teacher",
+    "TA-C46-student",
+    "TA-C46-doctor",
+    "TA-C46-farmer",
+    "TA-C46-guest"
+  ],
+  "tex": "tamil/book/chapters/ch46-who-somebody-is.tex"
+}

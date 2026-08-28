@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:69e99605c2dac4d4",
+  "lessonIds": [
+    "KA-C41-this",
+    "KA-C41-that",
+    "KA-C41-here",
+    "KA-C41-there",
+    "KA-C41-who",
+    "KA-C41-where",
+    "KA-C41-deixis-system"
+  ],
+  "tex": "kannada/book/chapters/ch41-pointing-and-asking.tex"
+}

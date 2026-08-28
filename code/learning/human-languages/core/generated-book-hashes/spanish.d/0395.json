@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:e73676a1bef16fd1",
+  "lessonIds": [
+    "ES-C395-entrar",
+    "ES-C395-volver",
+    "ES-C395-llegar",
+    "ES-C395-perder",
+    "ES-C395-necesitar"
+  ],
+  "tex": "spanish/book/chapters/ch395-entrar-y-volver.tex"
+}

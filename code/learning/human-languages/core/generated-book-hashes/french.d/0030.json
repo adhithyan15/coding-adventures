@@ -1,0 +1,12 @@
+{
+  "language": "french",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:8a0b8e345519679a",
+  "lessonIds": [
+    "FR-C30-fromage",
+    "FR-C30-beurre",
+    "FR-C30-sel",
+    "FR-C30-oeuf"
+  ],
+  "tex": "french/book/chapters/ch30-cheese-butter-salt-egg.tex"
+}

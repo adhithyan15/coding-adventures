@@ -1,0 +1,11 @@
+{
+  "language": "tamil",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:d004ebd4d5aeeacd",
+  "lessonIds": [
+    "TA-C20-pathinondru-irupathu",
+    "TA-C20-vaanilai",
+    "TA-S124-letter-ya"
+  ],
+  "tex": "tamil/book/chapters/ch20-numbers-and-weather.tex"
+}

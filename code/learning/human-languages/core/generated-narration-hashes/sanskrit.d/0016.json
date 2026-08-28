@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:4efb7c6331b7c64c",
+  "lessonIds": [
+    "SA-C16-house",
+    "SA-C16-village",
+    "SA-C16-road",
+    "SA-C16-forest",
+    "SA-C16-city",
+    "SA-C16-noun-families"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch16.txt",
+  "json": "sanskrit/narration/ch16.json",
+  "textHash": "fnv1a64:b4fa92253aa8eb3c",
+  "jsonHash": "fnv1a64:bc2ec0dd1ac615ce",
+  "findings": []
+}

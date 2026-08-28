@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:d6bec6c0d4f40548",
+  "lessonIds": [
+    "ES-C30-el-tiempo",
+    "ES-C30-hace-calor",
+    "ES-C30-llueve"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch148.txt",
+  "json": "spanish/narration/ch148.json",
+  "textHash": "fnv1a64:3b51cc9bd4edadc7",
+  "jsonHash": "fnv1a64:362c9047440d5234",
+  "findings": []
+}

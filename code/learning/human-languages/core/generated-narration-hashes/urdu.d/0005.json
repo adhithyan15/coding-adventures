@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:43956bda93403ef4",
+  "lessonIds": [
+    "UR-C05-khuda",
+    "UR-C05-hafiz",
+    "UR-C05-khuda-hafiz",
+    "UR-C05-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "urdu/narration/ch05.txt",
+  "json": "urdu/narration/ch05.json",
+  "textHash": "fnv1a64:4b650a658b85409b",
+  "jsonHash": "fnv1a64:2f9dcd45e046c096",
+  "findings": []
+}

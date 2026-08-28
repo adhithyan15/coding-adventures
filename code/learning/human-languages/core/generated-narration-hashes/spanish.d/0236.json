@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:fedacdbaf3a7819c",
+  "lessonIds": [
+    "ES-C62-hablando"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch236.txt",
+  "json": "spanish/narration/ch236.json",
+  "textHash": "fnv1a64:9ae266baab6c5556",
+  "jsonHash": "fnv1a64:ab596c89efee765b",
+  "findings": []
+}

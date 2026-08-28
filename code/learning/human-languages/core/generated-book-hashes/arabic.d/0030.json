@@ -1,0 +1,10 @@
+{
+  "language": "arabic",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:272831e06c04bb39",
+  "lessonIds": [
+    "AR-C30-arafa",
+    "AR-C30-akala"
+  ],
+  "tex": "arabic/book/chapters/ch30-knowing-and-eating.tex"
+}

@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:856c1a8a06676b98",
+  "lessonIds": [
+    "ES-C04-como-estas-register",
+    "ES-C04-regular",
+    "ES-C04-y",
+    "ES-C04-repaso-estar"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch09.txt",
+  "json": "spanish/narration/ch09.json",
+  "textHash": "fnv1a64:52ef19798d1e9e75",
+  "jsonHash": "fnv1a64:06c5f4960d3d030f",
+  "findings": []
+}

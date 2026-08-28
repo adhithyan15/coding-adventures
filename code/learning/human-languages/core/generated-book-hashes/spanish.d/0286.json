@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:2c8a8ab9aaa73b5c",
+  "lessonIds": [
+    "ES-C286-ojo",
+    "ES-C286-boca",
+    "ES-C286-garganta",
+    "ES-C286-dolor",
+    "ES-C286-fiebre"
+  ],
+  "tex": "spanish/book/chapters/ch286-donde-duele.tex"
+}

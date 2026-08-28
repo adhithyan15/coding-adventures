@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:685d47977773683f",
+  "lessonIds": [
+    "AR-C14-ashhur"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch14.txt",
+  "json": "arabic/narration/ch14.json",
+  "textHash": "fnv1a64:db3d930210f9f4d7",
+  "jsonHash": "fnv1a64:2439ac1d7952282c",
+  "findings": []
+}

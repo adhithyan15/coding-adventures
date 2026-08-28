@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:864a2a12ef813792",
+  "lessonIds": [
+    "ES-C392-aeropuerto",
+    "ES-C392-vacaciones",
+    "ES-C392-destino",
+    "ES-C392-pasajero",
+    "ES-C392-agosto"
+  ],
+  "tex": "spanish/book/chapters/ch392-el-aeropuerto-y-las-vacaciones.tex"
+}

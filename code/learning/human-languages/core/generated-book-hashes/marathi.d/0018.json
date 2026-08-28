@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:224df75f6f5a8d21",
+  "lessonIds": [
+    "MR-R18-script-warmup",
+    "MR-R18-script-a-r4",
+    "MR-R18-script-b-r4",
+    "MR-R18-script-c-r4",
+    "MR-R18-script-d-r4"
+  ],
+  "tex": "marathi/book/chapters/ch18-doorway-script-distance.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:017184a0786a6d13",
+  "lessonIds": [
+    "ES-C65-unos-unas"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch253.txt",
+  "json": "spanish/narration/ch253.json",
+  "textHash": "fnv1a64:ed1c3ea0e685cda6",
+  "jsonHash": "fnv1a64:319145fe55a11206",
+  "findings": []
+}

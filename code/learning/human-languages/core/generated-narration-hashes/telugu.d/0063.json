@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:ca7c3be34920e255",
+  "lessonIds": [
+    "TE-C63-hunger",
+    "TE-C63-sleep",
+    "TE-C63-cough",
+    "TE-C63-disease",
+    "TE-C63-health"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch63.txt",
+  "json": "telugu/narration/ch63.json",
+  "textHash": "fnv1a64:8753690dff925282",
+  "jsonHash": "fnv1a64:74bfdb4dd8e729e1",
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "german",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:c327e01c0746d6e7",
+  "lessonIds": [
+    "GE-C27-gehen",
+    "GE-C27-laufen",
+    "GE-C27-oeffnen",
+    "GE-C27-schliessen"
+  ],
+  "tex": "german/book/chapters/ch27-moving-verbs.tex"
+}

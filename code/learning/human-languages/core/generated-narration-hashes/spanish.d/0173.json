@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:37d040840cedbdbc",
+  "lessonIds": [
+    "ES-C39-sintesis-elegir"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch173.txt",
+  "json": "spanish/narration/ch173.json",
+  "textHash": "fnv1a64:7c04d43fc49b6f63",
+  "jsonHash": "fnv1a64:78e499d732f0a27f",
+  "findings": []
+}

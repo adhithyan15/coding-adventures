@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:08a58d31fdb8bbeb",
+  "lessonIds": [
+    "SA-C26-teacher",
+    "SA-C26-student",
+    "SA-C26-king",
+    "SA-C26-guest",
+    "SA-C26-physician"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch26.txt",
+  "json": "sanskrit/narration/ch26.json",
+  "textHash": "fnv1a64:a1ddb9e70f5908ea",
+  "jsonHash": "fnv1a64:43063a3bfd46dfa4",
+  "findings": []
+}

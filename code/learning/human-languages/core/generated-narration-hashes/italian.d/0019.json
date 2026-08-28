@@ -1,0 +1,18 @@
+{
+  "language": "italian",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:6b3c3feae097854a",
+  "lessonIds": [
+    "IT-C19-prendere",
+    "IT-C19-chiedere",
+    "IT-C19-aiutare",
+    "IT-C19-mi-piace"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "italian/narration/ch19.txt",
+  "json": "italian/narration/ch19.json",
+  "textHash": "fnv1a64:15d2d42ad6328b16",
+  "jsonHash": "fnv1a64:ad12af6929012bef",
+  "findings": []
+}

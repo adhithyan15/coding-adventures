@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:00616848acb1dc39",
+  "lessonIds": [
+    "GU-C03-hun",
+    "GU-C03-kem",
+    "GU-C03-tame-kem-chho",
+    "GU-C03-majaa",
+    "GU-C03-vandho-nahi",
+    "GU-C03-practice"
+  ],
+  "tex": "gujarati/book/chapters/ch09-responding.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:6a2602b5e7712dfe",
+  "lessonIds": [
+    "ES-C289-amanecer",
+    "ES-C289-cielo",
+    "ES-C289-nube",
+    "ES-C289-estrella",
+    "ES-C289-sombra"
+  ],
+  "tex": "spanish/book/chapters/ch289-lo-de-arriba.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:fe0fbf1109d33463",
+  "lessonIds": [
+    "ES-C347-norte",
+    "ES-C347-sur",
+    "ES-C347-oeste",
+    "ES-C347-centro",
+    "ES-C347-alrededor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch347.txt",
+  "json": "spanish/narration/ch347.json",
+  "textHash": "fnv1a64:f21309e254fd33da",
+  "jsonHash": "fnv1a64:fd2bdc4fe5498b6a",
+  "findings": []
+}

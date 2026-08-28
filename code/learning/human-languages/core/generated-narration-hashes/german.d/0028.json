@@ -1,0 +1,17 @@
+{
+  "language": "german",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:74baa8a044d4bf4f",
+  "lessonIds": [
+    "GE-C28-kaffee",
+    "GE-C28-tee",
+    "GE-C28-milch"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "german/narration/ch28.txt",
+  "json": "german/narration/ch28.json",
+  "textHash": "fnv1a64:de539fb4ff0d3752",
+  "jsonHash": "fnv1a64:adcecd3072c40651",
+  "findings": []
+}

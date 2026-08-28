@@ -1,0 +1,26 @@
+{
+  "language": "italian",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:e3c29e109805da79",
+  "lessonIds": [
+    "IT-C02-prego",
+    "IT-C02-prego-go-ahead",
+    "IT-C02-prego-here-you-are",
+    "IT-C02-prego-come-again",
+    "IT-C02-come",
+    "IT-C02-stare",
+    "IT-C02-come-stai",
+    "IT-C02-come-sta",
+    "IT-C02-come-va",
+    "IT-C02-cosi-cosi",
+    "IT-C02-non-ce-male",
+    "IT-C02-practice"
+  ],
+  "voiceLessons": 12,
+  "drivablePrefix": 12,
+  "text": "italian/narration/ch02.txt",
+  "json": "italian/narration/ch02.json",
+  "textHash": "fnv1a64:18ae38d1d24bff33",
+  "jsonHash": "fnv1a64:9655a7f49dfb1b53",
+  "findings": []
+}

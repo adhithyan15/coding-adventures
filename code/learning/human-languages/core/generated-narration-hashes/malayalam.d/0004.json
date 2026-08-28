@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:a47a2367c35ccfc2",
+  "lessonIds": [
+    "ML-C04-pokuka",
+    "ML-C04-poyi-varaam",
+    "ML-C04-naale-kaanaam",
+    "ML-C04-veendum-kaanaam",
+    "ML-C04-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "malayalam/narration/ch04.txt",
+  "json": "malayalam/narration/ch04.json",
+  "textHash": "fnv1a64:0e4812a2abd409f1",
+  "jsonHash": "fnv1a64:a88c194e3a3f0968",
+  "findings": []
+}

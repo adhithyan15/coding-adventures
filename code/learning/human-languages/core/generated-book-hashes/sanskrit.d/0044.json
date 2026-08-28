@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:1140a884d6c930f7",
+  "lessonIds": [
+    "SA-C44-white",
+    "SA-C44-dark",
+    "SA-C44-yellow",
+    "SA-C44-green",
+    "SA-C44-blue"
+  ],
+  "tex": "sanskrit/book/chapters/ch44-colours.tex"
+}

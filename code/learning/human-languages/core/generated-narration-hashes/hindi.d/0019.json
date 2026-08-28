@@ -1,0 +1,17 @@
+{
+  "language": "hindi",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:de603f927a0a6e77",
+  "lessonIds": [
+    "HI-C19-umr",
+    "HI-C19-age-grammar",
+    "HI-S123-letter-da"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch19.txt",
+  "json": "hindi/narration/ch19.json",
+  "textHash": "fnv1a64:1f7a1be93cdc7d7d",
+  "jsonHash": "fnv1a64:4b6f5906f3b5b0b0",
+  "findings": []
+}

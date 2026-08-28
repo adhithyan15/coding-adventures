@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:10db589b7d812418",
+  "lessonIds": [
+    "JA-W10-se",
+    "JA-W10-o",
+    "JA-W10-ne",
+    "JA-C10-sukoshi",
+    "JA-W10-shi",
+    "JA-C10-yukkuri",
+    "JA-W10-yu",
+    "JA-C10-itte-kudasai",
+    "JA-C10-mou-sukoshi",
+    "JA-C10-wakarimashita",
+    "JA-C10-koko",
+    "JA-C10-slower-please"
+  ],
+  "tex": "japanese/book/chapters/ch10-slower-please.tex"
+}

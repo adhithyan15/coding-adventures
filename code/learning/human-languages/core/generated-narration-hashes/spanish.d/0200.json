@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:48d17fc44aa1f5d2",
+  "lessonIds": [
+    "ES-C55-hablamos-dos"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch200.txt",
+  "json": "spanish/narration/ch200.json",
+  "textHash": "fnv1a64:1a2d5ad05c0b3f8e",
+  "jsonHash": "fnv1a64:c7f62f783bcc4da0",
+  "findings": []
+}

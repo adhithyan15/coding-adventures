@@ -1,0 +1,16 @@
+{
+  "language": "kannada",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:e50f384a56a6d24d",
+  "lessonIds": [
+    "KA-C16-tingalugalu",
+    "KA-S120-letter-ha"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch16.txt",
+  "json": "kannada/narration/ch16.json",
+  "textHash": "fnv1a64:a1d695ecce078cdb",
+  "jsonHash": "fnv1a64:57937e102c353222",
+  "findings": []
+}

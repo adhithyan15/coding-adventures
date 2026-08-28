@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:34fa2e1f92230d90",
+  "lessonIds": [
+    "LA-C32-bonum-mane"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "latin/narration/ch32.txt",
+  "json": "latin/narration/ch32.json",
+  "textHash": "fnv1a64:e42c636bce8a8ad4",
+  "jsonHash": "fnv1a64:2931ebbba2dc311b",
+  "findings": []
+}

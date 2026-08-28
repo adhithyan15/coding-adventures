@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:af61b04e03153ec1",
+  "lessonIds": [
+    "ES-C302-calle",
+    "ES-C302-esquina",
+    "ES-C302-huella",
+    "ES-C302-puerto",
+    "ES-C302-faro"
+  ],
+  "tex": "spanish/book/chapters/ch302-calle-y-faro.tex"
+}

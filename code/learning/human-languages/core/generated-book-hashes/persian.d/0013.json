@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:ab6374693cdcb9c9",
+  "lessonIds": [
+    "FA-C13-aseman",
+    "FA-C13-khorshid",
+    "FA-C13-mah",
+    "FA-C13-setare",
+    "FA-C13-baran"
+  ],
+  "tex": "persian/book/chapters/ch13-sky-words.tex"
+}

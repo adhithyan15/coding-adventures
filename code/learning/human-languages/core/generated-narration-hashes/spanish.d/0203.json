@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:34ab31004b7c3255",
+  "lessonIds": [
+    "ES-C55-fueron"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch203.txt",
+  "json": "spanish/narration/ch203.json",
+  "textHash": "fnv1a64:9b6a1748daca0f80",
+  "jsonHash": "fnv1a64:3e3b312ef9620ff6",
+  "findings": []
+}

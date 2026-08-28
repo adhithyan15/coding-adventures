@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:75492b375f15e823",
+  "lessonIds": [
+    "ES-C396-aprender",
+    "ES-C396-cocinar",
+    "ES-C396-preferir",
+    "ES-C396-funcionar",
+    "ES-C396-reparar"
+  ],
+  "tex": "spanish/book/chapters/ch396-aprender-y-cocinar.tex"
+}

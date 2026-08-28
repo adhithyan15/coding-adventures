@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:7f62b672195aeb20",
+  "lessonIds": [
+    "ES-C377-letra",
+    "ES-C377-frase",
+    "ES-C377-idioma",
+    "ES-C377-historia",
+    "ES-C377-baile"
+  ],
+  "tex": "spanish/book/chapters/ch377-la-letra-y-la-frase.tex"
+}

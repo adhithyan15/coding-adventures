@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:8a4c730f2f560ab9",
+  "lessonIds": [
+    "HI-C28-subah"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "hindi/narration/ch28.txt",
+  "json": "hindi/narration/ch28.json",
+  "textHash": "fnv1a64:dd8dafe533f15766",
+  "jsonHash": "fnv1a64:f9c95dd751d89c67",
+  "findings": []
+}

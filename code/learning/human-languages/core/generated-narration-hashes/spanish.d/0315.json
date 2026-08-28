@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:4af5a7c0cb829461",
+  "lessonIds": [
+    "ES-C315-pecho",
+    "ES-C315-fuerza",
+    "ES-C315-descanso",
+    "ES-C315-miedo",
+    "ES-C315-risa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch315.txt",
+  "json": "spanish/narration/ch315.json",
+  "textHash": "fnv1a64:9abc7e5ac45f606c",
+  "jsonHash": "fnv1a64:12a301311294224c",
+  "findings": []
+}

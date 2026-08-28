@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:0e3519579c0de56e",
+  "lessonIds": [
+    "HI-C11-kaalaa-safed",
+    "HI-C11-laal-niila",
+    "HI-S06-vowel-sign-aa",
+    "HI-S115-letter-ya"
+  ],
+  "tex": "hindi/book/chapters/ch11-colours.tex"
+}

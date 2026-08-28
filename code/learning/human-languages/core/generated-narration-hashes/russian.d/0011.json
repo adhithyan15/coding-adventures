@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:8b8703fb2674f7b1",
+  "lessonIds": [
+    "RU-C11-do-svidaniya",
+    "RU-C11-poka",
+    "RU-C11-do-skorogo",
+    "RU-C11-do-zavtra",
+    "RU-C11-do-vstrechi",
+    "RU-C11-spokoynoy-nochi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 0,
+  "text": "russian/narration/ch11.txt",
+  "json": "russian/narration/ch11.json",
+  "textHash": "fnv1a64:6777a81107aa08d8",
+  "jsonHash": "fnv1a64:a7e57bee01709303",
+  "findings": []
+}

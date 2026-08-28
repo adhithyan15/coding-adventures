@@ -1,0 +1,16 @@
+{
+  "language": "hindi",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:ecaddd9f9884f0f7",
+  "lessonIds": [
+    "HI-C21-numbers-6-10",
+    "HI-C21-six-nine-ten-history"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch21.txt",
+  "json": "hindi/narration/ch21.json",
+  "textHash": "fnv1a64:1b85496b6481418e",
+  "jsonHash": "fnv1a64:a879f80521ddd710",
+  "findings": []
+}

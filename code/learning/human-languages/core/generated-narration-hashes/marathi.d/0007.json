@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:4f49dcb297120106",
+  "lessonIds": [
+    "MR-C04-punha",
+    "MR-C04-bhetu",
+    "MR-C04-punha-bhetu",
+    "MR-C04-udya-bhetu",
+    "MR-C04-kalji-ghya",
+    "MR-C04-practice"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch07.txt",
+  "json": "marathi/narration/ch07.json",
+  "textHash": "fnv1a64:52a8cc1b3b452b28",
+  "jsonHash": "fnv1a64:c170235ac60bbee7",
+  "findings": []
+}

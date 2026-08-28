@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:58f30ebc9d570e69",
+  "lessonIds": [
+    "ES-C42-me-objeto",
+    "ES-C42-te",
+    "ES-C42-te-thee"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch85.txt",
+  "json": "spanish/narration/ch85.json",
+  "textHash": "fnv1a64:cffaeeb9e199b846",
+  "jsonHash": "fnv1a64:fb791a103b3eeb09",
+  "findings": []
+}

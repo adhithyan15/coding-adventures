@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:5a9e92d2903f480d",
+  "lessonIds": [
+    "ES-C40-sintesis-describir",
+    "ES-C40-repaso-palabras-con-historia",
+    "ES-C40-repaso-un-sabado-de-octubre"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch152.txt",
+  "json": "spanish/narration/ch152.json",
+  "textHash": "fnv1a64:031681260d5da35c",
+  "jsonHash": "fnv1a64:4924c06fd881197a",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:adc960361d8c37c0",
+  "lessonIds": [
+    "TE-C55-river",
+    "TE-C55-tank",
+    "TE-C55-hill",
+    "TE-C55-village",
+    "TE-C55-path"
+  ],
+  "tex": "telugu/book/chapters/ch55-river-and-road.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:17c11259237cefc8",
+  "lessonIds": [
+    "ES-C361-carne",
+    "ES-C361-pescado",
+    "ES-C361-leche",
+    "ES-C361-sal",
+    "ES-C361-aceite"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch361.txt",
+  "json": "spanish/narration/ch361.json",
+  "textHash": "fnv1a64:4d11f1e029a22205",
+  "jsonHash": "fnv1a64:936d7f600d6a4afa",
+  "findings": []
+}

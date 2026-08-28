@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:66f7063517294752",
+  "lessonIds": [
+    "TA-C57-wind",
+    "TA-C57-sand",
+    "TA-C57-mud",
+    "TA-C57-smoke",
+    "TA-C57-ember"
+  ],
+  "tex": "tamil/book/chapters/ch57-wind-and-fire.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:fbfe6bfdc8699ad8",
+  "lessonIds": [
+    "LA-C24-propediem-te-videbo"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "latin/narration/ch24.txt",
+  "json": "latin/narration/ch24.json",
+  "textHash": "fnv1a64:865516a208190c28",
+  "jsonHash": "fnv1a64:0d2bda58fd282824",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:e23d3f69b39d024a",
+  "lessonIds": [
+    "TA-C22-paccai-manjal"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch22.txt",
+  "json": "tamil/narration/ch22.json",
+  "textHash": "fnv1a64:a724514c5e1369eb",
+  "jsonHash": "fnv1a64:df2214da7e72265f",
+  "findings": []
+}

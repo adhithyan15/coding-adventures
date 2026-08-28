@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:affb42651d8a871d",
+  "lessonIds": [
+    "ES-C313-boleto",
+    "ES-C313-moneda",
+    "ES-C313-pasaporte",
+    "ES-C313-entrada",
+    "ES-C313-cambio"
+  ],
+  "tex": "spanish/book/chapters/ch313-el-mostrador.tex"
+}

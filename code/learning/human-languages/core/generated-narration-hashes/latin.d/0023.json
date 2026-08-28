@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:5a51c5425280c9de",
+  "lessonIds": [
+    "LA-C23-nihil-est"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "latin/narration/ch23.txt",
+  "json": "latin/narration/ch23.json",
+  "textHash": "fnv1a64:c44fb829919c9c22",
+  "jsonHash": "fnv1a64:704f65433b9747ce",
+  "findings": []
+}

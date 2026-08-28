@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:5971bcb035880453",
+  "lessonIds": [
+    "ES-C393-ordenador",
+    "ES-C393-internet",
+    "ES-C393-correo-electronico",
+    "ES-C393-direccion",
+    "ES-C393-nacionalidad"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch393.txt",
+  "json": "spanish/narration/ch393.json",
+  "textHash": "fnv1a64:f496717da614ced2",
+  "jsonHash": "fnv1a64:f5fcf2ac49ec93b0",
+  "findings": []
+}

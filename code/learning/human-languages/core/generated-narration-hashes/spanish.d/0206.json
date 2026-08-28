@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:69031ad012e5e834",
+  "lessonIds": [
+    "ES-C56-hablara"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch206.txt",
+  "json": "spanish/narration/ch206.json",
+  "textHash": "fnv1a64:78398c59b4ad61e0",
+  "jsonHash": "fnv1a64:e5b58e576b5aad8c",
+  "findings": []
+}

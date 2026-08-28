@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:1d603d69882cd3bd",
+  "lessonIds": [
+    "KA-C41-this",
+    "KA-C41-that",
+    "KA-C41-here",
+    "KA-C41-there",
+    "KA-C41-who",
+    "KA-C41-where",
+    "KA-C41-deixis-system"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch41.txt",
+  "json": "kannada/narration/ch41.json",
+  "textHash": "fnv1a64:3f8705a89aa458a6",
+  "jsonHash": "fnv1a64:0aae170e0d371f47",
+  "findings": []
+}

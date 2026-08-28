@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:b89e86f2c1a6c617",
+  "lessonIds": [
+    "ES-C33-verde",
+    "ES-C33-amarillo"
+  ],
+  "tex": "spanish/book/chapters/ch151-green-and-yellow.tex"
+}

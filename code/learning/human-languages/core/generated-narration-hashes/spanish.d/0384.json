@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:b2d02dd008a0dad1",
+  "lessonIds": [
+    "ES-C384-enviar",
+    "ES-C384-subir",
+    "ES-C384-morir",
+    "ES-C384-olvidar"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch384.txt",
+  "json": "spanish/narration/ch384.json",
+  "textHash": "fnv1a64:b337c2012efb15b3",
+  "jsonHash": "fnv1a64:924156f9780ae1c6",
+  "findings": []
+}

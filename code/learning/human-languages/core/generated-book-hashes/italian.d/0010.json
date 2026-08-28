@@ -1,0 +1,10 @@
+{
+  "language": "italian",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:edfbd547f7ef2a44",
+  "lessonIds": [
+    "IT-C10-genitori",
+    "IT-C10-fratello-sorella"
+  ],
+  "tex": "italian/book/chapters/ch10-family.tex"
+}

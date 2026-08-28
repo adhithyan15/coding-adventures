@@ -1,0 +1,16 @@
+{
+  "language": "latin",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:b25c55ef1e914d27",
+  "lessonIds": [
+    "LA-C20-quid-tibi-nomen",
+    "LA-C20-name-case-variation"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "latin/narration/ch20.txt",
+  "json": "latin/narration/ch20.json",
+  "textHash": "fnv1a64:c5b43c0d36a7badc",
+  "jsonHash": "fnv1a64:86b85d63d1737273",
+  "findings": []
+}

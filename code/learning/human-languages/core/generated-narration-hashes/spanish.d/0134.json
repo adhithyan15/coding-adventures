@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:656294b53179bdba",
+  "lessonIds": [
+    "ES-C50-hable-usted"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch134.txt",
+  "json": "spanish/narration/ch134.json",
+  "textHash": "fnv1a64:19cd8feedf377a69",
+  "jsonHash": "fnv1a64:824b130a5b9a5001",
+  "findings": []
+}

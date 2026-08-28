@@ -1,0 +1,16 @@
+{
+  "language": "italian",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:107eaa34576d12bc",
+  "lessonIds": [
+    "IT-C14-avere",
+    "IT-C14-eta"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "italian/narration/ch14.txt",
+  "json": "italian/narration/ch14.json",
+  "textHash": "fnv1a64:dcb61b2646ca0757",
+  "jsonHash": "fnv1a64:d3bdab707dfb78a6",
+  "findings": []
+}

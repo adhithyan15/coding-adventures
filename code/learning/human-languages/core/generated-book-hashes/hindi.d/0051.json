@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:65fe668589e0caeb",
+  "lessonIds": [
+    "HI-C51-flower",
+    "HI-C51-garland",
+    "HI-C51-courtyard",
+    "HI-C51-table",
+    "HI-C51-sweet"
+  ],
+  "tex": "hindi/book/chapters/ch51-welcoming-a-guest.tex"
+}

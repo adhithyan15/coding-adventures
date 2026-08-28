@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:74c783863405ee10",
+  "lessonIds": [
+    "ES-C50-repaso-mandatos"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch135.txt",
+  "json": "spanish/narration/ch135.json",
+  "textHash": "fnv1a64:dfe117210f5c73d3",
+  "jsonHash": "fnv1a64:77a730af04b9ef66",
+  "findings": []
+}

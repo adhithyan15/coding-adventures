@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:cc7d61e86d697a34",
+  "lessonIds": [
+    "ES-C326-nervioso",
+    "ES-C326-valiente",
+    "ES-C326-solo",
+    "ES-C326-libre",
+    "ES-C326-listo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch326.txt",
+  "json": "spanish/narration/ch326.json",
+  "textHash": "fnv1a64:1e41d9f694c38b02",
+  "jsonHash": "fnv1a64:0aaec201852475d0",
+  "findings": []
+}

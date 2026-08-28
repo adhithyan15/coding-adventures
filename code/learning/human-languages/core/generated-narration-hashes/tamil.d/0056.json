@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:e8cc56bd9d4b2098",
+  "lessonIds": [
+    "TA-C56-a-little",
+    "TA-C56-a-lot",
+    "TA-C56-less",
+    "TA-C56-no-need",
+    "TA-C56-let-it-be"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch56.txt",
+  "json": "tamil/narration/ch56.json",
+  "textHash": "fnv1a64:920766e861dec516",
+  "jsonHash": "fnv1a64:cf8ad0815c1aac24",
+  "findings": []
+}

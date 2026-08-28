@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:c6e95160d5da7587",
+  "lessonIds": [
+    "AR-C20-ahada-ashar-ishrun"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch20.txt",
+  "json": "arabic/narration/ch20.json",
+  "textHash": "fnv1a64:f80d76029941e585",
+  "jsonHash": "fnv1a64:f26d0d591343fae6",
+  "findings": []
+}

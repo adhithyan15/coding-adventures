@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:d882c1e89d4c56b0",
+  "lessonIds": [
+    "ES-C369-rio",
+    "ES-C369-arena",
+    "ES-C369-polvo",
+    "ES-C369-humo",
+    "ES-C369-ceniza"
+  ],
+  "tex": "spanish/book/chapters/ch369-el-rio-y-la-arena.tex"
+}

@@ -1,0 +1,10 @@
+{
+  "language": "italian",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:47ee8445e9e6b019",
+  "lessonIds": [
+    "IT-C09-mesi",
+    "IT-C09-stagioni"
+  ],
+  "tex": "italian/book/chapters/ch09-months-and-seasons.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:d2ebe18a18d878e5",
+  "lessonIds": [
+    "KA-C56-mat",
+    "KA-C56-basket",
+    "KA-C56-knife",
+    "KA-C56-vessel",
+    "KA-C56-box"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch56.txt",
+  "json": "kannada/narration/ch56.json",
+  "textHash": "fnv1a64:39d5a5c52ec8d7ca",
+  "jsonHash": "fnv1a64:aac63c8c851e4efa",
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:d68b2c3cbc74d0c6",
+  "lessonIds": [
+    "MR-C10-paani",
+    "MR-C10-chaha",
+    "MR-C10-dudh",
+    "MR-C10-bhakari"
+  ],
+  "tex": "marathi/book/chapters/ch13-request-food-drink.tex"
+}

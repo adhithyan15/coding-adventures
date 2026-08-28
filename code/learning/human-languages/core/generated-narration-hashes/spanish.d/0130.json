@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:32b4046515a52612",
+  "lessonIds": [
+    "ES-C18-sintesis-subjuntivo"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch130.txt",
+  "json": "spanish/narration/ch130.json",
+  "textHash": "fnv1a64:fa8411d38150e58a",
+  "jsonHash": "fnv1a64:244dfe3241f92b5a",
+  "findings": []
+}

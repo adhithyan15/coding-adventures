@@ -1,0 +1,22 @@
+{
+  "language": "marwadi",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:f24f107c183641b6",
+  "lessonIds": [
+    "MW-C17-hear-riksha",
+    "MW-W17-sha",
+    "MW-C17-riksha",
+    "MW-C17-hear-ghodo",
+    "MW-C17-ghodo",
+    "MW-R17-transport-new-two",
+    "MW-C17-transport-five",
+    "MW-R17-script-close"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 1,
+  "text": "marwadi/narration/ch22.txt",
+  "json": "marwadi/narration/ch22.json",
+  "textHash": "fnv1a64:2fb979b8711a1d9c",
+  "jsonHash": "fnv1a64:7f9417232a9db7be",
+  "findings": []
+}

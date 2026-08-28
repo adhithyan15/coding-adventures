@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:1617f98e2f80f48a",
+  "lessonIds": [
+    "ES-C365-alto",
+    "ES-C365-largo",
+    "ES-C365-ancho",
+    "ES-C365-corto",
+    "ES-C365-lleno"
+  ],
+  "tex": "spanish/book/chapters/ch365-alto-y-largo.tex"
+}

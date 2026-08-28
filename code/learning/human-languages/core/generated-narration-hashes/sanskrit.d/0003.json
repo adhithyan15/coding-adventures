@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:b089fe3d35ef4a66",
+  "lessonIds": [
+    "SA-C03-katham",
+    "SA-C03-bhavan-katham-asti",
+    "SA-C03-aham",
+    "SA-C03-kushalam",
+    "SA-C03-na-cinta",
+    "SA-C03-practice"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "sanskrit/narration/ch03.txt",
+  "json": "sanskrit/narration/ch03.json",
+  "textHash": "fnv1a64:683335a5f220ab55",
+  "jsonHash": "fnv1a64:26f4817ef2f4fa55",
+  "findings": []
+}

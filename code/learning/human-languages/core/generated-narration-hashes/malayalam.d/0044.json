@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:af5dd9ae0a6373bc",
+  "lessonIds": [
+    "ML-C44-look",
+    "ML-C44-listen",
+    "ML-C44-speak",
+    "ML-C44-write"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch44.txt",
+  "json": "malayalam/narration/ch44.json",
+  "textHash": "fnv1a64:0add227804cb5e78",
+  "jsonHash": "fnv1a64:287b8b664d1534a8",
+  "findings": []
+}

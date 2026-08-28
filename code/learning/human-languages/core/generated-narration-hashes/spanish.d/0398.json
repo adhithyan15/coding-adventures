@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:11bcc021c81a6855",
+  "lessonIds": [
+    "ES-C398-importante",
+    "ES-C398-interesante",
+    "ES-C398-favorito",
+    "ES-C398-facil",
+    "ES-C398-dificil"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch398.txt",
+  "json": "spanish/narration/ch398.json",
+  "textHash": "fnv1a64:2d8f7a65f97960e0",
+  "jsonHash": "fnv1a64:70f153547277b2dc",
+  "findings": []
+}

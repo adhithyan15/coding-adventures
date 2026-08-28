@@ -1,0 +1,18 @@
+{
+  "language": "italian",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:0d843d31a84e75f6",
+  "lessonIds": [
+    "IT-C24-cuore",
+    "IT-C24-occhio",
+    "IT-C24-orecchio",
+    "IT-C24-bocca"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "italian/narration/ch24.txt",
+  "json": "italian/narration/ch24.json",
+  "textHash": "fnv1a64:30372e50abd8906b",
+  "jsonHash": "fnv1a64:8520c73cc2f34d33",
+  "findings": []
+}

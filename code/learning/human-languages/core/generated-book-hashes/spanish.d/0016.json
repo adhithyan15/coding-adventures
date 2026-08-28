@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:ce67529b047008b4",
+  "lessonIds": [
+    "ES-C06-hablar",
+    "ES-C06-hablo",
+    "ES-C06-pro-drop"
+  ],
+  "tex": "spanish/book/chapters/ch16-first-verb.tex"
+}

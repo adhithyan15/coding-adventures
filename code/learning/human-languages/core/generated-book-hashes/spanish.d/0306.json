@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:d53375870d79e726",
+  "lessonIds": [
+    "ES-C306-hijo",
+    "ES-C306-hija",
+    "ES-C306-abuelo",
+    "ES-C306-abuela",
+    "ES-C306-esposo"
+  ],
+  "tex": "spanish/book/chapters/ch306-hijos-y-abuelos.tex"
+}

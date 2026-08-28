@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:c09f7860a5c9b52d",
+  "lessonIds": [
+    "KA-C27-sanje"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch27.txt",
+  "json": "kannada/narration/ch27.json",
+  "textHash": "fnv1a64:1fc9bc123b4dc95d",
+  "jsonHash": "fnv1a64:f934bdf9b10c50de",
+  "findings": []
+}

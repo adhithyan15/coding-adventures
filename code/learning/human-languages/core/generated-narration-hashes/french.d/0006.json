@@ -1,0 +1,16 @@
+{
+  "language": "french",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:0fcca13612dc3a29",
+  "lessonIds": [
+    "FR-C06-nombres-1-5",
+    "FR-C06-nombres-6-10"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "french/narration/ch06.txt",
+  "json": "french/narration/ch06.json",
+  "textHash": "fnv1a64:55dd85d4f40913cc",
+  "jsonHash": "fnv1a64:82c59b2c5b82ccd5",
+  "findings": []
+}

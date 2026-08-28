@@ -1,0 +1,16 @@
+{
+  "language": "malayalam",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:561691b70f9472e3",
+  "lessonIds": [
+    "ML-C18-mani",
+    "ML-S121-letter-ssa"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch18.txt",
+  "json": "malayalam/narration/ch18.json",
+  "textHash": "fnv1a64:ae5f35f772e28c11",
+  "jsonHash": "fnv1a64:69b7abe0fc220413",
+  "findings": []
+}

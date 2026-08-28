@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:f90e598b6c702d83",
+  "lessonIds": [
+    "TA-C45-eye",
+    "TA-C45-ear",
+    "TA-C45-nose",
+    "TA-C45-tooth",
+    "TA-C45-stomach"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch45.txt",
+  "json": "tamil/narration/ch45.json",
+  "textHash": "fnv1a64:503baefb4013e313",
+  "jsonHash": "fnv1a64:775a45bfcca9a3e9",
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "language": "latin",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:af06efd219c490fc",
+  "lessonIds": [
+    "LA-C08-caput",
+    "LA-C08-manus"
+  ],
+  "tex": "latin/book/chapters/ch08-head-and-hand.tex"
+}

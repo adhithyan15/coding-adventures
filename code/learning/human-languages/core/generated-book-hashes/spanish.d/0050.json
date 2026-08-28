@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:6f3faca05ad4832c",
+  "lessonIds": [
+    "ES-C09-somos",
+    "ES-C09-son",
+    "ES-C09-sois",
+    "ES-C09-repaso-ser"
+  ],
+  "tex": "spanish/book/chapters/ch50-ser-plural.tex"
+}

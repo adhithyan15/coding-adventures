@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:c537885101397e3d",
+  "lessonIds": [
+    "ES-C344-cero",
+    "ES-C344-numero",
+    "ES-C344-mitad",
+    "ES-C344-docena",
+    "ES-C344-doble"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch344.txt",
+  "json": "spanish/narration/ch344.json",
+  "textHash": "fnv1a64:3f6db0d43c8389fe",
+  "jsonHash": "fnv1a64:24c11b958267cd80",
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:5b199e4ab8de6ddb",
+  "lessonIds": [
+    "KA-C42-big",
+    "KA-C42-small",
+    "KA-C42-good",
+    "KA-C42-new",
+    "KA-C42-old",
+    "KA-C42-adjective-system"
+  ],
+  "tex": "kannada/book/chapters/ch42-describing-things.tex"
+}

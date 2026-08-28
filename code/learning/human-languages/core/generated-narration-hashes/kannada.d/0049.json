@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:b3fd0578054eb63c",
+  "lessonIds": [
+    "KA-C49-true",
+    "KA-C49-enough",
+    "KA-C49-certainly",
+    "KA-C49-perhaps",
+    "KA-C49-just-so"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch49.txt",
+  "json": "kannada/narration/ch49.json",
+  "textHash": "fnv1a64:2ee5f7dd57aafbfa",
+  "jsonHash": "fnv1a64:7e94b881b93e842e",
+  "findings": []
+}

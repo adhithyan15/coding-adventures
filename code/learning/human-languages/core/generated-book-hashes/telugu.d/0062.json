@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:45eceae2ad2e2e94",
+  "lessonIds": [
+    "TE-C62-thread",
+    "TE-C62-needle",
+    "TE-C62-broom",
+    "TE-C62-umbrella",
+    "TE-C62-mirror"
+  ],
+  "tex": "telugu/book/chapters/ch62-things-people-make.tex"
+}

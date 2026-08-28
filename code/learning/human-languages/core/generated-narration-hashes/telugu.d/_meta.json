@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "algorithm": "fnv1a64",
+  "maxLinearisableTableColumns": 3
+}

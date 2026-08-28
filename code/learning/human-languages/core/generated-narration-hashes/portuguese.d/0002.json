@@ -1,0 +1,22 @@
+{
+  "language": "portuguese",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:b696688c2654a2d3",
+  "lessonIds": [
+    "PT-C02-de-nada",
+    "PT-C02-como",
+    "PT-C02-tudo",
+    "PT-C02-tudo-bem",
+    "PT-C02-como-vai-esta",
+    "PT-C02-mais-ou-menos",
+    "PT-C02-practice",
+    "PT-C02-formal-practice"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
+  "text": "portuguese/narration/ch02.txt",
+  "json": "portuguese/narration/ch02.json",
+  "textHash": "fnv1a64:b8ed231a080a816e",
+  "jsonHash": "fnv1a64:85d6321af6ca4e28",
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:c1db76284226aa26",
+  "lessonIds": [
+    "ES-C13-repaso-yo-go",
+    "ES-C13-practice"
+  ],
+  "tex": "spanish/book/chapters/ch74-review-yo-go.tex"
+}

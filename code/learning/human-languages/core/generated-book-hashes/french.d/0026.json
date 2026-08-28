@@ -1,0 +1,12 @@
+{
+  "language": "french",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:a90508cbd39c7e6b",
+  "lessonIds": [
+    "FR-C26-entendre",
+    "FR-C26-dormir",
+    "FR-C26-marcher",
+    "FR-C26-courir"
+  ],
+  "tex": "french/book/chapters/ch26-hearing-sleeping-walking-running.tex"
+}

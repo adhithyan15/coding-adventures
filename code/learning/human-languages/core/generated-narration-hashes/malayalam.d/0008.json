@@ -1,0 +1,17 @@
+{
+  "language": "malayalam",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:d54bbf6b95fc6f5d",
+  "lessonIds": [
+    "ML-C08-dayavayi",
+    "ML-S03-vowel-sign-i",
+    "ML-S111-letter-ca"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch08.txt",
+  "json": "malayalam/narration/ch08.json",
+  "textHash": "fnv1a64:a0428c4c72b2edcb",
+  "jsonHash": "fnv1a64:a597c3aa595294f2",
+  "findings": []
+}

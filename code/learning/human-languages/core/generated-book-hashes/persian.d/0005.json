@@ -1,0 +1,12 @@
+{
+  "language": "persian",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:81817a249de01c5a",
+  "lessonIds": [
+    "FA-C05-khoda",
+    "FA-C05-hafez",
+    "FA-C05-khodahafez",
+    "FA-C05-practice"
+  ],
+  "tex": "persian/book/chapters/ch05-take-leave.tex"
+}

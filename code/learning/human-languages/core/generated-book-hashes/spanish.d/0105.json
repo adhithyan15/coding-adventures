@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:5a5bab714bb3492c",
+  "lessonIds": [
+    "ES-C15-tener-preterite",
+    "ES-C15-hacer-preterite",
+    "ES-C15-preterite-fuertes"
+  ],
+  "tex": "spanish/book/chapters/ch105-preterito-fuerte.tex"
+}

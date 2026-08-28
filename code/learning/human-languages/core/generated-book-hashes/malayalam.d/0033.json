@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:baa5d84c1445d66e",
+  "lessonIds": [
+    "ML-C33-cintikkuka",
+    "ML-C33-manassilaakkuka",
+    "ML-C33-vaayikkuka",
+    "ML-C33-ezhutuka"
+  ],
+  "tex": "malayalam/book/chapters/ch33-mind-and-page.tex"
+}

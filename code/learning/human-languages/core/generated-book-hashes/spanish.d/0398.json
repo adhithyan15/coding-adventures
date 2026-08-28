@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:fbf25491334dcbf3",
+  "lessonIds": [
+    "ES-C398-importante",
+    "ES-C398-interesante",
+    "ES-C398-favorito",
+    "ES-C398-facil",
+    "ES-C398-dificil"
+  ],
+  "tex": "spanish/book/chapters/ch398-importante-y-facil.tex"
+}

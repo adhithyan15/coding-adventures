@@ -1,0 +1,10 @@
+{
+  "language": "punjabi",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:ecc392a64b165b06",
+  "lessonIds": [
+    "PA-C13-dil",
+    "PA-C13-sir"
+  ],
+  "tex": "punjabi/book/chapters/ch13-heart-and-head.tex"
+}

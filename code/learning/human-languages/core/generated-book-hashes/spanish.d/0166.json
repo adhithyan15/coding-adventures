@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:4975742e430e35f3",
+  "lessonIds": [
+    "ES-C37-abrir",
+    "ES-C37-cerrar",
+    "ES-C37-sentarse",
+    "ES-C37-levantarse",
+    "ES-C37-repaso-sentado-de-pie-andando"
+  ],
+  "tex": "spanish/book/chapters/ch166-open-close-sit-stand.tex"
+}

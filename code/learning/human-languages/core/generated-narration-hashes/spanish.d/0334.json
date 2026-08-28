@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:1801ca1490878e10",
+  "lessonIds": [
+    "ES-C334-salud",
+    "ES-C334-hambre",
+    "ES-C334-frio",
+    "ES-C334-calor",
+    "ES-C334-edad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch334.txt",
+  "json": "spanish/narration/ch334.json",
+  "textHash": "fnv1a64:1cbd42dce4c16d13",
+  "jsonHash": "fnv1a64:7736d969d39d3317",
+  "findings": []
+}

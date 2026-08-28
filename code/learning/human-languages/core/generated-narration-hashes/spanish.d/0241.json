@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:80b20521595b5b7f",
+  "lessonIds": [
+    "ES-C63-hablasteis"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch241.txt",
+  "json": "spanish/narration/ch241.json",
+  "textHash": "fnv1a64:36aa20885e3fd29f",
+  "jsonHash": "fnv1a64:326d16093498cd9b",
+  "findings": []
+}

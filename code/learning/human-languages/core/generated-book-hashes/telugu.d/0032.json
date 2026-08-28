@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:525e6054cf773042",
+  "lessonIds": [
+    "TE-C32-undu",
+    "TE-C32-vellu",
+    "TE-C32-raa",
+    "TE-C32-tinu",
+    "TE-C32-cuudu",
+    "TE-C32-telusu"
+  ],
+  "tex": "telugu/book/chapters/ch32-core-verbs.tex"
+}

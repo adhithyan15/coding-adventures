@@ -1,0 +1,18 @@
+{
+  "language": "french",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:2f5bd522d0d2e9d2",
+  "lessonIds": [
+    "FR-C25-comprendre",
+    "FR-C25-penser",
+    "FR-C25-lire",
+    "FR-C25-ecrire"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "french/narration/ch25.txt",
+  "json": "french/narration/ch25.json",
+  "textHash": "fnv1a64:df2e1890cd9841f0",
+  "jsonHash": "fnv1a64:10db56cf492a3d07",
+  "findings": []
+}

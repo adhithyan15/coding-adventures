@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:b7291e47cd0cafef",
+  "lessonIds": [
+    "ES-C44-repaso-articulos",
+    "ES-C44-repaso-ir-ida"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch81.txt",
+  "json": "spanish/narration/ch81.json",
+  "textHash": "fnv1a64:e327704da3991c04",
+  "jsonHash": "fnv1a64:1352f60b1d52ce92",
+  "findings": []
+}

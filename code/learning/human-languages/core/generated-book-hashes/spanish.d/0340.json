@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:c3861aaffb584f30",
+  "lessonIds": [
+    "ES-C340-cerca",
+    "ES-C340-lejos",
+    "ES-C340-derecha",
+    "ES-C340-izquierda",
+    "ES-C340-enfrente"
+  ],
+  "tex": "spanish/book/chapters/ch340-cerca-y-lejos.tex"
+}

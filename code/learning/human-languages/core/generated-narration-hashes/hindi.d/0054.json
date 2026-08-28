@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:b5fce6ba6d7c7f5b",
+  "lessonIds": [
+    "HI-C54-cow",
+    "HI-C54-horse",
+    "HI-C54-fish",
+    "HI-C54-bird",
+    "HI-C54-goat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch54.txt",
+  "json": "hindi/narration/ch54.json",
+  "textHash": "fnv1a64:0fa46e4036438a44",
+  "jsonHash": "fnv1a64:e33aafc2222b4aff",
+  "findings": []
+}

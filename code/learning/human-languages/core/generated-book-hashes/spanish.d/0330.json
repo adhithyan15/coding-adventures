@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:9ed1244e53a2a597",
+  "lessonIds": [
+    "ES-C330-camino",
+    "ES-C330-parada",
+    "ES-C330-mundo",
+    "ES-C330-vida",
+    "ES-C330-vez"
+  ],
+  "tex": "spanish/book/chapters/ch330-camino-y-vez.tex"
+}

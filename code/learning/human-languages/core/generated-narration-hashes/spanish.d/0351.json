@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:2851f0fb24d23d94",
+  "lessonIds": [
+    "ES-C351-cien",
+    "ES-C351-cantidad",
+    "ES-C351-ambos",
+    "ES-C351-varios",
+    "ES-C351-triple"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch351.txt",
+  "json": "spanish/narration/ch351.json",
+  "textHash": "fnv1a64:9258d24d8f1e6294",
+  "jsonHash": "fnv1a64:2e915e7016ed7548",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:8e5eed3fa725a3c9",
+  "lessonIds": [
+    "TE-C69-axe",
+    "TE-C69-saw",
+    "TE-C69-spade",
+    "TE-C69-hammer",
+    "TE-C69-stick"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch69.txt",
+  "json": "telugu/narration/ch69.json",
+  "textHash": "fnv1a64:8e7470d061416763",
+  "jsonHash": "fnv1a64:dcad1be6b16fd397",
+  "findings": []
+}

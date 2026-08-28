@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:f72039c5d3c00ef3",
+  "lessonIds": [
+    "ES-C09-grande"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch58.txt",
+  "json": "spanish/narration/ch58.json",
+  "textHash": "fnv1a64:6b20d20d8e1be6f0",
+  "jsonHash": "fnv1a64:2309b50728120e46",
+  "findings": []
+}

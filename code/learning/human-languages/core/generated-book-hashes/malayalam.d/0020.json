@@ -1,0 +1,11 @@
+{
+  "language": "malayalam",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:3d8dcb7d02635244",
+  "lessonIds": [
+    "ML-C20-pathinonnu-irupathu",
+    "ML-C20-kalavastha",
+    "ML-S123-letter-da"
+  ],
+  "tex": "malayalam/book/chapters/ch20-numbers-and-weather.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:15f25395e06855d8",
+  "lessonIds": [
+    "KA-C29-shubhodaya"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch29.txt",
+  "json": "kannada/narration/ch29.json",
+  "textHash": "fnv1a64:8f3ea45796a475a1",
+  "jsonHash": "fnv1a64:63056f6fe7d518f1",
+  "findings": []
+}

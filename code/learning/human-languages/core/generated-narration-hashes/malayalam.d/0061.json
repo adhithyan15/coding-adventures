@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:b6d27421e7e7de16",
+  "lessonIds": [
+    "ML-C61-coconut",
+    "ML-C61-oil",
+    "ML-C61-curd",
+    "ML-C61-jaggery",
+    "ML-C61-chilli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch61.txt",
+  "json": "malayalam/narration/ch61.json",
+  "textHash": "fnv1a64:cf1f1f1a3d61edf2",
+  "jsonHash": "fnv1a64:cb2047fcf136c165",
+  "findings": []
+}

@@ -1,0 +1,16 @@
+{
+  "language": "french",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:2dab988c5a7db51b",
+  "lessonIds": [
+    "FR-C08-heure",
+    "FR-C08-midi-minuit"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "french/narration/ch08.txt",
+  "json": "french/narration/ch08.json",
+  "textHash": "fnv1a64:abb25242190f022f",
+  "jsonHash": "fnv1a64:520937a3c51a702d",
+  "findings": []
+}

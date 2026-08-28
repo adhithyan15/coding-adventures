@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:28baeae54e13a2dc",
+  "lessonIds": [
+    "BN-C06-numbers-1-5"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "bengali/narration/ch06.txt",
+  "json": "bengali/narration/ch06.json",
+  "textHash": "fnv1a64:67c20a3297a2125e",
+  "jsonHash": "fnv1a64:11e35b91d6707d85",
+  "findings": []
+}

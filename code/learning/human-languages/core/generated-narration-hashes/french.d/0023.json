@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:1a8564ce5039677f",
+  "lessonIds": [
+    "FR-C23-vert-jaune"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "french/narration/ch23.txt",
+  "json": "french/narration/ch23.json",
+  "textHash": "fnv1a64:18f59d596b5f62a9",
+  "jsonHash": "fnv1a64:d452f4ad9250f357",
+  "findings": []
+}

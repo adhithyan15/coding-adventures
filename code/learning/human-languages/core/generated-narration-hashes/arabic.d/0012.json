@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:af1b615293fb14da",
+  "lessonIds": [
+    "AR-C12-al-fusul"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch12.txt",
+  "json": "arabic/narration/ch12.json",
+  "textHash": "fnv1a64:b0fe0e2b0afef681",
+  "jsonHash": "fnv1a64:a38f2d560d6146da",
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "tamil",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:5dec28402cd80e78",
+  "lessonIds": [
+    "TA-C16-thamizh-maadangal",
+    "TA-S07-ma",
+    "TA-W05-write-aam",
+    "TA-S120-letter-aa"
+  ],
+  "tex": "tamil/book/chapters/ch16-months.tex"
+}

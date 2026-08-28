@@ -1,0 +1,12 @@
+{
+  "language": "bengali",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:2cc8d10a95ff36e5",
+  "lessonIds": [
+    "BN-C13-doya-kore",
+    "BN-C13-dukkhito",
+    "BN-C13-maf-korben",
+    "BN-C13-sbagotom"
+  ],
+  "tex": "bengali/book/chapters/ch13-please-sorry-welcome.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:a8fc69defea2fec8",
+  "lessonIds": [
+    "ES-C49-participio"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch116.txt",
+  "json": "spanish/narration/ch116.json",
+  "textHash": "fnv1a64:34b5883cd2659d6e",
+  "jsonHash": "fnv1a64:471b7a3ee5c881d9",
+  "findings": []
+}

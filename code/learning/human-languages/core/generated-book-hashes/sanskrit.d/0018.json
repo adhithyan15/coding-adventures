@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:f79b5fe69e9e4d3e",
+  "lessonIds": [
+    "SA-C18-when",
+    "SA-C18-why",
+    "SA-C18-how-many",
+    "SA-C18-from-where",
+    "SA-C18-k-words"
+  ],
+  "tex": "sanskrit/book/chapters/ch18-asking.tex"
+}

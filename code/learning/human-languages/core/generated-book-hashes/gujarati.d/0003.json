@@ -1,0 +1,18 @@
+{
+  "language": "gujarati",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:da0260ba8b7faa01",
+  "lessonIds": [
+    "GU-W03-ja",
+    "GU-W03-o-matra",
+    "GU-W03-anusvara",
+    "GU-W03-ii-matra",
+    "GU-W03-u-matra",
+    "GU-W03-chha",
+    "GU-W03-ka",
+    "GU-W03-nna",
+    "GU-W03-sha",
+    "GU-R03-doorway-three-r1"
+  ],
+  "tex": "gujarati/book/chapters/ch03-doorway-glyphs.tex"
+}

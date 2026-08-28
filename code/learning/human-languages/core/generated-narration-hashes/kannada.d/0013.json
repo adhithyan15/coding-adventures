@@ -1,0 +1,17 @@
+{
+  "language": "kannada",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:87a6fb4bed0f386e",
+  "lessonIds": [
+    "KA-C13-dehada-bhagagalu",
+    "KA-S08-vowel-sign-aa",
+    "KA-S117-letter-ya"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch13.txt",
+  "json": "kannada/narration/ch13.json",
+  "textHash": "fnv1a64:9790837b1452b5fe",
+  "jsonHash": "fnv1a64:e69eea2bc0513139",
+  "findings": []
+}

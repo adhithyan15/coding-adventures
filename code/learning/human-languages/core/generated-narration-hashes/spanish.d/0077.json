@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:68053fa44aac5bdd",
+  "lessonIds": [
+    "ES-C43-comida"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch77.txt",
+  "json": "spanish/narration/ch77.json",
+  "textHash": "fnv1a64:38060f3d8719b308",
+  "jsonHash": "fnv1a64:2e88b6dbaeda522d",
+  "findings": []
+}

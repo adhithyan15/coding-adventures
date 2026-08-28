@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:9822df67521c44ab",
+  "lessonIds": [
+    "ES-C362-tierra",
+    "ES-C362-mar",
+    "ES-C362-aire",
+    "ES-C362-fuego",
+    "ES-C362-luna"
+  ],
+  "tex": "spanish/book/chapters/ch362-la-tierra-y-el-mar.tex"
+}

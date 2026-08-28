@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:34da59aa4d024b17",
+  "lessonIds": [
+    "AR-C18-al-taqs"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch18.txt",
+  "json": "arabic/narration/ch18.json",
+  "textHash": "fnv1a64:ff3e74430e0a7234",
+  "jsonHash": "fnv1a64:9dacb23596304d48",
+  "findings": []
+}

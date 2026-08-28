@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:97f8ffd22321bbaa",
+  "lessonIds": [
+    "ES-C48-sintesis-una-historia"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch115.txt",
+  "json": "spanish/narration/ch115.json",
+  "textHash": "fnv1a64:1584968014356b62",
+  "jsonHash": "fnv1a64:0b7f8373c53011df",
+  "findings": []
+}

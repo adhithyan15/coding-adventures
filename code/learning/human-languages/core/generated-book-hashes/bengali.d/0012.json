@@ -1,0 +1,12 @@
+{
+  "language": "bengali",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:4a8bfadfeee7db35",
+  "lessonIds": [
+    "BN-C12-chokh",
+    "BN-C12-mukh",
+    "BN-C12-nak",
+    "BN-C12-hridoy"
+  ],
+  "tex": "bengali/book/chapters/ch12-eye-mouth-nose-heart.tex"
+}

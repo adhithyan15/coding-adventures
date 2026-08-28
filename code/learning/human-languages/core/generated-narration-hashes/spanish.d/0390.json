@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:65b592a1cf1658bb",
+  "lessonIds": [
+    "ES-C390-terraza",
+    "ES-C390-sala",
+    "ES-C390-planta",
+    "ES-C390-ascensor",
+    "ES-C390-piscina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch390.txt",
+  "json": "spanish/narration/ch390.json",
+  "textHash": "fnv1a64:2571f55009f4e4d8",
+  "jsonHash": "fnv1a64:99cc09c85c1d30c4",
+  "findings": []
+}

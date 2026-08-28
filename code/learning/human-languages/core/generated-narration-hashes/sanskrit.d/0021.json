@@ -1,0 +1,18 @@
+{
+  "language": "sanskrit",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:f4763804d02be7a6",
+  "lessonIds": [
+    "SA-C21-dance",
+    "SA-C21-laugh",
+    "SA-C21-stand",
+    "SA-C21-remember"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "sanskrit/narration/ch21.txt",
+  "json": "sanskrit/narration/ch21.json",
+  "textHash": "fnv1a64:1274ab2c8e93c5bb",
+  "jsonHash": "fnv1a64:34d03d9533ef528a",
+  "findings": []
+}

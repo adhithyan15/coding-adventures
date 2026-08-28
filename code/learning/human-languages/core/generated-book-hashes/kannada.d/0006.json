@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:0dd0018832133f4e",
+  "lessonIds": [
+    "KA-C06-dative-ge",
+    "KA-C06-dative-stacking",
+    "KA-C06-dative-subject",
+    "KA-S01-letter-na",
+    "KA-S110-letter-ba"
+  ],
+  "tex": "kannada/book/chapters/ch06-dative-case.tex"
+}

@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:7afc0a7ba6dbaf84",
+  "lessonIds": [
+    "HI-C37-chai",
+    "HI-C37-dudh",
+    "HI-C37-khaana",
+    "HI-C37-kitaab"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch37.txt",
+  "json": "hindi/narration/ch37.json",
+  "textHash": "fnv1a64:77904f5a4d83f9d7",
+  "jsonHash": "fnv1a64:77c0e23d761ccd26",
+  "findings": []
+}

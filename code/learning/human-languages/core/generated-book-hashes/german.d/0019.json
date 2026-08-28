@@ -1,0 +1,9 @@
+{
+  "language": "german",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:2c61dc327d985977",
+  "lessonIds": [
+    "GE-C19-bitte-requests"
+  ],
+  "tex": "german/book/chapters/ch19-please.tex"
+}

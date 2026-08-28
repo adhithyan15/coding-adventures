@@ -1,0 +1,18 @@
+{
+  "language": "arabic",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:77bc08ced4c5f9b7",
+  "lessonIds": [
+    "AR-C33-shay",
+    "AR-C33-halib",
+    "AR-C33-sukkar",
+    "AR-C33-qahwa"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "arabic/narration/ch33.txt",
+  "json": "arabic/narration/ch33.json",
+  "textHash": "fnv1a64:3fbe254299914906",
+  "jsonHash": "fnv1a64:d7adadabbea121f0",
+  "findings": []
+}

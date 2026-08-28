@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:2ac72f1649060bf5",
+  "lessonIds": [
+    "TA-C55-neck",
+    "TA-C55-back",
+    "TA-C55-lip",
+    "TA-C55-nail",
+    "TA-C55-bone"
+  ],
+  "tex": "tamil/book/chapters/ch55-the-rest-of-you.tex"
+}

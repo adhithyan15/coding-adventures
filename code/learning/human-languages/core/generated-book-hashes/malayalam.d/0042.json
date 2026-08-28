@@ -1,0 +1,14 @@
+{
+  "language": "malayalam",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:6cd4fe14bd21dd5f",
+  "lessonIds": [
+    "ML-C42-big",
+    "ML-C42-small",
+    "ML-C42-good",
+    "ML-C42-new",
+    "ML-C42-old",
+    "ML-C42-adjective-system"
+  ],
+  "tex": "malayalam/book/chapters/ch42-describing-things.tex"
+}

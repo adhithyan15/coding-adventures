@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:d8182770b2c6ca85",
+  "lessonIds": [
+    "TA-C30-maalai-vanakkam"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch30.txt",
+  "json": "tamil/narration/ch30.json",
+  "textHash": "fnv1a64:c6ac6281892287ea",
+  "jsonHash": "fnv1a64:219f404a0d395897",
+  "findings": []
+}

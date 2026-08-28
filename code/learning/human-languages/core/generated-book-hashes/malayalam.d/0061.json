@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:b2a87db045213eb8",
+  "lessonIds": [
+    "ML-C61-coconut",
+    "ML-C61-oil",
+    "ML-C61-curd",
+    "ML-C61-jaggery",
+    "ML-C61-chilli"
+  ],
+  "tex": "malayalam/book/chapters/ch61-on-the-kitchen-shelf.tex"
+}

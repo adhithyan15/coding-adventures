@@ -1,0 +1,12 @@
+{
+  "language": "italian",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:3ae006c8d50dfd6f",
+  "lessonIds": [
+    "IT-C18-pensare",
+    "IT-C18-capire",
+    "IT-C18-leggere",
+    "IT-C18-scrivere"
+  ],
+  "tex": "italian/book/chapters/ch18-mind-verbs.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:cfffb9a83bfad045",
+  "lessonIds": [
+    "KA-C24-ratri"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch24.txt",
+  "json": "kannada/narration/ch24.json",
+  "textHash": "fnv1a64:e116dae1c9934d65",
+  "jsonHash": "fnv1a64:18a07d152f0ee12c",
+  "findings": []
+}

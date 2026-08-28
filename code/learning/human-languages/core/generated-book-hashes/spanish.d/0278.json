@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:f75526bb706b87ca",
+  "lessonIds": [
+    "ES-C278-viento",
+    "ES-C278-nieve",
+    "ES-C278-arbol",
+    "ES-C278-flor"
+  ],
+  "tex": "spanish/book/chapters/ch278-al-aire-libre.tex"
+}

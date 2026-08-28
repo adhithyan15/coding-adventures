@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:b4eb50b1aed0c1da",
+  "lessonIds": [
+    "KA-C53-sky",
+    "KA-C53-sunshine",
+    "KA-C53-moon",
+    "KA-C53-star",
+    "KA-C53-cloud"
+  ],
+  "tex": "kannada/book/chapters/ch53-the-sky.tex"
+}

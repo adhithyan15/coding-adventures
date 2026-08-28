@@ -1,0 +1,16 @@
+{
+  "language": "latin",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:ed8c641caa3d95e0",
+  "lessonIds": [
+    "LA-C06-niger-albus",
+    "LA-C06-ruber-caeruleus"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "latin/narration/ch06.txt",
+  "json": "latin/narration/ch06.json",
+  "textHash": "fnv1a64:ec7273d5baf2dbca",
+  "jsonHash": "fnv1a64:62fcdeabfbc8a94d",
+  "findings": []
+}

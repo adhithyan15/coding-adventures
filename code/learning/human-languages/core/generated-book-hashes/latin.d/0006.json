@@ -1,0 +1,10 @@
+{
+  "language": "latin",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:6c711094c9fa1621",
+  "lessonIds": [
+    "LA-C06-niger-albus",
+    "LA-C06-ruber-caeruleus"
+  ],
+  "tex": "latin/book/chapters/ch06-colours.tex"
+}

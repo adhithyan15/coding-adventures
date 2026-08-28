@@ -1,0 +1,18 @@
+{
+  "language": "french",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:7b90e63b031ff511",
+  "lessonIds": [
+    "FR-C16-etre",
+    "FR-C16-etre-roots",
+    "FR-C16-passe-compose-etre",
+    "FR-C16-pronominal-past"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "french/narration/ch16.txt",
+  "json": "french/narration/ch16.json",
+  "textHash": "fnv1a64:13b47fb3a41c58d7",
+  "jsonHash": "fnv1a64:26ba5d33ac4690fb",
+  "findings": []
+}

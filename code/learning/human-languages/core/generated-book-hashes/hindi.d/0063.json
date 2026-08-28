@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:e85accb25c929c1f",
+  "lessonIds": [
+    "HI-C63-hunger",
+    "HI-C63-thirst",
+    "HI-C63-sleep",
+    "HI-C63-fever",
+    "HI-C63-pain"
+  ],
+  "tex": "hindi/book/chapters/ch63-what-the-body-tells-you.tex"
+}

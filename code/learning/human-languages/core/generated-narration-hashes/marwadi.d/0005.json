@@ -1,0 +1,24 @@
+{
+  "language": "marwadi",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:b92cb985ccda313a",
+  "lessonIds": [
+    "MW-C05-hear-mharo",
+    "MW-W05-virama",
+    "MW-W05-o-matra",
+    "MW-C05-mharo",
+    "MW-C05-hear-naam",
+    "MW-W05-na",
+    "MW-C05-naam",
+    "MW-C05-hear-hai",
+    "MW-W05-ai-matra",
+    "MW-C05-answer"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "marwadi/narration/ch05.txt",
+  "json": "marwadi/narration/ch05.json",
+  "textHash": "fnv1a64:32c75112b0457cfe",
+  "jsonHash": "fnv1a64:8c4ec81c7b3a698c",
+  "findings": []
+}

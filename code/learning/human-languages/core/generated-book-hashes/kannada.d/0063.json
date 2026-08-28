@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:c69e57aac38d566c",
+  "lessonIds": [
+    "KA-C63-hunger",
+    "KA-C63-sleep",
+    "KA-C63-fever",
+    "KA-C63-pain",
+    "KA-C63-health"
+  ],
+  "tex": "kannada/book/chapters/ch63-hunger-sleep-health.tex"
+}

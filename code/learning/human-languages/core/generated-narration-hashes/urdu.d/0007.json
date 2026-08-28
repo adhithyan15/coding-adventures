@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:e74bffd91b088f61",
+  "lessonIds": [
+    "UR-C07-sochna",
+    "UR-C07-samajhna",
+    "UR-C07-parhna",
+    "UR-C07-likhna"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "urdu/narration/ch07.txt",
+  "json": "urdu/narration/ch07.json",
+  "textHash": "fnv1a64:3e017a5b0b4e6325",
+  "jsonHash": "fnv1a64:920a5ab45aa38e61",
+  "findings": []
+}

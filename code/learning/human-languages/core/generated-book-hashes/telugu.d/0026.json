@@ -1,0 +1,9 @@
+{
+  "language": "telugu",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:ed5a94c8d8092c51",
+  "lessonIds": [
+    "TE-C26-udayam"
+  ],
+  "tex": "telugu/book/chapters/ch26-morning.tex"
+}

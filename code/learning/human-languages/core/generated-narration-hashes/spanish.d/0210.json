@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:f26f69e4f50f30d9",
+  "lessonIds": [
+    "ES-C56-sintesis-condiciones",
+    "ES-C56-depende"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch210.txt",
+  "json": "spanish/narration/ch210.json",
+  "textHash": "fnv1a64:b37dee8181054319",
+  "jsonHash": "fnv1a64:bf35ecc0075b297d",
+  "findings": []
+}

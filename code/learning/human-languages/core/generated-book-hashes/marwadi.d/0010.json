@@ -1,0 +1,18 @@
+{
+  "language": "marwadi",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:9856485b115ca3d8",
+  "lessonIds": [
+    "MW-C08-hear-maa",
+    "MW-C08-maa",
+    "MW-C08-hear-baap",
+    "MW-W08-ba",
+    "MW-C08-baap",
+    "MW-C08-hear-bhai",
+    "MW-C08-bhai",
+    "MW-C08-hear-bahan",
+    "MW-C08-bahan",
+    "MW-C08-family-four"
+  ],
+  "tex": "marwadi/book/chapters/ch10-family-four.tex"
+}

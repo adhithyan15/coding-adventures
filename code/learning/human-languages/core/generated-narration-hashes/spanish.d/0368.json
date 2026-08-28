@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:9b197bb9c3c908fb",
+  "lessonIds": [
+    "ES-C368-abeja",
+    "ES-C368-mosca",
+    "ES-C368-cerdo",
+    "ES-C368-lobo",
+    "ES-C368-toro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch368.txt",
+  "json": "spanish/narration/ch368.json",
+  "textHash": "fnv1a64:35e451c2261c5ee5",
+  "jsonHash": "fnv1a64:e915232b8941d01b",
+  "findings": []
+}

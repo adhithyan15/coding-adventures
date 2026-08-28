@@ -1,0 +1,17 @@
+{
+  "language": "kannada",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:4a5f921ff407d8b5",
+  "lessonIds": [
+    "KA-C10-vaara",
+    "KA-S05-letter-ta",
+    "KA-S114-vowel-sign-o"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch10.txt",
+  "json": "kannada/narration/ch10.json",
+  "textHash": "fnv1a64:dd453abd44a3d50c",
+  "jsonHash": "fnv1a64:91d94b75e0180438",
+  "findings": []
+}

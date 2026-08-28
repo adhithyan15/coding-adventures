@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:377f1dfb407bda55",
+  "lessonIds": [
+    "ES-C32-gato",
+    "ES-C32-perro"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch150.txt",
+  "json": "spanish/narration/ch150.json",
+  "textHash": "fnv1a64:dd3803a44f89fb25",
+  "jsonHash": "fnv1a64:71422278cf84f523",
+  "findings": []
+}

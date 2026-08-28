@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:423980fff8c1c174",
+  "lessonIds": [
+    "ES-C341-arriba",
+    "ES-C341-abajo",
+    "ES-C341-delante",
+    "ES-C341-detras",
+    "ES-C341-dentro"
+  ],
+  "tex": "spanish/book/chapters/ch341-arriba-y-abajo.tex"
+}

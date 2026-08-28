@@ -1,0 +1,17 @@
+{
+  "language": "telugu",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:ee6fad53a3dc1364",
+  "lessonIds": [
+    "TE-C12-kutumbam",
+    "TE-S07-vowel-sign-aa",
+    "TE-S115-vowel-sign-e"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch12.txt",
+  "json": "telugu/narration/ch12.json",
+  "textHash": "fnv1a64:fbcdd35f8a85f7e8",
+  "jsonHash": "fnv1a64:3ce66b8a22092265",
+  "findings": []
+}

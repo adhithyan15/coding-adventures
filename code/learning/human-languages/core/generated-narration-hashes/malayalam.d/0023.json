@@ -1,0 +1,16 @@
+{
+  "language": "malayalam",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:a314701877510adb",
+  "lessonIds": [
+    "ML-C23-divasam",
+    "ML-C23-naal"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "malayalam/narration/ch23.txt",
+  "json": "malayalam/narration/ch23.json",
+  "textHash": "fnv1a64:7f1ee47e0fbec2d1",
+  "jsonHash": "fnv1a64:525be46e37401b44",
+  "findings": []
+}

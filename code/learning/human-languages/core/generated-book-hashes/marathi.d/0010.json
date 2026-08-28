@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:d9bc7917e1c0cabc",
+  "lessonIds": [
+    "MR-C07-asne",
+    "MR-C07-jane",
+    "MR-C07-yene",
+    "MR-C07-khane",
+    "MR-C07-pahne",
+    "MR-C07-mahit-asne"
+  ],
+  "tex": "marathi/book/chapters/ch10-core-verbs.tex"
+}

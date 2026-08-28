@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:883b7e1f06e26fc7",
+  "lessonIds": [
+    "ML-C54-tree",
+    "ML-C54-branch",
+    "ML-C54-trunk",
+    "ML-C54-root",
+    "ML-C54-seed"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch54.txt",
+  "json": "malayalam/narration/ch54.json",
+  "textHash": "fnv1a64:fb21c05d1387552e",
+  "jsonHash": "fnv1a64:38a3f200a081d805",
+  "findings": []
+}

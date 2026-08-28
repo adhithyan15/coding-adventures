@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:72a0d02c9057f2df",
+  "lessonIds": [
+    "ES-C30-el-tiempo",
+    "ES-C30-hace-calor",
+    "ES-C30-llueve"
+  ],
+  "tex": "spanish/book/chapters/ch148-weather.tex"
+}

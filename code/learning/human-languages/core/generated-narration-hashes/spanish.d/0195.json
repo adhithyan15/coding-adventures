@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:6270bb7cf4a2e585",
+  "lessonIds": [
+    "ES-C54-sintesis-lo-que-hay"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch195.txt",
+  "json": "spanish/narration/ch195.json",
+  "textHash": "fnv1a64:657dfb509b9117a4",
+  "jsonHash": "fnv1a64:7742985746693c88",
+  "findings": []
+}

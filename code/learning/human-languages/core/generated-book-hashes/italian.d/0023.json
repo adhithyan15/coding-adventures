@@ -1,0 +1,12 @@
+{
+  "language": "italian",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:9c586999e1d4d5ce",
+  "lessonIds": [
+    "IT-C23-amico-amica",
+    "IT-C23-famiglia",
+    "IT-C23-nome",
+    "IT-C23-persona"
+  ],
+  "tex": "italian/book/chapters/ch23-friends-family-name.tex"
+}

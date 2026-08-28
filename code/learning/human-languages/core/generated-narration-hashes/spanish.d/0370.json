@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:51d2e183b87fddfb",
+  "lessonIds": [
+    "ES-C370-tormenta",
+    "ES-C370-trueno",
+    "ES-C370-hielo",
+    "ES-C370-cueva",
+    "ES-C370-costa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch370.txt",
+  "json": "spanish/narration/ch370.json",
+  "textHash": "fnv1a64:97fd4abee6c1de91",
+  "jsonHash": "fnv1a64:d719338a8dabc6e2",
+  "findings": []
+}

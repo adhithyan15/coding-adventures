@@ -1,0 +1,18 @@
+{
+  "language": "portuguese",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:b049ba0d513a814b",
+  "lessonIds": [
+    "PT-C19-pensar",
+    "PT-C19-entender-compreender",
+    "PT-C19-ler",
+    "PT-C19-escrever"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "portuguese/narration/ch19.txt",
+  "json": "portuguese/narration/ch19.json",
+  "textHash": "fnv1a64:409033480eafdf08",
+  "jsonHash": "fnv1a64:a3fe5752f63aadca",
+  "findings": []
+}

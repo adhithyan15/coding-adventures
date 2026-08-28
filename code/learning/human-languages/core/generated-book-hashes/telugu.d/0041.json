@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:79da479911dbbba9",
+  "lessonIds": [
+    "TE-C41-this",
+    "TE-C41-that",
+    "TE-C41-here",
+    "TE-C41-there",
+    "TE-C41-who",
+    "TE-C41-where",
+    "TE-C41-deixis-system"
+  ],
+  "tex": "telugu/book/chapters/ch41-pointing-and-asking.tex"
+}

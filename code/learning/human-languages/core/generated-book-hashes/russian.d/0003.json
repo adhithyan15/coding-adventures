@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:3236e694033d85e2",
+  "lessonIds": [
+    "RU-C03-byt",
+    "RU-C03-zhit",
+    "RU-C03-znat",
+    "RU-C03-govorit",
+    "RU-C03-videt",
+    "RU-C03-idti"
+  ],
+  "tex": "russian/book/chapters/ch03-first-verbs.tex"
+}

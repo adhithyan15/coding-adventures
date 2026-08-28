@@ -1,0 +1,10 @@
+{
+  "language": "malayalam",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:eccf98215d428c0f",
+  "lessonIds": [
+    "ML-C24-rathri",
+    "ML-C24-native-night-words"
+  ],
+  "tex": "malayalam/book/chapters/ch24-night.tex"
+}

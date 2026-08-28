@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:75d49d894c151acd",
+  "lessonIds": [
+    "MW-C10-hear-haath",
+    "MW-C10-haath",
+    "MW-C10-hear-paisa",
+    "MW-C10-paisa",
+    "MW-R10-travel-five",
+    "MW-C10-travel-five",
+    "MW-R10-script-close"
+  ],
+  "tex": "marwadi/book/chapters/ch15-hand-and-money.tex"
+}

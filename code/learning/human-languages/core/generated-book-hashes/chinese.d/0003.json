@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:e9e6cad65da7ceb1",
+  "lessonIds": [
+    "ZH-W03-yi",
+    "ZH-C03-yi",
+    "ZH-W03-er",
+    "ZH-C03-er",
+    "ZH-W03-san",
+    "ZH-C03-san",
+    "ZH-W03-si",
+    "ZH-C03-si",
+    "ZH-W03-wu",
+    "ZH-C03-wu",
+    "ZH-C03-practice"
+  ],
+  "tex": "chinese/book/chapters/ch03-numbers.tex"
+}

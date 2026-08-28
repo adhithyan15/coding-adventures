@@ -1,0 +1,16 @@
+{
+  "language": "arabic",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:a7f2c436d12b1d2a",
+  "lessonIds": [
+    "AR-C09-aswad-abyad",
+    "AR-C09-ahmar-azraq"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "arabic/narration/ch09.txt",
+  "json": "arabic/narration/ch09.json",
+  "textHash": "fnv1a64:f0000ba66a23420b",
+  "jsonHash": "fnv1a64:44453cac217ada45",
+  "findings": []
+}

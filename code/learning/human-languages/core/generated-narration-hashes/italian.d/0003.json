@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:83f1390fd16977dd",
+  "lessonIds": [
+    "IT-C03-io",
+    "IT-C03-mi-chiamo",
+    "IT-C03-come-ti-chiami",
+    "IT-C03-piacere",
+    "IT-C03-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch03.txt",
+  "json": "italian/narration/ch03.json",
+  "textHash": "fnv1a64:9980c0eb2f0cba0d",
+  "jsonHash": "fnv1a64:20301ea598c2a19c",
+  "findings": []
+}

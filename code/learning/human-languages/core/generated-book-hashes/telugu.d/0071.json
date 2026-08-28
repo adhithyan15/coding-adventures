@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:a6f0ada84d0aae87",
+  "lessonIds": [
+    "TE-C71-uncle",
+    "TE-C71-aunt",
+    "TE-C71-brother-in-law",
+    "TE-C71-sister-in-law",
+    "TE-C71-son-in-law"
+  ],
+  "tex": "telugu/book/chapters/ch71-the-wider-family.tex"
+}

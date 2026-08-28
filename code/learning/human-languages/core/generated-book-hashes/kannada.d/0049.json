@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:f2cad7f24b738f18",
+  "lessonIds": [
+    "KA-C49-true",
+    "KA-C49-enough",
+    "KA-C49-certainly",
+    "KA-C49-perhaps",
+    "KA-C49-just-so"
+  ],
+  "tex": "kannada/book/chapters/ch49-replies.tex"
+}

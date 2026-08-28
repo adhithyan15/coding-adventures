@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:7fa634f2ac2a6a4e",
+  "lessonIds": [
+    "ES-C08-numeros-1-5",
+    "ES-C08-numeros-6-10",
+    "ES-C08-tener",
+    "ES-C08-cuantos-anos",
+    "ES-C08-practice"
+  ],
+  "tex": "spanish/book/chapters/ch47-numbers-and-age.tex"
+}

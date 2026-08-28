@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:4c8c2a31c3bfd7fb",
+  "lessonIds": [
+    "PT-C18-ser-estar",
+    "PT-C18-ter-haver",
+    "PT-C18-ir",
+    "PT-C18-vir",
+    "PT-C18-dizer",
+    "PT-C18-ver",
+    "PT-C18-saber-conhecer"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch18.txt",
+  "json": "portuguese/narration/ch18.json",
+  "textHash": "fnv1a64:85dca2af99bf97a3",
+  "jsonHash": "fnv1a64:39a9bb0353a17ac1",
+  "findings": []
+}

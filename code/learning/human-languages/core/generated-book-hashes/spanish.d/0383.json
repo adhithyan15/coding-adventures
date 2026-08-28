@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:568f5e6949d1ffc0",
+  "lessonIds": [
+    "ES-C383-guardar",
+    "ES-C383-dejar",
+    "ES-C383-sacar",
+    "ES-C383-buscar"
+  ],
+  "tex": "spanish/book/chapters/ch383-guardar-y-dejar.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:77ccd1eb075edfe5",
+  "lessonIds": [
+    "ES-C293-cuello",
+    "ES-C293-hombro",
+    "ES-C293-espalda",
+    "ES-C293-rodilla",
+    "ES-C293-tobillo"
+  ],
+  "tex": "spanish/book/chapters/ch293-mas-del-cuerpo.tex"
+}

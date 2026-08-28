@@ -1,0 +1,10 @@
+{
+  "language": "arabic",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:075932e407092784",
+  "lessonIds": [
+    "AR-C29-qala",
+    "AR-C29-raa"
+  ],
+  "tex": "arabic/book/chapters/ch29-saying-and-seeing.tex"
+}

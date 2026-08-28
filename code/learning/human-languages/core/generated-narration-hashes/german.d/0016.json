@@ -1,0 +1,17 @@
+{
+  "language": "german",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:3e3201f79e13dc35",
+  "lessonIds": [
+    "GE-C16-sein",
+    "GE-C16-perfekt-sein",
+    "GE-C16-perfekt-sein-agreement"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "german/narration/ch16.txt",
+  "json": "german/narration/ch16.json",
+  "textHash": "fnv1a64:7f6e04ffdd5a2613",
+  "jsonHash": "fnv1a64:1bb0cd4185c6c460",
+  "findings": []
+}

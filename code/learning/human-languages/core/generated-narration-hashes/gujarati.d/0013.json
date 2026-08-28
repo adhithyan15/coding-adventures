@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:c41857ef9236f825",
+  "lessonIds": [
+    "GU-C07-hovun",
+    "GU-C07-javun",
+    "GU-C07-aavvun",
+    "GU-C07-khaavun",
+    "GU-C07-jovun",
+    "GU-C07-jaanvun"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch13.txt",
+  "json": "gujarati/narration/ch13.json",
+  "textHash": "fnv1a64:8105ec7e97e0f96f",
+  "jsonHash": "fnv1a64:58a04cef9cad0d27",
+  "findings": []
+}

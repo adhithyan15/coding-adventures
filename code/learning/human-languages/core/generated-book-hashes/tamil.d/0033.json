@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:065dcc3b22f88105",
+  "lessonIds": [
+    "TA-C33-ninai",
+    "TA-C33-puri",
+    "TA-C33-padi",
+    "TA-W16-read-tamizh",
+    "TA-C33-ezhutu"
+  ],
+  "tex": "tamil/book/chapters/ch33-verbs-of-the-mind.tex"
+}

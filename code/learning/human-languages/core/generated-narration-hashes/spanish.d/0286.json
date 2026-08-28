@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:877f6d8c9d4dd131",
+  "lessonIds": [
+    "ES-C286-ojo",
+    "ES-C286-boca",
+    "ES-C286-garganta",
+    "ES-C286-dolor",
+    "ES-C286-fiebre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch286.txt",
+  "json": "spanish/narration/ch286.json",
+  "textHash": "fnv1a64:3b7daacf5b2ccfdf",
+  "jsonHash": "fnv1a64:e1ba6ce8831d8b18",
+  "findings": []
+}

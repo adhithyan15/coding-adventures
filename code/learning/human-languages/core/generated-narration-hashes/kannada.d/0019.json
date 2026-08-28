@@ -1,0 +1,16 @@
+{
+  "language": "kannada",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:0417b8f99dcd2a1f",
+  "lessonIds": [
+    "KA-C19-vayassu",
+    "KA-S123-sign-anusvara"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch19.txt",
+  "json": "kannada/narration/ch19.json",
+  "textHash": "fnv1a64:2bf1a3d9e277eba0",
+  "jsonHash": "fnv1a64:fa5fc42c171f8b60",
+  "findings": []
+}

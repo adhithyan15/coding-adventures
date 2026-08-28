@@ -1,0 +1,12 @@
+{
+  "language": "arabic",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:7686a9ba811d62c6",
+  "lessonIds": [
+    "AR-C34-milh",
+    "AR-C34-lahm",
+    "AR-C34-jubn",
+    "AR-C34-taam"
+  ],
+  "tex": "arabic/book/chapters/ch34-asking-for-food.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:74e36c0e0c12d04f",
+  "lessonIds": [
+    "TA-C53-river",
+    "TA-C53-hill",
+    "TA-C53-field",
+    "TA-C53-path",
+    "TA-C53-village"
+  ],
+  "tex": "tamil/book/chapters/ch53-the-land.tex"
+}

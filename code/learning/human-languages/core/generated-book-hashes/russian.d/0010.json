@@ -1,0 +1,9 @@
+{
+  "language": "russian",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:33ab0d5a6161125a",
+  "lessonIds": [
+    "RU-C10-serdtse"
+  ],
+  "tex": "russian/book/chapters/ch10-heart.tex"
+}

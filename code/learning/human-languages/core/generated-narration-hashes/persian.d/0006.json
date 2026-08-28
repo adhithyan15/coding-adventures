@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:ee07c5f77f2bdce8",
+  "lessonIds": [
+    "FA-C06-budan",
+    "FA-C06-raftan",
+    "FA-C06-amadan",
+    "FA-C06-goftan",
+    "FA-C06-danestan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch06.txt",
+  "json": "persian/narration/ch06.json",
+  "textHash": "fnv1a64:03d604560e0778f5",
+  "jsonHash": "fnv1a64:a2d72f3054b0c50b",
+  "findings": []
+}

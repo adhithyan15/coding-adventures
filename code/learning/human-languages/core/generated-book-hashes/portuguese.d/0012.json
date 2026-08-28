@@ -1,0 +1,10 @@
+{
+  "language": "portuguese",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:66d4757f03f1ab09",
+  "lessonIds": [
+    "PT-C12-numeros-11-15",
+    "PT-C12-numeros-16-20"
+  ],
+  "tex": "portuguese/book/chapters/ch12-numbers-11-20.tex"
+}

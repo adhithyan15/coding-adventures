@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:817313e9f3d74cfa",
+  "lessonIds": [
+    "KA-C54-tree",
+    "KA-C54-branch",
+    "KA-C54-leaf",
+    "KA-C54-root",
+    "KA-C54-seed"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch54.txt",
+  "json": "kannada/narration/ch54.json",
+  "textHash": "fnv1a64:26ef05dddd652c04",
+  "jsonHash": "fnv1a64:fb58d26c57e7c05b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:a9797578410b4bba",
+  "lessonIds": [
+    "ES-C397-barato",
+    "ES-C397-caro",
+    "ES-C397-gratis",
+    "ES-C397-mayor",
+    "ES-C397-menor"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch397.txt",
+  "json": "spanish/narration/ch397.json",
+  "textHash": "fnv1a64:34d4cc6ad8db06f6",
+  "jsonHash": "fnv1a64:9a347bf2a2b25e8e",
+  "findings": []
+}

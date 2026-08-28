@@ -1,0 +1,10 @@
+{
+  "language": "portuguese",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:11559e2e6cc6b816",
+  "lessonIds": [
+    "PT-C13-preto-branco",
+    "PT-C13-vermelho-azul"
+  ],
+  "tex": "portuguese/book/chapters/ch13-colours.tex"
+}

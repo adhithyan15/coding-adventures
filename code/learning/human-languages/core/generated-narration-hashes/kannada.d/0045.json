@@ -1,0 +1,18 @@
+{
+  "language": "kannada",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:2d62fb1f0478ffb4",
+  "lessonIds": [
+    "KA-C45-grandfather",
+    "KA-C45-grandmother",
+    "KA-C45-husband",
+    "KA-C45-wife"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "kannada/narration/ch45.txt",
+  "json": "kannada/narration/ch45.json",
+  "textHash": "fnv1a64:9a1195191c84821e",
+  "jsonHash": "fnv1a64:551bf53fdf576e8e",
+  "findings": []
+}

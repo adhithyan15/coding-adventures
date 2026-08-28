@@ -1,0 +1,10 @@
+{
+  "language": "telugu",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:9317cf28b1fcb23f",
+  "lessonIds": [
+    "TE-C21-kukka-pilli",
+    "TE-S124-letter-e"
+  ],
+  "tex": "telugu/book/chapters/ch21-dog-and-cat.tex"
+}

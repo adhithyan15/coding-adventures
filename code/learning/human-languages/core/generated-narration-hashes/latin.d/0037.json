@@ -1,0 +1,22 @@
+{
+  "language": "latin",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:83d4326c264a1aaa",
+  "lessonIds": [
+    "LA-C37-sum",
+    "LA-C37-habeo",
+    "LA-C37-eo",
+    "LA-C37-venio",
+    "LA-C37-dico",
+    "LA-C37-video",
+    "LA-C37-scio",
+    "LA-C37-do"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
+  "text": "latin/narration/ch37.txt",
+  "json": "latin/narration/ch37.json",
+  "textHash": "fnv1a64:ac5df0103ad7b98a",
+  "jsonHash": "fnv1a64:c1afa17f579b199a",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:da899caa1859b39c",
+  "lessonIds": [
+    "TE-C27-sayantram"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch27.txt",
+  "json": "telugu/narration/ch27.json",
+  "textHash": "fnv1a64:a61dacc3a4afbd3e",
+  "jsonHash": "fnv1a64:a2c29ee1a09ae3d0",
+  "findings": []
+}

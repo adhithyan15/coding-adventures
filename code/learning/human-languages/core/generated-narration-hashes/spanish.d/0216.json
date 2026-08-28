@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:d2dc584058e0f30d",
+  "lessonIds": [
+    "ES-C57-repaso-reportar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch216.txt",
+  "json": "spanish/narration/ch216.json",
+  "textHash": "fnv1a64:f96ddafc33b33511",
+  "jsonHash": "fnv1a64:0d447fa20d24ad40",
+  "findings": []
+}

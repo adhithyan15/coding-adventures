@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:a81a5090f8dcaa70",
+  "lessonIds": [
+    "UR-C15-barish",
+    "UR-C15-dhoop",
+    "UR-C15-hawa",
+    "UR-C15-garmi",
+    "UR-C15-sardi"
+  ],
+  "tex": "urdu/book/chapters/ch15-weather.tex"
+}

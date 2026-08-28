@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:6f8df0c03d11807f",
+  "lessonIds": [
+    "ES-C295-sendero",
+    "ES-C295-puente",
+    "ES-C295-orilla",
+    "ES-C295-isla",
+    "ES-C295-niebla"
+  ],
+  "tex": "spanish/book/chapters/ch295-el-sendero.tex"
+}

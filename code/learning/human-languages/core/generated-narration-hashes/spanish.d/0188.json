@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:0daede2edcfa46e1",
+  "lessonIds": [
+    "ES-C53-lo-que"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch188.txt",
+  "json": "spanish/narration/ch188.json",
+  "textHash": "fnv1a64:142e86b3f8f2d0a8",
+  "jsonHash": "fnv1a64:f028b1f5d7824bad",
+  "findings": []
+}

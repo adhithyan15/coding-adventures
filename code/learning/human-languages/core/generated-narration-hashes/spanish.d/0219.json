@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:99f1d1991b3e327c",
+  "lessonIds": [
+    "ES-C58-tambien"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch219.txt",
+  "json": "spanish/narration/ch219.json",
+  "textHash": "fnv1a64:d3ec5d539620aee7",
+  "jsonHash": "fnv1a64:27c793ea7bf99068",
+  "findings": []
+}

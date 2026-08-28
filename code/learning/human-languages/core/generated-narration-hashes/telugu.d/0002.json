@@ -1,0 +1,22 @@
+{
+  "language": "telugu",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:39395b76d48dcd8b",
+  "lessonIds": [
+    "TE-C02-peru",
+    "TE-C02-naa",
+    "TE-C02-naa-peru",
+    "TE-C02-nuvvu-miiru",
+    "TE-C02-emiti",
+    "TE-C02-mii-peru-emiti",
+    "TE-C02-santosham",
+    "TE-C02-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "telugu/narration/ch02.txt",
+  "json": "telugu/narration/ch02.json",
+  "textHash": "fnv1a64:4dff25f9b953d469",
+  "jsonHash": "fnv1a64:8416164734a92e3a",
+  "findings": []
+}

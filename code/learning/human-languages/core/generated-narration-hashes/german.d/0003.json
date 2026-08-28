@@ -1,0 +1,22 @@
+{
+  "language": "german",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:4cb03e23d3d38e6f",
+  "lessonIds": [
+    "GE-C03-danke",
+    "GE-C03-bitte",
+    "GE-C03-gehen",
+    "GE-C03-wie-geht-es",
+    "GE-C03-wie-geht-register",
+    "GE-C03-es-geht",
+    "GE-C03-practice",
+    "GE-C03-formal-practice"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
+  "text": "german/narration/ch03.txt",
+  "json": "german/narration/ch03.json",
+  "textHash": "fnv1a64:37033fd4047b3991",
+  "jsonHash": "fnv1a64:a5af417eded2a0a7",
+  "findings": []
+}

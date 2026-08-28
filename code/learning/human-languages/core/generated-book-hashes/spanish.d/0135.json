@@ -1,0 +1,9 @@
+{
+  "language": "spanish",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:87a62829babe9b78",
+  "lessonIds": [
+    "ES-C50-repaso-mandatos"
+  ],
+  "tex": "spanish/book/chapters/ch135-review-commands.tex"
+}

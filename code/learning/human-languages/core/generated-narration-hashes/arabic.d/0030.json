@@ -1,0 +1,16 @@
+{
+  "language": "arabic",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:45fc604680884fe0",
+  "lessonIds": [
+    "AR-C30-arafa",
+    "AR-C30-akala"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "arabic/narration/ch30.txt",
+  "json": "arabic/narration/ch30.json",
+  "textHash": "fnv1a64:8acde7c824bb8d9a",
+  "jsonHash": "fnv1a64:6c3d8c29487be17b",
+  "findings": []
+}

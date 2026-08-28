@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:a077e52baf3c9781",
+  "lessonIds": [
+    "ES-C35-sintesis-gustar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch164.txt",
+  "json": "spanish/narration/ch164.json",
+  "textHash": "fnv1a64:22c28f34620d9a5a",
+  "jsonHash": "fnv1a64:6118e862771d486f",
+  "findings": []
+}

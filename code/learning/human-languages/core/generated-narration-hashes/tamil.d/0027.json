@@ -1,0 +1,16 @@
+{
+  "language": "tamil",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:f8e82c6bf8d1ee32",
+  "lessonIds": [
+    "TA-C27-maalai",
+    "TA-W11-read-niingal"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch27.txt",
+  "json": "tamil/narration/ch27.json",
+  "textHash": "fnv1a64:fcf87d9d1b2a4238",
+  "jsonHash": "fnv1a64:5827ba81f2b52170",
+  "findings": []
+}

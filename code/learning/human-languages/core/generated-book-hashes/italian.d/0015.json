@@ -1,0 +1,10 @@
+{
+  "language": "italian",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:88430bd49466d29d",
+  "lessonIds": [
+    "IT-C15-passato-prossimo",
+    "IT-C15-passato-remoto"
+  ],
+  "tex": "italian/book/chapters/ch15-two-pasts.tex"
+}

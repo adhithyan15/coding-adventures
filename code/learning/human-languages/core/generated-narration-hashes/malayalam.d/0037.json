@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:7286ede620318904",
+  "lessonIds": [
+    "ML-C37-kannu",
+    "ML-C37-chevi",
+    "ML-C37-mookku",
+    "ML-C37-vaay"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch37.txt",
+  "json": "malayalam/narration/ch37.json",
+  "textHash": "fnv1a64:e74f4968bc9ad97a",
+  "jsonHash": "fnv1a64:90305b6205f5509e",
+  "findings": []
+}

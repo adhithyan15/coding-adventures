@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:602e0bb79bf0105b",
+  "lessonIds": [
+    "ES-C60-mal",
+    "ES-C60-apocope"
+  ],
+  "tex": "spanish/book/chapters/ch228-mal.tex"
+}

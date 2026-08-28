@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:ae492ba39ba2b892",
+  "lessonIds": [
+    "ES-C350-propio",
+    "ES-C350-ajeno",
+    "ES-C350-igual",
+    "ES-C350-distinto",
+    "ES-C350-tipo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch350.txt",
+  "json": "spanish/narration/ch350.json",
+  "textHash": "fnv1a64:f11bb94a9b3f8ae8",
+  "jsonHash": "fnv1a64:4a96eccf51ebf0fa",
+  "findings": []
+}

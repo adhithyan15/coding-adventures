@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:81af0ba7ab38b05b",
+  "lessonIds": [
+    "SA-C41-wheel",
+    "SA-C41-pot",
+    "SA-C41-boat",
+    "SA-C41-mirror",
+    "SA-C41-parasol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch41.txt",
+  "json": "sanskrit/narration/ch41.json",
+  "textHash": "fnv1a64:601f9b7f2fedfd06",
+  "jsonHash": "fnv1a64:1edb17b0e2cfca63",
+  "findings": []
+}

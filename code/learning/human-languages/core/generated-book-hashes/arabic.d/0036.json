@@ -1,0 +1,12 @@
+{
+  "language": "arabic",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:ad5a733afa7ca6d7",
+  "lessonIds": [
+    "AR-C36-zayt",
+    "AR-C36-kub",
+    "AR-C36-tabaq",
+    "AR-C36-milaqa"
+  ],
+  "tex": "arabic/book/chapters/ch36-cups-plates-and-more-than-one.tex"
+}

@@ -1,0 +1,18 @@
+{
+  "language": "kannada",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:6a2f6cb5132d84c8",
+  "lessonIds": [
+    "KA-C43-come",
+    "KA-C43-sit",
+    "KA-C43-stand",
+    "KA-C43-give"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "kannada/narration/ch43.txt",
+  "json": "kannada/narration/ch43.json",
+  "textHash": "fnv1a64:75a7d6816d4f7380",
+  "jsonHash": "fnv1a64:f77683c4198aa7bf",
+  "findings": []
+}

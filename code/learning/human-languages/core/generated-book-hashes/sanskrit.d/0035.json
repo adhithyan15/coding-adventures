@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:e15dcbdeebb2d5f9",
+  "lessonIds": [
+    "SA-C35-milk",
+    "SA-C35-honey",
+    "SA-C35-salt",
+    "SA-C35-book",
+    "SA-C35-bed"
+  ],
+  "tex": "sanskrit/book/chapters/ch35-in-the-house.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:fc0623f30694ca99",
+  "lessonIds": [
+    "ES-W01-con-reloj"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch339.txt",
+  "json": "spanish/narration/ch339.json",
+  "textHash": "fnv1a64:7b427d9cd8b5e0c4",
+  "jsonHash": "fnv1a64:ab79adeddd8fcd43",
+  "findings": []
+}

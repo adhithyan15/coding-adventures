@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:7da5ea56361b74f3",
+  "lessonIds": [
+    "ES-C17-sintesis-futuro-condicional"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch125.txt",
+  "json": "spanish/narration/ch125.json",
+  "textHash": "fnv1a64:24b231788da61429",
+  "jsonHash": "fnv1a64:c56c1cd0bd472d41",
+  "findings": []
+}

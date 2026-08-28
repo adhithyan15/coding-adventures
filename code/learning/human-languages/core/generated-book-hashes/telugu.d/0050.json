@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:204d311254d96d78",
+  "lessonIds": [
+    "TE-C50-now",
+    "TE-C50-day-after",
+    "TE-C50-journey",
+    "TE-C50-set-out",
+    "TE-C50-farewell"
+  ],
+  "tex": "telugu/book/chapters/ch50-taking-leave.tex"
+}

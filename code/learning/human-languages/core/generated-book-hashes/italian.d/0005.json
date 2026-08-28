@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:00c623becfc1883b",
+  "lessonIds": [
+    "IT-C05-parlare",
+    "IT-C05-abitare",
+    "IT-C05-lavorare",
+    "IT-C05-parlo-italiano",
+    "IT-C05-practice"
+  ],
+  "tex": "italian/book/chapters/ch05-first-verbs.tex"
+}

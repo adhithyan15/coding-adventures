@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:68e3805c4810d188",
+  "lessonIds": [
+    "ES-C07-comeis-vivis"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch44.txt",
+  "json": "spanish/narration/ch44.json",
+  "textHash": "fnv1a64:45df5f088c1750c7",
+  "jsonHash": "fnv1a64:6b883866deaa9655",
+  "findings": []
+}

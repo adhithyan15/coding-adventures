@@ -1,0 +1,16 @@
+{
+  "language": "arabic",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:7275327a382c2588",
+  "lessonIds": [
+    "AR-C10-ab-umm",
+    "AR-C10-akh-ukht"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "arabic/narration/ch10.txt",
+  "json": "arabic/narration/ch10.json",
+  "textHash": "fnv1a64:518ff9ef462513fb",
+  "jsonHash": "fnv1a64:43cb846fbedc847c",
+  "findings": []
+}

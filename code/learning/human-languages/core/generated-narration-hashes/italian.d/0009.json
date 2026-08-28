@@ -1,0 +1,16 @@
+{
+  "language": "italian",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:eb920ac85210535c",
+  "lessonIds": [
+    "IT-C09-mesi",
+    "IT-C09-stagioni"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "italian/narration/ch09.txt",
+  "json": "italian/narration/ch09.json",
+  "textHash": "fnv1a64:29421d240bd03412",
+  "jsonHash": "fnv1a64:896f1030dc81227d",
+  "findings": []
+}

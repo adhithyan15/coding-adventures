@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:60f14cce1705c85c",
+  "lessonIds": [
+    "ES-C342-minuto",
+    "ES-C342-cuarto",
+    "ES-C342-punto",
+    "ES-C342-horario",
+    "ES-C342-madrugada"
+  ],
+  "tex": "spanish/book/chapters/ch342-el-minuto-y-el-cuarto.tex"
+}

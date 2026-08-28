@@ -1,0 +1,10 @@
+{
+  "language": "hindi",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:27f977d89ee9af98",
+  "lessonIds": [
+    "HI-C20-mausam",
+    "HI-S124-letter-dha"
+  ],
+  "tex": "hindi/book/chapters/ch20-weather.tex"
+}

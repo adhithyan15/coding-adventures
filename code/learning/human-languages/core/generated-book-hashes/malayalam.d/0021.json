@@ -1,0 +1,10 @@
+{
+  "language": "malayalam",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:611c169b7f3b65d4",
+  "lessonIds": [
+    "ML-C21-naaya-poocha",
+    "ML-S124-letter-sa"
+  ],
+  "tex": "malayalam/book/chapters/ch21-dog-and-cat.tex"
+}

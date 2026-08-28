@@ -1,0 +1,11 @@
+{
+  "language": "tamil",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:d34493da4106ab05",
+  "lessonIds": [
+    "TA-C25-iniya-iravu",
+    "TA-W10-read-naan",
+    "TA-C25-goodnight-alternatives"
+  ],
+  "tex": "tamil/book/chapters/ch25-good-night.tex"
+}

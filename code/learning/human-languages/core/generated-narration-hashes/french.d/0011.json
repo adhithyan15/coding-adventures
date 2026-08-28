@@ -1,0 +1,16 @@
+{
+  "language": "french",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:51837bc7fb216a4f",
+  "lessonIds": [
+    "FR-C11-pain",
+    "FR-C11-eau-vin"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "french/narration/ch11.txt",
+  "json": "french/narration/ch11.json",
+  "textHash": "fnv1a64:fd7e799738d7faef",
+  "jsonHash": "fnv1a64:262ac43c81d8f580",
+  "findings": []
+}

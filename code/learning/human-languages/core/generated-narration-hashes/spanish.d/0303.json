@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:c04d281c67b8fbac",
+  "lessonIds": [
+    "ES-C303-ayuda",
+    "ES-C303-momento",
+    "ES-C303-otra-vez",
+    "ES-C303-no-se",
+    "ES-C303-que-significa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch303.txt",
+  "json": "spanish/narration/ch303.json",
+  "textHash": "fnv1a64:87a87fa8c81b3fbd",
+  "jsonHash": "fnv1a64:9277a943b015b47c",
+  "findings": []
+}

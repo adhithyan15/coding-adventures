@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:400238e370971755",
+  "lessonIds": [
+    "HI-C12-pitaa-maataa",
+    "HI-C12-bhaai-bahin",
+    "HI-S07-letter-ta",
+    "HI-S116-vowel-sign-ii"
+  ],
+  "tex": "hindi/book/chapters/ch12-family.tex"
+}

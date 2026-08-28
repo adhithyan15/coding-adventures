@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:1cb7d7218495dc15",
+  "lessonIds": [
+    "MR-C01-dhanyavad",
+    "MR-W02-visarga",
+    "MR-W02-aa-independent",
+    "MR-W02-bha",
+    "MR-W02-e-matra",
+    "MR-W02-anusvara",
+    "MR-W02-ta"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "marathi/narration/ch02.txt",
+  "json": "marathi/narration/ch02.json",
+  "textHash": "fnv1a64:4c5208b3034c858d",
+  "jsonHash": "fnv1a64:c8e8eb1560ac5210",
+  "findings": []
+}

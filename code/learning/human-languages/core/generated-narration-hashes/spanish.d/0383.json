@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:7b0c04d76994d7a2",
+  "lessonIds": [
+    "ES-C383-guardar",
+    "ES-C383-dejar",
+    "ES-C383-sacar",
+    "ES-C383-buscar"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch383.txt",
+  "json": "spanish/narration/ch383.json",
+  "textHash": "fnv1a64:35d91f9b7ab3c0c9",
+  "jsonHash": "fnv1a64:88392edc976f4b66",
+  "findings": []
+}

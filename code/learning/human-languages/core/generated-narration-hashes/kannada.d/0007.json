@@ -1,0 +1,18 @@
+{
+  "language": "kannada",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:2295ba513f28ffd2",
+  "lessonIds": [
+    "KA-C07-numbers-1-5",
+    "KA-C07-numbers-6-10",
+    "KA-S02-vowel-sign-u",
+    "KA-S111-vowel-sign-e"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch07.txt",
+  "json": "kannada/narration/ch07.json",
+  "textHash": "fnv1a64:648be8799b5b74f7",
+  "jsonHash": "fnv1a64:c86f9a35a12c62c5",
+  "findings": []
+}

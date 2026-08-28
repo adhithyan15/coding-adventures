@@ -1,0 +1,9 @@
+{
+  "language": "spanish",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:d80de7249fce6682",
+  "lessonIds": [
+    "ES-C47-repaso-dobles"
+  ],
+  "tex": "spanish/book/chapters/ch101-review-double-object.tex"
+}

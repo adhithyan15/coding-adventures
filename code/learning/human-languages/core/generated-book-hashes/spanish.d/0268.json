@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:e8a33ce364b354b6",
+  "lessonIds": [
+    "ES-C268-donde-esta",
+    "ES-C268-billete",
+    "ES-C268-habitacion",
+    "ES-C268-repaso-llegar-y-quedarse",
+    "ES-C268-problema",
+    "ES-C268-repaso-dos-finales-dos-generos"
+  ],
+  "tex": "spanish/book/chapters/ch268-viajar.tex"
+}

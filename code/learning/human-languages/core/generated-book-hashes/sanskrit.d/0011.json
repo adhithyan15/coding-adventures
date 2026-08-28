@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:a4070cf5ab96f31b",
+  "lessonIds": [
+    "SA-C11-mitram",
+    "SA-C11-kutumbam",
+    "SA-C11-bhrata",
+    "SA-C11-bhagini",
+    "SA-S04-letter-aa",
+    "SA-S110-letter-ra"
+  ],
+  "tex": "sanskrit/book/chapters/ch11-people-nouns.tex"
+}

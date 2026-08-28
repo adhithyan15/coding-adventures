@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:ed2c11072cb1e8d8",
+  "lessonIds": [
+    "KA-C62-thread",
+    "KA-C62-needle",
+    "KA-C62-rope",
+    "KA-C62-broom",
+    "KA-C62-umbrella"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch62.txt",
+  "json": "kannada/narration/ch62.json",
+  "textHash": "fnv1a64:d9021fd5aedfa506",
+  "jsonHash": "fnv1a64:a3cf72339a1b41ee",
+  "findings": []
+}

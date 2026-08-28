@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:82f88c569d9be245",
+  "lessonIds": [
+    "MW-C14-hear-sasta",
+    "MW-C14-sasta",
+    "MW-C14-hear-samaan",
+    "MW-C14-samaan",
+    "MW-R14-shopping-new-two",
+    "MW-C14-shopping-five",
+    "MW-R14-shopping-close"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch19.txt",
+  "json": "marwadi/narration/ch19.json",
+  "textHash": "fnv1a64:9a4fa3c9be9b8ec5",
+  "jsonHash": "fnv1a64:4bf20cff2ea24dfa",
+  "findings": []
+}

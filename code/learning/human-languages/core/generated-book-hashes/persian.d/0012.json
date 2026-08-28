@@ -1,0 +1,12 @@
+{
+  "language": "persian",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:ab7d6ae8e49fc066",
+  "lessonIds": [
+    "FA-C12-nam",
+    "FA-C12-del",
+    "FA-C12-dar",
+    "FA-C12-ketab"
+  ],
+  "tex": "persian/book/chapters/ch12-name-heart-door-book.tex"
+}

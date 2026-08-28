@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:c60e3d4deecc516f",
+  "lessonIds": [
+    "HI-C11-kaalaa-safed",
+    "HI-C11-laal-niila",
+    "HI-S06-vowel-sign-aa",
+    "HI-S115-letter-ya"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch11.txt",
+  "json": "hindi/narration/ch11.json",
+  "textHash": "fnv1a64:2649c3ebcd1242ea",
+  "jsonHash": "fnv1a64:146ca5358972b5f9",
+  "findings": []
+}

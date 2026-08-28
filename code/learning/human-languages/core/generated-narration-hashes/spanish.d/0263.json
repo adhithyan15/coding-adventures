@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:df23922ff10b58d7",
+  "lessonIds": [
+    "ES-C67-uno-otro",
+    "ES-C67-repaso-uno-otro-ninguno"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch263.txt",
+  "json": "spanish/narration/ch263.json",
+  "textHash": "fnv1a64:27e2daa6e1b09654",
+  "jsonHash": "fnv1a64:a5cbd6552595e022",
+  "findings": []
+}

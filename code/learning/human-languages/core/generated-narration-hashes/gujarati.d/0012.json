@@ -1,0 +1,16 @@
+{
+  "language": "gujarati",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:bb51f2017819af61",
+  "lessonIds": [
+    "GU-C06-numbers-1-5",
+    "GU-C06-number-histories"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "gujarati/narration/ch12.txt",
+  "json": "gujarati/narration/ch12.json",
+  "textHash": "fnv1a64:b83f76e49dfa28f7",
+  "jsonHash": "fnv1a64:0eccb5fa886e852f",
+  "findings": []
+}

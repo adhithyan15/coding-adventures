@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:59c8c0cacb7d60df",
+  "lessonIds": [
+    "ES-C314-brazo",
+    "ES-C314-pierna",
+    "ES-C314-pie",
+    "ES-C314-diente",
+    "ES-C314-oido"
+  ],
+  "tex": "spanish/book/chapters/ch314-brazo-y-pie.tex"
+}

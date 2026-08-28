@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:be30b04ecffa8e52",
+  "lessonIds": [
+    "IT-C04-arrivederci",
+    "IT-C04-a-domani",
+    "IT-C04-a-presto",
+    "IT-C04-a-piu-tardi",
+    "IT-C04-practice"
+  ],
+  "tex": "italian/book/chapters/ch04-farewells.tex"
+}

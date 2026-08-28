@@ -1,0 +1,17 @@
+{
+  "language": "latin",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:467e8562c765f453",
+  "lessonIds": [
+    "LA-C36-salve-post-meridiem",
+    "LA-C36-timeless-salve",
+    "LA-C36-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "latin/narration/ch36.txt",
+  "json": "latin/narration/ch36.json",
+  "textHash": "fnv1a64:9ed12563ee1ef64f",
+  "jsonHash": "fnv1a64:42ffdf2a61c18a39",
+  "findings": []
+}

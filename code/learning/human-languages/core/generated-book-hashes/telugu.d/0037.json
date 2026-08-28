@@ -1,0 +1,12 @@
+{
+  "language": "telugu",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:99eb80f4feb1465f",
+  "lessonIds": [
+    "TE-C37-kannu",
+    "TE-C37-cevi",
+    "TE-C37-mukku",
+    "TE-C37-noru"
+  ],
+  "tex": "telugu/book/chapters/ch37-face-words.tex"
+}

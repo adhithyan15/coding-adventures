@@ -1,0 +1,18 @@
+{
+  "language": "telugu",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:eb4a3f036595f3e7",
+  "lessonIds": [
+    "TE-C37-kannu",
+    "TE-C37-cevi",
+    "TE-C37-mukku",
+    "TE-C37-noru"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "telugu/narration/ch37.txt",
+  "json": "telugu/narration/ch37.json",
+  "textHash": "fnv1a64:4591e01f64a01889",
+  "jsonHash": "fnv1a64:84fd4266cbd60ed0",
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:39edeb71fc77bd36",
+  "lessonIds": [
+    "ES-C270-en-mi-opinion",
+    "ES-C270-por-ejemplo",
+    "ES-C270-sin-embargo",
+    "ES-C270-aunque"
+  ],
+  "tex": "spanish/book/chapters/ch270-argumentar.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:83019148d84be716",
+  "lessonIds": [
+    "ES-C06-repaso-hablar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch32.txt",
+  "json": "spanish/narration/ch32.json",
+  "textHash": "fnv1a64:f6e61d60681cafd8",
+  "jsonHash": "fnv1a64:4f307e54a3bbe186",
+  "findings": []
+}

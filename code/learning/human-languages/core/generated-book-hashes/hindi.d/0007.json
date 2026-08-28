@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:efac221cee66d5c5",
+  "lessonIds": [
+    "HI-C07-haan",
+    "HI-C07-nahin",
+    "HI-S02-letter-na",
+    "HI-S111-letter-ka"
+  ],
+  "tex": "hindi/book/chapters/ch07-yes-and-no.tex"
+}

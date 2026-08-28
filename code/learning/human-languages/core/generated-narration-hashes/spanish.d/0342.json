@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:b3ee20f58de2f7e9",
+  "lessonIds": [
+    "ES-C342-minuto",
+    "ES-C342-cuarto",
+    "ES-C342-punto",
+    "ES-C342-horario",
+    "ES-C342-madrugada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch342.txt",
+  "json": "spanish/narration/ch342.json",
+  "textHash": "fnv1a64:96d1369df0e2c312",
+  "jsonHash": "fnv1a64:692cc883a54ba9ac",
+  "findings": []
+}

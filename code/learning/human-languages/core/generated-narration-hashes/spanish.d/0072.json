@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:9dc126e5e9354bf1",
+  "lessonIds": [
+    "ES-C13-salir"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch72.txt",
+  "json": "spanish/narration/ch72.json",
+  "textHash": "fnv1a64:3242c00cc1cf6d62",
+  "jsonHash": "fnv1a64:9472ef0aa155e2c2",
+  "findings": []
+}

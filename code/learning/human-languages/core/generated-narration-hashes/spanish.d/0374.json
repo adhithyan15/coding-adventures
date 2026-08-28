@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:8a95510a8476605e",
+  "lessonIds": [
+    "ES-C374-lapiz",
+    "ES-C374-cepillo",
+    "ES-C374-guante",
+    "ES-C374-vela",
+    "ES-C374-nudo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch374.txt",
+  "json": "spanish/narration/ch374.json",
+  "textHash": "fnv1a64:7054eb73b7dbfccd",
+  "jsonHash": "fnv1a64:121c16763855eacb",
+  "findings": []
+}

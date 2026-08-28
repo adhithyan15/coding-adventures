@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:a050da75d525dd14",
+  "lessonIds": [
+    "UR-C09-bhai",
+    "UR-C09-bahan",
+    "UR-C09-dost",
+    "UR-C09-khandan"
+  ],
+  "tex": "urdu/book/chapters/ch09-people.tex"
+}

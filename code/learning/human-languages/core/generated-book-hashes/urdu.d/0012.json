@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:a60d793b75e8265a",
+  "lessonIds": [
+    "UR-C12-pani",
+    "UR-C12-chai",
+    "UR-C12-doodh",
+    "UR-C12-roti"
+  ],
+  "tex": "urdu/book/chapters/ch12-food-words.tex"
+}

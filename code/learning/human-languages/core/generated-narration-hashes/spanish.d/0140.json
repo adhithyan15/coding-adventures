@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:c2125cbe8223bffe",
+  "lessonIds": [
+    "ES-C23-padre-madre",
+    "ES-C23-hermano-hermana",
+    "ES-C23-hermano-hache"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch140.txt",
+  "json": "spanish/narration/ch140.json",
+  "textHash": "fnv1a64:e7a3c33dc75fdb44",
+  "jsonHash": "fnv1a64:187ffd56478974e4",
+  "findings": []
+}

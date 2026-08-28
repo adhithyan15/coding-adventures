@@ -1,0 +1,10 @@
+{
+  "language": "marwadi",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:3ad5f180edf12c4d",
+  "lessonIds": [
+    "MW-C06-hear-question",
+    "MW-C06-question"
+  ],
+  "tex": "marwadi/book/chapters/ch07-wellbeing-question.tex"
+}

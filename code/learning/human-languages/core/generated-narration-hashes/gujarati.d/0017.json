@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:ce5ec58e6b71ac31",
+  "lessonIds": [
+    "GU-C11-mitra",
+    "GU-C11-kutumb",
+    "GU-C11-bhai",
+    "GU-C11-bahen",
+    "GU-R13-doorway-nine-r3"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch17.txt",
+  "json": "gujarati/narration/ch17.json",
+  "textHash": "fnv1a64:7e6b29260e9cf80f",
+  "jsonHash": "fnv1a64:5499b5f78eed6308",
+  "findings": []
+}

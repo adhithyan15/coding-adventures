@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:96a805cc005c3922",
+  "lessonIds": [
+    "TE-C57-neck",
+    "TE-C57-back",
+    "TE-C57-lip",
+    "TE-C57-nail",
+    "TE-C57-bone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch57.txt",
+  "json": "telugu/narration/ch57.json",
+  "textHash": "fnv1a64:95ab92b9e345f19d",
+  "jsonHash": "fnv1a64:39236be36a87da46",
+  "findings": []
+}

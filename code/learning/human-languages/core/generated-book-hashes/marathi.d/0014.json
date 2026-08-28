@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:df1625220f4184f8",
+  "lessonIds": [
+    "MR-C11-mitra",
+    "MR-R11-mitra-r1",
+    "MR-C11-kutumb",
+    "MR-R11-kutumb-r1",
+    "MR-C11-bhau",
+    "MR-C11-bahin"
+  ],
+  "tex": "marathi/book/chapters/ch14-friend-and-family.tex"
+}

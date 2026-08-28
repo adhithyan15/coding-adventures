@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:79e0bfe1f909b421",
+  "lessonIds": [
+    "HI-C12-pitaa-maataa",
+    "HI-C12-bhaai-bahin",
+    "HI-S07-letter-ta",
+    "HI-S116-vowel-sign-ii"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch12.txt",
+  "json": "hindi/narration/ch12.json",
+  "textHash": "fnv1a64:c29c43fe9328b01a",
+  "jsonHash": "fnv1a64:61f9b61959353f82",
+  "findings": []
+}

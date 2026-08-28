@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:41d278a4451b5788",
+  "lessonIds": [
+    "ES-C14-ayer",
+    "ES-C14-ser-ir-preterite",
+    "ES-C14-hablar-preterite",
+    "ES-C14-practice"
+  ],
+  "tex": "spanish/book/chapters/ch103-preterite.tex"
+}

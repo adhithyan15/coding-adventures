@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:ab7ba438421d31a2",
+  "lessonIds": [
+    "KA-C01-namaskara",
+    "KA-C01-dhanyavada",
+    "KA-C01-haudu",
+    "KA-C01-illa",
+    "KA-C01-sari",
+    "KA-C01-practice"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch01.txt",
+  "json": "kannada/narration/ch01.json",
+  "textHash": "fnv1a64:e374649df0137a84",
+  "jsonHash": "fnv1a64:449842101e4dd252",
+  "findings": []
+}

@@ -1,0 +1,16 @@
+{
+  "language": "german",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:ec1871a82a4f5293",
+  "lessonIds": [
+    "GE-C10-eltern",
+    "GE-C10-geschwister"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "german/narration/ch10.txt",
+  "json": "german/narration/ch10.json",
+  "textHash": "fnv1a64:ad4198d51fe8049c",
+  "jsonHash": "fnv1a64:6373fb1d217b9e97",
+  "findings": []
+}

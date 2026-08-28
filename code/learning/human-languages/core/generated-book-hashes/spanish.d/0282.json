@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:f39f1ea067eabaa3",
+  "lessonIds": [
+    "ES-C282-bienvenido",
+    "ES-C282-saludo",
+    "ES-C282-abrazo",
+    "ES-C282-sonrisa",
+    "ES-C282-invitado"
+  ],
+  "tex": "spanish/book/chapters/ch282-encuentro.tex"
+}

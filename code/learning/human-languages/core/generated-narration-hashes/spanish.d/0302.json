@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:c8eedd1561cf8b38",
+  "lessonIds": [
+    "ES-C302-calle",
+    "ES-C302-esquina",
+    "ES-C302-huella",
+    "ES-C302-puerto",
+    "ES-C302-faro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch302.txt",
+  "json": "spanish/narration/ch302.json",
+  "textHash": "fnv1a64:7616da60437f04ca",
+  "jsonHash": "fnv1a64:ff80c7b9a3e625ed",
+  "findings": []
+}

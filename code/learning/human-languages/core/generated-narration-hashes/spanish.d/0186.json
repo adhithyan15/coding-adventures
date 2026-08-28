@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:07aae184cd25cae5",
+  "lessonIds": [
+    "ES-C53-que-relativo"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch186.txt",
+  "json": "spanish/narration/ch186.json",
+  "textHash": "fnv1a64:cf9657866f8a2c65",
+  "jsonHash": "fnv1a64:bdf6048743ac5fcb",
+  "findings": []
+}

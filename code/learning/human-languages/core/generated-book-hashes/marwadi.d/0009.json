@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:e7057768cec2f9b6",
+  "lessonIds": [
+    "MW-C07-hear-later",
+    "MW-W07-chha",
+    "MW-W07-e-matra",
+    "MW-W07-i-matra",
+    "MW-W07-la",
+    "MW-C07-read-later",
+    "MW-C07-practice"
+  ],
+  "tex": "marwadi/book/chapters/ch09-see-you-later.tex"
+}

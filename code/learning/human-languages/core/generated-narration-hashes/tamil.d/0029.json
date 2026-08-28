@@ -1,0 +1,16 @@
+{
+  "language": "tamil",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:04412c3d0b13f291",
+  "lessonIds": [
+    "TA-C29-kaalai-vanakkam",
+    "TA-W12-read-eppadi"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch29.txt",
+  "json": "tamil/narration/ch29.json",
+  "textHash": "fnv1a64:d0b046e80a92a3c2",
+  "jsonHash": "fnv1a64:b044d5217c8f5f3b",
+  "findings": []
+}

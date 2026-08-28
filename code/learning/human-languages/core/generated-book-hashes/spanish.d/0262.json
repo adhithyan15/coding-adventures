@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:b2f6dba4a2c5f380",
+  "lessonIds": [
+    "ES-C67-primero",
+    "ES-C67-primer-libro"
+  ],
+  "tex": "spanish/book/chapters/ch262-primero.tex"
+}

@@ -1,0 +1,12 @@
+{
+  "language": "italian",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:a4eb113cfc3cec34",
+  "lessonIds": [
+    "IT-C24-cuore",
+    "IT-C24-occhio",
+    "IT-C24-orecchio",
+    "IT-C24-bocca"
+  ],
+  "tex": "italian/book/chapters/ch24-heart-eyes-ears-mouth.tex"
+}

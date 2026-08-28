@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:baf72a5b0adf1546",
+  "lessonIds": [
+    "PT-C05-falar",
+    "PT-C05-morar",
+    "PT-C05-trabalhar",
+    "PT-C05-falo-portugues",
+    "PT-C05-practice"
+  ],
+  "tex": "portuguese/book/chapters/ch05-first-verbs.tex"
+}

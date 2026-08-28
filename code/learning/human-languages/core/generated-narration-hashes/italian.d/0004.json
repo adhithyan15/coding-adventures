@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:534f394f345fb8a4",
+  "lessonIds": [
+    "IT-C04-arrivederci",
+    "IT-C04-a-domani",
+    "IT-C04-a-presto",
+    "IT-C04-a-piu-tardi",
+    "IT-C04-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch04.txt",
+  "json": "italian/narration/ch04.json",
+  "textHash": "fnv1a64:90d94941e757ce54",
+  "jsonHash": "fnv1a64:ccd5e50cf54aaad7",
+  "findings": []
+}

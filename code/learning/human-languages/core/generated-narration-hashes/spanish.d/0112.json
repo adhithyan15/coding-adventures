@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:ce287f378d5f01a3",
+  "lessonIds": [
+    "ES-C48-cuando"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch112.txt",
+  "json": "spanish/narration/ch112.json",
+  "textHash": "fnv1a64:750b95dfdb39a89c",
+  "jsonHash": "fnv1a64:4f309659b7acf072",
+  "findings": []
+}

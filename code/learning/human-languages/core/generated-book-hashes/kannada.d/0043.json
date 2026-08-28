@@ -1,0 +1,12 @@
+{
+  "language": "kannada",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:7cecf2b2c5085f88",
+  "lessonIds": [
+    "KA-C43-come",
+    "KA-C43-sit",
+    "KA-C43-stand",
+    "KA-C43-give"
+  ],
+  "tex": "kannada/book/chapters/ch43-more-verbs.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:85bf89d7878b761c",
+  "lessonIds": [
+    "PT-C04-adeus",
+    "PT-C04-ate-logo",
+    "PT-C04-ate-amanha",
+    "PT-C04-ate-breve",
+    "PT-C04-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch04.txt",
+  "json": "portuguese/narration/ch04.json",
+  "textHash": "fnv1a64:de40031c8e2ec75d",
+  "jsonHash": "fnv1a64:b386a1e7434fc5ef",
+  "findings": []
+}

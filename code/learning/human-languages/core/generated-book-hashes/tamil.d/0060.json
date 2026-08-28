@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:a511ec75651d639c",
+  "lessonIds": [
+    "TA-C60-needle",
+    "TA-C60-rope",
+    "TA-C60-umbrella",
+    "TA-C60-broom",
+    "TA-C60-comb"
+  ],
+  "tex": "tamil/book/chapters/ch60-things-people-make.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:b15c6b4a9c21a457",
+  "lessonIds": [
+    "PA-C05-bolna",
+    "PA-C05-main-punjabi-bolda-han",
+    "PA-C05-rahna",
+    "PA-C05-kamm-karna",
+    "PA-C05-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch05.txt",
+  "json": "punjabi/narration/ch05.json",
+  "textHash": "fnv1a64:13ead793841e4d4b",
+  "jsonHash": "fnv1a64:6d09aed8e899f015",
+  "findings": []
+}

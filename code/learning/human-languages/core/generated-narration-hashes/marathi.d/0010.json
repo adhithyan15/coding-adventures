@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:fbae7286d1b5efed",
+  "lessonIds": [
+    "MR-C07-asne",
+    "MR-C07-jane",
+    "MR-C07-yene",
+    "MR-C07-khane",
+    "MR-C07-pahne",
+    "MR-C07-mahit-asne"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marathi/narration/ch10.txt",
+  "json": "marathi/narration/ch10.json",
+  "textHash": "fnv1a64:96c4ed7320c2e03b",
+  "jsonHash": "fnv1a64:74619847ff8ec1a2",
+  "findings": []
+}

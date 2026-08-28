@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:fb87ffcfd3419b08",
+  "lessonIds": [
+    "HI-C61-vessel",
+    "HI-C61-spoon",
+    "HI-C61-tumbler",
+    "HI-C61-griddle",
+    "HI-C61-stove"
+  ],
+  "tex": "hindi/book/chapters/ch61-at-the-cooking-fire.tex"
+}

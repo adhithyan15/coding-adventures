@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:c382a44a66a07827",
+  "lessonIds": [
+    "FA-C03-shoma-to",
+    "FA-C03-chist",
+    "FA-C03-esm-e-shoma-chist",
+    "FA-C03-khoshvaghtam",
+    "FA-C03-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "persian/narration/ch03.txt",
+  "json": "persian/narration/ch03.json",
+  "textHash": "fnv1a64:a7b747e0634217be",
+  "jsonHash": "fnv1a64:638b0b256c295f93",
+  "findings": []
+}

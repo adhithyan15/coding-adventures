@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:370475346b7cdc30",
+  "lessonIds": [
+    "SA-C20-man",
+    "SA-C20-woman",
+    "SA-C20-child",
+    "SA-C20-old-person",
+    "SA-C20-people"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "sanskrit/narration/ch20.txt",
+  "json": "sanskrit/narration/ch20.json",
+  "textHash": "fnv1a64:a162ff48ba68c86f",
+  "jsonHash": "fnv1a64:74652217bc880965",
+  "findings": []
+}

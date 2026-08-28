@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:4bdbdac42bdd01f3",
+  "lessonIds": [
+    "SA-C12-akshi",
+    "SA-C12-karnah",
+    "SA-C12-mukham",
+    "SA-S05-sign-virama",
+    "SA-S111-letter-ka"
+  ],
+  "tex": "sanskrit/book/chapters/ch12-face-nouns-1.tex"
+}

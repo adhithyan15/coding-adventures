@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:409567282553f4de",
+  "lessonIds": [
+    "HI-C64-now",
+    "HI-C64-quickly",
+    "HI-C64-slowly",
+    "HI-C64-little",
+    "HI-C64-more"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch64.txt",
+  "json": "hindi/narration/ch64.json",
+  "textHash": "fnv1a64:3c75d97a8c4ff25b",
+  "jsonHash": "fnv1a64:bc2ffa22eca3aecc",
+  "findings": []
+}

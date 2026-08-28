@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:72fc5234b7dceb5b",
+  "lessonIds": [
+    "JA-W01-i",
+    "JA-W01-ha",
+    "JA-W01-hai-read",
+    "JA-W01-e",
+    "JA-C01-hai",
+    "JA-C01-iie"
+  ],
+  "tex": "japanese/book/chapters/ch01-three-scripts.tex"
+}

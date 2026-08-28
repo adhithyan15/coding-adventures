@@ -1,0 +1,22 @@
+{
+  "language": "bengali",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:4f0af9de6c0a13b5",
+  "lessonIds": [
+    "BN-C02-naam",
+    "BN-C02-amar",
+    "BN-C02-amar-naam",
+    "BN-C02-alaap",
+    "BN-C02-ki",
+    "BN-C02-tumi-apni",
+    "BN-C02-tomar-naam-ki",
+    "BN-C02-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch02.txt",
+  "json": "bengali/narration/ch02.json",
+  "textHash": "fnv1a64:4a932eb9c8e9010d",
+  "jsonHash": "fnv1a64:0bf43366665119ff",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "kannada",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:278bc949cf5aecc2",
+  "lessonIds": [
+    "KA-C33-yocisu",
+    "KA-C33-artha-maadiko",
+    "KA-C33-oodu",
+    "KA-C33-bare"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "kannada/narration/ch33.txt",
+  "json": "kannada/narration/ch33.json",
+  "textHash": "fnv1a64:41bdfc6bacaa1735",
+  "jsonHash": "fnv1a64:e99d7a99c8cdd6ae",
+  "findings": []
+}

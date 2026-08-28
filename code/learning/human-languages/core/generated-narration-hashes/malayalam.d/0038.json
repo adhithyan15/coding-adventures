@@ -1,0 +1,16 @@
+{
+  "language": "malayalam",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:458b8d8ebdc6af03",
+  "lessonIds": [
+    "ML-C38-hrudayam",
+    "ML-C38-nenchu"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "malayalam/narration/ch38.txt",
+  "json": "malayalam/narration/ch38.json",
+  "textHash": "fnv1a64:e25bc0e452c62763",
+  "jsonHash": "fnv1a64:a18d6dbaee18b722",
+  "findings": []
+}

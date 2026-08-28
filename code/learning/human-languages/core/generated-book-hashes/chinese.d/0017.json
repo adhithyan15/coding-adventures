@@ -1,0 +1,25 @@
+{
+  "language": "chinese",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:4c60ae6454ea7676",
+  "lessonIds": [
+    "ZH-C17-hear-zhongwen",
+    "ZH-W17-wen-observe",
+    "ZH-W17-wen-guided",
+    "ZH-W17-wen-delayed",
+    "ZH-C17-zhongwen",
+    "ZH-R17-character-language-r2",
+    "ZH-C17-hear-zhongguo",
+    "ZH-W17-guo-observe",
+    "ZH-W17-guo-guided",
+    "ZH-W17-guo-delayed",
+    "ZH-C17-zhongguo",
+    "ZH-R17-country-language-r1",
+    "ZH-R17-old-three-r2",
+    "ZH-R17-listening-five",
+    "ZH-R17-reading-five",
+    "ZH-R17-writing-five",
+    "ZH-C17-practice"
+  ],
+  "tex": "chinese/book/chapters/ch17-language-country.tex"
+}

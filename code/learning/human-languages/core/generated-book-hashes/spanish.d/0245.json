@@ -1,0 +1,9 @@
+{
+  "language": "spanish",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:605a305825243a93",
+  "lessonIds": [
+    "ES-C63-repaso-paradigmas"
+  ],
+  "tex": "spanish/book/chapters/ch245-review-paradigmas.tex"
+}

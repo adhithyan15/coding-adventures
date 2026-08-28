@@ -1,0 +1,10 @@
+{
+  "language": "malayalam",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:1c379fee1e9393a2",
+  "lessonIds": [
+    "ML-C23-divasam",
+    "ML-C23-naal"
+  ],
+  "tex": "malayalam/book/chapters/ch23-day.tex"
+}

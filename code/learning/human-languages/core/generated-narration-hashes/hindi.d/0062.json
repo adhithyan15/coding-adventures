@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:82c5aef2b02fc633",
+  "lessonIds": [
+    "HI-C62-rope",
+    "HI-C62-needle",
+    "HI-C62-basket",
+    "HI-C62-clay",
+    "HI-C62-wood"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch62.txt",
+  "json": "hindi/narration/ch62.json",
+  "textHash": "fnv1a64:8b11d09b6ee9ee81",
+  "jsonHash": "fnv1a64:662aa4a26539c25e",
+  "findings": []
+}

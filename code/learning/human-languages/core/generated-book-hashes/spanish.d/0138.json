@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:22c57eb91017728a",
+  "lessonIds": [
+    "ES-C21-lunes-viernes",
+    "ES-C21-sabado-domingo"
+  ],
+  "tex": "spanish/book/chapters/ch138-days-of-the-week.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:f308b01bcd78b1e6",
+  "lessonIds": [
+    "MR-C05-bolne",
+    "MR-C05-mi-marathi-bolto",
+    "MR-C05-rahne",
+    "MR-C05-kaam-karne",
+    "MR-C05-practice"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch08.txt",
+  "json": "marathi/narration/ch08.json",
+  "textHash": "fnv1a64:a4946d7037610f67",
+  "jsonHash": "fnv1a64:25efbbe168f2a014",
+  "findings": []
+}

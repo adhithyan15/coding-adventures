@@ -1,0 +1,18 @@
+{
+  "language": "telugu",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:2849330214cf237b",
+  "lessonIds": [
+    "TE-C34-tiisuko",
+    "TE-C34-adugu",
+    "TE-C34-sahayam-ceyu",
+    "TE-C34-ishtam"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "telugu/narration/ch34.txt",
+  "json": "telugu/narration/ch34.json",
+  "textHash": "fnv1a64:71a3dea5ff2bbe68",
+  "jsonHash": "fnv1a64:e75e72400f724413",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:17c3dff5eab7d6cb",
+  "lessonIds": [
+    "ES-C51-sintesis-regalo-motivo"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch180.txt",
+  "json": "spanish/narration/ch180.json",
+  "textHash": "fnv1a64:2379c0ced02512da",
+  "jsonHash": "fnv1a64:23ac127719f591d9",
+  "findings": []
+}

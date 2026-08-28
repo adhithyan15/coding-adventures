@@ -1,0 +1,12 @@
+{
+  "language": "japanese",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:7adbd5a272c5dded",
+  "lessonIds": [
+    "JA-W06-ko-katakana",
+    "JA-W06-long-mark",
+    "JA-W06-hi-katakana",
+    "JA-C01-koohii"
+  ],
+  "tex": "japanese/book/chapters/ch06-koohii-katakana.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:8f73341b9aeaf9c5",
+  "lessonIds": [
+    "ES-C349-jornada",
+    "ES-C349-decada",
+    "ES-C349-fiesta",
+    "ES-C349-aniversario",
+    "ES-C349-agenda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch349.txt",
+  "json": "spanish/narration/ch349.json",
+  "textHash": "fnv1a64:573a8c24be52efdc",
+  "jsonHash": "fnv1a64:71d59fb86aaf3295",
+  "findings": []
+}

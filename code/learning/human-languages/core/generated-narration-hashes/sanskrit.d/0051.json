@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:a0be78232ec466ac",
+  "lessonIds": [
+    "SA-C51-husband",
+    "SA-C51-wife",
+    "SA-C51-grandfather",
+    "SA-C51-grandmother",
+    "SA-C51-uncle"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch51.txt",
+  "json": "sanskrit/narration/ch51.json",
+  "textHash": "fnv1a64:b795c4044fa13ed4",
+  "jsonHash": "fnv1a64:74bd2d13905be8ae",
+  "findings": []
+}

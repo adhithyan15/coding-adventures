@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:dfd1cafce09fbe7c",
+  "lessonIds": [
+    "KA-C64-after",
+    "KA-C64-also",
+    "KA-C64-still",
+    "KA-C64-soon",
+    "KA-C64-in-that-case"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch64.txt",
+  "json": "kannada/narration/ch64.json",
+  "textHash": "fnv1a64:e13c4e29e8644b56",
+  "jsonHash": "fnv1a64:fe0dc98362104587",
+  "findings": []
+}

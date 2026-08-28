@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:55728eb26e67792e",
+  "lessonIds": [
+    "HI-C40-this",
+    "HI-C40-that",
+    "HI-C40-here",
+    "HI-C40-there",
+    "HI-C40-who",
+    "HI-C40-where",
+    "HI-C40-deixis-system"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch40.txt",
+  "json": "hindi/narration/ch40.json",
+  "textHash": "fnv1a64:9b8a9afbed6cfcee",
+  "jsonHash": "fnv1a64:1e9a1c8b96b6207c",
+  "findings": []
+}

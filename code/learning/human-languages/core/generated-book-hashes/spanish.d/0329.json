@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:ae5b034fb81dda16",
+  "lessonIds": [
+    "ES-C329-tal",
+    "ES-C329-cual",
+    "ES-C329-pues",
+    "ES-C329-sino",
+    "ES-C329-salvo"
+  ],
+  "tex": "spanish/book/chapters/ch329-tal-y-salvo.tex"
+}

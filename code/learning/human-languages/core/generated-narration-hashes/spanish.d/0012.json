@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:015f55d558f7a17c",
+  "lessonIds": [
+    "ES-C05-adios",
+    "ES-C05-hasta",
+    "ES-C05-hasta-limits",
+    "ES-C05-repaso-adios"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch12.txt",
+  "json": "spanish/narration/ch12.json",
+  "textHash": "fnv1a64:7c1adcebbdb0774e",
+  "jsonHash": "fnv1a64:5cbe4d8b77d76dfe",
+  "findings": []
+}

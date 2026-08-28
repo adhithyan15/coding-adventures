@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:d45966cf46988112",
+  "lessonIds": [
+    "ZH-W04-kou",
+    "ZH-C04-kou",
+    "ZH-W04-ri",
+    "ZH-C04-ri",
+    "ZH-W04-bu",
+    "ZH-C04-bu",
+    "ZH-C04-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "chinese/narration/ch04.txt",
+  "json": "chinese/narration/ch04.json",
+  "textHash": "fnv1a64:cb9aeabffe021265",
+  "jsonHash": "fnv1a64:94a24189944d033d",
+  "findings": []
+}

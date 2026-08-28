@@ -1,0 +1,18 @@
+{
+  "language": "portuguese",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:9a537968b4d88274",
+  "lessonIds": [
+    "PT-C25-amigo",
+    "PT-C25-familia",
+    "PT-C25-homem",
+    "PT-C25-mulher"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "portuguese/narration/ch25.txt",
+  "json": "portuguese/narration/ch25.json",
+  "textHash": "fnv1a64:b4d8756296dbeb80",
+  "jsonHash": "fnv1a64:783fd5fb76a1dfba",
+  "findings": []
+}

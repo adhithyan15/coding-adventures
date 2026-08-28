@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:055ad239cd0e0fc2",
+  "lessonIds": [
+    "SA-C30-door",
+    "SA-C30-seat",
+    "SA-C30-flower",
+    "SA-C30-garland",
+    "SA-C30-anjali"
+  ],
+  "tex": "sanskrit/book/chapters/ch30-welcoming-a-guest.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:600d2c132460deff",
+  "lessonIds": [
+    "JA-W03-sa",
+    "JA-W03-ma",
+    "JA-W03-su",
+    "JA-C01-gozaimasu",
+    "JA-C03-practice"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "japanese/narration/ch04.txt",
+  "json": "japanese/narration/ch04.json",
+  "textHash": "fnv1a64:2ea24f5b24b362ef",
+  "jsonHash": "fnv1a64:eb9d4dec825afd24",
+  "findings": []
+}

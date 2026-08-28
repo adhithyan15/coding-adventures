@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:ee993f58cf13a210",
+  "lessonIds": [
+    "SA-C42-sometimes",
+    "SA-C42-suddenly",
+    "SA-C42-mostly",
+    "SA-C42-a-little",
+    "SA-C42-much"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch42.txt",
+  "json": "sanskrit/narration/ch42.json",
+  "textHash": "fnv1a64:07c8f038f60e94e5",
+  "jsonHash": "fnv1a64:ad95fdbeced99ab4",
+  "findings": []
+}

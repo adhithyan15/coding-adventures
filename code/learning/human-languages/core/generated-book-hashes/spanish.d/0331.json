@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:7e404e85ae74eed8",
+  "lessonIds": [
+    "ES-C331-rato",
+    "ES-C331-manera",
+    "ES-C331-modo",
+    "ES-C331-cosa",
+    "ES-C331-asunto"
+  ],
+  "tex": "spanish/book/chapters/ch331-manera-y-asunto.tex"
+}

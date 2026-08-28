@@ -1,0 +1,18 @@
+{
+  "language": "russian",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:f53db69acfff78c5",
+  "lessonIds": [
+    "RU-C07-drug",
+    "RU-C07-podruga",
+    "RU-C07-brat",
+    "RU-C07-sestra"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "russian/narration/ch07.txt",
+  "json": "russian/narration/ch07.json",
+  "textHash": "fnv1a64:bbfb9bc97611ca2f",
+  "jsonHash": "fnv1a64:ac5c2b1880405619",
+  "findings": []
+}

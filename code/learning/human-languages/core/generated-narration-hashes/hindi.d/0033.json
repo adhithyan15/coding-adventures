@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:62e659a8f3fef824",
+  "lessonIds": [
+    "HI-C33-shubh-dopahar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "hindi/narration/ch33.txt",
+  "json": "hindi/narration/ch33.json",
+  "textHash": "fnv1a64:749b59cbbde21161",
+  "jsonHash": "fnv1a64:cdce441391d6f8ae",
+  "findings": []
+}

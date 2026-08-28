@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:3c727433f5b7afcd",
+  "lessonIds": [
+    "ES-C53-que-no-se-cae"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch187.txt",
+  "json": "spanish/narration/ch187.json",
+  "textHash": "fnv1a64:af4178460f8da87f",
+  "jsonHash": "fnv1a64:58e6b84caedd9641",
+  "findings": []
+}

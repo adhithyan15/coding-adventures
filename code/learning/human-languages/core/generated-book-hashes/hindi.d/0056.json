@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:57764767fb4c0250",
+  "lessonIds": [
+    "HI-C56-road",
+    "HI-C56-village",
+    "HI-C56-market",
+    "HI-C56-shop",
+    "HI-C56-field"
+  ],
+  "tex": "hindi/book/chapters/ch56-the-road.tex"
+}

@@ -1,0 +1,17 @@
+{
+  "language": "italian",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:6fe0173bfa2c62f2",
+  "lessonIds": [
+    "IT-C21-giocare",
+    "IT-C21-ottenere",
+    "IT-C21-rispondere"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "italian/narration/ch21.txt",
+  "json": "italian/narration/ch21.json",
+  "textHash": "fnv1a64:61092490c4f28364",
+  "jsonHash": "fnv1a64:c5d2a1b0ad955793",
+  "findings": []
+}

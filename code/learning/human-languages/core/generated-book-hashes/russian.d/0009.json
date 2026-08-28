@@ -1,0 +1,12 @@
+{
+  "language": "russian",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:8372c8233a0c08e3",
+  "lessonIds": [
+    "RU-C09-ukho",
+    "RU-C09-nos",
+    "RU-C09-rot",
+    "RU-C09-glaz"
+  ],
+  "tex": "russian/book/chapters/ch09-face-parts.tex"
+}

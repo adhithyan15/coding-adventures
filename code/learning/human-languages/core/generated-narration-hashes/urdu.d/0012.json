@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:db08ec16c24f2790",
+  "lessonIds": [
+    "UR-C12-pani",
+    "UR-C12-chai",
+    "UR-C12-doodh",
+    "UR-C12-roti"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "urdu/narration/ch12.txt",
+  "json": "urdu/narration/ch12.json",
+  "textHash": "fnv1a64:c5574458caf84a4f",
+  "jsonHash": "fnv1a64:ed6310990e2c4e09",
+  "findings": []
+}

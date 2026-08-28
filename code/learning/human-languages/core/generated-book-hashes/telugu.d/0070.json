@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:ee73ed3a966ae223",
+  "lessonIds": [
+    "TE-C70-mouse",
+    "TE-C70-frog",
+    "TE-C70-mosquito",
+    "TE-C70-squirrel",
+    "TE-C70-spider"
+  ],
+  "tex": "telugu/book/chapters/ch70-small-creatures.tex"
+}

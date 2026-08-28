@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:e878033d44b641d7",
+  "lessonIds": [
+    "TE-C58-a-little",
+    "TE-C58-more",
+    "TE-C58-less",
+    "TE-C58-no-thanks",
+    "TE-C58-thats-all"
+  ],
+  "tex": "telugu/book/chapters/ch58-more-short-replies.tex"
+}

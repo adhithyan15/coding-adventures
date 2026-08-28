@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:ee9da7a1685b5887",
+  "lessonIds": [
+    "ES-C299-campo",
+    "ES-C299-granja",
+    "ES-C299-ganado",
+    "ES-C299-cosecha",
+    "ES-C299-pastor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch299.txt",
+  "json": "spanish/narration/ch299.json",
+  "textHash": "fnv1a64:07a544651d76147b",
+  "jsonHash": "fnv1a64:d3a51fb50f7a3def",
+  "findings": []
+}

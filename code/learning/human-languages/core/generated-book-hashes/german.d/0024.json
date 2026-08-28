@@ -1,0 +1,12 @@
+{
+  "language": "german",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:3bda08b88668578b",
+  "lessonIds": [
+    "GE-C24-denken",
+    "GE-C24-verstehen",
+    "GE-C24-lesen",
+    "GE-C24-schreiben"
+  ],
+  "tex": "german/book/chapters/ch24-mind-verbs.tex"
+}

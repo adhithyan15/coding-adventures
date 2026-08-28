@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:713fb61fe4a7123a",
+  "lessonIds": [
+    "ES-C08-tenemos",
+    "ES-C08-tienen"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch67.txt",
+  "json": "spanish/narration/ch67.json",
+  "textHash": "fnv1a64:af405894d4e4ac19",
+  "jsonHash": "fnv1a64:917055bfb3f80e9b",
+  "findings": []
+}

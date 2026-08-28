@@ -1,0 +1,16 @@
+{
+  "language": "german",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:65b9a357c444bf22",
+  "lessonIds": [
+    "GE-C18-ja",
+    "GE-C18-nein"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "german/narration/ch18.txt",
+  "json": "german/narration/ch18.json",
+  "textHash": "fnv1a64:3c95657affbf0a3b",
+  "jsonHash": "fnv1a64:a33a5b0fff9dd9b9",
+  "findings": []
+}

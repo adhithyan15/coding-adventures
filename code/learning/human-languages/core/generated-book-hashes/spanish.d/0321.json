@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:d588396578ab2b77",
+  "lessonIds": [
+    "ES-C321-placer",
+    "ES-C321-razon",
+    "ES-C321-respeto",
+    "ES-C321-paciencia",
+    "ES-C321-consejo"
+  ],
+  "tex": "spanish/book/chapters/ch321-placer-y-consejo.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:facc0883c4ec7149",
+  "lessonIds": [
+    "ZH-C01-tones",
+    "ZH-C01-ni",
+    "ZH-C01-hao",
+    "ZH-C01-nihao",
+    "ZH-C01-tone-sandhi",
+    "ZH-C01-hao-fond",
+    "ZH-C01-practice"
+  ],
+  "tex": "chinese/book/chapters/ch01-nihao.tex"
+}

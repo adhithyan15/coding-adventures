@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:f54b40b47c4adb8a",
+  "lessonIds": [
+    "ES-C351-cien",
+    "ES-C351-cantidad",
+    "ES-C351-ambos",
+    "ES-C351-varios",
+    "ES-C351-triple"
+  ],
+  "tex": "spanish/book/chapters/ch351-cien-y-la-cantidad.tex"
+}

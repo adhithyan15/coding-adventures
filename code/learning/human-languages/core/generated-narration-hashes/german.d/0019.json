@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:01e79cb23f947ddb",
+  "lessonIds": [
+    "GE-C19-bitte-requests"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "german/narration/ch19.txt",
+  "json": "german/narration/ch19.json",
+  "textHash": "fnv1a64:e3922081d4606042",
+  "jsonHash": "fnv1a64:0576022fa2b81ce9",
+  "findings": []
+}

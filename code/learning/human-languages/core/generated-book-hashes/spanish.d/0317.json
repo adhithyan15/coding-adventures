@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:21e143a8ec7e3810",
+  "lessonIds": [
+    "ES-C317-algo",
+    "ES-C317-alguien",
+    "ES-C317-nadie",
+    "ES-C317-otro",
+    "ES-C317-poco"
+  ],
+  "tex": "spanish/book/chapters/ch317-algo-y-nadie.tex"
+}

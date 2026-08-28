@@ -1,0 +1,12 @@
+{
+  "language": "gujarati",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:31409d5c7f88adde",
+  "lessonIds": [
+    "GU-C10-paani",
+    "GU-C10-chaa",
+    "GU-C10-dudh",
+    "GU-C10-rotli"
+  ],
+  "tex": "gujarati/book/chapters/ch16-request-food-drink.tex"
+}

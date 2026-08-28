@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:e357e50208605641",
+  "lessonIds": [
+    "LA-C47-sal",
+    "LA-C47-mel",
+    "LA-C47-lac",
+    "LA-C47-ovum",
+    "LA-C47-piscis"
+  ],
+  "tex": "latin/book/chapters/ch47-mensa.tex"
+}

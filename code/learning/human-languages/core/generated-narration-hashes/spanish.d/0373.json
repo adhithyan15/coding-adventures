@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:9f15d85fd1386577",
+  "lessonIds": [
+    "ES-C373-oro",
+    "ES-C373-botella",
+    "ES-C373-alfombra",
+    "ES-C373-falda",
+    "ES-C373-peine"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch373.txt",
+  "json": "spanish/narration/ch373.json",
+  "textHash": "fnv1a64:3b05e6308d7af4ef",
+  "jsonHash": "fnv1a64:3b5198faa1fdbc49",
+  "findings": []
+}

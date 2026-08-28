@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:9b6e7f4e39ba5934",
+  "lessonIds": [
+    "BN-C04-abar",
+    "BN-C04-dekha-hobe",
+    "BN-C04-abar-dekha-hobe",
+    "BN-C04-kal-dekha-hobe",
+    "BN-C04-practice"
+  ],
+  "tex": "bengali/book/chapters/ch04-farewells.tex"
+}

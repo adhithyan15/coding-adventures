@@ -1,0 +1,16 @@
+{
+  "language": "arabic",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:e0cc4614e20283a2",
+  "lessonIds": [
+    "AR-W10-ayn",
+    "AR-W11-ha-and-ta-marbuta",
+    "AR-W12-maa-salama",
+    "AR-C04-maa-with",
+    "AR-C04-al-salama",
+    "AR-C04-maa-salama",
+    "AR-C04-ila-liqaa",
+    "AR-C04-practice"
+  ],
+  "tex": "arabic/book/chapters/ch04-farewells.tex"
+}

@@ -1,0 +1,16 @@
+{
+  "language": "german",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:bb300434897bdc90",
+  "lessonIds": [
+    "GE-C09-monate",
+    "GE-C09-jahreszeiten"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "german/narration/ch09.txt",
+  "json": "german/narration/ch09.json",
+  "textHash": "fnv1a64:f55bd3307c9ca715",
+  "jsonHash": "fnv1a64:b1280861b0fe5419",
+  "findings": []
+}

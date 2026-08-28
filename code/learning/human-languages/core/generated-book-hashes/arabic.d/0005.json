@@ -1,0 +1,10 @@
+{
+  "language": "arabic",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:4d5c7c628cccdf90",
+  "lessonIds": [
+    "AR-C05-naam",
+    "AR-C05-la"
+  ],
+  "tex": "arabic/book/chapters/ch05-yes-and-no.tex"
+}

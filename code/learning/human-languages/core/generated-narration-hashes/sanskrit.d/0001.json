@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:9c4899c747d7348b",
+  "lessonIds": [
+    "SA-C01-namaste",
+    "SA-C01-namaskara",
+    "SA-C01-dhanyavada",
+    "SA-C01-svagatam",
+    "SA-C01-am-na",
+    "SA-C01-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "sanskrit/narration/ch01.txt",
+  "json": "sanskrit/narration/ch01.json",
+  "textHash": "fnv1a64:5a1cb6f4b3102852",
+  "jsonHash": "fnv1a64:23f4ed540e2efe92",
+  "findings": []
+}

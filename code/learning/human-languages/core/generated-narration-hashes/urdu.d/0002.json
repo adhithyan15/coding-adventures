@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:70cc8a618f52d4d8",
+  "lessonIds": [
+    "UR-C02-mera-naam"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "urdu/narration/ch02.txt",
+  "json": "urdu/narration/ch02.json",
+  "textHash": "fnv1a64:b51d3358d9b6bb75",
+  "jsonHash": "fnv1a64:394aec242d6ba765",
+  "findings": []
+}

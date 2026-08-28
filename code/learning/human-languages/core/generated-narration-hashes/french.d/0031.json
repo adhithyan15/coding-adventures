@@ -1,0 +1,18 @@
+{
+  "language": "french",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:8138898faa88cff1",
+  "lessonIds": [
+    "FR-C31-oeil",
+    "FR-C31-nez",
+    "FR-C31-bouche",
+    "FR-C31-ventre"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "french/narration/ch31.txt",
+  "json": "french/narration/ch31.json",
+  "textHash": "fnv1a64:fbe5fa982de525fa",
+  "jsonHash": "fnv1a64:4c072b0bdd6a61e3",
+  "findings": []
+}

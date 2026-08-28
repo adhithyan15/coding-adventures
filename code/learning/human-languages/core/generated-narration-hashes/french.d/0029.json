@@ -1,0 +1,18 @@
+{
+  "language": "french",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:5f3289320f5d0980",
+  "lessonIds": [
+    "FR-C29-ami",
+    "FR-C29-famille",
+    "FR-C29-enfant",
+    "FR-C29-personne"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "french/narration/ch29.txt",
+  "json": "french/narration/ch29.json",
+  "textHash": "fnv1a64:d56fbf3d665b4d9d",
+  "jsonHash": "fnv1a64:ae9952251f337507",
+  "findings": []
+}

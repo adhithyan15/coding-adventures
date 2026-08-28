@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:a99e6ab515b95526",
+  "lessonIds": [
+    "ES-C03-tu-usted",
+    "ES-C03-tu-usted-register",
+    "ES-C03-vos",
+    "ES-C03-usted-origin",
+    "ES-C03-quien",
+    "ES-C03-repaso-tu-usted"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch05.txt",
+  "json": "spanish/narration/ch05.json",
+  "textHash": "fnv1a64:622bc4f52afc0bc4",
+  "jsonHash": "fnv1a64:6e4fe58f80a432da",
+  "findings": []
+}

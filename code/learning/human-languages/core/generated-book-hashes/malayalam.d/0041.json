@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:b13a3aaaa95c244a",
+  "lessonIds": [
+    "ML-C41-this",
+    "ML-C41-that",
+    "ML-C41-here",
+    "ML-C41-there",
+    "ML-C41-who",
+    "ML-C41-where",
+    "ML-C41-deixis-system"
+  ],
+  "tex": "malayalam/book/chapters/ch41-pointing-and-asking.tex"
+}

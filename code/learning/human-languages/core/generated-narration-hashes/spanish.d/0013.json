@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:ef630c3039e5e9e6",
+  "lessonIds": [
+    "ES-C05-hasta-luego",
+    "ES-C05-hasta-manana",
+    "ES-C05-hasta-pronto",
+    "ES-C05-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch13.txt",
+  "json": "spanish/narration/ch13.json",
+  "textHash": "fnv1a64:8a73ecd9d3861b7f",
+  "jsonHash": "fnv1a64:4e7cf2d7aeffe243",
+  "findings": []
+}

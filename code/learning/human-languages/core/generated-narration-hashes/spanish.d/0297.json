@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:e021d5bf4baec1af",
+  "lessonIds": [
+    "ES-C297-sarten",
+    "ES-C297-horno",
+    "ES-C297-tenedor",
+    "ES-C297-ajo",
+    "ES-C297-sopa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch297.txt",
+  "json": "spanish/narration/ch297.json",
+  "textHash": "fnv1a64:611295e8639edcd2",
+  "jsonHash": "fnv1a64:230463e9624ea3f5",
+  "findings": []
+}

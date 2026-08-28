@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:f1add5c1b59edeb8",
+  "lessonIds": [
+    "ES-C64-repaso-tonicos"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch250.txt",
+  "json": "spanish/narration/ch250.json",
+  "textHash": "fnv1a64:6b6ecdc55ffc8f7c",
+  "jsonHash": "fnv1a64:408367f5a4ad63ed",
+  "findings": []
+}

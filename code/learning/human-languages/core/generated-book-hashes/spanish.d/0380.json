@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:3642abb440b07f6e",
+  "lessonIds": [
+    "ES-C380-simpatico",
+    "ES-C380-alegre",
+    "ES-C380-feo",
+    "ES-C380-ultimo",
+    "ES-C380-necesario"
+  ],
+  "tex": "spanish/book/chapters/ch380-simpatico-y-alegre.tex"
+}

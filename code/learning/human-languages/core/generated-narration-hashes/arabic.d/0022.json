@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:40963c413843c8b4",
+  "lessonIds": [
+    "AR-C22-akhdar-asfar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch22.txt",
+  "json": "arabic/narration/ch22.json",
+  "textHash": "fnv1a64:cc1c4f5b913e4424",
+  "jsonHash": "fnv1a64:05e51958e551c646",
+  "findings": []
+}

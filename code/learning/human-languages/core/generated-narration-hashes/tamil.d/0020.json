@@ -1,0 +1,17 @@
+{
+  "language": "tamil",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:e67d1d276c7a7655",
+  "lessonIds": [
+    "TA-C20-pathinondru-irupathu",
+    "TA-C20-vaanilai",
+    "TA-S124-letter-ya"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch20.txt",
+  "json": "tamil/narration/ch20.json",
+  "textHash": "fnv1a64:61b843dea70c333e",
+  "jsonHash": "fnv1a64:583401b64efe3522",
+  "findings": []
+}

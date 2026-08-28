@@ -1,0 +1,12 @@
+{
+  "language": "bengali",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:82414b9469b64ee2",
+  "lessonIds": [
+    "BN-C09-neowa",
+    "BN-C09-jijnasa-kora",
+    "BN-C09-sahajjo-kora",
+    "BN-C09-bhalo-laga"
+  ],
+  "tex": "bengali/book/chapters/ch09-conjunct-verbs.tex"
+}

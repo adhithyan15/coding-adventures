@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:9ec1863155f891e4",
+  "lessonIds": [
+    "PT-C04-adeus",
+    "PT-C04-ate-logo",
+    "PT-C04-ate-amanha",
+    "PT-C04-ate-breve",
+    "PT-C04-practice"
+  ],
+  "tex": "portuguese/book/chapters/ch04-farewells.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:f385601cf90448cb",
+  "lessonIds": [
+    "SA-C28-now",
+    "SA-C28-day-after",
+    "SA-C28-journey",
+    "SA-C28-auspicious",
+    "SA-C28-svasti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch28.txt",
+  "json": "sanskrit/narration/ch28.json",
+  "textHash": "fnv1a64:82004849fe2d1724",
+  "jsonHash": "fnv1a64:dc70227beacce3f8",
+  "findings": []
+}

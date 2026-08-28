@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:3d2d7fec277af520",
+  "lessonIds": [
+    "TE-C26-udayam"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch26.txt",
+  "json": "telugu/narration/ch26.json",
+  "textHash": "fnv1a64:29f114a8f7119fe1",
+  "jsonHash": "fnv1a64:a3f3c1e8def63e88",
+  "findings": []
+}

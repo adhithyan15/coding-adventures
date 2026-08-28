@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:f973ecad3ae5d548",
+  "lessonIds": [
+    "ES-C298-tal-vez",
+    "ES-C298-puede-ser",
+    "ES-C298-en-efecto",
+    "ES-C298-sin-duda",
+    "ES-C298-ni-hablar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch298.txt",
+  "json": "spanish/narration/ch298.json",
+  "textHash": "fnv1a64:7f8fddc2d60cd1be",
+  "jsonHash": "fnv1a64:e0fe1c302efe9f55",
+  "findings": []
+}

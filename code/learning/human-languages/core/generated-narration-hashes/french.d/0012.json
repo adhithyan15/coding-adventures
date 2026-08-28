@@ -1,0 +1,16 @@
+{
+  "language": "french",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:caa28c1b4c8252f2",
+  "lessonIds": [
+    "FR-C12-nombres-11-16",
+    "FR-C12-nombres-17-20"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "french/narration/ch12.txt",
+  "json": "french/narration/ch12.json",
+  "textHash": "fnv1a64:ba25cd8c811e667f",
+  "jsonHash": "fnv1a64:589b062a58469766",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:4ba27be46237587f",
+  "lessonIds": [
+    "KA-C38-hrudaya"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch38.txt",
+  "json": "kannada/narration/ch38.json",
+  "textHash": "fnv1a64:80865df50127c960",
+  "jsonHash": "fnv1a64:df94268c76682c6b",
+  "findings": []
+}

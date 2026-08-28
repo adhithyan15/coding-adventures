@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:077e9cbe7832f986",
+  "lessonIds": [
+    "TE-C56-mat",
+    "TE-C56-basket",
+    "TE-C56-knife",
+    "TE-C56-vessel",
+    "TE-C56-box"
+  ],
+  "tex": "telugu/book/chapters/ch56-in-the-house.tex"
+}

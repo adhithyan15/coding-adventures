@@ -1,0 +1,17 @@
+{
+  "language": "portuguese",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:728dab4d688bf937",
+  "lessonIds": [
+    "PT-C23-cafe",
+    "PT-C23-cha",
+    "PT-C23-leite"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "portuguese/narration/ch23.txt",
+  "json": "portuguese/narration/ch23.json",
+  "textHash": "fnv1a64:f01d4f833738c658",
+  "jsonHash": "fnv1a64:69409caf69142bad",
+  "findings": []
+}

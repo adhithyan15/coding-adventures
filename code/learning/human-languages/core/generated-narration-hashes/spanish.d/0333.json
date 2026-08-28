@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:608bd6f13f73a5eb",
+  "lessonIds": [
+    "ES-C333-ruido",
+    "ES-C333-silencio",
+    "ES-C333-calma",
+    "ES-C333-prisa",
+    "ES-C333-cuidado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch333.txt",
+  "json": "spanish/narration/ch333.json",
+  "textHash": "fnv1a64:08285b65995537da",
+  "jsonHash": "fnv1a64:996235810e3d30d3",
+  "findings": []
+}

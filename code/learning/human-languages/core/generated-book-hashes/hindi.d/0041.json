@@ -1,0 +1,14 @@
+{
+  "language": "hindi",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:3ff5259e08cbfbe2",
+  "lessonIds": [
+    "HI-C41-big",
+    "HI-C41-small",
+    "HI-C41-good",
+    "HI-C41-new",
+    "HI-C41-old",
+    "HI-C41-adjective-system"
+  ],
+  "tex": "hindi/book/chapters/ch41-describing-things.tex"
+}

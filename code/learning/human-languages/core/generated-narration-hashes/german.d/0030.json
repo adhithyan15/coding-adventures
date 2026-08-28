@@ -1,0 +1,18 @@
+{
+  "language": "german",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:37a192c1c28d6006",
+  "lessonIds": [
+    "GE-C30-auge",
+    "GE-C30-ohr",
+    "GE-C30-mund",
+    "GE-C30-nase"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "german/narration/ch30.txt",
+  "json": "german/narration/ch30.json",
+  "textHash": "fnv1a64:21ca7448e9ca583a",
+  "jsonHash": "fnv1a64:e7e103d6f10050b7",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "language": "italian",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:c277ec60087059ec",
+  "lessonIds": [
+    "IT-C25-naso",
+    "IT-C25-stomaco",
+    "IT-C25-gola"
+  ],
+  "tex": "italian/book/chapters/ch25-nose-stomach-throat.tex"
+}

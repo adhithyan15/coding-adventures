@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:3beefa46ef3ec7e7",
+  "lessonIds": [
+    "SA-C32-tree",
+    "SA-C32-leaf",
+    "SA-C32-grass",
+    "SA-C32-vine",
+    "SA-C32-wood"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch32.txt",
+  "json": "sanskrit/narration/ch32.json",
+  "textHash": "fnv1a64:b172ea9f7244f99b",
+  "jsonHash": "fnv1a64:11a38616c123b705",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:f47c724e8c248007",
+  "lessonIds": [
+    "AR-C13-maa-khubz"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch13.txt",
+  "json": "arabic/narration/ch13.json",
+  "textHash": "fnv1a64:52aa96c8fdbc9737",
+  "jsonHash": "fnv1a64:f44b4d2cf1bdd994",
+  "findings": []
+}

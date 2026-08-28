@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:ae963402190d48a0",
+  "lessonIds": [
+    "TE-C46-fruit",
+    "TE-C46-cloth",
+    "TE-C46-lamp",
+    "TE-C46-salt",
+    "TE-C46-book"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch46.txt",
+  "json": "telugu/narration/ch46.json",
+  "textHash": "fnv1a64:02b399bcec3968fa",
+  "jsonHash": "fnv1a64:c406fb8aad7d8360",
+  "findings": []
+}

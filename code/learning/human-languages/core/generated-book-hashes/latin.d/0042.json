@@ -1,0 +1,12 @@
+{
+  "language": "latin",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:16bebc5b7c62db22",
+  "lessonIds": [
+    "LA-C42-fero",
+    "LA-C42-accipio",
+    "LA-C42-ludo",
+    "LA-C42-exspecto"
+  ],
+  "tex": "latin/book/chapters/ch42-getting-and-waiting-verbs.tex"
+}

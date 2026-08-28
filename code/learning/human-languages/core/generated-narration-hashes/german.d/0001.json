@@ -1,0 +1,27 @@
+{
+  "language": "german",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:df73d98be014894e",
+  "lessonIds": [
+    "GE-C01-hallo",
+    "GE-W01-hallo-guided-copy",
+    "GE-C01-gut",
+    "GE-C01-der-die-das",
+    "GE-C01-tag",
+    "GE-C01-guten-tag",
+    "GE-C01-morgen",
+    "GE-C01-guten-morgen",
+    "GE-C01-abend",
+    "GE-C01-guten-abend",
+    "GE-C01-nacht",
+    "GE-C01-gute-nacht",
+    "GE-C01-practice"
+  ],
+  "voiceLessons": 11,
+  "drivablePrefix": 0,
+  "text": "german/narration/ch01.txt",
+  "json": "german/narration/ch01.json",
+  "textHash": "fnv1a64:f37ed25e0596bf8f",
+  "jsonHash": "fnv1a64:ebbbfb429ee5c120",
+  "findings": []
+}

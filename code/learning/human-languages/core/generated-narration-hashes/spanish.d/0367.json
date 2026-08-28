@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:78fcd77eda73b9b5",
+  "lessonIds": [
+    "ES-C367-desayuno",
+    "ES-C367-fruta",
+    "ES-C367-naranja",
+    "ES-C367-patata",
+    "ES-C367-azucar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch367.txt",
+  "json": "spanish/narration/ch367.json",
+  "textHash": "fnv1a64:e750a42665d35fec",
+  "jsonHash": "fnv1a64:2d7e86f3861beba8",
+  "findings": []
+}

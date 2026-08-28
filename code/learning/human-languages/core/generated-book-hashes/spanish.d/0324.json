@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:6d16d1e3da3e1724",
+  "lessonIds": [
+    "ES-C324-verdad",
+    "ES-C324-falso",
+    "ES-C324-acaso",
+    "ES-C324-menos",
+    "ES-C324-siquiera"
+  ],
+  "tex": "spanish/book/chapters/ch324-verdad-y-siquiera.tex"
+}

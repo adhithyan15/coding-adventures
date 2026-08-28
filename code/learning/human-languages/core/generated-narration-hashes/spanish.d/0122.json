@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:62bcd219ddfc2570",
+  "lessonIds": [
+    "ES-C17-futuro",
+    "ES-C17-comer-futuro",
+    "ES-C17-vivir-futuro"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch122.txt",
+  "json": "spanish/narration/ch122.json",
+  "textHash": "fnv1a64:8dd448a576f06208",
+  "jsonHash": "fnv1a64:e940c2d4a9a81741",
+  "findings": []
+}

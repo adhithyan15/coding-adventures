@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:9790d02972a27ea4",
+  "lessonIds": [
+    "SA-C47-wall",
+    "SA-C47-window",
+    "SA-C47-stair",
+    "SA-C47-pillar",
+    "SA-C47-floor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch47.txt",
+  "json": "sanskrit/narration/ch47.json",
+  "textHash": "fnv1a64:845c6fb147bfd9f6",
+  "jsonHash": "fnv1a64:8308ba6b94b620b7",
+  "findings": []
+}

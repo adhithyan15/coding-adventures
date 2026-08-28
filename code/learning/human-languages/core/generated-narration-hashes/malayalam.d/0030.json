@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:7713f803a7a00dfd",
+  "lessonIds": [
+    "ML-C30-shubha-sayaahnam"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch30.txt",
+  "json": "malayalam/narration/ch30.json",
+  "textHash": "fnv1a64:b7ba68da04009b90",
+  "jsonHash": "fnv1a64:4ac0d4aead6cda02",
+  "findings": []
+}

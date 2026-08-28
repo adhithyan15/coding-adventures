@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:f6677e6db5993b1c",
+  "lessonIds": [
+    "ES-C343-fecha",
+    "ES-C343-calendario",
+    "ES-C343-proximo",
+    "ES-C343-epoca",
+    "ES-C343-siglo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch343.txt",
+  "json": "spanish/narration/ch343.json",
+  "textHash": "fnv1a64:7933493d5307ddda",
+  "jsonHash": "fnv1a64:9ae2209323dc777d",
+  "findings": []
+}

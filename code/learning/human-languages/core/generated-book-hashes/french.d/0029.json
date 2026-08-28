@@ -1,0 +1,12 @@
+{
+  "language": "french",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:1d96f1fe7687713f",
+  "lessonIds": [
+    "FR-C29-ami",
+    "FR-C29-famille",
+    "FR-C29-enfant",
+    "FR-C29-personne"
+  ],
+  "tex": "french/book/chapters/ch29-the-people-you-introduce.tex"
+}

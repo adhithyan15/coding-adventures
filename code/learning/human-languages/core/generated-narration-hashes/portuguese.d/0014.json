@@ -1,0 +1,16 @@
+{
+  "language": "portuguese",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:5dd21c93ee684761",
+  "lessonIds": [
+    "PT-C14-ter",
+    "PT-C14-idade"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "portuguese/narration/ch14.txt",
+  "json": "portuguese/narration/ch14.json",
+  "textHash": "fnv1a64:e46873388d7afbf8",
+  "jsonHash": "fnv1a64:6aafe90ee669f6ac",
+  "findings": []
+}

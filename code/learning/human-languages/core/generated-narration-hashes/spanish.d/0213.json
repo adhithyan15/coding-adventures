@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:dae0c456f3e7aa9f",
+  "lessonIds": [
+    "ES-C57-dijo-que"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch213.txt",
+  "json": "spanish/narration/ch213.json",
+  "textHash": "fnv1a64:ed936d4a12d3bcae",
+  "jsonHash": "fnv1a64:67285529d2b85bdb",
+  "findings": []
+}

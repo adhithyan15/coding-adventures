@@ -1,7 +1,19 @@
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync,
+} from "node:fs";
+import {
+  dirname,
+  join,
+  normalize,
+  relative as pathRelative,
+  resolve,
+} from "node:path";
 import { assertRelativeManifestPath } from "./manifest-path.js";
-import { readLedgerFile } from "./shard.js";
+import { listGeneratedBookHashManifests } from "./generated-hash-shards.js";
 import { pathToFileURL } from "node:url";
 import {
   defaultCurriculumRoot,
@@ -18,39 +30,32 @@ import {
 
 export const TRACK_PROGRESS_DIR = "progress";
 
-interface GeneratedBookManifest {
-  version: number;
-  chapters: GeneratedBookChapterRef[];
-}
-
-function loadGeneratedBookChapters(root: string): GeneratedBookChapterRef[] {
-  const directory = join(root, "core", "generated-book-hashes");
-  const chapters: GeneratedBookChapterRef[] = [];
-  for (const entry of readdirSync(directory, { withFileTypes: true })
-    .filter((candidate) => candidate.isFile() && candidate.name.endsWith(".json"))
-    .sort((left, right) => left.name.localeCompare(right.name))) {
-    const language = entry.name.slice(0, -".json".length);
-    // `readLedgerFile`, not a bare parse. `core/generated-book-hashes/` is a
-    // plain per-language directory rather than an HL21 `X.d/`, so there is no
-    // monolith here to go stale — but the symlink refusal, the dangerous-key
-    // rejection and the parse-error scrubbing apply to any repo JSON, and the
-    // `.sort()` above already treats these files exactly as shards are treated.
-    const manifest = readLedgerFile<GeneratedBookManifest>(join(directory, entry.name));
-    if (manifest.version !== 1 || !Array.isArray(manifest.chapters)) {
-      throw new Error(`${entry.name} must declare version 1 and chapters[]`);
-    }
-    if (manifest.chapters.some((chapter) => chapter.language !== language)) {
-      throw new Error(`${entry.name} may contain only ${language} chapters`);
-    }
-    chapters.push(...manifest.chapters);
-  }
-  return chapters;
+export function loadGeneratedBookChapterRefs(
+  root: string,
+  registeredLanguages: ReadonlySet<string>,
+): GeneratedBookChapterRef[] {
+  return listGeneratedBookHashManifests(root).flatMap(
+    ({ language, manifest }) => {
+      if (!registeredLanguages.has(language)) {
+        throw new Error(
+          `generated book hash owner '${language}' is not a registered language`,
+        );
+      }
+      return manifest.chapters;
+    },
+  );
 }
 
 function safeProgressOutput(root: string, relative: string): string {
-  assertRelativeManifestPath(relative, `unsafe track progress output '${relative}'`);
+  assertRelativeManifestPath(
+    relative,
+    `unsafe track progress output '${relative}'`,
+  );
   const output = resolve(root, relative);
-  const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll("\\", "/");
+  const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll(
+    "\\",
+    "/",
+  );
   if (
     fromRoot === "" ||
     fromRoot === ".." ||
@@ -67,12 +72,16 @@ function safeProgressOutput(root: string, relative: string): string {
 export function generatedTrackProgressOutputs(
   root = defaultCurriculumRoot(),
 ): Map<string, string> {
+  const registry = loadLanguageRegistry(root);
   const tracks = buildTrackProgress(
-    loadLanguageRegistry(root),
+    registry,
     loadLessons(root),
     loadLanguageCurricula(root),
     loadBookCorpus(root),
-    loadGeneratedBookChapters(root),
+    loadGeneratedBookChapterRefs(
+      root,
+      new Set(registry.languages.map((language) => language.id)),
+    ),
   );
   return new Map(
     tracks.map((track) => {
@@ -106,22 +115,30 @@ export function runTrackProgress(
       process.stdout.write(`generated ${relative}\n`);
       continue;
     }
-    const actual = existsSync(output) ? readFileSync(output, "utf8") : undefined;
+    const actual = existsSync(output)
+      ? readFileSync(output, "utf8")
+      : undefined;
     if (actual !== expected) {
-      process.stderr.write(`${relative}: generated track progress is missing or stale\n`);
+      process.stderr.write(
+        `${relative}: generated track progress is missing or stale\n`,
+      );
       mismatch = true;
     }
   }
 
   if (mode === "--check") {
     const directory = resolve(root, TRACK_PROGRESS_DIR);
-    const expectedNames = new Set([...outputs.keys()].map((path) => path.split("/").at(-1)!));
+    const expectedNames = new Set(
+      [...outputs.keys()].map((path) => path.split("/").at(-1)!),
+    );
     const actualNames = existsSync(directory)
       ? readdirSync(directory).filter((name) => name.endsWith(".md"))
       : [];
     for (const name of actualNames) {
       if (!expectedNames.has(name)) {
-        process.stderr.write(`${TRACK_PROGRESS_DIR}/${name}: unexpected stale progress card\n`);
+        process.stderr.write(
+          `${TRACK_PROGRESS_DIR}/${name}: unexpected stale progress card\n`,
+        );
         mismatch = true;
       }
     }
@@ -129,6 +146,9 @@ export function runTrackProgress(
   return mismatch ? 1 : 0;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(resolve(process.argv[1])).href
+) {
   process.exit(runTrackProgress());
 }

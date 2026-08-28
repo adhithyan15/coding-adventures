@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:67bdc9d499269f92",
+  "lessonIds": [
+    "ES-C05-adios",
+    "ES-C05-hasta",
+    "ES-C05-hasta-limits",
+    "ES-C05-repaso-adios"
+  ],
+  "tex": "spanish/book/chapters/ch12-goodbye.tex"
+}

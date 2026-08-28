@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:69bd0c1b96ca2d0a",
+  "lessonIds": [
+    "HI-C47-teacher",
+    "HI-C47-student",
+    "HI-C47-farmer",
+    "HI-C47-guest",
+    "HI-C47-neighbour"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch47.txt",
+  "json": "hindi/narration/ch47.json",
+  "textHash": "fnv1a64:6690fd414194da57",
+  "jsonHash": "fnv1a64:94c3cb232207d303",
+  "findings": []
+}

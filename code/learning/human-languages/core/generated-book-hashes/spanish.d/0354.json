@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:aba6e9ff294ac279",
+  "lessonIds": [
+    "ES-C354-hotel",
+    "ES-C354-restaurante",
+    "ES-C354-cine",
+    "ES-C354-parque",
+    "ES-C354-jardin"
+  ],
+  "tex": "spanish/book/chapters/ch354-el-hotel-y-el-cine.tex"
+}

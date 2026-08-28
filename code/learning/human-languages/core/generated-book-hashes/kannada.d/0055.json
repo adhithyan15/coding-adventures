@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:450598b619a6e76e",
+  "lessonIds": [
+    "KA-C55-river",
+    "KA-C55-tank",
+    "KA-C55-hill",
+    "KA-C55-village",
+    "KA-C55-path"
+  ],
+  "tex": "kannada/book/chapters/ch55-river-and-road.tex"
+}

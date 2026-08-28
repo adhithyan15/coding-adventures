@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:75ab1fe5b5adbb4f",
+  "lessonIds": [
+    "ML-C43-run",
+    "ML-C43-sleep",
+    "ML-C43-stand",
+    "ML-C43-give"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch43.txt",
+  "json": "malayalam/narration/ch43.json",
+  "textHash": "fnv1a64:0b75e893c8cd4413",
+  "jsonHash": "fnv1a64:319bb00914dd7ca7",
+  "findings": []
+}

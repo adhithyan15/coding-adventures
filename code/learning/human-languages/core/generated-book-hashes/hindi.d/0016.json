@@ -1,0 +1,10 @@
+{
+  "language": "hindi",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:53a183f1c23a7830",
+  "lessonIds": [
+    "HI-C16-mahine",
+    "HI-S120-vowel-sign-u"
+  ],
+  "tex": "hindi/book/chapters/ch16-months.tex"
+}

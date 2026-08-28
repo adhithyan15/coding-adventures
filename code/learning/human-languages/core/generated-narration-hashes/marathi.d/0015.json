@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:eb10c2f7b02ebe44",
+  "lessonIds": [
+    "MR-C12-dola",
+    "MR-C12-kaan",
+    "MR-C12-tond",
+    "MR-C12-naak"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch15.txt",
+  "json": "marathi/narration/ch15.json",
+  "textHash": "fnv1a64:c76eba593ac96edd",
+  "jsonHash": "fnv1a64:5f4c4e053ca651f3",
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "gujarati",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:ba4329f4e1c1f92e",
+  "lessonIds": [
+    "GU-C08-vicharvun",
+    "GU-C08-samajvun",
+    "GU-C08-vanchvun",
+    "GU-C08-lakhvun"
+  ],
+  "tex": "gujarati/book/chapters/ch14-mind-and-page.tex"
+}

@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:7d0dd0587582a1b3",
+  "lessonIds": [
+    "HI-C42-come",
+    "HI-C42-sit",
+    "HI-C42-stand",
+    "HI-C42-give"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "hindi/narration/ch42.txt",
+  "json": "hindi/narration/ch42.json",
+  "textHash": "fnv1a64:89da4f5aaa9502eb",
+  "jsonHash": "fnv1a64:1d2dce0752a7b2c3",
+  "findings": []
+}

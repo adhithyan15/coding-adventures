@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:7f0fa755c8b6dcb8",
+  "lessonIds": [
+    "ES-C277-segun",
+    "ES-C277-es-decir",
+    "ES-C277-por-un-lado",
+    "ES-C277-en-resumen",
+    "ES-C277-practice"
+  ],
+  "tex": "spanish/book/chapters/ch277-fuentes.tex"
+}

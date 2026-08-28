@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:352db1400a2259e5",
+  "lessonIds": [
+    "TA-C61-hunger",
+    "TA-C61-thirst",
+    "TA-C61-sleep",
+    "TA-C61-fever",
+    "TA-C61-pain"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch61.txt",
+  "json": "tamil/narration/ch61.json",
+  "textHash": "fnv1a64:3db8a44133caa74f",
+  "jsonHash": "fnv1a64:f1e2637426105bea",
+  "findings": []
+}

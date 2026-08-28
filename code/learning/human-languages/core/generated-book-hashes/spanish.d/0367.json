@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:96f8f636ab25e37b",
+  "lessonIds": [
+    "ES-C367-desayuno",
+    "ES-C367-fruta",
+    "ES-C367-naranja",
+    "ES-C367-patata",
+    "ES-C367-azucar"
+  ],
+  "tex": "spanish/book/chapters/ch367-el-desayuno-y-la-fruta.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:9c7dddfb0a477b25",
+  "lessonIds": [
+    "ES-C375-una",
+    "ES-C375-labio",
+    "ES-C375-pulgar",
+    "ES-C375-beso",
+    "ES-C375-sobrino"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch375.txt",
+  "json": "spanish/narration/ch375.json",
+  "textHash": "fnv1a64:be91f09694a1d1c2",
+  "jsonHash": "fnv1a64:bf543b664db6bdc4",
+  "findings": []
+}

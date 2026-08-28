@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:1c2a86a84214c21e",
+  "lessonIds": [
+    "ES-C315-pecho",
+    "ES-C315-fuerza",
+    "ES-C315-descanso",
+    "ES-C315-miedo",
+    "ES-C315-risa"
+  ],
+  "tex": "spanish/book/chapters/ch315-fuerza-y-risa.tex"
+}

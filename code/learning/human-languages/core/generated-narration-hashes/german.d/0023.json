@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:eb1b6a770268bde7",
+  "lessonIds": [
+    "GE-C23-gruen-gelb"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "german/narration/ch23.txt",
+  "json": "german/narration/ch23.json",
+  "textHash": "fnv1a64:96af6b0d067f021c",
+  "jsonHash": "fnv1a64:5156c6eb8b58d39e",
+  "findings": []
+}

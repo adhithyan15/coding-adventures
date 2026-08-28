@@ -1,0 +1,25 @@
+{
+  "language": "japanese",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:88a078391c1cc824",
+  "lessonIds": [
+    "JA-W13-tsu",
+    "JA-R13-tsu-contrast",
+    "JA-C13-chichi",
+    "JA-C13-haha",
+    "JA-C13-ani",
+    "JA-C13-ane",
+    "JA-C13-otouto",
+    "JA-C13-imouto",
+    "JA-C13-otto",
+    "JA-C13-tsuma",
+    "JA-C13-kodomo",
+    "JA-R13-family-a",
+    "JA-R13-family-b",
+    "JA-R13-family-c",
+    "JA-R13-family-d",
+    "JA-C13-family-reception",
+    "JA-C13-family-check"
+  ],
+  "tex": "japanese/book/chapters/ch13-family-nine.tex"
+}

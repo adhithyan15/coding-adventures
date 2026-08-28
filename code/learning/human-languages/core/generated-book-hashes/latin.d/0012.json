@@ -1,0 +1,9 @@
+{
+  "language": "latin",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:074fad3b3c63b625",
+  "lessonIds": [
+    "LA-C12-medius-dies-nox"
+  ],
+  "tex": "latin/book/chapters/ch12-noon-midnight.tex"
+}

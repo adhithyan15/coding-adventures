@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:8b115f8be827a33e",
+  "lessonIds": [
+    "ES-C279-puerta",
+    "ES-C279-ventana",
+    "ES-C279-silla",
+    "ES-C279-cama"
+  ],
+  "tex": "spanish/book/chapters/ch279-la-habitacion.tex"
+}

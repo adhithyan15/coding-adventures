@@ -1,0 +1,15 @@
+{
+  "language": "japanese",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:3ea6a6cad1cc95e9",
+  "lessonIds": [
+    "JA-W01-ko",
+    "JA-W01-n",
+    "JA-W01-ni",
+    "JA-W01-chi",
+    "JA-W01-wa",
+    "JA-W01-konnichiwa-read",
+    "JA-C01-konnichiwa"
+  ],
+  "tex": "japanese/book/chapters/ch02-hiragana-eight.tex"
+}

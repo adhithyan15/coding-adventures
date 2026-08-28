@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:5b80baf88ebc0eb5",
+  "lessonIds": [
+    "ES-C358-color",
+    "ES-C358-tamano",
+    "ES-C358-forma",
+    "ES-C358-clase",
+    "ES-C358-marca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch358.txt",
+  "json": "spanish/narration/ch358.json",
+  "textHash": "fnv1a64:d7b308c98512359c",
+  "jsonHash": "fnv1a64:9bb34b6e2f22657b",
+  "findings": []
+}

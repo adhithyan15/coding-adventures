@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:da217aa648fb22c6",
+  "lessonIds": [
+    "ML-C53-sky",
+    "ML-C53-sun",
+    "ML-C53-moon",
+    "ML-C53-star",
+    "ML-C53-sunshine"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch53.txt",
+  "json": "malayalam/narration/ch53.json",
+  "textHash": "fnv1a64:653f0023c22e62c2",
+  "jsonHash": "fnv1a64:a237ea72766a795a",
+  "findings": []
+}

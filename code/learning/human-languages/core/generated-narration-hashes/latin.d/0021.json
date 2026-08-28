@@ -1,0 +1,17 @@
+{
+  "language": "latin",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:67e96b837e28d997",
+  "lessonIds": [
+    "LA-C21-volup-est-convenisse",
+    "LA-C21-meeting-phrase-context",
+    "LA-C21-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "latin/narration/ch21.txt",
+  "json": "latin/narration/ch21.json",
+  "textHash": "fnv1a64:603b55f443f608e2",
+  "jsonHash": "fnv1a64:bc106bd797e8e97e",
+  "findings": []
+}

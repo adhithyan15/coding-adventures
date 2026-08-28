@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:0241846223c6b84a",
+  "lessonIds": [
+    "ES-C18-ojala",
+    "ES-C18-practice",
+    "ES-C18-repaso-el-yo-que-viaja"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch129.txt",
+  "json": "spanish/narration/ch129.json",
+  "textHash": "fnv1a64:f0bcc887e1c3f60a",
+  "jsonHash": "fnv1a64:003addde3270e7db",
+  "findings": []
+}

@@ -1,0 +1,29 @@
+{
+  "language": "chinese",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:c51b5f72470d99f2",
+  "lessonIds": [
+    "ZH-C16-hear-zi",
+    "ZH-C16-zi",
+    "ZH-C16-hear-hanzi",
+    "ZH-W16-han-observe",
+    "ZH-W16-han-guided",
+    "ZH-W16-han-delayed",
+    "ZH-C16-hanzi",
+    "ZH-C16-hear-hanyu",
+    "ZH-R16-identity-1",
+    "ZH-W16-yu-observe",
+    "ZH-W16-yu-guided",
+    "ZH-W16-yu-delayed",
+    "ZH-C16-hanyu",
+    "ZH-R16-identity-2",
+    "ZH-C16-practice"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch16.txt",
+  "json": "chinese/narration/ch16.json",
+  "textHash": "fnv1a64:2cb873758248680f",
+  "jsonHash": "fnv1a64:d1f914bee2cc8485",
+  "findings": []
+}

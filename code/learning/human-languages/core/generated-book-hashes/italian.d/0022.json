@@ -1,0 +1,12 @@
+{
+  "language": "italian",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:cc65b1cd09bf85ef",
+  "lessonIds": [
+    "IT-C22-caffe",
+    "IT-C22-te",
+    "IT-C22-latte",
+    "IT-C22-zucchero"
+  ],
+  "tex": "italian/book/chapters/ch22-coffee-tea-milk-sugar.tex"
+}

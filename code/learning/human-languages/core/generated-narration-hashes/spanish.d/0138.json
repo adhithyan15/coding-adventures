@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:4bc4e76c9bdc7161",
+  "lessonIds": [
+    "ES-C21-lunes-viernes",
+    "ES-C21-sabado-domingo"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch138.txt",
+  "json": "spanish/narration/ch138.json",
+  "textHash": "fnv1a64:92a547b4f857828f",
+  "jsonHash": "fnv1a64:6dda1a625a28fcd0",
+  "findings": []
+}

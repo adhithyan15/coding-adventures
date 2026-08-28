@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:0162b1f949460b47",
+  "lessonIds": [
+    "TA-C54-mat",
+    "TA-C54-basket",
+    "TA-C54-knife",
+    "TA-C54-bowl",
+    "TA-C54-box"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch54.txt",
+  "json": "tamil/narration/ch54.json",
+  "textHash": "fnv1a64:f473f9724c1e6663",
+  "jsonHash": "fnv1a64:f00e38a9fa5866ae",
+  "findings": []
+}

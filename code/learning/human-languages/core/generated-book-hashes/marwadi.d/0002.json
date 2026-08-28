@@ -1,0 +1,12 @@
+{
+  "language": "marwadi",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:e88908db8b506bb6",
+  "lessonIds": [
+    "MW-W02-aa-independent",
+    "MW-W02-bha",
+    "MW-C02-aabhaar",
+    "MW-C02-practice"
+  ],
+  "tex": "marwadi/book/chapters/ch02-aabhaar.tex"
+}

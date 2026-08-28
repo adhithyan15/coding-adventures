@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:a7b1f04777d97375",
+  "lessonIds": [
+    "ES-C06-cafe",
+    "ES-C06-por-favor",
+    "ES-C06-repaso-cafe"
+  ],
+  "tex": "spanish/book/chapters/ch14-a-coffee.tex"
+}

@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:a5c7993a76ca67ef",
+  "lessonIds": [
+    "ML-C06-dative-ikku",
+    "ML-C06-dative-subject",
+    "ML-S01-letter-ka",
+    "ML-S109-letter-ra"
+  ],
+  "tex": "malayalam/book/chapters/ch06-dative-case.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:1e856eb64f618895",
+  "lessonIds": [
+    "KA-C65-request",
+    "KA-C65-permission",
+    "KA-C65-hesitancy",
+    "KA-C65-trust",
+    "KA-C65-manners"
+  ],
+  "tex": "kannada/book/chapters/ch65-more-good-manners.tex"
+}

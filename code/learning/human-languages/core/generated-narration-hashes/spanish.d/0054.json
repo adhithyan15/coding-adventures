@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:1889c210364d4e75",
+  "lessonIds": [
+    "ES-C09-sintesis-trabajo"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch54.txt",
+  "json": "spanish/narration/ch54.json",
+  "textHash": "fnv1a64:32bef1e33871b8ea",
+  "jsonHash": "fnv1a64:c6da13e544d20adb",
+  "findings": []
+}

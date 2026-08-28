@@ -1,0 +1,18 @@
+{
+  "language": "bengali",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:6f56ed66ba6d8ddf",
+  "lessonIds": [
+    "BN-C12-chokh",
+    "BN-C12-mukh",
+    "BN-C12-nak",
+    "BN-C12-hridoy"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch12.txt",
+  "json": "bengali/narration/ch12.json",
+  "textHash": "fnv1a64:2215af79a7520ca2",
+  "jsonHash": "fnv1a64:cf1404081dab3b7d",
+  "findings": []
+}

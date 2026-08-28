@@ -1,0 +1,18 @@
+{
+  "language": "persian",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:12bc5d02963fddc3",
+  "lessonIds": [
+    "FA-C08-gereftan",
+    "FA-C08-porsidan",
+    "FA-C08-komak-kardan",
+    "FA-C08-dust-dashtan"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "persian/narration/ch08.txt",
+  "json": "persian/narration/ch08.json",
+  "textHash": "fnv1a64:2b882a065a605eb5",
+  "jsonHash": "fnv1a64:7a3349e95d55047b",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:17c79329ffb69c87",
+  "lessonIds": [
+    "GU-W05-la",
+    "GU-W05-pa",
+    "GU-W05-cha",
+    "GU-W05-ba",
+    "GU-R05-second-four-r1"
+  ],
+  "tex": "gujarati/book/chapters/ch05-first-use-forms-b.tex"
+}

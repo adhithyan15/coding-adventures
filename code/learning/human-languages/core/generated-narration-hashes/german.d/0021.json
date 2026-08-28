@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:389516e718676981",
+  "lessonIds": [
+    "GE-C21-das-wetter"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "german/narration/ch21.txt",
+  "json": "german/narration/ch21.json",
+  "textHash": "fnv1a64:e1313c12976293f9",
+  "jsonHash": "fnv1a64:eb177c839bf90f32",
+  "findings": []
+}

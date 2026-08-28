@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:cd577df29848aef2",
+  "lessonIds": [
+    "ES-C369-rio",
+    "ES-C369-arena",
+    "ES-C369-polvo",
+    "ES-C369-humo",
+    "ES-C369-ceniza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch369.txt",
+  "json": "spanish/narration/ch369.json",
+  "textHash": "fnv1a64:c2596a3fa0d0e91e",
+  "jsonHash": "fnv1a64:6edad8d755d70a5f",
+  "findings": []
+}

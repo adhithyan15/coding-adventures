@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:1c5c98c4dd39d301",
+  "lessonIds": [
+    "ES-C18-subjuntivo",
+    "ES-C18-comer-subjuntivo",
+    "ES-C18-vivir-subjuntivo"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch127.txt",
+  "json": "spanish/narration/ch127.json",
+  "textHash": "fnv1a64:25a3c147bd17404f",
+  "jsonHash": "fnv1a64:5ddbcff3722dd024",
+  "findings": []
+}

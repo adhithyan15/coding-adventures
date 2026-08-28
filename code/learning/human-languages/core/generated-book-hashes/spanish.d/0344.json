@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:b7e9654c0cbf4c59",
+  "lessonIds": [
+    "ES-C344-cero",
+    "ES-C344-numero",
+    "ES-C344-mitad",
+    "ES-C344-docena",
+    "ES-C344-doble"
+  ],
+  "tex": "spanish/book/chapters/ch344-cero-y-mitad.tex"
+}

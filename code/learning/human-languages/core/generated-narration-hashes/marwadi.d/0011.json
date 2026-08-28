@@ -1,0 +1,26 @@
+{
+  "language": "marwadi",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:147840a93646591c",
+  "lessonIds": [
+    "MW-C08-hear-dada",
+    "MW-W08-da",
+    "MW-C08-dada",
+    "MW-C08-hear-dadi",
+    "MW-C08-dadi",
+    "MW-C08-hear-parivaar",
+    "MW-W08-va",
+    "MW-C08-parivaar",
+    "MW-R08-family-foundation",
+    "MW-R08-family-map",
+    "MW-C08-family-seven",
+    "MW-R08-script-close"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 1,
+  "text": "marwadi/narration/ch11.txt",
+  "json": "marwadi/narration/ch11.json",
+  "textHash": "fnv1a64:9ed1bd32ff94f393",
+  "jsonHash": "fnv1a64:ceec82fdf603dcce",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:d8cd3c4ebee60e11",
+  "lessonIds": [
+    "ML-C52-door",
+    "ML-C52-chair",
+    "ML-C52-kolam",
+    "ML-C52-flower",
+    "ML-C52-garland"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch52.txt",
+  "json": "malayalam/narration/ch52.json",
+  "textHash": "fnv1a64:470fba40270dccac",
+  "jsonHash": "fnv1a64:304bfece1dbb4a03",
+  "findings": []
+}

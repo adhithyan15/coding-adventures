@@ -1,0 +1,11 @@
+{
+  "language": "german",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:9a11589bb4e3b607",
+  "lessonIds": [
+    "GE-C17-kopf",
+    "GE-C17-kopf-haupt",
+    "GE-C17-hand"
+  ],
+  "tex": "german/book/chapters/ch17-head-and-hand.tex"
+}

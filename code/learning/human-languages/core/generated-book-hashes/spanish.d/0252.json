@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:28f38ff65213bab8",
+  "lessonIds": [
+    "ES-C65-ahora-hoy",
+    "ES-C65-hoy"
+  ],
+  "tex": "spanish/book/chapters/ch252-ahora-hoy.tex"
+}

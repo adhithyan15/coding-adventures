@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:efee4dd234f42a53",
+  "lessonIds": [
+    "ES-C46-cual-pide"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch95.txt",
+  "json": "spanish/narration/ch95.json",
+  "textHash": "fnv1a64:f2bc9a6eb453874c",
+  "jsonHash": "fnv1a64:320b2a66a8583276",
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "language": "italian",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:98ae575fd9c0a1be",
+  "lessonIds": [
+    "IT-C13-nero-bianco",
+    "IT-C13-rosso-blu"
+  ],
+  "tex": "italian/book/chapters/ch13-colours.tex"
+}

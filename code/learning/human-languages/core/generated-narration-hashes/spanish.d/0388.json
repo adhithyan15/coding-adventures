@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:55ec10fa80b52ce1",
+  "lessonIds": [
+    "ES-C388-empujar",
+    "ES-C388-lanzar",
+    "ES-C388-borrar",
+    "ES-C388-gritar",
+    "ES-C388-repaso-cuatro-hedges"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch388.txt",
+  "json": "spanish/narration/ch388.json",
+  "textHash": "fnv1a64:3aac2b4b16e8b7b0",
+  "jsonHash": "fnv1a64:ecb69956ac021207",
+  "findings": []
+}

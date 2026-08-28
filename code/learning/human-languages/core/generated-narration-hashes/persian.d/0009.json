@@ -1,0 +1,18 @@
+{
+  "language": "persian",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:e3cffd99a97483ae",
+  "lessonIds": [
+    "FA-C09-ab",
+    "FA-C09-nan",
+    "FA-C09-chay",
+    "FA-C09-kelid"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "persian/narration/ch09.txt",
+  "json": "persian/narration/ch09.json",
+  "textHash": "fnv1a64:94787a353584ca0d",
+  "jsonHash": "fnv1a64:53731e58403a55ac",
+  "findings": []
+}

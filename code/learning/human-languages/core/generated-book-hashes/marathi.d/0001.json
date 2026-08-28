@@ -1,0 +1,22 @@
+{
+  "language": "marathi",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:c6c8bb0037db48b1",
+  "lessonIds": [
+    "MR-C01-namaskar",
+    "MR-W01-ha",
+    "MR-W01-o-matra",
+    "MR-W01-ho-delayed-copy",
+    "MR-W01-ho-dictation",
+    "MR-W01-na",
+    "MR-W01-aa-matra",
+    "MR-W01-ii-matra",
+    "MR-W01-ma",
+    "MR-W01-sa",
+    "MR-W01-ka",
+    "MR-W01-virama",
+    "MR-W01-ra",
+    "MR-W01-namaskar-read"
+  ],
+  "tex": "marathi/book/chapters/ch01-namaskar-script.tex"
+}

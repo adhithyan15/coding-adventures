@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:a6cad17335cf2ca9",
+  "lessonIds": [
+    "ES-C377-letra",
+    "ES-C377-frase",
+    "ES-C377-idioma",
+    "ES-C377-historia",
+    "ES-C377-baile"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch377.txt",
+  "json": "spanish/narration/ch377.json",
+  "textHash": "fnv1a64:a44813f52b4f9040",
+  "jsonHash": "fnv1a64:81ced6281ae8285f",
+  "findings": []
+}

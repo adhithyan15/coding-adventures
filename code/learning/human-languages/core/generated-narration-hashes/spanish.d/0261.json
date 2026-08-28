@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:a7294df88d8e06ed",
+  "lessonIds": [
+    "ES-C66-repaso-lo-implicito"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch261.txt",
+  "json": "spanish/narration/ch261.json",
+  "textHash": "fnv1a64:0b4e076d475dc9b3",
+  "jsonHash": "fnv1a64:3afddcf2debfbb3e",
+  "findings": []
+}

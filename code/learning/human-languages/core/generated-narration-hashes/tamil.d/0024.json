@@ -1,0 +1,16 @@
+{
+  "language": "tamil",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:333d9bb84bca2bca",
+  "lessonIds": [
+    "TA-C24-iravu",
+    "TA-C24-night-register-darkness"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch24.txt",
+  "json": "tamil/narration/ch24.json",
+  "textHash": "fnv1a64:acaaeaf2e93fd738",
+  "jsonHash": "fnv1a64:384b492df887a250",
+  "findings": []
+}

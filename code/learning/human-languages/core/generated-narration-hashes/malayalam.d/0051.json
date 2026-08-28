@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:333a2d525a83cbbe",
+  "lessonIds": [
+    "ML-C51-gratitude",
+    "ML-C51-favour",
+    "ML-C51-respect",
+    "ML-C51-blessing",
+    "ML-C51-salutation"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch51.txt",
+  "json": "malayalam/narration/ch51.json",
+  "textHash": "fnv1a64:41a175295170ce2a",
+  "jsonHash": "fnv1a64:f89d170ff0de1615",
+  "findings": []
+}

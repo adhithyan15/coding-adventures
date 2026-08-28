@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:b980035e19dfc64f",
+  "lessonIds": [
+    "ES-C03-como",
+    "ES-C03-como-acento",
+    "ES-C03-familia-qu",
+    "ES-C03-se-llama",
+    "ES-C03-como-se-llama",
+    "ES-C03-mucho",
+    "ES-C03-gusto",
+    "ES-C03-practice"
+  ],
+  "tex": "spanish/book/chapters/ch06-asking-a-name.tex"
+}

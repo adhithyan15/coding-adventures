@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:10552473fc491800",
+  "lessonIds": [
+    "ES-C366-caja",
+    "ES-C366-lampara",
+    "ES-C366-almohada",
+    "ES-C366-escalera",
+    "ES-C366-armario"
+  ],
+  "tex": "spanish/book/chapters/ch366-la-caja-y-la-lampara.tex"
+}

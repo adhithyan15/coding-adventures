@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:51a648908f48bc99",
+  "lessonIds": [
+    "ES-C15-practice",
+    "ES-C15-sintesis-preterito"
+  ],
+  "tex": "spanish/book/chapters/ch106-synthesis-preterito.tex"
+}

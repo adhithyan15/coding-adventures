@@ -1,0 +1,23 @@
+{
+  "language": "french",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:ab8ecf4dad6f9ede",
+  "lessonIds": [
+    "FR-C02-je",
+    "FR-C02-me",
+    "FR-C02-appeler",
+    "FR-C02-je-mappelle",
+    "FR-C02-tu-vous",
+    "FR-C02-comment",
+    "FR-C02-comment-vous-appelez-vous",
+    "FR-C02-enchante",
+    "FR-C02-practice"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 0,
+  "text": "french/narration/ch02.txt",
+  "json": "french/narration/ch02.json",
+  "textHash": "fnv1a64:d91003b30cc29ea4",
+  "jsonHash": "fnv1a64:77b62607ed037cd9",
+  "findings": []
+}

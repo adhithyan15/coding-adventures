@@ -1,0 +1,22 @@
+{
+  "language": "sanskrit",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:2a345cef402c9cc3",
+  "lessonIds": [
+    "SA-C14-this",
+    "SA-C14-that",
+    "SA-C14-here",
+    "SA-C14-there",
+    "SA-C14-who",
+    "SA-C14-where",
+    "SA-C14-deixis-system",
+    "SA-S113-letter-pa"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch14.txt",
+  "json": "sanskrit/narration/ch14.json",
+  "textHash": "fnv1a64:cdc4b5bcfe1dd735",
+  "jsonHash": "fnv1a64:effd4f401930d0a3",
+  "findings": []
+}

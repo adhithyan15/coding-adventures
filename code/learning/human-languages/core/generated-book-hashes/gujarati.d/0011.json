@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:36cf73ae72dfa92c",
+  "lessonIds": [
+    "GU-C05-bolvun",
+    "GU-C05-hun-gujarati-bolun-chhun",
+    "GU-C05-kaam-karvun",
+    "GU-C05-rahevun",
+    "GU-C05-practice"
+  ],
+  "tex": "gujarati/book/chapters/ch11-first-verbs.tex"
+}

@@ -1,0 +1,10 @@
+{
+  "language": "tamil",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:1eef810c6efc16a4",
+  "lessonIds": [
+    "TA-C27-maalai",
+    "TA-W11-read-niingal"
+  ],
+  "tex": "tamil/book/chapters/ch27-evening.tex"
+}

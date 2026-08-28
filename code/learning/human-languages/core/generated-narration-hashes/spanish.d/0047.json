@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:4a815a21c8ab118b",
+  "lessonIds": [
+    "ES-C08-numeros-1-5",
+    "ES-C08-numeros-6-10",
+    "ES-C08-tener",
+    "ES-C08-cuantos-anos",
+    "ES-C08-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch47.txt",
+  "json": "spanish/narration/ch47.json",
+  "textHash": "fnv1a64:217611fac406e7b6",
+  "jsonHash": "fnv1a64:804eb82acff17534",
+  "findings": []
+}

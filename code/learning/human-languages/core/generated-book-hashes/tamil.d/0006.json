@@ -1,0 +1,17 @@
+{
+  "language": "tamil",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:2dfc8f46bd0b295e",
+  "lessonIds": [
+    "TA-C06-dative-ukku",
+    "TA-S01-va",
+    "TA-W02-ma-retroflex-na",
+    "TA-C06-dative-stacking",
+    "TA-C06-dative-subject",
+    "TA-C06-dative-subject-family",
+    "TA-S02-nna",
+    "TA-W02-three-ns",
+    "TA-S101-letter-pa"
+  ],
+  "tex": "tamil/book/chapters/ch06-dative-case.tex"
+}

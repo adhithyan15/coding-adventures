@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:8fe10f0363f191f6",
+  "lessonIds": [
+    "ES-C55-sintesis-condicion"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch198.txt",
+  "json": "spanish/narration/ch198.json",
+  "textHash": "fnv1a64:8a6c7f908a460e50",
+  "jsonHash": "fnv1a64:f2e41f84d659666b",
+  "findings": []
+}

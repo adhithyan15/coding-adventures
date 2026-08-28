@@ -1,0 +1,9 @@
+{
+  "language": "latin",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:44a9dbb3d8ed83a0",
+  "lessonIds": [
+    "LA-C03-quaeso"
+  ],
+  "tex": "latin/book/chapters/ch03-please.tex"
+}

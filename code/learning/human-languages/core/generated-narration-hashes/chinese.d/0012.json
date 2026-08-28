@@ -1,0 +1,28 @@
+{
+  "language": "chinese",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:626eb96c5ac549d1",
+  "lessonIds": [
+    "ZH-C12-ren",
+    "ZH-C12-nu",
+    "ZH-C12-hear-erzi",
+    "ZH-W12-er",
+    "ZH-C12-erzi",
+    "ZH-C12-hear-nuer",
+    "ZH-C12-nuer",
+    "ZH-C12-hear-jia",
+    "ZH-W12-jia",
+    "ZH-C12-jia",
+    "ZH-C12-hear-jiaren",
+    "ZH-C12-jiaren",
+    "ZH-R12-family-six",
+    "ZH-C12-practice"
+  ],
+  "voiceLessons": 10,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch12.txt",
+  "json": "chinese/narration/ch12.json",
+  "textHash": "fnv1a64:925ead23f8c92412",
+  "jsonHash": "fnv1a64:6823524bb175d7b9",
+  "findings": []
+}

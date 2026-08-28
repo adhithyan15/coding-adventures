@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:2156645f89f34a75",
+  "lessonIds": [
+    "TE-C46-fruit",
+    "TE-C46-cloth",
+    "TE-C46-lamp",
+    "TE-C46-salt",
+    "TE-C46-book"
+  ],
+  "tex": "telugu/book/chapters/ch46-things-you-ask-for.tex"
+}

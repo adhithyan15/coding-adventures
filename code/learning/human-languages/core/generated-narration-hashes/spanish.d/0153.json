@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:314bc4fff67d4f48",
+  "lessonIds": [
+    "ES-C34-pensar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch153.txt",
+  "json": "spanish/narration/ch153.json",
+  "textHash": "fnv1a64:63aa1e4e40df9fc2",
+  "jsonHash": "fnv1a64:5db3d434e4e2f57f",
+  "findings": []
+}

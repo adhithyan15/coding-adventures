@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:15ad7ffbad6af617",
+  "lessonIds": [
+    "TE-C64-also",
+    "TE-C64-only",
+    "TE-C64-in-that-case",
+    "TE-C64-after",
+    "TE-C64-still"
+  ],
+  "tex": "telugu/book/chapters/ch64-joining-words.tex"
+}

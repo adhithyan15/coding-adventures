@@ -1,0 +1,23 @@
+{
+  "language": "gujarati",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:04004e3b92d81fc3",
+  "lessonIds": [
+    "GU-W02-ra",
+    "GU-W02-da",
+    "GU-W02-va",
+    "GU-W02-ya",
+    "GU-W02-bha",
+    "GU-W02-dha",
+    "GU-W02-vocalic-r",
+    "GU-C01-aabhaar",
+    "GU-C01-aavjo",
+    "GU-C01-haa-naa",
+    "GU-W01-haa-guided-copy",
+    "GU-W01-haa-delayed-copy",
+    "GU-W01-haa-dictation",
+    "GU-C01-saarun",
+    "GU-C01-practice"
+  ],
+  "tex": "gujarati/book/chapters/ch02-courtesy-responses.tex"
+}

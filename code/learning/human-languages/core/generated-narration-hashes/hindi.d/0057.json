@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:2a1a6a6de2d54e00",
+  "lessonIds": [
+    "HI-C57-present",
+    "HI-C57-feast",
+    "HI-C57-platter",
+    "HI-C57-fragrance",
+    "HI-C57-sweetness"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch57.txt",
+  "json": "hindi/narration/ch57.json",
+  "textHash": "fnv1a64:aa8dcc761abbe88b",
+  "jsonHash": "fnv1a64:00a24797b7c01983",
+  "findings": []
+}

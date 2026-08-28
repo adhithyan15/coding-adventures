@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:d61999c2de95dcb5",
+  "lessonIds": [
+    "ES-C49-repaso-perfecto"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch120.txt",
+  "json": "spanish/narration/ch120.json",
+  "textHash": "fnv1a64:e45ba21ae322f8ef",
+  "jsonHash": "fnv1a64:bebb68b783b85093",
+  "findings": []
+}

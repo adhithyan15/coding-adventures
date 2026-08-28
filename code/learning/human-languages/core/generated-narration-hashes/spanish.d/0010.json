@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:06130b946ce85324",
+  "lessonIds": [
+    "ES-W01-acento",
+    "ES-W01-tilde-diacritica",
+    "ES-W01-repaso-acento"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch10.txt",
+  "json": "spanish/narration/ch10.json",
+  "textHash": "fnv1a64:b3f2b755911db0c0",
+  "jsonHash": "fnv1a64:b5dc46c3c9992264",
+  "findings": []
+}

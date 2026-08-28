@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:5c469f4a8723fa9f",
+  "lessonIds": [
+    "ES-C304-tranquilo",
+    "ES-C304-enfermo",
+    "ES-C304-contento",
+    "ES-C304-ocupado",
+    "ES-C304-triste"
+  ],
+  "tex": "spanish/book/chapters/ch304-como-estoy.tex"
+}

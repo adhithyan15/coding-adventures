@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:8f080bbaa2473bf6",
+  "lessonIds": [
+    "ES-C325-pais",
+    "ES-C325-ciudad",
+    "ES-C325-barrio",
+    "ES-C325-plaza",
+    "ES-C325-lugar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch325.txt",
+  "json": "spanish/narration/ch325.json",
+  "textHash": "fnv1a64:55b9f9bfc20327b5",
+  "jsonHash": "fnv1a64:8920ffdf5d1f7ee3",
+  "findings": []
+}

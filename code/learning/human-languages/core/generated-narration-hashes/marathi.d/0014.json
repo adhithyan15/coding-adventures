@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:37104eeadc9280f0",
+  "lessonIds": [
+    "MR-C11-mitra",
+    "MR-R11-mitra-r1",
+    "MR-C11-kutumb",
+    "MR-R11-kutumb-r1",
+    "MR-C11-bhau",
+    "MR-C11-bahin"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch14.txt",
+  "json": "marathi/narration/ch14.json",
+  "textHash": "fnv1a64:0ed4cb7aed04f003",
+  "jsonHash": "fnv1a64:e4603644d844165b",
+  "findings": []
+}

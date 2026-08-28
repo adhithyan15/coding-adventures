@@ -1,0 +1,16 @@
+{
+  "language": "german",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:85680b13a9ee2b91",
+  "lessonIds": [
+    "GE-C14-haben",
+    "GE-C14-alter"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "german/narration/ch14.txt",
+  "json": "german/narration/ch14.json",
+  "textHash": "fnv1a64:8711f08c20f17bda",
+  "jsonHash": "fnv1a64:89ebd07d17a64913",
+  "findings": []
+}

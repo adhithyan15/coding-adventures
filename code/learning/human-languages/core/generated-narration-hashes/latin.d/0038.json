@@ -1,0 +1,18 @@
+{
+  "language": "latin",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:2dd5ca8497d6aa7e",
+  "lessonIds": [
+    "LA-C38-cogito",
+    "LA-C38-lego",
+    "LA-C38-intellego",
+    "LA-C38-scribo"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "latin/narration/ch38.txt",
+  "json": "latin/narration/ch38.json",
+  "textHash": "fnv1a64:14a6092186419df1",
+  "jsonHash": "fnv1a64:f7f1e498688a10f0",
+  "findings": []
+}

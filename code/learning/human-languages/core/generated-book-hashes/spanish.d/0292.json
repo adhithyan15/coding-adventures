@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:aea9b6c761a389b2",
+  "lessonIds": [
+    "ES-C292-pueblo",
+    "ES-C292-colina",
+    "ES-C292-valle",
+    "ES-C292-lago",
+    "ES-C292-montana"
+  ],
+  "tex": "spanish/book/chapters/ch292-la-tierra.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:da82d3bac8c4acca",
+  "lessonIds": [
+    "ES-C39-conseguir"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch169.txt",
+  "json": "spanish/narration/ch169.json",
+  "textHash": "fnv1a64:3481b534e8647a54",
+  "jsonHash": "fnv1a64:ef2e4c5ba5880678",
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:b840ec330bf55d18",
+  "lessonIds": [
+    "ES-C318-repaso-despedirse",
+    "ES-C318-repaso-disculparse",
+    "ES-C318-repaso-genero",
+    "ES-C318-repaso-marcas"
+  ],
+  "tex": "spanish/book/chapters/ch318-repaso-pre-a1.tex"
+}

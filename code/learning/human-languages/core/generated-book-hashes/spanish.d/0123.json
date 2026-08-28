@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:f4dfe8f79202e574",
+  "lessonIds": [
+    "ES-C17-condicional",
+    "ES-C17-comer-condicional",
+    "ES-C17-vivir-condicional"
+  ],
+  "tex": "spanish/book/chapters/ch123-condicional.tex"
+}

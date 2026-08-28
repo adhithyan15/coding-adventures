@@ -1,0 +1,10 @@
+{
+  "language": "kannada",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:6c302943b73829f3",
+  "lessonIds": [
+    "KA-C15-niiru-akki",
+    "KA-S119-vowel-sign-oo"
+  ],
+  "tex": "kannada/book/chapters/ch15-water-and-rice.tex"
+}

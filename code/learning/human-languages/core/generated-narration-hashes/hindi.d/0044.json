@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:4798dbb915aa746d",
+  "lessonIds": [
+    "HI-C44-son",
+    "HI-C44-daughter",
+    "HI-C44-family",
+    "HI-C44-people"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "hindi/narration/ch44.txt",
+  "json": "hindi/narration/ch44.json",
+  "textHash": "fnv1a64:d222320e2e5c078c",
+  "jsonHash": "fnv1a64:25374706625b2a9a",
+  "findings": []
+}

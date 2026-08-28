@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:fea4a907ac7f8745",
+  "lessonIds": [
+    "ES-C283-disculpe",
+    "ES-C283-permiso",
+    "ES-C283-amable",
+    "ES-C283-mil-gracias",
+    "ES-C283-no-hay-de-que"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch283.txt",
+  "json": "spanish/narration/ch283.json",
+  "textHash": "fnv1a64:efb576c827b9834a",
+  "jsonHash": "fnv1a64:f030630fdbd3aa29",
+  "findings": []
+}

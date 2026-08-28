@@ -1,0 +1,17 @@
+{
+  "language": "french",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:95a698fb852c82dc",
+  "lessonIds": [
+    "FR-C32-intonation",
+    "FR-C32-est-ce-que",
+    "FR-C32-ou",
+    "FR-C32-quand",
+    "FR-C32-comment",
+    "FR-C32-combien",
+    "FR-C32-pourquoi",
+    "FR-C32-inversion",
+    "FR-C32-quel"
+  ],
+  "tex": "french/book/chapters/ch32-questions.tex"
+}

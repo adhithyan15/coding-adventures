@@ -1,0 +1,16 @@
+{
+  "language": "german",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:6866acd0f8171296",
+  "lessonIds": [
+    "GE-C06-zahlen-1-5",
+    "GE-C06-zahlen-6-10"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "german/narration/ch06.txt",
+  "json": "german/narration/ch06.json",
+  "textHash": "fnv1a64:44ef522197d162f6",
+  "jsonHash": "fnv1a64:fdc1829a825239c4",
+  "findings": []
+}

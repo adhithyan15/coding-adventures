@@ -1,0 +1,17 @@
+{
+  "language": "kannada",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:153be3bf12dc9139",
+  "lessonIds": [
+    "KA-C09-kshamisi",
+    "KA-S04-vowel-sign-i",
+    "KA-S113-letter-lla"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch09.txt",
+  "json": "kannada/narration/ch09.json",
+  "textHash": "fnv1a64:1e02493cffbf8c9f",
+  "jsonHash": "fnv1a64:db3e148e1efa5154",
+  "findings": []
+}

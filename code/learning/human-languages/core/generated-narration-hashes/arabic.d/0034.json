@@ -1,0 +1,18 @@
+{
+  "language": "arabic",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:bbdf458104246edd",
+  "lessonIds": [
+    "AR-C34-milh",
+    "AR-C34-lahm",
+    "AR-C34-jubn",
+    "AR-C34-taam"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "arabic/narration/ch34.txt",
+  "json": "arabic/narration/ch34.json",
+  "textHash": "fnv1a64:e8a2785242d78fca",
+  "jsonHash": "fnv1a64:6bbd2d917dbc218f",
+  "findings": []
+}

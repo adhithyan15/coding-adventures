@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:0768040cb513a410",
+  "lessonIds": [
+    "ES-C65-repaso-parejas",
+    "ES-C65-repaso-dos-pasados",
+    "ES-C65-repaso-columna-vosotros"
+  ],
+  "tex": "spanish/book/chapters/ch256-review-parejas.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:1c30a200e9dbbff3",
+  "lessonIds": [
+    "HI-C65-kindness",
+    "HI-C65-entreaty",
+    "HI-C65-permission",
+    "HI-C65-trust",
+    "HI-C65-manners"
+  ],
+  "tex": "hindi/book/chapters/ch65-asking-nicely.tex"
+}

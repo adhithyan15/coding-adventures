@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:5612a1032b01bf83",
+  "lessonIds": [
+    "ES-C319-repaso-la-superficie",
+    "ES-C319-repaso-salir",
+    "ES-C319-despedida",
+    "ES-C319-repaso-presentarse",
+    "ES-C319-dos-respuestas",
+    "ES-C319-repaso-respuestas",
+    "ES-C319-otro-y-poco"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch319.txt",
+  "json": "spanish/narration/ch319.json",
+  "textHash": "fnv1a64:ed1e0dc04606120b",
+  "jsonHash": "fnv1a64:186e4b0f8d3cebef",
+  "findings": []
+}

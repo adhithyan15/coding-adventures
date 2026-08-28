@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:acf4b9002ada45d8",
+  "lessonIds": [
+    "TA-C47-true",
+    "TA-C47-enough",
+    "TA-C47-certainly",
+    "TA-C47-perhaps",
+    "TA-C47-just-so"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch47.txt",
+  "json": "tamil/narration/ch47.json",
+  "textHash": "fnv1a64:74560128debde592",
+  "jsonHash": "fnv1a64:87631d1fcf37e4ea",
+  "findings": []
+}

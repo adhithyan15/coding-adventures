@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:7920ede0bf513631",
+  "lessonIds": [
+    "ES-C61-del"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch231.txt",
+  "json": "spanish/narration/ch231.json",
+  "textHash": "fnv1a64:70cf2a0eeb578284",
+  "jsonHash": "fnv1a64:de16a581508d5952",
+  "findings": []
+}

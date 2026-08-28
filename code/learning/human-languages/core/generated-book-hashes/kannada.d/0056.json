@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:66318e27eaa4eb61",
+  "lessonIds": [
+    "KA-C56-mat",
+    "KA-C56-basket",
+    "KA-C56-knife",
+    "KA-C56-vessel",
+    "KA-C56-box"
+  ],
+  "tex": "kannada/book/chapters/ch56-in-the-house.tex"
+}

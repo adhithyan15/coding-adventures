@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:fbb5a6f40a71e02b",
+  "lessonIds": [
+    "ES-C321-placer",
+    "ES-C321-razon",
+    "ES-C321-respeto",
+    "ES-C321-paciencia",
+    "ES-C321-consejo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch321.txt",
+  "json": "spanish/narration/ch321.json",
+  "textHash": "fnv1a64:f317d1229cb6853e",
+  "jsonHash": "fnv1a64:b5d63b5196a04a0f",
+  "findings": []
+}

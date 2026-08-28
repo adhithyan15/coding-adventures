@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:c802a71569d25973",
+  "lessonIds": [
+    "SA-C28-now",
+    "SA-C28-day-after",
+    "SA-C28-journey",
+    "SA-C28-auspicious",
+    "SA-C28-svasti"
+  ],
+  "tex": "sanskrit/book/chapters/ch28-taking-leave.tex"
+}

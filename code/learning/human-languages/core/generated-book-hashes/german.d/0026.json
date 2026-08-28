@@ -1,0 +1,12 @@
+{
+  "language": "german",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:ed49129a47d423a8",
+  "lessonIds": [
+    "GE-C26-sitzen",
+    "GE-C26-stehen",
+    "GE-C26-schlafen",
+    "GE-C26-hoeren"
+  ],
+  "tex": "german/book/chapters/ch26-still-verbs.tex"
+}

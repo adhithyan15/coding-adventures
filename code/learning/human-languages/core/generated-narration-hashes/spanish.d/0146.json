@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:104389aff684bc44",
+  "lessonIds": [
+    "ES-C28-mediodia-medianoche"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch146.txt",
+  "json": "spanish/narration/ch146.json",
+  "textHash": "fnv1a64:735eb768eb301a42",
+  "jsonHash": "fnv1a64:ee93f0c38e3e40c0",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:c9aad9cfd8062854",
+  "lessonIds": [
+    "HI-C40-this",
+    "HI-C40-that",
+    "HI-C40-here",
+    "HI-C40-there",
+    "HI-C40-who",
+    "HI-C40-where",
+    "HI-C40-deixis-system"
+  ],
+  "tex": "hindi/book/chapters/ch40-pointing-and-asking.tex"
+}

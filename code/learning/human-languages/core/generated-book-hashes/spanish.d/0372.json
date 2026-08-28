@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:005b9ad2c4197cd3",
+  "lessonIds": [
+    "ES-C372-gris",
+    "ES-C372-rosa",
+    "ES-C372-oscuro",
+    "ES-C372-palido",
+    "ES-C372-suave"
+  ],
+  "tex": "spanish/book/chapters/ch372-gris-y-rosa.tex"
+}

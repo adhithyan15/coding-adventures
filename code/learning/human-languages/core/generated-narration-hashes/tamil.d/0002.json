@@ -1,0 +1,22 @@
+{
+  "language": "tamil",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:b55db3804a8a541e",
+  "lessonIds": [
+    "TA-C02-peyar",
+    "TA-C02-en",
+    "TA-C02-en-peyar",
+    "TA-C02-nii-niingal",
+    "TA-C02-enna",
+    "TA-C02-ungal-peyar-enna",
+    "TA-C02-magizhcci",
+    "TA-C02-practice"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
+  "text": "tamil/narration/ch02.txt",
+  "json": "tamil/narration/ch02.json",
+  "textHash": "fnv1a64:86dedbdaedab79ae",
+  "jsonHash": "fnv1a64:dcabe0b422f39127",
+  "findings": []
+}

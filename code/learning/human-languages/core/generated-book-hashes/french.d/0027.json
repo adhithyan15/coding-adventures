@@ -1,0 +1,12 @@
+{
+  "language": "french",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:63390900cfac961f",
+  "lessonIds": [
+    "FR-C27-sasseoir",
+    "FR-C27-se-lever",
+    "FR-C27-ouvrir",
+    "FR-C27-fermer"
+  ],
+  "tex": "french/book/chapters/ch27-sitting-standing-opening-closing.tex"
+}

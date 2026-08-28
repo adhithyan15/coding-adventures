@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:19a631bcb35e8c76",
+  "lessonIds": [
+    "ES-C281-nuevo",
+    "ES-C281-viejo",
+    "ES-C281-limpio",
+    "ES-C281-sucio"
+  ],
+  "tex": "spanish/book/chapters/ch281-cuatro-adjetivos.tex"
+}

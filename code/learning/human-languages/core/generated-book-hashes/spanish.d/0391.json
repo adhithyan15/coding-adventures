@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:c4d2fde415817ce8",
+  "lessonIds": [
+    "ES-C391-menu",
+    "ES-C391-camarero",
+    "ES-C391-postre",
+    "ES-C391-supermercado",
+    "ES-C391-euro"
+  ],
+  "tex": "spanish/book/chapters/ch391-el-menu-y-el-camarero.tex"
+}

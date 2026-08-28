@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:1c512fe978f4e7be",
+  "lessonIds": [
+    "ES-C280-queso",
+    "ES-C280-huevo",
+    "ES-C280-manzana",
+    "ES-C280-dinero"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch280.txt",
+  "json": "spanish/narration/ch280.json",
+  "textHash": "fnv1a64:9c1abf63214d5366",
+  "jsonHash": "fnv1a64:9dd8a6c64acf7fb5",
+  "findings": []
+}

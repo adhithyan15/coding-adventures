@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:5b09760fb7feec97",
+  "lessonIds": [
+    "AR-C23-afwan"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch23.txt",
+  "json": "arabic/narration/ch23.json",
+  "textHash": "fnv1a64:b1f091a29b488635",
+  "jsonHash": "fnv1a64:b4455dc36abcf827",
+  "findings": []
+}

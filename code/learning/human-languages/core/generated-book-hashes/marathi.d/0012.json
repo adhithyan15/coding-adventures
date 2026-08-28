@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:5817b6278e8ebc6e",
+  "lessonIds": [
+    "MR-C09-ghene",
+    "MR-C09-vicharne",
+    "MR-C09-madat-karne",
+    "MR-C09-avadne"
+  ],
+  "tex": "marathi/book/chapters/ch12-doing-verbs.tex"
+}

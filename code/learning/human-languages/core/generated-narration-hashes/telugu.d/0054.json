@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:bcf0ea5378d1b762",
+  "lessonIds": [
+    "TE-C54-tree",
+    "TE-C54-branch",
+    "TE-C54-root",
+    "TE-C54-seed",
+    "TE-C54-seedling"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch54.txt",
+  "json": "telugu/narration/ch54.json",
+  "textHash": "fnv1a64:8bc28c6bdc1e1113",
+  "jsonHash": "fnv1a64:5e4a6b6e4bb88e37",
+  "findings": []
+}

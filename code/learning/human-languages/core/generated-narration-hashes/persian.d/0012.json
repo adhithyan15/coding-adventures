@@ -1,0 +1,18 @@
+{
+  "language": "persian",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:fd60a20979c810dd",
+  "lessonIds": [
+    "FA-C12-nam",
+    "FA-C12-del",
+    "FA-C12-dar",
+    "FA-C12-ketab"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "persian/narration/ch12.txt",
+  "json": "persian/narration/ch12.json",
+  "textHash": "fnv1a64:c0420c20f3d365af",
+  "jsonHash": "fnv1a64:1eed69c66fd67d9d",
+  "findings": []
+}

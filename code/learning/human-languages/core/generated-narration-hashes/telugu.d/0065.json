@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:e5ff12e7d7d62c5d",
+  "lessonIds": [
+    "TE-C65-welcome",
+    "TE-C65-manners",
+    "TE-C65-request",
+    "TE-C65-permission",
+    "TE-C65-trust"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch65.txt",
+  "json": "telugu/narration/ch65.json",
+  "textHash": "fnv1a64:f02de6cd04e4ccf6",
+  "jsonHash": "fnv1a64:6239cd9df53a56bb",
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "language": "french",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:786f57c3303a0541",
+  "lessonIds": [
+    "FR-C17-tete",
+    "FR-C17-main"
+  ],
+  "tex": "french/book/chapters/ch17-head-and-hand.tex"
+}

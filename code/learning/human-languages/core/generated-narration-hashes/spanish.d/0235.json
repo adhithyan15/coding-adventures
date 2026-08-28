@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:72297a62b259292d",
+  "lessonIds": [
+    "ES-C61-repaso-juntores"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch235.txt",
+  "json": "spanish/narration/ch235.json",
+  "textHash": "fnv1a64:b8273280d62256ee",
+  "jsonHash": "fnv1a64:c543cc03bb1551f6",
+  "findings": []
+}

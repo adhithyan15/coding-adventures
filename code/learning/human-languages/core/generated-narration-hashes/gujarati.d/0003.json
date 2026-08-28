@@ -1,0 +1,24 @@
+{
+  "language": "gujarati",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:1a6b2afdffc13f91",
+  "lessonIds": [
+    "GU-W03-ja",
+    "GU-W03-o-matra",
+    "GU-W03-anusvara",
+    "GU-W03-ii-matra",
+    "GU-W03-u-matra",
+    "GU-W03-chha",
+    "GU-W03-ka",
+    "GU-W03-nna",
+    "GU-W03-sha",
+    "GU-R03-doorway-three-r1"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch03.txt",
+  "json": "gujarati/narration/ch03.json",
+  "textHash": "fnv1a64:8b5d12a964deabae",
+  "jsonHash": "fnv1a64:ddb871c28d594fca",
+  "findings": []
+}

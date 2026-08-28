@@ -1,0 +1,9 @@
+{
+  "language": "french",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:5f42597a2da4f798",
+  "lessonIds": [
+    "FR-C20-je-suis-desole"
+  ],
+  "tex": "french/book/chapters/ch20-sorry.tex"
+}

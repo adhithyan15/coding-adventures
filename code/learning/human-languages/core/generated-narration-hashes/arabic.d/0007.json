@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:224dec45c07eb4db",
+  "lessonIds": [
+    "AR-C07-asif"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch07.txt",
+  "json": "arabic/narration/ch07.json",
+  "textHash": "fnv1a64:45a8d1d23f8414f0",
+  "jsonHash": "fnv1a64:1fda162a06d25715",
+  "findings": []
+}

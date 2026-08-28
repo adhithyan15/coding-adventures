@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:38f01cd6347a8875",
+  "lessonIds": [
+    "HI-C13-sir",
+    "HI-C13-haath",
+    "HI-S08-letter-sa",
+    "HI-S117-letter-ca"
+  ],
+  "tex": "hindi/book/chapters/ch13-head-and-hand.tex"
+}

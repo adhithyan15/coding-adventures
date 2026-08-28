@@ -1,0 +1,16 @@
+{
+  "language": "italian",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:19dbcedcb0ef5c37",
+  "lessonIds": [
+    "IT-C10-genitori",
+    "IT-C10-fratello-sorella"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "italian/narration/ch10.txt",
+  "json": "italian/narration/ch10.json",
+  "textHash": "fnv1a64:bfb639300f0bc9a0",
+  "jsonHash": "fnv1a64:49df4d34bd6b8cf5",
+  "findings": []
+}

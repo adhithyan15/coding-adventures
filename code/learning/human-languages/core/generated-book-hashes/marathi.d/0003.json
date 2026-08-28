@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:71d60822bcac1f40",
+  "lessonIds": [
+    "MR-W03-da",
+    "MR-W03-dha",
+    "MR-W03-ba",
+    "MR-W03-ya",
+    "MR-W03-lla",
+    "MR-W03-va",
+    "MR-W03-dhanyavad-write"
+  ],
+  "tex": "marathi/book/chapters/ch03-thanks-script-b.tex"
+}

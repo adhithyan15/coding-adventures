@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:f7a004f42511272b",
+  "lessonIds": [
+    "ES-C13-plurales-cambio",
+    "ES-C13-plurales-yo-go",
+    "ES-C13-sintesis-derivar"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch76.txt",
+  "json": "spanish/narration/ch76.json",
+  "textHash": "fnv1a64:7acf9a19e27e94f4",
+  "jsonHash": "fnv1a64:ac79f5af547e03a9",
+  "findings": []
+}

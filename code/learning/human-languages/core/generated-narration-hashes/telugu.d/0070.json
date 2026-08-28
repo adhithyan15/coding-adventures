@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:0ea9d47aa46c71be",
+  "lessonIds": [
+    "TE-C70-mouse",
+    "TE-C70-frog",
+    "TE-C70-mosquito",
+    "TE-C70-squirrel",
+    "TE-C70-spider"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch70.txt",
+  "json": "telugu/narration/ch70.json",
+  "textHash": "fnv1a64:33648e914ae7646d",
+  "jsonHash": "fnv1a64:3eaae05ebf909a11",
+  "findings": []
+}

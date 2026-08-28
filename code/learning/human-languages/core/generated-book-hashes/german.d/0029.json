@@ -1,0 +1,11 @@
+{
+  "language": "german",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:c30859682d5d2fed",
+  "lessonIds": [
+    "GE-C29-freund",
+    "GE-C29-freundin",
+    "GE-C29-familie"
+  ],
+  "tex": "german/book/chapters/ch29-friend-and-family.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:81113a2a23489289",
+  "lessonIds": [
+    "KA-C25-shubha-ratri"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch25.txt",
+  "json": "kannada/narration/ch25.json",
+  "textHash": "fnv1a64:eb7690dc69d12f68",
+  "jsonHash": "fnv1a64:f6c2e71a172b9890",
+  "findings": []
+}

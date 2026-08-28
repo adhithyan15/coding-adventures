@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:c8a7a866d54f7d48",
+  "lessonIds": [
+    "ES-C03-tu-usted",
+    "ES-C03-tu-usted-register",
+    "ES-C03-vos",
+    "ES-C03-usted-origin",
+    "ES-C03-quien",
+    "ES-C03-repaso-tu-usted"
+  ],
+  "tex": "spanish/book/chapters/ch05-three-yous.tex"
+}

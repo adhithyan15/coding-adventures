@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:4a7e6e51998f6cda",
+  "lessonIds": [
+    "TE-C41-this",
+    "TE-C41-that",
+    "TE-C41-here",
+    "TE-C41-there",
+    "TE-C41-who",
+    "TE-C41-where",
+    "TE-C41-deixis-system"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch41.txt",
+  "json": "telugu/narration/ch41.json",
+  "textHash": "fnv1a64:3f9fb4b8404fcceb",
+  "jsonHash": "fnv1a64:73399e019f83b003",
+  "findings": []
+}

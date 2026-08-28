@@ -1,0 +1,12 @@
+{
+  "language": "italian",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:04b83a8cd684a4a7",
+  "lessonIds": [
+    "IT-C19-prendere",
+    "IT-C19-chiedere",
+    "IT-C19-aiutare",
+    "IT-C19-mi-piace"
+  ],
+  "tex": "italian/book/chapters/ch19-backwards-verb.tex"
+}

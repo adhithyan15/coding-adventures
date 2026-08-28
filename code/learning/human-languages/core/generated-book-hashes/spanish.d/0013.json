@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:5fb1114794f472e5",
+  "lessonIds": [
+    "ES-C05-hasta-luego",
+    "ES-C05-hasta-manana",
+    "ES-C05-hasta-pronto",
+    "ES-C05-practice"
+  ],
+  "tex": "spanish/book/chapters/ch13-until-when.tex"
+}

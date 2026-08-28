@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:f276e8f0a008ab8b",
+  "lessonIds": [
+    "KA-C22-hasiru-haladi"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch22.txt",
+  "json": "kannada/narration/ch22.json",
+  "textHash": "fnv1a64:dce2aaca8b20ed09",
+  "jsonHash": "fnv1a64:158f0427f2806565",
+  "findings": []
+}

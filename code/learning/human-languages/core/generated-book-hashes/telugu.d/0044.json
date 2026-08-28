@@ -1,0 +1,12 @@
+{
+  "language": "telugu",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:63acae2d22179943",
+  "lessonIds": [
+    "TE-C44-look",
+    "TE-C44-listen",
+    "TE-C44-speak",
+    "TE-C44-write"
+  ],
+  "tex": "telugu/book/chapters/ch44-see-say.tex"
+}

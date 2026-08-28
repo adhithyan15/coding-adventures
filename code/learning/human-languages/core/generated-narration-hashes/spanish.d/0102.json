@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:4ed305f9336d6864",
+  "lessonIds": [
+    "ES-C47-sintesis-dos-a-la-vez"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch102.txt",
+  "json": "spanish/narration/ch102.json",
+  "textHash": "fnv1a64:e0b0a3066ffab7fd",
+  "jsonHash": "fnv1a64:0abe2fb18b4500b7",
+  "findings": []
+}

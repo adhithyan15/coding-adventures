@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 4,
+  "sourceHash": "fnv1a64:322ada37d9e4874e",
+  "lessonIds": [
+    "BN-C04-abar",
+    "BN-C04-dekha-hobe",
+    "BN-C04-abar-dekha-hobe",
+    "BN-C04-kal-dekha-hobe",
+    "BN-C04-practice"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch04.txt",
+  "json": "bengali/narration/ch04.json",
+  "textHash": "fnv1a64:1994915e9d1cd3bf",
+  "jsonHash": "fnv1a64:83ddd841c37b8c48",
+  "findings": []
+}

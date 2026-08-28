@@ -1,0 +1,11 @@
+{
+  "language": "tamil",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:8ec170d08f5dc673",
+  "lessonIds": [
+    "TA-C09-mannikkavum",
+    "TA-C09-sorry-register",
+    "TA-S113-letter-la"
+  ],
+  "tex": "tamil/book/chapters/ch09-sorry.tex"
+}

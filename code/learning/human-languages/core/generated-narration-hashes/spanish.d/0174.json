@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:5f41ecd49317d0d5",
+  "lessonIds": [
+    "ES-C40-esperar",
+    "ES-C40-contestar",
+    "ES-C40-comprar"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch174.txt",
+  "json": "spanish/narration/ch174.json",
+  "textHash": "fnv1a64:a4e8ea282d91ffae",
+  "jsonHash": "fnv1a64:f7544afccf788d23",
+  "findings": []
+}

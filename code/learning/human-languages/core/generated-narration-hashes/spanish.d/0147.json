@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:3457db2f2eb38cc0",
+  "lessonIds": [
+    "ES-C29-la-hora"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch147.txt",
+  "json": "spanish/narration/ch147.json",
+  "textHash": "fnv1a64:36d04b4cd477aa6e",
+  "jsonHash": "fnv1a64:f35d2bc09653b4d5",
+  "findings": []
+}

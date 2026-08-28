@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:de05917a5cadb4ba",
+  "lessonIds": [
+    "AR-C16-al-saa"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "arabic/narration/ch16.txt",
+  "json": "arabic/narration/ch16.json",
+  "textHash": "fnv1a64:a5ce05e95ff122c5",
+  "jsonHash": "fnv1a64:054a8ad237dccb6d",
+  "findings": []
+}

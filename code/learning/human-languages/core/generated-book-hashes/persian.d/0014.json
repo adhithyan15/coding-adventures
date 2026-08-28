@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:9f86de35685835cf",
+  "lessonIds": [
+    "FA-C14-khahar",
+    "FA-C14-pesar",
+    "FA-C14-mard",
+    "FA-C14-zan",
+    "FA-C14-dust"
+  ],
+  "tex": "persian/book/chapters/ch14-people-words.tex"
+}

@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:3d15ff11917e0e6d",
+  "lessonIds": [
+    "TE-C42-big",
+    "TE-C42-small",
+    "TE-C42-good",
+    "TE-C42-new",
+    "TE-C42-old",
+    "TE-C42-adjective-system"
+  ],
+  "tex": "telugu/book/chapters/ch42-describing-things.tex"
+}

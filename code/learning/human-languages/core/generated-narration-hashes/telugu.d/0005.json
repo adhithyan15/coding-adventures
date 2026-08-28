@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:c7c3f39e8c0c6490",
+  "lessonIds": [
+    "TE-C05-maatlaadu",
+    "TE-C05-nenu-telugu-maatlaadataanu",
+    "TE-C05-undu",
+    "TE-C05-pani-ceyu",
+    "TE-C05-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "telugu/narration/ch05.txt",
+  "json": "telugu/narration/ch05.json",
+  "textHash": "fnv1a64:b284f76a02a6d365",
+  "jsonHash": "fnv1a64:098eea1c09765079",
+  "findings": []
+}

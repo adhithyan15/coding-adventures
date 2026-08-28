@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:86d387300b5534da",
+  "lessonIds": [
+    "ES-C51-repaso-flecha"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch179.txt",
+  "json": "spanish/narration/ch179.json",
+  "textHash": "fnv1a64:f1f3dcffc31e00ae",
+  "jsonHash": "fnv1a64:1c8b36fcd3264caf",
+  "findings": []
+}

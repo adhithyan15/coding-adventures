@@ -1,0 +1,22 @@
+{
+  "language": "kannada",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:804526dd486188eb",
+  "lessonIds": [
+    "KA-C02-hesaru",
+    "KA-C02-nanna",
+    "KA-C02-nanna-hesaru",
+    "KA-C02-niinu-niivu",
+    "KA-C02-enu",
+    "KA-C02-nimma-hesaru-enu",
+    "KA-C02-santosha",
+    "KA-C02-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch02.txt",
+  "json": "kannada/narration/ch02.json",
+  "textHash": "fnv1a64:e8264c7f55794c06",
+  "jsonHash": "fnv1a64:fa20182995c3da21",
+  "findings": []
+}

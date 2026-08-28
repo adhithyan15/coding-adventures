@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:4e7f7334bfd63dc0",
+  "lessonIds": [
+    "ES-C39-traer"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch168.txt",
+  "json": "spanish/narration/ch168.json",
+  "textHash": "fnv1a64:7d08a74b5414dd47",
+  "jsonHash": "fnv1a64:19a35fd8e1fca9d3",
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:d1316da09935110e",
+  "lessonIds": [
+    "HI-C43-look",
+    "HI-C43-listen",
+    "HI-C43-speak",
+    "HI-C43-write"
+  ],
+  "tex": "hindi/book/chapters/ch43-see-say.tex"
+}

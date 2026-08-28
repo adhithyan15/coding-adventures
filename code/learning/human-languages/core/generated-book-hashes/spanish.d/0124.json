@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:60e9130b09c434c6",
+  "lessonIds": [
+    "ES-C17-irregulares",
+    "ES-C17-practice"
+  ],
+  "tex": "spanish/book/chapters/ch124-future-conditional-stems.tex"
+}

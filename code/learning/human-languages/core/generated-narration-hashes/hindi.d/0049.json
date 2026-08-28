@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:56764eb1be8fc968",
+  "lessonIds": [
+    "HI-C49-now",
+    "HI-C49-day-after",
+    "HI-C49-journey",
+    "HI-C49-set-out",
+    "HI-C49-meeting"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch49.txt",
+  "json": "hindi/narration/ch49.json",
+  "textHash": "fnv1a64:12a270684ee87aeb",
+  "jsonHash": "fnv1a64:c692110fef56ae58",
+  "findings": []
+}

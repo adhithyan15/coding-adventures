@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:ce15f1314006c5f7",
+  "lessonIds": [
+    "TA-C56-a-little",
+    "TA-C56-a-lot",
+    "TA-C56-less",
+    "TA-C56-no-need",
+    "TA-C56-let-it-be"
+  ],
+  "tex": "tamil/book/chapters/ch56-how-much.tex"
+}

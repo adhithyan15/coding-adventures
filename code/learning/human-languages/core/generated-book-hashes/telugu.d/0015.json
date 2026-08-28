@@ -1,0 +1,10 @@
+{
+  "language": "telugu",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:c8fd2561bcbebbd6",
+  "lessonIds": [
+    "TE-C15-neellu-biyyam",
+    "TE-S118-letter-ga"
+  ],
+  "tex": "telugu/book/chapters/ch15-water-and-rice.tex"
+}

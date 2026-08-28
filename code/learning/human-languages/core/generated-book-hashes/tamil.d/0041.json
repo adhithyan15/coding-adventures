@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:1cdfaea5426041f4",
+  "lessonIds": [
+    "TA-C41-big",
+    "TA-C41-small",
+    "TA-C41-good",
+    "TA-C41-new",
+    "TA-C41-old",
+    "TA-C41-adjective-system"
+  ],
+  "tex": "tamil/book/chapters/ch41-describing-things.tex"
+}

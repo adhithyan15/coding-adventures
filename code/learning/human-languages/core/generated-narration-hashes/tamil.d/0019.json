@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:8f7c62818e2d37aa",
+  "lessonIds": [
+    "TA-C19-vayathu",
+    "TA-C19-age-register-grammar",
+    "TA-S09-i-sign",
+    "TA-W07-write-sari",
+    "TA-S123-vowel-sign-ee"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch19.txt",
+  "json": "tamil/narration/ch19.json",
+  "textHash": "fnv1a64:ba8a99a2574c9439",
+  "jsonHash": "fnv1a64:187d71a87da215d4",
+  "findings": []
+}

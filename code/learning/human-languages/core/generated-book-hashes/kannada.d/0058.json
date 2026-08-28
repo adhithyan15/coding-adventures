@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:2b85482f8acc78ca",
+  "lessonIds": [
+    "KA-C58-a-little",
+    "KA-C58-more",
+    "KA-C58-less",
+    "KA-C58-no-thanks",
+    "KA-C58-thats-all"
+  ],
+  "tex": "kannada/book/chapters/ch58-more-short-replies.tex"
+}

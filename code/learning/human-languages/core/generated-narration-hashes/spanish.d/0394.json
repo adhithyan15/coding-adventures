@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:311831f04a0b6b35",
+  "lessonIds": [
+    "ES-C394-universidad",
+    "ES-C394-trabajo",
+    "ES-C394-actividad",
+    "ES-C394-guitarra",
+    "ES-C394-medico"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch394.txt",
+  "json": "spanish/narration/ch394.json",
+  "textHash": "fnv1a64:5b65dbe6729377b6",
+  "jsonHash": "fnv1a64:c5a2f03d1023ca3a",
+  "findings": []
+}

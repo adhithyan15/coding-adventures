@@ -1,0 +1,16 @@
+{
+  "language": "french",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:446ab9036ea79d9f",
+  "lessonIds": [
+    "FR-C07-jours-1",
+    "FR-C07-jours-2"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "french/narration/ch07.txt",
+  "json": "french/narration/ch07.json",
+  "textHash": "fnv1a64:9e5a5270e9d9b801",
+  "jsonHash": "fnv1a64:2827f854dbbfc3ea",
+  "findings": []
+}

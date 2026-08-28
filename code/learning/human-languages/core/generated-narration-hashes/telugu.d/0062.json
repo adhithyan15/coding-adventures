@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:810c054c05f389b8",
+  "lessonIds": [
+    "TE-C62-thread",
+    "TE-C62-needle",
+    "TE-C62-broom",
+    "TE-C62-umbrella",
+    "TE-C62-mirror"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch62.txt",
+  "json": "telugu/narration/ch62.json",
+  "textHash": "fnv1a64:362b30d75d9fbeca",
+  "jsonHash": "fnv1a64:393664a211e23497",
+  "findings": []
+}

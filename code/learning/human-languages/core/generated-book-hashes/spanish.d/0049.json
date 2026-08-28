@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:d0eec88ae7a6c9ee",
+  "lessonIds": [
+    "ES-C10-ir",
+    "ES-C10-ir-a-futuro",
+    "ES-C10-futuro-simple",
+    "ES-C10-mi-tu-su",
+    "ES-C10-practice"
+  ],
+  "tex": "spanish/book/chapters/ch49-ir-y-futuro.tex"
+}

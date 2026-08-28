@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 5,
+  "sourceHash": "fnv1a64:af211b9a67a63a6f",
+  "lessonIds": [
+    "ML-C05-samsaarikkuka",
+    "ML-C05-njaan-malayalam-samsaarikkunnu",
+    "ML-C05-taamasikkuka",
+    "ML-C05-joli-ceyyuka",
+    "ML-C05-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "malayalam/narration/ch05.txt",
+  "json": "malayalam/narration/ch05.json",
+  "textHash": "fnv1a64:7b9c961f039a2ddd",
+  "jsonHash": "fnv1a64:0746e8655fd957b1",
+  "findings": []
+}

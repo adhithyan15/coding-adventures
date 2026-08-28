@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:279958570c130560",
+  "lessonIds": [
+    "SA-C51-husband",
+    "SA-C51-wife",
+    "SA-C51-grandfather",
+    "SA-C51-grandmother",
+    "SA-C51-uncle"
+  ],
+  "tex": "sanskrit/book/chapters/ch51-more-of-the-family.tex"
+}

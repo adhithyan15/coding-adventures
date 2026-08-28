@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:7e81f3dbf65dccfb",
+  "lessonIds": [
+    "TE-C60-buffalo",
+    "TE-C60-goat",
+    "TE-C60-hen",
+    "TE-C60-ant",
+    "TE-C60-bird"
+  ],
+  "tex": "telugu/book/chapters/ch60-animals.tex"
+}

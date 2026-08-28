@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:d29e76a1e4216d59",
+  "lessonIds": [
+    "SA-C08-cintayati",
+    "SA-C08-avagacchati",
+    "SA-C08-pathati",
+    "SA-C08-likhati",
+    "SA-S01-letter-ma",
+    "SA-S107-letter-ta"
+  ],
+  "tex": "sanskrit/book/chapters/ch08-mind-verbs.tex"
+}

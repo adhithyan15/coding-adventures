@@ -1,0 +1,12 @@
+{
+  "language": "latin",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:554cde9ce238f426",
+  "lessonIds": [
+    "LA-C41-ambulo",
+    "LA-C41-curro",
+    "LA-C41-aperio",
+    "LA-C41-claudo"
+  ],
+  "tex": "latin/book/chapters/ch41-motion-verbs.tex"
+}

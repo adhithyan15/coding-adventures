@@ -1,0 +1,28 @@
+{
+  "language": "malayalam",
+  "chapter": 1,
+  "sourceHash": "fnv1a64:a7f1b28bea94fe88",
+  "lessonIds": [
+    "ML-C01-namaskaram",
+    "ML-W01-na-ma-trace",
+    "ML-W01-na-ma-guided-copy",
+    "ML-W01-na-ma-delayed-copy",
+    "ML-W01-na-ma-dictation",
+    "ML-W01-sa-chandrakkala-ka",
+    "ML-W01-aa-ra-anusvaram",
+    "ML-W01-namaskaram-read",
+    "ML-W01-namaskaram-dictation",
+    "ML-C01-nandi",
+    "ML-C01-athe",
+    "ML-C01-illa",
+    "ML-C01-sari",
+    "ML-C01-practice"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch01.txt",
+  "json": "malayalam/narration/ch01.json",
+  "textHash": "fnv1a64:971746e56c4405f9",
+  "jsonHash": "fnv1a64:102b1409b810d43a",
+  "findings": []
+}

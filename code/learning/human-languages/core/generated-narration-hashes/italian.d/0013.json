@@ -1,0 +1,16 @@
+{
+  "language": "italian",
+  "chapter": 13,
+  "sourceHash": "fnv1a64:64d43dd9fc525346",
+  "lessonIds": [
+    "IT-C13-nero-bianco",
+    "IT-C13-rosso-blu"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "italian/narration/ch13.txt",
+  "json": "italian/narration/ch13.json",
+  "textHash": "fnv1a64:44888e2120d44934",
+  "jsonHash": "fnv1a64:9e48cb4c3900cfa9",
+  "findings": []
+}

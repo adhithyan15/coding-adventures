@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:0798d4a9f34c8ea3",
+  "lessonIds": [
+    "ML-C48-teacher",
+    "ML-C48-student",
+    "ML-C48-doctor",
+    "ML-C48-farmer",
+    "ML-C48-guest"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch48.txt",
+  "json": "malayalam/narration/ch48.json",
+  "textHash": "fnv1a64:08924a02c4e74344",
+  "jsonHash": "fnv1a64:944c5abd952994c0",
+  "findings": []
+}

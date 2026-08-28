@@ -1,0 +1,11 @@
+{
+  "language": "kannada",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:93def0a04664a09e",
+  "lessonIds": [
+    "KA-C11-bannagalu",
+    "KA-S06-letter-da",
+    "KA-S115-letter-i"
+  ],
+  "tex": "kannada/book/chapters/ch11-colours.tex"
+}

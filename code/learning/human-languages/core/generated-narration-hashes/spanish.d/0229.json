@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:45007dd90b9ef5bc",
+  "lessonIds": [
+    "ES-C60-repaso-grado"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch229.txt",
+  "json": "spanish/narration/ch229.json",
+  "textHash": "fnv1a64:f7440c8bfd1a2cd1",
+  "jsonHash": "fnv1a64:b79952ccc1701e81",
+  "findings": []
+}

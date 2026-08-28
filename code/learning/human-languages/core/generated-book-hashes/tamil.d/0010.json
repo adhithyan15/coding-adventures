@@ -1,0 +1,12 @@
+{
+  "language": "tamil",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:c1fccee7e5775e20",
+  "lessonIds": [
+    "TA-C10-vaara-kizhamai",
+    "TA-S05-rra",
+    "TA-W04-vowel-signs-nandri",
+    "TA-S114-vowel-sign-aa"
+  ],
+  "tex": "tamil/book/chapters/ch10-days.tex"
+}

@@ -1,0 +1,18 @@
+{
+  "language": "italian",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:e5f8e1e2a9334956",
+  "lessonIds": [
+    "IT-C18-pensare",
+    "IT-C18-capire",
+    "IT-C18-leggere",
+    "IT-C18-scrivere"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "italian/narration/ch18.txt",
+  "json": "italian/narration/ch18.json",
+  "textHash": "fnv1a64:51c0fd04024c453b",
+  "jsonHash": "fnv1a64:526fddfe2fb3d637",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "bengali",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:4767c103fcf56411",
+  "lessonIds": [
+    "BN-C09-neowa",
+    "BN-C09-jijnasa-kora",
+    "BN-C09-sahajjo-kora",
+    "BN-C09-bhalo-laga"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch09.txt",
+  "json": "bengali/narration/ch09.json",
+  "textHash": "fnv1a64:ebf1670e1f25eeb0",
+  "jsonHash": "fnv1a64:0a32bb5bbbc70216",
+  "findings": []
+}

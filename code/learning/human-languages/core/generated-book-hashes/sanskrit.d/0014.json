@@ -1,0 +1,16 @@
+{
+  "language": "sanskrit",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:822f4a007006df63",
+  "lessonIds": [
+    "SA-C14-this",
+    "SA-C14-that",
+    "SA-C14-here",
+    "SA-C14-there",
+    "SA-C14-who",
+    "SA-C14-where",
+    "SA-C14-deixis-system",
+    "SA-S113-letter-pa"
+  ],
+  "tex": "sanskrit/book/chapters/ch14-pointing-and-asking.tex"
+}

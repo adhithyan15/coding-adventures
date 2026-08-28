@@ -1,0 +1,16 @@
+{
+  "language": "malayalam",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:97c5927d8f18a212",
+  "lessonIds": [
+    "ML-C31-shubha-madhyaahnam",
+    "ML-C31-afternoon-convergence"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "malayalam/narration/ch31.txt",
+  "json": "malayalam/narration/ch31.json",
+  "textHash": "fnv1a64:00c53f4ec570400e",
+  "jsonHash": "fnv1a64:a37047f8cb41601e",
+  "findings": []
+}

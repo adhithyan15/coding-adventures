@@ -1,0 +1,10 @@
+{
+  "language": "latin",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:6d28cab2921a9e26",
+  "lessonIds": [
+    "LA-C15-tempestas-pluit",
+    "LA-C15-weather-verbs"
+  ],
+  "tex": "latin/book/chapters/ch15-weather.tex"
+}

@@ -1,0 +1,10 @@
+{
+  "language": "spanish",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:400d2705ebcdb750",
+  "lessonIds": [
+    "ES-C15-comer-preterite",
+    "ES-C15-comer-vivir-preterite"
+  ],
+  "tex": "spanish/book/chapters/ch104-preterito-regular.tex"
+}

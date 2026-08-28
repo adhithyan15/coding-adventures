@@ -1,0 +1,16 @@
+{
+  "language": "portuguese",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:b0efef039678335d",
+  "lessonIds": [
+    "PT-C02-de-nada",
+    "PT-C02-como",
+    "PT-C02-tudo",
+    "PT-C02-tudo-bem",
+    "PT-C02-como-vai-esta",
+    "PT-C02-mais-ou-menos",
+    "PT-C02-practice",
+    "PT-C02-formal-practice"
+  ],
+  "tex": "portuguese/book/chapters/ch02-how-are-you.tex"
+}

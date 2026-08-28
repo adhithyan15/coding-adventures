@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:76204ac3b7665f74",
+  "lessonIds": [
+    "TA-C58-cow",
+    "TA-C58-goat",
+    "TA-C58-hen",
+    "TA-C58-crow",
+    "TA-C58-bird"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch58.txt",
+  "json": "tamil/narration/ch58.json",
+  "textHash": "fnv1a64:8219618b822437f5",
+  "jsonHash": "fnv1a64:67ed5bc2a2f7d7bc",
+  "findings": []
+}

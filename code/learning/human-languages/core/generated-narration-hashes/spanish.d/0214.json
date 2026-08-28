@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:31555c0e2d959fc1",
+  "lessonIds": [
+    "ES-C57-pregunto-si"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch214.txt",
+  "json": "spanish/narration/ch214.json",
+  "textHash": "fnv1a64:782e6604ea08b745",
+  "jsonHash": "fnv1a64:c31c5b649db831e1",
+  "findings": []
+}

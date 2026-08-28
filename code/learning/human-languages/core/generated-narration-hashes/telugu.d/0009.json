@@ -1,0 +1,17 @@
+{
+  "language": "telugu",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:817da5ef2bdf6772",
+  "lessonIds": [
+    "TE-C09-kshaminchandi",
+    "TE-S04-sign-anusvara",
+    "TE-S112-letter-ca"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch09.txt",
+  "json": "telugu/narration/ch09.json",
+  "textHash": "fnv1a64:66b821256ace7311",
+  "jsonHash": "fnv1a64:ba8aa64a674cf4bf",
+  "findings": []
+}

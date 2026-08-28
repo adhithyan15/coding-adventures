@@ -1,0 +1,10 @@
+{
+  "language": "portuguese",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:af30b941e6b8378e",
+  "lessonIds": [
+    "PT-C06-numeros-1-5",
+    "PT-C06-numeros-6-10"
+  ],
+  "tex": "portuguese/book/chapters/ch06-numbers-1-10.tex"
+}

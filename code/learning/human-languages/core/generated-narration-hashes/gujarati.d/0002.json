@@ -1,0 +1,29 @@
+{
+  "language": "gujarati",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:b3f71b37f2f57af6",
+  "lessonIds": [
+    "GU-W02-ra",
+    "GU-W02-da",
+    "GU-W02-va",
+    "GU-W02-ya",
+    "GU-W02-bha",
+    "GU-W02-dha",
+    "GU-W02-vocalic-r",
+    "GU-C01-aabhaar",
+    "GU-C01-aavjo",
+    "GU-C01-haa-naa",
+    "GU-W01-haa-guided-copy",
+    "GU-W01-haa-delayed-copy",
+    "GU-W01-haa-dictation",
+    "GU-C01-saarun",
+    "GU-C01-practice"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch02.txt",
+  "json": "gujarati/narration/ch02.json",
+  "textHash": "fnv1a64:793433660d98cb71",
+  "jsonHash": "fnv1a64:6e38edc41ed57333",
+  "findings": []
+}

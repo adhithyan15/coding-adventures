@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 3,
+  "sourceHash": "fnv1a64:09db6ea596f5b4bc",
+  "lessonIds": [
+    "BN-C03-ami",
+    "BN-C03-kemon",
+    "BN-C03-tumi-kemon-achho",
+    "BN-C03-bhalo",
+    "BN-C03-kono-bepar-na",
+    "BN-C03-practice"
+  ],
+  "tex": "bengali/book/chapters/ch03-responding.tex"
+}

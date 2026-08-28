@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:bd589184220eddd8",
+  "lessonIds": [
+    "ES-C48-repaso-dos-pasados"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch114.txt",
+  "json": "spanish/narration/ch114.json",
+  "textHash": "fnv1a64:17e692fcfd4dc060",
+  "jsonHash": "fnv1a64:bd68d7326e42e582",
+  "findings": []
+}

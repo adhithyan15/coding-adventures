@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:d45317358595e16a",
+  "lessonIds": [
+    "ES-C328-asi",
+    "ES-C328-jamas",
+    "ES-C328-apenas",
+    "ES-C328-casi",
+    "ES-C328-incluso"
+  ],
+  "tex": "spanish/book/chapters/ch328-asi-y-incluso.tex"
+}

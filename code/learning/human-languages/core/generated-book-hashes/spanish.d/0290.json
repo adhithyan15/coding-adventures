@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:836e3c0f0a8142f1",
+  "lessonIds": [
+    "ES-C290-trigo",
+    "ES-C290-arroz",
+    "ES-C290-cebolla",
+    "ES-C290-tomate",
+    "ES-C290-miel"
+  ],
+  "tex": "spanish/book/chapters/ch290-lo-que-se-come.tex"
+}

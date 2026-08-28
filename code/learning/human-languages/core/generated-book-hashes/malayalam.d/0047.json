@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:b288f38df0c925fc",
+  "lessonIds": [
+    "ML-C47-leg",
+    "ML-C47-tooth",
+    "ML-C47-hair",
+    "ML-C47-finger",
+    "ML-C47-stomach"
+  ],
+  "tex": "malayalam/book/chapters/ch47-leg-and-tooth.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:6d07e0d8a49ad68b",
+  "lessonIds": [
+    "ES-C311-tienda",
+    "ES-C311-cuenta",
+    "ES-C311-precio",
+    "ES-C311-bolsa",
+    "ES-C311-asiento"
+  ],
+  "tex": "spanish/book/chapters/ch311-la-tienda-y-la-cuenta.tex"
+}

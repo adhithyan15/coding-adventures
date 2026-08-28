@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:07ae0c488d0871ae",
+  "lessonIds": [
+    "ES-C309-familia",
+    "ES-C309-apodo",
+    "ES-C309-pariente",
+    "ES-C309-pareja",
+    "ES-C309-bebe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch309.txt",
+  "json": "spanish/narration/ch309.json",
+  "textHash": "fnv1a64:77dbf16f5e4a6743",
+  "jsonHash": "fnv1a64:001853554536187a",
+  "findings": []
+}

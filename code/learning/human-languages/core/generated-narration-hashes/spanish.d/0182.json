@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:ac43bd74d13cb9f9",
+  "lessonIds": [
+    "ES-C52-se-venden"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch182.txt",
+  "json": "spanish/narration/ch182.json",
+  "textHash": "fnv1a64:f7d7366b81649341",
+  "jsonHash": "fnv1a64:bb04297b5f06f382",
+  "findings": []
+}

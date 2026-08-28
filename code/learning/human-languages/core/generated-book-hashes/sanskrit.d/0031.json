@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:6bc5210479745d33",
+  "lessonIds": [
+    "SA-C31-sky",
+    "SA-C31-moon",
+    "SA-C31-star",
+    "SA-C31-wind",
+    "SA-C31-snow"
+  ],
+  "tex": "sanskrit/book/chapters/ch31-the-sky.tex"
+}

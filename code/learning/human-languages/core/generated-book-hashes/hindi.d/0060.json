@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:362d39681c5b8a62",
+  "lessonIds": [
+    "HI-C60-monkey",
+    "HI-C60-snake",
+    "HI-C60-hen",
+    "HI-C60-buffalo",
+    "HI-C60-peacock"
+  ],
+  "tex": "hindi/book/chapters/ch60-animals-in-the-yard.tex"
+}

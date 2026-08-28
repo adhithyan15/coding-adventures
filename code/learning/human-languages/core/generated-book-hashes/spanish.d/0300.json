@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:d5794e18cf2873ab",
+  "lessonIds": [
+    "ES-C300-sed",
+    "ES-C300-sueno",
+    "ES-C300-piel",
+    "ES-C300-sangre",
+    "ES-C300-remedio"
+  ],
+  "tex": "spanish/book/chapters/ch300-el-cuerpo-dice.tex"
+}

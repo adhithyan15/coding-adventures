@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:80c59f8d2bc38a70",
+  "lessonIds": [
+    "SA-C33-river",
+    "SA-C33-bridge",
+    "SA-C33-mountain",
+    "SA-C33-town",
+    "SA-C33-sea"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch33.txt",
+  "json": "sanskrit/narration/ch33.json",
+  "textHash": "fnv1a64:8fe2525c5df363be",
+  "jsonHash": "fnv1a64:958b3036d67ff35e",
+  "findings": []
+}

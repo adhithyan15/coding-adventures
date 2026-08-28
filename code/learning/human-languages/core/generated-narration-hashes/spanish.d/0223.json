@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:3052e26e25835dd8",
+  "lessonIds": [
+    "ES-C59-aquel"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch223.txt",
+  "json": "spanish/narration/ch223.json",
+  "textHash": "fnv1a64:9b5cfd0b9206ca55",
+  "jsonHash": "fnv1a64:438bb3a79643ac3e",
+  "findings": []
+}

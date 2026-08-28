@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:54e22da2b725d4d5",
+  "lessonIds": [
+    "PA-C07-hona",
+    "PA-C07-jana",
+    "PA-C07-auna",
+    "PA-C07-khana",
+    "PA-C07-vekhna",
+    "PA-R07-wellbeing-r3",
+    "PA-C07-janna"
+  ],
+  "tex": "punjabi/book/chapters/ch07-core-verbs.tex"
+}

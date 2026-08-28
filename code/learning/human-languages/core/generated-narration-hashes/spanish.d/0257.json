@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:ea6ae5461e52c794",
+  "lessonIds": [
+    "ES-C66-hablo-dos-lecturas"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch257.txt",
+  "json": "spanish/narration/ch257.json",
+  "textHash": "fnv1a64:e5a68302a8541218",
+  "jsonHash": "fnv1a64:2164f17cfa294120",
+  "findings": []
+}

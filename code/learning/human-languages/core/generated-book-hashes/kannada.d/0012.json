@@ -1,0 +1,11 @@
+{
+  "language": "kannada",
+  "chapter": 12,
+  "sourceHash": "fnv1a64:2c67a80ccfeddfe5",
+  "lessonIds": [
+    "KA-C12-kutumba",
+    "KA-S07-letter-ra",
+    "KA-S116-letter-ka"
+  ],
+  "tex": "kannada/book/chapters/ch12-family.tex"
+}

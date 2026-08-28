@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 14,
+  "sourceHash": "fnv1a64:d8c4a2361f3045bd",
+  "lessonIds": [
+    "RU-W06-u",
+    "RU-W06-z",
+    "RU-W06-k",
+    "RU-W06-l",
+    "RU-W06-m",
+    "RU-W06-y",
+    "RU-W06-zh",
+    "RU-W06-ch",
+    "RU-W06-sh",
+    "RU-W06-soft-sign",
+    "RU-W06-ya"
+  ],
+  "tex": "russian/book/chapters/ch14-script-eleven.tex"
+}

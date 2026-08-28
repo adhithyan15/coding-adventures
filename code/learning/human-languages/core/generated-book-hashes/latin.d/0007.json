@@ -1,0 +1,10 @@
+{
+  "language": "latin",
+  "chapter": 7,
+  "sourceHash": "fnv1a64:a9c1680409af9736",
+  "lessonIds": [
+    "LA-C07-pater-mater",
+    "LA-C07-frater-soror"
+  ],
+  "tex": "latin/book/chapters/ch07-family.tex"
+}

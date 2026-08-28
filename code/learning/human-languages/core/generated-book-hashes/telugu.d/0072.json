@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:1d356c6e2b1cf591",
+  "lessonIds": [
+    "TE-C72-shop",
+    "TE-C72-money",
+    "TE-C72-price",
+    "TE-C72-weight",
+    "TE-C72-bargain"
+  ],
+  "tex": "telugu/book/chapters/ch72-the-market.tex"
+}

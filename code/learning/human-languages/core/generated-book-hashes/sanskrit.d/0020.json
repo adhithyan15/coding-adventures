@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:84967fcaaa8b753a",
+  "lessonIds": [
+    "SA-C20-man",
+    "SA-C20-woman",
+    "SA-C20-child",
+    "SA-C20-old-person",
+    "SA-C20-people"
+  ],
+  "tex": "sanskrit/book/chapters/ch20-people.tex"
+}

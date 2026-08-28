@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:edf15fd2f349f3f4",
+  "lessonIds": [
+    "ES-C346-escuela",
+    "ES-C346-iglesia",
+    "ES-C346-mercado",
+    "ES-C346-oficina",
+    "ES-C346-estacion"
+  ],
+  "tex": "spanish/book/chapters/ch346-lugares-del-pueblo.tex"
+}

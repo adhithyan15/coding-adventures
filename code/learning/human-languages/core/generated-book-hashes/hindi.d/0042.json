@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:1822be25071bbf4f",
+  "lessonIds": [
+    "HI-C42-come",
+    "HI-C42-sit",
+    "HI-C42-stand",
+    "HI-C42-give"
+  ],
+  "tex": "hindi/book/chapters/ch42-more-verbs.tex"
+}

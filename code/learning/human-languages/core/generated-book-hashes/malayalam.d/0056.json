@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:f99c68c789186123",
+  "lessonIds": [
+    "ML-C56-mat",
+    "ML-C56-basket",
+    "ML-C56-knife",
+    "ML-C56-vessel",
+    "ML-C56-box"
+  ],
+  "tex": "malayalam/book/chapters/ch56-things-about-the-house.tex"
+}

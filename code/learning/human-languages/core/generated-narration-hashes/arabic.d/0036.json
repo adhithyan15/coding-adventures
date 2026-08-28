@@ -1,0 +1,18 @@
+{
+  "language": "arabic",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:20901df6d4de1002",
+  "lessonIds": [
+    "AR-C36-zayt",
+    "AR-C36-kub",
+    "AR-C36-tabaq",
+    "AR-C36-milaqa"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "arabic/narration/ch36.txt",
+  "json": "arabic/narration/ch36.json",
+  "textHash": "fnv1a64:6c4026d17057d9f2",
+  "jsonHash": "fnv1a64:eb8c93e1224203ce",
+  "findings": []
+}

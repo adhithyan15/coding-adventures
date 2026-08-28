@@ -1,0 +1,16 @@
+{
+  "language": "arabic",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:05aab835b77e96ec",
+  "lessonIds": [
+    "AR-C08-al-ahad-al-khamis",
+    "AR-C08-al-jumua-as-sabt"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 0,
+  "text": "arabic/narration/ch08.txt",
+  "json": "arabic/narration/ch08.json",
+  "textHash": "fnv1a64:12a8846284a034cc",
+  "jsonHash": "fnv1a64:fd4b7add4bd3dcb3",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "language": "kannada",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:77b970094650c5a1",
+  "lessonIds": [
+    "KA-C08-dayavittu",
+    "KA-S03-sign-virama",
+    "KA-S112-letter-ga"
+  ],
+  "tex": "kannada/book/chapters/ch08-please.tex"
+}

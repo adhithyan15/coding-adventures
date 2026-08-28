@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:4b3451a0670a1066",
+  "lessonIds": [
+    "LA-C22-tu-vos"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "latin/narration/ch22.txt",
+  "json": "latin/narration/ch22.json",
+  "textHash": "fnv1a64:b16051a04ccd2cb5",
+  "jsonHash": "fnv1a64:1e047ac99f8b70a6",
+  "findings": []
+}

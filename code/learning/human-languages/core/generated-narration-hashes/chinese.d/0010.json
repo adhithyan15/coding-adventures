@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:973a39a8619cdb55",
+  "lessonIds": [
+    "ZH-W10-yan",
+    "ZH-W10-xie",
+    "ZH-C10-xiexie",
+    "ZH-C10-buxie",
+    "ZH-C10-practice"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "chinese/narration/ch10.txt",
+  "json": "chinese/narration/ch10.json",
+  "textHash": "fnv1a64:bc4806b83508a7fb",
+  "jsonHash": "fnv1a64:3b71f2f96558b9da",
+  "findings": []
+}

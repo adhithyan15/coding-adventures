@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:62ab06597adb3224",
+  "lessonIds": [
+    "ES-C57-sintesis-descifrar"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch31.txt",
+  "json": "spanish/narration/ch31.json",
+  "textHash": "fnv1a64:6c7a6007a4cb236a",
+  "jsonHash": "fnv1a64:d840067cdfcb0f08",
+  "findings": []
+}

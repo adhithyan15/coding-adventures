@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:1c7eb646b6275fb9",
+  "lessonIds": [
+    "ES-C13-repaso-yo-go",
+    "ES-C13-practice"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch74.txt",
+  "json": "spanish/narration/ch74.json",
+  "textHash": "fnv1a64:874f2ce87d84b3d9",
+  "jsonHash": "fnv1a64:f23fa1e29a4d83a1",
+  "findings": []
+}

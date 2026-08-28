@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 10,
+  "sourceHash": "fnv1a64:1632ce3078cbdd02",
+  "lessonIds": [
+    "UR-C10-kaan",
+    "UR-C10-naak",
+    "UR-C10-aankh",
+    "UR-C10-munh"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "urdu/narration/ch10.txt",
+  "json": "urdu/narration/ch10.json",
+  "textHash": "fnv1a64:3e8af661ecc26341",
+  "jsonHash": "fnv1a64:8158a63276408c14",
+  "findings": []
+}

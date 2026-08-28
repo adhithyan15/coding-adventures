@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:7af6559995d7daa8",
+  "lessonIds": [
+    "ES-C13-venir"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch73.txt",
+  "json": "spanish/narration/ch73.json",
+  "textHash": "fnv1a64:1965a1715d8f8b4f",
+  "jsonHash": "fnv1a64:86bbf6f3bbc98bfa",
+  "findings": []
+}

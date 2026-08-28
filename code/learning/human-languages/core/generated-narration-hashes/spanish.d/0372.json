@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:e8c5a5cffab342ea",
+  "lessonIds": [
+    "ES-C372-gris",
+    "ES-C372-rosa",
+    "ES-C372-oscuro",
+    "ES-C372-palido",
+    "ES-C372-suave"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch372.txt",
+  "json": "spanish/narration/ch372.json",
+  "textHash": "fnv1a64:1fafeee41929a5ec",
+  "jsonHash": "fnv1a64:a86f7fd60565d8dc",
+  "findings": []
+}

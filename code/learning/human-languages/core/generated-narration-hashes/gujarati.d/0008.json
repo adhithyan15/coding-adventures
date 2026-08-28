@@ -1,0 +1,24 @@
+{
+  "language": "gujarati",
+  "chapter": 8,
+  "sourceHash": "fnv1a64:ca09f1aca26a2d3e",
+  "lessonIds": [
+    "GU-C02-naam",
+    "GU-C02-maarun",
+    "GU-C02-chhe",
+    "GU-C02-maarun-naam-chhe",
+    "GU-C02-anand",
+    "GU-C02-tu-tame",
+    "GU-C02-shun",
+    "GU-C02-tamarun-naam-shun-chhe",
+    "GU-R04-doorway-nine-r2",
+    "GU-C02-practice"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch08.txt",
+  "json": "gujarati/narration/ch08.json",
+  "textHash": "fnv1a64:e8302a4e09968cd5",
+  "jsonHash": "fnv1a64:08429e5f7838a4cc",
+  "findings": []
+}

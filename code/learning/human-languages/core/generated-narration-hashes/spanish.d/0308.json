@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:c509377658fb42e6",
+  "lessonIds": [
+    "ES-C308-nino",
+    "ES-C308-nina",
+    "ES-C308-chico",
+    "ES-C308-chica",
+    "ES-C308-gente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch308.txt",
+  "json": "spanish/narration/ch308.json",
+  "textHash": "fnv1a64:47d453c8575b80ca",
+  "jsonHash": "fnv1a64:637eff6d45426efe",
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:b61dce62ac22c9af",
+  "lessonIds": [
+    "ES-C15-tener-preterite",
+    "ES-C15-hacer-preterite",
+    "ES-C15-preterite-fuertes"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch105.txt",
+  "json": "spanish/narration/ch105.json",
+  "textHash": "fnv1a64:1eb54eeda004906a",
+  "jsonHash": "fnv1a64:1a5976d6a42a3afb",
+  "findings": []
+}

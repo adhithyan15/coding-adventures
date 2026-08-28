@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:e517207416be4826",
+  "lessonIds": [
+    "ES-C60-muy"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch226.txt",
+  "json": "spanish/narration/ch226.json",
+  "textHash": "fnv1a64:910a352f10843bda",
+  "jsonHash": "fnv1a64:6043e792c0ed4964",
+  "findings": []
+}

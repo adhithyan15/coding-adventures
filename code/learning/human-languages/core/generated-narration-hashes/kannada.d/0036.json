@@ -1,0 +1,17 @@
+{
+  "language": "kannada",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:a9f129f06c399190",
+  "lessonIds": [
+    "KA-C36-magu",
+    "KA-C36-maga",
+    "KA-C36-magalu"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "kannada/narration/ch36.txt",
+  "json": "kannada/narration/ch36.json",
+  "textHash": "fnv1a64:f6409a1a9af81048",
+  "jsonHash": "fnv1a64:5ca4a96f0d8d5df0",
+  "findings": []
+}

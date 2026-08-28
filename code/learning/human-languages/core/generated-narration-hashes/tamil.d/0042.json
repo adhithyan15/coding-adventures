@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:cd5b9a3733d6b4b5",
+  "lessonIds": [
+    "TA-C42-come",
+    "TA-C42-sit",
+    "TA-C42-read",
+    "TA-C42-give"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "tamil/narration/ch42.txt",
+  "json": "tamil/narration/ch42.json",
+  "textHash": "fnv1a64:32f9714a4650f5e3",
+  "jsonHash": "fnv1a64:9c25dbe397fd716f",
+  "findings": []
+}

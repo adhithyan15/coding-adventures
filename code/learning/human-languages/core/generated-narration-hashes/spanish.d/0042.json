@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:ad1dececdbc41dae",
+  "lessonIds": [
+    "ES-C07-sintesis-dos-continentes"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch42.txt",
+  "json": "spanish/narration/ch42.json",
+  "textHash": "fnv1a64:da1e41272daac19c",
+  "jsonHash": "fnv1a64:e0c962f246af82cd",
+  "findings": []
+}

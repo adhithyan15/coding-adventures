@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "chapter": 6,
+  "sourceHash": "fnv1a64:10bd5188ff1351bd",
+  "lessonIds": [
+    "SA-C06-numbers-1-5",
+    "SA-C06-number-cognates",
+    "SA-C06-pancha-travels"
+  ],
+  "tex": "sanskrit/book/chapters/ch06-numbers-1-5.tex"
+}

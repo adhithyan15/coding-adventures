@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 9,
+  "sourceHash": "fnv1a64:edc64f98539cbfbd",
+  "lessonIds": [
+    "LA-C09-anni-tempora"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "latin/narration/ch09.txt",
+  "json": "latin/narration/ch09.json",
+  "textHash": "fnv1a64:cd8f356bfc3ab4e6",
+  "jsonHash": "fnv1a64:19f65be45faff4df",
+  "findings": []
+}

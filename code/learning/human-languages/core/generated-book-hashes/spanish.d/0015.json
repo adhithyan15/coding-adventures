@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:2ccd82f453816bb3",
+  "lessonIds": [
+    "ES-R01-no-entiendo",
+    "ES-R02-mas-despacio",
+    "ES-R03-repaso-reparar"
+  ],
+  "tex": "spanish/book/chapters/ch15-when-you-dont-understand.tex"
+}

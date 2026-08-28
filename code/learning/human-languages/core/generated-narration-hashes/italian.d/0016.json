@@ -1,0 +1,18 @@
+{
+  "language": "italian",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:f1cfcbc3670e86e6",
+  "lessonIds": [
+    "IT-C16-essere",
+    "IT-C16-essere-stato",
+    "IT-C16-andare",
+    "IT-C16-passato-prossimo-essere"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "italian/narration/ch16.txt",
+  "json": "italian/narration/ch16.json",
+  "textHash": "fnv1a64:e2376be5ee197120",
+  "jsonHash": "fnv1a64:564732acecb2a340",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:e14ec3083a4451d8",
+  "lessonIds": [
+    "ES-C294-cuchillo",
+    "ES-C294-taza",
+    "ES-C294-olla",
+    "ES-C294-manta",
+    "ES-C294-escoba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch294.txt",
+  "json": "spanish/narration/ch294.json",
+  "textHash": "fnv1a64:eaec35c0b9217218",
+  "jsonHash": "fnv1a64:e384d35fad63774f",
+  "findings": []
+}

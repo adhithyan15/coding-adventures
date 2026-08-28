@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:30061862d161a455",
+  "lessonIds": [
+    "ES-C65-ahora-hoy",
+    "ES-C65-hoy"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch252.txt",
+  "json": "spanish/narration/ch252.json",
+  "textHash": "fnv1a64:4ae73e79afbb4c07",
+  "jsonHash": "fnv1a64:25fb46a5124dc0e9",
+  "findings": []
+}

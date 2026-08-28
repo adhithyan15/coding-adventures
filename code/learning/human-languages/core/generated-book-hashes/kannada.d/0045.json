@@ -1,0 +1,12 @@
+{
+  "language": "kannada",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:e7be6a7b72a246ae",
+  "lessonIds": [
+    "KA-C45-grandfather",
+    "KA-C45-grandmother",
+    "KA-C45-husband",
+    "KA-C45-wife"
+  ],
+  "tex": "kannada/book/chapters/ch45-older-generation.tex"
+}

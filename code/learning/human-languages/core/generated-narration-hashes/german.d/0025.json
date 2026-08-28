@@ -1,0 +1,18 @@
+{
+  "language": "german",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:e3890990049fc9d8",
+  "lessonIds": [
+    "GE-C25-nehmen",
+    "GE-C25-fragen",
+    "GE-C25-helfen",
+    "GE-C25-moegen-lieben"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "german/narration/ch25.txt",
+  "json": "german/narration/ch25.json",
+  "textHash": "fnv1a64:88ef7d723c403055",
+  "jsonHash": "fnv1a64:3f0efdf9714ec094",
+  "findings": []
+}

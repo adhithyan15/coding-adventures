@@ -1,0 +1,12 @@
+{
+  "language": "sanskrit",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:e08fffbeecff5991",
+  "lessonIds": [
+    "SA-C23-father",
+    "SA-C23-mother",
+    "SA-C23-son",
+    "SA-C23-daughter"
+  ],
+  "tex": "sanskrit/book/chapters/ch23-kinship.tex"
+}

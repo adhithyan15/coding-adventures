@@ -1,0 +1,16 @@
+{
+  "language": "tamil",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:676890fadc32e283",
+  "lessonIds": [
+    "TA-C21-naay-poonai",
+    "TA-W08-read-en"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch21.txt",
+  "json": "tamil/narration/ch21.json",
+  "textHash": "fnv1a64:bc4f6d639748430f",
+  "jsonHash": "fnv1a64:5ee48cd117c45700",
+  "findings": []
+}

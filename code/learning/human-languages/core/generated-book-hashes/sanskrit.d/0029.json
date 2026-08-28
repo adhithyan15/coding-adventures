@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:31e8c28cbad3067a",
+  "lessonIds": [
+    "SA-C29-please",
+    "SA-C29-pardon",
+    "SA-C29-bow",
+    "SA-C29-favour",
+    "SA-C29-fortunate"
+  ],
+  "tex": "sanskrit/book/chapters/ch29-courtesy.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "language": "chinese",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:efeb50daae8dbbb0",
+  "lessonIds": [
+    "ZH-W11-qing",
+    "ZH-C11-qing",
+    "ZH-C11-practice"
+  ],
+  "tex": "chinese/book/chapters/ch11-qing.tex"
+}

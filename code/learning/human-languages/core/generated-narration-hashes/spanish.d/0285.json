@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:086bdc1c6f5f46d8",
+  "lessonIds": [
+    "ES-C285-vecino",
+    "ES-C285-amiga",
+    "ES-C285-maestro",
+    "ES-C285-enfermera",
+    "ES-C285-cocinero"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch285.txt",
+  "json": "spanish/narration/ch285.json",
+  "textHash": "fnv1a64:be64f55256489688",
+  "jsonHash": "fnv1a64:4aa9451255647c7f",
+  "findings": []
+}

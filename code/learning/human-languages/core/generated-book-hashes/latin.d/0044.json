@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:a930e57d43010ed8",
+  "lessonIds": [
+    "LA-C44-domus",
+    "LA-C44-porta",
+    "LA-C44-murus",
+    "LA-C44-hortus",
+    "LA-C44-focus"
+  ],
+  "tex": "latin/book/chapters/ch44-domus.tex"
+}

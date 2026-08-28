@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:e45a7b347790fb7c",
+  "lessonIds": [
+    "KA-C46-fruit",
+    "KA-C46-cloth",
+    "KA-C46-lamp",
+    "KA-C46-salt",
+    "KA-C46-book"
+  ],
+  "tex": "kannada/book/chapters/ch46-things-you-ask-for.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:3eeac91cd724efd0",
+  "lessonIds": [
+    "HI-C53-shoulder",
+    "HI-C53-knee",
+    "HI-C53-forehead",
+    "HI-C53-back",
+    "HI-C53-lip"
+  ],
+  "tex": "hindi/book/chapters/ch53-more-of-the-body.tex"
+}

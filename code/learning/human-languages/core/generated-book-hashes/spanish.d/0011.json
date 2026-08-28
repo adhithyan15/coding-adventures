@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 11,
+  "sourceHash": "fnv1a64:da22d8b68fb114f4",
+  "lessonIds": [
+    "ES-W02-enye",
+    "ES-W02-enye-formas",
+    "ES-W03-inverted",
+    "ES-W03-question-span",
+    "ES-C04-practice"
+  ],
+  "tex": "spanish/book/chapters/ch11-enye-and-marks.tex"
+}

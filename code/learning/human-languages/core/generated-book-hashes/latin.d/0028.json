@@ -1,0 +1,9 @@
+{
+  "language": "latin",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:5db0cdd12b952e84",
+  "lessonIds": [
+    "LA-C28-dies"
+  ],
+  "tex": "latin/book/chapters/ch28-day.tex"
+}

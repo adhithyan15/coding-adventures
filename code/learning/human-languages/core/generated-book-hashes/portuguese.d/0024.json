@@ -1,0 +1,12 @@
+{
+  "language": "portuguese",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:e79e0b883e76c1f7",
+  "lessonIds": [
+    "PT-C24-queijo",
+    "PT-C24-ovo",
+    "PT-C24-arroz",
+    "PT-C24-acucar"
+  ],
+  "tex": "portuguese/book/chapters/ch24-cheese-egg-rice-sugar.tex"
+}

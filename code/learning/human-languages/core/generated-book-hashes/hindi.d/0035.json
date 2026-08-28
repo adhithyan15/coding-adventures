@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:c0cd50d28e3bec53",
+  "lessonIds": [
+    "HI-C35-lena",
+    "HI-C35-puchna",
+    "HI-C35-madad",
+    "HI-C35-pasand"
+  ],
+  "tex": "hindi/book/chapters/ch35-pasand.tex"
+}

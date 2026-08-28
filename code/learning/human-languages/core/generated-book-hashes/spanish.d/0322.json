@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:61ed3012fb95b1ac",
+  "lessonIds": [
+    "ES-C322-anoche",
+    "ES-C322-semana",
+    "ES-C322-temprano",
+    "ES-C322-enseguida",
+    "ES-C322-todavia"
+  ],
+  "tex": "spanish/book/chapters/ch322-anoche-y-todavia.tex"
+}

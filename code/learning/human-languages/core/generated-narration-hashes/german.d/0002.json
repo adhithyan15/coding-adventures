@@ -1,0 +1,22 @@
+{
+  "language": "german",
+  "chapter": 2,
+  "sourceHash": "fnv1a64:c44c7d00c35088f5",
+  "lessonIds": [
+    "GE-C02-ich",
+    "GE-C02-heissen",
+    "GE-C02-ich-heisse",
+    "GE-C02-du-sie",
+    "GE-C02-wie",
+    "GE-C02-wie-heissen-sie",
+    "GE-C02-freut-mich",
+    "GE-C02-practice"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
+  "text": "german/narration/ch02.txt",
+  "json": "german/narration/ch02.json",
+  "textHash": "fnv1a64:bbed14f4c32d65db",
+  "jsonHash": "fnv1a64:8e5136fa8f795e6a",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:f8cfe20a43e46d43",
+  "lessonIds": [
+    "ML-C41-this",
+    "ML-C41-that",
+    "ML-C41-here",
+    "ML-C41-there",
+    "ML-C41-who",
+    "ML-C41-where",
+    "ML-C41-deixis-system"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch41.txt",
+  "json": "malayalam/narration/ch41.json",
+  "textHash": "fnv1a64:921f51e6bf3298fe",
+  "jsonHash": "fnv1a64:997f38fbdaac58ab",
+  "findings": []
+}

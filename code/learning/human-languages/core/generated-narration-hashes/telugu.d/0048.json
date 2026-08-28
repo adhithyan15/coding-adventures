@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:e22e97c39f8b3a48",
+  "lessonIds": [
+    "TE-C48-teacher",
+    "TE-C48-student",
+    "TE-C48-doctor",
+    "TE-C48-farmer",
+    "TE-C48-guest"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "telugu/narration/ch48.txt",
+  "json": "telugu/narration/ch48.json",
+  "textHash": "fnv1a64:4924ba5a55588581",
+  "jsonHash": "fnv1a64:79a9778597286b90",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:aa0b04d57df79a6d",
+  "lessonIds": [
+    "ES-C268-donde-esta",
+    "ES-C268-billete",
+    "ES-C268-habitacion",
+    "ES-C268-repaso-llegar-y-quedarse",
+    "ES-C268-problema",
+    "ES-C268-repaso-dos-finales-dos-generos"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch268.txt",
+  "json": "spanish/narration/ch268.json",
+  "textHash": "fnv1a64:8fb01ed375bb8f4d",
+  "jsonHash": "fnv1a64:41c964411525d7c3",
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "language": "malayalam",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:9e181a6dfe227ad6",
+  "lessonIds": [
+    "ML-C15-vellam-ari",
+    "ML-S119-vowel-sign-oo"
+  ],
+  "tex": "malayalam/book/chapters/ch15-water-and-rice.tex"
+}

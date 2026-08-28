@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:f96cd8040d951949",
+  "lessonIds": [
+    "ES-C301-cuerda",
+    "ES-C301-aguja",
+    "ES-C301-hilo",
+    "ES-C301-cesta",
+    "ES-C301-papel"
+  ],
+  "tex": "spanish/book/chapters/ch301-mas-cosas-que-pedir.tex"
+}

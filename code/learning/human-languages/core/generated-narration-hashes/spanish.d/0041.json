@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:d96b3d77c6c4f9f4",
+  "lessonIds": [
+    "ES-C07-repaso-presente-completo"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch41.txt",
+  "json": "spanish/narration/ch41.json",
+  "textHash": "fnv1a64:dc01c2379b5e5eb1",
+  "jsonHash": "fnv1a64:424732339a3b3d65",
+  "findings": []
+}

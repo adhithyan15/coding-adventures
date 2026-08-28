@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:a061b7ebd2b2598f",
+  "lessonIds": [
+    "ES-C66-mucha-agua"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch259.txt",
+  "json": "spanish/narration/ch259.json",
+  "textHash": "fnv1a64:fbfbdd9575dd5672",
+  "jsonHash": "fnv1a64:a57f32ee0efd42f3",
+  "findings": []
+}

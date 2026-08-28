@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:904f8e495a94ce6c",
+  "lessonIds": [
+    "ES-C25-las-estaciones"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "spanish/narration/ch142.txt",
+  "json": "spanish/narration/ch142.json",
+  "textHash": "fnv1a64:1506b219272939ea",
+  "jsonHash": "fnv1a64:9f6d29873bc9dacb",
+  "findings": []
+}

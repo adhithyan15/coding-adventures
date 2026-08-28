@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:c91efd0e783d0928",
+  "lessonIds": [
+    "ES-C346-escuela",
+    "ES-C346-iglesia",
+    "ES-C346-mercado",
+    "ES-C346-oficina",
+    "ES-C346-estacion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch346.txt",
+  "json": "spanish/narration/ch346.json",
+  "textHash": "fnv1a64:a95687f57dfa1fed",
+  "jsonHash": "fnv1a64:81002a956929e82d",
+  "findings": []
+}

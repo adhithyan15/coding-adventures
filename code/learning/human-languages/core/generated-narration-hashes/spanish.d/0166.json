@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:3e73f6b2b41546c8",
+  "lessonIds": [
+    "ES-C37-abrir",
+    "ES-C37-cerrar",
+    "ES-C37-sentarse",
+    "ES-C37-levantarse",
+    "ES-C37-repaso-sentado-de-pie-andando"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch166.txt",
+  "json": "spanish/narration/ch166.json",
+  "textHash": "fnv1a64:af7a7e1d3e05f086",
+  "jsonHash": "fnv1a64:54baae36adf26a47",
+  "findings": []
+}

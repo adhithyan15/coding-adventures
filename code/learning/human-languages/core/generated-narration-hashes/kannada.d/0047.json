@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:c58e8e1da40d31c4",
+  "lessonIds": [
+    "KA-C47-leg",
+    "KA-C47-tooth",
+    "KA-C47-hair",
+    "KA-C47-finger",
+    "KA-C47-stomach"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch47.txt",
+  "json": "kannada/narration/ch47.json",
+  "textHash": "fnv1a64:528cd76c9c71914f",
+  "jsonHash": "fnv1a64:2c1b762fec8d3bd8",
+  "findings": []
+}

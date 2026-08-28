@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:a3b9c2e3a75c56aa",
+  "lessonIds": [
+    "LA-C46-lux",
+    "LA-C46-umbra",
+    "LA-C46-stella",
+    "LA-C46-luna",
+    "LA-C46-somnus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch46.txt",
+  "json": "latin/narration/ch46.json",
+  "textHash": "fnv1a64:bd62670f677bda9a",
+  "jsonHash": "fnv1a64:8c1a7306d58b6eb1",
+  "findings": []
+}
