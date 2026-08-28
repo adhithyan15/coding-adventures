@@ -12,13 +12,9 @@
 //! the PC-fetch helpers `_fetch_word`/`_fetch_long`/`_fetch_word_signed`
 //! they depend on).
 //!
-//! # Addressing modes ported vs. deferred
+//! # Addressing modes
 //!
-//! Of the 11 non-register-direct effective-address variants the 68000
-//! defines, this port implements 6 (plus the 2 register-direct modes,
-//! plus immediate — 9 of 12 rows in the full EA table, or "8 of 11
-//! addressing-mode variants" counting only the true *memory* EA rows
-//! beyond bare register-direct):
+//! The complete Spec 07n effective-address surface is implemented:
 //!
 //! | Mode | Syntax | Ported? |
 //! |------|--------|---------|
@@ -28,22 +24,16 @@
 //! | `011` | `(An)+` (postincrement) | ✅ |
 //! | `100` | `-(An)` (predecrement) | ✅ |
 //! | `101` | `d16(An)` (16-bit displacement) | ✅ |
-//! | `110` | `d8(An,Xn.sz)` (indexed) | ❌ deferred |
+//! | `110` | `d8(An,Xn.sz)` (indexed) | ✅ |
 //! | `111.000` | `(abs).W` (absolute short) | ✅ |
 //! | `111.001` | `(abs).L` (absolute long) | ✅ |
-//! | `111.010` | `d16(PC)` (PC-relative) | ❌ deferred |
-//! | `111.011` | `d8(PC,Xn.sz)` (PC-relative indexed) | ❌ deferred |
+//! | `111.010` | `d16(PC)` (PC-relative) | ✅ |
+//! | `111.011` | `d8(PC,Xn.sz)` (PC-relative indexed) | ✅ |
 //! | `111.100` | `#imm` (immediate) | ✅ |
 //!
-//! The 3 deferred modes are exactly the ones that require decoding a
-//! **second** extension word carrying an index-register selector, a
-//! Dn-vs-An bit, and a word/long size bit (`ext = 1 xxx x sz 0 dddddddd`
-//! in the Python original's `_ea_address`) — the most intricate
-//! addressing-mode machinery on the chip, and not needed by
-//! `m68k-backend`'s minimal-viable `MOVE.L #imm, D0` scope.
-//! [`decode_ea`] returns `Err` for them (and for reserved `mode=7,reg∈{5,6,7}`
-//! encodings) rather than silently misinterpreting the extension word
-//! stream — a wrong guess here would desync every subsequent fetch.
+//! Indexed extension words select Dn/An, word/long index size, and an
+//! eight-bit displacement. Reserved `mode=7,reg∈{5,6,7}` encodings are
+//! rejected before consuming an extension word.
 
 use cpu_simulator::Memory;
 
@@ -73,11 +63,18 @@ pub enum EaMode {
     /// `d16(An)` — indirect plus a signed 16-bit displacement extension
     /// word.
     Disp16(u8),
+    /// `d8(An,Xn.sz)` — address register plus signed displacement and
+    /// data/address word-or-long index selected by an extension word.
+    Index(u8),
     /// `(abs).W` — absolute short (a 16-bit extension word, sign-extended
     /// to the 24-bit address bus).
     AbsShort,
     /// `(abs).L` — absolute long (a 32-bit extension long-word).
     AbsLong,
+    /// `d16(PC)` — extension-word-relative to the PC at the extension.
+    PcDisp,
+    /// `d8(PC,Xn.sz)` — PC-relative indexed extension.
+    PcIndex,
     /// `#imm` — immediate data (the operand bytes follow the opword
     /// directly; word immediates use a 16-bit extension even for `.B`
     /// operands, matching real 68000 instruction alignment).
@@ -87,8 +84,7 @@ pub enum EaMode {
 /// Classify a 6-bit `mode:reg` effective-address field.  Consumes no
 /// bytes and mutates no state — pure decode.
 ///
-/// Returns `Err` for the 3 deferred indexed/PC-relative modes (see the
-/// module doc) and for the two reserved `mode=7` sub-encodings
+/// Returns `Err` for reserved `mode=7` sub-encodings
 /// (`MOVE #imm,CCR`/`MOVE #imm,SR` claim `reg=4`/`reg=5` in some
 /// instruction families, but as a plain *addressing mode* `reg=5..=7`
 /// under `mode=7` has no defined meaning here).
@@ -100,23 +96,12 @@ pub fn decode_ea(mode: u8, reg: u8) -> Result<EaMode, String> {
         3 => Ok(EaMode::PostInc(reg)),
         4 => Ok(EaMode::PreDec(reg)),
         5 => Ok(EaMode::Disp16(reg)),
-        6 => Err(format!(
-            "indexed addressing mode d8(An,Xn.sz) ({mode:#o}/{reg:#o}) is not \
-             supported by m68k-simulator v0.1.0 -- see decode.rs's module doc"
-        )),
+        6 => Ok(EaMode::Index(reg)),
         7 => match reg {
             0 => Ok(EaMode::AbsShort),
             1 => Ok(EaMode::AbsLong),
-            2 => Err(
-                "PC-relative addressing mode d16(PC) is not supported by \
-                 m68k-simulator v0.1.0 -- see decode.rs's module doc"
-                    .to_string(),
-            ),
-            3 => Err(
-                "PC-relative indexed addressing mode d8(PC,Xn.sz) is not \
-                 supported by m68k-simulator v0.1.0 -- see decode.rs's module doc"
-                    .to_string(),
-            ),
+            2 => Ok(EaMode::PcDisp),
+            3 => Ok(EaMode::PcIndex),
             4 => Ok(EaMode::Imm),
             _ => Err(format!("reserved EA encoding mode=7,reg={reg}")),
         },
@@ -171,10 +156,21 @@ pub fn fetch_imm(sim: &mut M68kSimulator, sz: u8) -> u32 {
 /// address-error exception; this simulator has no exception channel, so
 /// the caller propagates the error up to `step()`, which halts).
 pub fn mem_read(mem: &Memory, addr: u32, sz: u8) -> Result<u32, String> {
+    if !matches!(sz, 1 | 2 | 4) {
+        return Err(format!("invalid memory access width {sz}"));
+    }
     if sz >= 2 && addr & 1 != 0 {
         return Err(format!("misaligned {sz}-byte read at {addr:#08x}"));
     }
     let a = addr as usize;
+    if a.checked_add(usize::from(sz))
+        .is_none_or(|end| end > mem.size())
+    {
+        return Err(format!(
+            "{sz}-byte read at {addr:#08x} exceeds {}-byte memory",
+            mem.size()
+        ));
+    }
     Ok(match sz {
         1 => u32::from(mem.read_byte(a)),
         2 => (u32::from(mem.read_byte(a)) << 8) | u32::from(mem.read_byte(a + 1)),
@@ -191,10 +187,21 @@ pub fn mem_read(mem: &Memory, addr: u32, sz: u8) -> Result<u32, String> {
 /// Write `sz` bytes (1, 2, or 4) to `addr`, big-endian.  Same alignment
 /// rule as [`mem_read`].
 pub fn mem_write(mem: &mut Memory, addr: u32, sz: u8, val: u32) -> Result<(), String> {
+    if !matches!(sz, 1 | 2 | 4) {
+        return Err(format!("invalid memory access width {sz}"));
+    }
     if sz >= 2 && addr & 1 != 0 {
         return Err(format!("misaligned {sz}-byte write at {addr:#08x}"));
     }
     let a = addr as usize;
+    if a.checked_add(usize::from(sz))
+        .is_none_or(|end| end > mem.size())
+    {
+        return Err(format!(
+            "{sz}-byte write at {addr:#08x} exceeds {}-byte memory",
+            mem.size()
+        ));
+    }
     match sz {
         1 => mem.write_byte(a, val as u8),
         2 => {
@@ -223,6 +230,20 @@ pub fn mem_write(mem: &mut Memory, addr: u32, sz: u8, val: u32) -> Result<(), St
 /// modes — `Dn`/`An`/`Imm` have no memory address (mirrors the Python
 /// original's `_ea_address` raising `ValueError` for the same cases).
 pub fn ea_address(sim: &mut M68kSimulator, ea: EaMode, sz: u8) -> Result<u32, String> {
+    fn index_value(sim: &M68kSimulator, ext: u16) -> i64 {
+        let n = usize::from((ext >> 12) & 7);
+        let raw = if ext & 0x8000 != 0 {
+            sim.a[n]
+        } else {
+            sim.d[n]
+        };
+        if ext & 0x0800 == 0 {
+            i64::from(sext16(raw as u16))
+        } else {
+            i64::from(raw)
+        }
+    }
+
     match ea {
         EaMode::Ind(r) => Ok(sim.a[r as usize] & ADDR_MASK),
         EaMode::PostInc(r) => {
@@ -243,11 +264,30 @@ pub fn ea_address(sim: &mut M68kSimulator, ea: EaMode, sz: u8) -> Result<u32, St
             let d16 = fetch_word_signed(sim);
             Ok(((i64::from(sim.a[r as usize]) + i64::from(d16)) as u32) & ADDR_MASK)
         }
+        EaMode::Index(r) => {
+            let ext = fetch_word(sim);
+            let displacement = i64::from(crate::opcodes::sext8((ext & 0xff) as u8));
+            Ok(
+                (i64::from(sim.a[r as usize]) + index_value(sim, ext) + displacement) as u32
+                    & ADDR_MASK,
+            )
+        }
         EaMode::AbsShort => {
             let w = fetch_word(sim);
             Ok((sext16(w) as u32) & ADDR_MASK)
         }
         EaMode::AbsLong => Ok(fetch_long(sim) & ADDR_MASK),
+        EaMode::PcDisp => {
+            let base = sim.pc;
+            let displacement = fetch_word_signed(sim);
+            Ok((i64::from(base) + i64::from(displacement)) as u32 & ADDR_MASK)
+        }
+        EaMode::PcIndex => {
+            let base = sim.pc;
+            let ext = fetch_word(sim);
+            let displacement = i64::from(crate::opcodes::sext8((ext & 0xff) as u8));
+            Ok((i64::from(base) + index_value(sim, ext) + displacement) as u32 & ADDR_MASK)
+        }
         EaMode::Dn(_) | EaMode::An(_) | EaMode::Imm => {
             Err(format!("EA mode {ea:?} has no memory address"))
         }
@@ -322,10 +362,11 @@ mod tests {
     }
 
     #[test]
-    fn decode_deferred_modes_error() {
-        assert!(decode_ea(6, 0).is_err());
-        assert!(decode_ea(7, 2).is_err());
-        assert!(decode_ea(7, 3).is_err());
+    fn decode_indexed_and_pc_relative_modes() {
+        assert_eq!(decode_ea(6, 0).unwrap(), EaMode::Index(0));
+        assert_eq!(decode_ea(7, 2).unwrap(), EaMode::PcDisp);
+        assert_eq!(decode_ea(7, 3).unwrap(), EaMode::PcIndex);
+        assert!(decode_ea(7, 5).is_err());
     }
 
     #[test]
@@ -399,5 +440,22 @@ mod tests {
         sim.pc = 0;
         let addr = ea_address(&mut sim, EaMode::AbsShort, 2).unwrap();
         assert_eq!(addr, (-16i32 as u32) & ADDR_MASK);
+    }
+
+    #[test]
+    fn memory_width_and_range_errors_are_typed() {
+        let mut memory = Memory::new(8);
+        assert!(mem_read(&memory, 0, 3).is_err());
+        assert!(mem_write(&mut memory, 0, 3, 0).is_err());
+        assert!(mem_read(&memory, 6, 4).is_err());
+        assert!(mem_write(&mut memory, 7, 2, 0).is_err());
+    }
+
+    #[test]
+    fn address_register_word_write_sign_extends() {
+        let mut simulator = M68kSimulator::new(64);
+        ea_write(&mut simulator, EaMode::An(2), 2, 0x8001).unwrap();
+        assert_eq!(simulator.a[2], 0xffff_8001);
+        assert!(ea_address(&mut simulator, EaMode::Imm, 2).is_err());
     }
 }
