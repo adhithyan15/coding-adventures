@@ -45,6 +45,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/gantt-11.16.1-visual-corpus.json"
     ));
+    const SEQUENCE_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/sequence-11.16.1-corpus.json"
+    ));
+    const SEQUENCE_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/sequence-11.16.1-visual-corpus.json"
+    ));
 
     #[test]
     fn render_dot_diagram_to_png() {
@@ -1608,5 +1616,53 @@ line "Target" [35, 50, 68, 82]"##,
             paint_instructions::PaintInstruction::Rect(rect)
                 if rect.fill.as_deref() == Some("#fff7ed")
         )));
+    }
+
+    #[test]
+    fn render_pinned_sequence_visual_corpus_to_png() {
+        let syntax: Value =
+            serde_json::from_str(SEQUENCE_CORPUS).expect("sequence corpus must be JSON");
+        let visual: Value = serde_json::from_str(SEQUENCE_VISUAL_CORPUS)
+            .expect("sequence visual corpus must be JSON");
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+
+        for id in visual["fixtures"].as_array().expect("visual fixture array") {
+            let id = id.as_str().expect("visual fixture id");
+            let fixture = syntax["valid"]
+                .as_array()
+                .expect("valid corpus array")
+                .iter()
+                .find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} missing from syntax corpus"));
+            let diagram = parse_sequence_diagram(
+                fixture["source"].as_str().expect("fixture source"),
+            )
+            .unwrap_or_else(|error| panic!("sequence visual fixture {id} failed: {error}"));
+            let layout = layout_sequence_diagram(&diagram);
+            let scene = diagram_to_paint_sequence(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color {
+                        r: 255,
+                        g: 255,
+                        b: 255,
+                        a: 255,
+                    },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 17.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_sequence_11_16_1_{id}.png");
+            write_png(&pixels, &path).expect("PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+            assert!(!scene.instructions.is_empty());
+        }
     }
 }

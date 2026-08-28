@@ -4699,7 +4699,7 @@ fn take_sequence_actor_ref(cursor: &mut TokenCursor) -> Result<String, ParseErro
             "IDENTIFIER" | "WORD" | "NUMBER"
         ) && cursor.current().value != "as"
         {
-            if !actor.is_empty() && !actor.ends_with('-') {
+            if !actor.is_empty() && !actor.ends_with(['-', '=']) {
                 actor.push(' ');
             }
             actor.push_str(&cursor.advance().value);
@@ -4712,6 +4712,16 @@ fn take_sequence_actor_ref(cursor: &mut TokenCursor) -> Result<String, ParseErro
                 .is_some_and(|next| matches!(token_name(next), "IDENTIFIER" | "WORD" | "NUMBER"));
         if !actor.is_empty() && hyphen_continues_actor {
             actor.push('-');
+            cursor.advance();
+            continue;
+        }
+        let equals_continues_actor = token_name(cursor.current()) == "EQUAL"
+            && cursor
+                .tokens
+                .get(cursor.index + 1)
+                .is_some_and(|next| matches!(token_name(next), "IDENTIFIER" | "WORD" | "NUMBER"));
+        if !actor.is_empty() && equals_continues_actor {
+            actor.push('=');
             cursor.advance();
             continue;
         }
@@ -9094,6 +9104,26 @@ B//-A: reverse stick top
             &diagram.events[2],
             SequenceEvent::Message { from, to, deactivate: true, .. }
                 if from == "Order-Service" && to == "Customer-Portal"
+        ));
+    }
+
+    #[test]
+    fn sequence_preserves_equals_sign_participant_identifiers() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant Alice=Wonderland\nparticipant Bob\nAlice=Wonderland->Bob:Hello Bob, how are - you?\nBob-->Alice=Wonderland:I am good thanks!\n",
+        )
+        .unwrap();
+        assert_eq!(diagram.participants[0].id, "Alice=Wonderland");
+        assert_eq!(diagram.participants[0].label.text, "Alice=Wonderland");
+        assert!(matches!(
+            &diagram.events[0],
+            SequenceEvent::Message { from, to, .. }
+                if from == "Alice=Wonderland" && to == "Bob"
+        ));
+        assert!(matches!(
+            &diagram.events[1],
+            SequenceEvent::Message { from, to, .. }
+                if from == "Bob" && to == "Alice=Wonderland"
         ));
     }
 
