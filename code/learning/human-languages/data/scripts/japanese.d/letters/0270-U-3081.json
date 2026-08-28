@@ -1,0 +1,21 @@
+{
+  "glyph": "め",
+  "sound": "me",
+  "role": "hiragana",
+  "components": [
+    "a left descending curve",
+    "a crossing diagonal that loops left, sweeps over the top, and circles down the right"
+  ],
+  "strokeOrder": [
+    "descend from the upper left and curve down and right to the central finish",
+    "lift, begin high near the center, descend diagonally left through the first stroke, loop around the lower left, sweep upward across the top, then continue clockwise around the broad right curve to the lower finish"
+  ],
+  "strokeOrderNote": "Sirgazil's 32-frame animation writes め in two separate pen-down runs: the short left descending curve first, then the crossing diagonal and continuous lower-left and broad-right loop.",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "url": "https://commons.wikimedia.org/wiki/File:Hiragana_%E3%82%81_stroke_order_animation.gif",
+    "citation": "Sirgazil, Hiragana め stroke order animation.gif, hiragana め, 32 frames, 3.2 seconds (Wikimedia Commons, 1 October 2009)",
+    "variation": "The CC0 animation draws め in two pen-down runs with one lift: the left descending curve, then a high central restart that crosses the first stroke, loops around the lower left, sweeps upward across the top, and continues clockwise around the broad right curve to its lower finish. The learner path is fitted to the bundled Noto Sans JP subset; handwritten loop width and crossing position vary, but the two-run order remains the same."
+  },
+  "notes": "The me of だめ and め; one mora, pronounced as a short, even beat. Keep the small first stroke separate from the long looping second stroke."
+}

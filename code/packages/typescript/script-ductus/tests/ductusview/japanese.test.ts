@@ -58,6 +58,8 @@ const JAPANESE_YU = DUCTUS[ductusKey("japanese", "ゆ")];
 const japaneseYuOutline = japaneseOutline("ゆ");
 const JAPANESE_YO = DUCTUS[ductusKey("japanese", "よ")];
 const japaneseYoOutline = japaneseOutline("よ");
+const JAPANESE_ME = DUCTUS[ductusKey("japanese", "め")];
+const japaneseMeOutline = japaneseOutline("め");
 
 describe("し — one continuous descending curve", () => {
   const steps = ductusSteps(JAPANESE_SHI);
@@ -435,5 +437,31 @@ describe("よ — a short bar followed by one looping stem", () => {
       penPathD(JAPANESE_YO.strokes[0], 1),
     ]);
     expect(pen.attrs.d).toBe(penPathD(JAPANESE_YO.strokes[1], 1));
+  });
+});
+
+describe("め — a short curve followed by one crossing paired loop", () => {
+  const steps = ductusSteps(JAPANESE_ME);
+  const strip = ductusFilmstrip(JAPANESE_ME, japaneseMeOutline);
+
+  it("lifts once before the three-movement crossing loop", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 1]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, false, false]);
+  });
+
+  it("reports a four-frame one-lift filmstrip", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("keeps the short first curve visible while the paired loop finishes", () => {
+    const last = strip.frames.at(-1)!;
+    const done = byTag(last, "path").filter((node) => node.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((node) => node.attrs.class === "ductus__pen")!;
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(JAPANESE_ME.strokes[0], 1),
+    ]);
+    expect(pen.attrs.d).toBe(penPathD(JAPANESE_ME.strokes[1], 1));
   });
 });
