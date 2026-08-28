@@ -1,0 +1,2089 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C15-adjective-system
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 720
+chapter: 15
+type: grammar
+headword: "before the noun, and it AGREES"
+gloss: the one pattern behind all six words in this chapter
+romanization: "before the noun, and it AGREES"
+concept_tag: SA-ADJ-SYSTEM
+prerequisites: [SA-C15-old]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C15-ADJ-01, SA-LEX-C15-ADJ-02, SA-LEX-C15-ADJ-03, SA-LEX-C15-ADJ-04, SA-LEX-C15-ADJ-05]
+introduces:
+  knowledge: [SA-GRAMMAR-C15-ADJ-SYSTEM]
+practises:
+  knowledge: [SA-LEX-C15-ADJ-01, SA-LEX-C15-ADJ-02, SA-LEX-C15-ADJ-03, SA-LEX-C15-ADJ-04, SA-LEX-C15-ADJ-05, SA-GRAMMAR-C15-ADJ-SYSTEM]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C15-old]
+---
+
+# before the noun, and it AGREES — five words, one rule
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-01, SA-LEX-C15-ADJ-02, SA-LEX-C15-ADJ-03, SA-LEX-C15-ADJ-04, SA-LEX-C15-ADJ-05] -->
+
+[PAUSE 2s] Say the five words from this chapter out loud, then say each one in
+front of a noun you already know.
+
+## Grammar lens: where an adjective goes
+<!-- hl-knowledge: introduces=[SA-GRAMMAR-C15-ADJ-SYSTEM]; assesses=[] -->
+
+You did not learn five separate words. You learned **where an adjective goes**,
+and five words that go there.
+
+| meaning | word |
+|---|---|
+| big | **महत्** *mahat* |
+| small | **अल्प** *alpa* |
+| good | **उत्तम** *uttama* |
+
+Sanskrit agrees too, and in more ways than Hindi does — this is where Hindi's habit comes from.
+
+This is worth more than the five words are. Every noun you already know — your
+name, the house, the water, the day — can now take any of them in front, and
+every adjective you meet from here goes in the same place.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C15-ADJ-SYSTEM] -->
+
+[PAUSE 1s]
+- [YOU SAY: each of the five in front of a noun you already know]
+- [YOU SAY: two of them with the same noun, one after the other]
+- [YOU NOTICE: whether the adjective changed shape when the noun did]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C15-ADJ-SYSTEM] -->
+
+[PAUSE 3s] Where does an adjective go in this language? (**In front of the noun.**)
+Does it change shape to match the noun? (and it AGREES.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C15-big
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 670
+chapter: 15
+type: word
+headword: "महत्"
+gloss: "big"
+romanization: "mahat"
+concept_tag: SA-ADJ-BIG
+prerequisites: []
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: []
+introduces:
+  knowledge: [SA-LEX-C15-ADJ-01]
+practises:
+  knowledge: [SA-LEX-C15-ADJ-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: []
+---
+
+# महत् (mahat) — big
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You can already name things. This is how you POINT at them.
+
+## You'll want to know: महत्
+<!-- hl-knowledge: introduces=[SA-LEX-C15-ADJ-01]; assesses=[] -->
+
+**महत्** — *mahat* — big.
+
+Put it in front of a word you already know and you have said something new.
+That is all an adjective does in this language.
+
+The last lesson of this chapter gives the one rule that governs every
+adjective you will ever meet here.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: "महत्" three times, pointing at something different each time]
+- [YOU SAY: it once with a word you already know after it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-01] -->
+
+[PAUSE 3s] What is *mahat*? (**big**.) Where does it go — before the word
+it describes, or after? (**Before.**)
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C15-good
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 690
+chapter: 15
+type: word
+headword: "उत्तम"
+gloss: "good"
+romanization: "uttama"
+concept_tag: SA-ADJ-GOOD
+prerequisites: [SA-C15-small]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C15-ADJ-01, SA-LEX-C15-ADJ-02]
+introduces:
+  knowledge: [SA-LEX-C15-ADJ-03]
+practises:
+  knowledge: [SA-LEX-C15-ADJ-01, SA-LEX-C15-ADJ-02, SA-LEX-C15-ADJ-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C15-small]
+---
+
+# उत्तम (uttama) — good
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-01, SA-LEX-C15-ADJ-02] -->
+
+[PAUSE 2s] You can already name things. This is how you POINT at them.
+
+## You'll want to know: उत्तम
+<!-- hl-knowledge: introduces=[SA-LEX-C15-ADJ-03]; assesses=[] -->
+
+**उत्तम** — *uttama* — good.
+
+Put it in front of a word you already know and you have said something new.
+That is all an adjective does in this language.
+
+You met **अल्प** *alpa* a moment ago. Put them side by side and nothing about either one changes.
+
+The last lesson of this chapter gives the one rule that governs every
+adjective you will ever meet here.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: "उत्तम" three times, pointing at something different each time]
+- [YOU SAY: it once with a word you already know after it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-03] -->
+
+[PAUSE 3s] What is *uttama*? (**good**.) Where does it go — before the word
+it describes, or after? (**Before.**)
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C15-new
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 700
+chapter: 15
+type: word
+headword: "नव"
+gloss: "new"
+romanization: "nava"
+concept_tag: SA-ADJ-NEW
+prerequisites: [SA-C15-good]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C15-ADJ-02, SA-LEX-C15-ADJ-03]
+introduces:
+  knowledge: [SA-LEX-C15-ADJ-04]
+practises:
+  knowledge: [SA-LEX-C15-ADJ-02, SA-LEX-C15-ADJ-03, SA-LEX-C15-ADJ-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C15-good]
+---
+
+# नव (nava) — new
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-02, SA-LEX-C15-ADJ-03] -->
+
+[PAUSE 2s] You can already name things. This is how you POINT at them.
+
+## You'll want to know: नव
+<!-- hl-knowledge: introduces=[SA-LEX-C15-ADJ-04]; assesses=[] -->
+
+**नव** — *nava* — new.
+
+Put it in front of a word you already know and you have said something new.
+That is all an adjective does in this language.
+
+You met **उत्तम** *uttama* a moment ago. Put them side by side and nothing about either one changes.
+
+The last lesson of this chapter gives the one rule that governs every
+adjective you will ever meet here.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: "नव" three times, pointing at something different each time]
+- [YOU SAY: it once with a word you already know after it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-04] -->
+
+[PAUSE 3s] What is *nava*? (**new**.) Where does it go — before the word
+it describes, or after? (**Before.**)
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C15-old
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 710
+chapter: 15
+type: word
+headword: "पुरातन"
+gloss: "old — of a thing, not of a person"
+romanization: "purātana"
+concept_tag: SA-ADJ-OLD
+prerequisites: [SA-C15-new]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C15-ADJ-03, SA-LEX-C15-ADJ-04]
+introduces:
+  knowledge: [SA-LEX-C15-ADJ-05]
+practises:
+  knowledge: [SA-LEX-C15-ADJ-03, SA-LEX-C15-ADJ-04, SA-LEX-C15-ADJ-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C15-new]
+---
+
+# पुरातन (purātana) — old — of a thing, not of a person
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-03, SA-LEX-C15-ADJ-04] -->
+
+[PAUSE 2s] You can already name things. This is how you POINT at them.
+
+## You'll want to know: पुरातन
+<!-- hl-knowledge: introduces=[SA-LEX-C15-ADJ-05]; assesses=[] -->
+
+**पुरातन** — *purātana* — old — of a thing, not of a person.
+
+Put it in front of a word you already know and you have said something new.
+That is all an adjective does in this language.
+
+You met **नव** *nava* a moment ago. Put them side by side and nothing about either one changes.
+
+The last lesson of this chapter gives the one rule that governs every
+adjective you will ever meet here.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: "पुरातन" three times, pointing at something different each time]
+- [YOU SAY: it once with a word you already know after it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-05] -->
+
+[PAUSE 3s] What is *purātana*? (**old — of a thing, not of a person**.) Where does it go — before the word
+it describes, or after? (**Before.**)
+`,d=e({default:()=>f}),f=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C15-small
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 680
+chapter: 15
+type: word
+headword: "अल्प"
+gloss: "small"
+romanization: "alpa"
+concept_tag: SA-ADJ-SMALL
+prerequisites: [SA-C15-big]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C15-ADJ-01]
+introduces:
+  knowledge: [SA-LEX-C15-ADJ-02]
+practises:
+  knowledge: [SA-LEX-C15-ADJ-01, SA-LEX-C15-ADJ-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C15-big]
+---
+
+# अल्प (alpa) — small
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-01] -->
+
+[PAUSE 2s] You can already name things. This is how you POINT at them.
+
+## You'll want to know: अल्प
+<!-- hl-knowledge: introduces=[SA-LEX-C15-ADJ-02]; assesses=[] -->
+
+**अल्प** — *alpa* — small.
+
+Put it in front of a word you already know and you have said something new.
+That is all an adjective does in this language.
+
+You met **महत्** *mahat* a moment ago. Put them side by side and nothing about either one changes.
+
+The last lesson of this chapter gives the one rule that governs every
+adjective you will ever meet here.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: "अल्प" three times, pointing at something different each time]
+- [YOU SAY: it once with a word you already know after it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-02] -->
+
+[PAUSE 3s] What is *alpa*? (**small**.) Where does it go — before the word
+it describes, or after? (**Before.**)
+`,p=e({default:()=>m}),m=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C16-city
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 770
+chapter: 16
+type: word
+headword: "नगरम्"
+gloss: "city"
+romanization: "nagaram"
+concept_tag: SA-NOUN-CITY
+prerequisites: [SA-C16-forest]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C16-PLACE-04]
+introduces:
+  knowledge: [SA-LEX-C16-PLACE-05]
+practises:
+  knowledge: [SA-LEX-C16-PLACE-04, SA-LEX-C16-PLACE-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C16-forest]
+---
+
+# नगरम् (nagaram) — city
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The last of the five places, and the biggest.
+
+## You'll want to know: नगरम्
+<!-- hl-knowledge: introduces=[SA-LEX-C16-PLACE-05]; assesses=[] -->
+
+**नगरम्** (*nagaram*) — "city, town."
+
+Its origin is **genuinely unsettled**, and that is worth saying plainly rather
+than inventing a story. Sanskrit offers no agreed root for it. Some scholars have
+proposed that it came into the language from outside — one of a handful of
+everyday words that may record a borrowing from languages spoken in the
+subcontinent before Sanskrit arrived. Others resist that reading. The honest
+position is that nobody knows.
+
+Whatever its history, it ends in *-am*, like *गृहम्* and *वनम्*.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Five places: house, village, road, forest, city. Three take *-am* and two take
+*-aḥ*, and the next lesson says what that division actually is.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-04, SA-LEX-C16-PLACE-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *nagaram* — "city"]
+- [YOU SAY: "a new city" — *nava nagaram*]
+- [YOU SAY: all three *-am* words — *gṛham*, *vanam*, *nagaram*]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-04, SA-LEX-C16-PLACE-05] -->
+
+[PAUSE 3s] Why is नगरम् unusual among this chapter's words? (Its origin is unsettled; it
+may be a borrowing.) Which ending does it take? (*-am*.)
+`,h=e({default:()=>g}),g=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C16-forest
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 760
+chapter: 16
+type: word
+headword: "वनम्"
+gloss: "forest, wood"
+romanization: "vanam"
+concept_tag: SA-NOUN-FOREST
+prerequisites: [SA-C16-road]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C16-PLACE-03]
+introduces:
+  knowledge: [SA-LEX-C16-PLACE-04]
+practises:
+  knowledge: [SA-LEX-C16-PLACE-03, SA-LEX-C16-PLACE-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C16-road]
+---
+
+# वनम् (vanam) — forest, wood
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Follow the road far enough out of the village and you reach this.
+
+## You'll want to know: वनम्
+<!-- hl-knowledge: introduces=[SA-LEX-C16-PLACE-04]; assesses=[] -->
+
+**वनम्** (*vanam*) — "forest, wood, wilderness."
+
+In the older literature it carries a weight that "forest" does not quite catch:
+*वनम्* is where the settled world stops. To go to the *वनम्* is to leave the
+*ग्रामः* behind, and a great deal of Sanskrit narrative turns on somebody doing
+exactly that.
+
+Its ending is *-am*, so it belongs with गृहम् — which gives the chapter a
+neat symmetry: the two *-am* words so far are the house you live inside and the
+wild you do not.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Four places, and the two endings now have two words each. That is a pattern you
+have observed, not one you have been handed.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-03, SA-LEX-C16-PLACE-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *vanam* — "forest"]
+- [YOU SAY: "a big forest" — *mahat vanam*]
+- [YOU SAY: the two *-am* words together — *gṛham*, *vanam*]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-03, SA-LEX-C16-PLACE-04] -->
+
+[PAUSE 3s] What does वनम् mean beyond "forest"? (Where the settled world stops.) Which
+other word shares its ending? (गृहम्.)
+`,_=e({default:()=>v}),v=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C16-house
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 730
+chapter: 16
+type: word
+headword: "गृहम्"
+gloss: "house, home"
+romanization: "gṛham"
+concept_tag: SA-NOUN-HOUSE
+prerequisites: [SA-C15-adjective-system]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: []
+introduces:
+  knowledge: [SA-LEX-C16-PLACE-01]
+practises:
+  knowledge: [SA-LEX-C16-PLACE-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C15-adjective-system]
+---
+
+# गृहम् (gṛham) — house, home
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You can describe a thing now — big, small, new, old. This chapter gives you places to put those things.
+
+## You'll want to know: गृहम्
+<!-- hl-knowledge: introduces=[SA-LEX-C16-PLACE-01]; assesses=[] -->
+
+**गृहम्** (*gṛham*) — "house, home."
+
+The traditional derivation ties it to the root **√ग्रह्** (*grah*), "to seize, to
+hold." A house is *the thing that holds you* — the grasp you live inside. That is
+how Sanskrit's own grammarians heard the word, and it is worth hearing that way.
+
+You can already stack an adjective in front of it: महत् गृहम्, "a big house";
+नव गृहम्, "a new house." The adjective comes first, as you have already
+seen it do.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+This is your first **place**. Everything in this chapter is somewhere you can be,
+and every one of them takes the adjectives you already own.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *gṛham* — "house"]
+- [YOU SAY: "a big house" — *mahat gṛham*]
+- [YOU SAY: "a new house" — *nava gṛham*]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-01] -->
+
+[PAUSE 3s] What root is गृहम् traditionally tied to? (√ग्रह्, "to seize, to hold.") Where
+does the adjective go? (Before the noun.)
+`,y=e({default:()=>b}),b=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C16-noun-families
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 780
+chapter: 16
+type: grammar
+headword: "-अम् · -अः"
+gloss: "the two noun endings, side by side"
+romanization: "-am · -aḥ"
+concept_tag: SA-GRAMMAR-NOUN-FAMILIES
+prerequisites: [SA-C16-city]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C16-PLACE-05]
+introduces:
+  knowledge: [SA-GRAMMAR-C16-NOUN-FAMILIES]
+practises:
+  knowledge: [SA-LEX-C16-PLACE-01, SA-LEX-C16-PLACE-05, SA-GRAMMAR-C16-NOUN-FAMILIES]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C16-city]
+---
+
+# -अम् · -अः (-am · -aḥ) — the two noun endings, side by side
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You have met five places and noticed their endings differ. This lesson names what you noticed.
+
+## You'll want to know: -अम् · -अः
+<!-- hl-knowledge: introduces=[SA-GRAMMAR-C16-NOUN-FAMILIES]; assesses=[] -->
+
+Sanskrit sorts its nouns into **genders**, and the ending you have been hearing
+is the clue:
+
+*गृहम्*, *वनम्*, *नगरम्* end in -अम् — these are **neuter**.
+*ग्रामः*, *मार्गः* end in -अः — these are **masculine**.
+
+This is the same machinery the adjectives used without naming it: they change
+to match. *महत् गृहम्* and *महान् ग्रामः* are one adjective agreeing with two
+different families.
+
+You do not need to produce that agreement yet. What you need is the ear for it —
+when you hear *-अम्* or *-अः* closing a word, you are hearing which family it
+belongs to, and Sanskrit will keep using that information for everything that
+follows.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+You can now hear a noun's family from its ending, which is the single most useful
+thing to know about a Sanskrit noun.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-01, SA-LEX-C16-PLACE-05, SA-GRAMMAR-C16-NOUN-FAMILIES] -->
+
+[PAUSE 1s]
+- [YOU SAY: the three neuters — *gṛham*, *vanam*, *nagaram*]
+- [YOU SAY: the two masculines — *grāmaḥ*, *mārgaḥ*]
+- [YOU SAY: which family a new word ending in *-am* belongs to]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-01, SA-LEX-C16-PLACE-05, SA-GRAMMAR-C16-NOUN-FAMILIES] -->
+
+[PAUSE 3s] Which ending marks the neuter? (*-अम्*.) Which marks the masculine? (*-अः*.)
+What else in the sentence responds to a noun's family? (The adjective.)
+`,x=e({default:()=>S}),S=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C16-road
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 750
+chapter: 16
+type: word
+headword: "मार्गः"
+gloss: "road, path"
+romanization: "mārgaḥ"
+concept_tag: SA-NOUN-ROAD
+prerequisites: [SA-C16-village]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C16-PLACE-02]
+introduces:
+  knowledge: [SA-LEX-C16-PLACE-03]
+practises:
+  knowledge: [SA-LEX-C16-PLACE-02, SA-LEX-C16-PLACE-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C16-village]
+---
+
+# मार्गः (mārgaḥ) — road, path
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Two places, and no way between them. Here is the way.
+
+## You'll want to know: मार्गः
+<!-- hl-knowledge: introduces=[SA-LEX-C16-PLACE-03]; assesses=[] -->
+
+**मार्गः** (*mārgaḥ*) — "road, path, way."
+
+From the root √मृग् (*mṛg*), "to track, to hunt, to search out." A road is a
+**tracking** — the line left by someone who went looking. The same root gives
+मृगः (*mṛgaḥ*), "deer": the animal that gets tracked.
+
+So the word does not name a built thing at all. It names the trace of a search,
+and only later the paved version of it. English keeps that metaphor alive when it
+speaks of a *line of enquiry*.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*मार्गः* takes the same *-aḥ* ending as *ग्रामः*. That is the second word in its
+family, and the pattern is becoming visible rather than asserted.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-02, SA-LEX-C16-PLACE-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *mārgaḥ* — "road"]
+- [YOU SAY: "the old road" — *purātana mārgaḥ*]
+- [YOU SAY: the related animal — *mṛgaḥ*, "deer"]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-02, SA-LEX-C16-PLACE-03] -->
+
+[PAUSE 3s] What does √मृग् mean? (To track, to hunt.) What animal shares the root? (मृगः,
+the deer.) Which ending does मार्गः take? (*-aḥ*.)
+`,C=e({default:()=>w}),w=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C16-village
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 740
+chapter: 16
+type: word
+headword: "ग्रामः"
+gloss: "village"
+romanization: "grāmaḥ"
+concept_tag: SA-NOUN-VILLAGE
+prerequisites: [SA-C16-house]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C16-PLACE-01]
+introduces:
+  knowledge: [SA-LEX-C16-PLACE-02]
+practises:
+  knowledge: [SA-LEX-C16-PLACE-01, SA-LEX-C16-PLACE-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C16-house]
+---
+
+# ग्रामः (grāmaḥ) — village
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] One house is a home. Many of them together are this.
+
+## You'll want to know: ग्रामः
+<!-- hl-knowledge: introduces=[SA-LEX-C16-PLACE-02]; assesses=[] -->
+
+**ग्रामः** (*grāmaḥ*) — "village."
+
+Its oldest sense is not "village" but **"a collection, a troop"** — a gathering of
+people considered as one body. The settlement took its name from the group, not
+the group from the settlement, which tells you how the word's first speakers saw
+the place: people first, buildings after.
+
+Notice the ending. गृहम् ends in *-am*; ग्रामः ends in *-aḥ*. Sanskrit
+sorts its nouns into families, and that final syllable is the badge. You do not
+need the system yet — only the observation that the endings differ, and that the
+difference is not random.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Two places now, and your first glimpse of the noun families — the *-am* ending
+and the *-aḥ* ending, sitting side by side.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-01, SA-LEX-C16-PLACE-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *grāmaḥ* — "village"]
+- [YOU SAY: "a big village" — *mahat grāmaḥ*]
+- [YOU SAY: the two endings back to back — *gṛham*, *grāmaḥ*]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-01, SA-LEX-C16-PLACE-02] -->
+
+[PAUSE 3s] What did ग्रामः mean before it meant "village"? (A collection, a troop.) Which
+two endings have you now seen? (*-am* and *-aḥ*.)
+`,T=e({default:()=>E}),E=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C17-always
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 830
+chapter: 17
+type: word
+headword: "सदा"
+gloss: "always"
+romanization: "sadā"
+concept_tag: SA-ADV-ALWAYS
+prerequisites: [SA-C17-yesterday]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C17-TIME-04]
+introduces:
+  knowledge: [SA-LEX-C17-TIME-05]
+practises:
+  knowledge: [SA-LEX-C17-TIME-04, SA-LEX-C17-TIME-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C17-yesterday]
+---
+
+# सदा (sadā) — always
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Today, yesterday — and the word for every day there is.
+
+## You'll want to know: सदा
+<!-- hl-knowledge: introduces=[SA-LEX-C17-TIME-05]; assesses=[] -->
+
+**सदा** (*sadā*) — "always, ever."
+
+It carries the sense of *sa-*, "together, whole, the same" — the element behind
+Sanskrit **सम** (*sama*), "same, equal," and behind English **same** itself.
+Always is the whole of time taken at once.
+
+Where the other four words in this chapter point at one particular time, सदा
+refuses to. That is what makes it useful with the verbs you already have: सदा
+पठति, "he reads always."
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Five time words: two nouns, three that simply attach to a verb and say when.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-04, SA-LEX-C17-TIME-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *sadā* — "always"]
+- [YOU SAY: "he always reads" — *sadā paṭhati*]
+- [YOU SAY: the English word related to its first piece (*same*)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-04, SA-LEX-C17-TIME-05] -->
+
+[PAUSE 3s] What does the *sa-* in सदा carry? (Together, whole, the same.) Which English
+word shares it? (*Same*.)
+`,D=e({default:()=>O}),O=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C17-day
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 790
+chapter: 17
+type: word
+headword: "दिनम्"
+gloss: "day"
+romanization: "dinam"
+concept_tag: SA-NOUN-DAY
+prerequisites: [SA-C16-noun-families]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: []
+introduces:
+  knowledge: [SA-LEX-C17-TIME-01]
+practises:
+  knowledge: [SA-LEX-C17-TIME-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C16-noun-families]
+---
+
+# दिनम् (dinam) — day
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You have places. Now you need times to put in them.
+
+## You'll want to know: दिनम्
+<!-- hl-knowledge: introduces=[SA-LEX-C17-TIME-01]; assesses=[] -->
+
+**दिनम्** (*dinam*) — "day."
+
+It belongs to one of the oldest word-families in the language. The Indo-European
+root for the bright sky, *\\*dyew-*, gave Sanskrit **द्यौः** (*dyauḥ*), the sky
+itself, and it is the same root standing behind Latin *diēs*, "day," and the god names
+*Iuppiter* and *Zeus*. A day, to the people who coined the word, was simply
+*the bright*.
+
+Its ending is *-am*, so you already know its family without being told: neuter,
+like गृहम् and वनम्.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Your first time word, and it arrived with its family badge already legible. That
+is what the ending work bought you.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *dinam* — "day"]
+- [YOU SAY: "a good day" — *uttama dinam*]
+- [YOU SAY: which family it belongs to, from the ending alone]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-01] -->
+
+[PAUSE 3s] What did the root behind दिनम् originally mean? (The bright sky.) Which family
+does it belong to, and how do you know? (Neuter — the *-am* ending.)
+`,k=e({default:()=>A}),A=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C17-night
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 800
+chapter: 17
+type: word
+headword: "रात्रिः"
+gloss: "night"
+romanization: "rātriḥ"
+concept_tag: SA-NOUN-NIGHT
+prerequisites: [SA-C17-day]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C17-TIME-01]
+introduces:
+  knowledge: [SA-LEX-C17-TIME-02]
+practises:
+  knowledge: [SA-LEX-C17-TIME-01, SA-LEX-C17-TIME-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C17-day]
+---
+
+# रात्रिः (rātriḥ) — night
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The other half of the day.
+
+## You'll want to know: रात्रिः
+<!-- hl-knowledge: introduces=[SA-LEX-C17-TIME-02]; assesses=[] -->
+
+**रात्रिः** (*rātriḥ*) — "night."
+
+Where दिनम् is the bright, रात्रिः is its opposite, and the pair is one of the
+oldest ways any language divides the world. In the hymns it is a name as much as
+a noun: Rātrī is addressed directly, a presence rather than an absence of light.
+
+The ending here is *-iḥ*, which is neither of the two you have met. Sanskrit has
+more than two families, and this is your first sight of a third. You do not need
+it yet — only the honest note that the system is bigger than the part you have
+seen.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Day and night, and a quiet warning: the *-am* / *-aḥ* division you learned is
+real but not the whole map.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-01, SA-LEX-C17-TIME-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *rātriḥ* — "night"]
+- [YOU SAY: the pair together — *dinam*, *rātriḥ*]
+- [YOU SAY: which ending is new to you here]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-01, SA-LEX-C17-TIME-02] -->
+
+[PAUSE 3s] What is रात्रिः in the hymns, beyond a noun? (A presence addressed by name.)
+What does its ending tell you? (That there are more than two noun families.)
+`,j=e({default:()=>M}),M=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C17-time-words
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 840
+chapter: 17
+type: grammar
+headword: "कालशब्दाः"
+gloss: "where a time word stands"
+romanization: "kāla-śabdāḥ"
+concept_tag: SA-GRAMMAR-TIME-WORDS
+prerequisites: [SA-C17-always]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C17-TIME-05]
+introduces:
+  knowledge: [SA-GRAMMAR-C17-TIME-WORDS]
+practises:
+  knowledge: [SA-LEX-C17-TIME-01, SA-LEX-C17-TIME-05, SA-GRAMMAR-C17-TIME-WORDS]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C17-always]
+---
+
+# कालशब्दाः (kāla-śabdāḥ) — where a time word stands
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You have five time words. This is where they go.
+
+## You'll want to know: कालशब्दाः
+<!-- hl-knowledge: introduces=[SA-GRAMMAR-C17-TIME-WORDS]; assesses=[] -->
+
+Three of this chapter's words — अद्य, ह्यः, सदा — are not nouns at all. Look for
+an *-am* or *-aḥ* or *-iḥ* on them and you will not find one. They attach to a
+sentence, say *when*, and keep the same shape wherever they land.
+
+Sanskrit lets them stand almost anywhere. सदा पठति and पठति सदा both say "he
+always reads," and neither is more correct than the other. You have been given a
+lot of attention to endings, and this is the payoff: they are carrying the work
+that word order carries in English.
+
+The two that *are* nouns, दिनम् and रात्रिः, behave like any other noun, and take
+adjectives in front of them the way गृहम् does.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+You can now say when something happens, and you have met the single most
+important fact about Sanskrit word order: it is loose because the endings are
+strict.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-01, SA-LEX-C17-TIME-05, SA-GRAMMAR-C17-TIME-WORDS] -->
+
+[PAUSE 1s]
+- [YOU SAY: "he always reads," both ways round]
+- [YOU SAY: "a good day" — *uttama dinam*]
+- [YOU SAY: which three of the five never change]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-01, SA-LEX-C17-TIME-05, SA-GRAMMAR-C17-TIME-WORDS] -->
+
+[PAUSE 3s] Which three words never change their ending? (अद्य, ह्यः, सदा.) Why can
+Sanskrit move words around freely? (Because the endings carry the grammar, not
+the order.)
+`,N=e({default:()=>P}),P=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C17-today
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 810
+chapter: 17
+type: word
+headword: "अद्य"
+gloss: "today"
+romanization: "adya"
+concept_tag: SA-ADV-TODAY
+prerequisites: [SA-C17-night]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C17-TIME-02]
+introduces:
+  knowledge: [SA-LEX-C17-TIME-03]
+practises:
+  knowledge: [SA-LEX-C17-TIME-02, SA-LEX-C17-TIME-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C17-night]
+---
+
+# अद्य (adya) — today
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Naming the day you are standing in.
+
+## You'll want to know: अद्य
+<!-- hl-knowledge: introduces=[SA-LEX-C17-TIME-03]; assesses=[] -->
+
+**अद्य** (*adya*) — "today."
+
+Take it apart and the older shape shows: *a-* ("this") plus the same *dy-* that
+sits inside दिनम् and द्यौः. **This day** — said so often that the two halves
+fused and stopped being separable for ordinary speakers.
+
+This is how a great many everyday words are built, in Sanskrit and elsewhere.
+English *today* is *to* + *day*, and *tomorrow* is *to* + *morrow*: the same
+trick, a thousand years later, in a different family.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+A word you can now see through. When a short everyday word looks unanalysable,
+it is usually a fused phrase that got worn smooth.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-02, SA-LEX-C17-TIME-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *adya* — "today"]
+- [YOU SAY: the two pieces inside it — *a-* and *dy-*]
+- [YOU SAY: the English word built the same way (*today*)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-02, SA-LEX-C17-TIME-03] -->
+
+[PAUSE 3s] What are the two pieces of अद्य? (*A-*, "this," and the *dy-* of "day.")
+What English word is built the same way? (*Today*.)
+`,F=e({default:()=>I}),I=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C17-yesterday
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 820
+chapter: 17
+type: word
+headword: "ह्यः"
+gloss: "yesterday"
+romanization: "hyaḥ"
+concept_tag: SA-ADV-YESTERDAY
+prerequisites: [SA-C17-today]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C17-TIME-03]
+introduces:
+  knowledge: [SA-LEX-C17-TIME-04]
+practises:
+  knowledge: [SA-LEX-C17-TIME-03, SA-LEX-C17-TIME-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C17-today]
+---
+
+# ह्यः (hyaḥ) — yesterday
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The day behind you — and a word with relatives you already speak.
+
+## You'll want to know: ह्यः
+<!-- hl-knowledge: introduces=[SA-LEX-C17-TIME-04]; assesses=[] -->
+
+**ह्यः** (*hyaḥ*) — "yesterday."
+
+This one is a gift, because its cousins are everywhere. The same ancestral word
+gave Latin *heri*, which became Spanish *ayer* and French *hier*; and it gave
+Germanic *gester-*, which is the **yester-** still sitting inside English
+*yesterday*.
+
+So ह्यः, *heri*, *ayer* and *yester-* are four survivals of one word for
+"the day before this one," spoken continuously for as long as any of these
+languages have existed. Very few words let you see that far back this clearly.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+A word that is genuinely easier to keep because of what it is related to. When
+a Sanskrit word has a visible European cousin, learn them as one thing.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-03, SA-LEX-C17-TIME-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *hyaḥ* — "yesterday"]
+- [YOU SAY: its Latin cousin — *heri*]
+- [YOU SAY: the English word that still carries it (*yester*day)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C17-TIME-03, SA-LEX-C17-TIME-04] -->
+
+[PAUSE 3s] Which Latin word is ह्यः related to? (*Heri*.) What English word still
+carries the same root? (*Yester*day.) What does the family all mean? (The day
+before this one.)
+`,L=e({default:()=>R}),R=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C18-from-where
+spine_node: SPINE-NEGATE-AND-ASK
+sequence: 880
+chapter: 18
+type: word
+headword: "कुतः"
+gloss: "from where?"
+romanization: "kutaḥ"
+concept_tag: SA-Q-FROM-WHERE
+prerequisites: [SA-C18-how-many]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C18-ASK-03]
+introduces:
+  knowledge: [SA-LEX-C18-ASK-04]
+practises:
+  knowledge: [SA-LEX-C18-ASK-03, SA-LEX-C18-ASK-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C18-how-many]
+---
+
+# कुतः (kutaḥ) — from where?
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You can ask where something is. This asks where it came from.
+
+## You'll want to know: कुतः
+<!-- hl-knowledge: introduces=[SA-LEX-C18-ASK-04]; assesses=[] -->
+
+**कुतः** (*kutaḥ*) — "from where? whence?"
+
+You already have **कुत्र** (*kutra*), "where?" Now compare the two endings:
+
+*कुत्र* — where, at what place. *कुतः* — from where, out of what place.
+
+The *-tas* ending means "from," and Sanskrit uses it far beyond question words.
+English once had this distinction too and has mostly lost it: *where* against
+*whence*, *there* against *thence*. Sanskrit keeps them working.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Four *k-* words, and a distinction English has let go of. When a language keeps
+a difference yours has dropped, that is worth noticing rather than flattening.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-03, SA-LEX-C18-ASK-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kutaḥ* — "from where?"]
+- [YOU SAY: it against *kutra*, "where?"]
+- [YOU SAY: the English pair that used to make the same distinction (*where*, *whence*)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-03, SA-LEX-C18-ASK-04] -->
+
+[PAUSE 3s] What does the *-tas* ending add? ("From.") Which English word matches कुतः?
+(*Whence*.)
+`,z=e({default:()=>B}),B=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C18-how-many
+spine_node: SPINE-NEGATE-AND-ASK
+sequence: 870
+chapter: 18
+type: word
+headword: "कति"
+gloss: "how many?"
+romanization: "kati"
+concept_tag: SA-Q-HOW-MANY
+prerequisites: [SA-C18-why]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C18-ASK-02]
+introduces:
+  knowledge: [SA-LEX-C18-ASK-03]
+practises:
+  knowledge: [SA-LEX-C18-ASK-02, SA-LEX-C18-ASK-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C18-why]
+---
+
+# कति (kati) — how many?
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You can count to five. This asks how many there are.
+
+## You'll want to know: कति
+<!-- hl-knowledge: introduces=[SA-LEX-C18-ASK-03]; assesses=[] -->
+
+**कति** (*kati*) — "how many?"
+
+*K-* at the front again, and this time the relatives are visible outside Sanskrit
+too: Latin *quot*, "how many," is the same word, and it survives in English
+**quota** and **quotient** — both of them, at root, answers to *how many*.
+
+Pair it with the numbers you already have and it is immediately useful: कति
+गृहाणि, "how many houses?"
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Three *k-* words now, and one of them has handed you two English words as a
+souvenir.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-02, SA-LEX-C18-ASK-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kati* — "how many?"]
+- [YOU SAY: its Latin cousin — *quot*]
+- [YOU SAY: the two English words built on it (*quota*, *quotient*)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-02, SA-LEX-C18-ASK-03] -->
+
+[PAUSE 3s] Which Latin word is कति related to? (*Quot*.) Which English words carry it?
+(*Quota*, *quotient*.)
+`,V=e({default:()=>H}),H=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C18-k-words
+spine_node: SPINE-NEGATE-AND-ASK
+sequence: 890
+chapter: 18
+type: grammar
+headword: "क-शब्दाः"
+gloss: "every question begins with k-"
+romanization: "ka-śabdāḥ"
+concept_tag: SA-GRAMMAR-K-QUESTIONS
+prerequisites: [SA-C18-from-where]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C18-ASK-04]
+introduces:
+  knowledge: [SA-GRAMMAR-C18-K-QUESTIONS]
+practises:
+  knowledge: [SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-04, SA-GRAMMAR-C18-K-QUESTIONS]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C18-from-where]
+---
+
+# क-शब्दाः (ka-śabdāḥ) — every question begins with k-
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Every question word you have met, gathered in one place, so you can see they are one word wearing different endings.
+
+## You'll want to know: क-शब्दाः
+<!-- hl-knowledge: introduces=[SA-GRAMMAR-C18-K-QUESTIONS]; assesses=[] -->
+
+Line them up:
+
+*कः* — who? · *किम्* — what? · *कुत्र* — where? · *कुतः* — from where? · *कथम्* —
+how? · *कदा* — when? · *कति* — how many?
+
+Seven questions, one opening consonant. Sanskrit builds them all on a single
+interrogative stem **क-** and distinguishes them entirely by what follows.
+
+The family reaches much further than Sanskrit. That *k-* is the ancestral
+*\\*kʷ-*, which became Latin *qu-* — *quis*, *quid*, *quando*, *quot* — and, by a
+regular sound change, Germanic *hw-*, which English writes **wh-**: *who*,
+*what*, *where*, *when*, *how*.
+
+So *कः* and *who*, *किम्* and *what*, *कदा* and *when* are not lookalikes. They
+are the same words, separated by five thousand years.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+You now hold every basic question in Sanskrit, and one fact that makes them
+nearly impossible to forget: if it opens with क्, it is asking you something.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-04, SA-GRAMMAR-C18-K-QUESTIONS] -->
+
+[PAUSE 1s]
+- [YOU SAY: all seven, in a row]
+- [YOU SAY: the English *wh-* word for each]
+- [YOU SAY: what the *k-* became in Latin (*qu-*)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-04, SA-GRAMMAR-C18-K-QUESTIONS] -->
+
+[PAUSE 3s] What do all seven share? (An opening क्.) What did that consonant become in
+Latin, and in English? (*Qu-*, and *wh-*.) Are कः and *who* related? (Yes — the
+same word, five thousand years apart.)
+`,U=e({default:()=>W}),W=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C18-when
+spine_node: SPINE-NEGATE-AND-ASK
+sequence: 850
+chapter: 18
+type: word
+headword: "कदा"
+gloss: "when?"
+romanization: "kadā"
+concept_tag: SA-Q-WHEN
+prerequisites: [SA-C17-time-words]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: []
+introduces:
+  knowledge: [SA-LEX-C18-ASK-01]
+practises:
+  knowledge: [SA-LEX-C18-ASK-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C17-time-words]
+---
+
+# कदा (kadā) — when?
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You can say when. This chapter is for asking when.
+
+## You'll want to know: कदा
+<!-- hl-knowledge: introduces=[SA-LEX-C18-ASK-01]; assesses=[] -->
+
+**कदा** (*kadā*) — "when?"
+
+Set it beside the word you just learned and something jumps out:
+
+*सदा* — always. *कदा* — when?
+
+One letter apart, and the difference is the whole of this chapter. Sanskrit
+builds its question words on **क्** (*k-*), and it builds several of its answering
+words on **स्** (*s-*) or **त्** (*t-*). Ask with *k-*, answer with *t-*.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Your first *k-* word met deliberately. There are four more in this chapter, and
+by the end the pattern will be doing the remembering for you.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kadā* — "when?"]
+- [YOU SAY: it against its answer — *kadā*, *sadā*]
+- [YOU SAY: "when does he read?" — *kadā paṭhati*]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-01] -->
+
+[PAUSE 3s] What single letter separates कदा from सदा? (*K-* against *s-*.) Which letter
+opens a Sanskrit question word? (*K-*.)
+`,G=e({default:()=>K}),K=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C18-why
+spine_node: SPINE-NEGATE-AND-ASK
+sequence: 860
+chapter: 18
+type: word
+headword: "किमर्थम्"
+gloss: "why?"
+romanization: "kimartham"
+concept_tag: SA-Q-WHY
+prerequisites: [SA-C18-when]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C18-ASK-01]
+introduces:
+  knowledge: [SA-LEX-C18-ASK-02]
+practises:
+  knowledge: [SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C18-when]
+---
+
+# किमर्थम् (kimartham) — why?
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The hardest question in any language, and Sanskrit builds it out of two words you can almost read.
+
+## You'll want to know: किमर्थम्
+<!-- hl-knowledge: introduces=[SA-LEX-C18-ASK-02]; assesses=[] -->
+
+**किमर्थम्** (*kimartham*) — "why?"
+
+It is transparently two pieces:
+
+*किम्* ("what") + *अर्थम्* ("for the purpose of, for the sake of")
+
+— literally **"for what purpose?"** Sanskrit does not have a single opaque word
+for *why*; it asks what the aim was, and lets the shape of the question show.
+
+*अर्थ* (*artha*) is worth keeping on its own. It means purpose, aim, meaning,
+and wealth all at once, and it is one of the four goals of life in the classical
+scheme. A word for "why" built on it is asking, quite seriously, *what is this
+for?*
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+A compound you can take apart on sight — and *k-* again at the front, exactly as
+promised.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kimartham* — "why?"]
+- [YOU SAY: its two pieces — *kim* and *artham*]
+- [YOU SAY: what अर्थ means on its own (purpose, aim, meaning, wealth)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C18-ASK-01, SA-LEX-C18-ASK-02] -->
+
+[PAUSE 3s] What are the two pieces of किमर्थम्? (*Kim*, "what," and *artham*, "for the
+purpose of.") What does अर्थ mean by itself? (Purpose, aim, meaning, wealth.)
+`,q=e({default:()=>J}),J=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C19-eight
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 920
+chapter: 19
+type: word
+headword: "अष्ट"
+gloss: "eight"
+romanization: "aṣṭa"
+concept_tag: SA-NUM-EIGHT
+prerequisites: [SA-C19-seven]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C19-NUM-02]
+introduces:
+  knowledge: [SA-LEX-C19-NUM-03]
+practises:
+  knowledge: [SA-LEX-C19-NUM-02, SA-LEX-C19-NUM-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C19-seven]
+---
+
+# अष्ट (aṣṭa) — eight
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Eight — and a word that still shows its seams.
+
+## You'll want to know: अष्ट
+<!-- hl-knowledge: introduces=[SA-LEX-C19-NUM-03]; assesses=[] -->
+
+**अष्ट** (*aṣṭa*) — "eight."
+
+Latin *octo*, Greek *okto*, English *eight* (whose silent *-gh-* is the ghost of
+a consonant that used to be pronounced).
+
+There is an old and appealing observation about this one: the form behaves like a
+**dual** — the grammatical number Sanskrit uses for things that come in pairs.
+Eight would then be "two fours," counted on two hands with the thumbs left out.
+It is a hypothesis rather than a settled fact, and it is offered here as one,
+because a good story is not the same as evidence.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Three numbers, and a reminder about how to hold an etymology that is attractive
+but unproven: enjoy it, label it.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-02, SA-LEX-C19-NUM-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *aṣṭa* — "eight"]
+- [YOU SAY: *octo*, *eight*]
+- [YOU SAY: whether the "two fours" story is fact or hypothesis]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-02, SA-LEX-C19-NUM-03] -->
+
+[PAUSE 3s] Which English word is अष्ट related to, and what is its silent *-gh-*? (*Eight*
+— the ghost of a pronounced consonant.) Is the "two fours" reading established?
+(No — a hypothesis.)
+`,Y=e({default:()=>X}),X=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C19-nine
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 930
+chapter: 19
+type: word
+headword: "नवन्"
+gloss: "nine"
+romanization: "navan"
+concept_tag: SA-NUM-NINE
+prerequisites: [SA-C19-eight]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C19-NUM-03]
+introduces:
+  knowledge: [SA-LEX-C19-NUM-04]
+practises:
+  knowledge: [SA-LEX-C19-NUM-03, SA-LEX-C19-NUM-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C19-eight]
+---
+
+# नवन् (navan) — nine
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Nine — and a word you have met before meaning something else entirely.
+
+## You'll want to know: नवन्
+<!-- hl-knowledge: introduces=[SA-LEX-C19-NUM-04]; assesses=[] -->
+
+**नवन्** (*navan*) — "nine." Latin *novem*, English *nine*.
+
+Now the catch, and it is worth meeting deliberately rather than tripping over.
+You already learned **नव** (*nava*) meaning **"new."** They look nearly
+identical and they are **not** the same word:
+
+*नव* (*nava*) — new. Latin *novus*, English *new*.
+*नवन्* (*navan*) — nine. Latin *novem*, English *nine*.
+
+Two distinct ancient words that drifted into near-identical shapes. Latin kept
+them apart (*novus* against *novem*) and so did English (*new* against *nine*).
+Sanskrit did not, quite — and a reader who assumes one word here will misread
+sentences.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+A pair of look-alikes, separated on purpose. This is the most common way to get
+a word wrong: assuming that similar shape means shared origin.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-03, SA-LEX-C19-NUM-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *navan* — "nine"]
+- [YOU SAY: *nava* — "new"]
+- [YOU SAY: which Latin word goes with each (*novem*, *novus*)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-03, SA-LEX-C19-NUM-04] -->
+
+[PAUSE 3s] What is the difference between नव and नवन्? (New, and nine.) Are they the same
+word? (No — two ancient words that drifted into similar shapes.)
+`,Z=e({default:()=>Q}),Q=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [SA-CULTURE-NUMERALS-HISTORICAL-LINGUISTICS-01]
+id: SA-C19-number-family
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 950
+chapter: 19
+type: grammar
+headword: "सङ्ख्याशब्दाः"
+gloss: "the numbers, and what they prove"
+romanization: "saṅkhyā-śabdāḥ"
+concept_tag: SA-GRAMMAR-NUMBER-FAMILY
+prerequisites: [SA-C19-ten]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C19-NUM-05]
+introduces:
+  knowledge: [SA-GRAMMAR-C19-NUMBER-FAMILY]
+practises:
+  knowledge: [SA-LEX-C19-NUM-01, SA-LEX-C19-NUM-05, SA-GRAMMAR-C19-NUMBER-FAMILY]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C19-ten]
+---
+
+# सङ्ख्याशब्दाः (saṅkhyā-śabdāḥ) — the numbers, and what they prove
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Ten numbers is enough to see something no single word could have shown you.
+
+## You'll want to know: सङ्ख्याशब्दाः
+<!-- hl-knowledge: introduces=[SA-GRAMMAR-C19-NUMBER-FAMILY]; assesses=[] -->
+
+Set the ten side by side with Latin and English and the correspondence is not
+occasional — it is regular:
+
+एक one · द्व two · त्रि three · चतुर् four · पञ्च five ·
+षट् six · सप्त seven · अष्ट eight · नवन् nine · दश ten
+
+Where Sanskrit has *p*, Latin often has *p* and English often has *f*. Where
+Sanskrit has *d*, English often has *t*. Those are not impressions; they are
+**regular correspondences**, and their regularity is what turned the study of
+language into something testable in the nineteenth century.
+
+That is what the numbers prove. Not that these languages borrowed from each
+other, but that they inherited from something older — and that the inheritance
+followed rules consistent enough to predict.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+You can count to ten, and you have seen the single piece of evidence that
+founded historical linguistics.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-01, SA-LEX-C19-NUM-05, SA-GRAMMAR-C19-NUMBER-FAMILY] -->
+
+[PAUSE 1s]
+- [YOU SAY: all ten, in order]
+- [YOU SAY: the English cousin of each]
+- [YOU SAY: what the regularity proves — inheritance, not borrowing]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-01, SA-LEX-C19-NUM-05, SA-GRAMMAR-C19-NUMBER-FAMILY] -->
+
+[PAUSE 3s] What makes the correspondences evidence rather than coincidence? (They are
+regular.) What do they show? (Common inheritance from an older language.)
+`,$=e({default:()=>ee}),ee=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C19-seven
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 910
+chapter: 19
+type: word
+headword: "सप्त"
+gloss: "seven"
+romanization: "sapta"
+concept_tag: SA-NUM-SEVEN
+prerequisites: [SA-C19-six]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C19-NUM-01]
+introduces:
+  knowledge: [SA-LEX-C19-NUM-02]
+practises:
+  knowledge: [SA-LEX-C19-NUM-01, SA-LEX-C19-NUM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C19-six]
+---
+
+# सप्त (sapta) — seven
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The second of the five, and the resemblance is now visible without squinting.
+
+## You'll want to know: सप्त
+<!-- hl-knowledge: introduces=[SA-LEX-C19-NUM-02]; assesses=[] -->
+
+**सप्त** (*sapta*) — "seven."
+
+Latin *septem*. Greek *hepta*. English *seven*. Line them up and the shape is one
+shape: *s-p-t* under the vowels, with Greek turning the initial *s* into a rough
+breathing and English softening the *-pt-* to *-v-*.
+
+The Sanskrit form is not the ancestor of the others — that is a common
+misunderstanding worth heading off. All four descend from a **shared parent
+nobody wrote down**. Sanskrit is simply an old, well-recorded cousin.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Two numbers, and one correction that matters: Sanskrit is a cousin of Latin and
+English, not their ancestor.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-01, SA-LEX-C19-NUM-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *sapta* — "seven"]
+- [YOU SAY: *septem*, *hepta*, *seven* after it]
+- [YOU SAY: whether Sanskrit is the parent of English (it is not — a cousin)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-01, SA-LEX-C19-NUM-02] -->
+
+[PAUSE 3s] Which consonants survive across all four forms? (*S*, *p*, *t*.) Is Sanskrit
+the ancestor of Latin and English? (No — a cousin; the parent was never
+written down.)
+`,te=e({default:()=>ne}),ne=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C19-six
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 900
+chapter: 19
+type: word
+headword: "षट्"
+gloss: "six"
+romanization: "ṣaṭ"
+concept_tag: SA-NUM-SIX
+prerequisites: [SA-C18-k-words]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: []
+introduces:
+  knowledge: [SA-LEX-C19-NUM-01]
+practises:
+  knowledge: [SA-LEX-C19-NUM-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C18-k-words]
+---
+
+# षट् (ṣaṭ) — six
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] You can count to five. The next five are where the family resemblance becomes impossible to miss.
+
+## You'll want to know: षट्
+<!-- hl-knowledge: introduces=[SA-LEX-C19-NUM-01]; assesses=[] -->
+
+**षट्** (*ṣaṭ*) — "six."
+
+Say it beside its relatives: Latin *sex*, Greek *hex*, English *six*. The
+Sanskrit form looks least like the others on the page, because *ṣ* is a
+retroflex sound English has no letter for — but it is the same word.
+
+This chapter is the clearest evidence a beginner can be shown that Sanskrit,
+Latin and English are relatives rather than neighbours. The numbers are the
+proof, because numbers are borrowed less often than almost anything else.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One number, and a claim you are about to see supported four more times.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *ṣaṭ* — "six"]
+- [YOU SAY: its Latin and English cousins — *sex*, *six*]
+- [YOU SAY: one to six, in order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-01] -->
+
+[PAUSE 3s] What are the Latin and English cousins of षट्? (*Sex* and *six*.) Why are
+numbers good evidence of relatedness? (They are rarely borrowed.)
+`,re=e({default:()=>ie}),ie=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C19-ten
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 940
+chapter: 19
+type: word
+headword: "दश"
+gloss: "ten"
+romanization: "daśa"
+concept_tag: SA-NUM-TEN
+prerequisites: [SA-C19-nine]
+sounds: []
+roots: []
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [SA-LEX-C19-NUM-04]
+introduces:
+  knowledge: [SA-LEX-C19-NUM-05]
+practises:
+  knowledge: [SA-LEX-C19-NUM-04, SA-LEX-C19-NUM-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C19-nine]
+---
+
+# दश (daśa) — ten
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] The last of them, and the one hiding inside words you use every week.
+
+## You'll want to know: दश
+<!-- hl-knowledge: introduces=[SA-LEX-C19-NUM-05]; assesses=[] -->
+
+**दश** (*daśa*) — "ten." Latin *decem*, Greek *deka*, English *ten*.
+
+The Latin form is the one that pays. *Decem* gives English **decimal**,
+**decade**, **December** — which was the *tenth* month before the calendar was
+rearranged and left the name stranded two months out of place.
+
+So दश, *decem* and *ten* are one word, and a fossil of the old counting survives
+in the name of the wrong month.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+You can count to ten in Sanskrit, and every one of the second five arrived
+attached to a word you already knew.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-04, SA-LEX-C19-NUM-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *daśa* — "ten"]
+- [YOU SAY: one to ten, straight through]
+- [YOU SAY: why December is misnamed]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-04, SA-LEX-C19-NUM-05] -->
+
+[PAUSE 3s] Which English words carry Latin *decem*? (*Decimal*, *decade*, *December*.)
+Why is December's name wrong? (It was the tenth month before the calendar
+changed.)
+`;export{p as C,a as D,s as E,r as O,h as S,l as T,T as _,Y as a,y as b,U as c,L as d,F as f,D as g,k as h,Z as i,t as k,V as l,j as m,te as n,q as o,N as p,$ as r,G as s,re as t,z as u,C as v,d as w,_ as x,x as y};
