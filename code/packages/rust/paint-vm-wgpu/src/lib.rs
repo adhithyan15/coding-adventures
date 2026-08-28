@@ -9,8 +9,9 @@ use std::sync::mpsc;
 
 use paint_instructions::{PaintScene, PixelContainer};
 use paint_vm_gpu_core::{
-    plan_scene, GpuApiFamily, GpuBackendProfile, GpuColor, GpuCommand, GpuImageUpload, GpuMesh,
-    GpuPaintPlan, GpuPlanSeverity, GpuReadbackStrategy, GpuRect, GpuRenderPath, GpuTextureFilter,
+    plan_scene, GpuApiFamily, GpuBackendProfile, GpuBlendMode, GpuColor, GpuCommand, GpuFilter,
+    GpuImageUpload, GpuLayer, GpuMesh, GpuPaintPlan, GpuPlanSeverity, GpuReadbackStrategy, GpuRect,
+    GpuRenderPath, GpuTextureFilter,
 };
 use paint_vm_runtime::{
     PaintAcceleration, PaintBackendCapabilities, PaintBackendDescriptor, PaintBackendFamily,
@@ -47,8 +48,8 @@ pub fn descriptor() -> PaintBackendDescriptor {
             group_opacity: SupportLevel::Supported,
             layer: SupportLevel::Supported,
             layer_opacity: SupportLevel::Supported,
-            layer_filters: SupportLevel::Unsupported,
-            layer_blend_modes: SupportLevel::Unsupported,
+            layer_filters: SupportLevel::Supported,
+            layer_blend_modes: SupportLevel::Supported,
             linear_gradient: SupportLevel::Supported,
             radial_gradient: SupportLevel::Supported,
             antialiasing: SupportLevel::Unsupported,
@@ -66,6 +67,7 @@ pub fn profile() -> GpuBackendProfile {
         "WGSL",
         GpuReadbackStrategy::TextureCopyToBuffer,
     )
+    .with_isolated_layers()
 }
 
 pub fn renderer() -> WgpuPaintBackend {
@@ -132,6 +134,45 @@ struct PreparedTexture {
     _texture: wgpu::Texture,
     _view: wgpu::TextureView,
     _sampler: wgpu::Sampler,
+}
+
+struct RenderTarget {
+    texture: wgpu::Texture,
+    view: wgpu::TextureView,
+}
+
+struct LayerFrame {
+    parent_target: usize,
+    descriptor: GpuLayer,
+    composite_clip: GpuRect,
+}
+
+#[derive(Clone, Copy, Debug, bytemuck::Pod, bytemuck::Zeroable)]
+#[repr(C)]
+struct FilterParams {
+    kind: u32,
+    padding: [u32; 3],
+    params: [f32; 4],
+    color: [f32; 4],
+    matrix: [[f32; 4]; 4],
+    bias: [f32; 4],
+}
+
+#[derive(Clone, Copy, Debug, bytemuck::Pod, bytemuck::Zeroable)]
+#[repr(C)]
+struct CompositeParams {
+    blend_mode: u32,
+    padding: [u32; 3],
+    opacity: f32,
+    opacity_padding: [f32; 3],
+    clip: [f32; 4],
+}
+
+struct LayerPipelines {
+    filter_layout: wgpu::BindGroupLayout,
+    composite_layout: wgpu::BindGroupLayout,
+    filter_pipeline: wgpu::ComputePipeline,
+    composite_pipeline: wgpu::ComputePipeline,
 }
 
 fn render_scene(scene: &PaintScene) -> Result<PixelContainer, PaintRenderError> {
@@ -259,22 +300,14 @@ async fn render_plan(plan: GpuPaintPlan) -> Result<PixelContainer, PaintRenderEr
         }),
         multiview: None,
     });
+    let layer_pipelines = prepare_layer_pipelines(&device);
 
-    let target = device.create_texture(&wgpu::TextureDescriptor {
-        label: Some("paint-vm-wgpu-target"),
-        size: wgpu::Extent3d {
-            width: plan.width,
-            height: plan.height,
-            depth_or_array_layers: 1,
-        },
-        mip_level_count: 1,
-        sample_count: 1,
-        dimension: wgpu::TextureDimension::D2,
-        format: TARGET_FORMAT,
-        usage: wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
-        view_formats: &[],
-    });
-    let view = target.create_view(&wgpu::TextureViewDescriptor::default());
+    let mut targets = vec![create_render_target(
+        &device,
+        plan.width,
+        plan.height,
+        "paint-vm-wgpu-root-target",
+    )];
     let prepared_meshes = prepare_meshes(&device, &plan.meshes);
     let (white_texture, prepared_textures) =
         prepare_textures(&device, &queue, &texture_bind_group_layout, &plan.images);
@@ -291,75 +324,127 @@ async fn render_plan(plan: GpuPaintPlan) -> Result<PixelContainer, PaintRenderEr
     let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
         label: Some("paint-vm-wgpu-encoder"),
     });
-    {
-        let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-            label: Some("paint-vm-wgpu-render-pass"),
-            color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                view: &view,
-                resolve_target: None,
-                ops: wgpu::Operations {
-                    load: wgpu::LoadOp::Clear(to_wgpu_color(plan.background)),
-                    store: wgpu::StoreOp::Store,
-                },
-            })],
-            depth_stencil_attachment: None,
-            occlusion_query_set: None,
-            timestamp_writes: None,
-        });
-        pass.set_pipeline(&pipeline);
-        pass.set_bind_group(0, &viewport_bind_group, &[]);
-        pass.set_scissor_rect(0, 0, plan.width, plan.height);
-        let mut clip_stack = vec![GpuRect {
-            x: 0.0,
-            y: 0.0,
-            width: plan.width as f32,
-            height: plan.height as f32,
-        }];
-        for command in &plan.commands {
-            match command {
-                GpuCommand::DrawMesh { mesh_id } => {
-                    if let Some(mesh) = prepared_meshes.get(*mesh_id) {
-                        let texture = mesh
-                            .texture_id
-                            .and_then(|texture_id| prepared_textures.get(texture_id))
-                            .unwrap_or(&white_texture);
-                        pass.set_vertex_buffer(0, mesh.vertex_buffer.slice(..));
-                        pass.set_index_buffer(
-                            mesh.index_buffer.slice(..),
-                            wgpu::IndexFormat::Uint32,
-                        );
-                        pass.set_bind_group(1, &texture.bind_group, &[]);
-                        pass.draw_indexed(0..mesh.index_count, 0, 0..1);
-                    }
+    clear_target(
+        &mut encoder,
+        &targets[0].view,
+        to_wgpu_color(plan.background),
+    );
+    let full_clip = GpuRect {
+        x: 0.0,
+        y: 0.0,
+        width: plan.width as f32,
+        height: plan.height as f32,
+    };
+    let mut clip_stack = vec![full_clip];
+    let mut layer_stack: Vec<LayerFrame> = Vec::new();
+    let mut current_target = 0;
+
+    for command in &plan.commands {
+        match command {
+            GpuCommand::DrawMesh { mesh_id } => {
+                let clip = *clip_stack.last().unwrap();
+                if clip.width <= 0.0 || clip.height <= 0.0 {
+                    continue;
                 }
-                GpuCommand::PushClip { rect } => {
-                    let current = *clip_stack.last().unwrap();
-                    let clipped = intersect_rect(current, *rect);
-                    clip_stack.push(clipped);
-                    set_scissor(&mut pass, clipped, plan.width, plan.height);
-                }
-                GpuCommand::PopClip => {
-                    if clip_stack.len() > 1 {
-                        clip_stack.pop();
-                    }
-                    set_scissor(
-                        &mut pass,
-                        *clip_stack.last().unwrap(),
+                if let Some(mesh) = prepared_meshes.get(*mesh_id) {
+                    let texture = mesh
+                        .texture_id
+                        .and_then(|texture_id| prepared_textures.get(texture_id))
+                        .unwrap_or(&white_texture);
+                    draw_mesh(
+                        &mut encoder,
+                        &targets[current_target].view,
+                        &pipeline,
+                        &viewport_bind_group,
+                        mesh,
+                        texture,
+                        clip,
                         plan.width,
                         plan.height,
                     );
                 }
-                // validate_plan rejects isolated layers until this backend's
-                // offscreen pass executor is wired. Keeping the variants here
-                // makes the shared command contract exhaustive for that work.
-                GpuCommand::BeginLayer(_) | GpuCommand::EndLayer => {}
-                GpuCommand::DrawText(_) | GpuCommand::DrawGlyphRun(_) => {}
             }
+            GpuCommand::PushClip { rect } => {
+                let clipped = intersect_rect(*clip_stack.last().unwrap(), *rect);
+                clip_stack.push(clipped);
+            }
+            GpuCommand::PopClip => {
+                if clip_stack.len() > 1 {
+                    clip_stack.pop();
+                }
+            }
+            GpuCommand::BeginLayer(descriptor) => {
+                let layer_target = targets.len();
+                targets.push(create_render_target(
+                    &device,
+                    plan.width,
+                    plan.height,
+                    "paint-vm-wgpu-layer-target",
+                ));
+                clear_target(
+                    &mut encoder,
+                    &targets[layer_target].view,
+                    wgpu::Color::TRANSPARENT,
+                );
+                layer_stack.push(LayerFrame {
+                    parent_target: current_target,
+                    descriptor: descriptor.clone(),
+                    composite_clip: *clip_stack.last().unwrap(),
+                });
+                current_target = layer_target;
+            }
+            GpuCommand::EndLayer => {
+                let Some(frame) = layer_stack.pop() else {
+                    continue;
+                };
+                let mut filtered = current_target;
+                for filter in &frame.descriptor.filters {
+                    let destination = targets.len();
+                    targets.push(create_render_target(
+                        &device,
+                        plan.width,
+                        plan.height,
+                        "paint-vm-wgpu-filter-target",
+                    ));
+                    apply_filter(
+                        &device,
+                        &mut encoder,
+                        &layer_pipelines,
+                        &targets[filtered].view,
+                        &targets[destination].view,
+                        filter,
+                        plan.width,
+                        plan.height,
+                    );
+                    filtered = destination;
+                }
+                let destination = targets.len();
+                targets.push(create_render_target(
+                    &device,
+                    plan.width,
+                    plan.height,
+                    "paint-vm-wgpu-composite-target",
+                ));
+                composite_layer(
+                    &device,
+                    &mut encoder,
+                    &layer_pipelines,
+                    &targets[filtered].view,
+                    &targets[frame.parent_target].view,
+                    &targets[destination].view,
+                    &frame.descriptor,
+                    frame.composite_clip,
+                    plan.width,
+                    plan.height,
+                );
+                current_target = destination;
+            }
+            GpuCommand::DrawText(_) | GpuCommand::DrawGlyphRun(_) => {}
         }
     }
     encoder.copy_texture_to_buffer(
         wgpu::ImageCopyTexture {
-            texture: &target,
+            texture: &targets[current_target].texture,
             mip_level: 0,
             origin: wgpu::Origin3d::ZERO,
             aspect: wgpu::TextureAspect::All,
@@ -411,6 +496,355 @@ async fn render_plan(plan: GpuPaintPlan) -> Result<PixelContainer, PaintRenderEr
     Ok(PixelContainer::from_data(plan.width, plan.height, data))
 }
 
+fn create_render_target(
+    device: &wgpu::Device,
+    width: u32,
+    height: u32,
+    label: &'static str,
+) -> RenderTarget {
+    let texture = device.create_texture(&wgpu::TextureDescriptor {
+        label: Some(label),
+        size: wgpu::Extent3d {
+            width,
+            height,
+            depth_or_array_layers: 1,
+        },
+        mip_level_count: 1,
+        sample_count: 1,
+        dimension: wgpu::TextureDimension::D2,
+        format: TARGET_FORMAT,
+        usage: wgpu::TextureUsages::RENDER_ATTACHMENT
+            | wgpu::TextureUsages::TEXTURE_BINDING
+            | wgpu::TextureUsages::STORAGE_BINDING
+            | wgpu::TextureUsages::COPY_SRC,
+        view_formats: &[],
+    });
+    let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
+    RenderTarget { texture, view }
+}
+
+fn clear_target(encoder: &mut wgpu::CommandEncoder, view: &wgpu::TextureView, color: wgpu::Color) {
+    let _pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+        label: Some("paint-vm-wgpu-clear-pass"),
+        color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+            view,
+            resolve_target: None,
+            ops: wgpu::Operations {
+                load: wgpu::LoadOp::Clear(color),
+                store: wgpu::StoreOp::Store,
+            },
+        })],
+        depth_stencil_attachment: None,
+        occlusion_query_set: None,
+        timestamp_writes: None,
+    });
+}
+
+#[allow(clippy::too_many_arguments)]
+fn draw_mesh(
+    encoder: &mut wgpu::CommandEncoder,
+    view: &wgpu::TextureView,
+    pipeline: &wgpu::RenderPipeline,
+    viewport_bind_group: &wgpu::BindGroup,
+    mesh: &PreparedMesh,
+    texture: &PreparedTexture,
+    clip: GpuRect,
+    width: u32,
+    height: u32,
+) {
+    let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+        label: Some("paint-vm-wgpu-draw-pass"),
+        color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+            view,
+            resolve_target: None,
+            ops: wgpu::Operations {
+                load: wgpu::LoadOp::Load,
+                store: wgpu::StoreOp::Store,
+            },
+        })],
+        depth_stencil_attachment: None,
+        occlusion_query_set: None,
+        timestamp_writes: None,
+    });
+    pass.set_pipeline(pipeline);
+    pass.set_bind_group(0, viewport_bind_group, &[]);
+    set_scissor(&mut pass, clip, width, height);
+    pass.set_vertex_buffer(0, mesh.vertex_buffer.slice(..));
+    pass.set_index_buffer(mesh.index_buffer.slice(..), wgpu::IndexFormat::Uint32);
+    pass.set_bind_group(1, &texture.bind_group, &[]);
+    pass.draw_indexed(0..mesh.index_count, 0, 0..1);
+}
+
+fn prepare_layer_pipelines(device: &wgpu::Device) -> LayerPipelines {
+    let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+        label: Some("paint-vm-wgpu-layer-shader"),
+        source: wgpu::ShaderSource::Wgsl(LAYER_SHADER.into()),
+    });
+    let filter_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+        label: Some("paint-vm-wgpu-filter-layout"),
+        entries: &[
+            sampled_texture_entry(0),
+            storage_texture_entry(1),
+            uniform_entry(2),
+        ],
+    });
+    let composite_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+        label: Some("paint-vm-wgpu-composite-layout"),
+        entries: &[
+            sampled_texture_entry(0),
+            sampled_texture_entry(1),
+            storage_texture_entry(2),
+            uniform_entry(3),
+        ],
+    });
+    let filter_pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+        label: Some("paint-vm-wgpu-filter-pipeline-layout"),
+        bind_group_layouts: &[&filter_layout],
+        push_constant_ranges: &[],
+    });
+    let composite_pipeline_layout =
+        device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+            label: Some("paint-vm-wgpu-composite-pipeline-layout"),
+            bind_group_layouts: &[&composite_layout],
+            push_constant_ranges: &[],
+        });
+    let filter_pipeline = device.create_compute_pipeline(&wgpu::ComputePipelineDescriptor {
+        label: Some("paint-vm-wgpu-filter-pipeline"),
+        layout: Some(&filter_pipeline_layout),
+        module: &shader,
+        entry_point: "paint_filter",
+    });
+    let composite_pipeline = device.create_compute_pipeline(&wgpu::ComputePipelineDescriptor {
+        label: Some("paint-vm-wgpu-composite-pipeline"),
+        layout: Some(&composite_pipeline_layout),
+        module: &shader,
+        entry_point: "paint_composite",
+    });
+    LayerPipelines {
+        filter_layout,
+        composite_layout,
+        filter_pipeline,
+        composite_pipeline,
+    }
+}
+
+fn sampled_texture_entry(binding: u32) -> wgpu::BindGroupLayoutEntry {
+    wgpu::BindGroupLayoutEntry {
+        binding,
+        visibility: wgpu::ShaderStages::COMPUTE,
+        ty: wgpu::BindingType::Texture {
+            sample_type: wgpu::TextureSampleType::Float { filterable: false },
+            view_dimension: wgpu::TextureViewDimension::D2,
+            multisampled: false,
+        },
+        count: None,
+    }
+}
+
+fn storage_texture_entry(binding: u32) -> wgpu::BindGroupLayoutEntry {
+    wgpu::BindGroupLayoutEntry {
+        binding,
+        visibility: wgpu::ShaderStages::COMPUTE,
+        ty: wgpu::BindingType::StorageTexture {
+            access: wgpu::StorageTextureAccess::WriteOnly,
+            format: TARGET_FORMAT,
+            view_dimension: wgpu::TextureViewDimension::D2,
+        },
+        count: None,
+    }
+}
+
+fn uniform_entry(binding: u32) -> wgpu::BindGroupLayoutEntry {
+    wgpu::BindGroupLayoutEntry {
+        binding,
+        visibility: wgpu::ShaderStages::COMPUTE,
+        ty: wgpu::BindingType::Buffer {
+            ty: wgpu::BufferBindingType::Uniform,
+            has_dynamic_offset: false,
+            min_binding_size: None,
+        },
+        count: None,
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn apply_filter(
+    device: &wgpu::Device,
+    encoder: &mut wgpu::CommandEncoder,
+    pipelines: &LayerPipelines,
+    source: &wgpu::TextureView,
+    destination: &wgpu::TextureView,
+    filter: &GpuFilter,
+    width: u32,
+    height: u32,
+) {
+    let params = filter_params(filter);
+    let params_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+        label: Some("paint-vm-wgpu-filter-params"),
+        contents: bytemuck::bytes_of(&params),
+        usage: wgpu::BufferUsages::UNIFORM,
+    });
+    let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+        label: Some("paint-vm-wgpu-filter-bind-group"),
+        layout: &pipelines.filter_layout,
+        entries: &[
+            wgpu::BindGroupEntry {
+                binding: 0,
+                resource: wgpu::BindingResource::TextureView(source),
+            },
+            wgpu::BindGroupEntry {
+                binding: 1,
+                resource: wgpu::BindingResource::TextureView(destination),
+            },
+            wgpu::BindGroupEntry {
+                binding: 2,
+                resource: params_buffer.as_entire_binding(),
+            },
+        ],
+    });
+    let mut pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {
+        label: Some("paint-vm-wgpu-filter-pass"),
+        timestamp_writes: None,
+    });
+    pass.set_pipeline(&pipelines.filter_pipeline);
+    pass.set_bind_group(0, &bind_group, &[]);
+    pass.dispatch_workgroups(width.div_ceil(8), height.div_ceil(8), 1);
+}
+
+#[allow(clippy::too_many_arguments)]
+fn composite_layer(
+    device: &wgpu::Device,
+    encoder: &mut wgpu::CommandEncoder,
+    pipelines: &LayerPipelines,
+    source: &wgpu::TextureView,
+    backdrop: &wgpu::TextureView,
+    destination: &wgpu::TextureView,
+    layer: &GpuLayer,
+    clip: GpuRect,
+    width: u32,
+    height: u32,
+) {
+    let params = CompositeParams {
+        blend_mode: blend_mode_index(layer.blend_mode),
+        padding: [0; 3],
+        opacity: layer.opacity,
+        opacity_padding: [0.0; 3],
+        clip: [clip.x, clip.y, clip.width, clip.height],
+    };
+    let params_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+        label: Some("paint-vm-wgpu-composite-params"),
+        contents: bytemuck::bytes_of(&params),
+        usage: wgpu::BufferUsages::UNIFORM,
+    });
+    let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
+        label: Some("paint-vm-wgpu-composite-bind-group"),
+        layout: &pipelines.composite_layout,
+        entries: &[
+            wgpu::BindGroupEntry {
+                binding: 0,
+                resource: wgpu::BindingResource::TextureView(source),
+            },
+            wgpu::BindGroupEntry {
+                binding: 1,
+                resource: wgpu::BindingResource::TextureView(backdrop),
+            },
+            wgpu::BindGroupEntry {
+                binding: 2,
+                resource: wgpu::BindingResource::TextureView(destination),
+            },
+            wgpu::BindGroupEntry {
+                binding: 3,
+                resource: params_buffer.as_entire_binding(),
+            },
+        ],
+    });
+    let mut pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {
+        label: Some("paint-vm-wgpu-composite-pass"),
+        timestamp_writes: None,
+    });
+    pass.set_pipeline(&pipelines.composite_pipeline);
+    pass.set_bind_group(0, &bind_group, &[]);
+    pass.dispatch_workgroups(width.div_ceil(8), height.div_ceil(8), 1);
+}
+
+fn filter_params(filter: &GpuFilter) -> FilterParams {
+    let mut params = FilterParams {
+        kind: 0,
+        padding: [0; 3],
+        params: [0.0; 4],
+        color: [0.0; 4],
+        matrix: [[0.0; 4]; 4],
+        bias: [0.0; 4],
+    };
+    match filter {
+        GpuFilter::Blur { radius } => params.params[0] = *radius,
+        GpuFilter::DropShadow {
+            dx,
+            dy,
+            blur,
+            color,
+        } => {
+            params.kind = 1;
+            params.params = [*dx, *dy, 0.0, *blur];
+            params.color = [color.r, color.g, color.b, color.a];
+        }
+        GpuFilter::ColorMatrix { matrix } => {
+            params.kind = 2;
+            for row in 0..4 {
+                let offset = row * 5;
+                params.matrix[row].copy_from_slice(&matrix[offset..offset + 4]);
+                params.bias[row] = matrix[offset + 4];
+            }
+        }
+        GpuFilter::Brightness { amount } => {
+            params.kind = 3;
+            params.params[0] = *amount;
+        }
+        GpuFilter::Contrast { amount } => {
+            params.kind = 4;
+            params.params[0] = *amount;
+        }
+        GpuFilter::Saturate { amount } => {
+            params.kind = 5;
+            params.params[0] = *amount;
+        }
+        GpuFilter::HueRotate { angle_degrees } => {
+            params.kind = 6;
+            params.params[0] = *angle_degrees;
+        }
+        GpuFilter::Invert { amount } => {
+            params.kind = 7;
+            params.params[0] = *amount;
+        }
+        GpuFilter::Opacity { amount } => {
+            params.kind = 8;
+            params.params[0] = *amount;
+        }
+    }
+    params
+}
+
+fn blend_mode_index(mode: GpuBlendMode) -> u32 {
+    match mode {
+        GpuBlendMode::Normal => 0,
+        GpuBlendMode::Multiply => 1,
+        GpuBlendMode::Screen => 2,
+        GpuBlendMode::Overlay => 3,
+        GpuBlendMode::Darken => 4,
+        GpuBlendMode::Lighten => 5,
+        GpuBlendMode::ColorDodge => 6,
+        GpuBlendMode::ColorBurn => 7,
+        GpuBlendMode::HardLight => 8,
+        GpuBlendMode::SoftLight => 9,
+        GpuBlendMode::Difference => 10,
+        GpuBlendMode::Exclusion => 11,
+        GpuBlendMode::Hue => 12,
+        GpuBlendMode::Saturation => 13,
+        GpuBlendMode::Color => 14,
+        GpuBlendMode::Luminosity => 15,
+    }
+}
+
 fn validate_plan(plan: &GpuPaintPlan) -> Result<(), PaintRenderError> {
     if let Some(diagnostic) = plan
         .diagnostics
@@ -431,17 +865,6 @@ fn validate_plan(plan: &GpuPaintPlan) -> Result<(), PaintRenderError> {
         return Err(PaintRenderError::RenderFailed {
             backend: "paint-vm-wgpu",
             message: "text and glyph atlas rendering are not wired in the WGPU backend yet"
-                .to_string(),
-        });
-    }
-    if plan
-        .commands
-        .iter()
-        .any(|command| matches!(command, GpuCommand::BeginLayer(_) | GpuCommand::EndLayer))
-    {
-        return Err(PaintRenderError::RenderFailed {
-            backend: "paint-vm-wgpu",
-            message: "isolated GPU layer commands require WGPU offscreen pass execution"
                 .to_string(),
         });
     }
@@ -690,14 +1113,262 @@ fn fs_main(input: VertexOut) -> @location(0) vec4<f32> {
 }
 "#;
 
+const LAYER_SHADER: &str = r#"
+struct FilterParams {
+    kind: u32,
+    padding0: u32,
+    padding1: u32,
+    padding2: u32,
+    params: vec4<f32>,
+    color: vec4<f32>,
+    matrix0: vec4<f32>,
+    matrix1: vec4<f32>,
+    matrix2: vec4<f32>,
+    matrix3: vec4<f32>,
+    bias: vec4<f32>,
+};
+
+struct CompositeParams {
+    blend_mode: u32,
+    padding0: u32,
+    padding1: u32,
+    padding2: u32,
+    opacity: f32,
+    opacity_padding0: f32,
+    opacity_padding1: f32,
+    opacity_padding2: f32,
+    clip: vec4<f32>,
+};
+
+@group(0) @binding(0) var filter_source: texture_2d<f32>;
+@group(0) @binding(1) var filter_destination: texture_storage_2d<rgba8unorm, write>;
+@group(0) @binding(2) var<uniform> filter_params: FilterParams;
+
+fn straight_color(value: vec4<f32>) -> vec4<f32> {
+    if (value.a > 0.000001) {
+        return vec4<f32>(value.rgb / value.a, value.a);
+    }
+    return vec4<f32>(0.0);
+}
+
+fn premultiplied_color(value: vec4<f32>) -> vec4<f32> {
+    return vec4<f32>(value.rgb * value.a, value.a);
+}
+
+fn hue_rotated(color: vec3<f32>, degrees: f32) -> vec3<f32> {
+    let angle = degrees * (3.14159265358979323846 / 180.0);
+    let c = cos(angle);
+    let s = sin(angle);
+    return vec3<f32>(
+        dot(color, vec3<f32>(0.213 + c * 0.787 - s * 0.213,
+                             0.715 - c * 0.715 - s * 0.715,
+                             0.072 - c * 0.072 + s * 0.928)),
+        dot(color, vec3<f32>(0.213 - c * 0.213 + s * 0.143,
+                             0.715 + c * 0.285 + s * 0.140,
+                             0.072 - c * 0.072 - s * 0.283)),
+        dot(color, vec3<f32>(0.213 - c * 0.213 - s * 0.787,
+                             0.715 - c * 0.715 + s * 0.715,
+                             0.072 + c * 0.928 + s * 0.072))
+    );
+}
+
+@compute @workgroup_size(8, 8)
+fn paint_filter(@builtin(global_invocation_id) gid: vec3<u32>) {
+    let dimensions = textureDimensions(filter_source);
+    if (gid.x >= dimensions.x || gid.y >= dimensions.y) {
+        return;
+    }
+    let position = vec2<i32>(gid.xy);
+
+    if (filter_params.kind == 0u) {
+        let radius = min(i32(round(filter_params.params.x)), 32);
+        var total = vec4<f32>(0.0);
+        var count = 0u;
+        for (var y = -radius; y <= radius; y = y + 1) {
+            for (var x = -radius; x <= radius; x = x + 1) {
+                let sample_position = position + vec2<i32>(x, y);
+                if (sample_position.x >= 0 && sample_position.y >= 0 &&
+                    sample_position.x < i32(dimensions.x) &&
+                    sample_position.y < i32(dimensions.y)) {
+                    total += textureLoad(filter_source, sample_position, 0);
+                }
+                count += 1u;
+            }
+        }
+        textureStore(filter_destination, position, total / max(f32(count), 1.0));
+        return;
+    }
+
+    let input = textureLoad(filter_source, position, 0);
+    if (filter_params.kind == 1u) {
+        let radius = min(i32(round(filter_params.params.w)), 32);
+        let center = position - vec2<i32>(round(filter_params.params.xy));
+        var alpha = 0.0;
+        var count = 0u;
+        for (var y = -radius; y <= radius; y = y + 1) {
+            for (var x = -radius; x <= radius; x = x + 1) {
+                let sample_position = center + vec2<i32>(x, y);
+                if (sample_position.x >= 0 && sample_position.y >= 0 &&
+                    sample_position.x < i32(dimensions.x) &&
+                    sample_position.y < i32(dimensions.y)) {
+                    alpha += textureLoad(filter_source, sample_position, 0).a;
+                }
+                count += 1u;
+            }
+        }
+        alpha = alpha / max(f32(count), 1.0) * filter_params.color.a;
+        let shadow = vec4<f32>(filter_params.color.rgb * alpha, alpha);
+        textureStore(filter_destination, position, input + shadow * (1.0 - input.a));
+        return;
+    }
+
+    var straight = straight_color(input);
+    if (filter_params.kind == 2u) {
+        let channels = straight;
+        straight = vec4<f32>(
+            dot(filter_params.matrix0, channels) + filter_params.bias.x,
+            dot(filter_params.matrix1, channels) + filter_params.bias.y,
+            dot(filter_params.matrix2, channels) + filter_params.bias.z,
+            dot(filter_params.matrix3, channels) + filter_params.bias.w
+        );
+    } else if (filter_params.kind == 3u) {
+        straight = vec4<f32>(straight.rgb * filter_params.params.x, straight.a);
+    } else if (filter_params.kind == 4u) {
+        straight = vec4<f32>((straight.rgb - vec3<f32>(0.5)) * filter_params.params.x + vec3<f32>(0.5), straight.a);
+    } else if (filter_params.kind == 5u) {
+        let luminance = dot(straight.rgb, vec3<f32>(0.2126, 0.7152, 0.0722));
+        straight = vec4<f32>(mix(vec3<f32>(luminance), straight.rgb, filter_params.params.x), straight.a);
+    } else if (filter_params.kind == 6u) {
+        straight = vec4<f32>(hue_rotated(straight.rgb, filter_params.params.x), straight.a);
+    } else if (filter_params.kind == 7u) {
+        straight = vec4<f32>(mix(straight.rgb, vec3<f32>(1.0) - straight.rgb, filter_params.params.x), straight.a);
+    } else if (filter_params.kind == 8u) {
+        straight = vec4<f32>(straight.rgb, straight.a * filter_params.params.x);
+    }
+    textureStore(filter_destination, position, premultiplied_color(clamp(straight, vec4<f32>(0.0), vec4<f32>(1.0))));
+}
+
+@group(0) @binding(0) var composite_source: texture_2d<f32>;
+@group(0) @binding(1) var composite_backdrop: texture_2d<f32>;
+@group(0) @binding(2) var composite_destination: texture_storage_2d<rgba8unorm, write>;
+@group(0) @binding(3) var<uniform> composite: CompositeParams;
+
+fn luminance(color: vec3<f32>) -> f32 {
+    return dot(color, vec3<f32>(0.3, 0.59, 0.11));
+}
+
+fn saturation(color: vec3<f32>) -> f32 {
+    return max(color.r, max(color.g, color.b)) - min(color.r, min(color.g, color.b));
+}
+
+fn clip_color(input: vec3<f32>) -> vec3<f32> {
+    var color = input;
+    let l = luminance(color);
+    let minimum = min(color.r, min(color.g, color.b));
+    let maximum = max(color.r, max(color.g, color.b));
+    if (minimum < 0.0) {
+        color = vec3<f32>(l) + ((color - vec3<f32>(l)) * l) / max(l - minimum, 0.000001);
+    }
+    if (maximum > 1.0) {
+        color = vec3<f32>(l) + ((color - vec3<f32>(l)) * (1.0 - l)) / max(maximum - l, 0.000001);
+    }
+    return color;
+}
+
+fn set_luminance(color: vec3<f32>, value: f32) -> vec3<f32> {
+    return clip_color(color + vec3<f32>(value - luminance(color)));
+}
+
+fn set_saturation(color: vec3<f32>, value: f32) -> vec3<f32> {
+    let minimum = min(color.r, min(color.g, color.b));
+    let maximum = max(color.r, max(color.g, color.b));
+    if (maximum <= minimum) {
+        return vec3<f32>(0.0);
+    }
+    return (color - vec3<f32>(minimum)) * (value / (maximum - minimum));
+}
+
+fn soft_light(backdrop: f32, source: f32) -> f32 {
+    if (source <= 0.5) {
+        return backdrop - (1.0 - 2.0 * source) * backdrop * (1.0 - backdrop);
+    }
+    var d = sqrt(backdrop);
+    if (backdrop <= 0.25) {
+        d = ((16.0 * backdrop - 12.0) * backdrop + 4.0) * backdrop;
+    }
+    return backdrop + (2.0 * source - 1.0) * (d - backdrop);
+}
+
+fn blend_rgb(mode: u32, backdrop: vec3<f32>, source: vec3<f32>) -> vec3<f32> {
+    if (mode == 1u) { return backdrop * source; }
+    if (mode == 2u) { return backdrop + source - backdrop * source; }
+    if (mode == 3u) { return select(2.0 * backdrop * source, 1.0 - 2.0 * (1.0 - backdrop) * (1.0 - source), backdrop >= vec3<f32>(0.5)); }
+    if (mode == 4u) { return min(backdrop, source); }
+    if (mode == 5u) { return max(backdrop, source); }
+    if (mode == 6u) { return select(backdrop / max(vec3<f32>(1.0) - source, vec3<f32>(0.000001)), vec3<f32>(1.0), source >= vec3<f32>(1.0)); }
+    if (mode == 7u) { return select(vec3<f32>(1.0) - (vec3<f32>(1.0) - backdrop) / max(source, vec3<f32>(0.000001)), vec3<f32>(0.0), source <= vec3<f32>(0.0)); }
+    if (mode == 8u) { return select(2.0 * backdrop * source, 1.0 - 2.0 * (1.0 - backdrop) * (1.0 - source), source >= vec3<f32>(0.5)); }
+    if (mode == 9u) { return vec3<f32>(soft_light(backdrop.r, source.r), soft_light(backdrop.g, source.g), soft_light(backdrop.b, source.b)); }
+    if (mode == 10u) { return abs(backdrop - source); }
+    if (mode == 11u) { return backdrop + source - 2.0 * backdrop * source; }
+    if (mode == 12u) { return set_luminance(set_saturation(source, saturation(backdrop)), luminance(backdrop)); }
+    if (mode == 13u) { return set_luminance(set_saturation(backdrop, saturation(source)), luminance(backdrop)); }
+    if (mode == 14u) { return set_luminance(source, luminance(backdrop)); }
+    if (mode == 15u) { return set_luminance(backdrop, luminance(source)); }
+    return source;
+}
+
+@compute @workgroup_size(8, 8)
+fn paint_composite(@builtin(global_invocation_id) gid: vec3<u32>) {
+    let dimensions = textureDimensions(composite_source);
+    if (gid.x >= dimensions.x || gid.y >= dimensions.y) {
+        return;
+    }
+    let position = vec2<i32>(gid.xy);
+    let source_pixel = textureLoad(composite_source, position, 0);
+    let destination_pixel = textureLoad(composite_backdrop, position, 0);
+    if (f32(gid.x) < composite.clip.x || f32(gid.y) < composite.clip.y ||
+        f32(gid.x) >= composite.clip.x + composite.clip.z ||
+        f32(gid.y) >= composite.clip.y + composite.clip.w) {
+        textureStore(composite_destination, position, destination_pixel);
+        return;
+    }
+    let source_alpha = clamp(source_pixel.a * composite.opacity, 0.0, 1.0);
+    let destination_alpha = destination_pixel.a;
+    var source_color = vec3<f32>(0.0);
+    if (source_pixel.a > 0.000001) {
+        source_color = source_pixel.rgb / source_pixel.a;
+    }
+    var destination_color = vec3<f32>(0.0);
+    if (destination_alpha > 0.000001) {
+        destination_color = destination_pixel.rgb / destination_alpha;
+    }
+    let blended = clamp(blend_rgb(composite.blend_mode, destination_color, source_color), vec3<f32>(0.0), vec3<f32>(1.0));
+    let result = (1.0 - source_alpha) * destination_pixel.rgb
+        + (1.0 - destination_alpha) * source_color * source_alpha
+        + source_alpha * destination_alpha * blended;
+    let alpha = source_alpha + destination_alpha * (1.0 - source_alpha);
+    textureStore(composite_destination, position, vec4<f32>(clamp(result, vec3<f32>(0.0), vec3<f32>(1.0)), alpha));
+}
+"#;
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use paint_instructions::{
-        GradientKind, GradientStop, ImageSrc, PaintBase, PaintGradient, PaintImage,
-        PaintInstruction, PaintRect, PaintText,
+        BlendMode, GradientKind, GradientStop, ImageSrc, PaintBase, PaintGradient, PaintImage,
+        PaintInstruction, PaintLayer, PaintRect, PaintText,
     };
     use paint_vm_runtime::{PaintBackendPreference, PaintBackendRegistry, PaintRenderOptions};
+    use std::sync::{Mutex, MutexGuard, OnceLock};
+
+    fn adapter_test_guard() -> MutexGuard<'static, ()> {
+        static ADAPTER_TEST: OnceLock<Mutex<()>> = OnceLock::new();
+        ADAPTER_TEST
+            .get_or_init(|| Mutex::new(()))
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner())
+    }
 
     #[test]
     fn exposes_tier1_descriptor() {
@@ -727,13 +1398,13 @@ mod tests {
         assert!(profile.supports_texture_sampling);
         assert!(profile.supports_linear_gradients);
         assert!(profile.supports_radial_gradients);
-        assert!(!profile.supports_isolated_layers);
-        assert!(!profile.supports_layer_filters);
-        assert!(!profile.supports_layer_blend_modes);
+        assert!(profile.supports_isolated_layers);
+        assert!(profile.supports_layer_filters);
+        assert!(profile.supports_layer_blend_modes);
     }
 
     #[test]
-    fn isolated_layer_plan_requires_the_offscreen_executor_path() {
+    fn isolated_layer_plan_is_accepted_by_the_offscreen_executor_path() {
         let plan = GpuPaintPlan {
             width: 1,
             height: 1,
@@ -756,15 +1427,125 @@ mod tests {
             diagnostics: vec![],
         };
 
-        let error = validate_plan(&plan).expect_err("WGPU must not flatten isolated layers");
-        assert_eq!(
-            error,
-            PaintRenderError::RenderFailed {
-                backend: "paint-vm-wgpu",
-                message: "isolated GPU layer commands require WGPU offscreen pass execution"
-                    .to_string(),
-            }
-        );
+        validate_plan(&plan).expect("WGPU executes isolated layers without flattening them");
+    }
+
+    #[test]
+    fn shared_layer_filters_keep_stable_wgsl_discriminants() {
+        let matrix = [
+            1.0, 0.0, 0.0, 0.0, 0.1, 0.0, 1.0, 0.0, 0.0, 0.2, 0.0, 0.0, 1.0, 0.0, 0.3, 0.0, 0.0,
+            0.0, 1.0, 0.4,
+        ];
+        let filters = [
+            GpuFilter::Blur { radius: 2.0 },
+            GpuFilter::DropShadow {
+                dx: 1.0,
+                dy: 2.0,
+                blur: 3.0,
+                color: GpuColor {
+                    r: 0.1,
+                    g: 0.2,
+                    b: 0.3,
+                    a: 0.4,
+                },
+            },
+            GpuFilter::ColorMatrix { matrix },
+            GpuFilter::Brightness { amount: 1.1 },
+            GpuFilter::Contrast { amount: 1.2 },
+            GpuFilter::Saturate { amount: 1.3 },
+            GpuFilter::HueRotate {
+                angle_degrees: 45.0,
+            },
+            GpuFilter::Invert { amount: 0.5 },
+            GpuFilter::Opacity { amount: 0.6 },
+        ];
+        for (expected, filter) in filters.iter().enumerate() {
+            assert_eq!(filter_params(filter).kind, expected as u32);
+        }
+        let encoded = filter_params(&GpuFilter::ColorMatrix { matrix });
+        assert_eq!(encoded.matrix[0], [1.0, 0.0, 0.0, 0.0]);
+        assert_eq!(encoded.bias, [0.1, 0.2, 0.3, 0.4]);
+        assert_eq!(std::mem::size_of::<FilterParams>(), 128);
+        assert_eq!(std::mem::size_of::<CompositeParams>(), 48);
+    }
+
+    #[test]
+    fn shared_blend_modes_keep_stable_wgsl_discriminants() {
+        let modes = [
+            GpuBlendMode::Normal,
+            GpuBlendMode::Multiply,
+            GpuBlendMode::Screen,
+            GpuBlendMode::Overlay,
+            GpuBlendMode::Darken,
+            GpuBlendMode::Lighten,
+            GpuBlendMode::ColorDodge,
+            GpuBlendMode::ColorBurn,
+            GpuBlendMode::HardLight,
+            GpuBlendMode::SoftLight,
+            GpuBlendMode::Difference,
+            GpuBlendMode::Exclusion,
+            GpuBlendMode::Hue,
+            GpuBlendMode::Saturation,
+            GpuBlendMode::Color,
+            GpuBlendMode::Luminosity,
+        ];
+        for (expected, mode) in modes.into_iter().enumerate() {
+            assert_eq!(blend_mode_index(mode), expected as u32);
+        }
+    }
+
+    #[test]
+    fn isolated_layers_match_the_shared_visual_oracle_when_an_adapter_is_available() {
+        let _guard = adapter_test_guard();
+        let scene = venture_browser_visual_fixtures::isolated_gpu_layer_scene();
+        let pixels = match render(&scene) {
+            Ok(pixels) => pixels,
+            Err(PaintRenderError::BackendUnavailable { .. }) => return,
+            Err(error) => panic!("WGPU isolated layer rendering failed: {error:?}"),
+        };
+        venture_browser_visual_fixtures::assert_isolated_gpu_layer_pixels(&pixels)
+            .expect("WGPU isolated layer fixture");
+    }
+
+    #[test]
+    fn nested_layers_apply_each_scope_opacity_once_when_an_adapter_is_available() {
+        let _guard = adapter_test_guard();
+        let inner = PaintLayer {
+            base: PaintBase::default(),
+            children: vec![PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 2.0, 2.0, "#ff0000",
+            ))],
+            filters: None,
+            blend_mode: Some(BlendMode::Normal),
+            opacity: Some(0.5),
+            transform: None,
+        };
+        let outer = PaintLayer {
+            base: PaintBase::default(),
+            children: vec![PaintInstruction::Layer(inner)],
+            filters: None,
+            blend_mode: Some(BlendMode::Normal),
+            opacity: Some(0.5),
+            transform: None,
+        };
+        let mut scene = PaintScene::new(2.0, 2.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 2.0, 2.0, "#808080",
+            )));
+        scene.instructions.push(PaintInstruction::Layer(outer));
+
+        let pixels = match render(&scene) {
+            Ok(pixels) => pixels,
+            Err(PaintRenderError::BackendUnavailable { .. }) => return,
+            Err(error) => panic!("WGPU nested layer rendering failed: {error:?}"),
+        };
+        let (red, green, blue, alpha) = pixels.pixel_at(1, 1);
+        assert!((red as i16 - 160).abs() <= 2, "red channel: {red}");
+        assert!((green as i16 - 96).abs() <= 2, "green channel: {green}");
+        assert!((blue as i16 - 96).abs() <= 2, "blue channel: {blue}");
+        assert_eq!(alpha, 255);
     }
 
     #[test]
