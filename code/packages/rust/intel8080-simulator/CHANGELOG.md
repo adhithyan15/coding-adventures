@@ -1,5 +1,30 @@
 # Changelog — intel8080-simulator
 
+## [0.2.0] - Unreleased
+
+### Changed
+
+- Replaced silent load truncation and undefined-opcode halting with the typed
+  `Intel8080Error` contract. Oversized images, truncated instructions, halted
+  steps, and data/stack accesses outside a configured short-memory arena are
+  rejected before the failing operation mutates state.
+- Added transactional bounded `run`, checked `load_program`, `step`,
+  `run_loaded`, and `run_loaded_with_limit` APIs.
+- Added owned `Intel8080State` snapshots, full before/after `StepTrace` values,
+  and trace/final-state data in `ExecutionResult`.
+- Updated the `intel8080-backend` simulator consumer to use checked results.
+
+### Verified
+
+- Added exhaustive classification for all 256 first bytes and a full-state
+  FNV-1a oracle over all 244 defined opcodes generated from the repository's
+  Python reference implementation.
+- Added atomic load/fetch/data-access/run boundaries plus snapshot ownership,
+  reset, bounded-run, and repeatability tests. The simulator now has 45 tests
+  plus one doctest and 92.68% core line coverage (671/724).
+- Repaired strict rustdoc links; formatting, tests, strict Clippy, and strict
+  rustdoc all pass.
+
 ## [0.1.0] - 2026-08-17
 
 ### Added

@@ -72,7 +72,7 @@ according to the current prioritization run.
 | RCPU-009 / RCPU-010 | 1970 | DEC PDP-11 | Complete: `pdp11-simulator` | Complete: `pdp11-gatelevel` |
 | RCPU-011 / RCPU-012 | 1971 | Intel 4004 | Complete: `intel4004-simulator` | Complete: `intel4004-gatelevel` |
 | RCPU-013 / RCPU-014 | 1972 | Intel 8008 | Complete: `intel8008-simulator` | Complete: `intel8008-gatelevel` |
-| RCPU-015 / RCPU-016 | 1974 | Intel 8080 | Audit: `intel8080-simulator` | Audit: `intel8080-gatelevel` |
+| RCPU-015 / RCPU-016 | 1974 | Intel 8080 | Complete: `intel8080-simulator` | Audit: `intel8080-gatelevel` |
 | RCPU-017 / RCPU-018 | 1975 | MOS 6502 | Audit: `mos6502-simulator` | Audit: `mos6502-gatelevel` |
 | RCPU-019 / RCPU-020 | 1976 | Zilog Z80 | Audit: `z80-simulator` | Audit: `z80-gatelevel` |
 | RCPU-021 / RCPU-022 | 1978 | Intel 8086 | Audit: `intel8086-simulator` | Audit: `intel8086-gatelevel` |
@@ -91,11 +91,10 @@ according to the current prioritization run.
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Missing | Missing |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Missing | Missing |
 
-Current selection: **RCPU-015**, the Intel 8080 functional Rust audit, ordered
-behind publication of the completed PDP-11, Intel 4004, and Intel 8008 pairs.
-Intel 8008 functional merged green through PR #13447 as `7d4b96bb46`; its
-gate-level partner RCPU-014 is complete locally and is the current publication
-cell.
+Current selection: **RCPU-016**, the Intel 8080 gate-level Rust audit, ordered
+behind publication of the completed PDP-11, Intel 4004, Intel 8008, and Intel
+8080 functional work. Intel 8008 gate-level merged green through PR #13456 as
+`9b9c4ca514`; Intel 8080 functional is the current publication cell.
 RCPU-005 is complete after its AAU/final-audit slice added separate
 40-bit AX/BX/QX/IX state, all three calculation modes, exact general/arithmetic/
 data-transfer and plug-7 status words, deterministic integer floating-point,
@@ -247,6 +246,20 @@ traces and 16 KiB states, cover multi-instruction memory/control/I/O workloads,
 pin topology and atomic boundaries, and pass strict formatting, Clippy, and
 rustdoc. Core line coverage is 99.82% (548/549), above the completion target.
 Publication closes the Intel 8008 pair and advances to the Intel 8080 audit.
+
+RCPU-015 is audit-complete locally atop RCPU-014. The legacy Rust package
+implemented the 244 defined opcodes and passed 41 unit tests, but silently
+truncated oversized program loads, converted undefined opcodes into HLT, could
+silently ignore data and stack accesses outside caller-configured short memory,
+returned no typed lifecycle errors, exposed no complete owned snapshot or
+before/after trace, and failed strict rustdoc. The audit adds typed atomic
+load/fetch/data-access/run boundaries, transactional bounded program execution,
+complete owned register/flag/memory/control/I/O snapshots, and full traces.
+Forty-one unit and four integration tests classify all 256 first bytes and pin
+the full final state of every one of the 244 defined opcodes to a hash generated
+by the repository's Python oracle. All tests plus the doctest pass formatting,
+strict Clippy, and strict rustdoc; core line coverage is 92.68% (671/724), above
+the completion floor. Publication advances to the Intel 8080 gate audit.
 
 ## Cross-language wave
 

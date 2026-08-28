@@ -230,7 +230,7 @@ fn pop16(mem: &Memory, sp: &mut u16) -> u16 {
     ((hi as u16) << 8) | lo as u16
 }
 
-fn condition_met(cond: u8, f: &Flags) -> bool {
+pub(crate) fn condition_is_met(cond: u8, f: &Flags) -> bool {
     match cond {
         COND_NZ => !f.z,
         COND_Z => f.z,
@@ -261,10 +261,16 @@ pub fn execute(
     inte: &mut bool,
     pc: u16,
 ) -> ExecuteResult {
-    let fallthrough = ExecuteResult { next_pc: pc, halted: false };
+    let fallthrough = ExecuteResult {
+        next_pc: pc,
+        halted: false,
+    };
 
     match decoded.mnemonic.as_str() {
-        "hlt" => ExecuteResult { next_pc: pc, halted: true },
+        "hlt" => ExecuteResult {
+            next_pc: pc,
+            halted: true,
+        },
         "nop" => fallthrough,
 
         "mov" => {
@@ -463,33 +469,55 @@ pub fn execute(
             fallthrough
         }
 
-        "jmp" => ExecuteResult { next_pc: get(decoded, "addr") as u16, halted: false },
+        "jmp" => ExecuteResult {
+            next_pc: get(decoded, "addr") as u16,
+            halted: false,
+        },
         "jcond" => {
             let cond = get(decoded, "cond") as u8;
             let addr = get(decoded, "addr") as u16;
-            let next_pc = if condition_met(cond, flags) { addr } else { pc };
-            ExecuteResult { next_pc, halted: false }
+            let next_pc = if condition_is_met(cond, flags) {
+                addr
+            } else {
+                pc
+            };
+            ExecuteResult {
+                next_pc,
+                halted: false,
+            }
         }
         "call" => {
             let addr = get(decoded, "addr") as u16;
             push16(mem, &mut regs.sp, pc);
-            ExecuteResult { next_pc: addr, halted: false }
+            ExecuteResult {
+                next_pc: addr,
+                halted: false,
+            }
         }
         "ccond" => {
             let cond = get(decoded, "cond") as u8;
             let addr = get(decoded, "addr") as u16;
-            if condition_met(cond, flags) {
+            if condition_is_met(cond, flags) {
                 push16(mem, &mut regs.sp, pc);
-                ExecuteResult { next_pc: addr, halted: false }
+                ExecuteResult {
+                    next_pc: addr,
+                    halted: false,
+                }
             } else {
                 fallthrough
             }
         }
-        "ret" => ExecuteResult { next_pc: pop16(mem, &mut regs.sp), halted: false },
+        "ret" => ExecuteResult {
+            next_pc: pop16(mem, &mut regs.sp),
+            halted: false,
+        },
         "rcond" => {
             let cond = get(decoded, "cond") as u8;
-            if condition_met(cond, flags) {
-                ExecuteResult { next_pc: pop16(mem, &mut regs.sp), halted: false }
+            if condition_is_met(cond, flags) {
+                ExecuteResult {
+                    next_pc: pop16(mem, &mut regs.sp),
+                    halted: false,
+                }
             } else {
                 fallthrough
             }
@@ -497,9 +525,15 @@ pub fn execute(
         "rst" => {
             let n = get(decoded, "n") as u16;
             push16(mem, &mut regs.sp, pc);
-            ExecuteResult { next_pc: n * 8, halted: false }
+            ExecuteResult {
+                next_pc: n * 8,
+                halted: false,
+            }
         }
-        "pchl" => ExecuteResult { next_pc: regs.hl(), halted: false },
+        "pchl" => ExecuteResult {
+            next_pc: regs.hl(),
+            halted: false,
+        },
 
         "push" => {
             let pair = get(decoded, "pair") as u8;
@@ -560,6 +594,9 @@ pub fn execute(
         // `step() -> String`, matching the fail-closed convention
         // `mips_r2000_simulator::execute` uses for signed-overflow /
         // divide-by-zero).
-        _ => ExecuteResult { next_pc: pc, halted: true },
+        _ => ExecuteResult {
+            next_pc: pc,
+            halted: true,
+        },
     }
 }

@@ -162,25 +162,57 @@ fn decode_group00(
     }
 
     match opcode {
-        STAX_B => result("stax", HashMap::from([("pair".to_string(), PAIR_B as i32)]), raw.clone()),
-        STAX_D => result("stax", HashMap::from([("pair".to_string(), PAIR_D as i32)]), raw.clone()),
-        LDAX_B => result("ldax", HashMap::from([("pair".to_string(), PAIR_B as i32)]), raw.clone()),
-        LDAX_D => result("ldax", HashMap::from([("pair".to_string(), PAIR_D as i32)]), raw.clone()),
+        STAX_B => result(
+            "stax",
+            HashMap::from([("pair".to_string(), PAIR_B as i32)]),
+            raw.clone(),
+        ),
+        STAX_D => result(
+            "stax",
+            HashMap::from([("pair".to_string(), PAIR_D as i32)]),
+            raw.clone(),
+        ),
+        LDAX_B => result(
+            "ldax",
+            HashMap::from([("pair".to_string(), PAIR_B as i32)]),
+            raw.clone(),
+        ),
+        LDAX_D => result(
+            "ldax",
+            HashMap::from([("pair".to_string(), PAIR_D as i32)]),
+            raw.clone(),
+        ),
         SHLD => {
             let addr = fetch_word(raw, fetch);
-            result("shld", HashMap::from([("addr".to_string(), addr as i32)]), raw.clone())
+            result(
+                "shld",
+                HashMap::from([("addr".to_string(), addr as i32)]),
+                raw.clone(),
+            )
         }
         LHLD => {
             let addr = fetch_word(raw, fetch);
-            result("lhld", HashMap::from([("addr".to_string(), addr as i32)]), raw.clone())
+            result(
+                "lhld",
+                HashMap::from([("addr".to_string(), addr as i32)]),
+                raw.clone(),
+            )
         }
         STA => {
             let addr = fetch_word(raw, fetch);
-            result("sta", HashMap::from([("addr".to_string(), addr as i32)]), raw.clone())
+            result(
+                "sta",
+                HashMap::from([("addr".to_string(), addr as i32)]),
+                raw.clone(),
+            )
         }
         LDA => {
             let addr = fetch_word(raw, fetch);
-            result("lda", HashMap::from([("addr".to_string(), addr as i32)]), raw.clone())
+            result(
+                "lda",
+                HashMap::from([("addr".to_string(), addr as i32)]),
+                raw.clone(),
+            )
         }
         RLC => result("rlc", HashMap::new(), raw.clone()),
         RRC => result("rrc", HashMap::new(), raw.clone()),
@@ -251,11 +283,19 @@ fn decode_group11(
     }
     if opcode == JMP {
         let addr = fetch_word(raw, fetch);
-        return result("jmp", HashMap::from([("addr".to_string(), addr as i32)]), raw.clone());
+        return result(
+            "jmp",
+            HashMap::from([("addr".to_string(), addr as i32)]),
+            raw.clone(),
+        );
     }
     if opcode == CALL {
         let addr = fetch_word(raw, fetch);
-        return result("call", HashMap::from([("addr".to_string(), addr as i32)]), raw.clone());
+        return result(
+            "call",
+            HashMap::from([("addr".to_string(), addr as i32)]),
+            raw.clone(),
+        );
     }
 
     // ALU immediate — 11ooo110
@@ -281,11 +321,19 @@ fn decode_group11(
         PCHL => result("pchl", HashMap::new(), raw.clone()),
         IN => {
             let port = fetch_one(raw, fetch);
-            result("in", HashMap::from([("port".to_string(), port as i32)]), raw.clone())
+            result(
+                "in",
+                HashMap::from([("port".to_string(), port as i32)]),
+                raw.clone(),
+            )
         }
         OUT => {
             let port = fetch_one(raw, fetch);
-            result("out", HashMap::from([("port".to_string(), port as i32)]), raw.clone())
+            result(
+                "out",
+                HashMap::from([("port".to_string(), port as i32)]),
+                raw.clone(),
+            )
         }
         EI => result("ei", HashMap::new(), raw.clone()),
         DI => result("di", HashMap::new(), raw.clone()),

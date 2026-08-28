@@ -69,32 +69,40 @@ pub fn encode_dcr(reg: u8) -> u8 {
     0b00_000_101 | ((reg & 0x07) << 3)
 }
 
-/// `STAX B`/`STAX D` — memory[rp] ← A.  Only `PAIR_B`/`PAIR_D` are valid.
+/// `STAX B`/`STAX D` — `memory[rp]` ← A. Only `PAIR_B`/`PAIR_D` are valid.
 pub fn encode_stax(pair: u8) -> u8 {
-    if pair == PAIR_D { STAX_D } else { STAX_B }
+    if pair == PAIR_D {
+        STAX_D
+    } else {
+        STAX_B
+    }
 }
 
-/// `LDAX B`/`LDAX D` — A ← memory[rp].  Only `PAIR_B`/`PAIR_D` are valid.
+/// `LDAX B`/`LDAX D` — A ← `memory[rp]`. Only `PAIR_B`/`PAIR_D` are valid.
 pub fn encode_ldax(pair: u8) -> u8 {
-    if pair == PAIR_D { LDAX_D } else { LDAX_B }
+    if pair == PAIR_D {
+        LDAX_D
+    } else {
+        LDAX_B
+    }
 }
 
-/// `SHLD addr` — memory[addr] ← L; memory[addr+1] ← H.
+/// `SHLD addr` — `memory[addr]` ← L; `memory[addr+1]` ← H.
 pub fn encode_shld(addr: u16) -> Vec<u8> {
     vec![SHLD, (addr & 0xFF) as u8, (addr >> 8) as u8]
 }
 
-/// `LHLD addr` — L ← memory[addr]; H ← memory[addr+1].
+/// `LHLD addr` — L ← `memory[addr]`; H ← `memory[addr+1]`.
 pub fn encode_lhld(addr: u16) -> Vec<u8> {
     vec![LHLD, (addr & 0xFF) as u8, (addr >> 8) as u8]
 }
 
-/// `STA addr` — memory[addr] ← A.
+/// `STA addr` — `memory[addr]` ← A.
 pub fn encode_sta(addr: u16) -> Vec<u8> {
     vec![STA, (addr & 0xFF) as u8, (addr >> 8) as u8]
 }
 
-/// `LDA addr` — A ← memory[addr].
+/// `LDA addr` — A ← `memory[addr]`.
 pub fn encode_lda(addr: u16) -> Vec<u8> {
     vec![LDA, (addr & 0xFF) as u8, (addr >> 8) as u8]
 }
@@ -106,7 +114,7 @@ pub fn encode_lda(addr: u16) -> Vec<u8> {
 /// `MOV dst, src` — register-to-register copy (either side may be M).
 /// Bit pattern: `01_ddd_sss`.  `MOV M, M` (`0x76`) is reserved for `HLT`;
 /// this function does not special-case it — callers should use
-/// [`HLT`](crate::opcodes::HLT) directly rather than `encode_mov(REG_M, REG_M)`.
+/// [`HLT`] directly rather than `encode_mov(REG_M, REG_M)`.
 pub fn encode_mov(dst: u8, src: u8) -> u8 {
     0b01_000_000 | ((dst & 0x07) << 3) | (src & 0x07)
 }
