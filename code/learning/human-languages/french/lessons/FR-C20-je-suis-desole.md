@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-PLEASE-02, FR-ETYMON-PLAIRE-03, FR-GRAMMAR-PLEASE-REGISTER-04]
 introduces:
   knowledge: [FR-LEX-DESOLE-02, FR-ETYMON-DESOLE-03, FR-PRAGMATICS-SORRY-04]
+introduces_idioms: [FR-IDIOM-JE-SUIS-DESOLE-SORRY-01]
+introduces_senses: []
+introduces_culture_claims: [FR-CULTURE-SORRY-REGISTER-01]
 practises:
   knowledge: [FR-LEX-DESOLE-02, FR-ETYMON-DESOLE-03, FR-PRAGMATICS-SORRY-04]
 skills: [listening, speaking, reading]

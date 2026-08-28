@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-THE-03, FR-ETYMON-THE-04]
 introduces:
   knowledge: [FR-LEX-LAIT-05, FR-ETYMON-LAIT-06]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-LAIT-05, FR-ETYMON-LAIT-06, FR-LEX-THE-03, FR-ETYMON-THE-04, FR-LEX-CAFE-01]
 skills: [listening, speaking, reading]

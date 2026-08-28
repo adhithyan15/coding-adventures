@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-LAIT-05, FR-ETYMON-LAIT-06, FR-CULTURE-OUI-04, FR-PRAGMATICS-SI-05]
 introduces:
   knowledge: [FR-LEX-SUCRE-07, FR-ETYMON-SUCRE-08]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-SUCRE-07, FR-ETYMON-SUCRE-08, FR-LEX-LAIT-05, FR-ETYMON-LAIT-06, FR-LEX-THE-03, FR-LEX-CAFE-01, FR-ETYMON-CAFE-02, FR-CULTURE-OUI-04, FR-PRAGMATICS-SI-05]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-VOULOIR-01, FR-LEX-POUVOIR-02, FR-LEX-DEVOIR-03]
 introduces:
   knowledge: [FR-GRAMMAR-MODAL-CHAIN-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-GRAMMAR-MODAL-CHAIN-04, FR-LEX-VOULOIR-01, FR-LEX-POUVOIR-02, FR-LEX-DEVOIR-03]
 skills: [listening, speaking, reading]

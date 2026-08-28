@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [FR-LEX-OUI-02, FR-ETYMON-OUI-03, FR-CULTURE-OUI-04, FR-PRAGMATICS-SI-05]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [FR-CULTURE-OUI-OIL-OC-01]
 practises:
   knowledge: [FR-LEX-OUI-02, FR-ETYMON-OUI-03, FR-CULTURE-OUI-04, FR-PRAGMATICS-SI-05]
 skills: [listening, speaking, reading]

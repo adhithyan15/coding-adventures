@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-PLEASE-02, FR-GRAMMAR-PLEASE-REGISTER-04]
 introduces:
   knowledge: [FR-LEX-CAFE-01, FR-ETYMON-CAFE-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-CAFE-01, FR-ETYMON-CAFE-02, FR-LEX-PLEASE-02, FR-GRAMMAR-PLEASE-REGISTER-04]
 skills: [listening, speaking, reading]

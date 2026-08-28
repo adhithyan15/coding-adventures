@@ -16,6 +16,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [FR-ORTHO-SALUT-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-ORTHO-SALUT-01]
 skills: [reading, writing]

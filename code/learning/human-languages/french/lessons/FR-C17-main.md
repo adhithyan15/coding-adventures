@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04, FR-SOUND-TETE-05]
 introduces:
   knowledge: [FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAIN-04, FR-ETYMON-MAINTENIR-05]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAIN-04, FR-ETYMON-MAINTENIR-05]
 skills: [listening, speaking, reading]

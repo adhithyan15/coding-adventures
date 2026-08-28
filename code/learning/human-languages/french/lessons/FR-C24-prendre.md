@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-MAIN-02, FR-ETYMON-MAIN-04]
 introduces:
   knowledge: [FR-LEX-PRENDRE-01, FR-ETYMON-PRENDRE-02, FR-GRAMMAR-PRENDRE-STEM-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-PRENDRE-01, FR-ETYMON-PRENDRE-02, FR-GRAMMAR-PRENDRE-STEM-03, FR-LEX-MAIN-02, FR-ETYMON-MAIN-04]
 skills: [listening, speaking, reading]

@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-POUVOIR-02]
 introduces:
   knowledge: [FR-LEX-DEVOIR-03]
+introduces_idioms: []
+introduces_senses: [FR-SENSE-DEVOIR-OWE-01]
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-DEVOIR-03, FR-LEX-POUVOIR-02]
 skills: [listening, speaking, reading]

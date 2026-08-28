@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-OEIL-01, FR-ETYMON-OEIL-02]
 introduces:
   knowledge: [FR-LEX-NEZ-03, FR-ETYMON-NEZ-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-NEZ-03, FR-ETYMON-NEZ-04, FR-LEX-OEIL-01, FR-ETYMON-OEIL-02]
 skills: [listening, speaking, reading]

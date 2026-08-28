@@ -5,7 +5,7 @@
     {
       "language": "french",
       "chapter": 17,
-      "sourceHash": "fnv1a64:e82573b5bfc33017",
+      "sourceHash": "fnv1a64:786f57c3303a0541",
       "lessonIds": [
         "FR-C17-tete",
         "FR-C17-main"
@@ -15,7 +15,7 @@
     {
       "language": "french",
       "chapter": 18,
-      "sourceHash": "fnv1a64:447a84035bce7f32",
+      "sourceHash": "fnv1a64:bf95cd427951952e",
       "lessonIds": [
         "FR-C18-oui",
         "FR-C18-non"
@@ -25,7 +25,7 @@
     {
       "language": "french",
       "chapter": 19,
-      "sourceHash": "fnv1a64:7b0e60c925c1f93b",
+      "sourceHash": "fnv1a64:298172841af8e4ae",
       "lessonIds": [
         "FR-C19-sil-vous-plait"
       ],
@@ -34,7 +34,7 @@
     {
       "language": "french",
       "chapter": 20,
-      "sourceHash": "fnv1a64:6e56e082362dff9b",
+      "sourceHash": "fnv1a64:5f42597a2da4f798",
       "lessonIds": [
         "FR-C20-je-suis-desole"
       ],
@@ -43,7 +43,7 @@
     {
       "language": "french",
       "chapter": 21,
-      "sourceHash": "fnv1a64:ccc02a6296c9b1ce",
+      "sourceHash": "fnv1a64:196e39f1b6cb40f2",
       "lessonIds": [
         "FR-C21-le-temps"
       ],
@@ -52,7 +52,7 @@
     {
       "language": "french",
       "chapter": 22,
-      "sourceHash": "fnv1a64:8fda576460f0e796",
+      "sourceHash": "fnv1a64:fb49102a7d9fbcc6",
       "lessonIds": [
         "FR-C22-chien-chat"
       ],
@@ -61,7 +61,7 @@
     {
       "language": "french",
       "chapter": 23,
-      "sourceHash": "fnv1a64:e639587f37730d15",
+      "sourceHash": "fnv1a64:d520a52bdfee2b10",
       "lessonIds": [
         "FR-C23-vert-jaune"
       ],
@@ -70,7 +70,7 @@
     {
       "language": "french",
       "chapter": 24,
-      "sourceHash": "fnv1a64:b9bf2d170686fe7f",
+      "sourceHash": "fnv1a64:63714e77bdd41f52",
       "lessonIds": [
         "FR-C24-prendre",
         "FR-C24-demander",
@@ -82,7 +82,7 @@
     {
       "language": "french",
       "chapter": 25,
-      "sourceHash": "fnv1a64:c39b6be77d4b01c0",
+      "sourceHash": "fnv1a64:7fd319b97f9cfe41",
       "lessonIds": [
         "FR-C25-comprendre",
         "FR-C25-penser",
@@ -94,7 +94,7 @@
     {
       "language": "french",
       "chapter": 26,
-      "sourceHash": "fnv1a64:26c39ba8ef152cd3",
+      "sourceHash": "fnv1a64:a90508cbd39c7e6b",
       "lessonIds": [
         "FR-C26-entendre",
         "FR-C26-dormir",
@@ -106,7 +106,7 @@
     {
       "language": "french",
       "chapter": 27,
-      "sourceHash": "fnv1a64:4e06ea93672e2c1a",
+      "sourceHash": "fnv1a64:63390900cfac961f",
       "lessonIds": [
         "FR-C27-sasseoir",
         "FR-C27-se-lever",
@@ -118,7 +118,7 @@
     {
       "language": "french",
       "chapter": 28,
-      "sourceHash": "fnv1a64:a92990ca7abb814c",
+      "sourceHash": "fnv1a64:4333ad5087ade2cf",
       "lessonIds": [
         "FR-C28-cafe",
         "FR-C28-the",
@@ -130,7 +130,7 @@
     {
       "language": "french",
       "chapter": 29,
-      "sourceHash": "fnv1a64:e036c23eaa61d6e3",
+      "sourceHash": "fnv1a64:1d96f1fe7687713f",
       "lessonIds": [
         "FR-C29-ami",
         "FR-C29-famille",
@@ -142,7 +142,7 @@
     {
       "language": "french",
       "chapter": 30,
-      "sourceHash": "fnv1a64:0dd3b9d6844a05d4",
+      "sourceHash": "fnv1a64:8a0b8e345519679a",
       "lessonIds": [
         "FR-C30-fromage",
         "FR-C30-beurre",
@@ -154,7 +154,7 @@
     {
       "language": "french",
       "chapter": 31,
-      "sourceHash": "fnv1a64:a19533a9208a54b6",
+      "sourceHash": "fnv1a64:93539542a2fb6b61",
       "lessonIds": [
         "FR-C31-oeil",
         "FR-C31-nez",
@@ -166,7 +166,7 @@
     {
       "language": "french",
       "chapter": 32,
-      "sourceHash": "fnv1a64:161058a80338ec76",
+      "sourceHash": "fnv1a64:95a698fb852c82dc",
       "lessonIds": [
         "FR-C32-intonation",
         "FR-C32-est-ce-que",
@@ -183,7 +183,7 @@
     {
       "language": "french",
       "chapter": 33,
-      "sourceHash": "fnv1a64:35ea0518c5abb30c",
+      "sourceHash": "fnv1a64:ac6fddfb9d2d80d4",
       "lessonIds": [
         "FR-C33-vouloir",
         "FR-C33-pouvoir",

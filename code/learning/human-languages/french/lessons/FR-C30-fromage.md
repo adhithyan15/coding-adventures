@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-PERSONNE-08, FR-LEX-PLEASE-02, FR-LEX-ENFANT-06]
 introduces:
   knowledge: [FR-LEX-FROMAGE-01, FR-ETYMON-FROMAGE-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-FROMAGE-01, FR-ETYMON-FROMAGE-02, FR-LEX-PLEASE-02, FR-LEX-PERSONNE-08, FR-LEX-ENFANT-06]
 skills: [listening, speaking, reading]

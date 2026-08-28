@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [FR-LEX-TEMPS-02, FR-GRAMMAR-IL-FAIT-03, FR-LEX-IL-PLEUT-04, FR-ETYMON-PLEUVOIR-05]
+introduces_idioms: []
+introduces_senses: [FR-SENSE-TEMPS-WEATHER-01]
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-TEMPS-02, FR-GRAMMAR-IL-FAIT-03, FR-LEX-IL-PLEUT-04, FR-ETYMON-PLEUVOIR-05]
 skills: [listening, speaking, reading]

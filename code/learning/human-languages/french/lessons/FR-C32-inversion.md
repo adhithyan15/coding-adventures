@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-GRAMMAR-INTONATION-01, FR-GRAMMAR-ESTCEQUE-02, FR-LEX-OU-03, FR-LEX-QUAND-04, FR-LEX-COMMENT-05, FR-LEX-COMBIEN-06, FR-LEX-POURQUOI-07]
 introduces:
   knowledge: [FR-GRAMMAR-INVERSION-08]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [FR-CULTURE-INVERSION-FORMAL-WRITTEN-01]
 practises:
   knowledge: [FR-GRAMMAR-INTONATION-01, FR-GRAMMAR-ESTCEQUE-02, FR-LEX-OU-03, FR-LEX-QUAND-04, FR-LEX-COMMENT-05, FR-LEX-COMBIEN-06, FR-LEX-POURQUOI-07, FR-GRAMMAR-INVERSION-08]
 skills: [listening, speaking, reading]

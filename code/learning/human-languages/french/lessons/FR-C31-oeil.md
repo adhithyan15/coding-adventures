@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-OEUF-07, FR-LEX-TETE-02, FR-CULTURE-TETE-04, FR-SOUND-TETE-05]
 introduces:
   knowledge: [FR-LEX-OEIL-01, FR-ETYMON-OEIL-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-OEIL-01, FR-ETYMON-OEIL-02, FR-LEX-OEUF-07, FR-LEX-TETE-02, FR-CULTURE-TETE-04, FR-SOUND-TETE-05]
 skills: [listening, speaking, reading]

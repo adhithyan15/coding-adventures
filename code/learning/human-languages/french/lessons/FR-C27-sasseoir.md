@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-COURIR-10, FR-LEX-MARCHER-07, FR-LEX-DORMIR-04, FR-ETYMON-DORMIR-05, FR-LEX-ENTENDRE-01]
 introduces:
   knowledge: [FR-LEX-ASSEOIR-01, FR-ETYMON-ASSEOIR-02, FR-GRAMMAR-ASSEOIR-TWO-STEMS-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [FR-CULTURE-ASSEOIR-FRANCE-FORM-VARIATION-01]
 practises:
   knowledge: [FR-LEX-ASSEOIR-01, FR-ETYMON-ASSEOIR-02, FR-GRAMMAR-ASSEOIR-TWO-STEMS-03, FR-LEX-COURIR-10, FR-LEX-MARCHER-07, FR-LEX-DORMIR-04, FR-ETYMON-DORMIR-05, FR-LEX-ENTENDRE-01]
 skills: [listening, speaking, reading]

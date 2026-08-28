@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-DEMANDER-04, FR-LEX-PLEASE-02, FR-GRAMMAR-PLEASE-REGISTER-04]
 introduces:
   knowledge: [FR-LEX-AIDER-07, FR-ETYMON-AIDER-08]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-AIDER-07, FR-ETYMON-AIDER-08, FR-LEX-DEMANDER-04, FR-LEX-PLEASE-02, FR-GRAMMAR-PLEASE-REGISTER-04]
 skills: [listening, speaking, reading]

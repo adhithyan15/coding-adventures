@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Want, Can, Must",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:abb9eee8ab13a632",
+  "sourceHash": "fnv1a64:6af7b0112e1b4493",
   "lessons": [
     {
       "id": "FR-C33-vouloir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ff8dd5065225afd",
+      "sourceHash": "fnv1a64:4cd2d2610e3163f6",
       "notice": null,
       "blocks": [
         {
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83e40d8cbef9bb56",
+      "sourceHash": "fnv1a64:c4dd26105d88046f",
       "notice": null,
       "blocks": [
         {
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ec79d2d8196026a",
+      "sourceHash": "fnv1a64:0b117fe5ee9ba964",
       "notice": null,
       "blocks": [
         {
@@ -479,7 +479,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c0416eaf66b97ca",
+      "sourceHash": "fnv1a64:b8594ed6679a96f5",
       "notice": null,
       "blocks": [
         {

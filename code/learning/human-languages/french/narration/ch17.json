@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Head and Hand",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8c6d326221123c15",
+  "sourceHash": "fnv1a64:a17d3639e3b5c5b7",
   "lessons": [
     {
       "id": "FR-C17-tete",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:51ee660bc823dcc3",
+      "sourceHash": "fnv1a64:5e2fddb422fadef4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -214,7 +214,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be3d639c94977510",
+      "sourceHash": "fnv1a64:5379491197d468f5",
       "notice": null,
       "blocks": [
         {

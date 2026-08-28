@@ -18,6 +18,9 @@ requires:
   knowledge: [FR-LEX-ENTENDRE-01, FR-LEX-CHAT-04, FR-ETYMON-CHAT-05, FR-LEX-COMPRENDRE-01]
 introduces:
   knowledge: [FR-LEX-DORMIR-04, FR-ETYMON-DORMIR-05, FR-GRAMMAR-DORMIR-STEM-06]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [FR-LEX-DORMIR-04, FR-ETYMON-DORMIR-05, FR-GRAMMAR-DORMIR-STEM-06, FR-LEX-ENTENDRE-01, FR-LEX-CHAT-04, FR-ETYMON-CHAT-05, FR-LEX-COMPRENDRE-01]
 skills: [listening, speaking, reading]

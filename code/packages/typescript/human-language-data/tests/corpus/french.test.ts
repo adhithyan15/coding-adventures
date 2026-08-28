@@ -3,12 +3,21 @@ import { compileLessonActivities } from "../../src/activity.js";
 import { loadTrackLessons } from "../../src/loader.js";
 import {
   expectLanguageContinuity,
+  expectLanguageLessonBudgets,
   expectLanguageModality,
   languageWritingStages,
 } from "./assert-language-corpus.js";
 
 it("pins French continuity", () => expectLanguageContinuity("french"));
 it("pins French modality", () => expectLanguageModality("french"));
+it("pins French lesson-content budgets", () =>
+  expectLanguageLessonBudgets("french", {
+    lessons: 58,
+    idioms: 3,
+    senses: 7,
+    cultureClaims: 10,
+    unitPrefix: "FR",
+  }));
 
 it("pins French's complete pre-A1 writing runway", () => {
   const french = languageWritingStages("french");
