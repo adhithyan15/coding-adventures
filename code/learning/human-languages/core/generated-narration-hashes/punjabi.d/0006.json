@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 6,
-  "sourceHash": "fnv1a64:b77ab588fd68bcd5",
+  "sourceHash": "fnv1a64:e5e2b0df8902a562",
   "lessonIds": [
     "PA-C06-numbers-1-5",
     "PA-C06-panj-convergence"
@@ -11,6 +11,6 @@
   "text": "punjabi/narration/ch06.txt",
   "json": "punjabi/narration/ch06.json",
   "textHash": "fnv1a64:281aa641ce5dab6c",
-  "jsonHash": "fnv1a64:106331c68cd48720",
+  "jsonHash": "fnv1a64:14f18819bbf48f37",
   "findings": []
 }

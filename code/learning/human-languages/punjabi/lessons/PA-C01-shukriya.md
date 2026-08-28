@@ -18,6 +18,9 @@ requires:
   knowledge: [PA-LEX-DHANVAAD-01]
 introduces:
   knowledge: [PA-LEX-SHUKRIYA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-DHANVAAD-01, PA-LEX-SHUKRIYA-01]
 skills: [listening, speaking]

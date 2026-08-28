@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-KHANA]
 introduces:
   knowledge: [PA-LEX-VEKHNA, PA-ETYMON-VEKHNA-IKS, PA-COMPARISON-VEKHNA-DEKHNA]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-KHANA, PA-LEX-VEKHNA, PA-ETYMON-VEKHNA-IKS, PA-COMPARISON-VEKHNA-DEKHNA]
 skills: [listening, speaking, reading]

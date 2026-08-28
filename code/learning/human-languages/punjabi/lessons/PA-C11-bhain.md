@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-LEX-BHARA, PA-ETYMON-BHARA-BROTHER, PA-SOUND-TONE-LOW, PA-LEX-DOST, PA-LEX-PARIVAR]
 introduces:
   knowledge: [PA-LEX-BHAIN, PA-ETYMON-BHAIN-BHAGA]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-BHAIN, PA-ETYMON-BHAIN-BHAGA, PA-LEX-BHARA, PA-ETYMON-BHARA-BROTHER, PA-SOUND-TONE-LOW, PA-LEX-DOST, PA-LEX-PARIVAR]
 skills: [listening, speaking, reading]

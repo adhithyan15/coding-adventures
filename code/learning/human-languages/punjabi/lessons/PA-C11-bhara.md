@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-LEX-PARIVAR, PA-ETYMON-PARIVAR-SURROUND, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA, PA-SOUND-TONE-HIGH-LEVEL]
 introduces:
   knowledge: [PA-LEX-BHARA, PA-ETYMON-BHARA-BROTHER, PA-SOUND-TONE-LOW]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-BHARA, PA-ETYMON-BHARA-BROTHER, PA-SOUND-TONE-LOW, PA-LEX-PARIVAR, PA-ETYMON-PARIVAR-SURROUND, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA, PA-SOUND-TONE-HIGH-LEVEL]
 skills: [listening, speaking, reading]

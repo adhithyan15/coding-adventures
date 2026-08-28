@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN, PA-LEX-DUDH, PA-LEX-CHA, PA-LEX-PAANI]
 introduces:
   knowledge: [PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE, PA-LEX-ROTI, PA-ETYMON-ROTI-UNKNOWN, PA-LEX-DUDH, PA-LEX-CHA, PA-LEX-PAANI]
 skills: [listening, speaking, reading]

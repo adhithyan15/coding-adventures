@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 13,
-  "sourceHash": "fnv1a64:5befc5cc961e0e3d",
+  "sourceHash": "fnv1a64:837fe1c8ae49acef",
   "lessonIds": [
     "PA-C13-dil",
     "PA-C13-sir"
@@ -11,6 +11,6 @@
   "text": "punjabi/narration/ch13.txt",
   "json": "punjabi/narration/ch13.json",
   "textHash": "fnv1a64:4381828405ebd516",
-  "jsonHash": "fnv1a64:e48facd3e87b7eb0",
+  "jsonHash": "fnv1a64:adb74449ee8d0a4e",
   "findings": []
 }

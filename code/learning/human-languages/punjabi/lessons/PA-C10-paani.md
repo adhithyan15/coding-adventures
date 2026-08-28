@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-LEX-PASAND, PA-GRAMMAR-DATIVE-LIKING, PA-LEX-MADAD-KARNA, PA-GRAMMAR-NOUN-PLUS-KARNA, PA-ETYMON-MADAD-ARABIC]
 introduces:
   knowledge: [PA-LEX-PAANI, PA-PHRASE-KIRPA-KARKE, PA-ETYMON-PAANI-DRINK]
+introduces_idioms: [PA-IDIOM-KIRPA-KARKE-PLEASE-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-PAANI, PA-PHRASE-KIRPA-KARKE, PA-ETYMON-PAANI-DRINK, PA-LEX-PASAND, PA-GRAMMAR-DATIVE-LIKING, PA-LEX-MADAD-KARNA, PA-GRAMMAR-NOUN-PLUS-KARNA]
 skills: [listening, speaking, reading]

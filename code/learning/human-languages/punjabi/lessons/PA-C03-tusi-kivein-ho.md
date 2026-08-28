@@ -18,6 +18,9 @@ requires:
   knowledge: [PA-LEX-KIVEIN-03, PA-LEX-YOU-REGISTER-02]
 introduces:
   knowledge: [PA-PHRASE-HOW-ARE-YOU-03, PA-GRAMMAR-TUSI-HO-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-KIVEIN-03, PA-LEX-YOU-REGISTER-02, PA-PHRASE-HOW-ARE-YOU-03, PA-GRAMMAR-TUSI-HO-03]
 skills: [listening, speaking]

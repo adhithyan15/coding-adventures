@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a1160de7afbd017f",
+  "sourceHash": "fnv1a64:92e90a71f2457bb6",
   "lessons": [
     {
       "id": "PA-C02-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:973aad1bb953e9b9",
+      "sourceHash": "fnv1a64:23f9bac69def9884",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:137292eb187e119c",
+      "sourceHash": "fnv1a64:bbc1fa8dbb8d64db",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -302,7 +302,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bb95417168841d79",
+      "sourceHash": "fnv1a64:6e4bc1acf3d40c62",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -456,7 +456,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e29f514855dd0d1",
+      "sourceHash": "fnv1a64:c89f616ac63cbd90",
       "notice": null,
       "blocks": [
         {
@@ -581,7 +581,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5b68d4e45e8970fb",
+      "sourceHash": "fnv1a64:a7138f2e1ea6fb83",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -741,7 +741,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:67db2d8205a27276",
+      "sourceHash": "fnv1a64:fcb20b07cc70a877",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -881,7 +881,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed73bdd53864f9c8",
+      "sourceHash": "fnv1a64:a0b29ac8d42932fb",
       "notice": null,
       "blocks": [
         {
@@ -1015,7 +1015,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6da03ed7064f491c",
+      "sourceHash": "fnv1a64:b065f1d295493d60",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1158,7 +1158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0830fb96cca7cb95",
+      "sourceHash": "fnv1a64:e33b221a042150ba",
       "notice": null,
       "blocks": [
         {

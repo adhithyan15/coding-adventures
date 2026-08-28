@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE, PA-LEX-ROTI]
 introduces:
   knowledge: [PA-LEX-PARIVAR, PA-ETYMON-PARIVAR-SURROUND]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-PARIVAR, PA-ETYMON-PARIVAR-SURROUND, PA-LEX-DOST, PA-ETYMON-DOST-CHOOSE, PA-LEX-ROTI]
 skills: [listening, speaking, reading]

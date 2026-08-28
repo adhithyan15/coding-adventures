@@ -16,6 +16,9 @@ requires:
   knowledge: [PA-LEX-SAT-SRI-AKAL-01, PA-LEX-NAMASTE-01, PA-LEX-HAAN-NAHIN-01, PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01, PA-SCRIPT-HAAN-01, PA-LEX-DHANVAAD-01, PA-LEX-SHUKRIYA-01]
 introduces:
   knowledge: []
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-SAT-SRI-AKAL-01, PA-LEX-NAMASTE-01, PA-LEX-HAAN-NAHIN-01, PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01, PA-SCRIPT-HAAN-01, PA-LEX-DHANVAAD-01, PA-LEX-SHUKRIYA-01]
 skills: [reading, listening, writing, speaking]

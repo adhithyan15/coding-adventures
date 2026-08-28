@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [PA-LEX-SAT-SRI-AKAL-01]
+introduces_idioms: [PA-IDIOM-SAT-SRI-AKAL-GREETING-01]
+introduces_senses: []
+introduces_culture_claims: [PA-CULTURE-SAT-SRI-AKAL-SIKH-GREETING-01]
 practises:
   knowledge: [PA-LEX-SAT-SRI-AKAL-01]
 skills: [listening, speaking]

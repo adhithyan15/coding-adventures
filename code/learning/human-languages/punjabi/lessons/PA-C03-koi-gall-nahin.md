@@ -18,6 +18,9 @@ requires:
   knowledge: [PA-LEX-HAAN-NAHIN-01, PA-LEX-DHANVAAD-01]
 introduces:
   knowledge: [PA-PHRASE-NO-PROBLEM-03, PA-ETYMON-NEGATIVE-NE-03]
+introduces_idioms: [PA-IDIOM-KOI-GALL-NAHIN-GRACIOUS-REPLY-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-HAAN-NAHIN-01, PA-LEX-DHANVAAD-01, PA-PHRASE-NO-PROBLEM-03, PA-ETYMON-NEGATIVE-NE-03]
 skills: [listening, speaking]

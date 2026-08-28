@@ -18,6 +18,9 @@ requires:
   knowledge: [PA-PHRASE-MY-NAME-02]
 introduces:
   knowledge: [PA-LEX-YOU-REGISTER-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [PA-CULTURE-YOU-REGISTER-FIRST-MEETING-01]
 practises:
   knowledge: [PA-PHRASE-MY-NAME-02, PA-LEX-YOU-REGISTER-02]
 skills: [listening, speaking]

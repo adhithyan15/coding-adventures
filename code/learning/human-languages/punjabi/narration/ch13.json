@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Heart and Head",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5befc5cc961e0e3d",
+  "sourceHash": "fnv1a64:837fe1c8ae49acef",
   "lessons": [
     {
       "id": "PA-C13-dil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:431ad2ee677edac2",
+      "sourceHash": "fnv1a64:6991138fdb8550f9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4f34c56bd8284fb9",
+      "sourceHash": "fnv1a64:a2dc9b8969b5de50",
       "notice": {
         "modality": "sight",
         "needs": [

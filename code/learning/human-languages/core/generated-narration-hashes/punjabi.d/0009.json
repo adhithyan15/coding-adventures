@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 9,
-  "sourceHash": "fnv1a64:a5d3077984886e8a",
+  "sourceHash": "fnv1a64:bfc8570198a3e9b7",
   "lessonIds": [
     "PA-C09-laina",
     "PA-C09-puchhna",
@@ -13,6 +13,6 @@
   "text": "punjabi/narration/ch09.txt",
   "json": "punjabi/narration/ch09.json",
   "textHash": "fnv1a64:9fbcd2f5256b662b",
-  "jsonHash": "fnv1a64:984b10bd6adcb49a",
+  "jsonHash": "fnv1a64:8aa189df468a8289",
   "findings": []
 }

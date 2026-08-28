@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-LEX-AKKH, PA-LEX-MADAD-KARNA, PA-GRAMMAR-NOUN-PLUS-KARNA, PA-SCRIPT-ADDAK-DOUBLING]
 introduces:
   knowledge: [PA-LEX-KANN, PA-CONTRAST-KANN-KARNA]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-KANN, PA-CONTRAST-KANN-KARNA, PA-LEX-AKKH, PA-LEX-MADAD-KARNA, PA-SCRIPT-ADDAK-DOUBLING]
 skills: [listening, speaking, reading]

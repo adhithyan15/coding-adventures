@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:6b670b9e6e92363f",
+  "sourceHash": "fnv1a64:6de8578d95df8570",
   "summary": {
     "totalLessons": 78,
     "voice": 25,
@@ -277,7 +277,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:836e8ae4284500b6"
+      "sourceHash": "fnv1a64:d88b64d2e787972b"
     },
     {
       "id": "PA-C01-namaste",
@@ -295,7 +295,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c9cc2e8d1d4ef820"
+      "sourceHash": "fnv1a64:f1edf54ba434f16f"
     },
     {
       "id": "PA-C01-han-nahin",
@@ -313,7 +313,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bd93501ba302f8bd"
+      "sourceHash": "fnv1a64:100343f90371008a"
     },
     {
       "id": "PA-W01-ha",
@@ -334,7 +334,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:ff4853fe4c956668",
+      "sourceHash": "fnv1a64:355cc818eac264b3",
       "detachableSegments": [
         "Script",
         "Writing — observe and trace"
@@ -359,7 +359,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:17188499a5e51aaf",
+      "sourceHash": "fnv1a64:c2c89f64d26d1a3c",
       "detachableSegments": [
         "Script",
         "Writing — observe and trace"
@@ -384,7 +384,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:143a5947ed38a09a",
+      "sourceHash": "fnv1a64:9b47de53bcb0391f",
       "detachableSegments": [
         "Script",
         "Writing — observe and trace"
@@ -407,7 +407,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a797111c5b871d24",
+      "sourceHash": "fnv1a64:af162bf222dea615",
       "detachableSegments": [
         "Script — assemble with no new sign"
       ]
@@ -429,7 +429,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:cd91f60b8ab9c3a6",
+      "sourceHash": "fnv1a64:5eaaae1fcdd44ce3",
       "detachableSegments": [
         "Writing — guided copy"
       ],
@@ -454,7 +454,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:22f3257310022d94",
+      "sourceHash": "fnv1a64:6ff2449cc3904c2b",
       "detachableSegments": [
         "Writing — delayed copy"
       ],
@@ -477,7 +477,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:203cde4f82ee4eac",
+      "sourceHash": "fnv1a64:777d287b1cbfdd27",
       "detachableSegments": [
         "Writing — short dictation"
       ],
@@ -499,7 +499,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9fb864d38bd214e3"
+      "sourceHash": "fnv1a64:8dd684244e1af3ce"
     },
     {
       "id": "PA-C01-shukriya",
@@ -517,7 +517,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:74202a95294e8fd5"
+      "sourceHash": "fnv1a64:5b0f205bbc8eee92"
     },
     {
       "id": "PA-C01-practice",
@@ -536,7 +536,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:144a52a8fa24a85d",
+      "sourceHash": "fnv1a64:0c31d76c94d3b16c",
       "detachableSegments": [
         "Script — see and understand",
         "Writing — one independent answer"
@@ -558,7 +558,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:973aad1bb953e9b9",
+      "sourceHash": "fnv1a64:23f9bac69def9884",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -579,7 +579,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:137292eb187e119c",
+      "sourceHash": "fnv1a64:bbc1fa8dbb8d64db",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -600,7 +600,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bb95417168841d79",
+      "sourceHash": "fnv1a64:6e4bc1acf3d40c62",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -621,7 +621,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0e29f514855dd0d1"
+      "sourceHash": "fnv1a64:c89f616ac63cbd90"
     },
     {
       "id": "PA-C02-tu-tusi",
@@ -639,7 +639,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5b68d4e45e8970fb",
+      "sourceHash": "fnv1a64:a7138f2e1ea6fb83",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -660,7 +660,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:67db2d8205a27276",
+      "sourceHash": "fnv1a64:fcb20b07cc70a877",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -681,7 +681,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ed73bdd53864f9c8"
+      "sourceHash": "fnv1a64:a0b29ac8d42932fb"
     },
     {
       "id": "PA-C02-khushi",
@@ -699,7 +699,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6da03ed7064f491c",
+      "sourceHash": "fnv1a64:b065f1d295493d60",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -720,7 +720,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0830fb96cca7cb95"
+      "sourceHash": "fnv1a64:e33b221a042150ba"
     },
     {
       "id": "PA-C03-kivein",
@@ -738,7 +738,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:13feacee070c0589",
+      "sourceHash": "fnv1a64:58181e78c97737a8",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -759,7 +759,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:67c1425883cfebc0"
+      "sourceHash": "fnv1a64:926ee3e5c7115e73"
     },
     {
       "id": "PA-R03-wellbeing-r1",
@@ -777,7 +777,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:96efdc6397b9f8e0"
+      "sourceHash": "fnv1a64:202de047ba9d5f39"
     },
     {
       "id": "PA-C03-main",
@@ -795,7 +795,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9bd127d8c66f0e58",
+      "sourceHash": "fnv1a64:8c74bcd4a9c611ed",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -816,7 +816,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d5e5598f7c637bf7",
+      "sourceHash": "fnv1a64:8f8f6bf8688b9550",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -837,7 +837,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0c7a33984ed2d729",
+      "sourceHash": "fnv1a64:c086f565adf83f93",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -858,7 +858,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dce86f6f942229f4"
+      "sourceHash": "fnv1a64:60848f42d47b0cf7"
     },
     {
       "id": "PA-C04-phir",
@@ -936,7 +936,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a1111b7e9500ba77"
+      "sourceHash": "fnv1a64:ecedec026b89131c"
     },
     {
       "id": "PA-C04-rab-raakha",
@@ -1096,7 +1096,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:eb013f7b1d01d8f5"
+      "sourceHash": "fnv1a64:54b38eb0c72fe8be"
     },
     {
       "id": "PA-C06-panj-convergence",
@@ -1114,7 +1114,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ffa41e7a4b0fb099"
+      "sourceHash": "fnv1a64:a731337dc95f5cd6"
     },
     {
       "id": "PA-C07-hona",
@@ -1132,7 +1132,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b885be04f89dedf2"
+      "sourceHash": "fnv1a64:4662b67ab08de593"
     },
     {
       "id": "PA-C07-jana",
@@ -1150,7 +1150,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:454611cabf72ba2e"
+      "sourceHash": "fnv1a64:e8296a86ba7ff043"
     },
     {
       "id": "PA-C07-auna",
@@ -1168,7 +1168,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9564a2e1bfc6b848"
+      "sourceHash": "fnv1a64:de95cf78daea6df3"
     },
     {
       "id": "PA-C07-khana",
@@ -1186,7 +1186,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:399aa141195ccd0f"
+      "sourceHash": "fnv1a64:ba4f33f3a55ae352"
     },
     {
       "id": "PA-C07-vekhna",
@@ -1204,7 +1204,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:206f10ac6c1ebf37"
+      "sourceHash": "fnv1a64:318823eea240e19e"
     },
     {
       "id": "PA-R07-wellbeing-r3",
@@ -1222,7 +1222,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2673e58945cb94b1"
+      "sourceHash": "fnv1a64:72cc6108fc6c927e"
     },
     {
       "id": "PA-C07-janna",
@@ -1240,7 +1240,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:720de68e6041f13e"
+      "sourceHash": "fnv1a64:6d241d60dba8de3f"
     },
     {
       "id": "PA-C08-sochna",
@@ -1258,7 +1258,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a9a4fa8645386d68",
+      "sourceHash": "fnv1a64:4111148ac606e685",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1279,7 +1279,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dbc09d98b1506dd6",
+      "sourceHash": "fnv1a64:f3a15da9d5371add",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1300,7 +1300,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f2b3a3784e9d0877",
+      "sourceHash": "fnv1a64:d9aac73fb66e0bf2",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1321,7 +1321,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:990cb890f5403d2f",
+      "sourceHash": "fnv1a64:26cd2c14d419dabe",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1342,7 +1342,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b3ba243cf1ee590e",
+      "sourceHash": "fnv1a64:debc2c16c1ce8379",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1363,7 +1363,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c6326a269d01dcf7",
+      "sourceHash": "fnv1a64:e30f934ec89cec48",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1384,7 +1384,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fe20dd4c14e2913b",
+      "sourceHash": "fnv1a64:bb354ae47d72d452",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1405,7 +1405,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dd55d6ba97fead62",
+      "sourceHash": "fnv1a64:1ebebff9fddb8d8d",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1426,7 +1426,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dfd5bcf4f1c5a178",
+      "sourceHash": "fnv1a64:268b734c24f667cb",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1447,7 +1447,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:272712fa4822d6f7"
+      "sourceHash": "fnv1a64:f5f961502f8bc694"
     },
     {
       "id": "PA-C10-dudh",
@@ -1465,7 +1465,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c563cb8818f2ec50",
+      "sourceHash": "fnv1a64:7e5eaa8a86a0eb67",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1486,7 +1486,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:59b55cfa516d4f75",
+      "sourceHash": "fnv1a64:4e28f6858db1647c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1507,7 +1507,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1e7b38f4476778ba",
+      "sourceHash": "fnv1a64:e9adc15a9f3ba5e3",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1528,7 +1528,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ac3e35f497e92e49",
+      "sourceHash": "fnv1a64:3f049e4aa36e4fb8",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1549,7 +1549,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e0e3c62522448c62",
+      "sourceHash": "fnv1a64:c39647080b625461",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1570,7 +1570,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dcde203bbabcbb3c",
+      "sourceHash": "fnv1a64:37b807e0900e53d9",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1591,7 +1591,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:02cee814770632f1",
+      "sourceHash": "fnv1a64:d92561a802c40824",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1612,7 +1612,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f21af6e1defd8763",
+      "sourceHash": "fnv1a64:59f73db4bffd8656",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1633,7 +1633,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ceebc6370764052b",
+      "sourceHash": "fnv1a64:cd82f6edbb8eca3c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1654,7 +1654,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0163d79b2785b9e0",
+      "sourceHash": "fnv1a64:b918869cae1c86c7",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1675,7 +1675,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:431ad2ee677edac2",
+      "sourceHash": "fnv1a64:6991138fdb8550f9",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1696,7 +1696,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4f34c56bd8284fb9",
+      "sourceHash": "fnv1a64:a2dc9b8969b5de50",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1718,7 +1718,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:425fff0822b2ddb6",
+      "sourceHash": "fnv1a64:ec1301f1f656d3e7",
       "detachableSegments": [
         "Script"
       ],
@@ -1741,7 +1741,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:a7371059a8bb4421",
+      "sourceHash": "fnv1a64:a66b20a6e1bc51bc",
       "detachableSegments": [
         "Script"
       ],
@@ -1764,7 +1764,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:e0133bf731a1b255",
+      "sourceHash": "fnv1a64:a924a7b930d37c24",
       "detachableSegments": [
         "Script"
       ],
@@ -1787,7 +1787,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:447800b30688dd70",
+      "sourceHash": "fnv1a64:682dd5f1acb0746d",
       "detachableSegments": [
         "Script"
       ],
@@ -1810,7 +1810,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d406593dd3166706",
+      "sourceHash": "fnv1a64:41b4e4c376b76a3b",
       "detachableSegments": [
         "Script"
       ],
@@ -1833,7 +1833,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:a59475f6637af613",
+      "sourceHash": "fnv1a64:fbda09282ac90a88",
       "detachableSegments": [
         "Script"
       ],
@@ -1856,7 +1856,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:a25243511a7eaa71",
+      "sourceHash": "fnv1a64:4bbe49c3b617e79c",
       "detachableSegments": [
         "Script"
       ],

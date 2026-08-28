@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-HONA, PA-LEX-JANA, PA-LEX-AUNA, PA-LEX-KHANA, PA-LEX-VEKHNA, PA-SOUND-Y-TO-J, PA-SOUND-PUNJABI-TONE]
 introduces:
   knowledge: [PA-LEX-JANNA, PA-CONTRAST-JANA-JANNA, PA-ETYMON-JANNA-KNOW]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-HONA, PA-LEX-JANA, PA-LEX-AUNA, PA-LEX-KHANA, PA-LEX-VEKHNA, PA-SOUND-Y-TO-J, PA-SOUND-PUNJABI-TONE, PA-LEX-JANNA, PA-CONTRAST-JANA-JANNA, PA-ETYMON-JANNA-KNOW]
 skills: [listening, speaking, reading]

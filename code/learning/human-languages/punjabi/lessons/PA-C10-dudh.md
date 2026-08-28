@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-LEX-CHA, PA-LEX-PAANI, PA-PHRASE-KIRPA-KARKE, PA-SCRIPT-ADDAK-DOUBLING]
 introduces:
   knowledge: [PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-DUDH, PA-ETYMON-DUDH-DUGDHA, PA-LEX-CHA, PA-LEX-PAANI, PA-PHRASE-KIRPA-KARKE, PA-SCRIPT-ADDAK-DOUBLING, PA-LEX-PASAND]
 skills: [listening, speaking, reading]

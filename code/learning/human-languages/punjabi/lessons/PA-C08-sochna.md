@@ -19,6 +19,9 @@ requires:
   knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-JANNA, PA-LEX-AUNA]
 introduces:
   knowledge: [PA-LEX-SOCHNA, PA-ETYMON-SOCHNA-SHUC]
+introduces_idioms: []
+introduces_senses: [PA-SENSE-SOCH-THOUGHT-WORRY-01]
+introduces_culture_claims: []
 practises:
   knowledge: [PA-LEX-SOCHNA, PA-ETYMON-SOCHNA-SHUC, PA-GRAMMAR-NA-INFINITIVE, PA-LEX-JANNA, PA-CONTRAST-JANA-JANNA, PA-ETYMON-JANNA-KNOW, PA-LEX-AUNA, PA-ETYMON-AUNA-GAM]
 skills: [listening, speaking, reading]
