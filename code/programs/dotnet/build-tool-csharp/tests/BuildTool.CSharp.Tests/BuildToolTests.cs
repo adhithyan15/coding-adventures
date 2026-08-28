@@ -439,6 +439,241 @@ public sealed class BuildToolTests : IDisposable
         Assert.Equal("repository", diagnostic.Path);
     }
 
+    [Fact]
+    public void ToolchainDetectionConsumesEveryNeutralFixture()
+    {
+        var fixtureDirectory = Path.Combine(
+            RepositoryRoot,
+            "code",
+            "specs",
+            "fixtures",
+            "build-tool-v1",
+            "cases");
+        var fixturePaths = Directory
+            .GetFiles(fixtureDirectory, "toolchain-detection-*.json")
+            .OrderBy(path => path, StringComparer.Ordinal)
+            .ToArray();
+        Assert.True(fixturePaths.Length >= 10, $"Expected at least 10 fixtures, found {fixturePaths.Length}.");
+
+        foreach (var fixturePath in fixturePaths)
+        {
+            using var fixture = JsonDocument.Parse(File.ReadAllText(fixturePath));
+            var options = fixture.RootElement.GetProperty("input").GetProperty("options");
+            var packages = options
+                .GetProperty("packages")
+                .EnumerateArray()
+                .Select(package => new ToolchainPackageSnapshot(
+                    package.GetProperty("name").GetString()!,
+                    package.GetProperty("language").GetString()!,
+                    package
+                        .GetProperty("build_files")
+                        .EnumerateObject()
+                        .ToDictionary(
+                            property => property.Name,
+                            property => property.Value.GetString()!,
+                            StringComparer.Ordinal)))
+                .ToArray();
+            var scheduledElement = options.GetProperty("scheduled_packages");
+            IReadOnlyList<string>? scheduledPackages = scheduledElement.ValueKind == JsonValueKind.Null
+                ? null
+                : scheduledElement.EnumerateArray().Select(value => value.GetString()!).ToArray();
+            var forcedToolchains = options
+                .GetProperty("forced_toolchains")
+                .EnumerateArray()
+                .Select(value => value.GetString()!)
+                .ToArray();
+
+            var actual = ToolchainDetection.EvaluateSnapshot(
+                options.GetProperty("platform").GetString()!,
+                options.GetProperty("force_full").GetBoolean(),
+                packages,
+                scheduledPackages,
+                forcedToolchains);
+            var expected = fixture.RootElement.GetProperty("expected");
+            var expectedOutcome = expected.GetProperty("outcome").GetString()!;
+
+            Assert.True(
+                string.Equals(expectedOutcome, actual.Outcome, StringComparison.Ordinal),
+                $"{Path.GetFileName(fixturePath)} expected {expectedOutcome}, got {actual.Outcome}.");
+            if (expectedOutcome == "ok")
+            {
+                var expectedToolchains = expected
+                    .GetProperty("result")
+                    .GetProperty("toolchains")
+                    .EnumerateObject()
+                    .ToDictionary(
+                        property => property.Name,
+                        property => property.Value.GetBoolean(),
+                        StringComparer.Ordinal);
+                Assert.Equal(expectedToolchains.Count, actual.Toolchains.Count);
+                foreach (var (toolchain, needed) in expectedToolchains)
+                {
+                    Assert.True(actual.Toolchains.TryGetValue(toolchain, out var actualNeeded));
+                    Assert.Equal(needed, actualNeeded);
+                }
+                Assert.Empty(actual.Diagnostics);
+            }
+            else
+            {
+                Assert.Empty(actual.Toolchains);
+                Assert.Empty(expected.GetProperty("result").EnumerateObject());
+                var expectedDiagnostic = Assert.Single(expected.GetProperty("diagnostics").EnumerateArray());
+                var actualDiagnostic = Assert.Single(actual.Diagnostics);
+                Assert.Equal(expectedDiagnostic.GetProperty("code").GetString(), actualDiagnostic.Code);
+                Assert.Equal(expectedDiagnostic.GetProperty("severity").GetString(), actualDiagnostic.Severity);
+                Assert.Equal(expectedDiagnostic.GetProperty("package").GetString(), actualDiagnostic.Package);
+            }
+        }
+    }
+
+    [Fact]
+    public void DiscoveryReadsDeclarationsFromTheSelectedPlatformFront()
+    {
+        WriteFile(
+            "code/packages/rust/java-to-semantic-ir/BUILD",
+            "# needs-toolchain: java\ncargo test\n");
+        WriteFile(
+            "code/packages/rust/java-to-semantic-ir/BUILD_windows",
+            "# needs-toolchain: python\ncargo test\n");
+
+        var package = Assert.Single(Discovery.DiscoverPackages(Path.Combine(_tempRoot, "code"), "windows"));
+
+        Assert.Equal(["python"], package.ExtraToolchains);
+        Assert.Equal(["cargo test"], package.BuildCommands);
+    }
+
+    [Fact]
+    public void ToolchainSnapshotRejectsPerFileAndAggregateLimitOverruns()
+    {
+        var exactByteLimit = "# needs-toolchain: python\n";
+        exactByteLimit += new string('a', ToolchainDetection.MaxBuildBytes - exactByteLimit.Length);
+        Assert.Equal(["python"], ToolchainDetection.ParseExtraToolchains(exactByteLimit));
+
+        var exactLineLimit = "# needs-toolchain: python" + new string('\n', ToolchainDetection.MaxBuildLines - 1);
+        Assert.Equal(["python"], ToolchainDetection.ParseExtraToolchains(exactLineLimit));
+
+        var oversizedFile = new string('a', ToolchainDetection.MaxBuildBytes + 1);
+        Assert.Throws<ArgumentException>(() => ToolchainDetection.EvaluateSnapshot(
+            "linux",
+            false,
+            [new ToolchainPackageSnapshot("rust/app", "rust", new Dictionary<string, string> { ["BUILD"] = oversizedFile })],
+            null,
+            []));
+
+        var excessiveLines = exactLineLimit + "\n# needs-toolchain: java";
+        Assert.Throws<ArgumentException>(() => ToolchainDetection.EvaluateSnapshot(
+            "linux",
+            false,
+            [new ToolchainPackageSnapshot("rust/app", "rust", new Dictionary<string, string> { ["BUILD"] = excessiveLines })],
+            null,
+            []));
+
+        var exactAggregatePackages = Enumerable
+            .Range(0, 16)
+            .Select(index => new ToolchainPackageSnapshot(
+                $"rust/exact-{index}",
+                "rust",
+                new Dictionary<string, string> { ["BUILD"] = new string('a', ToolchainDetection.MaxBuildBytes) }))
+            .ToArray();
+        Assert.Equal(
+            "ok",
+            ToolchainDetection.EvaluateSnapshot("linux", false, exactAggregatePackages, [], []).Outcome);
+
+        var aggregatePackages = Enumerable
+            .Range(0, 17)
+            .Select(index => new ToolchainPackageSnapshot(
+                $"rust/app-{index}",
+                "rust",
+                new Dictionary<string, string> { ["BUILD"] = new string('a', 65_000) }))
+            .ToArray();
+        Assert.Throws<ArgumentException>(() => ToolchainDetection.EvaluateSnapshot(
+            "linux",
+            false,
+            aggregatePackages,
+            null,
+            []));
+    }
+
+    [Fact]
+    public void ToolchainDeclarationsRejectALoneCarriageReturnButAcceptCrlf()
+    {
+        Assert.Empty(ToolchainDetection.ParseExtraToolchains("# needs-toolchain: python\r"));
+        Assert.Equal(
+            ["python"],
+            ToolchainDetection.ParseExtraToolchains("# needs-toolchain: python\r\n"));
+    }
+
+    [Fact]
+    public void ToolchainForceFullStillRejectsAnUnsupportedSelectedLanguage()
+    {
+        var result = ToolchainDetection.EvaluateSnapshot(
+            "linux",
+            true,
+            [new ToolchainPackageSnapshot("zig/app", "zig", new Dictionary<string, string> { ["BUILD"] = "" })],
+            null,
+            []);
+
+        Assert.Equal("error", result.Outcome);
+        Assert.Empty(result.Toolchains);
+        var diagnostic = Assert.Single(result.Diagnostics);
+        Assert.Equal("TOOLCHAIN_UNSUPPORTED", diagnostic.Code);
+        Assert.Equal("zig/app", diagnostic.Package);
+    }
+
+    [Fact]
+    public void ProductionToolchainMappingTreatsTheStarlarkBuildBucketAsGo()
+    {
+        Assert.Equal("go", BuildToolApp.ToolchainForLanguage("starlark"));
+    }
+
+    [Fact]
+    public void ProductionForceFullEnablesTheClosedRegistryWithoutClassifyingSpecialBuckets()
+    {
+        var result = ToolchainDetection.EvaluateProductionPackages(
+            [new PackageSpec("unknown/fixture", string.Empty, [], "unknown", [])],
+            null,
+            true,
+            []);
+
+        Assert.Equal("ok", result.Outcome);
+        Assert.All(result.Toolchains, entry => Assert.True(entry.Value, entry.Key));
+        Assert.Empty(result.Diagnostics);
+    }
+
+    [Fact]
+    public void ProductionToolchainSchedulingConsultsOnlyAffectedPackageDeclarations()
+    {
+        var packages = new PackageSpec[]
+        {
+            new("rust/selected", string.Empty, [], "rust", ["python"]),
+            new("go/unselected", string.Empty, [], "go", ["java"]),
+        };
+
+        var result = ToolchainDetection.EvaluatePackages(
+            packages,
+            ["rust/selected"],
+            false,
+            []);
+
+        Assert.Equal("ok", result.Outcome);
+        Assert.True(result.Toolchains["rust"]);
+        Assert.True(result.Toolchains["python"]);
+        Assert.False(result.Toolchains["go"]);
+        Assert.False(result.Toolchains["java"]);
+    }
+
+    [Theory]
+    [InlineData("c", "cpp")]
+    [InlineData("cpp", "cpp")]
+    [InlineData("csharp", "dotnet")]
+    [InlineData("fsharp", "dotnet")]
+    [InlineData("wasm", "rust")]
+    [InlineData("ocaml", "ocaml")]
+    public void ToolchainLanguageMappingUsesCanonicalKeys(string language, string expectedToolchain)
+    {
+        Assert.Equal(expectedToolchain, ToolchainDetection.ToolchainForLanguage(language));
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_tempRoot))

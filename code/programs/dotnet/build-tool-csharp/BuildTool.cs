@@ -27,7 +27,23 @@ public sealed record PackageSpec(
     string Name,
     string Path,
     IReadOnlyList<string> BuildCommands,
-    string Language);
+    string Language,
+    IReadOnlyList<string> ExtraToolchains);
+
+public sealed record ToolchainPackageSnapshot(
+    string Name,
+    string Language,
+    IReadOnlyDictionary<string, string> BuildFiles);
+
+public sealed record ToolchainDiagnostic(
+    string Code,
+    string Severity,
+    string? Package);
+
+public sealed record ToolchainDetectionResult(
+    string Outcome,
+    IReadOnlyDictionary<string, bool> Toolchains,
+    IReadOnlyList<ToolchainDiagnostic> Diagnostics);
 
 public sealed record BuildResult(
     string PackageName,
@@ -367,6 +383,218 @@ public sealed class DirectedGraph
             .ToArray();
 }
 
+public static class ToolchainDetection
+{
+    public const int MaxBuildBytes = 65_536;
+    public const int MaxBuildLines = 4_096;
+    public const int MaxAggregateBuildBytes = 1_048_576;
+
+    private const string DeclarationPrefix = "# needs-toolchain:";
+
+    private static readonly string[] CanonicalToolchainNames =
+    [
+        "cpp", "dart", "dotnet", "elixir", "go", "haskell", "java", "kotlin",
+        "lua", "ocaml", "perl", "python", "ruby", "rust", "swift", "typescript",
+    ];
+
+    private static readonly HashSet<string> CanonicalToolchainSet =
+        new(CanonicalToolchainNames, StringComparer.Ordinal);
+
+    public static IReadOnlyList<string> CanonicalToolchains { get; } =
+        Array.AsReadOnly(CanonicalToolchainNames);
+
+    public static string ToolchainForLanguage(string language) =>
+        language switch
+        {
+            "wasm" => "rust",
+            "c" or "cpp" => "cpp",
+            "csharp" or "fsharp" or "dotnet" => "dotnet",
+            _ when CanonicalToolchainSet.Contains(language) => language,
+            _ => throw new ArgumentException($"Unsupported implementation language: {language}.", nameof(language)),
+        };
+
+    public static IReadOnlyList<string> ParseExtraToolchains(string rawContent)
+    {
+        if (Encoding.UTF8.GetByteCount(rawContent) > MaxBuildBytes || LogicalLineCount(rawContent) > MaxBuildLines)
+        {
+            return [];
+        }
+
+        var declarations = new List<string>();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var lines = rawContent.Split('\n');
+        for (var index = 0; index < lines.Length; index++)
+        {
+            var line = lines[index].TrimStart(' ', '\t');
+            if (index < lines.Length - 1 && line.EndsWith('\r'))
+            {
+                line = line[..^1];
+            }
+
+            line = line.TrimEnd(' ', '\t');
+
+            if (!line.StartsWith(DeclarationPrefix, StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            var suffix = line[DeclarationPrefix.Length..];
+            if (suffix.Length == 0 || (suffix[0] != ' ' && suffix[0] != '\t'))
+            {
+                continue;
+            }
+
+            var name = suffix.Trim(' ', '\t');
+            if (CanonicalToolchainSet.Contains(name) && seen.Add(name))
+            {
+                declarations.Add(name);
+            }
+        }
+
+        return declarations;
+    }
+
+    public static IReadOnlyList<string> ExtraToolchainsForSnapshot(
+        IReadOnlyDictionary<string, string> buildFiles,
+        string platform)
+    {
+        foreach (var filename in BuildFileCandidates(platform))
+        {
+            if (buildFiles.TryGetValue(filename, out var content))
+            {
+                return ParseExtraToolchains(content);
+            }
+        }
+
+        return [];
+    }
+
+    public static ToolchainDetectionResult EvaluateSnapshot(
+        string platform,
+        bool forceFull,
+        IReadOnlyList<ToolchainPackageSnapshot> packages,
+        IReadOnlyList<string>? scheduledPackages,
+        IReadOnlyList<string> forcedToolchains)
+    {
+        ValidateSnapshotLimits(packages);
+        var packageSpecs = packages
+            .Select(package => new PackageSpec(
+                package.Name,
+                string.Empty,
+                [],
+                package.Language,
+                ExtraToolchainsForSnapshot(package.BuildFiles, platform)))
+            .ToArray();
+        return EvaluatePackages(packageSpecs, scheduledPackages, forceFull, forcedToolchains);
+    }
+
+    public static ToolchainDetectionResult EvaluatePackages(
+        IReadOnlyList<PackageSpec> packages,
+        IReadOnlyCollection<string>? scheduledPackages,
+        bool forceFull,
+        IReadOnlyCollection<string> forcedToolchains) =>
+        EvaluatePackagesCore(packages, scheduledPackages, forceFull, forcedToolchains, true);
+
+    public static ToolchainDetectionResult EvaluateProductionPackages(
+        IReadOnlyList<PackageSpec> packages,
+        IReadOnlyCollection<string>? scheduledPackages,
+        bool forceFull,
+        IReadOnlyCollection<string> forcedToolchains) =>
+        EvaluatePackagesCore(packages, scheduledPackages, forceFull, forcedToolchains, false);
+
+    private static ToolchainDetectionResult EvaluatePackagesCore(
+        IReadOnlyList<PackageSpec> packages,
+        IReadOnlyCollection<string>? scheduledPackages,
+        bool forceFull,
+        IReadOnlyCollection<string> forcedToolchains,
+        bool validateForceFullLanguages)
+    {
+        var toolchains = CanonicalToolchains.ToDictionary(
+            toolchain => toolchain,
+            _ => forceFull,
+            StringComparer.Ordinal);
+        var selected = scheduledPackages is null
+            ? packages
+            : packages.Where(package => scheduledPackages.Contains(package.Name, StringComparer.Ordinal)).ToArray();
+
+        if (!forceFull || validateForceFullLanguages)
+        {
+            foreach (var package in selected)
+            {
+                string toolchain;
+                try
+                {
+                    toolchain = ToolchainForLanguage(package.Language);
+                }
+                catch (ArgumentException)
+                {
+                    return Unsupported(package.Name);
+                }
+
+                if (!forceFull)
+                {
+                    toolchains[toolchain] = true;
+                    foreach (var extraToolchain in package.ExtraToolchains)
+                    {
+                        toolchains[extraToolchain] = true;
+                    }
+                }
+            }
+        }
+
+        foreach (var forcedToolchain in forcedToolchains)
+        {
+            if (!CanonicalToolchainSet.Contains(forcedToolchain))
+            {
+                return Unsupported(null);
+            }
+
+            toolchains[forcedToolchain] = true;
+        }
+
+        return new ToolchainDetectionResult("ok", toolchains, []);
+    }
+
+    private static ToolchainDetectionResult Unsupported(string? package) =>
+        new(
+            "error",
+            new Dictionary<string, bool>(StringComparer.Ordinal),
+            [new ToolchainDiagnostic("TOOLCHAIN_UNSUPPORTED", "error", package)]);
+
+    private static IReadOnlyList<string> BuildFileCandidates(string platform) =>
+        platform switch
+        {
+            "darwin" => ["BUILD_mac", "BUILD_mac_and_linux", "BUILD"],
+            "linux" => ["BUILD_linux", "BUILD_mac_and_linux", "BUILD"],
+            "windows" or "win32" => ["BUILD_windows", "BUILD"],
+            _ => throw new ArgumentException($"Unsupported target platform: {platform}.", nameof(platform)),
+        };
+
+    private static void ValidateSnapshotLimits(IReadOnlyList<ToolchainPackageSnapshot> packages)
+    {
+        long aggregateBytes = 0;
+        foreach (var package in packages)
+        {
+            foreach (var content in package.BuildFiles.Values)
+            {
+                var byteCount = Encoding.UTF8.GetByteCount(content);
+                aggregateBytes += byteCount;
+                if (byteCount > MaxBuildBytes || LogicalLineCount(content) > MaxBuildLines)
+                {
+                    throw new ArgumentException("Toolchain BUILD snapshot exceeds its per-file resource ceiling.", nameof(packages));
+                }
+            }
+        }
+
+        if (aggregateBytes > MaxAggregateBuildBytes)
+        {
+            throw new ArgumentException("Toolchain BUILD snapshot exceeds its aggregate resource ceiling.", nameof(packages));
+        }
+    }
+
+    private static int LogicalLineCount(string content) => content.Count(character => character == '\n') + 1;
+}
+
 public static class Discovery
 {
     public static readonly HashSet<string> SkipDirs = new(StringComparer.Ordinal)
@@ -398,8 +626,8 @@ public static class Discovery
     private static readonly string[] KnownLanguages =
     [
         "python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl",
-        "swift", "dart", "haskell", "wasm", "java", "kotlin", "csharp",
-        "fsharp", "dotnet", "starlark",
+        "swift", "dart", "haskell", "wasm", "java", "kotlin", "c", "cpp",
+        "csharp", "fsharp", "dotnet", "ocaml", "starlark",
     ];
 
     public static IReadOnlyList<string> ReadLines(string filePath)
@@ -469,15 +697,15 @@ public static class Discovery
         return File.Exists(Combine(directory, "BUILD")) ? Combine(directory, "BUILD") : null;
     }
 
-    public static IReadOnlyList<PackageSpec> DiscoverPackages(string codeRoot)
+    public static IReadOnlyList<PackageSpec> DiscoverPackages(string codeRoot, string? platformOverride = null)
     {
         var packages = new List<PackageSpec>();
-        Walk(codeRoot, packages);
+        Walk(codeRoot, packages, platformOverride);
         packages.Sort((left, right) => StringComparer.Ordinal.Compare(left.Name, right.Name));
         return packages;
     }
 
-    private static void Walk(string directory, List<PackageSpec> packages)
+    private static void Walk(string directory, List<PackageSpec> packages, string? platformOverride)
     {
         var directoryName = Path.GetFileName(directory);
         if (SkipDirs.Contains(directoryName))
@@ -485,21 +713,23 @@ public static class Discovery
             return;
         }
 
-        var buildFile = GetBuildFile(directory);
+        var buildFile = GetBuildFile(directory, platformOverride);
         if (buildFile is not null)
         {
             var language = InferLanguage(directory);
+            var rawContent = File.ReadAllText(buildFile);
             packages.Add(new PackageSpec(
                 InferPackageName(directory, language),
                 Path.GetFullPath(directory),
                 ReadLines(buildFile),
-                language));
+                language,
+                ToolchainDetection.ParseExtraToolchains(rawContent)));
             return;
         }
 
         foreach (var child in Directory.EnumerateDirectories(directory).OrderBy(path => path, StringComparer.Ordinal))
         {
-            Walk(child, packages);
+            Walk(child, packages, platformOverride);
         }
     }
 
@@ -693,21 +923,21 @@ public static class Resolver
 
                     break;
                 case "elixir":
-                {
-                    var baseName = dirName.Replace("-", "_", StringComparison.Ordinal);
-                    SetKnown($"coding_adventures_{baseName}", package.Name, package.Path, package.Language);
-                    SetKnown(baseName, package.Name, package.Path, package.Language);
-                    TrySetRegexName(Path.Combine(package.Path, "mix.exs"), @"app:\s*:([a-z0-9_]+)", package, SetKnown);
-                    break;
-                }
+                    {
+                        var baseName = dirName.Replace("-", "_", StringComparison.Ordinal);
+                        SetKnown($"coding_adventures_{baseName}", package.Name, package.Path, package.Language);
+                        SetKnown(baseName, package.Name, package.Path, package.Language);
+                        TrySetRegexName(Path.Combine(package.Path, "mix.exs"), @"app:\s*:([a-z0-9_]+)", package, SetKnown);
+                        break;
+                    }
                 case "dart":
-                {
-                    var baseName = dirName.Replace("-", "_", StringComparison.Ordinal);
-                    SetKnown($"coding_adventures_{baseName}", package.Name, package.Path, package.Language);
-                    SetKnown(baseName, package.Name, package.Path, package.Language);
-                    TrySetRegexName(Path.Combine(package.Path, "pubspec.yaml"), @"(?m)^name\s*:\s*([a-z0-9_]+)\s*$", package, SetKnown);
-                    break;
-                }
+                    {
+                        var baseName = dirName.Replace("-", "_", StringComparison.Ordinal);
+                        SetKnown($"coding_adventures_{baseName}", package.Name, package.Path, package.Language);
+                        SetKnown(baseName, package.Name, package.Path, package.Language);
+                        TrySetRegexName(Path.Combine(package.Path, "pubspec.yaml"), @"(?m)^name\s*:\s*([a-z0-9_]+)\s*$", package, SetKnown);
+                        break;
+                    }
                 case "lua":
                     SetKnown($"coding-adventures-{dirName.Replace("_", "-", StringComparison.Ordinal)}", package.Name, package.Path, package.Language);
                     break;
@@ -1564,7 +1794,7 @@ public static class Reporter
         }
 
         var maxNameLength = Math.Max("Package".Length, results.Keys.Max(name => name.Length));
-        lines.Add($"{ "Package".PadRight(maxNameLength) }   { "Status".PadRight(12) } Duration");
+        lines.Add($"{"Package".PadRight(maxNameLength)}   {"Status".PadRight(12)} Duration");
 
         foreach (var name in results.Keys.OrderBy(value => value, StringComparer.Ordinal))
         {
@@ -2626,19 +2856,10 @@ public static class Executor
 
 public static class BuildToolApp
 {
-    public static readonly string[] AllToolchains =
-    [
-        "python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl",
-        "swift", "dart", "java", "kotlin", "haskell", "dotnet",
-    ];
+    public static readonly string[] AllToolchains = ToolchainDetection.CanonicalToolchains.ToArray();
 
     public static string ToolchainForLanguage(string language) =>
-        language switch
-        {
-            "wasm" => "rust",
-            "csharp" or "fsharp" or "dotnet" => "dotnet",
-            _ => language,
-        };
+        language == "starlark" ? "go" : ToolchainDetection.ToolchainForLanguage(language);
 
     public static async Task<int> RunAsync(string[] args)
     {
@@ -2755,27 +2976,27 @@ public static class BuildToolApp
             }
         }
 
-        var languagesNeeded = AllToolchains.ToDictionary(toolchain => toolchain, _ => false, StringComparer.Ordinal);
-        languagesNeeded["go"] = true;
-        if (force || affectedSet is null)
+        var toolchainPackages = packages
+            .Select(package => package.Language == "starlark" ? package with { Language = "go" } : package)
+            .ToArray();
+        var toolchainDetection = ToolchainDetection.EvaluateProductionPackages(
+            toolchainPackages,
+            affectedSet,
+            force || affectedSet is null,
+            ciToolchains);
+        if (toolchainDetection.Outcome == "error")
         {
-            foreach (var toolchain in AllToolchains)
+            foreach (var diagnostic in toolchainDetection.Diagnostics)
             {
-                languagesNeeded[toolchain] = true;
-            }
-        }
-        else
-        {
-            foreach (var package in packages.Where(package => affectedSet.Contains(package.Name)))
-            {
-                languagesNeeded[ToolchainForLanguage(package.Language)] = true;
+                var package = diagnostic.Package is null ? string.Empty : $" package={diagnostic.Package}";
+                Console.Error.WriteLine($"{diagnostic.Code}: severity={diagnostic.Severity}{package}");
             }
 
-            foreach (var toolchain in ciToolchains)
-            {
-                languagesNeeded[toolchain] = true;
-            }
+            return 1;
         }
+
+        var languagesNeeded = new Dictionary<string, bool>(toolchainDetection.Toolchains, StringComparer.Ordinal);
+        languagesNeeded["go"] = true;
 
         if (options.EmitPlan)
         {

@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Language-neutral extra CI toolchain declarations
 
+- Made the C# build-tool engine the first follow-on consumer of the neutral
+  declaration corpus. It now parses exact declarations from the selected
+  platform BUILD front, emits the complete canonical 16-key toolchain map,
+  schedules extras only for selected packages, reports unsupported selected
+  languages deterministically, and exercises every neutral snapshot without
+  process, Git, environment, network, or execution authority.
 - Expanded build-tool conformance with six inert platform/BUILD snapshot cases
   covering exact canonical `# needs-toolchain:` comments, invalid decoys,
   stable deduplication, affected-only and forced-full selection, and all three
