@@ -26,14 +26,16 @@ one fresh worktree and one PR; remove the worktree after merge.
 
 | Rank | ID | Status | Work item | Completion proof |
 |---:|---|---|---|---|
-| 1 | VM-001 | in progress | Preserve COBOL scale-12 decimal intermediates on JVM. | The existing `A / B + C` LANG matrix cell prints `000533` on real Java and the full matrix is green. |
-| 2 | VM-002 | queued | Re-enable `lang_matrix` and `e6d7a_wasm_closures` in `lang-aot/BUILD`; remove stale red-suite comments. | The normal build command runs both suites on CI with no exclusions. |
-| 3 | VM-003 | queued | Reconcile `LANG-FULL-IMPLEMENTATION.md` with landed Twig E6 and McCarthy work. | Roadmap statuses match current executed suites and name only genuine gaps. |
-| 4 | VM-010 | queued | Bring Twig dynamic lists, records, unions, closures, symbols, and globals to VM/JIT parity. | Dynamic Twig programs run on VM and JIT in addition to the five code-generation backends. |
-| 5 | VM-011 | queued | Close Dartmouth BASIC's non-ALGOL semantic tail: remaining math builtins and dynamic string data paths. | `SIN`, `COS`, `LOG`, `EXP`, `RND`, and remaining string `READ`/`DATA` cases have seven-backend executed cells. |
-| 6 | VM-012 | queued | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
-| 7 | VM-013 | decision required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `adc`, `sbb`, rotations, carry, parity). | The accepted semantics are documented and every intrinsic has executed portable and 8008 proofs. |
-| 8 | VM-014 | queued | Extend the unified matrix to every wired frontend, especially FLOW-MATIC and Macsyma/JIT. | Every `Language` variant has an executed baseline on every applicable standard backend, with explicit exclusions only where architectural. |
+| — | VM-001 | done ([#13306](https://github.com/adhithyan15/coding-adventures/pull/13306)) | Preserve COBOL scale-12 decimal intermediates on JVM. | The existing `A / B + C` LANG matrix cell prints `000533` on real Java and the full matrix is green. |
+| 1 | VM-004 | queued | Normalize signed process results in `macsyma_conformance` for LLVM and native AOT. | `-7$` compares as `-7`, not process status 249, and the full Macsyma conformance suite passes on every available backend. |
+| 2 | VM-005 | queued | Link Linux LLVM matrix executables with the host math library. | Dartmouth BASIC `trunc` and non-ALGOL math cells link and pass under `lang_matrix` on Linux; ALGOL-native gaps remain separately owned. |
+| 3 | VM-002 | in progress | Protect every CI-green `lang-aot` integration suite in `lang-aot/BUILD`, including `e6d7a_wasm_closures`; replace stale exclusions with the current Macsyma and Linux-matrix failures. | The normal build command runs every CI-green top-level integration target and documents both red exclusions precisely. |
+| 4 | VM-003 | queued | Reconcile `LANG-FULL-IMPLEMENTATION.md` with landed Twig E6 and McCarthy work. | Roadmap statuses match current executed suites and name only genuine gaps. |
+| 5 | VM-010 | queued | Bring Twig dynamic lists, records, unions, closures, symbols, and globals to VM/JIT parity. | Dynamic Twig programs run on VM and JIT in addition to the five code-generation backends. |
+| 6 | VM-011 | queued | Close Dartmouth BASIC's non-ALGOL semantic tail: remaining math builtins and dynamic string data paths. | `SIN`, `COS`, `LOG`, `EXP`, `RND`, and remaining string `READ`/`DATA` cases have seven-backend executed cells. |
+| 7 | VM-012 | queued | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
+| 8 | VM-013 | decision required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `adc`, `sbb`, rotations, carry, parity). | The accepted semantics are documented and every intrinsic has executed portable and 8008 proofs. |
+| 9 | VM-014 | queued | Extend the unified matrix to every wired frontend, especially FLOW-MATIC and Macsyma/JIT. | Every `Language` variant has an executed baseline on every applicable standard backend, with explicit exclusions only where architectural. |
 
 ## Discovery log
 
@@ -46,6 +48,18 @@ one fresh worktree and one PR; remove the worktree after merge.
 - **VM-D003 — confirmed 2026-08-27:** the LANG-FULL roadmap still marks Twig
   lists/closures/records/unions and McCarthy backend completion as open despite
   landed executed tests. Promoted to VM-003.
+- **VM-D004 — confirmed 2026-08-27:** comparing top-level `lang-aot/tests/*.rs`
+  targets with the explicit BUILD command found `macsyma_conformance` omitted
+  in addition to the two documented exclusions. Running it exposed LLVM process
+  status 249 for the expected signed result -7. Promoted to VM-004 and ranked
+  above CI/documentation work as a red executed conformance suite.
+- **VM-D005 — confirmed 2026-08-27:** enabling `lang_matrix` in Linux CI exposed
+  19 failures: LLVM links without `libm` for cross-language
+  `pow`/`floor`/`trunc` calls (including Dartmouth BASIC), while native AOT
+  refuses newly proven four-dimensional ALGOL array cases. The linker portion
+  is promoted to VM-005; the array refusals remain with the separate ALGOL
+  campaign. `lang_matrix` stays explicitly excluded from `lang-aot/BUILD`
+  until both streams make it Linux-green.
 
 ## Ownership boundary
 
