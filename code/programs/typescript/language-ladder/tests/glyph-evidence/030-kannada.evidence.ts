@@ -6,7 +6,7 @@ export default [
     suite: "independent (word-initial) vowels",
     suiteOrder: 10,
     caseOrder: 30,
-    name: "keeps Kannada independent ಅ, ಆ, ಇ, ಉ, ಎ, ಏ, ಒ, ಐ, and ಋ sourced while the remaining vowels stay unverified",
+    name: "keeps Kannada independent ಅ, ಆ, ಇ, ಉ, ಎ, ಏ, ಒ, ಓ, ಐ, and ಋ sourced while the remaining vowels stay unverified",
     verify: ({ SCRIPTS }) => {
       const kannada = SCRIPTS.find((s) => s.script === "kannada")!;
       const iv = kannada.independentVowels!;
@@ -52,6 +52,12 @@ export default [
       expect(iv[8]!.strokeOrderSource?.url).toBe(
         "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-o.gif",
       );
+      expect(iv[9]!.glyph).toBe("ಓ");
+      expect(iv[9]!.strokeOrder).toHaveLength(5);
+      expect(iv[9]!.penLifts).toBe(1);
+      expect(iv[9]!.strokeOrderSource?.url).toBe(
+        "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-oo.gif",
+      );
       expect(iv[10]!.glyph).toBe("ಐ");
       expect(iv[10]!.strokeOrder).toHaveLength(3);
       expect(iv[10]!.penLifts).toBe(0);
@@ -64,7 +70,7 @@ export default [
       expect(iv[12]!.strokeOrderSource?.url).toBe(
         "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ru.gif",
       );
-      expect(iv.filter((_, index) => ![0, 1, 2, 4, 6, 7, 8, 10, 12].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+      expect(iv.filter((_, index) => ![0, 1, 2, 4, 6, 7, 8, 9, 10, 12].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
     },
   },
   {
@@ -132,6 +138,26 @@ export default [
     suite: "shared Perso-Arabic letters retain script-owned provenance",
     suiteOrder: 50,
     caseOrder: 190,
+    name: "keeps Kannada ಓ as a source-backed two-run independent vowel",
+    verify: ({ SCRIPTS }) => {
+      const kannada = SCRIPTS.find((script) => script.script === "kannada")!
+        .independentVowels!.find((entry) => entry.glyph === "ಓ")!;
+      expect(kannada.sound).toBe("ō");
+      expect(kannada.role).toBe("vowel");
+      expect(kannada.penLifts).toBe(1);
+      expect(kannada.strokeOrder).toHaveLength(5);
+      expect(kannada.strokeOrder[0]).toMatch(/upper-left loop/i);
+      expect(kannada.strokeOrder[3]).toMatch(/without lifting.*open terminal/i);
+      expect(kannada.strokeOrder[4]).toMatch(/lift.*small upper flourish/i);
+      expect(kannada.strokeOrderSource?.url).toBe(
+        "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-oo.gif",
+      );
+    },
+  },
+  {
+    suite: "shared Perso-Arabic letters retain script-owned provenance",
+    suiteOrder: 50,
+    caseOrder: 200,
     name: "keeps Kannada ಐ as a source-backed one-run independent vowel",
     verify: ({ SCRIPTS }) => {
       const kannada = SCRIPTS.find((script) => script.script === "kannada")!
@@ -151,7 +177,7 @@ export default [
   {
     suite: "shared Perso-Arabic letters retain script-owned provenance",
     suiteOrder: 50,
-    caseOrder: 200,
+    caseOrder: 210,
     name: "keeps Kannada ಋ as a source-backed three-run independent vowel",
     verify: ({ SCRIPTS }) => {
       const kannada = SCRIPTS.find((script) => script.script === "kannada")!

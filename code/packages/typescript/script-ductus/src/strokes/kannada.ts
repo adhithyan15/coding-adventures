@@ -568,6 +568,96 @@ export const entries: DuctusEntry[] = [
       source: kannadaIndependentVowelSource("ಒ"),
     },
   ],
+  // Gopala Krishna A's 35-frame animation writes independent vowel ಓ in two
+  // runs. The first matches the loop, joined lower bowls, and open terminal of
+  // ಒ; after one lift, the second adds the small upper flourish. These medians
+  // fit that order to Noto Sans Kannada.
+  [
+    "kannada:ಓ",
+    {
+      script: "kannada",
+      glyph: "ಓ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "turn counterclockwise around the compact upper-left loop",
+              path: [
+                { x: 125, y: 365 },
+                { x: 105, y: 400 },
+                { x: 105, y: 445 },
+                { x: 130, y: 490 },
+                { x: 180, y: 525 },
+                { x: 235, y: 515 },
+                { x: 285, y: 480 },
+                { x: 310, y: 435 },
+                { x: 305, y: 400 },
+              ],
+            },
+            {
+              label: "descend through the curved middle into the lower-left bowl",
+              path: [
+                { x: 305, y: 400 },
+                { x: 280, y: 350 },
+                { x: 235, y: 300 },
+                { x: 185, y: 260 },
+                { x: 135, y: 220 },
+                { x: 95, y: 175 },
+                { x: 90, y: 125 },
+                { x: 120, y: 75 },
+                { x: 180, y: 35 },
+                { x: 250, y: 30 },
+                { x: 315, y: 70 },
+                { x: 370, y: 145 },
+              ],
+            },
+            {
+              label: "sweep through the join and around the lower-right bowl",
+              path: [
+                { x: 370, y: 145 },
+                { x: 405, y: 95 },
+                { x: 460, y: 55 },
+                { x: 525, y: 30 },
+                { x: 595, y: 35 },
+                { x: 655, y: 75 },
+                { x: 700, y: 130 },
+                { x: 705, y: 180 },
+              ],
+            },
+            {
+              label: "climb the right side and curl left at the open terminal",
+              path: [
+                { x: 705, y: 180 },
+                { x: 695, y: 225 },
+                { x: 670, y: 260 },
+                { x: 640, y: 285 },
+                { x: 610, y: 295 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep left and curl upward through the small upper flourish",
+              path: [
+                { x: 270, y: 550 },
+                { x: 220, y: 555 },
+                { x: 160, y: 570 },
+                { x: 120, y: 600 },
+                { x: 105, y: 640 },
+                { x: 105, y: 680 },
+                { x: 130, y: 710 },
+                { x: 180, y: 720 },
+                { x: 230, y: 720 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: kannadaIndependentVowelSource("ಓ"),
+    },
+  ],
   // Gopala Krishna A's 28-frame animation writes independent vowel ಐ in one
   // run: compact left spiral and lower bowl, broad right loop, then the high
   // arch finishing at the open upper-left terminal. These three medians fit
