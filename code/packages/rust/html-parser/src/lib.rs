@@ -8437,6 +8437,7 @@ impl HtmlParser {
             || is_select_option_element(name)
             || name == "selectedcontent"
             || name == "colgroup"
+            || (name == "head" && self.is_fragment)
             || is_table_structure_end_tag_element(name)
             || is_state_boundary_element(name)
             || (is_tokenizer_mode_element(name)
@@ -28395,6 +28396,14 @@ mod tests {
             "end tag `</colgroup>` did not match an open element",
         )
         .at_emission(Some(end_tag_position_at(source, "colgroup", occurrence)))
+    }
+
+    fn unmatched_head_end_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            "end tag `</head>` did not match an open element",
+        )
+        .at_emission(Some(end_tag_position_at(source, "head", occurrence)))
     }
 
     fn unmatched_table_structure_end_tag(
@@ -53116,5 +53125,77 @@ mod tests {
             vec![Node::text("x")]
         );
         assert_eq!(explicit_body.children[1], Node::text("yz"));
+    }
+
+    #[test]
+    fn positions_unmatched_head_end_tags_in_body_fragments_at_token_emission() {
+        let source = "é\r\n</head></head>tail";
+        let fragment = parse_html_fragment_with_diagnostics(source).unwrap();
+        assert!(source.len() > source.chars().count());
+        assert_eq!(fragment.nodes, vec![Node::text("é\ntail")]);
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![
+                unmatched_head_end_tag(source, 0),
+                unmatched_head_end_tag(source, 1),
+            ]
+        );
+
+        let body_context =
+            parse_html_fragment_for_context_with_diagnostics("</head>tail", "body").unwrap();
+        assert_eq!(body_context.nodes, vec![Node::text("tail")]);
+        assert_eq!(
+            body_context.parser_diagnostics,
+            vec![unmatched_head_end_tag("</head>tail", 0)]
+        );
+
+        let seeded =
+            parse_html_fragment_for_context_with_diagnostics("</head>tail", "head").unwrap();
+        assert!(seeded.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &fragment_context_end_tag("</head>tail", "head", 0)
+        }));
+        assert!(seeded
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+        for document_source in [
+            "<!doctype html></head><p>tail</p>",
+            "<!doctype html><head></head><body>tail</body>",
+        ] {
+            let document = parse_html_with_diagnostics(document_source).unwrap();
+            assert!(document
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+        }
+
+        let foreign =
+            parse_html_fragment_for_context_with_diagnostics("<svg><g></head>", "body").unwrap();
+        assert!(foreign
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+        let incomplete = parse_html_fragment_with_diagnostics("</head").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+        let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        direct.process_token(Token::EndTag {
+            name: "head".to_string(),
+        });
+        direct.process_token(Token::Eof);
+        assert_eq!(
+            direct
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .unwrap()
+                .position,
+            None
+        );
     }
 }
