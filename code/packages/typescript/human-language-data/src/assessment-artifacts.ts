@@ -123,6 +123,9 @@ export function collectArtifactReferences(contract: AssessmentContract): Artifac
     for (const mock of level.fullMocks) {
       add(`${level.level}.fullMocks[${mock.id}].rubric`, mock.rubric);
       add(`${level.level}.fullMocks[${mock.id}].answerKey`, mock.answerKey);
+      if (mock.humanValidation !== undefined) {
+        add(`${level.level}.fullMocks[${mock.id}].humanValidation`, mock.humanValidation);
+      }
     }
   }
 
@@ -140,6 +143,9 @@ export function collectArtifactReferences(contract: AssessmentContract): Artifac
     for (const mock of capstone.fullMocks) {
       add(`capstone[${capstone.id}].fullMocks[${mock.id}].rubric`, mock.rubric);
       add(`capstone[${capstone.id}].fullMocks[${mock.id}].answerKey`, mock.answerKey);
+      if (mock.humanValidation !== undefined) {
+        add(`capstone[${capstone.id}].fullMocks[${mock.id}].humanValidation`, mock.humanValidation);
+      }
     }
   }
 

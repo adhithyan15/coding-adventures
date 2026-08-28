@@ -163,7 +163,13 @@ describe("track assessment contracts", () => {
           .filter((stage) => policy.levels.indexOf(stage.firstRequiredAt) <= levelIndex)
           .map((stage) => stage.id),
         fullMocks: [
-          { id: `${current}-mock-1`, timed: true, rubric: "rubric.md", answerKey: "answers-1.md" },
+          {
+            id: `${current}-mock-1`,
+            timed: true,
+            rubric: "rubric.md",
+            answerKey: "answers-1.md",
+            humanValidation: `validation/${current}-mock-1.md`,
+          },
           { id: `${current}-mock-2`, timed: true, rubric: "rubric.md", answerKey: "answers-2.md" },
         ],
       })),
@@ -171,6 +177,13 @@ describe("track assessment contracts", () => {
     const parsed = parseAssessmentContract(value, "alpha", policy);
     expect(parsed.levels).toHaveLength(7);
     expect(parsed.levels.every((level) => Object.keys(level.additionalComponents).length === 0)).toBe(true);
+    expect(parsed.levels[0]?.fullMocks[0]?.humanValidation).toBe("validation/pre-A1-mock-1.md");
+    expect(parsed.levels[0]?.fullMocks[1]?.humanValidation).toBeUndefined();
+
+    value.levels[0]!.fullMocks[0]!.humanValidation = "../outside-review.md";
+    expect(() => parseAssessmentContract(value, "alpha", policy)).toThrow(
+      /humanValidation must be a safe relative artifact reference/,
+    );
   });
 
   it("parses independently required provider components beyond the four-skill floor", () => {

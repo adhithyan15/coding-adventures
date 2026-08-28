@@ -38,12 +38,13 @@ import { LEVEL_VOCABULARY, type LevelGateReport } from "./level-gate.js";
 import type { ScriptClosureReport } from "./script-closure.js";
 import type { WritingStageReport } from "./writing-stages.js";
 
-/** The eleven families of work. Every item belongs to exactly one. */
+/** The twelve families of work. Every item belongs to exactly one. */
 export type WorkKind =
   | "assessment-contract"
   | "external-capstone"
   | "task-shape"
   | "writing-stage"
+  | "human-validation"
   | "exam-inventory"
   | "script-closure"
   | "vocabulary"
@@ -93,13 +94,14 @@ export const KIND_PRIORITY: Readonly<Record<WorkKind, number>> = Object.freeze({
   "external-capstone": 2,
   "task-shape": 3,
   "writing-stage": 4,
-  "exam-inventory": 5,
-  "script-closure": 6,
-  "exam-point": 7,
-  vocabulary: 8,
-  reinforcement: 9,
-  "atom-budget": 10,
-  "spine-nodes": 11,
+  "human-validation": 5,
+  "exam-inventory": 6,
+  "script-closure": 7,
+  "exam-point": 8,
+  vocabulary: 9,
+  reinforcement: 10,
+  "atom-budget": 11,
+  "spine-nodes": 12,
 });
 
 /**
@@ -116,6 +118,7 @@ export const TRANCHE_SIZE: Readonly<Record<WorkKind, number>> = Object.freeze({
   "external-capstone": 1,
   "task-shape": 1,
   "writing-stage": 1,
+  "human-validation": 1,
   "exam-inventory": 1,
   "script-closure": 10,
   vocabulary: 35,
@@ -196,6 +199,15 @@ export interface ExamCoverageSummary {
   covered: number;
 }
 
+/** Human-review evidence state for one contract rung's full mocks. */
+export interface HumanValidationCoverage {
+  language: string;
+  level: CefrLevel;
+  requiredMocks: number;
+  validatedMocks: number;
+  missingMocks: readonly string[];
+}
+
 export interface CompletionPlanInput {
   levelGate: LevelGateReport;
   scriptClosure: ScriptClosureReport;
@@ -218,6 +230,11 @@ export interface CompletionPlanInput {
   partialInventories?: readonly InventoryPresence[];
   /** Which sourced four-skill performance shapes exist. Absent pairs become `task-shape` items. */
   taskShapes?: readonly InventoryPresence[];
+  /**
+   * Human-review evidence for the full mocks enumerated by valid contracts.
+   * Missing declarations and dangling declared evidence both remain explicit.
+   */
+  humanValidation?: readonly HumanValidationCoverage[];
   /**
    * Measured coverage for every inventory that exists.
    *
@@ -283,6 +300,12 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
   const have = new Set(input.inventories.map((entry) => `${entry.language}/${entry.level}`));
   const partial = new Set((input.partialInventories ?? []).map((entry) => `${entry.language}/${entry.level}`));
   const haveTaskShapes = new Set((input.taskShapes ?? []).map((entry) => `${entry.language}/${entry.level}`));
+  const humanValidationByLanguage = new Map<string, HumanValidationCoverage[]>();
+  for (const status of input.humanValidation ?? []) {
+    const statuses = humanValidationByLanguage.get(status.language) ?? [];
+    statuses.push(status);
+    humanValidationByLanguage.set(status.language, statuses);
+  }
   const closureByLanguage = new Map(input.scriptClosure.tracks.map((track) => [track.language, track]));
   const contracted = new Set(input.assessmentContracts ?? []);
 
@@ -297,14 +320,40 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
   let tracksDone = 0;
 
   for (const track of input.levelGate.tracks) {
+    const mine: WorkItem[] = [];
     // `inProgressAt` is null exactly when the ladder is complete. A track that
-    // has attained the ceiling needs nothing from this plan.
+    // has attained the structural ceiling may still owe learner evidence. The
+    // human-validation family is checked before that early exit so "corpus
+    // complete" cannot silently become "learner proven".
     const level = track.inProgressAt;
     if (level === null || levelRank(level) > levelRank(ceiling)) {
-      tracksDone += 1;
+      const missingHumanValidation = contracted.has(track.language) && input.humanValidation !== undefined
+        ? (humanValidationByLanguage.get(track.language) ?? [])
+            .filter((status) =>
+              levelRank(status.level) <= levelRank(ceiling) && status.missingMocks.length > 0
+            )
+            .sort((a, b) => levelRank(a.level) - levelRank(b.level))[0]
+        : undefined;
+      if (missingHumanValidation !== undefined) {
+        mine.push({
+          id: `human-validation/${track.language}/${missingHumanValidation.level}`,
+          kind: "human-validation",
+          language: track.language,
+          level: missingHumanValidation.level,
+          goal:
+            `human-validate ${missingHumanValidation.missingMocks.length} of ` +
+            `${missingHumanValidation.requiredMocks} ${missingHumanValidation.level} full mock(s) for ` +
+            `${track.language} and check in the reviewer or pilot evidence`,
+          outstanding: missingHumanValidation.missingMocks.length,
+          tranches: tranchesFor(missingHumanValidation.missingMocks.length, "human-validation"),
+        });
+        byTrack.set(track.language, mine);
+        items.push(...mine);
+      } else {
+        tracksDone += 1;
+      }
       continue;
     }
-    const mine: WorkItem[] = [];
 
     // The assessment contract is the outer target. An exam inventory says which
     // language points occur; it does NOT prove that reading, listening, writing
@@ -337,7 +386,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
         level: capstone.requiredAfterLevel,
         goal:
           `complete the non-CEFR-mapped external capstone '${capstone.name}' after ` +
-          `${capstone.requiredAfterLevel}: add ${capstone.missingArtifacts.length} missing task, rubric, or answer-key ` +
+          `${capstone.requiredAfterLevel}: add ${capstone.missingArtifacts.length} missing task, rubric, answer-key, or human-validation ` +
           `artifact(s) without inventing a CEFR equivalence`,
         outstanding: capstone.missingArtifacts.length,
         tranches: Math.max(1, capstone.missingArtifacts.length),
@@ -362,6 +411,35 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
         outstanding: 1,
         tranches: 1,
       });
+    }
+
+    // Policy has required human validation since HL16, but until HL-C13440 the
+    // contract could not name its evidence and the queue could not represent
+    // its absence. Keep legacy contracts readable and put the missing proof on
+    // the queue instead. One item owns one rung, however many mocks that rung
+    // still needs reviewed.
+    if (contracted.has(track.language) && input.humanValidation !== undefined) {
+      const missingHumanValidation = (humanValidationByLanguage.get(track.language) ?? [])
+        .filter((status) =>
+          levelRank(status.level) >= levelRank(level)
+          && levelRank(status.level) <= levelRank(ceiling)
+          && status.missingMocks.length > 0
+        )
+        .sort((a, b) => levelRank(a.level) - levelRank(b.level))[0];
+      if (missingHumanValidation !== undefined) {
+        mine.push({
+          id: `human-validation/${track.language}/${missingHumanValidation.level}`,
+          kind: "human-validation",
+          language: track.language,
+          level,
+          goal:
+            `human-validate ${missingHumanValidation.missingMocks.length} of ` +
+            `${missingHumanValidation.requiredMocks} ${missingHumanValidation.level} full mock(s) for ` +
+            `${track.language} and check in the reviewer or pilot evidence`,
+          outstanding: missingHumanValidation.missingMocks.length,
+          tranches: tranchesFor(missingHumanValidation.missingMocks.length, "human-validation"),
+        });
+      }
     }
 
     // The external language-point target for the next certifiable rung, if it is not written.
@@ -492,7 +570,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
  * a precondition for the climb; it stops being a precondition for the floor.
  */
 function effectivePriority(item: WorkItem): number {
-  if (item.kind === "task-shape" || item.kind === "exam-inventory") {
+  if (item.kind === "task-shape" || item.kind === "human-validation" || item.kind === "exam-inventory") {
     const target = item.id.split("/").at(-1) as CefrLevel | undefined;
     if (target !== undefined && levelRank(target) > levelRank(item.level)) {
       return KIND_PRIORITY["spine-nodes"] + 1;
@@ -604,6 +682,16 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
     (input.assessmentContracts ?? []).filter((language) => trackNames.has(language)),
   );
   const assessmentItems = Math.max(0, input.levelGate.tracks.length - validAssessmentContracts.size);
+  const relevantHumanValidation = (input.humanValidation ?? []).filter(
+    (status) => trackNames.has(status.language) && levelRank(status.level) <= levelRank(ceiling),
+  );
+  const missingHumanValidationEvidence = relevantHumanValidation.reduce(
+    (sum, status) => sum + status.missingMocks.length,
+    0,
+  );
+  const humanValidationItems = input.humanValidation === undefined || assessmentItems > 0
+    ? null
+    : relevantHumanValidation.filter((status) => status.missingMocks.length > 0).length;
   const relevantCapstones = (input.externalCapstones ?? []).filter(
     (capstone) =>
       trackNames.has(capstone.language)
@@ -651,7 +739,7 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
       items: incompleteCapstones.length,
       detail:
         `${relevantCapstones.length - incompleteCapstones.length} of ${relevantCapstones.length} declared ` +
-        `non-CEFR-mapped external capstone(s) have every task, rubric and answer-key artifact`,
+        `non-CEFR-mapped external capstone(s) have every task, rubric, answer-key and human-validation artifact`,
     },
     {
       kind: "task-shape",
@@ -669,11 +757,16 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
             `${input.writingStages!.summary.tracks} track(s) currently prove pre-A1`,
     },
     {
-      kind: "vocabulary",
-      items: vocabularyItems,
+      kind: "human-validation",
+      items: humanValidationItems,
       detail:
-        `${words.toLocaleString()} headword(s) short of ${target.toLocaleString()} across ` +
-        `${tracksShort} track(s), at ${TRANCHE_SIZE.vocabulary} per tranche`,
+        input.humanValidation === undefined
+          ? "not measured — no human-validation evidence report was supplied"
+          : humanValidationItems === null
+            ? `${missingHumanValidationEvidence} mock validation evidence artifact(s) missing from ` +
+              `${relevantHumanValidation.length} measured rung(s); not projectable until every track has a contract`
+            : `${missingHumanValidationEvidence} mock validation evidence artifact(s) missing across ` +
+              `${humanValidationItems} (track x level) work item(s)`,
     },
     {
       kind: "exam-inventory",
@@ -698,6 +791,13 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
             `the other ${input.levelGate.tracks.length - measuredTracks} ` +
             `track(s) cannot be measured until theirs exist` +
             (input.unreadableInventories ? `; ${input.unreadableInventories} exist but could not be READ` : ""),
+    },
+    {
+      kind: "vocabulary",
+      items: vocabularyItems,
+      detail:
+        `${words.toLocaleString()} headword(s) short of ${target.toLocaleString()} across ` +
+        `${tracksShort} track(s), at ${TRANCHE_SIZE.vocabulary} per tranche`,
     },
     {
       kind: "reinforcement",

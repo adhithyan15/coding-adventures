@@ -433,6 +433,7 @@ export {
   TRANCHE_SIZE,
   type CompletionPlan,
   type CompletionPlanInput,
+  type HumanValidationCoverage,
   type InventoryPresence,
   type PlanProjection,
   type WorkItem,
