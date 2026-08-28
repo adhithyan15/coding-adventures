@@ -11,14 +11,21 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 13418,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13418",
+    "branch": "codex/build-tool-csharp-extra-ci-toolchain-declaration-conformance",
+    "implementation_revision": "2d663dac3ea428fb61dc47b915e354486895aa4d",
+    "status": "checks-pending",
+    "opened_at": "2026-08-28T09:11:04Z"
+  },
   "last_ci_action": {
-    "observed_at": "2026-08-28T08:15:00Z",
-    "pr_number": 13388,
-    "run_id": 33151040429,
+    "observed_at": "2026-08-28T09:11:04Z",
+    "pr_number": 13418,
+    "run_id": 33158464571,
     "attempt": 1,
-    "status": "merged-after-auto-merge",
-    "notes": "All 41 final checks reached terminal acceptable conclusions: 35 successes and six expected skips. GitHub reported final head 96eaf214e75b3dff458ef104f3f9fb31a9505acb conflict-free; the loop enabled squash auto-merge, and GitHub merged PR #13388 at 2026-08-28T08:05:32Z as b8b2282996b6983f4d2b2de87889300900bd37dd without a manual merge command."
+    "status": "opened-checks-pending",
+    "notes": "Opened ready-for-review PR #13418 from validated head 2d663dac3ea428fb61dc47b915e354486895aa4d. GitHub reports the branch mergeable and conflict-free; required checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "5ffefdda23ad1c3ce0e3d285d859d3ed6bed2fc2",
@@ -225,16 +232,21 @@
     {
       "id": "build-tool-csharp-extra-ci-toolchain-declaration-conformance",
       "title": "Make the C# build tool consume extra CI toolchain declarations",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus"],
       "branch": "codex/build-tool-csharp-extra-ci-toolchain-declaration-conformance",
-      "pr_number": null,
+      "pr_number": 13418,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13418",
+      "opened_at": "2026-08-28T09:11:04Z",
+      "opened_revision": "2d663dac3ea428fb61dc47b915e354486895aa4d",
       "selection_revision": "c750c8a4e87b8f3f6f2d0d6a3179b6980b39ce0a",
       "selection_notes": "Selected after PR #13388 merged and the remaining-engine umbrella was decomposed, then refreshed over exact current main after the CDC 6600 gate-level merge. The collision-checked schema-3 inventory records 15 established lanes, 1,386 implementation identities, 4,599 slots, 1,425 all-reported identities, zero collisions, zero unknown buckets, and OCaml still emerging at zero packages. C# is the highest-leverage ready child because F# directly references its engine; current live PRs have zero exact overlap with the C# build-tool, shared corpus, state, roadmap, or changelog surfaces.",
       "implementation_revision": "bc8186a366aa8c64f392887ad1524e3c32578554",
       "rebase_revision": "5ffefdda23ad1c3ce0e3d285d859d3ed6bed2fc2",
       "validation_revision": "bc8186a366aa8c64f392887ad1524e3c32578554",
       "validation_notes": "On the rebased implementation, 57 C# tests and 11 F# downstream tests pass. Coverlet reports 94.66% overall production-line coverage and 95.83% line plus 91.66% branch coverage for ToolchainDetection. Warning-as-error release build and publish, both dotnet-format gates, neutral validation of 118 cases and 283 files across 16 implementations and 15 lanes, 61 Python runner tests with 114 subtests, the complete Go suite, Go vet, and trimpath build pass. A real C# affected-plan run over the merged corpus branch selects go/programs/build-tool and rust/java-to-semantic-ir and proves the Windows front enables python plus rust and go while every other canonical toolchain stays false; a production force-full run over all 5,116 discovered packages emits all 16 keys true while the strict neutral evaluator rejects unsupported selected languages even in force-full mode. The production Go validator evaluates 45 Starlark BUILD files, discovers 5,108 packages, keeps the five-entry orphan backlog clean, and emits all 16 toolchains for force-full. NuGet reports no vulnerable runtime or test packages. The exact-current-main parity report records 1,386 identities, 4,599 slots, zero collisions, zero unknown buckets, and zero OCaml packages; the 565-owner/832-edge state graph is complete and acyclic with exactly this item in progress. Diff hygiene and the focused authority/security review pass; declarations remain inert and add no process, Git, environment, network, filesystem-write, or execution authority.",
+      "final_review_revision": "2d663dac3ea428fb61dc47b915e354486895aa4d",
+      "publication_notes": "Opened ready-for-review PR #13418 from validated head 2d663dac3ea428fb61dc47b915e354486895aa4d. GitHub reports it mergeable and conflict-free. Required checks are queued, so auto-merge is intentionally disabled until every required check is terminal and acceptable. The tranche grants no process, Git, environment, network, filesystem-write, execution, or OCaml-promotion authority; remaining engines stay under their dependent child owners.",
       "notes": "Consume the successful neutral toolchain-detection snapshots in the C# engine. Add canonical cpp and ocaml registry entries, c/cpp language mapping, exact selected-front declaration parsing, stable deduplication and unsupported diagnostics, platform precedence, affected/forced-full scheduling, and bounded process-free input handling. Do not add process, environment, network, Git, or execution authority; keep the F# facade as a separately reviewed dependent child."
     },
     {
