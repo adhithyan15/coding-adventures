@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C56-mat",
+    "language": "telugu",
+    "chapter": 56,
+    "sequence": 1630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f61eaa19060f19f"
+  },
+  "findings": []
+}

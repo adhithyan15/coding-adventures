@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C09-hear-nana",
+    "language": "marwadi",
+    "chapter": 12,
+    "sequence": 770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce09a425d5025236"
+  },
+  "findings": []
+}

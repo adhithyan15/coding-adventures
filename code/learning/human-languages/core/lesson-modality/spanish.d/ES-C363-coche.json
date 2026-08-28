@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C363-coche",
+    "language": "spanish",
+    "chapter": 363,
+    "sequence": 7070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63c95b9e3dc72819"
+  },
+  "findings": []
+}

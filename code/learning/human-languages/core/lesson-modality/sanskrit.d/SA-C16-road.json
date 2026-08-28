@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C16-road",
+    "language": "sanskrit",
+    "chapter": 16,
+    "sequence": 750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b272a25822f37155"
+  },
+  "findings": []
+}

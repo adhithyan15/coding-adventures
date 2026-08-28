@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C43-sleep",
+    "language": "malayalam",
+    "chapter": 43,
+    "sequence": 1080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8f5d6425fafc0a8"
+  },
+  "findings": []
+}

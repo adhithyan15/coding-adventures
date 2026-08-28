@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "FA-W15-te-nun",
+    "language": "persian",
+    "chapter": 15,
+    "sequence": 660,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a7d7d088ee097264",
+    "detachableSegments": [
+      "Script — two dots above",
+      "Script — one dot above, and a deeper bowl"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

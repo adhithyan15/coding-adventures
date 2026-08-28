@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "AR-C01-sabah-al-khayr",
+    "language": "arabic",
+    "chapter": 1,
+    "sequence": 50,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5757bf691437aa58",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-W08-read-en",
+    "language": "tamil",
+    "chapter": 21,
+    "sequence": 725,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0eab9a657dd7d20f",
+    "detachableSegments": [
+      "Script you'll notice: எ",
+      "Script you'll notice: build the word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

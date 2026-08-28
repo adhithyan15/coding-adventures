@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C07-numbers-6-10",
+    "language": "telugu",
+    "chapter": 7,
+    "sequence": 340,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ad0f0d5bb46a0ef3"
+  },
+  "findings": []
+}

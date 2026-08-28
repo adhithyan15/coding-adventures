@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R12-repair-01",
+    "language": "japanese",
+    "chapter": 12,
+    "sequence": 930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4348fae8accad20e"
+  },
+  "findings": []
+}

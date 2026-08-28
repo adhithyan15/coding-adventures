@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C365-corto",
+    "language": "spanish",
+    "chapter": 365,
+    "sequence": 7200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9234460622e1206c"
+  },
+  "findings": []
+}

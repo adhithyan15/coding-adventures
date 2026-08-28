@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C288-vuelta",
+    "language": "spanish",
+    "chapter": 288,
+    "sequence": 3540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:395c34dd2909c5a2"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C10-yukkuri",
+    "language": "japanese",
+    "chapter": 10,
+    "sequence": 620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f92189da5f38aa4"
+  },
+  "findings": []
+}

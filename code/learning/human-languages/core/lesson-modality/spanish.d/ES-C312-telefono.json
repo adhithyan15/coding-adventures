@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C312-telefono",
+    "language": "spanish",
+    "chapter": 312,
+    "sequence": 4730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb5af56b71eac8c5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C02-freut-mich",
+    "language": "german",
+    "chapter": 2,
+    "sequence": 95,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c05232d91c953d0"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W08-va",
+    "language": "marwadi",
+    "chapter": 11,
+    "sequence": 710,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f0543bd63db1a2b6",
+    "detachableSegments": [
+      "Script — one sign"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

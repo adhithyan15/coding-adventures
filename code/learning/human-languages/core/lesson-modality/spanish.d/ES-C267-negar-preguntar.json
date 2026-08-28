@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C267-negar-preguntar",
+    "language": "spanish",
+    "chapter": 267,
+    "sequence": 2610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5dd3ba98729544f"
+  },
+  "findings": []
+}

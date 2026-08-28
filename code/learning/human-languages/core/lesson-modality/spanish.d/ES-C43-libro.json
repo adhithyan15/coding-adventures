@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C43-libro",
+    "language": "spanish",
+    "chapter": 57,
+    "sequence": 1004,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7af0b750a679827"
+  },
+  "findings": []
+}

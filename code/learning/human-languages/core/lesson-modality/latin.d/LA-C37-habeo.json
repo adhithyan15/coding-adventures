@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C37-habeo",
+    "language": "latin",
+    "chapter": 37,
+    "sequence": 650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f92cae1d694c771b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C47-neighbour",
+    "language": "hindi",
+    "chapter": 47,
+    "sequence": 1490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8b4dd8aa5367baa"
+  },
+  "findings": []
+}

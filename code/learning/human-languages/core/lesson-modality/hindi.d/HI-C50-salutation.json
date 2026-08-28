@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C50-salutation",
+    "language": "hindi",
+    "chapter": 50,
+    "sequence": 1640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82d548303d513726"
+  },
+  "findings": []
+}

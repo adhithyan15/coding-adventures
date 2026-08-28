@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C53-lo-que",
+    "language": "spanish",
+    "chapter": 188,
+    "sequence": 2203,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f87f6cd8c4f9428f"
+  },
+  "findings": []
+}

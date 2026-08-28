@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C47-guest",
+    "language": "hindi",
+    "chapter": 47,
+    "sequence": 1480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e1c7eb6fd380285"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C14-ashhur",
+    "language": "arabic",
+    "chapter": 14,
+    "sequence": 580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea17f2007056922e"
+  },
+  "findings": []
+}

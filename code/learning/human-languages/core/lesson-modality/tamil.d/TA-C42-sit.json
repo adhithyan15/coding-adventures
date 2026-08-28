@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C42-sit",
+    "language": "tamil",
+    "chapter": 42,
+    "sequence": 1340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07f019b07767cc89"
+  },
+  "findings": []
+}

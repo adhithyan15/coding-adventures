@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C07-giorni-1",
+    "language": "italian",
+    "chapter": 7,
+    "sequence": 350,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4438599e8f2b7661"
+  },
+  "findings": []
+}

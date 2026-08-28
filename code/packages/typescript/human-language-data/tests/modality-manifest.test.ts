@@ -1,4 +1,13 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -18,6 +27,10 @@ import {
   type ModalityManifest,
   type ModalityManifestLesson,
 } from "../src/modality-manifest.js";
+import {
+  generatedNarrationHashOwnerContents,
+  type GeneratedNarrationHashManifest,
+} from "../src/generated-hash-shards.js";
 import { parseLesson, type ParsedLesson } from "../src/parse.js";
 
 // ---------------------------------------------------------------------------
@@ -63,6 +76,56 @@ function fixtureRoot(lessons: Array<{ file: string; source: string }>): string {
   mkdirSync(join(root, "spanish", "lessons"), { recursive: true });
   for (const entry of lessons) {
     writeFileSync(join(root, "spanish", "lessons", entry.file), entry.source, "utf8");
+  }
+  writeFileSync(
+    join(root, "core", "languages.json"),
+    `${JSON.stringify({
+      version: 1,
+      languages: [
+        {
+          id: "spanish",
+          name: "Spanish",
+          family: "Romance",
+          script: "latin",
+          status: "active",
+          bridges: [],
+        },
+      ],
+    }, null, 2)}\n`,
+    "utf8",
+  );
+  const lessonIds = lessons.map((entry) => {
+    const id = /^id: (.+)$/m.exec(entry.source)?.[1];
+    if (id === undefined) throw new Error(`fixture lesson '${entry.file}' has no id`);
+    return id;
+  });
+  const narrationManifest: GeneratedNarrationHashManifest = {
+    version: 1,
+    algorithm: "fnv1a64",
+    maxLinearisableTableColumns: 3,
+    chapters: [
+      {
+        language: "spanish",
+        chapter: 1,
+        sourceHash: "fnv1a64:0123456789abcdef",
+        lessonIds,
+        voiceLessons: lessonIds.length,
+        drivablePrefix: lessonIds.length,
+        text: "spanish/narration/ch01.txt",
+        json: "spanish/narration/ch01.json",
+        textHash: "fnv1a64:1111111111111111",
+        jsonHash: "fnv1a64:2222222222222222",
+      },
+    ],
+    findings: [],
+  };
+  for (const [relative, contents] of generatedNarrationHashOwnerContents(
+    "spanish",
+    narrationManifest,
+  )) {
+    const path = join(root, relative);
+    mkdirSync(join(path, ".."), { recursive: true });
+    writeFileSync(path, contents, "utf8");
   }
   return root;
 }
@@ -482,13 +545,16 @@ describe("the modality manifest CLI", () => {
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 
     expect(runModalityManifest(["--write"], root)).toBe(0);
-    const output = join(root, "core", "lesson-modality", "spanish.json");
-    expect(existsSync(output)).toBe(true);
+    const directory = join(root, "core", "lesson-modality", "spanish.d");
+    expect(existsSync(join(directory, "_meta.json"))).toBe(true);
+    expect(existsSync(join(directory, "ES-C01-hola.json"))).toBe(true);
+    expect(existsSync(join(directory, "ES-C01-ser.json"))).toBe(true);
+    expect(existsSync(join(root, "core", "lesson-modality", "spanish.json"))).toBe(false);
     expect(process.stdout.write).toHaveBeenCalledWith(
-      "generated core/lesson-modality/spanish.json\n",
+      "generated core/lesson-modality (3 direct owners)\n",
     );
 
-    const manifest = JSON.parse(readFileSync(output, "utf8")) as ModalityManifest;
+    const manifest = loadModalityManifest(root);
     expect(manifest.summary).toMatchObject({ totalLessons: 2, voice: 1, sight: 1 });
     expect(runModalityManifest(["--check"], root)).toBe(0);
   });
@@ -507,7 +573,7 @@ describe("the modality manifest CLI", () => {
 
     expect(runModalityManifest(["--check"], root)).toBe(1);
     expect(process.stderr.write).toHaveBeenCalledWith(
-      "core/lesson-modality/spanish.json: generated output is missing or stale\n",
+      "core/lesson-modality/spanish.d/ES-C01-hola.json: generated output is stale\n",
     );
   });
 
@@ -523,10 +589,91 @@ describe("the modality manifest CLI", () => {
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runModalityManifest(["--write"], root)).toBe(0);
 
-    const output = join(root, "core", "lesson-modality", "spanish.json");
+    const output = join(
+      root,
+      "core",
+      "lesson-modality",
+      "spanish.d",
+      "ES-C01-hola.json",
+    );
     const compacted = JSON.stringify(JSON.parse(readFileSync(output, "utf8")));
     writeFileSync(output, compacted, "utf8");
     expect(runModalityManifest(["--check"], root)).toBe(1);
+  });
+
+  it("recovers a deterministic backup left after the old tree was moved", () => {
+    const root = simpleRoot();
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    expect(runModalityManifest(["--write"], root)).toBe(0);
+    const target = join(root, MODALITY_MANIFEST_DIR);
+    const backup = `${target}.backup`;
+    renameSync(target, backup);
+
+    expect(runModalityManifest(["--write"], root)).toBe(0);
+    expect(existsSync(target)).toBe(true);
+    expect(existsSync(backup)).toBe(false);
+    expect(runModalityManifest(["--check"], root)).toBe(0);
+  });
+
+  it("preserves the backup when installed-tree removal fails", () => {
+    const root = simpleRoot();
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    expect(runModalityManifest(["--write"], root)).toBe(0);
+    const target = join(root, MODALITY_MANIFEST_DIR);
+    const backup = `${target}.backup`;
+
+    expect(runModalityManifest(["--write"], root, {
+      afterInstalled: () => {
+        throw new Error("injected verification interruption");
+      },
+      beforeInstalledRemoval: () => {
+        throw new Error("injected target removal failure");
+      },
+    })).toBe(1);
+    expect(existsSync(target)).toBe(true);
+    expect(existsSync(backup)).toBe(true);
+
+    expect(runModalityManifest(["--write"], root)).toBe(0);
+    expect(existsSync(backup)).toBe(false);
+    expect(runModalityManifest(["--check"], root)).toBe(0);
+  });
+
+  it("preserves and later recovers the backup when restoration fails", () => {
+    const root = simpleRoot();
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    expect(runModalityManifest(["--write"], root)).toBe(0);
+    const target = join(root, MODALITY_MANIFEST_DIR);
+    const backup = `${target}.backup`;
+
+    expect(runModalityManifest(["--write"], root, {
+      afterBackupMoved: () => {
+        throw new Error("injected interruption after backup move");
+      },
+      beforeBackupRestore: () => {
+        throw new Error("injected backup restoration failure");
+      },
+    })).toBe(1);
+    expect(existsSync(target)).toBe(false);
+    expect(existsSync(backup)).toBe(true);
+
+    expect(runModalityManifest(["--write"], root)).toBe(0);
+    expect(existsSync(target)).toBe(true);
+    expect(existsSync(backup)).toBe(false);
+  });
+
+  it("rejects dangling target links and linked parent components", () => {
+    const dangling = simpleRoot();
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    symlinkSync(join(dangling, "missing-owner-tree"), join(dangling, MODALITY_MANIFEST_DIR));
+    expect(runModalityManifest(["--write"], dangling)).toBe(1);
+
+    const linkedParent = simpleRoot();
+    const realCore = join(linkedParent, "real-core");
+    renameSync(join(linkedParent, "core"), realCore);
+    symlinkSync(realCore, join(linkedParent, "core"));
+    expect(runModalityManifest(["--write"], linkedParent)).toBe(1);
   });
 
   it("rejects an unsupported mode with the usage text", () => {
@@ -541,8 +688,12 @@ describe("the modality manifest CLI", () => {
   it("exposes the bytes as a path -> content map so write and check cannot diverge", () => {
     const root = simpleRoot();
     const outputs = generatedModalityOutputs(root);
-    expect([...outputs.keys()]).toEqual([`${MODALITY_MANIFEST_DIR}/spanish.json`]);
-    expect(outputs.get(`${MODALITY_MANIFEST_DIR}/spanish.json`)).toContain(
+    expect([...outputs.keys()]).toEqual([
+      `${MODALITY_MANIFEST_DIR}/spanish.d/_meta.json`,
+      `${MODALITY_MANIFEST_DIR}/spanish.d/ES-C01-hola.json`,
+      `${MODALITY_MANIFEST_DIR}/spanish.d/ES-C01-ser.json`,
+    ]);
+    expect(outputs.get(`${MODALITY_MANIFEST_DIR}/spanish.d/_meta.json`)).toContain(
       '"algorithm": "fnv1a64"',
     );
   });
@@ -557,8 +708,11 @@ describe("the modality manifest CLI", () => {
       ...base,
       lesson({ id: "ES-C01-b", language: "spanish", sequence: 20 }),
     ]);
-    expect([...before.keys()].filter((path) => before.get(path) !== after.get(path))).toEqual([
-      `${MODALITY_MANIFEST_DIR}/spanish.json`,
+    expect(
+      [...before.keys()].filter((path) => before.get(path) !== after.get(path)),
+    ).toEqual([]);
+    expect([...after.keys()].filter((path) => !before.has(path))).toEqual([
+      `${MODALITY_MANIFEST_DIR}/spanish.d/ES-C01-b.json`,
     ]);
   });
 });
@@ -605,9 +759,11 @@ describe("the output path guard", () => {
     expect(safeOutput(root, `${MODALITY_MANIFEST_DIR}/spanish.json`)).toBe(
       join(root, "core", "lesson-modality", "spanish.json"),
     );
-    expect(generatedModalityOutputs(root, "core/driving-edition").has("core/driving-edition/spanish.json")).toBe(
-      true,
-    );
+    expect(
+      generatedModalityOutputs(root, "core/driving-edition").has(
+        "core/driving-edition/spanish.d/_meta.json",
+      ),
+    ).toBe(true);
   });
 });
 

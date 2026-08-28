@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C310-luz",
+    "language": "spanish",
+    "chapter": 310,
+    "sequence": 4650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb3bf11b5bac7062"
+  },
+  "findings": []
+}

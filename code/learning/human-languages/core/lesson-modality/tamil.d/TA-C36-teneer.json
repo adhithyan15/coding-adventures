@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C36-teneer",
+    "language": "tamil",
+    "chapter": 36,
+    "sequence": 1060,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a16ff2a5db8e0872",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

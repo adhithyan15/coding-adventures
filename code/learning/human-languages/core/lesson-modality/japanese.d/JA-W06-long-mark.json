@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "JA-W06-long-mark",
+    "language": "japanese",
+    "chapter": 6,
+    "sequence": 350,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:aedcf8d8d8a26aee",
+    "detachableSegments": [
+      "Script — length lives on the page"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MR-C08-lihine",
+    "language": "marathi",
+    "chapter": 11,
+    "sequence": 470,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1e633d41d2c7dc6",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

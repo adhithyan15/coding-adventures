@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C61-jaggery",
+    "language": "kannada",
+    "chapter": 61,
+    "sequence": 1920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3334b553a047db62"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C284-por-supuesto",
+    "language": "spanish",
+    "chapter": 284,
+    "sequence": 3360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6045a8fb588b352"
+  },
+  "findings": []
+}

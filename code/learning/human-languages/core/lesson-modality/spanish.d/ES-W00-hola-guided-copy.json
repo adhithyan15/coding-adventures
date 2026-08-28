@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "ES-W00-hola-guided-copy",
+    "language": "spanish",
+    "chapter": 1,
+    "sequence": 12,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4ee94029c5e4024d",
+    "detachableSegments": [
+      "Writing — guided copy"
+    ]
+  },
+  "findings": []
+}

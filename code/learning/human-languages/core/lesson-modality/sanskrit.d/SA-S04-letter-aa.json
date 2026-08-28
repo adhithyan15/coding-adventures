@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S04-letter-aa",
+    "language": "sanskrit",
+    "chapter": 11,
+    "sequence": 545,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:abbb7355612130a6",
+    "detachableSegments": [
+      "Script you'll notice: आ",
+      "Writing: आ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

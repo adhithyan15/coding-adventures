@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C01-soir",
+    "language": "french",
+    "chapter": 1,
+    "sequence": 35,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f7907718b69140e"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W01-ii-matra",
+    "language": "punjabi",
+    "chapter": 14,
+    "sequence": 840,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a7371059a8bb4421",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

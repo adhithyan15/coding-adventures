@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C12-mama",
+    "language": "russian",
+    "chapter": 12,
+    "sequence": 480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c72b149c84054a1"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C323-mientras",
+    "language": "spanish",
+    "chapter": 323,
+    "sequence": 5310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69a3ee0641d17702"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C384-subir",
+    "language": "spanish",
+    "chapter": 384,
+    "sequence": 8100,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:339bd23ae13715a5"
+  },
+  "findings": []
+}

@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "HI-W02-ka-ta-mouth-order",
+    "language": "hindi",
+    "chapter": 1,
+    "sequence": 90,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e1be6db0eb11c96d",
+    "delivery": "script"
+  },
+  "findings": []
+}

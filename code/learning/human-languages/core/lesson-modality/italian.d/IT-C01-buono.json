@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C01-buono",
+    "language": "italian",
+    "chapter": 1,
+    "sequence": 20,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a009286963919e4"
+  },
+  "findings": []
+}

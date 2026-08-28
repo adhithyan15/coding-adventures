@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C47-finger",
+    "language": "malayalam",
+    "chapter": 47,
+    "sequence": 1270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c77682610b69ec0c"
+  },
+  "findings": []
+}

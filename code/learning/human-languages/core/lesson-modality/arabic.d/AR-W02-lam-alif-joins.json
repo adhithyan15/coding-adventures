@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-W02-lam-alif-joins",
+    "language": "arabic",
+    "chapter": 1,
+    "sequence": 120,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4eb5f5e51205df77"
+  },
+  "findings": []
+}

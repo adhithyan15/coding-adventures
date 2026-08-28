@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C15-barish",
+    "language": "urdu",
+    "chapter": 15,
+    "sequence": 640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ca20e9bc98fdcbf"
+  },
+  "findings": []
+}

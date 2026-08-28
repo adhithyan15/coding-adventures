@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S08-letter-ta",
+    "language": "malayalam",
+    "chapter": 13,
+    "sequence": 415,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:891e6a4f03ca67a7",
+    "detachableSegments": [
+      "Script you'll notice: ത",
+      "Writing: ത — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

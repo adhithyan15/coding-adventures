@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S120-letter-ha",
+    "language": "kannada",
+    "chapter": 16,
+    "sequence": 441,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2b7ed341b78dd87d",
+    "detachableSegments": [
+      "Script you'll notice: ಹ",
+      "Writing: ಹ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

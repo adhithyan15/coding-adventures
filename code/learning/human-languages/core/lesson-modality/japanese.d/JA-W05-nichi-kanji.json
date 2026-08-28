@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "JA-W05-nichi-kanji",
+    "language": "japanese",
+    "chapter": 5,
+    "sequence": 270,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bc9bcf20c5b9db2d",
+    "detachableSegments": [
+      "Script — build the sun"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C12-nam",
+    "language": "persian",
+    "chapter": 12,
+    "sequence": 460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5c85a3e7b8b565b"
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "HI-S01-letter-ma",
+    "language": "hindi",
+    "chapter": 6,
+    "sequence": 485,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9fc086a7acb2e3df",
+    "detachableSegments": [
+      "Script you'll notice: म",
+      "Writing: म — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C07-auna",
+    "language": "punjabi",
+    "chapter": 7,
+    "sequence": 380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9564a2e1bfc6b848"
+  },
+  "findings": []
+}

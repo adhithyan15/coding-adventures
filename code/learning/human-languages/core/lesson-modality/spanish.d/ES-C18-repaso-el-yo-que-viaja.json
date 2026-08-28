@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C18-repaso-el-yo-que-viaja",
+    "language": "spanish",
+    "chapter": 129,
+    "sequence": 1494,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b732d98655952744"
+  },
+  "findings": []
+}

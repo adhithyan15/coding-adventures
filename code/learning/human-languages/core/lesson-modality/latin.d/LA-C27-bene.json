@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C27-bene",
+    "language": "latin",
+    "chapter": 27,
+    "sequence": 510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73fe26f145769b20"
+  },
+  "findings": []
+}

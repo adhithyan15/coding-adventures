@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MR-C01-nahi",
+    "language": "marathi",
+    "chapter": 4,
+    "sequence": 46,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1de0505ecc9b260e",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

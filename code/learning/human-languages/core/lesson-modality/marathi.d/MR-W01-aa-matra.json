@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-W01-aa-matra",
+    "language": "marathi",
+    "chapter": 1,
+    "sequence": 11,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7bd0dccda4ad7f18",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

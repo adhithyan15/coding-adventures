@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C356-cita",
+    "language": "spanish",
+    "chapter": 356,
+    "sequence": 6730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24c036a9933e29e4"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C12-body-map-two",
+    "language": "japanese",
+    "chapter": 12,
+    "sequence": 1000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:093da5377d668e95"
+  },
+  "findings": []
+}

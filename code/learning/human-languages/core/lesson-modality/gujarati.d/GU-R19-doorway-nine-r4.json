@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "GU-R19-doorway-nine-r4",
+    "language": "gujarati",
+    "chapter": 23,
+    "sequence": 870,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7f476ddec1780cf6",
+    "detachableSegments": [
+      "Writing — from sound"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

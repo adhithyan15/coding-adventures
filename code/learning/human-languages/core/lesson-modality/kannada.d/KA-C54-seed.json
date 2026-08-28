@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C54-seed",
+    "language": "kannada",
+    "chapter": 54,
+    "sequence": 1580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:948ebdedc76e6763"
+  },
+  "findings": []
+}

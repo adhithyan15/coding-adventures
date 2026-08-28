@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C43-casa",
+    "language": "spanish",
+    "chapter": 56,
+    "sequence": 1000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:515a6854078bb7d3"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C01-abend",
+    "language": "german",
+    "chapter": 1,
+    "sequence": 40,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:200c3e27d69a0cda"
+  },
+  "findings": []
+}

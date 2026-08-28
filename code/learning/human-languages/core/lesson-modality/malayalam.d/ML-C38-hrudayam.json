@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C38-hrudayam",
+    "language": "malayalam",
+    "chapter": 38,
+    "sequence": 880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f14b74af1cfa8a1b"
+  },
+  "findings": []
+}

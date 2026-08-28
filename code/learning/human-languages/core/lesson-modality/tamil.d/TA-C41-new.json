@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C41-new",
+    "language": "tamil",
+    "chapter": 41,
+    "sequence": 1300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d1e8a5a7a5e2548"
+  },
+  "findings": []
+}

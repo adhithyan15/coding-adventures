@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C08-baap",
+    "language": "marwadi",
+    "chapter": 10,
+    "sequence": 590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da0232c39ee3a781"
+  },
+  "findings": []
+}

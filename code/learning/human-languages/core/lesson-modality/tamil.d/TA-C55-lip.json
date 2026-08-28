@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C55-lip",
+    "language": "tamil",
+    "chapter": 55,
+    "sequence": 1980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce5043b6602cb0eb"
+  },
+  "findings": []
+}

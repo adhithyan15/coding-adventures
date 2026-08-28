@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C62-comiendo",
+    "language": "spanish",
+    "chapter": 237,
+    "sequence": 2420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14799988e58679ee"
+  },
+  "findings": []
+}

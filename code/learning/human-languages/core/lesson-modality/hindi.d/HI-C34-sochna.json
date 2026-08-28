@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C34-sochna",
+    "language": "hindi",
+    "chapter": 34,
+    "sequence": 860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a54a146eaf65a464"
+  },
+  "findings": []
+}

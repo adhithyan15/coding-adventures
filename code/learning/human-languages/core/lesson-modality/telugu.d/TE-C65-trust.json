@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C65-trust",
+    "language": "telugu",
+    "chapter": 65,
+    "sequence": 2120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:712e5e6e134c55ab"
+  },
+  "findings": []
+}

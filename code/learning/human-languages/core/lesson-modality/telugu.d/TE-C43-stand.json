@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C43-stand",
+    "language": "telugu",
+    "chapter": 43,
+    "sequence": 1030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75315e9df49b8811"
+  },
+  "findings": []
+}

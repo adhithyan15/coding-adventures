@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "JA-W13-tsu",
+    "language": "japanese",
+    "chapter": 13,
+    "sequence": 1010,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3e3f54c8f202bda8",
+    "detachableSegments": [
+      "Script — notice and trace",
+      "Writing — copy, then recall"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

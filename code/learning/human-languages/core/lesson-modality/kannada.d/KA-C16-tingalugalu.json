@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C16-tingalugalu",
+    "language": "kannada",
+    "chapter": 16,
+    "sequence": 440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12b347e74d1b8a21"
+  },
+  "findings": []
+}

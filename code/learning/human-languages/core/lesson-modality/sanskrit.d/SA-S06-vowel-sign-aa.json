@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S06-vowel-sign-aa",
+    "language": "sanskrit",
+    "chapter": 13,
+    "sequence": 595,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c22f0d95290784ea",
+    "detachableSegments": [
+      "Script you'll notice: ◌ा",
+      "Writing: ◌ा — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

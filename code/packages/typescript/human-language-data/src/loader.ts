@@ -36,11 +36,13 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  MODALITY_MANIFEST_DIR,
-  mergeModalityManifests,
   type ModalityManifest,
   type ModalityManifestLesson,
 } from "./modality-manifest.js";
+import {
+  modalityNarrationLessonIds,
+  readModalityManifestOwners,
+} from "./modality-shards.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
 import {
   EXAM_CONTENT_DIMENSIONS,
@@ -637,21 +639,21 @@ export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
  * hand a driver the handwriting drills. CI's `--check` guarantees the file is present
  * and current, so the throw is unreachable in a healthy checkout.
  */
-export function loadModalityManifest(root = defaultCurriculumRoot()): ModalityManifest {
-  const directory = join(root, MODALITY_MANIFEST_DIR);
-  // Enumerated here, but READ through `readLedgerFile` — which is the split
-  // that matters. `core/lesson-modality/` is NOT an HL21 `X.d/`: it is the
-  // older PR #12443 shape, a plain directory of per-language files with no
-  // monolith anywhere, so `readShards` (which derives `X.d` from an `X.json`
-  // that does not exist) is the wrong tool and would have to invent a ledger
-  // path to be handed one. What these files DO share with a shard is the trust
-  // boundary — each is a repo file a pull request chooses — so each gets the
-  // same per-file guards a shard gets.
-  const manifests = readdirSync(directory)
-    .filter((name) => name.endsWith(".json"))
-    .sort()
-    .map((name) => readLedgerFile<ModalityManifest>(join(directory, name)));
-  return mergeModalityManifests(manifests);
+export function loadModalityManifest(
+  root = defaultCurriculumRoot(),
+  registry = loadLanguageRegistry(root),
+): ModalityManifest {
+  const languages = registry.languages.map((language) => language.id);
+  // Narration chapter owners are a separately generated, chapter-sharded identity
+  // projection. They let a consumer prove that a clean modality-owner deletion did
+  // not merely shrink the corpus it happened to discover. The source-derived second
+  // comparison remains `check:modality`'s job so loading the emitted artifact never
+  // reparses thousands of Markdown lessons.
+  const expectedLessonIds = modalityNarrationLessonIds(root, languages);
+  return readModalityManifestOwners(root, {
+    expectedLanguages: languages,
+    expectedLessonIds,
+  });
 }
 
 /**

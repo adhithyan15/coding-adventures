@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C08-wo",
+    "language": "chinese",
+    "chapter": 8,
+    "sequence": 510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbf9ff9e05cd068c"
+  },
+  "findings": []
+}

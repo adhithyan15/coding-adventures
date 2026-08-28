@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S08-vowel-sign-aa",
+    "language": "kannada",
+    "chapter": 13,
+    "sequence": 415,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5d1c8307fed7683e",
+    "detachableSegments": [
+      "Script you'll notice: ◌ಾ",
+      "Writing: ◌ಾ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

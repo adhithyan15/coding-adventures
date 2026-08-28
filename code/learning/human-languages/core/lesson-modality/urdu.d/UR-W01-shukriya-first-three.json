@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "UR-W01-shukriya-first-three",
+    "language": "urdu",
+    "chapter": 1,
+    "sequence": 15,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b3c58acd6081afc1",
+    "detachableSegments": [
+      "Script — recognize three shapes",
+      "Writing — trace before you copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

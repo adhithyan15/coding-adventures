@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C44-look",
+    "language": "kannada",
+    "chapter": 44,
+    "sequence": 1060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ee6802a2ba3d8b8"
+  },
+  "findings": []
+}

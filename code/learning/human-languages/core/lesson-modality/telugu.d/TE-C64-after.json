@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C64-after",
+    "language": "telugu",
+    "chapter": 64,
+    "sequence": 2060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:559905e942120f28"
+  },
+  "findings": []
+}

@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "GU-W03-sha",
+    "language": "gujarati",
+    "chapter": 3,
+    "sequence": 69,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4889c6c7820b7cce",
+    "detachableSegments": [
+      "Script — meet one form",
+      "Writing — notice and trace",
+      "Writing — copy with the model",
+      "Writing — recall after hiding"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

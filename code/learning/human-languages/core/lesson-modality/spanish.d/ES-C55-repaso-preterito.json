@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C55-repaso-preterito",
+    "language": "spanish",
+    "chapter": 204,
+    "sequence": 2255,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cdc36f29071cdca"
+  },
+  "findings": []
+}

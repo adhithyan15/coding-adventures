@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C324-acaso",
+    "language": "spanish",
+    "chapter": 324,
+    "sequence": 5340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbbf422f0474be3f"
+  },
+  "findings": []
+}

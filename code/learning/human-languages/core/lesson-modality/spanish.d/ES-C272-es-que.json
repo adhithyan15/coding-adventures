@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C272-es-que",
+    "language": "spanish",
+    "chapter": 272,
+    "sequence": 2770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96746d24a5ad8b93"
+  },
+  "findings": []
+}

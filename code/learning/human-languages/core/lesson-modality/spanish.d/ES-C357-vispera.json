@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C357-vispera",
+    "language": "spanish",
+    "chapter": 357,
+    "sequence": 6790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2675b68ba5163ab5"
+  },
+  "findings": []
+}

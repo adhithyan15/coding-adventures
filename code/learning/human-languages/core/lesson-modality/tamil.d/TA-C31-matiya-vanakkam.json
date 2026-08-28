@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C31-matiya-vanakkam",
+    "language": "tamil",
+    "chapter": 31,
+    "sequence": 860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0fc68ea0a96a97e"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-C03-kushalam",
+    "language": "sanskrit",
+    "chapter": 3,
+    "sequence": 180,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b0fa063054236d8",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

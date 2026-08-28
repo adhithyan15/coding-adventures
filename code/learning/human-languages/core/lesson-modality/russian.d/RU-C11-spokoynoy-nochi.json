@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C11-spokoynoy-nochi",
+    "language": "russian",
+    "chapter": 11,
+    "sequence": 470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a85d235bbf3e814d"
+  },
+  "findings": []
+}

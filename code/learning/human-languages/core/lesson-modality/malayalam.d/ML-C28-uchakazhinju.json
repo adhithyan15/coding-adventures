@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C28-uchakazhinju",
+    "language": "malayalam",
+    "chapter": 28,
+    "sequence": 600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e41a549db6c8c832"
+  },
+  "findings": []
+}

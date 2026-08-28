@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C52-door",
+    "language": "telugu",
+    "chapter": 52,
+    "sequence": 1430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f568d18e2ff408b"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "BN-W01-aa",
+    "language": "bengali",
+    "chapter": 16,
+    "sequence": 1620,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c90a1b9dc66e8228",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

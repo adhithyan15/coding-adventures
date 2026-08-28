@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "HI-S114-letter-ha",
+    "language": "hindi",
+    "chapter": 10,
+    "sequence": 546,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:715b8be2054026ff",
+    "detachableSegments": [
+      "Script you'll notice: ह",
+      "Writing: ह"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

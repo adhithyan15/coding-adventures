@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C23-son",
+    "language": "sanskrit",
+    "chapter": 23,
+    "sequence": 1110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eddd1c1f67b7d275"
+  },
+  "findings": []
+}

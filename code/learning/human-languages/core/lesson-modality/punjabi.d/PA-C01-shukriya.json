@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C01-shukriya",
+    "language": "punjabi",
+    "chapter": 1,
+    "sequence": 50,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74202a95294e8fd5"
+  },
+  "findings": []
+}

@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "ZH-R17-writing-five",
+    "language": "chinese",
+    "chapter": 17,
+    "sequence": 1570,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:17e275c8d8ffb02b",
+    "delivery": "script"
+  },
+  "findings": []
+}

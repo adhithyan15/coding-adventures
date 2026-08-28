@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C06-panj-convergence",
+    "language": "punjabi",
+    "chapter": 6,
+    "sequence": 350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffa41e7a4b0fb099"
+  },
+  "findings": []
+}

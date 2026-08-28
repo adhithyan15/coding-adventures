@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C281-limpio",
+    "language": "spanish",
+    "chapter": 281,
+    "sequence": 3200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb5e581667624e53"
+  },
+  "findings": []
+}

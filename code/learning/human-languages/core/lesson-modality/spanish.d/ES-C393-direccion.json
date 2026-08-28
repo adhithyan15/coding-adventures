@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C393-direccion",
+    "language": "spanish",
+    "chapter": 393,
+    "sequence": 8480,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:986043d57fec22a1"
+  },
+  "findings": []
+}

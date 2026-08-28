@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C10-kaan",
+    "language": "urdu",
+    "chapter": 10,
+    "sequence": 380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28aba40e2f673778"
+  },
+  "findings": []
+}

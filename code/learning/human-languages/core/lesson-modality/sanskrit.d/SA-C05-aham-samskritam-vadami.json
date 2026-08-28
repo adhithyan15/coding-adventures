@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-C05-aham-samskritam-vadami",
+    "language": "sanskrit",
+    "chapter": 5,
+    "sequence": 270,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b052e7b455dfc4e",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

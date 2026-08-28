@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C63-hablasteis",
+    "language": "spanish",
+    "chapter": 241,
+    "sequence": 2440,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0796815c679b7da0"
+  },
+  "findings": []
+}

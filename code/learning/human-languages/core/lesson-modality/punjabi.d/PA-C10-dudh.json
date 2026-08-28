@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-C10-dudh",
+    "language": "punjabi",
+    "chapter": 10,
+    "sequence": 520,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c563cb8818f2ec50",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

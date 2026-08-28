@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C21-stand",
+    "language": "sanskrit",
+    "chapter": 21,
+    "sequence": 1030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9f01c85c4a50c03"
+  },
+  "findings": []
+}

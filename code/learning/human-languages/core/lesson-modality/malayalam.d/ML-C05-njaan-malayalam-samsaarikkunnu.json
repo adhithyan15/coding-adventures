@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ML-C05-njaan-malayalam-samsaarikkunnu",
+    "language": "malayalam",
+    "chapter": 5,
+    "sequence": 280,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47b983e2f90a685e",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

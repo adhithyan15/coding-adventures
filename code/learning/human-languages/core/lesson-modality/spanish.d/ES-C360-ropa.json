@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C360-ropa",
+    "language": "spanish",
+    "chapter": 360,
+    "sequence": 6920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d02900a1709d9f32"
+  },
+  "findings": []
+}

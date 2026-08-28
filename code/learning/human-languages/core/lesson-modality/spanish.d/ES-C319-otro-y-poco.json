@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C319-otro-y-poco",
+    "language": "spanish",
+    "chapter": 319,
+    "sequence": 5110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd665043c1e72176"
+  },
+  "findings": []
+}

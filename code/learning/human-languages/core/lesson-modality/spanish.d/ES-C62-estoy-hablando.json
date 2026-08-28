@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C62-estoy-hablando",
+    "language": "spanish",
+    "chapter": 238,
+    "sequence": 2425,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57e90c1436beb2ae"
+  },
+  "findings": []
+}

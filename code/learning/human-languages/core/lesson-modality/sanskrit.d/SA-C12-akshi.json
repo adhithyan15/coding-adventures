@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-C12-akshi",
+    "language": "sanskrit",
+    "chapter": 12,
+    "sequence": 550,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5301b376028e7b2d",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

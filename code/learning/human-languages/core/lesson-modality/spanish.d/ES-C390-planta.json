@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C390-planta",
+    "language": "spanish",
+    "chapter": 390,
+    "sequence": 8320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e2b9d59ef38c8f1"
+  },
+  "findings": []
+}

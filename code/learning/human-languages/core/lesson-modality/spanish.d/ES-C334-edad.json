@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C334-edad",
+    "language": "spanish",
+    "chapter": 334,
+    "sequence": 5860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b128d93ff109052b"
+  },
+  "findings": []
+}

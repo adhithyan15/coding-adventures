@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "ZH-W16-han-guided",
+    "language": "chinese",
+    "chapter": 16,
+    "sequence": 1310,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ccc44535d9fb4761",
+    "delivery": "script"
+  },
+  "findings": []
+}

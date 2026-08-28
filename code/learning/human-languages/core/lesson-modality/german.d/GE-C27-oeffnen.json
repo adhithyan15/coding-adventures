@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C27-oeffnen",
+    "language": "german",
+    "chapter": 27,
+    "sequence": 850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2963acd57141a92"
+  },
+  "findings": []
+}

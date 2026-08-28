@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C33-vesper-afterlives",
+    "language": "latin",
+    "chapter": 33,
+    "sequence": 580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7310ce5f2eee5856"
+  },
+  "findings": []
+}

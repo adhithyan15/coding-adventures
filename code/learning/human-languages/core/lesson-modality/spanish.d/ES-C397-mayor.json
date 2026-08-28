@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C397-mayor",
+    "language": "spanish",
+    "chapter": 397,
+    "sequence": 8680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1cca8485c5ed3873"
+  },
+  "findings": []
+}

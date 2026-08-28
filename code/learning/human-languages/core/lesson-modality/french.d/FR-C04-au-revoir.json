@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C04-au-revoir",
+    "language": "french",
+    "chapter": 4,
+    "sequence": 140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1db881ea75cc37d5"
+  },
+  "findings": []
+}

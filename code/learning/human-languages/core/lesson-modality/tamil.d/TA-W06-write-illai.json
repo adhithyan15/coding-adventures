@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-W06-write-illai",
+    "language": "tamil",
+    "chapter": 18,
+    "sequence": 650,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8ac490a17d82b53a",
+    "detachableSegments": [
+      "Script you'll notice: இ and ல",
+      "Script you'll notice: build the word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

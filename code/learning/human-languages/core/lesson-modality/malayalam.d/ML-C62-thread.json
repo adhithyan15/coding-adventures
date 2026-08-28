@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C62-thread",
+    "language": "malayalam",
+    "chapter": 62,
+    "sequence": 2000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ecbf56f90687216"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C53-que-no-se-cae",
+    "language": "spanish",
+    "chapter": 187,
+    "sequence": 2202,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fed3d5d56436141"
+  },
+  "findings": []
+}

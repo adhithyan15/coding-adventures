@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-C04-hoogu",
+    "language": "kannada",
+    "chapter": 4,
+    "sequence": 210,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f76bb08b0f28ebbd",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

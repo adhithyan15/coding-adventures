@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "MR-W03-dhanyavad-write",
+    "language": "marathi",
+    "chapter": 3,
+    "sequence": 33,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:630e03829b9964bd",
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C362-luna",
+    "language": "spanish",
+    "chapter": 362,
+    "sequence": 7060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c5a4f6683530fd5"
+  },
+  "findings": []
+}

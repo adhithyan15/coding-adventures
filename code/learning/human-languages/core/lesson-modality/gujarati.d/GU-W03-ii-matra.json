@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "GU-W03-ii-matra",
+    "language": "gujarati",
+    "chapter": 3,
+    "sequence": 64,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:29c97a1f0570ecb5",
+    "detachableSegments": [
+      "Script — meet one form",
+      "Writing — notice and trace",
+      "Writing — copy with the model",
+      "Writing — recall after hiding"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

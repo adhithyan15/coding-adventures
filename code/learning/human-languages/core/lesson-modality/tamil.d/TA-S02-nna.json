@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S02-nna",
+    "language": "tamil",
+    "chapter": 6,
+    "sequence": 405,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2a1e1f702ce9cc6c",
+    "detachableSegments": [
+      "Script you'll notice: ண",
+      "Writing: ண"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

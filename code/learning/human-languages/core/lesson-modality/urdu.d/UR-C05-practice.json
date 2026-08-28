@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C05-practice",
+    "language": "urdu",
+    "chapter": 5,
+    "sequence": 200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4886a8486582c1be"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C59-aquel",
+    "language": "spanish",
+    "chapter": 223,
+    "sequence": 2350,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cc14bfaf151c2c66"
+  },
+  "findings": []
+}

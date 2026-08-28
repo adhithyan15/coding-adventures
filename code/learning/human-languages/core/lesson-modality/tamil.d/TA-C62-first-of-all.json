@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C62-first-of-all",
+    "language": "tamil",
+    "chapter": 62,
+    "sequence": 2350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e04f07e0e08697df"
+  },
+  "findings": []
+}

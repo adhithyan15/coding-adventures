@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C358-tamano",
+    "language": "spanish",
+    "chapter": 358,
+    "sequence": 6830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a1f184e45ec7e31"
+  },
+  "findings": []
+}

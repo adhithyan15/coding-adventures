@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C07-aavvun",
+    "language": "gujarati",
+    "chapter": 13,
+    "sequence": 400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d660e16cdb5abe70"
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "HI-S115-letter-ya",
+    "language": "hindi",
+    "chapter": 11,
+    "sequence": 566,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7459f8c76e70a32d",
+    "detachableSegments": [
+      "Script you'll notice: य",
+      "Writing: य"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C367-patata",
+    "language": "spanish",
+    "chapter": 367,
+    "sequence": 7300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c97700eeb5e73fc9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C14-annos-natus",
+    "language": "latin",
+    "chapter": 14,
+    "sequence": 340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2236be9e8847f3d4"
+  },
+  "findings": []
+}

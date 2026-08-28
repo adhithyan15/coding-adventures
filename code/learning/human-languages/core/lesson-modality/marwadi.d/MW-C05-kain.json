@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C05-kain",
+    "language": "marwadi",
+    "chapter": 6,
+    "sequence": 390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c88e64064c5b245"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C66-repaso-lo-implicito",
+    "language": "spanish",
+    "chapter": 261,
+    "sequence": 2540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c4296fbd4f9c106"
+  },
+  "findings": []
+}

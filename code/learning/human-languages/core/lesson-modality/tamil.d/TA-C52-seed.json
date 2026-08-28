@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C52-seed",
+    "language": "tamil",
+    "chapter": 52,
+    "sequence": 1850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8898c71bd7ef14f"
+  },
+  "findings": []
+}

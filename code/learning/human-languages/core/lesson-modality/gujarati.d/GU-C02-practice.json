@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C02-practice",
+    "language": "gujarati",
+    "chapter": 8,
+    "sequence": 170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9e8d48880696f41"
+  },
+  "findings": []
+}

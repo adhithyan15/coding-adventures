@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "HI-S122-letter-kha",
+    "language": "hindi",
+    "chapter": 18,
+    "sequence": 651,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:64228cb3e5d9f64f",
+    "detachableSegments": [
+      "Script you'll notice: ख",
+      "Writing: ख — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

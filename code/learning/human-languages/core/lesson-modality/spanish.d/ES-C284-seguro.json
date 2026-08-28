@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C284-seguro",
+    "language": "spanish",
+    "chapter": 284,
+    "sequence": 3330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3852ec8707f5fe66"
+  },
+  "findings": []
+}

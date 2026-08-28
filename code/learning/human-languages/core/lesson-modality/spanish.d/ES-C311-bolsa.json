@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C311-bolsa",
+    "language": "spanish",
+    "chapter": 311,
+    "sequence": 4700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9090824df8fc9c6"
+  },
+  "findings": []
+}

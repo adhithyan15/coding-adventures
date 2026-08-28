@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "AR-W06-sukun-shadda-tanwin",
+    "language": "arabic",
+    "chapter": 2,
+    "sequence": 255,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d99aa8c25c46a3b6",
+    "detachableSegments": [
+      "Script — Three marks, three instructions"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C33-verde",
+    "language": "spanish",
+    "chapter": 151,
+    "sequence": 1870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:254ff86ad8c30c3b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C30-mund",
+    "language": "german",
+    "chapter": 30,
+    "sequence": 950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24fb4a7f4f3cdc45"
+  },
+  "findings": []
+}

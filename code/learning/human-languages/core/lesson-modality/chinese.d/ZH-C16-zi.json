@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C16-zi",
+    "language": "chinese",
+    "chapter": 16,
+    "sequence": 1280,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:22f45224442b4e48"
+  },
+  "findings": []
+}

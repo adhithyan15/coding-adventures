@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S04-vowel-sign-aa",
+    "language": "malayalam",
+    "chapter": 9,
+    "sequence": 375,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ca7bd872d637f851",
+    "detachableSegments": [
+      "Script you'll notice: ◌ാ",
+      "Writing: ◌ാ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

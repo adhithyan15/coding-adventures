@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-C01-svagatam",
+    "language": "sanskrit",
+    "chapter": 1,
+    "sequence": 40,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d92e56c9e2145744",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

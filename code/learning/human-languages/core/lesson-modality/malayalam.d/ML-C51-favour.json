@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C51-favour",
+    "language": "malayalam",
+    "chapter": 51,
+    "sequence": 1450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e71a73941b250003"
+  },
+  "findings": []
+}

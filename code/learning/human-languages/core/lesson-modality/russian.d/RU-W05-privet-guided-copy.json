@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "RU-W05-privet-guided-copy",
+    "language": "russian",
+    "chapter": 1,
+    "sequence": 62,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dbede5428bac6012",
+    "detachableSegments": [
+      "Writing — guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

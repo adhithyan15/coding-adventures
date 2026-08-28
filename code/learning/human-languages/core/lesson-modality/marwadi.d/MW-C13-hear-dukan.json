@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C13-hear-dukan",
+    "language": "marwadi",
+    "chapter": 18,
+    "sequence": 1310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c35db5d173137329"
+  },
+  "findings": []
+}

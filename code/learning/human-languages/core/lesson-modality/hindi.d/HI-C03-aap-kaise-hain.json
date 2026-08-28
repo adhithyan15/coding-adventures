@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C03-aap-kaise-hain",
+    "language": "hindi",
+    "chapter": 3,
+    "sequence": 280,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed4078b55b808f1d",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

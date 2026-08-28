@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C37-cerrar",
+    "language": "spanish",
+    "chapter": 166,
+    "sequence": 2020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64540286ceff3e21"
+  },
+  "findings": []
+}

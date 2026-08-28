@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C290-arroz",
+    "language": "spanish",
+    "chapter": 290,
+    "sequence": 3630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2eb906be7dd1659b"
+  },
+  "findings": []
+}

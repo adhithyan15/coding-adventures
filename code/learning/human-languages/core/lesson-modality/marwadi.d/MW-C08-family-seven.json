@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C08-family-seven",
+    "language": "marwadi",
+    "chapter": 11,
+    "sequence": 750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1308919a76c1e75"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C66-ear-of-grain",
+    "language": "malayalam",
+    "chapter": 66,
+    "sequence": 2210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0eba34e130871ee"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C53-star",
+    "language": "telugu",
+    "chapter": 53,
+    "sequence": 1510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25ff5095fd0254cf"
+  },
+  "findings": []
+}

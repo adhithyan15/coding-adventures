@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C302-calle",
+    "language": "spanish",
+    "chapter": 302,
+    "sequence": 4220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86a4500e9d8ab72b"
+  },
+  "findings": []
+}

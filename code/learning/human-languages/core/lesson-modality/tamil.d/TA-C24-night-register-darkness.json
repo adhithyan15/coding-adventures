@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C24-night-register-darkness",
+    "language": "tamil",
+    "chapter": 24,
+    "sequence": 770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39c3cb1f85922cf4"
+  },
+  "findings": []
+}

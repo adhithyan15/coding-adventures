@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C42-give",
+    "language": "tamil",
+    "chapter": 42,
+    "sequence": 1360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00474ac7e02b6ef0"
+  },
+  "findings": []
+}

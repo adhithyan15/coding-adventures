@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C394-trabajo",
+    "language": "spanish",
+    "chapter": 394,
+    "sequence": 8510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c540887751faaed"
+  },
+  "findings": []
+}

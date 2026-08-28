@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-W10-read-naan",
+    "language": "tamil",
+    "chapter": 25,
+    "sequence": 785,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4cd4df8950c7367a",
+    "detachableSegments": [
+      "Script you'll notice: the ா sign",
+      "Script you'll notice: build the word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

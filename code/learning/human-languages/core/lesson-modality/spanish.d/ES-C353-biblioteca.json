@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C353-biblioteca",
+    "language": "spanish",
+    "chapter": 353,
+    "sequence": 6600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0494f41999f446fe"
+  },
+  "findings": []
+}

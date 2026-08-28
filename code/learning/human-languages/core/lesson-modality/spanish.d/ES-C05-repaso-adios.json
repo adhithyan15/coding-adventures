@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C05-repaso-adios",
+    "language": "spanish",
+    "chapter": 12,
+    "sequence": 445,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:696a3944705dc778"
+  },
+  "findings": []
+}

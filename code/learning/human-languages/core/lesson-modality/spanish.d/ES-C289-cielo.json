@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C289-cielo",
+    "language": "spanish",
+    "chapter": 289,
+    "sequence": 3580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01b060bc20707017"
+  },
+  "findings": []
+}

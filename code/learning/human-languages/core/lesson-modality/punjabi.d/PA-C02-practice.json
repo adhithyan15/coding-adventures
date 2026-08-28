@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C02-practice",
+    "language": "punjabi",
+    "chapter": 2,
+    "sequence": 150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0830fb96cca7cb95"
+  },
+  "findings": []
+}

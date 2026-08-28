@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "RU-W05-privet-letters-e-t",
+    "language": "russian",
+    "chapter": 1,
+    "sequence": 60,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d940e9c62e2cd670",
+    "detachableSegments": [
+      "Script — е (\"ye\") — the honest vowel",
+      "Script — т (\"t\") — Greek tau, honest too",
+      "Writing — now write the whole word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

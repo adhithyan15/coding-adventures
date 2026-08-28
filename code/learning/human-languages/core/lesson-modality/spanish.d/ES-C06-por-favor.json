@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C06-por-favor",
+    "language": "spanish",
+    "chapter": 14,
+    "sequence": 500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:031d0e43ac4b59b7"
+  },
+  "findings": []
+}

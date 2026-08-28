@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C39-traer",
+    "language": "spanish",
+    "chapter": 168,
+    "sequence": 2090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f41ff7d130500ca"
+  },
+  "findings": []
+}

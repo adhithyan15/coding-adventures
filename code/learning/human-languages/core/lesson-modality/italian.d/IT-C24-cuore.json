@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C24-cuore",
+    "language": "italian",
+    "chapter": 24,
+    "sequence": 820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1971c1c12f429593"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C11-qing",
+    "language": "chinese",
+    "chapter": 11,
+    "sequence": 660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b761a25bb0f5a71"
+  },
+  "findings": []
+}

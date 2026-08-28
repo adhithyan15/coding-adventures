@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C55-sintesis-condicion",
+    "language": "spanish",
+    "chapter": 198,
+    "sequence": 2225,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8fdd76452ba3424e"
+  },
+  "findings": []
+}

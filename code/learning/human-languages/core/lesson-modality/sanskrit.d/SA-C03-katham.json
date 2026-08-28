@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-C03-katham",
+    "language": "sanskrit",
+    "chapter": 3,
+    "sequence": 150,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8277df7c7009a07e",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

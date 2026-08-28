@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C349-agenda",
+    "language": "spanish",
+    "chapter": 349,
+    "sequence": 6410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d054718f47e7e7a4"
+  },
+  "findings": []
+}

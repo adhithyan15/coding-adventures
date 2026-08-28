@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C334-hambre",
+    "language": "spanish",
+    "chapter": 334,
+    "sequence": 5830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb424c08d29f2813"
+  },
+  "findings": []
+}

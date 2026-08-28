@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C17-hear-riksha",
+    "language": "marwadi",
+    "chapter": 22,
+    "sequence": 1650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:456f0eb9b2427856"
+  },
+  "findings": []
+}

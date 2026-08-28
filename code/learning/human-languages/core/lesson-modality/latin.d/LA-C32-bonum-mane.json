@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C32-bonum-mane",
+    "language": "latin",
+    "chapter": 32,
+    "sequence": 560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6dafdd74091a9bde"
+  },
+  "findings": []
+}

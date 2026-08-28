@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C335-repaso-seis-palabras",
+    "language": "spanish",
+    "chapter": 335,
+    "sequence": 5870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94bc532eaeb2dac0"
+  },
+  "findings": []
+}

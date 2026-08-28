@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C38-fire",
+    "language": "sanskrit",
+    "chapter": 38,
+    "sequence": 1830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50958c0d02ee661d"
+  },
+  "findings": []
+}

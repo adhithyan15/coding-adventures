@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C04-repaso-gracias",
+    "language": "spanish",
+    "chapter": 7,
+    "sequence": 285,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23c987997af13a9c"
+  },
+  "findings": []
+}

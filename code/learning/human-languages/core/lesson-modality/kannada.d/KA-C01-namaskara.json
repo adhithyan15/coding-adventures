@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-C01-namaskara",
+    "language": "kannada",
+    "chapter": 1,
+    "sequence": 10,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00091f24b7f9059e",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

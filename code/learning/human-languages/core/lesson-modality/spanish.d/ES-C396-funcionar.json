@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C396-funcionar",
+    "language": "spanish",
+    "chapter": 396,
+    "sequence": 8630,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:699afcf7102866a3"
+  },
+  "findings": []
+}

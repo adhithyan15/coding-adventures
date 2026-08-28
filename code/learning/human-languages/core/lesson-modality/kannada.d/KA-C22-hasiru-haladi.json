@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C22-hasiru-haladi",
+    "language": "kannada",
+    "chapter": 22,
+    "sequence": 510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65ba36cced6b0222"
+  },
+  "findings": []
+}

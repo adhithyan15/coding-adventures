@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S116-letter-u",
+    "language": "malayalam",
+    "chapter": 17,
+    "sequence": 461,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e2d5579cc9ae583c",
+    "detachableSegments": [
+      "Script you'll notice: ഉ",
+      "Writing: ഉ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

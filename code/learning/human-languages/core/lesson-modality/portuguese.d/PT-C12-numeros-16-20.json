@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C12-numeros-16-20",
+    "language": "portuguese",
+    "chapter": 12,
+    "sequence": 460,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f1e185fdf95fe4c3"
+  },
+  "findings": []
+}

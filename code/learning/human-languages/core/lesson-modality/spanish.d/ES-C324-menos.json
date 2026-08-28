@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C324-menos",
+    "language": "spanish",
+    "chapter": 324,
+    "sequence": 5350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3642a0f392cd8bd"
+  },
+  "findings": []
+}

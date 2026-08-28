@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C278-flor",
+    "language": "spanish",
+    "chapter": 278,
+    "sequence": 3090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dda861a7e37ff54a"
+  },
+  "findings": []
+}

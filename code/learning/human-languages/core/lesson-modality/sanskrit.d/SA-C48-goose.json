@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C48-goose",
+    "language": "sanskrit",
+    "chapter": 48,
+    "sequence": 2370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cdc43c8db576d2f"
+  },
+  "findings": []
+}

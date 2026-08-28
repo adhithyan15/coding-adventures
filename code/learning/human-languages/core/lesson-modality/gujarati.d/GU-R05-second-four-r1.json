@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "GU-R05-second-four-r1",
+    "language": "gujarati",
+    "chapter": 5,
+    "sequence": 80,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:247119f8fdb22a07",
+    "detachableSegments": [
+      "Writing — from sound"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

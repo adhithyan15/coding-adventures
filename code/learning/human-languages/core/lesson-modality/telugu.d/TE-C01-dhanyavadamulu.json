@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "TE-C01-dhanyavadamulu",
+    "language": "telugu",
+    "chapter": 1,
+    "sequence": 20,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:706f6c3652245a6d",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

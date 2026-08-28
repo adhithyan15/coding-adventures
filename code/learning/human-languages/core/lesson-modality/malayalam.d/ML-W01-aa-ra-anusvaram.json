@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-W01-aa-ra-anusvaram",
+    "language": "malayalam",
+    "chapter": 1,
+    "sequence": 16,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7b99c3705651c108",
+    "detachableSegments": [
+      "Script",
+      "Writing — observe and trace the last three"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

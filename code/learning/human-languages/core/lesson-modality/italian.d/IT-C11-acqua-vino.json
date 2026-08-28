@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C11-acqua-vino",
+    "language": "italian",
+    "chapter": 11,
+    "sequence": 440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb97f2ca160ba953"
+  },
+  "findings": []
+}

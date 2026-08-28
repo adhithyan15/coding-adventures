@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C351-cantidad",
+    "language": "spanish",
+    "chapter": 351,
+    "sequence": 6480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9aaecaa92b621277"
+  },
+  "findings": []
+}

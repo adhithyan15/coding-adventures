@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C42-much",
+    "language": "sanskrit",
+    "chapter": 42,
+    "sequence": 2070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4398fd4a7486ddf"
+  },
+  "findings": []
+}

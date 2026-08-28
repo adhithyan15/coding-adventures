@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C37-ivar-en-nanbar",
+    "language": "tamil",
+    "chapter": 37,
+    "sequence": 1130,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30fc8c871f6986df",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

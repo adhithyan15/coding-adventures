@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C36-kursi",
+    "language": "hindi",
+    "chapter": 36,
+    "sequence": 970,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acd34c6f351f46b1",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

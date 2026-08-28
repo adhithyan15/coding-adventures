@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "JA-W05-hon-kanji",
+    "language": "japanese",
+    "chapter": 5,
+    "sequence": 280,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f410753d9ac7e65a",
+    "detachableSegments": [
+      "Script — five strokes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

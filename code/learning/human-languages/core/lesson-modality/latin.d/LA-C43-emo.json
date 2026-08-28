@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C43-emo",
+    "language": "latin",
+    "chapter": 43,
+    "sequence": 940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c34c605aaf1896c1"
+  },
+  "findings": []
+}

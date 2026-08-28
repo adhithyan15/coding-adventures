@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C323-entonces",
+    "language": "spanish",
+    "chapter": 323,
+    "sequence": 5280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d91f05b865113410"
+  },
+  "findings": []
+}

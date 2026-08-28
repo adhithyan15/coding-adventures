@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C388-repaso-cuatro-hedges",
+    "language": "spanish",
+    "chapter": 388,
+    "sequence": 8285,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89e99e00a03f9279"
+  },
+  "findings": []
+}

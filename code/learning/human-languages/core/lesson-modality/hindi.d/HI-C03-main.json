@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C03-main",
+    "language": "hindi",
+    "chapter": 3,
+    "sequence": 290,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:114d68a91d9c4fa1",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

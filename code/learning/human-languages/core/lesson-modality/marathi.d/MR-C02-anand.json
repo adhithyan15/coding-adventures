@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C02-anand",
+    "language": "marathi",
+    "chapter": 5,
+    "sequence": 95,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15b70c478bebe8f9"
+  },
+  "findings": []
+}

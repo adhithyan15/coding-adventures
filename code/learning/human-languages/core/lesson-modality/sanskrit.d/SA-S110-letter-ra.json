@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S110-letter-ra",
+    "language": "sanskrit",
+    "chapter": 11,
+    "sequence": 546,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e083048617d082a2",
+    "detachableSegments": [
+      "Script you'll notice: र",
+      "Writing: र"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

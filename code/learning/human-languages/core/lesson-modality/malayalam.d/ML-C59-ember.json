@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C59-ember",
+    "language": "malayalam",
+    "chapter": 59,
+    "sequence": 1880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:565fec087415206a"
+  },
+  "findings": []
+}

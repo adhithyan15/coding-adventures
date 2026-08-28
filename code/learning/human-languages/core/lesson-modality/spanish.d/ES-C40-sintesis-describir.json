@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C40-sintesis-describir",
+    "language": "spanish",
+    "chapter": 152,
+    "sequence": 1885,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02fa49f5adf17f87"
+  },
+  "findings": []
+}

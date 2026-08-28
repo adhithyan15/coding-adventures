@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C307-esposa",
+    "language": "spanish",
+    "chapter": 307,
+    "sequence": 4470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:468a2d723c025a75"
+  },
+  "findings": []
+}

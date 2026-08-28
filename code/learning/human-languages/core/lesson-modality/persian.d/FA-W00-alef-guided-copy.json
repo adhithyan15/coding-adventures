@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "FA-W00-alef-guided-copy",
+    "language": "persian",
+    "chapter": 1,
+    "sequence": 15,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7a9f8a41988d58e3",
+    "detachableSegments": [
+      "Script — meet alef",
+      "Writing — one guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

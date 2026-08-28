@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C05-main-hindi-bolta-hun",
+    "language": "hindi",
+    "chapter": 5,
+    "sequence": 440,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64de2a7ed25c1785",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C285-vecino",
+    "language": "spanish",
+    "chapter": 285,
+    "sequence": 3370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5c63b5afce8d898"
+  },
+  "findings": []
+}

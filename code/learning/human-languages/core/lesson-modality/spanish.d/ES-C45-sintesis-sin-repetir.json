@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C45-sintesis-sin-repetir",
+    "language": "spanish",
+    "chapter": 92,
+    "sequence": 1231,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:53a38bf6163fcc46"
+  },
+  "findings": []
+}

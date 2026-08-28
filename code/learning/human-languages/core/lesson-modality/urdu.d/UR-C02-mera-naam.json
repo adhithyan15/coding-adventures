@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C02-mera-naam",
+    "language": "urdu",
+    "chapter": 2,
+    "sequence": 50,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30c8da2e4547e041"
+  },
+  "findings": []
+}

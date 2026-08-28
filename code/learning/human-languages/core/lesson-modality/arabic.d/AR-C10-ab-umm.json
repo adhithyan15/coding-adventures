@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C10-ab-umm",
+    "language": "arabic",
+    "chapter": 10,
+    "sequence": 520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9edbfa9dc7bd8772"
+  },
+  "findings": []
+}

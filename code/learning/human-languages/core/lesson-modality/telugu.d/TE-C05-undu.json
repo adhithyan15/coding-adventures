@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TE-C05-undu",
+    "language": "telugu",
+    "chapter": 5,
+    "sequence": 280,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:043e0ccd43de7364",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

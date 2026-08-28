@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C09-sintesis-describir",
+    "language": "spanish",
+    "chapter": 60,
+    "sequence": 1030,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a94435e14b304ad5"
+  },
+  "findings": []
+}

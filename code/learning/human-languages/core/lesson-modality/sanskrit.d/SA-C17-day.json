@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C17-day",
+    "language": "sanskrit",
+    "chapter": 17,
+    "sequence": 790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5dc3430b8590e010"
+  },
+  "findings": []
+}

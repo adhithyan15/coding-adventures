@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C58-pero",
+    "language": "spanish",
+    "chapter": 218,
+    "sequence": 2325,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95d92ad375ca4533"
+  },
+  "findings": []
+}

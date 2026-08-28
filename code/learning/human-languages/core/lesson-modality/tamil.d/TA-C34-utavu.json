@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C34-utavu",
+    "language": "tamil",
+    "chapter": 34,
+    "sequence": 1000,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39f1276ff0515dcc",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

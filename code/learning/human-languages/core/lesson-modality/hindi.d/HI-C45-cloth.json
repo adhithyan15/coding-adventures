@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C45-cloth",
+    "language": "hindi",
+    "chapter": 45,
+    "sequence": 1360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c92fdd695d22749"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C28-jaa",
+    "language": "arabic",
+    "chapter": 28,
+    "sequence": 730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a4865032340188a"
+  },
+  "findings": []
+}

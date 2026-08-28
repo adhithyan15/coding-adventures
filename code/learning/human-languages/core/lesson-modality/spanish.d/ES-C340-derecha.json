@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C340-derecha",
+    "language": "spanish",
+    "chapter": 340,
+    "sequence": 5940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b61e5581b906ea4"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-C38-hrudaya",
+    "language": "kannada",
+    "chapter": 38,
+    "sequence": 840,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd42b39cf2f06260",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C37-chevi",
+    "language": "malayalam",
+    "chapter": 37,
+    "sequence": 850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f8df872c77848bd"
+  },
+  "findings": []
+}

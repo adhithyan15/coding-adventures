@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C36-rightly",
+    "language": "sanskrit",
+    "chapter": 36,
+    "sequence": 1770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2e415d2ea53a111"
+  },
+  "findings": []
+}

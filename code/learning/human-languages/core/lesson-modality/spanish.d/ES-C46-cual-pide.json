@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C46-cual-pide",
+    "language": "spanish",
+    "chapter": 95,
+    "sequence": 1234,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc6f7579ee417e13"
+  },
+  "findings": []
+}

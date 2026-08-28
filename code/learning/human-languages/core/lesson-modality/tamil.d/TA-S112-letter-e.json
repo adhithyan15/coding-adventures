@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S112-letter-e",
+    "language": "tamil",
+    "chapter": 8,
+    "sequence": 491,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:50944e3bc120df71",
+    "detachableSegments": [
+      "Script you'll notice: எ",
+      "Writing: எ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C34-repaso-mente",
+    "language": "spanish",
+    "chapter": 157,
+    "sequence": 1923,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15e991949c75e380"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C50-now",
+    "language": "kannada",
+    "chapter": 50,
+    "sequence": 1340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae5d8360d35cfecb"
+  },
+  "findings": []
+}

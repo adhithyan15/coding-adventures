@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W03-san",
+    "language": "chinese",
+    "chapter": 3,
+    "sequence": 215,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c33952dc7991503a",
+    "detachableSegments": [
+      "Script — the pattern holds one last time"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

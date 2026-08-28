@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C19-umr",
+    "language": "hindi",
+    "chapter": 19,
+    "sequence": 660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0b8d5a237a2ce8f"
+  },
+  "findings": []
+}

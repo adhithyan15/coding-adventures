@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-W07-number-words-6-10",
+    "language": "tamil",
+    "chapter": 7,
+    "sequence": 443,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4ef938f8ba898ca1",
+    "detachableSegments": [
+      "Script",
+      "Writing — observe and trace"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

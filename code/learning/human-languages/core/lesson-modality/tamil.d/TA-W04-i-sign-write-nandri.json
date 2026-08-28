@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-W04-i-sign-write-nandri",
+    "language": "tamil",
+    "chapter": 13,
+    "sequence": 570,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3418015b917f2833",
+    "detachableSegments": [
+      "Script you'll notice: The first vowel sign",
+      "Script you'll notice: Assemble நன்றி"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

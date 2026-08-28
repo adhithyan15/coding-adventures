@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C08-hear-bahan",
+    "language": "marwadi",
+    "chapter": 10,
+    "sequence": 620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:799d815b5fb1ec61"
+  },
+  "findings": []
+}

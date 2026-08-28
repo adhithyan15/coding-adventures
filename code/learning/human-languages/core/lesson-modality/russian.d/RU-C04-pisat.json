@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "RU-C04-pisat",
+    "language": "russian",
+    "chapter": 4,
+    "sequence": 230,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d28f1a31cca17e4",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

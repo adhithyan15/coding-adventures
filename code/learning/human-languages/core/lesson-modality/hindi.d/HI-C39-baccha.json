@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C39-baccha",
+    "language": "hindi",
+    "chapter": 39,
+    "sequence": 1070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:beec7c097a166057"
+  },
+  "findings": []
+}

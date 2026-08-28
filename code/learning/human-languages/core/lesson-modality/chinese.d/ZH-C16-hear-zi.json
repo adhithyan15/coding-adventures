@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C16-hear-zi",
+    "language": "chinese",
+    "chapter": 16,
+    "sequence": 1270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1af31b4d2ced71f8"
+  },
+  "findings": []
+}

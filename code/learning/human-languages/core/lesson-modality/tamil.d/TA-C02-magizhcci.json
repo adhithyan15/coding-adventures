@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C02-magizhcci",
+    "language": "tamil",
+    "chapter": 2,
+    "sequence": 165,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5519f38ad4330a86"
+  },
+  "findings": []
+}

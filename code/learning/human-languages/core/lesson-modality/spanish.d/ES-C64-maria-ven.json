@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C64-maria-ven",
+    "language": "spanish",
+    "chapter": 249,
+    "sequence": 2480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de9887469704e879"
+  },
+  "findings": []
+}

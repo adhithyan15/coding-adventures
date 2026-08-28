@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R18-reading-five",
+    "language": "chinese",
+    "chapter": 18,
+    "sequence": 1790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02112ecd97e67cb3"
+  },
+  "findings": []
+}

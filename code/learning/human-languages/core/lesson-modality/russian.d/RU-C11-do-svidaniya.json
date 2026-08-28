@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C11-do-svidaniya",
+    "language": "russian",
+    "chapter": 11,
+    "sequence": 420,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a481c2ed2b749dd9"
+  },
+  "findings": []
+}

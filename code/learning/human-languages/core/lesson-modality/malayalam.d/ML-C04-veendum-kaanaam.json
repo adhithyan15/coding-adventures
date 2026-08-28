@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ML-C04-veendum-kaanaam",
+    "language": "malayalam",
+    "chapter": 4,
+    "sequence": 250,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a1fb92a59043286",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

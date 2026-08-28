@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C308-gente",
+    "language": "spanish",
+    "chapter": 308,
+    "sequence": 4560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ede8b94f350bc14a"
+  },
+  "findings": []
+}

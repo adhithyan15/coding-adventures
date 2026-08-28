@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "AR-W03-dots-mim-ba-salam",
+    "language": "arabic",
+    "chapter": 1,
+    "sequence": 130,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "wide-table"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:85664130a1760d63"
+  },
+  "findings": []
+}

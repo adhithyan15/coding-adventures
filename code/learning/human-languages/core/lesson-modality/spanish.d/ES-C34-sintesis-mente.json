@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C34-sintesis-mente",
+    "language": "spanish",
+    "chapter": 158,
+    "sequence": 1926,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60f5c707b39dab66"
+  },
+  "findings": []
+}

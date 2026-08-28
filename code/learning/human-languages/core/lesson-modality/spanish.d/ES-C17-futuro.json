@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C17-futuro",
+    "language": "spanish",
+    "chapter": 122,
+    "sequence": 1420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a0f48d12eb63dea"
+  },
+  "findings": []
+}

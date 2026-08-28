@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C16-forest",
+    "language": "sanskrit",
+    "chapter": 16,
+    "sequence": 760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29ed10c64bc942ff"
+  },
+  "findings": []
+}

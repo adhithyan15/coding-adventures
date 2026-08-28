@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C29-ami",
+    "language": "french",
+    "chapter": 29,
+    "sequence": 910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c71f8a70f8667ac6"
+  },
+  "findings": []
+}

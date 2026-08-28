@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C48-certainly",
+    "language": "hindi",
+    "chapter": 48,
+    "sequence": 1520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6e7824ba62d0c8c"
+  },
+  "findings": []
+}

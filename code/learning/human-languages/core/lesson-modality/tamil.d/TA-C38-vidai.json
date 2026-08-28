@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C38-vidai",
+    "language": "tamil",
+    "chapter": 38,
+    "sequence": 1160,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e168048336c9617",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

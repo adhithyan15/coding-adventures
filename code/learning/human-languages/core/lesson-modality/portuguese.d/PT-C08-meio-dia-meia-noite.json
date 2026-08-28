@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "PT-C08-meio-dia-meia-noite",
+    "language": "portuguese",
+    "chapter": 8,
+    "sequence": 380,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d5fc9bf426fbe033"
+  },
+  "findings": []
+}

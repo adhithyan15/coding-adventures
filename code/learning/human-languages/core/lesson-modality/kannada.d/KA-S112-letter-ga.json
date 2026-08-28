@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S112-letter-ga",
+    "language": "kannada",
+    "chapter": 8,
+    "sequence": 366,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:66b10188e56d165f",
+    "detachableSegments": [
+      "Script you'll notice: ಗ",
+      "Writing: ಗ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

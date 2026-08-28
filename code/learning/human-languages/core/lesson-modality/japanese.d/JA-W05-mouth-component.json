@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "JA-W05-mouth-component",
+    "language": "japanese",
+    "chapter": 5,
+    "sequence": 310,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:41e23e2b05cdd380",
+    "detachableSegments": [
+      "Script — the lower-right piece"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

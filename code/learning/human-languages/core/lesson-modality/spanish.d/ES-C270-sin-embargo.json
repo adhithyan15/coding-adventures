@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C270-sin-embargo",
+    "language": "spanish",
+    "chapter": 270,
+    "sequence": 2720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9c0eff238e9e520"
+  },
+  "findings": []
+}

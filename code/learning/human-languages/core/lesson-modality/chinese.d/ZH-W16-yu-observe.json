@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W16-yu-observe",
+    "language": "chinese",
+    "chapter": 16,
+    "sequence": 1360,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:45f5a67507691215",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C57-sintesis-descifrar",
+    "language": "spanish",
+    "chapter": 31,
+    "sequence": 547,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9391b39a841931b"
+  },
+  "findings": []
+}

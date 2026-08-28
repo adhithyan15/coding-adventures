@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C37-khaana",
+    "language": "hindi",
+    "chapter": 37,
+    "sequence": 1000,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9045839f8f594ae0",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C07-beber",
+    "language": "spanish",
+    "chapter": 36,
+    "sequence": 660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a73db5ca449d1f01"
+  },
+  "findings": []
+}

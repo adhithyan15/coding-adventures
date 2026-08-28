@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C03-wie-geht-register",
+    "language": "german",
+    "chapter": 3,
+    "sequence": 125,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45d6c5767b70b9eb"
+  },
+  "findings": []
+}

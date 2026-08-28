@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S05-letter-ta",
+    "language": "kannada",
+    "chapter": 10,
+    "sequence": 385,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6df006e071b41eea",
+    "detachableSegments": [
+      "Script you'll notice: ತ",
+      "Writing: ತ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

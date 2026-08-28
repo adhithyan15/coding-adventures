@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "UR-W16-alef",
+    "language": "urdu",
+    "chapter": 16,
+    "sequence": 730,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b54fcb7e24249ba0",
+    "detachableSegments": [
+      "Script — first, which way the page runs",
+      "Script — the letter itself"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

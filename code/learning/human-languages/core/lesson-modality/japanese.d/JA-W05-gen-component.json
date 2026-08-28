@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "JA-W05-gen-component",
+    "language": "japanese",
+    "chapter": 5,
+    "sequence": 290,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4566d09ba88a8331",
+    "detachableSegments": [
+      "Script — one component, not a whole word yet"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

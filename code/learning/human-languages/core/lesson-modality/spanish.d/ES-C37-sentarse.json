@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C37-sentarse",
+    "language": "spanish",
+    "chapter": 166,
+    "sequence": 2030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf2f054d90f8e7ad"
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S107-letter-ta",
+    "language": "sanskrit",
+    "chapter": 8,
+    "sequence": 436,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0086ba84aa2ded30",
+    "detachableSegments": [
+      "Script you'll notice: त",
+      "Writing: त"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

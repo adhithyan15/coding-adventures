@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C03-eu",
+    "language": "portuguese",
+    "chapter": 3,
+    "sequence": 180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26f2b21b5fc97efd"
+  },
+  "findings": []
+}

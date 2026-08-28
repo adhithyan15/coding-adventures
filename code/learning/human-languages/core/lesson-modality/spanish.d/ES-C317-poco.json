@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C317-poco",
+    "language": "spanish",
+    "chapter": 317,
+    "sequence": 5010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f53a5e50feed543d"
+  },
+  "findings": []
+}

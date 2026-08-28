@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C16-essere-stato",
+    "language": "italian",
+    "chapter": 16,
+    "sequence": 540,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:68bfeaba1054c2e2"
+  },
+  "findings": []
+}

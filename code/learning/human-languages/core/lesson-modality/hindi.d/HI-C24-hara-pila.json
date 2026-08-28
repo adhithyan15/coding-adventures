@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C24-hara-pila",
+    "language": "hindi",
+    "chapter": 24,
+    "sequence": 740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74a7089fc59c56de"
+  },
+  "findings": []
+}

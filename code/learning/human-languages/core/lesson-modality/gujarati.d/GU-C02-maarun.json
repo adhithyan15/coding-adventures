@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-C02-maarun",
+    "language": "gujarati",
+    "chapter": 8,
+    "sequence": 100,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d97c3efe30e10e86",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

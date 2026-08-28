@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C388-gritar",
+    "language": "spanish",
+    "chapter": 388,
+    "sequence": 8280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:181273442b7170dc"
+  },
+  "findings": []
+}

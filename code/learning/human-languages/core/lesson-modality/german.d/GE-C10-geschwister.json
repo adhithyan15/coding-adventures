@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C10-geschwister",
+    "language": "german",
+    "chapter": 10,
+    "sequence": 260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e80036c2a5807815"
+  },
+  "findings": []
+}

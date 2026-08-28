@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "HI-W05-write-namaste",
+    "language": "hindi",
+    "chapter": 2,
+    "sequence": 250,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:982531436c9f0ff0",
+    "delivery": "script"
+  },
+  "findings": []
+}

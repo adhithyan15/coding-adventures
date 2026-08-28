@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C12-erzi",
+    "language": "chinese",
+    "chapter": 12,
+    "sequence": 740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bebc6c05960290b8"
+  },
+  "findings": []
+}

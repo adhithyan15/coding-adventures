@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C03-practice",
+    "language": "arabic",
+    "chapter": 3,
+    "sequence": 350,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d9581a608a683218"
+  },
+  "findings": []
+}

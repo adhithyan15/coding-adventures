@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "ZH-W17-wen-guided",
+    "language": "chinese",
+    "chapter": 17,
+    "sequence": 1440,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:93b1c6696a23c032",
+    "delivery": "script"
+  },
+  "findings": []
+}

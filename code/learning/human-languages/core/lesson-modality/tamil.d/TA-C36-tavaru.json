@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C36-tavaru",
+    "language": "tamil",
+    "chapter": 36,
+    "sequence": 1090,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28d405c93048afda",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C09-ario",
+    "language": "spanish",
+    "chapter": 63,
+    "sequence": 1041,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb3ff81898d645f5"
+  },
+  "findings": []
+}

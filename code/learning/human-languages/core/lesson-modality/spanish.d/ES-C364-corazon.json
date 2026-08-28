@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C364-corazon",
+    "language": "spanish",
+    "chapter": 364,
+    "sequence": 7160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32a2ca9b253e961e"
+  },
+  "findings": []
+}

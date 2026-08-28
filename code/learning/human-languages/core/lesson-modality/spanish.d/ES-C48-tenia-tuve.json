@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C48-tenia-tuve",
+    "language": "spanish",
+    "chapter": 113,
+    "sequence": 1382,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e658aba551d7076f"
+  },
+  "findings": []
+}

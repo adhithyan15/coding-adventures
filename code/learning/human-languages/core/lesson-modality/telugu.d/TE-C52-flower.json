@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C52-flower",
+    "language": "telugu",
+    "chapter": 52,
+    "sequence": 1460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d38ecad787b51f10"
+  },
+  "findings": []
+}

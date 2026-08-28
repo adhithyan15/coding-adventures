@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MR-C13-hrudaya",
+    "language": "marathi",
+    "chapter": 16,
+    "sequence": 640,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b6c7c80a05f1bfd",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

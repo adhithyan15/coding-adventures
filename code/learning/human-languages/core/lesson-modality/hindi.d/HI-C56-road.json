@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C56-road",
+    "language": "hindi",
+    "chapter": 56,
+    "sequence": 1900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f936d7d3767b6a8a"
+  },
+  "findings": []
+}

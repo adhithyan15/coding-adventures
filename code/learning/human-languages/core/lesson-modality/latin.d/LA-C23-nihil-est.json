@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C23-nihil-est",
+    "language": "latin",
+    "chapter": 23,
+    "sequence": 470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1dbbf1f5b3ea3d04"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C343-calendario",
+    "language": "spanish",
+    "chapter": 343,
+    "sequence": 6080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61363d3def4df3be"
+  },
+  "findings": []
+}

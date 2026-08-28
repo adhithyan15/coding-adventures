@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-C05-maatanaadu",
+    "language": "kannada",
+    "chapter": 5,
+    "sequence": 260,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbb27b107deab7c0",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

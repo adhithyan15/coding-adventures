@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C02-tuhada-naam-ki-hai",
+    "language": "punjabi",
+    "chapter": 2,
+    "sequence": 130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed73bdd53864f9c8"
+  },
+  "findings": []
+}

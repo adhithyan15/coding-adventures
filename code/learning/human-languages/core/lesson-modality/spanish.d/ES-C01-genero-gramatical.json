@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C01-genero-gramatical",
+    "language": "spanish",
+    "chapter": 1,
+    "sequence": 40,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ae2661f94e4c312"
+  },
+  "findings": []
+}

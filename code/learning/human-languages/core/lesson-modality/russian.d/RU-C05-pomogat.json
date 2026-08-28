@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C05-pomogat",
+    "language": "russian",
+    "chapter": 5,
+    "sequence": 260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85f08c17652ab8de"
+  },
+  "findings": []
+}

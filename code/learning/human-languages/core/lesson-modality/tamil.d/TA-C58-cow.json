@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C58-cow",
+    "language": "tamil",
+    "chapter": 58,
+    "sequence": 2110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c73907e1022a429c"
+  },
+  "findings": []
+}

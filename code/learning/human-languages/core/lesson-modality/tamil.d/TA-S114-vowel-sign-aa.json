@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S114-vowel-sign-aa",
+    "language": "tamil",
+    "chapter": 10,
+    "sequence": 531,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:45ff00e0a58fd159",
+    "detachableSegments": [
+      "Script you'll notice: ◌ா",
+      "Writing: ◌ா — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

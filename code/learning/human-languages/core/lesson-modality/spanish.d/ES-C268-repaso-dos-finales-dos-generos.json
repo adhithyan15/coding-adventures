@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C268-repaso-dos-finales-dos-generos",
+    "language": "spanish",
+    "chapter": 268,
+    "sequence": 2655,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb333335d174dd7f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C285-enfermera",
+    "language": "spanish",
+    "chapter": 285,
+    "sequence": 3400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:308ed4f4355b5d1b"
+  },
+  "findings": []
+}

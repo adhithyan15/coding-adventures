@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S113-letter-pa",
+    "language": "sanskrit",
+    "chapter": 14,
+    "sequence": 661,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ca8e34b46755226e",
+    "detachableSegments": [
+      "Script you'll notice: प",
+      "Writing: प"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

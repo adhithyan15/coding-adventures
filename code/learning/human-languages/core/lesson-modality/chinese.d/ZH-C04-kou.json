@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C04-kou",
+    "language": "chinese",
+    "chapter": 4,
+    "sequence": 310,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:52e816fdf4546142"
+  },
+  "findings": []
+}

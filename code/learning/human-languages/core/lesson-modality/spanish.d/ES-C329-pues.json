@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C329-pues",
+    "language": "spanish",
+    "chapter": 329,
+    "sequence": 5590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b94615f3affecd1b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C12-yo-go",
+    "language": "spanish",
+    "chapter": 70,
+    "sequence": 1130,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:79f3a62524b38865"
+  },
+  "findings": []
+}

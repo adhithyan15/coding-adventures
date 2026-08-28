@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C310-ducha",
+    "language": "spanish",
+    "chapter": 310,
+    "sequence": 4630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6aae5ad8036d9e80"
+  },
+  "findings": []
+}

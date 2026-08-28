@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C317-otro",
+    "language": "spanish",
+    "chapter": 317,
+    "sequence": 5000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1cae2cc8f8f99bd4"
+  },
+  "findings": []
+}

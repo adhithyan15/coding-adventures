@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C44-write",
+    "language": "telugu",
+    "chapter": 44,
+    "sequence": 1080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d5dd9366d657b37"
+  },
+  "findings": []
+}

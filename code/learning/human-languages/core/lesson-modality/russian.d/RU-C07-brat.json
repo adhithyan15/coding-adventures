@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C07-brat",
+    "language": "russian",
+    "chapter": 7,
+    "sequence": 340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fd0e9e69085edf6"
+  },
+  "findings": []
+}

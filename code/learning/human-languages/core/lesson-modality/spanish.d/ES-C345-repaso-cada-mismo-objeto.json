@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C345-repaso-cada-mismo-objeto",
+    "language": "spanish",
+    "chapter": 345,
+    "sequence": 6216,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab30f751ce26548f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C46-nose",
+    "language": "hindi",
+    "chapter": 46,
+    "sequence": 1430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a988cbd7d9d4e8d"
+  },
+  "findings": []
+}

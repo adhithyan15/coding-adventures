@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C38-soil",
+    "language": "sanskrit",
+    "chapter": 38,
+    "sequence": 1870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e06c06b19c67af63"
+  },
+  "findings": []
+}

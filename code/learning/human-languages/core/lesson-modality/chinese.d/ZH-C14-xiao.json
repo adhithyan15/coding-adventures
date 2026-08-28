@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C14-xiao",
+    "language": "chinese",
+    "chapter": 14,
+    "sequence": 1030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b10fc10a9567cde0"
+  },
+  "findings": []
+}

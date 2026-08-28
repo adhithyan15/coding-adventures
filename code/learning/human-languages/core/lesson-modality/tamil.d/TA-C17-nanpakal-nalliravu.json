@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C17-nanpakal-nalliravu",
+    "language": "tamil",
+    "chapter": 17,
+    "sequence": 620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f54b98fb24a35ebe"
+  },
+  "findings": []
+}

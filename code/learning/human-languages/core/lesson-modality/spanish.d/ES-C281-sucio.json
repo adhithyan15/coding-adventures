@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C281-sucio",
+    "language": "spanish",
+    "chapter": 281,
+    "sequence": 3210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1a8231e44c8070a"
+  },
+  "findings": []
+}

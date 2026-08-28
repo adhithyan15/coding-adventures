@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C54-repaso-hay",
+    "language": "spanish",
+    "chapter": 194,
+    "sequence": 2209,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f5817e871642c875"
+  },
+  "findings": []
+}

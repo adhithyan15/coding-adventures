@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C08-avagacchati",
+    "language": "sanskrit",
+    "chapter": 8,
+    "sequence": 410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce0858a1cd760739"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C37-nanban",
+    "language": "tamil",
+    "chapter": 37,
+    "sequence": 1110,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b1e135aa5ebe420",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

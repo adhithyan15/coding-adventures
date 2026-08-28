@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W12-jia",
+    "language": "chinese",
+    "chapter": 12,
+    "sequence": 780,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2dcbd10345348aeb",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

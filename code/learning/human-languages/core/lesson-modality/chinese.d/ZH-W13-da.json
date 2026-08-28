@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W13-da",
+    "language": "chinese",
+    "chapter": 13,
+    "sequence": 850,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:daf6f23f0abcb000",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "PT-W01-ola-guided-copy",
+    "language": "portuguese",
+    "chapter": 1,
+    "sequence": 15,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:67f5190aea8d7181",
+    "detachableSegments": [
+      "Writing — one guided copy"
+    ]
+  },
+  "findings": []
+}

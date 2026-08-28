@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C13-daxuesheng",
+    "language": "chinese",
+    "chapter": 13,
+    "sequence": 980,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4093985f75f50fb8"
+  },
+  "findings": []
+}

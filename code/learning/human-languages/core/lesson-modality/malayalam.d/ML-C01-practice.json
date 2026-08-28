@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ML-C01-practice",
+    "language": "malayalam",
+    "chapter": 1,
+    "sequence": 60,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:32cc5f4165be8d72",
+    "detachableSegments": [
+      "Writing checkpoint"
+    ]
+  },
+  "findings": []
+}

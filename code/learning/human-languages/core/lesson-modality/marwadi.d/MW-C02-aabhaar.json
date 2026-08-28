@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-C02-aabhaar",
+    "language": "marwadi",
+    "chapter": 2,
+    "sequence": 100,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28ddd7bfa8bb6b3a",
+    "detachableSegments": [
+      "Script — build the word",
+      "Writing — from guided to delayed copy"
+    ]
+  },
+  "findings": []
+}

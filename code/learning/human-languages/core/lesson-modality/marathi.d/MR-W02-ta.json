@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "MR-W02-ta",
+    "language": "marathi",
+    "chapter": 2,
+    "sequence": 26,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a66c9d6e9adff3a8",
+    "detachableSegments": [
+      "Script",
+      "Writing — look, hide, write"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

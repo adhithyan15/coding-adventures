@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R15-shopping-new-two",
+    "language": "marwadi",
+    "chapter": 20,
+    "sequence": 1530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:239074d0f8a4363b"
+  },
+  "findings": []
+}

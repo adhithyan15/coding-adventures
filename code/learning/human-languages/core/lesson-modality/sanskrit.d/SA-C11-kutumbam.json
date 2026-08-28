@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-C11-kutumbam",
+    "language": "sanskrit",
+    "chapter": 11,
+    "sequence": 520,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0b8b998f9c37f6e",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

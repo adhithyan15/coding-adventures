@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-W07-number-words-6-10",
+    "language": "malayalam",
+    "chapter": 7,
+    "sequence": 350,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:807ecf1ae84ab1a8",
+    "detachableSegments": [
+      "Script",
+      "Writing — observe and trace"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

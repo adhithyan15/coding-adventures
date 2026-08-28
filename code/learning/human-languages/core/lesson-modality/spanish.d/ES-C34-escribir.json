@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C34-escribir",
+    "language": "spanish",
+    "chapter": 156,
+    "sequence": 1920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90e0e3ab8f68d64f"
+  },
+  "findings": []
+}

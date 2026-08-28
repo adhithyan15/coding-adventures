@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-W01-namaskaram-read",
+    "language": "malayalam",
+    "chapter": 1,
+    "sequence": 17,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:798422534f54186b",
+    "detachableSegments": [
+      "Script — assemble and read",
+      "Writing — one visible whole-word copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

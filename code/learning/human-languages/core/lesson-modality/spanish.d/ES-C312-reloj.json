@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C312-reloj",
+    "language": "spanish",
+    "chapter": 312,
+    "sequence": 4720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b300cbcf8759eb5c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C15-comer-vivir-preterite",
+    "language": "spanish",
+    "chapter": 104,
+    "sequence": 1325,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:367bf6ac841a9de0"
+  },
+  "findings": []
+}

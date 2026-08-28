@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C62-broom",
+    "language": "telugu",
+    "chapter": 62,
+    "sequence": 1950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d94759836acc76fb"
+  },
+  "findings": []
+}

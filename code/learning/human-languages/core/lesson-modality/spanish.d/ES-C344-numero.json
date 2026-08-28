@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C344-numero",
+    "language": "spanish",
+    "chapter": 344,
+    "sequence": 6130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ba026214419fb15"
+  },
+  "findings": []
+}

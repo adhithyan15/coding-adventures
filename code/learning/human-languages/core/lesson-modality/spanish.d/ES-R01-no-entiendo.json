@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R01-no-entiendo",
+    "language": "spanish",
+    "chapter": 15,
+    "sequence": 506,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ea0ee7cbd044daf"
+  },
+  "findings": []
+}

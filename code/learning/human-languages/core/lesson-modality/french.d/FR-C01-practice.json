@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "FR-C01-practice",
+    "language": "french",
+    "chapter": 1,
+    "sequence": 55,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7499253fe8acbabe",
+    "detachableSegments": [
+      "Writing — close the first runway"
+    ]
+  },
+  "findings": []
+}

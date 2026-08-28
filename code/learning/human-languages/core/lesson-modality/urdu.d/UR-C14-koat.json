@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C14-koat",
+    "language": "urdu",
+    "chapter": 14,
+    "sequence": 620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca56aa49e5abc188"
+  },
+  "findings": []
+}

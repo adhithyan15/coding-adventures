@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R07-wellbeing-r3",
+    "language": "punjabi",
+    "chapter": 7,
+    "sequence": 405,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2673e58945cb94b1"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C19-sil-vous-plait",
+    "language": "french",
+    "chapter": 19,
+    "sequence": 660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a96f28201509ab73"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C303-que-significa",
+    "language": "spanish",
+    "chapter": 303,
+    "sequence": 4310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b77b6c9c7ac93e8"
+  },
+  "findings": []
+}

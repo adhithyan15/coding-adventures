@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-C02-ki",
+    "language": "punjabi",
+    "chapter": 2,
+    "sequence": 120,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67db2d8205a27276",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

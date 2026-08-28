@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C37-baayi",
+    "language": "kannada",
+    "chapter": 37,
+    "sequence": 830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d51caf6e91e84716"
+  },
+  "findings": []
+}

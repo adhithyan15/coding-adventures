@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C39-repaso-cambios",
+    "language": "spanish",
+    "chapter": 172,
+    "sequence": 2123,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63eb6a2f220e367b"
+  },
+  "findings": []
+}

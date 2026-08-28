@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C37-noru",
+    "language": "telugu",
+    "chapter": 37,
+    "sequence": 820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c40f58440537d71"
+  },
+  "findings": []
+}

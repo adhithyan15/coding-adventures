@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C290-tomate",
+    "language": "spanish",
+    "chapter": 290,
+    "sequence": 3650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:066479c26b812c8e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C01-noite",
+    "language": "portuguese",
+    "chapter": 1,
+    "sequence": 70,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dd07fefea56d02f3"
+  },
+  "findings": []
+}

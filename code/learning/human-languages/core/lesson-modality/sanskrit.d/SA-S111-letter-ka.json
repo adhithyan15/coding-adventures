@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S111-letter-ka",
+    "language": "sanskrit",
+    "chapter": 12,
+    "sequence": 576,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:88224ad3dfa3652f",
+    "detachableSegments": [
+      "Script you'll notice: क",
+      "Writing: क"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

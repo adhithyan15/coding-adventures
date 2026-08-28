@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C42-small",
+    "language": "telugu",
+    "chapter": 42,
+    "sequence": 960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ba86b6117e37bf0"
+  },
+  "findings": []
+}

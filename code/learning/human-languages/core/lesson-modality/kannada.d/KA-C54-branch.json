@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C54-branch",
+    "language": "kannada",
+    "chapter": 54,
+    "sequence": 1550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b17aa27f07e6862"
+  },
+  "findings": []
+}

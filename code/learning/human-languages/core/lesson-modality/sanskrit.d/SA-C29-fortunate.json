@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C29-fortunate",
+    "language": "sanskrit",
+    "chapter": 29,
+    "sequence": 1420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5821073fa871d89b"
+  },
+  "findings": []
+}

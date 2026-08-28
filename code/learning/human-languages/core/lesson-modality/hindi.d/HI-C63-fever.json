@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C63-fever",
+    "language": "hindi",
+    "chapter": 63,
+    "sequence": 2390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ada208a561a56ee"
+  },
+  "findings": []
+}

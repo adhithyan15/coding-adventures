@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C362-fuego",
+    "language": "spanish",
+    "chapter": 362,
+    "sequence": 7050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7c19dc4d597d291"
+  },
+  "findings": []
+}

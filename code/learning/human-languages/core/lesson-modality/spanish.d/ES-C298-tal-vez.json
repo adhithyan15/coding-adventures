@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C298-tal-vez",
+    "language": "spanish",
+    "chapter": 298,
+    "sequence": 4020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56561e603f3dbe88"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C322-anoche",
+    "language": "spanish",
+    "chapter": 322,
+    "sequence": 5220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f14efd373d34e611"
+  },
+  "findings": []
+}

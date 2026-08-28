@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C311-tienda",
+    "language": "spanish",
+    "chapter": 311,
+    "sequence": 4670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bfeeb5b3f17f374"
+  },
+  "findings": []
+}

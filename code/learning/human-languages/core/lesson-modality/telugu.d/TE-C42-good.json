@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C42-good",
+    "language": "telugu",
+    "chapter": 42,
+    "sequence": 970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d5b3f567ca07e00"
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-W01-curves-va-ka",
+    "language": "tamil",
+    "chapter": 4,
+    "sequence": 270,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2c2e171ca2be012a",
+    "detachableSegments": [
+      "Script you'll notice: The script is the shape of its writing surface"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C34-pensar",
+    "language": "spanish",
+    "chapter": 153,
+    "sequence": 1890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:608331f2949c03bd"
+  },
+  "findings": []
+}

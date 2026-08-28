@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C13-vermelho-azul",
+    "language": "portuguese",
+    "chapter": 13,
+    "sequence": 480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:101e5c18b9129d16"
+  },
+  "findings": []
+}

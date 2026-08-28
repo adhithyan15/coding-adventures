@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C21-practice",
+    "language": "latin",
+    "chapter": 21,
+    "sequence": 455,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9134d1ebb0ee8cc7"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C56-repaso-amigos",
+    "language": "spanish",
+    "chapter": 26,
+    "sequence": 539,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:07202e2d1d34da54"
+  },
+  "findings": []
+}

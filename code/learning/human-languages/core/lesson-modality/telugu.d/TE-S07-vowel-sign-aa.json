@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S07-vowel-sign-aa",
+    "language": "telugu",
+    "chapter": 12,
+    "sequence": 395,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:be89faed7378f0b4",
+    "detachableSegments": [
+      "Script you'll notice: ◌ా",
+      "Writing: ◌ా — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

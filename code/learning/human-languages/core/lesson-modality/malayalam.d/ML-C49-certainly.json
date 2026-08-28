@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C49-certainly",
+    "language": "malayalam",
+    "chapter": 49,
+    "sequence": 1360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6920046592af77a8"
+  },
+  "findings": []
+}

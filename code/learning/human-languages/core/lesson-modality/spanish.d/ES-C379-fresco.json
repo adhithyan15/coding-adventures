@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C379-fresco",
+    "language": "spanish",
+    "chapter": 379,
+    "sequence": 7890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:604c9ab01a3ae3f4"
+  },
+  "findings": []
+}

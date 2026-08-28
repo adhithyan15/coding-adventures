@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "JA-C01-gozaimasu",
+    "language": "japanese",
+    "chapter": 4,
+    "sequence": 250,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7efc64215810c473",
+    "detachableSegments": [
+      "Script — five more signs, two of them dakuten"
+    ]
+  },
+  "findings": []
+}

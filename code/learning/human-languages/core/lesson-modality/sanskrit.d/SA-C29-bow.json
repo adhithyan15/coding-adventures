@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C29-bow",
+    "language": "sanskrit",
+    "chapter": 29,
+    "sequence": 1400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a45ff1eca8ff92da"
+  },
+  "findings": []
+}

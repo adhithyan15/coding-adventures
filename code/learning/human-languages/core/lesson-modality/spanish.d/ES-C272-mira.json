@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C272-mira",
+    "language": "spanish",
+    "chapter": 272,
+    "sequence": 2800,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f65367a5a9497e04"
+  },
+  "findings": []
+}

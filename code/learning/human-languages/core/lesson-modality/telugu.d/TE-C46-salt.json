@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C46-salt",
+    "language": "telugu",
+    "chapter": 46,
+    "sequence": 1160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1664d89ed3064c5e"
+  },
+  "findings": []
+}

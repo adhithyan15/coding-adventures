@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C32-undu",
+    "language": "telugu",
+    "chapter": 32,
+    "sequence": 610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95e0e0d8d44e097c"
+  },
+  "findings": []
+}

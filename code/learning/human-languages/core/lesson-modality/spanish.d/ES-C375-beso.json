@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C375-beso",
+    "language": "spanish",
+    "chapter": 375,
+    "sequence": 7700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a934cb6ae443bcb0"
+  },
+  "findings": []
+}

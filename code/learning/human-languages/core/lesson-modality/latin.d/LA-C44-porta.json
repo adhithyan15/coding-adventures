@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C44-porta",
+    "language": "latin",
+    "chapter": 44,
+    "sequence": 960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b64bb442b164357"
+  },
+  "findings": []
+}

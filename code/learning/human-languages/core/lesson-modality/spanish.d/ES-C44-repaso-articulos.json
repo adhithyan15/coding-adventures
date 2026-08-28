@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C44-repaso-articulos",
+    "language": "spanish",
+    "chapter": 81,
+    "sequence": 1201,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:065b8b5c4c112727"
+  },
+  "findings": []
+}

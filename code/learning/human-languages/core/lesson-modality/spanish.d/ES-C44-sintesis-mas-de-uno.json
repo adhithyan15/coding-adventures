@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C44-sintesis-mas-de-uno",
+    "language": "spanish",
+    "chapter": 82,
+    "sequence": 1203,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4aad9105e32037f2"
+  },
+  "findings": []
+}

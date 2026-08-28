@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C59-fire",
+    "language": "kannada",
+    "chapter": 59,
+    "sequence": 1830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04d19b737fb7783c"
+  },
+  "findings": []
+}

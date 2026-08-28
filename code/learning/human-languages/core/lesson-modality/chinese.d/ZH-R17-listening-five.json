@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R17-listening-five",
+    "language": "chinese",
+    "chapter": 17,
+    "sequence": 1550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3fabfb207e4b944"
+  },
+  "findings": []
+}

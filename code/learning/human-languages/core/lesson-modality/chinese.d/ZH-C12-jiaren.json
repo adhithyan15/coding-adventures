@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C12-jiaren",
+    "language": "chinese",
+    "chapter": 12,
+    "sequence": 810,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9d94b71035359378"
+  },
+  "findings": []
+}

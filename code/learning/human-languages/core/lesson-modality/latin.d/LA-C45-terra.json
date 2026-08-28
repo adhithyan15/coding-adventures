@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C45-terra",
+    "language": "latin",
+    "chapter": 45,
+    "sequence": 1000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:014758c96ae79b5b"
+  },
+  "findings": []
+}

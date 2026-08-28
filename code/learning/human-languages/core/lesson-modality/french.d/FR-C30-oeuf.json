@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C30-oeuf",
+    "language": "french",
+    "chapter": 30,
+    "sequence": 980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbf74115727dfbc8"
+  },
+  "findings": []
+}

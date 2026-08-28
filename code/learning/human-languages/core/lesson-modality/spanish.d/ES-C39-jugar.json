@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C39-jugar",
+    "language": "spanish",
+    "chapter": 170,
+    "sequence": 2110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4ed5252f070d202"
+  },
+  "findings": []
+}

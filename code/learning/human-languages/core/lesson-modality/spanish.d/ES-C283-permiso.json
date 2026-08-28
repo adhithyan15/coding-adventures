@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C283-permiso",
+    "language": "spanish",
+    "chapter": 283,
+    "sequence": 3280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8d2a5857ad97544"
+  },
+  "findings": []
+}

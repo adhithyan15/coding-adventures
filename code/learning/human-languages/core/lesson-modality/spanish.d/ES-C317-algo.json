@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C317-algo",
+    "language": "spanish",
+    "chapter": 317,
+    "sequence": 4970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4ab617224c17a79"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C29-kaalai-vanakkam",
+    "language": "tamil",
+    "chapter": 29,
+    "sequence": 840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec2aada931263b05"
+  },
+  "findings": []
+}

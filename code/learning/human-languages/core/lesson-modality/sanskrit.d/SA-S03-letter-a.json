@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-S03-letter-a",
+    "language": "sanskrit",
+    "chapter": 10,
+    "sequence": 505,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f77ce3e778901bc7",
+    "detachableSegments": [
+      "Script you'll notice: अ",
+      "Writing: अ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

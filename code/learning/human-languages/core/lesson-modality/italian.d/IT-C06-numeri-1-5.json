@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "IT-C06-numeri-1-5",
+    "language": "italian",
+    "chapter": 6,
+    "sequence": 330,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d566605e6e7dc462"
+  },
+  "findings": []
+}

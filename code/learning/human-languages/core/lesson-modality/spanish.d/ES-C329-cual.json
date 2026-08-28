@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C329-cual",
+    "language": "spanish",
+    "chapter": 329,
+    "sequence": 5580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c889cccf163e3e3"
+  },
+  "findings": []
+}

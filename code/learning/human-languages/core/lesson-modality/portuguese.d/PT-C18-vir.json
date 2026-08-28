@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C18-vir",
+    "language": "portuguese",
+    "chapter": 18,
+    "sequence": 630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e85a3a7ab3a1cc5"
+  },
+  "findings": []
+}

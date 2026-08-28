@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "GU-W01-namaste-read",
+    "language": "gujarati",
+    "chapter": 1,
+    "sequence": 11,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fa553a1942c50bb6",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

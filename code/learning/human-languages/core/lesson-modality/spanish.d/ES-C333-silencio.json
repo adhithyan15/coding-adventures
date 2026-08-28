@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C333-silencio",
+    "language": "spanish",
+    "chapter": 333,
+    "sequence": 5780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7592d80e1d248bc"
+  },
+  "findings": []
+}

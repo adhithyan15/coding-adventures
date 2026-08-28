@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C73-astringent",
+    "language": "telugu",
+    "chapter": 73,
+    "sequence": 2520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7edf9e9e12600c58"
+  },
+  "findings": []
+}

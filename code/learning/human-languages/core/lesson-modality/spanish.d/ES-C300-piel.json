@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C300-piel",
+    "language": "spanish",
+    "chapter": 300,
+    "sequence": 4140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d09bb6793358182c"
+  },
+  "findings": []
+}

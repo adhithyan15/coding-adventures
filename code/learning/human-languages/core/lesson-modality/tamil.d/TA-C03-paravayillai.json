@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C03-paravayillai",
+    "language": "tamil",
+    "chapter": 3,
+    "sequence": 220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:254f875eb66ed2a8"
+  },
+  "findings": []
+}

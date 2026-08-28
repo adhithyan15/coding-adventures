@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C14-hear-sasta",
+    "language": "marwadi",
+    "chapter": 19,
+    "sequence": 1410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d25f07cc6be786a4"
+  },
+  "findings": []
+}

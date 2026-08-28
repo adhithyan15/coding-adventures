@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "JA-W01-ko",
+    "language": "japanese",
+    "chapter": 2,
+    "sequence": 70,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b3833ba98c8971d6",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

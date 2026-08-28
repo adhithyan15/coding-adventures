@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "ZH-W17-guo-guided",
+    "language": "chinese",
+    "chapter": 17,
+    "sequence": 1500,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:91a4fc7980284b6d",
+    "delivery": "script"
+  },
+  "findings": []
+}

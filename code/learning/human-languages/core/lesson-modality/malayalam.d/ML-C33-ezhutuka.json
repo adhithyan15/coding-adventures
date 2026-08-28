@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ML-C33-ezhutuka",
+    "language": "malayalam",
+    "chapter": 33,
+    "sequence": 740,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a56549e165423daf",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

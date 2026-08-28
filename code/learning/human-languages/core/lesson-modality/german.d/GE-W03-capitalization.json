@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-W03-capitalization",
+    "language": "german",
+    "chapter": 4,
+    "sequence": 185,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e6b30785e5e895b4"
+  },
+  "findings": []
+}

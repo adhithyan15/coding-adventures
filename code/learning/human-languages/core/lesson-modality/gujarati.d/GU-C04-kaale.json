@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-C04-kaale",
+    "language": "gujarati",
+    "chapter": 10,
+    "sequence": 250,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c74f25343c3d5f2",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C310-llave",
+    "language": "spanish",
+    "chapter": 310,
+    "sequence": 4620,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e98f3377eda8e14e"
+  },
+  "findings": []
+}

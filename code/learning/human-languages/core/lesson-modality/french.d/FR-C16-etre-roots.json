@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C16-etre-roots",
+    "language": "french",
+    "chapter": 16,
+    "sequence": 310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba9a29b4cdf232ff"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C07-repaso-presente-completo",
+    "language": "spanish",
+    "chapter": 41,
+    "sequence": 770,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bf55451aa2293fde"
+  },
+  "findings": []
+}

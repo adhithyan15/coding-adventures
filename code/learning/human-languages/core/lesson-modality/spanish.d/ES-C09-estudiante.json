@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C09-estudiante",
+    "language": "spanish",
+    "chapter": 52,
+    "sequence": 965,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17b32a18e8b99151"
+  },
+  "findings": []
+}

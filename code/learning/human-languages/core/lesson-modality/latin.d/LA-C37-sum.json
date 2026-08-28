@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C37-sum",
+    "language": "latin",
+    "chapter": 37,
+    "sequence": 640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75aadd5df7401b1b"
+  },
+  "findings": []
+}

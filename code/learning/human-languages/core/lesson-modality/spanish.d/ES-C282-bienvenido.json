@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C282-bienvenido",
+    "language": "spanish",
+    "chapter": 282,
+    "sequence": 3220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad93e4a4bbcb097b"
+  },
+  "findings": []
+}

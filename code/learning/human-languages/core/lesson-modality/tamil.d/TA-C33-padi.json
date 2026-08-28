@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C33-padi",
+    "language": "tamil",
+    "chapter": 33,
+    "sequence": 960,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28b03fb1ff05f7fd",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

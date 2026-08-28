@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "JA-C01-koohii",
+    "language": "japanese",
+    "chapter": 6,
+    "sequence": 370,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fb6b46583ca9190",
+    "detachableSegments": [
+      "Script — katakana, the borrowed-word script"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "GU-R23-route-three-r1",
+    "language": "gujarati",
+    "chapter": 27,
+    "sequence": 1095,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:21b3b1e99502b1cb",
+    "detachableSegments": [
+      "Writing — from meaning, with every model covered"
+    ],
+    "delivery": "script",
+    "authored": "pen",
+    "authoredReason": "The four separate retrieval checks end in required model-free dictation, so the complete lesson needs a pen."
+  },
+  "findings": []
+}

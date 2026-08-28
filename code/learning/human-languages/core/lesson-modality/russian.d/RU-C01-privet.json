@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "RU-C01-privet",
+    "language": "russian",
+    "chapter": 1,
+    "sequence": 5,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1f12c93293138e3",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

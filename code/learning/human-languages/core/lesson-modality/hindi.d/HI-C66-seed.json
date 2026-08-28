@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C66-seed",
+    "language": "hindi",
+    "chapter": 66,
+    "sequence": 2510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1525030d0581ed24"
+  },
+  "findings": []
+}

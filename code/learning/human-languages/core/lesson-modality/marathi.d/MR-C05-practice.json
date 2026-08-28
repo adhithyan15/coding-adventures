@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C05-practice",
+    "language": "marathi",
+    "chapter": 8,
+    "sequence": 185,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ffcb38ee411f9ef"
+  },
+  "findings": []
+}

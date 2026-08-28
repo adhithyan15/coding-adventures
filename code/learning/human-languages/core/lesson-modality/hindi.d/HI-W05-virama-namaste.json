@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "HI-W05-virama-namaste",
+    "language": "hindi",
+    "chapter": 2,
+    "sequence": 230,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ba56a8aa108b98f2",
+    "delivery": "script"
+  },
+  "findings": []
+}

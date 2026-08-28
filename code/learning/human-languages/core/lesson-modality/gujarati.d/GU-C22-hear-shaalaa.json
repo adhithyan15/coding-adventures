@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C22-hear-shaalaa",
+    "language": "gujarati",
+    "chapter": 26,
+    "sequence": 1040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef770e15b2453d20"
+  },
+  "findings": []
+}

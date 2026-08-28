@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C10-fratello-sorella",
+    "language": "italian",
+    "chapter": 10,
+    "sequence": 420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60f8b9d1658fd8b2"
+  },
+  "findings": []
+}

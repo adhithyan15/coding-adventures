@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C06-dative-stacking",
+    "language": "kannada",
+    "chapter": 6,
+    "sequence": 320,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:237c518b69f2b256"
+  },
+  "findings": []
+}

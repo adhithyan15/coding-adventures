@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C304-triste",
+    "language": "spanish",
+    "chapter": 304,
+    "sequence": 4360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a93a84459d7928b9"
+  },
+  "findings": []
+}

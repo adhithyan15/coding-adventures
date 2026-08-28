@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C358-forma",
+    "language": "spanish",
+    "chapter": 358,
+    "sequence": 6840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6bba956d7b29da6f"
+  },
+  "findings": []
+}

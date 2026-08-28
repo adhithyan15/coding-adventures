@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C49-alright",
+    "language": "telugu",
+    "chapter": 49,
+    "sequence": 1320,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a57e7573d3e3c12f"
+  },
+  "findings": []
+}

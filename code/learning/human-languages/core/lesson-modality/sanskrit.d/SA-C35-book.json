@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C35-book",
+    "language": "sanskrit",
+    "chapter": 35,
+    "sequence": 1710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d77f843bdfca025"
+  },
+  "findings": []
+}

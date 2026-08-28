@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C22-lead",
+    "language": "sanskrit",
+    "chapter": 22,
+    "sequence": 1060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f1aeb37b6b70fbc"
+  },
+  "findings": []
+}

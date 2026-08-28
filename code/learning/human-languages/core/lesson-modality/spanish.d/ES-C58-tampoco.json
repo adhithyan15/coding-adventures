@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C58-tampoco",
+    "language": "spanish",
+    "chapter": 220,
+    "sequence": 2335,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b449e45ff9771482"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C02-tomar-naam-ki",
+    "language": "bengali",
+    "chapter": 2,
+    "sequence": 130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6151514d9f54e202"
+  },
+  "findings": []
+}

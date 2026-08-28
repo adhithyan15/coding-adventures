@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C09-mesi",
+    "language": "italian",
+    "chapter": 9,
+    "sequence": 390,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b1976e6af609af25"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C294-manta",
+    "language": "spanish",
+    "chapter": 294,
+    "sequence": 3850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccdcc7837fdf0137"
+  },
+  "findings": []
+}

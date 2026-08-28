@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C05-falo-portugues",
+    "language": "portuguese",
+    "chapter": 5,
+    "sequence": 310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d434c449f02a2cbe"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-R18-majaa-r4",
+    "language": "gujarati",
+    "chapter": 22,
+    "sequence": 830,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e92309c5dac097eb",
+    "detachableSegments": [
+      "Writing — from sound"
+    ]
+  },
+  "findings": []
+}

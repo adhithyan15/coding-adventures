@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C69-axe",
+    "language": "telugu",
+    "chapter": 69,
+    "sequence": 2280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b91f042b56e45f6"
+  },
+  "findings": []
+}

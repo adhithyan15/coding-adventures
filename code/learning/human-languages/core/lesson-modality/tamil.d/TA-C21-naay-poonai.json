@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C21-naay-poonai",
+    "language": "tamil",
+    "chapter": 21,
+    "sequence": 720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2f119fd5362a2d8"
+  },
+  "findings": []
+}

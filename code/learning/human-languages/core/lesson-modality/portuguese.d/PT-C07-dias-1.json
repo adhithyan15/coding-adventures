@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C07-dias-1",
+    "language": "portuguese",
+    "chapter": 7,
+    "sequence": 350,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:013fdf4f6d027633"
+  },
+  "findings": []
+}

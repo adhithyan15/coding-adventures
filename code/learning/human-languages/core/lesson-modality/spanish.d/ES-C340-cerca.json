@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C340-cerca",
+    "language": "spanish",
+    "chapter": 340,
+    "sequence": 5920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6027c89eade7c23"
+  },
+  "findings": []
+}

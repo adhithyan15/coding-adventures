@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C09-practice",
+    "language": "chinese",
+    "chapter": 9,
+    "sequence": 590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8e10f6c3e57e6ab"
+  },
+  "findings": []
+}

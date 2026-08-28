@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S115-vowel-sign-e",
+    "language": "telugu",
+    "chapter": 12,
+    "sequence": 396,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bbc54fc56f1bb1d2",
+    "detachableSegments": [
+      "Script you'll notice: ◌ె",
+      "Writing: ◌ె — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

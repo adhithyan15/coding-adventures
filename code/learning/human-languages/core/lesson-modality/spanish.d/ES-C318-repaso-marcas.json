@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C318-repaso-marcas",
+    "language": "spanish",
+    "chapter": 318,
+    "sequence": 5050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45e68d2b5e7df452"
+  },
+  "findings": []
+}

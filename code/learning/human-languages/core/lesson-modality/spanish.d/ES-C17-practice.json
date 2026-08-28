@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C17-practice",
+    "language": "spanish",
+    "chapter": 124,
+    "sequence": 1448,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:10dade747b30c925"
+  },
+  "findings": []
+}

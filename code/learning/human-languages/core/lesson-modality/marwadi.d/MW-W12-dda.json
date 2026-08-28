@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W12-dda",
+    "language": "marwadi",
+    "chapter": 17,
+    "sequence": 1260,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:189ba4b81a8b7fb2",
+    "detachableSegments": [
+      "Script — one sign"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R12-mixed-scripts",
+    "language": "japanese",
+    "chapter": 12,
+    "sequence": 870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e86cdb9426dcf62"
+  },
+  "findings": []
+}

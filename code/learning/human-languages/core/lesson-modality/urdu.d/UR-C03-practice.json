@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C03-practice",
+    "language": "urdu",
+    "chapter": 3,
+    "sequence": 100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48894eac6203d96c"
+  },
+  "findings": []
+}

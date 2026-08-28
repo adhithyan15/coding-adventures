@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C03-kayfa-haluka",
+    "language": "arabic",
+    "chapter": 3,
+    "sequence": 320,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a25e4ef4183d839a"
+  },
+  "findings": []
+}

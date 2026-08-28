@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S117-letter-ya",
+    "language": "kannada",
+    "chapter": 13,
+    "sequence": 416,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b96f3326db306f60",
+    "detachableSegments": [
+      "Script you'll notice: ಯ",
+      "Writing: ಯ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

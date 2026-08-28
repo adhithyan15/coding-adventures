@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C54-horse",
+    "language": "hindi",
+    "chapter": 54,
+    "sequence": 1810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:197f9cc2356979f8"
+  },
+  "findings": []
+}

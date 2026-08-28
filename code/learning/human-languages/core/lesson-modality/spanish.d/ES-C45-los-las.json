@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C45-los-las",
+    "language": "spanish",
+    "chapter": 89,
+    "sequence": 1228,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ce74d91213293776"
+  },
+  "findings": []
+}

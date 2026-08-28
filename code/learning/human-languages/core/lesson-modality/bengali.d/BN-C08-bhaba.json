@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "BN-C08-bhaba",
+    "language": "bengali",
+    "chapter": 8,
+    "sequence": 500,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:559a663bc15c575f",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

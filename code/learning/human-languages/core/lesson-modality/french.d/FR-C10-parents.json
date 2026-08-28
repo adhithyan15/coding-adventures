@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C10-parents",
+    "language": "french",
+    "chapter": 10,
+    "sequence": 245,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8324934c578d1137"
+  },
+  "findings": []
+}

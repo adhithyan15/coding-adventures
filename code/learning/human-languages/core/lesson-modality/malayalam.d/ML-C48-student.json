@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C48-student",
+    "language": "malayalam",
+    "chapter": 48,
+    "sequence": 1300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6dfe9ed6b55f8756"
+  },
+  "findings": []
+}

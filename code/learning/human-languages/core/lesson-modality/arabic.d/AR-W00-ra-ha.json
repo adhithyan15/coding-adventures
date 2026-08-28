@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "AR-W00-ra-ha",
+    "language": "arabic",
+    "chapter": 1,
+    "sequence": 22,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6749fb2c7b4dfeb3",
+    "detachableSegments": [
+      "Script — observe rāʾ and ḥāʾ"
+    ]
+  },
+  "findings": []
+}

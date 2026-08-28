@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C10-hear-haath",
+    "language": "marwadi",
+    "chapter": 15,
+    "sequence": 1020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dccef203960fd2bc"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C03-come-ti-chiami",
+    "language": "italian",
+    "chapter": 3,
+    "sequence": 200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8486cecf03fc1cbe"
+  },
+  "findings": []
+}

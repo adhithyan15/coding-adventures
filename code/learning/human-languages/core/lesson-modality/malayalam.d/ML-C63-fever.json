@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C63-fever",
+    "language": "malayalam",
+    "chapter": 63,
+    "sequence": 2080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1277a74f66e6f73"
+  },
+  "findings": []
+}

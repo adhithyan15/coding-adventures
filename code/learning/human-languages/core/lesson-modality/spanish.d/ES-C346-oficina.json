@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C346-oficina",
+    "language": "spanish",
+    "chapter": 346,
+    "sequence": 6250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b746f2d5d94f1349"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C55-si",
+    "language": "spanish",
+    "chapter": 196,
+    "sequence": 2215,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9423788974ef675"
+  },
+  "findings": []
+}

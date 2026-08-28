@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C61-quien",
+    "language": "spanish",
+    "chapter": 232,
+    "sequence": 2395,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9420efd6cb4fe7c4"
+  },
+  "findings": []
+}

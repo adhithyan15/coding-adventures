@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-W07-digits-1-3",
+    "language": "malayalam",
+    "chapter": 7,
+    "sequence": 341,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:619eb5ec44ae5e38",
+    "detachableSegments": [
+      "Script",
+      "Writing — observe and trace"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

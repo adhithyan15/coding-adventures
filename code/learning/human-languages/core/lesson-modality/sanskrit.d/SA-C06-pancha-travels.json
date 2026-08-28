@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C06-pancha-travels",
+    "language": "sanskrit",
+    "chapter": 6,
+    "sequence": 330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5331f9d89fc516c1"
+  },
+  "findings": []
+}

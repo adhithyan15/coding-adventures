@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C14-pesar",
+    "language": "persian",
+    "chapter": 14,
+    "sequence": 560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b9cf8ed4993e5a7"
+  },
+  "findings": []
+}

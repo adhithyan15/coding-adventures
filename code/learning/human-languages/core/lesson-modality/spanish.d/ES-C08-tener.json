@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C08-tener",
+    "language": "spanish",
+    "chapter": 47,
+    "sequence": 840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c3aba8ed8135762"
+  },
+  "findings": []
+}

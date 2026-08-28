@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C273-en-primer-lugar",
+    "language": "spanish",
+    "chapter": 273,
+    "sequence": 2820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f304ad2439a0426c"
+  },
+  "findings": []
+}

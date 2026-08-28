@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "TE-C07-numbers-1-5",
+    "language": "telugu",
+    "chapter": 7,
+    "sequence": 330,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:03c37e86ea6bfc16",
+    "detachableSegments": [
+      "Script you'll notice: A Telugu shape to notice"
+    ]
+  },
+  "findings": []
+}

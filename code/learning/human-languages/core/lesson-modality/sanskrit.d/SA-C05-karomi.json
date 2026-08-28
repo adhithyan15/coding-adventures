@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-C05-karomi",
+    "language": "sanskrit",
+    "chapter": 5,
+    "sequence": 290,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:557c4b1e88d8dee8",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

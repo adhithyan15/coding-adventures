@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C56-knife",
+    "language": "telugu",
+    "chapter": 56,
+    "sequence": 1650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11ecc8934e5b1906"
+  },
+  "findings": []
+}

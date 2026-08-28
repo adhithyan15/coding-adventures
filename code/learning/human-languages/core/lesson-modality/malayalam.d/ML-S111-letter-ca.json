@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S111-letter-ca",
+    "language": "malayalam",
+    "chapter": 8,
+    "sequence": 366,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:789617e07171bbfd",
+    "detachableSegments": [
+      "Script you'll notice: ച",
+      "Writing: ച — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

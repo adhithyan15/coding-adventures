@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C32-tinnuka",
+    "language": "malayalam",
+    "chapter": 32,
+    "sequence": 680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4391ddcae89fe89"
+  },
+  "findings": []
+}

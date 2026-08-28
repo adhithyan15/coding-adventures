@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W01-hao-build",
+    "language": "chinese",
+    "chapter": 2,
+    "sequence": 140,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2b4ee5a1c588bbd7",
+    "detachableSegments": [
+      "Script — the assembly"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

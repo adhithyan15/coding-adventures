@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C395-volver",
+    "language": "spanish",
+    "chapter": 395,
+    "sequence": 8560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1eb769a23509367"
+  },
+  "findings": []
+}

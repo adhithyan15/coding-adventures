@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C03-khushi-hui",
+    "language": "urdu",
+    "chapter": 3,
+    "sequence": 90,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8f2496ec4fb771a"
+  },
+  "findings": []
+}

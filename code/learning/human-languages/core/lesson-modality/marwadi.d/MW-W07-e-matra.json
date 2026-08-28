@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W07-e-matra",
+    "language": "marwadi",
+    "chapter": 9,
+    "sequence": 500,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3de27e1c91b735d6",
+    "detachableSegments": [
+      "Script — one vowel mark"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

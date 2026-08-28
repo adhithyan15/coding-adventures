@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C273-ademas",
+    "language": "spanish",
+    "chapter": 273,
+    "sequence": 2830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09b77ffc3fe533b8"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C08-bhai",
+    "language": "marwadi",
+    "chapter": 10,
+    "sequence": 610,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:064dafd0afdebe81"
+  },
+  "findings": []
+}

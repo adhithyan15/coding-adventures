@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C25-penser",
+    "language": "french",
+    "chapter": 25,
+    "sequence": 760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d811e9afeacc5a4"
+  },
+  "findings": []
+}

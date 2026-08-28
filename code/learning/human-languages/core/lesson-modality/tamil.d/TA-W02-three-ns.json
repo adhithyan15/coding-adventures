@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-W02-three-ns",
+    "language": "tamil",
+    "chapter": 6,
+    "sequence": 410,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ab29843a61b3d47c",
+    "detachableSegments": [
+      "Script you'll notice: The backward walk"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "RU-W06-soft-sign",
+    "language": "russian",
+    "chapter": 14,
+    "sequence": 690,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a5dcb91d5f96f75d",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

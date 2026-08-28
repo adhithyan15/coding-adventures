@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C44-los",
+    "language": "spanish",
+    "chapter": 79,
+    "sequence": 1197,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31f8147b377003c4"
+  },
+  "findings": []
+}

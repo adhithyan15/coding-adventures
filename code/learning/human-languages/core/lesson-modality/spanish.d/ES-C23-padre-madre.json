@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C23-padre-madre",
+    "language": "spanish",
+    "chapter": 140,
+    "sequence": 1660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:377a7fc85bef5bec"
+  },
+  "findings": []
+}

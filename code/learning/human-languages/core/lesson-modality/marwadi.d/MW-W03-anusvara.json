@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "MW-W03-anusvara",
+    "language": "marwadi",
+    "chapter": 3,
+    "sequence": 130,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:53cddf6736b749d5",
+    "detachableSegments": [
+      "Script — one small new mark",
+      "Writing — add only the mark"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

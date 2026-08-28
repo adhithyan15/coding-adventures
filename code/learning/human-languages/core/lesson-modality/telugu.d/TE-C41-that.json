@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C41-that",
+    "language": "telugu",
+    "chapter": 41,
+    "sequence": 890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:905385745e69a368"
+  },
+  "findings": []
+}

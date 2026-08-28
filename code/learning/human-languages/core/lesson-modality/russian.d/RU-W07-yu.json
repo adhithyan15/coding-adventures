@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "RU-W07-yu",
+    "language": "russian",
+    "chapter": 15,
+    "sequence": 780,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a13fef99a566fbc1",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

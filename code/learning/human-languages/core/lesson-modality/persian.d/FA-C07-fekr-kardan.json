@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C07-fekr-kardan",
+    "language": "persian",
+    "chapter": 7,
+    "sequence": 260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80059904ee6dfeb4"
+  },
+  "findings": []
+}

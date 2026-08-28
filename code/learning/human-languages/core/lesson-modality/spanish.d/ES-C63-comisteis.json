@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C63-comisteis",
+    "language": "spanish",
+    "chapter": 242,
+    "sequence": 2445,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d15a48b02a4594df"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TE-C02-naa",
+    "language": "telugu",
+    "chapter": 2,
+    "sequence": 80,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:affcd5254104a7fc",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

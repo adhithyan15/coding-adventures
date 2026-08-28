@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C08-uhr",
+    "language": "german",
+    "chapter": 8,
+    "sequence": 235,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5cc9aeede24f93f"
+  },
+  "findings": []
+}

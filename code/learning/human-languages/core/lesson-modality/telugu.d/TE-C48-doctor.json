@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C48-doctor",
+    "language": "telugu",
+    "chapter": 48,
+    "sequence": 1250,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cbbbbc851a66a1e5"
+  },
+  "findings": []
+}

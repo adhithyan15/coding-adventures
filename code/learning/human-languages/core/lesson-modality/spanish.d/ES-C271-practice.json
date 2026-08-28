@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C271-practice",
+    "language": "spanish",
+    "chapter": 271,
+    "sequence": 2760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45043b25f3befac5"
+  },
+  "findings": []
+}

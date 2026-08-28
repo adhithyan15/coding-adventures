@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "RU-C01-zdravstvuyte",
+    "language": "russian",
+    "chapter": 1,
+    "sequence": 10,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e3e3a2bd758d1ff",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

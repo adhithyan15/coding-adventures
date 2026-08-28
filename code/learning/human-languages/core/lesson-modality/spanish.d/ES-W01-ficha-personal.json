@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ES-W01-ficha-personal",
+    "language": "spanish",
+    "chapter": 338,
+    "sequence": 5900,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98a3b39597b987a4",
+    "detachableSegments": [
+      "Writing — controlled composition"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C46-luna",
+    "language": "latin",
+    "chapter": 46,
+    "sequence": 1080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c421350aad26ef4"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C09-snihyati",
+    "language": "sanskrit",
+    "chapter": 9,
+    "sequence": 470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40cf7e91615b9b8f"
+  },
+  "findings": []
+}

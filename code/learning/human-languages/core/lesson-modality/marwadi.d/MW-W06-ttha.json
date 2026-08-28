@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W06-ttha",
+    "language": "marwadi",
+    "chapter": 8,
+    "sequence": 450,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f86cdeed947ae14a",
+    "detachableSegments": [
+      "Script — one consonant"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

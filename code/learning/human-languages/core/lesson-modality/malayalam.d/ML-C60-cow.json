@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C60-cow",
+    "language": "malayalam",
+    "chapter": 60,
+    "sequence": 1890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57d6593df7c06c45"
+  },
+  "findings": []
+}

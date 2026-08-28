@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C18-vivir-subjuntivo",
+    "language": "spanish",
+    "chapter": 127,
+    "sequence": 1472,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd916da49caeda30"
+  },
+  "findings": []
+}

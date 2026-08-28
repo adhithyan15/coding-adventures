@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C18-dizer",
+    "language": "portuguese",
+    "chapter": 18,
+    "sequence": 640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bff1d4499dfaa806"
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "HI-S110-letter-ra",
+    "language": "hindi",
+    "chapter": 6,
+    "sequence": 486,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e1252418302c3e2b",
+    "detachableSegments": [
+      "Script you'll notice: र",
+      "Writing: र"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

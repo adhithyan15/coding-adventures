@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "AR-C33-qahwa",
+    "language": "arabic",
+    "chapter": 33,
+    "sequence": 890,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e1b0191f766aa53",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C08-dayavayi",
+    "language": "malayalam",
+    "chapter": 8,
+    "sequence": 360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:216fa0b67ea1f0c5"
+  },
+  "findings": []
+}

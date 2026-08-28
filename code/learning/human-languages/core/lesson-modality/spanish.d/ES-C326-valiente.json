@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C326-valiente",
+    "language": "spanish",
+    "chapter": 326,
+    "sequence": 5430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3221021762f5dcc"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C293-hombro",
+    "language": "spanish",
+    "chapter": 293,
+    "sequence": 3780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd8c8765242da47f"
+  },
+  "findings": []
+}

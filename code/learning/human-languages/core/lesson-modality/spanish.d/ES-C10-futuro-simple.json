@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "ES-C10-futuro-simple",
+    "language": "spanish",
+    "chapter": 49,
+    "sequence": 935,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:21a6f33e14a65343"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-C11-parivar",
+    "language": "punjabi",
+    "chapter": 11,
+    "sequence": 550,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac3e35f497e92e49",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

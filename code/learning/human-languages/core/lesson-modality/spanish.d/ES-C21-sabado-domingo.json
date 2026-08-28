@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C21-sabado-domingo",
+    "language": "spanish",
+    "chapter": 138,
+    "sequence": 1610,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:435cc9211a23f67c"
+  },
+  "findings": []
+}

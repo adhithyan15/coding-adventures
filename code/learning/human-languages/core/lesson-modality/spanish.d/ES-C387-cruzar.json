@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C387-cruzar",
+    "language": "spanish",
+    "chapter": 387,
+    "sequence": 8220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9853c943d979845"
+  },
+  "findings": []
+}

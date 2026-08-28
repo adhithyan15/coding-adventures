@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C267-no-nada",
+    "language": "spanish",
+    "chapter": 267,
+    "sequence": 2580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d607464e0506bac5"
+  },
+  "findings": []
+}

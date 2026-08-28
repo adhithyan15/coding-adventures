@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "ZH-W01-ren",
+    "language": "chinese",
+    "chapter": 2,
+    "sequence": 80,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:61937c2eaec8d499",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

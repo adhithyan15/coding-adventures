@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C30-hace-calor",
+    "language": "spanish",
+    "chapter": 148,
+    "sequence": 1790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:967c6825ca4da029"
+  },
+  "findings": []
+}

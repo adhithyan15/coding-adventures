@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "MR-W01-ha",
+    "language": "marathi",
+    "chapter": 1,
+    "sequence": 6,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:91ae975d19bda384",
+    "detachableSegments": [
+      "Script",
+      "Writing — notice and trace one consonant"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

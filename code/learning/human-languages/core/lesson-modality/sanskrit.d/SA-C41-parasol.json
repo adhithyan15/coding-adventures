@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C41-parasol",
+    "language": "sanskrit",
+    "chapter": 41,
+    "sequence": 2020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74fe07b35b4420ba"
+  },
+  "findings": []
+}

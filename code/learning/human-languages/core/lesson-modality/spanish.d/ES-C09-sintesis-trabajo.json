@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C09-sintesis-trabajo",
+    "language": "spanish",
+    "chapter": 54,
+    "sequence": 975,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7640786a7ef2842"
+  },
+  "findings": []
+}

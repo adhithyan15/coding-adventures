@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C36-likewise",
+    "language": "sanskrit",
+    "chapter": 36,
+    "sequence": 1750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f6e52cf7f235cd5"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W05-virama",
+    "language": "marwadi",
+    "chapter": 5,
+    "sequence": 240,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:34dd587cb77a00dc",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

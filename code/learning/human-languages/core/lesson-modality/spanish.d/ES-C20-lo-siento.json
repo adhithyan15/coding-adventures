@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C20-lo-siento",
+    "language": "spanish",
+    "chapter": 137,
+    "sequence": 1580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ce54c39406f4ca0"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C364-cara",
+    "language": "spanish",
+    "chapter": 364,
+    "sequence": 7130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:401bd88e2dffc55c"
+  },
+  "findings": []
+}

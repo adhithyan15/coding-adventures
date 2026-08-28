@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C34-ishta",
+    "language": "kannada",
+    "chapter": 34,
+    "sequence": 740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5329c7743b9841b9"
+  },
+  "findings": []
+}

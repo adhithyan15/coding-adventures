@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C06-estudiar",
+    "language": "spanish",
+    "chapter": 21,
+    "sequence": 528,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8323b00f57b0ac61"
+  },
+  "findings": []
+}

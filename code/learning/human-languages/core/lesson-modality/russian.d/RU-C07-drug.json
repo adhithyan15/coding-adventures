@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C07-drug",
+    "language": "russian",
+    "chapter": 7,
+    "sequence": 320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba22124d99d3ced8"
+  },
+  "findings": []
+}

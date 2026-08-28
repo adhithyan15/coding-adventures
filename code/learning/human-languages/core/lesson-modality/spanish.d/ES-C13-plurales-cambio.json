@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C13-plurales-cambio",
+    "language": "spanish",
+    "chapter": 76,
+    "sequence": 1186,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d799c51a996f6bd7"
+  },
+  "findings": []
+}

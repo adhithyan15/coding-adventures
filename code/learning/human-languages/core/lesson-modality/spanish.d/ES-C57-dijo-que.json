@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C57-dijo-que",
+    "language": "spanish",
+    "chapter": 213,
+    "sequence": 2300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ae14677f1a6748b"
+  },
+  "findings": []
+}

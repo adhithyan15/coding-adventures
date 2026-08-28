@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R12-weather-first-two",
+    "language": "marwadi",
+    "chapter": 17,
+    "sequence": 1240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d101b0420d8261e9"
+  },
+  "findings": []
+}

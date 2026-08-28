@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "BN-C10-bhat",
+    "language": "bengali",
+    "chapter": 10,
+    "sequence": 730,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:797239fdb53c5eee",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

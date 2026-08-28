@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C367-naranja",
+    "language": "spanish",
+    "chapter": 367,
+    "sequence": 7290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8924ea326e8b2f5"
+  },
+  "findings": []
+}

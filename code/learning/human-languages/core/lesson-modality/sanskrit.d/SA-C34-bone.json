@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C34-bone",
+    "language": "sanskrit",
+    "chapter": 34,
+    "sequence": 1650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8c483ec99a1edfa"
+  },
+  "findings": []
+}

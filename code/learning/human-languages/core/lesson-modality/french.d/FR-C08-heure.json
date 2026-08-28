@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C08-heure",
+    "language": "french",
+    "chapter": 8,
+    "sequence": 225,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93a082b1f4ec4ef7"
+  },
+  "findings": []
+}

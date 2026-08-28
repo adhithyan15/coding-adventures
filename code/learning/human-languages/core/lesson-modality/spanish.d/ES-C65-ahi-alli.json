@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C65-ahi-alli",
+    "language": "spanish",
+    "chapter": 251,
+    "sequence": 2490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:325897e8d77e4f53"
+  },
+  "findings": []
+}

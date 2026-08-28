@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C375-labio",
+    "language": "spanish",
+    "chapter": 375,
+    "sequence": 7680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0a9506b9cf4115f"
+  },
+  "findings": []
+}

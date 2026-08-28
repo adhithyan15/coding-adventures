@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C334-salud",
+    "language": "spanish",
+    "chapter": 334,
+    "sequence": 5820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:186d7b6bbe834d6e"
+  },
+  "findings": []
+}

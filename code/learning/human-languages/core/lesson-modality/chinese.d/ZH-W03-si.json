@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W03-si",
+    "language": "chinese",
+    "chapter": 3,
+    "sequence": 225,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2ab10e75bfb312b1",
+    "detachableSegments": [
+      "Script — five strokes, for four"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

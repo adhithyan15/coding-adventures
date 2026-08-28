@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-W08-sollungal-delayed-copy",
+    "language": "tamil",
+    "chapter": 8,
+    "sequence": 474,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0d641de6db0212b5",
+    "detachableSegments": [
+      "Writing — delayed copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

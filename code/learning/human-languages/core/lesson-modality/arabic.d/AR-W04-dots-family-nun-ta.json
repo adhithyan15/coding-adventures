@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-W04-dots-family-nun-ta",
+    "language": "arabic",
+    "chapter": 2,
+    "sequence": 230,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d053baf1837e3241"
+  },
+  "findings": []
+}

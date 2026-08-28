@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-C11-dost",
+    "language": "punjabi",
+    "chapter": 11,
+    "sequence": 540,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e7b38f4476778ba",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

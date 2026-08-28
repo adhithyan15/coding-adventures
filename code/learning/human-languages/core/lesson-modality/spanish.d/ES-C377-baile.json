@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C377-baile",
+    "language": "spanish",
+    "chapter": 377,
+    "sequence": 7810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:288687e9008a2437"
+  },
+  "findings": []
+}

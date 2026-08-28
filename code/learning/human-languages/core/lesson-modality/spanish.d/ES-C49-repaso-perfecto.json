@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C49-repaso-perfecto",
+    "language": "spanish",
+    "chapter": 120,
+    "sequence": 1389,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0294f36e2a74eeca"
+  },
+  "findings": []
+}

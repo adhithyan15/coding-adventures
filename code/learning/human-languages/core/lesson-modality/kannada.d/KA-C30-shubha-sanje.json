@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C30-shubha-sanje",
+    "language": "kannada",
+    "chapter": 30,
+    "sequence": 590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71f56fe687f930ba"
+  },
+  "findings": []
+}

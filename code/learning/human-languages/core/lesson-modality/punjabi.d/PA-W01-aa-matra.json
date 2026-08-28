@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-W01-aa-matra",
+    "language": "punjabi",
+    "chapter": 1,
+    "sequence": 32,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:17188499a5e51aaf",
+    "detachableSegments": [
+      "Script",
+      "Writing — observe and trace"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

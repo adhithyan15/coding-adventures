@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ES-W01-con-reloj",
+    "language": "spanish",
+    "chapter": 339,
+    "sequence": 5910,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc451bba1a880229",
+    "detachableSegments": [
+      "Writing — timed composition"
+    ]
+  },
+  "findings": []
+}

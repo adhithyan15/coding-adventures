@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C03-piacere",
+    "language": "italian",
+    "chapter": 3,
+    "sequence": 210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ec6113c9b63f559"
+  },
+  "findings": []
+}

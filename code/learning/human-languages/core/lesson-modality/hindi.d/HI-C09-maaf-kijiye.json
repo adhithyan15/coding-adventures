@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C09-maaf-kijiye",
+    "language": "hindi",
+    "chapter": 9,
+    "sequence": 520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75a32a4c24a81888"
+  },
+  "findings": []
+}

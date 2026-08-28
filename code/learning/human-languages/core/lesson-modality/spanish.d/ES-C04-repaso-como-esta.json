@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C04-repaso-como-esta",
+    "language": "spanish",
+    "chapter": 8,
+    "sequence": 315,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08dc01ba6c0ffecb"
+  },
+  "findings": []
+}

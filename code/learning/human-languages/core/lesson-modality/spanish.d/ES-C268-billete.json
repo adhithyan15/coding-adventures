@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C268-billete",
+    "language": "spanish",
+    "chapter": 268,
+    "sequence": 2630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d941ba8d1b54ab5"
+  },
+  "findings": []
+}

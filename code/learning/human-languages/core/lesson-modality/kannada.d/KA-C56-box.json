@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C56-box",
+    "language": "kannada",
+    "chapter": 56,
+    "sequence": 1680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ef4a4c3cf091d7c"
+  },
+  "findings": []
+}

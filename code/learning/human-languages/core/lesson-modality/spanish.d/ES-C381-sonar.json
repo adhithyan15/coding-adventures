@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C381-sonar",
+    "language": "spanish",
+    "chapter": 381,
+    "sequence": 8000,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1347479c6ff6f05d"
+  },
+  "findings": []
+}

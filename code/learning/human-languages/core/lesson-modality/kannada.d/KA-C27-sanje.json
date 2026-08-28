@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C27-sanje",
+    "language": "kannada",
+    "chapter": 27,
+    "sequence": 560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72a485ed0029a2cf"
+  },
+  "findings": []
+}

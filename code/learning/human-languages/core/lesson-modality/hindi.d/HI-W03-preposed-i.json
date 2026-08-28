@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "HI-W03-preposed-i",
+    "language": "hindi",
+    "chapter": 2,
+    "sequence": 200,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c2ae6bb3cfba4b4f",
+    "delivery": "script"
+  },
+  "findings": []
+}

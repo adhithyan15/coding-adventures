@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R02-mas-despacio",
+    "language": "spanish",
+    "chapter": 15,
+    "sequence": 507,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d50a9d5df956192e"
+  },
+  "findings": []
+}

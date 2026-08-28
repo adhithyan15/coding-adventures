@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W01-ren-radical",
+    "language": "chinese",
+    "chapter": 2,
+    "sequence": 90,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a5f07237c7a76a1c",
+    "detachableSegments": [
+      "Script — one character, two postures"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

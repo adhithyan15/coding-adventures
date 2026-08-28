@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C43-sit",
+    "language": "telugu",
+    "chapter": 43,
+    "sequence": 1020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:582c1422f1db7f8f"
+  },
+  "findings": []
+}

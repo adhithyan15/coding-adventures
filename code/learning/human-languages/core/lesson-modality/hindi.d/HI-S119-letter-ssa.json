@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "HI-S119-letter-ssa",
+    "language": "hindi",
+    "chapter": 15,
+    "sequence": 621,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:19bf434bf81b8137",
+    "detachableSegments": [
+      "Script you'll notice: ष",
+      "Writing: ष — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

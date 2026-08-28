@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C01-sat-sri-akal",
+    "language": "punjabi",
+    "chapter": 1,
+    "sequence": 10,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:836e8ae4284500b6"
+  },
+  "findings": []
+}

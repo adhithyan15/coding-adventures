@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C43-comida",
+    "language": "spanish",
+    "chapter": 77,
+    "sequence": 1193,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c017cd9a9ba400bd"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C320-culpa",
+    "language": "spanish",
+    "chapter": 320,
+    "sequence": 5160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c06ada703a0ed82"
+  },
+  "findings": []
+}

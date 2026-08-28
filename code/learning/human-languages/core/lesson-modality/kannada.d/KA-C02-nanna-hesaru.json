@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C02-nanna-hesaru",
+    "language": "kannada",
+    "chapter": 2,
+    "sequence": 90,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85e9c18fd0cc0d7a"
+  },
+  "findings": []
+}

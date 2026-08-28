@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C11-poka",
+    "language": "russian",
+    "chapter": 11,
+    "sequence": 430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36bba21239f2a53e"
+  },
+  "findings": []
+}

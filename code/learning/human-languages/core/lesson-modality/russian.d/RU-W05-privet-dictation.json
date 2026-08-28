@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "RU-W05-privet-dictation",
+    "language": "russian",
+    "chapter": 1,
+    "sequence": 64,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d92a33ad6f8086dc",
+    "detachableSegments": [
+      "Writing — short dictation"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

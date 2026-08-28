@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C345-persona",
+    "language": "spanish",
+    "chapter": 345,
+    "sequence": 6200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f9173ae94e2537a"
+  },
+  "findings": []
+}

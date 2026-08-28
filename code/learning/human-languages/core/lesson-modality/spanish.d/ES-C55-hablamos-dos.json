@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C55-hablamos-dos",
+    "language": "spanish",
+    "chapter": 200,
+    "sequence": 2235,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a07b8cf298176ee7"
+  },
+  "findings": []
+}

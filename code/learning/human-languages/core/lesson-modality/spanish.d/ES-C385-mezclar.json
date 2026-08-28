@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C385-mezclar",
+    "language": "spanish",
+    "chapter": 385,
+    "sequence": 8150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2e4b4a6adccc433"
+  },
+  "findings": []
+}

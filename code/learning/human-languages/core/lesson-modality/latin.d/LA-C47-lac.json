@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C47-lac",
+    "language": "latin",
+    "chapter": 47,
+    "sequence": 1120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f41b6a86a8d26be"
+  },
+  "findings": []
+}

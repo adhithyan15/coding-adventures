@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C25-familia",
+    "language": "portuguese",
+    "chapter": 25,
+    "sequence": 900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab7e8608d769fb60"
+  },
+  "findings": []
+}

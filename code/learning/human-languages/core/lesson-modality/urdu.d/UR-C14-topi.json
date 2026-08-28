@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C14-topi",
+    "language": "urdu",
+    "chapter": 14,
+    "sequence": 600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47de8e799d93cec9"
+  },
+  "findings": []
+}

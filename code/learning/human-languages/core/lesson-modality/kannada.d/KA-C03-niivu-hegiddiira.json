@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-C03-niivu-hegiddiira",
+    "language": "kannada",
+    "chapter": 3,
+    "sequence": 160,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:afb0cd5376b8c018",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

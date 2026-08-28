@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S124-letter-e",
+    "language": "telugu",
+    "chapter": 21,
+    "sequence": 491,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e54588efd4541e8f",
+    "detachableSegments": [
+      "Script you'll notice: ఎ",
+      "Writing: ఎ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

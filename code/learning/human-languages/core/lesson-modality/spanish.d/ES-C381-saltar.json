@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C381-saltar",
+    "language": "spanish",
+    "chapter": 381,
+    "sequence": 7990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5eb8f05b473ffc93"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C63-permission",
+    "language": "tamil",
+    "chapter": 63,
+    "sequence": 2370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9a97a990743b936"
+  },
+  "findings": []
+}

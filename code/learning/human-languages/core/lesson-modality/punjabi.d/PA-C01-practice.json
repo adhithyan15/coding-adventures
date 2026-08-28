@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-C01-practice",
+    "language": "punjabi",
+    "chapter": 1,
+    "sequence": 60,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:144a52a8fa24a85d",
+    "detachableSegments": [
+      "Script — see and understand",
+      "Writing — one independent answer"
+    ]
+  },
+  "findings": []
+}

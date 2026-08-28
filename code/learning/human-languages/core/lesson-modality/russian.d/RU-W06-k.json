@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "RU-W06-k",
+    "language": "russian",
+    "chapter": 14,
+    "sequence": 620,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:20da63f74635d4a2",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

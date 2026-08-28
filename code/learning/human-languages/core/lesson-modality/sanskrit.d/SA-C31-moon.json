@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C31-moon",
+    "language": "sanskrit",
+    "chapter": 31,
+    "sequence": 1490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41634a53e1a0b594"
+  },
+  "findings": []
+}

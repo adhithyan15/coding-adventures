@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C376-maiz",
+    "language": "spanish",
+    "chapter": 376,
+    "sequence": 7740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca19fd8200d82000"
+  },
+  "findings": []
+}

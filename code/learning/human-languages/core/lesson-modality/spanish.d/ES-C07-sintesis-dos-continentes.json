@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C07-sintesis-dos-continentes",
+    "language": "spanish",
+    "chapter": 42,
+    "sequence": 790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49cd10088e99595e"
+  },
+  "findings": []
+}

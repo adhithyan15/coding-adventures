@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "UR-C16-practice",
+    "language": "urdu",
+    "chapter": 16,
+    "sequence": 810,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efc76f57c73219ef",
+    "detachableSegments": [
+      "Script — the words come back"
+    ]
+  },
+  "findings": []
+}

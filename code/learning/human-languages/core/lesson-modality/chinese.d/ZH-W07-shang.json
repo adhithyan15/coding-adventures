@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W07-shang",
+    "language": "chinese",
+    "chapter": 7,
+    "sequence": 460,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4f69ff1bea8d65f3",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

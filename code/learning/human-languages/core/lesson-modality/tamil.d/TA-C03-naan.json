@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C03-naan",
+    "language": "tamil",
+    "chapter": 3,
+    "sequence": 200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26dddc33f0b1f1f0"
+  },
+  "findings": []
+}

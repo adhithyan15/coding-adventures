@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C70-mouse",
+    "language": "telugu",
+    "chapter": 70,
+    "sequence": 2330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab7dd7ea911ba11a"
+  },
+  "findings": []
+}

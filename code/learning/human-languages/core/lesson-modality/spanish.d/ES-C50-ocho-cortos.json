@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C50-ocho-cortos",
+    "language": "spanish",
+    "chapter": 132,
+    "sequence": 1498,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7bf15c067415da14"
+  },
+  "findings": []
+}

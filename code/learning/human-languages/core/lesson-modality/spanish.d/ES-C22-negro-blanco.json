@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C22-negro-blanco",
+    "language": "spanish",
+    "chapter": 139,
+    "sequence": 1620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b94b887b6940842"
+  },
+  "findings": []
+}

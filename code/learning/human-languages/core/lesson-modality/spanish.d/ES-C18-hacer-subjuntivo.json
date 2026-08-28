@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C18-hacer-subjuntivo",
+    "language": "spanish",
+    "chapter": 128,
+    "sequence": 1484,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:451e65ee6ed39868"
+  },
+  "findings": []
+}

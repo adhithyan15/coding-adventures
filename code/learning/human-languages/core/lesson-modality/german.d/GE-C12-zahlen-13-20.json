@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "GE-C12-zahlen-13-20",
+    "language": "german",
+    "chapter": 12,
+    "sequence": 280,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue",
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:632c4bc9ece29d05"
+  },
+  "findings": []
+}

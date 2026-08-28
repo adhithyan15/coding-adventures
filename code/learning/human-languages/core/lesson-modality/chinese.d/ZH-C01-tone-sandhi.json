@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C01-tone-sandhi",
+    "language": "chinese",
+    "chapter": 1,
+    "sequence": 50,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be0bd150e6d245de"
+  },
+  "findings": []
+}

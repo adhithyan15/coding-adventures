@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C23-roju",
+    "language": "telugu",
+    "chapter": 23,
+    "sequence": 510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e5f30243daa1733"
+  },
+  "findings": []
+}

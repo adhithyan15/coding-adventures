@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C19-si",
+    "language": "spanish",
+    "chapter": 7,
+    "sequence": 264,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fc4b33a28aafb3b"
+  },
+  "findings": []
+}

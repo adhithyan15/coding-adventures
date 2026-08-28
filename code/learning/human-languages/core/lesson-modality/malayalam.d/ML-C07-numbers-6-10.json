@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C07-numbers-6-10",
+    "language": "malayalam",
+    "chapter": 7,
+    "sequence": 347,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f51f39db4797e23"
+  },
+  "findings": []
+}

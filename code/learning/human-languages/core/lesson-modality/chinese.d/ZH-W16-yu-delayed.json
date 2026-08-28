@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ZH-W16-yu-delayed",
+    "language": "chinese",
+    "chapter": 16,
+    "sequence": 1380,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7fa74c38913a7682",
+    "delivery": "script"
+  },
+  "findings": []
+}

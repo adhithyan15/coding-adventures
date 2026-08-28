@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C40-there",
+    "language": "hindi",
+    "chapter": 40,
+    "sequence": 1130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2eafa1d413cafbd"
+  },
+  "findings": []
+}

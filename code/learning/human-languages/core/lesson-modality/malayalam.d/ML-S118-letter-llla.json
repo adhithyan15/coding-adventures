@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S118-letter-llla",
+    "language": "malayalam",
+    "chapter": 14,
+    "sequence": 421,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a031fb39cd118d0f",
+    "detachableSegments": [
+      "Script you'll notice: ഴ",
+      "Writing: ഴ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

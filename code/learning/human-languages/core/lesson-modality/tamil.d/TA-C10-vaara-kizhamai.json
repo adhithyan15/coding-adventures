@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C10-vaara-kizhamai",
+    "language": "tamil",
+    "chapter": 10,
+    "sequence": 520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff31b17db43deacb"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C06-dative-subject",
+    "language": "tamil",
+    "chapter": 6,
+    "sequence": 390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2af170cba5d5680"
+  },
+  "findings": []
+}

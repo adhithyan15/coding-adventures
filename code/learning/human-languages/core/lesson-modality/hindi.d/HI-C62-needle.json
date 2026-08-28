@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C62-needle",
+    "language": "hindi",
+    "chapter": 62,
+    "sequence": 2320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:357ba031dc426662"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C01-tag",
+    "language": "german",
+    "chapter": 1,
+    "sequence": 20,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbcac780e0277f22"
+  },
+  "findings": []
+}

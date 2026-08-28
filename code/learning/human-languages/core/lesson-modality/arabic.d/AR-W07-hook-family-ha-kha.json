@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W07-hook-family-ha-kha",
+    "language": "arabic",
+    "chapter": 3,
+    "sequence": 270,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:033b3143ac074409",
+    "detachableSegments": [
+      "Script — The hook-and-tail family",
+      "Script — Draw them",
+      "Script — Where you've seen it — خير"
+    ]
+  },
+  "findings": []
+}

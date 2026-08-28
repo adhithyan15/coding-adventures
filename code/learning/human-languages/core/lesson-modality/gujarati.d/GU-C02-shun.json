@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "GU-C02-shun",
+    "language": "gujarati",
+    "chapter": 8,
+    "sequence": 150,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd3d93a107cc2793",
+    "detachableSegments": [
+      "The letters in this word",
+      "Script retrieval"
+    ]
+  },
+  "findings": []
+}

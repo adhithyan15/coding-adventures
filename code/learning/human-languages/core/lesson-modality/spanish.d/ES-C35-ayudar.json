@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C35-ayudar",
+    "language": "spanish",
+    "chapter": 161,
+    "sequence": 1950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b809b92d5dfab11"
+  },
+  "findings": []
+}

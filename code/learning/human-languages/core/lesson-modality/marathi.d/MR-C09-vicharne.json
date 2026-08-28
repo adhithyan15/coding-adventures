@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MR-C09-vicharne",
+    "language": "marathi",
+    "chapter": 12,
+    "sequence": 490,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efd583212edc2bde",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

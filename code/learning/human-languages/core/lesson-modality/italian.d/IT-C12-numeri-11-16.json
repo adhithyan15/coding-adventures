@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C12-numeri-11-16",
+    "language": "italian",
+    "chapter": 12,
+    "sequence": 450,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8b6a037c017781e1"
+  },
+  "findings": []
+}

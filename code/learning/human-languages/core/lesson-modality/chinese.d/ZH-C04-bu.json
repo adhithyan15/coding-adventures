@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C04-bu",
+    "language": "chinese",
+    "chapter": 4,
+    "sequence": 350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90d32de54cfd2ac9"
+  },
+  "findings": []
+}

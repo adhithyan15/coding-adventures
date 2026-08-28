@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "JA-C01-arigatou",
+    "language": "japanese",
+    "chapter": 3,
+    "sequence": 210,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8f0b0bb450a2f2b",
+    "detachableSegments": [
+      "Script — five signs and two small strokes"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C289-estrella",
+    "language": "spanish",
+    "chapter": 289,
+    "sequence": 3600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70747d4cc588b80f"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "UR-C09-bhai",
+    "language": "urdu",
+    "chapter": 9,
+    "sequence": 340,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9eb8148c2eff2eb",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

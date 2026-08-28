@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C12-onaka",
+    "language": "japanese",
+    "chapter": 12,
+    "sequence": 880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b77d40bf1d0c2c53"
+  },
+  "findings": []
+}

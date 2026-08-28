@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C31-afternoon-convergence",
+    "language": "malayalam",
+    "chapter": 31,
+    "sequence": 640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:245c8bd9a2c2896c"
+  },
+  "findings": []
+}

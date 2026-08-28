@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C38-aankh",
+    "language": "hindi",
+    "chapter": 38,
+    "sequence": 1020,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13ec42675c456624",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

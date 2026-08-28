@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C45-grandmother",
+    "language": "kannada",
+    "chapter": 45,
+    "sequence": 1110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa0d7d9092274833"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C48-sintesis-una-historia",
+    "language": "spanish",
+    "chapter": 115,
+    "sequence": 1384,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5287b2e454eaaa19"
+  },
+  "findings": []
+}

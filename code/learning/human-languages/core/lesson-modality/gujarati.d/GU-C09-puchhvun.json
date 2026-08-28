@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "GU-C09-puchhvun",
+    "language": "gujarati",
+    "chapter": 15,
+    "sequence": 490,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac62af0c03756617",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

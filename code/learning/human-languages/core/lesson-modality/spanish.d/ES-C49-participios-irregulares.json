@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C49-participios-irregulares",
+    "language": "spanish",
+    "chapter": 119,
+    "sequence": 1388,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:11782b81da37dbca"
+  },
+  "findings": []
+}

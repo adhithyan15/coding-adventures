@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C379-mojado",
+    "language": "spanish",
+    "chapter": 379,
+    "sequence": 7880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:593676a4e58ce5f4"
+  },
+  "findings": []
+}

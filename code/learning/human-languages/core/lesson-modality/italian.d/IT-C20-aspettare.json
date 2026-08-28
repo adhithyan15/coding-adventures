@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C20-aspettare",
+    "language": "italian",
+    "chapter": 20,
+    "sequence": 690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15bc07f4854fba91"
+  },
+  "findings": []
+}

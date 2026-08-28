@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C12-hear-garmi",
+    "language": "marwadi",
+    "chapter": 17,
+    "sequence": 1210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0839d8ff60533969"
+  },
+  "findings": []
+}

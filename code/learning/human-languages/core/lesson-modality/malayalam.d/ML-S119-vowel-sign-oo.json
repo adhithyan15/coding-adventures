@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S119-vowel-sign-oo",
+    "language": "malayalam",
+    "chapter": 15,
+    "sequence": 431,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:90a65e8207126e2d",
+    "detachableSegments": [
+      "Script you'll notice: ◌ോ",
+      "Writing: ◌ോ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

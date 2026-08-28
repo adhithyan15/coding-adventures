@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "AR-W12-maa-salama",
+    "language": "arabic",
+    "chapter": 4,
+    "sequence": 380,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:05b37c3821332dd2",
+    "detachableSegments": [
+      "Script — Part 1 — مع (maʿa, \"with\")",
+      "Script — Part 2 — السلامة (as-salāma, \"the safety\")",
+      "Script — The root s-l-m, one more time",
+      "Script — Assemble it — right to left"
+    ]
+  },
+  "findings": []
+}

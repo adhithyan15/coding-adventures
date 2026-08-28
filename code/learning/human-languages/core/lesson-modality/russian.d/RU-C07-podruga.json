@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C07-podruga",
+    "language": "russian",
+    "chapter": 7,
+    "sequence": 330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92a6a3599d0aefd5"
+  },
+  "findings": []
+}

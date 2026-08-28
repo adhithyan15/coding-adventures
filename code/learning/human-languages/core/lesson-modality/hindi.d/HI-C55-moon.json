@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C55-moon",
+    "language": "hindi",
+    "chapter": 55,
+    "sequence": 1860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebb9566c36aaeec1"
+  },
+  "findings": []
+}

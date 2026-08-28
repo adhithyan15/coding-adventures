@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C279-puerta",
+    "language": "spanish",
+    "chapter": 279,
+    "sequence": 3100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:877426c26a0d41bc"
+  },
+  "findings": []
+}

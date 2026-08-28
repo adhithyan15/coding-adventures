@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C280-huevo",
+    "language": "spanish",
+    "chapter": 280,
+    "sequence": 3150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1cacd7efe7abc3c"
+  },
+  "findings": []
+}

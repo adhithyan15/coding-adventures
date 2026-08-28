@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C15-thanneer-arisi",
+    "language": "tamil",
+    "chapter": 15,
+    "sequence": 590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a1b674fcef23d70"
+  },
+  "findings": []
+}

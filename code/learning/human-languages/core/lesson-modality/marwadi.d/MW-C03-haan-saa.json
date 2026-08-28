@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MW-C03-haan-saa",
+    "language": "marwadi",
+    "chapter": 3,
+    "sequence": 140,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de6ce767a9a93d97",
+    "detachableSegments": [
+      "Writing — guided, then delayed"
+    ]
+  },
+  "findings": []
+}

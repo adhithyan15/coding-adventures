@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C271-quizas",
+    "language": "spanish",
+    "chapter": 271,
+    "sequence": 2740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b596f22e013fe1df"
+  },
+  "findings": []
+}

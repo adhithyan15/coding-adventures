@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C46-salt",
+    "language": "malayalam",
+    "chapter": 46,
+    "sequence": 1220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60c738a1f070158e"
+  },
+  "findings": []
+}

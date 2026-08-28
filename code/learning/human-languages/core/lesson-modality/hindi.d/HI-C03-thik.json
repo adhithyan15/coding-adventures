@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C03-thik",
+    "language": "hindi",
+    "chapter": 3,
+    "sequence": 310,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2db0ea8b5923ef3c",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

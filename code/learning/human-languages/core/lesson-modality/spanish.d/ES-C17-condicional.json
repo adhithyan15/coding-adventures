@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C17-condicional",
+    "language": "spanish",
+    "chapter": 123,
+    "sequence": 1432,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7946d21bd6548bb1"
+  },
+  "findings": []
+}

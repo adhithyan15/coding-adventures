@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W02-aa-independent",
+    "language": "marathi",
+    "chapter": 2,
+    "sequence": 22,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f60ec639cc16576f",
+    "detachableSegments": [
+      "Script",
+      "Writing — trace, then guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

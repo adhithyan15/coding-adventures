@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C59-mud",
+    "language": "telugu",
+    "chapter": 59,
+    "sequence": 1810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03cf92397f6255fa"
+  },
+  "findings": []
+}

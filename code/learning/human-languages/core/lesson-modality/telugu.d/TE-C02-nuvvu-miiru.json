@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TE-C02-nuvvu-miiru",
+    "language": "telugu",
+    "chapter": 2,
+    "sequence": 100,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2fe9264ff4f648b",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

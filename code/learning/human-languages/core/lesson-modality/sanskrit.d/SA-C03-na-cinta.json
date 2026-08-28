@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-C03-na-cinta",
+    "language": "sanskrit",
+    "chapter": 3,
+    "sequence": 190,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5db6f7dffc43bfa4",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

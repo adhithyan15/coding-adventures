@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "BN-C14-shobuj",
+    "language": "bengali",
+    "chapter": 14,
+    "sequence": 1140,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25e82d4b8c4d5add",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

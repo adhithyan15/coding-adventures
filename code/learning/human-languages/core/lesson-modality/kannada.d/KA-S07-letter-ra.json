@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S07-letter-ra",
+    "language": "kannada",
+    "chapter": 12,
+    "sequence": 405,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f87d92f51b706e3b",
+    "detachableSegments": [
+      "Script you'll notice: ರ",
+      "Writing: ರ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "UR-C10-munh",
+    "language": "urdu",
+    "chapter": 10,
+    "sequence": 410,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:805c1d108f8b6eae",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

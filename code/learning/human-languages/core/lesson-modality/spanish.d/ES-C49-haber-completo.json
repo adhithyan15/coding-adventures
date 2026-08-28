@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C49-haber-completo",
+    "language": "spanish",
+    "chapter": 118,
+    "sequence": 1387,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:809ada5cc8f97083"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C299-campo",
+    "language": "spanish",
+    "chapter": 299,
+    "sequence": 4070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9825a5f697ba6d0c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C66-crop",
+    "language": "kannada",
+    "chapter": 66,
+    "sequence": 2170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8812cdc093d1861"
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W02-anusvara",
+    "language": "marathi",
+    "chapter": 2,
+    "sequence": 25,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fd644070796ff6a0",
+    "detachableSegments": [
+      "Script",
+      "Writing — guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

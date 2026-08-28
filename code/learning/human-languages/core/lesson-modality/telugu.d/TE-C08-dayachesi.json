@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TE-C08-dayachesi",
+    "language": "telugu",
+    "chapter": 8,
+    "sequence": 350,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5da90112221b1c54",
+    "detachableSegments": [
+      "Script you'll notice: Sound & structure point"
+    ]
+  },
+  "findings": []
+}

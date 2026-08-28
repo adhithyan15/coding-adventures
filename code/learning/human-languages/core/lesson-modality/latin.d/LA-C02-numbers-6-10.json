@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C02-numbers-6-10",
+    "language": "latin",
+    "chapter": 2,
+    "sequence": 170,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9a16b4e9ec856c5b"
+  },
+  "findings": []
+}

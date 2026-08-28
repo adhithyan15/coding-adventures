@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C65-hoy",
+    "language": "spanish",
+    "chapter": 252,
+    "sequence": 2497,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b2a4163c6a3a202"
+  },
+  "findings": []
+}

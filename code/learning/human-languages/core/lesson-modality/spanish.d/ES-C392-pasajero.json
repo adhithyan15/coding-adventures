@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C392-pasajero",
+    "language": "spanish",
+    "chapter": 392,
+    "sequence": 8430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89e75f425f1dc8d1"
+  },
+  "findings": []
+}

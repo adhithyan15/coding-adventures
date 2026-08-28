@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C61-sugar",
+    "language": "kannada",
+    "chapter": 61,
+    "sequence": 1930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf6d326bffda53c6"
+  },
+  "findings": []
+}

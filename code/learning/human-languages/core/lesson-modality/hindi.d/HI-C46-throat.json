@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C46-throat",
+    "language": "hindi",
+    "chapter": 46,
+    "sequence": 1440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1762c37db099a61a"
+  },
+  "findings": []
+}

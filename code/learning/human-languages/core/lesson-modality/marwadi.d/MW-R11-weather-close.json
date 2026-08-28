@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R11-weather-close",
+    "language": "marwadi",
+    "chapter": 16,
+    "sequence": 1170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c313db0c58058d4d"
+  },
+  "findings": []
+}

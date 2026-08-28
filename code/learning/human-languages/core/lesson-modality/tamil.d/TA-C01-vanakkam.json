@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C01-vanakkam",
+    "language": "tamil",
+    "chapter": 1,
+    "sequence": 10,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b55f10876077d66f",
+    "detachableSegments": [
+      "Writing — let your finger meet one shape"
+    ]
+  },
+  "findings": []
+}

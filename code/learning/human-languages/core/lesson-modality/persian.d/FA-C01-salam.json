@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "FA-C01-salam",
+    "language": "persian",
+    "chapter": 1,
+    "sequence": 10,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18883d2683f99439",
+    "detachableSegments": [
+      "Writing — follow one visible stroke"
+    ]
+  },
+  "findings": []
+}

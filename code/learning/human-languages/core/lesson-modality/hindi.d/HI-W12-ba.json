@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "HI-W12-ba",
+    "language": "hindi",
+    "chapter": 59,
+    "sequence": 2190,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4fbf6674eebb7208",
+    "detachableSegments": [
+      "Script"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

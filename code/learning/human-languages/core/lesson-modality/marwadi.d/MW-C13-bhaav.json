@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C13-bhaav",
+    "language": "marwadi",
+    "chapter": 18,
+    "sequence": 1370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ace0076d9333b71"
+  },
+  "findings": []
+}

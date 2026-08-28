@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "AR-W00-ayn-ya",
+    "language": "arabic",
+    "chapter": 1,
+    "sequence": 42,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c25ddf85b0b67fca",
+    "detachableSegments": [
+      "Script — observe ʿayn and yāʾ"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C23-hermano-hermana",
+    "language": "spanish",
+    "chapter": 140,
+    "sequence": 1670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0afeb97b27aa2f63"
+  },
+  "findings": []
+}

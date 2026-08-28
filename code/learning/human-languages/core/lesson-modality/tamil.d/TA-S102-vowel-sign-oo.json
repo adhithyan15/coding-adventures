@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S102-vowel-sign-oo",
+    "language": "tamil",
+    "chapter": 7,
+    "sequence": 461,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d9f6b2cd1c972f1b",
+    "detachableSegments": [
+      "Script you'll notice: ◌ோ",
+      "Writing: ◌ோ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

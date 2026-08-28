@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C280-queso",
+    "language": "spanish",
+    "chapter": 280,
+    "sequence": 3140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bdca3836e7d414d"
+  },
+  "findings": []
+}

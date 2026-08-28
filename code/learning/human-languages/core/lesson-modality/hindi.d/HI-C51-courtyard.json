@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C51-courtyard",
+    "language": "hindi",
+    "chapter": 51,
+    "sequence": 1670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40b83642d5558482"
+  },
+  "findings": []
+}

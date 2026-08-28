@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C64-now",
+    "language": "hindi",
+    "chapter": 64,
+    "sequence": 2410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9a47d8a1447b4b7"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C15-tempestas-pluit",
+    "language": "latin",
+    "chapter": 15,
+    "sequence": 350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2f719ae296e0d24"
+  },
+  "findings": []
+}

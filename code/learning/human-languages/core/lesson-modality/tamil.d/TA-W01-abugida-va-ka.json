@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-W01-abugida-va-ka",
+    "language": "tamil",
+    "chapter": 5,
+    "sequence": 320,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e5aa86b1748302a8",
+    "detachableSegments": [
+      "Script you'll notice: The vowel you get for free",
+      "Script you'll notice: வ — \"va\"",
+      "Script you'll notice: க — \"ka\""
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

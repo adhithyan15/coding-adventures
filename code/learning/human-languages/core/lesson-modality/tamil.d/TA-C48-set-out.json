@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C48-set-out",
+    "language": "tamil",
+    "chapter": 48,
+    "sequence": 1650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a9c98fa0ea6e4f7"
+  },
+  "findings": []
+}

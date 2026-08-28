@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C16-kollavarsham-maasangal",
+    "language": "malayalam",
+    "chapter": 16,
+    "sequence": 440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15853d09bdad6b8a"
+  },
+  "findings": []
+}

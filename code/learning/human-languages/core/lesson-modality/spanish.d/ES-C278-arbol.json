@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C278-arbol",
+    "language": "spanish",
+    "chapter": 278,
+    "sequence": 3080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5dab7a2876af5dd"
+  },
+  "findings": []
+}

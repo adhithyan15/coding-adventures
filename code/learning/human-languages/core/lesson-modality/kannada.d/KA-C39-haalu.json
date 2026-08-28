@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C39-haalu",
+    "language": "kannada",
+    "chapter": 39,
+    "sequence": 870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a87916642761ef7"
+  },
+  "findings": []
+}

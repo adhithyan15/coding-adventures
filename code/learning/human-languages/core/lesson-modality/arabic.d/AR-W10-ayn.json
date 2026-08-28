@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "AR-W10-ayn",
+    "language": "arabic",
+    "chapter": 4,
+    "sequence": 360,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4fe833a181bf8395",
+    "detachableSegments": [
+      "Script — Draw it",
+      "Script — A third dots-family",
+      "Script — The surprise: ʿayn → O",
+      "Script — Where you've heard it"
+    ]
+  },
+  "findings": []
+}

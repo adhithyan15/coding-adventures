@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C02-menya-zovut",
+    "language": "russian",
+    "chapter": 2,
+    "sequence": 100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c96788680c0dcbb9"
+  },
+  "findings": []
+}

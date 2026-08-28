@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C08-family-four",
+    "language": "marwadi",
+    "chapter": 10,
+    "sequence": 640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:266d48450b1eada2"
+  },
+  "findings": []
+}

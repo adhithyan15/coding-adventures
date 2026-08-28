@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C292-montana",
+    "language": "spanish",
+    "chapter": 292,
+    "sequence": 3760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30ac88d5a5f9e777"
+  },
+  "findings": []
+}

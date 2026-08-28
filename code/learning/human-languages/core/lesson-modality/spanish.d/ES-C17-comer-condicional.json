@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C17-comer-condicional",
+    "language": "spanish",
+    "chapter": 123,
+    "sequence": 1436,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49d624cad69a86b3"
+  },
+  "findings": []
+}

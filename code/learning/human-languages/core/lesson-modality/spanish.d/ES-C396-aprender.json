@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C396-aprender",
+    "language": "spanish",
+    "chapter": 396,
+    "sequence": 8600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d6c72a8c29c1031"
+  },
+  "findings": []
+}

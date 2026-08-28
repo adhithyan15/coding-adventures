@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C44-salt",
+    "language": "tamil",
+    "chapter": 44,
+    "sequence": 1440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10674da6cdaaadb5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C60-bird",
+    "language": "telugu",
+    "chapter": 60,
+    "sequence": 1870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:408df582366d324c"
+  },
+  "findings": []
+}

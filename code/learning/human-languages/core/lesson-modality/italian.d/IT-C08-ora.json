@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C08-ora",
+    "language": "italian",
+    "chapter": 8,
+    "sequence": 370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2eb36e64123bc560"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C37-kannu",
+    "language": "malayalam",
+    "chapter": 37,
+    "sequence": 840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2606586d13f68ed9"
+  },
+  "findings": []
+}

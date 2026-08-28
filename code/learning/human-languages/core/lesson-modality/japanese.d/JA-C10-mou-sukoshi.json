@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C10-mou-sukoshi",
+    "language": "japanese",
+    "chapter": 10,
+    "sequence": 650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2410108830f66ea"
+  },
+  "findings": []
+}

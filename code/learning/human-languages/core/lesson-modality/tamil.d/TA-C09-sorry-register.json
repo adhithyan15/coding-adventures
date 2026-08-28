@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-C09-sorry-register",
+    "language": "tamil",
+    "chapter": 9,
+    "sequence": 510,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7599bd315f961f82",
+    "detachableSegments": [
+      "Script you'll notice: Read ன்னி"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C72-weight",
+    "language": "telugu",
+    "chapter": 72,
+    "sequence": 2460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7491b0e24826e360"
+  },
+  "findings": []
+}

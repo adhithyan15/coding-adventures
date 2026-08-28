@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C66-harvest",
+    "language": "telugu",
+    "chapter": 66,
+    "sequence": 2170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6a2a94db3af3e1a"
+  },
+  "findings": []
+}

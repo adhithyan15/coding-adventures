@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W06-jian",
+    "language": "chinese",
+    "chapter": 6,
+    "sequence": 420,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:aaff03a235e7f3ce",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

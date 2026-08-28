@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C53-lip",
+    "language": "hindi",
+    "chapter": 53,
+    "sequence": 1790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d850b2554c017f5"
+  },
+  "findings": []
+}

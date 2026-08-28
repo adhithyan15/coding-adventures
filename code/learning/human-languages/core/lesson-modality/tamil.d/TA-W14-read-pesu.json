@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-W14-read-pesu",
+    "language": "tamil",
+    "chapter": 34,
+    "sequence": 995,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:20e9fcd487bbd15c",
+    "detachableSegments": [
+      "Script you'll notice: the ே sign",
+      "Script you'll notice: build the word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

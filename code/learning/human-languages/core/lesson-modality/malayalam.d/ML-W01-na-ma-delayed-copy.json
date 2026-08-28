@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-W01-na-ma-delayed-copy",
+    "language": "malayalam",
+    "chapter": 1,
+    "sequence": 13,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:856154e0f1a300db",
+    "detachableSegments": [
+      "Writing — retrieve after a delay"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

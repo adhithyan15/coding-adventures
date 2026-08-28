@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C54-hay",
+    "language": "spanish",
+    "chapter": 191,
+    "sequence": 2206,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:187dbc5ff8fab2f1"
+  },
+  "findings": []
+}

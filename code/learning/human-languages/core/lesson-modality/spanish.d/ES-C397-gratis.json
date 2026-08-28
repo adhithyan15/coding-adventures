@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C397-gratis",
+    "language": "spanish",
+    "chapter": 397,
+    "sequence": 8670,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7fddadce3b8c5fea"
+  },
+  "findings": []
+}

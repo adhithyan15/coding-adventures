@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "HI-W01-na-ma",
+    "language": "hindi",
+    "chapter": 1,
+    "sequence": 70,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4b729464aac5330f",
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C372-oscuro",
+    "language": "spanish",
+    "chapter": 372,
+    "sequence": 7540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acc2615dcbac9841"
+  },
+  "findings": []
+}

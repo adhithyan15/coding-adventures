@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C54-trunk",
+    "language": "malayalam",
+    "chapter": 54,
+    "sequence": 1610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c35f45508765fec9"
+  },
+  "findings": []
+}

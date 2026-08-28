@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "AR-C34-milh",
+    "language": "arabic",
+    "chapter": 34,
+    "sequence": 900,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:159b460cc4fe0068",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

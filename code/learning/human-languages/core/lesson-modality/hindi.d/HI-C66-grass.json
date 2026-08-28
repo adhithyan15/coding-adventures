@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C66-grass",
+    "language": "hindi",
+    "chapter": 66,
+    "sequence": 2540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7132903f181fc643"
+  },
+  "findings": []
+}

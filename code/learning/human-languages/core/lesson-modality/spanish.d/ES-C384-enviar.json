@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C384-enviar",
+    "language": "spanish",
+    "chapter": 384,
+    "sequence": 8090,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:70b679697ca2cb55"
+  },
+  "findings": []
+}

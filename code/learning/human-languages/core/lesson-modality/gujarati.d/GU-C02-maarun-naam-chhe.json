@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C02-maarun-naam-chhe",
+    "language": "gujarati",
+    "chapter": 8,
+    "sequence": 120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17989ec60295c9fb"
+  },
+  "findings": []
+}

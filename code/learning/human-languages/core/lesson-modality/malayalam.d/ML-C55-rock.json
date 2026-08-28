@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C55-rock",
+    "language": "malayalam",
+    "chapter": 55,
+    "sequence": 1650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a256a3e872ae03d5"
+  },
+  "findings": []
+}

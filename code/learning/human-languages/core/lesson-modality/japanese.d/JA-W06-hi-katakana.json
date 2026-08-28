@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "JA-W06-hi-katakana",
+    "language": "japanese",
+    "chapter": 6,
+    "sequence": 360,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:73a7c60d0b4e494b",
+    "detachableSegments": [
+      "Script — the last new shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

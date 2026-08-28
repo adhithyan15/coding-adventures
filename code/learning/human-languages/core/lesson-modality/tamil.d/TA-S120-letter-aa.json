@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S120-letter-aa",
+    "language": "tamil",
+    "chapter": 16,
+    "sequence": 611,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:afef584f473b9034",
+    "detachableSegments": [
+      "Script you'll notice: ஆ",
+      "Writing: ஆ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

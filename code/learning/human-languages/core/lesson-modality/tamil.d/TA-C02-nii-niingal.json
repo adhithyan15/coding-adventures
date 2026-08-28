@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C02-nii-niingal",
+    "language": "tamil",
+    "chapter": 2,
+    "sequence": 140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98e137452fb83731"
+  },
+  "findings": []
+}

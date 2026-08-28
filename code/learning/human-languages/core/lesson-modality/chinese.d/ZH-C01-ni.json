@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ZH-C01-ni",
+    "language": "chinese",
+    "chapter": 1,
+    "sequence": 20,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf90a02b9c63153c",
+    "detachableSegments": [
+      "Script — 你, and the person hiding on its left"
+    ]
+  },
+  "findings": []
+}

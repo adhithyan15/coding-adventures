@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C47-repaso-dobles",
+    "language": "spanish",
+    "chapter": 101,
+    "sequence": 1240,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ad5c7c5e2d90357e"
+  },
+  "findings": []
+}

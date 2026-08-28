@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C297-sarten",
+    "language": "spanish",
+    "chapter": 297,
+    "sequence": 3970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7315a54587c23640"
+  },
+  "findings": []
+}

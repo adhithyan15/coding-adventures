@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S04-vowel-sign-i",
+    "language": "kannada",
+    "chapter": 9,
+    "sequence": 375,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:143d5ccba6d8ebc7",
+    "detachableSegments": [
+      "Script you'll notice: ◌ಿ",
+      "Writing: ◌ಿ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

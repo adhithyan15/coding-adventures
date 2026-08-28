@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-W05-ya-and-my-name",
+    "language": "arabic",
+    "chapter": 2,
+    "sequence": 240,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9812c788ff106819"
+  },
+  "findings": []
+}

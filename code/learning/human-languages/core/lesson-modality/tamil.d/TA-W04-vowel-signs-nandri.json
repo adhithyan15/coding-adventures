@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-W04-vowel-signs-nandri",
+    "language": "tamil",
+    "chapter": 10,
+    "sequence": 530,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b1f78acfb57601f8",
+    "detachableSegments": [
+      "Script you'll notice: The two remaining n's",
+      "Script you'll notice: ற — \"ṟa\", the hard r"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C353-museo",
+    "language": "spanish",
+    "chapter": 353,
+    "sequence": 6610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:adf6bed4466ebd43"
+  },
+  "findings": []
+}

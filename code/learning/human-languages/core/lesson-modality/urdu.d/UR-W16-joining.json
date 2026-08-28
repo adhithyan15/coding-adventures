@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "UR-W16-joining",
+    "language": "urdu",
+    "chapter": 16,
+    "sequence": 770,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:448bab8a2e42ff08",
+    "detachableSegments": [
+      "Script — the running, falling line",
+      "Script — and the letter that refuses"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

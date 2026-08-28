@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C50-gratitude",
+    "language": "hindi",
+    "chapter": 50,
+    "sequence": 1600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f71e7f2a0f25de50"
+  },
+  "findings": []
+}

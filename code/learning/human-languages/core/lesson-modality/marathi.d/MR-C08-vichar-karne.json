@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MR-C08-vichar-karne",
+    "language": "marathi",
+    "chapter": 11,
+    "sequence": 440,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cf04a726c4cd135",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

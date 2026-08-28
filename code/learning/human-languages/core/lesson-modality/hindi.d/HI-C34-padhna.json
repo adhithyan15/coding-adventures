@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-C34-padhna",
+    "language": "hindi",
+    "chapter": 34,
+    "sequence": 880,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce0928485a5ce6ca",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

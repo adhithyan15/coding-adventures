@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C17-main",
+    "language": "french",
+    "chapter": 17,
+    "sequence": 630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5379491197d468f5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C11-laal-niila",
+    "language": "hindi",
+    "chapter": 11,
+    "sequence": 560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5eb9a51874c94ac6"
+  },
+  "findings": []
+}

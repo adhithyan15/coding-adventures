@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-W07-numbers-1-5-dictation",
+    "language": "tamil",
+    "chapter": 7,
+    "sequence": 426,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:642bb5a6b54c411f",
+    "detachableSegments": [
+      "Writing — dictation"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

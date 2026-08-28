@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C333-prisa",
+    "language": "spanish",
+    "chapter": 333,
+    "sequence": 5800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a90438690a37bc3"
+  },
+  "findings": []
+}

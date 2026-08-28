@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-W07-numbers-6-10-guided-copy",
+    "language": "tamil",
+    "chapter": 7,
+    "sequence": 444,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ff86b94031c65568",
+    "detachableSegments": [
+      "Writing — guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

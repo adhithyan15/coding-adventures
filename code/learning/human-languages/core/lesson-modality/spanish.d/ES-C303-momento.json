@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C303-momento",
+    "language": "spanish",
+    "chapter": 303,
+    "sequence": 4280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06ab85853527dff2"
+  },
+  "findings": []
+}

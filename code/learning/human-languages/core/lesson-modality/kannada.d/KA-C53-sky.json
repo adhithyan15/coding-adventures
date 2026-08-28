@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C53-sky",
+    "language": "kannada",
+    "chapter": 53,
+    "sequence": 1490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12e60d2002f010b8"
+  },
+  "findings": []
+}

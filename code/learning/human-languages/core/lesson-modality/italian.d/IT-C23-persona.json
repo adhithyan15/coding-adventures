@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C23-persona",
+    "language": "italian",
+    "chapter": 23,
+    "sequence": 810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5aa6ede049779ba4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "algorithm": "fnv1a64",
+  "features": {
+    "blockModality": true
+  },
+  "policy": {
+    "maxLinearisableTableColumns": 3
+  }
+}

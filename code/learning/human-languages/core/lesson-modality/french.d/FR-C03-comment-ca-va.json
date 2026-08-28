@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C03-comment-ca-va",
+    "language": "french",
+    "chapter": 3,
+    "sequence": 120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d88a8309eb66884b"
+  },
+  "findings": []
+}

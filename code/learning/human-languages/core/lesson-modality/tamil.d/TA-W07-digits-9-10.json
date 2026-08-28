@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-W07-digits-9-10",
+    "language": "tamil",
+    "chapter": 7,
+    "sequence": 442,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7341114bb88cc4fd",
+    "detachableSegments": [
+      "Script",
+      "Writing — observe and trace"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

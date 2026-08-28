@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C33-town",
+    "language": "sanskrit",
+    "chapter": 33,
+    "sequence": 1610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2725b6710a515899"
+  },
+  "findings": []
+}

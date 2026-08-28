@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "MW-W02-bha",
+    "language": "marwadi",
+    "chapter": 2,
+    "sequence": 90,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0eb4d76ceb7ed2fb",
+    "detachableSegments": [
+      "Script — one new sign and sound",
+      "Writing — observe, trace, copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

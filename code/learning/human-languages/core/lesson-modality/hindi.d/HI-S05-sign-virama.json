@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "HI-S05-sign-virama",
+    "language": "hindi",
+    "chapter": 10,
+    "sequence": 545,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:736b801e698f9537",
+    "detachableSegments": [
+      "Script you'll notice: ◌्",
+      "Writing: ◌् — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

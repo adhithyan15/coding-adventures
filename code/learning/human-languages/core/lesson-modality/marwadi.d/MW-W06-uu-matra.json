@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W06-uu-matra",
+    "language": "marwadi",
+    "chapter": 8,
+    "sequence": 440,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a10fcd4dd4440538",
+    "detachableSegments": [
+      "Script — one vowel mark"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

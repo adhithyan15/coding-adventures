@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C08-dayavittu",
+    "language": "kannada",
+    "chapter": 8,
+    "sequence": 360,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:914592b7c3ac64e7"
+  },
+  "findings": []
+}

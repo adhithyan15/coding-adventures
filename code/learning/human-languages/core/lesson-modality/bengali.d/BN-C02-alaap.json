@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "BN-C02-alaap",
+    "language": "bengali",
+    "chapter": 2,
+    "sequence": 100,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62a910da1c2e20d4",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

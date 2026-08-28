@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C62-veo-a-maria",
+    "language": "spanish",
+    "chapter": 239,
+    "sequence": 2430,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:073af979dcb16884"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W17-guo-observe",
+    "language": "chinese",
+    "chapter": 17,
+    "sequence": 1490,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9c4f16be87ddc982",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

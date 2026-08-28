@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "MR-C01-namaskar",
+    "language": "marathi",
+    "chapter": 1,
+    "sequence": 5,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c1d62e53fae6bab",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

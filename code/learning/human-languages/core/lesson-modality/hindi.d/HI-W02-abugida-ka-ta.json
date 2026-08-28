@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "HI-W02-abugida-ka-ta",
+    "language": "hindi",
+    "chapter": 1,
+    "sequence": 80,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:287f1a4c2a402674",
+    "delivery": "script"
+  },
+  "findings": []
+}

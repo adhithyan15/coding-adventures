@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C31-teens-latinos",
+    "language": "spanish",
+    "chapter": 149,
+    "sequence": 1830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9db40ee36e105ad"
+  },
+  "findings": []
+}

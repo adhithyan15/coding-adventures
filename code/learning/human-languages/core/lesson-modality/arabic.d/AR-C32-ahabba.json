@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "AR-C32-ahabba",
+    "language": "arabic",
+    "chapter": 32,
+    "sequence": 850,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2fe789512d75d1a",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C38-luego",
+    "language": "spanish",
+    "chapter": 167,
+    "sequence": 2050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd3a28828f875924"
+  },
+  "findings": []
+}

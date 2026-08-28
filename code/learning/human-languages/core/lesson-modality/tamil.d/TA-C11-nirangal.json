@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C11-nirangal",
+    "language": "tamil",
+    "chapter": 11,
+    "sequence": 540,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4b1ab1ec3abd07dd"
+  },
+  "findings": []
+}

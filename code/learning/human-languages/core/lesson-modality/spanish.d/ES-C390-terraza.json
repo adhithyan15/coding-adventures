@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C390-terraza",
+    "language": "spanish",
+    "chapter": 390,
+    "sequence": 8300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0092c28235802251"
+  },
+  "findings": []
+}

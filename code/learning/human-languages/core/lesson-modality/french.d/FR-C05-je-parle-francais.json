@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C05-je-parle-francais",
+    "language": "french",
+    "chapter": 5,
+    "sequence": 195,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2965723fcb81df81"
+  },
+  "findings": []
+}

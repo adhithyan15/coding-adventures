@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-C05-vasami",
+    "language": "sanskrit",
+    "chapter": 5,
+    "sequence": 280,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cde751a56ff7912e",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

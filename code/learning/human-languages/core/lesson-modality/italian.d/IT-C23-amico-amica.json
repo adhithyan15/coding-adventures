@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C23-amico-amica",
+    "language": "italian",
+    "chapter": 23,
+    "sequence": 780,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fb0741c78ac8d583"
+  },
+  "findings": []
+}

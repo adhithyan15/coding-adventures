@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C46-hair",
+    "language": "hindi",
+    "chapter": 46,
+    "sequence": 1400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c7e5ff2373c0952"
+  },
+  "findings": []
+}

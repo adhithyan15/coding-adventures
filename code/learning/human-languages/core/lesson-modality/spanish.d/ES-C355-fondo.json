@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C355-fondo",
+    "language": "spanish",
+    "chapter": 355,
+    "sequence": 6710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:369c8fcfd25c7064"
+  },
+  "findings": []
+}

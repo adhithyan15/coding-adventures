@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C15-big",
+    "language": "sanskrit",
+    "chapter": 15,
+    "sequence": 670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37545f522fe7ae4c"
+  },
+  "findings": []
+}

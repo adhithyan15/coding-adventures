@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C27-enough",
+    "language": "sanskrit",
+    "chapter": 27,
+    "sequence": 1300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc76d72757c3a020"
+  },
+  "findings": []
+}
