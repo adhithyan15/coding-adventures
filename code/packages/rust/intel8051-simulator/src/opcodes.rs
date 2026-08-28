@@ -256,7 +256,7 @@ pub const DJNZ_RN_BASE: u8 = 0xD8;
 /// `00001`.  So `opcode & 0x1F == AJMP_PATTERN`, not a simple base.
 pub const AJMP_PATTERN: u8 = 0x01;
 
-/// `ACALL`'s opcode uses the same addr[10:8]-in-high-bits trick as
+/// `ACALL`'s opcode uses the same `addr[10:8]`-in-high-bits trick as
 /// `AJMP`, with fixed low-5-bit pattern `10010`.
 pub const ACALL_PATTERN: u8 = 0x11;
 
