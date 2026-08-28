@@ -1,5 +1,18 @@
 # Changelog — coding-adventures-z80-gatelevel
 
+## [Unreleased]
+
+### Changed
+
+- Replaced host-backed memory, register banks, index registers, interrupt
+  state, halt state, and port latches with an exact 528,597-DFF topology.
+- Adopted the functional simulator's shared typed complete state, traces,
+  results, and errors; loads and steps are atomic and runs are transactional.
+- Completed RLD/RRD and all eight ED block-I/O operations, plus checked
+  maskable interrupt modes 0/1/2 and NMI delivery.
+- Added a 1,160-vector full-state Python-oracle differential spanning every
+  defined base, CB, ED, DD, FD, DDCB, and FDCB encoding.
+
 ## [0.1.0] — 2026-06-15
 
 ### Added
