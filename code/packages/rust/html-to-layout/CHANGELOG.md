@@ -4,6 +4,9 @@
 
 ### Added
 
+- Add element style declarations, inherited custom properties and `var()`
+  resolution, edge shorthands/longhands, attribute and structural selectors,
+  viewport-aware media evaluation, and transport-neutral `@import` metadata.
 - Add grammar-validated author stylesheets, selector specificity/source-order
   cascade, inherited computed styles, media-independent style contexts, and a
   reusable layout boundary for display, color, backgrounds, typography,

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Drain completion-discovered stylesheet imports through the same shared
+  lifecycle used by the Qt, Flutter, and Compose host family.
 - Expose the shared document-first navigation and incremental image completion
   seam for the Qt, Flutter, and Compose host family.
 - Serialize shared View Source auxiliary-document effects for Qt, Flutter, and

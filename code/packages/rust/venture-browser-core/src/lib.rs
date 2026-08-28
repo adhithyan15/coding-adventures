@@ -11,7 +11,7 @@ pub use browser_bookmarks::{
 };
 pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
 use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTree};
-use html_to_layout::{HtmlAuthorStylesheet, HtmlStyleContext, HtmlTheme};
+use html_to_layout::{html_media_query_applies, HtmlAuthorStylesheet, HtmlStyleContext, HtmlTheme};
 use html_to_paint::{
     decode_image_resource, hit_test_link, html_render_tree_to_paint_with_style_context,
     resolve_scene_image_resources_incrementally, scene_image_resource_uris, FetchedImage,
@@ -321,8 +321,11 @@ pub enum BrowserImageResourceState {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct BrowserStylesheetResource {
     pub url: Option<String>,
+    pub base_url: String,
     pub media: Option<String>,
     pub render_blocking: bool,
+    pub imported_by: Option<usize>,
+    pub imports: Vec<usize>,
     pub state: BrowserStylesheetResourceState,
 }
 
@@ -352,6 +355,9 @@ pub enum BrowserStylesheetError {
         url: Option<String>,
         message: String,
     },
+    ImportCycle {
+        url: String,
+    },
 }
 
 impl fmt::Display for BrowserStylesheetError {
@@ -373,6 +379,9 @@ impl fmt::Display for BrowserStylesheetError {
                 Some(url) => write!(formatter, "failed to parse stylesheet {url}: {message}"),
                 None => write!(formatter, "failed to parse inline stylesheet: {message}"),
             },
+            Self::ImportCycle { url } => {
+                write!(formatter, "stylesheet import cycle stopped at {url}")
+            }
         }
     }
 }
@@ -446,6 +455,8 @@ pub struct BrowserSubresourceUpdate {
     pub disposition: BrowserSubresourceDisposition,
     pub repaint_required: bool,
     pub pending_count: usize,
+    /// Newly discovered effects, such as a validated stylesheet's imports.
+    pub requests: Vec<BrowserSubresourceRequest>,
 }
 
 /// Effects produced when a navigation commits its document before images.
@@ -1092,18 +1103,13 @@ impl BrowserSession {
             return Vec::new();
         };
         let page = viewport.page();
-        let mut requests = page
-            .stylesheet_resources
-            .iter()
-            .enumerate()
-            .filter(|(_, resource)| {
-                matches!(resource.state, BrowserStylesheetResourceState::Pending)
-            })
-            .map(|(ordinal, resource)| BrowserSubresourceRequest {
+        let mut requests = pending_stylesheet_ordinals(&page.stylesheet_resources)
+            .into_iter()
+            .map(|ordinal| BrowserSubresourceRequest {
                 navigation_id: self.navigation_id,
                 kind: BrowserSubresourceKind::Stylesheet,
                 ordinal,
-                url: resource
+                url: page.stylesheet_resources[ordinal]
                     .url
                     .clone()
                     .expect("pending stylesheet must have a URL"),
@@ -1268,11 +1274,13 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        let pending_before = self.pending_subresource_requests();
         if completion.request.navigation_id != self.navigation_id {
             return BrowserSubresourceUpdate {
                 disposition: BrowserSubresourceDisposition::IgnoredStaleNavigation,
                 repaint_required: false,
                 pending_count: self.pending_subresource_requests().len(),
+                requests: Vec::new(),
             };
         }
         let Some(current) = self
@@ -1284,6 +1292,7 @@ impl BrowserSession {
                 disposition: BrowserSubresourceDisposition::IgnoredStaleNavigation,
                 repaint_required: false,
                 pending_count: 0,
+                requests: Vec::new(),
             };
         };
         let mut updated = current;
@@ -1320,24 +1329,22 @@ impl BrowserSession {
                 {
                     return self.ignored_duplicate_update();
                 }
-                updated.stylesheet_resources[completion.request.ordinal].state =
-                    match completion.result {
-                        Ok(BrowserSubresourcePayload::Stylesheet(source)) => {
-                            match HtmlAuthorStylesheet::parse(&source) {
-                                Ok(_) => BrowserStylesheetResourceState::Ready(source),
-                                Err(error) => BrowserStylesheetResourceState::Failed(
-                                    BrowserStylesheetError::Parse {
-                                        url: Some(completion.request.url.clone()),
-                                        message: error.to_string(),
-                                    },
-                                ),
-                            }
-                        }
-                        Err(BrowserSubresourceError::Stylesheet(error)) => {
-                            BrowserStylesheetResourceState::Failed(error)
-                        }
-                        _ => return self.ignored_duplicate_update(),
-                    };
+                match completion.result {
+                    Ok(BrowserSubresourcePayload::Stylesheet(source)) => {
+                        complete_stylesheet_source(
+                            &mut updated.stylesheet_resources,
+                            completion.request.ordinal,
+                            source,
+                            pipeline.viewport.width,
+                            pipeline.viewport.height,
+                        );
+                    }
+                    Err(BrowserSubresourceError::Stylesheet(error)) => {
+                        updated.stylesheet_resources[completion.request.ordinal].state =
+                            BrowserStylesheetResourceState::Failed(error);
+                    }
+                    _ => return self.ignored_duplicate_update(),
+                }
                 active_stylesheet_source_count(&updated.stylesheet_resources) != before
             }
         };
@@ -1345,10 +1352,17 @@ impl BrowserSession {
         if let Some(viewport) = self.viewport.as_mut() {
             viewport.reflow_page(updated, self.viewport_height);
         }
+        let pending_after = self.pending_subresource_requests();
+        let requests = pending_after
+            .iter()
+            .filter(|request| !pending_before.contains(request))
+            .cloned()
+            .collect();
         BrowserSubresourceUpdate {
             disposition: BrowserSubresourceDisposition::Applied,
             repaint_required,
-            pending_count: self.pending_subresource_requests().len(),
+            pending_count: pending_after.len(),
+            requests,
         }
     }
 
@@ -1357,6 +1371,7 @@ impl BrowserSession {
             disposition: BrowserSubresourceDisposition::IgnoredDuplicate,
             repaint_required: false,
             pending_count: self.pending_subresource_requests().len(),
+            requests: Vec::new(),
         }
     }
 
@@ -1381,6 +1396,35 @@ impl BrowserSession {
             return Ok(None);
         };
         self.execute(BrowserNavigation::Navigate(url), pipeline, fetcher)
+    }
+}
+
+fn pending_stylesheet_ordinals(resources: &[BrowserStylesheetResource]) -> Vec<usize> {
+    let mut pending = Vec::new();
+    for index in resources
+        .iter()
+        .enumerate()
+        .filter_map(|(index, resource)| resource.imported_by.is_none().then_some(index))
+    {
+        collect_pending_stylesheet_ordinals(resources, index, &mut pending);
+    }
+    pending
+}
+
+fn collect_pending_stylesheet_ordinals(
+    resources: &[BrowserStylesheetResource],
+    index: usize,
+    pending: &mut Vec<usize>,
+) {
+    let Some(resource) = resources.get(index) else {
+        return;
+    };
+    if matches!(resource.state, BrowserStylesheetResourceState::Pending) {
+        pending.push(index);
+        return;
+    }
+    for imported in &resource.imports {
+        collect_pending_stylesheet_ordinals(resources, *imported, pending);
     }
 }
 
@@ -1498,7 +1542,12 @@ where
         let document = BrowserDocument::from_document(&parsed);
         let render_tree =
             BrowserRenderTree::from_document_with_document_url(&parsed, &auxiliary.address);
-        let stylesheet_resources = stylesheet_resources_for_document(&document, &auxiliary.address);
+        let stylesheet_resources = stylesheet_resources_for_document(
+            &document,
+            &auxiliary.address,
+            self.viewport.width,
+            self.viewport.height,
+        );
         let (paint, image_failures, stylesheet_failures) = self.compose(
             &render_tree,
             &[],
@@ -1535,22 +1584,31 @@ where
         F: BrowserResourceFetcher,
     {
         let mut page = self.load_pending_with_visited(requested_url, fetcher, visited_links)?;
-        for resource in &mut page.stylesheet_resources {
-            if matches!(resource.state, BrowserStylesheetResourceState::Pending) {
-                let url = resource.url.as_deref().expect("pending stylesheet URL");
-                resource.state = match fetch_browser_stylesheet(url, fetcher) {
-                    Ok(source) => match HtmlAuthorStylesheet::parse(&source) {
-                        Ok(_) => BrowserStylesheetResourceState::Ready(source),
-                        Err(error) => {
-                            BrowserStylesheetResourceState::Failed(BrowserStylesheetError::Parse {
-                                url: Some(url.to_string()),
-                                message: error.to_string(),
-                            })
-                        }
-                    },
-                    Err(error) => BrowserStylesheetResourceState::Failed(error),
-                };
+        let mut stylesheet_index = 0;
+        while stylesheet_index < page.stylesheet_resources.len() {
+            if matches!(
+                page.stylesheet_resources[stylesheet_index].state,
+                BrowserStylesheetResourceState::Pending
+            ) {
+                let url = page.stylesheet_resources[stylesheet_index]
+                    .url
+                    .clone()
+                    .expect("pending stylesheet URL");
+                match fetch_browser_stylesheet(&url, fetcher) {
+                    Ok(source) => complete_stylesheet_source(
+                        &mut page.stylesheet_resources,
+                        stylesheet_index,
+                        source,
+                        self.viewport.width,
+                        self.viewport.height,
+                    ),
+                    Err(error) => {
+                        page.stylesheet_resources[stylesheet_index].state =
+                            BrowserStylesheetResourceState::Failed(error);
+                    }
+                }
             }
+            stylesheet_index += 1;
         }
         for resource in &mut page.image_resources {
             resource.state = match fetch_and_decode_browser_image(&resource.url, fetcher) {
@@ -1589,14 +1647,22 @@ where
             message: error.to_string(),
         })?;
         let document = BrowserDocument::from_document(&parsed);
-        let stylesheet_resources =
-            stylesheet_resources_for_document(&document, &response.final_url);
+        let stylesheet_resources = stylesheet_resources_for_document(
+            &document,
+            &response.final_url,
+            self.viewport.width,
+            self.viewport.height,
+        );
         let render_tree =
             BrowserRenderTree::from_document_with_document_url(&parsed, &response.final_url);
         let mut prospective_visited = visited_links.clone();
         let _ = prospective_visited.record(&response.final_url);
-        let (style_context, stylesheet_failures) =
-            style_context_for_resources(self.theme, &stylesheet_resources);
+        let (style_context, stylesheet_failures) = style_context_for_resources(
+            self.theme,
+            &stylesheet_resources,
+            self.viewport.width,
+            self.viewport.height,
+        );
         let mut paint = html_render_tree_to_paint_with_style_context(
             &render_tree,
             &style_context,
@@ -1687,8 +1753,12 @@ where
         Vec<HtmlImageResourceError>,
         Vec<BrowserStylesheetError>,
     ) {
-        let (style_context, stylesheet_failures) =
-            style_context_for_resources(self.theme, stylesheet_resources);
+        let (style_context, stylesheet_failures) = style_context_for_resources(
+            self.theme,
+            stylesheet_resources,
+            self.viewport.width,
+            self.viewport.height,
+        );
         let mut paint = html_render_tree_to_paint_with_style_context(
             render_tree,
             &style_context,
@@ -1711,14 +1781,20 @@ where
 fn stylesheet_resources_for_document(
     document: &BrowserDocument,
     document_url: &str,
+    viewport_width: f64,
+    viewport_height: f64,
 ) -> Vec<BrowserStylesheetResource> {
-    document
+    let mut resources = document
         .stylesheets
         .iter()
         .map(|stylesheet| {
             let active = !stylesheet.disabled
                 && !stylesheet.alternate
-                && stylesheet_media_applies(stylesheet.media.as_deref());
+                && html_media_query_applies(
+                    stylesheet.media.as_deref(),
+                    viewport_width,
+                    viewport_height,
+                );
             let authored_url = stylesheet
                 .resolved_href
                 .as_deref()
@@ -1742,13 +1818,33 @@ fn stylesheet_resources_for_document(
                 BrowserStylesheetResourceState::Inactive
             };
             BrowserStylesheetResource {
+                base_url: url.clone().unwrap_or_else(|| document_url.to_string()),
                 url,
                 media: stylesheet.media.clone(),
                 render_blocking: active && stylesheet.href.is_some(),
+                imported_by: None,
+                imports: Vec::new(),
                 state,
             }
         })
-        .collect()
+        .collect::<Vec<_>>();
+    let root_count = resources.len();
+    for index in 0..root_count {
+        let source = match &resources[index].state {
+            BrowserStylesheetResourceState::Ready(source) => Some(source.clone()),
+            _ => None,
+        };
+        if let Some(source) = source {
+            complete_stylesheet_source(
+                &mut resources,
+                index,
+                source,
+                viewport_width,
+                viewport_height,
+            );
+        }
+    }
+    resources
 }
 
 fn resolve_subresource_url(document_url: &str, resource_url: &str) -> Option<String> {
@@ -1759,47 +1855,188 @@ fn resolve_subresource_url(document_url: &str, resource_url: &str) -> Option<Str
         .or_else(|| resource_url.contains(':').then(|| resource_url.to_string()))
 }
 
-fn stylesheet_media_applies(media: Option<&str>) -> bool {
-    let Some(media) = media.map(str::trim).filter(|media| !media.is_empty()) else {
-        return true;
+fn complete_stylesheet_source(
+    resources: &mut Vec<BrowserStylesheetResource>,
+    index: usize,
+    source: String,
+    viewport_width: f64,
+    viewport_height: f64,
+) {
+    let parsed = match HtmlAuthorStylesheet::parse(&source) {
+        Ok(parsed) => parsed,
+        Err(error) => {
+            let url = resources
+                .get(index)
+                .and_then(|resource| resource.url.clone());
+            if let Some(resource) = resources.get_mut(index) {
+                resource.state =
+                    BrowserStylesheetResourceState::Failed(BrowserStylesheetError::Parse {
+                        url,
+                        message: error.to_string(),
+                    });
+            }
+            return;
+        }
     };
-    media.split(',').any(|query| {
-        let query = query.trim().to_ascii_lowercase();
-        (query == "all" || query == "screen" || query.starts_with("screen "))
-            && !query.starts_with("not ")
-    })
+    let Some(parent_url) = resources
+        .get(index)
+        .map(|resource| resource.base_url.clone())
+    else {
+        return;
+    };
+    if let Some(resource) = resources.get_mut(index) {
+        resource.state = BrowserStylesheetResourceState::Ready(source);
+    }
+    let mut imported_ordinals = Vec::new();
+    for import in parsed.imports() {
+        let resolved = resolve_subresource_url(&parent_url, &import.href);
+        let active =
+            html_media_query_applies(import.media.as_deref(), viewport_width, viewport_height);
+        let state = if !active {
+            BrowserStylesheetResourceState::Inactive
+        } else if let Some(url) = resolved.as_deref() {
+            if stylesheet_import_would_cycle(resources, index, url) {
+                BrowserStylesheetResourceState::Failed(BrowserStylesheetError::ImportCycle {
+                    url: url.to_string(),
+                })
+            } else {
+                BrowserStylesheetResourceState::Pending
+            }
+        } else {
+            BrowserStylesheetResourceState::Failed(BrowserStylesheetError::Fetch {
+                url: import.href.clone(),
+                message: "could not resolve imported stylesheet URL".into(),
+            })
+        };
+        let ordinal = resources.len();
+        resources.push(BrowserStylesheetResource {
+            base_url: resolved.clone().unwrap_or_else(|| parent_url.clone()),
+            url: resolved,
+            media: import.media.clone(),
+            render_blocking: active,
+            imported_by: Some(index),
+            imports: Vec::new(),
+            state,
+        });
+        imported_ordinals.push(ordinal);
+    }
+    if let Some(resource) = resources.get_mut(index) {
+        resource.imports = imported_ordinals;
+    }
+}
+
+fn stylesheet_import_would_cycle(
+    resources: &[BrowserStylesheetResource],
+    parent: usize,
+    imported_url: &str,
+) -> bool {
+    let mut cursor = Some(parent);
+    while let Some(index) = cursor {
+        let Some(resource) = resources.get(index) else {
+            break;
+        };
+        if resource.url.as_deref() == Some(imported_url) {
+            return true;
+        }
+        cursor = resource.imported_by;
+    }
+    false
 }
 
 fn active_stylesheet_source_count(resources: &[BrowserStylesheetResource]) -> usize {
-    resources
+    let mut count = 0;
+    for index in resources
         .iter()
-        .take_while(|resource| !matches!(resource.state, BrowserStylesheetResourceState::Pending))
-        .count()
+        .enumerate()
+        .filter_map(|(index, resource)| resource.imported_by.is_none().then_some(index))
+    {
+        if !count_active_stylesheets(resources, index, &mut count) {
+            break;
+        }
+    }
+    count
+}
+
+fn count_active_stylesheets(
+    resources: &[BrowserStylesheetResource],
+    index: usize,
+    count: &mut usize,
+) -> bool {
+    let Some(resource) = resources.get(index) else {
+        return true;
+    };
+    if matches!(resource.state, BrowserStylesheetResourceState::Pending) {
+        return false;
+    }
+    for imported in &resource.imports {
+        if !count_active_stylesheets(resources, *imported, count) {
+            return false;
+        }
+    }
+    if matches!(resource.state, BrowserStylesheetResourceState::Ready(_)) {
+        *count += 1;
+    }
+    true
 }
 
 fn style_context_for_resources(
     theme: &HtmlTheme,
     resources: &[BrowserStylesheetResource],
+    viewport_width: f64,
+    viewport_height: f64,
 ) -> (HtmlStyleContext, Vec<BrowserStylesheetError>) {
-    let mut context = HtmlStyleContext::new(theme.clone());
+    let mut context =
+        HtmlStyleContext::new(theme.clone()).with_viewport(viewport_width, viewport_height);
     let mut failures = Vec::new();
-    for resource in resources {
-        match &resource.state {
-            BrowserStylesheetResourceState::Ready(source) => {
-                match HtmlAuthorStylesheet::parse(source) {
-                    Ok(stylesheet) => context.author_stylesheets.push(stylesheet),
-                    Err(error) => failures.push(BrowserStylesheetError::Parse {
-                        url: resource.url.clone(),
-                        message: error.to_string(),
-                    }),
-                }
-            }
-            BrowserStylesheetResourceState::Failed(error) => failures.push(error.clone()),
-            BrowserStylesheetResourceState::Pending => break,
-            BrowserStylesheetResourceState::Inactive => {}
+    for index in resources
+        .iter()
+        .enumerate()
+        .filter_map(|(index, resource)| resource.imported_by.is_none().then_some(index))
+    {
+        if !append_stylesheet_context(
+            resources,
+            index,
+            &mut context.author_stylesheets,
+            &mut failures,
+        ) {
+            break;
         }
     }
     (context, failures)
+}
+
+fn append_stylesheet_context(
+    resources: &[BrowserStylesheetResource],
+    index: usize,
+    stylesheets: &mut Vec<HtmlAuthorStylesheet>,
+    failures: &mut Vec<BrowserStylesheetError>,
+) -> bool {
+    let Some(resource) = resources.get(index) else {
+        return true;
+    };
+    if matches!(resource.state, BrowserStylesheetResourceState::Pending) {
+        return false;
+    }
+    for imported in &resource.imports {
+        if !append_stylesheet_context(resources, *imported, stylesheets, failures) {
+            return false;
+        }
+    }
+    match &resource.state {
+        BrowserStylesheetResourceState::Ready(source) => {
+            match HtmlAuthorStylesheet::parse(source) {
+                Ok(stylesheet) => stylesheets.push(stylesheet),
+                Err(error) => failures.push(BrowserStylesheetError::Parse {
+                    url: resource.url.clone(),
+                    message: error.to_string(),
+                }),
+            }
+        }
+        BrowserStylesheetResourceState::Failed(error) => failures.push(error.clone()),
+        BrowserStylesheetResourceState::Pending => return false,
+        BrowserStylesheetResourceState::Inactive => {}
+    }
+    true
 }
 
 fn image_resource_state(resources: &[BrowserImageResource], url: &str) -> HtmlImageResource {
@@ -2986,6 +3223,129 @@ mod tests {
         assert!(page.stylesheet_failures.is_empty());
         assert!(matches!(
             page.stylesheet_resources[3].state,
+            BrowserStylesheetResourceState::Inactive
+        ));
+    }
+
+    #[test]
+    fn imported_stylesheets_use_stable_requests_depth_first_cascade_and_cycle_diagnostics() {
+        let fetcher = |url: &str| {
+            assert_eq!(url, "http://example.test/page.html");
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<link rel='stylesheet' href='main.css'>\
+                  <style>@import 'inline.css';</style><p>Imported</p>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(480.0, 240.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/page.html", 240.0);
+        let initial = session
+            .begin_execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(
+            initial
+                .requests
+                .iter()
+                .map(|request| request.url.as_str())
+                .collect::<Vec<_>>(),
+            vec![
+                "http://example.test/main.css",
+                "http://example.test/inline.css"
+            ]
+        );
+
+        let inline = initial.requests[1].resolve(&|url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/css".into()),
+                b"p { color: green; }".to_vec(),
+            ))
+        });
+        assert!(
+            !session
+                .complete_subresource(inline, &pipeline)
+                .repaint_required
+        );
+
+        let main = initial.requests[0].resolve(&|url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/css".into()),
+                b"@import 'base.css'; p { color: blue; }".to_vec(),
+            ))
+        });
+        let main_update = session.complete_subresource(main, &pipeline);
+        assert!(!main_update.repaint_required);
+        let pending = session.pending_subresource_requests();
+        assert_eq!(pending.len(), 1);
+        assert_eq!(pending[0].url, "http://example.test/base.css");
+
+        let base = pending[0].resolve(&|url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/css".into()),
+                b"@import 'main.css'; p { color: red; }".to_vec(),
+            ))
+        });
+        let base_update = session.complete_subresource(base, &pipeline);
+        assert!(base_update.repaint_required);
+        assert_eq!(base_update.pending_count, 0);
+        let page = session.viewport().unwrap().page();
+        assert_eq!(
+            positioned_text_color(&page.paint.positioned, "Imported"),
+            Some(layout_ir::rgb(0, 128, 0)),
+            "imports precede their parent and later DOM sheets still win"
+        );
+        assert!(page
+            .stylesheet_failures
+            .iter()
+            .any(|error| matches!(error, BrowserStylesheetError::ImportCycle { url } if url == "http://example.test/main.css")));
+    }
+
+    #[test]
+    fn link_media_queries_share_the_pipeline_viewport() {
+        let fetcher = |url: &str| {
+            assert_eq!(url, "http://example.test/page.html");
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<link rel='stylesheet' href='narrow.css' media='screen and (max-width: 500px)'>\
+                  <link rel='stylesheet' href='wide.css' media='screen and (min-width: 501px)'><p>Viewport</p>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(480.0, 240.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/page.html", 240.0);
+        let update = session
+            .begin_execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(update.requests.len(), 1);
+        assert_eq!(update.requests[0].url, "http://example.test/narrow.css");
+        assert!(matches!(
+            session.viewport().unwrap().page().stylesheet_resources[1].state,
             BrowserStylesheetResourceState::Inactive
         ));
     }

@@ -35,6 +35,8 @@ struct ExpectedContentNode {
     #[serde(default)]
     classes: Vec<String>,
     #[serde(default)]
+    style: Option<String>,
+    #[serde(default)]
     title: Option<String>,
     #[serde(default)]
     lang: Option<String>,
@@ -414,6 +416,7 @@ impl ExpectedContentNode {
             name: self.name,
             id: self.id,
             classes: self.classes,
+            style: self.style,
             title: self.title,
             lang: self.lang,
             dir: self.dir,

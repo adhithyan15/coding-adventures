@@ -25,6 +25,7 @@ pub const FIXTURE_PATH: &str = "/visual.html";
 pub const IMAGE_PATH: &str = "/checker.gif";
 pub const MISSING_IMAGE_PATH: &str = "/missing.gif";
 pub const STYLESHEET_PATH: &str = "/fixture.css";
+pub const IMPORTED_STYLESHEET_PATH: &str = "/fixture-base.css";
 pub const INTERNATIONAL_FIXTURE_PATH: &str = "/international.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
@@ -34,8 +35,8 @@ pub const GPU_LAYER_FIXTURE_HEIGHT: u32 = 8;
 pub const FIXTURE_HTML: &str = r#"<!doctype html>
 <html>
 <head><title>Venture visual fixture</title><link rel="stylesheet" href="fixture.css"></head>
-<body>
-  <h1 id="masthead">Venture Visual Atlas</h1>
+<body style="--tail-tone: green">
+  <h1 id="masthead" title="venture visual atlas">Venture Visual Atlas</h1>
   <p id="mixed-inline">A compact page with <b>bold type</b>, <i>italic type</i>, and a <a href="next.html">long wrapped link that crosses more than one visual line</a>.</p>
   <p id="image-row">Decoded image <img id="decoded-image" src="checker.gif" alt="checker" width="32" height="24"> and fallback <img id="fallback-image" src="missing.gif" alt="missing fixture" width="54" height="24"> stay inline.</p>
   <pre id="preformatted">GET /visual.html HTTP/1.0
@@ -44,13 +45,19 @@ Host: venture.test
 preformatted columns stay aligned</pre>
   <p id="scroll-anchor"><a href="chapter.html">A wrapped chapter link remains hittable after scrolling through the viewport</a>.</p>
   <p>Venture composes parsing, layout, paint, images, and native presentation from reusable components.</p>
-  <p id="tail">End of the deterministic visual fixture.</p>
+  <p id="tail" style="color: var(--tail-tone); padding: 1px 2px">End of the deterministic visual fixture.</p>
 </body>
 </html>"#;
 
-pub const FIXTURE_CSS: &str = r#"#masthead { color: maroon; }
-#tail { color: green; }
+pub const FIXTURE_CSS: &str = r#"@import "fixture-base.css" screen and (min-width: 200px);
+#masthead[title~="visual"]:first-child { color: var(--masthead-tone); margin: 0 0 8px; }
+@media screen and (max-width: 300px) { #tail { margin-left: 3px; } }
 a:link { text-decoration: underline; }"#;
+
+pub const IMPORTED_FIXTURE_CSS: &str = r#"body {
+  --masthead-tone: maroon;
+  --tail-tone: green;
+}"#;
 
 pub const INTERNATIONAL_FIXTURE_HTML: &str = r#"<!doctype html>
 <html lang="en">
@@ -455,6 +462,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let page_url = format!("{origin}{FIXTURE_PATH}");
     let image_url = format!("{origin}{IMAGE_PATH}");
     let stylesheet_url = format!("{origin}{STYLESHEET_PATH}");
+    let imported_stylesheet_url = format!("{origin}{IMPORTED_STYLESHEET_PATH}");
     let international_url = format!("{origin}{INTERNATIONAL_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
@@ -474,6 +482,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/css; charset=utf-8".into()),
             FIXTURE_CSS.as_bytes().to_vec(),
+        )),
+        url if url == imported_stylesheet_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/css; charset=utf-8".into()),
+            IMPORTED_FIXTURE_CSS.as_bytes().to_vec(),
         )),
         url if url == international_url => Ok(BrowserFetchResponse::new(
             url,
@@ -556,9 +570,12 @@ pub fn capture_subresource_lifecycle(origin: &str) -> Result<SubresourceLifecycl
             .viewport_scene(),
     )?;
     let mut completions = Vec::new();
-    for request in navigation.requests.iter().rev() {
+    let mut requests = navigation.requests.clone();
+    while let Some(request) = requests.pop() {
         let completion = request.resolve(&|url: &str| fixture_response(origin, url));
-        completions.push(session.complete_subresource(completion, &pipeline));
+        let update = session.complete_subresource(completion, &pipeline);
+        requests.extend(update.requests.iter().rev().cloned());
+        completions.push(update);
     }
     let page = session
         .viewport()
@@ -750,25 +767,25 @@ fn same_rect(left: &RectFixture, right: &RectFixture) -> bool {
         && approximately(left.height, right.height)
 }
 
-const BASELINE_CONTENT_HEIGHT: f64 = 539.2;
+const BASELINE_CONTENT_HEIGHT: f64 = 531.2;
 const BASELINE_ELEMENTS: [(&str, RectFixture); 8] = [
-    ("masthead", rect(16.0, 22.0, 208.0, 57.6)),
-    ("mixed-inline", rect(16.0, 85.6, 208.0, 78.4)),
-    ("image-row", rect(16.0, 170.0, 208.0, 64.8)),
-    ("decoded-image", rect(107.0, 170.0, 32.0, 24.0)),
-    ("fallback-image", rect(16.0, 202.4, 54.0, 24.0)),
-    ("preformatted", rect(16.0, 240.8, 208.0, 62.4)),
-    ("scroll-anchor", rect(16.0, 309.2, 208.0, 78.4)),
-    ("tail", rect(16.0, 478.0, 208.0, 39.2)),
+    ("masthead", rect(16.0, 16.0, 208.0, 57.6)),
+    ("mixed-inline", rect(16.0, 81.6, 208.0, 78.4)),
+    ("image-row", rect(16.0, 166.0, 208.0, 64.8)),
+    ("decoded-image", rect(107.0, 166.0, 32.0, 24.0)),
+    ("fallback-image", rect(16.0, 198.4, 54.0, 24.0)),
+    ("preformatted", rect(16.0, 236.8, 208.0, 62.4)),
+    ("scroll-anchor", rect(16.0, 305.2, 208.0, 78.4)),
+    ("tail", rect(19.0, 474.0, 205.0, 41.2)),
 ];
 const BASELINE_LINKS: [(&str, RectFixture); 7] = [
-    ("/next.html", rect(142.0, 105.2, 28.0, 19.6)),
-    ("/next.html", rect(16.0, 124.8, 175.0, 19.6)),
-    ("/next.html", rect(16.0, 144.4, 175.0, 19.6)),
-    ("/chapter.html", rect(16.0, 309.2, 154.0, 19.6)),
-    ("/chapter.html", rect(16.0, 328.8, 154.0, 19.6)),
-    ("/chapter.html", rect(16.0, 348.4, 147.0, 19.6)),
-    ("/chapter.html", rect(16.0, 368.0, 56.0, 19.6)),
+    ("/next.html", rect(142.0, 101.2, 28.0, 19.6)),
+    ("/next.html", rect(16.0, 120.8, 175.0, 19.6)),
+    ("/next.html", rect(16.0, 140.4, 175.0, 19.6)),
+    ("/chapter.html", rect(16.0, 305.2, 154.0, 19.6)),
+    ("/chapter.html", rect(16.0, 324.8, 154.0, 19.6)),
+    ("/chapter.html", rect(16.0, 344.4, 147.0, 19.6)),
+    ("/chapter.html", rect(16.0, 364.0, 56.0, 19.6)),
 ];
 
 const fn rect(x: f64, y: f64, width: f64, height: f64) -> RectFixture {
@@ -940,7 +957,7 @@ mod tests {
                 .iter()
                 .map(|completion| completion.pending_count)
                 .collect::<Vec<_>>(),
-            vec![2, 1, 0],
+            vec![2, 1, 1, 0],
             "reverse delivery must still converge deterministically"
         );
         assert_eq!(capture.pending.full_probe.magenta_pixels, 0);
@@ -1002,6 +1019,8 @@ mod tests {
             Some("text/css; charset=utf-8")
         );
         assert_eq!(stylesheet.body, FIXTURE_CSS.as_bytes());
+        let imported = fixture_response(origin, "http://venture.test/fixture-base.css").unwrap();
+        assert_eq!(imported.body, IMPORTED_FIXTURE_CSS.as_bytes());
         assert!(fixture_response(origin, "http://venture.test/missing.gif").is_err());
     }
 
