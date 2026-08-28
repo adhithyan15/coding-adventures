@@ -47,10 +47,16 @@ pub struct DecoderOutput {
     pub is_halt: bool,
     /// True if this is an unconditional or taken conditional jump.
     pub is_jump: bool,
+    /// True for the dedicated unconditional JMP encoding.
+    pub is_unconditional_jump: bool,
     /// True if this is a CALL (push + jump).
     pub is_call: bool,
+    /// True for the dedicated unconditional CAL encoding.
+    pub is_unconditional_call: bool,
     /// True if this is a RETURN.
     pub is_return: bool,
+    /// True for the dedicated unconditional RET encoding.
+    pub is_unconditional_return: bool,
     /// True if this is a RST (restart) instruction.
     pub is_rst: bool,
     /// Condition code (0=CY, 1=Z, 2=S, 3=P) for conditional instructions.
@@ -144,13 +150,16 @@ pub fn decode(opcode: u8) -> DecoderOutput {
         and_gate(not_gate(b7), b6),
         and_gate(
             and_gate(b5, b4),
-            and_gate(not_gate(b3), and_gate(b2, and_gate(b1, not_gate(b0))))
-        )
+            and_gate(not_gate(b3), and_gate(b2, and_gate(b1, not_gate(b0)))),
+        ),
     );
     // Also 0xFF
     let all_ones = and_gate(
         and_gate(b7, b6),
-        and_gate(and_gate(b5, b4), and_gate(b3, and_gate(b2, and_gate(b1, b0))))
+        and_gate(
+            and_gate(b5, b4),
+            and_gate(b3, and_gate(b2, and_gate(b1, b0))),
+        ),
     );
     let is_halt = or_gate(is_halt_u8, all_ones) == 1;
 
@@ -192,6 +201,13 @@ pub fn decode(opcode: u8) -> DecoderOutput {
     let is_return_false = and_gate(group_00, sss_is_011) == 1;
     let is_return_true = and_gate(group_00, sss_is_111) == 1;
     let is_return = is_return_false || is_return_true;
+    let is_ret_uncond = and_gate(
+        group_00,
+        and_gate(
+            b5,
+            and_gate(b4, and_gate(b3, and_gate(b2, and_gate(b1, b0)))),
+        ),
+    ) == 1;
 
     // --- Jump/Call detection (group_01) ---
     let sss_is_000_2 = sss_is_000; // reuse
@@ -201,7 +217,13 @@ pub fn decode(opcode: u8) -> DecoderOutput {
     // 0x7C = 0111 1100: group_01 (b7=0,b6=1), ddd=111 (b5=1,b4=1,b3=1), sss=100 (b2=1,b1=0,b0=0)
     let is_jmp_uncond = and_gate(
         and_gate(not_gate(b7), b6), // group_01
-        and_gate(b5, and_gate(b4, and_gate(b3, and_gate(b2, and_gate(not_gate(b1), not_gate(b0))))))
+        and_gate(
+            b5,
+            and_gate(
+                b4,
+                and_gate(b3, and_gate(b2, and_gate(not_gate(b1), not_gate(b0)))),
+            ),
+        ),
     ) == 1; // 0x7C
 
     let is_jump_cond = {
@@ -213,7 +235,13 @@ pub fn decode(opcode: u8) -> DecoderOutput {
 
     // Call: sss ∈ {010,110} AND ddd ≤ 3 (or opcode=0x7E)
     let sss_is_110_2 = sss_is_110; // reuse
-    let is_cal_uncond = opcode == 0x7E;
+    let is_cal_uncond = and_gate(
+        and_gate(not_gate(b7), b6),
+        and_gate(
+            b5,
+            and_gate(b4, and_gate(b3, and_gate(b2, and_gate(b1, not_gate(b0))))),
+        ),
+    ) == 1;
     let is_call_cond = {
         let c_false = and_gate(group_01, and_gate(sss_is_010, ddd_le3)) == 1;
         let c_true = and_gate(group_01, and_gate(sss_is_110_2, ddd_le3)) == 1;
@@ -226,7 +254,7 @@ pub fn decode(opcode: u8) -> DecoderOutput {
 
     // --- ALU detection ---
     let is_alu_reg = group_10 == 1; // group_10: ALU with register source
-    // is_alu_imm computed below via is_alu_immediate; this intermediate is unused
+                                    // is_alu_imm computed below via is_alu_immediate; this intermediate is unused
     let sss_is_100_2 = sss_is_100;
     let is_alu_immediate = and_gate(group_11, sss_is_100_2) == 1 && !is_halt;
     let is_alu = is_alu_reg || is_alu_immediate;
@@ -240,10 +268,15 @@ pub fn decode(opcode: u8) -> DecoderOutput {
     let reg_dst = ddd as usize;
 
     // Condition code and sense for conditional instructions
-    let cond_sense = if is_return { is_return_true }
-                     else if is_jump { sss == 4 || is_jmp_uncond }
-                     else if is_call { sss == 6 || is_cal_uncond }
-                     else { false };
+    let cond_sense = if is_return {
+        is_return_true
+    } else if is_jump {
+        sss == 4 || is_jmp_uncond
+    } else if is_call {
+        sss == 6 || is_cal_uncond
+    } else {
+        false
+    };
     let cond_code = ddd & 0x03; // low 2 bits of ddd
 
     // Write signals
@@ -258,14 +291,22 @@ pub fn decode(opcode: u8) -> DecoderOutput {
     let update_flags = is_alu || is_inr || is_dcr || is_rotate;
 
     // Instruction length
-    let instruction_bytes = if is_jump || is_call { 3 }
-                             else if is_mvi || is_alu_immediate { 2 }
-                             else { 1 };
+    let instruction_bytes = if is_jump || is_call {
+        3
+    } else if is_mvi || is_alu_immediate {
+        2
+    } else {
+        1
+    };
 
     // Port number for IN/OUT
-    let port = if is_input { ddd }
-               else if is_output { (opcode >> 1) & 0x1F }
-               else { 0 };
+    let port = if is_input {
+        ddd
+    } else if is_output {
+        (opcode >> 1) & 0x1F
+    } else {
+        0
+    };
 
     DecoderOutput {
         instruction_bytes,
@@ -274,8 +315,11 @@ pub fn decode(opcode: u8) -> DecoderOutput {
         reg_dst,
         is_halt,
         is_jump,
+        is_unconditional_jump: is_jmp_uncond,
         is_call,
+        is_unconditional_call: is_cal_uncond,
         is_return,
+        is_unconditional_return: is_ret_uncond,
         is_rst,
         cond_code,
         cond_sense,

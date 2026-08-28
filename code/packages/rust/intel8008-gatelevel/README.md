@@ -1,118 +1,77 @@
 # intel8008-gatelevel
 
-Gate-level simulation of the Intel 8008 microprocessor. Every arithmetic
-operation routes through ripple-carry adders (built from XOR/AND/OR gates),
-every register bit is held in a D flip-flop, and the instruction decoder
-expresses all opcode detection as explicit gate calls. Results are
-cross-validated against the behavioral `intel8008-simulator` crate.
+Gate-level Rust simulation of Intel's 1972 8008. It implements the same
+instruction and lifecycle contract as `intel8008-simulator`, while routing
+decode, arithmetic, logic, parity, increments, rotates, and program-counter
+updates through the repository's logic-gate and arithmetic primitives.
 
-## What this simulates
+## Persistent topology
 
-The Intel 8008 (1972) was Intel's first 8-bit processor — the architectural
-ancestor of the x86 family. This crate models:
+Every mutable architectural bit is stored in a D flip-flop:
 
-| Component         | Gate model                                    |
-|-------------------|-----------------------------------------------|
-| 8-bit ALU         | Ripple-carry adder (8 full-adders = 40 gates) |
-| Parity flag       | 7-input XOR chain (7 XOR gates)               |
-| 7×8-bit registers | D flip-flop arrays (7 × 8 = 56 flip-flops)   |
-| 8-level stack     | D flip-flop arrays (8 × 14 = 112 flip-flops) |
-| 14-bit PC         | Half-adder increment chain (28 gates)         |
-| Decoder           | AND/OR/NOT gate network (≈48 gates)           |
+| Component | D flip-flops |
+|---|---:|
+| 16 KiB unified memory | 131,072 |
+| B, C, D, E, H, L, A registers | 56 |
+| Eight 14-bit stack words | 112 |
+| Stack pointer/depth | 3 |
+| CY, Z, S, P flags | 4 |
+| Halt latch | 1 |
+| Eight input ports | 64 |
+| Twenty-four output ports | 192 |
+| **Exact total** | **131,504** |
 
-## Architecture overview
+M is a memory pseudo-register and has no extra storage. The live 14-bit PC is
+stack word zero, so it is not double-counted as a separate register.
 
-```text
-               ┌─────────────────────────────────────────┐
-               │           GateLevelCpu                  │
-               │                                         │
-  memory[] ───►│  Decoder ──► control signals            │
-               │      │                                  │
-               │      ▼                                  │
-               │  RegisterFile (7×8 flip-flops)          │
-               │      │                                  │
-               │      ▼                                  │
-               │  GateAlu8 (ripple-carry adder)          │
-               │      │                                  │
-               │      ▼                                  │
-               │  ProgramCounter (14-bit half-adder)     │
-               │  PushDownStack  (8×14 flip-flops)       │
-               └─────────────────────────────────────────┘
-```
+Host integers are used only for control flow, indices, trace formatting, and
+owned snapshots. Persistent state is DFF-backed. The public
+`FLIP_FLOP_COUNT` constant and `flip_flop_count()` method expose the exact
+topology.
 
-## Stack model
-
-Unlike modern CPUs, the 8008 uses an 8-level circular push-down stack (no
-stack pointer register). Slot 0 is always the live PC:
-
-```text
-CALL target:
-  slot[7] ← slot[6] ← ... ← slot[1] ← slot[0]  (old return address saved)
-  slot[0] ← target                               (jump to target)
-
-RETURN:
-  slot[0] ← slot[1] ← ... ← slot[6] ← slot[7]  (restore return address)
-  slot[7] ← 0
-```
-
-## Dependencies
-
-| Crate                            | Purpose                           |
-|----------------------------------|-----------------------------------|
-| `arithmetic`                     | Ripple-carry adder (via `alu()`)  |
-| `logic-gates`                    | AND/OR/XOR/NOT + D flip-flop      |
-| `coding-adventures-intel8008-simulator` | `Flags` and `Trace` types  |
-
-## Usage
+## Checked API
 
 ```rust
 use coding_adventures_intel8008_gatelevel::GateLevelCpu;
 
 let mut cpu = GateLevelCpu::new();
-
-// A simple program: B=5, C=4, A=B+C, then HLT
-let program: &[u8] = &[
-    0x06, 0x05,  // MVI B, 5
-    0x0E, 0x04,  // MVI C, 4
-    0x78,        // MOV A, B
-    0x81,        // ADD C
-    0x76,        // HLT
+let program = [
+    0x06, 5,    // MVI B, 5
+    0x0E, 4,    // MVI C, 4
+    0x78,       // MOV A, B
+    0x81,       // ADD C
+    0x76,       // HLT
 ];
-cpu.load_memory(program);
-
-let traces = cpu.run(program, 100);
-for t in &traces {
-    println!("{:04X}: {}  A={:02X}", t.address, t.mnemonic, t.a_after);
-}
-// 0000: MVI B,5   A=00
-// 0002: MVI C,4   A=00
-// 0004: MOV A,B   A=05
-// 0005: ADD C     A=09
-// 0006: HLT       A=09
+let traces = cpu.run(&program, 100)?;
+assert_eq!(cpu.a(), 9);
+# Ok::<(), coding_adventures_intel8008_simulator::Intel8008Error>(())
 ```
 
-## Cross-validation
+`load_program`, `step`, `run`, and I/O port access return the shared
+`Intel8008Error`. Invalid ranges, undefined opcodes, instructions that cross
+address `0x3FFF`, halted execution, and invalid ports are rejected atomically.
+`run` is caller-bounded and commits its new machine only after successful
+execution.
 
-The `test_cross_validate` test runs the same program through both
-`GateLevelCpu` and the behavioral `Simulator` and asserts that every trace
-entry has identical `a_after` and `flags_after`. This guarantees that the
-gate-level simulation produces exactly the same externally observable state
-as the reference implementation.
+`snapshot()` returns the same owned `Intel8008State` shape as the functional
+simulator: all registers, 16 KiB of memory, all stack words, stack depth,
+flags, halt state, and I/O latches.
 
-## Gate count
+## Conformance
 
+The completion suite:
+
+- classifies all 256 possible first opcode bytes;
+- compares exact trace and complete state after every defined encoding;
+- verifies atomic unknown, truncated, halted, oversized, and port failures;
+- compares multi-instruction memory, branch, call/return, ALU, and I/O
+  workloads with the functional oracle;
+- pins the exact 131,504-DFF topology.
+
+Run the package checks from `code/packages/rust`:
+
+```text
+cargo test -p coding-adventures-intel8008-gatelevel --no-fail-fast
+cargo clippy -p coding-adventures-intel8008-gatelevel --all-targets --all-features -- -D warnings
+RUSTDOCFLAGS="-D warnings" cargo doc -p coding-adventures-intel8008-gatelevel --no-deps
 ```
-cargo test -p coding-adventures-intel8008-gatelevel -- test_gate_count
-```
-
-| Component                | Gates |
-|--------------------------|-------|
-| Ripple-carry adder (8b)  |    40 |
-| Parity XOR tree          |     7 |
-| PC half-adder chain (14) |    28 |
-| Register file (56 FFs)   |   336 |
-| Stack (112 FFs × 6)      |   672 |
-| Decoder AND/OR/NOT       |    48 |
-| **Estimated total**      | **1131** |
-
-(Each D flip-flop = 6 gates; each full-adder = 5 gates.)

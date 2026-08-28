@@ -33,8 +33,9 @@
 //! let mut cpu = GateLevelCpu::new();
 //! // MVI B,1; MVI A,2; ADD B; HLT
 //! let program = &[0x06u8, 0x01, 0x3E, 0x02, 0x80, 0x76];
-//! let traces = cpu.run(program, 100);
+//! let traces = cpu.run(program, 100)?;
 //! assert_eq!(cpu.a(), 3);
+//! # Ok::<(), coding_adventures_intel8008_simulator::Intel8008Error>(())
 //! ```
 
 pub mod alu;
@@ -44,5 +45,6 @@ pub mod decoder;
 pub mod pc;
 pub mod registers;
 pub mod stack;
+mod state;
 
-pub use cpu::GateLevelCpu;
+pub use cpu::{GateLevelCpu, FLIP_FLOP_COUNT};

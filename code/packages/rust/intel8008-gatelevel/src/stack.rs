@@ -16,18 +16,18 @@
 //! ```
 //!
 //! **CALL operation (push):**
-//! The stack rotates DOWN: slot[7] ← slot[6] ← ... ← slot[1] ← slot[0].
-//! Then the jump target is loaded into slot[0] (the new PC).
-//! The old slot[0] value (return address after the CALL instruction) is now
-//! preserved in slot[1].
+//! The stack rotates DOWN: `slot[7] ← slot[6] ← ... ← slot[1] ← slot[0]`.
+//! Then the jump target is loaded into `slot[0]` (the new PC).
+//! The old `slot[0]` value (return address after the CALL instruction) is now
+//! preserved in `slot[1]`.
 //!
 //! **RETURN operation (pop):**
-//! The stack rotates UP: slot[0] ← slot[1] ← slot[2] ← ... ← slot[6] ← slot[7].
-//! slot[7] is zeroed. The value that was in slot[1] is now in slot[0] (the PC),
+//! The stack rotates UP: `slot[0] ← slot[1] ← slot[2] ← ... ← slot[6] ← slot[7]`.
+//! `slot[7]` is zeroed. The value that was in `slot[1]` is now in `slot[0]` (the PC),
 //! restoring execution to the return address.
 //!
 //! **Overflow (> 7 nested calls):**
-//! The oldest return address in slot[7] is silently overwritten. Programs
+//! The oldest return address in `slot[7]` is silently overwritten. Programs
 //! must ensure at most 7 levels of nesting.
 //!
 //! # Gate count
@@ -45,14 +45,17 @@
 
 use logic_gates::sequential::{register, FlipFlopState};
 
+use crate::state::StateRegister;
+
 /// 8-level push-down stack storing 14-bit return addresses.
 ///
 /// Slot 0 is always the current program counter. Slots 1-7 hold saved
 /// return addresses in LIFO order.
+#[derive(Clone)]
 pub struct PushDownStack {
     /// 8 slots of 14 flip-flops each (LSB-first).
     slots: Vec<Vec<FlipFlopState>>,
-    depth: usize,
+    depth: StateRegister,
 }
 
 impl PushDownStack {
@@ -61,7 +64,10 @@ impl PushDownStack {
         let slots: Vec<Vec<FlipFlopState>> = (0..8)
             .map(|_| (0..14).map(|_| FlipFlopState::default()).collect())
             .collect();
-        PushDownStack { slots, depth: 0 }
+        PushDownStack {
+            slots,
+            depth: StateRegister::new(3),
+        }
     }
 
     /// Read the current PC (always slot 0).
@@ -76,15 +82,20 @@ impl PushDownStack {
 
     /// How many CALL frames are currently active (0-7).
     pub fn depth(&self) -> usize {
-        self.depth
+        usize::from(self.depth.read())
+    }
+
+    /// Read all eight logical stack slots for immutable inspection.
+    pub fn read_slots(&self) -> [u16; 8] {
+        std::array::from_fn(|index| Self::slot_to_u16(&self.slots[index]))
     }
 
     /// CALL — save current PC, rotate stack down, load jump target.
     ///
     /// After this operation:
-    /// - slot[0] = target (new PC)
-    /// - slot[1] = old slot[0] (the saved return address)
-    /// - slot[2..7] each hold the value from one position up
+    /// - `slot[0] = target` (new PC)
+    /// - `slot[1] = old slot[0]` (the saved return address)
+    /// - `slot[2..7]` each hold the value from one position up
     pub fn push_and_jump(&mut self, target: u16) {
         // Rotate: slot[7] ← slot[6] ← ... ← slot[1] ← slot[0]
         // (copy each slot's bit states up the stack)
@@ -94,16 +105,16 @@ impl PushDownStack {
         }
         // Load target into PC slot
         Self::u16_to_slot(target & 0x3FFF, &mut self.slots[0]);
-        if self.depth < 7 {
-            self.depth += 1;
+        if self.depth() < 7 {
+            self.depth.write((self.depth() + 1) as u16);
         }
     }
 
     /// RETURN — rotate stack up, restoring the saved return address.
     ///
     /// After this operation:
-    /// - slot[0] = old slot[1] (saved return address becomes new PC)
-    /// - slot[7] = zeroed
+    /// - `slot[0] = old slot[1]` (saved return address becomes new PC)
+    /// - `slot[7]` = zeroed
     pub fn pop_return(&mut self) {
         // Rotate: slot[0] ← slot[1] ← ... ← slot[6] ← slot[7]
         for i in 0..7 {
@@ -113,8 +124,8 @@ impl PushDownStack {
         // Clear the now-orphaned oldest slot
         let zeros = vec![0u8; 14];
         write_bits_to_slot(&zeros, &mut self.slots[7]);
-        if self.depth > 0 {
-            self.depth -= 1;
+        if self.depth() > 0 {
+            self.depth.write((self.depth() - 1) as u16);
         }
     }
 
@@ -123,9 +134,9 @@ impl PushDownStack {
     // -------------------------------------------------------------------------
 
     fn slot_to_u16(slot: &[FlipFlopState]) -> u16 {
-        slot.iter().enumerate().fold(0u16, |acc, (i, s)| {
-            acc | ((s.slave_q as u16) << i)
-        })
+        slot.iter()
+            .enumerate()
+            .fold(0u16, |acc, (i, s)| acc | ((s.slave_q as u16) << i))
     }
 
     fn u16_to_slot(value: u16, slot: &mut [FlipFlopState]) {
@@ -158,7 +169,7 @@ mod tests {
 
     #[test]
     fn test_stack_push_pop() {
-        let mut stack = PushDownStack::new();
+        let mut stack = PushDownStack::default();
         stack.set_pc(5); // simulate PC after a CALL instruction
         assert_eq!(stack.pc(), 5);
         assert_eq!(stack.depth(), 0);

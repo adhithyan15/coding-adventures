@@ -2,8 +2,8 @@
 //!
 //! # Why LSB-first?
 //!
-//! The `arithmetic` crate's adders use LSB-first bit ordering: bit[0] is the
-//! least significant bit (value 1), bit[7] is the most significant bit
+//! The `arithmetic` crate's adders use LSB-first bit ordering: `bit[0]` is the
+//! least significant bit (value 1), `bit[7]` is the most significant bit
 //! (value 128). This matches the natural carry propagation direction in a
 //! ripple-carry adder — carries ripple from bit 0 towards bit 7.
 //!
@@ -137,5 +137,12 @@ mod tests {
         assert_eq!(compute_parity(&int_to_bits(0x80, 8)), 0);
         // 0x07 = 3 ones → odd parity → 0
         assert_eq!(compute_parity(&int_to_bits(0x07, 8)), 0);
+    }
+
+    #[test]
+    fn test_degenerate_parity_inputs() {
+        assert_eq!(compute_parity(&[]), 1);
+        assert_eq!(compute_parity(&[0]), 1);
+        assert_eq!(compute_parity(&[1]), 0);
     }
 }
