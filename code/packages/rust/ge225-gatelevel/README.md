@@ -13,10 +13,14 @@ arithmetic; `LAC`/`LCA`; deterministic 65-bit gate reduction for arbitrary
 clock advances; and atomic BCD validation. The combined 23 tests cover lifecycle and
 fail-closed bounds, one-hot decode, core-memory X modification, the complete
 single/double binary instruction families, every central shift/normalize path,
-overlapping `MOV`, manual decimal/clock examples, and 48 seeded decimal vectors;
-core line coverage is 89.91% (1,257/1,398). The later P006B2/P006B3 and P006C
-slices add direct I/O, selector/API state, then the separate AAU datapaths and a
-full instruction-family differential audit.
+overlapping `MOV`, manual decimal/clock examples, and 48 seeded decimal vectors.
+P006B2 adds 53 DFF-backed direct-I/O state bits, exact punched-card DMA and sync
+words, continuous reader slots, bounded card/paper-tape/typewriter queues,
+shared N-command routing, readiness branches, parity/overrun/priority alarms,
+atomic transfer validation, and functional-oracle lockstep coverage. The 33
+combined tests cover 83.48% of core lines (1,339/1,604). The later
+P006B3 and P006C slices add selector/API state, then the separate AAU datapaths
+and a full instruction-family differential audit.
 
 Run from `code/packages/rust`:
 

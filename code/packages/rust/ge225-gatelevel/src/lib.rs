@@ -8,6 +8,7 @@
 use arithmetic::adders::ripple_carry_adder_with_carry;
 use logic_gates::gates::{and_gate, not_gate, or_gate, xor_gate};
 use logic_gates::sequential::{register, FlipFlopState};
+use std::collections::VecDeque;
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 
@@ -19,9 +20,66 @@ pub const SIGN_BIT: i32 = 1 << 19;
 pub const ADDRESS_MASK: i32 = 0x1fff;
 const X_MASK: i32 = 0x7fff;
 const CLOCK_DAY_SIXTHS: i32 = 24 * 60 * 60 * 6;
+const N_MASK: i32 = 0x3f;
+const MAX_CARD_QUEUE_DEPTH: usize = 64;
+const MAX_CARD_PUNCH_DEPTH: usize = 64;
+const MAX_CHARACTER_QUEUE_DEPTH: usize = 65_536;
+const CARD_ADDRESS_ALIGNMENT: i32 = 128;
+const CARD_ADDRESS_LIMIT: i32 = 2_048;
+const CARD_DECIMAL_SYNC: i32 = 0o2606077;
+const CARD_BINARY_SYNC: i32 = 0o2001777;
+const CARD_FULL_SYNC: i32 = 0o2007777;
 
-/// Persistent non-memory bits in the P006B1 central binary/decimal/clock model.
-pub const CENTRAL_FLIP_FLOPS: usize = 132;
+/// Persistent non-memory bits in the P006B2 central/direct-I/O model.
+pub const CENTRAL_FLIP_FLOPS: usize = 185;
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum CardFormat {
+    Decimal,
+    Binary10,
+    Full12,
+    MixedDecimal,
+    MixedBinary,
+}
+
+impl CardFormat {
+    pub const fn word_count(self) -> usize {
+        match self {
+            Self::Decimal => 27,
+            Self::Binary10 => 40,
+            Self::Full12 | Self::MixedDecimal | Self::MixedBinary => 80,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub struct CardStatus {
+    pub invalid_character: bool,
+    pub output_stacker_full: bool,
+    pub reader_malfunction: bool,
+    pub end_of_file: bool,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CardRecord {
+    pub format: CardFormat,
+    pub words: Vec<i32>,
+    pub status: CardStatus,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum NRegisterDevice {
+    Off,
+    Typewriter,
+    PaperTapeReader,
+    PaperTapePunch,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct PaperTapeFrame {
+    pub data: i32,
+    pub parity_error: bool,
+}
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 struct BitRegister<const WIDTH: usize> {
@@ -72,6 +130,25 @@ pub struct Ge225GateState {
     pub n_ready: bool,
     pub selected_x_group: usize,
     pub halted: bool,
+    pub card_reader_ready: bool,
+    pub card_punch_ready: bool,
+    pub card_reader_continuous: Option<CardFormat>,
+    pub card_reader_base: i32,
+    pub card_reader_slot: usize,
+    pub card_reader_online: bool,
+    pub card_punch_online: bool,
+    pub card_reader_fault: bool,
+    pub card_punch_fault: bool,
+    pub card_reader_alarm: bool,
+    pub card_punch_alarm: bool,
+    pub priority_alarm: bool,
+    pub n_device: NRegisterDevice,
+    pub typewriter_power: bool,
+    pub paper_tape_reader_running: bool,
+    pub typewriter_keyboard_enabled: bool,
+    pub n_overrun: bool,
+    pub stop_on_parity_alarm: bool,
+    pub control_switches: i32,
     pub memory: Vec<i32>,
 }
 
@@ -101,6 +178,12 @@ pub enum Ge225GateError {
     InvalidBcd { word: i32 },
     FlaggedDecimalOperand { double: bool },
     InvalidClock { value: i32 },
+    InvalidCardRecordLength { format: CardFormat, words: usize },
+    CardReaderQueueFull,
+    InvalidCardAddress { address: i32 },
+    InvalidCharacter { code: i32 },
+    CharacterQueueFull,
+    DeviceNotActive { device: &'static str },
 }
 
 impl Display for Ge225GateError {
@@ -151,6 +234,29 @@ impl Display for Ge225GateError {
                     formatter,
                     "GE-225 clock must fit its 19-bit C register, got {value}"
                 )
+            }
+            Self::InvalidCardRecordLength { format, words } => write!(
+                formatter,
+                "GE-225 {format:?} card requires exactly {} words, got {words}",
+                format.word_count()
+            ),
+            Self::CardReaderQueueFull => write!(
+                formatter,
+                "GE-225 card-reader queue is full at {MAX_CARD_QUEUE_DEPTH} records"
+            ),
+            Self::InvalidCardAddress { address } => write!(
+                formatter,
+                "GE-225 card I/O base must be a multiple of {CARD_ADDRESS_ALIGNMENT} below {CARD_ADDRESS_LIMIT}, got {address}"
+            ),
+            Self::InvalidCharacter { code } => {
+                write!(formatter, "invalid GE-225 character code: {code:o}")
+            }
+            Self::CharacterQueueFull => write!(
+                formatter,
+                "GE-225 character queue exceeds {MAX_CHARACTER_QUEUE_DEPTH} entries"
+            ),
+            Self::DeviceNotActive { device } => {
+                write!(formatter, "GE-225 {device} is not active")
             }
         }
     }
@@ -221,6 +327,29 @@ enum Operation {
     Nor,
     Dno,
     Sxg,
+    Rcd,
+    Rcb,
+    Wcd,
+    Wcb,
+    Rcf,
+    Rcm,
+    Wcf,
+    Hcr,
+    Off,
+    NCommand,
+    Ton,
+    Rcs,
+    Ron,
+    Pon,
+    Hpt,
+    Bpe,
+    Bpc,
+    Bnr,
+    Bnn,
+    Bcr,
+    Bcn,
+    Bpr,
+    Bpn,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -240,6 +369,29 @@ pub struct Ge225GateLevel {
     n_ready: BitRegister<1>,
     selected_x_group: BitRegister<5>,
     halted: BitRegister<1>,
+    card_reader_continuous: BitRegister<2>,
+    card_reader_base: BitRegister<15>,
+    card_reader_slot: BitRegister<2>,
+    card_reader_online: BitRegister<1>,
+    card_punch_online: BitRegister<1>,
+    card_reader_fault: BitRegister<1>,
+    card_punch_fault: BitRegister<1>,
+    card_reader_alarm: BitRegister<1>,
+    card_punch_alarm: BitRegister<1>,
+    priority_alarm: BitRegister<1>,
+    typewriter_power: BitRegister<1>,
+    n_device: BitRegister<2>,
+    paper_tape_reader_running: BitRegister<1>,
+    typewriter_keyboard_enabled: BitRegister<1>,
+    n_overrun: BitRegister<1>,
+    stop_on_parity_alarm: BitRegister<1>,
+    control_switches: BitRegister<20>,
+    card_reader_queue: VecDeque<CardRecord>,
+    card_punch_output: Vec<CardRecord>,
+    typewriter_output: Vec<String>,
+    paper_tape_input: VecDeque<PaperTapeFrame>,
+    paper_tape_output: Vec<i32>,
+    typewriter_input: VecDeque<i32>,
 }
 
 impl Ge225GateLevel {
@@ -265,6 +417,29 @@ impl Ge225GateLevel {
             n_ready: BitRegister::new(&[1]),
             selected_x_group: BitRegister::zero(),
             halted: BitRegister::zero(),
+            card_reader_continuous: BitRegister::zero(),
+            card_reader_base: BitRegister::zero(),
+            card_reader_slot: BitRegister::zero(),
+            card_reader_online: BitRegister::new(&[1]),
+            card_punch_online: BitRegister::new(&[1]),
+            card_reader_fault: BitRegister::zero(),
+            card_punch_fault: BitRegister::zero(),
+            card_reader_alarm: BitRegister::zero(),
+            card_punch_alarm: BitRegister::zero(),
+            priority_alarm: BitRegister::zero(),
+            typewriter_power: BitRegister::zero(),
+            n_device: BitRegister::zero(),
+            paper_tape_reader_running: BitRegister::zero(),
+            typewriter_keyboard_enabled: BitRegister::zero(),
+            n_overrun: BitRegister::zero(),
+            stop_on_parity_alarm: BitRegister::zero(),
+            control_switches: BitRegister::zero(),
+            card_reader_queue: VecDeque::new(),
+            card_punch_output: Vec::new(),
+            typewriter_output: Vec::new(),
+            paper_tape_input: VecDeque::new(),
+            paper_tape_output: Vec::new(),
+            typewriter_input: VecDeque::new(),
         })
     }
 
@@ -286,6 +461,29 @@ impl Ge225GateLevel {
         self.n_ready.write(&[1]);
         self.selected_x_group.write(&[0; 5]);
         self.halted.write(&[0]);
+        self.card_reader_continuous.write(&[0; 2]);
+        self.card_reader_base.write(&[0; 15]);
+        self.card_reader_slot.write(&[0; 2]);
+        self.card_reader_online.write(&[1]);
+        self.card_punch_online.write(&[1]);
+        self.card_reader_fault.write(&[0]);
+        self.card_punch_fault.write(&[0]);
+        self.card_reader_alarm.write(&[0]);
+        self.card_punch_alarm.write(&[0]);
+        self.priority_alarm.write(&[0]);
+        self.typewriter_power.write(&[0]);
+        self.n_device.write(&[0; 2]);
+        self.paper_tape_reader_running.write(&[0]);
+        self.typewriter_keyboard_enabled.write(&[0]);
+        self.n_overrun.write(&[0]);
+        self.stop_on_parity_alarm.write(&[0]);
+        self.control_switches.write(&[0; 20]);
+        self.card_reader_queue.clear();
+        self.card_punch_output.clear();
+        self.typewriter_output.clear();
+        self.paper_tape_input.clear();
+        self.paper_tape_output.clear();
+        self.typewriter_input.clear();
     }
 
     pub fn load_words(&mut self, words: &[i32], origin: usize) -> Result<(), Ge225GateError> {
@@ -315,6 +513,208 @@ impl Ge225GateLevel {
         Ok(())
     }
 
+    pub fn queue_card_reader_card(
+        &mut self,
+        format: CardFormat,
+        words: &[i32],
+        status: CardStatus,
+    ) -> Result<(), Ge225GateError> {
+        if words.len() != format.word_count() {
+            return Err(Ge225GateError::InvalidCardRecordLength {
+                format,
+                words: words.len(),
+            });
+        }
+        if self.card_reader_queue.len() >= MAX_CARD_QUEUE_DEPTH {
+            return Err(Ge225GateError::CardReaderQueueFull);
+        }
+        self.card_reader_queue.push_back(CardRecord {
+            format,
+            words: words.iter().map(|word| word & WORD_MASK).collect(),
+            status,
+        });
+        Ok(())
+    }
+
+    pub fn queue_card_reader_record(&mut self, words: &[i32]) -> Result<(), Ge225GateError> {
+        if words.len() > CardFormat::Decimal.word_count() {
+            return Err(Ge225GateError::InvalidCardRecordLength {
+                format: CardFormat::Decimal,
+                words: words.len(),
+            });
+        }
+        let mut padded = words
+            .iter()
+            .map(|word| word & WORD_MASK)
+            .collect::<Vec<_>>();
+        padded.resize(CardFormat::Decimal.word_count(), 0);
+        self.queue_card_reader_card(CardFormat::Decimal, &padded, CardStatus::default())
+    }
+
+    pub fn card_punch_output(&self) -> &[CardRecord] {
+        &self.card_punch_output
+    }
+
+    pub fn take_card_punch_output(&mut self) -> Vec<CardRecord> {
+        std::mem::take(&mut self.card_punch_output)
+    }
+
+    pub fn set_card_reader_online(&mut self, online: bool) {
+        self.card_reader_online.write(&[u8::from(online)]);
+        if !online {
+            self.card_reader_continuous.write(&[0; 2]);
+        }
+    }
+
+    pub fn set_card_punch_online(&mut self, online: bool) {
+        self.card_punch_online.write(&[u8::from(online)]);
+    }
+
+    pub fn set_card_reader_fault(&mut self, fault: bool) {
+        self.card_reader_fault.write(&[u8::from(fault)]);
+        if fault {
+            self.card_reader_continuous.write(&[0; 2]);
+        }
+    }
+
+    pub fn set_card_punch_fault(&mut self, fault: bool) {
+        self.card_punch_fault.write(&[u8::from(fault)]);
+    }
+
+    pub fn set_stop_on_parity_alarm(&mut self, enabled: bool) {
+        self.stop_on_parity_alarm.write(&[u8::from(enabled)]);
+    }
+
+    pub fn set_control_switches(&mut self, value: i32) {
+        self.control_switches
+            .write(&i32_to_bits::<20>(value & WORD_MASK));
+    }
+
+    pub fn clear_direct_io_alarms(&mut self) {
+        self.card_reader_alarm.write(&[0]);
+        self.card_punch_alarm.write(&[0]);
+        self.priority_alarm.write(&[0]);
+        self.parity_error.write(&[0]);
+        self.halted.write(&[0]);
+    }
+
+    pub fn queue_paper_tape_input(&mut self, frames: &[i32]) -> Result<(), Ge225GateError> {
+        let frames: Vec<_> = frames
+            .iter()
+            .map(|data| PaperTapeFrame {
+                data: *data,
+                parity_error: false,
+            })
+            .collect();
+        self.queue_paper_tape_frames(&frames)
+    }
+
+    pub fn queue_paper_tape_frames(
+        &mut self,
+        frames: &[PaperTapeFrame],
+    ) -> Result<(), Ge225GateError> {
+        if self.paper_tape_input.len().saturating_add(frames.len()) > MAX_CHARACTER_QUEUE_DEPTH {
+            return Err(Ge225GateError::CharacterQueueFull);
+        }
+        if let Some(frame) = frames
+            .iter()
+            .find(|frame| !(0..=N_MASK).contains(&frame.data))
+        {
+            return Err(Ge225GateError::InvalidCharacter { code: frame.data });
+        }
+        self.paper_tape_input.extend(frames.iter().copied());
+        Ok(())
+    }
+
+    pub fn paper_tape_output(&self) -> &[i32] {
+        &self.paper_tape_output
+    }
+
+    pub fn take_paper_tape_output(&mut self) -> Vec<i32> {
+        std::mem::take(&mut self.paper_tape_output)
+    }
+
+    pub fn queue_typewriter_input(&mut self, codes: &[i32]) -> Result<(), Ge225GateError> {
+        if self.typewriter_input.len().saturating_add(codes.len()) > MAX_CHARACTER_QUEUE_DEPTH {
+            return Err(Ge225GateError::CharacterQueueFull);
+        }
+        if let Some(code) = codes.iter().find(|code| {
+            !(0..=N_MASK).contains(code)
+                || (typewriter_char(**code).is_none() && !matches!(**code, 0o37 | 0o76))
+        }) {
+            return Err(Ge225GateError::InvalidCharacter { code: *code });
+        }
+        self.typewriter_input.extend(codes.iter().copied());
+        Ok(())
+    }
+
+    pub fn advance_paper_tape_reader(&mut self) -> Result<bool, Ge225GateError> {
+        if decode_n_device(self.n_device.read()) != NRegisterDevice::PaperTapeReader
+            || self.paper_tape_reader_running.read()[0] == 0
+        {
+            return Err(Ge225GateError::DeviceNotActive {
+                device: "paper-tape reader",
+            });
+        }
+        let Some(frame) = self.paper_tape_input.pop_front() else {
+            return Ok(false);
+        };
+        let overrun = or_gate(self.n_overrun.read()[0], self.n_ready.read()[0]);
+        self.n_overrun.write(&[overrun]);
+        self.n.write(&i32_to_bits::<6>(frame.data));
+        self.parity_error.write(&[or_gate(
+            self.parity_error.read()[0],
+            u8::from(frame.parity_error),
+        )]);
+        self.n_ready.write(&[1]);
+        if and_gate(
+            u8::from(frame.parity_error),
+            self.stop_on_parity_alarm.read()[0],
+        ) == 1
+        {
+            self.paper_tape_reader_running.write(&[0]);
+            self.priority_alarm.write(&[1]);
+            self.halted.write(&[1]);
+        }
+        Ok(true)
+    }
+
+    pub fn advance_typewriter_input(&mut self) -> Result<bool, Ge225GateError> {
+        if decode_n_device(self.n_device.read()) != NRegisterDevice::Typewriter
+            || self.typewriter_keyboard_enabled.read()[0] == 0
+        {
+            return Err(Ge225GateError::DeviceNotActive {
+                device: "typewriter keyboard",
+            });
+        }
+        let Some(code) = self.typewriter_input.pop_front() else {
+            return Ok(false);
+        };
+        self.n_overrun
+            .write(&[or_gate(self.n_overrun.read()[0], self.n_ready.read()[0])]);
+        self.n.write(&i32_to_bits::<6>(code));
+        self.n_ready.write(&[1]);
+        Ok(true)
+    }
+
+    pub fn advance_card_reader(&mut self) -> Result<bool, Ge225GateError> {
+        let Some(format) = decode_continuous(self.card_reader_continuous.read()) else {
+            return Err(Ge225GateError::DeviceNotActive {
+                device: "card reader",
+            });
+        };
+        if self.card_reader_queue.is_empty() {
+            self.card_reader_continuous.write(&[0; 2]);
+            return Ok(false);
+        }
+        self.transfer_card_input(format)?;
+        Ok(true)
+    }
+
+    pub fn get_typewriter_output(&self) -> String {
+        self.typewriter_output.join("")
+    }
+
     pub fn set_program_counter(&mut self, address: i32) -> Result<(), Ge225GateError> {
         self.checked_address(address)?;
         self.pc.write(&i32_to_bits::<15>(address));
@@ -328,10 +728,12 @@ impl Ge225GateLevel {
         let pc_before = bits_to_i32(&self.pc.read());
         let instruction = self.read_word(pc_before)?;
         let (mut operation, mut modifier, mut address) =
-            decode(instruction).ok_or(Ge225GateError::UnknownInstruction {
-                word: instruction,
-                pc: pc_before,
-            })?;
+            decode(instruction, decode_n_device(self.n_device.read())).ok_or(
+                Ge225GateError::UnknownInstruction {
+                    word: instruction,
+                    pc: pc_before,
+                },
+            )?;
         let mut ir_word = instruction;
         if is_fixed(operation) && modifier != 0 {
             if operation == Operation::Sxg {
@@ -352,7 +754,7 @@ impl Ge225GateLevel {
             } else {
                 let modified_word = (0o25 << 15) | modified_operand;
                 let (modified_operation, modified_modifier, modified_address) =
-                    decode(modified_word)
+                    decode(modified_word, decode_n_device(self.n_device.read()))
                         .filter(|(candidate, _, _)| is_fixed(*candidate))
                         .ok_or(Ge225GateError::InvalidAutomaticModification {
                             word: modified_word,
@@ -419,10 +821,17 @@ impl Ge225GateLevel {
             self.checked_address(sequential + skip)?;
         }
         self.preflight_decimal(operation, effective_address)?;
+        self.preflight_direct_io(operation, effective_address)?;
         if ir_word == instruction && modifier != 0 {
-            if let Some(modified) = effective_address
-                .map(|effective| (instruction & !ADDRESS_MASK) | (effective & ADDRESS_MASK))
-            {
+            if let Some(modified) = effective_address.map(|effective| {
+                if is_card_operation(operation) {
+                    (instruction & !ADDRESS_MASK)
+                        | (effective & ADDRESS_MASK & !(CARD_ADDRESS_ALIGNMENT - 1))
+                        | (instruction & 0o17)
+                } else {
+                    (instruction & !ADDRESS_MASK) | (effective & ADDRESS_MASK)
+                }
+            }) {
                 ir_word = modified;
             }
         }
@@ -430,7 +839,17 @@ impl Ge225GateLevel {
         self.pc.write(&i32_to_bits::<15>(sequential));
         let a_before = bits_to_i32(&self.a.read());
         let q_before = bits_to_i32(&self.q.read());
-        let mnemonic = operation_name(operation).to_string();
+        let mnemonic = if operation == Operation::NCommand {
+            match decode_n_device(self.n_device.read()) {
+                NRegisterDevice::Off => "NIO",
+                NRegisterDevice::Typewriter => "TYP",
+                NRegisterDevice::PaperTapeReader => "RPT",
+                NRegisterDevice::PaperTapePunch => "WPT",
+            }
+        } else {
+            operation_name(operation)
+        }
+        .to_string();
         self.execute(operation, modifier, effective_address, address, pc_before)?;
 
         Ok(StepTrace {
@@ -473,6 +892,25 @@ impl Ge225GateLevel {
             n_ready: self.n_ready.read()[0] == 1,
             selected_x_group: bits_to_i32(&self.selected_x_group.read()) as usize,
             halted: self.halted.read()[0] == 1,
+            card_reader_ready: self.card_reader_ready() == 1,
+            card_punch_ready: self.card_punch_ready() == 1,
+            card_reader_continuous: decode_continuous(self.card_reader_continuous.read()),
+            card_reader_base: bits_to_i32(&self.card_reader_base.read()),
+            card_reader_slot: bits_to_i32(&self.card_reader_slot.read()) as usize,
+            card_reader_online: self.card_reader_online.read()[0] == 1,
+            card_punch_online: self.card_punch_online.read()[0] == 1,
+            card_reader_fault: self.card_reader_fault.read()[0] == 1,
+            card_punch_fault: self.card_punch_fault.read()[0] == 1,
+            card_reader_alarm: self.card_reader_alarm.read()[0] == 1,
+            card_punch_alarm: self.card_punch_alarm.read()[0] == 1,
+            priority_alarm: self.priority_alarm.read()[0] == 1,
+            n_device: decode_n_device(self.n_device.read()),
+            typewriter_power: self.typewriter_power.read()[0] == 1,
+            paper_tape_reader_running: self.paper_tape_reader_running.read()[0] == 1,
+            typewriter_keyboard_enabled: self.typewriter_keyboard_enabled.read()[0] == 1,
+            n_overrun: self.n_overrun.read()[0] == 1,
+            stop_on_parity_alarm: self.stop_on_parity_alarm.read()[0] == 1,
+            control_switches: bits_to_i32(&self.control_switches.read()),
             memory: self
                 .memory
                 .iter()
@@ -576,6 +1014,142 @@ impl Ge225GateLevel {
             }
             _ => {}
         }
+        Ok(())
+    }
+
+    fn card_reader_ready(&self) -> u8 {
+        let online = self.card_reader_online.read()[0];
+        let healthy = not_gate(self.card_reader_fault.read()[0]);
+        let idle = is_zero(&self.card_reader_continuous.read());
+        let queued = u8::from(!self.card_reader_queue.is_empty());
+        and_gate(and_gate(online, healthy), and_gate(idle, queued))
+    }
+
+    fn card_punch_ready(&self) -> u8 {
+        and_gate(
+            and_gate(
+                self.card_punch_online.read()[0],
+                not_gate(self.card_punch_fault.read()[0]),
+            ),
+            u8::from(self.card_punch_output.len() < MAX_CARD_PUNCH_DEPTH),
+        )
+    }
+
+    fn card_address(&self, address: i32) -> Result<i32, Ge225GateError> {
+        if !(0..CARD_ADDRESS_LIMIT).contains(&address) || address % CARD_ADDRESS_ALIGNMENT != 0 {
+            return Err(Ge225GateError::InvalidCardAddress { address });
+        }
+        Ok(address)
+    }
+
+    fn preflight_direct_io(
+        &self,
+        operation: Operation,
+        effective_address: Option<i32>,
+    ) -> Result<(), Ge225GateError> {
+        let format = card_operation_format(operation);
+        if is_card_operation(operation) {
+            let base =
+                self.card_address(effective_address.expect("card operations have an address"))?;
+            let words = format.unwrap_or(CardFormat::Full12).word_count();
+            self.checked_range(base, words)?;
+            if is_card_read(operation) {
+                let sync_offset = match format {
+                    Some(CardFormat::Decimal) => 27,
+                    Some(CardFormat::Binary10) => 41,
+                    _ => 83,
+                };
+                self.checked_address(base + sync_offset)?;
+            }
+        }
+        if operation == Operation::NCommand {
+            match decode_n_device(self.n_device.read()) {
+                NRegisterDevice::Typewriter
+                    if self.typewriter_output.len() >= MAX_CHARACTER_QUEUE_DEPTH =>
+                {
+                    return Err(Ge225GateError::CharacterQueueFull);
+                }
+                NRegisterDevice::PaperTapePunch
+                    if self.paper_tape_output.len() >= MAX_CHARACTER_QUEUE_DEPTH =>
+                {
+                    return Err(Ge225GateError::CharacterQueueFull);
+                }
+                _ => {}
+            }
+        }
+        Ok(())
+    }
+
+    fn reader_alarm(&mut self) {
+        self.card_reader_alarm.write(&[1]);
+        self.priority_alarm.write(&[1]);
+        self.card_reader_continuous.write(&[0; 2]);
+        self.halted.write(&[1]);
+    }
+
+    fn punch_alarm(&mut self) {
+        self.card_punch_alarm.write(&[1]);
+        self.priority_alarm.write(&[1]);
+        self.halted.write(&[1]);
+    }
+
+    fn transfer_card_input(&mut self, expected: CardFormat) -> Result<(), Ge225GateError> {
+        let Some(record) = self.card_reader_queue.front().cloned() else {
+            self.card_reader_continuous.write(&[0; 2]);
+            return Ok(());
+        };
+        if record.format != expected {
+            self.reader_alarm();
+            return Ok(());
+        }
+        let slot = bits_to_i32(&self.card_reader_slot.read()) as usize;
+        let offset = match expected {
+            CardFormat::Decimal => slot * 32,
+            CardFormat::Binary10 => slot * 64,
+            CardFormat::Full12 | CardFormat::MixedDecimal | CardFormat::MixedBinary => 0,
+        };
+        let destination = bits_to_i32(&self.card_reader_base.read()) + offset as i32;
+        let data_range = self.checked_range(destination, record.words.len())?;
+        let sync_offset = match expected {
+            CardFormat::Decimal => 27,
+            CardFormat::Binary10 => 41,
+            CardFormat::Full12 | CardFormat::MixedDecimal | CardFormat::MixedBinary => 83,
+        };
+        let sync_address = self.checked_address(destination + sync_offset)?;
+        let hopper_empty = self.card_reader_queue.len() == 1;
+        let sync = card_sync_word(record.format, record.status, hopper_empty);
+
+        self.card_reader_queue.pop_front();
+        for (address, mut word) in data_range.zip(record.words) {
+            if record.format == CardFormat::MixedBinary && address == destination as usize {
+                word |= SIGN_BIT;
+            }
+            self.memory[address].write(&i32_to_bits::<20>(word & WORD_MASK));
+        }
+        self.memory[sync_address].write(&i32_to_bits::<20>(sync));
+        let next_slot = match expected {
+            CardFormat::Decimal => (slot + 1) % 4,
+            CardFormat::Binary10 => (slot + 1) % 2,
+            CardFormat::Full12 | CardFormat::MixedDecimal | CardFormat::MixedBinary => 0,
+        };
+        self.card_reader_slot
+            .write(&i32_to_bits::<2>(next_slot as i32));
+        if self.card_reader_queue.is_empty() {
+            self.card_reader_continuous.write(&[0; 2]);
+        }
+        Ok(())
+    }
+
+    fn transfer_card_punch(&mut self, format: CardFormat, base: i32) -> Result<(), Ge225GateError> {
+        let words = self
+            .checked_range(base, format.word_count())?
+            .map(|address| bits_to_i32(&self.memory[address].read()))
+            .collect();
+        self.card_punch_output.push(CardRecord {
+            format,
+            words,
+            status: CardStatus::default(),
+        });
         Ok(())
     }
 
@@ -716,6 +1290,27 @@ impl Ge225GateLevel {
                     Operation::Bov => self.overflow.read()[0],
                     Operation::Bno => not_gate(self.overflow.read()[0]),
                     _ => unreachable!("the match only contains fixed branch tests"),
+                };
+                i32::from(condition == 0)
+            }
+            Operation::Bpe
+            | Operation::Bpc
+            | Operation::Bnr
+            | Operation::Bnn
+            | Operation::Bcr
+            | Operation::Bcn
+            | Operation::Bpr
+            | Operation::Bpn => {
+                let condition = match operation {
+                    Operation::Bpe => self.parity_error.read()[0],
+                    Operation::Bpc => not_gate(self.parity_error.read()[0]),
+                    Operation::Bnr => self.n_ready.read()[0],
+                    Operation::Bnn => not_gate(self.n_ready.read()[0]),
+                    Operation::Bcr => self.card_reader_ready(),
+                    Operation::Bcn => not_gate(self.card_reader_ready()),
+                    Operation::Bpr => self.card_punch_ready(),
+                    Operation::Bpn => not_gate(self.card_punch_ready()),
+                    _ => unreachable!("the match contains only direct-I/O branch tests"),
                 };
                 i32::from(condition == 0)
             }
@@ -947,6 +1542,133 @@ impl Ge225GateLevel {
                     }
                 }));
             }
+            Operation::Rcd | Operation::Rcb | Operation::Rcf => {
+                if self.card_reader_ready() == 0 {
+                    self.reader_alarm();
+                } else {
+                    let format =
+                        card_operation_format(operation).expect("a typed card read has a format");
+                    self.card_reader_base.write(&i32_to_bits::<15>(address));
+                    self.card_reader_slot.write(&[0; 2]);
+                    self.card_reader_continuous.write(&match operation {
+                        Operation::Rcd => [1, 0],
+                        Operation::Rcb => [0, 1],
+                        Operation::Rcf => [0, 0],
+                        _ => unreachable!("the match contains typed card reads"),
+                    });
+                    self.transfer_card_input(format)?;
+                }
+            }
+            Operation::Rcm => {
+                if self.card_reader_ready() == 0 {
+                    self.reader_alarm();
+                } else {
+                    let format = self
+                        .card_reader_queue
+                        .front()
+                        .map(|record| record.format)
+                        .unwrap_or(CardFormat::MixedDecimal);
+                    if !matches!(format, CardFormat::MixedDecimal | CardFormat::MixedBinary) {
+                        self.reader_alarm();
+                    } else {
+                        self.card_reader_base.write(&i32_to_bits::<15>(address));
+                        self.card_reader_slot.write(&[0; 2]);
+                        self.card_reader_continuous.write(&[0; 2]);
+                        self.transfer_card_input(format)?;
+                    }
+                }
+            }
+            Operation::Wcd | Operation::Wcb | Operation::Wcf => {
+                if self.card_punch_ready() == 0 {
+                    self.punch_alarm();
+                } else {
+                    self.transfer_card_punch(
+                        card_operation_format(operation).expect("a typed card punch has a format"),
+                        address,
+                    )?;
+                }
+            }
+            Operation::Hcr => self.card_reader_continuous.write(&[0; 2]),
+            Operation::Off => {
+                self.typewriter_power.write(&[0]);
+                self.n_device.write(&[0; 2]);
+                self.paper_tape_reader_running.write(&[0]);
+                self.typewriter_keyboard_enabled.write(&[0]);
+                self.n_ready.write(&[0]);
+            }
+            Operation::NCommand => match decode_n_device(self.n_device.read()) {
+                NRegisterDevice::Typewriter => {
+                    if self.typewriter_power.read()[0] == 0 {
+                        self.n_ready.write(&[0]);
+                    } else {
+                        let code = bits_to_i32(&self.n.read()) & N_MASK;
+                        let output = match code {
+                            0o37 => Some("\r"),
+                            0o76 => Some("\t"),
+                            0o72 | 0o75 => None,
+                            _ => typewriter_char(code),
+                        };
+                        if let Some(output) = output {
+                            self.typewriter_output.push(output.into());
+                            self.n_ready.write(&[1]);
+                        } else if matches!(code, 0o72 | 0o75) {
+                            self.n_ready.write(&[1]);
+                        } else {
+                            self.n_ready.write(&[0]);
+                        }
+                    }
+                }
+                NRegisterDevice::PaperTapeReader => {
+                    self.paper_tape_reader_running.write(&[1]);
+                    self.n_ready.write(&[0]);
+                    self.advance_paper_tape_reader()?;
+                }
+                NRegisterDevice::PaperTapePunch => {
+                    self.paper_tape_output
+                        .push(bits_to_i32(&self.n.read()) & N_MASK);
+                    self.n_ready.write(&[1]);
+                }
+                NRegisterDevice::Off => self.n_ready.write(&[0]),
+            },
+            Operation::Ton => {
+                self.n_device
+                    .write(&encode_n_device(NRegisterDevice::Typewriter));
+                self.typewriter_power.write(&[1]);
+                self.paper_tape_reader_running.write(&[0]);
+                self.typewriter_keyboard_enabled.write(&[0]);
+                self.n_ready.write(&[1]);
+            }
+            Operation::Ron => {
+                self.n_device
+                    .write(&encode_n_device(NRegisterDevice::PaperTapeReader));
+                self.typewriter_power.write(&[0]);
+                self.paper_tape_reader_running.write(&[0]);
+                self.typewriter_keyboard_enabled.write(&[0]);
+                self.n.write(&[0; 6]);
+                self.n_ready.write(&[0]);
+            }
+            Operation::Pon => {
+                self.n_device
+                    .write(&encode_n_device(NRegisterDevice::PaperTapePunch));
+                self.typewriter_power.write(&[0]);
+                self.paper_tape_reader_running.write(&[0]);
+                self.typewriter_keyboard_enabled.write(&[0]);
+                self.n_ready.write(&[1]);
+            }
+            Operation::Rcs => {
+                let controls = self.control_switches.read();
+                let a = self.a.read();
+                self.a
+                    .write(&std::array::from_fn(|bit| or_gate(a[bit], controls[bit])));
+            }
+            Operation::Hpt => match decode_n_device(self.n_device.read()) {
+                NRegisterDevice::PaperTapeReader => self.paper_tape_reader_running.write(&[0]),
+                NRegisterDevice::Typewriter => {
+                    self.typewriter_keyboard_enabled.write(&[1]);
+                    self.n_ready.write(&[0]);
+                }
+                NRegisterDevice::Off | NRegisterDevice::PaperTapePunch => {}
+            },
             Operation::Ldz => self.a.write(&[0; 20]),
             Operation::Ldo => self.a.write(&i32_to_bits::<20>(1)),
             Operation::Lmo => self.a.write(&[1; 20]),
@@ -1052,6 +1774,32 @@ impl Ge225GateLevel {
                 }
                 if matches!(operation, Operation::Bov | Operation::Bno) {
                     self.overflow.write(&[0]);
+                }
+            }
+            Operation::Bpe
+            | Operation::Bpc
+            | Operation::Bnr
+            | Operation::Bnn
+            | Operation::Bcr
+            | Operation::Bcn
+            | Operation::Bpr
+            | Operation::Bpn => {
+                let condition = match operation {
+                    Operation::Bpe => self.parity_error.read()[0],
+                    Operation::Bpc => not_gate(self.parity_error.read()[0]),
+                    Operation::Bnr => self.n_ready.read()[0],
+                    Operation::Bnn => not_gate(self.n_ready.read()[0]),
+                    Operation::Bcr => self.card_reader_ready(),
+                    Operation::Bcn => not_gate(self.card_reader_ready()),
+                    Operation::Bpr => self.card_punch_ready(),
+                    Operation::Bpn => not_gate(self.card_punch_ready()),
+                    _ => unreachable!("the match contains only direct-I/O branches"),
+                };
+                if condition == 0 {
+                    self.advance_pc(1)?;
+                }
+                if matches!(operation, Operation::Bpe | Operation::Bpc) {
+                    self.parity_error.write(&[0]);
                 }
             }
         }
@@ -1251,11 +1999,151 @@ impl Ge225GateLevel {
     }
 }
 
-fn decode(word: i32) -> Option<(Operation, i32, i32)> {
+fn encode_n_device(device: NRegisterDevice) -> [u8; 2] {
+    match device {
+        NRegisterDevice::Off => [0, 0],
+        NRegisterDevice::Typewriter => [1, 0],
+        NRegisterDevice::PaperTapeReader => [0, 1],
+        NRegisterDevice::PaperTapePunch => [1, 1],
+    }
+}
+
+fn decode_n_device(bits: [u8; 2]) -> NRegisterDevice {
+    match bits {
+        [1, 0] => NRegisterDevice::Typewriter,
+        [0, 1] => NRegisterDevice::PaperTapeReader,
+        [1, 1] => NRegisterDevice::PaperTapePunch,
+        _ => NRegisterDevice::Off,
+    }
+}
+
+fn decode_continuous(bits: [u8; 2]) -> Option<CardFormat> {
+    match bits {
+        [1, 0] => Some(CardFormat::Decimal),
+        [0, 1] => Some(CardFormat::Binary10),
+        _ => None,
+    }
+}
+
+fn is_card_operation(operation: Operation) -> bool {
+    matches!(
+        operation,
+        Operation::Rcd
+            | Operation::Rcb
+            | Operation::Wcd
+            | Operation::Wcb
+            | Operation::Rcf
+            | Operation::Rcm
+            | Operation::Wcf
+    )
+}
+
+fn is_card_read(operation: Operation) -> bool {
+    matches!(
+        operation,
+        Operation::Rcd | Operation::Rcb | Operation::Rcf | Operation::Rcm
+    )
+}
+
+fn card_operation_format(operation: Operation) -> Option<CardFormat> {
+    match operation {
+        Operation::Rcd | Operation::Wcd => Some(CardFormat::Decimal),
+        Operation::Rcb | Operation::Wcb => Some(CardFormat::Binary10),
+        Operation::Rcf | Operation::Wcf => Some(CardFormat::Full12),
+        _ => None,
+    }
+}
+
+fn card_sync_word(format: CardFormat, status: CardStatus, hopper_empty: bool) -> i32 {
+    let initial = match format {
+        CardFormat::Decimal => CARD_DECIMAL_SYNC,
+        CardFormat::Binary10 => CARD_BINARY_SYNC,
+        CardFormat::Full12 | CardFormat::MixedDecimal | CardFormat::MixedBinary => CARD_FULL_SYNC,
+    };
+    let mut bits = i32_to_bits::<20>(initial);
+    bits[18] = u8::from(hopper_empty);
+    bits[3] = not_gate(u8::from(status.output_stacker_full));
+    bits[2] = not_gate(u8::from(status.reader_malfunction));
+    bits[1] = not_gate(u8::from(status.invalid_character));
+    bits[0] = not_gate(and_gate(
+        u8::from(hopper_empty),
+        u8::from(status.end_of_file),
+    ));
+    bits_to_i32(&bits)
+}
+
+fn typewriter_char(code: i32) -> Option<&'static str> {
+    Some(match code {
+        0o00 => "0",
+        0o01 => "1",
+        0o02 => "2",
+        0o03 => "3",
+        0o04 => "4",
+        0o05 => "5",
+        0o06 => "6",
+        0o07 => "7",
+        0o10 => "8",
+        0o11 => "9",
+        0o13 => "/",
+        0o21 => "A",
+        0o22 => "B",
+        0o23 => "C",
+        0o24 => "D",
+        0o25 => "E",
+        0o26 => "F",
+        0o27 => "G",
+        0o30 => "H",
+        0o31 => "I",
+        0o33 => "-",
+        0o40 => ".",
+        0o41 => "J",
+        0o42 => "K",
+        0o43 => "L",
+        0o44 => "M",
+        0o45 => "N",
+        0o46 => "O",
+        0o47 => "P",
+        0o50 => "Q",
+        0o51 => "R",
+        0o53 => "$",
+        0o60 => " ",
+        0o62 => "S",
+        0o63 => "T",
+        0o64 => "U",
+        0o65 => "V",
+        0o66 => "W",
+        0o67 => "X",
+        0o70 => "Y",
+        0o71 => "Z",
+        _ => return None,
+    })
+}
+
+fn decode(word: i32, _n_device: NRegisterDevice) -> Option<(Operation, i32, i32)> {
     let normalized = word & WORD_MASK;
     let modifier = (normalized >> 13) & 0x03;
     let canonical = normalized & !(0x03 << 13);
     let canonical_bits = i32_to_bits::<20>(canonical);
+    if (canonical >> 15) == 0o25 {
+        let address = canonical & ADDRESS_MASK;
+        let base = address & !(CARD_ADDRESS_ALIGNMENT - 1);
+        let reserved = address & 0o160;
+        if base < CARD_ADDRESS_LIMIT && reserved == 0 {
+            let operation = match address & 0o17 {
+                0o00 => Some(Operation::Rcd),
+                0o01 => Some(Operation::Rcb),
+                0o02 => Some(Operation::Wcd),
+                0o03 => Some(Operation::Wcb),
+                0o10 => Some(Operation::Rcf),
+                0o12 => Some(Operation::Rcm),
+                0o17 => Some(Operation::Wcf),
+                _ => None,
+            };
+            if let Some(operation) = operation {
+                return Some((operation, modifier, base));
+            }
+        }
+    }
     let fixed = FIXED_OPERATIONS.iter().find_map(|(code, operation)| {
         (equal_bits(&canonical_bits, &i32_to_bits::<20>(*code)) == 1).then_some(*operation)
     });
@@ -1289,6 +2177,14 @@ fn decode(word: i32) -> Option<(Operation, i32, i32)> {
 }
 
 const FIXED_OPERATIONS: &[(i32, Operation)] = &[
+    (0o2500004, Operation::Hcr),
+    (0o2500005, Operation::Off),
+    (0o2500006, Operation::NCommand),
+    (0o2500007, Operation::Ton),
+    (0o2500011, Operation::Rcs),
+    (0o2500014, Operation::Ron),
+    (0o2500015, Operation::Pon),
+    (0o2500016, Operation::Hpt),
     (0o2504002, Operation::Ldz),
     (0o2504022, Operation::Ldo),
     (0o2504102, Operation::Lmo),
@@ -1314,6 +2210,14 @@ const FIXED_OPERATIONS: &[(i32, Operation)] = &[
     (0o2516002, Operation::Bnz),
     (0o2514003, Operation::Bov),
     (0o2516003, Operation::Bno),
+    (0o2514004, Operation::Bpe),
+    (0o2516004, Operation::Bpc),
+    (0o2514005, Operation::Bnr),
+    (0o2516005, Operation::Bnn),
+    (0o2514006, Operation::Bcr),
+    (0o2516006, Operation::Bcn),
+    (0o2514007, Operation::Bpr),
+    (0o2516007, Operation::Bpn),
 ];
 
 const MEMORY_OPERATIONS: &[(usize, Operation)] = &[
@@ -1398,6 +2302,22 @@ fn is_fixed(operation: Operation) -> bool {
             | Operation::Nor
             | Operation::Dno
             | Operation::Sxg
+            | Operation::Hcr
+            | Operation::Off
+            | Operation::NCommand
+            | Operation::Ton
+            | Operation::Rcs
+            | Operation::Ron
+            | Operation::Pon
+            | Operation::Hpt
+            | Operation::Bpe
+            | Operation::Bpc
+            | Operation::Bnr
+            | Operation::Bnn
+            | Operation::Bcr
+            | Operation::Bcn
+            | Operation::Bpr
+            | Operation::Bpn
     )
 }
 
@@ -1438,6 +2358,13 @@ fn is_memory_reference(operation: Operation) -> bool {
             | Operation::Ory
             | Operation::Bru
             | Operation::Sto
+            | Operation::Rcd
+            | Operation::Rcb
+            | Operation::Wcd
+            | Operation::Wcb
+            | Operation::Rcf
+            | Operation::Rcm
+            | Operation::Wcf
     )
 }
 
@@ -1504,6 +2431,29 @@ fn operation_name(operation: Operation) -> &'static str {
         Operation::Nor => "NOR",
         Operation::Dno => "DNO",
         Operation::Sxg => "SXG",
+        Operation::Rcd => "RCD",
+        Operation::Rcb => "RCB",
+        Operation::Wcd => "WCD",
+        Operation::Wcb => "WCB",
+        Operation::Rcf => "RCF",
+        Operation::Rcm => "RCM",
+        Operation::Wcf => "WCF",
+        Operation::Hcr => "HCR",
+        Operation::Off => "OFF",
+        Operation::NCommand => "NIO",
+        Operation::Ton => "TON",
+        Operation::Rcs => "RCS",
+        Operation::Ron => "RON",
+        Operation::Pon => "PON",
+        Operation::Hpt => "HPT",
+        Operation::Bpe => "BPE",
+        Operation::Bpc => "BPC",
+        Operation::Bnr => "BNR",
+        Operation::Bnn => "BNN",
+        Operation::Bcr => "BCR",
+        Operation::Bcn => "BCN",
+        Operation::Bpr => "BPR",
+        Operation::Bpn => "BPN",
     }
 }
 
