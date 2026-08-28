@@ -2506,12 +2506,12 @@ impl Compiler {
         node: &GrammarASTNode,
         widen_integer: bool,
     ) -> Option<f64> {
-        let name = expr_variable_name(node)?;
+        let (negative, name) = exact_signed_bare_variable_expression(node)?;
         let binding = self.require_var(&name).ok()?;
         if binding.is_global {
             return None;
         }
-        match binding.ty {
+        let value = match binding.ty {
             ScalarType::Real => self
                 .static_real_slots
                 .get(&binding.slot)?
@@ -2523,7 +2523,8 @@ impl Compiler {
                 (value.unsigned_abs() <= 9_007_199_254_740_992_u64).then_some(value as f64)
             }
             _ => None,
-        }
+        }?;
+        Some(if negative { -value } else { value })
     }
 
     fn static_real_expression_has_real_evidence(&self, node: &GrammarASTNode) -> bool {
@@ -2572,10 +2573,15 @@ impl Compiler {
         if let Some(value) = self.static_standard_integer_value(node) {
             return Some(value);
         }
-        if let Some(name) = expr_variable_name(node) {
+        if let Some((negative, name)) = exact_signed_bare_variable_expression(node) {
             let binding = self.require_var(&name).ok()?;
             if binding.ty == ScalarType::Integer && !binding.is_global {
-                return self.static_integer_slots.get(&binding.slot).copied();
+                let value = self.static_integer_slots.get(&binding.slot).copied()?;
+                return if negative {
+                    value.checked_neg()
+                } else {
+                    Some(value)
+                };
             }
             return None;
         }
@@ -2693,9 +2699,10 @@ impl Compiler {
     }
 
     /// Admit a tracked exponent for a real base only when the exponent operand
-    /// is one bare local integer. This retains the real multiplication path
-    /// without erasing a call or conditional expression from runtime IIR.
-    fn static_nonnegative_bare_tracked_integer_power_chain(
+    /// is one optionally signed bare local integer. Unary signs are pure, so
+    /// this retains the real multiplication path without erasing a call,
+    /// conditional, or arithmetic expression from runtime IIR.
+    fn static_nonnegative_signed_tracked_integer_power_chain(
         &self,
         nodes: &[&GrammarASTNode],
     ) -> Option<u32> {
@@ -2706,7 +2713,7 @@ impl Compiler {
                 return (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64)
                     .then_some(value as u32);
             }
-            let name = expr_variable_name(node)?;
+            let (negative, name) = exact_signed_bare_variable_expression(node)?;
             if dependencies.len() != 1 || !dependencies.contains(&name) {
                 return None;
             }
@@ -2719,6 +2726,11 @@ impl Compiler {
                 return None;
             }
             let value = *self.static_integer_slots.get(&binding.slot)?;
+            let value = if negative {
+                value.checked_neg()?
+            } else {
+                value
+            };
             (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64).then_some(value as u32)
         })
     }
@@ -7264,7 +7276,7 @@ impl Compiler {
             .or_else(|| {
                 (base.ty == ScalarType::Real)
                     .then(|| {
-                        self.static_nonnegative_bare_tracked_integer_power_chain(exponent_nodes)
+                        self.static_nonnegative_signed_tracked_integer_power_chain(exponent_nodes)
                     })
                     .flatten()
             });
@@ -8676,6 +8688,26 @@ fn exact_bare_variable_expression_name(node: &GrammarASTNode) -> Option<String> 
     let child_nodes = direct_nodes(node);
     (child_nodes.len() == 1)
         .then(|| exact_bare_variable_expression_name(child_nodes[0]))
+        .flatten()
+}
+
+fn exact_signed_bare_variable_expression(node: &GrammarASTNode) -> Option<(bool, String)> {
+    if node.rule_name == "variable" {
+        return bare_scalar_variable_name(node).map(|name| (false, name));
+    }
+    if let Some(child) = single_parenthesized_child(node) {
+        return exact_signed_bare_variable_expression(child);
+    }
+    if let Some((sign, child)) = single_signed_child(node) {
+        let (negative, name) = exact_signed_bare_variable_expression(child)?;
+        return Some((negative ^ (sign == "-"), name));
+    }
+    if !direct_tokens(node).is_empty() {
+        return None;
+    }
+    let child_nodes = direct_nodes(node);
+    (child_nodes.len() == 1)
+        .then(|| exact_signed_bare_variable_expression(child_nodes[0]))
         .flatten()
 }
 
@@ -10368,6 +10400,33 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
         }));
+    }
+
+    #[test]
+    fn al4_signed_tracked_integer_exponents_unroll_real_powers() {
+        let module = compile_source(
+            "begin integer exponent; real saved; exponent := -2; saved := 6.0 ^ (-exponent) + 6.0; exponent := 3; output(saved + 0.5) end",
+            "test",
+        )
+        .expect("a signed bare integer exponent may retain real multiplication lowering");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+        assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+    }
+
+    #[test]
+    fn al4_arithmetic_tracked_integer_exponents_remain_dynamic_for_real_powers() {
+        let module = compile_source(
+            "begin integer exponent; real saved; exponent := -2; saved := 6.0 ^ (0 - exponent) end",
+            "test",
+        )
+        .expect("tracked exponent arithmetic retains runtime real-power lowering");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
     }
 
     #[test]
