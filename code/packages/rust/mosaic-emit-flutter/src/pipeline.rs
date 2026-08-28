@@ -2396,15 +2396,55 @@ fn emit_container(
         format!("{pad}{widget}(\n{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
     };
 
-    // UI41, #12028 item 1 — `Row`/`Column`/`Stack` have no decoration
-    // mechanism of their own (unlike `Box` → `Container`), so a part
-    // with `elevation` set gets wrapped in a `Container` carrying just
-    // the shadow. Base props only (see `elevation_tier`'s doc comment).
-    if let Some(tier) = elevation_tier(&parse_style_props(style_props)) {
+    // `Row`/`Column`/`Stack` have no decoration mechanism of their own
+    // (unlike `Box` → `Container`), so a part declaring `width`/`height`
+    // and/or `elevation` (UI41, #12028 item 1) gets wrapped in a
+    // `Container` carrying those properties directly.
+    //
+    // `width`/`height` matter beyond visual sizing: a real crash
+    // (mosaic-emit-flutter issue #13429) traced to exactly this gap — a
+    // `Row`/`Column` with an explicit `width:` (e.g. the app-shell `rail`,
+    // `width: 236px`) that never reached the generated Dart rendered with
+    // NO size at all. A `Row`'s non-flex children get UNBOUNDED width by
+    // design (so they can shrink-wrap to their own content), and an
+    // unsized `Column` propagates that same unboundedness straight down
+    // to its own descendants — so any `Expanded` anywhere inside that
+    // subtree (a `Row(children: [Expanded(TextField), Button])`, a very
+    // common real shape) crashes with "RenderFlex children have non-zero
+    // flex but incoming width constraints are unbounded." Applying the
+    // part's own `width`/`height` via this wrapper gives the subtree a
+    // real, bounded size again, matching what `Box`'s decoration path
+    // already does for the same properties.
+    let props = parse_style_props(style_props);
+    let width = props.get("width").and_then(|v| fixed_pixel_length(v));
+    let height = props.get("height").and_then(|v| fixed_pixel_length(v));
+    let elevation = elevation_tier(&props);
+    if width.is_some() || height.is_some() || elevation.is_some() {
+        // `SizedBox` when there's only sizing to carry (no `decoration:`
+        // to attach) — `flutter analyze`'s `sized_box_for_whitespace`
+        // lint prefers it over a `Container` that does nothing but size
+        // its child, and it's the more idiomatic Flutter shape anyway.
+        let wrapper = if elevation.is_none() { "SizedBox" } else { "Container" };
+        let mut wrapper_args: Vec<String> = Vec::new();
+        if let Some(w) = &width {
+            wrapper_args.push(format!("width: {w}"));
+        }
+        if let Some(h) = &height {
+            wrapper_args.push(format!("height: {h}"));
+        }
+        if let Some(tier) = elevation {
+            wrapper_args.push(format!(
+                "decoration: BoxDecoration(boxShadow: [{}])",
+                tier.box_shadow_dart()
+            ));
+        }
+        let args_str: String = wrapper_args
+            .iter()
+            .map(|a| format!("{inner_pad}{a},\n"))
+            .collect();
         let body_trimmed = body.trim_start().trim_end_matches('\n');
         return Ok(format!(
-            "{pad}Container(\n{inner_pad}decoration: BoxDecoration(boxShadow: [{}]),\n{inner_pad}child: {body_trimmed}\n{pad})\n",
-            tier.box_shadow_dart()
+            "{pad}{wrapper}(\n{args_str}{inner_pad}child: {body_trimmed}\n{pad})\n"
         ));
     }
     Ok(body)
@@ -2468,6 +2508,26 @@ fn emit_paired_children(
         // `emit_widget_tree`, which emits a documenting placeholder.
         let sub = emit_widget_tree(child, indent, part_styles, component, emits, ctx)?;
         let sub = sub.trim_end_matches('\n');
+        // A direct `Row` child (e.g. the app-shell's `main` column,
+        // `flex-grow: 1`) needs to be `Expanded` for its declared
+        // `flex-grow` to mean anything in Flutter — and, per the same
+        // #13429 crash this fix addresses, for the REST of the top-level
+        // layout to have a bounded width at all (the sibling that ISN'T
+        // `Expanded` relies on the `Row`'s normal shrink-to-content
+        // behaviour instead). `Expanded` is a compile error outside a
+        // `Row`/`Column`, hence the `ctx.direct_row_child` gate.
+        let expanded;
+        let sub: &str = match ctx
+            .direct_row_child
+            .then(|| part_flex_grow(child, part_styles))
+            .flatten()
+        {
+            Some(flex) => {
+                expanded = format!("Expanded(flex: {flex}, child: {sub})");
+                &expanded
+            }
+            None => sub,
+        };
         out.push_str(sub);
         out.push_str(",\n");
         i += 1;
@@ -2768,12 +2828,41 @@ fn emit_if_dart(
         None => "const SizedBox.shrink()".to_string(),
     };
 
-    Ok(format!(
-        "{pad}((_mosaicTruthy({cond})) ? {then_b} : {else_b})\n",
+    let ternary = format!(
+        "(_mosaicTruthy({cond})) ? {then_b} : {else_b}",
         cond = cond_expr,
         then_b = then_branch,
         else_b = else_branch,
-    ))
+    );
+
+    // A toggled panel (e.g. Notes' `notes-editor`/`notes-empty` pair —
+    // "show the editor when a note is selected, else an empty-state
+    // message") commonly declares `flex-grow` on BOTH branches so the
+    // panel keeps the same layout weight regardless of which one is
+    // showing. Mirrors the plain-child `flex-grow` → `Expanded` wrap in
+    // `emit_paired_children` (mosaic-emit-flutter issue #13429) for the
+    // ternary case, which that fix didn't reach — `render_branch`'s
+    // single-child shape means each branch's own styled node is
+    // available here, so we check both and prefer whichever is set.
+    let flex = branch_flex_grow(&if_node.children, part_styles)
+        .or_else(|| else_node.and_then(|en| branch_flex_grow(&en.children, part_styles)));
+    let body = match ctx.direct_row_child.then_some(flex).flatten() {
+        Some(f) => format!("Expanded(flex: {f}, child: {ternary})"),
+        None => ternary,
+    };
+    Ok(format!("{pad}({body})\n"))
+}
+
+/// A conditional branch's `flex-grow`, read from its single styled child
+/// node (mirrors `render_branch`'s own single-child special case — a
+/// multi-child branch has no one node to attribute `flex-grow` to, so it
+/// contributes `None`). See [`part_flex_grow`]'s doc comment for why this
+/// is a freeform, defensively-parsed CSS-shape prop.
+fn branch_flex_grow(children: &[LayoutNode], part_styles: &HashMap<String, String>) -> Option<u32> {
+    match children {
+        [only] => part_flex_grow(only, part_styles),
+        _ => None,
+    }
 }
 
 /// Render a single conditional branch (the body of an `If` or `Else`)
@@ -2854,6 +2943,25 @@ fn parse_pixel_value(s: &str) -> String {
     s.parse::<f64>()
         .map(|f| format!("{f}"))
         .unwrap_or_else(|_| "0".to_string())
+}
+
+/// A fixed pixel length, or `None` for anything relative (a `%` value, most
+/// notably) that has no meaningful fixed-pixel translation.
+///
+/// Only used for the `Row`/`Column`/`Stack` width/height wrapper (#13429):
+/// a CSS `width: 100%` on a part like `title-block` means "fill my parent",
+/// but that part's parent is a `Row`, where `100%` has no well-defined
+/// pixel value to hand a `SizedBox` — `parse_pixel_value`'s "unparseable →
+/// 0" fallback would collapse the whole subtree into a zero-width box
+/// instead (a real regression this fix caught via a real `flutter test`
+/// render: `title-block`'s content overflowed a 0-width `SizedBox`). Silently
+/// not applying the width, leaving the child to size itself as it always
+/// did before this wrapper existed, is the correct behaviour here.
+fn fixed_pixel_length(s: &str) -> Option<String> {
+    if s.trim().ends_with('%') {
+        return None;
+    }
+    Some(parse_pixel_value(s))
 }
 
 /// Translate a CSS hex / named colour to a Dart `Color(0xFFRRGGBB)`
@@ -2987,6 +3095,24 @@ fn elevation_tier(props: &HashMap<String, String>) -> Option<ElevationTier> {
         Some("overlay") => Some(ElevationTier::Overlay),
         _ => None,
     }
+}
+
+/// A node's own part's `flex-grow` value, or `None` when unset or
+/// unparseable. `flex-grow` is a freeform CSS-shape prop like `width`/
+/// `padding` — not restricted by mosstyle's `validate()` the way
+/// `elevation` is — so a non-numeric value is treated defensively as "no
+/// flex" rather than erroring.
+///
+/// Only meaningful for a node that is a DIRECT child of a `Row`'s
+/// `children: [...]` list — Flutter's `Expanded` is a compile error
+/// anywhere else. Callers are responsible for checking
+/// `ctx.direct_row_child` before using this (mirrors how `emit_host_input`
+/// already threads that same flag for its own row-specific behaviour).
+fn part_flex_grow(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Option<u32> {
+    let part = node.part_name.as_deref()?;
+    let style_props = part_styles.get(part)?;
+    let value = parse_style_props(style_props).get("flex-grow")?.trim().parse::<f64>().ok()?;
+    Some(value.round().max(0.0) as u32)
 }
 
 /// True when the node carries any `state-when-*` predicate prop — the
@@ -6859,6 +6985,215 @@ mod tests {
         assert!(out.contains("child: Row("), "got:\n{out}");
     }
 
+    /// mosaic-emit-flutter issue #13429: a `Column` with an explicit
+    /// `width` (e.g. the app-shell `rail` sidebar) must carry that width
+    /// into the generated Dart, or a `Row`'s unbounded-width sizing of its
+    /// non-flex children propagates straight through the unsized `Column`
+    /// and crashes any `Expanded` further down the subtree.
+    #[test]
+    fn column_with_width_wraps_in_sized_box_carrying_width() {
+        let style = StyleDef {
+            component_name: "Shell".into(),
+            parts: vec![PartStyle {
+                name: "rail".into(),
+                base: vec![StyleProp {
+                    name: "width".into(),
+                    value: "236px".into(),
+                }],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let l = layout(
+            "Shell",
+            LayoutNode {
+                tag: "Column".into(),
+                part_name: Some("rail".into()),
+                props: vec![],
+                children: vec![text_node("nav")],
+            },
+        );
+        let out = from_pipeline(&component("Shell", vec![], vec![]), &l, &style)
+            .unwrap()
+            .output;
+
+        assert!(
+            out.contains("SizedBox(") && out.contains("width: 236"),
+            "width-only Column must be wrapped in a SizedBox carrying the width:\n{out}"
+        );
+        assert!(out.contains("child: Column("), "got:\n{out}");
+        // No BoxDecoration needed here — `flutter analyze`'s
+        // `sized_box_for_whitespace` lint prefers `SizedBox` over
+        // `Container` when there's no decoration to attach.
+        assert!(!out.contains("Container("), "got:\n{out}");
+    }
+
+    /// A part carrying BOTH `width` and `elevation` (a real, if rarer,
+    /// combination) still needs `Container` — `SizedBox` has no
+    /// `decoration:` slot for the box shadow.
+    #[test]
+    fn column_with_width_and_elevation_wraps_in_container_not_sized_box() {
+        let style = StyleDef {
+            component_name: "Shell".into(),
+            parts: vec![PartStyle {
+                name: "card".into(),
+                base: vec![
+                    StyleProp {
+                        name: "width".into(),
+                        value: "200px".into(),
+                    },
+                    StyleProp {
+                        name: "elevation".into(),
+                        value: "raised".into(),
+                    },
+                ],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let l = layout(
+            "Shell",
+            LayoutNode {
+                tag: "Column".into(),
+                part_name: Some("card".into()),
+                props: vec![],
+                children: vec![text_node("hi")],
+            },
+        );
+        let out = from_pipeline(&component("Shell", vec![], vec![]), &l, &style)
+            .unwrap()
+            .output;
+
+        assert!(
+            out.contains("Container(") && out.contains("width: 200"),
+            "width+elevation Column must use Container, not SizedBox:\n{out}"
+        );
+        assert!(out.contains("boxShadow: [BoxShadow("), "got:\n{out}");
+    }
+
+    /// mosaic-emit-flutter issue #13429 (real-toolchain follow-up): a
+    /// percentage `width` (e.g. TaskApp's real `title-block` part, `width:
+    /// 100%`) has no fixed pixel translation inside a `Row`/`Column`
+    /// wrapper and must NOT collapse to `SizedBox(width: 0, ...)` — that
+    /// zeroes the subtree's width and overflows its own children. It
+    /// should be silently skipped, leaving the child to size itself as it
+    /// always did before this wrapper existed.
+    #[test]
+    fn column_with_percent_width_does_not_collapse_to_zero_width_sized_box() {
+        let style = StyleDef {
+            component_name: "Shell".into(),
+            parts: vec![PartStyle {
+                name: "title-block".into(),
+                base: vec![StyleProp {
+                    name: "width".into(),
+                    value: "100%".into(),
+                }],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let l = layout(
+            "Shell",
+            LayoutNode {
+                tag: "Column".into(),
+                part_name: Some("title-block".into()),
+                props: vec![],
+                children: vec![text_node("title")],
+            },
+        );
+        let out = from_pipeline(&component("Shell", vec![], vec![]), &l, &style)
+            .unwrap()
+            .output;
+
+        assert!(!out.contains("SizedBox("), "got:\n{out}");
+        assert!(!out.contains("width: 0"), "got:\n{out}");
+        assert!(out.contains("Column("), "got:\n{out}");
+    }
+
+    /// mosaic-emit-flutter issue #13429: a plain (non-conditional) direct
+    /// `Row` child with `flex-grow` must be wrapped in `Expanded`, or the
+    /// declared flex is silently dropped and the sibling relies on
+    /// undefined shrink-to-content sizing instead.
+    #[test]
+    fn plain_direct_row_child_with_flex_grow_wraps_in_expanded() {
+        let style = StyleDef {
+            component_name: "Shell".into(),
+            parts: vec![PartStyle {
+                name: "main".into(),
+                base: vec![StyleProp {
+                    name: "flex-grow".into(),
+                    value: "1".into(),
+                }],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let l = layout(
+            "Shell",
+            LayoutNode {
+                tag: "Row".into(),
+                part_name: None,
+                props: vec![],
+                children: vec![
+                    text_node("rail"),
+                    LayoutNode {
+                        tag: "Column".into(),
+                        part_name: Some("main".into()),
+                        props: vec![],
+                        children: vec![text_node("content")],
+                    },
+                ],
+            },
+        );
+        let out = from_pipeline(&component("Shell", vec![], vec![]), &l, &style)
+            .unwrap()
+            .output;
+
+        assert!(
+            out.contains("Expanded(flex: 1, child:") && out.contains("Column("),
+            "flex-grow direct Row child must be wrapped in Expanded:\n{out}"
+        );
+    }
+
+    /// A `flex-grow` declared on a part that ISN'T a direct `Row` child
+    /// (e.g. nested one level deeper inside a `Column`) must NOT be
+    /// wrapped in `Expanded` — that's a compile error outside a
+    /// `Row`/`Column` context and this repo's real usage never needs it.
+    #[test]
+    fn flex_grow_on_non_row_child_is_not_wrapped_in_expanded() {
+        let style = StyleDef {
+            component_name: "Shell".into(),
+            parts: vec![PartStyle {
+                name: "inner".into(),
+                base: vec![StyleProp {
+                    name: "flex-grow".into(),
+                    value: "1".into(),
+                }],
+                transitions: vec![],
+                states: Vec::new(),
+            }],
+        };
+        let l = layout(
+            "Shell",
+            LayoutNode {
+                tag: "Column".into(),
+                part_name: None,
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Column".into(),
+                    part_name: Some("inner".into()),
+                    props: vec![],
+                    children: vec![text_node("content")],
+                }],
+            },
+        );
+        let out = from_pipeline(&component("Shell", vec![], vec![]), &l, &style)
+            .unwrap()
+            .output;
+
+        assert!(!out.contains("Expanded("), "got:\n{out}");
+    }
+
     /// `HostButton` should use Flutter's native, first-class Material
     /// `ButtonStyle.elevation` (a real depth-scaling shadow, verified via
     /// a real widget-test golden render) rather than a `BoxShadow` hack.
@@ -9757,6 +10092,73 @@ mod tests {
             "did not expect a fallback SizedBox.shrink when Else was paired, got:\n{}",
             out
         );
+    }
+
+    /// mosaic-emit-flutter issue #13429: a toggled panel — e.g. Notes'
+    /// real `notes-editor`/`notes-empty` pair, "show the editor when a
+    /// note is selected, else an empty-state message" — commonly declares
+    /// the SAME `flex-grow` on both branches so the panel keeps the same
+    /// layout weight either way. As a direct `Row` child, that ternary
+    /// must be wrapped in `Expanded`, the same as a plain (non-conditional)
+    /// flex-grow child already is.
+    #[test]
+    fn if_else_pair_as_direct_row_child_with_flex_grow_wraps_in_expanded() {
+        let m = component("X", vec![slot("editing", SlotType::Bool, true)], vec![]);
+        let style = StyleDef {
+            component_name: "X".into(),
+            parts: vec![
+                PartStyle {
+                    name: "editor".into(),
+                    base: vec![StyleProp {
+                        name: "flex-grow".into(),
+                        value: "1".into(),
+                    }],
+                    transitions: vec![],
+                    states: Vec::new(),
+                },
+                PartStyle {
+                    name: "empty".into(),
+                    base: vec![StyleProp {
+                        name: "flex-grow".into(),
+                        value: "1".into(),
+                    }],
+                    transitions: vec![],
+                    states: Vec::new(),
+                },
+            ],
+        };
+        let l = layout(
+            "X",
+            node_with(
+                "Row",
+                vec![],
+                vec![
+                    if_node(
+                        LayoutPropValue::SlotRef("editing".into()),
+                        vec![LayoutNode {
+                            tag: "Column".into(),
+                            part_name: Some("editor".into()),
+                            props: vec![],
+                            children: vec![text_node("editor")],
+                        }],
+                    ),
+                    else_node(vec![LayoutNode {
+                        tag: "Column".into(),
+                        part_name: Some("empty".into()),
+                        props: vec![],
+                        children: vec![text_node("empty")],
+                    }]),
+                ],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &style).expect("ok");
+        let out = &r.output;
+        assert!(
+            out.contains("Expanded(flex: 1, child: (_mosaicTruthy(editing)) ?"),
+            "expected the If/Else ternary wrapped in Expanded, got:\n{out}"
+        );
+        assert!(out.contains("Text(\"editor\")"), "got:\n{out}");
+        assert!(out.contains("Text(\"empty\")"), "got:\n{out}");
     }
 
     // ----- If when: is an Expr — passes through verbatim --------------------
