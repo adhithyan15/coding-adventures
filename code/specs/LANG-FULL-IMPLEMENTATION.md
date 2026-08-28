@@ -968,9 +968,10 @@ backend immediately) come before the enabler-dependent items.
   directly without a multiply or runtime power call, and other bounded results
   retain the integer unrolled-power path. A real base also retains bounded
   multiplication when its exponent is checked integer arithmetic over exact
-  local snapshots, or when pure built-in `abs` or `sign` consumes that exact
-  arithmetic. Invalid arithmetic, user calls and overrides, conditionals,
-  globals, and invalidated values stay on `f64_pow`.
+  local snapshots, including checked arithmetic that composes pure built-in
+  `abs` and `sign` calls over those exact values. Invalid arithmetic, user
+  calls and overrides, conditionals, globals, and invalidated values stay on
+  `f64_pow`.
   Checked evaluation recurses through nested
   bounded power operands while retaining the same overflow and exponent caps.
   Finite-real selectors also accept bounded variable-free literal arithmetic

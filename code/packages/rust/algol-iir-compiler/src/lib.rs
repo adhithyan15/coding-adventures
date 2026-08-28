@@ -2711,9 +2711,7 @@ impl Compiler {
             if dependencies.is_empty() {
                 return None;
             }
-            if !exact_tracked_integer_arithmetic_expression(node)
-                && !self.exact_tracked_standard_integer_expression(node)
-            {
+            if !self.exact_tracked_integer_expression(node) {
                 return None;
             }
             for name in dependencies {
@@ -2730,6 +2728,50 @@ impl Compiler {
             let value = self.static_integer_scalar_value(node)?;
             (value >= 0 && value <= MAX_POW_UNROLL_EXPONENT as i64).then_some(value as u32)
         })
+    }
+
+    /// Recognize checked integer arithmetic whose leaves are literals, exact
+    /// tracked locals, or pure supported standard-function calls.
+    fn exact_tracked_integer_expression(&self, node: &GrammarASTNode) -> bool {
+        if exact_signed_bare_variable_expression(node).is_some() {
+            return true;
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.exact_tracked_integer_expression(child);
+        }
+        if let Some((_, child)) = single_signed_child(node) {
+            return self.exact_tracked_integer_expression(child);
+        }
+        let tokens = direct_tokens(node);
+        if tokens.len() == 1 && tokens[0].effective_type_name() == "INTEGER_LIT" {
+            return true;
+        }
+        if node.rule_name == "proc_call" {
+            return self.exact_tracked_standard_integer_expression(node);
+        }
+        let sequence = pieces(node);
+        if sequence.len() >= 3
+            && !sequence.len().is_multiple_of(2)
+            && sequence.iter().skip(1).step_by(2).all(|piece| {
+                matches!(
+                    piece,
+                    Piece::Op(op)
+                        if matches!(op.as_str(), "+" | "-" | "*" | "div" | "mod" | "^" | "**")
+                )
+            })
+        {
+            return sequence
+                .iter()
+                .step_by(2)
+                .all(|piece| match piece {
+                    Piece::Node(operand) => self.exact_tracked_integer_expression(operand),
+                    Piece::Op(_) => false,
+                });
+        }
+        let child_nodes = direct_nodes(node);
+        tokens.is_empty()
+            && child_nodes.len() == 1
+            && self.exact_tracked_integer_expression(child_nodes[0])
     }
 
     /// Recognize one pure integer-valued standard function over exact tracked
@@ -2759,7 +2801,7 @@ impl Compiler {
             return false;
         }
         let actuals = self.standard_fn_actuals(node);
-        actuals.len() == 1 && exact_tracked_integer_arithmetic_expression(actuals[0])
+        actuals.len() == 1 && self.exact_tracked_integer_expression(actuals[0])
     }
 
     fn static_nonnegative_power_chain_with<F>(
@@ -8740,45 +8782,6 @@ fn exact_signed_bare_variable_expression(node: &GrammarASTNode) -> Option<(bool,
         .flatten()
 }
 
-fn exact_tracked_integer_arithmetic_expression(node: &GrammarASTNode) -> bool {
-    if exact_signed_bare_variable_expression(node).is_some() {
-        return true;
-    }
-    if let Some(child) = single_parenthesized_child(node) {
-        return exact_tracked_integer_arithmetic_expression(child);
-    }
-    if let Some((_, child)) = single_signed_child(node) {
-        return exact_tracked_integer_arithmetic_expression(child);
-    }
-    let tokens = direct_tokens(node);
-    if tokens.len() == 1 && tokens[0].effective_type_name() == "INTEGER_LIT" {
-        return true;
-    }
-    let sequence = pieces(node);
-    if sequence.len() >= 3
-        && !sequence.len().is_multiple_of(2)
-        && sequence.iter().skip(1).step_by(2).all(|piece| {
-            matches!(
-                piece,
-                Piece::Op(op)
-                    if matches!(op.as_str(), "+" | "-" | "*" | "div" | "mod" | "^" | "**")
-            )
-        })
-    {
-        return sequence
-            .iter()
-            .step_by(2)
-            .all(|piece| match piece {
-                Piece::Node(operand) => exact_tracked_integer_arithmetic_expression(operand),
-                Piece::Op(_) => false,
-            });
-    }
-    let child_nodes = direct_nodes(node);
-    tokens.is_empty()
-        && child_nodes.len() == 1
-        && exact_tracked_integer_arithmetic_expression(child_nodes[0])
-}
-
 fn literal_boolean_value(node: &GrammarASTNode) -> Option<bool> {
     if let Some(child) = single_parenthesized_child(node) {
         return literal_boolean_value(child);
@@ -10546,14 +10549,34 @@ mod tests {
 
     #[test]
     fn al4_user_standard_function_overrides_remain_dynamic_real_power_exponents() {
-        let module = compile_source(
-            "begin integer procedure abs(x); value x; integer x; abs := 2; integer exponent; real saved; exponent := -2; saved := 6.0 ^ abs(exponent) end",
-            "test",
-        )
-        .expect("a user override must retain its runtime call and real-power lowering");
-        let main = module.get_function("main").expect("has main");
-        assert!(main.instructions.iter().any(|instr| instr.op == "call"));
-        assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+        for exponent in ["abs(exponent)", "abs(exponent) + 0"] {
+            let source = format!(
+                "begin integer procedure abs(x); value x; integer x; abs := 2; integer exponent; real saved; exponent := -2; saved := 6.0 ^ ({exponent}) end"
+            );
+            let module = compile_source(&source, "test")
+                .expect("a user override must retain its runtime call and real-power lowering");
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| instr.op == "call"));
+            assert!(main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+        }
+    }
+
+    #[test]
+    fn al4_composed_tracked_standard_function_exponents_unroll_real_powers() {
+        for exponent in [
+            "abs(exponent) + sign(exponent) + 1",
+            "abs(sign(exponent) - 3) div 2",
+        ] {
+            let source = format!(
+                "begin integer exponent; real saved; exponent := -2; saved := 6.0 ^ ({exponent}) + 6.0; exponent := 3; if saved = 42.0 then output(42) else output(1) end"
+            );
+            let module = compile_source(&source, "test")
+                .expect("composed pure standard-function exponent should unroll");
+            let main = module.get_function("main").expect("has main");
+            assert!(!main.instructions.iter().any(|instr| instr.op == "f64_pow"));
+            assert!(main.instructions.iter().any(|instr| instr.op == "mul"));
+            assert!(main.instructions.iter().any(|instr| instr.op == "cmp_eq"));
+        }
     }
 
     #[test]
