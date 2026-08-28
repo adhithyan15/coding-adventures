@@ -182,6 +182,8 @@ Pinned participant-group fixtures gate named, transparent, unlabeled, and RGB
 boxes while preserving group membership and actor metadata through the scene.
 Pinned participant-configuration fixtures gate quote variants, aliases, mixed
 implicit lanes, all six stereotypes, and malformed or unterminated definitions.
+Pinned central-connection fixtures gate source, destination, and dual endpoint
+markers across solid, dotted, bidirectional, and cross message families.
 Both single-line accessibility statements and multiline `accDescr` blocks
 lower to PaintScene metadata.
 Newlines and semicolons are interchangeable sequence statement terminators,
