@@ -206,12 +206,27 @@ fn even_double_word_at_memory_end_fails_without_wrapping() {
         .load_words(&[instruction(0o10, 4096, 0)], 4)
         .unwrap();
     simulator.set_program_counter(4).unwrap();
+    let before = simulator.get_state();
 
     let error = simulator.step().unwrap_err();
 
     assert!(error.contains("address out of range: 4097"));
-    assert_eq!(simulator.get_state().a, 0);
-    assert_eq!(simulator.get_state().q, 0);
+    assert_eq!(simulator.get_state(), before);
+}
+
+#[test]
+fn decision_skip_past_memory_fails_before_mutating_state() {
+    for instruction_word in [assemble_fixed("BOD").unwrap(), instruction(0o04, 0, 1)] {
+        let mut simulator = Simulator::new(4096).unwrap();
+        simulator.write_word(4094, instruction_word).unwrap();
+        simulator.set_program_counter(4094).unwrap();
+        let before = simulator.get_state();
+
+        let error = simulator.step().unwrap_err();
+
+        assert!(error.contains("address out of range: 4096"));
+        assert_eq!(simulator.get_state(), before);
+    }
 }
 
 #[test]

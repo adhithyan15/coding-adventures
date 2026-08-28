@@ -5,6 +5,14 @@ All notable changes to the ge225-simulator Rust package will be documented in th
 ## [Unreleased]
 
 ### Changed
+- Decode `SEL P,X` and both `BCS` status senses, deliver the two opaque command
+  words without CPU execution, model selector busy/error/alert behavior, and
+  preserve fixed plug priority through a deterministic generic controller
+  adapter.
+- Complete optional API mode transitions: latch enabled controller and direct
+  card ready events, save P in special X-group 32, vector through octal 0204,
+  defer new events during priority mode, and implement `SET PST`/`SET PBK` plus
+  modified-`BRU` return semantics without interrupting a branch target.
 - Decode the card subsystem's aligned `RCD`, `RCB`, `RCF`, optional `RCM`,
   `WCD`, `WCB`, and `WCF` forms instead of treating every opcode-25 word as a
   generic memory-reference `RCD`.
@@ -61,6 +69,12 @@ All notable changes to the ge225-simulator Rust package will be documented in th
   warning-free rustdoc.
 
 ### Added
+- Public controller status/command records, bounded command capture, explicit
+  selector and controller completion events, API masks and pending state, and
+  14 manual-backed controller/API regressions, raising core line coverage to
+  87.45% (1,680/1,921).
+- Atomic core preflight for pair operands, raw and X-word addresses, `SPB`,
+  overlapping `MOV`, and exact decision/controller-status skips.
 - Public card-format/status records, exact card-I/O assembly, punch-output
   capture, N-device state, decoded paper-tape frames, and deterministic service
   methods for continuous card, paper-tape, and typewriter input.
