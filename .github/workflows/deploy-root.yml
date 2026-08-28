@@ -1,40 +1,100 @@
 # ================================================================
-# Deploy Root Landing Page to GitHub Pages
+# Build and deploy the Forme repository landing page
 # ================================================================
 #
-# Deploys the static site in code/programs/static/landing-page/
-# to the root of the gh-pages branch, so that
-#   https://adhithyan15.github.io/coding-adventures/
-# shows a summary page linking to all sub-apps instead of a 404.
-#
-# No build step — the page is plain HTML with embedded CSS and a social card.
-# keep_files: true preserves all existing sub-app content
-# (busicom/, logic-gates/, transistors/, lattice/) already on gh-pages.
+# The seven-stage site pipeline emits dist/index.html plus fingerprinted
+# assets. Pull requests exercise the exact clean-checkout build; main pushes
+# publish the verified artifact to the root of gh-pages while preserving all
+# sub-app directories.
 
 name: Deploy Root Landing Page
 
 on:
+  pull_request:
+    paths:
+      - "code/sites/landing-page/**"
+      - "code/packages/typescript/document-ast/**"
+      - "code/packages/typescript/forme-aot-css-slicer/**"
+      - "code/packages/typescript/forme-cache/**"
+      - "code/packages/typescript/forme-capability/**"
+      - "code/packages/typescript/forme-emit-site-fs/**"
+      - "code/packages/typescript/forme-errors/**"
+      - "code/packages/typescript/forme-identity/**"
+      - "code/packages/typescript/forme-load-assets-fs/**"
+      - "code/packages/typescript/forme-orchestrator/**"
+      - "code/packages/typescript/forme-pipeline-config/**"
+      - "code/packages/typescript/forme-resolve-asset-refs-fs/**"
+      - "code/packages/typescript/forme-router/**"
+      - "code/packages/typescript/forme-source-fs/**"
+      - "code/packages/typescript/forme-stage/**"
+      - "code/packages/typescript/forme-style-ir/**"
+      - "code/packages/typescript/forme-style-to-css/**"
+      - "code/packages/typescript/forme-types/**"
+      - "code/packages/typescript/blake2b/**"
+      - ".github/workflows/deploy-root.yml"
   push:
     branches: [main]
     paths:
-      - "code/programs/static/landing-page/**"
+      - "code/sites/landing-page/**"
+      - "code/packages/typescript/document-ast/**"
+      - "code/packages/typescript/forme-aot-css-slicer/**"
+      - "code/packages/typescript/forme-cache/**"
+      - "code/packages/typescript/forme-capability/**"
+      - "code/packages/typescript/forme-emit-site-fs/**"
+      - "code/packages/typescript/forme-errors/**"
+      - "code/packages/typescript/forme-identity/**"
+      - "code/packages/typescript/forme-load-assets-fs/**"
+      - "code/packages/typescript/forme-orchestrator/**"
+      - "code/packages/typescript/forme-pipeline-config/**"
+      - "code/packages/typescript/forme-resolve-asset-refs-fs/**"
+      - "code/packages/typescript/forme-router/**"
+      - "code/packages/typescript/forme-source-fs/**"
+      - "code/packages/typescript/forme-stage/**"
+      - "code/packages/typescript/forme-style-ir/**"
+      - "code/packages/typescript/forme-style-to-css/**"
+      - "code/packages/typescript/forme-types/**"
+      - "code/packages/typescript/blake2b/**"
       - ".github/workflows/deploy-root.yml"
   workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: deploy-root-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: code/sites/landing-page/package-lock.json
+
+      - name: Test clean-checkout Forme build
+        working-directory: code/sites/landing-page
+        run: npm run build:clean
+
+      - name: Verify generated root artifact
+        run: |
+          test -s code/sites/landing-page/dist/index.html
+          test -n "$(find code/sites/landing-page/dist/assets -type f -name 'og.*.jpg' -print -quit)"
+          grep -q '<meta name="generator" content="Forme">' code/sites/landing-page/dist/index.html
+          ! grep -R "forme-asset:" code/sites/landing-page/dist
+          ! grep -q "<script" code/sites/landing-page/dist/index.html
+
       - name: Deploy to GitHub Pages (root)
+        if: github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: code/programs/static/landing-page
+          publish_dir: code/sites/landing-page/dist
           destination_dir: .
           keep_files: true

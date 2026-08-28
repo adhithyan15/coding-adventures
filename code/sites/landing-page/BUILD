@@ -1,0 +1,1 @@
+npm run build:clean && npm test && npx tsc --noEmit && test -s dist/index.html && test -n "$(find dist/assets -type f -name 'og.*.jpg' -print -quit)" && ! grep -R "forme-asset:" dist && ! grep -q "<script" dist/index.html

@@ -1,0 +1,37 @@
+{
+  "name": "@coding-adventures/landing-page-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Forme-generated Coding Adventures repository landing page.",
+  "type": "module",
+  "scripts": {
+    "bootstrap": "node scripts/bootstrap.mjs",
+    "build": "tsx build.ts",
+    "build:clean": "npm run bootstrap && npm run clean && npm run build",
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "test": "node --test scripts/bootstrap.test.mjs && vitest run landing.test.ts"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../../packages/typescript/document-ast",
+    "@coding-adventures/forme-aot-css-slicer": "file:../../packages/typescript/forme-aot-css-slicer",
+    "@coding-adventures/forme-emit-site-fs": "file:../../packages/typescript/forme-emit-site-fs",
+    "@coding-adventures/forme-identity": "file:../../packages/typescript/forme-identity",
+    "@coding-adventures/forme-load-assets-fs": "file:../../packages/typescript/forme-load-assets-fs",
+    "@coding-adventures/forme-orchestrator": "file:../../packages/typescript/forme-orchestrator",
+    "@coding-adventures/forme-pipeline-config": "file:../../packages/typescript/forme-pipeline-config",
+    "@coding-adventures/forme-resolve-asset-refs-fs": "file:../../packages/typescript/forme-resolve-asset-refs-fs",
+    "@coding-adventures/forme-router": "file:../../packages/typescript/forme-router",
+    "@coding-adventures/forme-source-fs": "file:../../packages/typescript/forme-source-fs",
+    "@coding-adventures/forme-stage": "file:../../packages/typescript/forme-stage",
+    "@coding-adventures/forme-style-ir": "file:../../packages/typescript/forme-style-ir",
+    "@coding-adventures/forme-types": "file:../../packages/typescript/forme-types"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0"
+  }
+}

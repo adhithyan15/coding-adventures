@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "site": {
+    "title": "Coding Adventures — Build the stack",
+    "description": "Coding Adventures is a learning-first computing lab: nearly 5,000 packages, 200+ programs, and interactive projects spanning transistors, languages, runtimes, UI systems, and applications.",
+    "shortDescription": "A learning-first computing lab where every layer is built to be inspected.",
+    "canonicalUrl": "https://adhithyan15.github.io/coding-adventures/",
+    "repositoryUrl": "https://github.com/adhithyan15/coding-adventures",
+    "ogImage": "assets/og.jpg",
+    "ogImageWidth": 1731,
+    "ogImageHeight": 909,
+    "updated": "2026-08-28"
+  },
+  "hero": {
+    "eyebrow": "A learning-first monorepo",
+    "title": "Build the stack.",
+    "accent": "Inspect every layer.",
+    "intro": "Coding Adventures is a working laboratory for computing from first principles. The repository follows ideas from transistors and logic gates through languages, runtimes, UI systems, and complete products—without hiding the seams.",
+    "primaryAction": { "label": "Choose a path", "href": "#paths" },
+    "secondaryAction": { "label": "Read the field guide", "href": "https://github.com/adhithyan15/coding-adventures#where-to-start" },
+    "stack": [
+      { "label": "Applications", "detail": "Engram · Journal · task-app" },
+      { "label": "UI systems", "detail": "Mosaic · Lattice · renderers" },
+      { "label": "Languages", "detail": "lexers · parsers · compilers" },
+      { "label": "Runtimes", "detail": "VMs · storage · networking" },
+      { "label": "Machines", "detail": "ARM1 · ENIAC · Intel 4004" },
+      { "label": "Electronics", "detail": "transistors · logic · arithmetic" }
+    ]
+  },
+  "snapshot": {
+    "items": [
+      { "value": "5,003", "label": "Reusable package directories" },
+      { "value": "211", "label": "Programs and applications" },
+      { "value": "54", "label": "Grammar families" },
+      { "value": "1,498", "label": "Specifications and roadmaps" }
+    ],
+    "note": "The scale is deliberate: each package stays small enough to inspect, while parity lanes expose the same ideas across languages and runtimes."
+  },
+  "paths": [
+    {
+      "number": "PATH / 01",
+      "title": "Build a computer",
+      "description": "Start with device physics, compose logic and arithmetic, then step through real machine architectures.",
+      "links": [
+        { "label": "Transistors", "href": "/coding-adventures/transistors/" },
+        { "label": "Logic", "href": "/coding-adventures/logic-gates/" },
+        { "label": "Arithmetic", "href": "/coding-adventures/arithmetic/" },
+        { "label": "ARM1", "href": "/coding-adventures/arm1-web/" }
+      ]
+    },
+    {
+      "number": "PATH / 02",
+      "title": "Design a language",
+      "description": "Follow text from grammar and tokens through parsing, analysis, bytecode, runtimes, and developer tools.",
+      "links": [
+        { "label": "CommonMark", "href": "/coding-adventures/commonmark/" },
+        { "label": "Lattice", "href": "/coding-adventures/lattice/" },
+        { "label": "Nib", "href": "/coding-adventures/nib-web/" },
+        { "label": "Platform spec", "href": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/LANG-PLATFORM-VISION.md" }
+      ]
+    },
+    {
+      "number": "PATH / 03",
+      "title": "Ship a product",
+      "description": "See shared engines, storage, UI compilation, authoring, and deployment converge into usable applications.",
+      "links": [
+        { "label": "Engram", "href": "/coding-adventures/engram/" },
+        { "label": "Language Ladder", "href": "/coding-adventures/language-ladder/" },
+        { "label": "ML Lab", "href": "/coding-adventures/ml-learning/" },
+        { "label": "Forme", "href": "#forme" }
+      ]
+    }
+  ],
+  "labs": [
+    { "kicker": "Learning system / New", "title": "Language Ladder", "href": "/coding-adventures/language-ladder/", "description": "Explore concepts, scripts, syllabaries, lessons, and review progress across a growing human-language curriculum.", "tags": ["Languages", "Curriculum", "Interactive"], "featured": true },
+    { "kicker": "Product system / App", "title": "Engram", "href": "/coding-adventures/engram/", "description": "A spaced-repetition product that exercises the shared Rust core, document model, storage, and multi-host UI work.", "tags": ["Memory", "Rust", "Mosaic"], "featured": true },
+    { "kicker": "Layer 00", "title": "Transistors", "href": "/coding-adventures/transistors/", "description": "Vacuum tube, BJT, MOSFET, and CMOS behavior made visible.", "tags": ["Physics", "CMOS"] },
+    { "kicker": "Layer 01", "title": "Logic Gates", "href": "/coding-adventures/logic-gates/", "description": "Gate behavior, truth tables, and transistor-level CMOS layouts.", "tags": ["Boolean logic", "Circuits"] },
+    { "kicker": "Layer 02", "title": "Arithmetic", "href": "/coding-adventures/arithmetic/", "description": "Adders, ALUs, two's-complement, multiplication, and CPU steps.", "tags": ["ALU", "Binary"] },
+    { "kicker": "Machine / 1945", "title": "ENIAC", "href": "/coding-adventures/eniac/", "description": "Decimal vacuum-tube computation beside binary equivalents.", "tags": ["History", "Decimal"] },
+    { "kicker": "Machine / 1971", "title": "Busicom", "href": "/coding-adventures/busicom/", "description": "A working 141-PF calculator powered by an Intel 4004 simulation.", "tags": ["Intel 4004", "Calculator"] },
+    { "kicker": "Machine / 1985", "title": "ARM1", "href": "/coding-adventures/arm1-web/", "description": "Registers, pipeline, barrel shifter, control logic, and memory.", "tags": ["CPU", "Pipeline"] },
+    { "kicker": "Compiler path", "title": "Nib", "href": "/coding-adventures/nib-web/", "description": "Compile Nib into 4004 assembly, binary, HEX, and simulation.", "tags": ["Compiler", "Assembly"] },
+    { "kicker": "Language tool", "title": "Lattice", "href": "/coding-adventures/lattice/", "description": "Documentation and a live playground for the repository's CSS superset.", "tags": ["CSS", "Transpiler"] },
+    { "kicker": "Parser lab", "title": "CommonMark", "href": "/coding-adventures/commonmark/", "description": "A live Markdown renderer built from the repository's own grammar pipeline.", "tags": ["Markdown", "AST"] },
+    { "kicker": "Rendering lab", "title": "Code 39", "href": "/coding-adventures/code39/", "description": "Turn text into barcodes through reusable draw instructions.", "tags": ["Barcode", "Drawing"] },
+    { "kicker": "Collection", "title": "Electronics", "href": "/coding-adventures/electronics-visualizers/", "description": "Circuit and architecture visualizers collected in one surface.", "tags": ["Circuits", "Architecture"] },
+    { "kicker": "Learning lab", "title": "Machine Learning", "href": "/coding-adventures/ml-learning/", "description": "Perceptrons, XOR, normalization, gradient descent, and matrix math.", "tags": ["ML", "From scratch"] },
+    { "kicker": "Documentation", "title": "Engram Docs", "href": "/coding-adventures/engram-docs/", "description": "Architecture and product documentation for the spaced-repetition system.", "tags": ["Docs", "Architecture"] },
+    { "kicker": "Generated library / New", "title": "Language Books", "href": "/coding-adventures/human-languages/books/", "description": "Downloadable books generated from the shared human-language curriculum.", "tags": ["Books", "Generated"] }
+  ],
+  "forme": {
+    "eyebrow": "Built here, for pages like this",
+    "title": "Meet Forme.",
+    "description": "Forme is the typed authoring pipeline generating this page. Content, routes, Style IR, assets, rendering, and deployment artifacts stay independently inspectable while one verified DAG composes the finished site.",
+    "actions": [
+      { "label": "Read the vision", "href": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/FM00-forme-vision.md" },
+      { "label": "Read the build notes", "href": "/coding-adventures/blog/2026-05-15-hello-forme.html" }
+    ],
+    "pipeline": [
+      { "label": "Source", "detail": "declarative content · filesystem adapters" },
+      { "label": "Parse", "detail": "Content IR · validated model" },
+      { "label": "Transform", "detail": "asset identity · canonical route" },
+      { "label": "Render", "detail": "Style IR · semantic HTML · metadata" },
+      { "label": "Package", "detail": "fingerprints · manifest · exact bytes" },
+      { "label": "Deploy", "detail": "clean build · GitHub Pages" }
+    ],
+    "status": [
+      { "value": "61", "label": "TypeScript Forme packages" },
+      { "value": "2", "label": "End-to-end product sites" },
+      { "value": "Next", "label": "Headless CLI and preview" }
+    ]
+  },
+  "workshop": [
+    { "kicker": "UI compilation", "title": "Mosaic", "href": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/UI00-mosaic.md", "description": "One typed UI model targeting web, native toolkits, and paint backends." },
+    { "kicker": "Product surface", "title": "task-app", "href": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/task-app-overview.md", "description": "A shared project engine expressed as tables, boards, timelines, and flows." },
+    { "kicker": "Curriculum system", "title": "Human languages", "href": "/coding-adventures/language-ladder/", "description": "Shared lesson data feeding interactive study surfaces and generated books." },
+    { "kicker": "Application / source", "title": "Journal", "href": "https://github.com/adhithyan15/coding-adventures/tree/main/code/programs/typescript/journal-app", "description": "A local-first journaling application built on the repository's shared product stack." }
+  ],
+  "footer": "The best way to understand a system is to build the path through it."
+}
