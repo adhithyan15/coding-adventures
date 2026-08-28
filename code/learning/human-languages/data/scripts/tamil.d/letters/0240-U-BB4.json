@@ -1,0 +1,27 @@
+{
+  "glyph": "ழ",
+  "sound": "ḻa",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "a tall left upright joined to a low crossbar",
+    "an inner upright and broad right bowl",
+    "a detached lower hook and short exit"
+  ],
+  "strokeOrder": [
+    "start at the lower left and climb the tall upright",
+    "without lifting, retrace down the same upright",
+    "without lifting, carry the low crossbar to the right — then lift once",
+    "set the pen at the upper right and retrace left into the inner upright",
+    "without lifting, descend and sweep around the broad right bowl — then lift a second time",
+    "set the pen below the body and turn through the detached lower hook — and only now lift"
+  ],
+  "strokeOrderNote": "three strokes — three joined left-body and top-bar movements, one lift, two joined inner-upright and right-bowl movements, a second lift, then the detached lower hook; cited to Radhakrishnan, Tamil Script Learners Manual, Appendix I, Frame 7, ழ",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 7, ழ (University of Texas at Austin), p. 193",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Appendix I Frame 7 numbers six movements in three pen-down runs: joined movements 1–3 form the left body and bar, joined movements 4–5 retrace into the inner upright and broad right bowl, and separate movement 6 forms the detached lower hook. The bundled Noto Sans Tamil print face simplifies the source's looped left body and high bar into a retraced upright with a low crossbar; the authored path preserves the source's run grouping while fitting that printed outline. Tamil handwriting varies by school; this is one attested three-run order."
+  },
+  "notes": "The famously Tamil retroflex approximant, often transliterated ḻ. Frame 7's six numbered movements are three strokes rather than six: movements 1–3 stay joined through the left body and bar, movements 4–5 stay joined through the inner upright and right bowl, and movement 6 is the detached lower hook."
+}

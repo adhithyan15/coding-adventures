@@ -55,8 +55,23 @@
 // guard placed behind it, twice, in two consecutive review rounds. Use
 // `statIfPresent` below. Leaving the import out makes the next reach for it a
 // compile error rather than a judgement call.
-import { lstatSync, mkdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
-import { basename, dirname, isAbsolute, join, normalize, relative as pathRelative, resolve } from "node:path";
+import {
+  lstatSync,
+  mkdirSync,
+  readFileSync,
+  realpathSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import {
+  basename,
+  dirname,
+  isAbsolute,
+  join,
+  normalize,
+  relative as pathRelative,
+  resolve,
+} from "node:path";
 import { pathToFileURL } from "node:url";
 import { defaultCurriculumRoot } from "./loader.js";
 import { assertRelativeManifestPath } from "./manifest-path.js";
@@ -215,7 +230,12 @@ export interface ShardPlan {
  */
 const SAFE_GROUP = /^[a-z][a-z0-9-]*$/;
 
-function assertSafeGroup(group: unknown, plan: ShardPlan, key: string, index: number): string {
+function assertSafeGroup(
+  group: unknown,
+  plan: ShardPlan,
+  key: string,
+  index: number,
+): string {
   if (typeof group !== "string" || !SAFE_GROUP.test(group)) {
     throw new Error(
       `${plan.path}: ${key}[${index}] has group ${JSON.stringify(group)}, ` +
@@ -244,7 +264,11 @@ function assertSafeGroup(group: unknown, plan: ShardPlan, key: string, index: nu
  * without consulting the directory, which matters when the point of the
  * exercise is that two authors write two different files without coordinating.
  */
-function ordinalFor(section: ShardSection, element: unknown, index: number): number {
+function ordinalFor(
+  section: ShardSection,
+  element: unknown,
+  index: number,
+): number {
   return section.ordinalOf === undefined
     ? (index + 1) * ORDINAL_STRIDE
     : section.ordinalOf(element, index);
@@ -255,7 +279,6 @@ function sectionShardPath(section: ShardSection, name: string): string {
   return section.dir === undefined ? name : `${section.dir}/${name}`;
 }
 
-
 /**
  * The tracks whose `chapters.json` has been sharded.
  *
@@ -265,10 +288,29 @@ function sectionShardPath(section: ShardSection, name: string): string {
  * parsed data unchanged before this list was expanded to complete the migration.
  */
 const CHAPTER_SHARDED_TRACKS: readonly string[] = [
-  "arabic", "bengali", "chinese", "french", "german", "gujarati", "hindi",
-  "italian", "japanese", "kannada", "latin", "malayalam", "marathi", "marwadi",
-  "persian", "portuguese", "punjabi", "russian", "sanskrit", "spanish", "tamil",
-  "telugu", "urdu",
+  "arabic",
+  "bengali",
+  "chinese",
+  "french",
+  "german",
+  "gujarati",
+  "hindi",
+  "italian",
+  "japanese",
+  "kannada",
+  "latin",
+  "malayalam",
+  "marathi",
+  "marwadi",
+  "persian",
+  "portuguese",
+  "punjabi",
+  "russian",
+  "sanskrit",
+  "spanish",
+  "tamil",
+  "telugu",
+  "urdu",
 ];
 
 /**
@@ -287,7 +329,8 @@ function chaptersPlan(track: string): ShardPlan {
     sections: [
       {
         key: "chapters",
-        ordinalOf: (element) => (element as { chapter?: unknown }).chapter as number,
+        ordinalOf: (element) =>
+          (element as { chapter?: unknown }).chapter as number,
       },
     ],
     // The build-time virtual-module boundary keeps one lazy module per track,
@@ -305,10 +348,29 @@ function chaptersPlan(track: string): ShardPlan {
  * migration was audited, so it required no normalization commit here.
  */
 const CURRICULUM_SHARDED_TRACKS: readonly string[] = [
-  "arabic", "bengali", "chinese", "french", "german", "gujarati", "hindi",
-  "italian", "japanese", "kannada", "latin", "malayalam", "marathi", "marwadi",
-  "persian", "portuguese", "punjabi", "russian", "sanskrit", "spanish", "tamil",
-  "telugu", "urdu",
+  "arabic",
+  "bengali",
+  "chinese",
+  "french",
+  "german",
+  "gujarati",
+  "hindi",
+  "italian",
+  "japanese",
+  "kannada",
+  "latin",
+  "malayalam",
+  "marathi",
+  "marwadi",
+  "persian",
+  "portuguese",
+  "punjabi",
+  "russian",
+  "sanskrit",
+  "spanish",
+  "tamil",
+  "telugu",
+  "urdu",
 ];
 
 /**
@@ -404,7 +466,8 @@ export const BOOK_GENERATION_PLAN: ShardPlan = {
   sections: [],
   grouping: {
     keys: BOOK_GENERATION_GROUPED_KEYS,
-    groupOf: (element) => (element as { language?: unknown }).language as string,
+    groupOf: (element) =>
+      (element as { language?: unknown }).language as string,
   },
   // Filesystem and Python consumers merge the grouped shards directly.
   monolith: "removed",
@@ -422,7 +485,8 @@ function scriptInventoryPlan(name: string): ShardPlan {
       {
         key: "letters",
         dir: "letters",
-        idOf: (element) => scriptEntryId((element as { glyph?: unknown }).glyph),
+        idOf: (element) =>
+          scriptEntryId((element as { glyph?: unknown }).glyph),
       },
       {
         key: "marks",
@@ -438,13 +502,19 @@ function scriptInventoryPlan(name: string): ShardPlan {
 
 export const JAPANESE_SCRIPT_PLAN = scriptInventoryPlan("japanese");
 export const PERSO_ARABIC_SCRIPT_PLAN = scriptInventoryPlan("perso-arabic");
+export const TAMIL_SCRIPT_PLAN = scriptInventoryPlan("tamil");
 export const URDU_NASTALIQ_SCRIPT_PLAN = scriptInventoryPlan("urdu-nastaliq");
 
 /** Ledgers HL21 has migrated so far. Grows one entry per follow-on PR. */
 export const SHARD_PLANS: readonly ShardPlan[] = [
   {
     path: "core/spine.json",
-    sections: [{ key: "nodes", idOf: (element) => (element as { id?: unknown }).id as string }],
+    sections: [
+      {
+        key: "nodes",
+        idOf: (element) => (element as { id?: unknown }).id as string,
+      },
+    ],
     monolith: "removed",
   },
   ...CHAPTER_SHARDED_TRACKS.map(chaptersPlan),
@@ -452,9 +522,9 @@ export const SHARD_PLANS: readonly ShardPlan[] = [
   BOOK_GENERATION_PLAN,
   JAPANESE_SCRIPT_PLAN,
   PERSO_ARABIC_SCRIPT_PLAN,
+  TAMIL_SCRIPT_PLAN,
   URDU_NASTALIQ_SCRIPT_PLAN,
 ];
-
 
 /** Ordinal stride, and the width it is padded to. See the header. */
 const ORDINAL_STRIDE = 10;
@@ -477,9 +547,28 @@ const ORDINAL_WIDTH = 4;
  */
 const SAFE_ID = /^[A-Z][A-Z0-9-]*$/;
 const WINDOWS_RESERVED = new Set([
-  "CON", "PRN", "AUX", "NUL",
-  "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
-  "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
+  "CON",
+  "PRN",
+  "AUX",
+  "NUL",
+  "COM1",
+  "COM2",
+  "COM3",
+  "COM4",
+  "COM5",
+  "COM6",
+  "COM7",
+  "COM8",
+  "COM9",
+  "LPT1",
+  "LPT2",
+  "LPT3",
+  "LPT4",
+  "LPT5",
+  "LPT6",
+  "LPT7",
+  "LPT8",
+  "LPT9",
 ]);
 
 function assertSafeId(
@@ -625,7 +714,10 @@ export function safeLedgerPath(root: string, relative: string): string {
     `shard-cli: ledger path must be relative to the curriculum root, got '${relative}'`,
   );
   const output = resolve(root, relative);
-  const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll("\\", "/");
+  const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll(
+    "\\",
+    "/",
+  );
   if (
     fromRoot === "" ||
     fromRoot === ".." ||
@@ -652,7 +744,9 @@ export function safeLedgerPath(root: string, relative: string): string {
   // `/var` is a link to `/private/var`, so a checkout under a symlinked path
   // would otherwise fail this check for no reason.
   const realParent = realpathSync(dirname(output));
-  const inside = normalize(pathRelative(realpathSync(root), realParent)).replaceAll("\\", "/");
+  const inside = normalize(
+    pathRelative(realpathSync(root), realParent),
+  ).replaceAll("\\", "/");
   if (inside === ".." || inside.startsWith("../")) {
     throw new Error(
       `shard-cli: '${relative}' resolves outside the curriculum root — ` +
@@ -738,7 +832,10 @@ export function metaOf(
  * unconditionally would have rewritten all 21 already-committed shard sets to
  * add a line none of them needs.
  */
-function needsKeyOrder(keys: readonly string[], sharded: ReadonlySet<string>): boolean {
+function needsKeyOrder(
+  keys: readonly string[],
+  sharded: ReadonlySet<string>,
+): boolean {
   const present = keys.filter((key) => sharded.has(key));
   const suffix = keys.slice(keys.length - present.length);
   return present.length > 0 && !suffix.every((key) => sharded.has(key));
@@ -754,24 +851,41 @@ export function shardContents(
   document: Record<string, unknown>,
   plan: ShardPlan,
 ): Map<string, string> {
-  if (plan.grouping !== undefined) return groupedShardContents(document, plan, plan.grouping);
+  if (plan.grouping !== undefined)
+    return groupedShardContents(document, plan, plan.grouping);
 
   const out = new Map<string, string>();
-  out.set(META_SHARD, serialize(metaOf(document, plan.sections.map((s) => s.key))));
+  out.set(
+    META_SHARD,
+    serialize(
+      metaOf(
+        document,
+        plan.sections.map((s) => s.key),
+      ),
+    ),
+  );
 
   for (const section of plan.sections) {
     // An array section reads `[element, …]`; an object section reads
     // `{id: element, …}` and takes its id from the KEY rather than from `idOf`,
     // because that is where an object keeps it.
     const raw = document[section.key];
-    const entries: { element: unknown; id: string | undefined; where: string }[] = [];
+    const entries: {
+      element: unknown;
+      id: string | undefined;
+      where: string;
+    }[] = [];
 
     if ((section.kind ?? "array") === "object") {
       if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
-        throw new Error(`${plan.path}: no top-level '${section.key}' object to shard`);
+        throw new Error(
+          `${plan.path}: no top-level '${section.key}' object to shard`,
+        );
       }
       let index = 0;
-      for (const [key, element] of Object.entries(raw as Record<string, unknown>)) {
+      for (const [key, element] of Object.entries(
+        raw as Record<string, unknown>,
+      )) {
         entries.push({
           element,
           id: assertSafeId(key, plan, section, `['${key}']`),
@@ -782,14 +896,22 @@ export function shardContents(
       void index;
     } else {
       if (!Array.isArray(raw)) {
-        throw new Error(`${plan.path}: no top-level '${section.key}' array to shard`);
+        throw new Error(
+          `${plan.path}: no top-level '${section.key}' array to shard`,
+        );
       }
       raw.forEach((element, index) => {
         entries.push({
           element,
-          id: section.idOf === undefined
-            ? undefined
-            : assertSafeId(section.idOf(element, index), plan, section, `[${index}]`),
+          id:
+            section.idOf === undefined
+              ? undefined
+              : assertSafeId(
+                  section.idOf(element, index),
+                  plan,
+                  section,
+                  `[${index}]`,
+                ),
           where: `[${index}]`,
         });
       });
@@ -859,7 +981,12 @@ function groupedShardContents(
       throw new Error(`${plan.path}: no top-level '${key}' array to shard`);
     }
     list.forEach((element, index) => {
-      const group = assertSafeGroup(grouping.groupOf(element, key, index), plan, key, index);
+      const group = assertSafeGroup(
+        grouping.groupOf(element, key, index),
+        plan,
+        key,
+        index,
+      );
       let byKey = slices.get(group);
       if (byKey === undefined) {
         byKey = new Map();
@@ -875,7 +1002,9 @@ function groupedShardContents(
   out.set(META_SHARD, serialize(metaOf(document, grouping.keys)));
   // Sorted, so the written order matches the read order and `--shard` is
   // idempotent down to the byte.
-  for (const group of [...slices.keys()].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))) {
+  for (const group of [...slices.keys()].sort((a, b) =>
+    a < b ? -1 : a > b ? 1 : 0,
+  )) {
     const byKey = slices.get(group)!;
     // Keys in the ledger's own order, not in first-seen order, so two runs over
     // the same data always emit the same bytes.
@@ -909,7 +1038,9 @@ export function unshardContents(root: string, plan: ShardPlan): string {
   const monolith = safeLedgerPath(root, plan.path);
   const shards = readShards(monolith);
   if (shards === null) {
-    throw new Error(`${plan.path}: no ${shardDirectoryFor(plan.path)} to rebuild from`);
+    throw new Error(
+      `${plan.path}: no ${shardDirectoryFor(plan.path)} to rebuild from`,
+    );
   }
   // ONE definition of what these files mean, shared with `loader.ts`. If the
   // generated monolith and the document the app loads were assembled by two
@@ -939,7 +1070,10 @@ export function unshardContents(root: string, plan: ShardPlan): string {
  * ledger has one today; the check costs nothing and closes the collision before
  * it can be discovered as a corrupted rebuild.
  */
-function assertShardable(document: Record<string, unknown>, plan: ShardPlan): void {
+function assertShardable(
+  document: Record<string, unknown>,
+  plan: ShardPlan,
+): void {
   if (Object.hasOwn(document, KEY_ORDER_FIELD)) {
     throw new Error(
       `${plan.path}: has a top-level '${KEY_ORDER_FIELD}' key, which shard-cli ` +
@@ -980,7 +1114,8 @@ function assertShardable(document: Record<string, unknown>, plan: ShardPlan): vo
     seenDirs.add(dir);
   }
 
-  const keys = plan.grouping?.keys ?? plan.sections.map((section) => section.key);
+  const keys =
+    plan.grouping?.keys ?? plan.sections.map((section) => section.key);
   for (const key of keys) {
     if (!Object.hasOwn(document, key)) {
       throw new Error(`${plan.path}: no top-level '${key}' to shard`);
@@ -1016,7 +1151,11 @@ export function shardLedger(root: string, plan: ShardPlan): string[] {
   // say that plainly instead of letting `readLedgerFile` report ENOENT on a
   // file the migration deleted on purpose. Without this the second `--shard`
   // reads as "the checkout is broken" when it actually means "this is done".
-  if (plan.monolith === "removed" && statIfPresent(monolith) === undefined && isSharded(monolith)) {
+  if (
+    plan.monolith === "removed" &&
+    statIfPresent(monolith) === undefined &&
+    isSharded(monolith)
+  ) {
     throw new Error(
       `${plan.path}: already sharded into ${shardDirectoryFor(plan.path)}, and the ` +
         `monolith was removed by that migration. The shards are the source of ` +
@@ -1061,7 +1200,8 @@ export function shardLedger(root: string, plan: ShardPlan): string[] {
   // lazily inside the write loop so that a plan naming a section directory it
   // cannot create fails before any shard is written, not halfway through.
   for (const section of plan.sections) {
-    if (section.dir !== undefined) mkdirSync(join(dir, section.dir), { recursive: true });
+    if (section.dir !== undefined)
+      mkdirSync(join(dir, section.dir), { recursive: true });
   }
   const written: string[] = [];
   // The monolith goes LAST, after every shard is safely on disk, so an
@@ -1164,7 +1304,9 @@ export function runShardCli(
 
   const requested = args[1];
   const plans = requested
-    ? SHARD_PLANS.filter((plan) => plan.path === requested.replaceAll("\\", "/"))
+    ? SHARD_PLANS.filter(
+        (plan) => plan.path === requested.replaceAll("\\", "/"),
+      )
     : SHARD_PLANS;
   if (requested && plans.length === 0) {
     process.stderr.write(
@@ -1177,7 +1319,9 @@ export function runShardCli(
   for (const plan of plans) {
     if (mode === "--shard") {
       const written = shardLedger(root, plan);
-      process.stdout.write(`sharded ${plan.path} into ${written.length} files\n`);
+      process.stdout.write(
+        `sharded ${plan.path} into ${written.length} files\n`,
+      );
       continue;
     }
     if (mode === "--unshard") {
@@ -1188,7 +1332,9 @@ export function runShardCli(
     // --check: do the two representations agree?
     const monolith = safeLedgerPath(root, plan.path);
     if (!isSharded(monolith)) {
-      process.stderr.write(`${plan.path}: ${shardDirectoryFor(plan.path)} is missing\n`);
+      process.stderr.write(
+        `${plan.path}: ${shardDirectoryFor(plan.path)} is missing\n`,
+      );
       failed = true;
       continue;
     }
@@ -1219,9 +1365,14 @@ export function runShardCli(
       // unreadable files, having asserted nothing but an absence.
       JSON.parse(expected);
       const present = new Set(listShardNames(monolith));
-      for (const name of shardContents(JSON.parse(expected) as Record<string, unknown>, plan).keys()) {
+      for (const name of shardContents(
+        JSON.parse(expected) as Record<string, unknown>,
+        plan,
+      ).keys()) {
         if (!present.has(name)) {
-          process.stderr.write(`${plan.path}: expected shard '${name}' is missing\n`);
+          process.stderr.write(
+            `${plan.path}: expected shard '${name}' is missing\n`,
+          );
           failed = true;
         }
       }
@@ -1274,9 +1425,14 @@ export function runShardCli(
     // produced. Catches a shard deleted by a bad merge, whose absence would
     // otherwise only show up as a node quietly missing from the ladder.
     const names = new Set(listShardNames(monolith));
-    for (const name of shardContents(JSON.parse(expected) as Record<string, unknown>, plan).keys()) {
+    for (const name of shardContents(
+      JSON.parse(expected) as Record<string, unknown>,
+      plan,
+    ).keys()) {
       if (!names.has(name)) {
-        process.stderr.write(`${plan.path}: expected shard '${name}' is missing\n`);
+        process.stderr.write(
+          `${plan.path}: expected shard '${name}' is missing\n`,
+        );
         failed = true;
       }
     }
@@ -1284,6 +1440,9 @@ export function runShardCli(
   return failed ? 1 : 0;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(resolve(process.argv[1])).href
+) {
   process.exit(runShardCli());
 }

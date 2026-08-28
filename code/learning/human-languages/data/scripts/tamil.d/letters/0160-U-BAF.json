@@ -1,0 +1,28 @@
+{
+  "glyph": "ய",
+  "sound": "ya",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "a rounded left hook",
+    "a central upright retraced downward",
+    "a bottom bar",
+    "a straight right upright"
+  ],
+  "strokeOrder": [
+    "start at the top left and descend the left upright",
+    "without lifting, round the curved foot and climb into the central upright",
+    "without lifting, carry the central upright to the top",
+    "without lifting, retrace the central upright back down to the baseline",
+    "without lifting, turn right and run along the bottom",
+    "without lifting, rise up the right upright — and only now lift"
+  ],
+  "strokeOrderNote": "one unbroken stroke — six numbered movements, no pen lift; cited to Radhakrishnan, Tamil Script Learners Manual, Appendix I, Frame 1, ய",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 1, ய (University of Texas at Austin), p. 190",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Frame 1 numbers six joined movements for ய: down the left, around its foot, up and back down the central upright, across the bottom, and up the right. Tamil handwriting varies by school; this is one attested continuous order fitted to the bundled Noto Sans Tamil outline."
+  },
+  "notes": "Ya begins like a rounded extension of ப: its left hook feeds the central upright, which is climbed and retraced before the same bottom-and-right finish. All six numbered movements belong to one pen-down run."
+}

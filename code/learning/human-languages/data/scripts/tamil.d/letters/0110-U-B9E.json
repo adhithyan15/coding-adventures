@@ -1,0 +1,30 @@
+{
+  "glyph": "ஞ",
+  "sound": "ña",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "a compact left inner loop",
+    "a long top bar",
+    "a central descent with a right shoulder",
+    "a broad outer bowl returning up the left"
+  ],
+  "strokeOrder": [
+    "start inside the compact left body and curve down into its inner turn",
+    "without lifting, circle around the left inner loop and return toward its upper-left edge — then lift once",
+    "set the pen at the left end of the long top bar and carry it straight to the right — then lift a second time",
+    "set the pen at the upper-right shoulder and curve left toward the central upright",
+    "without lifting, descend the central upright to its lower end — then lift a third time",
+    "set the pen on the upper-right side and sweep around the broad outer-right curve",
+    "without lifting, continue around the bottom bowl toward the far left",
+    "without lifting, return up the outer-left side and finish below the top bar"
+  ],
+  "strokeOrderNote": "four strokes — movements 1–2 form the left inner loop, movement 3 is the detached top bar, movements 4–5 form the shoulder and central descent, and movements 6–8 form the broad outer bowl; cited to Radhakrishnan, Tamil Script Learners Manual, Appendix I, Frame 8, ஞ",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 8, ஞ (University of Texas at Austin), p. 194",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Appendix I Frame 8 numbers eight movements: 1–2 build the left inner loop, 3 draws the top bar, 4–5 form the shoulder and central descent, and 6–8 sweep around the broad outer bowl. Tamil handwriting varies by school; this is one attested four-run order fitted to the bundled Noto Sans Tamil outline."
+  },
+  "notes": "Ña is the palatal nasal heard in combinations such as ஞ்ச. Frame 8's eight numbered movements resolve into four pen-down runs in this font fit: inner loop, top bar, central shoulder-and-descent, and outer bowl."
+}

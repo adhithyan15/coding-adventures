@@ -5,7 +5,7 @@
 // ---------------------------------------------------------------------------
 //
 // The ONLY place that reaches out to the curriculum's canonical script files.
-// Ordinary inventories are imported directly. The three canonical shard sets
+// Ordinary inventories are imported directly. Canonical shard sets
 // arrive through one fixed build-time virtual module. Neither route copies the
 // curriculum, so readers see exactly what the lessons teach from.
 //
@@ -27,11 +27,11 @@ import arabic from "../../../../learning/human-languages/data/scripts/arabic.jso
 import {
   japanese as japaneseInventory,
   persoArabic as persoArabicInventory,
+  tamil as tamilInventory,
   urduNastaliq as urduNastaliqInventory,
 } from "virtual:script-ductus-inventories";
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
 import gujarati from "../../../../learning/human-languages/data/scripts/gujarati.json";
-import tamil from "../../../../learning/human-languages/data/scripts/tamil.json";
 // The Dravidian syllabaries (Telugu/Kannada/Malayalam) are GENERATED from Unicode
 // by data/scripts/generate_syllabary.py — each "letter" is a base consonant
 // composed with a vowel sign (ka, ki, ku, kha, …), for reading-recognition.
@@ -129,6 +129,7 @@ export interface ScriptData {
 
 const japanese = japaneseInventory as ScriptData;
 const persoArabic = persoArabicInventory as ScriptData;
+const tamil = tamilInventory as ScriptData;
 const urduNastaliq = urduNastaliqInventory as ScriptData;
 
 // The JSON files are authored to the ScriptData shape; assert it once here.
@@ -150,14 +151,18 @@ export const SCRIPTS: ScriptData[] = [
 ];
 
 /** Resolve a cited letter back to the exact canonical script font that owns it. */
-export function verifiedLetterFont(glyph: string, sourceUrl: string): string | undefined {
+export function verifiedLetterFont(
+  glyph: string,
+  sourceUrl: string,
+): string | undefined {
   return SCRIPTS.find((script) =>
     [
       ...script.letters,
       ...(script.independentVowels ?? []),
       ...(script.finalConsonants ?? []),
     ].some(
-      (letter) => letter.glyph === glyph && letter.strokeOrderSource?.url === sourceUrl,
+      (letter) =>
+        letter.glyph === glyph && letter.strokeOrderSource?.url === sourceUrl,
     ),
   )?.font;
 }

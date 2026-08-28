@@ -1,0 +1,22 @@
+{
+  "glyph": "ட",
+  "sound": "ṭa",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "a straight left upright",
+    "a long horizontal foot to the right"
+  ],
+  "strokeOrder": [
+    "start at the top left and draw the left upright straight down",
+    "without lifting, turn right and carry the long foot to the far edge — and only now lift"
+  ],
+  "strokeOrderNote": "one unbroken stroke — left upright then rightward foot, with no pen lift; cited to Radhakrishnan, Tamil Script Learners Manual, Appendix I, Frame 1, ட",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 1, ட (University of Texas at Austin), p. 190",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Frame 1 numbers ட's left descent and rightward foot as two joined movements, while Module 1 identifies the letter and teaches the usual top-to-bottom and left-to-right motion. Tamil handwriting varies by school; this is one attested continuous order fitted to the bundled Noto Sans Tamil outline."
+  },
+  "notes": "The retroflex stop begins as ṭ and voices to ḍ between vowels. Its spare L-shaped outline is written as one cornering motion: down first, then right, with no lift at the turn."
+}

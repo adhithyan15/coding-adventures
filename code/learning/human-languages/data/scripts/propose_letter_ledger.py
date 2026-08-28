@@ -59,6 +59,7 @@ import re
 import sys
 import unicodedata
 from collections import Counter
+from sharded_ledger import load_script
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 HL = os.path.normpath(os.path.join(HERE, "..", ".."))
@@ -230,8 +231,8 @@ def opening_words(track, script):
 
 def derived_families(script):
     """Families the script file's own `components` already state."""
-    path = os.path.join(HERE, SCRIPT_FILE[script])
-    data = json.load(open(path, encoding="utf-8"))
+    logical_name = SCRIPT_FILE[script]
+    data = load_script(HL, logical_name.removesuffix(".json"))
     inventory = {l["glyph"] for l in data.get("letters", []) if len(l.get("glyph", "")) == 1}
     families = []
     for letter in data.get("letters", []):
@@ -243,7 +244,7 @@ def derived_families(script):
         for ref in sorted(refs):
             families.append({
                 "names": [unicodedata.name(ref), unicodedata.name(glyph)],
-                "source": f"{SCRIPT_FILE[script]}: components of {unicodedata.name(glyph)} "
+                "source": f"{logical_name}: components of {unicodedata.name(glyph)} "
                           f"name {unicodedata.name(ref)}",
             })
     return families

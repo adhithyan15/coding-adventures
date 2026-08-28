@@ -1,0 +1,25 @@
+{
+  "glyph": "ர",
+  "sound": "ra",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "a straight left upright",
+    "a top bar",
+    "a central upright ending in a short angular tail"
+  ],
+  "strokeOrder": [
+    "start at the top left and draw the left upright straight down — then lift once",
+    "set the pen at the top left and carry the top bar to the right — then lift a second time",
+    "set the pen at the middle top and draw the central upright down",
+    "without lifting again, add the short angular tail down-left and hook its tip down-right — and only now lift"
+  ],
+  "strokeOrderNote": "three strokes — left upright, top bar, then the joined central upright and angular tail; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 3, ர",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 3, ர (University of Texas at Austin), p. 191",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Frame 3 identifies ர as the three-movement ஈ frame plus a slightly angular short fourth movement. Tamil handwriting varies by school; this is one attested three-run order fitted to the bundled Noto Sans Tamil outline."
+  },
+  "notes": "The light/flapped r, distinct from ற. Its first two runs make the upright and cap; the third descends through the middle and stays joined through the small angular tail."
+}

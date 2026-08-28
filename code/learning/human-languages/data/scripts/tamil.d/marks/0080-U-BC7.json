@@ -1,0 +1,20 @@
+{
+  "mark": "ே",
+  "sound": "ē",
+  "role": "vowel-sign",
+  "attachesAs": "a dependent long-e sign written before and to the left of the primary consonant, though pronounced after it",
+  "example": {
+    "base": "க",
+    "combined": "கே",
+    "sound": "kē"
+  },
+  "compositionOrder": [
+    "in handwriting, write the ē vowel sign to the left before the primary consonant",
+    "write the Tamil consonant carrier after it; read the result as consonant plus ē"
+  ],
+  "compositionSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Module 7, Frame 7: the secondary symbol for ē is written before the primary consonant (University of Texas at Austin, 2009)",
+    "url": "https://sites.la.utexas.edu/tamilscript/category/3-moduals/module-07",
+    "variation": "Module 7 verifies the handwritten sign-before-carrier order and the sign's left-side placement. It does not supply a standalone directional path or pen-lift count, so no ductus is inferred."
+  }
+}

@@ -15,11 +15,21 @@ import {
 } from "./script-inventories/helpers.js";
 
 const scriptInventoryModules = import.meta.glob<ScriptInventoryEvidenceModule>(
-  "./script-inventories/*.evidence.ts",
+  "./script-inventories/**/*.evidence.ts",
   { eager: true },
 );
 
-const { taxonomy, registry, spine, curricula, books, lessons, scripts, soundTags, dataset } = loadEverything();
+const {
+  taxonomy,
+  registry,
+  spine,
+  curricula,
+  books,
+  lessons,
+  scripts,
+  soundTags,
+  dataset,
+} = loadEverything();
 
 describe("real curriculum", () => {
   it("registers a sound-tag vocabulary for every language track", () => {
@@ -43,8 +53,8 @@ describe("real curriculum", () => {
   it("keeps script inventories source-backed and closure-pinned", () => {
     const gaps = measureGlyphGaps({ taxonomy, lessons, scripts });
     const context = { taxonomy, lessons, scripts, ...gaps };
-    for (const [, module] of Object.entries(scriptInventoryModules).sort(([left], [right]) =>
-      left.localeCompare(right),
+    for (const [, module] of Object.entries(scriptInventoryModules).sort(
+      ([left], [right]) => left.localeCompare(right),
     )) {
       module.scriptInventoryEvidence.assert(context);
     }
@@ -52,18 +62,40 @@ describe("real curriculum", () => {
 
   it("loaded every track (17+ and growing)", () => {
     expect(dataset.languages.length).toBeGreaterThanOrEqual(20);
-    for (const t of ["spanish", "telugu", "arabic", "russian", "persian", "urdu"]) {
+    for (const t of [
+      "spanish",
+      "telugu",
+      "arabic",
+      "russian",
+      "persian",
+      "urdu",
+    ]) {
       expect(dataset.languages).toContain(t);
     }
   });
 
   it("has a valid shared spine covering every registered language", () => {
-    const issues = validateCurriculum({ registry, spine, curricula, taxonomy, lessons, books });
-    expect(issues.filter((issue) => issue.level === "error").map((issue) => issue.message)).toEqual([]);
-    expect(registry.languages.map((language) => language.id)).toEqual(dataset.languages.sort((a, b) => {
-      const order = new Map(registry.languages.map((language, index) => [language.id, index]));
-      return order.get(a)! - order.get(b)!;
-    }));
+    const issues = validateCurriculum({
+      registry,
+      spine,
+      curricula,
+      taxonomy,
+      lessons,
+      books,
+    });
+    expect(
+      issues
+        .filter((issue) => issue.level === "error")
+        .map((issue) => issue.message),
+    ).toEqual([]);
+    expect(registry.languages.map((language) => language.id)).toEqual(
+      dataset.languages.sort((a, b) => {
+        const order = new Map(
+          registry.languages.map((language, index) => [language.id, index]),
+        );
+        return order.get(a)! - order.get(b)!;
+      }),
+    );
   });
 
   // HL-C10: the spine reaches above A1.
@@ -97,30 +129,48 @@ describe("real curriculum", () => {
   });
 
   it("loads one prerequisite-safe realization map for every language", () => {
-    expect(curricula.map((curriculum) => curriculum.language).sort())
-      .toEqual(registry.languages.map((language) => language.id).sort());
-    expect(curricula.flatMap((curriculum) => curriculum.path).length).toBeGreaterThan(300);
+    expect(curricula.map((curriculum) => curriculum.language).sort()).toEqual(
+      registry.languages.map((language) => language.id).sort(),
+    );
     expect(
-      curricula.flatMap((curriculum) => curriculum.path.flatMap((segment) => segment.lessons)).length,
+      curricula.flatMap((curriculum) => curriculum.path).length,
+    ).toBeGreaterThan(300);
+    expect(
+      curricula.flatMap((curriculum) =>
+        curriculum.path.flatMap((segment) => segment.lessons),
+      ).length,
     ).toBeGreaterThan(800);
-    expect(curricula.every((curriculum) =>
-      spine.nodes.every((node) => curriculum.spine[node.id] !== undefined),
-    )).toBe(true);
+    expect(
+      curricula.every((curriculum) =>
+        spine.nodes.every((node) => curriculum.spine[node.id] !== undefined),
+      ),
+    ).toBe(true);
 
-    const spanish = curricula.find((curriculum) => curriculum.language === "spanish")!;
-    expect(spanish.spine["SPINE-MEET-GREET"]?.segments.length).toBeGreaterThan(1);
-    expect(spanish.spine["SPINE-TAKE-LEAVE"]?.relocates["GREETING-GOODNIGHT"])
-      .toBe("SPINE-TIME-OF-DAY");
+    const spanish = curricula.find(
+      (curriculum) => curriculum.language === "spanish",
+    )!;
+    expect(spanish.spine["SPINE-MEET-GREET"]?.segments.length).toBeGreaterThan(
+      1,
+    );
+    expect(
+      spanish.spine["SPINE-TAKE-LEAVE"]?.relocates["GREETING-GOODNIGHT"],
+    ).toBe("SPINE-TIME-OF-DAY");
 
     for (const language of ["persian", "urdu"]) {
       const curriculum = curricula.find((item) => item.language === language)!;
-      expect(curriculum.extensions.some((extension) => extension.category === "script")).toBe(true);
+      expect(
+        curriculum.extensions.some(
+          (extension) => extension.category === "script",
+        ),
+      ).toBe(true);
     }
   });
 
   it("preserves every existing LaTeX book and maps each chapter to short lessons", () => {
     expect(books.books.length).toBeGreaterThanOrEqual(20);
-    expect(books.books.reduce((sum, book) => sum + book.chapters.length, 0)).toBeGreaterThanOrEqual(100);
+    expect(
+      books.books.reduce((sum, book) => sum + book.chapters.length, 0),
+    ).toBeGreaterThanOrEqual(100);
     // 33 -> 35: the second Spanish verb tranche added Chapters 34 and 35, the track's
     // first chapters filed under an A2 spine node (SPINE-SAY-WHAT-I-DO) rather than an
     // A1 social function. Both are generated from schema-v2 lessons like 1-6 and 19-33.
@@ -132,7 +182,9 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBeGreaterThanOrEqual(305); // spanish pre-A1 survival tranche: +15 lessons, +3 chapters (chapters 303-305) // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C175: +5 -- chapter 272, reading between the lines // HL-C177: +5 -- chapter 273, C1 closes // HL-C178: +5 -- chapter 274, C2 opens // HL-C179: +5 -- chapter 275, fine shades // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C194: +16 Spanish pre-A1 words // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // spanish pre-A1 round 3: +35 lessons, +7 chapters (chapters 296-302) // FLOOR — content only grows; exact pins serialize parallel tranches
+    expect(
+      books.books.find((book) => book.language === "spanish")?.chapters.length,
+    ).toBeGreaterThanOrEqual(305); // spanish pre-A1 survival tranche: +15 lessons, +3 chapters (chapters 303-305) // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C175: +5 -- chapter 272, reading between the lines // HL-C177: +5 -- chapter 273, C1 closes // HL-C178: +5 -- chapter 274, C2 opens // HL-C179: +5 -- chapter 275, fine shades // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C194: +16 Spanish pre-A1 words // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // spanish pre-A1 round 3: +35 lessons, +7 chapters (chapters 296-302) // FLOOR — content only grows; exact pins serialize parallel tranches
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -193,7 +245,11 @@ describe("real curriculum", () => {
       // because а and о -- the two commonest vowels in the language -- were taught by no
       // lesson at all, which 75 lessons and 14 chapters had not surfaced.
     ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-    expect(books.books.every((book) => book.chapters.every((chapter) => chapter.tex.length > 100))).toBe(true);
+    expect(
+      books.books.every((book) =>
+        book.chapters.every((chapter) => chapter.tex.length > 100),
+      ),
+    ).toBe(true);
   });
 
   it("produces a machine-readable migration gap baseline", () => {
@@ -220,7 +276,9 @@ describe("real curriculum", () => {
   });
 
   it("compiles unique cross-language objective activities from canonical blocks", () => {
-    const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
+    const activities = lessons.flatMap((lesson) =>
+      compileLessonActivities(lesson.blocks),
+    );
     const ids = activities.map((activity) => activity.id);
     expect(activities.length).toBeGreaterThan(0);
     expect(new Set(ids).size).toBe(ids.length);
@@ -243,8 +301,10 @@ describe("real curriculum", () => {
     // -guided-copy / -delayed-copy / -dictation into chapter 1. Spanish had zero
     // `hl-writing-stage` evidence before that, so the four are the whole of its
     // observe-trace -> dictation ladder, not padding.
-    expect(pilot).toHaveLength(24) // HL-C94: these chapters are short on purpose;
-    expect(pilot.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+    expect(pilot).toHaveLength(24); // HL-C94: these chapters are short on purpose;
+    expect(
+      pilot.every((lesson) => lesson.frontmatter.schema_version === "2"),
+    ).toBe(true);
     expect(
       report.duration.violations.filter(
         (lesson) => lesson.language === "spanish" && (lesson.chapter ?? 0) <= 3,
@@ -261,11 +321,18 @@ describe("real curriculum", () => {
     const report = buildCurriculumGapReport({ registry, lessons, books });
     for (const language of ["persian", "urdu"]) {
       const chapter = lessons.filter(
-        (lesson) => lesson.language === language && lesson.realization.chapter === 3,
+        (lesson) =>
+          lesson.language === language && lesson.realization.chapter === 3,
       );
       expect(chapter).toHaveLength(5);
-      expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
-      expect(chapter.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+      expect(
+        chapter.every((lesson) => lesson.frontmatter.schema_version === "2"),
+      ).toBe(true);
+      expect(
+        chapter.every(
+          (lesson) => compileLessonActivities(lesson.blocks).length === 1,
+        ),
+      ).toBe(true);
       expect(
         report.duration.violations.filter(
           (lesson) => lesson.language === language && lesson.chapter === 3,
@@ -283,11 +350,18 @@ describe("real curriculum", () => {
     const report = buildCurriculumGapReport({ registry, lessons, books });
     for (const language of ["persian", "urdu"]) {
       const chapter = lessons.filter(
-        (lesson) => lesson.language === language && lesson.realization.chapter === 4,
+        (lesson) =>
+          lesson.language === language && lesson.realization.chapter === 4,
       );
       expect(chapter).toHaveLength(6);
-      expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
-      expect(chapter.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+      expect(
+        chapter.every((lesson) => lesson.frontmatter.schema_version === "2"),
+      ).toBe(true);
+      expect(
+        chapter.every(
+          (lesson) => compileLessonActivities(lesson.blocks).length === 1,
+        ),
+      ).toBe(true);
       expect(
         report.duration.violations.filter(
           (lesson) => lesson.language === language && lesson.chapter === 4,
@@ -305,11 +379,18 @@ describe("real curriculum", () => {
     const report = buildCurriculumGapReport({ registry, lessons, books });
     for (const language of ["persian", "urdu"]) {
       const chapter = lessons.filter(
-        (lesson) => lesson.language === language && lesson.realization.chapter === 5,
+        (lesson) =>
+          lesson.language === language && lesson.realization.chapter === 5,
       );
       expect(chapter).toHaveLength(4);
-      expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
-      expect(chapter.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+      expect(
+        chapter.every((lesson) => lesson.frontmatter.schema_version === "2"),
+      ).toBe(true);
+      expect(
+        chapter.every(
+          (lesson) => compileLessonActivities(lesson.blocks).length === 1,
+        ),
+      ).toBe(true);
       expect(
         report.duration.violations.filter(
           (lesson) => lesson.language === language && lesson.chapter === 5,
@@ -342,10 +423,12 @@ describe("real curriculum", () => {
     const report = buildCurriculumGapReport({ registry, lessons, books });
     const japanese = lessons.filter((lesson) => lesson.language === "japanese");
     expect(japanese).toHaveLength(117);
-    expect(new Set(japanese.map((lesson) => lesson.realization.chapter))).toEqual(
-      new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-    );
-    expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+    expect(
+      new Set(japanese.map((lesson) => lesson.realization.chapter)),
+    ).toEqual(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]));
+    expect(
+      japanese.every((lesson) => lesson.frontmatter.schema_version === "2"),
+    ).toBe(true);
     expect(
       japanese.map((lesson) => [
         lesson.realization.lessonId,
@@ -367,7 +450,9 @@ describe("real curriculum", () => {
         .every((lesson) => compileLessonActivities(lesson.blocks).length === 1),
     ).toBe(true);
     expect(
-      report.duration.violations.filter((lesson) => lesson.language === "japanese"),
+      report.duration.violations.filter(
+        (lesson) => lesson.language === "japanese",
+      ),
     ).toEqual([]);
     expect(
       report.prerequisites.laterChapterWithoutPrerequisites.filter(
@@ -376,28 +461,41 @@ describe("real curriculum", () => {
     ).toEqual([]);
 
     const headwords = new Map(
-      japanese.map((lesson) => [lesson.realization.lessonId, lesson.realization.headword]),
+      japanese.map((lesson) => [
+        lesson.realization.lessonId,
+        lesson.realization.headword,
+      ]),
     );
     expect(headwords.get("JA-C01-konnichiwa")).toBe("こんにちは"); // hiragana
     expect(headwords.get("JA-C01-nihongo")).toBe("日本語"); // kanji
     expect(headwords.get("JA-C01-koohii")).toBe("コーヒー"); // katakana
     // The register field carries two genuinely different grammatical levels here,
     // not two synonyms, so the plain and polite thanks must not collapse into one.
-    const plain = lessons.find((lesson) => lesson.realization.lessonId === "JA-C01-arigatou")!;
-    const polite = lessons.find((lesson) => lesson.realization.lessonId === "JA-C01-gozaimasu")!;
+    const plain = lessons.find(
+      (lesson) => lesson.realization.lessonId === "JA-C01-arigatou",
+    )!;
+    const polite = lessons.find(
+      (lesson) => lesson.realization.lessonId === "JA-C01-gozaimasu",
+    )!;
     expect(plain.frontmatter.register).toBe("plain-casual");
     expect(polite.frontmatter.register).toBe("teineigo-polite");
   });
 
   it("GREETING-HELLO joins every track (the normalization payoff)", () => {
     // Every track realizes 'hello', so the join size tracks the track count.
-    const langs = languagesForConcept(dataset, "GREETING-HELLO").map((r) => r.language);
+    const langs = languagesForConcept(dataset, "GREETING-HELLO").map(
+      (r) => r.language,
+    );
     expect(new Set(langs).size).toBe(dataset.languages.length);
   });
 
   it("the self-introduction concepts join many languages", () => {
-    expect(languagesForConcept(dataset, "INTRO-MY-NAME-IS").length).toBeGreaterThanOrEqual(8);
-    expect(languagesForConcept(dataset, "INTRO-WHATS-YOUR-NAME").length).toBeGreaterThanOrEqual(8);
+    expect(
+      languagesForConcept(dataset, "INTRO-MY-NAME-IS").length,
+    ).toBeGreaterThanOrEqual(8);
+    expect(
+      languagesForConcept(dataset, "INTRO-WHATS-YOUR-NAME").length,
+    ).toBeGreaterThanOrEqual(8);
   });
 
   it("every concept id is canonical or namespaced", () => {

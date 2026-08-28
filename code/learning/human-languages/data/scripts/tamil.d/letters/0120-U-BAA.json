@@ -1,0 +1,24 @@
+{
+  "glyph": "ப",
+  "sound": "pa",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "a straight left upright",
+    "a horizontal along the bottom",
+    "a straight right upright"
+  ],
+  "strokeOrder": [
+    "start at the top left and draw the left upright straight down to the baseline",
+    "without lifting, turn right and run along the bottom to the far right",
+    "without lifting, turn upward and finish at the top of the right upright — and only now lift"
+  ],
+  "strokeOrderNote": "one unbroken stroke — left upright, bottom, then right upright, with no pen lift; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 1",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Frame 1, ப (University of Texas at Austin, 2009)",
+    "url": "https://sites.la.utexas.edu/tamilscript/category/3-moduals/module-01",
+    "variation": "Frame 1 teaches the usual left-to-right and top-to-bottom movement and directly presents ப for copying. Tamil handwriting varies by school; this is one attested continuous order fitted to the bundled Noto Sans Tamil outline."
+  },
+  "notes": "The three-sided pa shape is the opening portion of ம: descend the left, cross the bottom, and rise on the right, stopping before ma's added top arch and middle descent."
+}

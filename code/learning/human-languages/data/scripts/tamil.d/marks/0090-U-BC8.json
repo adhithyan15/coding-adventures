@@ -1,0 +1,11 @@
+{
+  "mark": "ை",
+  "sound": "ai",
+  "role": "vowel-sign",
+  "attachesAs": "a double hook written BEFORE (to the left of) the consonant, though pronounced after it",
+  "example": {
+    "base": "ல",
+    "combined": "லை",
+    "sound": "lai"
+  }
+}

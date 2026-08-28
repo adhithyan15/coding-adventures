@@ -77,11 +77,12 @@ holds the structured tone (`"1"`–`"4"` | `"neutral"`). No `forms`, no `marks`.
 
 ### Authoring a sharded script inventory
 
-Japanese, Perso-Arabic, and Urdu-Nastaliq are canonical in `japanese.d/`,
-`perso-arabic.d/`, and `urdu-nastaliq.d/`. `_meta.json` owns document metadata,
-while `letters/` and `marks/` own one entry per file. Each filename combines a
-spaced ordering number with a stable code-point id (`0010-U-3042.json`), so two
-authors can verify different glyphs without editing the same source file.
+Japanese, Perso-Arabic, Tamil, and Urdu-Nastaliq are canonical in
+`japanese.d/`, `perso-arabic.d/`, `tamil.d/`, and `urdu-nastaliq.d/`.
+`_meta.json` owns document metadata, while `letters/` and `marks/` own one entry
+per file. Each filename combines a spaced ordering number with a stable
+code-point id (`0010-U-3042.json`), so two authors can verify different glyphs
+without editing the same source file.
 
 Put glyph-specific stroke-order citations, variation notes, and teaching notes
 in that glyph's shard. Do not copy an evidence diary into this shared README;

@@ -1,0 +1,27 @@
+{
+  "glyph": "க",
+  "sound": "ka",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "an upper square frame",
+    "a large lower-left bowl",
+    "a lower-right bowl with an open foot"
+  ],
+  "strokeOrder": [
+    "start at the middle left and climb the left upright",
+    "without lifting, carry the top bar to the right and return along it to the inner corner",
+    "without lifting, drop the inner upright and carry the middle bar left — then lift once",
+    "set the pen at the inner crossing and curve down and around the lower-left bowl",
+    "without lifting again, return up its outer left side — then lift a second time",
+    "set the pen at the inner crossing and turn around the lower-right bowl — and only now lift"
+  ],
+  "strokeOrderNote": "three strokes — three joined upper-frame movements, one lift, two joined lower-left-bowl movements, a second lift, then the lower-right bowl; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 3, க",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 3, க (Univ. of Texas at Austin), p. 191",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+  },
+  "notes": "Tamil does not write separate letters for k / g / h — க covers them all, and position in the word decides which you say. Its six numbered movements form three pen-down runs, not six strokes: the upper frame, the lower-left bowl, and the lower-right bowl."
+}

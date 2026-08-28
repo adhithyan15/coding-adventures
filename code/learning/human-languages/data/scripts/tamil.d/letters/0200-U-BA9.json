@@ -1,0 +1,28 @@
+{
+  "glyph": "ன",
+  "sound": "ṉa",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "a spiral loop on the left",
+    "ONE rounded inner arch",
+    "a straight top bar",
+    "a separate straight vertical on the right, down to the baseline"
+  ],
+  "strokeOrder": [
+    "start in the lower-left curl and spiral outward, climbing the outer left side",
+    "without lifting, arch over the top of the left loop to the middle junction",
+    "without lifting, descend around the outside of the single inner arch",
+    "without lifting, turn through its bottom and climb the inside back to the top junction",
+    "without lifting, carry the top bar to the right edge — then lift once",
+    "set the pen at the top of the separate right upright and draw straight down — and only now lift"
+  ],
+  "strokeOrderNote": "two strokes — five joined loop, arch, and top-bar movements, one pen lift, then the right upright; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 13, ன",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 13, ன (Univ. of Texas at Austin), p. 195",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+  },
+  "notes": "The alveolar n — and visibly ண minus one arch. Frame 13's first row numbers six movements, not six strokes: the first five stay connected through the left spiral, single arch, and top bar; only the separate right upright requires a lift."
+}

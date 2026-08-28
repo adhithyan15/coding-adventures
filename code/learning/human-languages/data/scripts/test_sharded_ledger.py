@@ -6,6 +6,7 @@ from pathlib import Path
 
 from sharded_ledger import (
     load_curriculum,
+    load_script,
     load_script_inventory,
     write_chapters,
     write_curriculum,
@@ -130,6 +131,25 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
         self.assertEqual(inventory["script"], "japanese")
         self.assertEqual(inventory["letters"], [{"glyph": "あ"}])
         self.assertEqual(inventory["marks"], [{"mark": "゛"}])
+
+    def test_mixed_script_loader_prefers_shards_and_falls_back_to_monolith(self):
+        directory = self.script_tree()
+        write_json(
+            self.root / "data" / "scripts" / "tamil.json",
+            {"script": "tamil", "letters": [{"glyph": "அ"}], "marks": []},
+        )
+        self.assertEqual(load_script(self.root, "japanese")["letters"], [{"glyph": "あ"}])
+        self.assertEqual(load_script(self.root, "tamil")["letters"], [{"glyph": "அ"}])
+
+        write_json(directory.parent / "japanese.json", {"script": "stale"})
+        self.assertEqual(load_script(self.root, "japanese")["script"], "japanese")
+
+    def test_mixed_script_loader_refuses_a_symlinked_shard_directory(self):
+        scripts = self.root / "data" / "scripts"
+        scripts.mkdir(parents=True)
+        os.symlink(self.outside, scripts / "tamil.d")
+        with self.assertRaisesRegex(ValueError, "non-directory ledger ancestor"):
+            load_script(self.root, "tamil")
 
     def test_script_inventory_rejects_filename_identity_mismatch(self):
         directory = self.script_tree()

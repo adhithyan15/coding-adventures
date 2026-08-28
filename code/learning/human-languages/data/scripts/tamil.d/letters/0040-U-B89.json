@@ -1,0 +1,23 @@
+{
+  "glyph": "உ",
+  "sound": "u",
+  "role": "independent-vowel",
+  "components": [
+    "a compact upper spiral",
+    "a broad descending outer curve",
+    "a long baseline extending right"
+  ],
+  "strokeOrder": [
+    "start inside the upper spiral and sweep outward around it",
+    "without lifting, descend through the broad outer curve and turn left onto the baseline",
+    "without lifting, carry the long baseline straight to the right"
+  ],
+  "strokeOrderNote": "one unbroken stroke — three joined movements, no pen lift; cited to Radhakrishnan, Tamil Script Learners Manual, Appendix I, Frame 16, உ",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 16, உ (University of Texas at Austin), p. 196",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Appendix I Frame 16 numbers the upper spiral, descending outer curve, and rightward baseline as three joined movements. Tamil handwriting varies by school; this is one attested continuous order fitted to the bundled Noto Sans Tamil outline."
+  },
+  "notes": "Independent short u is the standalone vowel used at the beginning of a syllable. Frame 16 keeps its spiral, outer descent, and long baseline in one pen-down run; the dependent short-u sign ு is a separate mark added to a consonant."
+}

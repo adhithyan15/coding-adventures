@@ -1,0 +1,28 @@
+{
+  "glyph": "ள",
+  "sound": "ḷa",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "a large loop curling inward on the left",
+    "a descending stem at the loop's right edge",
+    "an adjacent rising middle stem and top bar",
+    "a separate straight right upright"
+  ],
+  "strokeOrder": [
+    "start at the lower left and climb around the large outer loop",
+    "without lifting, curve over the top and curl inward to the central junction",
+    "without lifting, draw the adjoining stem straight down — then lift once",
+    "set the pen at the bottom of the adjacent middle upright and rise to the top",
+    "without lifting again, carry the top bar to the right edge — then lift a second time",
+    "set the pen at the top of the separate right upright and draw straight down — and only now lift"
+  ],
+  "strokeOrderNote": "three strokes — three joined loop-and-descent movements, one lift, the joined middle rise and top bar, a second lift, then the right upright; cited to Radhakrishnan, Tamil Script Learners Manual, Appendix I, Frame 12, ள",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 12, ள (University of Texas at Austin), p. 195",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Module 12 identifies ள as the retroflex lateral, contrasts it with ல, and directs learners to Appendix I. Frame 12 numbers six movements in three pen-down runs: joined movements 1–3, joined movements 4–5, and separate movement 6. Tamil handwriting varies by school; this is one attested order fitted to the bundled Noto Sans Tamil outline."
+  },
+  "notes": "The retroflex lateral, made with the tongue tip curled back toward the hard palate. Frame 12's six numbered movements are three strokes, not six: movements 1–3 stay joined through the left loop and descent, movements 4–5 join the middle rise to the top bar, and movement 6 is the separate right upright."
+}

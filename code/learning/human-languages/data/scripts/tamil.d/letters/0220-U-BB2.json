@@ -1,0 +1,25 @@
+{
+  "glyph": "ல",
+  "sound": "la",
+  "role": "consonant",
+  "inherentVowel": "a",
+  "components": [
+    "a spiral loop on the left",
+    "a deep U-shaped turn",
+    "an open rising tip on the right"
+  ],
+  "strokeOrder": [
+    "start at the inner curl and spiral outward, climbing the left side",
+    "without lifting, arch over the top and descend through the middle",
+    "without lifting, turn around the deep right-hand curve",
+    "without lifting, rise to the open right tip — and only now lift"
+  ],
+  "strokeOrderNote": "one unbroken stroke — four joined movements, no pen lift; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 9, ல",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 9, ல (Univ. of Texas at Austin), p. 194",
+    "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order."
+  },
+  "notes": "Frame 9's four numbered movements form one continuous spiral-to-rising-tip motion, not four strokes: the pen stays down through the deep right-hand turn and leaves the page only after the open tip."
+}
