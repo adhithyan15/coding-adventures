@@ -6,38 +6,40 @@ sequence: 770
 chapter: 21
 type: word
 headword: esperar
-gloss: "to wait, to hope, to expect — one Portuguese verb doing the work of three English ones"
+gloss: "to wait"
 concept_tag: VERB-WAIT
 prerequisites: [PT-C21-conseguir, PT-C19-escrever]
 sounds: [open-e, prop-e]
 roots: [latin-sperare]
-etymology_hook: "esperar ← spērāre 'to hope', from spēs 'hope' → despair, desperate, desperado, and Esperanto ('one who hopes'); the propped e- is the same one that turned scrībere into escrever and stāre into estar"
+etymology_hook: "esperar ← spērāre 'to hope'; Portuguese later extended it to waiting"
 duration:
-  max_seconds: 285
+  max_seconds: 145
 requires:
-  knowledge: [PT-LEX-CONSEGUIR-02, PT-ETYMON-CONSEGUIR-03, PT-LEX-ESCREVER-02, PT-ETYMON-ESCREVER-03, PT-ETYMON-SER-ESTAR-03]
+  knowledge: [PT-LEX-CONSEGUIR-02, PT-LEX-ESCREVER-02]
 introduces:
   knowledge: [PT-LEX-ESPERAR-02, PT-GRAMMAR-ESPERAR-04, PT-ETYMON-ESPERAR-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
-  knowledge: [PT-LEX-CONSEGUIR-02, PT-ETYMON-CONSEGUIR-03, PT-LEX-ESCREVER-02, PT-ETYMON-ESCREVER-03, PT-ETYMON-SER-ESTAR-03, PT-LEX-ESPERAR-02, PT-GRAMMAR-ESPERAR-04, PT-ETYMON-ESPERAR-03]
+  knowledge: [PT-LEX-CONSEGUIR-02, PT-LEX-ESCREVER-02, PT-LEX-ESPERAR-02, PT-GRAMMAR-ESPERAR-04, PT-ETYMON-ESPERAR-03]
 skills: [listening, speaking, reading]
-modes: [interpretive, interpersonal, presentational, mediation]
+modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-contemporary
-reviews_of: [PT-C21-conseguir, PT-C19-escrever, PT-C18-ser-estar]
+reviews_of: [PT-C21-conseguir, PT-C19-escrever]
 ---
 
-# esperar — waiting, hoping, expecting
+# esperar — to wait
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Portuguese has sometimes answered one English verb with two. Here it
-goes the other way: one Portuguese verb answers three English ones.
+[PAUSE 2s] One ordinary **-ar** verb lets you say that you wait: **esperar**.
 
-## You'll want to know: A plain -ar verb
-<!-- hl-knowledge: introduces=[PT-LEX-ESPERAR-02]; assesses=[] -->
+## You'll want to know: The present tense
+<!-- hl-knowledge: introduces=[PT-LEX-ESPERAR-02, PT-GRAMMAR-ESPERAR-04]; assesses=[] -->
 
 | | |
 |---|---|
@@ -45,57 +47,30 @@ goes the other way: one Portuguese verb answers three English ones.
 | tu **esperas** | vocês/eles **esperam** |
 | ele/ela/você **espera** | |
 
-Nothing new in the endings — *esperar* runs like every *-ar* verb you have met.
+The endings are familiar. Portuguese normally puts the thing or person waited
+for directly after the verb:
 
-## Grammar Lens: Three English verbs, one Portuguese one
-<!-- hl-knowledge: introduces=[PT-GRAMMAR-ESPERAR-04]; assesses=[] -->
+> **Espero o meu irmão.** — I am waiting for my brother.
 
-> **Espero o meu irmão.** — "I am **waiting for** my brother."
-> **Espero que sim.** — "I **hope** so."
-> **Espero um livro.** — "I **expect** a book."
+English needs “for”; Portuguese does not add a preposition here.
 
-Waiting, hoping, expecting. Portuguese does not choose between them; the sentence
-around the verb decides. That is less strange than it looks — the three are one
-idea seen from three angles, since to wait for a thing is to expect it, and to
-expect a good thing is to hope for it.
-
-**Espero que sim** is worth banking whole. It sits beside *penso que sim*, "I
-think so," and is the softer of the two.
-
-## The word, taken apart: hope, and the propped-up e-
+## The word, taken apart
 <!-- hl-knowledge: introduces=[PT-ETYMON-ESPERAR-03]; assesses=[] -->
 
-**esperar** ← Latin ***spērāre***, "to hope," built on ***spēs***, "hope." The
-waiting sense is the newcomer; hoping came first, which is why one verb still
-holds all three jobs.
-
-English has the family only in the negative: to **despair** is *dē-spērāre*, "to
-be down from hope," and so is **desperate**, and the **desperado** who has none
-left. The cheerful half stayed on the far side of the Channel. It surfaces in one
-famous English word: **Esperanto**, the pen name its inventor published under,
-which means "one who is hoping."
-
-Now the *e* at the front. Latin *spērāre* began with *s* plus a consonant, and no
-Iberian mouth would start a word that way, so an **e-** was propped in front:
-*spērāre* → **esperar**. The same prop turned *scrībere* into **escrever** and
-*stāre* into **estar**. Three words, one habit.
+**Esperar** comes from Latin ***spērāre***, “to hope.” Its front **e-** props up
+an older *sp-* beginning, in the same way that **escrever** grew from Latin
+*scrībere*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-CONSEGUIR-02, PT-ETYMON-CONSEGUIR-03, PT-LEX-ESCREVER-02, PT-ETYMON-ESCREVER-03, PT-ETYMON-SER-ESTAR-03, PT-LEX-ESPERAR-02, PT-GRAMMAR-ESPERAR-04, PT-ETYMON-ESPERAR-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-CONSEGUIR-02, PT-LEX-ESCREVER-02, PT-LEX-ESPERAR-02, PT-GRAMMAR-ESPERAR-04, PT-ETYMON-ESPERAR-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "espero, esperas, espera, esperamos, esperam"]
-- [YOU SAY: the three jobs — "Espero o meu irmão" · "Espero que sim"]
-- [YOU SAY: hoping to manage it — "Espero conseguir"]
-- [YOU SAY: the propped e- — "esperar · escrever · estar"]
+- [YOU SAY: **espero, esperas, espera, esperamos, esperam**]
+- [YOU SAY: “I am waiting for my brother” — **Espero o meu irmão.**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-CONSEGUIR-02, PT-ETYMON-CONSEGUIR-03, PT-LEX-ESCREVER-02, PT-ETYMON-ESCREVER-03, PT-ETYMON-SER-ESTAR-03, PT-LEX-ESPERAR-02, PT-GRAMMAR-ESPERAR-04, PT-ETYMON-ESPERAR-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-CONSEGUIR-02, PT-LEX-ESCREVER-02, PT-LEX-ESPERAR-02, PT-GRAMMAR-ESPERAR-04, PT-ETYMON-ESPERAR-03] -->
 
-[PAUSE 3s] Name the three English verbs *esperar* covers. (**Wait**, **hope**,
-**expect**.) Say "I hope so" and "I hope to manage it." (***Espero que sim***;
-***espero conseguir***.) Which of the three senses did *spērāre* mean first?
-(**Hope** — from *spēs*.) Why is there an *e* on the front of *esperar*? (Latin
-*sp-* could not open a word here, so an **e-** was propped on — as in *escrever*
-← *scrībere* and *estar* ← *stāre*.) And what did *sequī* mean? ("To
-**follow**".)
+[PAUSE 3s] Say “I wait.” (**Espero.**) Say “We wait.” (**Esperamos.**) Does
+Portuguese add a word matching English “for” in **Espero o meu irmão**? (**No.**)
+Next, the same verb will take one carefully separated new meaning.

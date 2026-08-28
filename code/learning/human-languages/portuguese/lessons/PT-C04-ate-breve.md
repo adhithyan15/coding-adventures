@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-SOUND-ATE-LOGO-02, PT-ETYMON-ATE-LOGO-03]
 introduces:
   knowledge: [PT-SOUND-ATE-BREVE-02, PT-ETYMON-ATE-BREVE-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-SOUND-ATE-LOGO-02, PT-ETYMON-ATE-LOGO-03, PT-SOUND-ATE-BREVE-02, PT-ETYMON-ATE-BREVE-03]
 skills: [listening, speaking, reading]

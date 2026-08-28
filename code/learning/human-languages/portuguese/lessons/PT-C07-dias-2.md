@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03]
 introduces:
   knowledge: [PT-ETYMON-DIAS-2-02, PT-GRAMMAR-DIAS-2-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03, PT-ETYMON-DIAS-2-02, PT-GRAMMAR-DIAS-2-03]
 skills: [listening, speaking, reading]

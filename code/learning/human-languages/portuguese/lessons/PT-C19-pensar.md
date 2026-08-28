@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-SABER-CONHECER-02, PT-GRAMMAR-FALAR-04]
 introduces:
   knowledge: [PT-LEX-PENSAR-02, PT-ETYMON-PENSAR-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-SABER-CONHECER-02, PT-GRAMMAR-FALAR-04, PT-LEX-PENSAR-02, PT-ETYMON-PENSAR-03]
 skills: [listening, speaking, reading]

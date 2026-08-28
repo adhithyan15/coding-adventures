@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Past Portuguese Kept",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6126b552a3d85de0",
+  "sourceHash": "fnv1a64:0a8dc29c44b56013",
   "lessons": [
     {
       "id": "PT-C15-preterito-perfeito",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04e67acb90f29799",
+      "sourceHash": "fnv1a64:3768c8879d55a468",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc425e1b1bcff9a2",
+      "sourceHash": "fnv1a64:88473b948dd3c3bd",
       "notice": null,
       "blocks": [
         {

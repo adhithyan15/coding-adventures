@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-PERGUNTAR-02, PT-ETYMON-PERGUNTAR-03]
 introduces:
   knowledge: [PT-LEX-AJUDAR-02, PT-ETYMON-AJUDAR-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-PERGUNTAR-02, PT-ETYMON-PERGUNTAR-03, PT-LEX-AJUDAR-02, PT-ETYMON-AJUDAR-03]
 skills: [listening, speaking, reading]

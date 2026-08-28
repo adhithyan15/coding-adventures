@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-SOUND-CABECA-02, PT-ETYMON-CABECA-03]
 introduces:
   knowledge: [PT-ETYMON-CABECA-CAPUT-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-SOUND-CABECA-02, PT-ETYMON-CABECA-03, PT-ETYMON-CABECA-CAPUT-02]
 skills: [listening, speaking, reading]

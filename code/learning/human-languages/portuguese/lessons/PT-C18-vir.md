@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-IR-02, PT-ETYMON-MAO-03]
 introduces:
   knowledge: [PT-LEX-VIR-02, PT-ETYMON-VIR-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-IR-02, PT-ETYMON-MAO-03, PT-LEX-VIR-02, PT-ETYMON-VIR-03]
 skills: [listening, speaking, reading]

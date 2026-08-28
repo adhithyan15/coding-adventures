@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-FAMILIA-02, PT-ETYMON-FAMILIA-03]
 introduces:
   knowledge: [PT-LEX-HOMEM-02, PT-ETYMON-HOMEM-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-FAMILIA-02, PT-ETYMON-FAMILIA-03, PT-LEX-HOMEM-02, PT-ETYMON-HOMEM-03, PT-LEX-IDADE-02, PT-GRAMMAR-IDADE-04]
 skills: [listening, speaking, reading]

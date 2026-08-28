@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-ARROZ-02, PT-ETYMON-ARROZ-03]
 introduces:
   knowledge: [PT-LEX-ACUCAR-02, PT-ETYMON-ACUCAR-03, PT-NOTICE-C24-COMIDA-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-QUEIJO-02, PT-LEX-OVO-02, PT-LEX-ARROZ-02, PT-ETYMON-ARROZ-03, PT-LEX-ACUCAR-02, PT-ETYMON-ACUCAR-03, PT-NOTICE-C24-COMIDA-04, PT-SOUND-CABECA-02]
 skills: [listening, speaking, reading]

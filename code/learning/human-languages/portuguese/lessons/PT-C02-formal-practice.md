@@ -17,6 +17,9 @@ requires:
   knowledge: [PT-LEX-C02-PRACTICE-02, PT-NOTICE-C02-PRACTICE-03, PT-LEX-COMO-VAI-ESTA-01]
 introduces:
   knowledge: [PT-LEX-FORMAL-PRACTICE-02]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-C02-PRACTICE-02, PT-NOTICE-C02-PRACTICE-03, PT-LEX-COMO-VAI-ESTA-01, PT-LEX-FORMAL-PRACTICE-02]
 skills: [listening, speaking, reading]

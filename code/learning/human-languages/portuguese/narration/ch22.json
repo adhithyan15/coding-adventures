@@ -3,8 +3,8 @@
   "language": "portuguese",
   "chapter": 22,
   "title": "Answering, Meeting, and Three Ways to Play",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:059a3c61a88fcec7",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:cd709fd0e1900289",
   "lessons": [
     {
       "id": "PT-C22-responder",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91891c6856a502dc",
+      "sourceHash": "fnv1a64:33d1d4f37baae8dd",
       "notice": null,
       "blocks": [
         {
@@ -171,17 +171,17 @@
     {
       "id": "PT-C22-encontrar",
       "sequence": 800,
-      "title": "encontrar — meeting, finding, and coming face to face",
+      "title": "encontrar — to find",
       "headword": "encontrar",
       "romanization": "encontrar",
-      "gloss": "to meet, to find, to run into — and how it divides the work of meeting with conhecer",
+      "gloss": "to find",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63bdfa7d69a61baa",
+      "sourceHash": "fnv1a64:7d54069fe23131f3",
       "notice": null,
       "blocks": [
         {
@@ -197,14 +197,14 @@
             },
             {
               "kind": "speech",
-              "text": "English \"meet\" covers two different events: seeing someone you know, and meeting someone for the very first time. Portuguese keeps them apart, and it has already taught you half the answer."
+              "text": "Today encontrar has one job: “to find.”"
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: A plain -ar verb with two jobs",
+          "title": "You'll want to know: The present tense",
           "segments": [
             {
               "kind": "table",
@@ -222,58 +222,27 @@
             },
             {
               "kind": "speech",
-              "text": "Encontrar is to find and to run into — one verb, because both are coming upon something."
+              "text": "Encontro o livro. — I find the book. Encontramos o café. — We find the café."
             },
             {
               "kind": "speech",
-              "text": "Encontro o livro. — \"I find the book.\" Encontramo-nos no sábado ao meio-dia. — \"We are meeting on Saturday at midday.\""
-            },
-            {
-              "kind": "speech",
-              "text": "That second sentence adds nos, \"each other,\" and the -s of encontramos drops out in front of it. Portugal hangs the little word on the back like that; Brazil more often puts it in front: nós nos encontramos."
+              "text": "Keep the object directly after the verb, as in English."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: Which meeting is which",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Encontrar meets someone you already know. For meeting a person for the first time, Portuguese uses conhecer — the same verb that means being acquainted with a person or a city:"
-            },
-            {
-              "kind": "speech",
-              "text": "Encontro o Pedro. — \"I am meeting Pedro.\" (You know him.) Conheci o Pedro. — \"I met Pedro.\" (That was the first time.)"
-            },
-            {
-              "kind": "speech",
-              "text": "English collapses the two, and has to add \"for the first time\" when it matters."
+              "text": "Encontrar grew from in plus Latin contrā, “facing” or “opposite.” To find something is to come face to face with it. English encounter belongs to the same family."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: face to face",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "encontrar from a Vulgar Latin incontrāre, from in plus contrā, \"facing, opposite, against.\" To meet is to end up in front of someone."
-            },
-            {
-              "kind": "speech",
-              "text": "English borrowed the same verb through French as encounter, and shortened it to counter — to counter is still to go against. The quiet one is country: (terra) contrāta, \"the land lying opposite,\" the ground spread out in front of you."
-            },
-            {
-              "kind": "speech",
-              "text": "And every encounter ends. The goodbyes of the fourth chapter go here: até logo, até amanhã, adeus."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -286,52 +255,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"encontro, encontras, encontra, encontramos, encontram\"",
+              "instruction": "encontro, encontras, encontra, encontramos, encontram",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"encontro, encontras, encontra, encontramos, encontram\"]"
+              "source": "[YOU SAY: **encontro, encontras, encontra, encontramos, encontram**]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "making a plan — \"Encontramo-nos no sábado ao meio-dia\"",
+              "instruction": "“I find the book” — Encontro o livro.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: making a plan — \"Encontramo-nos no sábado ao meio-dia\"]"
+              "source": "[YOU SAY: “I find the book” — **Encontro o livro.**]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two meetings — \"Encontro o Pedro\", \"Conheci o Pedro\"",
+              "instruction": "“We find the café” — Encontramos o café.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two meetings — \"Encontro o Pedro\" · \"Conheci o Pedro\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "asking and answering — \"Pergunto e tu respondes\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: asking and answering — \"Pergunto e tu respondes\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "and parting — \"Até logo, adeus\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: and parting — \"Até logo · adeus\"]"
+              "source": "[YOU SAY: “We find the café” — **Encontramos o café.**]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -343,7 +294,118 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb meets a stranger for the first time, and which meets a friend? (Conhecer; encontrar.) Arrange it: \"We are meeting on Saturday at midday.\" (Encontramo-nos no sábado ao meio-dia.) Where did sábado come from, and what does meio-dia say literally? (Sabbatum, the Sabbath; \"mid-day\".) So which weekday is segunda-feira, and why? (Monday — domingo, the Lord's day, counts as the first.) And what is inside encontrar? (In + contrā — coming face to face; hence encounter, and country.)"
+              "text": "Say “I find.” (Encontro.) Say “We find the café.” (Encontramos o café.) Which English word shares the same family? (Encounter.) Next, encontrar will gain one social meaning."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C22-encontrar-meet",
+      "sequence": 802,
+      "title": "encontrar-se — to meet up",
+      "headword": "encontrar-se",
+      "romanization": "encontrar-se",
+      "gloss": "to meet up",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ef563960a8707d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know encontrar, “to find.” With people, it can also describe meeting up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: Make one plan",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Encontramo-nos no sábado ao meio-dia. — We are meeting on Saturday at midday."
+            },
+            {
+              "kind": "speech",
+              "text": "The little nos means “each other.” In much of Portugal it commonly attaches after the verb as shown. In Brazil, nós nos encontramos is more usual."
+            },
+            {
+              "kind": "speech",
+              "text": "For a first introduction, keep using the conhecer family you already know: Conheci o Pedro, “I met Pedro for the first time.” Today’s encontrar-se is for meeting up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Encontramo-nos no sábado.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **Encontramo-nos no sábado.**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Nós nos encontramos no sábado.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **Nós nos encontramos no sábado.**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "A first introduction uses encontrar or conhecer? (Conhecer.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: A first introduction uses **encontrar** or **conhecer**? (**Conhecer.**)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “We are meeting on Saturday” in the Portugal pattern. (Encontramo-nos no sábado.) Which pattern is common in Brazil? (Nós nos encontramos.) Which verb handles a first introduction? (Conhecer.)"
             }
           ]
         }
@@ -362,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0bdfdf3c3d4552c",
+      "sourceHash": "fnv1a64:17ca3fc2cc2dc615",
       "notice": null,
       "blocks": [
         {

@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-ENTENDER-COMPREENDER-02, PT-LEX-VER-02, PT-ETYMON-VER-03]
 introduces:
   knowledge: [PT-LEX-LER-02, PT-ETYMON-LER-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-ENTENDER-COMPREENDER-02, PT-LEX-VER-02, PT-ETYMON-VER-03, PT-LEX-LER-02, PT-ETYMON-LER-03]
 skills: [listening, speaking, reading]

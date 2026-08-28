@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04, PT-ETYMON-AGUA-VINHO-02, PT-ETYMON-AGUA-VINHO-03]
 introduces:
   knowledge: [PT-GRAMMAR-NUMEROS-11-15-02, PT-NOTICE-NUMEROS-11-15-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04, PT-ETYMON-AGUA-VINHO-02, PT-ETYMON-AGUA-VINHO-03, PT-GRAMMAR-NUMEROS-11-15-02, PT-NOTICE-NUMEROS-11-15-03]
 skills: [listening, speaking, reading]

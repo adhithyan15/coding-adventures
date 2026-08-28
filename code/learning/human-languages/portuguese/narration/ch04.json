@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:85bf89d7878b761c",
+  "sourceHash": "fnv1a64:3a993b74986ed9b9",
   "lessons": [
     {
       "id": "PT-C04-adeus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c97b23b8a6808e1c",
+      "sourceHash": "fnv1a64:7eb30aa1a8e50f2d",
       "notice": null,
       "blocks": [
         {
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9830b40389d38856",
+      "sourceHash": "fnv1a64:b0393a2a7258d175",
       "notice": null,
       "blocks": [
         {
@@ -284,7 +284,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac782f096e52d36a",
+      "sourceHash": "fnv1a64:b59dc1a6ec8551f1",
       "notice": null,
       "blocks": [
         {
@@ -422,7 +422,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b71370b7fd65a597",
+      "sourceHash": "fnv1a64:12f07b0704caf03e",
       "notice": null,
       "blocks": [
         {
@@ -564,7 +564,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da806e06899b5675",
+      "sourceHash": "fnv1a64:e1bc90956cb7e8f8",
       "notice": null,
       "blocks": [
         {

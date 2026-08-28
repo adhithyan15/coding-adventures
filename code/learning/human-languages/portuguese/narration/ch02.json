@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "How Are You?",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:b696688c2654a2d3",
+  "sourceHash": "fnv1a64:e38865bffa6b2aac",
   "lessons": [
     {
       "id": "PT-C02-de-nada",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52cbdef0857d72fc",
+      "sourceHash": "fnv1a64:d9db25f6cae40c7d",
       "notice": null,
       "blocks": [
         {
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f94e3dd7241a606",
+      "sourceHash": "fnv1a64:8dbf653867168ffe",
       "notice": null,
       "blocks": [
         {
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4a8709237abf25d",
+      "sourceHash": "fnv1a64:d9b331478ad86930",
       "notice": null,
       "blocks": [
         {
@@ -453,7 +453,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc322bb39b699414",
+      "sourceHash": "fnv1a64:b82290f797999a3c",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a02e9d4188bd98d6",
+      "sourceHash": "fnv1a64:8e4d0120e0b027e5",
       "notice": null,
       "blocks": [
         {
@@ -732,7 +732,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86de033159d18fc0",
+      "sourceHash": "fnv1a64:0b3396bb6e906f63",
       "notice": null,
       "blocks": [
         {
@@ -891,7 +891,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ded2b44e7c3dc08",
+      "sourceHash": "fnv1a64:aca1be415cde7665",
       "notice": null,
       "blocks": [
         {
@@ -1048,7 +1048,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:097a53e55e7299bb",
+      "sourceHash": "fnv1a64:f718ed94c477a750",
       "notice": null,
       "blocks": [
         {

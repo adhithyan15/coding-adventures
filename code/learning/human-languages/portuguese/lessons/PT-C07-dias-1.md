@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04]
 introduces:
   knowledge: [PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [PT-CULTURE-FEIRA-WEEKDAY-HISTORY-01]
 practises:
   knowledge: [PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04, PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03]
 skills: [listening, speaking, reading]

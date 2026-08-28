@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-GRAMMAR-NUMEROS-16-20-02, PT-NOTICE-NUMEROS-16-20-03]
 introduces:
   knowledge: [PT-ETYMON-PRETO-BRANCO-02, PT-ETYMON-PRETO-BRANCO-03, PT-ETYMON-PRETO-BRANCO-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-GRAMMAR-NUMEROS-16-20-02, PT-NOTICE-NUMEROS-16-20-03, PT-ETYMON-PRETO-BRANCO-02, PT-ETYMON-PRETO-BRANCO-03, PT-ETYMON-PRETO-BRANCO-04]
 skills: [listening, speaking, reading]

@@ -3,8 +3,8 @@
   "language": "portuguese",
   "chapter": 21,
   "title": "Bringing, Getting, Waiting, Buying",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:befd3a1bdd4a02e8",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d1d37ca80e261bab",
   "lessons": [
     {
       "id": "PT-C21-trazer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b14d556604d719e",
+      "sourceHash": "fnv1a64:ac9abf4e68b2cb2d",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3742b8b2544dccc1",
+      "sourceHash": "fnv1a64:6394a2e9a2b3612b",
       "notice": null,
       "blocks": [
         {
@@ -341,17 +341,17 @@
     {
       "id": "PT-C21-esperar",
       "sequence": 770,
-      "title": "esperar — waiting, hoping, expecting",
+      "title": "esperar — to wait",
       "headword": "esperar",
       "romanization": "esperar",
-      "gloss": "to wait, to hope, to expect — one Portuguese verb doing the work of three English ones",
+      "gloss": "to wait",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31120d6c1e64d76a",
+      "sourceHash": "fnv1a64:cb7e654355ebff21",
       "notice": null,
       "blocks": [
         {
@@ -367,14 +367,14 @@
             },
             {
               "kind": "speech",
-              "text": "Portuguese has sometimes answered one English verb with two. Here it goes the other way: one Portuguese verb answers three English ones."
+              "text": "One ordinary -ar verb lets you say that you wait: esperar."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: A plain -ar verb",
+          "title": "You'll want to know: The present tense",
           "segments": [
             {
               "kind": "table",
@@ -392,50 +392,31 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in the endings — esperar runs like every -ar verb you have met."
+              "text": "The endings are familiar. Portuguese normally puts the thing or person waited for directly after the verb:"
+            },
+            {
+              "kind": "speech",
+              "text": "Espero o meu irmão. — I am waiting for my brother."
+            },
+            {
+              "kind": "speech",
+              "text": "English needs “for”; Portuguese does not add a preposition here."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: Three English verbs, one Portuguese one",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Espero o meu irmão. — \"I am waiting for my brother.\" Espero que sim. — \"I hope so.\" Espero um livro. — \"I expect a book.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Waiting, hoping, expecting. Portuguese does not choose between them; the sentence around the verb decides. That is less strange than it looks — the three are one idea seen from three angles, since to wait for a thing is to expect it, and to expect a good thing is to hope for it."
-            },
-            {
-              "kind": "speech",
-              "text": "Espero que sim is worth banking whole. It sits beside penso que sim, \"I think so,\" and is the softer of the two."
+              "text": "Esperar comes from Latin spērāre, “to hope.” Its front e- props up an older sp- beginning, in the same way that escrever grew from Latin scrībere."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: hope, and the propped-up e-",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "esperar from Latin spērāre, \"to hope,\" built on spēs, \"hope.\" The waiting sense is the newcomer; hoping came first, which is why one verb still holds all three jobs."
-            },
-            {
-              "kind": "speech",
-              "text": "English has the family only in the negative: to despair is dē-spērāre, \"to be down from hope,\" and so is desperate, and the desperado who has none left. The cheerful half stayed on the far side of the Channel. It surfaces in one famous English word: Esperanto, the pen name its inventor published under, which means \"one who is hoping.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Now the e at the front. Latin spērāre began with s plus a consonant, and no Iberian mouth would start a word that way, so an e- was propped in front: spērāre becomes esperar. The same prop turned scrībere into escrever and stāre into estar. Three words, one habit."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -448,43 +429,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"espero, esperas, espera, esperamos, esperam\"",
+              "instruction": "espero, esperas, espera, esperamos, esperam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"espero, esperas, espera, esperamos, esperam\"]"
+              "source": "[YOU SAY: **espero, esperas, espera, esperamos, esperam**]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three jobs — \"Espero o meu irmão\", \"Espero que sim\"",
+              "instruction": "“I am waiting for my brother” — Espero o meu irmão.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three jobs — \"Espero o meu irmão\" · \"Espero que sim\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "hoping to manage it — \"Espero conseguir\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: hoping to manage it — \"Espero conseguir\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the propped e- — \"esperar, escrever, estar\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the propped e- — \"esperar · escrever · estar\"]"
+              "source": "[YOU SAY: “I am waiting for my brother” — **Espero o meu irmão.**]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -496,7 +459,223 @@
             },
             {
               "kind": "speech",
-              "text": "Name the three English verbs esperar covers. (Wait, hope, expect.) Say \"I hope so\" and \"I hope to manage it.\" (Espero que sim; espero conseguir.) Which of the three senses did spērāre mean first? (Hope — from spēs.) Why is there an e on the front of esperar? (Latin sp- could not open a word here, so an e- was propped on — as in escrever from scrībere and estar from stāre.) And what did sequī mean? (\"To follow\".)"
+              "text": "Say “I wait.” (Espero.) Say “We wait.” (Esperamos.) Does Portuguese add a word matching English “for” in Espero o meu irmão? (No.) Next, the same verb will take one carefully separated new meaning."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C21-esperar-hope",
+      "sequence": 772,
+      "title": "espero que sim — I hope so",
+      "headword": "espero que sim",
+      "romanization": "espero que sim",
+      "gloss": "I hope so",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9bec00139077ca6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Espero first meant “I hope.” Learn that meaning in one useful answer: Espero que sim, “I hope so.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: Bank the whole answer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— Vai chover? — Is it going to rain? — Espero que sim. — I hope so."
+            },
+            {
+              "kind": "speech",
+              "text": "You do not need to take the answer apart yet. Hear and say the four beats: es-pe-ro que sim."
+            },
+            {
+              "kind": "speech",
+              "text": "The earlier meaning, “wait,” is still available. The sentence around esperar selects the meaning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“I hope so” — Espero que sim.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “I hope so” — **Espero que sim.**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "In Espero que sim, does espero mean wait or hope? (Hope.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: In **Espero que sim**, does **espero** mean wait or hope? (**Hope.**)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “I hope so.” (Espero que sim.) Which meaning came first in the word’s Latin history? (Hope.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C21-esperar-expect",
+      "sequence": 774,
+      "title": "esperar — to expect",
+      "headword": "esperar",
+      "romanization": "esperar",
+      "gloss": "to expect",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3419d11a49edadca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have used esperar for waiting and hoping. Its third common meaning gets its own short lesson: “to expect.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: Let the object choose the meaning",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Espero um livro. — I expect a book."
+            },
+            {
+              "kind": "speech",
+              "text": "Here espero is about what you think will arrive. Compare the three meanings:"
+            },
+            {
+              "kind": "speech",
+              "text": "Espero o meu irmão. — I wait for my brother."
+            },
+            {
+              "kind": "speech",
+              "text": "Espero que sim. — I hope so."
+            },
+            {
+              "kind": "speech",
+              "text": "Espero um livro. — I expect a book."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not memorise three new verbs. Notice how the rest of the sentence guides you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“I expect a book” — Espero um livro.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “I expect a book” — **Espero um livro.**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHOOSE",
+              "instruction": "In that sentence, wait, hope or expect? (Expect.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHOOSE: In that sentence, wait, hope or expect? (**Expect.**)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “I expect a book.” (Espero um livro.) What helps you choose the English meaning? (The rest of the sentence.)"
             }
           ]
         }
@@ -515,7 +694,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b11425cdff3787b",
+      "sourceHash": "fnv1a64:190a68953a575526",
       "notice": null,
       "blocks": [
         {

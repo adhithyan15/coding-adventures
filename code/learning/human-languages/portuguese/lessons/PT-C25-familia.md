@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-AMIGO-02, PT-ETYMON-AMIGO-03]
 introduces:
   knowledge: [PT-LEX-FAMILIA-02, PT-ETYMON-FAMILIA-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-AMIGO-02, PT-ETYMON-AMIGO-03, PT-LEX-FAMILIA-02, PT-ETYMON-FAMILIA-03, PT-GRAMMAR-PAIS-03, PT-ETYMON-PAIS-02, PT-ETYMON-IRMAOS-02, PT-ETYMON-IRMAOS-03, PT-LEX-ACUCAR-02, PT-NOTICE-C24-COMIDA-04]
 skills: [listening, speaking, reading]

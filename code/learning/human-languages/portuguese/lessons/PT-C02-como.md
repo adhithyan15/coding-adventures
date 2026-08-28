@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04]
+introduces_idioms: []
+introduces_senses: [PT-SENSE-COMO-LIKE-AS-01]
+introduces_culture_claims: []
 practises:
   knowledge: [PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04]
 skills: [listening, speaking, reading]

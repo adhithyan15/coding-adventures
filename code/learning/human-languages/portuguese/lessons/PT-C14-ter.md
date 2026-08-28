@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-ETYMON-VERMELHO-AZUL-02, PT-ETYMON-VERMELHO-AZUL-03, PT-NOTICE-VERMELHO-AZUL-04, PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04]
 introduces:
   knowledge: [PT-LEX-TER-02, PT-ETYMON-TER-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-ETYMON-VERMELHO-AZUL-02, PT-ETYMON-VERMELHO-AZUL-03, PT-NOTICE-VERMELHO-AZUL-04, PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04, PT-LEX-TER-02, PT-ETYMON-TER-03]
 skills: [listening, speaking, reading]

@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d8f9eeb2611c6355",
+  "sourceHash": "fnv1a64:8111735e81aedb1f",
   "lessons": [
     {
       "id": "PT-C10-pais",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c95ddcf9efd42694",
+      "sourceHash": "fnv1a64:a515b21ebd62f6e5",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca89807f7cb84ee2",
+      "sourceHash": "fnv1a64:9d88cf9a8030ad65",
       "notice": null,
       "blocks": [
         {

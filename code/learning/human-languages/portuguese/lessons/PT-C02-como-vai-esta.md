@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-GRAMMAR-TUDO-BEM-02, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04]
 introduces:
   knowledge: [PT-LEX-COMO-VAI-ESTA-01]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-GRAMMAR-TUDO-BEM-02, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04, PT-LEX-COMO-VAI-ESTA-01]
 skills: [listening, speaking, reading]

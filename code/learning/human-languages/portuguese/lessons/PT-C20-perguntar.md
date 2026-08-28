@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-TOMAR-PEGAR-02, PT-LEX-DIZER-02, PT-ETYMON-DIZER-03]
 introduces:
   knowledge: [PT-LEX-PERGUNTAR-02, PT-ETYMON-PERGUNTAR-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-TOMAR-PEGAR-02, PT-LEX-DIZER-02, PT-ETYMON-DIZER-03, PT-LEX-PERGUNTAR-02, PT-ETYMON-PERGUNTAR-03]
 skills: [listening, speaking, reading]

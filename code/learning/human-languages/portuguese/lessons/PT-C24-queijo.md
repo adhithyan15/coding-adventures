@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-LEITE-02, PT-ETYMON-LEITE-03]
 introduces:
   knowledge: [PT-LEX-QUEIJO-02, PT-ETYMON-QUEIJO-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-LEITE-02, PT-ETYMON-LEITE-03, PT-LEX-QUEIJO-02, PT-ETYMON-QUEIJO-03, PT-LEX-CHA-02, PT-NOTICE-C23-BEBIDAS-04, PT-LEX-FALO-PORTUGUES-03]
 skills: [listening, speaking, reading]

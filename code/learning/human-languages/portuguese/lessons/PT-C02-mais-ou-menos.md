@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-GRAMMAR-TUDO-BEM-02]
 introduces:
   knowledge: [PT-SOUND-MAIS-OU-MENOS-02, PT-ETYMON-MAIS-OU-MENOS-03, PT-GRAMMAR-MAIS-OU-MENOS-04]
+introduces_idioms: [PT-IDIOM-MAIS-OU-MENOS-SO-SO-01]
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-GRAMMAR-TUDO-BEM-02, PT-SOUND-MAIS-OU-MENOS-02, PT-ETYMON-MAIS-OU-MENOS-03, PT-GRAMMAR-MAIS-OU-MENOS-04]
 skills: [listening, speaking, reading]

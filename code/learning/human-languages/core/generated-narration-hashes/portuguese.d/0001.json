@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 1,
-  "sourceHash": "fnv1a64:a33ac1ea92dc0dc0",
+  "sourceHash": "fnv1a64:6a9877657a0b02cb",
   "lessonIds": [
     "PT-C01-ola",
     "PT-W01-ola-guided-copy",
@@ -19,6 +19,6 @@
   "text": "portuguese/narration/ch01.txt",
   "json": "portuguese/narration/ch01.json",
   "textHash": "fnv1a64:dce5e856c892bc46",
-  "jsonHash": "fnv1a64:64531726eec5b722",
+  "jsonHash": "fnv1a64:0973328c14d36d12",
   "findings": []
 }

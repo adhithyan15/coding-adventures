@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-HOMEM-02, PT-ETYMON-HOMEM-03]
 introduces:
   knowledge: [PT-LEX-MULHER-02, PT-ETYMON-MULHER-03, PT-NOTICE-C25-PESSOAS-04]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-AMIGO-02, PT-LEX-FAMILIA-02, PT-LEX-HOMEM-02, PT-ETYMON-HOMEM-03, PT-LEX-MULHER-02, PT-ETYMON-MULHER-03, PT-NOTICE-C25-PESSOAS-04, PT-LEX-C03-PRACTICE-02, PT-NOTICE-C03-PRACTICE-03, PT-GRAMMAR-TENHO-FALADO-03, PT-PRAGMATICS-TENHO-FALADO-04]
 skills: [listening, speaking, reading]

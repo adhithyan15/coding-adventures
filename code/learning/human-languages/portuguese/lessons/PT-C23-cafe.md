@@ -18,6 +18,9 @@ requires:
   knowledge: [PT-LEX-JOGAR-BRINCAR-TOCAR-02]
 introduces:
   knowledge: [PT-LEX-CAFE-02, PT-SOUND-CAFE-02, PT-ETYMON-CAFE-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-LEX-JOGAR-BRINCAR-TOCAR-02, PT-LEX-CAFE-02, PT-SOUND-CAFE-02, PT-ETYMON-CAFE-03]
 skills: [listening, speaking, reading]

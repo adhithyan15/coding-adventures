@@ -18,6 +18,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [PT-SOUND-ADEUS-02, PT-ETYMON-ADEUS-03]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [PT-SOUND-ADEUS-02, PT-ETYMON-ADEUS-03]
 skills: [listening, speaking, reading]
