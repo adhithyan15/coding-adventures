@@ -18,7 +18,7 @@ use venture_browser_core::{
     BrowserFetchResponse, BrowserPage, BrowserPagePipeline, BrowserScrollCommand, BrowserViewport,
 };
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.1.1";
 pub const FIXTURE_PATH: &str = "/visual.html";
 pub const IMAGE_PATH: &str = "/checker.gif";
 pub const MISSING_IMAGE_PATH: &str = "/missing.gif";
@@ -51,7 +51,11 @@ pub const INTERNATIONAL_FIXTURE_HTML: &str = r#"<!doctype html>
 <body>
   <h1 id="international-title">International Inline Atlas</h1>
   <p id="rtl-run" dir="rtl">שלום Venture مرحبا</p>
+  <p id="bidi-controls">Build &#x2067;גרסה 12&#x2069; from &#x202B;مرحبا&#x202C; safely.</p>
   <p id="cjk-wrap" lang="ja">日本語の文章は空白がなくても共有行分割規則で複数行に折り返されます。</p>
+  <p id="thai-wrap" lang="th">ทุกสองสัปดาห์ภาษาไทยภาษาไทยภาษาไทยภาษาไทย</p>
+  <p id="lao-wrap" lang="lo">ພາສາລາວພາສາລາວພາສາລາວພາສາລາວພາສາລາວ</p>
+  <p id="khmer-wrap" lang="km">ភាសាខ្មែរភាសាខ្មែរភាសាខ្មែរភាសាខ្មែរភាសាខ្មែរ</p>
   <p id="cluster-run">Café 👩‍💻 🇺🇳 uses whole grapheme geometry and fallback → glyphs.</p>
 </body>
 </html>"#;
@@ -899,7 +903,16 @@ mod tests {
     #[test]
     fn international_page_converges_direction_wrap_and_font_fallback() {
         let page = load_international_page("http://venture.test").expect("international page");
-        for id in ["international-title", "rtl-run", "cjk-wrap", "cluster-run"] {
+        for id in [
+            "international-title",
+            "rtl-run",
+            "bidi-controls",
+            "cjk-wrap",
+            "thai-wrap",
+            "lao-wrap",
+            "khmer-wrap",
+            "cluster-run",
+        ] {
             assert!(
                 find_positioned_id(&page.paint.positioned, id).is_some(),
                 "missing #{id}"
@@ -907,6 +920,13 @@ mod tests {
         }
         let cjk = find_positioned_id(&page.paint.positioned, "cjk-wrap").unwrap();
         assert!(cjk.height > 14.0 * 1.4, "CJK fixture should wrap: {cjk:?}");
+        for id in ["thai-wrap", "lao-wrap", "khmer-wrap"] {
+            let complex = find_positioned_id(&page.paint.positioned, id).unwrap();
+            assert!(
+                complex.height > 14.0 * 1.4,
+                "dictionary-segmented fixture #{id} should wrap: {complex:?}"
+            );
+        }
 
         let font_refs: std::collections::HashSet<_> = page
             .paint

@@ -56,11 +56,21 @@ cross-platform proving application. Items are ordered by risk and dependency.
   `text-flow` analyzer, shared layout/measurement/paint integration, UTF-8
   grapheme selection spans, uniform bidi shaping runs, preserved native font
   fallback, and a deterministic international Venture page.
-- [ ] **P2 text convergence — generated Unicode conformance tables.** Extend
+- [x] **P2 text convergence — generated Unicode conformance tables.** Extend
   the browser-oriented text-flow profile with generated UAX #9/#14/#29 data,
   isolate/embedding controls, the full line-break pair table, and dictionary
   segmentation for Thai, Lao, and Khmer. Keep table generation independent of
-  layout and preserve the current analyzer API for all consumers.
+  layout and preserve the current analyzer API for all consumers. Completed
+  with ICU4X's generated Unicode 17 grapheme and full line-break state
+  machines, ICU bidi properties feeding the UAX #9 resolver, complex-script
+  dictionaries, profile diagnostics, focused conformance tests, and a shared
+  international real-page fixture.
+- [ ] **P2 browser convergence — asynchronous subresource lifecycle.** Replace
+  blocking inline-image fetch/decode with a host-neutral request, cancellation,
+  completion, and incremental-repaint contract owned by the browser pipeline.
+  Preserve retained document/layout state, deterministic ordering, failure
+  fallback, navigation cancellation, and one reusable scheduler seam across
+  native and web hosts rather than introducing toolkit-specific loaders.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a
