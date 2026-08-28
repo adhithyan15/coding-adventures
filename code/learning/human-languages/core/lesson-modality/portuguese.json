@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:cc4e9e6d45480baf",
+  "sourceHash": "fnv1a64:a08e1d2658d6c273",
   "summary": {
     "totalLessons": 102,
     "voice": 91,
@@ -1961,7 +1961,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:76f160adbaf02669"
+      "sourceHash": "fnv1a64:cb7e654355ebff21"
     },
     {
       "id": "PT-C21-esperar-hope",

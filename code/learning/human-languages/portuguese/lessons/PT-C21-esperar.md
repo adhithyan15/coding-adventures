@@ -58,7 +58,8 @@ English needs “for”; Portuguese does not add a preposition here.
 <!-- hl-knowledge: introduces=[PT-ETYMON-ESPERAR-03]; assesses=[] -->
 
 **Esperar** comes from Latin ***spērāre***, “to hope.” Its front **e-** props up
-an older *sp-* beginning, just as **escrever** grew from Latin *scrībere*.
+an older *sp-* beginning, in the same way that **escrever** grew from Latin
+*scrībere*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-CONSEGUIR-02, PT-LEX-ESCREVER-02, PT-LEX-ESPERAR-02, PT-GRAMMAR-ESPERAR-04, PT-ETYMON-ESPERAR-03] -->

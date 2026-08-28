@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Bringing, Getting, Waiting, Buying",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:036d9fcb2994e907",
+  "sourceHash": "fnv1a64:d1d37ca80e261bab",
   "lessons": [
     {
       "id": "PT-C21-trazer",
@@ -351,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76f160adbaf02669",
+      "sourceHash": "fnv1a64:cb7e654355ebff21",
       "notice": null,
       "blocks": [
         {
@@ -411,7 +411,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Esperar comes from Latin spērāre, “to hope.” Its front e- props up an older sp- beginning, just as escrever grew from Latin scrībere."
+              "text": "Esperar comes from Latin spērāre, “to hope.” Its front e- props up an older sp- beginning, in the same way that escrever grew from Latin scrībere."
             }
           ]
         },
