@@ -8431,6 +8431,7 @@ impl HtmlParser {
             || is_form_semantic_element(name)
             || is_phrasing_container_element(name)
             || is_select_option_element(name)
+            || is_table_structure_end_tag_element(name)
             || (is_rcdata_element(name)
                 && self.options.initial_tokenizer_context == HtmlInitialTokenizerContext::Data)
             || (name == "script"
@@ -12894,6 +12895,13 @@ fn is_phrasing_container_element(name: &str) -> bool {
 
 fn is_select_option_element(name: &str) -> bool {
     matches!(name, "optgroup" | "option")
+}
+
+fn is_table_structure_end_tag_element(name: &str) -> bool {
+    matches!(
+        name,
+        "caption" | "table" | "tbody" | "td" | "tfoot" | "th" | "thead" | "tr"
+    )
 }
 
 fn is_rcdata_element(name: &str) -> bool {
@@ -28338,6 +28346,18 @@ mod tests {
     }
 
     fn unmatched_select_option_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag",
+            format!("end tag `</{name}>` did not match an open element"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
+    fn unmatched_table_structure_end_tag(
         source: &str,
         name: &str,
         occurrence: usize,
@@ -45692,6 +45712,145 @@ mod tests {
                 foreign_direct.process_token(token);
             }
             assert!(foreign_direct
+                .diagnostics()
+                .iter()
+                .all(|diagnostic| diagnostic.position.is_none()));
+
+            let incomplete_source = format!("<!doctype html></{name}");
+            let incomplete = parse_html_with_diagnostics(&incomplete_source).unwrap();
+            assert!(incomplete
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+        }
+    }
+
+    #[test]
+    fn positions_unmatched_table_structure_end_tags_at_token_emission() {
+        let names = [
+            "caption", "table", "tbody", "td", "tfoot", "th", "thead", "tr",
+        ];
+        let source = "<!doctype html></caption></table></tbody></td></tfoot></th></thead></tr><!--é-->\r\n</caption><p>tail</p>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let clean =
+            parse_html_with_diagnostics("<!doctype html><!--é-->\r\n<p>tail</p>").unwrap();
+        assert!(source.len() > source.chars().count());
+        assert_eq!(output.document, clean.document);
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            names
+                .into_iter()
+                .map(|name| unmatched_table_structure_end_tag(source, name, 0))
+                .chain(std::iter::once(unmatched_table_structure_end_tag(
+                    source, "caption", 1,
+                )))
+                .collect::<Vec<_>>()
+        );
+
+        let table_source = "<!doctype html><table></caption></tbody></td></tfoot></th></thead></tr></table><p>tail</p>";
+        let table = parse_html_with_diagnostics(table_source).unwrap();
+        let clean_table =
+            parse_html_with_diagnostics("<!doctype html><table></table><p>tail</p>").unwrap();
+        assert_eq!(table.document, clean_table.document);
+        assert_eq!(
+            table
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                .cloned()
+                .collect::<Vec<_>>(),
+            names
+                .into_iter()
+                .filter(|name| *name != "table")
+                .map(|name| unmatched_table_structure_end_tag(table_source, name, 0))
+                .collect::<Vec<_>>()
+        );
+
+        for (context, context_names) in [
+            ("body", names.as_slice()),
+            (
+                "table",
+                ["caption", "tbody", "td", "tfoot", "th", "thead", "tr"].as_slice(),
+            ),
+            (
+                "tbody",
+                ["caption", "td", "tfoot", "th", "thead", "tr"].as_slice(),
+            ),
+            (
+                "tr",
+                ["caption", "td", "tfoot", "th", "thead"].as_slice(),
+            ),
+        ] {
+            let fragment_source = context_names
+                .iter()
+                .map(|name| format!("</{name}>"))
+                .collect::<String>()
+                + "tail";
+            let fragment =
+                parse_html_fragment_for_context_with_diagnostics(&fragment_source, context)
+                    .unwrap();
+            let clean_fragment =
+                parse_html_fragment_for_context_with_diagnostics("tail", context).unwrap();
+            assert_eq!(fragment.nodes, clean_fragment.nodes, "context {context}");
+            assert_eq!(
+                fragment
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "unexpected-end-tag")
+                    .cloned()
+                    .collect::<Vec<_>>(),
+                context_names
+                    .iter()
+                    .map(|name| unmatched_table_structure_end_tag(&fragment_source, name, 0))
+                    .collect::<Vec<_>>(),
+                "context {context}"
+            );
+        }
+
+        let seeded_source = "</table>";
+        let seeded =
+            parse_html_fragment_for_context_with_diagnostics(seeded_source, "table").unwrap();
+        assert_eq!(
+            seeded.parser_diagnostics,
+            vec![fragment_context_end_tag(seeded_source, "table", 0)]
+        );
+
+        for (name, matched_source) in [
+            ("caption", "<!doctype html><table><caption>X</caption></table>"),
+            ("table", "<!doctype html><table></table>"),
+            ("tbody", "<!doctype html><table><tbody></tbody></table>"),
+            ("td", "<!doctype html><table><tbody><tr><td></td></tr></tbody></table>"),
+            ("tfoot", "<!doctype html><table><tfoot></tfoot></table>"),
+            ("th", "<!doctype html><table><tbody><tr><th></th></tr></tbody></table>"),
+            ("thead", "<!doctype html><table><thead></thead></table>"),
+            ("tr", "<!doctype html><table><tbody><tr></tr></tbody></table>"),
+        ] {
+            let matched = parse_html_with_diagnostics(matched_source).unwrap();
+            assert!(matched
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
+
+            let foreign_source = format!(
+                "<!doctype html><svg><foreignObject></{name}>X</foreignObject></svg>"
+            );
+            let foreign = parse_html_with_diagnostics(&foreign_source).unwrap();
+            assert!(foreign.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-end-tag"
+                    && diagnostic.code != "unexpected-end-tag-in-foreign-content"
+            }));
+
+            let mut direct = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+            direct.process_token(Token::EndTag {
+                name: name.to_string(),
+            });
+            direct.process_token(Token::Eof);
+            assert!(direct
                 .diagnostics()
                 .iter()
                 .all(|diagnostic| diagnostic.position.is_none()));
