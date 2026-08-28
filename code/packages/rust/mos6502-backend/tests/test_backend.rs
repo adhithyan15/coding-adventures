@@ -58,11 +58,11 @@ fn canonical_const_42_then_ret_actually_executes_to_a_equals_42() {
     let bytes = compile(&ctx("fortytwo", &[], "i64"), &cir).expect("lowering");
 
     let mut sim = Mos6502Simulator::new(65536);
-    sim.load_program(&bytes);
+    sim.load_program(&bytes).unwrap();
     // Two instructions: LDA #42 (materialises 42 into A) then BRK, which
     // mos6502-simulator's execute() intercepts to set halted = true and
     // stop the fetch-decode-execute loop.
-    let result = sim.run_loaded_with_limit(10);
+    let result = sim.run_loaded_with_limit(10).unwrap();
     assert_eq!(result.steps, 2);
     assert_eq!(sim.a, 42);
     assert!(result.halted);
@@ -183,8 +183,14 @@ fn dangling_const_zero_with_no_ret_still_gets_a_real_terminator() {
     assert_eq!(bytes, vec![0xA9, 0x00, 0x00], "LDA #0 then a real BRK");
 
     let mut sim = Mos6502Simulator::new(65536);
-    sim.load_program(&bytes);
-    let result = sim.run_loaded_with_limit(1000);
-    assert!(result.halted, "program should halt, not run out the step budget");
-    assert_eq!(result.steps, 2, "should halt after exactly LDA + the real BRK");
+    sim.load_program(&bytes).unwrap();
+    let result = sim.run_loaded_with_limit(1000).unwrap();
+    assert!(
+        result.halted,
+        "program should halt, not run out the step budget"
+    );
+    assert_eq!(
+        result.steps, 2,
+        "should halt after exactly LDA + the real BRK"
+    );
 }

@@ -10,7 +10,7 @@
 //! $179), it powered the Apple II, Commodore 64, Atari 2600/8-bit line,
 //! BBC Micro, and — via the Ricoh 2A03 variant — the NES/Famicom.
 //!
-//! Module split mirrors [`mips_r2000_simulator`]:
+//! Module split mirrors the repository's MIPS R2000 simulator:
 //!
 //! ```text
 //! opcodes.rs   -- the 151-opcode table (mnemonic, addressing mode) + the
@@ -58,7 +58,8 @@
 //! sim.run(&[
 //!     0xA9, 42,  // LDA #42
 //!     0x00,      // BRK (halt)
-//! ]);
+//! ])
+//! .unwrap();
 //! assert_eq!(sim.a, 42);
 //! assert!(sim.halted);
 //! ```
@@ -70,4 +71,4 @@ pub mod flags;
 pub mod opcodes;
 pub mod simulator;
 
-pub use simulator::{ExecutionResult, Mos6502Simulator};
+pub use simulator::{ExecutionResult, Mos6502Error, Mos6502Simulator, Mos6502State, StepTrace};
