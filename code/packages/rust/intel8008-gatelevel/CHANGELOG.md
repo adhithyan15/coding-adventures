@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Moved unified memory, flags, halt state, all I/O latches, and the stack-depth
+  selector into D flip-flops and removed the unused M register slot, yielding
+  an exact 131,504 persistent DFF topology.
+- Routed INR/DCR and zero detection through gate-backed arithmetic and logic.
+- Added shared typed atomic lifecycle/I/O errors, deterministic transactional
+  runs, and complete owned `Intel8008State` snapshots.
+- Added exhaustive 256-byte full-state functional differentials plus lifecycle,
+  topology, memory, control-flow, and I/O workloads.
+- Replaced stale API/topology documentation and fixed strict rustdoc links.
+
 ## [0.1.0] - 2026-04-12
 
 ### Added

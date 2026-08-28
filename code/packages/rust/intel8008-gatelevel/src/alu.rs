@@ -144,7 +144,9 @@ impl GateAlu8 {
     pub fn and(a: u8, b: u8) -> (u8, AluFlags) {
         let a_bits = int_to_bits(a, 8);
         let b_bits = int_to_bits(b, 8);
-        let result_bits: Vec<u8> = a_bits.iter().zip(b_bits.iter())
+        let result_bits: Vec<u8> = a_bits
+            .iter()
+            .zip(b_bits.iter())
             .map(|(&ai, &bi)| and_gate(ai, bi))
             .collect();
         let result = bits_to_int(&result_bits);
@@ -157,7 +159,9 @@ impl GateAlu8 {
     pub fn or(a: u8, b: u8) -> (u8, AluFlags) {
         let a_bits = int_to_bits(a, 8);
         let b_bits = int_to_bits(b, 8);
-        let result_bits: Vec<u8> = a_bits.iter().zip(b_bits.iter())
+        let result_bits: Vec<u8> = a_bits
+            .iter()
+            .zip(b_bits.iter())
             .map(|(&ai, &bi)| or_gate(ai, bi))
             .collect();
         let result = bits_to_int(&result_bits);
@@ -170,7 +174,9 @@ impl GateAlu8 {
     pub fn xor(a: u8, b: u8) -> (u8, AluFlags) {
         let a_bits = int_to_bits(a, 8);
         let b_bits = int_to_bits(b, 8);
-        let result_bits: Vec<u8> = a_bits.iter().zip(b_bits.iter())
+        let result_bits: Vec<u8> = a_bits
+            .iter()
+            .zip(b_bits.iter())
             .map(|(&ai, &bi)| xor_gate(ai, bi))
             .collect();
         let result = bits_to_int(&result_bits);
@@ -181,19 +187,23 @@ impl GateAlu8 {
 
     /// Increment. Updates Z, S, P; does NOT update carry (8008 INR behavior).
     pub fn increment(a: u8) -> u8 {
-        a.wrapping_add(1)
+        let one = int_to_bits(1, 8);
+        let result = alu(&int_to_bits(a, 8), &one, AluOp::Add);
+        bits_to_int(&result.result)
     }
 
     /// Decrement. Updates Z, S, P; does NOT update carry (8008 DCR behavior).
     pub fn decrement(a: u8) -> u8 {
-        a.wrapping_sub(1)
+        let one = int_to_bits(1, 8);
+        let result = alu(&int_to_bits(a, 8), &one, AluOp::Sub);
+        bits_to_int(&result.result)
     }
 
     /// Compute flags Z, S, P from a result bit vector, plus supplied carry.
     pub fn compute_flags_from_bits(bits: &[u8], carry: bool) -> AluFlags {
         // Zero flag: all bits are 0 (implemented as NOR across all bits)
-        let any_set = bits.contains(&1);
-        let zero = !any_set;
+        let any_set = bits.iter().copied().fold(0, or_gate);
+        let zero = any_set == 0;
 
         // Sign flag: bit 7 (MSB) is 1
         let sign = bits.len() >= 8 && bits[7] == 1;
@@ -201,10 +211,15 @@ impl GateAlu8 {
         // Parity flag: even number of 1-bits (computed by XOR chain + NOT)
         let parity = compute_parity(bits) == 1;
 
-        AluFlags { carry, zero, sign, parity }
+        AluFlags {
+            carry,
+            zero,
+            sign,
+            parity,
+        }
     }
 
-    /// Rotate A left circular: CY ← A[7]; A ← (A<<1) | A[7]
+    /// Rotate A left circular: `CY ← A[7]; A ← (A<<1) | A[7]`
     pub fn rotate_left_circular(a: u8) -> (u8, bool) {
         let bits = int_to_bits(a, 8);
         let bit7 = bits[7];
@@ -216,7 +231,7 @@ impl GateAlu8 {
         (bits_to_int(&result_bits), bit7 == 1)
     }
 
-    /// Rotate A right circular: CY ← A[0]; A ← (A>>1) | (A[0]<<7)
+    /// Rotate A right circular: `CY ← A[0]; A ← (A>>1) | (A[0]<<7)`
     pub fn rotate_right_circular(a: u8) -> (u8, bool) {
         let bits = int_to_bits(a, 8);
         let bit0 = bits[0];
@@ -228,7 +243,7 @@ impl GateAlu8 {
         (bits_to_int(&result_bits), bit0 == 1)
     }
 
-    /// Rotate A left through carry: new_CY ← A[7]; A ← (A<<1) | old_CY
+    /// Rotate A left through carry: `new_CY ← A[7]; A ← (A<<1) | old_CY`
     pub fn rotate_left_carry(a: u8, carry_in: bool) -> (u8, bool) {
         let bits = int_to_bits(a, 8);
         let new_carry = bits[7] == 1;
@@ -239,7 +254,7 @@ impl GateAlu8 {
         (bits_to_int(&result_bits), new_carry)
     }
 
-    /// Rotate A right through carry: new_CY ← A[0]; A ← (old_CY<<7) | (A>>1)
+    /// Rotate A right through carry: `new_CY ← A[0]; A ← (old_CY<<7) | (A>>1)`
     pub fn rotate_right_carry(a: u8, carry_in: bool) -> (u8, bool) {
         let bits = int_to_bits(a, 8);
         let new_carry = bits[0] == 1;
@@ -286,6 +301,16 @@ mod tests {
         assert_eq!(result, 0xFF);
         assert!(flags.carry); // borrow
         assert!(flags.sign);
+    }
+
+    #[test]
+    fn test_subtract_with_incoming_borrow() {
+        let (result, flags) = GateAlu8::subtract_with_borrow(5, 3, true);
+        assert_eq!(result, 1);
+        assert!(!flags.carry);
+        let (result, flags) = GateAlu8::subtract_with_borrow(0, 0, true);
+        assert_eq!(result, 0xFF);
+        assert!(flags.carry);
     }
 
     #[test]

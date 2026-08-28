@@ -49,9 +49,10 @@ impl ProgramCounter {
     ///
     /// Reads by sampling the slave-latch Q output in each flip-flop.
     pub fn read(&self) -> u16 {
-        self.state.iter().enumerate().fold(0u16, |acc, (i, s)| {
-            acc | ((s.slave_q as u16) << i)
-        })
+        self.state
+            .iter()
+            .enumerate()
+            .fold(0u16, |acc, (i, s)| acc | ((s.slave_q as u16) << i))
     }
 
     /// Load a new 14-bit value into the PC (used by JMP, CALL, RETURN).
@@ -72,8 +73,8 @@ impl ProgramCounter {
     /// Increment the PC by 1 using a half-adder chain.
     ///
     /// Each stage:
-    ///   sum[i]   = XOR(bit[i], carry_in)
-    ///   carry[i] = AND(bit[i], carry_in)
+    ///   `sum[i]   = XOR(bit[i], carry_in)`
+    ///   `carry[i] = AND(bit[i], carry_in)`
     ///
     /// Starting carry_in = 1 (we are adding 1).
     pub fn increment(&mut self) {
@@ -104,7 +105,7 @@ mod tests {
 
     #[test]
     fn test_pc_increment() {
-        let mut pc = ProgramCounter::new();
+        let mut pc = ProgramCounter::default();
         assert_eq!(pc.read(), 0);
         pc.increment();
         assert_eq!(pc.read(), 1);

@@ -35,16 +35,16 @@ use crate::bits::{bits_to_int, int_to_bits};
 /// Each of the 8 register slots is stored as a `Vec<FlipFlopState>` of
 /// length 8 (LSB-first). Write operations simulate the two-phase clock;
 /// read operations sample the slave-latch Q outputs.
+#[derive(Clone)]
 pub struct RegisterFile {
-    /// 8 register slots: indices 0-5 = B,C,D,E,H,L; index 6 = unused;
-    /// index 7 = A (accumulator).
+    /// Seven physical register slots: B,C,D,E,H,L,A. M has no storage.
     regs: Vec<Vec<FlipFlopState>>,
 }
 
 impl RegisterFile {
     /// Create a new register file with all registers zeroed.
     pub fn new() -> Self {
-        let regs: Vec<Vec<FlipFlopState>> = (0..8)
+        let regs: Vec<Vec<FlipFlopState>> = (0..7)
             .map(|_| (0..8).map(|_| FlipFlopState::default()).collect())
             .collect();
         RegisterFile { regs }
@@ -55,7 +55,11 @@ impl RegisterFile {
     /// Samples the slave_q output of each flip-flop. Returns an 8-bit value
     /// with bit 0 = LSB.
     pub fn read(&self, idx: usize) -> u8 {
-        let bits: Vec<u8> = self.regs[idx].iter().map(|s| s.slave_q).collect();
+        if idx == 6 {
+            return 0;
+        }
+        let physical = if idx == 7 { 6 } else { idx };
+        let bits: Vec<u8> = self.regs[physical].iter().map(|s| s.slave_q).collect();
         bits_to_int(&bits)
     }
 
@@ -64,11 +68,13 @@ impl RegisterFile {
     /// Two-phase clock: clock=0 loads master latches, clock=1 propagates
     /// to slave latches so the value is immediately readable.
     pub fn write(&mut self, idx: usize, value: u8) {
+        assert_ne!(idx, 6, "M is a memory pseudo-register");
+        let physical = if idx == 7 { 6 } else { idx };
         let bits = int_to_bits(value, 8);
         // Phase 1: falling edge — master latches absorb new data
-        register(&bits, 0, &mut self.regs[idx]);
+        register(&bits, 0, &mut self.regs[physical]);
         // Phase 2: rising edge — slave latches receive from masters
-        register(&bits, 1, &mut self.regs[idx]);
+        register(&bits, 1, &mut self.regs[physical]);
     }
 }
 
@@ -84,7 +90,7 @@ mod tests {
 
     #[test]
     fn test_register_file_read_write() {
-        let mut rf = RegisterFile::new();
+        let mut rf = RegisterFile::default();
         // All registers start at 0
         for i in 0..8 {
             assert_eq!(rf.read(i), 0);
