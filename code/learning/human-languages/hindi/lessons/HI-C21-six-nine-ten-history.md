@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C21-six-nine-ten-history
 spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 700

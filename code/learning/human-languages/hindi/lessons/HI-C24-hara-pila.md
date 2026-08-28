@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C24-hara-pila
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 740

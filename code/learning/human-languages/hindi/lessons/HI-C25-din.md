@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C25-din
 spine_node: SPINE-TIME-OF-DAY
 sequence: 760

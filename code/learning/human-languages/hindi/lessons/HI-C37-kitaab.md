@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-HINDI-BOOK-REGISTER-01]
 id: HI-C37-kitaab
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 1010

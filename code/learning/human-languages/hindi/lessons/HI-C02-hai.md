@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C02-hai
 sequence: 130
 spine_node: SPINE-EXCHANGE-NAMES

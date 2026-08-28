@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-NAMASTE-GREETING-01]
+introduces_senses: [HI-SENSE-NAMASTE-HELLO-GOODBYE-01]
+introduces_culture_claims: []
 id: HI-C01-namaste
 sequence: 10
 spine_node: SPINE-MEET-GREET

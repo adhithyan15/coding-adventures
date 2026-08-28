@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-SUBAH-EVERYDAY-LOAN-REGISTER-01]
 id: HI-C28-subah
 spine_node: SPINE-TIME-OF-DAY
 sequence: 790

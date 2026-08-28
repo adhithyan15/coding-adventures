@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-PRANAM-SALUTATION-01]
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-PRANAM-RESPECT-SALUTATION-01]
 id: HI-C50-salutation
 spine_node: SPINE-COURTESY-THANK
 sequence: 1640

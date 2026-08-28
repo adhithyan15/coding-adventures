@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-AAPKA-SWAGAT-HAI-01]
+introduces_senses: [HI-SENSE-SWAGAT-WELCOME-RESPONSE-01]
+introduces_culture_claims: []
 id: HI-C03-aapka-swagat-hai
 sequence: 320
 spine_node: SPINE-COURTESY-THANK

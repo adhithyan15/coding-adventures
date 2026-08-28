@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "What the Body Tells You",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7b4cf6d7f73efefd",
+  "sourceHash": "fnv1a64:f955e489c4153045",
   "lessons": [
     {
       "id": "HI-C63-hunger",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de99f5fa13bdce49",
+      "sourceHash": "fnv1a64:aab5382bb626362e",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5670f9db1000aa03",
+      "sourceHash": "fnv1a64:043207d8e26a2f4a",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3e750bbd3c76905",
+      "sourceHash": "fnv1a64:932ad9654e2c8eda",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ada208a561a56ee",
+      "sourceHash": "fnv1a64:1bad2f05aad83c15",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b7a4c6795a31169",
+      "sourceHash": "fnv1a64:2eafb9833dbef498",
       "notice": null,
       "blocks": [
         {

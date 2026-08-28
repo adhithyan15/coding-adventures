@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C53-knee
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 1760

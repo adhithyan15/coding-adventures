@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:79e0bfe1f909b421",
+  "sourceHash": "fnv1a64:7783a6f323724369",
   "lessons": [
     {
       "id": "HI-C12-pitaa-maataa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33ad9c61c7bf4d19",
+      "sourceHash": "fnv1a64:d70f58c0d7ff6410",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7062d33ca437dbb6",
+      "sourceHash": "fnv1a64:f02c4c21edec4f25",
       "notice": null,
       "blocks": [
         {
@@ -261,7 +261,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fc04ed07ed08b8e7",
+      "sourceHash": "fnv1a64:67a955771a5a3478",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -446,7 +446,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4523478c6e5753df",
+      "sourceHash": "fnv1a64:42b7e7379e8bf87a",
       "notice": {
         "modality": "pen",
         "needs": [

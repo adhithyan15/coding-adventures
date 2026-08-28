@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-MAAF-KIJIYE-APOLOGY-01]
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C09-maaf-kijiye
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 520

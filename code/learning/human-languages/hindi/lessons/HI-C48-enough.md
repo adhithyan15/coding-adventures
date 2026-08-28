@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-BAS-ENOUGH-01]
+introduces_senses: [HI-SENSE-BAS-ENOUGH-THATS-ALL-01]
+introduces_culture_claims: []
 id: HI-C48-enough
 spine_node: SPINE-RESPOND-BASIC
 sequence: 1510

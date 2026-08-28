@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-SHUKRIYA-THANKS-01]
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-SHUKRIYA-EVERYDAY-REGISTER-01]
 id: HI-C01-shukriya
 sequence: 40
 spine_node: SPINE-COURTESY-THANK

@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C35-puchna
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 910

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 28,
-  "sourceHash": "fnv1a64:8a4c730f2f560ab9",
+  "sourceHash": "fnv1a64:0e16b58948cef310",
   "lessonIds": [
     "HI-C28-subah"
   ],
@@ -10,6 +10,6 @@
   "text": "hindi/narration/ch28.txt",
   "json": "hindi/narration/ch28.json",
   "textHash": "fnv1a64:dd8dafe533f15766",
-  "jsonHash": "fnv1a64:f9c95dd751d89c67",
+  "jsonHash": "fnv1a64:a6dc350dfe066699",
   "findings": []
 }

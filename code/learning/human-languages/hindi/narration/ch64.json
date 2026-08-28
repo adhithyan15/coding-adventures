@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "How Much and How Fast",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:409567282553f4de",
+  "sourceHash": "fnv1a64:4610a1f8ea462e7c",
   "lessons": [
     {
       "id": "HI-C64-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9a47d8a1447b4b7",
+      "sourceHash": "fnv1a64:f390852a2437fdd1",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6d232a764a5bfda",
+      "sourceHash": "fnv1a64:7dd31d0b91667765",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b9c3d889b64b7b1",
+      "sourceHash": "fnv1a64:935e4f57118f289a",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:797c56be195f9fd3",
+      "sourceHash": "fnv1a64:a51e639d1c8f1a6a",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a795198d15a76b91",
+      "sourceHash": "fnv1a64:db3847424e66a16c",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5379fa247a0b970e",
+  "sourceHash": "fnv1a64:d7bde14ad6306f9f",
   "lessons": [
     {
       "id": "HI-C34-sochna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a54a146eaf65a464",
+      "sourceHash": "fnv1a64:87397426af6ae787",
       "notice": null,
       "blocks": [
         {
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b02badb7a3afc2ae",
+      "sourceHash": "fnv1a64:2c5aea41c3dd0d03",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ce0928485a5ce6ca",
+      "sourceHash": "fnv1a64:1bc5ed3d123e8ff6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -465,7 +465,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:25983c136fa71b68",
+      "sourceHash": "fnv1a64:ba57294ed2cc7ccd",
       "notice": {
         "modality": "sight",
         "needs": [

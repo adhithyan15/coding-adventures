@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:647517f166ff3077",
+  "sourceHash": "fnv1a64:531c6e8d187571ea",
   "lessons": [
     {
       "id": "HI-C26-raat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ddafaefead3d8649",
+      "sourceHash": "fnv1a64:c858ebedb333a8f2",
       "notice": null,
       "blocks": [
         {

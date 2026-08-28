@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d7040781be8f2a6f",
+  "sourceHash": "fnv1a64:3d6892fdeab9090f",
   "lessons": [
     {
       "id": "HI-C14-ritu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d74609398efe0e53",
+      "sourceHash": "fnv1a64:b75978f448808762",
       "notice": null,
       "blocks": [
         {
@@ -152,7 +152,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1403e44db9798707",
+      "sourceHash": "fnv1a64:8727fb84a8618972",
       "notice": {
         "modality": "pen",
         "needs": [

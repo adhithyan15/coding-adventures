@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "One House, Four Languages",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:21e94bfc2692c481",
+  "sourceHash": "fnv1a64:fc4de337e0006eb8",
   "lessons": [
     {
       "id": "HI-C36-ghar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5d7cf3973b50e02f",
+      "sourceHash": "fnv1a64:cbfb5d9b7bbf2840",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bf4ccc0cb3c4a4b6",
+      "sourceHash": "fnv1a64:802e40cd4bcac2e1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -353,7 +353,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7383936482facd58",
+      "sourceHash": "fnv1a64:aacdd03b663a9c9e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -520,7 +520,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:acd34c6f351f46b1",
+      "sourceHash": "fnv1a64:56ed1c6a8b0253e6",
       "notice": {
         "modality": "sight",
         "needs": [

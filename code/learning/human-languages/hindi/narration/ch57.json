@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "A Gift and a Feast",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2a1a6a6de2d54e00",
+  "sourceHash": "fnv1a64:9aa22a156a82266f",
   "lessons": [
     {
       "id": "HI-C57-present",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02366b9341bd77cd",
+      "sourceHash": "fnv1a64:3cea8509d55dac8c",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca2c3a8a897b4020",
+      "sourceHash": "fnv1a64:5392d33ac7a0a77f",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b939c9caeaf96677",
+      "sourceHash": "fnv1a64:3c3db0265b623fad",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5e52c99a257d026",
+      "sourceHash": "fnv1a64:77091759a09c51db",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:505deddfa94acba1",
+      "sourceHash": "fnv1a64:77fd2c1a5aa7fa4a",
       "notice": null,
       "blocks": [
         {

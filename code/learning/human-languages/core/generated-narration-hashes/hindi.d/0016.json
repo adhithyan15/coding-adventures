@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 16,
-  "sourceHash": "fnv1a64:36b9d36d11bbabd0",
+  "sourceHash": "fnv1a64:c2f970c9c535ec05",
   "lessonIds": [
     "HI-C16-mahine",
     "HI-S120-vowel-sign-u"
@@ -11,6 +11,6 @@
   "text": "hindi/narration/ch16.txt",
   "json": "hindi/narration/ch16.json",
   "textHash": "fnv1a64:83b3d076ca0a3a9e",
-  "jsonHash": "fnv1a64:d00bf1c8b45210ad",
+  "jsonHash": "fnv1a64:b54a7a2c5e2804a8",
   "findings": []
 }

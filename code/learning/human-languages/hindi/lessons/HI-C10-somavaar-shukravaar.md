@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-HINDI-PLANET-WEEK-01]
 id: HI-C10-somavaar-shukravaar
 spine_node: SPINE-TIME-OF-DAY
 sequence: 530

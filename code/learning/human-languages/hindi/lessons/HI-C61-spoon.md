@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C61-spoon
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 2270

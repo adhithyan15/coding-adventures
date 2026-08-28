@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-NAMASKAR-GREETING-01]
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-NAMASKAR-FORMAL-REGISTER-01]
 id: HI-C01-namaskar
 sequence: 20
 spine_node: SPINE-MEET-GREET

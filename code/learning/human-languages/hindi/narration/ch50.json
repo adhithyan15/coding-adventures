@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Courtesy Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:62e3fc6e3fc19078",
+  "sourceHash": "fnv1a64:f7da3692a2674b4a",
   "lessons": [
     {
       "id": "HI-C50-gratitude",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f71e7f2a0f25de50",
+      "sourceHash": "fnv1a64:113449909a7e19cd",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c0346591969a2d3",
+      "sourceHash": "fnv1a64:e7e79be0590a0f90",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb28962cc82ed90a",
+      "sourceHash": "fnv1a64:5a10c88847c99cc9",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fc1e405d94ce9ac",
+      "sourceHash": "fnv1a64:3158e4c958c42073",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82d548303d513726",
+      "sourceHash": "fnv1a64:e4e75245f403b5c4",
       "notice": null,
       "blocks": [
         {

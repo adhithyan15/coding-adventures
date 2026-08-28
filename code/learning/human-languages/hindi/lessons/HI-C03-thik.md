@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-MAIN-THIK-HUN-01]
+introduces_senses: [HI-SENSE-THIK-FINE-CORRECT-01]
+introduces_culture_claims: []
 id: HI-C03-thik
 sequence: 310
 spine_node: SPINE-CHECK-WELLBEING

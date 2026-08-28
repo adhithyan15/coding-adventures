@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d0a0b12d0cf96cf3",
+  "sourceHash": "fnv1a64:3d4c1e973a761f7b",
   "lessons": [
     {
       "id": "HI-C03-kaise",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d66b7864b3a43c7a",
+      "sourceHash": "fnv1a64:7f8663cdf9d08845",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ed4078b55b808f1d",
+      "sourceHash": "fnv1a64:f39dd1712ae502b8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -298,7 +298,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:114d68a91d9c4fa1",
+      "sourceHash": "fnv1a64:642cd009ec911f94",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -434,7 +434,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:65fe038ab66acf6a",
+      "sourceHash": "fnv1a64:b3ac34f13698fb3d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -594,7 +594,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2db0ea8b5923ef3c",
+      "sourceHash": "fnv1a64:8a7683db13cd5345",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -747,7 +747,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9b569e69ad4ab9ad",
+      "sourceHash": "fnv1a64:a37fd05986719fd5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -897,7 +897,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0401c7b43f1cd42",
+      "sourceHash": "fnv1a64:9f23b716b2f4e345",
       "notice": null,
       "blocks": [
         {

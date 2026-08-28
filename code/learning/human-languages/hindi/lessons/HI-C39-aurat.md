@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-WOMAN-WORD-REGISTER-01]
 id: HI-C39-aurat
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 1090

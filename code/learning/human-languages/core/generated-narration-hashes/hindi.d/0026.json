@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 26,
-  "sourceHash": "fnv1a64:647517f166ff3077",
+  "sourceHash": "fnv1a64:531c6e8d187571ea",
   "lessonIds": [
     "HI-C26-raat"
   ],
@@ -10,6 +10,6 @@
   "text": "hindi/narration/ch26.txt",
   "json": "hindi/narration/ch26.json",
   "textHash": "fnv1a64:586d43eb6258cc41",
-  "jsonHash": "fnv1a64:5afd2646a7acc5ba",
+  "jsonHash": "fnv1a64:1a9df1cc034d06cd",
   "findings": []
 }

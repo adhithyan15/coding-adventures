@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Animals in the Yard",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f2c83bd0cde13f9a",
+  "sourceHash": "fnv1a64:b855ce2bf5217579",
   "lessons": [
     {
       "id": "HI-C60-monkey",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:472373a22999e48c",
+      "sourceHash": "fnv1a64:0dd5781e7acd6a57",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:943a64551e30273e",
+      "sourceHash": "fnv1a64:fd3be45d3b3307b9",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7faa24bc393e82e1",
+      "sourceHash": "fnv1a64:d9464a6cb797cac4",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e6791e3a2b08cf0",
+      "sourceHash": "fnv1a64:7c5b68da055109a1",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6dfaa40363b4d28f",
+      "sourceHash": "fnv1a64:a5f1899197e69776",
       "notice": null,
       "blocks": [
         {

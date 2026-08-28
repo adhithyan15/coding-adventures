@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-AAP-TUM-RESPECT-REGISTER-01]
 id: HI-C02-aap-tum
 sequence: 150
 spine_node: SPINE-EXCHANGE-NAMES

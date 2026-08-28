@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [HI-SENSE-KARNA-DO-MAKE-01]
+introduces_culture_claims: []
 id: HI-C05-karna
 sequence: 420
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS

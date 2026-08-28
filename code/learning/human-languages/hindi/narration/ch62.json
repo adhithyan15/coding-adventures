@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "What Hands Work With",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:82c5aef2b02fc633",
+  "sourceHash": "fnv1a64:91980025364c4b75",
   "lessons": [
     {
       "id": "HI-C62-rope",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60fe47411e1b3f99",
+      "sourceHash": "fnv1a64:bd54a89fe3efb478",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:357ba031dc426662",
+      "sourceHash": "fnv1a64:12eb89fdb53855d7",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37bbdf4de0810523",
+      "sourceHash": "fnv1a64:c1265bd917167eb8",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f53d865d7c2f9ae3",
+      "sourceHash": "fnv1a64:53b615b51831b323",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a94ffeca8eebb2f",
+      "sourceHash": "fnv1a64:db87dd356d0a7f10",
       "notice": null,
       "blocks": [
         {

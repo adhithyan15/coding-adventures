@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "Animals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b5fce6ba6d7c7f5b",
+  "sourceHash": "fnv1a64:eb8078c264cd76c2",
   "lessons": [
     {
       "id": "HI-C54-cow",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d95fcfba8f96741c",
+      "sourceHash": "fnv1a64:9ae67b111bad4c59",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:197f9cc2356979f8",
+      "sourceHash": "fnv1a64:656b443d6d6284af",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f7097ad99c59320",
+      "sourceHash": "fnv1a64:38030e0239bd9b2b",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf7125ae86cae4b7",
+      "sourceHash": "fnv1a64:214bdb2c58316474",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81233d5cce633653",
+      "sourceHash": "fnv1a64:0d03fc5d72428a16",
       "notice": null,
       "blocks": [
         {

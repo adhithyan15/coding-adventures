@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C55-star
 spine_node: SPINE-RESPOND-BASIC
 sequence: 1870

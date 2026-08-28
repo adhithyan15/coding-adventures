@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3d53759c519dce7d",
+  "sourceHash": "fnv1a64:a981ab87fb2e2f50",
   "lessons": [
     {
       "id": "HI-C22-gyarah-bees",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99c63c9e02caf853",
+      "sourceHash": "fnv1a64:2d576522ab400044",
       "notice": null,
       "blocks": [
         {

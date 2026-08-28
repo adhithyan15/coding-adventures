@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C02-khushi
 sequence: 180
 spine_node: SPINE-EXCHANGE-NAMES

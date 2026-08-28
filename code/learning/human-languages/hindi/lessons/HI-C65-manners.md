@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-ADAB-MANNERS-REGISTER-01]
 id: HI-C65-manners
 spine_node: SPINE-COURTESY-THANK
 sequence: 2500

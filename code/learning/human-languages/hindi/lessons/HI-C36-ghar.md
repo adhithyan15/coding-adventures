@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [HI-SENSE-GHAR-HOUSE-HOME-01]
+introduces_culture_claims: []
 id: HI-C36-ghar
 spine_node: SPINE-MEET-GREET
 sequence: 940

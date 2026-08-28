@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:13550d1f85bf5d6c",
+  "sourceHash": "fnv1a64:4740452712440e61",
   "lessons": [
     {
       "id": "HI-C52-rice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:903b186e07e8e5a8",
+      "sourceHash": "fnv1a64:6fcd83eec56c18ff",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ff11c17a097d5d3",
+      "sourceHash": "fnv1a64:b7f932b44657cfd8",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3604cb96e3601550",
+      "sourceHash": "fnv1a64:0c7f92ea69c176d3",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:970ee202377035c9",
+      "sourceHash": "fnv1a64:10e745b0be662cd4",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:276439de07522f28",
+      "sourceHash": "fnv1a64:3a0a17fff3f96bc3",
       "notice": null,
       "blocks": [
         {

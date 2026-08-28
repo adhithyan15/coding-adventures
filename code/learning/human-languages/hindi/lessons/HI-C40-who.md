@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C40-who
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 1140

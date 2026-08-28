@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [HI-SENSE-LAKDI-WOOD-FIREWOOD-01]
+introduces_culture_claims: []
 id: HI-C62-wood
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 2350

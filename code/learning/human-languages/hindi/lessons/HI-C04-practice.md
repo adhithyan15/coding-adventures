@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C04-practice
 sequence: 390
 spine_node: SPINE-TAKE-LEAVE

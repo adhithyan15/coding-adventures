@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:254b0713b9b6a859",
+  "sourceHash": "fnv1a64:240ca52ae443a3c7",
   "lessons": [
     {
       "id": "HI-C04-phir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3d70728e90675b06",
+      "sourceHash": "fnv1a64:fee98bbb013690ce",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a025facd26a353f3",
+      "sourceHash": "fnv1a64:9c9ed6103df53846",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9a2ad6452a9b800",
+      "sourceHash": "fnv1a64:f12d281c08de0465",
       "notice": null,
       "blocks": [
         {
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6e57c331212bbc8d",
+      "sourceHash": "fnv1a64:ab433240f1b58e7e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -556,7 +556,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0f74d5bb5bd84619",
+      "sourceHash": "fnv1a64:068b50b529c0899f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -704,7 +704,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6562f0a49b0950f7",
+      "sourceHash": "fnv1a64:3001534f9e83501a",
       "notice": null,
       "blocks": [
         {

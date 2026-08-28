@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Asking Nicely",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:202dac5979ee5bb1",
+  "sourceHash": "fnv1a64:9be758e3f5ff2a38",
   "lessons": [
     {
       "id": "HI-C65-kindness",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc3f9ebff7dd226b",
+      "sourceHash": "fnv1a64:dad0d35d47e8fb6c",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b64be1191994aa07",
+      "sourceHash": "fnv1a64:e09a02f7bce4e688",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a37875a6fe92450b",
+      "sourceHash": "fnv1a64:8287c547aa954cc8",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe0c46e600c01aa3",
+      "sourceHash": "fnv1a64:fa47abc73b5c7130",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86dbed166b28d1ed",
+      "sourceHash": "fnv1a64:b8b16972520c4a3c",
       "notice": null,
       "blocks": [
         {

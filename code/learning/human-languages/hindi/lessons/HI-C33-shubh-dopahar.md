@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-SHUBH-DOPAHAR-01]
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-AFTERNOON-GREETING-RARITY-01]
 id: HI-C33-shubh-dopahar
 spine_node: SPINE-TIME-OF-DAY
 sequence: 850

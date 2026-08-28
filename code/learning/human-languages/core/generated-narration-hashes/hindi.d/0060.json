@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 60,
-  "sourceHash": "fnv1a64:f2c83bd0cde13f9a",
+  "sourceHash": "fnv1a64:b855ce2bf5217579",
   "lessonIds": [
     "HI-C60-monkey",
     "HI-C60-snake",
@@ -14,6 +14,6 @@
   "text": "hindi/narration/ch60.txt",
   "json": "hindi/narration/ch60.json",
   "textHash": "fnv1a64:536891dc2552ac8b",
-  "jsonHash": "fnv1a64:0205756a571975b8",
+  "jsonHash": "fnv1a64:f06df706762ee0b1",
   "findings": []
 }

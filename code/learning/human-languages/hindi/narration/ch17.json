@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d582b7cf4ba60753",
+  "sourceHash": "fnv1a64:cffbeb9cee6c7900",
   "lessons": [
     {
       "id": "HI-C17-dopahar-aadhi-raat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21a36ec06af8f804",
+      "sourceHash": "fnv1a64:f3416d89206b4ed7",
       "notice": null,
       "blocks": [
         {
@@ -135,7 +135,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b202d9f57379a63e",
+      "sourceHash": "fnv1a64:97507137e1a494fd",
       "notice": {
         "modality": "pen",
         "needs": [

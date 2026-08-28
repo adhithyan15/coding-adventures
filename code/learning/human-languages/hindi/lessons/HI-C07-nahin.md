@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: [HI-SENSE-NAHIN-NO-NOT-01]
+introduces_culture_claims: []
 id: HI-C07-nahin
 spine_node: SPINE-RESPOND-BASIC
 sequence: 500

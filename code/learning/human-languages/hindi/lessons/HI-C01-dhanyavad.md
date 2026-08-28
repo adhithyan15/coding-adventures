@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-DHANYAVAD-THANKS-01]
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-DHANYAVAD-FORMAL-REGISTER-01]
 id: HI-C01-dhanyavad
 sequence: 30
 spine_node: SPINE-COURTESY-THANK

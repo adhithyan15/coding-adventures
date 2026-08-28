@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-MERA-NAAM-HAI-01]
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C02-mera-naam-hai
 sequence: 140
 spine_node: SPINE-EXCHANGE-NAMES

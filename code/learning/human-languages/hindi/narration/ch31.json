@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Good Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1c5480f813e94c2b",
+  "sourceHash": "fnv1a64:387bffd3c1c0fb8d",
   "lessons": [
     {
       "id": "HI-C31-suprabhat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57363ed5674d335a",
+      "sourceHash": "fnv1a64:9ec36327a14e022b",
       "notice": null,
       "blocks": [
         {

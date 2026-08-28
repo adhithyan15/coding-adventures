@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-AAP-KAISE-HAIN-01]
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C03-aap-kaise-hain
 sequence: 280
 spine_node: SPINE-CHECK-WELLBEING

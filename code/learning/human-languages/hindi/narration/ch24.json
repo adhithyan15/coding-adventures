@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Green and Yellow",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:23b5644f154e5450",
+  "sourceHash": "fnv1a64:18a59495148df9c6",
   "lessons": [
     {
       "id": "HI-C24-hara-pila",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74a7089fc59c56de",
+      "sourceHash": "fnv1a64:e35bf14473240035",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:290c98113103da8c",
+      "sourceHash": "fnv1a64:9bd6a5fbe19abc6b",
       "notice": null,
       "blocks": [
         {

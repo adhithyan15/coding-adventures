@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:866f9c8f103ba49d",
+  "sourceHash": "fnv1a64:89b92244bb421bdf",
   "lessons": [
     {
       "id": "HI-C06-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f17e9eadf0fc762",
+      "sourceHash": "fnv1a64:74674ab46265d59d",
       "notice": null,
       "blocks": [
         {
@@ -147,7 +147,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0085c72fcb524b49",
+      "sourceHash": "fnv1a64:57dad7f508adb903",
       "notice": null,
       "blocks": [
         {
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:425565e199a1eef8",
+      "sourceHash": "fnv1a64:5afbf7148a30d9b5",
       "notice": null,
       "blocks": [
         {
@@ -417,7 +417,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9fc086a7acb2e3df",
+      "sourceHash": "fnv1a64:d8fc38b02324bdca",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -606,7 +606,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e1252418302c3e2b",
+      "sourceHash": "fnv1a64:1afa702e7706712a",
       "notice": {
         "modality": "pen",
         "needs": [

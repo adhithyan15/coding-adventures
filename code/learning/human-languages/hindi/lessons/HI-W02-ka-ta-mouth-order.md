@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-W02-ka-ta-mouth-order
 spine_node: SPINE-MEET-GREET
 sequence: 90

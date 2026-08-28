@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 38,
-  "sourceHash": "fnv1a64:f180ca06271bbf4e",
+  "sourceHash": "fnv1a64:53743df220dce521",
   "lessonIds": [
     "HI-C38-aankh",
     "HI-C38-daant",
@@ -13,6 +13,6 @@
   "text": "hindi/narration/ch38.txt",
   "json": "hindi/narration/ch38.json",
   "textHash": "fnv1a64:4ac7037b230e02be",
-  "jsonHash": "fnv1a64:cf0eb0b2a5b15cb3",
+  "jsonHash": "fnv1a64:6369c4fb09a63daa",
   "findings": []
 }

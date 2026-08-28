@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C02-meraa
 sequence: 120
 spine_node: SPINE-EXCHANGE-NAMES

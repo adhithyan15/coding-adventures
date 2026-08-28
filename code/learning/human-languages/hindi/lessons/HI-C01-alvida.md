@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: [HI-IDIOM-ALVIDA-FAREWELL-01]
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-ALVIDA-FINAL-FAREWELL-REGISTER-01]
 id: HI-C01-alvida
 sequence: 50
 spine_node: SPINE-TAKE-LEAVE

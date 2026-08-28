@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-C64-slowly
 spine_node: SPINE-RESPOND-BASIC
 sequence: 2430

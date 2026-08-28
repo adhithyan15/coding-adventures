@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fd695bdb907dc7b6",
+  "sourceHash": "fnv1a64:02f28621c23df320",
   "lessons": [
     {
       "id": "HI-C27-shubh-raatri",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df802107ec88621e",
+      "sourceHash": "fnv1a64:3e4b21296b6d377a",
       "notice": null,
       "blocks": [
         {

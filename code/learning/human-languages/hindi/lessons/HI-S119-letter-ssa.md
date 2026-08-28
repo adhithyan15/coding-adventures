@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 id: HI-S119-letter-ssa
 spine_node: SPINE-MEET-GREET
 sequence: 621

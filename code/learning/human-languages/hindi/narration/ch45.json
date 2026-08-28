@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Things You Ask For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1209d4e5f87fc0dc",
+  "sourceHash": "fnv1a64:82505a42ca050c03",
   "lessons": [
     {
       "id": "HI-C45-fruit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1255f6a07bffc8b8",
+      "sourceHash": "fnv1a64:0414282e1bc675ad",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c92fdd695d22749",
+      "sourceHash": "fnv1a64:7da9243b0275f59c",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae32a0e342e952a9",
+      "sourceHash": "fnv1a64:fc9af47cee0a1342",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9404665ecbf362a",
+      "sourceHash": "fnv1a64:a40554b0faed7d3d",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7228e8e05ec7fef4",
+      "sourceHash": "fnv1a64:7ddd69a3d14b4763",
       "notice": null,
       "blocks": [
         {

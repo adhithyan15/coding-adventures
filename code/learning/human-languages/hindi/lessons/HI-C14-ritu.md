@@ -1,5 +1,8 @@
 ---
 schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [HI-CULTURE-SIX-RITU-SEASON-SYSTEM-01]
 id: HI-C14-ritu
 spine_node: SPINE-TIME-OF-DAY
 sequence: 610
