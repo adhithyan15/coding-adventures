@@ -10259,6 +10259,41 @@ reconciliation, dependency repair, and selection, the complete graph contains
 577 owners and 859 edges: 175 merged, 401 pending, and exactly one
 `in-progress` owner.
 
+### Rust Dune-discovery implementation and validation
+
+Test-first validation reproduced the defect in both the focused native boundary
+and the unchanged shared language-registry fixture: Rust discovered the
+generated `ocaml/decoy` identity below exact `_build`. The minimum production
+repair adds only `_build` to Rust discovery's existing exact, case-sensitive
+component registry. The direct regression puts exact, case-variant, and
+near-name fixtures beneath distinct parents, which prevents a case-insensitive
+host filesystem from collapsing `_build` and `_Build`; `ocaml/case-source` and
+`ocaml/near-source` remain discoverable.
+
+The complete Rust package passes 150 unit tests and three CLI integrations
+through both `cargo test --all-targets` and the literal `BUILD_windows` front.
+Clippy passes all targets and features with warnings denied. LLVM coverage is
+94.44% for discovery lines and 82.22% for all package lines, with 87.18%
+overall function coverage. `cargo audit` scans all 57 locked dependencies with
+no vulnerability. The complete build-tool conformance family passes 205 tests
+with 23 expected platform skips; the neutral corpus validates all 119 cases and
+283 files across 16 implementations and 15 established lanes, and the
+execution contract remains valid. The Go oracle passes all packages, vet, and
+trimpath compilation.
+
+The collision-checked schema-3 report remains unchanged at 15 established
+lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported
+identities, 731 Rust singletons, zero OCaml packages, zero collisions, and zero
+unknown buckets. The 577-owner/859-edge state graph is unique,
+dependency-complete, acyclic, and lifecycle-valid with 175 merged, 401 pending,
+and exactly this owner in progress. Rust 1.97 `cargo fmt --check` retains the
+exact current-main baseline: both trees emit the same 42 diff headers and 562
+lines with identical diff bodies once path-and-line headers are removed, so no
+unrelated bulk reformat was introduced. Diff, generated-artifact,
+credential-pattern, dependency, BUILD, parity, and collision checks are clean.
+Live PRs #13493, #13467, #13455, #13452, and #7821 have no changed-path overlap;
+#12165 shares only `lessons.md` at a disjoint line-272 coverage hunk.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
