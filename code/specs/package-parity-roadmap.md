@@ -10820,6 +10820,20 @@ focused portability tests pass locally. The same PR branch now carries the
 11-path tranche, still with zero exact overlap across six other live PRs.
 Replacement CI is pending and auto-merge remains disabled.
 
+The repair branch rebased conflict-free onto exact `origin/main`
+`3dac02fa7680e102ac1da7ad5392d7856d30f9be`. Intervening PR #13513 changes
+33 human-language and generated-book paths, with no overlap on this 11-path
+tranche, package root, manifest, build-tool contract, or canonical identity.
+Clean installation, strict typechecking, all 327 package tests with unchanged
+coverage, all 16 focused portability tests, the complete Go oracle, the
+collision-clean inventory, state graph, diff hygiene, and exact-diff plan pass
+again. The plan still discovers 481 TypeScript packages, selects only
+`typescript/programs/build-tool`, and skips the other 480. Six other live PRs
+have zero exact path overlap, and an independent exact-rebased-head review
+found no remaining correctness, security, authority, lifecycle, or scope
+issue. The same PR therefore receives an exact lease-protected replacement
+push; replacement CI remains the only pre-auto-merge gate.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

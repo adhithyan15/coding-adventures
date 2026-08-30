@@ -13,6 +13,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   now typechecks production and adapter source before running coverage.
 - Advanced the repository-wide locked-compiler inventory to include this new
   build-tool compiler gate.
+- Rebased the focused 11-path tranche onto the latest package-neutral main
+  after the CI repair; the complete package, compiler, portability, Go-oracle,
+  collision, state-graph, and exact-diff gates remain green.
 
 ### TypeScript build-tool Dune discovery
 
