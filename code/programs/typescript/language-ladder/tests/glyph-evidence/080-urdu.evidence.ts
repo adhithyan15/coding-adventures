@@ -85,6 +85,26 @@ export default [
   {
     suite: "shared Perso-Arabic letters retain script-owned provenance",
     suiteOrder: 50,
+    caseOrder: 230,
+    name: "keeps Urdu ض as a source-backed swad-series body plus final dot",
+    verify: ({ SCRIPTS }) => {
+      const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+        .letters.find((entry) => entry.glyph === "ض")!;
+      expect(urdu.sound).toBe("z");
+      expect(urdu.role).toBe("consonant");
+      expect(urdu.penLifts).toBe(2);
+      expect(urdu.strokeOrder).toHaveLength(3);
+      expect(urdu.strokeOrder[0]).toMatch(/oval clockwise.*short tooth/i);
+      expect(urdu.strokeOrder[1]).toMatch(/one lift.*lower bowl.*right to left/i);
+      expect(urdu.strokeOrder[2]).toMatch(/another lift.*dot above last/i);
+      expect(urdu.strokeOrderSource?.url).toBe(
+        "https://openbooks.library.northwestern.edu/zerozabar/chapter/khe-ze-zal-swad-and-zwad/",
+      );
+    },
+  },
+  {
+    suite: "shared Perso-Arabic letters retain script-owned provenance",
+    suiteOrder: 50,
     caseOrder: 210,
     name: "keeps Urdu ئ as a source-backed carrier-plus-hamza composition",
     verify: ({ SCRIPTS }) => {

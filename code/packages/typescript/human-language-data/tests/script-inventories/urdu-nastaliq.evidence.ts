@@ -211,6 +211,27 @@ export const scriptInventoryEvidence = {
     expect(urduRre.strokeOrderSource?.variation).toMatch(
       /re-series body first.*downward line curving left.*small to'e-shaped retroflex mark.*one pen lift.*downward.*back upward.*down again.*loop.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
     );
+    const urduZwad = scripts["urdu-nastaliq"]!.letters.find(
+      (letter) => letter.glyph === "ض",
+    )!;
+    expect(urduZwad.sound).toBe("z");
+    expect(urduZwad.penLifts).toBe(2);
+    expect(urduZwad.strokeOrder).toEqual([
+      "close the elongated upper oval clockwise and finish its short tooth",
+      "after one lift, restart below the oval and sweep through the lower bowl from right to left",
+      "after another lift, place the dot above last",
+    ]);
+    expect(urduZwad.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/khe-ze-zal-swad-and-zwad/",
+    );
+    expect(urduZwad.strokeOrderSource?.citation).toMatch(
+      /Zer o Zabar.*independent ض.*calligraphic and handwriting animations.*Zwad instructions.*Northwestern/i,
+    );
+    expect(urduZwad.strokeOrderSource?.variation).toMatch(
+      /swad-series body before.*upper oval.*clockwise.*short tooth.*lower right-to-left bowl.*dot.*last.*second lift.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
+    );
+    expect(urduMissing.has("ض")).toBe(false);
+    expect(affected.get("ض") ?? 0).toBe(0);
     expect(urduMissing.has("د")).toBe(false);
     expect(urduMissing.has("و")).toBe(false);
     expect(affected.get("و") ?? 0).toBe(0);

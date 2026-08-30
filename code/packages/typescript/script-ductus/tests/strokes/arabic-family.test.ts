@@ -74,6 +74,7 @@ const URDU_RRE = DUCTUS[ductusKey("urdu-nastaliq", "ڑ")];
 const URDU_WAW = DUCTUS[ductusKey("urdu-nastaliq", "و")];
 const URDU_SIN = DUCTUS[ductusKey("urdu-nastaliq", "س")];
 const URDU_SHIN = DUCTUS[ductusKey("urdu-nastaliq", "ش")];
+const URDU_ZWAD = DUCTUS[ductusKey("urdu-nastaliq", "ض")];
 const URDU_KAF = DUCTUS[ductusKey("urdu-nastaliq", "ک")];
 const URDU_GAF = DUCTUS[ductusKey("urdu-nastaliq", "گ")];
 const PERSIAN_KAF = DUCTUS[ductusKey("perso-arabic", "ک")];
@@ -574,6 +575,20 @@ describe("handwriting ductus", () => {
     expect(lowerLeft[0].x).toBeLessThan(lowerRight[0].x);
     expect(upper[0].y).toBeGreaterThan(lowerLeft[0].y);
     expect(upper[0].y).toBeGreaterThan(lowerRight[0].y);
+  });
+
+  it("Urdu independent ض writes its elongated body before the final upper dot", () => {
+    expect(URDU_ZWAD.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_ZWAD)).toBe(2);
+    expect(URDU_ZWAD.strokes).toHaveLength(3);
+    expect(URDU_ZWAD.strokes.map((stroke) => stroke.segments[0].label)).toEqual([
+      "close the elongated upper oval clockwise and finish its short tooth",
+      "after one lift, restart below the oval and sweep through the lower bowl from right to left",
+      "after another lift, place the dot above last",
+    ]);
+    expect(URDU_ZWAD.source.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/khe-ze-zal-swad-and-zwad/",
+    );
   });
 
   it("Urdu independent ک writes its main-line body before the separately lifted slash", () => {
