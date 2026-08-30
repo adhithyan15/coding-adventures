@@ -4,6 +4,16 @@ All notable changes to the Rust build tool will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.9] - 2026-08-30
+
+### Added
+
+- Add a pure, host-free extra CI toolchain declaration evaluator. It consumes
+  all 11 language-neutral fixtures and independently covers platform BUILD
+  precedence, bounded UTF-8 inputs, exact declaration grammar, affected and
+  forced scheduling, fresh canonical boolean maps, and stable unsupported
+  diagnostics.
+
 ## [0.2.8] - 2026-08-30
 
 ### Fixed

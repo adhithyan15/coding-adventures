@@ -68,6 +68,7 @@ The tool is organized into focused modules, each responsible for one aspect of t
 7. **gitdiff** — Git-based change detection (default mode)
 8. **reporter** — Terminal-friendly build report formatting
 9. **validator** — Pure build-contract, orphan-crate, and tracked-artifact validation
+10. **toolchain_detection** — Pure bounded snapshot evaluation for extra CI toolchain declarations
 
 Tracked-artifact snapshots explicitly require Unicode 17.0.0. The validator's
 exactly pinned `oxixml-unicode` tables cover NFC, NFKC, full default folding,
@@ -103,6 +104,13 @@ This is equivalent to the Go implementation's goroutine + semaphore pattern, but
 ```bash
 cargo test -- --nocapture
 ```
+
+The native suite discovers and consumes every language-neutral
+`toolchain-detection-*.json` fixture. Direct boundary tests also cover the
+per-front and aggregate resource ceilings, empty platform-front precedence,
+exact CRLF parsing, null-versus-empty schedules, aliases, forced toolchains,
+error precedence, and fresh deterministic result maps without reading the
+filesystem or invoking Git, processes, environment variables, or the network.
 
 ## Discovery and metadata diagnostics
 
