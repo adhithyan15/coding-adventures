@@ -2,10 +2,16 @@
 #include "MosaicHost.h"
 
 #include <QCoreApplication>
+#include <QDebug>
 #include <QDir>
+#include <QFile>
+#include <QFileInfo>
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QJsonParseError>
 #include <QLocale>
+#include <QSaveFile>
+#include <QStandardPaths>
 #include <QStringList>
 
 #include <limits>
@@ -60,21 +66,36 @@ MosaicHost::MosaicHost(QObject *parent)
 {
     if (!load()) return;
 
-    const QVariantMap context{
-        {QStringLiteral("protocolVersion"), ProtocolVersion},
-        {QStringLiteral("locale"), QLocale::system().name().replace('_', '-')},
-        {QStringLiteral("colorScheme"), QStringLiteral("system")},
-        {QStringLiteral("textScale"), 1.0},
-        {QStringLiteral("platform"), platformName()},
-        {QStringLiteral("restoredSnapshot"), QVariant()},
-    };
-    const auto encoded = QJsonDocument::fromVariant(context).toJson(QJsonDocument::Compact);
-    Bytes input{reinterpret_cast<const unsigned char *>(encoded.constData()),
-                static_cast<size_t>(encoded.size())};
-    Buffer output{};
-    try {
+    const auto restoredSnapshot = loadPersistedSnapshot();
+    const auto createApplication = [this](const QVariant &snapshot) {
+        const QVariantMap context{
+            {QStringLiteral("protocolVersion"), ProtocolVersion},
+            {QStringLiteral("locale"), QLocale::system().name().replace('_', '-')},
+            {QStringLiteral("colorScheme"), QStringLiteral("system")},
+            {QStringLiteral("textScale"), 1.0},
+            {QStringLiteral("platform"), platformName()},
+            {QStringLiteral("restoredSnapshot"), snapshot},
+        };
+        const auto encoded = QJsonDocument::fromVariant(context).toJson(QJsonDocument::Compact);
+        Bytes input{reinterpret_cast<const unsigned char *>(encoded.constData()),
+                    static_cast<size_t>(encoded.size())};
+        Buffer output{};
         const auto status = create_(input, &app_, &output);
-        latestUpdate_ = requireMap(consume(status, output), "startup update");
+        return requireMap(consume(status, output), "startup update");
+    };
+    try {
+        try {
+            latestUpdate_ = createApplication(restoredSnapshot);
+        } catch (const std::exception &exception) {
+            if (!restoredSnapshot.isValid()) throw;
+            if (app_ && destroy_) destroy_(app_);
+            app_ = nullptr;
+            quarantinePersistedState(
+                QStringLiteral("Mosaic runtime rejected persisted state: %1")
+                    .arg(QString::fromUtf8(exception.what())));
+            latestUpdate_ = createApplication(QVariant());
+        }
+        latestUpdate_ = withPersistenceWarning(latestUpdate_);
         if (!app_) throw std::runtime_error("Mosaic runtime returned a null application handle");
     } catch (const std::exception &exception) {
         if (app_ && destroy_) destroy_(app_);
@@ -162,8 +183,9 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
         const auto status = dispatch_(app_, input, &output);
         const auto update = requireMap(consume(status, output), "event update");
         sequence_ = nextSequence;
-        latestUpdate_ = update;
-        return update;
+        persistSnapshot();
+        latestUpdate_ = withPersistenceWarning(update);
+        return latestUpdate_;
     } catch (const std::exception &exception) {
         return failure(QString::fromUtf8(exception.what()));
     }
@@ -181,7 +203,8 @@ QVariant MosaicHost::snapshot()
     if (!app_) return QVariant();
     Buffer output{};
     try {
-        return consume(snapshot_(app_, &output), output);
+        const auto status = snapshot_(app_, &output);
+        return consume(status, output);
     } catch (const std::exception &exception) {
         error_ = QString::fromUtf8(exception.what());
         return QVariant();
@@ -196,7 +219,8 @@ QVariantMap MosaicHost::restore(const QVariantMap &snapshot)
                 static_cast<size_t>(encoded.size())};
     Buffer output{};
     try {
-        latestUpdate_ = requireMap(consume(restore_(app_, input, &output), output),
+        const auto status = restore_(app_, input, &output);
+        latestUpdate_ = requireMap(consume(status, output),
                                    "restore update");
         return latestUpdate_;
     } catch (const std::exception &exception) {
@@ -292,4 +316,86 @@ QVariantMap MosaicHost::failure(const QString &message) const
              ? QStringLiteral("Mosaic Rust runtime unavailable")
              : message},
     };
+}
+
+QVariant MosaicHost::loadPersistedSnapshot()
+{
+    const auto path = statePath();
+    if (path.isEmpty() || !QFile::exists(path)) return QVariant();
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+        persistenceWarning_ = QStringLiteral("Could not read Mosaic state at %1: %2")
+            .arg(path, file.errorString());
+        return QVariant();
+    }
+    QJsonParseError parseError;
+    const auto document = QJsonDocument::fromJson(file.readAll(), &parseError);
+    if (parseError.error == QJsonParseError::NoError && document.isObject()) {
+        return document.object().toVariantMap();
+    }
+    file.close();
+    quarantinePersistedState(
+        QStringLiteral("Ignored invalid Mosaic state: %1").arg(parseError.errorString()));
+    return QVariant();
+}
+
+void MosaicHost::quarantinePersistedState(const QString &reason)
+{
+    const auto path = statePath();
+    if (path.isEmpty()) {
+        persistenceWarning_ = reason;
+        return;
+    }
+    const auto corrupt = path + QStringLiteral(".corrupt");
+    QFile::remove(corrupt);
+    if (QFile::exists(path)) QFile::rename(path, corrupt);
+    persistenceWarning_ = QStringLiteral("%1 (%2)").arg(reason, path);
+    qWarning().noquote() << persistenceWarning_;
+}
+
+void MosaicHost::persistSnapshot()
+{
+    const auto path = statePath();
+    if (path.isEmpty()) return;
+    Buffer output{};
+    try {
+        const auto status = snapshot_(app_, &output);
+        const auto value = consume(status, output);
+        if (!value.isValid() || value.isNull()) {
+            QFile::remove(path);
+            persistenceWarning_.clear();
+            return;
+        }
+        const auto encoded = QJsonDocument::fromVariant(value).toJson(QJsonDocument::Compact);
+        QDir().mkpath(QFileInfo(path).absolutePath());
+        QSaveFile file(path);
+        if (!file.open(QIODevice::WriteOnly) || file.write(encoded) != encoded.size()
+            || !file.commit()) {
+            throw std::runtime_error(file.errorString().toStdString());
+        }
+        persistenceWarning_.clear();
+    } catch (const std::exception &exception) {
+        persistenceWarning_ = QStringLiteral("Could not persist Mosaic state: %1")
+            .arg(QString::fromUtf8(exception.what()));
+        qWarning().noquote() << persistenceWarning_;
+    }
+}
+
+QVariantMap MosaicHost::withPersistenceWarning(const QVariantMap &update) const
+{
+    if (persistenceWarning_.isEmpty()) return update;
+    auto augmented = update;
+    augmented.insert(QStringLiteral("persistenceWarning"), persistenceWarning_);
+    return augmented;
+}
+
+QString MosaicHost::statePath() const
+{
+    if (!PersistenceEnabled) return {};
+    const auto requested = qEnvironmentVariable("MOSAIC_APP_STATE_PATH").trimmed();
+    if (!requested.isEmpty()) return requested;
+    const auto root = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    if (root.isEmpty()) return {};
+    return QDir(root).filePath(
+        QString::fromUtf8(ApplicationId) + QStringLiteral("/mosaic-state.v1.json"));
 }

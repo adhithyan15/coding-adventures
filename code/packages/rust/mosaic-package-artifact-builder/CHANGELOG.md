@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased] - install application-scoped native persistence (#13519)
+
+All five generated native project shells now install a standard Mosaic runtime
+binding scoped to the package name. This gives Compose, SwiftUI, XAML, Flutter,
+and Qt independent per-user snapshot files while keeping low-level conformance
+bindings ephemeral.
+
 ## [Unreleased] - narrow the `HostProgressRing` degradation to also exclude Qt (#13176)
 
 Qt now lowers `HostProgressRing` to a hand-drawn native determinate arc

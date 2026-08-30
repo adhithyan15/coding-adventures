@@ -12,3 +12,6 @@ generated binding into this console harness and runs the full ABI lifecycle
 with only `compose.application.resources.dir` set—never `MOSAIC_APP_LIBRARY`.
 The binding itself is deliberately not duplicated here, and no Compose UI
 runtime is required for the console round trip.
+
+CI runs the harness across clean, restored, and incompatible-state launches
+against one explicit state path.

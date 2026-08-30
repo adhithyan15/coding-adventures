@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Persist opaque Mosaic snapshots in every application-scoped Compose,
+  SwiftUI, XAML, Flutter, and Qt host. Generated applications restore before
+  first render, atomically replace state after successful dispatches, quarantine
+  corrupt or incompatible state, and surface a recoverable warning. Native CI
+  launches each binding twice to prove process-restart restoration.
 - Resolve Flutter's selected Rust engine through Dart's bundled code-asset
   contract after the explicit environment override, so generated native apps
   need no platform-specific loader path or global library installation.

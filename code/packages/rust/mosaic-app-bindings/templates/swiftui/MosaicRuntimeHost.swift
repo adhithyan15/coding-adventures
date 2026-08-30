@@ -4,6 +4,9 @@ import Foundation
 
 private let mosaicProtocolVersion = __MOSAIC_PROTOCOL_VERSION__
 private let mosaicStatusOK: mosaic_binding_status = 0
+private let mosaicPersistenceEnabled = __MOSAIC_PERSISTENCE_ENABLED__
+private let mosaicApplicationID = "__MOSAIC_APPLICATION_ID__"
+private let mosaicStateFileName = "mosaic-state.v1.json"
 
 private enum MosaicRuntimeError: LocalizedError {
   case unavailable(String)
@@ -26,12 +29,19 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
   private var latestUpdate: [String: Any]
   private var sequence: UInt64 = 0
   private var propsChangedHandler: (() -> Void)?
+  private var persistenceWarning: String?
   private let lock = NSRecursiveLock()
 
-  private init(runtime: OpaquePointer, app: mosaic_binding_app, update: [String: Any]) {
+  private init(
+    runtime: OpaquePointer,
+    app: mosaic_binding_app,
+    update: [String: Any],
+    persistenceWarning: String?
+  ) {
     self.runtime = runtime
     self.app = app
-    self.latestUpdate = update
+    self.persistenceWarning = persistenceWarning
+    self.latestUpdate = Self.withPersistenceWarning(update, persistenceWarning)
     super.init()
   }
 
@@ -53,22 +63,42 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     }
 
     var app: mosaic_binding_app?
-    let start: [String: Any] = [
-      "protocolVersion": mosaicProtocolVersion,
-      "locale": Locale.current.identifier,
-      "colorScheme": "system",
-      "textScale": 1.0,
-      "platform": "apple",
-      "restoredSnapshot": NSNull(),
-    ]
-    do {
-      let update = try invoke(runtime: runtime, value: start) { bytes, output in
+    let persisted = loadPersistedSnapshot()
+    var persistenceWarning = persisted.warning
+    func create(_ snapshot: Any?) throws -> [String: Any] {
+      let start: [String: Any] = [
+        "protocolVersion": mosaicProtocolVersion,
+        "locale": Locale.current.identifier,
+        "colorScheme": "system",
+        "textScale": 1.0,
+        "platform": "apple",
+        "restoredSnapshot": snapshot ?? NSNull(),
+      ]
+      return try invoke(runtime: runtime, value: start) { bytes, output in
         mosaic_binding_create(runtime, bytes, &app, output)
+      }
+    }
+    do {
+      let update: [String: Any]
+      do {
+        update = try create(persisted.snapshot)
+      } catch where persisted.snapshot != nil {
+        if let app { mosaic_binding_destroy(runtime, app) }
+        app = nil
+        persistenceWarning = quarantinePersistedState(
+          "Mosaic runtime rejected persisted state: \(error.localizedDescription)"
+        )
+        update = try create(nil)
       }
       guard let app else {
         throw MosaicRuntimeError.invalidResponse("Mosaic runtime returned a null application handle")
       }
-      return MosaicRuntimeHost(runtime: runtime, app: app, update: update)
+      return MosaicRuntimeHost(
+        runtime: runtime,
+        app: app,
+        update: update,
+        persistenceWarning: persistenceWarning
+      )
     } catch {
       fputs("Mosaic Rust runtime unavailable: \(error.localizedDescription)\n", stderr)
       mosaic_binding_close(runtime)
@@ -107,7 +137,8 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
           mosaic_binding_dispatch(runtime, app, bytes, output)
         }
         sequence = nextSequence
-        latestUpdate = update
+        persistSnapshot()
+        latestUpdate = Self.withPersistenceWarning(update, persistenceWarning)
         propsChangedHandler?()
         return update as NSDictionary
       } catch {
@@ -165,6 +196,86 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
   }
 
   deinit { close() }
+
+  private func persistSnapshot() {
+    guard let runtime, let app, let url = Self.stateURL() else { return }
+    do {
+      let value = try Self.invokeValue(runtime: runtime) { output in
+        mosaic_binding_snapshot(runtime, app, output)
+      }
+      if value is NSNull {
+        try? FileManager.default.removeItem(at: url)
+        persistenceWarning = nil
+        return
+      }
+      let data = try JSONSerialization.data(withJSONObject: value, options: [.sortedKeys])
+      try FileManager.default.createDirectory(
+        at: url.deletingLastPathComponent(),
+        withIntermediateDirectories: true
+      )
+      try data.write(to: url, options: [.atomic])
+      persistenceWarning = nil
+    } catch {
+      persistenceWarning = "Could not persist Mosaic state: \(error.localizedDescription)"
+      fputs("\(persistenceWarning!)\n", stderr)
+    }
+  }
+
+  private static func loadPersistedSnapshot() -> (snapshot: Any?, warning: String?) {
+    guard let url = stateURL(), FileManager.default.fileExists(atPath: url.path) else {
+      return (nil, nil)
+    }
+    do {
+      let data = try Data(contentsOf: url)
+      let snapshot = try JSONSerialization.jsonObject(with: data)
+      guard snapshot is [String: Any] else {
+        throw MosaicRuntimeError.invalidResponse("persisted Mosaic state is not a JSON object")
+      }
+      return (snapshot, nil)
+    } catch {
+      let warning = quarantinePersistedState(
+        "Ignored invalid Mosaic state: \(error.localizedDescription)"
+      )
+      return (nil, warning)
+    }
+  }
+
+  private static func quarantinePersistedState(_ reason: String) -> String {
+    guard let url = stateURL() else { return reason }
+    let corrupt = url.appendingPathExtension("corrupt")
+    try? FileManager.default.removeItem(at: corrupt)
+    if FileManager.default.fileExists(atPath: url.path) {
+      try? FileManager.default.moveItem(at: url, to: corrupt)
+    }
+    let warning = "\(reason) (\(url.path))"
+    fputs("\(warning)\n", stderr)
+    return warning
+  }
+
+  private static func stateURL() -> URL? {
+    guard mosaicPersistenceEnabled else { return nil }
+    if let override = ProcessInfo.processInfo.environment["MOSAIC_APP_STATE_PATH"]?
+      .trimmingCharacters(in: .whitespacesAndNewlines), !override.isEmpty {
+      return URL(fileURLWithPath: override)
+    }
+    guard let root = FileManager.default.urls(
+      for: .applicationSupportDirectory,
+      in: .userDomainMask
+    ).first else { return nil }
+    return root
+      .appendingPathComponent(mosaicApplicationID, isDirectory: true)
+      .appendingPathComponent(mosaicStateFileName)
+  }
+
+  private static func withPersistenceWarning(
+    _ update: [String: Any],
+    _ warning: String?
+  ) -> [String: Any] {
+    guard let warning else { return update }
+    var augmented = update
+    augmented["persistenceWarning"] = warning
+    return augmented
+  }
 
   private static func invoke(
     runtime: OpaquePointer,

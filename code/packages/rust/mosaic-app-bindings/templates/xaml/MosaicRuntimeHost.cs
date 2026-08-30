@@ -18,6 +18,9 @@ public sealed record MosaicRuntimeResult(string Status, object? HostIntent = nul
 public static class MosaicRuntimeHost
 {
     private const int ProtocolVersion = __MOSAIC_PROTOCOL_VERSION__;
+    private static readonly bool PersistenceEnabled = __MOSAIC_PERSISTENCE_ENABLED__;
+    private const string ApplicationId = "__MOSAIC_APPLICATION_ID__";
+    private const string StateFileName = "mosaic-state.v1.json";
     private static readonly Lazy<Runtime?> State = new(Load);
 
     public static bool IsAvailable => State.Value is not null;
@@ -29,13 +32,13 @@ public static class MosaicRuntimeHost
         var runtime = State.Value;
         if (runtime is null) return null;
         runtime.ApplyProps(component);
-        return "Status: Mosaic runtime props loaded";
+        return runtime.Status("Mosaic runtime props loaded");
     }
 
     public static string ApplyRequiredProps(object component, params string[] requiredProps)
     {
         RequiredRuntime().ApplyProps(component, requiredProps, strict: true);
-        return "Status: Mosaic runtime props loaded";
+        return RequiredRuntime().Status("Mosaic runtime props loaded");
     }
 
     public static Task<MosaicRuntimeResult?> HandleEvent(object component, object mosaicEvent)
@@ -52,7 +55,7 @@ public static class MosaicRuntimeHost
             runtime.Dispatch(name, payload);
             runtime.ApplyProps(component);
             return Task.FromResult<MosaicRuntimeResult?>(
-                new($"Status: Mosaic runtime handled {name}"));
+                new(runtime.Status($"Mosaic runtime handled {name}")));
         }
         catch (Exception error)
         {
@@ -75,7 +78,7 @@ public static class MosaicRuntimeHost
         runtime.Dispatch(name, payload);
         runtime.ApplyProps(component, requiredProps, strict: true);
         return Task.FromResult(
-            new MosaicRuntimeResult($"Status: Mosaic runtime handled {name}"));
+            new MosaicRuntimeResult(runtime.Status($"Mosaic runtime handled {name}")));
     }
 
     public static void Close() => State.Value?.Dispose();
@@ -143,6 +146,7 @@ public static class MosaicRuntimeHost
         private IntPtr app;
         private ulong sequence;
         private JsonElement latestUpdate;
+        private string? persistenceWarning;
         private readonly Create create;
         private readonly Dispatch dispatch;
         private readonly Snapshot snapshot;
@@ -160,21 +164,38 @@ public static class MosaicRuntimeHost
             bufferFree = Symbol<BufferFree>(library, "mosaic_buffer_free");
             destroy = Symbol<Destroy>(library, "mosaic_app_destroy");
 
-            var start = new Dictionary<string, object?>
+            var persisted = LoadPersistedSnapshot();
+            persistenceWarning = persisted.Warning;
+            JsonElement CreateApplication(JsonElement? restoredSnapshot)
             {
-                ["protocolVersion"] = ProtocolVersion,
-                ["locale"] = CultureInfo.CurrentCulture.Name,
-                ["colorScheme"] = "system",
-                ["textScale"] = 1.0,
-                ["platform"] = "windows",
-                ["restoredSnapshot"] = null,
-            };
-            try
-            {
-                latestUpdate = Invoke(start, delegate(MosaicBytes input, out MosaicBuffer output)
+                var start = new Dictionary<string, object?>
+                {
+                    ["protocolVersion"] = ProtocolVersion,
+                    ["locale"] = CultureInfo.CurrentCulture.Name,
+                    ["colorScheme"] = "system",
+                    ["textScale"] = 1.0,
+                    ["platform"] = "windows",
+                    ["restoredSnapshot"] = restoredSnapshot,
+                };
+                return Invoke(start, delegate(MosaicBytes input, out MosaicBuffer output)
                 {
                     return create(input, out app, out output);
                 });
+            }
+            try
+            {
+                try
+                {
+                    latestUpdate = CreateApplication(persisted.Snapshot);
+                }
+                catch (Exception error) when (persisted.Snapshot.HasValue)
+                {
+                    if (app != IntPtr.Zero) destroy(app);
+                    app = IntPtr.Zero;
+                    persistenceWarning = QuarantinePersistedState(
+                        $"Mosaic runtime rejected persisted state: {error.Message}");
+                    latestUpdate = CreateApplication(null);
+                }
                 if (app == IntPtr.Zero)
                     throw new InvalidOperationException("Mosaic runtime returned a null application handle");
             }
@@ -223,6 +244,7 @@ public static class MosaicRuntimeHost
                     return dispatch(app, input, out output);
                 });
                 sequence = nextSequence;
+                PersistSnapshot();
                 latestUpdate = update;
             }
         }
@@ -251,6 +273,10 @@ public static class MosaicRuntimeHost
                 });
             }
         }
+
+        public string Status(string message) => persistenceWarning is null
+            ? $"Status: {message}"
+            : $"Status: {message}. {persistenceWarning}";
 
         public void ApplyProps(
             object component,
@@ -315,6 +341,86 @@ public static class MosaicRuntimeHost
                 if (library != IntPtr.Zero) NativeLibrary.Free(library);
                 library = IntPtr.Zero;
             }
+        }
+
+        private static (JsonElement? Snapshot, string? Warning) LoadPersistedSnapshot()
+        {
+            var path = StatePath();
+            if (path is null || !File.Exists(path)) return (null, null);
+            try
+            {
+                using var document = JsonDocument.Parse(File.ReadAllBytes(path));
+                if (document.RootElement.ValueKind != JsonValueKind.Object)
+                    throw new JsonException("persisted Mosaic state is not a JSON object");
+                return (document.RootElement.Clone(), null);
+            }
+            catch (Exception error)
+            {
+                var warning = QuarantinePersistedState(
+                    $"Ignored invalid Mosaic state: {error.Message}");
+                return (null, warning);
+            }
+        }
+
+        private static string QuarantinePersistedState(string reason)
+        {
+            var path = StatePath();
+            if (path is null) return reason;
+            var corrupt = path + ".corrupt";
+            try
+            {
+                if (File.Exists(corrupt)) File.Delete(corrupt);
+                if (File.Exists(path)) File.Move(path, corrupt);
+            }
+            catch (Exception moveError)
+            {
+                Debug.WriteLine($"Could not quarantine invalid Mosaic state: {moveError.Message}");
+            }
+            var warning = $"{reason} ({path})";
+            Debug.WriteLine(warning);
+            Console.Error.WriteLine(warning);
+            return warning;
+        }
+
+        private void PersistSnapshot()
+        {
+            var path = StatePath();
+            if (path is null) return;
+            try
+            {
+                var value = Invoke(delegate(out MosaicBuffer output)
+                {
+                    return snapshot(app, out output);
+                });
+                if (value.ValueKind == JsonValueKind.Null)
+                {
+                    if (File.Exists(path)) File.Delete(path);
+                    persistenceWarning = null;
+                    return;
+                }
+                var directory = Path.GetDirectoryName(path)!;
+                Directory.CreateDirectory(directory);
+                var temporary = path + ".tmp";
+                File.WriteAllBytes(temporary, Encoding.UTF8.GetBytes(value.GetRawText()));
+                File.Move(temporary, path, true);
+                persistenceWarning = null;
+            }
+            catch (Exception error)
+            {
+                persistenceWarning = $"Could not persist Mosaic state: {error.Message}";
+                Debug.WriteLine(persistenceWarning);
+            }
+        }
+
+        private static string? StatePath()
+        {
+            if (!PersistenceEnabled) return null;
+            var requested = Environment.GetEnvironmentVariable("MOSAIC_APP_STATE_PATH");
+            if (!string.IsNullOrWhiteSpace(requested)) return Path.GetFullPath(requested);
+            var root = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            return string.IsNullOrWhiteSpace(root)
+                ? null
+                : Path.Combine(root, ApplicationId, StateFileName);
         }
 
         private JsonElement Invoke(object value, InputOperation operation)
