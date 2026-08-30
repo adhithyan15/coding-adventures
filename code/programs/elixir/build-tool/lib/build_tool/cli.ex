@@ -52,12 +52,13 @@ defmodule BuildTool.CLI do
     Reporter,
     Resolver,
     StarlarkEvaluator,
+    ToolchainDetection,
     Validator
   }
 
   alias CodingAdventures.ProgressBar
 
-  @all_toolchains ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell", "dotnet"]
+  @all_toolchains ToolchainDetection.canonical_toolchains()
 
   # ---------------------------------------------------------------------------
   # Entry point
@@ -258,9 +259,9 @@ defmodule BuildTool.CLI do
     graph = Resolver.resolve_dependencies(packages)
 
     # Step 5: Git-diff change detection (default mode).
-    {affected_set, force_override} =
+    {affected_set, force_override, forced_toolchains} =
       if force do
-        {nil, force}
+        {nil, force, MapSet.new()}
       else
         changed_files = GitDiff.get_changed_files(repo_root, diff_base)
 
@@ -287,7 +288,7 @@ defmodule BuildTool.CLI do
             end
 
           if ci_change.requires_full_rebuild do
-            {nil, true}
+            {nil, true, MapSet.new()}
           else
             changed_pkgs = GitDiff.map_files_to_packages(changed_files, packages, repo_root)
 
@@ -298,15 +299,15 @@ defmodule BuildTool.CLI do
                 "Git diff: #{MapSet.size(changed_pkgs)} packages changed, #{MapSet.size(affected)} affected (including dependents)"
               )
 
-              {affected, force}
+              {affected, force, ci_change.toolchains}
             else
               IO.puts("Git diff: no package files changed — nothing to build")
-              {MapSet.new(), force}
+              {MapSet.new(), force, ci_change.toolchains}
             end
           end
         else
           IO.puts("Git diff unavailable — falling back to hash-based cache")
-          {nil, force}
+          {nil, force, MapSet.new()}
         end
       end
 
@@ -315,32 +316,35 @@ defmodule BuildTool.CLI do
     # share it across build jobs on multiple platforms.
     cond do
       detect_languages ->
-        languages_needed = compute_languages_needed(packages, affected_set, force_override)
+        languages_needed =
+          compute_languages_needed(packages, affected_set, force_override, forced_toolchains)
+
         output_language_flags(languages_needed)
 
       emit_plan_path != nil ->
-      return_emit_plan(
-        packages,
-        graph,
-        repo_root,
-        diff_base,
-        force_override,
-        affected_set,
-        emit_plan_path
-      )
+        return_emit_plan(
+          packages,
+          graph,
+          repo_root,
+          diff_base,
+          force_override,
+          affected_set,
+          forced_toolchains,
+          emit_plan_path
+        )
 
       true ->
-      do_execute_builds(
-        packages,
-        graph,
-        repo_root,
-        force_override,
-        dry_run,
-        jobs,
-        diff_base,
-        cache_file,
-        affected_set
-      )
+        do_execute_builds(
+          packages,
+          graph,
+          repo_root,
+          force_override,
+          dry_run,
+          jobs,
+          diff_base,
+          cache_file,
+          affected_set
+        )
     end
   end
 
@@ -358,6 +362,7 @@ defmodule BuildTool.CLI do
          diff_base,
          force,
          affected_set,
+         forced_toolchains,
          emit_plan_path
        ) do
     # Convert affected_set to a list (or nil for "rebuild all").
@@ -395,7 +400,7 @@ defmodule BuildTool.CLI do
       |> Enum.sort()
 
     # Determine which languages are needed.
-    langs_needed = compute_languages_needed(packages, affected_set, force)
+    langs_needed = compute_languages_needed(packages, affected_set, force, forced_toolchains)
 
     plan = %Plan{
       diff_base: diff_base,
@@ -568,35 +573,21 @@ defmodule BuildTool.CLI do
     end
   end
 
-  defp compute_languages_needed(_packages, _affected_set, true) do
-    Map.new(@all_toolchains, fn toolchain -> {toolchain, true} end)
-  end
+  defp compute_languages_needed(packages, affected_set, force, forced_toolchains) do
+    case ToolchainDetection.evaluate_packages(
+           packages,
+           affected_set,
+           force,
+           forced_toolchains
+         ) do
+      %{outcome: "ok", toolchains: toolchains} ->
+        toolchains
 
-  defp compute_languages_needed(_packages, nil, _force) do
-    Map.new(@all_toolchains, fn toolchain -> {toolchain, true} end)
-    |> Map.put("go", true)
-  end
-
-  defp compute_languages_needed(packages, affected_set, _force) do
-    Enum.reduce(
-      packages,
-      Map.new(@all_toolchains, fn toolchain -> {toolchain, false} end),
-      fn pkg, acc ->
-        if MapSet.member?(affected_set, pkg.name) do
-          Map.put(acc, toolchain_for_language(pkg.language), true)
-        else
-          acc
-        end
-      end
-    )
-    |> Map.put("go", true)
-  end
-
-  defp toolchain_for_language(language) do
-    case language do
-      "wasm" -> "rust"
-      lang when lang in ["csharp", "fsharp", "dotnet"] -> "dotnet"
-      _ -> language
+      %{diagnostics: diagnostics} ->
+        diagnostic = List.first(diagnostics) || %{code: "TOOLCHAIN_UNSUPPORTED"}
+        package = Map.get(diagnostic, :package)
+        suffix = if package == nil, do: "", else: " for #{package}"
+        raise ArgumentError, "#{diagnostic.code}#{suffix}"
     end
   end
 

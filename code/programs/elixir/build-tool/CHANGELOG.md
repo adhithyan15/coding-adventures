@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2026-08-30
+
+### Added
+
+- Added `BuildTool.ToolchainDetection`, a bounded process-free evaluator that
+  independently consumes all 11 language-neutral toolchain-detection fixtures,
+  emits the complete canonical 16-key registry, and preserves exact platform
+  precedence, scheduling, CRLF grammar, stable diagnostics, and resource caps.
+
+### Changed
+
+- Discovery now retains the raw selected BUILD front, and production language
+  detection plus emitted plans use the same evaluator so exact extra-toolchain
+  declarations and toolchain-scoped CI changes are scheduled consistently.
+
 ## [0.4.0] - 2026-08-26
 
 ### Added

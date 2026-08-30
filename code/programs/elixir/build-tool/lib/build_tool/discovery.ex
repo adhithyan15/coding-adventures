@@ -310,6 +310,13 @@ defmodule BuildTool.Discovery do
         build_file ->
           # This directory is a package. Read the BUILD commands and register it.
           commands = read_lines(build_file)
+
+          build_content =
+            case File.read(build_file) do
+              {:ok, content} -> content
+              {:error, _reason} -> ""
+            end
+
           language = infer_language(directory)
           name = infer_package_name(directory, language)
 
@@ -317,6 +324,7 @@ defmodule BuildTool.Discovery do
             name: name,
             path: directory,
             build_commands: commands,
+            build_content: build_content,
             language: language
           }
 

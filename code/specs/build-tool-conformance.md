@@ -60,6 +60,13 @@ snapshot through a language-native symbol and independently consume every
 `toolchain-detection-*.json` case. Merely executing a CLI that delegates to the
 shared engine is not independent lane evidence.
 
+Independent build-tool engines MUST expose the same process-free snapshot
+boundary through their native module surface before toolchain-detection parity
+is claimed. The Elixir engine uses
+`BuildTool.ToolchainDetection.evaluate_snapshot/5`; its package-local suite
+MUST discover and evaluate every `toolchain-detection-*.json` case rather than
+relying on the neutral Python oracle or the Go front door.
+
 C and C++ remain emerging implementation lanes. OCaml also begins as emerging
 and must implement this contract before promotion. WASM is an execution target,
 Mosaic and Twig are domain languages, and Starlark is a build language; none is

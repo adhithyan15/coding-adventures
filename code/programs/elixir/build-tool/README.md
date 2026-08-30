@@ -48,6 +48,7 @@ The build tool follows an 11-step pipeline:
 | `BuildTool.Cache` | Agent-based JSON build cache with atomic writes |
 | `BuildTool.Executor` | Parallel build execution with progress tracking |
 | `BuildTool.Reporter` | Fixed-width report table formatting |
+| `BuildTool.ToolchainDetection` | Bounded process-free CI toolchain decisions |
 | `BuildTool.Validator` | Pure build-contract, orphan-crate, and tracked-artifact validation |
 | `BuildTool.TrackedArtifactUnicode17` | Generated, source-embedded Unicode 17 policy tables |
 
@@ -91,6 +92,23 @@ mix escript.build
 | `--language` | `all` | Filter to a specific language |
 | `--diff-base` | `origin/main` | Git ref to diff against |
 | `--cache-file` | `.build-cache.json` | Path to cache file |
+
+## Toolchain detection
+
+`BuildTool.ToolchainDetection.evaluate_snapshot/5` evaluates caller-supplied,
+in-memory BUILD fronts against the shared language-neutral contract. It selects
+the exact platform front, parses only canonical `# needs-toolchain: NAME`
+records, preserves first-seen ordering while deduplicating, and returns the
+complete 16-key toolchain registry. Scheduled-package filtering, forced-full
+selection, forced CI toolchains, shared `cpp`, `dotnet`, and `rust` mappings,
+stable unsupported diagnostics, CRLF handling, and byte, line, and aggregate
+resource ceilings match the neutral fixtures.
+
+Production discovery retains the raw bytes of the already selected platform
+BUILD file. Both `--detect-languages` and emitted plans use the same pure
+evaluator, so declarations affect only scheduled packages and toolchain-scoped
+CI workflow changes are unioned without granting the evaluator filesystem,
+Git, process, environment, network, credential, or execution authority.
 
 ## Orphan-crate validation
 
@@ -158,7 +176,9 @@ mix test
 mix test --cover
 ```
 
-`test/validator_test.exs` consumes all four language-neutral orphan-crate
+`test/toolchain_detection_test.exs` dynamically consumes all 11 neutral
+toolchain-detection fixtures and exercises the resource ceilings and production
+snapshot boundary. `test/validator_test.exs` consumes all four language-neutral orphan-crate
 fixtures and all five tracked-artifact fixtures. Focused tests cover exemption
 precedence, hostile-path redaction, Python blank reasons and ASCII-JSON detail
 ordering, rooted BUILD selection, Unicode 17 full-fold aliases, tracked version

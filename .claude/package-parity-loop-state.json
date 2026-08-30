@@ -12,23 +12,23 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 13453,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13453",
-    "branch": "codex/build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
-    "implementation_revision": "814cb3c1b3d616f8687e9a06a8865541b41093f4",
+    "number": 13475,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13475",
+    "branch": "codex/build-tool-elixir-extra-ci-toolchain-declaration-conformance",
+    "implementation_revision": "c01387d3399f86c230a290f2e5402e6bf84d0560",
     "status": "checks-pending",
-    "opened_at": "2026-08-28T11:46:12Z"
+    "opened_at": "2026-08-30T07:43:22Z"
   },
   "last_ci_action": {
-    "observed_at": "2026-08-28T11:46:15Z",
-    "pr_number": 13453,
+    "observed_at": "2026-08-30T07:43:30Z",
+    "pr_number": 13475,
     "run_id": null,
     "attempt": 1,
     "status": "checks-pending",
-    "notes": "Opened ready-for-review PR #13453 from validated head 814cb3c1b3d616f8687e9a06a8865541b41093f4. GitHub reports the branch mergeable, but required CI and CodeQL checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict."
+    "notes": "Opened ready-for-review PR #13475 from validated head c01387d3399f86c230a290f2e5402e6bf84d0560. GitHub reports the branch mergeable and non-draft; CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
-    "revision": "0668a379a94d8071388d8f2cba2a52327f0c8ab3",
+    "revision": "ee5068fe7b8161fa549a0d9891372706baa80c40",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -274,7 +274,7 @@
     {
       "id": "build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
       "title": "Make the F# build-tool facade consume extra CI toolchain declarations",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-csharp-extra-ci-toolchain-declaration-conformance"],
       "branch": "codex/build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
       "pr_number": 13453,
@@ -292,15 +292,33 @@
       "security_review_notes": "The F# symbol delegates only to the already reviewed bounded C# snapshot evaluator and accepts caller-provided in-memory records. It adds no process, Git, environment, network, filesystem-read, filesystem-write, credential, secret, dependency, capability, execution, or logging authority. The neutral fixtures remain inert data, existing C# byte, line, aggregate, memory, CPU, and wall-time limits remain intact, and final live-PR path review found no exact overlap.",
       "final_review_revision": "814cb3c1b3d616f8687e9a06a8865541b41093f4",
       "publication_notes": "Opened ready-for-review PR #13453 from clean validated head 814cb3c1b3d616f8687e9a06a8865541b41093f4 after a normal first push from exact origin/main 0668a379a94d8071388d8f2cba2a52327f0c8ab3. Immediately before publication, all eight changed paths had zero exact overlap across nine other live open pull requests. GitHub reports the PR mergeable and non-draft; required CI and CodeQL checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "merged_head_revision": "511385c52d4c76e6272a875ae34d8476700aa062",
+      "merge_revision": "0ad7611d3701cacf40555556a7870346acb96c7c",
+      "merged_at": "2026-08-28T18:50:45Z",
+      "merge_notes": "All 40 final checks reached terminal acceptable conclusions: 33 successes and seven expected skips. GitHub merged PR #13453 without a manual merge command.",
       "notes": "Verify the F# facade and project-reference boundary over the remediated C# engine in an independently reviewable tranche, including native facade entry points and neutral declaration fixtures."
     },
     {
       "id": "build-tool-elixir-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Elixir build tool consume extra CI toolchain declarations",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-elixir-extra-ci-toolchain-declaration-conformance",
+      "pr_number": 13475,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13475",
+      "opened_at": "2026-08-30T07:43:22Z",
+      "opened_revision": "c01387d3399f86c230a290f2e5402e6bf84d0560",
+      "selection_revision": "1885408daa6d9eac02713700127642fba6cd964d",
+      "selection_notes": "Selected after reconciling merged PR #13453 and refreshing the collision-clean schema-3 inventory at exact current main. The nine remaining declaration consumers have equal graph leverage; Elixir is the first child after the completed shared .NET pair and provides the strongest independent-runtime diversity tie-break while remaining process-free. The exact inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Seven live open PRs have no exact overlap on the selected Elixir build-tool, conformance, state, or roadmap surfaces.",
+      "implementation_revision": "1c6f768c60af2f71a3cac021e97fa9e9b34bb73e",
+      "rebase_revision": "ee5068fe7b8161fa549a0d9891372706baa80c40",
+      "rebase_notes": "Rebased without conflict before publication over merged PR #13469. Its Kannada long-o curriculum, evidence, stroke, and test changes remain inside established human-language and TypeScript package owners, add no implementation identity or build-tool contract, and have zero exact overlap with this tranche.",
+      "validation_revision": "1c6f768c60af2f71a3cac021e97fa9e9b34bb73e",
+      "validation_notes": "The regression was established test-first: all four focused tests failed on the absent native module before source implementation. The Elixir engine now independently consumes all 11 neutral toolchain fixtures and returns exact outcomes, all 16 canonical flags, and diagnostics; focused resource, CRLF, lone-CR, production-declaration, and forced-workflow cases pass. The full suite passes 243 tests with two expected skips; the new module records 96.00% line coverage while the repository's pre-existing aggregate 90% threshold remains unmet at 58.63%. Warning-as-error test and production compilation, production escript construction, exact Windows BUILD commands, scoped format checks, Hex advisory inspection, dependency-tree review, direct production affected and forced-full snapshots, 12 Elixir Windows-front tests, the 119-case/283-file neutral corpus, 94 schema/runner/reporter tests, the complete Go suite, vet, and trimpath build, the collision gate, the 566-owner/833-edge unique acyclic state audit, and diff hygiene pass. Seven live open PRs have zero exact changed-path overlap.",
+      "security_review_revision": "1c6f768c60af2f71a3cac021e97fa9e9b34bb73e",
+      "security_review_notes": "The new evaluator accepts only caller-supplied in-memory snapshots and the production caller retains bytes from the BUILD front discovery already opened. It adds no enumeration, Git, process, environment, network, credential, secret, dependency, execution, write, or logging authority. Exact ASCII declaration grammar, canonical allowlisting, stable diagnostics, platform precedence, per-file byte and line ceilings, and an aggregate byte ceiling remain fail-closed; Hex reports no retired or vulnerable dependency.",
+      "final_review_revision": "c01387d3399f86c230a290f2e5402e6bf84d0560",
+      "publication_notes": "Opened ready-for-review PR #13475 from clean validated head c01387d3399f86c230a290f2e5402e6bf84d0560 after a normal first push from exact origin/main ee5068fe7b8161fa549a0d9891372706baa80c40. Immediately before publication, all 11 changed paths had zero exact overlap across seven other live open pull requests. GitHub reports the PR mergeable and non-draft; CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Adopt the merged process-free declaration corpus in the Elixir engine without widening execution authority."
     },
     {

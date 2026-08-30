@@ -9867,6 +9867,72 @@ required CI and CodeQL checks are queued, so auto-merge remains disabled until
 every required check is terminal and acceptable and the branch remains
 conflict-free.
 
+## Post-#13453 Refresh and Elixir Declaration-Engine Selection
+
+PR #13453 reached 40 terminal acceptable checks: 33 successes and seven
+expected skips. GitHub merged validated head
+`511385c52d4c76e6272a875ae34d8476700aa062` as
+`0ad7611d3701cacf40555556a7870346acb96c7c` at 2026-08-28T18:50:45Z without a
+manual merge command. The state therefore advances the F# owner from
+`pr-open` to `merged` and clears the sole active parity PR.
+
+The collision-checked schema-3 inventory at exact current `origin/main`
+`ee5068fe7b8161fa549a0d9891372706baa80c40` remains unchanged at 15 established
+lanes, 1,388 implementation identities, 4,602 package slots, and 1,427
+all-reported identities. The four completion bands remain 175/265, 123/934,
+170/2,139, and 920/12,880; Rust has 731 singletons, OCaml remains emerging at
+zero packages, and canonical collisions and unknown buckets remain zero. The
+14 commits since the prior inventory touched existing package roots without
+adding or removing an identity or slot, and the ownership audit found no new
+eligible unowned topology or build-tool contract gap.
+
+The nine unfinished native declaration consumers have equal graph leverage:
+each advances the one remaining-engine umbrella. The quick readiness pass
+selects `build-tool-elixir-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-elixir-extra-ci-toolchain-declaration-conformance`. Elixir is
+the first child after the completed shared C#/F# pair and provides the strongest
+independent-runtime diversity tie-break while preserving the same process-free
+boundary. Its corpus and CRLF grammar dependencies are merged. The local lane
+uses exact Elixir 1.18.4 on Erlang/OTP 27.3.4.11 from SHA-256-verified official
+release archives.
+
+The selected engine exposes `BuildTool.ToolchainDetection.evaluate_snapshot/5`
+and dynamically consumes all 11 neutral cases. The pure evaluator owns the
+complete 16-key registry, shared language mappings, platform precedence,
+affected and forced-full scheduling, forced workflow toolchains, exact CRLF
+declaration grammar, deterministic unsupported diagnostics, and per-file plus
+aggregate resource ceilings. Production discovery retains only the raw BUILD
+front it already selected and feeds the same evaluator for `--detect-languages`
+and emitted plans. No new filesystem enumeration, Git, process, environment,
+network, credential, secret, dependency, execution, or logging authority is
+introduced.
+
+After lifecycle reconciliation and selection, the complete graph contains 566
+owners and 833 dependency edges: 169 merged, 396 pending, and exactly one
+`in-progress` owner. There is no active parity PR.
+
+The implementation was rebased without conflict over merged Kannada long-o PR
+#13469, whose human-language and TypeScript changes have zero exact overlap with
+the Elixir tranche. The test-first regression failed four focused cases on the
+absent native module. After implementation and rebase, the full Elixir suite
+passes 243 tests with two expected skips; the new module records 96.00% line
+coverage. Warning-as-error test and production compilation, production escript
+construction, exact Windows BUILD commands, scoped format checks, Hex advisory
+inspection, direct affected and forced-full production snapshots, the Elixir
+Windows-front contract, neutral conformance suites, complete Go build-tool
+suite, vet, trimpath build, collision gate, state DAG audit, and diff hygiene
+pass. The repository's pre-existing aggregate Elixir coverage gate remains
+below its configured 90% threshold at 58.63%, while this added module clears
+focused coverage. Seven live PRs have zero exact changed-path overlap.
+
+Ready-for-review PR #13475 is now the sole active parity PR at validated head
+`c01387d3399f86c230a290f2e5402e6bf84d0560`. It was opened after a normal first
+push from exact `origin/main` `ee5068fe7b8161fa549a0d9891372706baa80c40`;
+all 11 changed paths have zero exact overlap across seven other live pull
+requests. The complete graph is now 169 merged, 396 pending, and exactly one
+`pr-open` owner. GitHub reports the PR mergeable and non-draft, with CI and
+CodeQL checks queued or in progress, so auto-merge remains disabled.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
