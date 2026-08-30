@@ -75,14 +75,14 @@ refuses unknown scripts and unsafe roots, writes canonical JSON, and changes
 only the evidence files whose inventory bytes changed. CI and focused tests use
 the read-only checker; they never repair missing evidence.
 
-The initial migration creates one evidence file for each of the 145 owners at
+The initial migration creates one evidence file for each of the 146 owners at
 the HL34 boundary:
 
 | Script | Letters | Marks | Total |
 |---|---:|---:|---:|
 | Japanese | 49 | 3 | 52 |
 | Perso-Arabic | 24 | 1 | 25 |
-| Tamil | 26 | 9 | 35 |
+| Tamil | 27 | 9 | 36 |
 | Urdu-Nastaliq | 31 | 2 | 33 |
 
 ## 6. Acceptance
@@ -91,7 +91,7 @@ Completion requires:
 
 1. the mutable whole-inventory digests and counts leave
    `tests/script-shards.test.ts`;
-2. all 145 current owners have separate canonical evidence files;
+2. all 146 current owners have separate canonical evidence files;
 3. a normal single-owner addition needs no shared-file update;
 4. clean deletion on either side, byte mutation, duplicate/case-fold identity,
    filename/body mismatch, malformed JSON, dangerous keys, traversal,
