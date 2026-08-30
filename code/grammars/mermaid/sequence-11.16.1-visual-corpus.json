@@ -13,6 +13,8 @@
     "rgb-participant-group",
     "participant-stereotypes-with-aliases",
     "mixed-central-connections",
-    "line-break-variants"
+    "line-break-variants",
+    "special-character-alt-labels",
+    "empty-par-labels"
   ]
 }

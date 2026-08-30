@@ -201,6 +201,8 @@ Message and note `wrap:` and `nowrap:` directives survive semantic lowering;
 forced wrapping becomes deterministic hard lines before backend-neutral Paint shaping.
 The same wrap controls apply to control-block and branch labels, with sequence
 layout reserving line-aware frame and divider geometry.
+Control-block and branch labels preserve punctuation adjacent to comments, and
+intentionally unlabeled `loop`, `opt`, `alt`, and `par` frames remain empty.
 All Mermaid 11.16.1 solid/dotted, normal/reverse filled and stick half-arrow
 forms preserve their line style, half orientation, and endpoint through Paint.
 Central connection markers before and/or after an arrow preserve source,

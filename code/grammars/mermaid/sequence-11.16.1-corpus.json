@@ -247,6 +247,38 @@
       "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\nNote right of Bob: -:<>,;# comment"
     },
     {
+      "id": "special-character-loop-label",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\nloop -:<>,;# comment\nBob-->Alice: I am good thanks!\nend"
+    },
+    {
+      "id": "special-character-opt-label",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\nopt -:<>,;# comment\nBob-->Alice: I am good thanks!\nend"
+    },
+    {
+      "id": "special-character-alt-labels",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\nalt -:<>,;# comment\nBob-->Alice: I am good thanks!\nelse ,<>:-#; comment\nBob-->Alice: I am good thanks!\nend"
+    },
+    {
+      "id": "special-character-par-labels",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\npar -:<>,;# comment\nBob-->Alice: I am good thanks!\nand ,<>:-#; comment\nBob-->Alice: I am good thanks!\nend"
+    },
+    {
+      "id": "empty-loop-label",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\nloop\nBob-->Alice: I am good thanks!\nend"
+    },
+    {
+      "id": "empty-opt-label",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\nopt # comment\nBob-->Alice: I am good thanks!\nend"
+    },
+    {
+      "id": "empty-alt-labels",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\nalt;Bob-->Alice: I am good thanks!\nelse # comment\nBob-->Alice: I am good thanks!\nend"
+    },
+    {
+      "id": "empty-par-labels",
+      "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\npar;Bob-->Alice: I am good thanks!\nand # comment\nBob-->Alice: I am good thanks!\nend"
+    },
+    {
       "id": "empty-message-label",
       "source": "sequenceDiagram\nAlice->>Bob:\nBob->>Alice:Got it!"
     }

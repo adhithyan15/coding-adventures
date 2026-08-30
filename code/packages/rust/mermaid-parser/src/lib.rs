@@ -9100,6 +9100,25 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_preserves_punctuation_and_empty_control_labels() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nalt -:<>,;# comment\nA->>B: One\nelse ,<>:-#; comment\nB-->>A: Two\nend\npar;A->>B: Three\nand # comment\nB-->>A: Four\nend\n",
+        )
+        .unwrap();
+
+        let labels: Vec<_> = diagram
+            .events
+            .iter()
+            .filter_map(|event| match event {
+                SequenceEvent::BlockStart { label, .. }
+                | SequenceEvent::BlockBranch { label, .. } => Some(label.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(labels, ["-:<>,", ",<>:-", "", ""]);
+    }
+
+    #[test]
     fn sequence_preserves_multiword_actor_identifiers() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nparticipant Customer Portal as Customer\nparticipant Order Service\nCustomer Portal->>Order Service: Submit\nnote over Customer Portal,Order Service: Accepted\nactivate Order Service\ndeactivate Order Service\n",
