@@ -540,11 +540,12 @@ lesson sitting behind a sight one is not reachable in the car.
 Every downloadable book projects that same result at the start of each chapter.
 The book generator derives one `chapter-modalities.tex` projection per track with
 font-independent car, eye, and pen signs, full printed-lesson counts, and the
-core-based hands-free prefix. Those projections are compile inputs, not tracked
-curriculum: `check-book-compile.sh` materializes them beneath a fresh temporary
-directory, exposes only the matching track through `TEXINPUTS`, and removes the
-directory when the run exits. A clean checkout needs the same local-dependency
-bootstrap as the all-books workflow:
+core-based hands-free prefix. It also derives each track's glossary, answer key,
+and subject index from the same canonical lesson and chapter owners. These 92
+projections are compile inputs, not tracked curriculum: `check-book-compile.sh`
+materializes them beneath a fresh temporary directory, exposes only the matching
+track through `TEXINPUTS`, and removes the directory when the run exits. A clean
+checkout needs the same local-dependency bootstrap as the all-books workflow:
 
 ```bash
 (cd ../pixel-container && npm ci --omit=dev --ignore-scripts)

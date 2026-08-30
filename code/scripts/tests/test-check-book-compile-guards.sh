@@ -224,7 +224,7 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 3. Compile-only modality TeX is found outside the book tree, and the isolated
+# 3. Compile-only generated TeX is found outside the book tree, and the isolated
 #    root is removed after the compile. The materializer is a static fixture;
 #    no repository data is used to construct executable JavaScript here.
 # ---------------------------------------------------------------------------
@@ -234,7 +234,12 @@ mkdir -p "$BOOKS3/realtrack/book" "$TEMP3"
 cat > "$BOOKS3/realtrack/book/book.tex" <<'TEX'
 \documentclass{article}
 \input{chapter-modalities}
-\begin{document}Hello from an isolated modality input.\end{document}
+\begin{document}
+Hello from isolated generated inputs.
+\input{chapters/appendix-glossary}
+\input{chapters/appendix-answer-key}
+\input{chapters/appendix-index}
+\end{document}
 TEX
 
 MATERIALIZER3="$TMP/static-materializer.mjs"
@@ -245,9 +250,16 @@ const prefix = "--materialize-compile-inputs=";
 const argument = process.argv[2] ?? "";
 if (!argument.startsWith(prefix)) process.exit(2);
 const root = argument.slice(prefix.length);
-const output = join(root, "realtrack", "book", "chapter-modalities.tex");
-mkdirSync(join(root, "realtrack", "book"), { recursive: true });
-writeFileSync(output, "% static compile-only test input\n", "utf8");
+const book = join(root, "realtrack", "book");
+mkdirSync(join(book, "chapters"), { recursive: true });
+for (const relative of [
+  "chapter-modalities.tex",
+  "chapters/appendix-glossary.tex",
+  "chapters/appendix-answer-key.tex",
+  "chapters/appendix-index.tex",
+]) {
+  writeFileSync(join(book, relative), "% static compile-only test input\n", "utf8");
+}
 JS
 
 out3="$(TMPDIR="$TEMP3" CHECK_BOOK_COMPILE_MATERIALIZER="$MATERIALIZER3" \
@@ -255,17 +267,20 @@ out3="$(TMPDIR="$TEMP3" CHECK_BOOK_COMPILE_MATERIALIZER="$MATERIALIZER3" \
 status3=$?
 
 if [ "$status3" -eq 0 ] && grep -q 'realtrack' "$TMP/m3.txt" 2>/dev/null; then
-  ok "a book resolves its modality input from the isolated compile tree"
+  ok "a book resolves generated inputs from the isolated compile tree"
 else
-  bad "a book resolves its modality input from the isolated compile tree" \
+  bad "a book resolves generated inputs from the isolated compile tree" \
       "exit=$status3 manifest=$(cat "$TMP/m3.txt" 2>/dev/null) output: $out3"
 fi
 
-if [ ! -e "$BOOKS3/realtrack/book/chapter-modalities.tex" ]; then
+if [ ! -e "$BOOKS3/realtrack/book/chapter-modalities.tex" ] && \
+   [ ! -e "$BOOKS3/realtrack/book/chapters/appendix-glossary.tex" ] && \
+   [ ! -e "$BOOKS3/realtrack/book/chapters/appendix-answer-key.tex" ] && \
+   [ ! -e "$BOOKS3/realtrack/book/chapters/appendix-index.tex" ]; then
   ok "materialization leaves the source book tree untouched"
 else
   bad "materialization leaves the source book tree untouched" \
-      "chapter-modalities.tex was written into the source book directory"
+      "a generated compile input was written into the source book directory"
 fi
 
 if [ -z "$(/usr/bin/find "$TEMP3" -mindepth 1 -print -quit 2>/dev/null)" ]; then

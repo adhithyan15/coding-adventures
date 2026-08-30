@@ -242,9 +242,10 @@ command -v latexmk >/dev/null 2>&1 || {
   exit 2
 }
 
-# `chapter-modalities.tex` is a deterministic compile input, not authored book
-# content. Materialize it outside the repository so lesson tranches do not
-# rewrite 23 tracked rollups, and remove the entire root on every ordinary exit.
+# Chapter modalities and the glossary, answer key, and index are deterministic
+# compile inputs, not authored book content. Materialize them outside the
+# repository so lesson tranches do not rewrite 92 tracked rollups, and remove
+# the entire root on every ordinary exit.
 # A SIGKILL can prevent any process cleanup; using the system temporary area
 # still keeps that residue out of the checkout and out of Git.
 cleanup_compile_inputs() {
@@ -256,7 +257,7 @@ trap cleanup_compile_inputs EXIT
 
 if [ "$MATERIALIZE_COMPILE_INPUTS" = 1 ]; then
   command -v node >/dev/null 2>&1 || {
-    echo "CANNOT VERIFY: node is required to derive chapter modality compile inputs." >&2
+    echo "CANNOT VERIFY: node is required to derive generated book compile inputs." >&2
     exit 2
   }
   MATERIALIZER="${CHECK_BOOK_COMPILE_MATERIALIZER:-$ROOT/code/packages/typescript/human-language-data/dist/book-cli.js}"
@@ -270,7 +271,7 @@ if [ "$MATERIALIZE_COMPILE_INPUTS" = 1 ]; then
     exit 2
   }
   if ! node "$MATERIALIZER" "--materialize-compile-inputs=$COMPILE_INPUT_ROOT"; then
-    echo "CANNOT VERIFY: chapter modality compile-input generation failed." >&2
+    echo "CANNOT VERIFY: generated book compile-input generation failed." >&2
     exit 2
   fi
   stray_compile_link="$(/usr/bin/find "$COMPILE_INPUT_ROOT" -type l -print -quit 2>/dev/null)"

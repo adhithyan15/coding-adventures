@@ -190,7 +190,9 @@ describe("canonical book generator filesystem shell", () => {
     expect(existsSync(modalities)).toBe(false);
     expect(readFileSync(manifest, "utf8")).toContain('"algorithm": "fnv1a64"');
     expect(readFileSync(chapterOwner, "utf8")).toContain('"chapter": 1');
-    const compileInputs = mkdtempSync(join(tmpdir(), "human-language-book-inputs-"));
+    const compileInputs = mkdtempSync(
+      join(tmpdir(), "human-language-book-inputs-"),
+    );
     roots.push(compileInputs);
     expect(materializeBookCompileInputs(compileInputs, root)).toBe(1);
     const stagedModalities = join(
@@ -329,6 +331,21 @@ describe("canonical book generator filesystem shell", () => {
     );
     expect(readFileSync(appendix, "utf8")).toContain("\\textbf{\\te{తెలుగు}}");
     expect(runBookGeneration(["--check"], root)).toBe(0);
+    const compileInputs = mkdtempSync(join(tmpdir(), "human-language-book-inputs-"));
+    roots.push(compileInputs);
+    expect(materializeBookCompileInputs(compileInputs, root)).toBe(1);
+    expect(
+      existsSync(
+        join(
+          compileInputs,
+          "test",
+          "book",
+          "chapters",
+          "appendix-pronunciation.tex",
+        ),
+      ),
+      "the materializer's closed allowlist excludes ordinary generated appendices",
+    ).toBe(false);
 
     writeFileSync(appendix, "stale\n");
     expect(runBookGeneration(["--check"], root)).toBe(1);
@@ -337,7 +354,7 @@ describe("canonical book generator filesystem shell", () => {
     );
   });
 
-  it("writes and byte-checks configured canonical glossaries", () => {
+  it("materializes configured canonical glossaries outside the source tree", () => {
     const root = fixture();
     const configPath = join(root, "core", "book-generation.json");
     const config = JSON.parse(readFileSync(configPath, "utf8")) as Record<
@@ -360,24 +377,31 @@ describe("canonical book generator filesystem shell", () => {
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runBookGeneration(["--write"], root)).toBe(0);
-    const glossary = join(
+    const sourceGlossary = join(
       root,
       "test",
       "book",
       "chapters",
       "appendix-glossary.tex",
     );
-    expect(readFileSync(glossary, "utf8")).toContain("\\textbf{hello}");
-    expect(runBookGeneration(["--check"], root)).toBe(0);
-
-    writeFileSync(glossary, "stale\n");
-    expect(runBookGeneration(["--check"], root)).toBe(1);
-    expect(process.stderr.write).toHaveBeenCalledWith(
-      "test/book/chapters/appendix-glossary.tex: generated output is missing or stale\n",
+    expect(existsSync(sourceGlossary)).toBe(false);
+    const compileInputs = mkdtempSync(
+      join(tmpdir(), "human-language-book-inputs-"),
     );
+    roots.push(compileInputs);
+    expect(materializeBookCompileInputs(compileInputs, root)).toBe(2);
+    const stagedGlossary = join(
+      compileInputs,
+      "test",
+      "book",
+      "chapters",
+      "appendix-glossary.tex",
+    );
+    expect(readFileSync(stagedGlossary, "utf8")).toContain("\\textbf{hello}");
+    expect(runBookGeneration(["--check"], root)).toBe(0);
   });
 
-  it("writes and byte-checks configured canonical answer keys", () => {
+  it("materializes configured canonical answer keys outside the source tree", () => {
     const root = fixture();
     const lessonPath = join(root, "test", "lessons", "hello.md");
     writeFileSync(
@@ -412,27 +436,34 @@ Read`,
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runBookGeneration(["--write"], root)).toBe(0);
-    const answerKey = join(
+    const sourceAnswerKey = join(
       root,
       "test",
       "book",
       "chapters",
       "appendix-answer-key.tex",
     );
-    const generated = readFileSync(answerKey, "utf8");
+    expect(existsSync(sourceAnswerKey)).toBe(false);
+    const compileInputs = mkdtempSync(
+      join(tmpdir(), "human-language-book-inputs-"),
+    );
+    roots.push(compileInputs);
+    expect(materializeBookCompileInputs(compileInputs, root)).toBe(2);
+    const stagedAnswerKey = join(
+      compileInputs,
+      "test",
+      "book",
+      "chapters",
+      "appendix-answer-key.tex",
+    );
+    const generated = readFileSync(stagedAnswerKey, "utf8");
     expect(generated).toContain("\\chapter*{Review Questions}");
     expect(generated).toContain("Type the greeting.");
     expect(generated).toContain("\\textbf{Answer:} hello");
     expect(runBookGeneration(["--check"], root)).toBe(0);
-
-    writeFileSync(answerKey, "stale\n");
-    expect(runBookGeneration(["--check"], root)).toBe(1);
-    expect(process.stderr.write).toHaveBeenCalledWith(
-      "test/book/chapters/appendix-answer-key.tex: generated output is missing or stale\n",
-    );
   });
 
-  it("writes and byte-checks configured canonical subject indexes", () => {
+  it("materializes configured canonical subject indexes outside the source tree", () => {
     const root = fixture();
     writeFileSync(
       join(root, "test", "chapters.json"),
@@ -477,20 +508,33 @@ Read`,
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runBookGeneration(["--write"], root)).toBe(0);
-    const index = join(root, "test", "book", "chapters", "appendix-index.tex");
-    const generated = readFileSync(index, "utf8");
+    const sourceIndex = join(
+      root,
+      "test",
+      "book",
+      "chapters",
+      "appendix-index.tex",
+    );
+    expect(existsSync(sourceIndex)).toBe(false);
+    const compileInputs = mkdtempSync(
+      join(tmpdir(), "human-language-book-inputs-"),
+    );
+    roots.push(compileInputs);
+    expect(materializeBookCompileInputs(compileInputs, root)).toBe(2);
+    const stagedIndex = join(
+      compileInputs,
+      "test",
+      "book",
+      "chapters",
+      "appendix-index.tex",
+    );
+    const generated = readFileSync(stagedIndex, "utf8");
     expect(generated).toContain("\\chapter*{Index}");
     expect(generated).toContain("\\textbf{hello}");
     expect(generated).toContain(
       "\\hyperref[ch:hello]{Chapter~1, p.~\\pageref*{ch:hello}}",
     );
     expect(runBookGeneration(["--check"], root)).toBe(0);
-
-    writeFileSync(index, "stale\n");
-    expect(runBookGeneration(["--check"], root)).toBe(1);
-    expect(process.stderr.write).toHaveBeenCalledWith(
-      "test/book/chapters/appendix-index.tex: generated output is missing or stale\n",
-    );
   });
 
   it("rejects reference sources outside the curriculum root", () => {
@@ -897,7 +941,7 @@ describe("pronunciation reference coverage", () => {
 describe("glossary coverage", () => {
   const root = defaultCurriculumRoot();
 
-  it("generates, byte-gates, and includes a glossary in every registered book", () => {
+  it("generates and includes a compile-only glossary in every registered book", () => {
     const registry = JSON.parse(
       readFileSync(join(root, "core", "languages.json"), "utf8"),
     ) as { languages: Array<{ id: string }> };
@@ -906,7 +950,7 @@ describe("glossary coverage", () => {
     for (const { id } of registry.languages) {
       const relative = `${id}/book/chapters/appendix-glossary.tex`;
       expect(outputs.get(relative), relative).toMatch(/^% GENERATED FILE\./);
-      expect(existsSync(join(root, relative)), `${id} glossary`).toBe(true);
+      expect(existsSync(join(root, relative)), `${id} glossary`).toBe(false);
       expect(
         readFileSync(join(root, id, "book", "book.tex"), "utf8"),
         `${id} book input`,
@@ -918,7 +962,7 @@ describe("glossary coverage", () => {
 describe("answer-key coverage", () => {
   const root = defaultCurriculumRoot();
 
-  it("generates, byte-gates, and includes a nonempty answer key in every registered book", () => {
+  it("generates and includes a nonempty compile-only answer key in every registered book", () => {
     const registry = JSON.parse(
       readFileSync(join(root, "core", "languages.json"), "utf8"),
     ) as { languages: Array<{ id: string }> };
@@ -930,7 +974,7 @@ describe("answer-key coverage", () => {
       expect(outputs.get(relative), `${id} canonical activities`).toMatch(
         /% canonical-activities: [1-9]\d*/,
       );
-      expect(existsSync(join(root, relative)), `${id} answer key`).toBe(true);
+      expect(existsSync(join(root, relative)), `${id} answer key`).toBe(false);
       expect(
         readFileSync(join(root, id, "book", "book.tex"), "utf8"),
         `${id} book input`,
@@ -942,7 +986,7 @@ describe("answer-key coverage", () => {
 describe("subject-index coverage", () => {
   const root = defaultCurriculumRoot();
 
-  it("generates, byte-gates, and includes a nonempty index in every registered book", () => {
+  it("generates and includes a nonempty compile-only index in every registered book", () => {
     const registry = JSON.parse(
       readFileSync(join(root, "core", "languages.json"), "utf8"),
     ) as { languages: Array<{ id: string }> };
@@ -954,7 +998,7 @@ describe("subject-index coverage", () => {
       expect(outputs.get(relative), `${id} canonical index entries`).toMatch(
         /% canonical-index-entries: [1-9]\d*/,
       );
-      expect(existsSync(join(root, relative)), `${id} index`).toBe(true);
+      expect(existsSync(join(root, relative)), `${id} index`).toBe(false);
       expect(
         readFileSync(join(root, id, "book", "book.tex"), "utf8"),
         `${id} book input`,

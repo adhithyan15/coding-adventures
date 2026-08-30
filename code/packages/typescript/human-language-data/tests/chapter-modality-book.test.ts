@@ -79,6 +79,14 @@ describe("book chapter modality projection", () => {
         () => lstatSync(join(root, path)),
         `${path} must remain a compile-only projection, not a tracked rollup`,
       ).toThrow(/ENOENT/);
+      for (const appendix of ["glossary", "answer-key", "index"]) {
+        const appendixPath = `${track.language}/book/chapters/appendix-${appendix}.tex`;
+        expect(outputs.get(appendixPath), appendixPath).toMatch(/^% GENERATED FILE\./);
+        expect(
+          () => lstatSync(join(root, appendixPath)),
+          `${appendixPath} must remain a compile-only projection, not a tracked rollup`,
+        ).toThrow(/ENOENT/);
+      }
       for (const entry of track.chapters) {
         expect(tex, `${path} chapter ${entry.chapter}`).toContain(
           `\\csname hlchaptermodality${entry.chapter}\\endcsname`,
