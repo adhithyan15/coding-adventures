@@ -20,6 +20,7 @@ const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
 const TELUGU_E = DUCTUS[ductusKey("telugu", "ఎ")];
 const TELUGU_EE = DUCTUS[ductusKey("telugu", "ఏ")];
+const TELUGU_O = DUCTUS[ductusKey("telugu", "ఒ")];
 const TELUGU_AI = DUCTUS[ductusKey("telugu", "ఐ")];
 const TELUGU_VOCALIC_R = DUCTUS[ductusKey("telugu", "ఋ")];
 
@@ -31,7 +32,7 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 describe("handwriting ductus", () => {
   // The five-run pedagogical ఐ route crosses the printed form's narrow
   // counter transitions while still covering the complete outline.
-  registerStrokeHonestyTests(letters, { అ: 0.96, ఐ: 0.59, ఋ: 0.84 });
+  registerStrokeHonestyTests(letters, { అ: 0.96, ఐ: 0.59, ఒ: 0.84, ఋ: 0.84 });
 
   beforeAll(() => {
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
@@ -50,6 +51,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ఏ", TELUGU_EE.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ఒ", TELUGU_O.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ఐ", TELUGU_AI.source.url)).toBe(
@@ -181,6 +185,16 @@ describe("handwriting ductus", () => {
       "sweep right around the broad lower bowl",
       "sweep left across the upper-right arch",
       "sweep left across the upper-left arch",
+    ]);
+  });
+
+  it("Telugu ఒ preserves all three source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_O)).toBe(2);
+    expect(TELUGU_O.strokes).toHaveLength(3);
+    expect(TELUGU_O.strokes.map((stroke) => stroke.segments[0]!.label)).toEqual([
+      "sweep right across the upper arch",
+      "curve down around the left bowl",
+      "sweep right around the broad lower bowl",
     ]);
   });
 });

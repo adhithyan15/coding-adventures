@@ -112,11 +112,11 @@ export const scriptInventoryEvidence = {
     expect(teluguAnusvara.compositionSource?.variation).toMatch(
       /consonant-nasalization role.*not a universal handwriting direction.*no standalone ductus claim/i,
     );
-    expect(missingByScript.get("telugu.json")?.has("్")).toBe(false);
+    expect(missingByScript.get("telugu.json")?.has("్") ?? false).toBe(false);
     expect(affected.get("్") ?? 0).toBe(0);
-    expect(missingByScript.get("telugu.json")?.has("ం")).toBe(false);
+    expect(missingByScript.get("telugu.json")?.has("ం") ?? false).toBe(false);
     expect(affected.get("ం") ?? 0).toBe(0);
-    expect(missingByScript.get("telugu.json")?.has("అ")).toBe(false);
+    expect(missingByScript.get("telugu.json")?.has("అ") ?? false).toBe(false);
     expect(affected.get("అ") ?? 0).toBe(0);
     const teluguAa = scripts.telugu!.independentVowels!.find(
       (entry) => entry.glyph === "ఆ",
@@ -133,7 +133,7 @@ export const scriptInventoryEvidence = {
     expect(teluguAa.strokeOrderSource?.variation).toMatch(
       /hooked bowl.*rounded right lobe.*recombined as ఆ.*Noto Sans Telugu.*handwriting may vary/i,
     );
-    expect(missingByScript.get("telugu.json")?.has("ఆ")).toBe(false);
+    expect(missingByScript.get("telugu.json")?.has("ఆ") ?? false).toBe(false);
     expect(affected.get("ఆ") ?? 0).toBe(0);
     const teluguI = scripts.telugu!.independentVowels!.find(
       (entry) => entry.glyph === "ఇ",
@@ -151,7 +151,7 @@ export const scriptInventoryEvidence = {
     expect(teluguI.strokeOrderSource?.variation).toMatch(
       /three separated components.*recombined as ఇ.*Noto Sans Telugu.*handwriting may vary/i,
     );
-    expect(missingByScript.get("telugu.json")?.has("ఇ")).toBe(false);
+    expect(missingByScript.get("telugu.json")?.has("ఇ") ?? false).toBe(false);
     expect(affected.get("ఇ") ?? 0).toBe(0);
     const teluguU = scripts.telugu!.independentVowels!.find(
       (entry) => entry.glyph === "ఉ",
@@ -174,12 +174,30 @@ export const scriptInventoryEvidence = {
     expect(teluguU.strokeOrderSource?.variation).toMatch(
       /five directional movements.*visible joins.*disconnected printed components.*movements 1.?3.*main body.*movements 4 and 5.*Noto Sans Telugu/i,
     );
-    expect(missingByScript.get("telugu.json")?.has("ఉ")).toBe(false);
+    expect(missingByScript.get("telugu.json")?.has("ఉ") ?? false).toBe(false);
     expect(affected.get("ఉ") ?? 0).toBe(0);
-    expect(missingByScript.get("telugu.json")?.has("ఎ")).toBe(false);
+    expect(missingByScript.get("telugu.json")?.has("ఎ") ?? false).toBe(false);
     expect(affected.get("ఎ") ?? 0).toBe(0);
-    expect(missingByScript.get("telugu.json")?.has("ఏ")).toBe(false);
+    expect(missingByScript.get("telugu.json")?.has("ఏ") ?? false).toBe(false);
     expect(affected.get("ఏ") ?? 0).toBe(0);
+    const teluguO = scripts.telugu!.independentVowels!.find(
+      (entry) => entry.glyph === "ఒ",
+    )!;
+    expect(teluguO.sound).toBe("o");
+    expect(teluguO.penLifts).toBe(2);
+    expect(teluguO.strokeOrder).toEqual([
+      "sweep right across the upper arch",
+      "restart and curve down around the left bowl",
+      "restart and sweep right around the broad lower bowl",
+    ]);
+    expect(teluguO.strokeOrderSource?.citation).toMatch(
+      /Sathish Shanmugam.*independent vowel ఒ.*dot_stroke_v_12_o\.png.*movements 1–3.*version 2\.6/i,
+    );
+    expect(teluguO.strokeOrderSource?.variation).toMatch(
+      /three disconnected directional movements.*separate pen-down run.*movement 1.*upper arch.*movement 2.*left bowl.*movement 3.*broad lower bowl.*Noto Sans Telugu/i,
+    );
+    expect(missingByScript.get("telugu.json")?.has("ఒ") ?? false).toBe(false);
+    expect(affected.get("ఒ") ?? 0).toBe(0);
     const teluguAi = scripts.telugu!.independentVowels!.find(
       (entry) => entry.glyph === "ఐ",
     )!;
@@ -198,7 +216,7 @@ export const scriptInventoryEvidence = {
     expect(teluguAi.strokeOrderSource?.variation).toMatch(
       /five disconnected directional movements.*separate pen-down run.*1.?3.*central and lower body.*4.?5.*two upper arches.*Noto Sans Telugu/i,
     );
-    expect(missingByScript.get("telugu.json")?.has("ఐ")).toBe(false);
+    expect(missingByScript.get("telugu.json")?.has("ఐ") ?? false).toBe(false);
     expect(affected.get("ఐ") ?? 0).toBe(0);
     const teluguVocalicR = scripts.telugu!.independentVowels!.find(
       (entry) => entry.glyph === "ఋ",
@@ -219,7 +237,7 @@ export const scriptInventoryEvidence = {
     expect(teluguVocalicR.strokeOrderSource?.variation).toMatch(
       /six disconnected directional movements.*separate pen-down run.*1.?3.*broad left body.*4.?6.*three successive right-side curls.*Noto Sans Telugu/i,
     );
-    expect(missingByScript.get("telugu.json")?.has("ఋ")).toBe(false);
+    expect(missingByScript.get("telugu.json")?.has("ఋ") ?? false).toBe(false);
     expect(affected.get("ఋ") ?? 0).toBe(0);
   },
 };
