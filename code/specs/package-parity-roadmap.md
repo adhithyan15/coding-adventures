@@ -10207,6 +10207,121 @@ mergeable, and conflict-free. Required CI and CodeQL checks are queued or in
 progress, so the item advances to `pr-open` and auto-merge remains disabled.
 The graph now contains 174 merged, 401 pending, and one `pr-open` owner.
 
+## Post-#13492 Refresh and Rust Dune-Discovery Selection
+
+PR #13492 completed 41 terminal acceptable checks: 34 successes, six expected
+skips, and one neutral result. Auto-merge was enabled only after GitHub reported
+the branch conflict-free, and GitHub merged validated head
+`b629208ff664ed8787029a0a754c82a504fcf265` as
+`400fe841123ce0631b64770a7092bf5795bd1525` at 2026-08-30T12:50:40Z without a
+manual merge command. Ruby declaration conformance therefore advances to
+`merged` and the active PR is cleared.
+
+The collision-checked exact-main inventory remains 15 established lanes,
+1,388 implementation identities, 4,602 slots, and 1,427 all-reported
+identities. Completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and collisions and unknown buckets remain zero. Merged PR #13491 then advanced
+main to `d43d10b0b716419cbb3bc4411e8fc1b7bbc25fcf` with only existing Tamil
+curriculum, human-language-data, script-ductus, language-ladder, and HL34
+changes. It adds no package identity, build marker, build-tool surface,
+collision, or unowned parity gap.
+
+The readiness audit found that the remaining Rust, Swift, and TypeScript
+declaration owners are dependency-eligible but not yet validation-ready. Each
+engine consumes the complete shared discovery-language-registry fixture, whose
+OCaml workspace includes an exact Dune `_build` decoy that the expected result
+excludes, while none of those three discovery engines currently prunes the
+exact component. Their existing engine-scoped Dune owners have merged
+prerequisites, so each declaration owner now depends on its matching Dune
+repair. This makes the ownership graph explicit instead of allowing a known
+full-suite failure to be folded into an unrelated declaration tranche.
+
+The pre-implementation Rust source audit found one additional portable gap.
+Both Rust hashing walkers recursively visit every descendant directory without
+applying the conformance registry for generated, dependency, VCS, cache, and
+temporary components, so Dune `_build` content can still affect source hashes
+after package discovery is corrected. The new pending
+`build-tool-rust-generated-directory-hashing-exclusion` owner classifies that
+separate hashing behavior. It remains outside this discovery-only tranche.
+
+The dependency/leverage pass selects
+`build-tool-rust-dune-build-discovery-exclusion` on branch
+`codex/build-tool-rust-dune-build-discovery-exclusion`. A complete exact-main
+Rust package run passes 148 tests and fails only the registered shared fixture,
+where unchanged discovery emits `ocaml/decoy`. Rust wins because this bounded
+repair unlocks both the documented next declaration lane after Ruby and the
+Dune completion umbrella. Rust 1.97.0, Clippy 0.1.97,
+`cargo-llvm-cov` 0.8.7, and `cargo-audit` 0.22.2 are installed locally.
+All five live PRs have zero exact overlap with the Rust discovery, package
+documentation, state, root changelog, and roadmap surfaces. After lifecycle
+reconciliation, dependency repair, and selection, the complete graph contains
+577 owners and 859 edges: 175 merged, 401 pending, and exactly one
+`in-progress` owner.
+
+### Rust Dune-discovery implementation and validation
+
+Test-first validation reproduced the defect in both the focused native boundary
+and the unchanged shared language-registry fixture: Rust discovered the
+generated `ocaml/decoy` identity below exact `_build`. The minimum production
+repair adds only `_build` to Rust discovery's existing exact, case-sensitive
+component registry. The direct regression puts exact, case-variant, and
+near-name fixtures beneath distinct parents, which prevents a case-insensitive
+host filesystem from collapsing `_build` and `_Build`; `ocaml/case-source` and
+`ocaml/near-source` remain discoverable.
+
+The complete Rust package passes 150 unit tests and three CLI integrations
+through both `cargo test --all-targets` and the literal `BUILD_windows` front.
+Clippy passes all targets and features with warnings denied. LLVM coverage is
+94.44% for discovery lines and 82.22% for all package lines, with 87.18%
+overall function coverage. `cargo audit` scans all 57 locked dependencies with
+no vulnerability. The complete build-tool conformance family passes 205 tests
+with 23 expected platform skips; the neutral corpus validates all 119 cases and
+283 files across 16 implementations and 15 established lanes, and the
+execution contract remains valid. The Go oracle passes all packages, vet, and
+trimpath compilation. A real exact-diff Rust dry plan evaluates 45 Starlark
+BUILD files, discovers and validates 1,172 Rust packages, preserves the
+five-entry orphan ledger, identifies exactly `rust/programs/build-tool` as the
+one changed and affected package, and reports one would-build plus 1,171 skips.
+
+The collision-checked schema-3 report remains unchanged at 15 established
+lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported
+identities, 731 Rust singletons, zero OCaml packages, zero collisions, and zero
+unknown buckets. The 577-owner/859-edge state graph is unique,
+dependency-complete, acyclic, and lifecycle-valid with 175 merged, 401 pending,
+and exactly this owner in progress. Rust 1.97 `cargo fmt --check` retains the
+exact current-main baseline: both trees emit the same 42 diff headers and 562
+lines with identical diff bodies once path-and-line headers are removed, so no
+unrelated bulk reformat was introduced. Diff, generated-artifact,
+credential-pattern, dependency, BUILD, parity, and collision checks are clean.
+Live PRs #13493, #13467, #13455, #13452, and #7821 have no changed-path overlap;
+#12165 shares only `lessons.md` at a disjoint line-272 coverage hunk.
+
+Independent read-only review of the complete implementation and validation
+diff found no actionable correctness, security, lifecycle, graph,
+documentation, or validation issue. It independently reproduced the focused
+and shared regressions, complete Rust suites, literal Windows BUILD front,
+strict Clippy, release build, coverage, dependency audit, neutral corpus,
+execution contract, state traversal, diff hygiene, and generated-artifact
+cleanup. The exact-component match adds no realpath, normalization,
+symlink-follow, process, environment, network, dependency, credential, or other
+authority; the separately classified hashing gap remains honestly pending.
+
+PR #13493 later advanced main with 18 existing Tamil curriculum and TypeScript
+human-language paths and no package, BUILD, build-tool, state, roadmap, or
+collision overlap. The branch rebased conflict-free onto
+`cf2e546e1b90ec075f271b6fac614a0aed26f9eb`; the refreshed inventory retained
+every count above, and all 150 unit tests, three CLI integrations, and strict
+Clippy passed again at rebased implementation
+`b7a63a3c62a779c6adee6783fc897cbb5a794225`.
+
+Ready-for-review PR #13494 is open from validated head
+`57017b3aae7e6d8aeadc8a8d41ef2b044043b3d5` after a normal first push. The
+remote branch and prior PR were absent before publication. GitHub reports the
+PR non-draft, mergeable, and conflict-free. Required CI and CodeQL checks are
+queued or in progress, so this owner advances to `pr-open` and auto-merge stays
+disabled until every required check is terminal and acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -4,6 +4,15 @@ All notable changes to the Rust build tool will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.8] - 2026-08-30
+
+### Fixed
+
+- Exclude Dune's exact case-sensitive `_build` output component before package
+  discovery checks for BUILD files, while preserving source directories named
+  `_Build` or `_build-example`. Both the shared language-registry fixture and
+  direct native regressions cover the boundary.
+
 ## [0.2.7] - 2026-08-25
 
 ### Added
