@@ -70,6 +70,10 @@ export const SKIP_DIRS: ReadonlySet<string> = new Set([
   "Pods",
   ".dart_tool",
   "dist-newstyle",
+  // Dune's exact output component. Set membership is deliberately
+  // case-sensitive, so source directories such as `_Build` and
+  // `_build-example` remain eligible for discovery.
+  "_build",
   ".build",
   ".gradle",
   "gradle-build",

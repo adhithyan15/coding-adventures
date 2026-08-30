@@ -380,6 +380,55 @@ describe("discoverPackages", () => {
     ]);
   });
 
+  it("should skip only Dune's exact _build artifact component", () => {
+    // Keep the exact, case-variant, and near-name components beneath distinct
+    // parents. NTFS and default macOS filesystems fold case, so putting
+    // `_build` and `_Build` beside each other would test the host filesystem
+    // instead of discovery's exact component rule.
+    writeFile(
+      path.join(
+        tmpDir,
+        "packages",
+        "ocaml",
+        "generated",
+        "_build",
+        "decoy",
+        "BUILD",
+      ),
+      "echo generated\n",
+    );
+    writeFile(
+      path.join(
+        tmpDir,
+        "packages",
+        "ocaml",
+        "case-source-parent",
+        "_Build",
+        "case-source",
+        "BUILD",
+      ),
+      "echo case source\n",
+    );
+    writeFile(
+      path.join(
+        tmpDir,
+        "packages",
+        "ocaml",
+        "near-source-parent",
+        "_build-example",
+        "near-source",
+        "BUILD",
+      ),
+      "echo near source\n",
+    );
+
+    const packages = discoverPackages(tmpDir);
+    expect(packages.map((pkg) => pkg.name)).toEqual([
+      "ocaml/case-source",
+      "ocaml/near-source",
+    ]);
+  });
+
   it("should stop recursing when BUILD file found", () => {
     const parentDir = path.join(tmpDir, "packages", "python", "parent");
     writeFile(path.join(parentDir, "BUILD"), "echo parent\n");
