@@ -11,24 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13498,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13498",
-    "branch": "codex/build-tool-rust-extra-ci-toolchain-declaration-conformance",
-    "implementation_revision": "2a4a334881cb32cba90e677fe9f33833552979ef",
-    "status": "checks-pending",
-    "opened_at": "2026-08-30T14:17:32Z"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-30T14:17:36Z",
+    "observed_at": "2026-08-30T14:33:58Z",
     "pr_number": 13498,
     "run_id": null,
     "attempt": 1,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #13498 is open and non-draft. GitHub reports validated head 2a4a334881cb32cba90e677fe9f33833552979ef mergeable and conflict-free, but required CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged-via-auto-merge",
+    "notes": "All 40 reported checks reached terminal acceptable conclusions: 33 successes and seven expected skips. GitHub reported validated head 9fd69b4b72182805fe1ea8da59934e210a0477e3 clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #13498 as c736080af3d9a1760be28d0eb352e2818b1fdf7b without a manual merge command."
   },
   "last_inventory": {
-    "revision": "3fd579f20ae67001857e2cb7258a394bd089a9eb",
+    "revision": "c736080af3d9a1760be28d0eb352e2818b1fdf7b",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -416,7 +409,7 @@
     {
       "id": "build-tool-rust-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Rust build tool consume extra CI toolchain declarations",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-rust-dune-build-discovery-exclusion"],
       "branch": "codex/build-tool-rust-extra-ci-toolchain-declaration-conformance",
       "pr_number": 13498,
@@ -432,13 +425,17 @@
       "validation_notes": "Test-first execution failed because the deliberately absent Rust snapshot types and evaluator were unresolved before production source was added. The completed host-free module dynamically discovers and consumes all 11 neutral declaration fixtures and passes direct UTF-8 byte, logical-line, per-front, aggregate, CRLF, stable-deduplication, empty-front, null-versus-empty selection, force-full, forced-toolchain, unsupported-platform, selected-error-precedence, fresh-map, and caller-mutation probes. The focused suite passes 11 tests; the literal generic and Windows BUILD workflows and all-target suite each pass 164 tests, including three CLI integrations. Clippy with all targets and features is warning-clean. cargo-llvm-cov reports 98.97% region, 97.44% function, and 99.12% line coverage for toolchain_detection.rs, with 82.72% region and 83.40% line coverage overall. cargo-audit scanned 57 locked dependencies against 1,226 advisories and found no vulnerability. The neutral conformance family passes 205 tests with 23 expected skips; corpus validation reports 119 cases and 283 files across 16 implementations, 15 established lanes, and 12 front doors, and the execution contract remains valid at its intentional zero-adapter baseline. The Go oracle passes all packages, vet, and trimpath build; its real exact-diff plan evaluates all 5,112 packages, selects only rust/programs/build-tool, and skips the other 5,111. The schema-3 parity inventory is collision-clean at 15 lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, 731 Rust singletons, zero OCaml packages, and zero unknown buckets. The 577-owner/859-edge graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges with 176 merged, 400 pending, and exactly this owner in progress. Six live PRs have zero exact overlap with all eight changed paths. Diff hygiene and direct production-authority scans are clean; the module adds no filesystem, Git, process, environment, network, credential, FFI, or execution authority and changes no dependency, Cargo metadata, BUILD front, CLI, plan, workflow, or package identity. Rustfmt 1.97 still reproduces the exact-main package baseline of 42 pre-existing diff headers and 562 lines; the new module itself is rustfmt-clean.",
       "review_notes": "Independent final review at rebased implementation head 96cf3893dc23e4ef81ccae96428ab5c75b308897 found no actionable correctness, security, fixture, boundary, API-purity, documentation, state, or scope issue. The reviewer reproduced the 11 focused cases, complete 164-test Rust suite, strict Clippy, 99.12% focused line coverage, 119-case/283-file corpus validation, and a cached 57-dependency advisory scan; confirmed exact metering, platform, grammar, scheduling, forced-union, unsupported-precedence, and fresh-map semantics; and verified that filesystem use is test-only while production adds no host or execution authority. The exact eight-path diff is hygienic and contains no Cargo, lockfile, BUILD, workflow, dependency, or unrelated source change.",
       "publication_notes": "Opened ready-for-review PR #13498 from clean validated head 2a4a334881cb32cba90e677fe9f33833552979ef after a normal first push. Immediately before publication, the branch was rebased onto exact origin/main 3fd579f20ae67001857e2cb7258a394bd089a9eb, the target remote branch and prior PR were absent, and all eight changed paths had zero exact overlap across six other live PRs. GitHub reports the PR mergeable, conflict-free, and non-draft, currently blocked only by queued or in-progress CI and CodeQL checks; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "final_revision": "9fd69b4b72182805fe1ea8da59934e210a0477e3",
+      "merged_at": "2026-08-30T14:33:58Z",
+      "merge_commit": "c736080af3d9a1760be28d0eb352e2818b1fdf7b",
+      "merge_notes": "All 40 final checks were acceptable: 33 successes and seven expected skips. GitHub reported the final head conflict-free; guarded squash auto-merge was enabled and GitHub merged the PR without a manual merge command.",
       "notes": "Adopt the merged process-free declaration corpus in the Rust engine without widening execution authority."
     },
     {
       "id": "build-tool-swift-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Swift build tool consume extra CI toolchain declarations",
       "status": "pending",
-      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-swift-dune-build-discovery-exclusion"],
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-swift-dune-build-discovery-exclusion", "build-tool-swift-windows-test-front-failure-propagation"],
       "branch": null,
       "pr_number": null,
       "notes": "Adopt the merged process-free declaration corpus in the Swift engine without widening execution authority."
@@ -447,7 +444,7 @@
       "id": "build-tool-typescript-extra-ci-toolchain-declaration-conformance",
       "title": "Make the TypeScript build tool consume extra CI toolchain declarations",
       "status": "pending",
-      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-typescript-dune-build-discovery-exclusion"],
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-typescript-dune-build-discovery-exclusion", "build-tool-typescript-static-build-front-typecheck"],
       "branch": null,
       "pr_number": null,
       "notes": "Adopt the merged process-free declaration corpus in the TypeScript engine without widening execution authority."
@@ -505,10 +502,13 @@
     {
       "id": "build-tool-swift-dune-build-discovery-exclusion",
       "title": "Make Swift build-tool discovery honor the Dune _build exclusion",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-swift-language-identity-registry"],
-      "branch": null,
+      "branch": "codex/build-tool-swift-dune-build-discovery-exclusion",
       "pr_number": null,
+      "selection_revision": "c736080af3d9a1760be28d0eb352e2818b1fdf7b",
+      "selection_notes": "Selected after PR #13498 completed 40 terminal acceptable checks and merged through guarded squash auto-merge, followed by a collision-checked exact-main inventory refresh. The inventory remains schema 3 with 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Changes since the prior inventory add or remove no package root, and no newly eligible unowned gap displaces this item. Both Swift Dune prerequisites are merged; the repair directly unlocks Swift declaration conformance and the remaining-engines Dune umbrella. Swift and TypeScript have equal graph leverage, but Swift wins the documented lane order, has no broad-lane live PR, and reuses Discovery.skipDirectories in source hashing so one exact-component repair covers two traversal surfaces. Swift 6.3.3, SwiftPM, swift-format, llvm-cov, and llvm-profdata are installed, Package.swift has no external dependencies, and no Package.swift, BUILD, workflow, neutral-fixture, or conformance-spec change is expected. Five live PRs have zero exact overlap on the Swift build-tool, state, roadmap, or root changelog paths; lessons.md is intentionally avoided because #12165 touches it. The complete 577-owner/859-edge graph is unique, dependency-complete, and acyclic; reconciliation plus selection yields 177 merged, 399 pending, and exactly this owner in progress.",
+      "classification_notes": "The concurrent implementation-surface audit found and registered three additional build-tool gaps before the first selection commit: Swift BUILD_windows masks native test failures behind its missing-toolchain fallback; TypeScript source hashing does not share discovery's generated-directory registry; and the TypeScript build-tool front lacks a compiler/typecheck gate. The Swift and TypeScript declaration owners now depend on their truthful front-door prerequisites. These additions expand the complete graph to 580 owners and 864 edges with 177 merged, 402 pending, and exactly this Swift Dune owner in progress; none displaces the selected dependency prerequisite.",
       "notes": "Swift consumes the complete shared discovery-language-registry fixture but does not prune the exact _build component. Add the bounded exact-component repair and preserve case variants and near names in its own engine tranche."
     },
     {
@@ -519,6 +519,33 @@
       "branch": null,
       "pr_number": null,
       "notes": "TypeScript consumes the complete shared discovery-language-registry fixture but does not prune the exact _build component. Add the bounded exact-component repair and preserve case variants and near names in its own engine tranche."
+    },
+    {
+      "id": "build-tool-swift-windows-test-front-failure-propagation",
+      "title": "Make the Swift build-tool Windows test front fail closed",
+      "status": "pending",
+      "depends_on": ["build-tool-swift-dune-build-discovery-exclusion"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the post-Rust declaration audit. BUILD_windows chains `where swift && swift test || echo ...`, so every failing native test is mislabeled as a missing toolchain and exits successfully. Split toolchain absence from test execution, add a deterministic front-door regression, and require this owner before Swift declaration validation claims a trustworthy Windows lane."
+    },
+    {
+      "id": "build-tool-typescript-generated-directory-hashing-exclusion",
+      "title": "Exclude generated directories from TypeScript build-tool source hashing",
+      "status": "pending",
+      "depends_on": ["build-tool-typescript-dune-build-discovery-exclusion"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the post-Rust declaration audit. TypeScript discovery has an exact skip registry, but hasher.ts recursively walks every descendant independently, so generated _build content can still affect source hashes after discovery is repaired. Add bounded exact-component hashing fixtures, preserve case variants and near names, and keep this independent from pure declaration evaluation."
+    },
+    {
+      "id": "build-tool-typescript-static-build-front-typecheck",
+      "title": "Add a TypeScript compiler gate to the TypeScript build-tool front",
+      "status": "pending",
+      "depends_on": ["build-tool-typescript-dune-build-discovery-exclusion"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the post-Rust declaration audit. The TypeScript build-tool package has Vitest and tsx but no compiler dependency or typecheck command, so its BUILD front can pass without static validation of production and adapter types. Add an explicit pinned TypeScript compiler gate and require it before the final TypeScript declaration consumer is claimed complete."
     },
     {
       "id": "build-tool-csharp-fsharp-dune-build-discovery-conformance",

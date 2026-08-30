@@ -10387,6 +10387,47 @@ PR non-draft, mergeable, and conflict-free. Required CI and CodeQL checks are
 queued or in progress, so this owner advances to `pr-open` and auto-merge stays
 disabled until every required check is terminal and acceptable.
 
+## Post-#13498 Refresh and Swift Dune Selection
+
+PR #13498 completed 40 terminal acceptable checks: 33 successes and seven
+expected skips. Auto-merge was enabled only after GitHub reported validated
+head `9fd69b4b72182805fe1ea8da59934e210a0477e3` conflict-free, and GitHub merged
+it as `c736080af3d9a1760be28d0eb352e2818b1fdf7b` at
+2026-08-30T14:33:58Z without a manual merge command. Rust declaration
+conformance therefore advances to `merged` and the active PR is cleared.
+
+The collision-checked exact-main inventory remains schema 3 with 15
+established lanes, 1,388 implementation identities, 4,602 slots, and 1,427
+all-reported identities. Completion bands remain 175/265, 123/934, 170/2,139,
+and 920/12,880; Rust has 731 singletons, OCaml remains emerging at zero
+packages, and collisions and unknown buckets remain zero. Intervening
+human-language work plus #13498 added or removed no package root, so no newly
+unowned portable or build-tool gap appeared.
+
+The dependency/leverage pass selects
+`build-tool-swift-dune-build-discovery-exclusion` on branch
+`codex/build-tool-swift-dune-build-discovery-exclusion`. Its two prerequisites
+are merged, and the item directly unlocks both Swift declaration conformance
+and the remaining-engines Dune umbrella. Swift and TypeScript have equal graph
+leverage, but Swift wins the documented lane order, has no broad-lane live PR,
+and already shares `Discovery.skipDirectories` between discovery and source
+hashing. Swift 6.3.3, SwiftPM, swift-format, `llvm-cov`, and `llvm-profdata` are
+installed; the package has no external dependency. Five live PRs have zero
+exact overlap on the seven expected Swift, state, roadmap, and root-changelog
+paths; `lessons.md` remains untouched because #12165 changes it. After merge
+reconciliation and selection, exactly one owner is `in-progress`.
+
+The concurrent implementation-surface audit registered three additional gaps
+before the first selection commit. Swift's `BUILD_windows` front converts every
+failing native test into a successful missing-toolchain message; that bounded
+failure-propagation repair is now a prerequisite of Swift declaration
+validation. TypeScript source hashing walks generated descendants independently
+of discovery, and the TypeScript build-tool front has no compiler/typecheck
+gate; both now have explicit pending owners, with the static gate preceding the
+final TypeScript declaration consumer. These additions do not displace the
+dependency-ready Swift Dune repair. The complete graph now contains 580 owners
+and 864 edges: 177 merged, 402 pending, and exactly one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
