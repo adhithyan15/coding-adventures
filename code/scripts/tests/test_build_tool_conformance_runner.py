@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 119)
+        self.assertEqual(summary["case_count"], 121)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -150,6 +150,7 @@ class CorpusTests(unittest.TestCase):
                 "plan",
                 "resolution",
                 "sharding",
+                "source_collection",
                 "starlark",
                 "toolchain_detection",
                 "validation",
@@ -1242,6 +1243,15 @@ class PureDomainValidationTests(unittest.TestCase):
             runner.validate_case_document(hashing, **schema_args)
         self.assertEqual(raised.exception.code, "EXPECTED_HASH_MISMATCH")
 
+        source_collection = load_case("source-collection-extension.json")
+        source_collection["expected"]["result"]["files"][0]["digest"] = "0" * 64
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(source_collection, **schema_args)
+        self.assertEqual(
+            raised.exception.code,
+            "EXPECTED_SOURCE_COLLECTION_MISMATCH",
+        )
+
         mutations = (
             (
                 "starlark-structured-context.json",
@@ -1340,6 +1350,13 @@ class PureDomainValidationTests(unittest.TestCase):
                 ),
                 "CASE_PURE_AUTHORITY",
             ),
+            (
+                "source-collection-extension.json",
+                lambda case: case["input"]["options"]["candidates"].append(
+                    copy.deepcopy(case["input"]["options"]["candidates"][0])
+                ),
+                "CASE_SOURCE_CANDIDATE_DUPLICATE",
+            ),
         )
         for filename, mutate, code in mutations:
             with self.subTest(filename=filename, code=code):
@@ -1363,6 +1380,14 @@ class PureDomainValidationTests(unittest.TestCase):
         self.assertEqual(
             runner.assert_result_matches(shard, actual),
             shard["expected"],
+        )
+
+        source_collection = load_case("source-collection-extension.json")
+        actual = copy.deepcopy(source_collection["expected"])
+        actual["result"]["files"].reverse()
+        self.assertEqual(
+            runner.assert_result_matches(source_collection, actual),
+            source_collection["expected"],
         )
 
     def test_pure_domain_validation_has_no_host_side_effects(self) -> None:
@@ -1421,7 +1446,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 119)
+        self.assertEqual(summary["case_count"], 121)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

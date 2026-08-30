@@ -11083,6 +11083,50 @@ check is terminal and acceptable and GitHub still reports no merge conflict.
 The ownership graph therefore contains 184 merged, 396 pending, and exactly one
 `pr-open` owner.
 
+### Post-PR #13544 refresh and hashing-corpus selection
+
+PR #13544 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral conclusion. Guarded squash auto-merge was
+enabled only after GitHub reported final head
+`6cab3bdeb9865501abac192294660fea5802713c` conflict-free, and GitHub merged it
+as `7733faf74a21ebe4211dbf3200af6f81cac2ee27` at 2026-08-30T21:34:49Z
+without a manual merge command. The Python Dune-discovery owner therefore
+advances to `merged` and the active PR is cleared.
+
+The exact-main collision inventory remains schema 3 with 15 established lanes,
+1,388 implementation identities, 4,602 slots, and 1,427 all-reported
+identities. Completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and collisions and unknown buckets remain zero. All seven merged paths modify
+existing Python build-tool, state, or documentation surfaces. No package root,
+BUILD, or manifest topology changed and no new unowned eligible gap appeared.
+
+The pre-selection conformance audit found a broader ownership prerequisite.
+The three neutral hashing-cache cases accept already filtered `include_paths`,
+so they cannot prove exact generated-directory pruning, case and near-name
+preservation, extension versus declared-source collection, or no-follow
+authority. The audit also found separate portable source-recognition and path-
+framing gaps in Python, Go, Elixir, Perl, Haskell, shared C#/F#, Swift, Ruby,
+Rust, and TypeScript, plus a missing hashing/cache layer in Lua. These are now
+engine-scoped pending leaves behind a selection-blocked completion aggregate;
+the four existing generated-directory owners also gain the shared corpus as a
+prerequisite.
+
+The dependency/leverage pass therefore selects
+`build-tool-generated-directory-hashing-conformance-corpus` on branch
+`codex/build-tool-generated-directory-hashing-conformance-corpus`. Its two
+prerequisites are merged. One bounded inert candidate-path operation can define
+the exact generated, dependency, VCS, cache, and temporary component registry;
+preserve case variants and near names; exercise both collector modes; return
+normalized included paths and digests; and reject symlink or reparse traversal
+without reading a checkout. This shared contract unlocks every implementation
+repair and therefore outranks both the newly unblocked Python leaf and the
+independent Haskell Dune leaf. Six live PRs have zero exact overlap with the
+expected shared spec, schema, fixture, adapter/test, state, roadmap, and root-
+changelog paths. Adding all newly discovered work before selection leaves the
+complete graph unique, dependency-complete, and acyclic at 594 owners and 895
+edges, with 185 merged, 408 pending, and exactly one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

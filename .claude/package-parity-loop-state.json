@@ -11,24 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13544,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13544",
-    "branch": "codex/build-tool-python-dune-build-discovery-conformance",
-    "implementation_revision": "31f4287711f39704a46dd03d58a58229edb68fa9",
-    "status": "checks-pending",
-    "opened_at": "2026-08-30T21:01:31Z"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-30T21:01:31Z",
+    "observed_at": "2026-08-30T21:34:49Z",
     "pr_number": 13544,
-    "run_id": null,
+    "run_id": 33335294122,
     "attempt": 1,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #13544 is open from the validated Python Dune-discovery branch. GitHub reports the initial publication head mergeable and non-draft with required checks registered or in progress, so auto-merge remains disabled until every final-head check is terminal and acceptable and GitHub still reports no merge conflict."
+    "status": "merged",
+    "notes": "PR #13544 completed all 41 final-head checks acceptably with 34 successes, six expected skips, and one neutral conclusion. GitHub reported final head 6cab3bdeb9865501abac192294660fea5802713c conflict-free before guarded squash auto-merge completed as 7733faf74a21ebe4211dbf3200af6f81cac2ee27; no manual merge command was used."
   },
   "last_inventory": {
-    "revision": "3810c7380ca67ae82f300af4d7d4134c25f2cef7",
+    "revision": "7733faf74a21ebe4211dbf3200af6f81cac2ee27",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -172,7 +165,7 @@
       "id": "build-tool-ruby-generated-directory-hashing-exclusion",
       "title": "Exclude generated directories from Ruby build-tool source hashing",
       "status": "pending",
-      "depends_on": ["build-tool-dist-newstyle-discovery-exclusion-remaining-engines"],
+      "depends_on": ["build-tool-dist-newstyle-discovery-exclusion-remaining-engines", "build-tool-generated-directory-hashing-conformance-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the post-#12683 source audit. Build-tool conformance requires every hasher to exclude generated, dependency, VCS, cache, and temporary directories, but Ruby's extension and declared-src collectors recursively visit every descendant file without pruning any directory component. Add a bounded exact-component skip registry with focused hashing fixtures, preserve source directories with similar names or different case, and keep the repair separate from discovery and process-free validation consumers."
@@ -527,7 +520,7 @@
       "id": "build-tool-rust-generated-directory-hashing-exclusion",
       "title": "Exclude generated directories from Rust build-tool source hashing",
       "status": "pending",
-      "depends_on": ["build-tool-rust-dune-build-discovery-exclusion"],
+      "depends_on": ["build-tool-rust-dune-build-discovery-exclusion", "build-tool-generated-directory-hashing-conformance-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered during the Rust Dune-discovery reference audit. Both Rust source-hashing walkers recurse through every descendant directory without pruning the conformance registry for generated, dependency, VCS, cache, and temporary components, so exact _build content can still affect hashes even after discovery is corrected. Add bounded exact-component hashing fixtures, preserve case variants and near names, and keep this independent of package discovery and declaration evaluation."
@@ -605,7 +598,7 @@
       "id": "build-tool-typescript-generated-directory-hashing-exclusion",
       "title": "Exclude generated directories from TypeScript build-tool source hashing",
       "status": "pending",
-      "depends_on": ["build-tool-typescript-dune-build-discovery-exclusion"],
+      "depends_on": ["build-tool-typescript-dune-build-discovery-exclusion", "build-tool-generated-directory-hashing-conformance-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered during the post-Rust declaration audit. TypeScript discovery has an exact skip registry, but hasher.ts recursively walks every descendant independently, so generated _build content can still affect source hashes after discovery is repaired. Add bounded exact-component hashing fixtures, preserve case variants and near names, and keep this independent from pure declaration evaluation."
@@ -669,13 +662,16 @@
     {
       "id": "build-tool-python-dune-build-discovery-conformance",
       "title": "Prove Dune _build discovery exclusion in the Python build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["ocaml-build-substrate-process-free-core"],
       "branch": "codex/build-tool-python-dune-build-discovery-conformance",
       "pr_number": 13544,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13544",
       "opened_at": "2026-08-30T21:01:31Z",
       "opened_revision": "64790f385ab3b561c6e68d5b2d6935f302c0fbfb",
+      "merged_at": "2026-08-30T21:34:49Z",
+      "merge_commit": "7733faf74a21ebe4211dbf3200af6f81cac2ee27",
+      "merge_notes": "All 41 final-head checks were terminal and acceptable: 34 succeeded, six were expected skips, and one was neutral. GitHub reported the final head conflict-free before guarded squash auto-merge completed; no manual merge command was used.",
       "selection_revision": "3810c7380ca67ae82f300af4d7d4134c25f2cef7",
       "selection_notes": "Selected after PR #13535 completed 40 terminal acceptable checks and merged through guarded squash auto-merge as 3810c7380ca67ae82f300af4d7d4134c25f2cef7. The exact-main schema-3 inventory is unchanged at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. No package root or manifest changed. The pre-selection conformance audit discovered and added the separate pending Python generated-directory hashing owner before prioritization; the complete graph is now 581 owners/865 edges, unique, dependency-complete, and acyclic. This Dune leaf's sole dependency is merged; it repairs exact _build discovery and OCaml registry consumption in the 488-package Python lane, and directly unlocks that new hashing owner while advancing the Dune umbrella, giving it more leverage and a smaller repair surface than the independent Haskell leaf. Python 3.13 is installed, the target branch and prior PR were absent, and all seven live PRs have zero exact overlap with the expected Python build-tool, state, roadmap, and root-changelog paths. Reconciliation, owner addition, and selection leave 184 merged, 396 pending, and exactly this owner in progress.",
       "implementation_revision": "31f4287711f39704a46dd03d58a58229edb68fa9",
@@ -684,13 +680,132 @@
       "notes": "Python's current registry test projects out OCaml inputs and its discovery skip set lacks exact _build. Consume the relevant fixture records, add the exact rule, and preserve case variants and near names without widening host authority."
     },
     {
+      "id": "build-tool-generated-directory-hashing-conformance-corpus",
+      "title": "Define language-neutral generated-directory source-collection fixtures",
+      "status": "in-progress",
+      "depends_on": ["build-tool-pure-domain-corpus", "ocaml-build-substrate-process-free-core"],
+      "branch": "codex/build-tool-generated-directory-hashing-conformance-corpus",
+      "pr_number": null,
+      "selection_revision": "7733faf74a21ebe4211dbf3200af6f81cac2ee27",
+      "selection_notes": "Selected after PR #13544 completed 41 terminal acceptable checks and merged through guarded squash auto-merge as 7733faf74a21ebe4211dbf3200af6f81cac2ee27. The exact-main schema-3 inventory is identity-neutral and unchanged at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. All seven merged paths modify existing Python build-tool, state, or documentation surfaces; no package root, BUILD, or manifest topology changed. The pre-selection conformance audit found that the three neutral hashing-cache cases receive already filtered include_paths and therefore cannot prove exact generated-directory pruning, case and near-name preservation, declared-source versus extension collection, or no-follow authority. This new shared corpus is a prerequisite for all four existing generated-directory implementation owners and enables their fixes without duplicating or drifting the contract. It outranks the newly unblocked Python implementation and the independent Haskell Dune leaf because one bounded fixture operation governs every current and future implementation lane. Six live PRs have zero exact overlap with the expected shared spec, schema, fixture, adapter/test, state, roadmap, and root-changelog paths. The target branch and prior PR were absent. Adding the full newly discovered source-hashing owner set before selection leaves the complete graph unique, dependency-complete, and acyclic at 594 owners/895 edges, with 185 merged, 408 pending, and exactly this owner in progress.",
+      "notes": "The existing pure hashing-cache cases accept prefiltered paths and cannot prove collector behavior. Add a bounded source-collection operation over inert candidate records that fixes the exact generated, dependency, VCS, cache, and temporary component registry; preserves case variants and near names; exercises extension and declared-source modes; returns normalized included paths and digests; and rejects symlink or reparse traversal without reading a checkout."
+    },
+    {
       "id": "build-tool-python-generated-directory-hashing-exclusion",
       "title": "Exclude generated directories from Python build-tool source hashing",
       "status": "pending",
-      "depends_on": ["build-tool-python-dune-build-discovery-conformance"],
+      "depends_on": ["build-tool-python-dune-build-discovery-conformance", "build-tool-generated-directory-hashing-conformance-corpus"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the exact-main pre-selection conformance audit after PR #13535. Both Python hashing walkers ignore os.walk dirnames, so exact generated components such as _build remain inside package hashes contrary to the shared generated-artifact contract. Add exact case-sensitive pruning for the complete registry in a separate post-discovery tranche, preserving _Build and _build-example and avoiding symlink or host-authority expansion."
+    },
+    {
+      "id": "build-tool-python-portable-source-hashing-conformance",
+      "title": "Complete portable source hashing in the Python build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-python-generated-directory-hashing-exclusion", "build-tool-generated-directory-hashing-conformance-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13544 source-hashing audit. Python recognizes source inputs only for Python, Ruby, Go, and Perl and concatenates content digests without normalized relative paths, so OCaml source/metadata changes and same-content renames can be invisible. After directory pruning lands, add complete portable source recognition and unambiguous normalized path framing without expanding host authority."
+    },
+    {
+      "id": "build-tool-go-portable-source-hashing-conformance",
+      "title": "Complete portable source hashing in the Go build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13544 source-hashing audit. Go recognizes OCaml sources but prunes only OCaml _build in the extension walker, prunes nothing in declared-source mode, and omits normalized paths from the package digest. Adopt the neutral collector registry and path framing in one engine-scoped tranche."
+    },
+    {
+      "id": "build-tool-elixir-portable-source-hashing-conformance",
+      "title": "Complete portable source hashing in the Elixir build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13544 source-hashing audit. Elixir recursively hashes without the exact generated-component registry and lacks portable path framing and OCaml source recognition. Repair those bounded collector semantics after the neutral corpus lands."
+    },
+    {
+      "id": "build-tool-perl-portable-source-hashing-conformance",
+      "title": "Complete portable source hashing in the Perl build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13544 source-hashing audit. Perl has only a partial artifact skip registry, uses platform-native relative paths, and lacks OCaml source recognition. Adopt the complete neutral collector and normalized framing contract in one engine-scoped tranche."
+    },
+    {
+      "id": "build-tool-haskell-portable-source-hashing-conformance",
+      "title": "Complete portable source hashing in the Haskell build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13544 source-hashing audit. Haskell lacks OCaml source recognition and its hashing collector uses an incomplete artifact registry. Adopt the neutral collector and portable path-framing contract without mixing discovery-fixture work."
+    },
+    {
+      "id": "build-tool-csharp-fsharp-portable-source-hashing-conformance",
+      "title": "Complete portable source hashing in the shared C# and F# build tools",
+      "status": "pending",
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13544 source-hashing audit. The shared .NET collector reuses discovery skips but omits normalized path framing and OCaml inputs. Repair the shared engine once for both front doors after the neutral corpus lands."
+    },
+    {
+      "id": "build-tool-swift-portable-source-hashing-conformance",
+      "title": "Complete portable source hashing in the Swift build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13544 source-hashing audit. Swift reuses discovery skips but omits normalized path framing and OCaml source recognition. Adopt the language-neutral collector and digest framing contract in a separate Swift tranche."
+    },
+    {
+      "id": "build-tool-ruby-portable-source-hashing-conformance",
+      "title": "Complete portable source hashing in the Ruby build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-ruby-generated-directory-hashing-exclusion"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13544 source-hashing audit. After Ruby adopts the neutral generated-directory registry, add OCaml source recognition and normalized unambiguous path framing as a separate bounded follow-up."
+    },
+    {
+      "id": "build-tool-rust-portable-source-hashing-conformance",
+      "title": "Complete portable source hashing in the Rust build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-rust-generated-directory-hashing-exclusion"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13544 source-hashing audit. After Rust adopts the neutral generated-directory registry, add OCaml source recognition and normalized unambiguous path framing without mixing declaration or discovery work."
+    },
+    {
+      "id": "build-tool-typescript-portable-source-hashing-conformance",
+      "title": "Complete portable source hashing in the TypeScript build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-typescript-generated-directory-hashing-exclusion"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13544 source-hashing audit. After TypeScript adopts the neutral generated-directory registry, add OCaml source recognition and normalized unambiguous path framing as a separate engine-scoped tranche."
+    },
+    {
+      "id": "build-tool-lua-hashing-cache-conformance",
+      "title": "Implement portable source hashing and cache behavior in the Lua build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-lua-dune-build-discovery-fixture-adoption"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#13544 source-hashing audit. Lua has no source-hasher/cache layer, so add the complete neutral collector, portable digest framing, dependency invalidation, and stable cache recovery only after its Dune discovery evidence and the shared source-collection corpus land."
+    },
+    {
+      "id": "build-tool-portable-source-hashing-remaining-engines",
+      "title": "Complete portable source hashing across every remaining build-tool engine",
+      "status": "pending",
+      "depends_on": ["build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-portable-source-hashing-conformance", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Selection-blocked aggregate for the complete hashing contract. It has no independent source behavior and advances only after every engine-scoped leaf proves exact component pruning, portable source recognition, normalized path framing, deterministic byte hashing, dependency invalidation, and stable cache recovery or records a reviewed exception."
     },
     {
       "id": "build-tool-elixir-dune-build-discovery-fixture-adoption",
