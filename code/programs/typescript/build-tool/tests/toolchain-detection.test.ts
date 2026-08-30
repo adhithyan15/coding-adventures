@@ -170,37 +170,196 @@ describe("process-free TypeScript toolchain declaration boundary", () => {
   });
 
   it("meters every front and the aggregate before scheduling", () => {
-    const exactFiles = Object.fromEntries(
-      Array.from({ length: 16 }, (_, index) => [
-        `BUILD_${index}`,
-        "x".repeat(65_536),
-      ]),
+    const exactPackages = Array.from({ length: 16 }, (_, index) =>
+      packageSnapshot({
+        name: `rust/package-${index}`,
+        buildFiles: { BUILD: "x".repeat(65_536) },
+      }),
     );
     expect(
       evaluateToolchainSnapshot({
         platform: "linux",
         forceFull: false,
-        packages: [packageSnapshot({ buildFiles: exactFiles })],
+        packages: exactPackages,
         scheduledPackages: [],
         forcedToolchains: [],
       }).outcome,
     ).toBe("ok");
 
-    const oversizedFiles = {
-      ...exactFiles,
-      BUILD_16: "x".repeat(65_536),
+    expectSnapshotError(
+      () =>
+        evaluateToolchainSnapshot({
+          platform: "linux",
+          forceFull: false,
+          packages: [
+            ...exactPackages,
+            packageSnapshot({
+              name: "rust/package-16",
+              buildFiles: { BUILD: "x".repeat(65_536) },
+            }),
+          ],
+          scheduledPackages: [],
+          forcedToolchains: [],
+        }),
+      "BUILD_SNAPSHOT_TOO_LARGE",
+    );
+
+    expectSnapshotError(
+      () =>
+        evaluateToolchainSnapshot({
+          platform: "linux",
+          forceFull: false,
+          packages: [
+            ...exactPackages,
+            packageSnapshot({
+              name: "rust/package-16",
+              buildFiles: { BUILD: "x" },
+            }),
+            packageSnapshot({
+              name: "rust/package-17",
+              buildFiles: { BUILD: "x".repeat(65_537) },
+            }),
+          ],
+          scheduledPackages: [],
+          forcedToolchains: [],
+        }),
+      "BUILD_SNAPSHOT_TOO_LARGE",
+    );
+  });
+
+  it("bounds direct-caller collections and identifier strings", () => {
+    expectSnapshotError(
+      () =>
+        evaluateToolchainSnapshot({
+          platform: "linux",
+          forceFull: false,
+          packages: Array.from({ length: 4_097 }, (_, index) =>
+            packageSnapshot({ name: `rust/package-${index}` }),
+          ),
+          scheduledPackages: [],
+          forcedToolchains: [],
+        }),
+      "SNAPSHOT_CARDINALITY_EXCEEDED",
+    );
+
+    const tooManyFronts = {
+      BUILD: "",
+      BUILD_windows: "",
+      BUILD_mac: "",
+      BUILD_linux: "",
+      BUILD_mac_and_linux: "",
+      BUILD_extra: "",
     };
     expectSnapshotError(
       () =>
         evaluateToolchainSnapshot({
           platform: "linux",
           forceFull: false,
-          packages: [packageSnapshot({ buildFiles: oversizedFiles })],
+          packages: [packageSnapshot({ buildFiles: tooManyFronts })],
           scheduledPackages: [],
           forcedToolchains: [],
         }),
-      "BUILD_SNAPSHOT_TOO_LARGE",
+      "SNAPSHOT_CARDINALITY_EXCEEDED",
     );
+
+    for (const options of [
+      {
+        scheduledPackages: Array.from(
+          { length: 4_097 },
+          (_, index) => `rust/package-${index}`,
+        ),
+        forcedToolchains: [],
+      },
+      {
+        scheduledPackages: [],
+        forcedToolchains: Array.from({ length: 17 }, () => "rust"),
+      },
+    ]) {
+      expectSnapshotError(
+        () =>
+          evaluateToolchainSnapshot({
+            platform: "linux",
+            forceFull: false,
+            packages: [],
+            ...options,
+          }),
+        "SNAPSHOT_CARDINALITY_EXCEEDED",
+      );
+    }
+
+    for (const snapshot of [
+      packageSnapshot({ name: `rust/${"x".repeat(236)}` }),
+      packageSnapshot({ language: `r${"x".repeat(64)}` }),
+    ]) {
+      expectSnapshotError(
+        () =>
+          evaluateToolchainSnapshot({
+            platform: "linux",
+            forceFull: false,
+            packages: [snapshot],
+            scheduledPackages: [],
+            forcedToolchains: [],
+          }),
+        "SNAPSHOT_STRING_INVALID",
+      );
+    }
+
+    for (const options of [
+      { scheduledPackages: ["not-a-package"], forcedToolchains: [] },
+      { scheduledPackages: [], forcedToolchains: ["not_a_language"] },
+    ]) {
+      expectSnapshotError(
+        () =>
+          evaluateToolchainSnapshot({
+            platform: "linux",
+            forceFull: false,
+            packages: [],
+            ...options,
+          }),
+        "SNAPSHOT_STRING_INVALID",
+      );
+    }
+
+    const sparsePackages = new Array<ToolchainPackageSnapshot>(1);
+    expectSnapshotError(
+      () =>
+        evaluateToolchainSnapshot({
+          platform: "linux",
+          forceFull: false,
+          packages: sparsePackages,
+          scheduledPackages: [],
+          forcedToolchains: [],
+        }),
+      "SNAPSHOT_INVALID",
+    );
+
+    for (const options of [
+      {
+        packages: [packageSnapshot({ buildFiles: { BUILD_linux: "" } })],
+        scheduledPackages: [],
+        forcedToolchains: [],
+      },
+      {
+        packages: [],
+        scheduledPackages: ["rust/app", "rust/app"],
+        forcedToolchains: [],
+      },
+      {
+        packages: [],
+        scheduledPackages: [],
+        forcedToolchains: ["rust", "rust"],
+      },
+    ]) {
+      expectSnapshotError(
+        () =>
+          evaluateToolchainSnapshot({
+            platform: "linux",
+            forceFull: false,
+            ...options,
+          }),
+        "SNAPSHOT_INVALID",
+      );
+    }
   });
 
   it("keeps declaration grammar byte-exact across CRLF and lone CR", () => {
@@ -340,17 +499,19 @@ describe("process-free TypeScript toolchain declaration boundary", () => {
   });
 
   it("rejects invalid platforms and force-full schedules before shortcuts", () => {
-    expectSnapshotError(
-      () =>
-        evaluateToolchainSnapshot({
-          platform: "solaris",
-          forceFull: true,
-          packages: [],
-          scheduledPackages: null,
-          forcedToolchains: [],
-        }),
-      "PLATFORM_UNSUPPORTED",
-    );
+    for (const platform of ["solaris", "win32"]) {
+      expectSnapshotError(
+        () =>
+          evaluateToolchainSnapshot({
+            platform,
+            forceFull: true,
+            packages: [],
+            scheduledPackages: null,
+            forcedToolchains: [],
+          }),
+        "PLATFORM_UNSUPPORTED",
+      );
+    }
     expectSnapshotError(
       () =>
         evaluateToolchainSnapshot({

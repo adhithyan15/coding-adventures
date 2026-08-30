@@ -21,6 +21,10 @@
 export const MAX_BUILD_BYTES = 65_536;
 export const MAX_BUILD_LINES = 4_096;
 export const MAX_AGGREGATE_BUILD_BYTES = 1_048_576;
+export const MAX_PACKAGES = 4_096;
+export const MAX_BUILD_FRONTS_PER_PACKAGE = 5;
+export const MAX_SCHEDULED_PACKAGES = 4_096;
+export const MAX_FORCED_TOOLCHAINS = 16;
 
 /** The sorted registry is both the result schema and the accepted vocabulary. */
 export const CANONICAL_TOOLCHAINS = Object.freeze([
@@ -43,7 +47,7 @@ export const CANONICAL_TOOLCHAINS = Object.freeze([
 ] as const);
 
 export type ToolchainName = (typeof CANONICAL_TOOLCHAINS)[number];
-export type TargetPlatform = "darwin" | "linux" | "windows" | "win32";
+export type TargetPlatform = "darwin" | "linux" | "windows";
 
 export interface ToolchainPackageSnapshot {
   readonly name: string;
@@ -77,6 +81,8 @@ export type ToolchainSnapshotErrorCode =
   | "BUILD_SNAPSHOT_TOO_LARGE"
   | "FORCE_FULL_SCHEDULE_INVALID"
   | "PLATFORM_UNSUPPORTED"
+  | "SNAPSHOT_CARDINALITY_EXCEEDED"
+  | "SNAPSHOT_STRING_INVALID"
   | "SNAPSHOT_INVALID";
 
 /**
@@ -103,20 +109,63 @@ interface PreparedPackage {
 }
 
 const DECLARATION_PREFIX = "# needs-toolchain:";
-const UTF8_ENCODER = new TextEncoder();
 const CANONICAL_SET: ReadonlySet<string> = new Set(CANONICAL_TOOLCHAINS);
 const EMPTY_DIAGNOSTICS = Object.freeze([]) as readonly ToolchainDiagnostic[];
+const PACKAGE_NAME_PATTERN =
+  /^[a-z0-9][a-z0-9._-]*(?:\/[a-z0-9][a-z0-9._-]*)+$/u;
+const LANGUAGE_NAME_PATTERN = /^[a-z][a-z0-9-]*$/u;
+const BUILD_FRONT_NAMES: ReadonlySet<string> = new Set([
+  "BUILD",
+  "BUILD_windows",
+  "BUILD_mac",
+  "BUILD_linux",
+  "BUILD_mac_and_linux",
+]);
 
-function utf8ByteLength(value: string): number {
-  return UTF8_ENCODER.encode(value).byteLength;
+/**
+ * Count UTF-8 bytes without first allocating an encoded copy.
+ *
+ * JavaScript strings are UTF-16.  Valid surrogate pairs become four UTF-8
+ * bytes; isolated surrogates match `TextEncoder` and become the three-byte
+ * replacement scalar.  Returning as soon as `limit` is crossed keeps a huge
+ * direct-caller string from forcing a proportional scan or allocation.
+ */
+function boundedUtf8ByteLength(value: string, limit: number): number {
+  let bytes = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    const code = value.charCodeAt(index);
+    if (code <= 0x7f) {
+      bytes += 1;
+    } else if (code <= 0x7ff) {
+      bytes += 2;
+    } else if (
+      code >= 0xd800 &&
+      code <= 0xdbff &&
+      index + 1 < value.length &&
+      value.charCodeAt(index + 1) >= 0xdc00 &&
+      value.charCodeAt(index + 1) <= 0xdfff
+    ) {
+      bytes += 4;
+      index += 1;
+    } else {
+      bytes += 3;
+    }
+    if (bytes > limit) {
+      return limit + 1;
+    }
+  }
+  return bytes;
 }
 
 /** `N` LF bytes delimit `N + 1` logical lines, even when the last is empty. */
-function logicalLineCount(content: string): number {
+function boundedLogicalLineCount(content: string, limit: number): number {
   let lines = 1;
   for (let index = 0; index < content.length; index += 1) {
     if (content.charCodeAt(index) === 0x0a) {
       lines += 1;
+      if (lines > limit) {
+        return limit + 1;
+      }
     }
   }
   return lines;
@@ -154,8 +203,8 @@ export function parseExtraToolchains(
   content: string,
 ): readonly ToolchainName[] {
   if (
-    utf8ByteLength(content) > MAX_BUILD_BYTES ||
-    logicalLineCount(content) > MAX_BUILD_LINES
+    boundedUtf8ByteLength(content, MAX_BUILD_BYTES) > MAX_BUILD_BYTES ||
+    boundedLogicalLineCount(content, MAX_BUILD_LINES) > MAX_BUILD_LINES
   ) {
     return Object.freeze([]);
   }
@@ -199,11 +248,19 @@ export function parseExtraToolchains(
 function preparePackages(
   packages: readonly ToolchainPackageSnapshot[],
 ): readonly PreparedPackage[] {
+  if (packages.length > MAX_PACKAGES) {
+    throw new ToolchainSnapshotError(
+      "SNAPSHOT_CARDINALITY_EXCEEDED",
+      "toolchain snapshot contains too many packages",
+    );
+  }
   let aggregateBytes = 0;
   const prepared: PreparedPackage[] = [];
 
   for (const packageSnapshot of packages) {
     if (
+      typeof packageSnapshot !== "object" ||
+      packageSnapshot === null ||
       typeof packageSnapshot.name !== "string" ||
       typeof packageSnapshot.language !== "string" ||
       typeof packageSnapshot.buildFiles !== "object" ||
@@ -215,31 +272,72 @@ function preparePackages(
         "toolchain package snapshots require string names, languages, and BUILD maps",
       );
     }
+    if (
+      packageSnapshot.name.length > 240 ||
+      !PACKAGE_NAME_PATTERN.test(packageSnapshot.name) ||
+      packageSnapshot.language.length > 64 ||
+      !LANGUAGE_NAME_PATTERN.test(packageSnapshot.language)
+    ) {
+      throw new ToolchainSnapshotError(
+        "SNAPSHOT_STRING_INVALID",
+        "toolchain package name or language is outside the closed grammar",
+      );
+    }
 
-    const copiedBuildFiles: Record<string, string> = {};
-    for (const [filename, content] of Object.entries(
-      packageSnapshot.buildFiles,
-    )) {
+    const buildFileEntries = Object.entries(packageSnapshot.buildFiles);
+    if (buildFileEntries.length > MAX_BUILD_FRONTS_PER_PACKAGE) {
+      throw new ToolchainSnapshotError(
+        "SNAPSHOT_CARDINALITY_EXCEEDED",
+        "toolchain package contains too many BUILD fronts",
+      );
+    }
+    if (
+      !Object.prototype.hasOwnProperty.call(packageSnapshot.buildFiles, "BUILD") ||
+      buildFileEntries.some(([filename]) => !BUILD_FRONT_NAMES.has(filename))
+    ) {
+      throw new ToolchainSnapshotError(
+        "SNAPSHOT_INVALID",
+        "toolchain BUILD map must contain only the closed platform fronts and require BUILD",
+      );
+    }
+    const copiedBuildFiles = Object.create(null) as Record<string, string>;
+    for (const [filename, content] of buildFileEntries) {
       if (typeof filename !== "string" || typeof content !== "string") {
         throw new ToolchainSnapshotError(
           "SNAPSHOT_INVALID",
           "toolchain BUILD fronts must map strings to strings",
         );
       }
-      const byteLength = utf8ByteLength(content);
+      if (
+        filename.length === 0 ||
+        filename.length > 512 ||
+        filename.includes("\0")
+      ) {
+        throw new ToolchainSnapshotError(
+          "SNAPSHOT_STRING_INVALID",
+          "toolchain BUILD-front name is outside the closed grammar",
+        );
+      }
+      const byteLength = boundedUtf8ByteLength(content, MAX_BUILD_BYTES);
       if (byteLength > MAX_BUILD_BYTES) {
         throw new ToolchainSnapshotError(
           "BUILD_FRONT_TOO_LARGE",
           "toolchain BUILD front exceeds its UTF-8 byte ceiling",
         );
       }
-      if (logicalLineCount(content) > MAX_BUILD_LINES) {
+      if (boundedLogicalLineCount(content, MAX_BUILD_LINES) > MAX_BUILD_LINES) {
         throw new ToolchainSnapshotError(
           "BUILD_FRONT_TOO_MANY_LINES",
           "toolchain BUILD front exceeds its logical-line ceiling",
         );
       }
       aggregateBytes += byteLength;
+      if (aggregateBytes > MAX_AGGREGATE_BUILD_BYTES) {
+        throw new ToolchainSnapshotError(
+          "BUILD_SNAPSHOT_TOO_LARGE",
+          "toolchain BUILD snapshot exceeds its aggregate byte ceiling",
+        );
+      }
       copiedBuildFiles[filename] = content;
     }
 
@@ -250,12 +348,6 @@ function preparePackages(
     });
   }
 
-  if (aggregateBytes > MAX_AGGREGATE_BUILD_BYTES) {
-    throw new ToolchainSnapshotError(
-      "BUILD_SNAPSHOT_TOO_LARGE",
-      "toolchain BUILD snapshot exceeds its aggregate byte ceiling",
-    );
-  }
   return Object.freeze(prepared);
 }
 
@@ -266,7 +358,6 @@ function buildFileCandidates(platform: string): readonly string[] {
     case "linux":
       return ["BUILD_linux", "BUILD_mac_and_linux", "BUILD"];
     case "windows":
-    case "win32":
       return ["BUILD_windows", "BUILD"];
     default:
       throw new ToolchainSnapshotError(
@@ -332,6 +423,67 @@ function completeToolchainMap(enabled: boolean): Record<ToolchainName, boolean> 
 export function evaluateToolchainSnapshot(
   options: ToolchainSnapshotOptions,
 ): ToolchainEvaluation {
+  if (
+    options.scheduledPackages !== null &&
+    options.scheduledPackages.length > MAX_SCHEDULED_PACKAGES
+  ) {
+    throw new ToolchainSnapshotError(
+      "SNAPSHOT_CARDINALITY_EXCEEDED",
+      "toolchain snapshot schedules too many packages",
+    );
+  }
+  if (
+    options.forcedToolchains !== null &&
+    options.forcedToolchains.length > MAX_FORCED_TOOLCHAINS
+  ) {
+    throw new ToolchainSnapshotError(
+      "SNAPSHOT_CARDINALITY_EXCEEDED",
+      "toolchain snapshot forces too many toolchains",
+    );
+  }
+  for (const scheduledPackage of options.scheduledPackages ?? []) {
+    if (
+      typeof scheduledPackage !== "string" ||
+      scheduledPackage.length > 240 ||
+      !PACKAGE_NAME_PATTERN.test(scheduledPackage)
+    ) {
+      throw new ToolchainSnapshotError(
+        "SNAPSHOT_STRING_INVALID",
+        "scheduled package name is outside the closed grammar",
+      );
+    }
+  }
+  if (
+    options.scheduledPackages !== null &&
+    new Set(options.scheduledPackages).size !== options.scheduledPackages.length
+  ) {
+    throw new ToolchainSnapshotError(
+      "SNAPSHOT_INVALID",
+      "scheduled package names must be unique",
+    );
+  }
+  for (const forcedToolchain of options.forcedToolchains ?? []) {
+    if (
+      typeof forcedToolchain !== "string" ||
+      forcedToolchain.length > 64 ||
+      !LANGUAGE_NAME_PATTERN.test(forcedToolchain)
+    ) {
+      throw new ToolchainSnapshotError(
+        "SNAPSHOT_STRING_INVALID",
+        "forced toolchain name is outside the closed grammar",
+      );
+    }
+  }
+  if (
+    options.forcedToolchains !== null &&
+    new Set(options.forcedToolchains).size !== options.forcedToolchains.length
+  ) {
+    throw new ToolchainSnapshotError(
+      "SNAPSHOT_INVALID",
+      "forced toolchain names must be unique",
+    );
+  }
+
   // Meter every supplied front, including an unselected platform override,
   // before scheduling can make a package appear irrelevant.
   const packages = preparePackages(options.packages);
