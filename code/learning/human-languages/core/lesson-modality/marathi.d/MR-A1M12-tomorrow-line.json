@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1M12-tomorrow-line",
+    "language": "marathi",
+    "chapter": 20,
+    "sequence": 851,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cb766723f0148319",
+    "detachableSegments": [
+      "Writing — delayed copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

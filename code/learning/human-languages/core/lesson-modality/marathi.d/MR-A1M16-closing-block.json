@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1M16-closing-block",
+    "language": "marathi",
+    "chapter": 20,
+    "sequence": 855,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c5e47a3a38c06a58",
+    "detachableSegments": [
+      "Writing — controlled composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
