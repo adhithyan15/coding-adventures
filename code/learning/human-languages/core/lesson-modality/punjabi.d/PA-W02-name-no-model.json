@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W02-name-no-model",
+    "language": "punjabi",
+    "chapter": 15,
+    "sequence": 970,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:40771d82b40dbc8e",
+    "detachableSegments": [
+      "Writing — independent controlled choice"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

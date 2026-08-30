@@ -1,0 +1,22 @@
+{
+  "language": "punjabi",
+  "chapter": 15,
+  "sourceHash": "fnv1a64:67b9b38c92096151",
+  "lessonIds": [
+    "PA-W02-a",
+    "PA-W02-aman",
+    "PA-W02-manan",
+    "PA-W02-name-label",
+    "PA-W02-name-select",
+    "PA-W02-name-supported",
+    "PA-W02-name-delayed",
+    "PA-W02-name-no-model"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch15.txt",
+  "json": "punjabi/narration/ch15.json",
+  "textHash": "fnv1a64:0a60ffa1026f7a54",
+  "jsonHash": "fnv1a64:874087f2c6459b5d",
+  "findings": []
+}

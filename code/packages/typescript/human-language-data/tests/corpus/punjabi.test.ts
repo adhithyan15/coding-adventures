@@ -15,14 +15,14 @@ it("pins Punjabi continuity", () => expectLanguageContinuity("punjabi"));
 it("pins Punjabi modality", () => expectLanguageModality("punjabi"));
 it("pins Punjabi lesson-content budgets", () =>
   expectLanguageLessonBudgets("punjabi", {
-    lessons: 68,
+    lessons: 76,
     idioms: 4,
     senses: 3,
     cultureClaims: 7,
     unitPrefix: "PA",
   }));
 
-it("keeps Punjabi's 78-row session map aligned with canonical order", () => {
+it("keeps Punjabi's 86-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -37,8 +37,8 @@ it("keeps Punjabi's 78-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(78);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 78 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(86);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 86 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );
@@ -83,7 +83,43 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "guided-copy",
     "delayed-copy",
     "dictation-transcription",
+    "controlled-composition",
+    "controlled-composition",
   ]);
+});
+
+it("builds the first Punjabi A1 form field without a copyable independent answer", () => {
+  const chapter = loadTrackLessons("punjabi")
+    .sort((left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence))
+    .filter((lesson) => lesson.frontmatter.chapter === "15");
+
+  expect(chapter.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "PA-W02-a",
+    "PA-W02-aman",
+    "PA-W02-manan",
+    "PA-W02-name-label",
+    "PA-W02-name-select",
+    "PA-W02-name-supported",
+    "PA-W02-name-delayed",
+    "PA-W02-name-no-model",
+  ]);
+  expect(chapter.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 180)).toBe(true);
+
+  const supported = chapter.find((lesson) => lesson.realization.lessonId === "PA-W02-name-supported")!;
+  expect(supported.body).toContain("This is supported entry, not independent writing evidence.");
+  expect(supported.blocks.some((block) => block.writingStage !== undefined)).toBe(false);
+
+  const independent = chapter.at(-1)!;
+  expect(independent.blocks.map((block) => block.writingStage).filter(Boolean)).toEqual([
+    "controlled-composition",
+  ]);
+  expect(independent.body).toContain("There is no value bank, support-language name, or romanized answer below.");
+  expect(independent.body).toContain("> A — **ਨਾਂ: __________**");
+  expect(independent.body).not.toContain("A ਅਮਨ");
+  const [activity] = compileLessonActivities(independent.blocks);
+  expect(activity?.prompt).not.toContain("Aman");
+  expect(activity?.prompt).not.toContain("ਅਮਨ");
+  expect(activity?.answer).toBe("ਅਮਨ");
 });
 
 it("migrates Punjabi Chapter 2 without inventing Gurmukhi writing credit", () => {
@@ -193,5 +229,5 @@ it("closes Chapter 3's oral R1/R2/R3 windows without inventing script credit", (
   ]);
   const report = measureContinuity(ordered);
   expect(report.reinforcement.filter((defect) => chapter3Atoms.has(defect.atom))).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 27, R2: 51, R3: 71, R4: 0 });
+  expect(report.summary.missedByWindow).toEqual({ R1: 29, R2: 57, R3: 89, R4: 6 });
 });
