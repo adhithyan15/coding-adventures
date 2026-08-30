@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Consumed the complete shared discovery-language registry, restricted language
+  inference to the exact bucket immediately below `packages` or `programs`,
+  classified Mosaic and Twig, ignored BUILD roots outside those containers,
+  and pruned exact case-sensitive `_build` and `dist-newstyle` components.
+- Added direct shared-fixture and exact/case/near-name discovery regressions.
 - Consumed the language-neutral extra-CI-toolchain declaration contract with a
   bounded process-free snapshot evaluator, exact selected-front parsing,
   canonical `cpp` and `ocaml` keys, C/C++ language normalization, stable

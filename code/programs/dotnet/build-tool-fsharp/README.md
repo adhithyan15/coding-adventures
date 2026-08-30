@@ -12,7 +12,9 @@ tracked-artifact snapshot supplied by a caller, and
 `validateOrphanCrateSnapshot`, an F# facade for validating an inert
 orphan-crate and exemption-ledger snapshot. The
 `evaluateToolchainSnapshot` facade evaluates bounded, caller-supplied package
-and BUILD-front records through a native F# symbol.
+and BUILD-front records through a native F# symbol. The `discoverPackages`
+facade likewise gives F# callers and tests an explicit entry into the shared
+.NET discovery engine.
 
 ## Why share the engine?
 
@@ -20,6 +22,14 @@ The build tool touches almost every language in the monorepo. Keeping the core
 dependency parsing, hashing, planning, and execution logic in one .NET engine
 avoids immediate drift between the C# and F# variants while still giving the
 repo an idiomatic F# program entry point.
+
+The discovery facade independently consumes the complete language-neutral
+registry through F#. Its fixture pins exact package/program bucket
+classification, program identities, domain-language buckets, unknown buckets,
+non-package BUILD roots, and exact case-sensitive generated-directory pruning,
+including Dune `_build`. Direct C# evidence additionally proves that `_Build`
+and `_build-example` remain source. This facade intentionally performs the same
+filesystem discovery as the CLI and adds no second implementation or authority.
 
 The tracked-artifact facade deliberately reuses the reviewed C# data and result
 types. Its F# test surface independently consumes all five language-neutral
