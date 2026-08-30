@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1M04-language-line",
+    "language": "marathi",
+    "chapter": 20,
+    "sequence": 843,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3bb1c9f10d4b1d36",
+    "detachableSegments": [
+      "Writing — delayed copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -2,7 +2,8 @@
   "segments": [
     "MR-PATH-012-B",
     "MR-PATH-013-B",
-    "MR-PATH-014-B"
+    "MR-PATH-014-B",
+    "MR-PATH-022"
   ],
   "omits": [
     "VERB-DRINK",

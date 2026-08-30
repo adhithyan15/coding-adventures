@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1M14-skills-block-one",
+    "language": "marathi",
+    "chapter": 20,
+    "sequence": 853,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c1240b2939386716",
+    "detachableSegments": [
+      "Writing — controlled composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

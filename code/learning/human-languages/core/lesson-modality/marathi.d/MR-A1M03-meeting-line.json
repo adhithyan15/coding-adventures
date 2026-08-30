@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1M03-meeting-line",
+    "language": "marathi",
+    "chapter": 20,
+    "sequence": 842,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0040ba977dee7848",
+    "detachableSegments": [
+      "Writing — guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

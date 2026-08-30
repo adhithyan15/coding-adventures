@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1M13-opening-block",
+    "language": "marathi",
+    "chapter": 20,
+    "sequence": 852,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dd9c51b2714fc556",
+    "detachableSegments": [
+      "Writing — controlled composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1M15-skills-block-two",
+    "language": "marathi",
+    "chapter": 20,
+    "sequence": 854,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:58331d6c0dc1bc53",
+    "detachableSegments": [
+      "Writing — controlled composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
