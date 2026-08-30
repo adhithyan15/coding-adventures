@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W03-sihari",
+    "language": "punjabi",
+    "chapter": 16,
+    "sequence": 1060,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5b27f4aac0b0a3ab",
+    "detachableSegments": [
+      "Script — one tiny step"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W03-sha",
+    "language": "punjabi",
+    "chapter": 16,
+    "sequence": 990,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:26d5e315a947cafa",
+    "detachableSegments": [
+      "Script — one tiny step"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

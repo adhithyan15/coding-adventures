@@ -1,0 +1,18 @@
+{
+  "language": "punjabi",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:a982733be0358673",
+  "lessonIds": [
+    "PA-W03-language-select",
+    "PA-W03-language-supported",
+    "PA-W03-language-delayed",
+    "PA-W03-language-no-model"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch17.txt",
+  "json": "punjabi/narration/ch17.json",
+  "textHash": "fnv1a64:2956ffde0231b75a",
+  "jsonHash": "fnv1a64:eb0d9bff427b8bf7",
+  "findings": []
+}

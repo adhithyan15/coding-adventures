@@ -1,0 +1,25 @@
+{
+  "language": "punjabi",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:a6e3ac548cc60e54",
+  "lessonIds": [
+    "PA-W03-bha",
+    "PA-W03-sha",
+    "PA-W03-language-label",
+    "PA-W03-pa",
+    "PA-W03-tippi",
+    "PA-W03-ja",
+    "PA-W03-ba",
+    "PA-W03-punjabi",
+    "PA-W03-sihari",
+    "PA-W03-da",
+    "PA-W03-hindi"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch16.txt",
+  "json": "punjabi/narration/ch16.json",
+  "textHash": "fnv1a64:ef465778e203fa33",
+  "jsonHash": "fnv1a64:105e777063648d5c",
+  "findings": []
+}

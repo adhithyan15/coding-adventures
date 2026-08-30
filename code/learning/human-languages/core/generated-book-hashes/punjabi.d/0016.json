@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 16,
+  "sourceHash": "fnv1a64:7caf15fa36f1ffe4",
+  "lessonIds": [
+    "PA-W03-bha",
+    "PA-W03-sha",
+    "PA-W03-language-label",
+    "PA-W03-pa",
+    "PA-W03-tippi",
+    "PA-W03-ja",
+    "PA-W03-ba",
+    "PA-W03-punjabi",
+    "PA-W03-sihari",
+    "PA-W03-da",
+    "PA-W03-hindi"
+  ],
+  "tex": "punjabi/book/chapters/ch16-form-language.tex"
+}
