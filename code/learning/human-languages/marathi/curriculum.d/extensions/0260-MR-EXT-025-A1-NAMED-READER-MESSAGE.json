@@ -3,7 +3,7 @@
   "stage": "A1",
   "kind": "required",
   "category": "writing",
-  "canDo": "I can independently write a 30-40-word Devanagari message to a named reader by ordering twelve separately practised lines.",
+  "canDo": "I can independently write a 30-40-word Devanagari message to a named reader for an introduction and Marathi-study purpose by ordering twelve separately practised lines.",
   "prerequisites": [
     "MR-EXT-023-SCRIPT-DISTANT"
   ],
