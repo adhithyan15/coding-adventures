@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:6ad960d4caed6204",
+  "lessonIds": [
+    "ES-C403-pollo",
+    "ES-C403-verdura",
+    "ES-C403-paella",
+    "ES-C403-food-recall-1",
+    "ES-C403-food-recall-2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch403.txt",
+  "json": "spanish/narration/ch403.json",
+  "textHash": "fnv1a64:5ddbb9ebcd7f6b42",
+  "jsonHash": "fnv1a64:4de40b9854f74c89",
+  "findings": []
+}
