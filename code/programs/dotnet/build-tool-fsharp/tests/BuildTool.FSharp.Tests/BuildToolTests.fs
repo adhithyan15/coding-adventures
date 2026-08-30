@@ -59,6 +59,61 @@ let ``help exits successfully`` () =
     Assert.Equal(0, exitCode)
 
 [<Fact>]
+let ``discovery language registry is reachable through the F sharp facade`` () =
+    let root = tempRoot ()
+
+    try
+        let fixturePath =
+            Path.Combine(
+                repositoryRoot,
+                "code",
+                "specs",
+                "fixtures",
+                "build-tool-v1",
+                "cases",
+                "discovery-language-registry.json"
+            )
+
+        use fixture = JsonDocument.Parse(File.ReadAllText(fixturePath))
+
+        for file in fixture.RootElement.GetProperty("workspace").GetProperty("files").EnumerateArray() do
+            writeFile
+                root
+                (file.GetProperty("path").GetString())
+                (file.GetProperty("content_utf8").GetString())
+
+        let actual =
+            discoverPackages (Path.Combine(root, "code")) "linux"
+            |> Seq.map (fun package ->
+                String.Join(
+                    '\u0000',
+                    package.Name,
+                    package.Language,
+                    Path.GetRelativePath(root, package.Path).Replace('\\', '/')
+                ))
+            |> Seq.toArray
+
+        let expected =
+            fixture.RootElement
+                .GetProperty("expected")
+                .GetProperty("result")
+                .GetProperty("packages")
+                .EnumerateArray()
+            |> Seq.map (fun package ->
+                String.Join(
+                    '\u0000',
+                    package.GetProperty("name").GetString(),
+                    package.GetProperty("language").GetString(),
+                    package.GetProperty("rel_path").GetString()
+                ))
+            |> Seq.toArray
+
+        Assert.Equal<string array>(expected, actual)
+    finally
+        if Directory.Exists(root) then
+            Directory.Delete(root, true)
+
+[<Fact>]
 let ``force emit-plan writes a schema versioned plan`` () =
     let root = tempRoot ()
 

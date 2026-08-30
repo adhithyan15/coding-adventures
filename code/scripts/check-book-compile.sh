@@ -60,10 +60,9 @@
 # --------------------------------------------------
 # Anything downstream that publishes a `book.pdf` must know which ones this run
 # produced. Re-deriving that list with a second `find` is not the same question
-# and gets a different answer: this script skips a directory with no `book.tex`,
-# so a `find -type d -name book` would happily hand a `<track>/book/book.pdf`
-# that no compile here ever touched — an attacker-supplied PDF, or a symlink —
-# to whatever collects the results.
+# and gets a different answer: production entrypoints are generated into the
+# isolated compile tree, so a `find -type d -name book` would happily hand a
+# source directory with no projected root to whatever collects the results.
 #
 # So the compile records what it compiled, and the consumer reads that. One
 # writer, one reader, no second opinion to disagree with.
@@ -191,8 +190,9 @@ export openout_any
 # NOT set here, and the omission is deliberate rather than an oversight:
 #
 #   openin_any   TeX Live ships `a` (any file). The READ side is a real
-#                exposure — `book.tex` and its chapters are repository content,
-#                so `\openin`/`\read` can pull an arbitrary readable file into
+#                exposure — the projected root derives from repository content
+#                and its chapters are repository content, so `\openin`/`\read`
+#                can pull an arbitrary readable file into
 #                the typeset PDF without needing `\write18` at all. `p` would
 #                close it, but `p` is also known to interfere with kpathsea
 #                package lookup, and MiKTeX ignores the variable outright (see
@@ -242,10 +242,10 @@ command -v latexmk >/dev/null 2>&1 || {
   exit 2
 }
 
-# Chapter modalities and the glossary, answer key, and index are deterministic
-# compile inputs, not authored book content. Materialize them outside the
-# repository so lesson tranches do not rewrite 92 tracked rollups, and remove
-# the entire root on every ordinary exit.
+# The assembled book root, chapter modalities, glossary, answer key, and index
+# are deterministic compile inputs, not authored book content. Materialize them
+# outside the repository so lesson tranches do not rewrite per-track generated
+# presentation files, and remove the entire root on every ordinary exit.
 # A SIGKILL can prevent any process cleanup; using the system temporary area
 # still keeps that residue out of the checkout and out of Git.
 cleanup_compile_inputs() {
@@ -285,7 +285,12 @@ compile_book() {
   local book_dir="$1"
   local track="$2"
   if [ -n "$COMPILE_INPUT_ROOT" ]; then
+    local book_input="$COMPILE_INPUT_ROOT/$track/book/book.tex"
     local modality_input="$COMPILE_INPUT_ROOT/$track/book/chapter-modalities.tex"
+    if [ ! -f "$book_input" ] || [ -L "$book_input" ]; then
+      echo "missing real generated book root: $book_input" >&2
+      return 1
+    fi
     if [ ! -f "$modality_input" ] || [ -L "$modality_input" ]; then
       echo "missing real compile input: $modality_input" >&2
       return 1
@@ -314,8 +319,35 @@ compile_book() {
       -interaction=nonstopmode -halt-on-error book.tex )
 }
 
-for dir in "$BOOKS"/*/book; do
-  [ -f "$dir/book.tex" ] || continue
+# Drive the production compile from the entrypoints the materializer actually
+# returned. This makes a missing source-tree `book.tex` the intended state and
+# prevents a source directory from entering the publication manifest merely
+# because it happens to exist. The static hostile-input test seam keeps its
+# legacy source-root discovery when materialization is disabled.
+BOOK_DIRS=()
+if [ -n "$COMPILE_INPUT_ROOT" ]; then
+  for generated_root in "$COMPILE_INPUT_ROOT"/*/book/book.tex; do
+    [ -f "$generated_root" ] || continue
+    track="$(basename "$(dirname "$(dirname "$generated_root")")")"
+    source_dir="$BOOKS/$track/book"
+    if [ ! -d "$source_dir" ]; then
+      echo "CANNOT VERIFY: generated book root for $track has no source book directory: $source_dir" >&2
+      exit 2
+    fi
+    BOOK_DIRS+=("$source_dir")
+  done
+  if [ ${#BOOK_DIRS[@]} -eq 0 ]; then
+    echo "CANNOT VERIFY: materialization produced no generated book roots." >&2
+    exit 2
+  fi
+else
+  for source_root in "$BOOKS"/*/book/book.tex; do
+    [ -f "$source_root" ] || continue
+    BOOK_DIRS+=("$(dirname "$source_root")")
+  done
+fi
+
+for dir in "${BOOK_DIRS[@]}"; do
   track="$(basename "$(dirname "$dir")")"
 
   if [ ${#WANTED[@]} -gt 0 ]; then

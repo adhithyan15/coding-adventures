@@ -185,7 +185,8 @@ gap report is meant to surface; the entries land as those chapters migrate.
 ## Book / fonts
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Gurmukhi font
-(`../../_fonts/NotoSansGurmukhi-Static.ttf`). `latexmk -xelatex book.tex`.
+(`../../_fonts/NotoSansGurmukhi-Static.ttf`). Build the isolated entrypoint with
+`code/scripts/check-book-compile.sh --strict punjabi` from the repository root.
 Generated Gurmukhi runs use that font while section bookmarks use the lessons'
 Latin romanization. A forced nine-chapter build is warning-free — zero
 overfull, underfull, missing-character, Hyperref, duplicate-destination, and

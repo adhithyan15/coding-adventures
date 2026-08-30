@@ -617,18 +617,20 @@ public static class Discovery
         "Pods",
         ".dart_tool",
         ".build",
+        "_build",
+        "dist-newstyle",
         ".gradle",
         "gradle-build",
         "bin",
         "obj",
     };
 
-    private static readonly string[] KnownLanguages =
-    [
+    private static readonly HashSet<string> KnownLanguages = new(StringComparer.Ordinal)
+    {
         "python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl",
         "swift", "dart", "haskell", "wasm", "java", "kotlin", "c", "cpp",
-        "csharp", "fsharp", "dotnet", "ocaml", "starlark",
-    ];
+        "csharp", "fsharp", "dotnet", "ocaml", "starlark", "mosaic", "twig",
+    };
 
     public static IReadOnlyList<string> ReadLines(string filePath)
     {
@@ -646,24 +648,40 @@ public static class Discovery
 
     public static string InferLanguage(string directoryPath)
     {
-        var normalized = directoryPath.Replace('\\', '/');
-        var parts = normalized.Split('/', StringSplitOptions.RemoveEmptyEntries);
-        foreach (var language in KnownLanguages)
+        return TryGetDiscoveryBucket(directoryPath, out var bucket, out _)
+            ? KnownLanguages.Contains(bucket) ? bucket : "unknown"
+            : "unknown";
+    }
+
+    private static bool TryGetDiscoveryBucket(
+        string directoryPath,
+        out string bucket,
+        out bool isProgram)
+    {
+        var parts = directoryPath
+            .Replace('\\', '/')
+            .Split('/', StringSplitOptions.RemoveEmptyEntries);
+        for (var index = parts.Length - 2; index >= 0; index--)
         {
-            if (parts.Contains(language, StringComparer.Ordinal))
+            if (parts[index] is not ("packages" or "programs"))
             {
-                return language;
+                continue;
             }
+
+            bucket = parts[index + 1];
+            isProgram = parts[index] == "programs";
+            return true;
         }
 
-        return "unknown";
+        bucket = string.Empty;
+        isProgram = false;
+        return false;
     }
 
     public static string InferPackageName(string directoryPath, string language)
     {
-        var normalized = directoryPath.Replace('\\', '/');
         var baseName = Path.GetFileName(directoryPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-        return normalized.Contains("/programs/", StringComparison.Ordinal)
+        return TryGetDiscoveryBucket(directoryPath, out _, out var isProgram) && isProgram
             ? $"{language}/programs/{baseName}"
             : $"{language}/{baseName}";
     }
@@ -714,7 +732,7 @@ public static class Discovery
         }
 
         var buildFile = GetBuildFile(directory, platformOverride);
-        if (buildFile is not null)
+        if (buildFile is not null && TryGetDiscoveryBucket(directory, out _, out _))
         {
             var language = InferLanguage(directory);
             var rawContent = File.ReadAllText(buildFile);

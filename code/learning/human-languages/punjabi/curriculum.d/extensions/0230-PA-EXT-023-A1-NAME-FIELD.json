@@ -1,0 +1,21 @@
+{
+  "id": "PA-EXT-023-A1-NAME-FIELD",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can recognise the Gurmukhi name label and independently select and write one of two known name values from a nonverbal cue.",
+  "prerequisites": [
+    "PA-EXT-016-SCRIPT-FIRST-PIECES",
+    "PA-EXT-018-INTRODUCTION-CHECKPOINT"
+  ],
+  "lessons": [
+    "PA-W02-a",
+    "PA-W02-aman",
+    "PA-W02-manan",
+    "PA-W02-name-label",
+    "PA-W02-name-select",
+    "PA-W02-name-supported",
+    "PA-W02-name-delayed",
+    "PA-W02-name-no-model"
+  ]
+}

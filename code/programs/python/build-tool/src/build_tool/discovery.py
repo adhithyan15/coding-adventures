@@ -51,6 +51,7 @@ SKIP_DIRS: frozenset[str] = frozenset({
     "vendor",
     "dist",
     "dist-newstyle",
+    "_build",
     "build",
     "target",
     ".claude",
@@ -79,6 +80,7 @@ DISCOVERABLE_LANGUAGES: tuple[str, ...] = (
     "csharp",
     "fsharp",
     "dart",
+    "ocaml",
 )
 
 

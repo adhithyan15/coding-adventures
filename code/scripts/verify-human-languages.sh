@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Run everything the Human Languages CI runs, locally, in the same order.
 #
-# WHY THIS EXISTS. The books workflow compiles 22 XeLaTeX books and is by far the slowest
+# WHY THIS EXISTS. The books workflow compiles 23 XeLaTeX books and is by far the slowest
 # gate in the repo; when GitHub's runners are busy it can be far behind. Waiting on it to
 # discover a missing glyph wastes an hour per mistake, and the machine doing the waiting
 # already has a TeX distribution. Verify here; let CI confirm rather than discover. The
@@ -9,7 +9,7 @@
 # by running this.
 #
 #   ./code/scripts/verify-human-languages.sh          # everything
-#   ./code/scripts/verify-human-languages.sh --fast   # skip the 22-book XeLaTeX compile
+#   ./code/scripts/verify-human-languages.sh --fast   # skip the 23-book XeLaTeX compile
 #   ./code/scripts/verify-human-languages.sh --books  # ONLY the book compile + warning scan
 #
 # For the compile alone, without the warning scan or the rest of the gates, see
@@ -89,36 +89,12 @@ if [ "$MODE" != "books" ]; then
 fi
 
 if [ "$MODE" != "fast" ]; then
-  step "Generated figures — SVG to PDF"
-  if command -v rsvg-convert >/dev/null 2>&1; then
-    while IFS= read -r svg; do
-      pdf="${svg%.svg}.pdf"
-      if rsvg-convert --format=pdf --output="$pdf" "$svg" >"$RUNLOG" 2>&1 && [ -s "$pdf" ]; then
-        ok "$(basename "$svg")"
-      else
-        bad "$(basename "$svg") SVG-to-PDF conversion"
-        tail -25 "$RUNLOG"
-      fi
-    done < <(find "$BOOKS" -path '*/book/figures/*.svg' -type f | sort)
-  else
-    bad "rsvg-convert (install librsvg2-bin to compile generated book figures)"
-  fi
-
   step "XeLaTeX — every book"
-  # The expensive one, and the reason this script exists. -halt-on-error catches hard TeX
-  # errors; the warning scan below catches the soft ones (missing glyphs, overfull boxes)
-  # that still ship a broken-looking page.
-  for dir in "$BOOKS"/*/book; do
-    [ -f "$dir/book.tex" ] || continue
-    name="$(basename "$(dirname "$dir")")"
-    if ( cd "$dir" && latexmk -norc -r "$ROOT/code/scripts/latexmk-safe.rc" -xelatex -interaction=nonstopmode -halt-on-error book.tex ) \
-        >"$RUNLOG" 2>&1; then
-      ok "$name"
-    else
-      bad "$name"
-      grep -E "^! |Emergency stop|Fatal error" "$RUNLOG" | head -10
-    fi
-  done
+  # One compiler owns generated entrypoint materialization, figure conversion,
+  # shell-escape hardening, and exact coverage. Keep this verifier on that path
+  # so local validation cannot drift from CI.
+  ( cd "$ROOT" && run "all generated book roots" bash \
+      code/scripts/check-book-compile.sh --strict )
 
   step "LaTeX warning scan"
   ( cd "$ROOT" && run "scan_latex_log_warnings" "$PY" code/scripts/scan_latex_log_warnings.py \

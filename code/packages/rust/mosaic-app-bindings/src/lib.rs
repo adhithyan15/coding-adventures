@@ -6,7 +6,20 @@
 
 /// Generate the standard Compose/JVM JNA host binding.
 pub fn compose_jna_binding() -> String {
-    include_str!("../templates/compose/MosaicRuntimeHost.kt").replace(
+    compose_jna_binding_source(None)
+}
+
+/// Generate a persistent Compose/JVM host for an emitted application.
+pub fn compose_jna_binding_for_application(application_id: &str) -> String {
+    compose_jna_binding_source(Some(application_id))
+}
+
+fn compose_jna_binding_source(application_id: Option<&str>) -> String {
+    bind_application(
+        include_str!("../templates/compose/MosaicRuntimeHost.kt"),
+        application_id,
+    )
+    .replace(
         "__MOSAIC_PROTOCOL_VERSION__",
         &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
     )
@@ -22,8 +35,21 @@ pub struct SwiftRuntimeBinding {
 
 /// Generate the standard SwiftUI/Foundation host and its C dynamic loader.
 pub fn swift_runtime_binding() -> SwiftRuntimeBinding {
+    swift_runtime_binding_source(None)
+}
+
+/// Generate a persistent SwiftUI/Foundation host for an emitted application.
+pub fn swift_runtime_binding_for_application(application_id: &str) -> SwiftRuntimeBinding {
+    swift_runtime_binding_source(Some(application_id))
+}
+
+fn swift_runtime_binding_source(application_id: Option<&str>) -> SwiftRuntimeBinding {
     SwiftRuntimeBinding {
-        host_swift: include_str!("../templates/swiftui/MosaicRuntimeHost.swift").replace(
+        host_swift: bind_application(
+            include_str!("../templates/swiftui/MosaicRuntimeHost.swift"),
+            application_id,
+        )
+        .replace(
             "__MOSAIC_PROTOCOL_VERSION__",
             &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
         ),
@@ -80,35 +106,58 @@ pub fn swift_package_with_runtime_binding(package_swift: &str, bundle_runtime: b
 
 /// Generate the standard XAML/.NET host binding for the requested C# namespace.
 pub fn xaml_runtime_binding(namespace: &str) -> String {
-    include_str!("../templates/xaml/MosaicRuntimeHost.cs")
-        .replace(
-            "__MOSAIC_PROTOCOL_VERSION__",
-            &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
-        )
-        .replace("__MOSAIC_NAMESPACE__", namespace)
+    xaml_runtime_binding_source(namespace, None)
+}
+
+/// Generate a persistent XAML/.NET host for an emitted application.
+pub fn xaml_runtime_binding_for_application(namespace: &str, application_id: &str) -> String {
+    xaml_runtime_binding_source(namespace, Some(application_id))
+}
+
+fn xaml_runtime_binding_source(namespace: &str, application_id: Option<&str>) -> String {
+    bind_application(
+        include_str!("../templates/xaml/MosaicRuntimeHost.cs"),
+        application_id,
+    )
+    .replace(
+        "__MOSAIC_PROTOCOL_VERSION__",
+        &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
+    )
+    .replace("__MOSAIC_NAMESPACE__", namespace)
 }
 
 /// Generate the standard Flutter/Dart FFI host binding.
 pub fn flutter_runtime_binding() -> String {
-    flutter_runtime_binding_source(false)
+    flutter_runtime_binding_source(false, None)
 }
 
 /// Generate the standard Flutter/Dart FFI host binding for a project whose
 /// selected Rust engine is registered as a bundled Dart code asset.
 pub fn flutter_runtime_binding_with_bundled_asset() -> String {
-    flutter_runtime_binding_source(true)
+    flutter_runtime_binding_source(true, None)
 }
 
-fn flutter_runtime_binding_source(bundle_runtime: bool) -> String {
-    include_str!("../templates/flutter/mosaic_host.dart")
-        .replace(
-            "__MOSAIC_PROTOCOL_VERSION__",
-            &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
-        )
-        .replace(
-            "__MOSAIC_BUNDLED_RUNTIME__",
-            if bundle_runtime { "true" } else { "false" },
-        )
+/// Generate a persistent Flutter host for an emitted application.
+pub fn flutter_runtime_binding_for_application(
+    application_id: &str,
+    bundle_runtime: bool,
+) -> String {
+    flutter_runtime_binding_source(bundle_runtime, Some(application_id))
+}
+
+fn flutter_runtime_binding_source(bundle_runtime: bool, application_id: Option<&str>) -> String {
+    bind_application(
+        include_str!("../templates/flutter/mosaic_host.dart"),
+        application_id,
+    )
+    .replace(
+        "__MOSAIC_PROTOCOL_VERSION__",
+        &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
+    )
+    .replace(
+        "__MOSAIC_BUNDLED_RUNTIME__",
+        if bundle_runtime { "true" } else { "false" },
+    )
 }
 
 /// Add the small allocation helper used by Dart's native FFI to a generated
@@ -144,13 +193,51 @@ pub struct QtRuntimeBinding {
 /// Generate the standard Qt/QML host using Qt Core's dynamic loading and JSON
 /// APIs, with no application-specific C++ adapter.
 pub fn qt_runtime_binding() -> QtRuntimeBinding {
+    qt_runtime_binding_source(None)
+}
+
+/// Generate a persistent Qt/QML host for an emitted application.
+pub fn qt_runtime_binding_for_application(application_id: &str) -> QtRuntimeBinding {
+    qt_runtime_binding_source(Some(application_id))
+}
+
+fn qt_runtime_binding_source(application_id: Option<&str>) -> QtRuntimeBinding {
     QtRuntimeBinding {
-        header: include_str!("../templates/qt/MosaicHost.h").replace(
-            "__MOSAIC_PROTOCOL_VERSION__",
-            &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
+        header: bind_application(include_str!("../templates/qt/MosaicHost.h"), application_id)
+            .replace(
+                "__MOSAIC_PROTOCOL_VERSION__",
+                &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
+            ),
+        source: bind_application(
+            include_str!("../templates/qt/MosaicHost.cpp"),
+            application_id,
         ),
-        source: include_str!("../templates/qt/MosaicHost.cpp").to_string(),
     }
+}
+
+fn bind_application(template: &str, application_id: Option<&str>) -> String {
+    let escaped = application_id
+        .unwrap_or_default()
+        .chars()
+        .flat_map(|character| match character {
+            '\\' => "\\\\".chars().collect::<Vec<_>>(),
+            '"' => "\\\"".chars().collect(),
+            '\n' => "\\n".chars().collect(),
+            '\r' => "\\r".chars().collect(),
+            '\t' => "\\t".chars().collect(),
+            other => vec![other],
+        })
+        .collect::<String>();
+    template
+        .replace(
+            "__MOSAIC_PERSISTENCE_ENABLED__",
+            if application_id.is_some() {
+                "true"
+            } else {
+                "false"
+            },
+        )
+        .replace("__MOSAIC_APPLICATION_ID__", &escaped)
 }
 
 #[cfg(test)]
@@ -482,5 +569,77 @@ mod tests {
             .source
             .contains("native-complete requires the Mosaic Rust application runtime"));
         assert!(binding.source.contains("missing required MIL prop"));
+    }
+
+    #[test]
+    fn emitted_native_bindings_restore_and_atomically_persist_application_state() {
+        let application_id = "com.example.tasks";
+        let qt = qt_runtime_binding_for_application(application_id);
+        let bindings = [
+            (
+                compose_jna_binding_for_application(application_id),
+                "val restoredSnapshot = loadPersistedSnapshot()",
+                "api.mosaic_app_create(input, app, output)",
+                "api.mosaic_app_dispatch(app, input, output)",
+                "persistSnapshot()",
+            ),
+            (
+                swift_runtime_binding_for_application(application_id).host_swift,
+                "let persisted = loadPersistedSnapshot()",
+                "mosaic_binding_create(runtime, bytes, &app, output)",
+                "mosaic_binding_dispatch(runtime, app, bytes, output)",
+                "persistSnapshot()",
+            ),
+            (
+                xaml_runtime_binding_for_application("Example.Tasks", application_id),
+                "var persisted = LoadPersistedSnapshot()",
+                "return create(input, out app, out output)",
+                "return dispatch(app, input, out output)",
+                "PersistSnapshot()",
+            ),
+            (
+                flutter_runtime_binding_for_application(application_id, true),
+                "final persisted = _loadPersistedSnapshot()",
+                "_create(input, appOut, output)",
+                "_dispatch(_app, input, output)",
+                "_persistSnapshot()",
+            ),
+            (
+                format!("{}\n{}", qt.header, qt.source),
+                "const auto restoredSnapshot = loadPersistedSnapshot()",
+                "create_(input, &app_, &output)",
+                "dispatch_(app_, input, &output)",
+                "persistSnapshot()",
+            ),
+        ];
+        for (source, restore_marker, create_marker, dispatch_marker, persist_marker) in &bindings {
+            assert!(source.contains(application_id));
+            assert!(!source.contains("__MOSAIC_PERSISTENCE_ENABLED__"));
+            assert!(!source.contains("__MOSAIC_APPLICATION_ID__"));
+            assert!(source.contains("MOSAIC_APP_STATE_PATH"));
+            assert!(source.contains("mosaic-state.v1.json"));
+            assert!(source.contains("corrupt"));
+            assert!(source.contains("rejected persisted state"));
+            assert!(source.contains("restoredSnapshot"));
+            assert!(source.contains("persistenceWarning") || source.contains("PersistenceWarning"));
+
+            let restored = source.find(restore_marker).unwrap();
+            let created = source.find(create_marker).unwrap();
+            assert!(
+                restored < created,
+                "state must be restored before app creation"
+            );
+
+            let dispatched = source.find(dispatch_marker).unwrap();
+            let persisted = source.rfind(persist_marker).unwrap();
+            assert!(dispatched < persisted, "state must persist after dispatch");
+        }
+
+        assert!(bindings[0].0.contains("StandardCopyOption.ATOMIC_MOVE"));
+        assert!(bindings[1].0.contains("options: [.atomic]"));
+        assert!(bindings[2].0.contains("File.Move(temporary, path, true)"));
+        assert!(bindings[3].0.contains("MoveFileExW"));
+        assert!(bindings[3].0.contains("temporary.renameSync(target.path)"));
+        assert!(bindings[4].0.contains("QSaveFile file(path)"));
     }
 }

@@ -66,20 +66,31 @@ internal static class Program
 
         MosaicRuntimeHost.LoadRequired();
 
+        var restoredOnLaunch = Environment.GetEnvironmentVariable("MOSAIC_EXPECT_RESTORED") == "1";
+        var expectWarning =
+            Environment.GetEnvironmentVariable("MOSAIC_EXPECT_PERSISTENCE_WARNING") == "1";
+        var initialCount = restoredOnLaunch ? 4L : 0L;
         var component = new ConformanceComponent();
         try
         {
             var startStatus = MosaicRuntimeHost.ApplyRequiredProps(
                 component, "count", "platform", "status");
-            Require(startStatus == "Status: Mosaic runtime props loaded", "startup status");
-            Require(component.Count == 0, "initial count");
+            Require(
+                startStatus.StartsWith("Status: Mosaic runtime props loaded", StringComparison.Ordinal),
+                "startup status");
+            Require(
+                (startStatus != "Status: Mosaic runtime props loaded") == expectWarning,
+                "startup persistence warning");
+            Require(component.Count == initialCount, "initial count");
             Require(component.Platform == "windows", "startup platform");
-            Require(component.Status == "started", "startup props");
+            Require(
+                component.Status == (restoredOnLaunch ? "restored" : "started"),
+                "startup props");
 
             var result = await MosaicRuntimeHost.HandleRequiredEvent(
                 component, new IncrementEvent(), "count", "platform", "status");
             Require(result.Status == "Status: Mosaic runtime handled increment", "dispatch status");
-            Require(component.Count == 4, "dispatched count");
+            Require(component.Count == initialCount + 4, "dispatched count");
             Require(component.Status == "dispatched", "dispatched props");
         }
         finally

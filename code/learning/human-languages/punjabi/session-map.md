@@ -1,4 +1,4 @@
-# Session Map — Punjabi Chapters 1–14
+# Session Map — Punjabi Chapters 1–15
 
 This is the authoritative book order. Every row is one session of at most five
 minutes. Sound and meaning come before load-bearing decoding; writing grows from
@@ -85,6 +85,14 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 76 | 14 | PA-W01-ta | add dental ਤ |
 | 77 | 14 | PA-W01-e-matra | add ੇ |
 | 78 | 14 | PA-W01-namaste-read | assemble and read ਨਮਸਤੇ |
+| 79 | 15 | PA-W02-a | trace the independent vowel ਅ |
+| 80 | 15 | PA-W02-aman | assemble and guided-copy ਅਮਨ |
+| 81 | 15 | PA-W02-manan | assemble and guided-copy ਮਨਨ |
+| 82 | 15 | PA-W02-name-label | recognise and write the label ਨਾਂ |
+| 83 | 15 | PA-W02-name-select | select between two known values from identity symbols |
+| 84 | 15 | PA-W02-name-supported | fill one name line with the two-value bank visible |
+| 85 | 15 | PA-W02-name-delayed | hide the bank, then fill one requested name line |
+| 86 | 15 | PA-W02-name-no-model | fill one name line from a nonverbal cue with no model |
 
-After session 78, the track continues through the dependency-linked backlog;
+After session 86, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

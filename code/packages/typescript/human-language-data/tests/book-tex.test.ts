@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, lstatSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
@@ -10,32 +10,33 @@ import {
   splitBookTex,
 } from "../src/book-tex.js";
 import { generatedBookOutputs, loadBookGenerationConfig } from "../src/book-cli.js";
-import { defaultCurriculumRoot } from "../src/loader.js";
+import {
+  defaultCurriculumRoot,
+  loadLanguageRegistry,
+} from "../src/loader.js";
 
 const ROOT = defaultCurriculumRoot();
 const config = loadBookGenerationConfig(ROOT) as Parameters<typeof chapterInputsFor>[0];
 
-/** Every track that has a book. */
-const tracks = readdirSync(ROOT, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory() && existsSync(join(ROOT, entry.name, "book", "book.tex")))
-  .map((entry) => entry.name)
-  .sort();
+/** Every track whose canonical owners project a book. */
+const tracks = [
+  ...new Set(config.targets.map((entry) => entry.language)),
+].sort();
 
 describe("the generated book.tex", () => {
-  it("reproduces every track's committed book.tex byte for byte", () => {
-    // The fidelity requirement, and the whole proof of this change. If the
-    // generator cannot reproduce what is on disk, it is not a generator for
-    // this book — it is a proposal to rewrite 23 of them.
+  it("projects every book root while keeping the generated roots untracked", () => {
     const outputs = generatedBookOutputs(ROOT);
-    let checked = 0;
+    expect(tracks).toHaveLength(23);
+    expect(tracks).toEqual(
+      loadLanguageRegistry(ROOT).languages.map((entry) => entry.id).sort(),
+    );
     for (const track of tracks) {
       const relative = `${track}/book/book.tex`;
       const generated = outputs.get(relative);
       expect(generated, `${relative} is not generated`).toBeDefined();
-      expect(generated, relative).toBe(readFileSync(join(ROOT, track, "book", "book.tex"), "utf8"));
-      checked += 1;
+      expect(generated, relative).toContain("\\documentclass");
+      expect(() => lstatSync(join(ROOT, relative)), relative).toThrow(/ENOENT/);
     }
-    expect(checked).toBe(tracks.length);
   });
 
   it("gives every track both authored halves", () => {

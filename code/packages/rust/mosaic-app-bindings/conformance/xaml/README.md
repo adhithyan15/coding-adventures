@@ -13,3 +13,6 @@ part of the complete TaskApp. This console harness uses a source-compatible
 runtime-only executable cannot bootstrap WinUI on GitHub's non-interactive
 Windows worker. It still executes the unchanged generated binding and production
 Rust C ABI, and the CI step has a ten-minute hard timeout.
+
+That lane also relaunches against persisted and incompatible state, covering
+restore-before-render, atomic dispatch persistence, and recoverable quarantine.
