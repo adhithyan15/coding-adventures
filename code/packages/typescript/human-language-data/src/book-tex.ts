@@ -40,7 +40,8 @@
 //   <track>/book/backmatter.tex    AUTHORED. \backmatter, the appendix inputs in
 //                                  their authored order, \end{document}.
 //
-//   <track>/book/book.tex          GENERATED = the three concatenated.
+//   <isolated>/<track>/book/book.tex  PROJECTED = the three concatenated for
+//                                     compile/publication only; never tracked.
 //
 // Sharding the `\input` list would have been the wrong tool. It is not content
 // anybody should be editing; it is a projection of a ledger that already exists.

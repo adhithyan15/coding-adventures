@@ -8,9 +8,9 @@
 # change-detection job.
 #
 # Each language track under code/learning/human-languages/<lang>/book/
-# contains a self-contained XeLaTeX book (see HL00 spec). This workflow
-# discovers every such book/ directory dynamically, installs TeX once, and
-# compiles the books sequentially so adding a new track needs zero changes here.
+# contains authored XeLaTeX fragments and chapters (see HL00 spec). This
+# workflow projects every registered entrypoint into an isolated compile tree,
+# installs TeX once, and compiles the books sequentially.
 
 name: Human Languages Books
 
@@ -114,6 +114,14 @@ jobs:
           if [ -n "$tracked_doc_monoliths" ]; then
             echo "::error::Generated Markdown aggregates must remain untracked:"
             printf '%s\n' "$tracked_doc_monoliths"
+            exit 1
+          fi
+
+          tracked_book_roots=$(git ls-files -- \
+            'code/learning/human-languages/*/book/book.tex')
+          if [ -n "$tracked_book_roots" ]; then
+            echo "::error::Generated book entrypoints must remain isolated compile inputs:"
+            printf '%s\n' "$tracked_book_roots"
             exit 1
           fi
 
@@ -403,8 +411,9 @@ jobs:
       # Exercise the compile script's hostile-input guards against real hostile
       # input, on the one machine in the loop that can create a symlink.
       #
-      # These guards refuse a symlinked `book.pdf` and keep a `book/` directory
-      # with no `book.tex` out of the manifest. Both were argued correct by
+      # These guards refuse a symlinked `book.pdf` and, through the static
+      # legacy-discovery seam, keep an unselected `book/` directory out of the
+      # manifest. Both were argued correct by
       # reading them; neither had been watched refusing anything. The authoring
       # box cannot create a native symlink without elevation, so the test skips
       # there and runs here — which is the right way round, since here is where
@@ -542,9 +551,9 @@ jobs:
       #
       # The list comes from the compile's own manifest, NOT from a fresh
       # `find -type d -name book`. Those are different questions with different
-      # answers: `check-book-compile.sh` skips a directory with no `book.tex`,
-      # so a `find` would hand this loop a `<track>/book/book.pdf` that no
-      # compile ever touched. A pull request adding nothing but
+      # answers: `check-book-compile.sh` admits only tracks whose projected
+      # entrypoints it actually compiled, while a `find` would hand this loop a
+      # `<track>/book/book.pdf` that no compile ever touched. A pull request adding nothing but
       # `code/learning/human-languages/anything/book/book.pdf` would then have an
       # attacker-authored file uploaded as a build artifact and, on `main`,
       # published to Pages and attached to the Release as though it were a book.

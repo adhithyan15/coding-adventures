@@ -147,7 +147,8 @@ gap report is meant to surface; the entries land as those chapters migrate.
 ## Book / fonts
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Devanagari font
-(`../../_fonts/NotoSansDevanagari-Static.ttf`). `latexmk -xelatex book.tex`.
+(`../../_fonts/NotoSansDevanagari-Static.ttf`). Build the isolated entrypoint with
+`code/scripts/check-book-compile.sh --strict sanskrit` from the repository root.
 Generated Devanagari runs use that font while section bookmarks use the
 lessons' Latin romanization.
 

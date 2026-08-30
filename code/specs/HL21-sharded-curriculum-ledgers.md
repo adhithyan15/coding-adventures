@@ -611,9 +611,10 @@ arrays, and a Spanish tranche touches only that file.
 > Section 4.4 removes the generated monolith after the remaining Python and test
 > consumers move to the same grouped shard projection.
 
-### 5.4 `<track>/book/book.tex` → **generated, not sharded**
+### 5.4 `<track>/book/book.tex` → **projected outside the checkout**
 
-Do not shard it. **Generate it**, and gate it with `--check`. See §6.
+Do not shard or track it. **Project it** into the isolated compile tree, and gate
+the absence of the old repository root with `--check`. See §6.
 
 ---
 
@@ -638,24 +639,27 @@ So split it by **origin**, not by size:
 ```text
 <track>/book/frontmatter.tex   authored, hand-maintained, rarely changes -> no conflict
 <track>/book/backmatter.tex    authored, if appendix ordering needs it
-<track>/book/book.tex          GENERATED = frontmatter + derived \input list + backmatter
+<temporary>/<track>/book/book.tex  PROJECTED = frontmatter + derived \input list + backmatter
 ```
 
-Emitted from `book-cli` alongside everything else, so it gets `--write` and
-`--check` exactly like the chapter files, the narration and the hashes already
-do.
+Returned by `generatedBookOutputs` alongside everything else, but excluded from
+repository writes. `--check` exercises all 23 projections and rejects a tracked
+root resurrected as a file, directory, real link, junction, or dangling link.
+The compile/publication path materializes it only beneath a caller-created empty
+real directory and removes that directory on exit.
 
 This removes the conflict entirely *and* removes a hand-maintenance step that
 has already been forgotten once. Chapters are already generated per chapter by
 `book-cli`, so the lesson → chapter → book granularity is complete below this
 level; this closes the last hand-maintained link in the chain.
 
-**Fidelity requirement.** For all 23 tracks the generated `book.tex` must be
-byte-identical to what is on disk before any new chapters are added. The
-generator lands with `--check` passing against the current hand-maintained
-files. If a track's `book.tex` has an ordering quirk the ledgers do not capture,
-that is a **finding to report**, not a file to quietly "fix" into agreement with
-the generator.
+**Fidelity requirement.** Before the tracked roots were retired, all 23
+`generatedBookOutputs` roots were measured byte-identical to the files on disk.
+The normal tests now require exact registry identity, both authored halves,
+every generated and handwritten chapter in canonical order, all appendices, and
+the absence of every retired root. If a track's projection has an ordering quirk
+the ledgers do not capture, that is a **finding to report**, not a fragment to
+quietly "fix" into agreement with the generator.
 
 ### 6.1 The compile gate
 

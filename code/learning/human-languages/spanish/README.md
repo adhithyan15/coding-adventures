@@ -61,7 +61,7 @@ standard from day one even though Spanish itself doesn't need it).
 Licensed CC BY-SA 4.0. To build it locally:
 
 ```
-cd book && latexmk -xelatex book.tex   # or: ./build.sh / .\build.ps1
+code/scripts/check-book-compile.sh --strict spanish   # or: book/build.sh / book/build.ps1
 ```
 
 Requires a LaTeX distribution with `xelatex`/`latexmk` on PATH (MiKTeX or
@@ -221,7 +221,7 @@ language.
 ### Building the book
 
 ```
-cd book && latexmk -xelatex book.tex   # or: ./build.sh / .\build.ps1
+code/scripts/check-book-compile.sh --strict spanish   # or: book/build.sh / book/build.ps1
 ```
 
 Needs a LaTeX distribution with `xelatex`/`latexmk` on PATH. The PDF is not

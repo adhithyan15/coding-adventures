@@ -156,7 +156,8 @@ than the ability to read the letters.
 The 38-chapter book compiles with XeLaTeX using **vendored** Noto fonts
 (`../../_fonts/`) for Tamil and every comparison script, with no system-font
 dependency. Chapters 6–38 are generated from canonical lesson ASTs and checked
-against Language Ladder source hashes. `latexmk -xelatex book.tex`.
+against Language Ladder source hashes. Build the isolated entrypoint with
+`code/scripts/check-book-compile.sh --strict tamil` from the repository root.
 
 ## Files
 

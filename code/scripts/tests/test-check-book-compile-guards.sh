@@ -231,16 +231,6 @@ fi
 BOOKS3="$TMP/books3"
 TEMP3="$TMP/compile-temp"
 mkdir -p "$BOOKS3/realtrack/book" "$TEMP3"
-cat > "$BOOKS3/realtrack/book/book.tex" <<'TEX'
-\documentclass{article}
-\input{chapter-modalities}
-\begin{document}
-Hello from isolated generated inputs.
-\input{chapters/appendix-glossary}
-\input{chapters/appendix-answer-key}
-\input{chapters/appendix-index}
-\end{document}
-TEX
 
 MATERIALIZER3="$TMP/static-materializer.mjs"
 cat > "$MATERIALIZER3" <<'JS'
@@ -252,6 +242,15 @@ if (!argument.startsWith(prefix)) process.exit(2);
 const root = argument.slice(prefix.length);
 const book = join(root, "realtrack", "book");
 mkdirSync(join(book, "chapters"), { recursive: true });
+writeFileSync(join(book, "book.tex"), `\\documentclass{article}
+\\input{chapter-modalities}
+\\begin{document}
+Hello from an isolated generated root.
+\\input{chapters/appendix-glossary}
+\\input{chapters/appendix-answer-key}
+\\input{chapters/appendix-index}
+\\end{document}
+`, "utf8");
 for (const relative of [
   "chapter-modalities.tex",
   "chapters/appendix-glossary.tex",
@@ -274,10 +273,11 @@ else
 fi
 
 if [ ! -e "$BOOKS3/realtrack/book/chapter-modalities.tex" ] && \
+   [ ! -e "$BOOKS3/realtrack/book/book.tex" ] && \
    [ ! -e "$BOOKS3/realtrack/book/chapters/appendix-glossary.tex" ] && \
    [ ! -e "$BOOKS3/realtrack/book/chapters/appendix-answer-key.tex" ] && \
    [ ! -e "$BOOKS3/realtrack/book/chapters/appendix-index.tex" ]; then
-  ok "materialization leaves the source book tree untouched"
+  ok "materialization leaves the source book tree untouched, including book.tex"
 else
   bad "materialization leaves the source book tree untouched" \
       "a generated compile input was written into the source book directory"

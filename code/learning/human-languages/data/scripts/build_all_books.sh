@@ -1,12 +1,12 @@
 #!/bin/sh
-# Build every human-language book locally, in parallel, and report the counts
-# that actually matter.
+# Build every human-language book through the shared isolated-entrypoint gate,
+# then report the counts that actually matter.
 #
-# Why this exists (HL-C213): the whole 22-book corpus rebuilds in ~98 SECONDS on a
-# 14-core laptop at 8-way parallelism -- Spanish alone is ~74s and sets the floor.
+# Why this exists (HL-C213): the whole 23-book corpus takes long enough that
+# Spanish alone still sets much of the floor.
 # The same work takes 5-58 minutes in CI and once hung for 6 hours in `apt` before
 # compiling a single page.  So there is no reason to discover a rendering defect
-# from a CI round-trip: build all 22 before pushing.
+# from a CI round-trip: build all 23 before pushing.
 #
 # What it checks, and why the exit code is not enough:
 #   * exit code        -- catches a hard LaTeX error
@@ -18,16 +18,15 @@
 # A book is only "ok" when all four are clean.
 #
 # Usage:   sh data/scripts/build_all_books.sh [track ...]      (default: all)
-#          JOBS=4 sh data/scripts/build_all_books.sh           (default: 8)
 
 set -u
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 # Repo root, kept separate from ROOT (which is the human-languages dir): the
 # curated latexmk rc must be loaded from OUTSIDE the tree latexmk cd-s into.
 REPO_ROOT=$(cd "$(dirname "$0")/../../../.." && pwd -P)
-JOBS=${JOBS:-8}
 OUT=$(mktemp -d)
-trap 'rm -rf "$OUT"' EXIT
+MANIFEST=$(mktemp)
+trap 'rm -rf "$OUT"; rm -f "$MANIFEST"' EXIT
 
 if [ "$#" -gt 0 ]; then
   TRACKS="$*"
@@ -92,11 +91,12 @@ self_test() {
 build_one() {
   t="$1"
   d="$ROOT/$t/book"
-  [ -f "$d/book.tex" ] || { printf '%s SKIP no-book.tex\n' "$t" > "$OUT/$t"; return; }
+  [ -f "$d/frontmatter.tex" ] && [ -f "$d/backmatter.tex" ] || {
+    printf '%s SKIP no-authored-book-fragments\n' "$t" > "$OUT/$t"; return;
+  }
   s=$(date +%s)
-  ( cd "$d" && latexmk -norc -r "$REPO_ROOT/code/scripts/latexmk-safe.rc" -C >/dev/null 2>&1 &&
-    latexmk -norc -r "$REPO_ROOT/code/scripts/latexmk-safe.rc" -xelatex -interaction=nonstopmode -halt-on-error book.tex >/dev/null 2>&1 )
-  rc=$?
+  real_d=$(cd "$d" && pwd -P)
+  if grep -Fxq "$real_d" "$MANIFEST"; then rc=0; else rc=1; fi
   e=$(date +%s)
   set -- $(classify_log "$d/book.log" "$rc")
   status=$1; miss=$2; over=$3; under=$4; pages=$5
@@ -105,11 +105,13 @@ build_one() {
 }
 
 START=$(date +%s)
+"$REPO_ROOT/code/scripts/check-book-compile.sh" --strict \
+  --manifest="$MANIFEST" $TRACKS
+GATE_RC=$?
 n=0
 for t in $TRACKS; do
   build_one "$t" &
   n=$((n+1))
-  [ "$((n % JOBS))" -eq 0 ] && wait
 done
 wait
 END=$(date +%s)
@@ -122,11 +124,11 @@ for f in "$OUT"/*; do
   printf '%-12s %-14s %6s %8s miss=%s over=%s under=%s\n' "$1" "$2" "$3" "$4" \
     "$(echo "$5" | cut -d= -f2)" "$(echo "$6" | cut -d= -f2)" "$(echo "$7" | cut -d= -f2)"
   [ "$2" = "ok" ] || [ "$2" = "SKIP" ] || bad=$((bad+1))
-done | sort -k2,2 -k1,1
+done
 
 echo "-----------------------------------------------------------"
-echo "wall clock: $((END-START))s at ${JOBS}-way parallelism"
-if [ "$bad" -ne 0 ]; then
+echo "wall clock: $((END-START))s through the shared compile gate"
+if [ "$bad" -ne 0 ] || [ "$GATE_RC" -ne 0 ]; then
   echo "FAILED: $bad book(s) are not clean -- fix the page, never the threshold"
   exit 1
 fi
