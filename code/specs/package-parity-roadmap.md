@@ -10004,7 +10004,7 @@ manual merge command. Haskell therefore advances to `merged` and the active PR
 is cleared.
 
 The collision-checked exact-main inventory at
-`69ee7b9f4eb82070f1ddb161f2d1786f4d09652c` remains 15 established lanes,
+`e6da7867b3f1937bafce6d3e19d4be963c19890e` remains 15 established lanes,
 1,388 implementation identities, 4,602 slots, and 1,427 all-reported
 identities. Completion bands remain 175/265, 123/934, 170/2,139, and
 920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
@@ -10021,7 +10021,8 @@ leverage. The readiness pass selects
 documented ordering after Haskell and adds another independent runtime through
 the same process-free boundary. Lua 5.4.5, LuaRocks 3.9.2, Busted 2.3.0,
 DKJSON 2.11, LuaFileSystem 1.9, LuaCov 0.17, and LuaCheck 1.2 are installed
-locally. Seven live PRs have zero exact overlap with the expected Lua tranche.
+locally. Five live PRs have zero exact overlap with the expected Lua tranche
+after the final pre-publication refresh.
 
 PR #13455 prospectively adds TypeScript-only `forme-cli`; the existing
 `forme-portable-core-family-classification` owner now records that live block,

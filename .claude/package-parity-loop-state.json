@@ -21,7 +21,7 @@
     "notes": "PR #13481 reached 40 terminal acceptable checks: 33 successes and seven expected skips. Auto-merge was enabled only after GitHub reported the branch conflict-free, and GitHub merged validated head bfc547836abe90d234563df823de76a3fc290fc6 as 9c11dc9188270efbaa9a2bb157c0622c55b874bc at 2026-08-30T09:18:36Z without a manual merge command."
   },
   "last_inventory": {
-    "revision": "69ee7b9f4eb82070f1ddb161f2d1786f4d09652c",
+    "revision": "e6da7867b3f1937bafce6d3e19d4be963c19890e",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -340,8 +340,8 @@
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
       "branch": "codex/build-tool-lua-extra-ci-toolchain-declaration-conformance",
       "pr_number": null,
-      "selection_revision": "69ee7b9f4eb82070f1ddb161f2d1786f4d09652c",
-      "selection_notes": "Selected after merged PR #13481 and a collision-clean exact-main refresh. The seven remaining declaration consumers have equal dependencies and graph leverage; Lua wins the documented ordering after Haskell and supplies another independent runtime through the same bounded pure boundary. Lua 5.4.5, LuaRocks 3.9.2, Busted 2.3.0, DKJSON 2.11, LuaFileSystem 1.9, LuaCov 0.17, and LuaCheck 1.2 are installed locally. The inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Seven live PRs have zero exact overlap with the expected Lua tranche paths. PR #13455 prospectively adds the already-owned TypeScript Forme CLI root and is recorded as a live block on its existing family owner; no new eligible unowned gap displaces Lua.",
+      "selection_revision": "e6da7867b3f1937bafce6d3e19d4be963c19890e",
+      "selection_notes": "Selected after merged PR #13481 and a collision-clean exact-main refresh. The seven remaining declaration consumers have equal dependencies and graph leverage; Lua wins the documented ordering after Haskell and supplies another independent runtime through the same bounded pure boundary. Lua 5.4.5, LuaRocks 3.9.2, Busted 2.3.0, DKJSON 2.11, LuaFileSystem 1.9, LuaCov 0.17, and LuaCheck 1.2 are installed locally. The inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Five live PRs have zero exact overlap with the expected Lua tranche paths after the final pre-publication refresh. PR #13455 prospectively adds the already-owned TypeScript Forme CLI root and is recorded as a live block on its existing family owner; no new eligible unowned gap displaces Lua.",
       "notes": "Adopt the merged process-free declaration corpus in the Lua engine without widening execution authority."
     },
     {
