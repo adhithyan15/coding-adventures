@@ -6,7 +6,7 @@ export default [
     suite: "independent (word-initial) vowels",
     suiteOrder: 10,
     caseOrder: 40,
-    name: "keeps Malayalam independent അ, ആ, ഇ, ഉ, ഊ, എ, and ഒ sourced while the remaining vowels stay unverified",
+    name: "keeps Malayalam independent അ, ആ, ഇ, ഉ, ഊ, എ, ഒ, and ഓ sourced while the remaining vowels stay unverified",
     verify: ({ SCRIPTS }) => {
       const malayalam = SCRIPTS.find((s) => s.script === "malayalam")!;
       const iv = malayalam.independentVowels!;
@@ -49,9 +49,15 @@ export default [
       expect(iv[8]!.strokeOrderSource?.url).toBe(
         "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
       );
+      expect(iv[9]!.glyph).toBe("ഓ");
+      expect(iv[9]!.strokeOrder).toHaveLength(3);
+      expect(iv[9]!.penLifts).toBe(2);
+      expect(iv[9]!.strokeOrderSource?.url).toBe(
+        "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+      );
       expect(
         iv
-          .filter((_, index) => ![0, 1, 2, 4, 5, 6, 8].includes(index))
+          .filter((_, index) => ![0, 1, 2, 4, 5, 6, 8, 9].includes(index))
           .every((v) => v.strokeOrder.length === 0),
       ).toBe(true);
     },

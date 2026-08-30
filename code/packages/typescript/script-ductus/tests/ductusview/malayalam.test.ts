@@ -48,6 +48,8 @@ const MALAYALAM_UU = DUCTUS[ductusKey("malayalam", "ഊ")];
 const malayalamUuOutline = malayalamOutline("ഊ");
 const MALAYALAM_O = DUCTUS[ductusKey("malayalam", "ഒ")];
 const malayalamOOutline = malayalamOutline("ഒ");
+const MALAYALAM_OO = DUCTUS[ductusKey("malayalam", "ഓ")];
+const malayalamOoOutline = malayalamOutline("ഓ");
 const MALAYALAM_CHILLU_L = DUCTUS[ductusKey("malayalam", "ൽ")];
 const malayalamChilluLOutline = malayalamOutline("ൽ");
 const MALAYALAM_CHILLU_N = DUCTUS[ductusKey("malayalam", "ൻ")];
@@ -251,6 +253,42 @@ describe("Malayalam ഒ — joined left body, then a rounded right lobe", () => 
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(MALAYALAM_O.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(MALAYALAM_O.strokes[1], 1));
+  });
+});
+
+describe("Malayalam ഓ — short-o body, then a separate outer arc", () => {
+  const steps = ductusSteps(MALAYALAM_OO);
+  const strip = ductusFilmstrip(MALAYALAM_OO, malayalamOoOutline);
+
+  it("places lifts before the body lobe and far-right arc", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      true,
+      true,
+    ]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2]);
+  });
+
+  it("reports three movements in three strokes", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
+  });
+
+  it("keeps both body runs visible while the outer arc completes", () => {
+    const last = strip.frames[2];
+    const done = byTag(last, "path").filter(
+      (path) => path.attrs.class === "ductus__done",
+    );
+    const pen = byTag(last, "path").find(
+      (path) => path.attrs.class === "ductus__pen",
+    )!;
+    expect(done).toHaveLength(2);
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(MALAYALAM_OO.strokes[0], 1),
+      penPathD(MALAYALAM_OO.strokes[1], 1),
+    ]);
+    expect(pen.attrs.d).toBe(penPathD(MALAYALAM_OO.strokes[2], 1));
   });
 });
 
