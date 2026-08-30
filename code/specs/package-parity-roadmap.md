@@ -10556,6 +10556,41 @@ every required check is terminal and acceptable and GitHub still reports no
 merge conflict. The owner advances from `in-progress` to `pr-open`; no second
 parity implementation starts while this PR is active.
 
+## Post-#13506 Refresh and Swift Declaration Selection
+
+PR #13506 completed all 43 reported checks acceptably: 36 successes, six
+expected skips, and one neutral CodeQL gate. Auto-merge was enabled only after
+GitHub reported final head
+`6924108676d3ae899d2c2c44215800c4267223b9` clean and mergeable, and GitHub
+merged it as `6ea19ec13f34599b9a9f48263d04d55e85efa873` at
+2026-08-30T16:38:49Z without a manual merge command. The Swift Windows front
+owner therefore advances to `merged` and the active PR is cleared.
+
+The collision-checked exact-main inventory at
+`aed89211922bd4e150b0bab8c8160bcb015a462a` remains schema 3 with 15
+established lanes, 1,388 implementation identities, 4,602 slots, and 1,427
+all-reported identities. Completion bands remain 175/265, 123/934, 170/2,139,
+and 920/12,880; Rust has 731 singletons, OCaml remains emerging at zero
+packages, and collisions and unknown buckets remain zero. The 49 paths changed
+since the prior inventory across PRs #13505, #13506, and #13507 add or remove
+no package root or manifest. Canonical identities are unchanged and no newly
+unowned eligible package or build-tool gap appeared.
+
+The dependency/leverage pass selects
+`build-tool-swift-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-swift-extra-ci-toolchain-declaration-conformance`. All four
+of its prerequisites are now merged: the neutral declaration corpus, CRLF
+grammar hardening, Swift Dune exclusion, and the fail-closed Windows front.
+This is the ready dependency payoff, becomes the tenth of eleven declaration
+consumers, directly advances the remaining-engines umbrella, and preserves the
+documented Rust-to-Swift-to-TypeScript lane order before beginning the
+TypeScript Dune chain. Swift 6.3.3 is installed and the exact package is
+locally executable. The target branch and prior PR are absent, and five live
+PRs have zero exact overlap across the expected eight-path state, root/package
+documentation, Swift source/test, conformance-spec, and roadmap tranche.
+Reconciliation plus selection leaves the complete 580-owner/864-edge graph at
+179 merged, 400 pending, and exactly one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

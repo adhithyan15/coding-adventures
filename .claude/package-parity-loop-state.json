@@ -11,24 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13506,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13506",
-    "branch": "codex/build-tool-swift-windows-test-front-failure-propagation",
-    "implementation_revision": "1a62f59b5db2bc3a71261220cf644c27753235a4",
-    "status": "checks-pending",
-    "opened_at": "2026-08-30T16:12:23Z"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-30T16:12:30Z",
+    "observed_at": "2026-08-30T16:38:49Z",
     "pr_number": 13506,
     "run_id": null,
     "attempt": 1,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #13506 is open from validated publication head 1a62f59b5db2bc3a71261220cf644c27753235a4. GitHub reports the PR mergeable and conflict-free, but required CI, Swift-app, and CodeQL checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged-via-auto-merge",
+    "notes": "All 43 reported checks reached terminal acceptable conclusions: 36 successes, six expected skips, and one neutral CodeQL gate. GitHub reported validated head 6924108676d3ae899d2c2c44215800c4267223b9 clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #13506 as 6ea19ec13f34599b9a9f48263d04d55e85efa873 without a manual merge command."
   },
   "last_inventory": {
-    "revision": "d5a47d9f709633d3656551d91d559467b64661ba",
+    "revision": "aed89211922bd4e150b0bab8c8160bcb015a462a",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -441,10 +434,12 @@
     {
       "id": "build-tool-swift-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Swift build tool consume extra CI toolchain declarations",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-swift-dune-build-discovery-exclusion", "build-tool-swift-windows-test-front-failure-propagation"],
-      "branch": null,
+      "branch": "codex/build-tool-swift-extra-ci-toolchain-declaration-conformance",
       "pr_number": null,
+      "selection_revision": "aed89211922bd4e150b0bab8c8160bcb015a462a",
+      "selection_notes": "Selected immediately after PR #13506 completed 43 terminal acceptable checks and merged through guarded squash auto-merge. The collision-checked exact-main inventory remains schema 3 with 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The 49 paths changed since d5a47d9f709633d3656551d91d559467b64661ba across PRs #13505, #13506, and #13507 add or remove no package root or manifest and produce no new canonical identity or newly unowned eligible gap. Reconciling #13506 to merged makes all four Swift declaration prerequisites terminal: the neutral declaration corpus, CRLF grammar hardening, Swift Dune exclusion, and fail-closed Windows front. This item is therefore the ready dependency payoff, becomes the tenth of eleven declaration consumers, directly advances the remaining-engines umbrella, and preserves the documented Rust-to-Swift-to-TypeScript lane order before beginning the TypeScript Dune chain. Swift 6.3.3 is installed on Windows, the target branch and prior PR are absent, and five live PRs have zero exact overlap across the expected eight-path Swift declaration tranche. Reconciliation plus selection leaves the complete 580-owner/864-edge graph unique, dependency-complete, acyclic, and closed over merged dependencies at 179 merged, 400 pending, and exactly this owner in progress.",
       "notes": "Adopt the merged process-free declaration corpus in the Swift engine without widening execution authority."
     },
     {
@@ -541,13 +536,16 @@
     {
       "id": "build-tool-swift-windows-test-front-failure-propagation",
       "title": "Make the Swift build-tool Windows test front fail closed",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-swift-dune-build-discovery-exclusion"],
       "branch": "codex/build-tool-swift-windows-test-front-failure-propagation",
       "pr_number": 13506,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13506",
       "opened_at": "2026-08-30T16:12:23Z",
       "opened_revision": "1a62f59b5db2bc3a71261220cf644c27753235a4",
+      "merged_at": "2026-08-30T16:38:49Z",
+      "merge_commit": "6ea19ec13f34599b9a9f48263d04d55e85efa873",
+      "final_head_revision": "6924108676d3ae899d2c2c44215800c4267223b9",
       "selection_revision": "d066aff6def388278bd0ad723ffc22bd8b8a766e",
       "rebase_revision": "d5a47d9f709633d3656551d91d559467b64661ba",
       "rebase_notes": "Rebased without conflict before final validation onto exact origin/main d5a47d9f709633d3656551d91d559467b64661ba. The intervening merged Malayalam curriculum change remains inside established human-language and TypeScript package owners, adds no package identity or build-tool contract, and has zero exact overlap with this tranche. The collision inventory and neutral fixture corpus are unchanged.",
