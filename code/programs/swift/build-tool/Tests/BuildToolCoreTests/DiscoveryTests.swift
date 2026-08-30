@@ -178,6 +178,39 @@ struct DiscoveryTests {
         )
     }
 
+    #if os(Windows)
+    @Test(.disabled("directory symbolic links require host capability on Windows"))
+    #else
+    @Test
+    #endif
+    func sourceHashingDoesNotFollowDirectorySymbolicLinks() throws {
+        let root = try makeTempDirectory(label: "hash_directory_link_root")
+        let outside = try makeTempDirectory(label: "hash_directory_link_outside")
+        defer {
+            try? FileManager.default.removeItem(atPath: root)
+            try? FileManager.default.removeItem(atPath: outside)
+        }
+
+        try writeFile((root as NSString).appendingPathComponent("root.swift"), "let root = 1\n")
+        try writeFile(
+            (outside as NSString).appendingPathComponent("external.swift"),
+            "let external = 1\n"
+        )
+        try FileManager.default.createSymbolicLink(
+            atPath: (root as NSString).appendingPathComponent("linked"),
+            withDestinationPath: outside
+        )
+
+        let package = BuildPackage(name: "swift/example", path: root, language: "swift")
+        let normalizedRoot = root.replacingOccurrences(of: "\\", with: "/") + "/"
+        let files = Hasher.collectSourceFiles(package).map {
+            $0.replacingOccurrences(of: "\\", with: "/")
+                .replacingOccurrences(of: normalizedRoot, with: "")
+        }
+
+        #expect(files == ["root.swift"])
+    }
+
     @Test
     func languageRegistryConsumesSharedFixture() throws {
         let fixture = try loadSharedDiscoveryFixture("discovery-language-registry.json")
