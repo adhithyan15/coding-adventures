@@ -7,7 +7,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { basename, join, posix, win32 } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   GENERATED_BOOK_HASH_DIR,
@@ -115,6 +115,13 @@ afterEach(() => {
 });
 
 describe("generated chapter hash shard loader", () => {
+  it("identifies owner basenames in both POSIX and Windows path forms", () => {
+    expect(posix.basename("/tmp/test.d/0002.json")).toBe("0002.json");
+    expect(posix.basename("/tmp/test.d/_meta.json")).toBe("_meta.json");
+    expect(win32.basename("C:\\tmp\\test.d\\0002.json")).toBe("0002.json");
+    expect(win32.basename("C:\\tmp\\test.d\\_meta.json")).toBe("_meta.json");
+  });
+
   it("enumerates only strict top-level .d owners without reading chapter bytes", () => {
     const root = fixture();
     const base = join(root, "core", "generated-book-hashes");
@@ -160,7 +167,7 @@ describe("generated chapter hash shard loader", () => {
       join(root, "core", "generated-book-hashes", "test.json"),
     );
     expect(book.manifest).toEqual(bookManifest());
-    expect(book.sourcePaths.map((path) => path.split("/").at(-1))).toEqual([
+    expect(book.sourcePaths.map((path) => basename(path))).toEqual([
       "0002.json",
       "_meta.json",
     ]);
