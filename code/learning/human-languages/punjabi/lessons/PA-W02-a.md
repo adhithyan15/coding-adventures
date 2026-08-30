@@ -58,4 +58,3 @@ once. Compare only three things: the top line, the upright, and the lower turn.
 <!-- hl-activity: {"id":"PA-W02-a-recognition","kind":"text","assesses":["PA-SCRIPT-INDEPENDENT-A-01"],"prompt":"Which Gurmukhi letter is the independent short a?","answer":"ਅ","accepted":[],"feedback":{"correct":"ਅ can stand at the beginning of a word.","incorrect":"Look once more at ਅ, trace it, and stop."},"response_seconds":8} -->
 
 Cover the model for two seconds. Point to **ਅ** when it appears beside **ਨ**.
-
