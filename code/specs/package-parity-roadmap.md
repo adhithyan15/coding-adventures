@@ -11144,8 +11144,9 @@ graph, and diff checks pass. The broader conformance family passes 177 tests,
 tests that fail locally at the existing NTFS volume/file identity boundary
 before schema evaluation.
 
-The branch rebased cleanly onto `ba289881dcfe9d5f67d08b6531cde2972d5e7120`
-after unrelated Mosaic and Punjabi merges advanced `origin/main`. The
+The branch rebased cleanly onto `49507e7daaf2304a670297f68ebd85ba10d4b009`
+after unrelated Mosaic, Punjabi, and human-language build merges advanced
+`origin/main`. The
 post-rebase schema-3 inventory is unchanged at 15 lanes, 1,388 identities,
 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139,
 and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and
