@@ -10355,6 +10355,31 @@ touches it. After merge reconciliation and selection, the complete graph
 contains 577 owners and 859 edges: 176 merged, 400 pending, and exactly one
 `in-progress` owner.
 
+Implementation remains one pure borrowed-snapshot boundary: it meters every
+supplied BUILD front before selection, applies explicit platform precedence,
+parses only the exact bounded declaration grammar, and returns a fresh sorted
+16-toolchain map without filesystem, Git, process, environment, network, or
+execution authority. Test-first development pinned all 11 neutral fixtures and
+the byte, line, aggregate, CRLF, empty-front, scheduling, alias, force-full,
+unsupported, precedence, mutation, and fresh-map boundaries before source was
+added. The completed Rust package passes 161 unit tests plus three CLI
+integrations through its all-target, generic BUILD, and Windows BUILD paths;
+strict Clippy is clean; and focused production coverage is 98.97% regions and
+99.12% lines. The 205-test neutral family passes with 23 expected skips, corpus
+validation covers 119 cases and 283 files, the Go oracle passes tests, vet, and
+trimpath build, cargo-audit finds no advisory among 57 locked dependencies,
+and parity and graph gates remain collision-clean and complete. Rustfmt 1.97
+reproduces the exact-main package baseline of 42 pre-existing diff headers and
+562 lines while the new module is formatted independently. An independent
+final review found no actionable correctness, security, fixture, purity,
+documentation, state, or scope issue.
+
+Before publication the branch rebased without conflict onto exact `origin/main`
+`3fd579f20ae67001857e2cb7258a394bd089a9eb`, whose merged Telugu evidence paths
+do not overlap this eight-path tranche or change the parity inventory. Six live
+PRs still have zero exact overlap, and no new owner gap displaces the selected
+Rust declaration consumer.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
