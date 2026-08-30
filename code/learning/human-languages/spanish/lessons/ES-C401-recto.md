@@ -33,7 +33,7 @@ reviews_of: [ES-C400-playa, ES-C400-aparcamiento, ES-C401-avenida, ES-C401-segui
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PLAYA, ES-LEX-APARCAMIENTO] -->
 
-[PAUSE 2s] Name the beach and the parking area. (*La playa, el
+[PAUSE 2s] Name the beach and parking. (*La playa, el
 aparcamiento*.)
 
 ## You'll want to know first
