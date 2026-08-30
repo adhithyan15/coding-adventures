@@ -1,0 +1,935 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 401,
+  "title": "Four Words for Following Directions",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:e7742ec822c44870",
+  "lessons": [
+    {
+      "id": "ES-C401-seguir",
+      "sequence": 8820,
+      "title": "seguir — follow what comes next",
+      "headword": "seguir",
+      "romanization": "seguir",
+      "gloss": "to follow or continue — from Vulgar Latin sequīre, built from Latin sequī with the ending of īre, to go",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b3f46f3db68ef6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say train, flight, and beach. (El tren, el vuelo, la playa.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ir — to go."
+            },
+            {
+              "kind": "speech",
+              "text": "continuar — another way to say to continue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "se-GUIR, two beats, weighted last. In gui, the written u is silent and keeps the g hard: say geer, not goo-eer. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "seguir — \"to follow\" or \"to continue.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It comes through Vulgar Latin sequīre from Latin sequī, \"to follow,\" reshaped with the ending of īre, \"to go.\" English sequence is a set in which one thing follows another; a consequence follows from a cause. Those words keep the same old motion."
+            },
+            {
+              "kind": "speech",
+              "text": "In directions, seguir tells you to keep to the route:"
+            },
+            {
+              "kind": "speech",
+              "text": "seguir la avenida — follow the avenue;"
+            },
+            {
+              "kind": "speech",
+              "text": "seguir — continue."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can tell someone to follow a named road or continue moving."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seguir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seguir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seguir la avenida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seguir la avenida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seguir en tren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seguir en tren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "después del vuelo, seguir a la playa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *después del vuelo, seguir a la playa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say follow the avenue. (Seguir la avenida.) What is the old idea shared with English sequence? (One thing follows another.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C401-cambiar",
+      "sequence": 8830,
+      "title": "cambiar — leave one route and take another",
+      "headword": "cambiar",
+      "romanization": "cambiar",
+      "gloss": "to change — Latin cambiāre, itself a word of Gaulish origin, for exchanging one thing for another",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7738859ace0581c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the flight, parking area, pass, and beach. (El vuelo, el aparcamiento, el abono, la playa.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el cambio — the related noun, a change or exchange."
+            },
+            {
+              "kind": "speech",
+              "text": "el destino — what may stay fixed when the route changes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cam-BIAR, two beats, weighted last. Keep mb together as you move into the final iar. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cambiar — \"to change\" or \"to exchange.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It comes from Latin cambiāre, which the Academy identifies as a word of Gaulish origin. Its exchange sense makes the core visible: leave one thing and take another. On a journey that may mean another train, route, or destination."
+            },
+            {
+              "kind": "speech",
+              "text": "cambiar de tren — change trains;"
+            },
+            {
+              "kind": "speech",
+              "text": "cambiar de dirección — change direction;"
+            },
+            {
+              "kind": "speech",
+              "text": "cambiar el destino — change the destination."
+            },
+            {
+              "kind": "speech",
+              "text": "English change reached its present form by a different Romance route, but it belongs to this same old family of exchange."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can follow an avenue, continue straight, and say when the journey changes."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cambiar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cambiar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cambiar de tren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cambiar de tren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seguir recto por la avenida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seguir recto por la avenida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "con el abono, cambiar después del vuelo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *con el abono, cambiar después del vuelo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cambiar la ruta del aparcamiento a la playa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cambiar la ruta del aparcamiento a la playa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the whole direction set: avenue, follow, straight, change. (La avenida, seguir, recto, cambiar.) What older action sits inside cambiar? (Exchanging one thing for another.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C401-avenida",
+      "sequence": 8840,
+      "title": "la avenida — the road by which you come",
+      "headword": "la avenida",
+      "romanization": "la avenida",
+      "gloss": "avenue — a broad street, from avenir, whose older senses include things that come or arrive",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd107c69f7c9824e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the train, the travel pass, and the beach. (El tren, el abono, la playa.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la calle — any street; an avenida is usually broader."
+            },
+            {
+              "kind": "speech",
+              "text": "venir — to come, the idea that helps anchor this road."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-ve-NI-da, four even vowels with the weight on ni. The written v has the same Spanish sound as b; do not give it the English v. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la avenida — \"the avenue,\" usually a broad street."
+            },
+            {
+              "kind": "speech",
+              "text": "The Academy derives avenida from Spanish avenir. The older noun could name something that came in force — especially a river's sudden rise — and also a road that leads, or lets people come, to a particular place. The modern broad city street grew from that road sense."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the scale contrast:"
+            },
+            {
+              "kind": "speech",
+              "text": "la calle — the general word for a street;"
+            },
+            {
+              "kind": "speech",
+              "text": "la avenida — usually a broad street, sometimes tree-lined."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can name the broad street that begins a set of directions."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la avenida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la avenida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la avenida y la calle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la avenida y la calle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seguir y cambiar por la avenida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seguir y cambiar por la avenida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voy en tren a la avenida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *voy en tren a la avenida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tengo un abono y voy a la playa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tengo un abono y voy a la playa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word names a broad street, and which verb lies behind its history? (La avenida; avenir.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C401-recto",
+      "sequence": 8850,
+      "title": "recto — keep the line straight",
+      "headword": "recto",
+      "romanization": "recto",
+      "gloss": "straight — Latin rectus; in directions, continue straight, not resto, the rest or remainder",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01e94be3f340e09b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the beach and the parking area. (La playa, el aparcamiento.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "seguir — the action this direction modifies."
+            },
+            {
+              "kind": "speech",
+              "text": "derecha — right; a turn rather than a straight line."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "REC-to, two beats, weighted first. The pair in the middle is k-t."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep recto/resto apart: REC-to has k; RES-to has s. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "recto — \"straight.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It comes from Latin rectus, also \"straight.\" English rectilinear keeps the straight-line meaning, and every rectangle is built from straight sides and right angles."
+            },
+            {
+              "kind": "speech",
+              "text": "For a route, put it after the action:"
+            },
+            {
+              "kind": "speech",
+              "text": "seguir recto — continue straight."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not let the exam's near-neighbour replace it:"
+            },
+            {
+              "kind": "speech",
+              "text": "recto — straight;"
+            },
+            {
+              "kind": "speech",
+              "text": "resto — the rest, the remainder."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can combine an action and a quality into the direction seguir recto."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "recto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *recto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "recto, resto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *recto, resto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seguir recto por la avenida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seguir recto por la avenida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cambiar y después seguir recto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cambiar y después seguir recto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seguir recto al aparcamiento y después a la playa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seguir recto al aparcamiento y después a la playa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say continue straight. (Seguir recto.) Which consonant keeps recto apart from resto? (K rather than s.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C401-route-recall-1",
+      "sequence": 8860,
+      "title": "route recall one — hear the chain, then rebuild it",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "first retrieval of the four-word directions chain — avenue, follow, straight, change",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2be3cbd20a332be4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the four-word chain from a broad road to a changed route. (La avenida, seguir, recto, cambiar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You are on la avenida. The instruction is seguir recto. Then the route changes: cambiar de dirección. Say those three steps again without the English prompts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la avenida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la avenida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seguir recto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seguir recto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cambiar de dirección",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cambiar de dirección*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the route in one line. (Seguir recto por la avenida y después cambiar de dirección.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C401-route-recall-2",
+      "sequence": 8870,
+      "title": "route recall two — rebuild it from the change",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "second retrieval of the four-word directions chain in a new order",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1319215a6ad35576",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Start with change, then say avenue, follow, and straight. (Cambiar, la avenida, seguir, recto.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Someone says cambiar. Ask which road: ¿Qué avenida? Then recover the instruction seguir recto. The same four words now survive a different cue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cambiar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cambiar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿Qué avenida?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿Qué avenida?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seguir recto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seguir recto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cambiar y seguir recto por la avenida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cambiar y seguir recto por la avenida*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Without looking back, name and use all four direction words. (La avenida; seguir recto; cambiar de dirección.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

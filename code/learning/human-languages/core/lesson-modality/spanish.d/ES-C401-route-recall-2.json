@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C401-route-recall-2",
+    "language": "spanish",
+    "chapter": 401,
+    "sequence": 8870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1319215a6ad35576"
+  },
+  "findings": []
+}

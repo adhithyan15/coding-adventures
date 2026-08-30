@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:e7742ec822c44870",
+  "lessonIds": [
+    "ES-C401-seguir",
+    "ES-C401-cambiar",
+    "ES-C401-avenida",
+    "ES-C401-recto",
+    "ES-C401-route-recall-1",
+    "ES-C401-route-recall-2"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch401.txt",
+  "json": "spanish/narration/ch401.json",
+  "textHash": "fnv1a64:222807ebee009989",
+  "jsonHash": "fnv1a64:930fa4e269bf2b27",
+  "findings": []
+}

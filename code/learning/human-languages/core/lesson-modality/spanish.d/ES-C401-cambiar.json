@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C401-cambiar",
+    "language": "spanish",
+    "chapter": 401,
+    "sequence": 8830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7738859ace0581c"
+  },
+  "findings": []
+}
