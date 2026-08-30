@@ -158,7 +158,6 @@ change that moves them fails a test in a file you did not edit.
 
 | pin | file |
 |---|---|
-| level histogram + lesson count per track | `tests/levels.test.ts`, `core/level-snapshots/` |
 | `summary.totalNodes`, nodes per strand | `tests/strands.test.ts` |
 | exam coverage `covered` / `percent` / `unmapped` | `tests/exam-inventory.test.ts` |
 | the exact set of `probe: null` point ids | `tests/exam-inventory.test.ts` |
@@ -170,6 +169,11 @@ change that moves them fails a test in a file you did not edit.
 **Update the pin and say why in the comment beside it.** Every one of these files already carries
 prose explaining its previous movements; a bare number change is not in keeping and hides the
 reason from the next reader.
+
+Level histograms are intentionally absent from this table. `tests/levels.test.ts` derives them
+directly from canonical lesson, curriculum, and spine owners, proves exact registered-track and
+arithmetic closure, and rejects resurrection of the retired `core/level-snapshots/` rollups.
+There is no generated level file to refresh or a shared same-language counter to edit.
 
 ---
 
@@ -358,8 +362,12 @@ Generate before you check — the drift gates compare committed artifacts to fre
 
 ```
 npm run generate:books generate:narration generate:modality generate:progress
-npm run generate:gentle-snapshots generate:level-snapshots generate:assessment-artifacts
+npm run generate:gentle-snapshots generate:assessment-artifacts
 ```
+
+Level coverage is derived and checked in memory. Do not recreate
+`core/level-snapshots/`; its 23 per-language files were deterministic rollups, not an
+independent source of truth.
 
 `dist/` is gitignored, so `npm run build` first or you are checking a stale CLI. `npx tsc` is a
 stub here; use `node node_modules/typescript/bin/tsc`.

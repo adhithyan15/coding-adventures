@@ -3,15 +3,11 @@
 // The corpus block at the bottom is the one that answers the project owner's question —
 // "how far is each track from A1, and from Advanced?" — with a number rather than a guess.
 
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { defaultCurriculumRoot, loadEverything } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
-import {
-  generatedLevelSnapshotOutputsFromSummary,
-  summarizeLevelTracks,
-} from "../src/level-snapshot-cli.js";
 import {
   CEFR_LEVELS,
   deriveLessonLevel,
@@ -199,7 +195,7 @@ describe("exam alignment", () => {
   });
 });
 
-describe("corpus snapshot", () => {
+describe("corpus level summary", () => {
   // The measured answer to "how far is each track from A1, and from Advanced?"
   //
   // Ratchet these as content lands. `A2: 0` was the headline for a long time: the A2
@@ -217,21 +213,53 @@ describe("corpus snapshot", () => {
   // in parallel and each measured this number alone — 8, 6 and 6 — so each was correct
   // and all three were wrong about the total. It is re-measured here against the merged
   // corpus, which is the only place the real number exists.
-  it("pins the exact corpus through independently mergeable language shards", () => {
-    const { lessons, curricula: paths, spine } = loadEverything();
+  it("derives an exact closed summary without tracked generated rollups", () => {
+    const { registry, lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
-    const snapshots = generatedLevelSnapshotOutputsFromSummary(summary);
-    const snappedTracks = [...snapshots.entries()].map(([relative, expected]) => {
-      expect(readFileSync(join(defaultCurriculumRoot(), relative), "utf8"), relative).toBe(expected);
-      return JSON.parse(expected);
-    });
+    expect(summary.tracks.map((track) => track.language)).toEqual(
+      registry.languages.map((language) => language.id).sort((a, b) => a.localeCompare(b)),
+    );
 
-    expect(summarizeLevelTracks(snappedTracks)).toEqual({
-      totalLessons: summary.totalLessons,
-      byLevel: summary.byLevel,
-      unmapped: summary.unmapped,
-      mappedPercent: summary.mappedPercent,
-    });
+    const byLevel = Object.fromEntries(CEFR_LEVELS.map((level) => [level, 0])) as Record<
+      CefrLevel,
+      number
+    >;
+    let totalLessons = 0;
+    let unmapped = 0;
+    for (const track of summary.tracks) {
+      const mapped = CEFR_LEVELS.reduce((total, level) => {
+        byLevel[level] += track.byLevel[level];
+        return total + track.byLevel[level];
+      }, 0);
+      expect(mapped + track.unmapped, track.language).toBe(track.lessonCount);
+      const reach = [...CEFR_LEVELS].reverse().find((level) => track.byLevel[level] > 0) ?? null;
+      expect(track.reach, track.language).toBe(reach);
+      totalLessons += track.lessonCount;
+      unmapped += track.unmapped;
+    }
+
+    expect(totalLessons).toBe(summary.totalLessons);
+    expect(totalLessons).toBe(lessons.length);
+    expect(byLevel).toEqual(summary.byLevel);
+    expect(unmapped).toBe(summary.unmapped);
+    expect(totalLessons - unmapped).toBe(
+      CEFR_LEVELS.reduce((total, level) => total + summary.byLevel[level], 0),
+    );
+    expect(summary.mappedPercent).toBe(
+      totalLessons === 0 ? 0 : Math.round(((totalLessons - unmapped) / totalLessons) * 100),
+    );
+  });
+
+  it("rejects resurrection of tracked level snapshot rollups", () => {
+    const root = defaultCurriculumRoot();
+    const collisions = readdirSync(join(root, "core"), { withFileTypes: true })
+      .filter((entry) => entry.name.toLowerCase() === "level-snapshots");
+    for (const entry of collisions) {
+      expect(entry.isDirectory(), entry.name).toBe(true);
+      // Git cannot track an empty directory. Any committed resurrection therefore
+      // puts at least one owner, aggregate, symlink, or sentinel inside this path.
+      expect(readdirSync(join(root, "core", entry.name)), entry.name).toEqual([]);
+    }
   });
   it("shows twenty tracks have reached A2, and only two have not reached A1", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
