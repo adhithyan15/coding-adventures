@@ -45,10 +45,13 @@ export default [
       expect(iv[7]!.strokeOrder).toHaveLength(4);
       expect(iv[7]!.penLifts).toBe(2);
       expect(iv[7]!.strokeOrderSource?.citation).toMatch(/dot_stroke_v_10_ae\.png.*movements 1–4.*version 2\.6/i);
+      expect(iv[10]!.strokeOrder).toHaveLength(5);
+      expect(iv[10]!.penLifts).toBe(4);
+      expect(iv[10]!.strokeOrderSource?.citation).toMatch(/dot_stroke_v_11_ai\.png.*movements 1–5.*version 2\.6/i);
       expect(iv[12]!.strokeOrder).toHaveLength(6);
       expect(iv[12]!.penLifts).toBe(5);
       expect(iv[12]!.strokeOrderSource?.citation).toMatch(/dot_stroke_v_7_ru\.png.*movements 1–6.*version 2\.6/i);
-      expect(iv.filter((_, index) => ![0, 1, 2, 4, 6, 7, 12].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+      expect(iv.filter((_, index) => ![0, 1, 2, 4, 6, 7, 10, 12].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
       // The vocalic-R vowel is ISO-15919 r̥ = r + U+0325 (ring below), not IAST ṛ.
       expect([...iv[12]!.sound].map((c) => c.codePointAt(0))).toEqual([0x72, 0x325]);
     },

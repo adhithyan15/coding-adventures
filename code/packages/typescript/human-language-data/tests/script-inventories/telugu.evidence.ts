@@ -180,6 +180,26 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ఎ") ?? 0).toBe(0);
     expect(missingByScript.get("telugu.json")?.has("ఏ")).toBe(false);
     expect(affected.get("ఏ") ?? 0).toBe(0);
+    const teluguAi = scripts.telugu!.independentVowels!.find(
+      (entry) => entry.glyph === "ఐ",
+    )!;
+    expect(teluguAi.sound).toBe("ai");
+    expect(teluguAi.penLifts).toBe(4);
+    expect(teluguAi.strokeOrder).toEqual([
+      "sweep left across the compact upper arch",
+      "restart and curve down around the left bowl",
+      "restart and sweep right around the broad lower bowl",
+      "restart and sweep left across the upper-right arch",
+      "restart and sweep left across the upper-left arch",
+    ]);
+    expect(teluguAi.strokeOrderSource?.citation).toMatch(
+      /Sathish Shanmugam.*independent vowel ఐ.*dot_stroke_v_11_ai\.png.*movements 1–5.*version 2\.6/i,
+    );
+    expect(teluguAi.strokeOrderSource?.variation).toMatch(
+      /five disconnected directional movements.*separate pen-down run.*1.?3.*central and lower body.*4.?5.*two upper arches.*Noto Sans Telugu/i,
+    );
+    expect(missingByScript.get("telugu.json")?.has("ఐ")).toBe(false);
+    expect(affected.get("ఐ") ?? 0).toBe(0);
     const teluguVocalicR = scripts.telugu!.independentVowels!.find(
       (entry) => entry.glyph === "ఋ",
     )!;
