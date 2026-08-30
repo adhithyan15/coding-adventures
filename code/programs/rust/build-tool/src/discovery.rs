@@ -137,6 +137,7 @@ const SKIP_DIRS: &[&str] = &[
     "dist",
     "dist-newstyle",
     "build",
+    "_build",
     "target",
     ".claude",
     "specs",
@@ -625,19 +626,14 @@ mod tests {
 
     #[test]
     fn test_exact_dune_build_directory_is_skipped_but_near_names_are_preserved() {
-        let dir = std::env::temp_dir().join(format!(
-            "build_tool_dune_build_skip_{}",
-            std::process::id()
-        ));
+        let dir =
+            std::env::temp_dir().join(format!("build_tool_dune_build_skip_{}", std::process::id()));
         let _ = fs::remove_dir_all(&dir);
 
         let fixtures = [
             ("packages/ocaml/generated/_build/decoy", "ignored"),
-            ("packages/ocaml/generated/_Build/case-source", "case"),
-            (
-                "packages/ocaml/generated/_build-example/near-source",
-                "near",
-            ),
+            ("packages/ocaml/source/_Build/case-source", "case"),
+            ("packages/ocaml/source/_build-example/near-source", "near"),
         ];
         for (relative, command) in fixtures {
             let package = dir.join(relative);
@@ -651,12 +647,10 @@ mod tests {
             .map(|package| package.name.as_str())
             .collect();
         assert_eq!(names, vec!["ocaml/case-source", "ocaml/near-source"]);
-        assert!(packages
-            .iter()
-            .all(|package| !package
-                .path
-                .components()
-                .any(|part| part.as_os_str() == "_build")));
+        assert!(packages.iter().all(|package| !package
+            .path
+            .components()
+            .any(|part| part.as_os_str() == "_build")));
 
         let _ = fs::remove_dir_all(&dir);
     }
