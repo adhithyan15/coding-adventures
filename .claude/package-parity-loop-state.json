@@ -11,24 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13535,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13535",
-    "branch": "codex/build-tool-csharp-fsharp-dune-build-discovery-conformance",
-    "implementation_revision": "c797c5e4de18a462c4c5e0cc8474c832b331c35a",
-    "status": "checks-pending",
-    "opened_at": "2026-08-30T20:22:29Z"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-30T20:22:33Z",
+    "observed_at": "2026-08-30T20:38:56Z",
     "pr_number": 13535,
     "run_id": 33333469275,
     "attempt": 1,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #13535 is open from the validated shared .NET Dune-discovery branch. GitHub reports initial head eb9795e95bcbe5ef022347988755f275ee023e84 mergeable and non-draft. Required CI, CodeQL, and human-language checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub still reports no merge conflict."
+    "status": "merged",
+    "notes": "PR #13535 completed all 40 final-head checks with 33 successes and seven expected skips. GitHub reported the reviewed head conflict-free before guarded squash auto-merge completed as 3810c7380ca67ae82f300af4d7d4134c25f2cef7; no manual merge command was used."
   },
   "last_inventory": {
-    "revision": "edcf0dd65077852392a2b7dcf7a9df64a1b5704f",
+    "revision": "3810c7380ca67ae82f300af4d7d4134c25f2cef7",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -637,13 +630,16 @@
     {
       "id": "build-tool-csharp-fsharp-dune-build-discovery-conformance",
       "title": "Prove Dune _build discovery exclusion in the C# and F# build tools",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["ocaml-build-substrate-process-free-core"],
       "branch": "codex/build-tool-csharp-fsharp-dune-build-discovery-conformance",
       "pr_number": 13535,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13535",
       "opened_at": "2026-08-30T20:22:29Z",
       "opened_revision": "eb9795e95bcbe5ef022347988755f275ee023e84",
+      "merged_at": "2026-08-30T20:38:56Z",
+      "merge_commit": "3810c7380ca67ae82f300af4d7d4134c25f2cef7",
+      "merge_notes": "All 40 final-head checks were terminal and acceptable: 33 succeeded and seven were expected skips. GitHub reported the head conflict-free before guarded squash auto-merge completed; no manual merge command was used.",
       "selection_revision": "d45caf1cd40c2946351dd28aa3464f4301cec5aa",
       "selection_notes": "Selected after PR #13530 completed 41 terminal acceptable checks and merged through guarded squash auto-merge. The exact-main collision inventory remains schema 3 with 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The identity delta is zero and no newly eligible unowned gap appeared. The declaration completion umbrella is selection-blocked and has no independent source behavior. This dependency-ready shared .NET owner closes the C# and F# Dune discovery contract together, advances two front doors and the Dune completion umbrella, and therefore outranks isolated single-engine hashing repairs. .NET SDK 9.0.315 is installed, the target branch and prior PR were absent, and all six live PRs have zero exact overlap with the expected implementation, test, documentation, state, and roadmap paths. Reconciliation plus selection leaves the complete 580-owner/864-edge graph at 183 merged, 396 pending, and exactly this owner in progress.",
       "implementation_revision": "c797c5e4de18a462c4c5e0cc8474c832b331c35a",
@@ -666,11 +662,24 @@
     {
       "id": "build-tool-python-dune-build-discovery-conformance",
       "title": "Prove Dune _build discovery exclusion in the Python build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "branch": "codex/build-tool-python-dune-build-discovery-conformance",
+      "pr_number": null,
+      "selection_revision": "3810c7380ca67ae82f300af4d7d4134c25f2cef7",
+      "selection_notes": "Selected after PR #13535 completed 40 terminal acceptable checks and merged through guarded squash auto-merge as 3810c7380ca67ae82f300af4d7d4134c25f2cef7. The exact-main schema-3 inventory is unchanged at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. No package root or manifest changed. The pre-selection conformance audit discovered and added the separate pending Python generated-directory hashing owner before prioritization; the complete graph is now 581 owners/865 edges, unique, dependency-complete, and acyclic. This Dune leaf's sole dependency is merged; it repairs exact _build discovery and OCaml registry consumption in the 488-package Python lane, and directly unlocks that new hashing owner while advancing the Dune umbrella, giving it more leverage and a smaller repair surface than the independent Haskell leaf. Python 3.13 is installed, the target branch and prior PR were absent, and all seven live PRs have zero exact overlap with the expected Python build-tool, state, roadmap, and root-changelog paths. Reconciliation, owner addition, and selection leave 184 merged, 396 pending, and exactly this owner in progress.",
+      "validation_notes": "Tests-first evidence produced three intended failures before source: OCaml was unknown, the shared Dune decoy was discovered, and the direct exact/case/near-name regression retained exact _build. After the bounded source repair, the focused discovery suite passes 68 tests. The complete Python package passes 457 tests at 90.79% total coverage with discovery.py at 96%; changed-module mypy passes. The language-neutral build-tool family passes 150 tests with two skips and 941 subtests, validate-corpus accepts 119 cases/283 files across 16 implementations, 15 lanes, and 12 front doors, and the Go oracle passes mod verification, tests, vet, and a trimmed build. BUILD and BUILD_windows are byte-identical. The exact-main inventory remains collision-free with zero unknown buckets, and the 581-owner/865-edge state graph is unique, dependency-complete, and acyclic.",
+      "security_notes": "pip-audit reports no known vulnerabilities, uv pip check reports compatible installed packages, the package builds both sdist and wheel, compileall passes, and Bandit passes for the changed discovery module. Full Ruff, mypy, and Bandit runs reproduce only pre-existing findings outside the changed behavior; changed-module Ruff has six pre-existing style findings and adds none on changed lines.",
+      "notes": "Python's current registry test projects out OCaml inputs and its discovery skip set lacks exact _build. Consume the relevant fixture records, add the exact rule, and preserve case variants and near names without widening host authority."
+    },
+    {
+      "id": "build-tool-python-generated-directory-hashing-exclusion",
+      "title": "Exclude generated directories from Python build-tool source hashing",
+      "status": "pending",
+      "depends_on": ["build-tool-python-dune-build-discovery-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Python's current registry test projects out OCaml inputs and its discovery skip set lacks exact _build. Consume the relevant fixture records, add the exact rule, and preserve case variants and near names without widening host authority."
+      "notes": "Discovered by the exact-main pre-selection conformance audit after PR #13535. Both Python hashing walkers ignore os.walk dirnames, so exact generated components such as _build remain inside package hashes contrary to the shared generated-artifact contract. Add exact case-sensitive pruning for the complete registry in a separate post-discovery tranche, preserving _Build and _build-example and avoiding symlink or host-authority expansion."
     },
     {
       "id": "build-tool-elixir-dune-build-discovery-fixture-adoption",

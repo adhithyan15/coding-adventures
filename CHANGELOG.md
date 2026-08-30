@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Python build-tool Dune discovery
+
+- Excluded Dune's exact case-sensitive `_build` output component from Python
+  package discovery while retaining `_Build` and `_build-example` source
+  directories.
+- Extended the Python shared-registry consumer through the emerging OCaml
+  package and program records, with the generated Dune decoy excluded.
+
 ### Shared .NET build-tool discovery
 
 - Aligned the shared C# engine with the complete language-neutral discovery
