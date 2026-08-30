@@ -538,11 +538,28 @@ voice lessons does it contain", because chapters are prerequisite-ordered and a 
 lesson sitting behind a sight one is not reachable in the car.
 
 Every downloadable book projects that same result at the start of each chapter.
-`generate:books` writes one byte-gated `chapter-modalities.tex` file per track with
+The book generator derives one `chapter-modalities.tex` projection per track with
 font-independent car, eye, and pen signs, full printed-lesson counts, and the
-core-based hands-free prefix. Generated and protected handwritten chapters both call
-the projection immediately after their title and label, so a reader sees the requirement
-before the first lesson and the book cannot drift from the app or narration model.
+core-based hands-free prefix. Those projections are compile inputs, not tracked
+curriculum: `check-book-compile.sh` materializes them beneath a fresh temporary
+directory, exposes only the matching track through `TEXINPUTS`, and removes the
+directory when the run exits. A clean checkout needs the same local-dependency
+bootstrap as the all-books workflow:
+
+```bash
+(cd ../pixel-container && npm ci --omit=dev --ignore-scripts)
+(cd ../paint-instructions && npm ci --omit=dev --ignore-scripts)
+(cd ../paint-vm && npm ci --omit=dev --ignore-scripts)
+(cd ../paint-vm-svg && npm ci --omit=dev --ignore-scripts)
+npm ci --ignore-scripts
+npm run build
+npm run check:compile
+```
+
+A missing build fails clearly instead of reviving generated files in the source
+tree. Generated and protected handwritten chapters both call the projection
+immediately after their title and label, so a reader sees the requirement before
+the first lesson and the book cannot drift from the app or narration model.
 
 #### One lesson, two modalities (HL-C41)
 
