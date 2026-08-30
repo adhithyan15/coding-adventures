@@ -11,24 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13510,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13510",
-    "branch": "codex/build-tool-swift-extra-ci-toolchain-declaration-conformance",
-    "implementation_revision": "75153a5c30568c1af3f9acd94f5d764cb2d14bfd",
-    "status": "checks-pending",
-    "opened_at": "2026-08-30T17:04:43Z"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-30T17:04:50Z",
+    "observed_at": "2026-08-30T17:24:49Z",
     "pr_number": 13510,
     "run_id": null,
     "attempt": 1,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #13510 is open and non-draft. GitHub reports validated publication head 75153a5c30568c1af3f9acd94f5d764cb2d14bfd mergeable and conflict-free, but required CI, Swift-app, and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged-via-auto-merge",
+    "notes": "All 43 final checks were acceptable: 36 successes and seven non-failing skips or neutral conclusions. GitHub reported final head 8f72fe8f515838e50c9cb91a24a25282fcfc12da conflict-free; guarded squash auto-merge was enabled only then, and GitHub merged PR #13510 as 43a34325da4f6a4430d6a1053e674247c8107195 without a manual merge command."
   },
   "last_inventory": {
-    "revision": "aed89211922bd4e150b0bab8c8160bcb015a462a",
+    "revision": "43a34325da4f6a4430d6a1053e674247c8107195",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -441,13 +434,17 @@
     {
       "id": "build-tool-swift-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Swift build tool consume extra CI toolchain declarations",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-swift-dune-build-discovery-exclusion", "build-tool-swift-windows-test-front-failure-propagation"],
       "branch": "codex/build-tool-swift-extra-ci-toolchain-declaration-conformance",
       "pr_number": 13510,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13510",
       "opened_at": "2026-08-30T17:04:43Z",
       "opened_revision": "75153a5c30568c1af3f9acd94f5d764cb2d14bfd",
+      "final_head_revision": "8f72fe8f515838e50c9cb91a24a25282fcfc12da",
+      "merged_at": "2026-08-30T17:24:49Z",
+      "merge_commit": "43a34325da4f6a4430d6a1053e674247c8107195",
+      "merge_notes": "All 43 final checks were acceptable: 36 successes and seven non-failing skips or neutral conclusions. GitHub reported the final head conflict-free; guarded squash auto-merge was enabled and GitHub merged the PR without a manual merge command.",
       "selection_revision": "aed89211922bd4e150b0bab8c8160bcb015a462a",
       "selection_notes": "Selected immediately after PR #13506 completed 43 terminal acceptable checks and merged through guarded squash auto-merge. The collision-checked exact-main inventory remains schema 3 with 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The 49 paths changed since d5a47d9f709633d3656551d91d559467b64661ba across PRs #13505, #13506, and #13507 add or remove no package root or manifest and produce no new canonical identity or newly unowned eligible gap. Reconciling #13506 to merged makes all four Swift declaration prerequisites terminal: the neutral declaration corpus, CRLF grammar hardening, Swift Dune exclusion, and fail-closed Windows front. This item is therefore the ready dependency payoff, becomes the tenth of eleven declaration consumers, directly advances the remaining-engines umbrella, and preserves the documented Rust-to-Swift-to-TypeScript lane order before beginning the TypeScript Dune chain. Swift 6.3.3 is installed on Windows, the target branch and prior PR are absent, and five live PRs have zero exact overlap across the expected eight-path Swift declaration tranche. Reconciliation plus selection leaves the complete 580-owner/864-edge graph unique, dependency-complete, acyclic, and closed over merged dependencies at 179 merged, 400 pending, and exactly this owner in progress.",
       "implementation_revision": "104485fed0b8beead70f5e65e2c9ed4793ec8124",
@@ -541,10 +538,12 @@
     {
       "id": "build-tool-typescript-dune-build-discovery-exclusion",
       "title": "Make TypeScript build-tool discovery honor the Dune _build exclusion",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-typescript-language-identity-registry"],
-      "branch": null,
+      "branch": "codex/build-tool-typescript-dune-build-discovery-exclusion",
       "pr_number": null,
+      "selection_revision": "43a34325da4f6a4430d6a1053e674247c8107195",
+      "selection_notes": "Selected after PR #13510 completed 43 acceptable checks and merged through guarded squash auto-merge as 43a34325da4f6a4430d6a1053e674247c8107195, followed by a collision-checked exact-main refresh. The schema-3 inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. PRs #13509 and #13510 changed 19 paths since aed89211922bd4e150b0bab8c8160bcb015a462a but no package root or manifest, so no identity or newly unowned gap displaces this owner. Both prerequisites are merged. This final established-engine Dune repair unlocks four owned downstream nodes: TypeScript declaration conformance, generated-directory hashing, static build-front typechecking, and the selection-blocked Dune completion umbrella. Node 24.16.0 and npm 11.13.0 are installed, the existing package dependencies suffice, the target branch and prior PR were absent, and six live PRs have zero exact overlap across the expected seven-path tranche. Reconciliation plus selection leaves the 580-owner/864-edge graph unique, dependency-complete, acyclic, and closed over merged dependencies at 180 merged, 399 pending, and exactly this owner in progress.",
       "notes": "TypeScript consumes the complete shared discovery-language-registry fixture but does not prune the exact _build component. Add the bounded exact-component repair and preserve case variants and near names in its own engine tranche."
     },
     {

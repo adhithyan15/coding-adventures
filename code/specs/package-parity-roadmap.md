@@ -10639,6 +10639,41 @@ conflict-free, and non-draft. Required CI, Swift-app, and CodeQL checks are
 queued or in progress, so auto-merge remains disabled until every required
 check is terminal and acceptable and GitHub still reports no conflict.
 
+## Post-#13510 Refresh and TypeScript Dune Selection
+
+PR #13510 completed all 43 reported checks acceptably: 36 successes and seven
+non-failing skips or neutral conclusions. Auto-merge was enabled only after
+GitHub reported final head `8f72fe8f515838e50c9cb91a24a25282fcfc12da`
+conflict-free, and GitHub merged it as
+`43a34325da4f6a4430d6a1053e674247c8107195` at 2026-08-30T17:24:49Z
+without a manual merge command. The Swift declaration owner therefore advances
+to `merged` and the active PR is cleared.
+
+The collision-checked exact-main inventory at
+`43a34325da4f6a4430d6a1053e674247c8107195` remains schema 3 with 15
+established lanes, 1,388 implementation identities, 4,602 slots, and 1,427
+all-reported identities. Completion bands remain 175/265, 123/934, 170/2,139,
+and 920/12,880; Rust has 731 singletons, OCaml remains emerging at zero
+packages, and collisions and unknown buckets remain zero. The 19 paths changed
+since the prior inventory by PRs #13509 and #13510 include no package root or
+manifest. Canonical identities are unchanged and no newly unowned eligible gap
+appeared.
+
+The dependency/leverage pass selects
+`build-tool-typescript-dune-build-discovery-exclusion` on branch
+`codex/build-tool-typescript-dune-build-discovery-exclusion`. Its OCaml
+process-free substrate and TypeScript identity-registry prerequisites are both
+merged. This bounded exact-component repair is the final established-engine
+Dune discovery gap and unlocks four owned downstream nodes: TypeScript
+declaration conformance, TypeScript generated-directory hashing, the static
+build-front typecheck, and the selection-blocked Dune completion umbrella.
+Node 24.16.0 and npm 11.13.0 are installed and the existing Vitest and tsx
+dependencies suffice. The target branch and prior PR were absent, and six live
+PRs have zero exact overlap across the expected seven-path state, roadmap,
+root/package documentation, TypeScript discovery, and discovery-test tranche.
+Reconciliation plus selection leaves the complete 580-owner/864-edge graph at
+180 merged, 399 pending, and exactly one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
