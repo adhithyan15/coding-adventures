@@ -98,6 +98,8 @@ const URDU_SIN = ductusFor("س", "urdu-nastaliq")!;
 const urduSinOutline = naskhOutline("س");
 const URDU_SHIN = ductusFor("ش", "urdu-nastaliq")!;
 const urduShinOutline = naskhOutline("ش");
+const URDU_ZWAD = ductusFor("ض", "urdu-nastaliq")!;
+const urduZwadOutline = naskhOutline("ض");
 const URDU_FE = ductusFor("ف", "urdu-nastaliq")!;
 const urduFeOutline = naskhOutline("ف");
 const URDU_QAF = ductusFor("ق", "urdu-nastaliq")!;
@@ -1254,6 +1256,26 @@ describe("Urdu ڑ — re-series body followed by one retroflex mark", () => {
     expect(strip.frames).toHaveLength(3);
     expect(strip.penLifts).toBe(1);
     expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+});
+
+describe("Urdu ض — elongated swad-series body followed by one dot", () => {
+  const steps = ductusSteps(URDU_ZWAD);
+  const strip = ductusFilmstrip(URDU_ZWAD, urduZwadOutline);
+
+  it("starts the lower bowl and upper dot only after their lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      true,
+      true,
+    ]);
+  });
+
+  it("reports three movements across three strokes", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
   });
 });
 

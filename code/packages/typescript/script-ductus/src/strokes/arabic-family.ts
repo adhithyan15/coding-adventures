@@ -4481,4 +4481,77 @@ export const tailEntries: DuctusEntry[] = [
       source: urduAlphabetSource("ز"),
     },
   ],
+  [
+    "urdu-nastaliq:ض",
+    {
+      script: "urdu-nastaliq",
+      glyph: "ض",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "close the elongated upper oval clockwise and finish its short tooth",
+              path: [
+                { x: 535, y: 30 },
+                { x: 560, y: 90 },
+                { x: 620, y: 160 },
+                { x: 700, y: 230 },
+                { x: 790, y: 305 },
+                { x: 870, y: 320 },
+                { x: 950, y: 285 },
+                { x: 1010, y: 230 },
+                { x: 1015, y: 175 },
+                { x: 970, y: 115 },
+                { x: 900, y: 70 },
+                { x: 810, y: 45 },
+                { x: 720, y: 38 },
+                { x: 630, y: 42 },
+                { x: 535, y: 30 },
+                { x: 530, y: 65 },
+                { x: 520, y: 105 },
+                { x: 510, y: 145 },
+                { x: 495, y: 190 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "after one lift, restart below the oval and sweep through the lower bowl from right to left",
+              path: [
+                { x: 500, y: -54 },
+                { x: 475, y: -115 },
+                { x: 425, y: -175 },
+                { x: 360, y: -215 },
+                { x: 280, y: -232 },
+                { x: 205, y: -225 },
+                { x: 145, y: -185 },
+                { x: 105, y: -125 },
+                { x: 92, y: -65 },
+                { x: 100, y: 20 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "after another lift, place the dot above last",
+              path: [
+                { x: 725, y: 470 },
+                { x: 675, y: 515 },
+                { x: 725, y: 568 },
+                { x: 770, y: 520 },
+                { x: 725, y: 470 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: urduAlphabetSource("ض"),
+    },
+  ],
 ];

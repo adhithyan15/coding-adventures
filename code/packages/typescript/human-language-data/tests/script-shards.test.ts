@@ -72,9 +72,9 @@ const INVENTORIES = [
   {
     name: "urdu-nastaliq",
     plan: URDU_NASTALIQ_SCRIPT_PLAN,
-    letters: 30,
+    letters: 31,
     marks: 2,
-    digest: "21b13b6e841c92002f8953f90df2dddeafe5c3b6db8d9b17a946bc929e96a845",
+      digest: "afaf69caacb5f99857179a6541b4cca76596993acb888359287f7ed2e5708e88",
   },
 ] as const;
 

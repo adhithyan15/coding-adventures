@@ -1,0 +1,29 @@
+{
+  "glyph": "ض",
+  "sound": "z",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ض",
+    "initial": "ضـ",
+    "medial": "ـضـ",
+    "final": "ـض"
+  },
+  "components": [
+    "elongated swad-series oval with a short tooth",
+    "lower leftward bowl",
+    "one dot above"
+  ],
+  "strokeOrder": [
+    "close the elongated upper oval clockwise and finish its short tooth",
+    "after one lift, restart below the oval and sweep through the lower bowl from right to left",
+    "after another lift, place the dot above last"
+  ],
+  "strokeOrderNote": "source-verified independent calligraphic and handwriting animations and prose",
+  "penLifts": 2,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Khe, ze, zal, swad, and zwad, independent ض calligraphic and handwriting animations and Zwad instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/khe-ze-zal-swad-and-zwad/",
+    "variation": "The independent-form animations build the elongated swad-series body before its upper dot: the upper oval closes clockwise and finishes with its short tooth, the pen restarts for the lower right-to-left bowl, and the dot is placed last after a second lift. The adjacent prose distinguishes zwad from fe by its elongated body and tooth, while the chapter identifies zwad as the dotted member of the swad series. This three-run learner path fits those movements to the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback. The evidence and glyph identity remain Urdu-specific rather than borrowing Arabic ض's independently sourced order."
+  },
+  "notes": "Primarily appears in words of Arabic origin; homophonous with Urdu ze and zal in ordinary pronunciation."
+}
