@@ -105,7 +105,7 @@ function bookProgress(track: TrackProgress): string {
   return `${track.bookChapters} ${chapterWord}; through Ch. ${track.latestBookChapter}; ${track.generatedBookChapters} generated`;
 }
 
-/** One independently mergeable Markdown progress card. */
+/** One deterministic Markdown progress card retained as an in-memory projection. */
 export function renderTrackProgressCard(track: TrackProgress): string {
   return [
     `# ${track.name} progress`,

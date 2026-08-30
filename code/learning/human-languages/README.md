@@ -61,7 +61,6 @@ core/lesson-modality/<language>.d/*.json generated voice/sight/pen, one owner pe
 core/gentle-ramp-snapshots/<language>.d/ generated metric/finding owners; no flat aggregate
 core/generated-book-hashes/<language>.d/ generated book hashes, one JSON owner per chapter
 core/generated-narration-hashes/<language>.d/ generated narration hashes, one JSON owner per chapter
-progress/*.md                   generated per-language progress cards for conflict-free authoring
 core/figure-generation.json     configured canonical-data SVG figures and safe book targets
 core/generated-figure-hashes.json generated: figure source/SVG drift fingerprints
 concepts/taxonomy.json          cross-language semantic join keys
@@ -269,11 +268,12 @@ enter cross-language review only after focused retrieval.
 
 ## Tracks
 
-Each language owns an independently generated card under [`progress/`](./progress/).
-Keeping those facts in one file per track lets Spanish, Gujarati, French, and every
-other curriculum advance without rewriting this shared README. A release or docs
-collector may assemble the cards into a consolidated table; authoring PRs never need
-to wait for that presentation step.
+The registry-ordered progress table is an on-demand projection, so Spanish,
+Gujarati, French, and every other curriculum can advance without rewriting
+tracked presentation files. From `code/packages/typescript/human-language-data`,
+run `npm run build && npm run report:progress` to print current canonical lesson,
+mapped lesson, and book counts. The public Language Ladder app above is the
+reader-facing live view; authoring PRs never wait for a presentation commit.
 
 Spanish is the pilot that proved the format; every other track replicates it,
 grounding each word against English plus whatever languages the learner already
