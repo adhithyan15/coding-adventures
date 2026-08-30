@@ -464,7 +464,9 @@ console.log(prose, nested);
         # +1: forme-theme-classless locks its standalone compiler toolchain.
         # +1: forme-resolve-asset-refs-fs locks its compiler toolchain.
         # +1: forme-load-assets-fs locks its compiler toolchain.
-        self.assertEqual(summary.locked_compilers, 463)
+        # +1: the TypeScript build tool locks the compiler that now gates its
+        # generic BUILD front before coverage.
+        self.assertEqual(summary.locked_compilers, 464)
 
 
 if __name__ == "__main__":

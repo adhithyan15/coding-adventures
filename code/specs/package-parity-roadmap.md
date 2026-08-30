@@ -10799,7 +10799,7 @@ zero OCaml packages, zero collisions, and zero unknown buckets. The
 lifecycle-valid at 181 merged, 398 pending, and exactly this owner in progress.
 Independent security and state/documentation reviews pass after correcting one
 roadmap overclaim about the separately owned hashing gap. Seven live PRs are
-present at final review and all have zero exact overlap with this 10-path
+present at final review and all have zero exact overlap with this 11-path
 tranche. Once this owner merges, TypeScript declaration conformance becomes
 dependency-eligible; generated-directory hashing remains separately pending.
 
@@ -10810,6 +10810,15 @@ exact overlap across seven other live PRs, and GitHub reports the PR mergeable,
 conflict-free, and non-draft. Required CI and CodeQL checks are queued or in
 progress, so auto-merge remains disabled until every required check is
 terminal and acceptable and GitHub still reports no conflict.
+
+The first exact-head CI detect job failed only because the repository-wide
+TypeScript portability contract still expected 463 locked compilers after this
+owner intentionally added the 464th. Actual logs showed every preceding
+parity-metadata family passing before that exact assertion. The smallest repair
+increments the aggregate count and adds the build-tool reason beside it; all 16
+focused portability tests pass locally. The same PR branch now carries the
+11-path tranche, still with zero exact overlap across six other live PRs.
+Replacement CI is pending and auto-merge remains disabled.
 
 ## Autonomous Loop Protocol
 
