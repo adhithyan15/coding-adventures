@@ -81,6 +81,12 @@ export interface Mark {
   }>;
   compositionOrder?: string[];
   compositionSource?: { citation: string; url: string; variation?: string };
+  /** Optional standalone handwriting claim for a mark with a sourced ductus. */
+  components?: string[];
+  strokeOrder?: string[];
+  strokeOrderNote?: string;
+  penLifts?: number;
+  strokeOrderSource?: { citation: string; url: string; variation?: string };
 }
 
 /** An obligatory joined shape whose editable text remains existing letters. */
@@ -163,6 +169,10 @@ export function verifiedLetterFont(
     ].some(
       (letter) =>
         letter.glyph === glyph && letter.strokeOrderSource?.url === sourceUrl,
+    ) ||
+    (script.marks ?? []).some(
+      (mark) =>
+        mark.mark === glyph && mark.strokeOrderSource?.url === sourceUrl,
     ),
   )?.font;
 }

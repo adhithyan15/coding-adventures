@@ -4,19 +4,23 @@ import type { StrokeSource } from "../strokes.ts";
 import type { DuctusEntry } from "./registry.ts";
 import kannada from "../../../../../learning/human-languages/data/scripts/kannada.json";
 
-const kannadaIndependentVowelSource = (glyph: string): StrokeSource => {
-  const letter = kannada.independentVowels.find(
+const kannadaLetterSource = (glyph: string): StrokeSource => {
+  const letter = [...kannada.letters, ...kannada.independentVowels].find(
     (candidate) => candidate.glyph === glyph,
   );
+  const mark = kannada.marks.find((candidate) => candidate.mark === glyph);
+  const owner = letter ?? mark;
   if (
-    !letter ||
-    !("strokeOrderSource" in letter) ||
-    !letter.strokeOrderSource
+    !owner ||
+    !("strokeOrderSource" in owner) ||
+    !owner.strokeOrderSource
   ) {
     throw new Error(`Kannada ${glyph} has no verified source`);
   }
-  return letter.strokeOrderSource;
+  return owner.strokeOrderSource;
 };
+
+const kannadaIndependentVowelSource = kannadaLetterSource;
 
 export const entries: DuctusEntry[] = [
   // Gopala Krishna A's 35-frame animation keeps the pencil down throughout:
@@ -996,6 +1000,55 @@ export const entries: DuctusEntry[] = [
         },
       ],
       source: kannadaIndependentVowelSource("ಋ"),
+    },
+  ],
+  // The source animation writes ಅಃ, so the standalone U+0C83 record owns only
+  // its final two pen-down runs: the upper closed loop, then the lower closed
+  // loop after one lift. These medians fit those runs to Noto Sans Kannada.
+  [
+    "kannada:ಃ",
+    {
+      script: "kannada",
+      glyph: "ಃ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the upper dot as a closed loop",
+              path: [
+                { x: 153, y: 28 },
+                { x: 210, y: 48 },
+                { x: 235, y: 105 },
+                { x: 210, y: 165 },
+                { x: 153, y: 195 },
+                { x: 92, y: 165 },
+                { x: 68, y: 105 },
+                { x: 92, y: 48 },
+                { x: 153, y: 28 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the lower dot as a closed loop",
+              path: [
+                { x: 153, y: 290 },
+                { x: 210, y: 312 },
+                { x: 235, y: 382 },
+                { x: 210, y: 450 },
+                { x: 153, y: 478 },
+                { x: 92, y: 450 },
+                { x: 68, y: 382 },
+                { x: 92, y: 312 },
+                { x: 153, y: 290 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: kannadaLetterSource("ಃ"),
     },
   ],
 ];

@@ -56,6 +56,8 @@ const KANNADA_AI = DUCTUS[ductusKey("kannada", "ಐ")];
 const kannadaAiOutline = kannadaOutline("ಐ");
 const KANNADA_VOCALIC_R = DUCTUS[ductusKey("kannada", "ಋ")];
 const kannadaVocalicROutline = kannadaOutline("ಋ");
+const KANNADA_VISARGA = DUCTUS[ductusKey("kannada", "ಃ")];
+const kannadaVisargaOutline = kannadaOutline("ಃ");
 
 describe("Kannada ಅ — four movements in one unbroken run", () => {
   const steps = ductusSteps(KANNADA_A);
@@ -288,5 +290,21 @@ describe("Kannada ಋ — three source-attested pen-down runs", () => {
     expect(strip.frames).toHaveLength(7);
     expect(strip.penLifts).toBe(2);
     expect(strip.summary).toBe("3 strokes · 2 pen lifts · 7 movements");
+  });
+});
+
+describe("Kannada ಃ — two closed loops separated by one lift", () => {
+  const steps = ductusSteps(KANNADA_VISARGA);
+  const strip = ductusFilmstrip(KANNADA_VISARGA, kannadaVisargaOutline);
+
+  it("starts the lower dot only after the lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
+  });
+
+  it("reports two movements across two strokes", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 2 movements");
   });
 });
