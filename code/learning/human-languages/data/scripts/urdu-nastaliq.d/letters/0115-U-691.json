@@ -1,0 +1,28 @@
+{
+  "glyph": "ڑ",
+  "sound": "ṛ",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ڑ",
+    "initial": "ڑ",
+    "medial": "ـڑ",
+    "final": "ـڑ"
+  },
+  "components": [
+    "re-series downward line curving left",
+    "small to'e-shaped retroflex mark above"
+  ],
+  "strokeOrder": [
+    "draw the independent re-series body downward",
+    "continue curving to the left without lifting",
+    "after one lift, draw the small retroflex mark downward, back upward, and down again to close its loop"
+  ],
+  "strokeOrderNote": "source-verified independent calligraphic and handwriting animations and prose",
+  "penLifts": 1,
+  "strokeOrderSource": {
+    "citation": "Zer o Zabar, Fe, qaf, te, dal, and re, independent ڑ calligraphic and handwriting animations and Re instructions (Northwestern University Libraries Open Textbook, 2026)",
+    "url": "https://openbooks.library.northwestern.edu/zerozabar/chapter/fe-qaf-te-dal-re/",
+    "variation": "The independent-form animations write the re-series body first as one downward line curving left, then add the small to'e-shaped retroflex mark above after one pen lift. The adjacent prose identifies retroflex re as the nonconnecting re body with that mark; the chapter's retroflex-te instructions specify drawing the shared mark downward, back upward, and down again to form its loop. This learner path fits the two-run order to the course's vendored Noto Naskh fallback; Urdu is conventionally printed in Nastaliq, and the app's true Nastaliq face remains separate from this canonical script-data fallback. The evidence and glyph identity remain Urdu-specific rather than borrowing plain re's motion or retroflex te's complete letter order."
+  },
+  "notes": "Does not join to the following letter; primarily appears in words of Indic origin."
+}

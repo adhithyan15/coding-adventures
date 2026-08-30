@@ -70,6 +70,7 @@ const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_CHE = DUCTUS[ductusKey("urdu-nastaliq", "چ")];
 const URDU_DAL = DUCTUS[ductusKey("urdu-nastaliq", "د")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
+const URDU_RRE = DUCTUS[ductusKey("urdu-nastaliq", "ڑ")];
 const URDU_WAW = DUCTUS[ductusKey("urdu-nastaliq", "و")];
 const URDU_SIN = DUCTUS[ductusKey("urdu-nastaliq", "س")];
 const URDU_SHIN = DUCTUS[ductusKey("urdu-nastaliq", "ش")];
@@ -512,6 +513,25 @@ describe("handwriting ductus", () => {
     expect(down[0].y).toBeGreaterThan(down.at(-1)!.y);
     expect(curve[0]).toEqual(down.at(-1));
     expect(curve[0].x).toBeGreaterThan(curve.at(-1)!.x);
+  });
+
+  it("Urdu independent ڑ adds its retroflex mark after the re-series body", () => {
+    expect(URDU_RRE.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_RRE)).toBe(1);
+    expect(URDU_RRE.strokes.map((stroke) =>
+      stroke.segments.map((segment) => segment.label),
+    )).toEqual([
+      [
+        "draw the independent re-series body downward",
+        "continue curving to the left",
+      ],
+      [
+        "after one lift, draw the small retroflex mark downward, back upward, and down again to close its loop",
+      ],
+    ]);
+    expect(URDU_RRE.source.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/fe-qaf-te-dal-re/",
+    );
   });
 
   it("Urdu independent و joins its looped head directly to the leftward tail", () => {

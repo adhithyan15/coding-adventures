@@ -192,6 +192,25 @@ export const scriptInventoryEvidence = {
     expect(urduTte.strokeOrderSource?.variation).toMatch(
       /be-series body.*upper retroflex mark.*two pen-down runs.*dental te.*small to'e-shaped mark.*down.*back up.*down again.*loop.*body-first.*one-lift.*Noto Naskh fallback.*Nastaliq.*Urdu retroflex/i,
     );
+    const urduRre = scripts["urdu-nastaliq"]!.letters.find(
+      (letter) => letter.glyph === "ڑ",
+    )!;
+    expect(urduRre.sound).toBe("ṛ");
+    expect(urduRre.penLifts).toBe(1);
+    expect(urduRre.strokeOrder).toEqual([
+      "draw the independent re-series body downward",
+      "continue curving to the left without lifting",
+      "after one lift, draw the small retroflex mark downward, back upward, and down again to close its loop",
+    ]);
+    expect(urduRre.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/fe-qaf-te-dal-re/",
+    );
+    expect(urduRre.strokeOrderSource?.citation).toMatch(
+      /Zer o Zabar.*independent ڑ.*calligraphic and handwriting animations.*Northwestern/i,
+    );
+    expect(urduRre.strokeOrderSource?.variation).toMatch(
+      /re-series body first.*downward line curving left.*small to'e-shaped retroflex mark.*one pen lift.*downward.*back upward.*down again.*loop.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
+    );
     expect(urduMissing.has("د")).toBe(false);
     expect(urduMissing.has("و")).toBe(false);
     expect(affected.get("و") ?? 0).toBe(0);
@@ -277,5 +296,7 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ق") ?? 0).toBe(0);
     expect(urduMissing.has("ط")).toBe(false);
     expect(affected.get("ط") ?? 0).toBe(0);
+    expect(urduMissing.has("ڑ")).toBe(false);
+    expect(affected.get("ڑ") ?? 0).toBe(0);
   },
 };

@@ -65,6 +65,26 @@ export default [
   {
     suite: "shared Perso-Arabic letters retain script-owned provenance",
     suiteOrder: 50,
+    caseOrder: 220,
+    name: "keeps Urdu ڑ as a source-backed re body plus retroflex mark",
+    verify: ({ SCRIPTS }) => {
+      const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+        .letters.find((entry) => entry.glyph === "ڑ")!;
+      expect(urdu.sound).toBe("ṛ");
+      expect(urdu.role).toBe("consonant");
+      expect(urdu.penLifts).toBe(1);
+      expect(urdu.strokeOrder).toHaveLength(3);
+      expect(urdu.strokeOrder[0]).toMatch(/re-series body downward/i);
+      expect(urdu.strokeOrder[1]).toMatch(/left.*without lifting/i);
+      expect(urdu.strokeOrder[2]).toMatch(/one lift.*retroflex mark.*loop/i);
+      expect(urdu.strokeOrderSource?.url).toBe(
+        "https://openbooks.library.northwestern.edu/zerozabar/chapter/fe-qaf-te-dal-re/",
+      );
+    },
+  },
+  {
+    suite: "shared Perso-Arabic letters retain script-owned provenance",
+    suiteOrder: 50,
     caseOrder: 210,
     name: "keeps Urdu ئ as a source-backed carrier-plus-hamza composition",
     verify: ({ SCRIPTS }) => {
