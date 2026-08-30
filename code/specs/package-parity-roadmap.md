@@ -10141,8 +10141,9 @@ the documented ordering after Python and supplies another independent runtime
 through the same bounded process-free boundary. Ruby 3.4.9 with PRISM and
 Bundler 2.6.9 are installed locally, and the existing bundle is satisfied.
 All six live open PRs have zero exact overlap with the expected Ruby
-declaration paths. PR #13455 prospectively adds TypeScript-only `forme-cli`, which remains
-covered by the existing `forme-portable-core-family-classification` owner.
+declaration paths. PR #13455 prospectively adds TypeScript-only `forme-cli`,
+which remains covered by the existing
+`forme-portable-core-family-classification` owner.
 After reconciliation and selection, the 566-owner, 833-edge graph contains 174
 merged, 391 pending, and one `in-progress` owner.
 
@@ -10150,11 +10151,12 @@ The first complete Ruby package run then exposed one deterministic exact-main
 failure unrelated to declaration evaluation. PR #13366 added an OCaml Dune
 `_build` decoy to the shared language-registry fixture, while unchanged Ruby
 discovery prunes `.build` and `dist-newstyle` but not exact `_build`; the only
-extra identity is `ocaml/decoy`. The discovery source, identity test, and
-fixture blobs are identical between this branch and `origin/main`, and no
-reviewed exception applies. The gap is classified under the pending
-`build-tool-existing-remediation` umbrella. This Ruby tranche therefore also
-carries the minimum exact-component discovery regression needed to restore its
+extra identity is `ocaml/decoy`. At reproduction time, before the repair
+commit, the discovery source, identity test, and fixture blobs all matched
+`origin/main`, and no reviewed exception applies. The gap is classified under
+the pending `build-tool-existing-remediation` umbrella. This Ruby tranche
+therefore also carries the minimum exact-component discovery regression needed
+to restore its
 canonical BUILD suite, while the separately owned generated-directory hashing
 repair remains out of scope.
 
@@ -10165,9 +10167,33 @@ need both behavior and fixture evidence; and already-correct Elixir, Lua, and
 Perl still need independent shared-fixture consumption. Nine engine-scoped
 owners plus `build-tool-dune-build-discovery-exclusion-remaining-engines` now
 classify that work. Ruby remains owned by the active declaration tranche, so
-implementation delivery stays serial with one active item and one PR. The
-expanded graph contains 576 owners and 855 edges: 174 merged, 401 pending, and
+implementation delivery stays serial with one active item and at most one PR.
+The expanded graph contains 576 owners and 855 edges: 174 merged, 401 pending, and
 one `in-progress` owner.
+
+The completed Ruby evaluator consumes all 11 declaration fixtures through a
+native pure API. The literal package BUILD passes 347 tests and 848 assertions
+with one expected skip, 90.96% line coverage, 76.35% branch coverage, and 100%
+line coverage for the new production module. Direct regressions also prove
+that the public parser checks byte and logical-line ceilings before splitting
+and that target-platform validation runs before full-rebuild and empty-package
+shortcuts. The Dune integration regression and direct exact/case/near-name
+tests pass. Schema and semantic-runner suites pass 22 and 62 tests, the
+119-case/283-file corpus validates, and 68 parity, capability, Haskell, and
+OCaml-lock tests pass with two expected Windows skips.
+
+The Go oracle passes all tests, vet, and trimpath compilation; its real forced
+Ruby plan reports 305 of 305 WOULD-BUILD, while an exact-diff plan selects only
+`ruby/programs/build-tool`. A fresh Ruby advisory audit reports no
+vulnerability, and dependency, authority, credential, collision, JSON, and
+diff gates are clean.
+
+Before publication, the branch rebased without conflict onto exact
+`origin/main` `0a5cfd29a338c4a24409ff6debbfef23bcbd0ef7`. Intervening PR #13489 is confined
+to human-language script-owner declarations, generated data, tests, and HL
+specifications, has no exact overlap with the ten Ruby tranche paths, and
+changes no package identity or build-tool contract. Post-rebase package,
+corpus, parity, state-graph, diff-plan, and hygiene checks pass.
 
 ## Autonomous Loop Protocol
 
