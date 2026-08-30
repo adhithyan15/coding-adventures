@@ -10100,10 +10100,15 @@ pip-audit 2.10.1, build 1.5.0, and uv 0.11.28 are installed locally. The Python
 3.13 Scripts directory must be prepended because uv is outside this shell's
 default PATH.
 
-Six live PRs have zero exact overlap with the expected Python tranche. PR
-#13455 prospectively adds TypeScript-only `forme-cli`, which remains covered
-by the existing `forme-portable-core-family-classification` owner. PR #13486
-touches only existing human-language data and script-ductus roots. Intervening
+After selection, PR #13486 merged changes only to existing Urdu curriculum,
+human-language-data, script-ductus, and language-ladder roots. The branch
+rebased without conflict onto its exact main revision
+`1f1e50dd783c0a630a87fae1db04d98a05bef4e5`; the regenerated collision inventory
+is unchanged. Seven current live PRs, including successor Urdu PR #13488 and
+script-owner PR #13489, have zero exact overlap with the eight Python paths.
+PR #13455 prospectively adds TypeScript-only `forme-cli`, which remains covered
+by the existing `forme-portable-core-family-classification` owner. PR #13489
+changes only existing human-language and script-owner surfaces. Intervening
 merged PR #13484 likewise changed curriculum and existing human-language roots
 only. No newly eligible unowned gap displaces Python. After reconciliation and
 selection, the 566-owner, 833-edge graph contains 173 merged, 392 pending, and
