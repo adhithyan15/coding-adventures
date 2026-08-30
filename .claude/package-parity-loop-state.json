@@ -11,14 +11,21 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 13544,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13544",
+    "branch": "codex/build-tool-python-dune-build-discovery-conformance",
+    "implementation_revision": "31f4287711f39704a46dd03d58a58229edb68fa9",
+    "status": "checks-pending",
+    "opened_at": "2026-08-30T21:01:31Z"
+  },
   "last_ci_action": {
-    "observed_at": "2026-08-30T20:38:56Z",
-    "pr_number": 13535,
-    "run_id": 33333469275,
+    "observed_at": "2026-08-30T21:01:31Z",
+    "pr_number": 13544,
+    "run_id": null,
     "attempt": 1,
-    "status": "merged",
-    "notes": "PR #13535 completed all 40 final-head checks with 33 successes and seven expected skips. GitHub reported the reviewed head conflict-free before guarded squash auto-merge completed as 3810c7380ca67ae82f300af4d7d4134c25f2cef7; no manual merge command was used."
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #13544 is open from the validated Python Dune-discovery branch. GitHub reports the initial publication head mergeable and non-draft with required checks registered or in progress, so auto-merge remains disabled until every final-head check is terminal and acceptable and GitHub still reports no merge conflict."
   },
   "last_inventory": {
     "revision": "3810c7380ca67ae82f300af4d7d4134c25f2cef7",
@@ -662,10 +669,13 @@
     {
       "id": "build-tool-python-dune-build-discovery-conformance",
       "title": "Prove Dune _build discovery exclusion in the Python build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["ocaml-build-substrate-process-free-core"],
       "branch": "codex/build-tool-python-dune-build-discovery-conformance",
-      "pr_number": null,
+      "pr_number": 13544,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13544",
+      "opened_at": "2026-08-30T21:01:31Z",
+      "opened_revision": "64790f385ab3b561c6e68d5b2d6935f302c0fbfb",
       "selection_revision": "3810c7380ca67ae82f300af4d7d4134c25f2cef7",
       "selection_notes": "Selected after PR #13535 completed 40 terminal acceptable checks and merged through guarded squash auto-merge as 3810c7380ca67ae82f300af4d7d4134c25f2cef7. The exact-main schema-3 inventory is unchanged at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. No package root or manifest changed. The pre-selection conformance audit discovered and added the separate pending Python generated-directory hashing owner before prioritization; the complete graph is now 581 owners/865 edges, unique, dependency-complete, and acyclic. This Dune leaf's sole dependency is merged; it repairs exact _build discovery and OCaml registry consumption in the 488-package Python lane, and directly unlocks that new hashing owner while advancing the Dune umbrella, giving it more leverage and a smaller repair surface than the independent Haskell leaf. Python 3.13 is installed, the target branch and prior PR were absent, and all seven live PRs have zero exact overlap with the expected Python build-tool, state, roadmap, and root-changelog paths. Reconciliation, owner addition, and selection leave 184 merged, 396 pending, and exactly this owner in progress.",
       "implementation_revision": "31f4287711f39704a46dd03d58a58229edb68fa9",

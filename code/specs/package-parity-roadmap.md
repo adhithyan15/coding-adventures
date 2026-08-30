@@ -11075,6 +11075,14 @@ Full Ruff, mypy, and Bandit runs reproduce only pre-existing findings outside
 the changed behavior; the changed-module Ruff findings are existing style debt
 and no changed line introduces a new one.
 
+Ready-for-review PR #13544 is open from
+`codex/build-tool-python-dune-build-discovery-conformance`. GitHub reports the
+initial publication head mergeable and non-draft with required checks already
+registered or in progress. Auto-merge remains disabled until every final-head
+check is terminal and acceptable and GitHub still reports no merge conflict.
+The ownership graph therefore contains 184 merged, 396 pending, and exactly one
+`pr-open` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
