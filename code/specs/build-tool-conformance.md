@@ -52,6 +52,13 @@ need implementations. The F# front door currently delegates to the C# engine;
 that is a shared-engine exception candidate, not proof of an independent F#
 implementation.
 
+A platform build front MAY exit successfully with a stable skip diagnostic when
+its required language toolchain is absent. It MUST decide absence before
+launching the native test or build command. Once the toolchain is present, the
+front MUST propagate that command's nonzero exit status and MUST NOT relabel a
+native failure as toolchain absence. Boolean command chains whose fallback
+catches both the tool lookup and the native command violate this boundary.
+
 Every shared-engine front door MUST expose a language-native adapter and
 independently consume each required conformance fixture. Transitive coverage
 from the shared engine does not count as front-door coverage for that lane.

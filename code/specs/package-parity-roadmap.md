@@ -10477,6 +10477,85 @@ corpus remain unchanged; all six live PRs still have zero exact overlap across
 the eight tranche paths, and the target remote branch and prior PR remain
 absent.
 
+## Post-#13502 Refresh and Swift Windows Front Selection
+
+PR #13502 completed all 43 reported checks acceptably: 36 successes, six
+expected skips, and one neutral CodeQL gate. Auto-merge was enabled only after
+GitHub reported final head
+`7a02e9dc9b8093fc2e3e37a3233d2ce66462099a` clean and mergeable, and GitHub
+merged it as `d066aff6def388278bd0ad723ffc22bd8b8a766e` at
+2026-08-30T15:46:47Z without a manual merge command. The Swift Dune owner
+therefore advances to `merged` and the active PR is cleared.
+
+The collision-checked exact-main inventory remains schema 3 with 15
+established lanes, 1,388 implementation identities, 4,602 slots, and 1,427
+all-reported identities. Completion bands remain 175/265, 123/934, 170/2,139,
+and 920/12,880; Rust has 731 singletons, OCaml remains emerging at zero
+packages, and collisions and unknown buckets remain zero. Changes since the
+post-#13498 baseline add or remove no package root or canonical identity, and
+no newly unowned eligible package or build-tool gap appeared.
+
+The dependency/leverage pass selects
+`build-tool-swift-windows-test-front-failure-propagation` on branch
+`codex/build-tool-swift-windows-test-front-failure-propagation`. Its sole Dune
+prerequisite is merged. The bounded repair directly unlocks Swift declaration
+validation and preserves the documented Rust-to-Swift-to-TypeScript
+declaration lane order. TypeScript Dune has broader raw fan-out, but completing
+this already-open Swift chain first has greater immediate payoff and prevents
+a declaration claim from passing through a Windows front that currently masks
+native test failures as toolchain absence. Swift 6.3.3 is installed and the
+exact front is locally executable. The target branch and prior PR are absent,
+and six live PRs have zero exact overlap across the expected eight-path Swift,
+state, roadmap, and root-changelog tranche. Reconciliation plus selection
+leaves the complete 580-owner/864-edge graph at 178 merged, 401 pending, and
+exactly one `in-progress` owner.
+
+## Swift Windows Front Failure Propagation
+
+The Swift Windows build front now separates toolchain discovery from native
+test execution. It exits successfully with the existing stable diagnostic only
+when `where swift` cannot find the toolchain. Once Swift is present,
+`swift test` is the final command and its exact nonzero exit status owns the
+front; native failures can no longer fall into the absence message. The
+language-neutral conformance specification now makes this boundary explicit
+for every platform front.
+
+The new Windows-only regression reads the checked-in `BUILD_windows` literal
+and runs it with a controlled fake `swift.bat`. The red phase proved the old
+boolean chain returned zero and mislabeled a fake exit `17` as absence. The
+final three cases pin present success, exact present failure propagation, and
+the exact absent-toolchain skip. The package's focused, full parallel,
+coverage, generic BUILD-content, and Windows BUILD-content runs pass with 47
+tests across seven suites; the one POSIX directory-symlink case remains an
+expected Windows skip. Swift strict formatting of the new test, the release
+build, package dump, and the zero-external-dependency graph also pass.
+
+Cross-cutting validation keeps the neutral corpus valid at 119 cases and 283
+files; all 205 focused conformance tests pass with 23 expected skips, and all
+10 parity-reporter tests pass. The Go oracle passes module verification, its
+tests, vet, and trimpath build. Its forced Swift dry plan evaluates 45 Starlark
+BUILD files, validates five reviewed orphan exemptions, discovers 167 Swift
+packages, and reports all 167 as `WOULD-BUILD`. The collision report remains
+schema 3 with 1,388 implementation identities, 4,602 slots, 1,427 all-reported
+identities, zero collisions, and zero unknown buckets. The complete
+580-owner/864-edge graph remains unique, dependency-complete, acyclic, and
+closed over merged dependencies with exactly this owner in progress.
+
+Before final validation, the branch rebased without conflict onto exact
+`origin/main` `d5a47d9f709633d3656551d91d559467b64661ba`. The intervening
+Malayalam curriculum change adds no package identity or build-tool contract
+and has zero exact overlap. The final eight-path tranche has zero exact overlap
+across five live PRs. Diff, tracked-artifact, dependency, credential-pattern,
+and authority checks pass; the repair introduces no production authority.
+
+Ready-for-review PR #13506 opened from validated head
+`1a62f59b5db2bc3a71261220cf644c27753235a4` after a normal first push.
+GitHub reports it mergeable, conflict-free, and non-draft. Its required CI,
+Swift-app, and CodeQL checks are queued, so auto-merge remains disabled until
+every required check is terminal and acceptable and GitHub still reports no
+merge conflict. The owner advances from `in-progress` to `pr-open`; no second
+parity implementation starts while this PR is active.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
