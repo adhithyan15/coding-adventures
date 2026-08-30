@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-400-01",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C400-tren",
+    "ES-C400-vuelo",
+    "ES-C400-aparcamiento",
+    "ES-C400-abono",
+    "ES-C400-playa"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-400-TRAVEL"
+  ],
+  "after": []
+}
