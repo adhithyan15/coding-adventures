@@ -485,4 +485,129 @@ export const entries: DuctusEntry[] = [
       source: teluguIndependentVowelSource("ఏ"),
     },
   ],
+  [
+    "telugu:ఋ",
+    {
+      script: "telugu",
+      glyph: "ఋ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep right across the upper shoulder",
+              path: [
+                { x: 85, y: 365 },
+                { x: 90, y: 405 },
+                { x: 125, y: 445 },
+                { x: 175, y: 463 },
+                { x: 225, y: 460 },
+                { x: 275, y: 438 },
+                { x: 315, y: 400 },
+                { x: 320, y: 360 },
+                { x: 300, y: 320 },
+                { x: 270, y: 280 },
+                { x: 230, y: 250 },
+                { x: 190, y: 225 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curve down around the left bowl",
+              path: [
+                { x: 90, y: 300 },
+                { x: 80, y: 245 },
+                { x: 80, y: 180 },
+                { x: 95, y: 115 },
+                { x: 130, y: 70 },
+                { x: 180, y: 40 },
+                { x: 235, y: 35 },
+                { x: 285, y: 50 },
+                { x: 325, y: 85 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep right around the lower bowl",
+              path: [
+                { x: 350, y: 115 },
+                { x: 390, y: 65 },
+                { x: 440, y: 40 },
+                { x: 500, y: 30 },
+                { x: 560, y: 35 },
+                { x: 610, y: 65 },
+                { x: 650, y: 110 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curl up around the first right lobe",
+              path: [
+                { x: 410, y: 125 },
+                { x: 450, y: 75 },
+                { x: 510, y: 40 },
+                { x: 575, y: 45 },
+                { x: 630, y: 85 },
+                { x: 670, y: 150 },
+                { x: 675, y: 225 },
+                { x: 650, y: 300 },
+                { x: 605, y: 360 },
+                { x: 550, y: 410 },
+                { x: 475, y: 450 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curl up around the middle lobe",
+              path: [
+                { x: 690, y: 125 },
+                { x: 755, y: 70 },
+                { x: 825, y: 40 },
+                { x: 890, y: 45 },
+                { x: 945, y: 85 },
+                { x: 990, y: 150 },
+                { x: 995, y: 225 },
+                { x: 970, y: 300 },
+                { x: 925, y: 360 },
+                { x: 870, y: 410 },
+                { x: 815, y: 450 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curl up around the final lobe",
+              path: [
+                { x: 1035, y: 125 },
+                { x: 1100, y: 70 },
+                { x: 1170, y: 40 },
+                { x: 1235, y: 45 },
+                { x: 1290, y: 85 },
+                { x: 1335, y: 150 },
+                { x: 1340, y: 225 },
+                { x: 1315, y: 300 },
+                { x: 1270, y: 360 },
+                { x: 1215, y: 410 },
+                { x: 1160, y: 450 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguIndependentVowelSource("ఋ"),
+    },
+  ],
 ];

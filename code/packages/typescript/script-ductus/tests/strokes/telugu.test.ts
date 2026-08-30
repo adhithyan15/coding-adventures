@@ -20,6 +20,7 @@ const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
 const TELUGU_E = DUCTUS[ductusKey("telugu", "ఎ")];
 const TELUGU_EE = DUCTUS[ductusKey("telugu", "ఏ")];
+const TELUGU_VOCALIC_R = DUCTUS[ductusKey("telugu", "ఋ")];
 
 const OWNER_SCRIPTS = new Set(["telugu"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -27,7 +28,7 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  registerStrokeHonestyTests(letters, { అ: 0.96 });
+  registerStrokeHonestyTests(letters, { అ: 0.96, ఋ: 0.84 });
 
   beforeAll(() => {
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
@@ -46,6 +47,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ఏ", TELUGU_EE.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ఋ", TELUGU_VOCALIC_R.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
   });
@@ -144,6 +148,21 @@ describe("handwriting ductus", () => {
         "restart at the lower-right tail and sweep up through the broad outer arch",
       ],
       ["restart below the upper-left hook and sweep upward to its tip"],
+    ]);
+  });
+
+  it("Telugu ఋ preserves all six source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_VOCALIC_R)).toBe(5);
+    expect(TELUGU_VOCALIC_R.strokes).toHaveLength(6);
+    expect(
+      TELUGU_VOCALIC_R.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "sweep right across the upper shoulder",
+      "curve down around the left bowl",
+      "sweep right around the lower bowl",
+      "curl up around the first right lobe",
+      "curl up around the middle lobe",
+      "curl up around the final lobe",
     ]);
   });
 });
