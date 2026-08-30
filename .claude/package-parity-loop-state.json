@@ -11,14 +11,21 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 13498,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13498",
+    "branch": "codex/build-tool-rust-extra-ci-toolchain-declaration-conformance",
+    "implementation_revision": "2a4a334881cb32cba90e677fe9f33833552979ef",
+    "status": "checks-pending",
+    "opened_at": "2026-08-30T14:17:32Z"
+  },
   "last_ci_action": {
-    "observed_at": "2026-08-30T13:46:06Z",
-    "pr_number": 13494,
+    "observed_at": "2026-08-30T14:17:36Z",
+    "pr_number": 13498,
     "run_id": null,
     "attempt": 1,
-    "status": "merged-via-auto-merge",
-    "notes": "All 40 reported checks reached terminal acceptable conclusions: 33 successes and seven expected skips. GitHub reported validated head f9eb3e307b6d8a6dfc5694097740cd17cbc61ae2 clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #13494 as a8f7116c2b694a3241d3c3c571d9c6202a672363 without a manual merge command."
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #13498 is open and non-draft. GitHub reports validated head 2a4a334881cb32cba90e677fe9f33833552979ef mergeable and conflict-free, but required CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "3fd579f20ae67001857e2cb7258a394bd089a9eb",
@@ -409,10 +416,13 @@
     {
       "id": "build-tool-rust-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Rust build tool consume extra CI toolchain declarations",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-rust-dune-build-discovery-exclusion"],
       "branch": "codex/build-tool-rust-extra-ci-toolchain-declaration-conformance",
-      "pr_number": null,
+      "pr_number": 13498,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13498",
+      "opened_at": "2026-08-30T14:17:32Z",
+      "opened_revision": "2a4a334881cb32cba90e677fe9f33833552979ef",
       "selection_revision": "a8f7116c2b694a3241d3c3c571d9c6202a672363",
       "rebase_revision": "3fd579f20ae67001857e2cb7258a394bd089a9eb",
       "implementation_revision": "9b3b0cd0635a876cff3bfd7a3332ffb1186658e8",
@@ -421,6 +431,7 @@
       "selection_notes": "Selected immediately after PR #13494 completed 40 terminal acceptable checks and merged through guarded squash auto-merge as a8f7116c2b694a3241d3c3c571d9c6202a672363. The collision-checked exact-main inventory remains schema 3 with 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. No new identity or owner gap was discovered; the separate Rust generated-directory hashing defect remains explicitly pending and does not affect pure declaration evaluation. All three declaration prerequisites are now merged, so this ninth independent consumer is the dependency-shaped payoff of the Rust Dune repair and advances the eleven-engine completion umbrella while leaving only Swift and TypeScript. The 577-owner/859-edge graph is unique, dependency-complete, and acyclic; reconciliation plus selection yields 176 merged, 400 pending, and exactly this owner in progress. Rust 1.97.0, Clippy 0.1.97, cargo-llvm-cov 0.8.7, and cargo-audit 0.22.2 are installed, serde and serde_json are already dependencies, and no Cargo, lockfile, BUILD-front, workflow, or new dependency change is expected. Six live PRs have zero exact overlap on the Rust build-tool, conformance, state, roadmap, or changelog tranche; lessons.md is intentionally avoided because #12165 touches it.",
       "validation_notes": "Test-first execution failed because the deliberately absent Rust snapshot types and evaluator were unresolved before production source was added. The completed host-free module dynamically discovers and consumes all 11 neutral declaration fixtures and passes direct UTF-8 byte, logical-line, per-front, aggregate, CRLF, stable-deduplication, empty-front, null-versus-empty selection, force-full, forced-toolchain, unsupported-platform, selected-error-precedence, fresh-map, and caller-mutation probes. The focused suite passes 11 tests; the literal generic and Windows BUILD workflows and all-target suite each pass 164 tests, including three CLI integrations. Clippy with all targets and features is warning-clean. cargo-llvm-cov reports 98.97% region, 97.44% function, and 99.12% line coverage for toolchain_detection.rs, with 82.72% region and 83.40% line coverage overall. cargo-audit scanned 57 locked dependencies against 1,226 advisories and found no vulnerability. The neutral conformance family passes 205 tests with 23 expected skips; corpus validation reports 119 cases and 283 files across 16 implementations, 15 established lanes, and 12 front doors, and the execution contract remains valid at its intentional zero-adapter baseline. The Go oracle passes all packages, vet, and trimpath build; its real exact-diff plan evaluates all 5,112 packages, selects only rust/programs/build-tool, and skips the other 5,111. The schema-3 parity inventory is collision-clean at 15 lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, 731 Rust singletons, zero OCaml packages, and zero unknown buckets. The 577-owner/859-edge graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges with 176 merged, 400 pending, and exactly this owner in progress. Six live PRs have zero exact overlap with all eight changed paths. Diff hygiene and direct production-authority scans are clean; the module adds no filesystem, Git, process, environment, network, credential, FFI, or execution authority and changes no dependency, Cargo metadata, BUILD front, CLI, plan, workflow, or package identity. Rustfmt 1.97 still reproduces the exact-main package baseline of 42 pre-existing diff headers and 562 lines; the new module itself is rustfmt-clean.",
       "review_notes": "Independent final review at rebased implementation head 96cf3893dc23e4ef81ccae96428ab5c75b308897 found no actionable correctness, security, fixture, boundary, API-purity, documentation, state, or scope issue. The reviewer reproduced the 11 focused cases, complete 164-test Rust suite, strict Clippy, 99.12% focused line coverage, 119-case/283-file corpus validation, and a cached 57-dependency advisory scan; confirmed exact metering, platform, grammar, scheduling, forced-union, unsupported-precedence, and fresh-map semantics; and verified that filesystem use is test-only while production adds no host or execution authority. The exact eight-path diff is hygienic and contains no Cargo, lockfile, BUILD, workflow, dependency, or unrelated source change.",
+      "publication_notes": "Opened ready-for-review PR #13498 from clean validated head 2a4a334881cb32cba90e677fe9f33833552979ef after a normal first push. Immediately before publication, the branch was rebased onto exact origin/main 3fd579f20ae67001857e2cb7258a394bd089a9eb, the target remote branch and prior PR were absent, and all eight changed paths had zero exact overlap across six other live PRs. GitHub reports the PR mergeable, conflict-free, and non-draft, currently blocked only by queued or in-progress CI and CodeQL checks; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Adopt the merged process-free declaration corpus in the Rust engine without widening execution authority."
     },
     {
