@@ -11,24 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13530,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13530",
-    "branch": "codex/build-tool-typescript-extra-ci-toolchain-declaration-conformance",
-    "implementation_revision": "9f6b2648db79d62b3a9e6112d66bd633b98e617d",
-    "status": "checks-pending",
-    "opened_at": "2026-08-30T19:24:03Z"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-30T19:24:07Z",
+    "observed_at": "2026-08-30T19:47:14Z",
     "pr_number": 13530,
-    "run_id": 33330765657,
+    "run_id": 33330824637,
     "attempt": 1,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #13530 is open from the validated TypeScript declaration branch. GitHub reports the initial head mergeable and non-draft; required CI, CodeQL, and human-language checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub still reports no merge conflict."
+    "status": "merged-via-auto-merge",
+    "notes": "PR #13530 completed 41 terminal acceptable checks: 34 successes, six expected skips, and one neutral result. GitHub reported the final reviewed head conflict-free and clean, so guarded squash auto-merge was enabled; GitHub merged head e5db6e7cc7cd75a8c519489310816a44fd72d4fe as d45caf1cd40c2946351dd28aa3464f4301cec5aa at 2026-08-30T19:47:14Z without a manual merge command."
   },
   "last_inventory": {
-    "revision": "9bd71e2fa332e16f8490052726e80a5f972a6eac",
+    "revision": "d45caf1cd40c2946351dd28aa3464f4301cec5aa",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -463,7 +456,7 @@
     {
       "id": "build-tool-typescript-extra-ci-toolchain-declaration-conformance",
       "title": "Make the TypeScript build tool consume extra CI toolchain declarations",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-typescript-dune-build-discovery-exclusion", "build-tool-typescript-static-build-front-typecheck"],
       "branch": "codex/build-tool-typescript-extra-ci-toolchain-declaration-conformance",
       "pr_number": 13530,
@@ -472,12 +465,14 @@
       "opened_revision": "4d906d171dc25f8dc508260819eb20a9810fdf79",
       "selection_revision": "76ba0c1833f0a2d3f8f85a354b83468dbd2c6aae",
       "selection_notes": "Selected immediately after PR #13516 completed 41 terminal acceptable checks and merged through guarded squash auto-merge. The collision-checked exact-main inventory remains schema 3 with 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. PR #13516 changed only existing TypeScript build-tool and parity-contract paths, so canonical identities remain unchanged and no newly unowned eligible gap appeared. All four prerequisites are merged; this final eleventh existing declaration consumer is the sole remaining child required by the remaining-engines declaration umbrella and therefore outranks the isolated TypeScript hashing repair. Node 24.16.0 and npm 11.13.0 are installed, the target remote branch and prior PR are absent, and six live PRs have zero exact overlap across the expected eight-path tranche. Reconciliation plus selection leaves the complete 580-owner/864-edge graph at 182 merged, 397 pending, and exactly this owner in progress.",
-      "implementation_revision": "9f6b2648db79d62b3a9e6112d66bd633b98e617d",
+      "implementation_revision": "e5db6e7cc7cd75a8c519489310816a44fd72d4fe",
       "rebase_revision": "9bd71e2fa332e16f8490052726e80a5f972a6eac",
       "rebase_notes": "Rebased conflict-free before first push from selection base 76ba0c1833f0a2d3f8f85a354b83468dbd2c6aae onto exact origin/main 9bd71e2fa332e16f8490052726e80a5f972a6eac after merged PR #13515 changed only human-language workflow, curriculum, progress, and the existing TypeScript human-language-data package. The 33-path intervening slice has zero exact overlap with this eight-path tranche, changes no package root or package name, leaves the collision-checked inventory unchanged, and creates no newly unowned eligible gap.",
       "validation_notes": "Test-first execution first failed at the deliberately absent toolchain-detection module. The package-local suite dynamically discovers all 11 neutral fixtures and evaluates them through the completed process-free evaluator, covering exact UTF-8 bytes, LF lines, per-front and aggregate ceilings, fail-fast aggregate precedence, closed platform BUILD fronts, exact CRLF grammar, stable deduplication, empty-front precedence, null-versus-empty scheduling, aliases, force-full, forced tools, unsupported diagnostics, fresh frozen maps, caller mutation, sparse-array shape errors, and direct-caller cardinality and string bounds. The focused suite passes 11 tests, strict typechecking passes, and the full package passes 338 tests across 14 files. Overall V8 coverage is 90.96% statements, 84.91% branches, 95.23% functions, and 90.89% lines; toolchain-detection.ts reaches 95.00% statements, 90.13% branches, 100% functions, and 94.90% lines. The neutral corpus validates 119 cases and 283 files across 16 implementations, 15 established lanes, and 12 front doors; focused conformance and parity families pass 248 tests with 25 expected skips and 1,048 subtests. The Go oracle passes module verification, all packages, vet, and trimpath build; its exact-diff plan discovers 481 TypeScript packages, selects only typescript/programs/build-tool, and skips the other 480. npm pack contains 19 allowlisted files with no bundled dependency, production audit reports zero vulnerabilities, and all 70 packages have verified registry signatures with 33 attestations.",
       "security_notes": "Independent review first identified unbounded direct-caller collection and string surfaces plus end-only aggregate rejection. The repair adds allocation-free fail-fast UTF-8 metering, immediate aggregate rejection, exact schema-aligned collection and string bounds, the five closed BUILD-front names with required BUILD, unique schedules and forced toolchains, null-prototype copies, stable sparse-element errors, and closed darwin/linux/windows target spelling. A second review identified the remaining sparse-element and Cartesian zero-byte-front risks; both are closed. The module still imports no host API and gains no filesystem, process, Git, environment, clock, randomness, credential, network, package-manager, or execution authority.",
-      "publication_notes": "Opened ready-for-review PR #13530 from clean validated head 4d906d171dc25f8dc508260819eb20a9810fdf79 after a normal first push. Immediately before publication, origin/main remained exact rebased base 9bd71e2fa332e16f8490052726e80a5f972a6eac, the target remote branch and prior PR were absent, and all current open PRs had zero exact overlap with the eight changed paths. Independent security, correctness, state, documentation, lifecycle, scope, inventory, and authority reviews found no remaining blocker. GitHub reports the PR mergeable and non-draft; required CI, CodeQL, and human-language checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "publication_notes": "Opened ready-for-review PR #13530 from clean validated head 4d906d171dc25f8dc508260819eb20a9810fdf79 after a normal first push. Final reviewed head e5db6e7cc7cd75a8c519489310816a44fd72d4fe completed all 41 checks with 34 successes, six expected skips, one neutral result, and no failure or pending job. GitHub reported the branch conflict-free and clean, so guarded squash auto-merge was enabled; GitHub merged it as d45caf1cd40c2946351dd28aa3464f4301cec5aa at 2026-08-30T19:47:14Z without a manual merge command.",
+      "merged_at": "2026-08-30T19:47:14Z",
+      "merge_commit": "d45caf1cd40c2946351dd28aa3464f4301cec5aa",
       "notes": "Adopt the merged process-free declaration corpus in the TypeScript engine without widening execution authority."
     },
     {
@@ -635,10 +630,14 @@
     {
       "id": "build-tool-csharp-fsharp-dune-build-discovery-conformance",
       "title": "Prove Dune _build discovery exclusion in the C# and F# build tools",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["ocaml-build-substrate-process-free-core"],
-      "branch": null,
+      "branch": "codex/build-tool-csharp-fsharp-dune-build-discovery-conformance",
       "pr_number": null,
+      "selection_revision": "d45caf1cd40c2946351dd28aa3464f4301cec5aa",
+      "selection_notes": "Selected after PR #13530 completed 41 terminal acceptable checks and merged through guarded squash auto-merge. The exact-main collision inventory remains schema 3 with 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The identity delta is zero and no newly eligible unowned gap appeared. The declaration completion umbrella is selection-blocked and has no independent source behavior. This dependency-ready shared .NET owner closes the C# and F# Dune discovery contract together, advances two front doors and the Dune completion umbrella, and therefore outranks isolated single-engine hashing repairs. .NET SDK 9.0.315 is installed, the target branch and prior PR were absent, and all six live PRs have zero exact overlap with the expected implementation, test, documentation, state, and roadmap paths. Reconciliation plus selection leaves the complete 580-owner/864-edge graph at 183 merged, 396 pending, and exactly this owner in progress.",
+      "validation_notes": "Test-first execution reproduced both owned failures: C# discovered the exact _build decoy in the unchanged shared language-registry fixture, and the F# fixture could not compile because no native discovery facade existed. The full fixture also exposed adjacent already-owned registry drift: later path-word borrowing, missing Mosaic/Twig buckets, generated dist-newstyle discovery, and a BUILD root outside packages/programs. The bounded shared-engine repair plus explicit F# facade passes 59 C# and 13 F# tests through both literal BUILD fronts with zero warnings. C# coverage is 92.25% lines and 44.43% branches overall, with Discovery at 91.12% lines and 83.33% branches; F# coverage is 89.55% lines and 35.32% branches overall, with Program.fs at 100% lines and branches. The neutral corpus validates 119 cases and 283 files across 16 implementations, 15 established lanes, and 12 front doors. Conformance, parity, capability, Haskell, and OCaml-lock families pass 248 tests with 25 expected skips and 1,047 subtests. The Go oracle passes module verification, all packages, vet, and trimpath build; real forced dry plans validate all 201 C# and 200 F# packages while preserving five reviewed orphan exemptions. C# formatting is clean, both test graphs report no vulnerable NuGet dependency, and collision, state-graph, diff-hygiene, credential-pattern, and authority gates pass.",
+      "security_notes": "The repair adds no dependency and no process, Git, environment, network, credential, package-manager, clock, randomness, or execution authority. Discovery remains bounded to the caller-supplied code root, compares exact case-sensitive components with Ordinal semantics, stops below discovered package roots, and uses the existing filesystem traversal authority of the CLI. The F# surface is a no-inline facade over the same reviewed engine, not a second traversal implementation.",
       "notes": "The shared C#/F# engine neither consumes the full registry fixture nor exposes the exact Dune exclusion. Add native C# behavior coverage and explicit F# facade evidence without pretending that one runtime silently covers the other."
     },
     {
