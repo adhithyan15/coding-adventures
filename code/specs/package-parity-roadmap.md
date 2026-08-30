@@ -9925,6 +9925,14 @@ pass. The repository's pre-existing aggregate Elixir coverage gate remains
 below its configured 90% threshold at 58.63%, while this added module clears
 focused coverage. Seven live PRs have zero exact changed-path overlap.
 
+Ready-for-review PR #13475 is now the sole active parity PR at validated head
+`c01387d3399f86c230a290f2e5402e6bf84d0560`. It was opened after a normal first
+push from exact `origin/main` `ee5068fe7b8161fa549a0d9891372706baa80c40`;
+all 11 changed paths have zero exact overlap across seven other live pull
+requests. The complete graph is now 169 merged, 396 pending, and exactly one
+`pr-open` owner. GitHub reports the PR mergeable and non-draft, with CI and
+CodeQL checks queued or in progress, so auto-merge remains disabled.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
