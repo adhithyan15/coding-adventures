@@ -10985,6 +10985,12 @@ dependency, and collision, state-graph, diff-hygiene, credential-pattern, and
 authority gates pass. Six live PRs retain zero exact path overlap with this
 11-path tranche.
 
+The exact-diff plan discovers 5,112 packages, selects only
+`dotnet/programs/build-tool-csharp` and
+`dotnet/programs/build-tool-fsharp`, and skips the other 5,110. This confirms
+that the documentation and parity-state surfaces do not widen the executable
+affected closure.
+
 Before first push, `origin/main` advanced to
 `f07970112b79960d383018e9d3664437bf851a85` through merged PR #13528. The
 branch rebased conflict-free. That one-path change only increases the main CI
