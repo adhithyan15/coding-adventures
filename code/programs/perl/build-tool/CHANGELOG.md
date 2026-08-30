@@ -15,6 +15,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   platform BUILD precedence, affected and forced scheduling, complete fresh
   canonical boolean maps, stable unsupported diagnostics, and shared UTF-8
   byte, line, and aggregate ceilings without host or execution authority.
+- The Windows BUILD front now installs test dependencies and runs the complete
+  15-file Test2 suite, including the real UTF-8 CLI check and the process-free
+  toolchain-declaration contract, instead of skipping the package.
 - A pure orphan-crate snapshot validator independently consumes all four
   language-neutral fixtures. It applies component-wise ancestor BUILD
   coverage, fixed filename precedence, exact artifact filtering, portable NFC

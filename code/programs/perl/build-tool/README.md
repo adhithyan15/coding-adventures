@@ -132,6 +132,11 @@ module does not enumerate a checkout, consult Git, launch a process, read the
 environment, or access the network. Production CLI and emitted-plan
 integration remain a separate tranche.
 
+Both `BUILD` and `BUILD_windows` install the declared test dependency and run
+the complete Test2 suite. The Windows front uses the executor's existing
+sequential fallback and verifies the real UTF-8 CLI boundary plus this
+process-free declaration engine instead of skipping the package.
+
 Generated source-embedded Unicode 17.0.0 NFC, NFKC, full default-fold, and
 full-uppercase tables keep policy independent of the installed Perl runtime's
 Unicode data. Regenerate the module and its Unicode License v3 notice with an
@@ -231,6 +236,8 @@ Run all tests:
 ```bash
 prove -l -v t/
 ```
+
+The same command is the package's real Windows BUILD front.
 
 ## Comparison with Other Implementations
 
