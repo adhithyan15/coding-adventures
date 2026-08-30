@@ -35,7 +35,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 119-case bootstrap corpus covers every process-free v1 domain:
+The 121-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, Kotlin, and OCaml package/program
@@ -62,6 +62,9 @@ The 119-case bootstrap corpus covers every process-free v1 domain:
 - fail-closed rejection of a future plan version;
 - conservative diff selection and prerequisite closure;
 - framed SHA-256 hashing plus hit, miss, and corrupt-cache recovery;
+- case-sensitive source collection across the complete generated-artifact
+  registry, extension and declared-source selection modes, exact near-name
+  retention, inert symlink/reparse boundaries, and per-file SHA-256 digests;
 - inline-only Starlark module resolution, bounded evaluation requests,
   structured command extraction, stable missing/outside errors, and adversarial
   fuel, recursion, aggregate, range, scalar-value, load-graph, and output
@@ -100,7 +103,7 @@ The 119-case bootstrap corpus covers every process-free v1 domain:
 
 The outer envelope and build-plan payload use `schema.json`,
 `result.schema.json`, and `code/specs/schemas/build-plan-v1.schema.json`.
-The seven added decision domains additionally validate a closed
+The eight added decision domains additionally validate a closed
 `{domain,outcome,input,result}` projection against
 `pure-domains.schema.json`; generic JSON is never a fallback.
 
@@ -309,8 +312,9 @@ isolation, a sanitized environment, direct argument vectors, and complete
 process-tree resource limits.
 
 The pure-domain expansion keeps that boundary intact. Diff selection consumes
-declared changed paths instead of Git, hashing consumes inline bytes instead of
-filesystem metadata, Starlark returns structured commands without running
+declared changed paths instead of Git, hashing and source collection consume
+inline bytes and closed candidate metadata instead of filesystem state,
+Starlark returns structured commands without running
 them, validation reads only fixture data, toolchain detection never probes the
 host, and CLI cases parse only the closed inert `argv` record without invoking
 a native front door or build.
@@ -325,7 +329,7 @@ so adapters cannot silently broaden the grammar.
 The corpus now closes all process-free v1 domains:
 
 - discovery, resolution, graph, and plan;
-- diff selection and hashing/cache;
+- diff selection, source collection, and hashing/cache;
 - Starlark evaluation and structured-command extraction;
 - prerequisite-closed sharding;
 - ten-check BUILD-file validation and toolchain detection; and

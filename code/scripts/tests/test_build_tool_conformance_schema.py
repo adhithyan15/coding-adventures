@@ -29,6 +29,7 @@ DOMAIN_CAPABILITIES = {
     "graph": {"graph"},
     "diff_selection": {"diff_selection"},
     "hashing_cache": {"hashing_cache"},
+    "source_collection": {"source_collection"},
     "starlark": {"starlark"},
     "plan": {"plan_v1_read", "plan_v1_write"},
     "sharding": {"sharding"},
