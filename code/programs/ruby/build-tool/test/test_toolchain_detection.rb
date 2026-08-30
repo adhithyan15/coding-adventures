@@ -37,7 +37,7 @@ class TestToolchainDetection < Minitest::Test
   end
 
   def evaluate(platform: "linux", force_full: false, packages: [package],
-               scheduled_packages: nil, forced_toolchains: [])
+    scheduled_packages: nil, forced_toolchains: [])
     BuildTool::ToolchainDetection.evaluate_snapshot(
       platform,
       force_full,
