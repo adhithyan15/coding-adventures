@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### TypeScript build-tool static front
+
+- Added exact pinned TypeScript and Node declaration development dependencies
+  plus a strict no-emit compiler gate. The generic cross-platform BUILD front
+  now typechecks production and adapter source before running coverage.
+
 ### TypeScript build-tool Dune discovery
 
 - Excluded Dune's exact case-sensitive `_build` output component from

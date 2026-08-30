@@ -10729,6 +10729,40 @@ conflict-free, and non-draft. Required CI, TypeScript-build, and CodeQL checks
 are queued or in progress, so auto-merge remains disabled until every required
 check is terminal and acceptable and GitHub still reports no conflict.
 
+### Post-PR #13514 refresh and selection
+
+PR #13514 completed all 41 checks acceptably with 34 successes, six expected
+skips, and one neutral CodeQL gate. Auto-merge was enabled only after GitHub
+reported final head `7f62a4f06214f847099de5b373cd57b53d42ec2f`
+conflict-free, and GitHub merged it as
+`582b246b810ae429a4aa06c8f7e52e3c38405454` at 2026-08-30T17:59:44Z
+without a manual merge command. The TypeScript Dune owner therefore advances
+to `merged` and the active PR is cleared.
+
+The collision-checked exact-main inventory at
+`582b246b810ae429a4aa06c8f7e52e3c38405454` remains schema 3 with 15
+established lanes, 1,388 implementation identities, 4,602 slots, and 1,427
+all-reported identities. Completion bands remain 175/265, 123/934, 170/2,139,
+and 920/12,880; Rust has 731 singletons, OCaml remains emerging at zero
+packages, and collisions and unknown buckets remain zero. PR #13514 changed
+only seven existing paths since the prior inventory, with no package root or
+manifest. Canonical identities are unchanged and no newly unowned eligible gap
+appeared.
+
+The dependency/leverage pass selects
+`build-tool-typescript-static-build-front-typecheck` on branch
+`codex/build-tool-typescript-static-build-front-typecheck`. Its sole
+TypeScript Dune prerequisite is merged. This bounded static front directly
+unlocks TypeScript declaration conformance; the other newly eligible child,
+generated-directory hashing, has no downstream owner and remains a separate
+required correctness item. Node 24.16.0 and npm 11.13.0 are
+installed. A strict no-emit compiler probe confirms that the production source
+needs direct, pinned TypeScript and Node declarations but no source repair.
+Six live PRs have zero exact overlap across the prospective TypeScript
+build-tool, state, roadmap, and root-changelog tranche. Reconciliation plus
+selection leaves the complete 580-owner/864-edge graph at 181 merged, 398
+pending, and exactly one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
