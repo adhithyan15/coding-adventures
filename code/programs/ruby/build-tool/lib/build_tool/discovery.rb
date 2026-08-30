@@ -83,7 +83,7 @@ module BuildTool
     SKIP_DIRS = Set.new(%w[
       .git .hg .svn .venv .tox .mypy_cache .pytest_cache .ruff_cache
       __pycache__ node_modules vendor dist build target .claude specs Pods
-      .dart_tool .build .gradle gradle-build dist-newstyle
+      .dart_tool .build .gradle gradle-build dist-newstyle _build
     ]).freeze
 
     module_function

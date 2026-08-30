@@ -10114,6 +10114,99 @@ only. No newly eligible unowned gap displaces Python. After reconciliation and
 selection, the 566-owner, 833-edge graph contains 173 merged, 392 pending, and
 one `in-progress` owner.
 
+## Post-#13490 Refresh and Ruby Declaration-Engine Selection
+
+PR #13490 completed 41 terminal acceptable checks: 34 successes, six expected
+skips, and one neutral result. Auto-merge was enabled only after GitHub reported
+the branch conflict-free, and GitHub merged validated head
+`e4ddc07a7049742448c3fb1be673ecb3e593b3f8` as
+`ce60a7bbf98d4e169e20e6b66f2d5bcb5dd46349` at 2026-08-30T11:47:33Z without a
+manual merge command. Python therefore advances to `merged` and the active PR
+is cleared.
+
+The collision-checked exact-main inventory remains 15 established lanes,
+1,388 implementation identities, 4,602 slots, and 1,427 all-reported
+identities. Completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and collisions and unknown buckets remain zero. Merged PR #13488 changes only
+existing Urdu curriculum, human-language-data, script-ductus, and
+language-ladder roots. No package identity or slot changed, and no newly
+eligible unowned gap exists.
+
+The four unfinished declaration consumers have equal merged dependencies and
+graph leverage. The readiness pass selects
+`build-tool-ruby-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-ruby-extra-ci-toolchain-declaration-conformance`. Ruby wins
+the documented ordering after Python and supplies another independent runtime
+through the same bounded process-free boundary. Ruby 3.4.9 with PRISM and
+Bundler 2.6.9 are installed locally, and the existing bundle is satisfied.
+All six live open PRs have zero exact overlap with the expected Ruby
+declaration paths. PR #13455 prospectively adds TypeScript-only `forme-cli`,
+which remains covered by the existing
+`forme-portable-core-family-classification` owner.
+After reconciliation and selection, the 566-owner, 833-edge graph contains 174
+merged, 391 pending, and one `in-progress` owner.
+
+The first complete Ruby package run then exposed one deterministic exact-main
+failure unrelated to declaration evaluation. PR #13366 added an OCaml Dune
+`_build` decoy to the shared language-registry fixture, while unchanged Ruby
+discovery prunes `.build` and `dist-newstyle` but not exact `_build`; the only
+extra identity is `ocaml/decoy`. At reproduction time, before the repair
+commit, the discovery source, identity test, and fixture blobs all matched
+`origin/main`, and no reviewed exception applies. The gap is classified under
+the pending `build-tool-existing-remediation` umbrella. This Ruby tranche
+therefore also carries the minimum exact-component discovery regression needed
+to restore its
+canonical BUILD suite, while the separately owned generated-directory hashing
+repair remains out of scope.
+
+The same read-only fixture audit found newly eligible cross-engine debt. Rust,
+Swift, and TypeScript consume the complete registry fixture but lack `_build`;
+Python projects the OCaml records away and lacks the rule; C#/F# and Haskell
+need both behavior and fixture evidence; and already-correct Elixir, Lua, and
+Perl still need independent shared-fixture consumption. Nine engine-scoped
+owners plus `build-tool-dune-build-discovery-exclusion-remaining-engines` now
+classify that work. Ruby remains owned by the active declaration tranche, so
+implementation delivery stays serial with one active item and at most one PR.
+The expanded graph contains 576 owners and 855 edges: 174 merged, 401 pending, and
+one `in-progress` owner.
+
+The completed Ruby evaluator consumes all 11 declaration fixtures through a
+native pure API. The literal package BUILD passes 347 tests and 848 assertions
+with one expected skip, 90.96% line coverage, 76.35% branch coverage, and 100%
+line coverage for the new production module. Direct regressions also prove
+that the public parser checks byte and logical-line ceilings before splitting
+and that target-platform validation runs before full-rebuild and empty-package
+shortcuts. The Dune integration regression and direct exact/case/near-name
+tests pass. Schema and semantic-runner suites pass 22 and 62 tests, the
+119-case/283-file corpus validates, and 68 parity, capability, Haskell, and
+OCaml-lock tests pass with two expected Windows skips.
+
+The Go oracle passes all tests, vet, and trimpath compilation; its real forced
+Ruby plan reports 305 of 305 WOULD-BUILD, while an exact-diff plan selects only
+`ruby/programs/build-tool`. A fresh Ruby advisory audit reports no
+vulnerability, and dependency, authority, credential, collision, JSON, and
+diff gates are clean.
+
+Before publication, the branch rebased without conflict onto exact
+`origin/main` `0a5cfd29a338c4a24409ff6debbfef23bcbd0ef7`. Intervening PR #13489 is confined
+to human-language script-owner declarations, generated data, tests, and HL
+specifications, has no exact overlap with the eleven Ruby tranche paths, and
+changes no package identity or build-tool contract. Post-rebase package,
+corpus, parity, state-graph, diff-plan, and hygiene checks pass.
+
+At final review, six live PRs have no overlap on the Ruby implementation,
+tests, specifications, changelogs, README, state, or roadmap. Unrelated PR
+#12165 shares only `lessons.md` at a disjoint Rust-coverage hunk; this tranche's
+required process-free-boundary lessons are added at the file top. No package,
+build-tool, or parity-state ownership collides.
+
+Ready-for-review PR #13492 opened from validated head
+`c723aea0dcfe0e9346bf6ca15b13d4a586e374af`. GitHub reports it non-draft,
+mergeable, and conflict-free. Required CI and CodeQL checks are queued or in
+progress, so the item advances to `pr-open` and auto-merge remains disabled.
+The graph now contains 174 merged, 401 pending, and one `pr-open` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

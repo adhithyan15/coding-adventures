@@ -6,6 +6,15 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- Extra CI toolchain declarations now use a pure bounded Ruby snapshot
+  evaluator that independently consumes all 11 language-neutral fixtures. It
+  applies exact platform BUILD precedence, UTF-8 byte and logical-line limits,
+  affected-only and forced scheduling, deeply frozen canonical metadata, fresh
+  result maps, and stable unsupported diagnostics without host authority.
+- Discovery now excludes Dune's exact, case-sensitive `_build` directory
+  component while preserving `_Build` and `_build-example`, restoring the
+  shared language-registry fixture after its OCaml generated-output decoy was
+  added.
 - Orphan-crate snapshots now use the shared build-tool v1 process-free
   contract. The pure Hash-in/result-out validator consumes all four
   language-neutral fixtures, derives direct and component-wise ancestor BUILD

@@ -99,6 +99,15 @@ empty-front precedence, return fresh complete 16-key maps, and enforce the
 shared per-file and aggregate ceilings before evaluation without reading host
 state or gaining process authority.
 
+The Ruby engine uses `BuildTool::ToolchainDetection.evaluate_snapshot`; its
+package-local Minitest suite MUST discover and evaluate every
+`toolchain-detection-*.json` case through that pure native boundary. The
+adapter MUST count encoded UTF-8 bytes independently of character count,
+preserve exact CRLF grammar and empty-front precedence, return fresh complete
+16-key maps from a frozen canonical registry, and enforce the shared per-file
+and aggregate ceilings before evaluation without reading host state or gaining
+process authority.
+
 C and C++ remain emerging implementation lanes. OCaml also begins as emerging
 and must implement this contract before promotion. WASM is an execution target,
 Mosaic and Twig are domain languages, and Starlark is a build language; none is

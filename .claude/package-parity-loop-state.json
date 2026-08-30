@@ -12,23 +12,23 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 13490,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13490",
-    "branch": "codex/build-tool-python-extra-ci-toolchain-declaration-conformance",
-    "implementation_revision": "94197e7ecccb4039f82f6793a3b6d17e8a75a006",
+    "number": 13492,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13492",
+    "branch": "codex/build-tool-ruby-extra-ci-toolchain-declaration-conformance",
+    "implementation_revision": "c723aea0dcfe0e9346bf6ca15b13d4a586e374af",
     "status": "checks-pending",
-    "opened_at": "2026-08-30T11:29:42Z"
+    "opened_at": "2026-08-30T12:31:10Z"
   },
   "last_ci_action": {
-    "observed_at": "2026-08-30T11:30:10Z",
-    "pr_number": 13490,
+    "observed_at": "2026-08-30T12:31:14Z",
+    "pr_number": 13492,
     "run_id": null,
     "attempt": 1,
     "status": "checks-pending",
-    "notes": "Ready-for-review PR #13490 is open and non-draft. GitHub reports the branch mergeable and conflict-free, but required CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable."
+    "notes": "Ready-for-review PR #13492 is open and non-draft. GitHub reports the branch mergeable and conflict-free, but required CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "1f1e50dd783c0a630a87fae1db04d98a05bef4e5",
+    "revision": "0a5cfd29a338c4a24409ff6debbfef23bcbd0ef7",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -372,7 +372,7 @@
     {
       "id": "build-tool-python-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Python build tool consume extra CI toolchain declarations",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
       "branch": "codex/build-tool-python-extra-ci-toolchain-declaration-conformance",
       "pr_number": 13490,
@@ -382,16 +382,32 @@
       "validation_notes": "Test-first execution failed on the deliberately absent build_tool.toolchain_detection module before source was added. The completed pure evaluator dynamically discovers and consumes all 11 neutral declaration fixtures and passes direct encoded-UTF8 byte, logical-line, aggregate, CRLF, empty-front, stable-deduplication, null-versus-empty selection, force-full, forced-toolchain, unsupported-value, selected-error-precedence, fresh-registry, and caller-mutation probes. The canonical Python 3.13 BUILD workflow passes the complete 453-test package suite at 90.79% total coverage; the focused 11-test module suite reaches 92.59% branch-aware production coverage. Ruff lint and formatting, MyPy, Bandit, wheel and source builds, uv compatibility across 17 installed packages, and pip-audit all pass; pip-audit reports no known vulnerability and explicitly skips the two editable repository packages. The neutral corpus validates schema 1 with 119 cases and 283 files across 16 implementations, 15 established lanes, and 12 front doors. The complete repository conformance family passes 205 tests with 23 expected Windows authority/platform skips on its Python 3.10 runner. Five Python 3.13 Windows execution-corpus identity failures reproduce unchanged on the exact main baseline and remain explicitly owned by pending build-tool-windows-python313-execution-snapshot-volume-identity; they are not caused or widened by this process-free tranche. Package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock suites pass 68 tests with two expected Windows symlink skips. The Go oracle passes module verification, every package test, vet, and trimpath build. A real exact-diff Python plan evaluates 45 Starlark files, discovers 495 Python packages, selects only python/programs/build-tool, keeps the five-entry orphan ledger clean, and a full 5,112-package toolchain detection enables only Python. The schema-3 parity report remains collision-clean at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, 731 Rust singletons, zero OCaml packages, and zero unknown buckets. At validation time, the 566-owner/833-edge state was unique, dependency-complete, acyclic, and free of merged-to-unmerged edges with 173 merged, 392 pending, and exactly this item in progress. The branch rebased without conflict onto exact origin/main 1f1e50dd783c0a630a87fae1db04d98a05bef4e5 after merged PR #13486 touched only existing human-language roots; seven live PRs, including successor #13488 and script-owner PR #13489, have zero exact overlap with all eight changed paths. Diff hygiene, dependency scope, credential scans, and direct production-authority scans are clean. The new module imports only collections.abc and typing, adds no filesystem, Git, process, environment, network, credential, FFI, or execution authority, and changes no production dependency, BUILD front, CLI, plan, or package metadata.",
       "final_review_notes": "Independent conformance review reproduced all 11 focused tests, formatting, Ruff, and MyPy, then found zero divergence across 1,000 randomized declaration strings and 1,000 randomized valid snapshots against the neutral oracle. Independent security and packaging review found no authority, dependency, supply-chain, diagnostic, or secret-leakage issue and verified that the five Python 3.13 Windows identity failures are byte-identical baseline behavior owned by the pending execution-snapshot-volume-identity repair. The live collision audit found zero overlap across all seven open PRs, no new eligible unowned gap, a collision-clean 1,388-identity inventory, and a complete acyclic 566-owner graph.",
       "publication_notes": "Opened ready-for-review PR #13490 from clean validated implementation head 94197e7ecccb4039f82f6793a3b6d17e8a75a006 after a normal first push. Immediately before publication, the branch was based on exact origin/main 1f1e50dd783c0a630a87fae1db04d98a05bef4e5, the target remote branch and prior PR were absent, and all eight changed paths had zero exact overlap across seven other live PRs. GitHub reports the PR mergeable and non-draft, currently blocked only by queued or in-progress CI and CodeQL checks; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "final_revision": "e4ddc07a7049742448c3fb1be673ecb3e593b3f8",
+      "merged_at": "2026-08-30T11:47:33Z",
+      "merge_commit": "ce60a7bbf98d4e169e20e6b66f2d5bcb5dd46349",
+      "merge_notes": "All 41 final checks were acceptable: 34 successes, six expected skips, and one neutral result. GitHub reported the final head conflict-free; squash auto-merge was enabled and GitHub merged the PR without a manual merge command.",
       "notes": "Adopt the merged process-free declaration corpus in the Python engine without widening execution authority."
     },
     {
       "id": "build-tool-ruby-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Ruby build tool consume extra CI toolchain declarations",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Adopt the merged process-free declaration corpus in the Ruby engine without widening execution authority."
+      "branch": "codex/build-tool-ruby-extra-ci-toolchain-declaration-conformance",
+      "pr_number": 13492,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13492",
+      "opened_at": "2026-08-30T12:31:10Z",
+      "opened_revision": "c723aea0dcfe0e9346bf6ca15b13d4a586e374af",
+      "selection_revision": "ce60a7bbf98d4e169e20e6b66f2d5bcb5dd46349",
+      "selection_notes": "Selected after PR #13490 completed 41 terminal acceptable checks and merged through guarded squash auto-merge, followed by a collision-checked exact-main inventory refresh. The four remaining declaration consumers have equal merged dependencies and graph leverage; Ruby wins the documented ordering after Python and supplies another independent runtime through the same bounded process-free boundary. Ruby 3.4.9 with PRISM and Bundler 2.6.9 are installed locally, and bundle check confirms the existing dependency set is satisfied. The inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Merged PR #13488 changed only existing Urdu curriculum, human-language-data, script-ductus, and language-ladder roots. All six live open PRs have zero exact overlap with the expected Ruby declaration paths. PR #13455 prospectively adds the already-owned TypeScript Forme CLI root; no newly eligible unowned gap displaces Ruby.",
+      "implementation_revision": "2137edb2adc7de8da631a8c9498fb050fbfd8843",
+      "validation_revision": "2137edb2adc7de8da631a8c9498fb050fbfd8843",
+      "rebase_revision": "0a5cfd29a338c4a24409ff6debbfef23bcbd0ef7",
+      "rebase_notes": "Rebased without conflict before publication onto exact origin/main 0a5cfd29a338c4a24409ff6debbfef23bcbd0ef7 after merged PR #13489 added only human-language script-owner declarations, generated data, tests, and HL specifications. It has zero exact overlap with the eleven Ruby declaration, discovery, documentation, lesson, state, and roadmap paths and changes no package identity or build-tool contract. Post-rebase package, corpus, parity, graph, diff-plan, and diff-hygiene validation all pass.",
+      "validation_notes": "Test-first execution failed on the deliberately absent BuildTool::ToolchainDetection module before source was added. The completed pure evaluator independently consumes all 11 neutral declaration fixtures and passes encoded-UTF8 byte, logical-line, aggregate, CRLF, stable-deduplication, empty-front, null-versus-empty selection, forced-full, forced-toolchain, unsupported-precedence, frozen-registry, fresh-result, caller-mutation, public-parser ceiling, and unsupported-platform probes. Pre-implementation full-suite validation also reproduced one exact-main shared-fixture failure: PR #13366 added the Dune _build decoy, while byte-identical Ruby discovery emitted only ocaml/decoy beyond the expected set. The minimum exact-component repair now excludes _build while direct tests preserve _Build and _build-example; the unchanged full registry fixture passes. The literal Ruby BUILD workflow passes 347 tests and 848 assertions with one expected skip, 90.96% line coverage, 76.35% branch coverage, and 100% line coverage across the new 98-line production module. The public declaration parser rejects oversized bytes or logical lines before splitting, and target-platform validation runs before force-full or empty-selection shortcuts. The neutral schema and runner suites pass 22 and 62 tests, and the corpus validates 119 cases and 283 files across 16 implementations and 15 established lanes. Package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock suites pass 68 tests with two expected Windows skips. The Go oracle passes all packages, vet, and trimpath build; a real forced Ruby dry plan evaluates 45 Starlark files and reports all 305 Ruby packages WOULD-BUILD, while the exact diff plan selects only ruby/programs/build-tool with 304 skips. The schema-3 report remains collision-clean at 15 lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, 731 Rust singletons, zero OCaml packages, and zero unknown buckets. The expanded 576-owner/855-edge graph is unique and dependency-complete with 174 merged, 401 pending, and exactly this owner in progress. Fresh ruby-advisory-db c7562c261741 reports no vulnerability. Direct StandardRB reproduces the exact existing discovery baseline and reports only the repository's Windows line-ending policy on the new source/tests, with no substantive new offense. Dependency and BUILD metadata are unchanged; production-authority, credential-pattern, generated-artifact, JSON, diff, and collision gates are clean.",
+      "review_notes": "Independent correctness review found and corrected one temporal roadmap claim, then confirmed exact declaration semantics, Dune case sensitivity, and fixture coverage. Independent security review found that the initially public parser could split over-ceiling direct input and that unsupported target platforms fell back to generic BUILD; direct red tests captured both, and the final implementation rejects both boundaries before selection or allocation. Independent state and inventory review confirmed the exact-main rebase, complete 576-owner/855-edge graph, all newly classified Dune lanes, and collision-clean inventory. The final six-PR audit has no overlap on Ruby code, tests, specs, changelogs, README, state, or roadmap; unrelated PR #12165 shares only lessons.md at a disjoint Rust-coverage hunk, while this tranche adds the required process-free-boundary lesson at the file top.",
+      "publication_notes": "Opened ready-for-review PR #13492 from clean validated head c723aea0dcfe0e9346bf6ca15b13d4a586e374af after a normal first push. Immediately before publication, the branch was rebased onto exact origin/main 0a5cfd29a338c4a24409ff6debbfef23bcbd0ef7; the target remote branch and prior PR were absent; and six live PRs had no overlap on implementation, tests, specs, changelogs, README, state, or roadmap. Unrelated #12165 shares only lessons.md at a disjoint hunk. GitHub reports PR #13492 non-draft, mergeable, and conflict-free, currently blocked only by queued or in-progress CI and CodeQL checks; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "notes": "Adopt the merged process-free declaration corpus in the Ruby engine without widening execution authority. Pre-implementation full-suite validation also reproduced one exact-main failure introduced when PR #13366 added the Dune _build decoy to the shared language-registry fixture: unchanged Ruby discovery emits only ocaml/decoy beyond the expected set. This tranche carries the minimum exact-component discovery regression repair classified under build-tool-existing-remediation so the real Ruby BUILD and CI can pass; the separately owned generated-directory hashing repair remains out of scope."
     },
     {
       "id": "build-tool-rust-extra-ci-toolchain-declaration-conformance",
@@ -419,6 +435,108 @@
       "branch": null,
       "pr_number": null,
       "notes": "Adopt the merged process-free declaration corpus in the TypeScript engine without widening execution authority."
+    },
+    {
+      "id": "build-tool-dune-build-discovery-exclusion-remaining-engines",
+      "title": "Complete exact Dune _build discovery exclusion across build tools",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-ruby-extra-ci-toolchain-declaration-conformance",
+        "build-tool-rust-dune-build-discovery-exclusion",
+        "build-tool-swift-dune-build-discovery-exclusion",
+        "build-tool-typescript-dune-build-discovery-exclusion",
+        "build-tool-csharp-fsharp-dune-build-discovery-conformance",
+        "build-tool-haskell-dune-build-discovery-conformance",
+        "build-tool-python-dune-build-discovery-conformance",
+        "build-tool-elixir-dune-build-discovery-fixture-adoption",
+        "build-tool-lua-dune-build-discovery-fixture-adoption",
+        "build-tool-perl-dune-build-discovery-fixture-adoption"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for the exact case-sensitive Dune _build generated-artifact rule introduced with the OCaml discovery fixture. Keep repairs engine-scoped and require explicit shared-fixture evidence; the selected Ruby declaration tranche owns its minimum package-suite unblock, while every other lane remains independently reviewable."
+    },
+    {
+      "id": "build-tool-rust-dune-build-discovery-exclusion",
+      "title": "Make Rust build-tool discovery honor the Dune _build exclusion",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-rust-language-identity-registry"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Rust consumes the complete shared discovery-language-registry fixture but does not prune the exact _build component. Add the bounded exact-component repair and preserve case variants and near names in its own engine tranche."
+    },
+    {
+      "id": "build-tool-swift-dune-build-discovery-exclusion",
+      "title": "Make Swift build-tool discovery honor the Dune _build exclusion",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-swift-language-identity-registry"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Swift consumes the complete shared discovery-language-registry fixture but does not prune the exact _build component. Add the bounded exact-component repair and preserve case variants and near names in its own engine tranche."
+    },
+    {
+      "id": "build-tool-typescript-dune-build-discovery-exclusion",
+      "title": "Make TypeScript build-tool discovery honor the Dune _build exclusion",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-typescript-language-identity-registry"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "TypeScript consumes the complete shared discovery-language-registry fixture but does not prune the exact _build component. Add the bounded exact-component repair and preserve case variants and near names in its own engine tranche."
+    },
+    {
+      "id": "build-tool-csharp-fsharp-dune-build-discovery-conformance",
+      "title": "Prove Dune _build discovery exclusion in the C# and F# build tools",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The shared C#/F# engine neither consumes the full registry fixture nor exposes the exact Dune exclusion. Add native C# behavior coverage and explicit F# facade evidence without pretending that one runtime silently covers the other."
+    },
+    {
+      "id": "build-tool-haskell-dune-build-discovery-conformance",
+      "title": "Prove Dune _build discovery exclusion in the Haskell build tool",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Haskell does not consume the shared language-registry fixture and mentions _build only in orphan validation. Add the exact discovery rule and language-neutral fixture consumption in one bounded Haskell tranche."
+    },
+    {
+      "id": "build-tool-python-dune-build-discovery-conformance",
+      "title": "Prove Dune _build discovery exclusion in the Python build tool",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Python's current registry test projects out OCaml inputs and its discovery skip set lacks exact _build. Consume the relevant fixture records, add the exact rule, and preserve case variants and near names without widening host authority."
+    },
+    {
+      "id": "build-tool-elixir-dune-build-discovery-fixture-adoption",
+      "title": "Make Elixir consume the Dune discovery fixture",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Elixir already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence."
+    },
+    {
+      "id": "build-tool-lua-dune-build-discovery-fixture-adoption",
+      "title": "Make Lua consume the Dune discovery fixture",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Lua already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence."
+    },
+    {
+      "id": "build-tool-perl-dune-build-discovery-fixture-adoption",
+      "title": "Make Perl consume the Dune discovery fixture",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Perl already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence."
     },
     {
       "id": "build-tool-typescript-dist-newstyle-discovery-exclusion",
@@ -1499,7 +1617,7 @@
       "depends_on": ["build-tool-go-oracle"],
       "branch": null,
       "pr_number": null,
-      "notes": "Deliver one independent engine per PR; explicitly review the shared C#/F# engine exception."
+      "notes": "Deliver one independent engine per PR; explicitly review the shared C#/F# engine exception. The exact-main audit after PR #13490 discovered that PR #13366's new Dune generated-output decoy makes the unchanged Ruby identity-registry fixture emit ocaml/decoy because Ruby discovery does not yet prune the exact case-sensitive _build component. The selected Ruby declaration-engine tranche must apply the bounded discovery/test repair needed to restore its canonical package suite; keep the separately owned Ruby hashing exclusion out of scope."
     },
     {
       "id": "build-tool-jvm",
