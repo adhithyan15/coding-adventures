@@ -8,15 +8,16 @@ This is a standalone program (not a publishable gem) that orchestrates building 
 
 ## Architecture
 
-| Module       | Responsibility                                      |
-|-------------|-----------------------------------------------------|
-| `discovery`  | Recursively walk directories, find packages with BUILD files |
-| `resolver`   | Parse metadata, build a dependency graph            |
-| `hasher`     | SHA256 hashing for change detection                 |
-| `cache`      | JSON cache file for incremental builds              |
-| `executor`   | Parallel execution via threads + Open3              |
-| `reporter`   | Human-readable build report formatting              |
-| `validator`  | Pure orphan-crate and tracked-artifact snapshot policy validation |
+| Module | Responsibility |
+|---|---|
+| `discovery` | Recursively walk directories, find packages with BUILD files |
+| `resolver` | Parse metadata, build a dependency graph |
+| `hasher` | SHA256 hashing for change detection |
+| `cache` | JSON cache file for incremental builds |
+| `executor` | Parallel execution via threads + Open3 |
+| `reporter` | Human-readable build report formatting |
+| `toolchain_detection` | Pure bounded extra-CI toolchain snapshot decisions |
+| `validator` | Pure orphan-crate and tracked-artifact snapshot policy validation |
 
 ## Usage
 
@@ -52,15 +53,33 @@ bucket. Programs retain a `programs` identity segment, such as
 `go/programs/build-tool`, so a library and program with the same basename stay
 distinct. Specification fixture trees are excluded, and duplicate qualified
 identities fail closed with exit code `2` and repository-relative paths.
-Cabal's exact, case-sensitive `dist-newstyle` directory component is also
-excluded as generated build output. Source directories such as
-`Dist-Newstyle` and `dist-newstyle-example` remain discoverable.
+Cabal's exact, case-sensitive `dist-newstyle` directory component and Dune's
+exact, case-sensitive `_build` component are also excluded as generated build
+output. Source directories such as `Dist-Newstyle`, `dist-newstyle-example`,
+`_Build`, and `_build-example` remain discoverable.
 
 The resolver preserves those identities in metadata edges and in qualified
 dependencies declared by the selected legacy BUILD file's
 `# build-tool: deps=` comment. The shared discovery, duplicate-identity,
 package/program, and BUILD-comment fixtures exercise the same contracts used by
 other build-tool implementations.
+
+## Extra CI Toolchain Declarations
+
+`BuildTool::ToolchainDetection.evaluate_snapshot` accepts only caller-owned
+package records and inline BUILD-front strings. It selects the exact Windows,
+Darwin, or Linux front, parses inert `# needs-toolchain: NAME` comments, and
+returns the complete sorted 16-key toolchain map for the supplied affected,
+forced, or full-rebuild decision. It never reads a checkout, probes PATH,
+consults the environment, invokes Git, starts a process, or accesses a network.
+
+Every supplied BUILD front is validated before selection: one front is limited
+to 65,536 encoded UTF-8 bytes and 4,096 logical lines, and the complete snapshot
+is limited to 1 MiB. Parsing uses literal LF boundaries, strips one CR only
+when it forms a CRLF terminator, trims only ASCII space and tab, and stably
+deduplicates exact lowercase canonical declarations. Unsupported selected
+languages and explicitly forced values return the stable
+`TOOLCHAIN_UNSUPPORTED` diagnostic.
 
 ## Canonical Starlark BUILD Files
 
@@ -130,7 +149,11 @@ bundle install
 bundle exec rake test
 ```
 
-The `test/test_identity_registry.rb` and `test/test_resolution_utf8.rb` coverage
+The `test/test_toolchain_detection.rb` suite independently consumes all 11
+language-neutral declaration fixtures and covers UTF-8 representation,
+resource ceilings, CRLF grammar, empty-front precedence, selection, forcing,
+freshness, and caller-input preservation. The `test/test_identity_registry.rb`
+and `test/test_resolution_utf8.rb` coverage
 exercise shared language-neutral discovery, dependency, valid-text, and
 invalid-text fixtures plus real CLI subprocesses. `test/test_validator.rb`
 consumes every shared orphan-crate and tracked-artifact fixture and covers
