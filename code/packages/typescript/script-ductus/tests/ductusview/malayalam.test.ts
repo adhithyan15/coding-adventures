@@ -46,6 +46,8 @@ const MALAYALAM_U = DUCTUS[ductusKey("malayalam", "ഉ")];
 const malayalamUOutline = malayalamOutline("ഉ");
 const MALAYALAM_UU = DUCTUS[ductusKey("malayalam", "ഊ")];
 const malayalamUuOutline = malayalamOutline("ഊ");
+const MALAYALAM_O = DUCTUS[ductusKey("malayalam", "ഒ")];
+const malayalamOOutline = malayalamOutline("ഒ");
 const MALAYALAM_CHILLU_L = DUCTUS[ductusKey("malayalam", "ൽ")];
 const malayalamChilluLOutline = malayalamOutline("ൽ");
 const MALAYALAM_CHILLU_N = DUCTUS[ductusKey("malayalam", "ൻ")];
@@ -220,6 +222,35 @@ describe("Malayalam ഊ — joined main body, then joined right flourish", () =>
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(MALAYALAM_UU.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(MALAYALAM_UU.strokes[1], 1));
+  });
+});
+
+describe("Malayalam ഒ — joined left body, then a rounded right lobe", () => {
+  const steps = ductusSteps(MALAYALAM_O);
+  const strip = ductusFilmstrip(MALAYALAM_O, malayalamOOutline);
+
+  it("places one lift before the right-side lobe", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1]);
+  });
+
+  it("reports two movements in two strokes", () => {
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 2 movements");
+  });
+
+  it("keeps the left body visible while the right lobe completes", () => {
+    const last = strip.frames[1];
+    const done = byTag(last, "path").filter(
+      (path) => path.attrs.class === "ductus__done",
+    );
+    const pen = byTag(last, "path").find(
+      (path) => path.attrs.class === "ductus__pen",
+    )!;
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(MALAYALAM_O.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(MALAYALAM_O.strokes[1], 1));
   });
 });
 
