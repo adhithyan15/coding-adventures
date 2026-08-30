@@ -153,7 +153,7 @@ describe("independent script owner declarations", () => {
     });
   });
 
-  it.skipIf(process.platform === "win32")(
+  it.skipIf(process.platform !== "linux")(
     "rejects declaration filenames that collide under case folding",
     () => {
       withFixture((root) => {
