@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Removed the tokenizer's dead local `peek` helper so strict downstream
+  TypeScript builds do not fail on an unused declaration.
+
 ## [0.4.0] - 2026-06-13
 
 ### Added

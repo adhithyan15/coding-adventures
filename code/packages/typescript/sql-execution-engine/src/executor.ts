@@ -14,7 +14,8 @@
  *   9. LIMIT       — paginate
  */
 
-import type { ASTNode, Token } from "@coding-adventures/parser";
+import type { Token } from "@coding-adventures/lexer";
+import type { ASTNode } from "@coding-adventures/parser";
 import { isASTNode } from "@coding-adventures/parser";
 import type { DataSource } from "./data-source.js";
 import type { Row, QueryResult, SqlValue } from "./types.js";

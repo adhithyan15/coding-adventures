@@ -5,6 +5,30 @@ by priority — top item is next up. Re-prioritized whenever a new item is disco
 Each item, once picked up, follows: spec-sync → tests → implementation → CHANGELOG → README →
 `/security-review` → PR → `/babysit-pr` → auto-merge.
 
+## Product completion queue
+
+The durable product backlog is [GitHub issue #13517](https://github.com/adhithyan15/coding-adventures/issues/13517).
+It tracks the local-first, Rust-scheduled, native TaskApp completion loop and
+links existing Mosaic work instead of duplicating it.
+
+1. **P0 — [#13518](https://github.com/adhithyan15/coding-adventures/issues/13518):**
+   make the web release build reproducible and CI-gated. **In progress.**
+2. **P0 — [#13519](https://github.com/adhithyan15/coding-adventures/issues/13519):**
+   persist TaskApp locally in every strict generated native host.
+3. **P0 — [#13520](https://github.com/adhithyan15/coding-adventures/issues/13520):**
+   prove the native simple-todo scheduling flow end to end.
+4. **P1 — [#13521](https://github.com/adhithyan15/coding-adventures/issues/13521):**
+   enforce web/native presentation-contract parity.
+5. **P1 — [#13522](https://github.com/adhithyan15/coding-adventures/issues/13522):**
+   package installable local apps on supported platforms.
+6. **P1 — [#13523](https://github.com/adhithyan15/coding-adventures/issues/13523):**
+   audit and refine the first-run simple-todo experience.
+7. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
+   move the Vitest config to Vite's native ESM loading contract.
+
+Newly discovered work is filed as an issue and the queue is reprioritized before
+the next item is selected. Only one TaskApp completion-loop PR is active at a time.
+
 ## Next up (priority order)
 
 The design-fidelity gap (see `CHANGELOG.md`'s "re-closed the design-fidelity gap"

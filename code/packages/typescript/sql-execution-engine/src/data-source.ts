@@ -22,7 +22,7 @@
  *   }
  */
 
-import type { Row, SqlValue } from "./types.js";
+import type { Row } from "./types.js";
 
 /**
  * Interface for pluggable data providers.

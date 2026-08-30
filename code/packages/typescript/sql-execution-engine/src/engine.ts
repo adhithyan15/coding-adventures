@@ -6,7 +6,8 @@
  * - `executeAll(sql, source)` — parse and execute all SELECT statements.
  */
 
-import type { ASTNode, Token } from "@coding-adventures/parser";
+import type { Token } from "@coding-adventures/lexer";
+import type { ASTNode } from "@coding-adventures/parser";
 import { isASTNode } from "@coding-adventures/parser";
 import { parseSQL } from "coding-adventures-sql-parser";
 import type { DataSource } from "./data-source.js";

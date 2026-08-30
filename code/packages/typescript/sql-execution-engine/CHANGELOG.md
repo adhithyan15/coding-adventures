@@ -1,5 +1,12 @@
 # Changelog — @coding-adventures/sql-execution-engine
 
+## [Unreleased]
+
+### Fixed
+
+- Import the shared `Token` type from its owning lexer package and remove an
+  unused `SqlValue` import so strict downstream application builds succeed.
+
 ## [0.1.0] — 2026-03-25
 
 ### Added

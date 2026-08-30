@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - keep native `elevation` intent out of React CSS (#13518)
+
+React emission now omits Mosaic's platform-neutral `elevation` token while
+preserving the authored `box-shadow` that renders the same intent on the web.
+Generated TaskApp themes therefore satisfy React's `CSSProperties` type instead
+of leaking `elevation: "raised"` into every raised surface. A focused emitter
+test locks both halves of the contract.
+
 ### Security - validate HostLink.href's URI scheme, literal and slot-bound (#13052)
 
 Follow-up to #12038 (the identical XAML gap). Both a literal `href="..."`

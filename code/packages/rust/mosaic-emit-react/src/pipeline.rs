@@ -4850,6 +4850,12 @@ fn build_part_style_map(style: &StyleDef) -> HashMap<String, String> {
 fn build_inline_style_fragment(props: &[StyleProp]) -> String {
     let mut parts: Vec<String> = Vec::with_capacity(props.len());
     for p in props {
+        // `elevation` is platform-neutral Mosaic intent, not CSS. Web themes
+        // retain their authored `box-shadow`; native emitters lower this token
+        // to each platform's shadow/elevation primitive.
+        if p.name == "elevation" {
+            continue;
+        }
         if let Some(translated) = translate_layout_alias(&p.name, p.value.trim()) {
             parts.push(translated);
             continue;
@@ -8153,6 +8159,48 @@ mod tests {
     fn an_unknown_align_value_falls_through_unchanged() {
         let out = aligned("sideways");
         assert!(out.contains("align: \"sideways\""), "{out}");
+    }
+
+    /// `elevation` is native rendering intent. React keeps the authored CSS
+    /// shadow and must not leak the non-CSS token into `CSSProperties`.
+    #[test]
+    fn elevation_is_omitted_while_box_shadow_is_preserved() {
+        let style = StyleDef {
+            component_name: "Raised".to_string(),
+            parts: vec![PartStyle {
+                name: "card".to_string(),
+                base: vec![
+                    StyleProp {
+                        name: "box-shadow".to_string(),
+                        value: "0 4px 14px rgba(0,0,0,.2)".to_string(),
+                    },
+                    StyleProp {
+                        name: "elevation".to_string(),
+                        value: "raised".to_string(),
+                    },
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = LayoutDef {
+            component_name: "Raised".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("card".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+
+        let out = from_pipeline(&component("Raised", vec![], vec![]), &layout, &style)
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("boxShadow: \"0 4px 14px rgba(0,0,0,.2)\""),
+            "{out}"
+        );
+        assert!(!out.contains("elevation"), "native intent leaked into React:\n{out}");
     }
 
     // ===================================================================

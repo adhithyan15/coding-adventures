@@ -12,7 +12,8 @@
  * All joins use nested-loop algorithm O(|left| × |right|).
  */
 
-import type { ASTNode, Token } from "@coding-adventures/parser";
+import type { Token } from "@coding-adventures/lexer";
+import type { ASTNode } from "@coding-adventures/parser";
 import type { Row } from "./types.js";
 import { evalExpr } from "./expression.js";
 
