@@ -1,0 +1,20 @@
+{
+  "chapter": 401,
+  "title": "Four Words for Following Directions",
+  "label": "ch:la-avenida-y-seguir-recto",
+  "canDo": "I can say la avenida, seguir, recto and cambiar, and use them to follow or change a route.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C401-route-recall-2",
+    "kind": "production",
+    "summary": "Complete ES-C401-cambiar: follow an avenue, continue straight, and change route or transport.",
+    "assesses": [
+      "ES-LEX-AVENIDA",
+      "ES-LEX-SEGUIR",
+      "ES-LEX-RECTO",
+      "ES-LEX-CAMBIAR"
+    ]
+  }
+}

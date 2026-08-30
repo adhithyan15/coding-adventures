@@ -69,6 +69,18 @@ class CountWarningsTests(unittest.TestCase):
 
         self.assertEqual(set(counts.values()), {0})
 
+    def test_first_warning_lines_preserves_repair_context(self) -> None:
+        samples = scanner.first_warning_lines(
+            "ordinary output\n"
+            "Underfull \\hbox (badness 10000) in paragraph at lines 38--39\n"
+            "Underfull \\hbox (badness 9000) in paragraph at lines 40--41\n"
+        )
+
+        self.assertEqual(
+            samples["underfull"],
+            "Underfull \\hbox (badness 10000) in paragraph at lines 38--39",
+        )
+
     def test_a_line_counts_once_per_class_even_with_two_matching_patterns(
         self,
     ) -> None:

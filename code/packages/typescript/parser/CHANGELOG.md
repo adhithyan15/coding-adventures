@@ -2,6 +2,14 @@
 
 All notable changes to the `@coding-adventures/parser` package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Grammar trace output now uses a small platform-neutral sink: Node consumers
+  retain `process.stderr`, while browser consumers fall back to `console.error`.
+  Downstream browser typechecks no longer require Node's ambient `process` type.
+
 ## [0.3.0] - 2026-04-18
 
 ### Added

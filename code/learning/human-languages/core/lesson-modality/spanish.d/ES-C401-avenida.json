@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C401-avenida",
+    "language": "spanish",
+    "chapter": 401,
+    "sequence": 8840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd107c69f7c9824e"
+  },
+  "findings": []
+}

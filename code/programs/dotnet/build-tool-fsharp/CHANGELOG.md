@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added a no-inline native `discoverPackages` facade and independently consumed
+  the complete shared discovery-language registry through F#, proving exact
+  bucket classification and Dune `_build` exclusion at this front door while
+  retaining the single reviewed .NET engine.
 - Added `evaluateToolchainSnapshot`, a no-inline pure F# facade over the shared
   .NET toolchain-decision engine, and independently consumed all 11 neutral
   toolchain-detection fixtures through that symbol. The cases pin canonical

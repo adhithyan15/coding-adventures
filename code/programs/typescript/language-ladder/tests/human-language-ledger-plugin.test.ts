@@ -7,7 +7,14 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import {
+  isAbsolute,
+  join,
+  posix,
+  relative,
+  sep,
+  win32,
+} from "node:path";
 import type { ViteDevServer } from "vite";
 import { describe, expect, it, vi } from "vitest";
 import {
@@ -32,6 +39,32 @@ import {
 } from "@coding-adventures/human-language-data/src/loader.ts";
 
 const root = defaultCurriculumRoot();
+
+interface PathBoundaryApi {
+  readonly isAbsolute: (path: string) => boolean;
+  readonly relative: (from: string, to: string) => string;
+  readonly sep: string;
+}
+
+const nativePathBoundaryApi: PathBoundaryApi = {
+  isAbsolute,
+  relative,
+  sep,
+};
+
+function isPathWithin(
+  directory: string,
+  candidate: string,
+  pathApi: PathBoundaryApi = nativePathBoundaryApi,
+): boolean {
+  const child = pathApi.relative(directory, candidate);
+  return (
+    child !== "" &&
+    child !== ".." &&
+    !child.startsWith(`..${pathApi.sep}`) &&
+    !pathApi.isAbsolute(child)
+  );
+}
 
 function defaultExport(source: string): unknown {
   const prefix = "export default ";
@@ -75,6 +108,37 @@ function writeLanguageRegistry(
 }
 
 describe("the bounded human-language ledger virtual modules", () => {
+  it("checks watch-root containment for POSIX and Windows path forms", () => {
+    expect(
+      isPathWithin(
+        "/repo/spanish/curriculum.d",
+        "/repo/spanish/curriculum.d/path/0001.json",
+        posix,
+      ),
+    ).toBe(true);
+    expect(
+      isPathWithin(
+        "/repo/spanish/curriculum.d",
+        "/repo/spanish/lessons/lesson.md",
+        posix,
+      ),
+    ).toBe(false);
+    expect(
+      isPathWithin(
+        "C:\\repo\\spanish\\curriculum.d",
+        "C:\\repo\\spanish\\curriculum.d\\path\\0001.json",
+        win32,
+      ),
+    ).toBe(true);
+    expect(
+      isPathWithin(
+        "C:\\repo\\spanish\\curriculum.d",
+        "C:\\repo\\spanish\\lessons\\lesson.md",
+        win32,
+      ),
+    ).toBe(false);
+  });
+
   it("resolves only the public index and its safe per-track children", () => {
     expect(resolveHumanLanguageLedgerId(LEDGER_INDEX_ID)).toBe(
       RESOLVED_LEDGER_INDEX_ID,
@@ -372,12 +436,8 @@ describe("the bounded human-language ledger virtual modules", () => {
     const match = /export const spine = (.*);\n/.exec(source);
     expect(match).not.toBeNull();
     expect(JSON.parse(match![1])).toEqual(loadCurriculumSpine(root));
-    expect(watched.some((path) => path.endsWith("spine.d/_meta.json"))).toBe(
-      true,
-    );
-    expect(watched.some((path) => path.endsWith("core/spine.json"))).toBe(
-      false,
-    );
+    expect(watched).toContain(join(root, "core", "spine.d", "_meta.json"));
+    expect(watched).not.toContain(join(root, "core", "spine.json"));
   });
 
   it("assembles one curriculum module from only that track's shards", () => {
@@ -393,7 +453,7 @@ describe("the bounded human-language ledger virtual modules", () => {
     expect(defaultExport(source)).toEqual(spanish);
     expect(watched.length).toBeGreaterThan(100);
     const dir = join(root, "spanish", "curriculum.d");
-    expect(watched.slice(1).every((path) => path.startsWith(`${dir}/`))).toBe(
+    expect(watched.slice(1).every((path) => isPathWithin(dir, path))).toBe(
       true,
     );
   });
@@ -411,7 +471,7 @@ describe("the bounded human-language ledger virtual modules", () => {
     expect(defaultExport(source)).toEqual(spanish);
     expect(watched.length).toBeGreaterThan(100);
     const dir = join(root, "spanish", "chapters.d");
-    expect(watched.slice(1).every((path) => path.startsWith(`${dir}/`))).toBe(
+    expect(watched.slice(1).every((path) => isPathWithin(dir, path))).toBe(
       true,
     );
   });
@@ -481,7 +541,7 @@ describe("the bounded human-language ledger virtual modules", () => {
     ]);
     expect(watched.length).toBeGreaterThan(100);
     const dir = join(root, "core", "generated-book-hashes", "spanish.d");
-    expect(watched.slice(1).every((path) => path.startsWith(`${dir}/`))).toBe(
+    expect(watched.slice(1).every((path) => isPathWithin(dir, path))).toBe(
       true,
     );
   });

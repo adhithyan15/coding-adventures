@@ -286,25 +286,6 @@ export function tokenize(source: string, config?: LexerConfig): Token[] {
   }
 
   /**
-   * Look at the *next* character without advancing the position.
-   *
-   * This is the "lookahead" operation. It's essential for distinguishing
-   * tokens that start the same way:
-   * - `=` vs `==`
-   *
-   * The lexer sees `=` and thinks, "Is this assignment or comparison?"
-   * It peeks at the next character to decide, without moving forward.
-   * If the next character is `=`, it's `==`. Otherwise, it's just `=`.
-   */
-  function peek(): string | null {
-    const peekPos = pos + 1;
-    if (peekPos < source.length) {
-      return source[peekPos];
-    }
-    return null;
-  }
-
-  /**
    * Consume the current character and move to the next one.
    *
    * This is the fundamental "step forward" operation. Every time the

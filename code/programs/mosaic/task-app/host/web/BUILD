@@ -11,3 +11,4 @@ cd ../../../../../packages/typescript/storage && npm install --quiet
 cd ../../../../../packages/typescript/indexeddb && npm install --quiet
 npm install --quiet
 npx vitest run
+npm run build

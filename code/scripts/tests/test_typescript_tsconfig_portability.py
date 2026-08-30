@@ -437,7 +437,10 @@ console.log(prose, nested);
         # +1: forme-resolve-asset-refs-fs resolves paths and reads identity
         # sidecars through the Node filesystem API.
         # +1: forme-load-assets-fs resolves canonical paths and reads bytes.
-        self.assertEqual(summary.node_api_projects, 67)
+        # -1: parser trace diagnostics now use a browser-safe console fallback
+        # and access process only through globalThis, so the package no longer
+        # requires ambient Node types in its compiler inputs.
+        self.assertEqual(summary.node_api_projects, 66)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -446,7 +449,8 @@ console.log(prose, nested);
         # out of both counts together.
         # +1: forme-resolve-asset-refs-fs owns its Node provider directly.
         # +1: forme-load-assets-fs owns its Node provider directly.
-        self.assertEqual(summary.node_provider_projects, 67)
+        # -1: see node_api_projects -- parser no longer needs a Node provider.
+        self.assertEqual(summary.node_provider_projects, 66)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)

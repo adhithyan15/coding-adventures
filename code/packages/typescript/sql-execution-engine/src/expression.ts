@@ -33,7 +33,8 @@
  *   and comparisons. IS NULL / IS NOT NULL are the only tests for NULL.
  */
 
-import type { ASTNode, Token } from "@coding-adventures/parser";
+import type { Token } from "@coding-adventures/lexer";
+import type { ASTNode } from "@coding-adventures/parser";
 import { isASTNode } from "@coding-adventures/parser";
 import type { Row, SqlValue } from "./types.js";
 import { ColumnNotFoundError } from "./errors.js";
