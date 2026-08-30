@@ -11127,6 +11127,30 @@ changelog paths. Adding all newly discovered work before selection leaves the
 complete graph unique, dependency-complete, and acyclic at 594 owners and 895
 edges, with 185 merged, 408 pending, and exactly one `in-progress` owner.
 
+The selected implementation now defines a closed `source_collection` pure
+domain, two 45-candidate extension/declared-source cases, the complete exact
+26-component artifact registry, no-follow symlink/reparse boundaries, and
+deterministic per-file SHA-256 results. Tests-first validation failed on the
+unmodeled domain before source was added. The completed focused suite passes 84
+tests and 132 subtests with 90% branch-aware runner coverage; the corpus accepts
+121 cases and 283 files across 16 implementations, 15 established lanes, and
+12 front doors. The Go oracle passes module verification, tests, vet, and a
+trimmed build. The real all-language plan evaluates 45 Starlark files,
+discovers 5,112 packages, correctly finds no changed package files in this
+shared-fixture-only diff, and retains the five reviewed orphan exemptions.
+Bandit, compileall, Ruff, schema parsing, JSON semantics, collision, state
+graph, and diff checks pass. The broader conformance family passes 177 tests,
+23 skips, and 238 subtests except for five unchanged Windows execution-snapshot
+tests that fail locally at the existing NTFS volume/file identity boundary
+before schema evaluation.
+
+The branch rebased cleanly onto `ba289881dcfe9d5f67d08b6531cde2972d5e7120`
+after unrelated Mosaic and Punjabi merges advanced `origin/main`. The
+post-rebase schema-3 inventory is unchanged at 15 lanes, 1,388 identities,
+4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139,
+and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and
+zero unknown buckets.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
