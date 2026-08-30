@@ -56,7 +56,7 @@ struct BuildFrontTests {
         if let fakeSwiftExit {
             try "@echo off\r\n@exit /b \(fakeSwiftExit)\r\n".write(
                 to: temporaryDirectory.appendingPathComponent("swift.bat"),
-                atomically: true,
+                atomically: false,
                 encoding: .utf8
             )
         }
