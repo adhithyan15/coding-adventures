@@ -9933,6 +9933,34 @@ requests. The complete graph is now 169 merged, 396 pending, and exactly one
 `pr-open` owner. GitHub reports the PR mergeable and non-draft, with CI and
 CodeQL checks queued or in progress, so auto-merge remains disabled.
 
+## Post-#13475 Refresh and Haskell Declaration-Engine Selection
+
+PR #13475 completed 40 terminal acceptable checks: 33 successes and seven
+expected skips. Auto-merge was enabled only after GitHub reported the branch
+conflict-free, and GitHub merged validated head
+`9c3a80300b8c2f1505591c2f26e93e2a2220f50b` as
+`2ba900aa5eb47f8da8e7d42703a3b7a303c4087d` at 2026-08-30T07:55:29Z without a
+manual merge command. Elixir therefore advances to `merged` and the active PR
+is cleared.
+
+The collision-checked exact-main inventory remains 15 established lanes,
+1,388 implementation identities, 4,602 slots, and 1,427 all-reported
+identities. Completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and collisions and unknown buckets remain zero. The neutral corpus remains
+schema 1 with 119 cases, 283 files, 16 implementations, 15 established lanes,
+and 12 front doors. No new eligible unowned gap exists.
+
+The remaining eight declaration consumers have equal graph leverage. The
+readiness pass selects
+`build-tool-haskell-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-haskell-extra-ci-toolchain-declaration-conformance`. Haskell
+wins the documented ordering and independent-runtime diversity tie-break. Its
+exact GHC 9.4.8 and Cabal 3.16.1.0 toolchain is installed with the required
+dependency cache populated. All six live open PRs have zero exact overlap with
+the expected Haskell tranche paths. After reconciliation and selection, the 566-owner,
+833-edge graph contains 170 merged, 395 pending, and one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
