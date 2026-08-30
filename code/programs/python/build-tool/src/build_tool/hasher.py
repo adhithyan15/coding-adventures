@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import hashlib
 import os
+import stat
 from pathlib import Path
 
 from build_tool.discovery import Package
@@ -90,10 +91,32 @@ GENERATED_DIRECTORY_COMPONENTS: frozenset[str] = frozenset(
 )
 
 
-def _prune_generated_directories(dirnames: list[str]) -> None:
-    """Prevent ``os.walk`` from descending into exact generated components."""
+def _is_link_or_reparse(path: Path) -> bool:
+    """Return whether ``path`` is a symlink, junction, or Windows reparse point."""
+    if os.path.islink(path):
+        return True
+
+    isjunction = getattr(os.path, "isjunction", None)
+    if isjunction is not None and isjunction(path):
+        return True
+
+    if os.name == "nt":
+        try:
+            attributes = os.lstat(path).st_file_attributes
+        except (AttributeError, OSError):
+            return True
+        return bool(attributes & stat.FILE_ATTRIBUTE_REPARSE_POINT)
+
+    return False
+
+
+def _prune_generated_directories(dirpath: str, dirnames: list[str]) -> None:
+    """Prevent ``os.walk`` from descending into generated or linked components."""
     dirnames[:] = [
-        dirname for dirname in dirnames if dirname not in GENERATED_DIRECTORY_COMPONENTS
+        dirname
+        for dirname in dirnames
+        if dirname not in GENERATED_DIRECTORY_COMPONENTS
+        and not _is_link_or_reparse(Path(dirpath) / dirname)
     ]
 
 
@@ -134,9 +157,11 @@ def _collect_source_files(package: Package) -> list[Path]:
         # This replaces pathlib.glob/rglob which has inconsistent behavior
         # with ** patterns across Python versions and platforms.
         for dirpath, dirnames, filenames in os.walk(pkg_root, followlinks=False):
-            _prune_generated_directories(dirnames)
+            _prune_generated_directories(dirpath, dirnames)
             for filename in filenames:
                 abs_path = Path(dirpath) / filename
+                if _is_link_or_reparse(abs_path):
+                    continue
 
                 # Always include BUILD files (a change to the build definition
                 # itself should always trigger a rebuild).
@@ -163,9 +188,11 @@ def _collect_source_files(package: Package) -> list[Path]:
         special_names = SPECIAL_FILENAMES.get(package.language, set())
 
         for dirpath, dirnames, filenames in os.walk(pkg_root, followlinks=False):
-            _prune_generated_directories(dirnames)
+            _prune_generated_directories(dirpath, dirnames)
             for filename in filenames:
                 abs_path = Path(dirpath) / filename
+                if _is_link_or_reparse(abs_path):
+                    continue
 
                 # Always include BUILD files
                 if filename in ("BUILD", "BUILD_mac", "BUILD_linux",

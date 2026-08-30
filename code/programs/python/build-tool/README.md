@@ -25,7 +25,8 @@ VCS, cache, and temporary directory components before either extension or
 declared-source matching. Component names are exact and case-sensitive, so
 `_build` and `dist-newstyle` are excluded while `_Build`, `_build-example`,
 `Dist-newstyle`, and `dist-newstyle-example` remain eligible source paths.
-Directory links are not followed.
+Directory and file symlinks plus Windows junction/reparse attributes are
+excluded before source matching or file reads.
 
 ## Usage
 

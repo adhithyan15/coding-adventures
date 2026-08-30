@@ -12,8 +12,9 @@ All notable changes to this project will be documented in this file.
   files.
 - **Source-directory preservation**: similarly named source components such as
   `_Build`, `_build-example`, `Dist-newstyle`, and
-  `dist-newstyle-example` remain hash inputs, and walks continue to avoid
-  following directory links.
+  `dist-newstyle-example` remain hash inputs, while directory and file symlinks
+  plus Windows junction/reparse attributes are excluded before matching or
+  opening files.
 
 ## [0.3.13] - 2026-08-30
 

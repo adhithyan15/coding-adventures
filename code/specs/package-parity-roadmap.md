@@ -11194,10 +11194,16 @@ source modes: all 26 exact generated components remained hash inputs. The
 bounded implementation now prunes those components by exact case-sensitive
 name before file filtering, preserves `_Build`, `_build-example`,
 `Dist-newstyle`, and `dist-newstyle-example`, and keeps the source walk's
-no-follow link boundary explicit.
+no-follow link boundary explicit. Independent final review caught a Windows
+junction gap in `os.walk(followlinks=False)` before publication. The smallest
+repair now rejects directory and file symlinks plus Windows junction/reparse
+attributes before matching or opening files; direct mocked tests cover both
+collection modes, a real NTFS-junction test passes locally, and the real POSIX
+link case is reserved for POSIX CI.
 
-The focused hasher suite passes 16 tests, and the complete Python build-tool
-package passes 459 tests at 91.29% total coverage with `hasher.py` at 100%.
+The focused hasher suite passes 20 tests with one platform skip, and the
+complete Python build-tool package passes 463 tests with one platform skip at
+91.23% total coverage with `hasher.py` at 96%.
 Changed production MyPy and Ruff checks pass; the sole direct Ruff finding is
 the unchanged pre-existing 89-character special-filename line. The neutral
 schema and runner suites pass 22 and 63 tests, while `validate-corpus` accepts
