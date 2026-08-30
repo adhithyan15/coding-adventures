@@ -45,13 +45,16 @@ Host: venture.test
 preformatted columns stay aligned</pre>
   <p id="scroll-anchor"><a href="chapter.html">A wrapped chapter link remains hittable after scrolling through the viewport</a>.</p>
   <p>Venture composes parsing, layout, paint, images, and native presentation from reusable components.</p>
-  <p id="tail" style="color: var(--tail-tone); padding: 1px 2px">End of the deterministic visual fixture.</p>
+  <p id="tail" style="color: var(--tail-tone)">End of the deterministic visual fixture.</p>
 </body>
 </html>"#;
 
 pub const FIXTURE_CSS: &str = r#"@import "fixture-base.css" screen and (min-width: 200px);
 #masthead[title~="visual"]:first-child { color: var(--masthead-tone); margin: 0 0 8px; }
 @media screen and (max-width: 300px) { #tail { margin-left: 3px; } }
+#tail { width: 75%; min-width: 120px; max-width: 180px; margin: 1em auto;
+  padding: .5em 1rem; border: 2px solid navy; box-sizing: border-box;
+  text-align: center; white-space: normal; }
 a:link { text-decoration: underline; }"#;
 
 pub const IMPORTED_FIXTURE_CSS: &str = r#"body {
@@ -767,7 +770,7 @@ fn same_rect(left: &RectFixture, right: &RectFixture) -> bool {
         && approximately(left.height, right.height)
 }
 
-const BASELINE_CONTENT_HEIGHT: f64 = 531.2;
+const BASELINE_CONTENT_HEIGHT: f64 = 584.8;
 const BASELINE_ELEMENTS: [(&str, RectFixture); 8] = [
     ("masthead", rect(16.0, 16.0, 208.0, 57.6)),
     ("mixed-inline", rect(16.0, 81.6, 208.0, 78.4)),
@@ -776,7 +779,7 @@ const BASELINE_ELEMENTS: [(&str, RectFixture); 8] = [
     ("fallback-image", rect(16.0, 198.4, 54.0, 24.0)),
     ("preformatted", rect(16.0, 236.8, 208.0, 62.4)),
     ("scroll-anchor", rect(16.0, 305.2, 208.0, 78.4)),
-    ("tail", rect(19.0, 474.0, 205.0, 41.2)),
+    ("tail", rect(42.0, 482.0, 156.0, 72.8)),
 ];
 const BASELINE_LINKS: [(&str, RectFixture); 7] = [
     ("/next.html", rect(142.0, 101.2, 28.0, 19.6)),

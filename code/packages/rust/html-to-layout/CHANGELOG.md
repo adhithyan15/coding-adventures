@@ -4,6 +4,9 @@
 
 ### Added
 
+- Add context-aware `%`, `em`, and `rem` computation, `auto` sizing/margins,
+  min/max constraints, border-box sizing, per-side border values, text
+  alignment, and white-space projection into reusable layout and paint seams.
 - Add element style declarations, inherited custom properties and `var()`
   resolution, edge shorthands/longhands, attribute and structural selectors,
   viewport-aware media evaluation, and transport-neutral `@import` metadata.

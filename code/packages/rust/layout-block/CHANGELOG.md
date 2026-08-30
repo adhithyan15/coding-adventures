@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Resolve percentage widths against the containing block and distribute
+  horizontal free space through shared two-sided/left `auto` margin metadata.
+
 ## [0.3.0] — fragmented inline formatting
 
 ### Changed

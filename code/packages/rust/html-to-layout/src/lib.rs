@@ -120,9 +120,21 @@ pub struct HtmlComputedStyle {
     pub display: Option<String>,
     pub background: Option<Color>,
     pub width: Option<f64>,
+    pub width_percent: Option<f64>,
+    pub width_auto: bool,
     pub height: Option<f64>,
+    pub min_width: Option<f64>,
+    pub max_width: Option<f64>,
+    pub min_height: Option<f64>,
+    pub max_height: Option<f64>,
     pub margin: Option<Edges>,
     pub padding: Option<Edges>,
+    pub margin_auto: [bool; 4],
+    pub border_width: Edges,
+    pub border_color: [Option<Color>; 4],
+    pub box_sizing: String,
+    pub text_align: TextAlign,
+    pub white_space: String,
     pub custom_properties: HashMap<String, Vec<String>>,
 }
 
@@ -283,13 +295,13 @@ where
     if let Some(padding) = style.padding {
         layout.padding = Some(padding);
     }
-    if let Some(background) = style.background {
-        layout
-            .ext
-            .insert("paint".into(), background_ext(background));
+    if style.background.is_some() || style.border_width != Edges::default() {
+        layout.ext.insert("paint".into(), box_paint_ext(&style));
     }
     layout.ext.insert("html".into(), html_ext(node));
-    layout.ext.insert("block".into(), block_ext(node, display));
+    layout
+        .ext
+        .insert("block".into(), block_ext(node, display, &style));
     Some(layout)
 }
 
@@ -355,8 +367,8 @@ fn text_leaf(value: &str, style: &HtmlComputedStyle) -> LayoutNode {
         color: style.color,
         decoration: style.decoration,
         max_lines: None,
-        wrap: true,
-        text_align: TextAlign::Start,
+        wrap: !matches!(style.white_space.as_str(), "nowrap" | "pre"),
+        text_align: style.text_align,
     })
     .with_width(SizeValue::Wrap)
     .with_height(SizeValue::Wrap)
@@ -390,9 +402,19 @@ where
     style.display = None;
     style.background = None;
     style.width = None;
+    style.width_percent = None;
+    style.width_auto = false;
     style.height = None;
+    style.min_width = None;
+    style.max_width = None;
+    style.min_height = None;
+    style.max_height = None;
     style.margin = None;
     style.padding = None;
+    style.margin_auto = [false; 4];
+    style.border_width = Edges::default();
+    style.border_color = [None; 4];
+    style.box_sizing = "content-box".into();
     if node.role == "heading" {
         let level = node.heading_level.unwrap_or(1).clamp(1, 6);
         style.font = theme.heading_fonts[usize::from(level - 1)].clone();
@@ -515,9 +537,21 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
         display: Some("block".into()),
         background: Some(context.theme.page_background),
         width: None,
+        width_percent: None,
+        width_auto: false,
         height: None,
+        min_width: None,
+        max_width: None,
+        min_height: None,
+        max_height: None,
         margin: None,
         padding: Some(edges_all(context.theme.page_padding)),
+        margin_auto: [false; 4],
+        border_width: Edges::default(),
+        border_color: [None; 4],
+        box_sizing: "content-box".into(),
+        text_align: TextAlign::Start,
+        white_space: "normal".into(),
         custom_properties: HashMap::new(),
     };
     let mut winners = HashMap::new();
@@ -539,7 +573,7 @@ fn root_computed_style(context: &HtmlStyleContext) -> HtmlComputedStyle {
             }
         }
     }
-    apply_declaration_winners(&mut style, winners);
+    apply_declaration_winners(&mut style, winners, context);
     style
 }
 
@@ -577,7 +611,7 @@ fn apply_author_cascade<F>(
             record_declarations(&mut winners, &declarations, (u16::MAX, 0, 0), &mut order);
         }
     }
-    apply_declaration_winners(style, winners);
+    apply_declaration_winners(style, winners, context);
 }
 
 fn record_declarations(
@@ -607,7 +641,9 @@ fn record_declarations(
 fn apply_declaration_winners(
     style: &mut HtmlComputedStyle,
     winners: HashMap<String, (CascadePriority, Vec<String>)>,
+    context: &HtmlStyleContext,
 ) {
+    let inherited_font_size = style.font.size;
     let mut custom_winners = winners
         .iter()
         .filter(|(property, _)| property.starts_with("--"))
@@ -617,7 +653,21 @@ fn apply_declaration_winners(
     for (property, value) in custom_winners {
         style.custom_properties.insert(property, value);
     }
-    for (property, (_, raw_value)) in winners {
+    if let Some((_, raw_value)) = winners.get("font-size") {
+        if let Some(value) = resolve_css_value(raw_value, &style.custom_properties, 0) {
+            if let Some(size) = parse_css_length_in_context(
+                &value,
+                inherited_font_size,
+                context.theme.body_font.size,
+                inherited_font_size,
+            ) {
+                style.font.size = size;
+            }
+        }
+    }
+    let mut resolved_winners = winners.into_iter().collect::<Vec<_>>();
+    resolved_winners.sort_by(|left, right| left.0.cmp(&right.0));
+    for (property, (_, raw_value)) in resolved_winners {
         if property.starts_with("--") {
             continue;
         }
@@ -636,11 +686,7 @@ fn apply_declaration_winners(
                     style.font.family = family.trim_matches(['\'', '"']).to_string();
                 }
             }
-            "font-size" => {
-                if let Some(size) = parse_css_length(&value) {
-                    style.font.size = size;
-                }
-            }
+            "font-size" => {}
             "font-weight" => {
                 if value.first().is_some_and(|value| value == "bold") {
                     style.font = font_bold(style.font.clone());
@@ -669,31 +715,72 @@ fn apply_declaration_winners(
                     .then(TextDecoration::underline);
             }
             "display" => style.display = value.first().cloned(),
-            "width" => style.width = parse_css_length(&value),
-            "height" => style.height = parse_css_length(&value),
-            "margin-top" => set_edge(&mut style.margin, EdgeSide::Top, parse_css_length(&value)),
-            "margin-right" => {
-                set_edge(&mut style.margin, EdgeSide::Right, parse_css_length(&value))
+            "width" => apply_width_value(style, &value, context),
+            "height" => {
+                style.height = parse_css_length_in_context(
+                    &value,
+                    style.font.size,
+                    context.theme.body_font.size,
+                    context.viewport_height,
+                )
             }
-            "margin-bottom" => set_edge(
-                &mut style.margin,
-                EdgeSide::Bottom,
-                parse_css_length(&value),
-            ),
-            "margin-left" => set_edge(&mut style.margin, EdgeSide::Left, parse_css_length(&value)),
-            "padding-top" => set_edge(&mut style.padding, EdgeSide::Top, parse_css_length(&value)),
-            "padding-right" => set_edge(
-                &mut style.padding,
-                EdgeSide::Right,
-                parse_css_length(&value),
-            ),
-            "padding-bottom" => set_edge(
-                &mut style.padding,
-                EdgeSide::Bottom,
-                parse_css_length(&value),
-            ),
-            "padding-left" => {
-                set_edge(&mut style.padding, EdgeSide::Left, parse_css_length(&value))
+            "min-width" => {
+                style.min_width = parse_box_length(&value, style, context, context.viewport_width)
+            }
+            "max-width" => {
+                style.max_width = parse_box_length(&value, style, context, context.viewport_width)
+            }
+            "min-height" => {
+                style.min_height = parse_box_length(&value, style, context, context.viewport_height)
+            }
+            "max-height" => {
+                style.max_height = parse_box_length(&value, style, context, context.viewport_height)
+            }
+            "margin-top" => apply_edge_value(style, EdgeSide::Top, &value, context, true),
+            "margin-right" => apply_edge_value(style, EdgeSide::Right, &value, context, true),
+            "margin-bottom" => apply_edge_value(style, EdgeSide::Bottom, &value, context, true),
+            "margin-left" => apply_edge_value(style, EdgeSide::Left, &value, context, true),
+            "padding-top" => apply_edge_value(style, EdgeSide::Top, &value, context, false),
+            "padding-right" => apply_edge_value(style, EdgeSide::Right, &value, context, false),
+            "padding-bottom" => apply_edge_value(style, EdgeSide::Bottom, &value, context, false),
+            "padding-left" => apply_edge_value(style, EdgeSide::Left, &value, context, false),
+            "box-sizing" if value.first().is_some_and(|value| value == "border-box") => {
+                style.box_sizing = "border-box".into();
+            }
+            "border-width" => {
+                if let Some(width) =
+                    parse_box_length(&value, style, context, context.viewport_width)
+                {
+                    style.border_width = edges_all(width);
+                }
+            }
+            "border-top-width" => apply_border_width(style, EdgeSide::Top, &value, context),
+            "border-right-width" => apply_border_width(style, EdgeSide::Right, &value, context),
+            "border-bottom-width" => apply_border_width(style, EdgeSide::Bottom, &value, context),
+            "border-left-width" => apply_border_width(style, EdgeSide::Left, &value, context),
+            "border-color" => {
+                if let Some(color) = parse_color(&value) {
+                    style.border_color = [Some(color); 4];
+                }
+            }
+            "border-top-color" => apply_border_color(style, EdgeSide::Top, &value),
+            "border-right-color" => apply_border_color(style, EdgeSide::Right, &value),
+            "border-bottom-color" => apply_border_color(style, EdgeSide::Bottom, &value),
+            "border-left-color" => apply_border_color(style, EdgeSide::Left, &value),
+            "text-align" => {
+                style.text_align = match value.first().map(String::as_str) {
+                    Some("center") => TextAlign::Center,
+                    Some("right" | "end") => TextAlign::End,
+                    _ => TextAlign::Start,
+                }
+            }
+            "white-space" => {
+                if let Some(value) = value
+                    .first()
+                    .filter(|value| matches!(value.as_str(), "normal" | "nowrap" | "pre"))
+                {
+                    style.white_space = value.clone();
+                }
             }
             _ => {}
         }
@@ -1241,6 +1328,24 @@ fn media_feature_applies(
 }
 
 fn expand_declaration(declaration: &Declaration) -> Vec<(String, Vec<String>)> {
+    if declaration.property == "border" {
+        let mut expanded = Vec::new();
+        if let Some(width) = declaration
+            .value
+            .iter()
+            .find(|token| parse_css_length(&[(*token).clone()]).is_some())
+        {
+            expanded.push(("border-width".into(), vec![width.clone()]));
+        }
+        if let Some(color) = declaration
+            .value
+            .iter()
+            .find(|token| parse_color(&[(*token).clone()]).is_some())
+        {
+            expanded.push(("border-color".into(), vec![color.clone()]));
+        }
+        return expanded;
+    }
     if !matches!(declaration.property.as_str(), "margin" | "padding") {
         return vec![(declaration.property.clone(), declaration.value.clone())];
     }
@@ -1326,6 +1431,17 @@ enum EdgeSide {
     Left,
 }
 
+impl EdgeSide {
+    fn index(self) -> usize {
+        match self {
+            Self::Top => 0,
+            Self::Right => 1,
+            Self::Bottom => 2,
+            Self::Left => 3,
+        }
+    }
+}
+
 fn set_edge(edges: &mut Option<Edges>, side: EdgeSide, value: Option<f64>) {
     let Some(value) = value else {
         return;
@@ -1365,6 +1481,108 @@ fn parse_css_length(value: &[String]) -> Option<f64> {
         .parse::<f64>()
         .ok()
         .filter(|value| value.is_finite() && *value >= 0.0)
+}
+
+fn parse_css_length_in_context(
+    value: &[String],
+    em_size: f64,
+    rem_size: f64,
+    percentage_basis: f64,
+) -> Option<f64> {
+    let value = value.first()?.trim().to_ascii_lowercase();
+    if value == "0" {
+        return Some(0.0);
+    }
+    let (number, scale) = if let Some(number) = value.strip_suffix("rem") {
+        (number, rem_size)
+    } else if let Some(number) = value.strip_suffix("em") {
+        (number, em_size)
+    } else if let Some(number) = value.strip_suffix("px") {
+        (number, 1.0)
+    } else {
+        let number = value.strip_suffix('%')?;
+        (number, percentage_basis / 100.0)
+    };
+    number
+        .parse::<f64>()
+        .ok()
+        .map(|number| number * scale)
+        .filter(|value| value.is_finite() && *value >= 0.0)
+}
+
+fn parse_percentage(value: &[String]) -> Option<f64> {
+    value
+        .first()?
+        .trim()
+        .strip_suffix('%')?
+        .parse::<f64>()
+        .ok()
+        .map(|value| value / 100.0)
+        .filter(|value| value.is_finite() && *value >= 0.0)
+}
+
+fn parse_box_length(
+    value: &[String],
+    style: &HtmlComputedStyle,
+    context: &HtmlStyleContext,
+    percentage_basis: f64,
+) -> Option<f64> {
+    parse_css_length_in_context(
+        value,
+        style.font.size,
+        context.theme.body_font.size,
+        percentage_basis,
+    )
+}
+
+fn apply_width_value(style: &mut HtmlComputedStyle, value: &[String], context: &HtmlStyleContext) {
+    style.width_auto = value.first().is_some_and(|value| value == "auto");
+    style.width_percent = parse_percentage(value);
+    style.width = if style.width_percent.is_some() || style.width_auto {
+        None
+    } else {
+        parse_box_length(value, style, context, context.viewport_width)
+    };
+}
+
+fn apply_edge_value(
+    style: &mut HtmlComputedStyle,
+    side: EdgeSide,
+    value: &[String],
+    context: &HtmlStyleContext,
+    margin: bool,
+) {
+    if margin && value.first().is_some_and(|value| value == "auto") {
+        style.margin_auto[side.index()] = true;
+        set_edge(&mut style.margin, side, Some(0.0));
+        return;
+    }
+    let length = parse_box_length(value, style, context, context.viewport_width);
+    if margin {
+        set_edge(&mut style.margin, side, length);
+    } else {
+        set_edge(&mut style.padding, side, length);
+    }
+}
+
+fn apply_border_width(
+    style: &mut HtmlComputedStyle,
+    side: EdgeSide,
+    value: &[String],
+    context: &HtmlStyleContext,
+) {
+    if let Some(width) = parse_box_length(value, style, context, context.viewport_width) {
+        match side {
+            EdgeSide::Top => style.border_width.top = width,
+            EdgeSide::Right => style.border_width.right = width,
+            EdgeSide::Bottom => style.border_width.bottom = width,
+            EdgeSide::Left => style.border_width.left = width,
+        }
+    }
+}
+
+fn apply_border_color(style: &mut HtmlComputedStyle, side: EdgeSide, value: &[String]) {
+    style.border_color[side.index()] = parse_color(value);
 }
 
 fn parse_color(value: &[String]) -> Option<Color> {
@@ -1414,10 +1632,21 @@ fn apply_size_hints(
     style: &HtmlComputedStyle,
     display: &str,
 ) {
-    if let Some(width) = style
+    let horizontal_insets = style.padding.unwrap_or_default().left
+        + style.padding.unwrap_or_default().right
+        + style.border_width.left
+        + style.border_width.right;
+    if let Some(fraction) = style.width_percent {
+        layout.width = Some(SizeValue::Percent(fraction));
+    } else if let Some(width) = style
         .width
         .or_else(|| parse_dimension(node.width.as_deref()))
     {
+        let width = if style.box_sizing == "content-box" {
+            width + horizontal_insets
+        } else {
+            width
+        };
         layout.width = Some(SizeValue::Fixed(width));
     } else if display == "block" || display.starts_with("table") {
         layout.width = Some(SizeValue::Fill);
@@ -1433,6 +1662,10 @@ fn apply_size_hints(
     } else if layout.height.is_none() {
         layout.height = Some(SizeValue::Wrap);
     }
+    layout.min_width = style.min_width;
+    layout.max_width = style.max_width;
+    layout.min_height = style.min_height;
+    layout.max_height = style.max_height;
 }
 
 fn apply_spacing(
@@ -1500,11 +1733,24 @@ fn display_ext(display: &str) -> ExtValue {
     )]))
 }
 
-fn block_ext(node: &BrowserRenderNode, display: &str) -> ExtValue {
+fn block_ext(node: &BrowserRenderNode, display: &str, style: &HtmlComputedStyle) -> ExtValue {
     let mut values = HashMap::from([("display".into(), ExtValue::Str(display.to_string()))]);
-    if node.role == "preformatted" {
-        values.insert("whiteSpace".into(), ExtValue::Str("pre".into()));
+    if node.role == "preformatted" || style.white_space != "normal" {
+        let white_space = if node.role == "preformatted" {
+            "pre"
+        } else {
+            &style.white_space
+        };
+        values.insert("whiteSpace".into(), ExtValue::Str(white_space.to_string()));
     }
+    values.insert(
+        "marginLeftAuto".into(),
+        ExtValue::Bool(style.margin_auto[EdgeSide::Left.index()]),
+    );
+    values.insert(
+        "marginRightAuto".into(),
+        ExtValue::Bool(style.margin_auto[EdgeSide::Right.index()]),
+    );
     ExtValue::Map(values)
 }
 
@@ -1513,6 +1759,28 @@ fn background_ext(color: Color) -> ExtValue {
         "backgroundColor".into(),
         color_ext(color),
     )]))
+}
+
+fn box_paint_ext(style: &HtmlComputedStyle) -> ExtValue {
+    let mut values = HashMap::new();
+    if let Some(background) = style.background {
+        values.insert("backgroundColor".into(), color_ext(background));
+    }
+    for (name, side, width) in [
+        ("Top", EdgeSide::Top, style.border_width.top),
+        ("Right", EdgeSide::Right, style.border_width.right),
+        ("Bottom", EdgeSide::Bottom, style.border_width.bottom),
+        ("Left", EdgeSide::Left, style.border_width.left),
+    ] {
+        if width > 0.0 {
+            values.insert(format!("border{name}Width"), ExtValue::Float(width));
+            values.insert(
+                format!("border{name}Color"),
+                color_ext(style.border_color[side.index()].unwrap_or(style.color)),
+            );
+        }
+    }
+    ExtValue::Map(values)
 }
 
 fn color_ext(color: Color) -> ExtValue {
@@ -1686,6 +1954,51 @@ mod tests {
                 left: 6.0,
             })
         );
+    }
+
+    #[test]
+    fn computed_box_values_project_relative_sizes_flow_and_border_paint() {
+        let render = parse_browser_render_tree(
+            "<main><p id='box'>Centered text that must stay together</p></main>",
+        )
+        .unwrap();
+        let context = HtmlStyleContext::with_author_stylesheets(
+            mosaic_html_theme(),
+            ["#box { width: 50%; min-width: 120px; max-width: 240px; \
+              margin: 1em auto; padding: 1em 2rem; border: 2px solid blue; \
+              box-sizing: border-box; font-size: 20px; text-align: center; \
+              white-space: nowrap; }"],
+        )
+        .unwrap()
+        .with_viewport(400.0, 300.0);
+        let layout =
+            html_render_tree_to_layout_with_style_context(&render, &context, &never_visited);
+        let box_node = find_by_id(&layout, "box").unwrap();
+        assert_eq!(box_node.width, Some(SizeValue::Percent(0.5)));
+        assert_eq!(box_node.min_width, Some(120.0));
+        assert_eq!(box_node.max_width, Some(240.0));
+        assert_eq!(
+            box_node.padding,
+            Some(Edges {
+                top: 20.0,
+                right: 28.0,
+                bottom: 20.0,
+                left: 28.0,
+            })
+        );
+        let text = first_text(box_node).unwrap();
+        assert_eq!(text.text_align, TextAlign::Center);
+        assert!(!text.wrap);
+        assert!(matches!(
+            box_node.ext.get("paint"),
+            Some(ExtValue::Map(values))
+                if values.get("borderTopWidth") == Some(&ExtValue::Float(2.0))
+        ));
+
+        let positioned = layout_block(&layout, constraints_width(400.0), &TestMeasurer);
+        let positioned_box = find_positioned_by_id(&positioned, "box").unwrap();
+        assert_eq!(positioned_box.width, 184.0);
+        assert_eq!(positioned_box.x, 92.0);
     }
 
     #[test]
@@ -1924,6 +2237,15 @@ mod tests {
         node.children
             .iter()
             .find_map(|child| find_positioned_text(child, value))
+    }
+
+    fn find_positioned_by_id<'a>(node: &'a PositionedNode, id: &str) -> Option<&'a PositionedNode> {
+        if node.id.as_deref() == Some(id) {
+            return Some(node);
+        }
+        node.children
+            .iter()
+            .find_map(|child| find_positioned_by_id(child, id))
     }
 
     fn find_positioned_by_html_role<'a>(

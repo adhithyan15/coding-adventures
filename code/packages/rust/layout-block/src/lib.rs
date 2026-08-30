@@ -250,7 +250,16 @@ fn lay_out_container<M: TextMeasurer>(
         let child_x = padding.left + child_margin.left;
         let child_y = cursor_y;
 
-        let positioned = lay_out_any(child, child_constraints, measurer, child_x, child_y);
+        let mut positioned = lay_out_any(child, child_constraints, measurer, child_x, child_y);
+        let free_inline =
+            (inner_max_width - positioned.width - child_margin.left - child_margin.right).max(0.0);
+        let auto_left = block_bool(child, "marginLeftAuto");
+        let auto_right = block_bool(child, "marginRightAuto");
+        if auto_left && auto_right {
+            positioned.x += free_inline / 2.0;
+        } else if auto_left {
+            positioned.x += free_inline;
+        }
         cursor_y += positioned.height + child_margin.bottom;
 
         prev_margin_bottom = child_margin.bottom;
@@ -306,9 +315,17 @@ fn is_inline_level(display: Option<&str>) -> bool {
     matches!(display, Some("inline" | "inline-text" | "inline-replaced"))
 }
 
+fn block_bool(node: &LayoutNode, key: &str) -> bool {
+    match node.ext.get("block") {
+        Some(ExtValue::Map(values)) => matches!(values.get(key), Some(ExtValue::Bool(true))),
+        _ => false,
+    }
+}
+
 fn resolve_container_width(node: &LayoutNode, outer_max_width: f64) -> f64 {
     let raw = match node.width {
         Some(SizeValue::Fixed(v)) => v,
+        Some(SizeValue::Percent(fraction)) => outer_max_width * fraction.clamp(0.0, 1.0),
         Some(SizeValue::Fill) | None => outer_max_width,
         Some(SizeValue::Wrap) => outer_max_width,
     };
@@ -318,7 +335,9 @@ fn resolve_container_width(node: &LayoutNode, outer_max_width: f64) -> f64 {
 fn resolve_container_height(node: &LayoutNode, content_height: f64) -> f64 {
     let raw = match node.height {
         Some(SizeValue::Fixed(v)) => v,
-        Some(SizeValue::Fill) | Some(SizeValue::Wrap) | None => content_height,
+        Some(SizeValue::Percent(_)) | Some(SizeValue::Fill) | Some(SizeValue::Wrap) | None => {
+            content_height
+        }
     };
     clamp_with_min_max(raw, node.min_height, node.max_height)
 }
@@ -362,6 +381,7 @@ fn lay_out_text_leaf<M: TextMeasurer>(
     // For Wrap or Fixed, base on the measurement (or the hint).
     let outer_width = match node.width {
         Some(SizeValue::Fixed(v)) => v,
+        Some(SizeValue::Percent(fraction)) => outer_max_width * fraction.clamp(0.0, 1.0),
         Some(SizeValue::Wrap) => (measured.width + padding_horizontal).min(outer_max_width),
         Some(SizeValue::Fill) | None => outer_max_width,
     };
@@ -372,6 +392,7 @@ fn lay_out_text_leaf<M: TextMeasurer>(
     let outer_height_raw = content_height + padding.top + padding.bottom;
     let outer_height = match node.height {
         Some(SizeValue::Fixed(v)) => v,
+        Some(SizeValue::Percent(_)) => outer_height_raw,
         _ => outer_height_raw,
     };
     let outer_height = clamp_with_min_max(outer_height, node.min_height, node.max_height);
@@ -409,6 +430,7 @@ fn lay_out_image_leaf(
     // No intrinsic-size resolution (the renderer handles that).
     let outer_width = match node.width {
         Some(SizeValue::Fixed(v)) => v,
+        Some(SizeValue::Percent(fraction)) => outer_max_width * fraction.clamp(0.0, 1.0),
         _ => outer_max_width,
     };
     let outer_width =
@@ -416,6 +438,7 @@ fn lay_out_image_leaf(
 
     let outer_height = match node.height {
         Some(SizeValue::Fixed(v)) => v,
+        Some(SizeValue::Percent(_)) => 0.0,
         _ => 0.0, // placeholder; renderer supplies intrinsic height if known
     };
     let outer_height = clamp_with_min_max(outer_height, node.min_height, node.max_height);

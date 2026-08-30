@@ -97,12 +97,21 @@ cross-platform proving application. Items are ordered by risk and dependency.
   `var()` fallback, four-edge shorthands, attribute/first/last/nth-child
   selectors, viewport media, append-only import requests, depth-first cascade,
   ancestor-cycle diagnostics, and shared real-page host acceptance.
-- [ ] **P2 CSS convergence — computed box and flow values.** Extend the same
+- [x] **P2 CSS convergence — computed box and flow values.** Extend the same
   computed-style boundary with percentages and `em`/`rem`, `auto`, min/max
   sizing, borders, `box-sizing`, per-side longhands, text alignment and white
   space, and display-aware block/inline flow. Keep value computation reusable
   and independent from layout engines, then add compact cross-host geometry
-  and paint cases before broadening into flex or grid layout.
+  and paint cases before broadening into flex or grid layout. Completed with a
+  containing-block percentage size in Layout IR, deterministic `em`/`rem`
+  computation, horizontal auto-margin distribution, min/max constraints,
+  content/border-box sizing, independent side borders, inherited alignment and
+  white-space flow, plus shared real-page geometry and paint acceptance.
+- [ ] **P2 CSS convergence — flex formatting context.** Add a reusable flex
+  container/item contract with main/cross-axis sizing, wrapping, gaps,
+  alignment, order, and min-content constraints. Keep computed CSS mapping
+  independent from the layout algorithm and reuse the same geometry oracle
+  before adding grid tracks.
 - [x] **P0 CI regression — required gate event isolation.** Keep the protected
   `CI gate` context exclusive to pull-request workflows. Branch and main push
   workflows publish `CI push gate` so a fast push build cannot auto-complete a

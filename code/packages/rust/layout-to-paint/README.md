@@ -30,6 +30,7 @@ associated type constraint.
 |-------------------------------------|---------------------------------------------------------------|
 | `ext["paint"]["backgroundColor"]`   | `PaintRect` with fill                                          |
 | `ext["paint"]["borderWidth"]` > 0   | `PaintRect` with stroke + stroke_width (same rect as above)    |
+| `border{Side}Width/Color` > 0        | Independent filled edge rectangles for each requested side   |
 | `ext["paint"]["cornerRadius"]`      | `corner_radius` field on the rect                              |
 | `Content::Text(tc)`                 | One `PaintGlyphRun` per wrapped line plus decoration `PaintRect`s; alignment (Start/Center/End) via `TextContent.text_align` |
 | `Content::Image(ic)`                | `PaintImage` with `src` unchanged                              |
