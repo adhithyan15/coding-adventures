@@ -10322,6 +10322,39 @@ PR non-draft, mergeable, and conflict-free. Required CI and CodeQL checks are
 queued or in progress, so this owner advances to `pr-open` and auto-merge stays
 disabled until every required check is terminal and acceptable.
 
+## Post-#13494 Refresh and Rust Declaration Selection
+
+PR #13494 completed 40 terminal acceptable checks: 33 successes and seven
+expected skips. Auto-merge was enabled only after GitHub reported the branch
+conflict-free, and GitHub merged validated head
+`f9eb3e307b6d8a6dfc5694097740cd17cbc61ae2` as
+`a8f7116c2b694a3241d3c3c571d9c6202a672363` at 2026-08-30T13:46:06Z without a
+manual merge command. Rust Dune discovery therefore advances to `merged` and
+the active PR is cleared.
+
+The collision-checked exact-main inventory remains schema 3 with 15
+established lanes, 1,388 implementation identities, 4,602 slots, and 1,427
+all-reported identities. Completion bands remain 175/265, 123/934, 170/2,139,
+and 920/12,880; Rust has 731 singletons, OCaml remains emerging at zero
+packages, and collisions and unknown buckets remain zero. No newly unowned gap
+appeared. The Rust generated-directory hashing defect discovered during the
+Dune tranche remains explicitly pending and separate from pure declaration
+evaluation.
+
+The dependency/leverage pass selects
+`build-tool-rust-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-rust-extra-ci-toolchain-declaration-conformance`. All three
+prerequisites are merged. This is the documented payoff of the Dune repair,
+becomes the ninth independent declaration consumer, and advances the
+eleven-engine completion umbrella while leaving Swift and TypeScript. Rust
+1.97.0, Clippy 0.1.97, `cargo-llvm-cov` 0.8.7, and `cargo-audit` 0.22.2 are
+installed; existing `serde` and `serde_json` dependencies suffice. Six live
+PRs have zero exact overlap on the Rust build-tool, conformance, state, roadmap,
+or changelog tranche; `lessons.md` is intentionally avoided because #12165
+touches it. After merge reconciliation and selection, the complete graph
+contains 577 owners and 859 edges: 176 merged, 400 pending, and exactly one
+`in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

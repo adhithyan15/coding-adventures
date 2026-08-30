@@ -108,6 +108,16 @@ preserve exact CRLF grammar and empty-front precedence, return fresh complete
 and aggregate ceilings before evaluation without reading host state or gaining
 process authority.
 
+The Rust engine uses `toolchain_detection::evaluate_snapshot`; its
+package-local native suite MUST discover and evaluate every
+`toolchain-detection-*.json` case through that pure native boundary. The
+adapter MUST meter UTF-8 bytes and logical lines before splitting, preserve
+exact CRLF grammar and empty-front precedence, validate the explicit target
+platform before any scheduling or force-full shortcut, return fresh complete
+sorted 16-key maps, and enforce the shared per-file and aggregate ceilings
+without reading host state or gaining filesystem, process, environment, Git,
+or network authority.
+
 C and C++ remain emerging implementation lanes. OCaml also begins as emerging
 and must implement this contract before promotion. WASM is an execution target,
 Mosaic and Twig are domain languages, and Starlark is a build language; none is
