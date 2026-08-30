@@ -21,6 +21,7 @@ const KANNADA_U = DUCTUS[ductusKey("kannada", "ಉ")];
 const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
 const KANNADA_EE = DUCTUS[ductusKey("kannada", "ಏ")];
 const KANNADA_O = DUCTUS[ductusKey("kannada", "ಒ")];
+const KANNADA_OO = DUCTUS[ductusKey("kannada", "ಓ")];
 const KANNADA_AI = DUCTUS[ductusKey("kannada", "ಐ")];
 const KANNADA_VOCALIC_R = DUCTUS[ductusKey("kannada", "ಋ")];
 
@@ -148,6 +149,25 @@ describe("handwriting ductus", () => {
     ]);
     expect(KANNADA_O.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-o.gif",
+    );
+  });
+
+  it("Kannada ಓ adds its small upper flourish after one lift", () => {
+    expect(penLifts(KANNADA_OO)).toBe(1);
+    expect(KANNADA_OO.strokes).toHaveLength(2);
+    expect(
+      KANNADA_OO.strokes.flatMap((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      "turn counterclockwise around the compact upper-left loop",
+      "descend through the curved middle into the lower-left bowl",
+      "sweep through the join and around the lower-right bowl",
+      "climb the right side and curl left at the open terminal",
+      "sweep left and curl upward through the small upper flourish",
+    ]);
+    expect(KANNADA_OO.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-oo.gif",
     );
   });
 

@@ -5622,10 +5622,25 @@
       "sound": "ō",
       "role": "vowel",
       "components": [
-        "ಓ  ō — independent vowel (word-initial)"
+        "a compact upper-left loop",
+        "a curved descent into joined lower bowls",
+        "an open right terminal",
+        "a separate small upper flourish"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn counterclockwise around the compact upper-left loop",
+        "without lifting, descend through the curved middle into the lower-left bowl",
+        "without lifting, sweep through the join and around the lower-right bowl",
+        "without lifting, climb the right side and curl left at the open terminal",
+        "lift, then sweep left and curl upward through the small upper flourish"
+      ],
+      "strokeOrderNote": "Write the upper loop, curved descent, joined lower bowls, and open terminal in one run, then lift once for the small upper flourish.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-oo.gif, animation of Kannada independent vowel ಓ, 35 frames, 3.5 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-oo.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಓ in two pen-down runs: turn around the compact upper-left loop, descend through the curved middle into the joined lower bowls, then climb and curl left at the open terminal; after one lift, sweep left and curl upward through the small upper flourish. The path is fitted to the bundled Noto Sans Kannada outline; handwritten loop width, bowl depth, terminal curl, and flourish shape vary, but the one-lift order remains the same."
+      }
     },
     {
       "glyph": "ಐ",
