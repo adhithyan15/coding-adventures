@@ -11152,6 +11152,14 @@ post-rebase schema-3 inventory is unchanged at 15 lanes, 1,388 identities,
 and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and
 zero unknown buckets.
 
+Ready-for-review PR #13552 is open from
+`codex/build-tool-generated-directory-hashing-conformance-corpus`. GitHub
+reports the initial publication head non-draft and mergeable, with required
+checks queued or in progress. Auto-merge remains disabled until every
+final-head check is terminal and acceptable and GitHub still reports no merge
+conflict. The ownership graph now contains 185 merged, 408 pending, and exactly
+one `pr-open` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

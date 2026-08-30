@@ -11,14 +11,21 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 13552,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13552",
+    "branch": "codex/build-tool-generated-directory-hashing-conformance-corpus",
+    "implementation_revision": "82c638e466fa138ec3983f42786dcdc57220e2ff",
+    "status": "checks-pending",
+    "opened_at": "2026-08-30T22:22:22Z"
+  },
   "last_ci_action": {
-    "observed_at": "2026-08-30T21:34:49Z",
-    "pr_number": 13544,
-    "run_id": 33335294122,
+    "observed_at": "2026-08-30T22:22:30Z",
+    "pr_number": 13552,
+    "run_id": 33338972845,
     "attempt": 1,
-    "status": "merged",
-    "notes": "PR #13544 completed all 41 final-head checks acceptably with 34 successes, six expected skips, and one neutral conclusion. GitHub reported final head 6cab3bdeb9865501abac192294660fea5802713c conflict-free before guarded squash auto-merge completed as 7733faf74a21ebe4211dbf3200af6f81cac2ee27; no manual merge command was used."
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #13552 is open from initial publication head 1127666fe544b1774e1806e26b0447760457ae1b. GitHub reports it non-draft and mergeable with checks queued or in progress; auto-merge remains disabled while checks are pending."
   },
   "last_inventory": {
     "revision": "49507e7daaf2304a670297f68ebd85ba10d4b009",
@@ -682,10 +689,13 @@
     {
       "id": "build-tool-generated-directory-hashing-conformance-corpus",
       "title": "Define language-neutral generated-directory source-collection fixtures",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-pure-domain-corpus", "ocaml-build-substrate-process-free-core"],
       "branch": "codex/build-tool-generated-directory-hashing-conformance-corpus",
-      "pr_number": null,
+      "pr_number": 13552,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13552",
+      "opened_at": "2026-08-30T22:22:22Z",
+      "opened_revision": "1127666fe544b1774e1806e26b0447760457ae1b",
       "selection_revision": "7733faf74a21ebe4211dbf3200af6f81cac2ee27",
       "selection_notes": "Selected after PR #13544 completed 41 terminal acceptable checks and merged through guarded squash auto-merge as 7733faf74a21ebe4211dbf3200af6f81cac2ee27. The exact-main schema-3 inventory is identity-neutral and unchanged at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. All seven merged paths modify existing Python build-tool, state, or documentation surfaces; no package root, BUILD, or manifest topology changed. The pre-selection conformance audit found that the three neutral hashing-cache cases receive already filtered include_paths and therefore cannot prove exact generated-directory pruning, case and near-name preservation, declared-source versus extension collection, or no-follow authority. This new shared corpus is a prerequisite for all four existing generated-directory implementation owners and enables their fixes without duplicating or drifting the contract. It outranks the newly unblocked Python implementation and the independent Haskell Dune leaf because one bounded fixture operation governs every current and future implementation lane. Six live PRs have zero exact overlap with the expected shared spec, schema, fixture, adapter/test, state, roadmap, and root-changelog paths. The target branch and prior PR were absent. Adding the full newly discovered source-hashing owner set before selection leaves the complete graph unique, dependency-complete, and acyclic at 594 owners/895 edges, with 185 merged, 408 pending, and exactly this owner in progress.",
       "implementation_revision": "82c638e466fa138ec3983f42786dcdc57220e2ff",
