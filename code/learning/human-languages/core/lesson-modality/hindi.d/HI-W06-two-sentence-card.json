@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "HI-W06-two-sentence-card",
+    "language": "hindi",
+    "chapter": 2,
+    "sequence": 265,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8602ffc0abb8440",
+    "detachableSegments": [
+      "Writing — assemble for one reader and purpose"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0c43cebd6c440fa6",
+  "sourceHash": "fnv1a64:36457ad900a4b600",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -2353,9 +2353,9 @@
               "columns": 2,
               "rowCount": 4,
               "utterances": [
-                "मेरा नाम मीरा है। (merā nām Mira hai) means My name is Mira.",
+                "मेरा नाम मीरा है। (merā nām Mīrā hai) (merā nām Mira hai) means My name is Mira.",
                 "आपका नाम क्या है? (āpkā nām kyā hai) means What's your name?",
-                "मेरा नाम अरुण है। (merā nām Arun hai) means My name is Arun.",
+                "मेरा नाम अरुण है। (merā nām Aruṇ hai) (merā nām Arun hai) means My name is Arun.",
                 "आपसे मिलकर ख़ुशी हुई। (āpse milkar khushī huī) means Pleased to meet you."
               ]
             },
@@ -2447,6 +2447,551 @@
             {
               "kind": "speech",
               "text": "Next chapter: āp kaise haiṁ? (\"how are you?\") and answering with ṭhīk — the responding cycle."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W06-name-sentence-frame",
+      "sequence": 261,
+      "title": "One frame, one small choice",
+      "headword": "मेरा नाम मीरा है",
+      "romanization": "merā nām Mīrā hai",
+      "gloss": "choose one known practice name and complete the familiar name sentence",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:56d07453c25d1031",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write the two known words मेरा नाम (merā nām) once. Leave an ordinary space after each word. Today adds no new letter and no new grammar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — complete the visible frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेरा नाम (merā nām) ___ है (hai)."
+            },
+            {
+              "kind": "speech",
+              "text": "Choose one name already used in Chapter 2: मीरा or अरुण. Put it in the gap, then write है (hai). The order stays:"
+            },
+            {
+              "kind": "speech",
+              "text": "मेरा नाम (merā nām) — my name."
+            },
+            {
+              "kind": "speech",
+              "text": "the chosen practice name."
+            },
+            {
+              "kind": "speech",
+              "text": "है (hai) — is."
+            },
+            {
+              "kind": "speech",
+              "text": "Write only one sentence. Keep four visible word groups; punctuation comes in the next tiny lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the sentence once. Stop after one choice and one bounded repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-W06-name-sentence-frame-check",
+              "prompt": "Use the visible frame to write that the practice name is Mira. Do not add punctuation yet.",
+              "assesses": [
+                "HI-CONCEPT-C02-MERANAAMHAI-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "मेरा नाम मीरा है",
+                "मेरा नाम अरुण है"
+              ],
+              "feedback": {
+                "correct": "Four word groups, with the chosen known name before है.",
+                "incorrect": "Point to मेरा नाम, the name choice, and है; repair only the missing or misplaced group."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W06-name-sentence-stop",
+      "sequence": 262,
+      "title": "One sentence, one stop",
+      "headword": "।",
+      "romanization": "pūrṇa virām",
+      "gloss": "close one known Hindi sentence with a single visible boundary",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:a719a191c6ee9615",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read मेरा नाम मीरा है (merā nām Mīrā hai). Count four word groups. Do not change their order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — add only the boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hindi can close this sentence with the vertical पूर्ण विराम:"
+            },
+            {
+              "kind": "speech",
+              "text": "मेरा नाम मीरा है। (merā nām Mīrā hai)."
+            },
+            {
+              "kind": "speech",
+              "text": "The mark । (pūrṇa virām) is not part of है (hai). Leave the word intact, then place one vertical stop after it. This lesson changes only the sentence boundary."
+            },
+            {
+              "kind": "speech",
+              "text": "Write the known sentence once and add । (pūrṇa virām). Check the four spaces first, then the one stop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one sentence and one single-dimension repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-W06-name-sentence-stop-check",
+              "prompt": "Write the visible Mira sentence and close it with the Hindi sentence stop.",
+              "assesses": [
+                "HI-CONCEPT-C02-MERANAAMHAI-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "मेरा नाम मीरा है।",
+                "मेरा नाम अरुण है।"
+              ],
+              "feedback": {
+                "correct": "The four word groups end with one separate ।.",
+                "incorrect": "Repair either the word spacing or the final ।, not both at once."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W06-name-sentence-delayed",
+      "sequence": 263,
+      "title": "Hide the sentence; keep the order",
+      "headword": "मेरा नाम मीरा है।",
+      "romanization": "merā nām Mīrā hai",
+      "gloss": "hide the complete known sentence and produce it after a short delay",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:0503650076a379e9",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look for five seconds:"
+            },
+            {
+              "kind": "speech",
+              "text": "मेरा नाम मीरा है। (merā nām Mīrā hai)."
+            },
+            {
+              "kind": "speech",
+              "text": "Point to the four word groups and the final stop. Do not write while the model is visible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed sentence production",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model. Wait ten seconds. From the meaning cue \"My name is Mira\", write the whole Hindi sentence with no visible answer and no romanization."
+            },
+            {
+              "kind": "speech",
+              "text": "Uncover it only after writing. Compare in this order: word order, spaces, spelling, then । (pūrṇa virām). Circle one differing dimension and repair only that one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One delayed attempt is enough today."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-W06-name-sentence-delayed-check",
+              "prompt": "After the ten-second delay and with the model hidden, write: My name is Mira.",
+              "assesses": [
+                "HI-CONCEPT-C02-MERANAAMHAI-01"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "मेरा नाम मीरा है।"
+              ],
+              "feedback": {
+                "correct": "A complete known sentence survived the delay.",
+                "incorrect": "Uncover the model, circle one differing dimension, repair it, and stop."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W06-name-sentence-dictation",
+      "sequence": 264,
+      "title": "Hear one known sentence; write it",
+      "headword": "मेरा नाम अरुण है।",
+      "romanization": "merā nām Aruṇ hai",
+      "gloss": "transcribe one complete known name sentence from a heard cue",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:be8b9bc657d0dcc6",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the answer below. The heard sentence uses only the familiar frame and the other Chapter 2 practice name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — sentence dictation",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "merā nām Aruṇ hai — \"my name is Arun\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *merā nām Aruṇ hai* — \"my name is Arun\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the Hindi sentence from sound alone. Add its final sentence stop. Do not use a visible Devanagari model or a romanized written answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Now uncover and compare: मेरा नाम अरुण है। (merā nām Aruṇ hai) Check word order first. If the order is right, check spelling; if spelling is right, check । (pūrṇa virām). Repair only the first differing dimension."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one heard sentence."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-W06-name-sentence-dictation-check",
+              "prompt": "From the heard cue alone, write: mera naam Arun hai.",
+              "assesses": [
+                "HI-CONCEPT-C02-MERANAAMHAI-01"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "मेरा नाम अरुण है।"
+              ],
+              "feedback": {
+                "correct": "The complete familiar frame was transcribed from sound.",
+                "incorrect": "Compare order, spelling, and the stop in that order; repair only the first mismatch."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W06-two-sentence-card",
+      "sequence": 265,
+      "title": "A two-sentence card for a new classmate",
+      "headword": "नमस्ते। मेरा नाम मीरा है।",
+      "romanization": "namaste. merā nām Mīrā hai.",
+      "gloss": "assemble two separately practised pieces for a new classmate",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:d8602ffc0abb8440",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have already practised both pieces separately:"
+            },
+            {
+              "kind": "speech",
+              "text": "the greeting नमस्ते (namaste)। (pūrṇa virām)."
+            },
+            {
+              "kind": "speech",
+              "text": "the name sentence मेरा नाम मीरा है। (merā nām Mīrā hai)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — assemble for one reader and purpose",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Your reader is a new classmate. Your purpose is to greet them and give the practice name. Put the greeting first and the name second:"
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्ते। मेरा नाम मीरा है। (namaste. merā nām Mīrā hai.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the two separately practised pieces once. Check two sentence stops, then the space between the sentences. No new word is introduced here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Next, the model disappears."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-W06-two-sentence-card-check",
+              "prompt": "Using the visible pieces, write a two-sentence card that greets a new classmate and gives the practice name Mira.",
+              "assesses": [
+                "HI-CONCEPT-W05-WRITE-NAMASTE-01",
+                "HI-CONCEPT-W05-WRITE-NAMASTE-02",
+                "HI-CONCEPT-C02-MERANAAMHAI-01"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "नमस्ते। मेरा नाम मीरा है।"
+              ],
+              "feedback": {
+                "correct": "The greeting and name sentence now serve one reader and purpose.",
+                "incorrect": "Check the greeting first, the name sentence second, and one stop after each."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W06-two-sentence-no-model",
+      "sequence": 266,
+      "title": "No model — greet and give the name",
+      "headword": "नमस्ते। मेरा नाम मीरा है।",
+      "romanization": "namaste. merā nām Mīrā hai.",
+      "gloss": "produce the two-sentence new-classmate card after a delay with no model",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:4f167b7401449863",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the preceding lesson. Wait ten seconds. Keep only this purpose cue:"
+            },
+            {
+              "kind": "speech",
+              "text": "Write to a new classmate. Greet them, then give the practice name Mira."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no Devanagari model and no romanized answer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — independent delayed checkpoint",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write two sentences from the purpose cue. Do not reopen the model until the attempt is complete. Then compare in four separate passes:"
+            },
+            {
+              "kind": "speech",
+              "text": "two meanings in the requested order;"
+            },
+            {
+              "kind": "speech",
+              "text": "word and sentence spacing;"
+            },
+            {
+              "kind": "speech",
+              "text": "spelling;"
+            },
+            {
+              "kind": "speech",
+              "text": "one । (pūrṇa virām) after each sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Choose the first differing pass, repair only that dimension, and stop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This completes only the short connected pre-A1 writing bridge. It is not a timed mock and does not claim A1 or exam readiness."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "HI-W06-two-sentence-no-model-check",
+              "prompt": "With no model, greet a new classmate and give the practice name Mira in two Hindi sentences.",
+              "assesses": [
+                "HI-CONCEPT-W05-WRITE-NAMASTE-01",
+                "HI-CONCEPT-W05-WRITE-NAMASTE-02",
+                "HI-CONCEPT-C02-MERANAAMHAI-01"
+              ],
+              "responseSeconds": 50,
+              "acceptedResponses": [
+                "नमस्ते। मेरा नाम मीरा है।"
+              ],
+              "feedback": {
+                "correct": "Two independently produced sentences fulfil the named purpose.",
+                "incorrect": "Reveal the model only now, find the first differing dimension, and make one bounded repair."
+              }
             }
           ]
         }

@@ -2,17 +2,18 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "label": "ch:introductions",
-  "canDo": "I can give my name and ask for someone else's in Hindi, and write मेरा नाम and नमस्ते by hand.",
+  "canDo": "I can give my name and ask for someone else's in Hindi, then independently write a two-sentence greeting and practice-name card in Devanagari.",
   "spineNodes": [
     "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "HI-W05-namaste-dictation",
+    "lesson": "HI-W06-two-sentence-no-model",
     "kind": "task",
-    "summary": "Hear the familiar greeting नमस्ते, write it without a visible model, compare its four known pieces, and repair one place if needed.",
+    "summary": "With no visible model, greet a new classmate and give the practice name in two complete Devanagari sentences, then repair one dimension if needed.",
     "assesses": [
       "HI-CONCEPT-W05-WRITE-NAMASTE-01",
-      "HI-CONCEPT-W05-WRITE-NAMASTE-02"
+      "HI-CONCEPT-W05-WRITE-NAMASTE-02",
+      "HI-CONCEPT-C02-MERANAAMHAI-01"
     ]
   }
 }

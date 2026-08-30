@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "HI-W06-name-sentence-delayed",
+    "language": "hindi",
+    "chapter": 2,
+    "sequence": 263,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0503650076a379e9",
+    "detachableSegments": [
+      "Writing — delayed sentence production"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

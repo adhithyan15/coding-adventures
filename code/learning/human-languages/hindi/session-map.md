@@ -4,7 +4,7 @@ Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
 authoritative order.
 
-## Writing runway — first glyph-to-word stage slice
+## Writing runway — glyphs to a short connected purpose
 
 Writing now begins with a visible trace of the head-line, moves to a visible
 guided copy of **न** and **म**, uses the existing mātrā, virāma, and conjunct
@@ -12,10 +12,16 @@ lessons to assemble **नमस्ते**, then removes support in two tiny ste
 copy and a heard-cue transcription of that same known word. Every step stays
 under five minutes and asks for one attempt plus a bounded repair.
 
-That four-stage sequence is only the first word-sized runway. It is not
-pre-A1 writing completion, chapter completion, or exam readiness. Phrase and
-short connected-text writing remain tracked separately in #13446 before the
-pre-A1-to-A2 assessment bridge can begin.
+Six further micro-lessons now reuse only Chapter 2 language. A visible name
+frame becomes a punctuated sentence, then loses its model, then arrives as a
+heard cue. The separately practised **नमस्ते।** and name sentence finally join
+as a two-sentence card for a named reader and purpose. A ten-second no-model
+checkpoint checks meaning order, spacing, spelling, and punctuation in separate
+repair passes. Every lesson remains at or below 180 seconds.
+
+This completes the short connected pre-A1 writing bridge in #13446, not Hindi
+exam readiness. Timed forms, mocks, rubrics, and book-only human validation
+remain in #13424 before any A1 or A2 claim is permitted.
 
 **There is no reading course.** Devanagari is learned *through* the words: each
 lesson's *"The letters in this word"* section introduces exactly the letters
@@ -136,4 +142,6 @@ revisit — a structural tail, not an oversight.
 
 ## Next
 
-Chapter 6 — postpositions (*ko, se, meṁ, par*) and the ergative *ne*.
+Specify and build the project-owned pre-A1-to-A2 assessment bridge in #13424;
+Chapter 6 continues with postpositions (*ko, se, meṁ, par*) and the ergative
+*ne*.

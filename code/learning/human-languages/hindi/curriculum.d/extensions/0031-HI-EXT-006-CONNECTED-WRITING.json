@@ -1,0 +1,18 @@
+{
+  "id": "HI-EXT-006-CONNECTED-WRITING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can independently greet a new classmate and give a practice name in two short Devanagari sentences.",
+  "prerequisites": [
+    "HI-EXT-004-SCRIPT"
+  ],
+  "lessons": [
+    "HI-W06-name-sentence-frame",
+    "HI-W06-name-sentence-stop",
+    "HI-W06-name-sentence-delayed",
+    "HI-W06-name-sentence-dictation",
+    "HI-W06-two-sentence-card",
+    "HI-W06-two-sentence-no-model"
+  ]
+}
