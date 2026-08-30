@@ -60,46 +60,53 @@ public enum Hasher {
         let fm = FileManager.default
         var files: [String] = []
 
-        guard let enumerator = fm.enumerator(atPath: root) else {
-            return []
-        }
-
         let extensions = sourceExtensions[package.language] ?? []
         let specials = specialFilenames[package.language] ?? []
 
-        while let entry = enumerator.nextObject() as? String {
-            let normalized = entry.replacingOccurrences(of: "\\", with: "/")
-            let fullPath = (root as NSString).appendingPathComponent(entry)
-            var isDirectory: ObjCBool = false
-            if fm.fileExists(atPath: fullPath, isDirectory: &isDirectory), isDirectory.boolValue {
-                if Discovery.skipDirectories.contains((normalized as NSString).lastPathComponent) {
-                    enumerator.skipDescendants()
+        func visit(directory: String, relativeDirectory: String) {
+            guard let entries = try? fm.contentsOfDirectory(atPath: directory) else {
+                return
+            }
+
+            for entry in entries.sorted() {
+                let relativePath = relativeDirectory.isEmpty
+                    ? entry
+                    : "\(relativeDirectory)/\(entry)"
+                let fullPath = (directory as NSString).appendingPathComponent(entry)
+                var isDirectory: ObjCBool = false
+                if fm.fileExists(atPath: fullPath, isDirectory: &isDirectory), isDirectory.boolValue {
+                    if !Discovery.skipDirectories.contains(entry) {
+                        visit(directory: fullPath, relativeDirectory: relativePath)
+                    }
+                    continue
                 }
-                continue
-            }
 
-            let filename = (normalized as NSString).lastPathComponent
-            if isBuildFile(filename) {
-                files.append(fullPath)
-                continue
-            }
+                let normalized = relativePath.replacingOccurrences(of: "\\", with: "/")
+                let filename = (normalized as NSString).lastPathComponent
+                if isBuildFile(filename) {
+                    files.append(fullPath)
+                    continue
+                }
 
-            if package.isStarlark, !package.declaredSrcs.isEmpty {
-                if package.declaredSrcs.contains(where: { GlobMatch.matchPath($0, normalized) }) {
+                if package.isStarlark, !package.declaredSrcs.isEmpty {
+                    if package.declaredSrcs.contains(where: { GlobMatch.matchPath($0, normalized) }) {
+                        files.append(fullPath)
+                    }
+                    continue
+                }
+
+                if extensions.contains((filename as NSString).pathExtension.isEmpty ? "" : ".\((filename as NSString).pathExtension)") {
+                    files.append(fullPath)
+                    continue
+                }
+
+                if specials.contains(filename) {
                     files.append(fullPath)
                 }
-                continue
-            }
-
-            if extensions.contains((filename as NSString).pathExtension.isEmpty ? "" : ".\((filename as NSString).pathExtension)") {
-                files.append(fullPath)
-                continue
-            }
-
-            if specials.contains(filename) {
-                files.append(fullPath)
             }
         }
+
+        visit(directory: root, relativeDirectory: "")
 
         return files.sorted {
             relativePath($0, root: root) < relativePath($1, root: root)
