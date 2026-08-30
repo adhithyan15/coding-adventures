@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.14] - 2026-08-30
+
+### Fixed
+
+- **Generated-directory source hashing**: extension and declared-source walks
+  now prune the complete 26-component generated, dependency, VCS, cache, and
+  temporary directory registry by exact case-sensitive name before matching
+  files.
+- **Source-directory preservation**: similarly named source components such as
+  `_Build`, `_build-example`, `Dist-newstyle`, and
+  `dist-newstyle-example` remain hash inputs, while directory and file symlinks
+  plus Windows junction/reparse attributes are excluded before matching or
+  opening files.
+
 ## [0.3.13] - 2026-08-30
 
 ### Fixed

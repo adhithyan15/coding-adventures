@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import hashlib
 import os
+import stat
 from pathlib import Path
 
 from build_tool.discovery import Package
@@ -55,6 +56,68 @@ SPECIAL_FILENAMES: dict[str, set[str]] = {
     "go": {"go.mod", "go.sum"},
     "perl": {"Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"},
 }
+
+# Exact, case-sensitive generated, dependency, VCS, cache, and temporary
+# directory components excluded by the shared source-collection contract.
+GENERATED_DIRECTORY_COMPONENTS: frozenset[str] = frozenset(
+    {
+        ".git",
+        ".hg",
+        ".svn",
+        ".venv",
+        ".tox",
+        ".mypy_cache",
+        ".pytest_cache",
+        ".ruff_cache",
+        ".stack-work",
+        "__pycache__",
+        "node_modules",
+        "vendor",
+        "dist",
+        "dist-newstyle",
+        "_build",
+        "build",
+        "target",
+        ".claude",
+        "Pods",
+        ".gradle",
+        ".dart_tool",
+        "gradle-build",
+        "deps",
+        ".build",
+        ".cargo",
+        "cover",
+    }
+)
+
+
+def _is_link_or_reparse(path: Path) -> bool:
+    """Return whether ``path`` is a symlink, junction, or Windows reparse point."""
+    if os.path.islink(path):
+        return True
+
+    isjunction = getattr(os.path, "isjunction", None)
+    if isjunction is not None and isjunction(path):
+        return True
+
+    if os.name == "nt":
+        try:
+            attributes = os.lstat(path).st_file_attributes
+        except (AttributeError, OSError):
+            return True
+        return bool(attributes & stat.FILE_ATTRIBUTE_REPARSE_POINT)
+
+    return False
+
+
+def _prune_generated_directories(dirpath: str, dirnames: list[str]) -> None:
+    """Prevent ``os.walk`` from descending into generated or linked components."""
+    dirnames[:] = [
+        dirname
+        for dirname in dirnames
+        if dirname not in GENERATED_DIRECTORY_COMPONENTS
+        and not _is_link_or_reparse(Path(dirpath) / dirname)
+    ]
 
 
 def _collect_source_files(package: Package) -> list[Path]:
@@ -93,9 +156,12 @@ def _collect_source_files(package: Package) -> list[Path]:
         #
         # This replaces pathlib.glob/rglob which has inconsistent behavior
         # with ** patterns across Python versions and platforms.
-        for dirpath, _dirnames, filenames in os.walk(pkg_root):
+        for dirpath, dirnames, filenames in os.walk(pkg_root, followlinks=False):
+            _prune_generated_directories(dirpath, dirnames)
             for filename in filenames:
                 abs_path = Path(dirpath) / filename
+                if _is_link_or_reparse(abs_path):
+                    continue
 
                 # Always include BUILD files (a change to the build definition
                 # itself should always trigger a rebuild).
@@ -121,9 +187,12 @@ def _collect_source_files(package: Package) -> list[Path]:
         extensions = SOURCE_EXTENSIONS.get(package.language, set())
         special_names = SPECIAL_FILENAMES.get(package.language, set())
 
-        for dirpath, _dirnames, filenames in os.walk(pkg_root):
+        for dirpath, dirnames, filenames in os.walk(pkg_root, followlinks=False):
+            _prune_generated_directories(dirpath, dirnames)
             for filename in filenames:
                 abs_path = Path(dirpath) / filename
+                if _is_link_or_reparse(abs_path):
+                    continue
 
                 # Always include BUILD files
                 if filename in ("BUILD", "BUILD_mac", "BUILD_linux",

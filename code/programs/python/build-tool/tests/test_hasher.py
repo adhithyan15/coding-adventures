@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import hashlib
+import json
+import os
+import subprocess
 from pathlib import Path
 
 import pytest
 
 from build_tool.discovery import Package, discover_packages
 from build_tool.hasher import (
+    GENERATED_DIRECTORY_COMPONENTS,
     _collect_source_files,
     _hash_file,
     hash_deps,
@@ -17,6 +21,37 @@ from build_tool.hasher import (
 from build_tool.resolver import DirectedGraph, resolve_dependencies
 
 FIXTURES = Path(__file__).parent / "fixtures"
+REPO_ROOT = Path(__file__).resolve().parents[5]
+SOURCE_COLLECTION_CASES = (
+    REPO_ROOT
+    / "code"
+    / "specs"
+    / "fixtures"
+    / "build-tool-v1"
+    / "cases"
+    / "source-collection-extension.json",
+    REPO_ROOT
+    / "code"
+    / "specs"
+    / "fixtures"
+    / "build-tool-v1"
+    / "cases"
+    / "source-collection-declared.json",
+)
+
+
+def _fixture_generated_components(case_path: Path) -> frozenset[str]:
+    case = json.loads(case_path.read_text(encoding="utf-8"))
+    return frozenset(
+        candidate["path"].split("/")[1]
+        for candidate in case["input"]["options"]["candidates"]
+        if candidate["path"].startswith("excluded-")
+    )
+
+
+FIXTURE_GENERATED_COMPONENTS = tuple(
+    _fixture_generated_components(case_path) for case_path in SOURCE_COLLECTION_CASES
+)
 
 
 class TestCollectSourceFiles:
@@ -100,6 +135,150 @@ class TestCollectSourceFiles:
         pkg = Package(name="python/empty", path=pkg_dir, language="python")
         files = _collect_source_files(pkg)
         assert files == []
+
+    def test_generated_registry_matches_both_neutral_fixture_modes(self):
+        assert FIXTURE_GENERATED_COMPONENTS == (
+            GENERATED_DIRECTORY_COMPONENTS,
+            GENERATED_DIRECTORY_COMPONENTS,
+        )
+
+    @pytest.mark.parametrize(
+        ("is_starlark", "declared_srcs"),
+        ((False, []), (True, ["**/*.py"])),
+        ids=("extension", "declared-sources"),
+    )
+    def test_prunes_exact_generated_directory_components(
+        self, tmp_path, is_starlark, declared_srcs
+    ):
+        pkg_dir = tmp_path / "packages" / "python" / "test-pkg"
+        pkg_dir.mkdir(parents=True)
+        (pkg_dir / "BUILD").write_text("echo hi")
+        (pkg_dir / "main.py").write_text("print('source')")
+
+        for index, component in enumerate(sorted(FIXTURE_GENERATED_COMPONENTS[0])):
+            generated = pkg_dir / f"excluded-{index}" / component
+            generated.mkdir(parents=True)
+            (generated / "generated.py").write_text("print('generated')")
+
+        retained_paths = (
+            "retained-case/_Build/source.py",
+            "retained-near/_build-example/source.py",
+            "retained-cabal-case/Dist-newstyle/source.py",
+            "retained-cabal-near/dist-newstyle-example/source.py",
+        )
+        for relative_path in retained_paths:
+            source = pkg_dir / relative_path
+            source.parent.mkdir(parents=True)
+            source.write_text("print('retained')")
+
+        pkg = Package(
+            name="python/test-pkg",
+            path=pkg_dir,
+            language="python",
+            is_starlark=is_starlark,
+            declared_srcs=declared_srcs,
+        )
+        relative_files = {
+            path.relative_to(pkg_dir).as_posix() for path in _collect_source_files(pkg)
+        }
+
+        assert relative_files == {"BUILD", "main.py", *retained_paths}
+
+    @pytest.mark.parametrize(
+        ("is_starlark", "declared_srcs"),
+        ((False, []), (True, ["**/*.py"])),
+        ids=("extension", "declared-sources"),
+    )
+    def test_prunes_directory_links_and_reparse_points(
+        self, tmp_path, monkeypatch, is_starlark, declared_srcs
+    ):
+        pkg_dir = tmp_path / "packages" / "python" / "test-pkg"
+        pkg_dir.mkdir(parents=True)
+        (pkg_dir / "BUILD").write_text("echo hi")
+        for directory in ("source", "linked-source", "reparse-source"):
+            child = pkg_dir / directory / "main.py"
+            child.parent.mkdir()
+            child.write_text("print('source')")
+        (pkg_dir / "linked.py").write_text("print('linked')")
+
+        monkeypatch.setattr(
+            os.path,
+            "islink",
+            lambda path: Path(path).name in {"linked-source", "linked.py"},
+        )
+        monkeypatch.setattr(
+            os.path,
+            "isjunction",
+            lambda path: Path(path).name == "reparse-source",
+            raising=False,
+        )
+
+        pkg = Package(
+            name="python/test-pkg",
+            path=pkg_dir,
+            language="python",
+            is_starlark=is_starlark,
+            declared_srcs=declared_srcs,
+        )
+        relative_files = {
+            path.relative_to(pkg_dir).as_posix() for path in _collect_source_files(pkg)
+        }
+
+        assert relative_files == {"BUILD", "source/main.py"}
+
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
+    def test_prunes_real_posix_directory_and_file_symlinks(self, tmp_path):
+        pkg_dir = tmp_path / "packages" / "python" / "test-pkg"
+        pkg_dir.mkdir(parents=True)
+        (pkg_dir / "BUILD").write_text("echo hi")
+        (pkg_dir / "main.py").write_text("print('source')")
+        external = tmp_path / "external"
+        external.mkdir()
+        external_source = external / "external.py"
+        external_source.write_text("print('external')")
+        try:
+            (pkg_dir / "linked-directory").symlink_to(
+                external, target_is_directory=True
+            )
+            (pkg_dir / "linked.py").symlink_to(external_source)
+        except OSError as error:
+            pytest.skip(f"symlink creation unavailable: {error}")
+
+        pkg = Package(name="python/test-pkg", path=pkg_dir, language="python")
+        relative_files = {
+            path.relative_to(pkg_dir).as_posix() for path in _collect_source_files(pkg)
+        }
+
+        assert relative_files == {"BUILD", "main.py"}
+
+    @pytest.mark.skipif(os.name != "nt", reason="Windows junction semantics")
+    def test_prunes_real_windows_junction(self, tmp_path):
+        pkg_dir = tmp_path / "packages" / "python" / "test-pkg"
+        pkg_dir.mkdir(parents=True)
+        (pkg_dir / "BUILD").write_text("echo hi")
+        (pkg_dir / "main.py").write_text("print('source')")
+        external = tmp_path / "external"
+        external.mkdir()
+        (external / "external.py").write_text("print('external')")
+        junction = pkg_dir / "junction"
+        created = subprocess.run(
+            ["cmd", "/c", "mklink", "/J", str(junction), str(external)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if created.returncode != 0:
+            pytest.skip(f"junction creation unavailable: {created.stderr.strip()}")
+
+        try:
+            pkg = Package(name="python/test-pkg", path=pkg_dir, language="python")
+            relative_files = {
+                path.relative_to(pkg_dir).as_posix()
+                for path in _collect_source_files(pkg)
+            }
+            assert relative_files == {"BUILD", "main.py"}
+        finally:
+            os.rmdir(junction)
 
 
 class TestHashFile:
