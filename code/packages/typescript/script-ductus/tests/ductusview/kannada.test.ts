@@ -42,6 +42,8 @@ const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
 const kannadaIOutline = kannadaOutline("ಇ");
 const KANNADA_U = DUCTUS[ductusKey("kannada", "ಉ")];
 const kannadaUOutline = kannadaOutline("ಉ");
+const KANNADA_UU = DUCTUS[ductusKey("kannada", "ಊ")];
+const kannadaUuOutline = kannadaOutline("ಊ");
 const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
 const kannadaEOutline = kannadaOutline("ಎ");
 const KANNADA_EE = DUCTUS[ductusKey("kannada", "ಏ")];
@@ -121,6 +123,27 @@ describe("Kannada ಇ — one retraced four-movement run", () => {
 describe("Kannada ಉ — one loop-to-terminal run", () => {
   const steps = ductusSteps(KANNADA_U);
   const strip = ductusFilmstrip(KANNADA_U, kannadaUOutline);
+
+  it("keeps all four movements in one pen-down run", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      false,
+    ]);
+  });
+
+  it("reports a four-frame zero-lift filmstrip", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+});
+
+describe("Kannada ಊ — one spiral-through-two-arches run", () => {
+  const steps = ductusSteps(KANNADA_UU);
+  const strip = ductusFilmstrip(KANNADA_UU, kannadaUuOutline);
 
   it("keeps all four movements in one pen-down run", () => {
     expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);

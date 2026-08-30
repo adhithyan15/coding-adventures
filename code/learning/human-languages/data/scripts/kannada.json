@@ -5546,10 +5546,24 @@
       "sound": "ū",
       "role": "vowel",
       "components": [
-        "ಊ  ū — independent vowel (word-initial)"
+        "a compact upper-left spiral",
+        "a broad lower-left bowl",
+        "two joined tall arches",
+        "a small lower-right spiral"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn counterclockwise around the compact upper-left spiral",
+        "without lifting, descend through the left shoulder and sweep around the broad lower-left bowl",
+        "without lifting, climb over the first tall arch, descend through the middle trough, and climb over the second arch",
+        "without lifting, descend the outer-right curve and curl around the small lower-right spiral"
+      ],
+      "strokeOrderNote": "Four visible movements in one continuous pen-down run: the upper-left spiral flows through the lower-left bowl, both tall arches, and the lower-right spiral.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-uu.gif, animation of Kannada independent vowel ಊ, 34 frames, 3.4 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-uu.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಊ in one uninterrupted run: turn around the compact upper-left spiral, descend through the left shoulder and broad lower-left bowl, climb over two joined tall arches, then descend the outer-right curve and curl around the small lower-right spiral. The path is fitted to the bundled Noto Sans Kannada outline; handwritten spiral size, bowl depth, arch height, and join width vary, but the zero-lift order remains the same."
+      }
     },
     {
       "glyph": "ಎ",

@@ -334,6 +334,112 @@ export const entries: DuctusEntry[] = [
       source: kannadaIndependentVowelSource("ಉ"),
     },
   ],
+  // Gopala Krishna A's 34-frame animation writes independent vowel ಊ in one
+  // run: compact upper-left spiral, broad lower-left bowl, two joined tall
+  // arches, and a small lower-right spiral. These four medians fit that
+  // zero-lift order to the bundled Noto Sans Kannada outline.
+  [
+    "kannada:ಊ",
+    {
+      script: "kannada",
+      glyph: "ಊ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "turn counterclockwise around the compact upper-left spiral",
+              path: [
+                { x: 65, y: 330 },
+                { x: 70, y: 385 },
+                { x: 95, y: 445 },
+                { x: 140, y: 500 },
+                { x: 205, y: 535 },
+                { x: 275, y: 535 },
+                { x: 330, y: 500 },
+                { x: 345, y: 445 },
+                { x: 340, y: 390 },
+                { x: 315, y: 345 },
+                { x: 280, y: 320 },
+              ],
+            },
+            {
+              label:
+                "descend through the left shoulder and sweep around the broad lower-left bowl",
+              path: [
+                { x: 280, y: 320 },
+                { x: 220, y: 305 },
+                { x: 145, y: 300 },
+                { x: 80, y: 285 },
+                { x: 75, y: 220 },
+                { x: 90, y: 155 },
+                { x: 125, y: 95 },
+                { x: 185, y: 50 },
+                { x: 260, y: 25 },
+                { x: 345, y: 30 },
+                { x: 420, y: 65 },
+                { x: 475, y: 125 },
+                { x: 515, y: 200 },
+              ],
+            },
+            {
+              label:
+                "climb over the first tall arch, descend through the middle trough, and climb over the second arch",
+              path: [
+                { x: 515, y: 200 },
+                { x: 515, y: 280 },
+                { x: 520, y: 365 },
+                { x: 545, y: 445 },
+                { x: 595, y: 505 },
+                { x: 660, y: 530 },
+                { x: 725, y: 505 },
+                { x: 765, y: 445 },
+                { x: 780, y: 365 },
+                { x: 780, y: 280 },
+                { x: 790, y: 195 },
+                { x: 825, y: 115 },
+                { x: 885, y: 55 },
+                { x: 960, y: 30 },
+                { x: 1025, y: 55 },
+                { x: 1065, y: 115 },
+                { x: 1065, y: 200 },
+                { x: 1065, y: 285 },
+                { x: 1080, y: 370 },
+                { x: 1120, y: 450 },
+                { x: 1180, y: 510 },
+                { x: 1250, y: 535 },
+                { x: 1320, y: 525 },
+                { x: 1380, y: 490 },
+              ],
+            },
+            {
+              label:
+                "descend the outer-right curve and curl around the small lower-right spiral",
+              path: [
+                { x: 1380, y: 490 },
+                { x: 1430, y: 440 },
+                { x: 1480, y: 370 },
+                { x: 1510, y: 290 },
+                { x: 1515, y: 205 },
+                { x: 1500, y: 130 },
+                { x: 1460, y: 70 },
+                { x: 1400, y: 35 },
+                { x: 1335, y: 30 },
+                { x: 1270, y: 55 },
+                { x: 1220, y: 105 },
+                { x: 1205, y: 170 },
+                { x: 1225, y: 225 },
+                { x: 1270, y: 255 },
+                { x: 1315, y: 245 },
+                { x: 1340, y: 210 },
+                { x: 1320, y: 175 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: kannadaIndependentVowelSource("ಊ"),
+    },
+  ],
   // Gopala Krishna A's 30-frame animation writes independent vowel ಎ in one
   // run: compact left loop, joined lower curves, rising right side, then the
   // tall outer arch finishing left. These four medians fit that zero-lift
