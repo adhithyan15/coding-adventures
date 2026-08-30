@@ -2,6 +2,9 @@ import Foundation
 #if canImport(CryptoKit)
 import CryptoKit
 #endif
+#if os(Windows)
+import WinSDK
+#endif
 
 public enum Hasher {
     private static let sourceExtensions: [String: Set<String>] = [
@@ -74,7 +77,7 @@ public enum Hasher {
                     : "\(relativeDirectory)/\(entry)"
                 let fullPath = (directory as NSString).appendingPathComponent(entry)
                 let attributes = try? fm.attributesOfItem(atPath: fullPath)
-                if attributes?[.type] as? FileAttributeType == .typeDirectory {
+                if isTraversableDirectory(path: fullPath, attributes: attributes) {
                     if !Discovery.skipDirectories.contains(entry) {
                         visit(directory: fullPath, relativeDirectory: relativePath)
                     }
@@ -115,6 +118,27 @@ public enum Hasher {
 
     private static func isBuildFile(_ filename: String) -> Bool {
         ["BUILD", "BUILD_mac", "BUILD_linux", "BUILD_windows", "BUILD_mac_and_linux"].contains(filename)
+    }
+
+    private static func isTraversableDirectory(
+        path: String,
+        attributes: [FileAttributeKey: Any]?
+    ) -> Bool {
+        guard attributes?[.type] as? FileAttributeType == .typeDirectory else {
+            return false
+        }
+
+        #if os(Windows)
+        let windowsAttributes = path.withCString(encodedAs: UTF16.self) {
+            GetFileAttributesW($0)
+        }
+        guard windowsAttributes != INVALID_FILE_ATTRIBUTES else {
+            return false
+        }
+        return windowsAttributes & DWORD(FILE_ATTRIBUTE_REPARSE_POINT) == 0
+        #else
+        return true
+        #endif
     }
 
     private static func relativePath(_ path: String, root: String) -> String {

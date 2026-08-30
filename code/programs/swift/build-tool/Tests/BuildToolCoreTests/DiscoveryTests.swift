@@ -211,6 +211,64 @@ struct DiscoveryTests {
         #expect(files == ["root.swift"])
     }
 
+    #if os(Windows)
+    @Test
+    func sourceHashingDoesNotFollowWindowsDirectoryJunctions() throws {
+        let root = try makeTempDirectory(label: "hash_junction_root")
+        let outside = try makeTempDirectory(label: "hash_junction_outside")
+        let junction = (root as NSString).appendingPathComponent("linked")
+        defer {
+            try? FileManager.default.removeItem(atPath: junction)
+            try? FileManager.default.removeItem(atPath: root)
+            try? FileManager.default.removeItem(atPath: outside)
+        }
+
+        try writeFile((root as NSString).appendingPathComponent("root.swift"), "let root = 1\n")
+        try writeFile(
+            (outside as NSString).appendingPathComponent("external.swift"),
+            "let external = 1\n"
+        )
+
+        let process = Process()
+        process.executableURL = URL(
+            fileURLWithPath: ProcessInfo.processInfo.environment["ComSpec"]
+                ?? "C:\\Windows\\System32\\cmd.exe"
+        )
+        let commandJunction = junction.replacingOccurrences(of: "/", with: "\\")
+        let commandOutside = outside.replacingOccurrences(of: "/", with: "\\")
+        process.arguments = [
+            "/d",
+            "/c",
+            "mklink",
+            "/J",
+            commandJunction,
+            commandOutside,
+        ]
+        let output = Pipe()
+        process.standardOutput = output
+        process.standardError = output
+        try process.run()
+        process.waitUntilExit()
+        let commandOutput = String(
+            decoding: output.fileHandleForReading.readDataToEndOfFile(),
+            as: UTF8.self
+        )
+        #expect(process.terminationStatus == 0, "junction creation failed: \(commandOutput)")
+        guard process.terminationStatus == 0 else {
+            return
+        }
+
+        let package = BuildPackage(name: "swift/example", path: root, language: "swift")
+        let normalizedRoot = root.replacingOccurrences(of: "\\", with: "/") + "/"
+        let files = Hasher.collectSourceFiles(package).map {
+            $0.replacingOccurrences(of: "\\", with: "/")
+                .replacingOccurrences(of: normalizedRoot, with: "")
+        }
+
+        #expect(files == ["root.swift"])
+    }
+    #endif
+
     @Test
     func languageRegistryConsumesSharedFixture() throws {
         let fixture = try loadSharedDiscoveryFixture("discovery-language-registry.json")
