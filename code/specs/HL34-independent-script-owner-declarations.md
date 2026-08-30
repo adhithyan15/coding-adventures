@@ -91,9 +91,9 @@ During `check:shards`:
   fail with the affected script and section named.
 
 The declaration set is established independently before inventory comparison.
-The existing whole-inventory test hashes remain a separate static migration
-defence until #13449 replaces their shared mutable evidence; they are not the
-runtime completeness source introduced here.
+HL35 replaces the former whole-inventory test hashes with separate per-owner
+static evidence. Those evidence files are not the runtime completeness source
+introduced here.
 
 ## 6. Acceptance
 

@@ -74,6 +74,14 @@ so a clean deletion, unexpected owner, duplicate identity, filename/body
 mismatch, unsafe path, or case-fold collision fails without restoring a shared
 script-sized manifest.
 
+Static mutation evidence is independently sharded at the same stable boundary:
+`data/script-owner-evidence/<script>/{letters,marks}/<identity>.json`. Each file
+binds its glyph or mark to the SHA-256 of that inventory owner's canonical
+bytes. `npm run check:script-owner-evidence` requires exact evidence/inventory
+identity equality and matching per-owner bytes. A new glyph therefore changes
+only its inventory owner, declaration, and evidence file; whole-script digests
+and shared expected-count tables are no longer part of normal authoring.
+
 Shared Markdown documents use `<document>.d/` and one strict, locale-free
 filename grammar. `_meta.md` is the only metadata shard. Every section shard is
 `RRRRR-SLUG-dddddddd.md`: a positive five-digit rank, one or more uppercase

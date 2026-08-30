@@ -151,3 +151,8 @@ back to its path. `check:shards` compares those independent identities with the
 current inventory owners in both directions. `complete: false` continues to
 describe an intentionally growing repertoire; it no longer means that a clean
 owner deletion is structurally undetectable.
+
+HL35 removes the remaining mutable whole-inventory hashes. Static evidence now
+lives in `data/script-owner-evidence/<script>/{letters,marks}/`, one digest per
+stable identity. Its reader compares directly with inventory owners and is not
+used as HL34's runtime completeness source.
