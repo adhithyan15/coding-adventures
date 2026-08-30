@@ -40,7 +40,9 @@ sub canonical_toolchains {
 
 sub _utf8_byte_length {
     my ($value) = @_;
-    return bytes::length($value);
+    my $utf8 = $value;
+    utf8::upgrade($utf8);
+    return bytes::length($utf8);
 }
 
 sub _logical_line_count {

@@ -87,6 +87,22 @@ subtest 'rejects byte, line, and aggregate snapshot overruns' => sub {
     };
     like($unicode_bytes, qr/per-file resource ceiling/, 'counts UTF-8 bytes, not characters');
 
+    my $unflagged_latin1 = chr(233) x 32_769;
+    ok(!utf8::is_utf8($unflagged_latin1), 'constructs an unflagged Unicode-scalar input');
+    my $unflagged_bytes = dies {
+        CodingAdventures::BuildTool::ToolchainDetection::evaluate_snapshot(
+            'linux', 0,
+            [{ name => 'rust/app', language => 'rust', build_files => { BUILD => $unflagged_latin1 } }],
+            undef, [],
+        );
+    };
+    like(
+        $unflagged_bytes,
+        qr/per-file resource ceiling/,
+        'counts encoded UTF-8 bytes independently of Perl internal flags',
+    );
+    ok(!utf8::is_utf8($unflagged_latin1), 'byte counting does not upgrade caller input');
+
     my $too_many_lines = dies {
         CodingAdventures::BuildTool::ToolchainDetection::evaluate_snapshot(
             'linux', 0,
