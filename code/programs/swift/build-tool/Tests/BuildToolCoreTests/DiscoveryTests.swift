@@ -108,6 +108,77 @@ struct DiscoveryTests {
     }
 
     @Test
+    func discoveryExcludesOnlyExactDuneBuildDirectory() throws {
+        let root = try makeTempDirectory(label: "discovery_dune_build")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+
+        try writeFile(
+            (root as NSString).appendingPathComponent(
+                "code/packages/ocaml/exact-parent/_build/BUILD"
+            ),
+            "dune build\n"
+        )
+        try writeFile(
+            (root as NSString).appendingPathComponent(
+                "code/packages/ocaml/near-parent/_build-example/BUILD"
+            ),
+            "dune build\n"
+        )
+        try writeFile(
+            (root as NSString).appendingPathComponent(
+                "code/packages/ocaml/case-parent/_Build/BUILD"
+            ),
+            "dune build\n"
+        )
+
+        let packages = try Discovery.discoverPackages(
+            root: (root as NSString).appendingPathComponent("code")
+        )
+
+        #expect(Discovery.skipDirectories.contains("_build"))
+        #expect(
+            packages.map(\.name) == [
+                "ocaml/_Build",
+                "ocaml/_build-example",
+            ]
+        )
+    }
+
+    @Test
+    func sourceHashingReusesExactDuneBuildExclusion() throws {
+        let root = try makeTempDirectory(label: "hash_dune_build")
+        defer { try? FileManager.default.removeItem(atPath: root) }
+
+        try writeFile((root as NSString).appendingPathComponent("root.swift"), "let root = 1\n")
+        try writeFile(
+            (root as NSString).appendingPathComponent("exact/_build/generated.swift"),
+            "let generated = 1\n"
+        )
+        try writeFile(
+            (root as NSString).appendingPathComponent("near/_build-example/preserved.swift"),
+            "let nearName = 1\n"
+        )
+        try writeFile(
+            (root as NSString).appendingPathComponent("case/_Build/preserved.swift"),
+            "let caseVariant = 1\n"
+        )
+        let package = BuildPackage(name: "swift/example", path: root, language: "swift")
+        let normalizedRoot = root.replacingOccurrences(of: "\\", with: "/") + "/"
+        let files = Hasher.collectSourceFiles(package).map {
+            $0.replacingOccurrences(of: "\\", with: "/")
+                .replacingOccurrences(of: normalizedRoot, with: "")
+        }
+
+        #expect(
+            files == [
+                "case/_Build/preserved.swift",
+                "near/_build-example/preserved.swift",
+                "root.swift",
+            ]
+        )
+    }
+
+    @Test
     func languageRegistryConsumesSharedFixture() throws {
         let fixture = try loadSharedDiscoveryFixture("discovery-language-registry.json")
         let root = try materializeSharedDiscoveryFixture(fixture, label: "discovery_registry")
