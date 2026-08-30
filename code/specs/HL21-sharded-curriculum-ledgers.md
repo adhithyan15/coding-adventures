@@ -404,10 +404,11 @@ intermediate ordinal such as `0015`.
 
 The later script-inventory migration removed the Japanese, Perso-Arabic, Tamil,
 and Urdu-Nastaliq aggregates. Those inventories intentionally declare
-`complete: false`, so their plans are explicitly structural-only until #13381
-adds independent per-glyph declarations. The checker still enforces their
-shape, parsing, safe paths, filename/body binding, and monolith absence; it does
-not overstate clean-deletion detection during that transition.
+`complete: false`, which means “the course repertoire is still growing,” not
+“the current owner set may shrink silently.” HL34 adds one independent
+declaration per glyph or mark. The four plans now compare exact current
+inventory identities with those declarations while retaining shape, parsing,
+safe-path, filename/body-binding, and monolith-absence checks.
 
 Acceptance is executable rather than inferred:
 

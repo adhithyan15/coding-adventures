@@ -85,6 +85,7 @@ import {
 } from "./loader.js";
 import { assertRelativeManifestPath } from "./manifest-path.js";
 import { scriptEntryId } from "./script-shards.js";
+import { readScriptOwnerDeclarations } from "./script-owner-declarations.js";
 import {
   BOOK_GENERATION_GROUPED_KEYS,
   KEY_ORDER_FIELD,
@@ -227,10 +228,9 @@ export interface ShardGrouping {
  * document and the filenames reconstructed from it. Every exact mode therefore
  * names a source that does not consult the owner set it is checking.
  *
- * The four script inventories are intentionally incomplete (`complete: false`)
- * and have no exhaustive independent glyph source yet. Calling that fact out in
- * the plan prevents `--check` from silently overstating what it proves while
- * #13381 adds conflict-free declarations.
+ * Script inventories remain deliberately incomplete Unicode repertoires, but
+ * their current owner sets are exact: independent per-glyph declarations prove
+ * that one valid inventory owner did not disappear silently.
  */
 export type ShardCompleteness =
   | { readonly kind: "curriculum-spine-union" }
@@ -242,7 +242,11 @@ export type ShardCompleteness =
       readonly kind: "curriculum-cross-references";
       readonly language: string;
     }
-  | { readonly kind: "structural-only"; readonly reason: string };
+  | {
+      readonly kind: "script-owner-declarations";
+      readonly language: string;
+      readonly script: string;
+    };
 
 export interface ShardPlan {
   /** Ledger path relative to the curriculum root, POSIX-separated. */
@@ -511,7 +515,7 @@ export const BOOK_GENERATION_PLAN: ShardPlan = {
  * per file. Code-point ids are stable across filesystems and make two
  * independent verification tranches edit different canonical files.
  */
-function scriptInventoryPlan(name: string): ShardPlan {
+function scriptInventoryPlan(name: string, language: string): ShardPlan {
   return {
     path: `data/scripts/${name}.json`,
     sections: [
@@ -528,9 +532,9 @@ function scriptInventoryPlan(name: string): ShardPlan {
       },
     ],
     completeness: {
-      kind: "structural-only",
-      reason:
-        "the inventory declares complete: false and awaits independent per-glyph declarations in #13381",
+      kind: "script-owner-declarations",
+      language,
+      script: name,
     },
     // Script Ductus receives these through HL25's fixed build-time virtual
     // module, so no browser consumer needs a tracked aggregate.
@@ -538,10 +542,16 @@ function scriptInventoryPlan(name: string): ShardPlan {
   };
 }
 
-export const JAPANESE_SCRIPT_PLAN = scriptInventoryPlan("japanese");
-export const PERSO_ARABIC_SCRIPT_PLAN = scriptInventoryPlan("perso-arabic");
-export const TAMIL_SCRIPT_PLAN = scriptInventoryPlan("tamil");
-export const URDU_NASTALIQ_SCRIPT_PLAN = scriptInventoryPlan("urdu-nastaliq");
+export const JAPANESE_SCRIPT_PLAN = scriptInventoryPlan("japanese", "japanese");
+export const PERSO_ARABIC_SCRIPT_PLAN = scriptInventoryPlan(
+  "perso-arabic",
+  "persian",
+);
+export const TAMIL_SCRIPT_PLAN = scriptInventoryPlan("tamil", "tamil");
+export const URDU_NASTALIQ_SCRIPT_PLAN = scriptInventoryPlan(
+  "urdu-nastaliq",
+  "urdu",
+);
 
 /** One authored owner per registered language, plus stable version metadata. */
 export const SOUND_TAG_PLAN: ShardPlan = {
@@ -1818,8 +1828,6 @@ function assertIndependentOwnerCompleteness(
       `${plan.path}: a removed generic shard plan must declare its completeness source`,
     );
   }
-  if (completeness.kind === "structural-only") return;
-
   const expected = new Map<string, readonly string[]>();
   if (completeness.kind === "curriculum-spine-union") {
     expected.set(
@@ -1849,7 +1857,7 @@ function assertIndependentOwnerCompleteness(
         join(root, GENERATED_NARRATION_HASH_DIR, `${completeness.language}.json`),
       ).manifest.chapters.map((chapter) => String(chapter.chapter)),
     );
-  } else {
+  } else if (completeness.kind === "curriculum-cross-references") {
     if (document.language !== completeness.language) {
       throw new Error(
         `${plan.path}: declares language '${String(document.language)}', expected ` +
@@ -1887,6 +1895,19 @@ function assertIndependentOwnerCompleteness(
         );
       }),
     );
+  } else {
+    if (document.script !== completeness.script) {
+      throw new Error(
+        `${plan.path}: declares script '${String(document.script)}', expected ` +
+          `'${completeness.script}'`,
+      );
+    }
+    const declarations = readScriptOwnerDeclarations(root, {
+      language: completeness.language,
+      script: completeness.script,
+    });
+    expected.set("letters", declarations.letters);
+    expected.set("marks", declarations.marks);
   }
 
   for (const [sectionKey, sectionExpected] of expected) {
