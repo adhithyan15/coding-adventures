@@ -17,6 +17,7 @@ import { registerStrokeHonestyTests } from "../support/stroke-honesty";
 const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const KANNADA_AA = DUCTUS[ductusKey("kannada", "ಆ")];
 const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
+const KANNADA_LONG_I = DUCTUS[ductusKey("kannada", "ಈ")];
 const KANNADA_U = DUCTUS[ductusKey("kannada", "ಉ")];
 const KANNADA_UU = DUCTUS[ductusKey("kannada", "ಊ")];
 const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
@@ -86,6 +87,25 @@ describe("handwriting ductus", () => {
       "descend through the broad outer curve and turn left along the base",
       "close the lower loop and sweep out to the right",
     ]);
+  });
+
+  it("Kannada ಈ separates its body from the crossbar with one lift", () => {
+    expect(penLifts(KANNADA_LONG_I)).toBe(1);
+    expect(KANNADA_LONG_I.strokes.map((stroke) =>
+      stroke.segments.map((segment) => segment.label),
+    )).toEqual([
+      [
+        "draw the broad rounded body and return to its upper-right join",
+        "sweep the upper bar left, retrace it right, and curl upward",
+      ],
+      [
+        "lift, then draw the horizontal crossbar from left to right",
+        "turn around the small right loop and descend into the lower hook",
+      ],
+    ]);
+    expect(KANNADA_LONG_I.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ee.gif",
+    );
   });
 
   it("Kannada ಉ carries both bowls through the tall arch without lifting", () => {

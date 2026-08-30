@@ -40,6 +40,8 @@ const KANNADA_AA = DUCTUS[ductusKey("kannada", "ಆ")];
 const kannadaAaOutline = kannadaOutline("ಆ");
 const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
 const kannadaIOutline = kannadaOutline("ಇ");
+const KANNADA_LONG_I = DUCTUS[ductusKey("kannada", "ಈ")];
+const kannadaLongIOutline = kannadaOutline("ಈ");
 const KANNADA_U = DUCTUS[ductusKey("kannada", "ಉ")];
 const kannadaUOutline = kannadaOutline("ಉ");
 const KANNADA_UU = DUCTUS[ductusKey("kannada", "ಊ")];
@@ -119,6 +121,27 @@ describe("Kannada ಇ — one retraced four-movement run", () => {
     expect(strip.frames).toHaveLength(4);
     expect(strip.penLifts).toBe(0);
     expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+});
+
+describe("Kannada ಈ — body and crossbar separated by one lift", () => {
+  const steps = ductusSteps(KANNADA_LONG_I);
+  const strip = ductusFilmstrip(KANNADA_LONG_I, kannadaLongIOutline);
+
+  it("starts the crossbar only after the lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      true,
+      false,
+    ]);
+  });
+
+  it("reports four movements across two strokes", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
   });
 });
 

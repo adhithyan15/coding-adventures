@@ -5512,10 +5512,24 @@
       "sound": "ī",
       "role": "vowel",
       "components": [
-        "ಈ  ī — independent vowel (word-initial)"
+        "a broad rounded body",
+        "a retraced upper bar ending in a high curl",
+        "a separate horizontal crossbar",
+        "a joined small right loop and lower hook"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "draw the broad rounded body and return to its upper-right join",
+        "without lifting, sweep the upper bar left, retrace it right, and curl upward",
+        "lift, then draw the horizontal crossbar from left to right",
+        "without lifting, turn around the small right loop and descend into the lower hook"
+      ],
+      "strokeOrderNote": "Four visible movements in two pen-down runs: the rounded body flows through the retraced upper bar and high curl; after one lift, the crossbar continues into the small right loop and lower hook.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-ee.gif, animation of Kannada independent vowel ಈ, 44 frames, 4.4 seconds (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ee.gif",
+        "variation": "The CC BY-SA 4.0 animation writes ಈ in two pen-down runs: the broad rounded body returns to its upper-right join, sweeps the upper bar left, retraces it right, and curls upward; after one lift, the horizontal crossbar runs left to right and continues through the small right loop into the lower hook. The learner path fits that one-lift order to the bundled Noto Sans Kannada outline rather than inferring handwriting from print alone."
+      }
     },
     {
       "glyph": "ಉ",

@@ -29,7 +29,7 @@ export default [
     suite: "independent (word-initial) vowels",
     suiteOrder: 10,
     caseOrder: 30,
-    name: "keeps Kannada independent ಅ, ಆ, ಇ, ಉ, ಊ, ಎ, ಏ, ಒ, ಓ, ಐ, and ಋ sourced while the remaining vowels stay unverified",
+    name: "keeps Kannada independent ಅ, ಆ, ಇ, ಈ, ಉ, ಊ, ಎ, ಏ, ಒ, ಓ, ಐ, and ಋ sourced while the remaining vowels stay unverified",
     verify: ({ SCRIPTS }) => {
       const kannada = SCRIPTS.find((s) => s.script === "kannada")!;
       const iv = kannada.independentVowels!;
@@ -50,6 +50,12 @@ export default [
       expect(iv[2]!.penLifts).toBe(0);
       expect(iv[2]!.strokeOrderSource?.url).toBe(
         "https://commons.wikimedia.org/wiki/File:Animation_of_hand-writing_Kannada_character_%22%E0%B2%87%22.gif",
+      );
+      expect(iv[3]!.glyph).toBe("ಈ");
+      expect(iv[3]!.strokeOrder).toHaveLength(4);
+      expect(iv[3]!.penLifts).toBe(1);
+      expect(iv[3]!.strokeOrderSource?.url).toBe(
+        "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ee.gif",
       );
       expect(iv[4]!.glyph).toBe("ಉ");
       expect(iv[4]!.strokeOrder).toHaveLength(4);
@@ -99,7 +105,7 @@ export default [
       expect(iv[12]!.strokeOrderSource?.url).toBe(
         "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ru.gif",
       );
-      expect(iv.filter((_, index) => ![0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 12].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+      expect(iv.filter((_, index) => ![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
     },
   },
   {

@@ -75,11 +75,11 @@ export const scriptInventoryEvidence = {
     expect(kannadaA.strokeOrderSource?.variation).toMatch(
       /35-frame animation.*one uninterrupted run.*left loop.*lower bowl.*right loop.*horizontal bar returning left.*Noto Sans Kannada/i,
     );
-    expect(missingByScript.get("kannada.json")?.has("್")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("್") ?? false).toBe(false);
     expect(affected.get("್") ?? 0).toBe(0);
-    expect(missingByScript.get("kannada.json")?.has("ಂ")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("ಂ") ?? false).toBe(false);
     expect(affected.get("ಂ") ?? 0).toBe(0);
-    expect(missingByScript.get("kannada.json")?.has("ಅ")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("ಅ") ?? false).toBe(false);
     expect(affected.get("ಅ") ?? 0).toBe(0);
     const kannadaVisarga = scripts.kannada!.marks!.find(
       (entry) => entry.mark === "ಃ",
@@ -96,7 +96,7 @@ export const scriptInventoryEvidence = {
     expect(kannadaVisarga.strokeOrderSource?.variation).toMatch(
       /CC BY-SA 4\.0.*ಅಃ.*carrier first.*upper and lower visarga dots.*standalone U\+0C83.*excludes that carrier.*one intervening lift.*Noto Sans Kannada/i,
     );
-    expect(missingByScript.get("kannada.json")?.has("ಃ")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("ಃ") ?? false).toBe(false);
     expect(affected.get("ಃ") ?? 0).toBe(0);
     const kannadaI = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಇ",
@@ -115,7 +115,7 @@ export const scriptInventoryEvidence = {
     expect(kannadaI.strokeOrderSource?.variation).toMatch(
       /one uninterrupted run.*first arch.*retrace.*second arch.*outer curve.*lower loop.*Noto Sans Kannada.*zero-lift order/i,
     );
-    expect(missingByScript.get("kannada.json")?.has("ಇ")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("ಇ") ?? false).toBe(false);
     expect(affected.get("ಇ") ?? 0).toBe(0);
     const kannadaU = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಉ",
@@ -134,7 +134,7 @@ export const scriptInventoryEvidence = {
     expect(kannadaU.strokeOrderSource?.variation).toMatch(
       /CC BY-SA 4\.0.*one uninterrupted run.*upper-left loop.*lower-left bowl.*tall middle arch.*lower-right bowl.*outer-right curve.*open upper terminal.*Noto Sans Kannada.*zero-lift order/i,
     );
-    expect(missingByScript.get("kannada.json")?.has("ಉ")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("ಉ") ?? false).toBe(false);
     expect(affected.get("ಉ") ?? 0).toBe(0);
     const kannadaUu = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಊ",
@@ -153,7 +153,7 @@ export const scriptInventoryEvidence = {
     expect(kannadaUu.strokeOrderSource?.variation).toMatch(
       /CC BY-SA 4\.0.*one uninterrupted run.*upper-left spiral.*lower-left bowl.*two joined tall arches.*outer-right curve.*lower-right spiral.*Noto Sans Kannada.*zero-lift order/i,
     );
-    expect(missingByScript.get("kannada.json")?.has("ಊ")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("ಊ") ?? false).toBe(false);
     expect(affected.get("ಊ") ?? 0).toBe(0);
     const kannadaE = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಎ",
@@ -172,7 +172,7 @@ export const scriptInventoryEvidence = {
     expect(kannadaE.strokeOrderSource?.variation).toMatch(
       /CC BY-SA 4\.0.*one uninterrupted run.*compact left loop.*joined lower curves.*rounded right side.*tall outer arch.*finish left.*Noto Sans Kannada.*zero-lift order/i,
     );
-    expect(missingByScript.get("kannada.json")?.has("ಎ")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("ಎ") ?? false).toBe(false);
     expect(affected.get("ಎ") ?? 0).toBe(0);
     const kannadaEe = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಏ",
@@ -191,7 +191,7 @@ export const scriptInventoryEvidence = {
     expect(kannadaEe.strokeOrderSource?.variation).toMatch(
       /CC BY-SA 4\.0.*two pen-down runs.*compact left loop.*joined lower curves.*tall outer arch.*one lift.*small upper loop.*left to right.*Noto Sans Kannada.*one-lift order/i,
     );
-    expect(missingByScript.get("kannada.json")?.has("ಏ")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("ಏ") ?? false).toBe(false);
     expect(affected.get("ಏ") ?? 0).toBe(0);
     const kannadaO = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಒ",
@@ -210,7 +210,7 @@ export const scriptInventoryEvidence = {
     expect(kannadaO.strokeOrderSource?.variation).toMatch(
       /CC BY-SA 4\.0.*one uninterrupted run.*upper-left loop.*curved middle.*lower-left bowl.*lower-right bowl.*curl left.*open terminal.*Noto Sans Kannada.*zero-lift order/i,
     );
-    expect(missingByScript.get("kannada.json")?.has("ಒ")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("ಒ") ?? false).toBe(false);
     expect(affected.get("ಒ") ?? 0).toBe(0);
     const kannadaOo = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಓ",
@@ -230,7 +230,7 @@ export const scriptInventoryEvidence = {
     expect(kannadaOo.strokeOrderSource?.variation).toMatch(
       /CC BY-SA 4\.0.*two pen-down runs.*upper-left loop.*curved middle.*joined lower bowls.*open terminal.*one lift.*small upper flourish.*Noto Sans Kannada.*one-lift order/i,
     );
-    expect(missingByScript.get("kannada.json")?.has("ಓ")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("ಓ") ?? false).toBe(false);
     expect(affected.get("ಓ") ?? 0).toBe(0);
     const kannadaAi = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಐ",
@@ -248,7 +248,7 @@ export const scriptInventoryEvidence = {
     expect(kannadaAi.strokeOrderSource?.variation).toMatch(
       /CC BY-SA 4\.0.*one uninterrupted run.*left spiral.*lower bowl.*broad right loop.*high arch.*open upper-left terminal.*Noto Sans Kannada.*zero-lift order/i,
     );
-    expect(missingByScript.get("kannada.json")?.has("ಐ")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("ಐ") ?? false).toBe(false);
     expect(affected.get("ಐ") ?? 0).toBe(0);
     const kannadaVocalicR = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಋ",
@@ -266,7 +266,7 @@ export const scriptInventoryEvidence = {
     expect(kannadaVocalicR.strokeOrderSource?.variation).toMatch(
       /CC BY-SA 4\.0.*three pen-down runs.*upper-left spiral.*lower-left spiral.*rounded middle bowl.*lift.*inward bar.*high hook.*second lift.*right bowl.*open upper terminal.*Noto Sans Kannada.*two-lift order/i,
     );
-    expect(missingByScript.get("kannada.json")?.has("ಋ")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("ಋ") ?? false).toBe(false);
     expect(affected.get("ಋ") ?? 0).toBe(0);
     const kannadaAa = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಆ",
@@ -285,10 +285,26 @@ export const scriptInventoryEvidence = {
     expect(kannadaAa.strokeOrderSource?.variation).toMatch(
       /CC BY-SA 4\.0.*two pen-down runs.*compact left loop.*broad lower bowl.*lift once.*rounded right loop.*horizontal bar.*Noto Sans Kannada.*one-lift order/i,
     );
-    expect(missingByScript.get("kannada.json")?.has("ಆ")).toBe(false);
+    expect(missingByScript.get("kannada.json")?.has("ಆ") ?? false).toBe(false);
     expect(affected.get("ಆ") ?? 0).toBe(0);
-    expect(
-      [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ಈ", 1]);
+    const kannadaLongI = scripts.kannada!.independentVowels!.find(
+      (entry) => entry.glyph === "ಈ",
+    )!;
+    expect(kannadaLongI.sound).toBe("ī");
+    expect(kannadaLongI.penLifts).toBe(1);
+    expect(kannadaLongI.strokeOrder).toEqual([
+      "draw the broad rounded body and return to its upper-right join",
+      "without lifting, sweep the upper bar left, retrace it right, and curl upward",
+      "lift, then draw the horizontal crossbar from left to right",
+      "without lifting, turn around the small right loop and descend into the lower hook",
+    ]);
+    expect(kannadaLongI.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-ee\.gif.*ಈ.*44 frames.*4\.4 seconds.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaLongI.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*two pen-down runs.*rounded body.*retrace.*curl.*one lift.*crossbar.*right loop.*lower hook.*Noto Sans Kannada/i,
+    );
+    expect(missingByScript.get("kannada.json")?.has("ಈ") ?? false).toBe(false);
+    expect(affected.get("ಈ") ?? 0).toBe(0);
   },
 };
