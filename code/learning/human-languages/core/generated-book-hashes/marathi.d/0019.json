@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:1d416153f90cf43a",
+  "lessonIds": [
+    "MR-A1F01-naav",
+    "MR-A1F01-shahar",
+    "MR-A1F01-bhasha",
+    "MR-A1F01-avdate-pey",
+    "MR-A1F01-avadti-kruti",
+    "MR-A1F01-mitrache-naav",
+    "MR-A1F02-first-three-copy",
+    "MR-A1F02-last-three-copy",
+    "MR-A1F03-first-three-delayed",
+    "MR-A1F03-last-three-delayed"
+  ],
+  "tex": "marathi/book/chapters/ch19-a1-form-labels.tex"
+}

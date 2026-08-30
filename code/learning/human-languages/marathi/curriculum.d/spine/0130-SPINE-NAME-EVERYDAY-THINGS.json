@@ -1,5 +1,7 @@
 {
-  "segments": [],
+  "segments": [
+    "MR-PATH-021"
+  ],
   "omits": [
     "LODGING-ROOM"
   ],

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1F01-shahar",
+    "language": "marathi",
+    "chapter": 19,
+    "sequence": 821,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e42a094ac42c7c1d",
+    "detachableSegments": [
+      "Writing — observe and trace one pair"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

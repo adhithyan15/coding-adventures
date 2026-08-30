@@ -1,0 +1,824 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 19,
+  "title": "Six Small Form Labels",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:0f0aae27970c3568",
+  "lessons": [
+    {
+      "id": "MR-A1F01-naav",
+      "sequence": 820,
+      "title": "नाव — the first form label",
+      "headword": "नाव: मीरा",
+      "romanization": "nāv: Mīrā",
+      "gloss": "read and trace the form label for name, then pair it with the known practice name Mira",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:7792aa22e840035c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already know नाव as “name.” On a form, the same word becomes a request: write the name after it. Today the answer is the familiar practice name मीरा."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — observe and trace one pair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace only नाव: मीरा (nāv: Mīrā). Keep the colon between the printed label and the answer. Then cover the line and point to the part that asks the question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one label and one known answer."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F01-naav-check",
+              "prompt": "Which printed Marathi label asks for the person's name?",
+              "assesses": [
+                "MR-A1-FORM-LABEL-NAAV"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "नाव",
+                "naav",
+                "nav"
+              ],
+              "feedback": {
+                "correct": "नाव is both the known word name and the form label.",
+                "incorrect": "Look only at the label before the colon: नाव."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F01-shahar",
+      "sequence": 821,
+      "title": "शहर — the city box",
+      "headword": "शहर: पुणे",
+      "romanization": "śahar: Puṇe",
+      "gloss": "read and trace the form label for city, paired with the already practised place Pune",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:e42a094ac42c7c1d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The known sentence मी पुण्यात राहतो / राहते put the practice person in Pune. A short form asks for that place with शहर — “city.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — observe and trace one pair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace only शहर: पुणे (śahar: Puṇe). Say “city, Pune” once. Do not add an address; this box asks for one small thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two labels are enough for one sitting."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F01-shahar-check",
+              "prompt": "Which label asks for the city?",
+              "assesses": [
+                "MR-A1-FORM-LABEL-SHAHAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "शहर",
+                "shahar"
+              ],
+              "feedback": {
+                "correct": "शहर asks for the city.",
+                "incorrect": "Trace the three written groups once more: शहर."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F01-bhasha",
+      "sequence": 822,
+      "title": "भाषा — the language box",
+      "headword": "भाषा: मराठी",
+      "romanization": "bhāṣā: marāṭhī",
+      "gloss": "read and trace the form label for language, paired with the already practised word Marathi",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:9c8db5879cbd5a68",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can already say मी मराठी बोलतो / बोलते. A form compresses that whole sentence to a label and a value: भाषा: मराठी (bhāṣā: marāṭhī) — “language: Marathi.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — observe and trace one pair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace भाषा: मराठी (bhāṣā: marāṭhī) once. Keep भाषा on the question side and मराठी on the answer side."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop before the form grows longer."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F01-bhasha-check",
+              "prompt": "Which label asks which language the person uses?",
+              "assesses": [
+                "MR-A1-FORM-LABEL-BHASHA"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "भाषा",
+                "bhasha",
+                "bhaasha"
+              ],
+              "feedback": {
+                "correct": "भाषा is the label; मराठी is this practice answer.",
+                "incorrect": "The label before the colon is भाषा."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F01-avdate-pey",
+      "sequence": 823,
+      "title": "आवडते पेय — favorite drink",
+      "headword": "आवडते पेय: चहा",
+      "romanization": "āvaḍte pey: chahā",
+      "gloss": "read and trace favorite drink, noticing the neuter agreement in the printed label",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:61d4cc48c00c04ff",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The known drink is चहा. The label आवडते पेय means “favorite drink.” पेय is neuter, so the describing word takes neuter -ते: आवडते."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — observe and trace one pair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace आवडते पेय: चहा (āvaḍte pey: chahā) once. Box only the ending -ते. The next lesson will change that ending for a feminine label; do not learn both today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One agreement ending is enough."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F01-avdate-pey-check",
+              "prompt": "Complete the printed label for the neuter word pey: आवड__ पेय",
+              "assesses": [
+                "MR-A1-FORM-LABEL-AVDATE-PEY",
+                "MR-A1-FORM-AGREEMENT-NEUTER"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "आवडते पेय",
+                "avadte pey"
+              ],
+              "feedback": {
+                "correct": "Neuter पेय selects आवडते.",
+                "incorrect": "Use the neuter ending -ते: आवडते पेय."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F01-avadti-kruti",
+      "sequence": 824,
+      "title": "आवडती कृती — favorite activity",
+      "headword": "आवडती कृती: वाचणे",
+      "romanization": "āvaḍtī kṛtī: vācaṇe",
+      "gloss": "read and trace favorite activity, changing only the agreement ending for feminine kruti",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:ad0a04b4b2af03e4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Change one thing. कृती, “activity,” is feminine, so “favorite” becomes feminine आवडती. The familiar activity value is वाचणे, “reading.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — observe and trace one pair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace आवडती कृती: वाचणे (āvaḍtī kṛtī: vācaṇe) once. Underline only -ती. Compare without rewriting: आवडते पेय but आवडती कृती."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after the one-ending contrast."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F01-avadti-kruti-check",
+              "prompt": "Complete the printed label for feminine kruti: आवड__ कृती",
+              "assesses": [
+                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
+                "MR-A1-FORM-AGREEMENT-FEMININE"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "आवडती कृती",
+                "avadti kruti"
+              ],
+              "feedback": {
+                "correct": "Feminine कृती selects आवडती.",
+                "incorrect": "Use the feminine ending -ती: आवडती कृती."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F01-mitrache-naav",
+      "sequence": 825,
+      "title": "मित्राचे नाव — friend's name",
+      "headword": "मित्राचे नाव: अरुण",
+      "romanization": "mitrāce nāv: Aruṇ",
+      "gloss": "read and trace friend's name, with the possessive agreeing with neuter naav",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:87d80fe68b442816",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You know मित्र, friend, and नाव, name. Marathi links them as मित्राचे नाव, “the friend's name.” The -चे form agrees with neuter नाव. The familiar practice answer is अरुण."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — observe and trace one pair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace मित्राचे नाव: अरुण (mitrāce nāv: Aruṇ) once. Circle -चे and stop; no possessive table is needed for this form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "All six labels now have one first encounter."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F01-mitrache-naav-check",
+              "prompt": "Which label asks for the friend's name?",
+              "assesses": [
+                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
+                "MR-A1-FORM-POSSESSIVE-NEUTER"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "मित्राचे नाव",
+                "mitrache naav",
+                "mitrache nav"
+              ],
+              "feedback": {
+                "correct": "मित्राचे नाव asks for the friend's name.",
+                "incorrect": "Join friend to neuter name with -चे: मित्राचे नाव."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F02-first-three-copy",
+      "sequence": 826,
+      "title": "Copy the first three rows",
+      "headword": "नाव · शहर · भाषा",
+      "romanization": "nāv · śahar · bhāṣā",
+      "gloss": "guided copy of the first three form labels and their already-known values",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:7ad9a61d5040980a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the three meanings once: name, city, language. Keep the model closed until you can say all three in that order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy exactly three short rows:"
+            },
+            {
+              "kind": "speech",
+              "text": "नाव: मीरा (nāv: Mīrā) शहर: पुणे (śahar: Puṇe) भाषा: मराठी (bhāṣā: marāṭhī)."
+            },
+            {
+              "kind": "speech",
+              "text": "After each row, point left of the colon and say what that label asks. Repair only a missing or misplaced character; do not add a fourth row."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the model before the next lesson."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F02-first-three-copy-check",
+              "prompt": "Give the three labels in order: name, city, language.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-NAAV",
+                "MR-A1-FORM-LABEL-SHAHAR",
+                "MR-A1-FORM-LABEL-BHASHA"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "नाव; शहर; भाषा",
+                "naav; shahar; bhasha",
+                "नाव शहर भाषा"
+              ],
+              "feedback": {
+                "correct": "Three known labels, in the form's order.",
+                "incorrect": "Repair only the missing row: नाव; शहर; भाषा."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F02-last-three-copy",
+      "sequence": 827,
+      "title": "Copy the last three rows",
+      "headword": "आवडते पेय · आवडती कृती · मित्राचे नाव",
+      "romanization": "āvaḍte pey · āvaḍtī kṛtī · mitrāce nāv",
+      "gloss": "guided copy of the last three form labels with one agreement contrast and one possessive",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:e8797a065729f237",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the three meanings once: favorite drink, favorite activity, friend's name. Listen for the one small job each label performs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy exactly three rows:"
+            },
+            {
+              "kind": "speech",
+              "text": "आवडते पेय: चहा (āvaḍte pey: chahā) आवडती कृती: वाचणे (āvaḍtī kṛtī: vācaṇe) मित्राचे नाव: अरुण (mitrāce nāv: Aruṇ)."
+            },
+            {
+              "kind": "speech",
+              "text": "On the first two, underline only -ते / -ती. On the third, circle only -चे. One visible contrast, then stop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the model before retrieval."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F02-last-three-copy-check",
+              "prompt": "Complete the two favorite labels: आवड__ पेय; आवड__ कृती.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-AVDATE-PEY",
+                "MR-A1-FORM-AGREEMENT-NEUTER",
+                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
+                "MR-A1-FORM-AGREEMENT-FEMININE",
+                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
+                "MR-A1-FORM-POSSESSIVE-NEUTER"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "आवडते पेय; आवडती कृती",
+                "avadte pey; avadti kruti"
+              ],
+              "feedback": {
+                "correct": "Neuter पेय takes -ते; feminine कृती takes -ती.",
+                "incorrect": "Repair only the endings: आवडते पेय; आवडती कृती."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F03-first-three-delayed",
+      "sequence": 828,
+      "title": "Hide, wait, write the first three labels",
+      "headword": "नाव · शहर · भाषा",
+      "romanization": "nāv · śahar · bhāṣā",
+      "gloss": "delayed writing of the first three form labels from meaning cues, with no visible model",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:ff09300d44610af1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the copy lesson. Say name, city, language once, then start the ten-second delay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the copy lesson and wait ten seconds. From the meaning cues name, city, language, write the three Marathi labels. There is no Devanagari model and no romanization in this attempt."
+            },
+            {
+              "kind": "speech",
+              "text": "Only after all three are written, reopen the model. Check one row at a time and repair only the first differing character."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one delayed set."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F03-first-three-delayed-check",
+              "prompt": "After a delay, write name, city, language as Marathi form labels.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-NAAV",
+                "MR-A1-FORM-LABEL-SHAHAR",
+                "MR-A1-FORM-LABEL-BHASHA"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "नाव; शहर; भाषा"
+              ],
+              "feedback": {
+                "correct": "All three labels survived without a visible model.",
+                "incorrect": "Reveal the model only now and repair the first differing character."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-A1F03-last-three-delayed",
+      "sequence": 829,
+      "title": "Hide, wait, write the last three labels",
+      "headword": "आवडते पेय · आवडती कृती · मित्राचे नाव",
+      "romanization": "āvaḍte pey · āvaḍtī kṛtī · mitrāce nāv",
+      "gloss": "delayed writing of the last three form labels, with agreement and possessive repaired separately",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:9facfd37108c1355",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the copy lesson. Say favorite drink, favorite activity, friend's name once, then start the ten-second delay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the copy lesson and wait ten seconds. From favorite drink, favorite activity, friend's name, write the three Marathi labels without a model or romanization."
+            },
+            {
+              "kind": "speech",
+              "text": "Then compare in two bounded passes: first -ते / -ती, then -चे. If the first pass differs, repair it and stop; leave the second pass for tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The labels are ready; choosing answers belongs to the next runway."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-A1F03-last-three-delayed-check",
+              "prompt": "After a delay, write favorite drink, favorite activity, and friend's name as Marathi form labels.",
+              "assesses": [
+                "MR-A1-FORM-LABEL-AVDATE-PEY",
+                "MR-A1-FORM-AGREEMENT-NEUTER",
+                "MR-A1-FORM-LABEL-AVADTI-KRUTI",
+                "MR-A1-FORM-AGREEMENT-FEMININE",
+                "MR-A1-FORM-LABEL-MITRACHE-NAAV",
+                "MR-A1-FORM-POSSESSIVE-NEUTER"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "आवडते पेय; आवडती कृती; मित्राचे नाव"
+              ],
+              "feedback": {
+                "correct": "All three labels survived, including the two agreement endings.",
+                "incorrect": "Reveal the model only now; repair endings before any other spelling."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

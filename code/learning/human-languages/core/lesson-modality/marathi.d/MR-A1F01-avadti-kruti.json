@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1F01-avadti-kruti",
+    "language": "marathi",
+    "chapter": 19,
+    "sequence": 824,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ad0a04b4b2af03e4",
+    "detachableSegments": [
+      "Writing — observe and trace one pair"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

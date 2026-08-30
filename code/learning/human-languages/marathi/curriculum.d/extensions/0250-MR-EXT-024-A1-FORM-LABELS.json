@@ -1,0 +1,22 @@
+{
+  "id": "MR-EXT-024-A1-FORM-LABELS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "writing",
+  "canDo": "I can read, copy, and retrieve six Marathi personal-form labels before I am asked to choose any answers independently.",
+  "prerequisites": [
+    "MR-EXT-023-SCRIPT-DISTANT"
+  ],
+  "lessons": [
+    "MR-A1F01-naav",
+    "MR-A1F01-shahar",
+    "MR-A1F01-bhasha",
+    "MR-A1F01-avdate-pey",
+    "MR-A1F01-avadti-kruti",
+    "MR-A1F01-mitrache-naav",
+    "MR-A1F02-first-three-copy",
+    "MR-A1F02-last-three-copy",
+    "MR-A1F03-first-three-delayed",
+    "MR-A1F03-last-three-delayed"
+  ]
+}

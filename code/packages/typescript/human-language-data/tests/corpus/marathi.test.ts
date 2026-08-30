@@ -13,7 +13,7 @@ it("pins Marathi continuity", () => expectLanguageContinuity("marathi"));
 it("pins Marathi modality", () => expectLanguageModality("marathi"));
 it("pins Marathi lesson-content budgets", () =>
   expectLanguageLessonBudgets("marathi", {
-    lessons: 85,
+    lessons: 95,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -95,7 +95,41 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["16", 1],
     ["17", 12],
     ["18", 5],
+    ["19", 10],
   ]);
+});
+
+it("keeps Marathi's A1 form-label runway gentle and pre-compositional", () => {
+  const ordered = loadTrackLessons("marathi").sort(readingOrder);
+  const ids = ordered.filter((lesson) => lesson.realization.chapter === 19);
+  expect(ids.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "MR-A1F01-naav",
+    "MR-A1F01-shahar",
+    "MR-A1F01-bhasha",
+    "MR-A1F01-avdate-pey",
+    "MR-A1F01-avadti-kruti",
+    "MR-A1F01-mitrache-naav",
+    "MR-A1F02-first-three-copy",
+    "MR-A1F02-last-three-copy",
+    "MR-A1F03-first-three-delayed",
+    "MR-A1F03-last-three-delayed",
+  ]);
+  expect(ids.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 210)).toBe(true);
+  expect(ids.every((lesson) => lesson.realization.type === "writing")).toBe(true);
+  expect(ids.flatMap((lesson) => lesson.blocks.map((block) => block.writingStage)).filter(Boolean)).toEqual([
+    "observe-trace",
+    "observe-trace",
+    "observe-trace",
+    "observe-trace",
+    "observe-trace",
+    "observe-trace",
+    "guided-copy",
+    "guided-copy",
+    "delayed-copy",
+    "delayed-copy",
+  ]);
+  expect(ids.some((lesson) => lesson.body.includes("controlled-composition"))).toBe(false);
+  expect(ids.some((lesson) => lesson.body.includes("timed-assessment-production"))).toBe(false);
 });
 
 it("gives the five Chapter 14 family atoms genuine R1, R2, and R3 retrieval", () => {

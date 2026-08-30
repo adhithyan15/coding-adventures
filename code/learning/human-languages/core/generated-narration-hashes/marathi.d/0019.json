@@ -1,0 +1,24 @@
+{
+  "language": "marathi",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:0f0aae27970c3568",
+  "lessonIds": [
+    "MR-A1F01-naav",
+    "MR-A1F01-shahar",
+    "MR-A1F01-bhasha",
+    "MR-A1F01-avdate-pey",
+    "MR-A1F01-avadti-kruti",
+    "MR-A1F01-mitrache-naav",
+    "MR-A1F02-first-three-copy",
+    "MR-A1F02-last-three-copy",
+    "MR-A1F03-first-three-delayed",
+    "MR-A1F03-last-three-delayed"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch19.txt",
+  "json": "marathi/narration/ch19.json",
+  "textHash": "fnv1a64:e45374c07626104e",
+  "jsonHash": "fnv1a64:2c7cdc5e330e8ab8",
+  "findings": []
+}

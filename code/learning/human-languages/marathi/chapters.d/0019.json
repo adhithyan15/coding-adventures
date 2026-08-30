@@ -1,0 +1,23 @@
+{
+  "chapter": 19,
+  "title": "Six Small Form Labels",
+  "label": "ch:mr-a1-form-labels",
+  "canDo": "I can read, copy, and retrieve six Marathi form labels, while keeping the two favorite-label agreement endings distinct.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-A1F03-last-three-delayed",
+    "kind": "task",
+    "summary": "After a delay and without a visible answer model, write the final three form labels and repair agreement before other spelling.",
+    "assesses": [
+      "MR-A1-FORM-LABEL-AVDATE-PEY",
+      "MR-A1-FORM-AGREEMENT-NEUTER",
+      "MR-A1-FORM-LABEL-AVADTI-KRUTI",
+      "MR-A1-FORM-AGREEMENT-FEMININE",
+      "MR-A1-FORM-LABEL-MITRACHE-NAAV",
+      "MR-A1-FORM-POSSESSIVE-NEUTER"
+    ],
+    "note": "This is label retrieval, not independent form completion or A1 readiness."
+  }
+}

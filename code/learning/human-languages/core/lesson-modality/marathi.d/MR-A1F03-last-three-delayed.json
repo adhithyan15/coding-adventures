@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1F03-last-three-delayed",
+    "language": "marathi",
+    "chapter": 19,
+    "sequence": 829,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9facfd37108c1355",
+    "detachableSegments": [
+      "Writing — delayed copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MR-A1F01-bhasha",
+    "language": "marathi",
+    "chapter": 19,
+    "sequence": 822,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9c8db5879cbd5a68",
+    "detachableSegments": [
+      "Writing — observe and trace one pair"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
