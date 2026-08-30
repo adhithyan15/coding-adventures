@@ -10114,6 +10114,38 @@ only. No newly eligible unowned gap displaces Python. After reconciliation and
 selection, the 566-owner, 833-edge graph contains 173 merged, 392 pending, and
 one `in-progress` owner.
 
+## Post-#13490 Refresh and Ruby Declaration-Engine Selection
+
+PR #13490 completed 41 terminal acceptable checks: 34 successes, six expected
+skips, and one neutral result. Auto-merge was enabled only after GitHub reported
+the branch conflict-free, and GitHub merged validated head
+`e4ddc07a7049742448c3fb1be673ecb3e593b3f8` as
+`ce60a7bbf98d4e169e20e6b66f2d5bcb5dd46349` at 2026-08-30T11:47:33Z without a
+manual merge command. Python therefore advances to `merged` and the active PR
+is cleared.
+
+The collision-checked exact-main inventory remains 15 established lanes,
+1,388 implementation identities, 4,602 slots, and 1,427 all-reported
+identities. Completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and collisions and unknown buckets remain zero. Merged PR #13488 changes only
+existing Urdu curriculum, human-language-data, script-ductus, and
+language-ladder roots. No package identity or slot changed, and no newly
+eligible unowned gap exists.
+
+The four unfinished declaration consumers have equal merged dependencies and
+graph leverage. The readiness pass selects
+`build-tool-ruby-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-ruby-extra-ci-toolchain-declaration-conformance`. Ruby wins
+the documented ordering after Python and supplies another independent runtime
+through the same bounded process-free boundary. Ruby 3.4.9 with PRISM and
+Bundler 2.6.9 are installed locally, and the existing bundle is satisfied.
+All six live open PRs have zero exact overlap with the expected nine Ruby
+paths. PR #13455 prospectively adds TypeScript-only `forme-cli`, which remains
+covered by the existing `forme-portable-core-family-classification` owner.
+After reconciliation and selection, the 566-owner, 833-edge graph contains 174
+merged, 391 pending, and one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
