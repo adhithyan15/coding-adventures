@@ -610,6 +610,17 @@ Required behavior:
 - invalidate dependents when a prerequisite hash changes; and
 - recover from a missing or corrupt cache with a stable diagnostic.
 
+Before extension or declared-source filtering, every source collector prunes a
+directory when any exact case-sensitive path component is one of `.git`,
+`.hg`, `.svn`, `.venv`, `.tox`, `.mypy_cache`, `.pytest_cache`, `.ruff_cache`,
+`.stack-work`, `__pycache__`, `node_modules`, `vendor`, `dist`,
+`dist-newstyle`, `_build`, `build`, `target`, `.claude`, `Pods`, `.gradle`,
+`.dart_tool`, `gradle-build`, `deps`, `.build`, `.cargo`, or `cover`.
+Similarly named source components, including `_Build`, `_build-example`,
+`Dist-newstyle`, and `dist-newstyle-example`, remain eligible. Collectors do
+not traverse symlink or reparse-point components. The rule is lexical over
+bounded normalized candidate records and does not grant filesystem authority.
+
 Fixtures provide file bytes. Implementations MUST NOT include host metadata,
 absolute paths, mtimes, ownership, locale, or directory enumeration order.
 
@@ -811,6 +822,7 @@ structured command fields use the shared definitions in the corpus schema.
 | Domain | `input.options` | Successful `result` |
 |---|---|---|
 | `diff_selection` | packages with repository-relative roots and an explicit `package_prefix` or `strict_globs` source mode, dependency edges, forced packages, and an `all` or `error` unknown-path policy | sorted `changed_packages`, `affected_packages`, and prerequisite-only `prerequisite_packages` |
+| `source_collection` | an `extension` or `declared_sources` mode, exact extensions, special filenames, portable globs, and bounded inert file/symlink/reparse candidate records | sorted normalized included file paths with lowercase SHA-256 content digests |
 | `hashing_cache` | SHA-256 mode, package, included paths, dependency digests, dependents, and a closed missing, corrupt, or typed prior-cache record | lowercase `package_digest`, `dependencies_digest`, `combined_digest`, cache status, and sorted invalidated packages |
 | `starlark` | repository-contained entrypoint, v1 `_ctx`, and declared legacy fallback policy | sorted targets containing rule metadata, structured commands, deterministic display rendering, and the per-target command source |
 | `sharding` | package languages and build-command counts, dependency edges, scheduled packages, shard count, and optional shard index | stable prerequisite-closed shard records with assignments, package closure, toolchains, and estimated cost |
@@ -821,6 +833,8 @@ structured command fields use the shared definitions in the corpus schema.
 These records intentionally model decisions, not host operations:
 
 - diff selection receives `changed_paths`; it never invokes Git;
+- source collection receives inert candidate records; it never enumerates or
+  opens a checkout and never follows a linked component;
 - hashing receives inline bytes; it never reads host metadata;
 - Starlark receives inline source and context; it never executes a command;
 - validation inspects inline repository data only;

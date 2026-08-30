@@ -45,6 +45,7 @@
         "resolution",
         "graph",
         "diff_selection",
+        "source_collection",
         "hashing_cache",
         "starlark",
         "plan_v1_read",

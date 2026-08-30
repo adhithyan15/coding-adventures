@@ -11083,6 +11083,83 @@ check is terminal and acceptable and GitHub still reports no merge conflict.
 The ownership graph therefore contains 184 merged, 396 pending, and exactly one
 `pr-open` owner.
 
+### Post-PR #13544 refresh and hashing-corpus selection
+
+PR #13544 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral conclusion. Guarded squash auto-merge was
+enabled only after GitHub reported final head
+`6cab3bdeb9865501abac192294660fea5802713c` conflict-free, and GitHub merged it
+as `7733faf74a21ebe4211dbf3200af6f81cac2ee27` at 2026-08-30T21:34:49Z
+without a manual merge command. The Python Dune-discovery owner therefore
+advances to `merged` and the active PR is cleared.
+
+The exact-main collision inventory remains schema 3 with 15 established lanes,
+1,388 implementation identities, 4,602 slots, and 1,427 all-reported
+identities. Completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and collisions and unknown buckets remain zero. All seven merged paths modify
+existing Python build-tool, state, or documentation surfaces. No package root,
+BUILD, or manifest topology changed and no new unowned eligible gap appeared.
+
+The pre-selection conformance audit found a broader ownership prerequisite.
+The three neutral hashing-cache cases accept already filtered `include_paths`,
+so they cannot prove exact generated-directory pruning, case and near-name
+preservation, extension versus declared-source collection, or no-follow
+authority. The audit also found separate portable source-recognition and path-
+framing gaps in Python, Go, Elixir, Perl, Haskell, shared C#/F#, Swift, Ruby,
+Rust, and TypeScript, plus a missing hashing/cache layer in Lua. These are now
+engine-scoped pending leaves behind a selection-blocked completion aggregate;
+the four existing generated-directory owners also gain the shared corpus as a
+prerequisite.
+
+The dependency/leverage pass therefore selects
+`build-tool-generated-directory-hashing-conformance-corpus` on branch
+`codex/build-tool-generated-directory-hashing-conformance-corpus`. Its two
+prerequisites are merged. One bounded inert candidate-path operation can define
+the exact generated, dependency, VCS, cache, and temporary component registry;
+preserve case variants and near names; exercise both collector modes; return
+normalized included paths and digests; and reject symlink or reparse traversal
+without reading a checkout. This shared contract unlocks every implementation
+repair and therefore outranks both the newly unblocked Python leaf and the
+independent Haskell Dune leaf. Six live PRs have zero exact overlap with the
+expected shared spec, schema, fixture, adapter/test, state, roadmap, and root-
+changelog paths. Adding all newly discovered work before selection leaves the
+complete graph unique, dependency-complete, and acyclic at 594 owners and 895
+edges, with 185 merged, 408 pending, and exactly one `in-progress` owner.
+
+The selected implementation now defines a closed `source_collection` pure
+domain, two 45-candidate extension/declared-source cases, the complete exact
+26-component artifact registry, no-follow symlink/reparse boundaries, and
+deterministic per-file SHA-256 results. Tests-first validation failed on the
+unmodeled domain before source was added. The completed focused suite passes 85
+tests and 132 subtests with 90% branch-aware runner coverage; the corpus accepts
+121 cases and 283 files across 16 implementations, 15 established lanes, and
+12 front doors. The Go oracle passes module verification, tests, vet, and a
+trimmed build. The real all-language plan evaluates 45 Starlark files,
+discovers 5,112 packages, correctly finds no changed package files in this
+shared-fixture-only diff, and retains the five reviewed orphan exemptions.
+Bandit, compileall, Ruff, schema parsing, JSON semantics, collision, state
+graph, and diff checks pass. The broader conformance family passes 177 tests,
+23 skips, and 238 subtests except for five unchanged Windows execution-snapshot
+tests that fail locally at the existing NTFS volume/file identity boundary
+before schema evaluation.
+
+The branch rebased cleanly onto `49507e7daaf2304a670297f68ebd85ba10d4b009`
+after unrelated Mosaic, Punjabi, and human-language build merges advanced
+`origin/main`. The
+post-rebase schema-3 inventory is unchanged at 15 lanes, 1,388 identities,
+4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139,
+and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and
+zero unknown buckets.
+
+Ready-for-review PR #13552 is open from
+`codex/build-tool-generated-directory-hashing-conformance-corpus`. GitHub
+reports the initial publication head non-draft and mergeable, with required
+checks queued or in progress. Auto-merge remains disabled until every
+final-head check is terminal and acceptable and GitHub still reports no merge
+conflict. The ownership graph now contains 185 merged, 408 pending, and exactly
+one `pr-open` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

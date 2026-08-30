@@ -73,6 +73,7 @@ PURE_DOMAINS = {
     "diff_selection",
     "hashing_cache",
     "sharding",
+    "source_collection",
     "starlark",
     "toolchain_detection",
     "validation",
@@ -107,6 +108,7 @@ DOMAIN_CAPABILITIES = {
     "graph": {"graph"},
     "diff_selection": {"diff_selection"},
     "hashing_cache": {"hashing_cache"},
+    "source_collection": {"source_collection"},
     "starlark": {"starlark"},
     "plan": {"plan_v1_read", "plan_v1_write"},
     "sharding": {"sharding"},
@@ -176,6 +178,36 @@ ORPHAN_SKIP_COMPONENTS = frozenset(
         ".build",
         "dist-newstyle",
         ".cargo",
+    }
+)
+SOURCE_COLLECTION_SKIP_COMPONENTS = frozenset(
+    {
+        ".git",
+        ".hg",
+        ".svn",
+        ".venv",
+        ".tox",
+        ".mypy_cache",
+        ".pytest_cache",
+        ".ruff_cache",
+        ".stack-work",
+        "__pycache__",
+        "node_modules",
+        "vendor",
+        "dist",
+        "dist-newstyle",
+        "_build",
+        "build",
+        "target",
+        ".claude",
+        "Pods",
+        ".gradle",
+        ".dart_tool",
+        "gradle-build",
+        "deps",
+        ".build",
+        ".cargo",
+        "cover",
     }
 )
 TRACKED_ARTIFACT_COMPONENT_IDENTITY = "node_modules"
@@ -1335,6 +1367,27 @@ def _validate_pure_case_semantics(
                 "CASE_HASH_DEPENDENT_SELF",
                 "a package cannot be its own dependent",
             )
+    elif domain == "source_collection":
+        candidate_paths: set[str] = set()
+        for candidate in options["candidates"]:
+            path = candidate["path"]
+            if portable_path_error(path) or unicodedata.normalize("NFC", path) != path:
+                raise ConformanceError(
+                    "CASE_SOURCE_PATH_UNSAFE",
+                    f"source candidate path is not portable NFC: {path!r}",
+                )
+            if path in candidate_paths:
+                raise ConformanceError(
+                    "CASE_SOURCE_CANDIDATE_DUPLICATE",
+                    f"duplicate source candidate path: {path}",
+                )
+            candidate_paths.add(path)
+        for pattern in options["declared_srcs"]:
+            if error := portable_glob_error(pattern):
+                raise ConformanceError(
+                    "CASE_SOURCE_GLOB_UNSAFE",
+                    f"unsafe declared source glob {pattern!r}: {error}",
+                )
     elif domain == "starlark":
         workspace_paths = {entry.path for entry in staged_files}
         entrypoint = options["entrypoint"]
@@ -1594,6 +1647,50 @@ def _expected_hashes(
     )
     combined = hashlib.sha256(package_digest + dependencies_digest).hexdigest()
     return package_digest.hex(), dependencies_digest.hex(), combined
+
+
+def _expected_source_collection(options: dict[str, Any]) -> list[dict[str, str]]:
+    link_roots = {
+        candidate["path"]
+        for candidate in options["candidates"]
+        if candidate["kind"] != "file"
+    }
+    include_extensions = set(options["include_extensions"])
+    special_filenames = set(options["special_filenames"])
+    declared_srcs = options["declared_srcs"]
+    files: list[dict[str, str]] = []
+
+    for candidate in options["candidates"]:
+        if candidate["kind"] != "file":
+            continue
+        path = candidate["path"]
+        if any(path == root or path.startswith(f"{root}/") for root in link_roots):
+            continue
+        if any(
+            component in SOURCE_COLLECTION_SKIP_COMPONENTS
+            for component in path.split("/")
+        ):
+            continue
+
+        basename = posixpath.basename(path)
+        included = basename in special_filenames
+        if not included and options["mode"] == "extension":
+            included = posixpath.splitext(basename)[1] in include_extensions
+        if not included and options["mode"] == "declared_sources":
+            included = any(
+                _portable_glob_matches(pattern, path) for pattern in declared_srcs
+            )
+        if included:
+            files.append(
+                {
+                    "path": path,
+                    "digest": hashlib.sha256(
+                        bytes.fromhex(candidate["content_hex"])
+                    ).hexdigest(),
+                }
+            )
+
+    return sorted(files, key=lambda item: item["path"])
 
 
 def _render_display_command(command: dict[str, Any]) -> str:
@@ -2322,6 +2419,13 @@ def _validate_pure_result_semantics(
                 f"{prefix}_HASH_RECOVERY_DIAGNOSTIC_MISSING",
                 "corrupt cache recovery requires a stable diagnostic",
             )
+    elif domain == "source_collection" and outcome == "ok":
+        actual_files = sorted(payload["files"], key=lambda item: item["path"])
+        if actual_files != _expected_source_collection(options):
+            raise ConformanceError(
+                f"{prefix}_SOURCE_COLLECTION_MISMATCH",
+                "source collection does not match pruning, link, mode, and digest rules",
+            )
     elif domain == "starlark":
         module_error = _starlark_module_error(options, staged_files)
         if module_error is not None:
@@ -2567,6 +2671,8 @@ def canonicalize_result(result: dict[str, Any]) -> dict[str, Any]:
     elif domain == "hashing_cache":
         if "invalidated_packages" in payload:
             payload["invalidated_packages"].sort()
+    elif domain == "source_collection" and "files" in payload:
+        payload["files"].sort(key=lambda item: item["path"])
     elif domain == "starlark" and "targets" in payload:
         payload["targets"].sort(key=lambda target: (target["rule"], target["name"]))
         for target in payload["targets"]:
