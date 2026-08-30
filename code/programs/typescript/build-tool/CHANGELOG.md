@@ -26,6 +26,10 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Fixed
 
+- Exclude Dune's exact case-sensitive `_build` output component from package
+  discovery while preserving `_Build` and `_build-example` source directories.
+  The shared language-registry fixture and a direct Windows-safe regression
+  cover the boundary.
 - Exclude Cabal `dist-newstyle` output from package discovery while preserving
   similarly named source directories, matching the shared language-registry
   fixture.

@@ -12,9 +12,11 @@ lane plus the repository's execution, domain, build-language, and shared .NET
 host buckets. Program identities use `language/programs/name`, specification
 fixtures are excluded, and residual duplicate qualified names fail closed with
 the portable `DUPLICATE_PACKAGE_IDENTITY` diagnostic and CLI exit code 2.
-Generated dependency and build trees are excluded by exact directory component;
-this includes Cabal's `dist-newstyle` output without excluding similarly named
-source directories.
+Generated dependency and build trees are excluded by exact, case-sensitive
+directory component. This includes Cabal's `dist-newstyle` and Dune's `_build`
+output without excluding similarly named source directories such as `_Build`
+and `_build-example`. The shared language-registry fixture and direct
+Windows-safe discovery regressions enforce these boundaries.
 
 ## How it fits in the stack
 
