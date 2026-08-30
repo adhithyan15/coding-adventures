@@ -246,7 +246,7 @@ jobs:
           shard_flags=()
           if [ "${{ steps.detect-main.outputs.is_main }}" = "true" ]; then
             force_flag=(-force)
-            shard_flags=(-shard-count 5 -emit-shard-matrix)
+            shard_flags=(-shard-count 10 -emit-shard-matrix)
           fi
           ./build-tool \
             -root . \

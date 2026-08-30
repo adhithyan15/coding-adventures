@@ -355,69 +355,70 @@ Step 2: If (high nibble of result > 9) or CY=1: A += 0x60; CY ← 1
 This requires saving the pre-adjustment AC flag. The flags S, Z, P are set based on
 the final adjusted value.
 
-## SIM00 Protocol Conformance
+## Rust Completion Contract
 
-The package exports `Intel8080Simulator` which structurally satisfies
-`Simulator[Intel8080State]` from `coding-adventures-simulator-protocol`.
+The normative implementation is `code/packages/rust/intel8080-simulator`.
+The Python package remains the cross-language behavioral oracle. The Rust API
+uses typed `Result` values instead of Python exceptions or error strings and
+guarantees that a failing load, step, or transactional program run does not
+partially mutate architectural state.
 
 ### State Snapshot: `Intel8080State`
 
-```python
-@dataclass(frozen=True)
-class Intel8080State:
-    a: int                    # Accumulator (0–255)
-    b: int                    # Register B (0–255)
-    c: int                    # Register C (0–255)
-    d: int                    # Register D (0–255)
-    e: int                    # Register E (0–255)
-    h: int                    # Register H (0–255)
-    l: int                    # Register L (0–255)
-    sp: int                   # Stack pointer (0–65535)
-    pc: int                   # Program counter (0–65535)
-    flag_s: bool              # Sign flag
-    flag_z: bool              # Zero flag
-    flag_ac: bool             # Auxiliary carry flag
-    flag_p: bool              # Parity flag
-    flag_cy: bool             # Carry flag
-    interrupts_enabled: bool  # INTE flip-flop
-    halted: bool              # HLT has been executed
-    memory: tuple[int, ...]   # 65,536 bytes, immutable snapshot
-    input_ports: tuple[int, ...]   # 256 input port values
-    output_ports: tuple[int, ...]  # 256 output port values
+```rust
+pub struct Intel8080State {
+    pub regs: Registers,             // A/B/C/D/E/H/L/SP
+    pub flags: Flags,                // S/Z/AC/P/CY
+    pub memory: Box<[u8]>,           // complete configured memory image
+    pub pc: u16,
+    pub halted: bool,
+    pub interrupts_enabled: bool,
+    pub input_ports: [u8; 256],
+    pub output_ports: [u8; 256],
+}
 ```
+
+Every field is owned by the snapshot. Mutating the simulator after
+`snapshot()` therefore cannot change any previously returned state.
 
 ### Simulator Methods
 
 | Method | Description |
 |--------|-------------|
-| `load(program: bytes)` | Write bytes to memory starting at address 0; reset PC and registers |
-| `step() -> StepTrace` | Execute one instruction; return StepTrace |
-| `execute(program: bytes) -> ExecutionResult` | Load, run until HLT; return result with full traces |
-| `get_state() -> Intel8080State` | Return frozen snapshot of current state |
-| `reset()` | Clear all registers, flags, and memory |
+| `load_program(program)` | Checked atomic write at address zero without resetting CPU state |
+| `step() -> Result<StepTrace, Intel8080Error>` | Preflight and execute one instruction |
+| `run(program, max_steps)` | Transactional fresh-machine bounded execution |
+| `run_loaded_with_limit(max_steps)` | Bounded execution from current loaded state |
+| `snapshot() -> Intel8080State` | Return a complete owned state snapshot |
+| `reset()` | Clear registers, flags, memory, interrupt state, and I/O ports |
 
 ### StepTrace Fields
 
 Each `StepTrace` produced by `step()` includes:
 
-```python
-StepTrace(
-    pc_before=...,         # PC before this instruction
-    pc_after=...,          # PC after (PC + instr_length, or branch target)
-    mnemonic=...,          # E.g. "MOV B,C", "ADD M", "CALL 0x0100"
-    description=...,       # Human-readable explanation
-    state_before=...,      # Intel8080State snapshot before execution
-    state_after=...,       # Intel8080State snapshot after execution
-)
+```rust
+pub struct StepTrace {
+    pub address: u16,
+    pub raw: Vec<u8>,
+    pub mnemonic: String,
+    pub state_before: Intel8080State,
+    pub state_after: Intel8080State,
+}
 ```
 
-### `execute` Behavior
+### Checked Execution Behavior
 
-- Resets state before loading the program (fresh start each call)
-- Steps until `halted=True` or 1,000,000 steps (safety limit)
-- Returns `ExecutionResult(halted=True, error=None, ...)` on clean HLT
-- Returns `ExecutionResult(halted=False, error="...", ...)` on cycle limit
-- Undefined opcode raises `ValueError`, which is caught and stored in `error`
+- `run` starts from power-on CPU state while preserving caller-supplied input
+  port latches, then commits the candidate machine only if every step succeeds.
+- The caller supplies a step limit; exhausting it returns a normal
+  `ExecutionResult` with `halted == false`.
+- Oversized programs, truncated instructions, the twelve undefined opcodes,
+  stepping a halted CPU, and accesses outside a configured short-memory arena
+  return `Intel8080Error`.
+- Instruction fetch and every possible data/stack access are preflighted before
+  execution, so an error leaves the failing operation's state unchanged.
+- Exhaustive tests classify every byte and compare the complete final state of
+  all 244 defined opcodes with the repository's Python implementation.
 
 ## I/O Ports
 
@@ -519,38 +520,31 @@ in 8080 assembly. The personal computer era began.
 ## Package Layout
 
 ```
-code/packages/python/intel8080-simulator/
-├── pyproject.toml
+code/packages/rust/intel8080-simulator/
+├── Cargo.toml
 ├── BUILD
 ├── README.md
 ├── CHANGELOG.md
-└── src/
-    └── intel8080_simulator/
-        ├── __init__.py       # Public API
-        ├── state.py          # Intel8080State frozen dataclass
-        ├── flags.py          # Flag computation helpers
-        └── simulator.py      # Intel8080Simulator main class
-tests/
-    ├── test_state.py         # State immutability and snapshot tests
-    ├── test_flags.py         # Flag computation edge cases
-    ├── test_data_transfer.py # MOV, MVI, LXI, LDA/STA, LDAX/STAX, XCHG
-    ├── test_arithmetic.py    # ADD/ADC/SUB/SBB/INR/DCR/INX/DCX/DAD/DAA
-    ├── test_logical.py       # ANA/ORA/XRA/CMP/RLC/RRC/RAL/RAR/CMA/CMC/STC
-    ├── test_branch.py        # JMP, conditional jumps, CALL, RET, RST, PCHL
-    ├── test_stack.py         # PUSH, POP, XTHL, SPHL
-    ├── test_io.py            # IN, OUT, port state
-    ├── test_programs.py      # End-to-end multi-instruction programs
-    └── test_protocol.py      # SIM00 protocol conformance
+├── src/
+│   ├── lib.rs                # Public exports and crate documentation
+│   ├── opcodes.rs            # Opcode and field constants
+│   ├── encoding.rs           # Machine-code encoders
+│   ├── decode.rs             # Complete variable-length decoder
+│   ├── execute.rs            # Registers, flags, and ISA execution
+│   └── simulator.rs          # Checked lifecycle, snapshots, and traces
+└── tests/
+    └── completion_contract.rs # Exhaustive byte/oracle/atomic boundaries
 ```
 
 ## Divergences from Real Hardware
 
-1. **Undefined opcodes**: The real 8080 has deterministic (but undocumented) behavior
-   for undefined opcodes. We raise `ValueError` instead.
+1. **Undefined opcodes**: The real 8080 has deterministic (but undocumented)
+   behavior for undefined opcodes. Rust returns `Intel8080Error::UnknownOpcode`.
 2. **No external interrupts**: The behavioral simulator cannot receive interrupts
    between steps.
 3. **No T-state timing**: We count steps (instructions), not T-states.
-4. **HALT behavior**: After HLT, `step()` is a no-op (real CPU halts clock).
+4. **HALT behavior**: After HLT, Rust `step()` returns
+   `Intel8080Error::Halted` (real CPU halts its clock).
 5. **I/O isolation**: I/O ports are simulator-internal arrays, not connected to
    actual hardware.
 6. **ANA/ANI auxiliary carry**: We implement per Intel 8080 System Reference Manual

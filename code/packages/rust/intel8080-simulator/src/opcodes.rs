@@ -122,23 +122,23 @@ pub const CMA: u8 = 0x2F;
 pub const STC: u8 = 0x37;
 /// `CMC` — complement carry.
 pub const CMC: u8 = 0x3F;
-/// `STAX B` — memory[BC] ← A.
+/// `STAX B` — `memory[BC]` ← A.
 pub const STAX_B: u8 = 0x02;
-/// `STAX D` — memory[DE] ← A.
+/// `STAX D` — `memory[DE]` ← A.
 pub const STAX_D: u8 = 0x12;
-/// `LDAX B` — A ← memory[BC].
+/// `LDAX B` — A ← `memory[BC]`.
 pub const LDAX_B: u8 = 0x0A;
-/// `LDAX D` — A ← memory[DE].
+/// `LDAX D` — A ← `memory[DE]`.
 pub const LDAX_D: u8 = 0x1A;
-/// `SHLD addr` — memory[addr] ← L; memory[addr+1] ← H.
+/// `SHLD addr` — `memory[addr]` ← L; `memory[addr+1]` ← H.
 pub const SHLD: u8 = 0x22;
-/// `LHLD addr` — L ← memory[addr]; H ← memory[addr+1].
+/// `LHLD addr` — L ← `memory[addr]`; H ← `memory[addr+1]`.
 pub const LHLD: u8 = 0x2A;
-/// `STA addr` — memory[addr] ← A.
+/// `STA addr` — `memory[addr]` ← A.
 pub const STA: u8 = 0x32;
-/// `LDA addr` — A ← memory[addr].
+/// `LDA addr` — A ← `memory[addr]`.
 pub const LDA: u8 = 0x3A;
-/// `XTHL` — L ↔ memory[SP]; H ↔ memory[SP+1].
+/// `XTHL` — L ↔ `memory[SP]`; H ↔ `memory[SP+1]`.
 pub const XTHL: u8 = 0xE3;
 /// `SPHL` — SP ← HL.
 pub const SPHL: u8 = 0xF9;

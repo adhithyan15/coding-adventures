@@ -12,23 +12,23 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 13516,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13516",
-    "branch": "codex/build-tool-typescript-static-build-front-typecheck",
-    "implementation_revision": "3cde0e2980b632e8605b13af13acc9abdb46dd37",
+    "number": 13530,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13530",
+    "branch": "codex/build-tool-typescript-extra-ci-toolchain-declaration-conformance",
+    "implementation_revision": "9f6b2648db79d62b3a9e6112d66bd633b98e617d",
     "status": "checks-pending",
-    "opened_at": "2026-08-30T18:21:41Z"
+    "opened_at": "2026-08-30T19:24:03Z"
   },
   "last_ci_action": {
-    "observed_at": "2026-08-30T18:33:19Z",
-    "pr_number": 13516,
-    "run_id": 33327897701,
+    "observed_at": "2026-08-30T19:24:07Z",
+    "pr_number": 13530,
+    "run_id": 33330765657,
     "attempt": 1,
-    "status": "checks-pending-after-rebase-fix-push",
-    "notes": "The first exact-head detect job and its duplicate push run failed only because the repository-wide TypeScript portability contract still expected 463 compiler locks after this owner intentionally added the 464th. Actual logs identified that exact assertion after every preceding parity-metadata family passed. The smallest in-scope repair updates the inventory comment and count. The branch then rebased conflict-free onto exact origin/main 3dac02fa7680e102ac1da7ad5392d7856d30f9be; all 16 focused portability tests, the complete 327-test package suite and coverage, the Go oracle, exact-diff plan, collision report, state graph, and diff hygiene pass after the rebase. The same branch receives an exact lease-protected replacement push, and auto-merge stays disabled while replacement CI is pending."
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #13530 is open from the validated TypeScript declaration branch. GitHub reports the initial head mergeable and non-draft; required CI, CodeQL, and human-language checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub still reports no merge conflict."
   },
   "last_inventory": {
-    "revision": "582b246b810ae429a4aa06c8f7e52e3c38405454",
+    "revision": "9bd71e2fa332e16f8490052726e80a5f972a6eac",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -463,10 +463,21 @@
     {
       "id": "build-tool-typescript-extra-ci-toolchain-declaration-conformance",
       "title": "Make the TypeScript build tool consume extra CI toolchain declarations",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-typescript-dune-build-discovery-exclusion", "build-tool-typescript-static-build-front-typecheck"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-typescript-extra-ci-toolchain-declaration-conformance",
+      "pr_number": 13530,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13530",
+      "opened_at": "2026-08-30T19:24:03Z",
+      "opened_revision": "4d906d171dc25f8dc508260819eb20a9810fdf79",
+      "selection_revision": "76ba0c1833f0a2d3f8f85a354b83468dbd2c6aae",
+      "selection_notes": "Selected immediately after PR #13516 completed 41 terminal acceptable checks and merged through guarded squash auto-merge. The collision-checked exact-main inventory remains schema 3 with 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. PR #13516 changed only existing TypeScript build-tool and parity-contract paths, so canonical identities remain unchanged and no newly unowned eligible gap appeared. All four prerequisites are merged; this final eleventh existing declaration consumer is the sole remaining child required by the remaining-engines declaration umbrella and therefore outranks the isolated TypeScript hashing repair. Node 24.16.0 and npm 11.13.0 are installed, the target remote branch and prior PR are absent, and six live PRs have zero exact overlap across the expected eight-path tranche. Reconciliation plus selection leaves the complete 580-owner/864-edge graph at 182 merged, 397 pending, and exactly this owner in progress.",
+      "implementation_revision": "9f6b2648db79d62b3a9e6112d66bd633b98e617d",
+      "rebase_revision": "9bd71e2fa332e16f8490052726e80a5f972a6eac",
+      "rebase_notes": "Rebased conflict-free before first push from selection base 76ba0c1833f0a2d3f8f85a354b83468dbd2c6aae onto exact origin/main 9bd71e2fa332e16f8490052726e80a5f972a6eac after merged PR #13515 changed only human-language workflow, curriculum, progress, and the existing TypeScript human-language-data package. The 33-path intervening slice has zero exact overlap with this eight-path tranche, changes no package root or package name, leaves the collision-checked inventory unchanged, and creates no newly unowned eligible gap.",
+      "validation_notes": "Test-first execution first failed at the deliberately absent toolchain-detection module. The package-local suite dynamically discovers all 11 neutral fixtures and evaluates them through the completed process-free evaluator, covering exact UTF-8 bytes, LF lines, per-front and aggregate ceilings, fail-fast aggregate precedence, closed platform BUILD fronts, exact CRLF grammar, stable deduplication, empty-front precedence, null-versus-empty scheduling, aliases, force-full, forced tools, unsupported diagnostics, fresh frozen maps, caller mutation, sparse-array shape errors, and direct-caller cardinality and string bounds. The focused suite passes 11 tests, strict typechecking passes, and the full package passes 338 tests across 14 files. Overall V8 coverage is 90.96% statements, 84.91% branches, 95.23% functions, and 90.89% lines; toolchain-detection.ts reaches 95.00% statements, 90.13% branches, 100% functions, and 94.90% lines. The neutral corpus validates 119 cases and 283 files across 16 implementations, 15 established lanes, and 12 front doors; focused conformance and parity families pass 248 tests with 25 expected skips and 1,048 subtests. The Go oracle passes module verification, all packages, vet, and trimpath build; its exact-diff plan discovers 481 TypeScript packages, selects only typescript/programs/build-tool, and skips the other 480. npm pack contains 19 allowlisted files with no bundled dependency, production audit reports zero vulnerabilities, and all 70 packages have verified registry signatures with 33 attestations.",
+      "security_notes": "Independent review first identified unbounded direct-caller collection and string surfaces plus end-only aggregate rejection. The repair adds allocation-free fail-fast UTF-8 metering, immediate aggregate rejection, exact schema-aligned collection and string bounds, the five closed BUILD-front names with required BUILD, unique schedules and forced toolchains, null-prototype copies, stable sparse-element errors, and closed darwin/linux/windows target spelling. A second review identified the remaining sparse-element and Cartesian zero-byte-front risks; both are closed. The module still imports no host API and gains no filesystem, process, Git, environment, clock, randomness, credential, network, package-manager, or execution authority.",
+      "publication_notes": "Opened ready-for-review PR #13530 from clean validated head 4d906d171dc25f8dc508260819eb20a9810fdf79 after a normal first push. Immediately before publication, origin/main remained exact rebased base 9bd71e2fa332e16f8490052726e80a5f972a6eac, the target remote branch and prior PR were absent, and all current open PRs had zero exact overlap with the eight changed paths. Independent security, correctness, state, documentation, lifecycle, scope, inventory, and authority reviews found no remaining blocker. GitHub reports the PR mergeable and non-draft; required CI, CodeQL, and human-language checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Adopt the merged process-free declaration corpus in the TypeScript engine without widening execution authority."
     },
     {
@@ -600,13 +611,17 @@
     {
       "id": "build-tool-typescript-static-build-front-typecheck",
       "title": "Add a TypeScript compiler gate to the TypeScript build-tool front",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-typescript-dune-build-discovery-exclusion"],
       "branch": "codex/build-tool-typescript-static-build-front-typecheck",
       "pr_number": 13516,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13516",
       "opened_at": "2026-08-30T18:21:41Z",
       "opened_revision": "5d0e1fe4386e1c04ab5ed68d2bf3763a0d82f33d",
+      "final_head_revision": "04e91dfcaef0ff5b86ab2bd20d5f4fc720cfec75",
+      "merged_at": "2026-08-30T18:50:43Z",
+      "merge_commit": "76ba0c1833f0a2d3f8f85a354b83468dbd2c6aae",
+      "merge_notes": "All 41 final-head checks were terminal and acceptable: 34 success, six expected skips, and one neutral CodeQL result. GitHub reported the head conflict-free before guarded squash auto-merge was enabled and completed; no manual merge command was used.",
       "selection_revision": "582b246b810ae429a4aa06c8f7e52e3c38405454",
       "selection_notes": "Selected after PR #13514 completed 41 acceptable checks and merged through guarded squash auto-merge as 582b246b810ae429a4aa06c8f7e52e3c38405454, followed by a collision-checked exact-main refresh. The schema-3 inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. PR #13514 changed only seven existing paths since 4abc7f001f7e3f924f6b7d4cc7bf3ae583b3dd45, with no package root or manifest and no newly unowned eligible gap. This owner's sole TypeScript Dune prerequisite is merged; its bounded static front directly unlocks TypeScript declaration conformance, while the newly eligible generated-directory hashing owner has no downstream children. Node 24.16.0 and npm 11.13.0 are installed; strict no-emit compilation proves that direct pinned TypeScript and Node declaration dependencies are required. The target branch and prior PR were absent, and six live PRs have zero exact overlap across the prospective TypeScript build-tool, state, roadmap, and root-changelog tranche. Reconciliation plus selection leaves the complete 580-owner/864-edge graph unique, dependency-complete, acyclic, and closed over merged dependencies at 181 merged, 398 pending, and exactly this owner in progress.",
       "implementation_revision": "5aa36f64b728201a7cd57a1f717b399faf4b8173",
