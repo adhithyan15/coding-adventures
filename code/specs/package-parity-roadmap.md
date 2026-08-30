@@ -11131,7 +11131,7 @@ The selected implementation now defines a closed `source_collection` pure
 domain, two 45-candidate extension/declared-source cases, the complete exact
 26-component artifact registry, no-follow symlink/reparse boundaries, and
 deterministic per-file SHA-256 results. Tests-first validation failed on the
-unmodeled domain before source was added. The completed focused suite passes 84
+unmodeled domain before source was added. The completed focused suite passes 85
 tests and 132 subtests with 90% branch-aware runner coverage; the corpus accepts
 121 cases and 283 files across 16 implementations, 15 established lanes, and
 12 front doors. The Go oracle passes module verification, tests, vet, and a

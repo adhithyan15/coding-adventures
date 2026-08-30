@@ -1203,6 +1203,75 @@ class PureDomainValidationTests(unittest.TestCase):
 
         runner.validate_case_document(case, **self._schema_args())
 
+    def test_source_collection_corpus_closes_registry_modes_and_links(self) -> None:
+        expected_components = {
+            ".git",
+            ".hg",
+            ".svn",
+            ".venv",
+            ".tox",
+            ".mypy_cache",
+            ".pytest_cache",
+            ".ruff_cache",
+            ".stack-work",
+            "__pycache__",
+            "node_modules",
+            "vendor",
+            "dist",
+            "dist-newstyle",
+            "_build",
+            "build",
+            "target",
+            ".claude",
+            "Pods",
+            ".gradle",
+            ".dart_tool",
+            "gradle-build",
+            "deps",
+            ".build",
+            ".cargo",
+            "cover",
+        }
+        cases = [
+            load_case("source-collection-extension.json"),
+            load_case("source-collection-declared.json"),
+        ]
+        self.assertEqual(
+            {case["input"]["options"]["mode"] for case in cases},
+            {"extension", "declared_sources"},
+        )
+
+        for case in cases:
+            candidates = case["input"]["options"]["candidates"]
+            excluded_components = {
+                candidate["path"].split("/")[1]
+                for candidate in candidates
+                if candidate["path"].startswith("excluded-")
+            }
+            self.assertEqual(excluded_components, expected_components)
+            self.assertEqual(
+                {candidate["kind"] for candidate in candidates},
+                {"file", "symlink", "reparse_point"},
+            )
+            included = {
+                entry["path"] for entry in case["expected"]["result"]["files"]
+            }
+            self.assertTrue(
+                {
+                    "case/_Build/generated.ml",
+                    "near/Build/generated.ml",
+                    "near/Dist-newstyle/generated.ml",
+                    "near/_build-example/generated.ml",
+                    "near/dist-newstyle-example/generated.ml",
+                }.issubset(included)
+            )
+            self.assertTrue(
+                all(
+                    not path.startswith(("excluded-", "linked/", "reparse/"))
+                    for path in included
+                )
+            )
+
     def test_dependency_cycles_are_rejected_without_recursion(self) -> None:
         cyclic = load_case("diff-selection-transitive.json")
         cyclic["input"]["options"]["edges"].append(["python/app", "python/base"])
