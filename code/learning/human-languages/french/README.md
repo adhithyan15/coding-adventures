@@ -302,7 +302,8 @@ the tranche's own new atoms are still unrevisited — `FR-ETYMON-COURIR-11` and
 - [`pronunciation-reference.md`](./pronunciation-reference.md) — French sounds,
   to look up on demand.
 - [`roadmap.md`](./roadmap.md) · [`session-map.md`](./session-map.md)
-- [`book/`](./book/) — the LaTeX book (`latexmk -xelatex book.tex`).
+- [`book/`](./book/) — authored LaTeX fragments and chapters; build the projected
+  entrypoint with `code/scripts/check-book-compile.sh --strict french` from the repository root.
 
 Lessons are named by **slug** (e.g. `FR-C01-jour`), never numbered; order
 lives in the book (LaTeX auto-numbers) and `session-map.md`.

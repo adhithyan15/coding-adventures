@@ -184,7 +184,8 @@ The book compiles with XeLaTeX using the **vendored** Noto Sans Telugu font
 and in CI, no system-font dependency. A forced build produces 120 visually
 inspected pages with zero missing glyphs, layout warnings, duplicate
 destinations, bookmark warnings, or font warnings.
-`latexmk -xelatex book.tex`.
+Build the isolated entrypoint with
+`code/scripts/check-book-compile.sh --strict telugu` from the repository root.
 
 ## Files
 

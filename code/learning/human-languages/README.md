@@ -46,7 +46,7 @@ Every track shares the same shape:
   session-map.md              how lessons compose into commute sessions + review schedule
   pronunciation-reference.md   the sounds, to look up on demand (never a gate)
   lessons/*.md                 deep one-word practice lessons (slug-named)
-  book/                        the LaTeX book (book.tex, chapters/*.tex)
+  book/                        authored LaTeX fragments + chapters; book.tex is projected on demand
 ```
 
 The machine-readable layer alongside the tracks is:
@@ -190,7 +190,7 @@ Modality stays derived rather than written into every lesson frontmatter file, w
 would create one place per lesson for it to go stale. The authored `modality:` override
 with a `modality_reason:` remains available for the genuinely exceptional lesson.
 
-### `book.tex` is generated (HL21 section 6)
+### `book.tex` is an isolated generated compile input
 
 `book.tex` was the last hand-maintained link in the lesson → chapter → book
 chain, and the only one that could be forgotten without anything failing: a
@@ -203,11 +203,18 @@ It is now split by **origin**, not by size:
 <track>/book/frontmatter.tex   AUTHORED — \documentclass, titlepage, licence,
                                preface, \tableofcontents, \mainmatter
 <track>/book/backmatter.tex    AUTHORED — \backmatter, appendix inputs, \end{document}
-<track>/book/book.tex          GENERATED — the two, with the derived \input list between
+<temporary>/<track>/book/book.tex  PROJECTED — the two, with the derived \input list between
 ```
 
-Edit the authored halves; never `book.tex` itself. `npm run generate:books`
-rebuilds it and `npm run check:books` gates it, exactly like the chapters.
+Edit the authored halves; there is no tracked `book.tex` to edit. The canonical
+`generatedBookOutputs()` projection still assembles all 23 entrypoints exactly,
+but `npm run generate:books` never writes them into the curriculum tree.
+`npm run check:books` exercises every projection and fails closed if a returned
+root is resurrected as a file, directory, real link, junction, or dangling link.
+The compile gate materializes each root under a caller-created empty temporary
+directory, adds that track-specific directory ahead of the inherited TeX search
+path, compiles from the authored book directory, and removes the projection on
+exit.
 
 The chapter list is folded from `core/book-generation.d/` — **both**
 `targets.d/` and `handwritten.d/`, merged by chapter number. Using generated
@@ -244,10 +251,12 @@ need `rsvg-convert` (or Inkscape, or ImageMagick's `magick`) on PATH, because
 chapters reference figures as `.pdf` and only the `.svg` is committed; without a
 converter those tracks are **skipped with a message**, not failed.
 
-The data package also loads every existing `book/book.tex` and `book/chapters/ch*.tex`
-losslessly and checks that each authored book chapter maps to its short Markdown
-lessons. This preserves the well-received book narrative while the pipeline moves
-toward generating book and app views from one lesson AST.
+The data package recognizes a book from its authored `frontmatter.tex`,
+`backmatter.tex`, and `book/chapters/ch*.tex`, then exposes the projected
+`<track>/book/book.tex` identity without requiring that generated root to exist
+on disk. It checks that each authored book chapter maps to its short Markdown
+lessons. This preserves the well-received book narrative while the pipeline
+moves toward generating book and app views from one lesson AST.
 
 ## Download the books
 

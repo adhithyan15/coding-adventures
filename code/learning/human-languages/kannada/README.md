@@ -110,7 +110,8 @@ Practice block recombines everything the chapter taught.
 
 The book compiles with XeLaTeX using the **vendored** Noto Sans Kannada font
 (`../../_fonts/`), loaded by relative path — so it builds identically locally
-and in CI, no system-font dependency. `latexmk -xelatex book.tex`.
+and in CI, no system-font dependency. Build the isolated entrypoint with
+`code/scripts/check-book-compile.sh --strict kannada` from the repository root.
 
 ## Files
 

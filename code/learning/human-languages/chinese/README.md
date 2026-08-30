@@ -122,8 +122,9 @@ types beside `grammar` and `etymology`.
   first-person "I can …" promise per chapter and the payoff lesson that proves it.
 - [`lessons/`](./lessons/) contains the canonical short lessons referenced by the
   curriculum; the directory grows with each reviewed tranche.
-- [`book/book.tex`](./book/book.tex) builds the generated book with XeLaTeX from
-  those canonical lessons.
+- [`book/`](./book/) holds the authored fragments and chapters; build their
+  isolated generated entrypoint with
+  `code/scripts/check-book-compile.sh --strict chinese` from the repository root.
 
 ## A note on the empty `bridges` list
 

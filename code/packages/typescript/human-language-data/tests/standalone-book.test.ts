@@ -1,24 +1,32 @@
 // HL-C50 — the book is a standalone artifact. See HL09 §8.
 
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { defaultCurriculumRoot, loadBookCorpus, loadEverything } from "../src/loader.js";
+import { generatedBookOutputs } from "../src/book-cli.js";
+import { loadBookCorpus, loadEverything } from "../src/loader.js";
 import { canonicalLessonSource } from "../src/hash.js";
 
 const BOOKS = loadBookCorpus().books;
+const GENERATED_BOOKS = generatedBookOutputs();
 
-// Chapters AND the book shell. `loadBookCorpus` records `entrypoint` as a path and
-// never reads it, so a test over `book.chapters` alone passes green while the TITLE
-// PAGE prints a repo path — which is exactly what Japanese and Chinese were doing,
-// more prominently than any chapter clause.
+function projectedEntrypoint(path: string): string {
+  const tex = GENERATED_BOOKS.get(path);
+  if (tex === undefined) throw new Error(`${path}: generated book entrypoint is missing`);
+  return tex;
+}
+
+// Chapters AND the projected book shell. `loadBookCorpus` records `entrypoint` as a
+// logical path and never reads it, so a test over `book.chapters` alone passes green
+// while the TITLE PAGE prints a repo path — which is exactly what Japanese and
+// Chinese were doing, more prominently than any chapter clause. The entrypoint is
+// generated in memory now; requiring it here also proves every book still receives
+// one without resurrecting tracked `book.tex` files in the source tree.
 const CHAPTERS = [
   ...BOOKS.flatMap((book) =>
     book.chapters.map((chapter) => ({ source: chapter.source, tex: chapter.tex })),
   ),
   ...BOOKS.map((book) => ({
     source: book.entrypoint,
-    tex: readFileSync(join(defaultCurriculumRoot(), book.entrypoint), "utf8"),
+    tex: projectedEntrypoint(book.entrypoint),
   })),
 ];
 

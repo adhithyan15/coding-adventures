@@ -3,7 +3,7 @@
 #
 # Why this exists
 # ---------------
-# The books workflow builds all 22 books in CI and gates the logs with
+# The books workflow builds all 23 books in CI and gates the logs with
 # scan_latex_log_warnings.py. That is the right backstop, but it is the WRONG
 # place to discover a broken page: by the time CI reports it, the change is
 # already pushed and the branch is already under review.
@@ -63,26 +63,29 @@ else
   done < <(find "$books_root" -mindepth 2 -maxdepth 2 -type d -name book | sort)
 fi
 
-# Figures are committed as SVG and converted at build time, exactly as CI does
-# it. Converting every SVG on every run costs a fraction of a second and avoids
-# the far more expensive failure mode of building against a stale PDF.
-while IFS= read -r svg; do
-  rsvg-convert --format=pdf --output="${svg%.svg}.pdf" "$svg"
-done < <(find "$books_root" -path '*/book/figures/*.svg' -type f | sort)
+# Use the same isolated-entrypoint compiler as CI. It owns figure conversion,
+# generated compile-input materialization, containment checks, and the exact
+# manifest of books that really compiled.
+manifest="$(mktemp)"
+trap 'rm -f "$manifest"' EXIT
+compile_status=0
+"$ROOT/code/scripts/check-book-compile.sh" --strict \
+  --manifest="$manifest" "${tracks[@]}" || compile_status=$?
 
-status=0
+status=$compile_status
 printf '%-12s %8s %9s %10s %8s %7s\n' TRACK PAGES OVERFULL UNDERFULL MISSING BUILD
 
 for track in "${tracks[@]}"; do
   book_dir="$books_root/$track/book"
-  if [ ! -f "$book_dir/book.tex" ]; then
+  if [ ! -f "$book_dir/frontmatter.tex" ] || [ ! -f "$book_dir/backmatter.tex" ]; then
     echo "no book at $book_dir" >&2
     status=1
     continue
   fi
 
+  real_book_dir="$(cd "$book_dir" && pwd -P)"
   build_ok=ok
-  if ! (cd "$book_dir" && latexmk -norc -r "$ROOT/code/scripts/latexmk-safe.rc" -xelatex -interaction=nonstopmode book.tex >/dev/null 2>&1); then
+  if ! grep -Fxq "$real_book_dir" "$manifest"; then
     build_ok=FAILED
     status=1
   fi
