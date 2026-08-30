@@ -36,6 +36,11 @@ dotnet run -- --emit-plan --plan-file build-plan.json
 - Mirrors the current practical feature set of the TypeScript and Rust ports:
   shell `BUILD` files, manifest-based dependency resolution, git diff, cache,
   reporting, and plan emission.
+- Discovery consumes the complete language-neutral registry. The exact bucket
+  immediately below `packages` or `programs` is the sole language
+  discriminator, BUILD roots outside those containers do not become packages,
+  and exact case-sensitive generated components including `_build` and
+  `dist-newstyle` are pruned while near names and case variants remain source.
 - `Validator.ValidateTrackedArtifactSnapshot` is a pure security boundary for
   the shared build-tool conformance corpus. It rejects unsafe portable paths,
   redacts hostile path text, and detects Unicode compatibility aliases of an

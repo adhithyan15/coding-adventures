@@ -38,6 +38,13 @@ let evaluateToolchainSnapshot
     =
     ToolchainDetection.EvaluateSnapshot(platform, forceFull, packages, scheduledPackages, forcedToolchains)
 
+// Discovery remains implemented once in the shared .NET engine, but the F#
+// front door exposes a native symbol so its fixture suite proves that callers
+// cross the reviewed F# boundary instead of silently inheriting C# coverage.
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let discoverPackages (codeRoot: string) (platform: string) =
+    Discovery.DiscoverPackages(codeRoot, platform)
+
 [<EntryPoint>]
 let main argv =
     BuildToolApp.RunAsync(argv) |> Async.AwaitTask |> Async.RunSynchronously

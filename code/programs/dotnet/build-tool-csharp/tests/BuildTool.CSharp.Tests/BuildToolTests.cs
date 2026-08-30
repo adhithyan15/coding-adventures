@@ -25,6 +25,65 @@ public sealed class BuildToolTests : IDisposable
     }
 
     [Fact]
+    public void DiscoveryConsumesTheSharedCanonicalLanguageRegistry()
+    {
+        using var fixture = JsonDocument.Parse(File.ReadAllText(Path.Combine(
+            RepositoryRoot,
+            "code",
+            "specs",
+            "fixtures",
+            "build-tool-v1",
+            "cases",
+            "discovery-language-registry.json")));
+
+        foreach (var file in fixture.RootElement.GetProperty("workspace").GetProperty("files").EnumerateArray())
+        {
+            WriteFile(
+                file.GetProperty("path").GetString()!,
+                file.GetProperty("content_utf8").GetString()!);
+        }
+
+        var actual = Discovery
+            .DiscoverPackages(Path.Combine(_tempRoot, "code"), "linux")
+            .Select(package => string.Join(
+                '\0',
+                package.Name,
+                package.Language,
+                Path.GetRelativePath(_tempRoot, package.Path).Replace('\\', '/')))
+            .ToArray();
+        var expected = fixture.RootElement
+            .GetProperty("expected")
+            .GetProperty("result")
+            .GetProperty("packages")
+            .EnumerateArray()
+            .Select(package => string.Join(
+                '\0',
+                package.GetProperty("name").GetString(),
+                package.GetProperty("language").GetString(),
+                package.GetProperty("rel_path").GetString()))
+            .ToArray();
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void DiscoverySkipsOnlyTheExactDuneBuildComponent()
+    {
+        WriteFile("code/packages/ocaml/generated-a/_build/exact/BUILD", "echo generated\n");
+        WriteFile("code/packages/ocaml/generated-b/_Build/case-source/BUILD", "echo source\n");
+        WriteFile("code/packages/ocaml/generated-c/_build-example/near-source/BUILD", "echo source\n");
+
+        var names = Discovery
+            .DiscoverPackages(Path.Combine(_tempRoot, "code"))
+            .Select(package => package.Name)
+            .ToArray();
+
+        Assert.DoesNotContain("ocaml/exact", names);
+        Assert.Contains("ocaml/case-source", names);
+        Assert.Contains("ocaml/near-source", names);
+    }
+
+    [Fact]
     public void ResolverReadsDotnetProjectReferences()
     {
         WriteFile("code/packages/csharp/hash-map/BUILD", "dotnet test\n");

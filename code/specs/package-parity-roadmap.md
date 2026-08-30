@@ -10919,6 +10919,100 @@ language checks are queued, so auto-merge remains disabled until every
 required check is terminal and acceptable and GitHub still reports no
 conflict.
 
+## Post-PR #13530 refresh and shared .NET Dune-discovery selection
+
+PR #13530 completed 41 terminal acceptable checks: 34 successes, six expected
+skips, and one neutral result. GitHub reported final reviewed head
+`e5db6e7cc7cd75a8c519489310816a44fd72d4fe` conflict-free and clean, so
+guarded squash auto-merge was enabled. GitHub merged it as
+`d45caf1cd40c2946351dd28aa3464f4301cec5aa` at 2026-08-30T19:47:14Z without
+a manual merge command. The TypeScript declaration owner therefore advances to
+`merged` and the active PR is cleared.
+
+The collision-checked exact-main inventory remains schema 3 with 15 established
+lanes, 1,388 implementation identities, 4,602 slots, and 1,427 all-reported
+identities. Completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and collisions and unknown buckets remain zero. The identity delta is zero,
+the ownership graph remains acyclic at 580 owners and 864 edges, and no newly
+eligible unowned package or build-tool gap appeared.
+
+The declaration completion umbrella is now dependency-complete but remains an
+explicitly selection-blocked aggregate with no independent source behavior.
+The dependency/leverage pass instead selects
+`build-tool-csharp-fsharp-dune-build-discovery-conformance` on branch
+`codex/build-tool-csharp-fsharp-dune-build-discovery-conformance`. Its sole
+prerequisite is merged, it closes two established front doors through the
+shared .NET engine, and it advances the remaining Dune-discovery umbrella.
+The target branch and prior PR were absent, .NET SDK 9.0.315 is installed, and
+six live PRs have zero exact overlap with the expected C#, F#, documentation,
+state, roadmap, and root-changelog paths. Reconciliation plus selection leaves
+183 merged, 396 pending, and exactly this owner in progress.
+
+### Shared .NET Dune-discovery implementation and validation
+
+Test-first execution reproduced both registered gaps. C# discovered the exact
+`_build` decoy from the unchanged shared registry, and the F# fixture could not
+compile because no native discovery facade existed. The complete registry also
+exposed adjacent behavior already owned by this full-fixture tranche: the
+engine borrowed a later `go` path component from an unknown bucket, omitted
+Mosaic and Twig, discovered generated `dist-newstyle`, and treated a BUILD root
+under `code/specs` as a package.
+
+The bounded repair adds exact case-sensitive `_build` and `dist-newstyle`
+components to the existing discovery skip set, recognizes Mosaic and Twig,
+derives language only from the nearest exact `packages` or `programs` bucket,
+and ignores BUILD roots outside those containers. A direct C# regression keeps
+`_Build` and `_build-example` discoverable. The F# front door adds only a
+no-inline native facade over the same shared engine and independently consumes
+the entire unchanged neutral fixture, so it gains explicit evidence without a
+second discovery implementation.
+
+Both literal package BUILD fronts now pass: 59 C# tests and 13 F# tests, with
+zero build warnings. C# coverage is 92.25% lines and 44.43% branches overall;
+the repaired `Discovery` class reaches 91.12% lines and 83.33% branches. F#
+coverage is 89.55% lines and 35.32% branches overall, and `Program.fs` reaches
+100% lines and branches. The neutral corpus validates 119 cases and 283 files
+across 16 implementations, 15 established lanes, and 12 front doors.
+Conformance, parity, capability, Haskell, and OCaml-lock families pass 248
+tests with 25 expected platform skips and 1,047 subtests.
+
+The Go oracle passes module verification, all packages, vet, and trimpath
+compilation. Real forced dry plans evaluate all 45 Starlark BUILD files,
+preserve the five reviewed orphan exemptions, and validate all 201 C# and 200
+F# packages. C# formatting is clean, both test graphs have no vulnerable NuGet
+dependency, and collision, state-graph, diff-hygiene, credential-pattern, and
+authority gates pass. Six live PRs retain zero exact path overlap with this
+11-path tranche.
+
+The exact-diff plan discovers 5,112 packages, selects only
+`dotnet/programs/build-tool-csharp` and
+`dotnet/programs/build-tool-fsharp`, and skips the other 5,110. This confirms
+that the documentation and parity-state surfaces do not widen the executable
+affected closure.
+
+Before first push, `origin/main` advanced twice. PR #13528 changed only
+`.github/workflows/ci.yml` to increase the main CI shard count. PR #13527 then
+changed 17 existing Mosaic task-app, Rust Mosaic emitter, TypeScript
+lexer/parser/SQL, and portability-test paths. The branch rebased conflict-free
+after each merge onto final base
+`edcf0dd65077852392a2b7dcf7a9df64a1b5704f`. Both intervening slices have
+zero exact overlap with this tranche, add no package root or manifest, change
+no package identity or shared .NET build-tool contract, and create no newly
+unowned eligible gap. The inventory revision advances without changing any
+count.
+
+Ready-for-review PR #13535 opened from clean validated head
+`eb9795e95bcbe5ef022347988755f275ee023e84` after a normal first push.
+Immediately before publication, exact remote main matched rebased base
+`edcf0dd65077852392a2b7dcf7a9df64a1b5704f`, the target branch and prior PR
+were absent, and six live PRs had zero exact overlap with the 11 changed paths.
+GitHub reports the PR mergeable and non-draft. Required CI, CodeQL, and human-
+language checks are queued or in progress, so auto-merge remains disabled until
+every required check is terminal and acceptable and GitHub still reports no
+conflict. The ownership graph now contains 183 merged, 396 pending, and exactly
+one `pr-open` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
