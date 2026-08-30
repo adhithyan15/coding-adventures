@@ -35,18 +35,28 @@ private fun expectedPlatform(): String {
 }
 
 fun main() {
+    val restoredOnLaunch = System.getenv("MOSAIC_EXPECT_RESTORED") == "1"
+    val expectWarning = System.getenv("MOSAIC_EXPECT_PERSISTENCE_WARNING") == "1"
+    val initialCount = if (restoredOnLaunch) 4L else 0L
     val host = checkNotNull(MosaicRuntimeHost.load()) {
         "standard Compose binding did not load the Rust app"
     }
     try {
         val started = objectMap(host.props(), "startup update")
         val startedProps = props(started, "startup update")
+        requireConformance(
+            ("persistenceWarning" in started) == expectWarning,
+            "startup persistence warning",
+        )
         requireConformance(integer(started["revision"], "startup revision") == 1L,
             "startup revision")
-        requireConformance(integer(startedProps["count"], "initial count") == 0L,
+        requireConformance(integer(startedProps["count"], "initial count") == initialCount,
             "initial count")
         requireConformance(startedProps["platform"] == expectedPlatform(), "startup platform")
-        requireConformance(startedProps["status"] == "started", "startup status")
+        requireConformance(
+            startedProps["status"] == if (restoredOnLaunch) "restored" else "started",
+            "startup status",
+        )
 
         var notificationCount = 0
         host.setPropsChangedHandler { notificationCount += 1 }
@@ -63,7 +73,7 @@ fun main() {
         val dispatchedProps = props(dispatched, "dispatch update")
         requireConformance(integer(dispatched["revision"], "dispatch revision") == 2L,
             "dispatch revision")
-        requireConformance(integer(dispatchedProps["count"], "dispatched count") == 4L,
+        requireConformance(integer(dispatchedProps["count"], "dispatched count") == initialCount + 4L,
             "dispatched count")
         requireConformance(dispatchedProps["status"] == "dispatched", "dispatch status")
         requireConformance(notificationCount == 1, "dispatch props-change notification")
@@ -79,7 +89,7 @@ fun main() {
         val restoredProps = props(restored, "restore update")
         requireConformance(integer(restored["revision"], "restore revision") == 3L,
             "restore revision")
-        requireConformance(integer(restoredProps["count"], "restored count") == 4L,
+        requireConformance(integer(restoredProps["count"], "restored count") == initialCount + 4L,
             "restored count")
         requireConformance(restoredProps["status"] == "restored", "restore status")
         requireConformance(notificationCount == 2, "restore props-change notification")

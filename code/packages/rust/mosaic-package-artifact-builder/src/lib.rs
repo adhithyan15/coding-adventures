@@ -2169,11 +2169,10 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 if let Some(parent) = host.parent() {
                     create_dir_all(parent)?;
                 }
-                let runtime_binding = if bundle_runtime {
-                    mosaic_app_bindings::flutter_runtime_binding_with_bundled_asset()
-                } else {
-                    mosaic_app_bindings::flutter_runtime_binding()
-                };
+                let runtime_binding = mosaic_app_bindings::flutter_runtime_binding_for_application(
+                    package_name,
+                    bundle_runtime,
+                );
                 write_file(&host, runtime_binding.as_bytes())?;
                 written.push(host);
                 if let Some(source) = runtime_library {
@@ -2230,7 +2229,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             let host_nested = backend_dir.join("src/main/kotlin/MosaicRuntimeHost.kt");
             write_file(
                 &host_nested,
-                mosaic_app_bindings::compose_jna_binding().as_bytes(),
+                mosaic_app_bindings::compose_jna_binding_for_application(package_name).as_bytes(),
             )?;
             written.push(host_nested);
         }
@@ -2262,7 +2261,8 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     components,
                     bundled_runtime,
                 );
-                let runtime_binding = mosaic_app_bindings::qt_runtime_binding();
+                let runtime_binding =
+                    mosaic_app_bindings::qt_runtime_binding_for_application(package_name);
                 let contract = if require_runtime {
                     " In the native-complete profile the binding and Rust runtime are mandatory; startup validates required MIL props before constructing QML and exits explicitly if the contract is unavailable."
                 } else {
@@ -2325,7 +2325,8 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     &proj.app_swift,
                     bundle_runtime,
                 );
-                let runtime_binding = mosaic_app_bindings::swift_runtime_binding();
+                let runtime_binding =
+                    mosaic_app_bindings::swift_runtime_binding_for_application(package_name);
                 let runtime_distribution = if bundle_runtime {
                     "The selected target Rust engine is copied into SwiftPM's `Runtime` resource bundle and resolved through `Bundle.module`; no environment variable or global library install is required."
                 } else {
@@ -2391,8 +2392,10 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if let Some(proj) = r.project {
-                let runtime_binding =
-                    mosaic_app_bindings::xaml_runtime_binding(&xaml_opts.namespace);
+                let runtime_binding = mosaic_app_bindings::xaml_runtime_binding_for_application(
+                    &xaml_opts.namespace,
+                    package_name,
+                );
                 let runtime_distribution = if runtime_library.is_some() {
                     "The selected target Rust engine is copied into the project as `mosaic_app.dll`. The generated MSBuild target copies it beside the WinUI executable, and the standard binding resolves it through `AppContext.BaseDirectory` before global lookup; no environment variable or global library install is required."
                 } else {

@@ -19,10 +19,16 @@ import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.longOrNull
 import kotlinx.serialization.json.put
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.util.Locale
 
 private const val MOSAIC_PROTOCOL_VERSION = __MOSAIC_PROTOCOL_VERSION__
 private const val MOSAIC_STATUS_OK = 0
+private const val MOSAIC_PERSISTENCE_ENABLED = __MOSAIC_PERSISTENCE_ENABLED__
+private const val MOSAIC_APPLICATION_ID = "__MOSAIC_APPLICATION_ID__"
+private const val MOSAIC_STATE_FILE = "mosaic-state.v1.json"
 
 class MosaicRuntimeException(val status: Int, message: String) : RuntimeException(message)
 
@@ -93,24 +99,38 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
     private var sequence = 0L
     private var latestUpdate: JsonObject
     private var propsChangedHandler: (() -> Unit)? = null
+    private var persistenceWarning: String? = null
 
     init {
         val app = PointerByReference()
-        val start = buildJsonObject {
-            put("protocolVersion", MOSAIC_PROTOCOL_VERSION)
-            put("locale", Locale.getDefault().toLanguageTag())
-            put("colorScheme", "system")
-            put("textScale", 1.0)
-            put("platform", mosaicPlatform())
-            put("restoredSnapshot", JsonNull)
+        val restoredSnapshot = loadPersistedSnapshot()
+        fun create(snapshot: JsonObject?): JsonObject {
+            val start = buildJsonObject {
+                put("protocolVersion", MOSAIC_PROTOCOL_VERSION)
+                put("locale", Locale.getDefault().toLanguageTag())
+                put("colorScheme", "system")
+                put("textScale", 1.0)
+                put("platform", mosaicPlatform())
+                put("restoredSnapshot", snapshot ?: JsonNull)
+            }
+            return withJsonInput(start) { input ->
+                invoke { output -> api.mosaic_app_create(input, app, output) }
+            }.jsonObject
         }
-        latestUpdate = withJsonInput(start) { input ->
-            invoke { output -> api.mosaic_app_create(input, app, output) }
-        }.jsonObject
+        val update = try {
+            create(restoredSnapshot)
+        } catch (error: Exception) {
+            if (restoredSnapshot == null) throw error
+            app.value?.let(api::mosaic_app_destroy)
+            app.value = null
+            quarantinePersistedState("Mosaic runtime rejected persisted state: ${error.message}")
+            create(null)
+        }
         handle = app.value ?: throw MosaicRuntimeException(
             1,
             "Mosaic runtime returned a null application handle",
         )
+        latestUpdate = withPersistenceWarning(update)
     }
 
     @Synchronized
@@ -132,7 +152,8 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
             invoke { output -> api.mosaic_app_dispatch(app, input, output) }
         }.jsonObject
         sequence = nextSequence
-        latestUpdate = update
+        persistSnapshot()
+        latestUpdate = withPersistenceWarning(update)
         propsChangedHandler?.invoke()
         return update.toKotlinMap()
     }
@@ -174,6 +195,90 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
 
     private fun requireHandle(): Pointer = handle
         ?: throw IllegalStateException("Mosaic runtime is closed")
+
+    private fun loadPersistedSnapshot(): JsonObject? {
+        val file = stateFile() ?: return null
+        if (!file.isFile) return null
+        return try {
+            Json.parseToJsonElement(file.readText()).jsonObject
+        } catch (error: Exception) {
+            quarantinePersistedState("Ignored invalid Mosaic state: ${error.message}")
+            null
+        }
+    }
+
+    private fun quarantinePersistedState(reason: String) {
+        val file = stateFile() ?: return
+        val corrupt = File(file.parentFile, "$MOSAIC_STATE_FILE.corrupt")
+        runCatching {
+            if (corrupt.exists()) corrupt.delete()
+            if (file.exists()) {
+                Files.move(file.toPath(), corrupt.toPath(), StandardCopyOption.REPLACE_EXISTING)
+            }
+        }
+        recordPersistenceWarning("$reason (${file.absolutePath})")
+    }
+
+    private fun persistSnapshot() {
+        val file = stateFile() ?: return
+        try {
+            val value = invoke { output ->
+                api.mosaic_app_snapshot(requireHandle(), output)
+            }
+            if (value == JsonNull) {
+                Files.deleteIfExists(file.toPath())
+                persistenceWarning = null
+                return
+            }
+            file.parentFile.mkdirs()
+            val temporary = File(file.parentFile, "$MOSAIC_STATE_FILE.tmp")
+            temporary.writeText(value.toString())
+            try {
+                Files.move(
+                    temporary.toPath(),
+                    file.toPath(),
+                    StandardCopyOption.ATOMIC_MOVE,
+                    StandardCopyOption.REPLACE_EXISTING,
+                )
+            } catch (_: Exception) {
+                Files.move(
+                    temporary.toPath(),
+                    file.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING,
+                )
+            }
+            persistenceWarning = null
+        } catch (error: Exception) {
+            recordPersistenceWarning("Could not persist Mosaic state: ${error.message}")
+        }
+    }
+
+    private fun stateFile(): File? {
+        if (!MOSAIC_PERSISTENCE_ENABLED) return null
+        System.getenv("MOSAIC_APP_STATE_PATH")
+            ?.takeIf(String::isNotBlank)
+            ?.let(::File)
+            ?.absoluteFile
+            ?.let { return it }
+        val os = mosaicPlatform()
+        val root = when (os) {
+            "windows" -> System.getenv("LOCALAPPDATA")?.let(::File)
+            "apple" -> File(System.getProperty("user.home"), "Library/Application Support")
+            else -> System.getenv("XDG_DATA_HOME")?.let(::File)
+                ?: File(System.getProperty("user.home"), ".local/share")
+        } ?: return null
+        return File(File(root, MOSAIC_APPLICATION_ID), MOSAIC_STATE_FILE)
+    }
+
+    private fun recordPersistenceWarning(message: String) {
+        persistenceWarning = message
+        System.err.println(message)
+    }
+
+    private fun withPersistenceWarning(update: JsonObject): JsonObject {
+        val warning = persistenceWarning ?: return update
+        return JsonObject(update + ("persistenceWarning" to JsonPrimitive(warning)))
+    }
 
     private fun withJsonInput(
         value: JsonElement,

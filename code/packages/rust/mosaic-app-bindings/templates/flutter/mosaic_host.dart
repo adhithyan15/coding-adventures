@@ -48,6 +48,12 @@ typedef _DestroyNative = Void Function(Pointer<Void>);
 typedef _Destroy = void Function(Pointer<Void>);
 typedef _InputOperation = int Function(_MosaicBytes, Pointer<_MosaicBuffer>);
 typedef _OutputOperation = int Function(Pointer<_MosaicBuffer>);
+typedef _MoveFileExNative = Int32 Function(
+  Pointer<Utf16>,
+  Pointer<Utf16>,
+  Uint32,
+);
+typedef _MoveFileEx = int Function(Pointer<Utf16>, Pointer<Utf16>, int);
 
 @Native<_CreateNative>(symbol: 'mosaic_app_create')
 external int _bundledCreate(
@@ -167,17 +173,31 @@ final class _MosaicRuntime {
   ) {
     final appOut = calloc<Pointer<Void>>();
     try {
-      latestUpdate = _requireMap(
-        _invokeInput(<String, Object?>{
+      final persisted = _loadPersistedSnapshot();
+      _persistenceWarning = persisted.warning;
+      Map<String, Object?> create(Map<String, Object?>? restoredSnapshot) =>
+          _requireMap(
+            _invokeInput(<String, Object?>{
           'protocolVersion': _protocolVersion,
           'locale': Platform.localeName,
           'colorScheme': 'system',
           'textScale': 1.0,
           'platform': _platformName(),
-          'restoredSnapshot': null,
-        }, (input, output) => _create(input, appOut, output)),
-        'startup update',
-      );
+          'restoredSnapshot': restoredSnapshot,
+        }, (input, output) => _create(input, appOut, output)), 'startup update');
+      try {
+        latestUpdate = create(persisted.snapshot);
+      } on Object catch (error) {
+        if (persisted.snapshot == null) rethrow;
+        final created = appOut.value;
+        if (created != nullptr) _destroy(created);
+        appOut.value = nullptr;
+        _persistenceWarning = _quarantinePersistedState(
+          'Mosaic runtime rejected persisted state: $error',
+        );
+        latestUpdate = create(null);
+      }
+      latestUpdate = _withPersistenceWarning(latestUpdate);
       _app = appOut.value;
       if (_app == nullptr) {
         throw StateError('Mosaic runtime returned a null application handle');
@@ -193,6 +213,9 @@ final class _MosaicRuntime {
 
   static const int _protocolVersion = __MOSAIC_PROTOCOL_VERSION__;
   static const bool _hasBundledRuntime = __MOSAIC_BUNDLED_RUNTIME__;
+  static const bool _persistenceEnabled = __MOSAIC_PERSISTENCE_ENABLED__;
+  static const String _applicationId = '__MOSAIC_APPLICATION_ID__';
+  static const String _stateFileName = 'mosaic-state.v1.json';
 
   final _Create _create;
   final _Dispatch _dispatch;
@@ -203,6 +226,7 @@ final class _MosaicRuntime {
   Pointer<Void> _app = nullptr;
   int _sequence = 0;
   late Map<String, Object?> latestUpdate;
+  String? _persistenceWarning;
   void Function()? propsChangedHandler;
 
   static _MosaicRuntime load() {
@@ -260,8 +284,9 @@ final class _MosaicRuntime {
       'event update',
     );
     _sequence = nextSequence;
-    latestUpdate = update;
-    return update;
+    _persistSnapshot();
+    latestUpdate = _withPersistenceWarning(update);
+    return latestUpdate;
   }
 
   Map<String, Object?>? snapshot() {
@@ -285,6 +310,117 @@ final class _MosaicRuntime {
     if (_app == nullptr) return;
     _destroy(_app);
     _app = nullptr;
+  }
+
+  ({Map<String, Object?>? snapshot, String? warning})
+  _loadPersistedSnapshot() {
+    final path = _statePath();
+    if (path == null) return (snapshot: null, warning: null);
+    final file = File(path);
+    if (!file.existsSync()) return (snapshot: null, warning: null);
+    try {
+      final value = jsonDecode(file.readAsStringSync());
+      return (snapshot: _requireMap(value, 'persisted state'), warning: null);
+    } on Object catch (error) {
+      final warning = _quarantinePersistedState(
+        'Ignored invalid Mosaic state: $error',
+      );
+      return (snapshot: null, warning: warning);
+    }
+  }
+
+  String _quarantinePersistedState(String reason) {
+    final path = _statePath();
+    if (path == null) return reason;
+    final file = File(path);
+    final corrupt = File('$path.corrupt');
+    try {
+      if (corrupt.existsSync()) corrupt.deleteSync();
+      if (file.existsSync()) file.renameSync(corrupt.path);
+    } on Object catch (moveError) {
+      stderr.writeln('Could not quarantine invalid Mosaic state: $moveError');
+    }
+    final warning = '$reason ($path)';
+    stderr.writeln(warning);
+    return warning;
+  }
+
+  void _persistSnapshot() {
+    final path = _statePath();
+    if (path == null) return;
+    try {
+      final value = _invokeOutput((output) => _snapshot(_app, output));
+      final file = File(path);
+      if (value == null) {
+        if (file.existsSync()) file.deleteSync();
+        _persistenceWarning = null;
+        return;
+      }
+      file.parent.createSync(recursive: true);
+      final temporary = File('$path.tmp');
+      temporary.writeAsStringSync(jsonEncode(value), flush: true);
+      _replaceAtomically(temporary, file);
+      _persistenceWarning = null;
+    } on Object catch (error) {
+      _persistenceWarning = 'Could not persist Mosaic state: $error';
+      stderr.writeln(_persistenceWarning);
+    }
+  }
+
+  String? _statePath() {
+    if (!_persistenceEnabled) return null;
+    final requested = Platform.environment['MOSAIC_APP_STATE_PATH'];
+    if (requested != null && requested.trim().isNotEmpty) return requested;
+    final environment = Platform.environment;
+    late final String root;
+    if (Platform.isWindows) {
+      root = environment['LOCALAPPDATA'] ?? '';
+    } else if (Platform.isMacOS || Platform.isIOS) {
+      final home = environment['HOME'] ?? '';
+      root = home.isEmpty ? '' : _joinPath(home, 'Library/Application Support');
+    } else {
+      final home = environment['HOME'] ?? '';
+      root = environment['XDG_DATA_HOME'] ??
+          (home.isEmpty ? '' : _joinPath(home, '.local/share'));
+    }
+    if (root.isEmpty) return null;
+    return _joinPath(_joinPath(root, _applicationId), _stateFileName);
+  }
+
+  Map<String, Object?> _withPersistenceWarning(Map<String, Object?> update) {
+    final warning = _persistenceWarning;
+    return warning == null
+        ? update
+        : <String, Object?>{...update, 'persistenceWarning': warning};
+  }
+
+  static void _replaceAtomically(File temporary, File target) {
+    if (!Platform.isWindows) {
+      temporary.renameSync(target.path);
+      return;
+    }
+    final moveFileEx = DynamicLibrary.open('kernel32.dll')
+        .lookupFunction<_MoveFileExNative, _MoveFileEx>('MoveFileExW');
+    final source = temporary.path.toNativeUtf16();
+    final destination = target.path.toNativeUtf16();
+    try {
+      const moveFileReplaceExisting = 0x1;
+      const moveFileWriteThrough = 0x8;
+      final moved = moveFileEx(
+        source,
+        destination,
+        moveFileReplaceExisting | moveFileWriteThrough,
+      );
+      if (moved == 0) {
+        throw FileSystemException(
+          'MoveFileExW could not atomically replace Mosaic state',
+          target.path,
+        );
+      }
+    } finally {
+      calloc.free(destination);
+      calloc.free(source);
+    }
   }
 
   Object? _invokeInput(Object? value, _InputOperation operation) {
@@ -361,6 +497,11 @@ final class _MosaicRuntime {
   static Map<String, Object?> _requireMap(Object? value, String kind) {
     if (value is Map) return _stringMap(value);
     throw FormatException('Mosaic runtime returned a non-object $kind');
+  }
+
+  static String _joinPath(String parent, String child) {
+    final separator = Platform.pathSeparator;
+    return parent.endsWith(separator) ? '$parent$child' : '$parent$separator$child';
   }
 }
 

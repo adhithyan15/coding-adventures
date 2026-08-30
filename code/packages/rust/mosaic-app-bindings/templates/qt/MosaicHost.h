@@ -52,8 +52,15 @@ private:
     QVariantMap requireMap(const QVariant &value, const char *kind) const;
     QVariantMap requireAndMapUpdate(const QVariantMap &update, const char *kind) const;
     QVariantMap failure(const QString &message) const;
+    QVariant loadPersistedSnapshot();
+    void quarantinePersistedState(const QString &reason);
+    void persistSnapshot();
+    QVariantMap withPersistenceWarning(const QVariantMap &update) const;
+    QString statePath() const;
 
     static constexpr quint32 ProtocolVersion = __MOSAIC_PROTOCOL_VERSION__;
+    static constexpr bool PersistenceEnabled = __MOSAIC_PERSISTENCE_ENABLED__;
+    static constexpr const char *ApplicationId = "__MOSAIC_APPLICATION_ID__";
     QLibrary library_;
     void *app_ = nullptr;
     quint64 sequence_ = 0;
@@ -61,6 +68,7 @@ private:
     QVariantMap requiredSlotNames_;
     QStringList requiredProps_;
     QString error_;
+    QString persistenceWarning_;
     Create create_ = nullptr;
     Dispatch dispatch_ = nullptr;
     Snapshot snapshot_ = nullptr;

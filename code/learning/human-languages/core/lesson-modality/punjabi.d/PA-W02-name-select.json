@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W02-name-select",
+    "language": "punjabi",
+    "chapter": 15,
+    "sequence": 940,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c33082b9f9305232",
+    "detachableSegments": [
+      "Script — attach one nonverbal cue to each person"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -13,6 +13,13 @@ This CLI program:
 6. Only runs BUILD commands for packages whose hash (or dependency hash) changed
 7. Runs independent packages in parallel using concurrent.futures
 
+Discovery follows the shared canonical language registry. It classifies the
+emerging OCaml package and program buckets, prunes Dune's exact case-sensitive
+`_build` output component before testing BUILD membership, and preserves
+similarly named source components such as `_Build` and `_build-example`.
+OCaml remains outside the established-lane completion denominator until its
+separate promotion gates pass.
+
 ## Usage
 
 ```bash

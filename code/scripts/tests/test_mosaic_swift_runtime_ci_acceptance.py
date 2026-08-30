@@ -144,9 +144,20 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("Sources/App/MosaicRuntimeHost.swift", workflow)
         self.assertIn("Sources/CMosaicRuntime/CMosaicRuntime.c", workflow)
         self.assertIn(
-            'env -u MOSAIC_APP_LIBRARY swift run --package-path "$harness" '
-            'Conformance --library "$installed_runtime"',
-            workflow,
+            'env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path"',
+            swift_runtime_step,
+        )
+        self.assertIn(
+            'MOSAIC_EXPECT_RESTORED=1 \\\n'
+            '            swift run --package-path "$harness" Conformance '
+            '--library "$installed_runtime"',
+            swift_runtime_step,
+        )
+        self.assertIn(
+            'MOSAIC_EXPECT_PERSISTENCE_WARNING=1 \\\n'
+            '            swift run --package-path "$harness" Conformance '
+            '--library "$installed_runtime"',
+            swift_runtime_step,
         )
         self.assertIn("mosaic-swift-bundled-conformance", workflow)
         self.assertIn(

@@ -4,6 +4,14 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - local state across generated native app restarts (#13519)
+
+Native-complete TaskApp packages now restore the Rust engine's opaque snapshot
+before their first visible render and persist a fresh snapshot after every
+successful event. Compose, SwiftUI, XAML, Flutter, and Qt use independent
+per-user application-data files with atomic replacement and recover safely from
+corrupt or incompatible state.
+
 ### Added - `elevation: raised;` on every raised-card part (#12028 item 1, UI41)
 
 `TaskApp.{light,dark}.msl`'s 13 raised-card-style parts (Kanban cards,

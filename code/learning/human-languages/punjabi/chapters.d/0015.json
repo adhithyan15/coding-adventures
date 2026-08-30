@@ -1,0 +1,20 @@
+{
+  "chapter": 15,
+  "title": "The First Form Line: Name",
+  "label": "ch:pa-form-name",
+  "canDo": "I can recognise the Gurmukhi name label, select between two separately practised values, and fill one requested name line from a nonverbal cue with no model.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W02-name-no-model",
+    "kind": "production",
+    "summary": "The learner fills one name field from a nonverbal identity cue after the label, both values, selection, supported entry, delayed entry, spelling, spacing, and repair have each received a bounded pass.",
+    "assesses": [
+      "PA-FORM-LABEL-NAME-01",
+      "PA-FORM-NAME-AMAN-01",
+      "PA-FORM-NAME-CUE-MAP-01",
+      "PA-FORM-NAME-NO-MODEL-01"
+    ]
+  }
+}

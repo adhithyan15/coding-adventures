@@ -8,3 +8,5 @@ snapshot/restore, buffer ownership, and teardown.
 CI generates the complete TaskApp project, copies its generated binding into
 this harness in a temporary workspace, and runs the result. The binding itself
 is deliberately not duplicated here, and no graphical display is required.
+
+CI also covers clean, restored, and incompatible-state process launches.

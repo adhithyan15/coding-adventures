@@ -10,3 +10,6 @@ into this harness in a temporary workspace, and runs the result. The binding and
 loader are deliberately not duplicated here. The harness declares only the
 source-compatible host protocol that the generated TaskApp normally owns, so it
 can exercise the unchanged runtime host without launching a SwiftUI window.
+
+The macOS lane runs clean, restored, and incompatible-state launches against
+one explicit state path.

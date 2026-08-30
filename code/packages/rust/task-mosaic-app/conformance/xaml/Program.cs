@@ -21,6 +21,7 @@ internal static class Program
 {
     private static async Task Main()
     {
+        var restoredOnLaunch = Environment.GetEnvironmentVariable("MOSAIC_EXPECT_RESTORED") == "1";
         MosaicRuntimeHost.LoadRequired();
         var component = new TaskAppComponent();
         try
@@ -29,7 +30,9 @@ internal static class Program
                 component, "app-title", "new-task-name");
             Require(startStatus == "Status: Mosaic runtime props loaded", "startup status");
             Require(component.AppTitle == "Tasks — auto-scheduled", "initial app title");
-            Require(component.NewTaskName == "", "initial task composer");
+            Require(
+                component.NewTaskName == (restoredOnLaunch ? "Ship on Windows" : ""),
+                "initial task composer");
 
             var result = await MosaicRuntimeHost.HandleRequiredEvent(
                 component,
