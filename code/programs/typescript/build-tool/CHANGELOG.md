@@ -6,6 +6,9 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Added
 
+- Add exact pinned TypeScript and Node declaration development dependencies,
+  an explicit strict no-emit `typecheck` command, and a generic BUILD-front
+  gate that runs static validation before coverage on every platform.
 - Add a pure `validateOrphanCrateSnapshot()` API that independently consumes
   all four language-neutral orphan fixtures, derives exact direct and ancestor
   BUILD coverage, validates and redacts exemption policy, reports stale debt

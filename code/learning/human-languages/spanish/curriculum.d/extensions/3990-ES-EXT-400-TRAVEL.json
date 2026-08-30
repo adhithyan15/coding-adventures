@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-400-TRAVEL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name el tren, el vuelo, el aparcamiento, el abono and la playa.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C400-tren",
+    "ES-C400-vuelo",
+    "ES-C400-aparcamiento",
+    "ES-C400-abono",
+    "ES-C400-playa"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C400-playa",
+    "language": "spanish",
+    "chapter": 400,
+    "sequence": 8810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:672a5838a367b509"
+  },
+  "findings": []
+}

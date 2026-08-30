@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:d6c11750a11db3e7",
+  "lessonIds": [
+    "ES-C400-tren",
+    "ES-C400-vuelo",
+    "ES-C400-aparcamiento",
+    "ES-C400-abono",
+    "ES-C400-playa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch400.txt",
+  "json": "spanish/narration/ch400.json",
+  "textHash": "fnv1a64:cd618250e7245d80",
+  "jsonHash": "fnv1a64:1aaa60a1ee1921ca",
+  "findings": []
+}

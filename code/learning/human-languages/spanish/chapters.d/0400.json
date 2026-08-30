@@ -1,0 +1,21 @@
+{
+  "chapter": 400,
+  "title": "Five Words for Making a Journey",
+  "label": "ch:el-tren-y-la-playa",
+  "canDo": "I can say el tren, el vuelo, el aparcamiento, el abono and la playa, and use them to plan a journey.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C400-playa",
+    "kind": "production",
+    "summary": "Complete ES-C400-playa: choose transport, name its practical details, and say where the journey ends.",
+    "assesses": [
+      "ES-LEX-TREN",
+      "ES-LEX-VUELO",
+      "ES-LEX-APARCAMIENTO",
+      "ES-LEX-ABONO",
+      "ES-LEX-PLAYA"
+    ]
+  }
+}
