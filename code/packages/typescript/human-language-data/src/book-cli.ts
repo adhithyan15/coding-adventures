@@ -3,6 +3,7 @@ import {
   lstatSync,
   mkdirSync,
   readFileSync,
+  readdirSync,
   realpathSync,
   writeFileSync,
 } from "node:fs";
@@ -239,6 +240,12 @@ function safeOutput(root: string, relative: string): string {
     throw new Error(`unsafe generated book output '${relative}'`);
   }
   return output;
+}
+
+const CHAPTER_MODALITY_COMPILE_INPUT = "/book/chapter-modalities.tex";
+
+function isBookCompileInput(relative: string): boolean {
+  return relative.endsWith(CHAPTER_MODALITY_COMPILE_INPUT);
 }
 
 function safeMarkdownSource(root: string, relative: string): string {
@@ -749,14 +756,88 @@ export function generatedBookOutputs(
   return outputs;
 }
 
+/**
+ * Materialize the TeX definitions that a book needs only while it is compiling.
+ *
+ * These used to be committed beside every book. That made every lesson tranche
+ * rewrite a per-language rollup even though the canonical lesson-modality owners
+ * can reproduce it exactly. The compile gate now gives this function a fresh,
+ * isolated directory and exposes only the matching track through `TEXINPUTS`.
+ *
+ * Requiring an existing empty real directory is intentional. It keeps this API
+ * from becoming a general "write generated files somewhere" escape hatch, and
+ * means every descendant directory was created by this invocation rather than
+ * supplied as a symlink or junction by repository content.
+ */
+export function materializeBookCompileInputs(
+  outputRoot: string,
+  root = defaultCurriculumRoot(),
+  options: BookGenerationLoadOptions = {},
+): number {
+  const rootStat = statIfPresent(outputRoot);
+  if (!rootStat || !rootStat.isDirectory() || rootStat.isSymbolicLink()) {
+    throw new Error(
+      `book compile input root '${outputRoot}' must be an existing real directory`,
+    );
+  }
+  const realOutputRoot = realpathSync(outputRoot);
+  if (readdirSync(realOutputRoot).length !== 0) {
+    throw new Error(
+      `book compile input root '${outputRoot}' must be empty`,
+    );
+  }
+
+  let written = 0;
+  for (const [relative, content] of generatedBookOutputs(root, options)) {
+    if (!isBookCompileInput(relative)) continue;
+    const output = safeOutput(realOutputRoot, relative);
+    mkdirSync(dirname(output), { recursive: true });
+    const realParent = realpathSync(dirname(output));
+    if (
+      realParent !== realOutputRoot &&
+      !realParent.startsWith(realOutputRoot + sep)
+    ) {
+      throw new Error(
+        `book compile input '${relative}' resolves outside its isolated root`,
+      );
+    }
+    if (statIfPresent(output)) {
+      throw new Error(
+        `book compile input '${relative}' already exists — refusing to overwrite it`,
+      );
+    }
+    writeFileSync(output, content, "utf8");
+    process.stdout.write(`materialized ${relative}\n`);
+    written += 1;
+  }
+  if (written === 0) {
+    throw new Error("book compile input generation produced no modality files");
+  }
+  return written;
+}
+
 export function runBookGeneration(
   args = process.argv.slice(2),
   root = defaultCurriculumRoot(),
   options: BookGenerationLoadOptions = {},
 ): number {
   const mode = args.length === 1 ? args[0] : undefined;
+  const compileInputPrefix = "--materialize-compile-inputs=";
+  if (mode?.startsWith(compileInputPrefix)) {
+    const outputRoot = mode.slice(compileInputPrefix.length);
+    if (outputRoot.length === 0) {
+      process.stderr.write(
+        "usage: book-cli --materialize-compile-inputs=<empty-directory>\n",
+      );
+      return 2;
+    }
+    materializeBookCompileInputs(outputRoot, root, options);
+    return 0;
+  }
   if (mode !== "--check" && mode !== "--write") {
-    process.stderr.write("usage: book-cli (--check | --write)\n");
+    process.stderr.write(
+      "usage: book-cli (--check | --write | --materialize-compile-inputs=<empty-directory>)\n",
+    );
     return 2;
   }
   let mismatch = false;
@@ -776,6 +857,10 @@ export function runBookGeneration(
     }
   }
   for (const [relative, expected] of outputs) {
+    // Compile-only inputs are projected and validated above, then materialized
+    // into an isolated temporary root by the compile gate. They must never be
+    // compared with or written into the tracked curriculum tree.
+    if (isBookCompileInput(relative)) continue;
     const hashOwner = relative.startsWith(`${BOOK_HASH_MANIFEST_DIR}/`);
     const output = hashOwner
       ? mode === "--write"

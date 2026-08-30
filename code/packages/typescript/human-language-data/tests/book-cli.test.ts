@@ -16,6 +16,7 @@ import {
   generatedBookOutputs as generatedBookOutputsImpl,
   handwrittenBookChapters as handwrittenBookChaptersImpl,
   loadBookGenerationConfig as loadBookGenerationConfigImpl,
+  materializeBookCompileInputs as materializeBookCompileInputsImpl,
   runBookGeneration as runBookGenerationImpl,
 } from "../src/book-cli.js";
 import { defaultCurriculumRoot, loadTrackChapters } from "../src/loader.js";
@@ -30,6 +31,8 @@ const handwrittenBookChapters = (root?: string) =>
   handwrittenBookChaptersImpl(root, legacyFixture);
 const loadBookGenerationConfig = (root: string) =>
   loadBookGenerationConfigImpl(root, legacyFixture);
+const materializeBookCompileInputs = (outputRoot: string, root: string) =>
+  materializeBookCompileInputsImpl(outputRoot, root, legacyFixture);
 const runBookGeneration = (args?: string[], root?: string) =>
   runBookGenerationImpl(args, root, legacyFixture);
 
@@ -184,10 +187,19 @@ describe("canonical book generator filesystem shell", () => {
     );
     const modalities = join(root, "test", "book", "chapter-modalities.tex");
     expect(existsSync(chapter)).toBe(true);
-    expect(existsSync(modalities)).toBe(true);
+    expect(existsSync(modalities)).toBe(false);
     expect(readFileSync(manifest, "utf8")).toContain('"algorithm": "fnv1a64"');
     expect(readFileSync(chapterOwner, "utf8")).toContain('"chapter": 1');
-    expect(readFileSync(modalities, "utf8")).toContain(
+    const compileInputs = mkdtempSync(join(tmpdir(), "human-language-book-inputs-"));
+    roots.push(compileInputs);
+    expect(materializeBookCompileInputs(compileInputs, root)).toBe(1);
+    const stagedModalities = join(
+      compileInputs,
+      "test",
+      "book",
+      "chapter-modalities.tex",
+    );
+    expect(readFileSync(stagedModalities, "utf8")).toContain(
       "\\textbf{Hands-free start:} all 1 lesson.",
     );
     // sourceBaseUrl no longer feeds the book: a repository-relative link keeps
@@ -206,6 +218,21 @@ describe("canonical book generator filesystem shell", () => {
     expect(runBookGeneration(["--check"], root)).toBe(1);
     expect(process.stderr.write).toHaveBeenCalledWith(
       "test/book/chapters/ch01-first.tex: generated output is missing or stale\n",
+    );
+  });
+
+  it("requires a fresh isolated root for compile-only modality inputs", () => {
+    const root = fixture();
+    const compileInputs = mkdtempSync(join(tmpdir(), "human-language-book-inputs-"));
+    roots.push(compileInputs);
+    writeFileSync(join(compileInputs, "preexisting.txt"), "do not overwrite\n");
+    expect(() => materializeBookCompileInputs(compileInputs, root)).toThrow(
+      /must be empty/,
+    );
+
+    const missing = join(compileInputs, "missing");
+    expect(() => materializeBookCompileInputs(missing, root)).toThrow(
+      /existing real directory/,
     );
   });
 
@@ -518,8 +545,9 @@ Read`,
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runBookGeneration([], root)).toBe(2);
     expect(process.stderr.write).toHaveBeenCalledWith(
-      "usage: book-cli (--check | --write)\n",
+      "usage: book-cli (--check | --write | --materialize-compile-inputs=<empty-directory>)\n",
     );
+    expect(runBookGeneration(["--materialize-compile-inputs="], root)).toBe(2);
   });
 
   it("requires a canonical HTTP(S) source base URL", () => {

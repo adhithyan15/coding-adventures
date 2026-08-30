@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { lstatSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { renderBookChapterModalities } from "../src/book.js";
@@ -75,6 +75,10 @@ describe("book chapter modality projection", () => {
       const path = `${track.language}/book/chapter-modalities.tex`;
       const tex = outputs.get(path);
       expect(tex, path).toBeDefined();
+      expect(
+        () => lstatSync(join(root, path)),
+        `${path} must remain a compile-only projection, not a tracked rollup`,
+      ).toThrow(/ENOENT/);
       for (const entry of track.chapters) {
         expect(tex, `${path} chapter ${entry.chapter}`).toContain(
           `\\csname hlchaptermodality${entry.chapter}\\endcsname`,

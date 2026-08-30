@@ -224,5 +224,57 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+# 3. Compile-only modality TeX is found outside the book tree, and the isolated
+#    root is removed after the compile. The materializer is a static fixture;
+#    no repository data is used to construct executable JavaScript here.
+# ---------------------------------------------------------------------------
+BOOKS3="$TMP/books3"
+TEMP3="$TMP/compile-temp"
+mkdir -p "$BOOKS3/realtrack/book" "$TEMP3"
+cat > "$BOOKS3/realtrack/book/book.tex" <<'TEX'
+\documentclass{article}
+\input{chapter-modalities}
+\begin{document}Hello from an isolated modality input.\end{document}
+TEX
+
+MATERIALIZER3="$TMP/static-materializer.mjs"
+cat > "$MATERIALIZER3" <<'JS'
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+const prefix = "--materialize-compile-inputs=";
+const argument = process.argv[2] ?? "";
+if (!argument.startsWith(prefix)) process.exit(2);
+const root = argument.slice(prefix.length);
+const output = join(root, "realtrack", "book", "chapter-modalities.tex");
+mkdirSync(join(root, "realtrack", "book"), { recursive: true });
+writeFileSync(output, "% static compile-only test input\n", "utf8");
+JS
+
+out3="$(TMPDIR="$TEMP3" CHECK_BOOK_COMPILE_MATERIALIZER="$MATERIALIZER3" \
+  "$SCRIPT" --strict --book-root="$BOOKS3" --manifest="$TMP/m3.txt" 2>&1)"
+status3=$?
+
+if [ "$status3" -eq 0 ] && grep -q 'realtrack' "$TMP/m3.txt" 2>/dev/null; then
+  ok "a book resolves its modality input from the isolated compile tree"
+else
+  bad "a book resolves its modality input from the isolated compile tree" \
+      "exit=$status3 manifest=$(cat "$TMP/m3.txt" 2>/dev/null) output: $out3"
+fi
+
+if [ ! -e "$BOOKS3/realtrack/book/chapter-modalities.tex" ]; then
+  ok "materialization leaves the source book tree untouched"
+else
+  bad "materialization leaves the source book tree untouched" \
+      "chapter-modalities.tex was written into the source book directory"
+fi
+
+if [ -z "$(/usr/bin/find "$TEMP3" -mindepth 1 -print -quit 2>/dev/null)" ]; then
+  ok "the isolated compile-input root is cleaned after the run"
+else
+  bad "the isolated compile-input root is cleaned after the run" \
+      "temporary residue: $(/usr/bin/find "$TEMP3" -mindepth 1 -print 2>/dev/null)"
+fi
+
+# ---------------------------------------------------------------------------
 printf '\npassed %d, failed %d\n' "$PASS" "$FAIL"
 [ "$FAIL" = 0 ] || exit 1

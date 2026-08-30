@@ -127,16 +127,30 @@ fi
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
 BOOKS="$ROOT/code/learning/human-languages"
 RC="$ROOT/code/scripts/latexmk-safe.rc"
+COMPILE_INPUT_ROOT=""
+MATERIALIZE_COMPILE_INPUTS=1
 
 # `--book-root` is resolved the same way, so the containment comparison stays a
 # resolved-against-resolved test. The rc is deliberately NOT relocatable: it is
 # always loaded from this repository's `code/scripts/`, never from the tree being
 # compiled, which is the entire point of `-norc -r`.
 if [ -n "$BOOK_ROOT" ]; then
+  MATERIALIZE_COMPILE_INPUTS=0
   BOOKS="$(cd "$BOOK_ROOT" 2>/dev/null && pwd -P)" || {
     echo "--book-root does not exist or is not a directory: $BOOK_ROOT" >&2
     exit 2
   }
+fi
+
+# The guard suite can opt a static fixture into the same materialization path.
+# Keep the override behind the existing self-test gate: a normal caller must
+# never be able to redirect `node` to an arbitrary script by ambient state.
+if [ -n "${CHECK_BOOK_COMPILE_MATERIALIZER:-}" ]; then
+  if [ "${CHECK_BOOK_COMPILE_SELF_TEST:-}" != "1" ]; then
+    echo "CHECK_BOOK_COMPILE_MATERIALIZER is a test seam; set CHECK_BOOK_COMPILE_SELF_TEST=1 to use it." >&2
+    exit 2
+  fi
+  MATERIALIZE_COMPILE_INPUTS=1
 fi
 
 # Belt and braces for the rc.
@@ -226,6 +240,77 @@ command -v latexmk >/dev/null 2>&1 || {
   echo "CANNOT VERIFY: latexmk is not on PATH, so no book was compiled." >&2
   echo "  install a TeX distribution (TeX Live: 'latexmk texlive-xetex'; MiKTeX on Windows)" >&2
   exit 2
+}
+
+# `chapter-modalities.tex` is a deterministic compile input, not authored book
+# content. Materialize it outside the repository so lesson tranches do not
+# rewrite 23 tracked rollups, and remove the entire root on every ordinary exit.
+# A SIGKILL can prevent any process cleanup; using the system temporary area
+# still keeps that residue out of the checkout and out of Git.
+cleanup_compile_inputs() {
+  if [ -n "$COMPILE_INPUT_ROOT" ] && [ -d "$COMPILE_INPUT_ROOT" ]; then
+    rm -rf -- "$COMPILE_INPUT_ROOT"
+  fi
+}
+trap cleanup_compile_inputs EXIT
+
+if [ "$MATERIALIZE_COMPILE_INPUTS" = 1 ]; then
+  command -v node >/dev/null 2>&1 || {
+    echo "CANNOT VERIFY: node is required to derive chapter modality compile inputs." >&2
+    exit 2
+  }
+  MATERIALIZER="${CHECK_BOOK_COMPILE_MATERIALIZER:-$ROOT/code/packages/typescript/human-language-data/dist/book-cli.js}"
+  [ -f "$MATERIALIZER" ] || {
+    echo "CANNOT VERIFY: $MATERIALIZER is missing." >&2
+    echo "  build @coding-adventures/human-language-data before compiling the books" >&2
+    exit 2
+  }
+  COMPILE_INPUT_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/human-language-book-inputs.XXXXXX")" || {
+    echo "CANNOT VERIFY: could not create an isolated book compile-input directory." >&2
+    exit 2
+  }
+  if ! node "$MATERIALIZER" "--materialize-compile-inputs=$COMPILE_INPUT_ROOT"; then
+    echo "CANNOT VERIFY: chapter modality compile-input generation failed." >&2
+    exit 2
+  fi
+  stray_compile_link="$(/usr/bin/find "$COMPILE_INPUT_ROOT" -type l -print -quit 2>/dev/null)"
+  if [ -n "$stray_compile_link" ]; then
+    echo "CANNOT VERIFY: generated compile-input tree contains a symlink: $stray_compile_link" >&2
+    exit 2
+  fi
+fi
+
+compile_book() {
+  local book_dir="$1"
+  local track="$2"
+  if [ -n "$COMPILE_INPUT_ROOT" ]; then
+    local modality_input="$COMPILE_INPUT_ROOT/$track/book/chapter-modalities.tex"
+    if [ ! -f "$modality_input" ] || [ -L "$modality_input" ]; then
+      echo "missing real compile input: $modality_input" >&2
+      return 1
+    fi
+    # The leading entry is track-specific; the trailing empty entry preserves
+    # kpathsea's standard search path. Any inherited TEXINPUTS remains after the
+    # isolated directory rather than being silently discarded.
+    local tex_input_dir="$COMPILE_INPUT_ROOT/$track/book"
+    local tex_input_separator=":"
+    case "$(uname -s 2>/dev/null)" in
+      MINGW*|MSYS*)
+        # Native MiKTeX does not understand an MSYS `/tmp/...` path and uses
+        # semicolons, not colons, between search roots. Convert only the value
+        # passed to TeX; the shell keeps using the POSIX path for its guards.
+        tex_input_dir="$(cygpath -w "$tex_input_dir")" || return 1
+        tex_input_separator=";"
+        ;;
+    esac
+    ( cd "$book_dir" && \
+      TEXINPUTS="$tex_input_dir$tex_input_separator${TEXINPUTS:-}" \
+      latexmk -norc -r "$RC" -xelatex \
+        -interaction=nonstopmode -halt-on-error book.tex )
+    return
+  fi
+  ( cd "$book_dir" && latexmk -norc -r "$RC" -xelatex \
+      -interaction=nonstopmode -halt-on-error book.tex )
 }
 
 for dir in "$BOOKS"/*/book; do
@@ -358,8 +443,7 @@ for dir in "$BOOKS"/*/book; do
   # `-norc` stops the rc being READ; it does nothing to shell escape. `-r "$RC"`
   # is what disables shell escape; it does nothing to stop the repo's own rc
   # being read. Neither implies the other. Both, always.
-  if ( cd "$dir" && latexmk -norc -r "$RC" -xelatex \
-        -interaction=nonstopmode -halt-on-error book.tex ) \
+  if compile_book "$dir" "$track" \
       >"$log" 2>&1; then
     printf 'ok   %-12s\n' "$track"
     COMPILED=$((COMPILED + 1))
