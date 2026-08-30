@@ -10477,6 +10477,39 @@ corpus remain unchanged; all six live PRs still have zero exact overlap across
 the eight tranche paths, and the target remote branch and prior PR remain
 absent.
 
+## Post-#13502 Refresh and Swift Windows Front Selection
+
+PR #13502 completed all 43 reported checks acceptably: 36 successes, six
+expected skips, and one neutral CodeQL gate. Auto-merge was enabled only after
+GitHub reported final head
+`7a02e9dc9b8093fc2e3e37a3233d2ce66462099a` clean and mergeable, and GitHub
+merged it as `d066aff6def388278bd0ad723ffc22bd8b8a766e` at
+2026-08-30T15:46:47Z without a manual merge command. The Swift Dune owner
+therefore advances to `merged` and the active PR is cleared.
+
+The collision-checked exact-main inventory remains schema 3 with 15
+established lanes, 1,388 implementation identities, 4,602 slots, and 1,427
+all-reported identities. Completion bands remain 175/265, 123/934, 170/2,139,
+and 920/12,880; Rust has 731 singletons, OCaml remains emerging at zero
+packages, and collisions and unknown buckets remain zero. Changes since the
+post-#13498 baseline add or remove no package root or canonical identity, and
+no newly unowned eligible package or build-tool gap appeared.
+
+The dependency/leverage pass selects
+`build-tool-swift-windows-test-front-failure-propagation` on branch
+`codex/build-tool-swift-windows-test-front-failure-propagation`. Its sole Dune
+prerequisite is merged. The bounded repair directly unlocks Swift declaration
+validation and preserves the documented Rust-to-Swift-to-TypeScript
+declaration lane order. TypeScript Dune has broader raw fan-out, but completing
+this already-open Swift chain first has greater immediate payoff and prevents
+a declaration claim from passing through a Windows front that currently masks
+native test failures as toolchain absence. Swift 6.3.3 is installed and the
+exact front is locally executable. The target branch and prior PR are absent,
+and six live PRs have zero exact overlap across the expected seven-path Swift,
+state, roadmap, and root-changelog tranche. Reconciliation plus selection
+leaves the complete 580-owner/864-edge graph at 178 merged, 401 pending, and
+exactly one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
