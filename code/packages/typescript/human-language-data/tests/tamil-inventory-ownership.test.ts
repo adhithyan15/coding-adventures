@@ -88,7 +88,7 @@ describe("Tamil canonical inventory ownership", () => {
         ).toEqual([match![1]]);
       }
     }
-    expect(names(inventoryRoot, "letters")).toHaveLength(25);
+    expect(names(inventoryRoot, "letters")).toHaveLength(26);
     expect(names(inventoryRoot, "marks")).toHaveLength(9);
   });
 

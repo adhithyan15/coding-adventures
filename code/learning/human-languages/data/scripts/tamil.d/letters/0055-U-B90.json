@@ -1,0 +1,26 @@
+{
+  "glyph": "ஐ",
+  "sound": "ai",
+  "role": "independent-vowel",
+  "components": [
+    "an upper-left spiral",
+    "a central upright",
+    "an upper-right loop returning left across the middle",
+    "two separate lower bowls"
+  ],
+  "strokeOrder": [
+    "curl inward around the upper-left spiral — then lift once",
+    "set the pen at the middle and draw the central upright upward — then lift a second time",
+    "start at the top of the upright, sweep around the upper-right loop, and return left across the middle — then lift a third time",
+    "set the pen at the left end of the middle bar and circle the lower-left bowl back toward the centre — then lift a fourth time",
+    "set the pen at the centre, descend, and circle through the lower-right bowl"
+  ],
+  "strokeOrderNote": "five strokes — the upper-left spiral, central upright, upper-right loop with middle return, lower-left bowl, and lower-right bowl are separate pen-down runs; source-verified against the 13-frame Writing Tamil 10 animation and Radhakrishnan Appendix I Frame 11",
+  "penLifts": 4,
+  "strokeOrderSource": {
+    "citation": "Info-farmer, Writing Tamil 10.gif, ஐ stroke-order animation (Wikimedia Commons, CC BY-SA 3.0, 2008), cross-checked with Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I Frame 11 (University of Texas at Austin), p. 194",
+    "url": "https://commons.wikimedia.org/wiki/File:Writing_Tamil_10.gif",
+    "variation": "The 13-frame animation writes five separate runs in order: upper-left spiral, upward central upright, upper-right loop returning left across the middle, lower-left bowl, then lower-right bowl. Radhakrishnan's Appendix I Frame 11 independently numbers the same shape as seven movements. This five-run learner path fits those movements to the bundled Noto Sans Tamil outline; Tamil handwriting varies by school."
+  },
+  "notes": "Independent ai begins words such as ஐந்து (aintu, five). The two lower bowls are written separately after the completed upper body."
+}
