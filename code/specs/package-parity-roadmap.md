@@ -10279,7 +10279,10 @@ no vulnerability. The complete build-tool conformance family passes 205 tests
 with 23 expected platform skips; the neutral corpus validates all 119 cases and
 283 files across 16 implementations and 15 established lanes, and the
 execution contract remains valid. The Go oracle passes all packages, vet, and
-trimpath compilation.
+trimpath compilation. A real exact-diff Rust dry plan evaluates 45 Starlark
+BUILD files, discovers and validates 1,172 Rust packages, preserves the
+five-entry orphan ledger, identifies exactly `rust/programs/build-tool` as the
+one changed and affected package, and reports one would-build plus 1,171 skips.
 
 The collision-checked schema-3 report remains unchanged at 15 established
 lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported
@@ -10293,6 +10296,16 @@ unrelated bulk reformat was introduced. Diff, generated-artifact,
 credential-pattern, dependency, BUILD, parity, and collision checks are clean.
 Live PRs #13493, #13467, #13455, #13452, and #7821 have no changed-path overlap;
 #12165 shares only `lessons.md` at a disjoint line-272 coverage hunk.
+
+Independent read-only review of the complete implementation and validation
+diff found no actionable correctness, security, lifecycle, graph,
+documentation, or validation issue. It independently reproduced the focused
+and shared regressions, complete Rust suites, literal Windows BUILD front,
+strict Clippy, release build, coverage, dependency audit, neutral corpus,
+execution contract, state traversal, diff hygiene, and generated-artifact
+cleanup. The exact-component match adds no realpath, normalization,
+symlink-follow, process, environment, network, dependency, credential, or other
+authority; the separately classified hashing gap remains honestly pending.
 
 ## Autonomous Loop Protocol
 
