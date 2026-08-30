@@ -10721,6 +10721,14 @@ this repair advances rather than immediately unlocks declaration conformance,
 which still depends on the pending static build front; and it satisfies only
 TypeScript's Dune-umbrella edge while six other engine owners remain pending.
 
+Ready-for-review PR #13514 opened from validated head
+`2847a4b2c7cafcc325617b711d69592e604f373a` after a normal first push. Exact
+`origin/main` remained the rebased base, all seven changed paths have zero
+exact overlap across six other live PRs, and GitHub reports the PR mergeable,
+conflict-free, and non-draft. Required CI, TypeScript-build, and CodeQL checks
+are queued or in progress, so auto-merge remains disabled until every required
+check is terminal and acceptable and GitHub still reports no conflict.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
