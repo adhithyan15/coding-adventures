@@ -11,24 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13485,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13485",
-    "branch": "codex/build-tool-perl-extra-ci-toolchain-declaration-conformance",
-    "implementation_revision": "cf8c3f32fb09cffd5b6731f277d6c6fa267d81cb",
-    "status": "checks-pending",
-    "opened_at": "2026-08-30T10:43:26Z"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-30T10:43:39Z",
+    "observed_at": "2026-08-30T11:00:10Z",
     "pr_number": 13485,
     "run_id": null,
     "attempt": 1,
-    "status": "checks-pending",
-    "notes": "Opened ready-for-review PR #13485 from validated implementation head cf8c3f32fb09cffd5b6731f277d6c6fa267d81cb. GitHub reports the branch mergeable and non-draft, but CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict."
+    "status": "merged",
+    "notes": "PR #13485 reached 40 terminal acceptable checks: 33 successes and seven expected skips. Auto-merge was enabled only after GitHub reported the branch conflict-free, and GitHub merged validated head 64c29085268aac4403cb7dabf3dee1bc07dcfcf8 as ca4e5c1c04e8822da233dce3bc2ac57e3396c055 at 2026-08-30T11:00:10Z without a manual merge command."
   },
   "last_inventory": {
-    "revision": "ed0fa54984dde17f8b8d1d61ee0cc0ac2f4c02f8",
+    "revision": "ca4e5c1c04e8822da233dce3bc2ac57e3396c055",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -357,7 +350,7 @@
     {
       "id": "build-tool-perl-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Perl build tool consume extra CI toolchain declarations",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
       "branch": "codex/build-tool-perl-extra-ci-toolchain-declaration-conformance",
       "pr_number": 13485,
@@ -366,15 +359,18 @@
       "validation_notes": "Test-first execution failed on the deliberately absent CodingAdventures::BuildTool::ToolchainDetection module before source was added. The completed pure evaluator dynamically discovers and consumes all 11 neutral declaration fixtures and passes direct byte, logical-line, aggregate, CRLF, empty-front, fresh-registry, affected-selection, force-full, forced-toolchain, unsupported-value, Perl-internal-UTF8-flag, and caller-mutation probes. Source and test syntax checks pass; the focused native file passes six top-level tests, and the real Windows BUILD commands install dependencies and pass the complete package suite at 15 files and 142 tests, including t/13's IPC::Open3 CLI check. Focused Devel::Cover reports 98.9% statement, 88.4% branch, 71.4% condition, 100% subroutine, and 91.5% total production-module coverage; severity-5 Perl::Critic is clean. The neutral corpus validates 119 cases and 283 files, 182 conformance tests pass with 23 expected platform skips and 236 subtests, and 66 package-parity/capability/Haskell/OCaml-lock tests pass with two expected Windows symlink skips and 812 subtests. The Go oracle passes module verification, all tests, vet, and trimpath build. The schema-3 parity report remains collision-clean at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, 731 Rust singletons, zero OCaml packages, and zero unknown buckets. The 566-owner/833-edge state is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges with 172 merged, 393 pending, and exactly this item in progress. Six live PRs have zero exact overlap with all nine changed paths; diff hygiene, credential scans, and direct production-authority scans are clean. CPAN::Audit 20260622.001 with database 20260816.002 reports three exact Perl 5.42.2 runtime advisories (CPANSA-perl-2026-57432, CPANSA-perl-2026-15534, and CPANSA-perl-2026-8376), while JSON::PP 4.18 and Test2::V0 1.302219 are absent from that advisory database; remediation and database-floor interpretation remain owned by pending build-tool-perl-runtime-security-floor rather than suppressed here. The production module imports only core bytes and JSON::PP, gains no filesystem, Git, process, environment, network, credential, FFI, or execution authority, changes no production dependency, and replaces only the stale Windows test-front skip with the same full suite used by the generic front.",
       "publication_notes": "Opened ready-for-review PR #13485 from clean validated implementation head cf8c3f32fb09cffd5b6731f277d6c6fa267d81cb after a normal first push. Immediately before publication, the branch was based on exact origin/main ed0fa54984dde17f8b8d1d61ee0cc0ac2f4c02f8, the target remote branch and prior PR were absent, and all nine changed paths had zero exact overlap across six live PRs. GitHub reports the PR mergeable and non-draft, currently blocked only by queued or in-progress CI and CodeQL checks; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "review_notes": "Three independent read-only audits covered contract semantics, fixture consumption, state and inventory integrity, live-PR overlap, local toolchain compatibility, and security scope. Two audits independently found the same Perl internal-UTF8-flag byte-count defect before publication; the evaluator now upgrades a copy before counting, and the unflagged chr(233) regression proves rejection without caller mutation. The third audit corrected the advisory interpretation and demonstrated that t/13 plus the full 15-file suite pass on native Windows; state now records the three exact runtime advisories and two database-coverage limits, and BUILD_windows runs the full suite instead of skipping it. Focused production coverage is 91.5%, and no other actionable finding remains.",
+      "merge_notes": "PR #13485 completed 40 terminal acceptable checks: 33 successes and seven expected skips. After GitHub reported the validated head conflict-free, guarded squash auto-merge merged it as ca4e5c1c04e8822da233dce3bc2ac57e3396c055 at 2026-08-30T11:00:10Z without a manual merge command.",
       "notes": "Adopt the merged process-free declaration corpus in the Perl engine without widening execution authority."
     },
     {
       "id": "build-tool-python-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Python build tool consume extra CI toolchain declarations",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
-      "branch": null,
+      "branch": "codex/build-tool-python-extra-ci-toolchain-declaration-conformance",
       "pr_number": null,
+      "selection_revision": "ca4e5c1c04e8822da233dce3bc2ac57e3396c055",
+      "selection_notes": "Selected after merged PR #13485 and a collision-clean exact-main refresh. The five remaining declaration consumers have equal dependencies and graph leverage; Python wins the documented ordering after Perl and closes the reference runtime through the same bounded pure boundary. Python 3.13.14, pytest 9.1.1, pytest-cov 7.1.0, Coverage.py 7.14.3, Ruff 0.15.20, mypy 2.1.0, Bandit 1.8.6, pip-audit 2.10.1, build 1.5.0, and uv 0.11.28 are installed locally; the Python 3.13 Scripts directory must be prepended because uv is outside this shell's default PATH. The inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Six live PRs have zero exact overlap with the expected eight-path Python tranche. PR #13455 prospectively adds the already-owned TypeScript Forme CLI root, and PR #13486 touches only existing human-language roots; no new eligible unowned gap displaces Python.",
       "notes": "Adopt the merged process-free declaration corpus in the Python engine without widening execution authority."
     },
     {

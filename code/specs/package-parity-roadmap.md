@@ -10071,6 +10071,44 @@ were disjoint from the Perl selection, so the fresh parity branch rebased
 cleanly onto that exact `origin/main`. A repeat collision gate left every
 inventory count unchanged, and Perl remains the selected owner.
 
+## Post-#13485 Refresh and Python Declaration-Engine Selection
+
+PR #13485 completed 40 terminal acceptable checks: 33 successes and seven
+expected skips. Auto-merge was enabled only after GitHub reported the branch
+conflict-free, and GitHub merged validated head
+`64c29085268aac4403cb7dabf3dee1bc07dcfcf8` as
+`ca4e5c1c04e8822da233dce3bc2ac57e3396c055` at 2026-08-30T11:00:10Z without a
+manual merge command. Perl therefore advances to `merged` and the active PR is
+cleared.
+
+The collision-checked exact-main inventory remains 15 established lanes,
+1,388 implementation identities, 4,602 slots, and 1,427 all-reported
+identities. Completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and collisions and unknown buckets remain zero. The neutral corpus remains
+schema 1 with 119 cases, 283 files, 16 implementations, 15 established lanes,
+and 12 front doors.
+
+The five unfinished declaration consumers have equal dependencies and graph
+leverage. The readiness pass selects
+`build-tool-python-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-python-extra-ci-toolchain-declaration-conformance`. Python
+wins the documented ordering after Perl and closes the reference runtime
+through the same bounded process-free boundary. Python 3.13.14, pytest 9.1.1,
+pytest-cov 7.1.0, Coverage.py 7.14.3, Ruff 0.15.20, mypy 2.1.0, Bandit 1.8.6,
+pip-audit 2.10.1, build 1.5.0, and uv 0.11.28 are installed locally. The Python
+3.13 Scripts directory must be prepended because uv is outside this shell's
+default PATH.
+
+Six live PRs have zero exact overlap with the expected Python tranche. PR
+#13455 prospectively adds TypeScript-only `forme-cli`, which remains covered
+by the existing `forme-portable-core-family-classification` owner. PR #13486
+touches only existing human-language data and script-ductus roots. Intervening
+merged PR #13484 likewise changed curriculum and existing human-language roots
+only. No newly eligible unowned gap displaces Python. After reconciliation and
+selection, the 566-owner, 833-edge graph contains 173 merged, 392 pending, and
+one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
