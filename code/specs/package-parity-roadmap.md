@@ -10140,8 +10140,8 @@ graph leverage. The readiness pass selects
 the documented ordering after Python and supplies another independent runtime
 through the same bounded process-free boundary. Ruby 3.4.9 with PRISM and
 Bundler 2.6.9 are installed locally, and the existing bundle is satisfied.
-All six live open PRs have zero exact overlap with the expected nine Ruby
-paths. PR #13455 prospectively adds TypeScript-only `forme-cli`, which remains
+All six live open PRs have zero exact overlap with the expected Ruby
+declaration paths. PR #13455 prospectively adds TypeScript-only `forme-cli`, which remains
 covered by the existing `forme-portable-core-family-classification` owner.
 After reconciliation and selection, the 566-owner, 833-edge graph contains 174
 merged, 391 pending, and one `in-progress` owner.
@@ -10157,6 +10157,17 @@ reviewed exception applies. The gap is classified under the pending
 carries the minimum exact-component discovery regression needed to restore its
 canonical BUILD suite, while the separately owned generated-directory hashing
 repair remains out of scope.
+
+The same read-only fixture audit found newly eligible cross-engine debt. Rust,
+Swift, and TypeScript consume the complete registry fixture but lack `_build`;
+Python projects the OCaml records away and lacks the rule; C#/F# and Haskell
+need both behavior and fixture evidence; and already-correct Elixir, Lua, and
+Perl still need independent shared-fixture consumption. Nine engine-scoped
+owners plus `build-tool-dune-build-discovery-exclusion-remaining-engines` now
+classify that work. Ruby remains owned by the active declaration tranche, so
+implementation delivery stays serial with one active item and one PR. The
+expanded graph contains 576 owners and 855 edges: 174 merged, 401 pending, and
+one `in-progress` owner.
 
 ## Autonomous Loop Protocol
 

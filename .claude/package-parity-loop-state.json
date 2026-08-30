@@ -420,6 +420,108 @@
       "notes": "Adopt the merged process-free declaration corpus in the TypeScript engine without widening execution authority."
     },
     {
+      "id": "build-tool-dune-build-discovery-exclusion-remaining-engines",
+      "title": "Complete exact Dune _build discovery exclusion across build tools",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-ruby-extra-ci-toolchain-declaration-conformance",
+        "build-tool-rust-dune-build-discovery-exclusion",
+        "build-tool-swift-dune-build-discovery-exclusion",
+        "build-tool-typescript-dune-build-discovery-exclusion",
+        "build-tool-csharp-fsharp-dune-build-discovery-conformance",
+        "build-tool-haskell-dune-build-discovery-conformance",
+        "build-tool-python-dune-build-discovery-conformance",
+        "build-tool-elixir-dune-build-discovery-fixture-adoption",
+        "build-tool-lua-dune-build-discovery-fixture-adoption",
+        "build-tool-perl-dune-build-discovery-fixture-adoption"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for the exact case-sensitive Dune _build generated-artifact rule introduced with the OCaml discovery fixture. Keep repairs engine-scoped and require explicit shared-fixture evidence; the selected Ruby declaration tranche owns its minimum package-suite unblock, while every other lane remains independently reviewable."
+    },
+    {
+      "id": "build-tool-rust-dune-build-discovery-exclusion",
+      "title": "Make Rust build-tool discovery honor the Dune _build exclusion",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-rust-language-identity-registry"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Rust consumes the complete shared discovery-language-registry fixture but does not prune the exact _build component. Add the bounded exact-component repair and preserve case variants and near names in its own engine tranche."
+    },
+    {
+      "id": "build-tool-swift-dune-build-discovery-exclusion",
+      "title": "Make Swift build-tool discovery honor the Dune _build exclusion",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-swift-language-identity-registry"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Swift consumes the complete shared discovery-language-registry fixture but does not prune the exact _build component. Add the bounded exact-component repair and preserve case variants and near names in its own engine tranche."
+    },
+    {
+      "id": "build-tool-typescript-dune-build-discovery-exclusion",
+      "title": "Make TypeScript build-tool discovery honor the Dune _build exclusion",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-typescript-language-identity-registry"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "TypeScript consumes the complete shared discovery-language-registry fixture but does not prune the exact _build component. Add the bounded exact-component repair and preserve case variants and near names in its own engine tranche."
+    },
+    {
+      "id": "build-tool-csharp-fsharp-dune-build-discovery-conformance",
+      "title": "Prove Dune _build discovery exclusion in the C# and F# build tools",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The shared C#/F# engine neither consumes the full registry fixture nor exposes the exact Dune exclusion. Add native C# behavior coverage and explicit F# facade evidence without pretending that one runtime silently covers the other."
+    },
+    {
+      "id": "build-tool-haskell-dune-build-discovery-conformance",
+      "title": "Prove Dune _build discovery exclusion in the Haskell build tool",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Haskell does not consume the shared language-registry fixture and mentions _build only in orphan validation. Add the exact discovery rule and language-neutral fixture consumption in one bounded Haskell tranche."
+    },
+    {
+      "id": "build-tool-python-dune-build-discovery-conformance",
+      "title": "Prove Dune _build discovery exclusion in the Python build tool",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Python's current registry test projects out OCaml inputs and its discovery skip set lacks exact _build. Consume the relevant fixture records, add the exact rule, and preserve case variants and near names without widening host authority."
+    },
+    {
+      "id": "build-tool-elixir-dune-build-discovery-fixture-adoption",
+      "title": "Make Elixir consume the Dune discovery fixture",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Elixir already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence."
+    },
+    {
+      "id": "build-tool-lua-dune-build-discovery-fixture-adoption",
+      "title": "Make Lua consume the Dune discovery fixture",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Lua already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence."
+    },
+    {
+      "id": "build-tool-perl-dune-build-discovery-fixture-adoption",
+      "title": "Make Perl consume the Dune discovery fixture",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Perl already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence."
+    },
+    {
       "id": "build-tool-typescript-dist-newstyle-discovery-exclusion",
       "title": "Make TypeScript build-tool discovery honor the dist-newstyle exclusion",
       "status": "merged",
