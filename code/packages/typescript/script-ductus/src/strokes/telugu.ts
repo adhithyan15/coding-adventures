@@ -486,6 +486,109 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:ఐ",
+    {
+      script: "telugu",
+      glyph: "ఐ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep left across the compact upper arch",
+              path: [
+                { x: 390, y: 370 },
+                { x: 365, y: 405 },
+                { x: 335, y: 430 },
+                { x: 300, y: 450 },
+                { x: 260, y: 460 },
+                { x: 220, y: 455 },
+                { x: 185, y: 425 },
+                { x: 230, y: 410 },
+                { x: 270, y: 380 },
+                { x: 295, y: 340 },
+                { x: 290, y: 300 },
+                { x: 260, y: 270 },
+                { x: 220, y: 245 },
+                { x: 180, y: 230 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curve down around the left bowl",
+              path: [
+                { x: 52, y: 302 },
+                { x: 42, y: 250 },
+                { x: 55, y: 170 },
+                { x: 80, y: 95 },
+                { x: 120, y: 45 },
+                { x: 180, y: 22 },
+                { x: 240, y: 30 },
+                { x: 290, y: 70 },
+                { x: 325, y: 115 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep right around the broad lower bowl",
+              path: [
+                { x: 285, y: 140 },
+                { x: 330, y: 90 },
+                { x: 380, y: 50 },
+                { x: 440, y: 25 },
+                { x: 500, y: 25 },
+                { x: 555, y: 45 },
+                { x: 610, y: 80 },
+                { x: 650, y: 135 },
+                { x: 668, y: 200 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep left across the upper-right arch",
+              path: [
+                { x: 650, y: 300 },
+                { x: 630, y: 365 },
+                { x: 590, y: 420 },
+                { x: 535, y: 455 },
+                { x: 480, y: 465 },
+                { x: 425, y: 450 },
+                { x: 375, y: 420 },
+                { x: 340, y: 390 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep left across the upper-left arch",
+              path: [
+                { x: 323, y: 396 },
+                { x: 295, y: 435 },
+                { x: 255, y: 465 },
+                { x: 205, y: 478 },
+                { x: 155, y: 472 },
+                { x: 110, y: 450 },
+                { x: 75, y: 415 },
+                { x: 55, y: 375 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguIndependentVowelSource("ఐ"),
+    },
+  ],
+  [
     "telugu:ఋ",
     {
       script: "telugu",

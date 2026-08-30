@@ -5620,8 +5620,21 @@
       "components": [
         "ఐ  ai — independent vowel (word-initial)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "sweep left across the compact upper arch",
+        "restart and curve down around the left bowl",
+        "restart and sweep right around the broad lower bowl",
+        "restart and sweep left across the upper-right arch",
+        "restart and sweep left across the upper-left arch"
+      ],
+      "strokeOrderNote": "Five numbered movements shown as five separate pen-down runs: the compact upper arch, left bowl, broad lower bowl, upper-right arch, and upper-left arch.",
+      "penLifts": 4,
+      "strokeOrderSource": {
+        "url": "https://write-telugu-alphabets.en.aptoide.com/app",
+        "citation": "Sathish Shanmugam, Write Telugu Alphabets, independent vowel ఐ packaged tracing guide res/drawable/dot_stroke_v_11_ai.png, movements 1–5 (version 2.6)",
+        "accessed": "2026-08-30",
+        "variation": "The packaged tracing guide numbers five disconnected directional movements, each drawn as a separate pen-down run: movements 1–3 construct the central and lower body before movements 4–5 add the two upper arches from right to left. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+      }
     },
     {
       "glyph": "ఔ",
