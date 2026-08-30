@@ -10207,6 +10207,50 @@ mergeable, and conflict-free. Required CI and CodeQL checks are queued or in
 progress, so the item advances to `pr-open` and auto-merge remains disabled.
 The graph now contains 174 merged, 401 pending, and one `pr-open` owner.
 
+## Post-#13492 Refresh and Rust Dune-Discovery Selection
+
+PR #13492 completed 41 terminal acceptable checks: 34 successes, six expected
+skips, and one neutral result. Auto-merge was enabled only after GitHub reported
+the branch conflict-free, and GitHub merged validated head
+`b629208ff664ed8787029a0a754c82a504fcf265` as
+`400fe841123ce0631b64770a7092bf5795bd1525` at 2026-08-30T12:50:40Z without a
+manual merge command. Ruby declaration conformance therefore advances to
+`merged` and the active PR is cleared.
+
+The collision-checked exact-main inventory remains 15 established lanes,
+1,388 implementation identities, 4,602 slots, and 1,427 all-reported
+identities. Completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and collisions and unknown buckets remain zero. Merged PR #13491 then advanced
+main to `d43d10b0b716419cbb3bc4411e8fc1b7bbc25fcf` with only existing Tamil
+curriculum, human-language-data, script-ductus, language-ladder, and HL34
+changes. It adds no package identity, build marker, build-tool surface,
+collision, or unowned parity gap.
+
+The readiness audit found that the remaining Rust, Swift, and TypeScript
+declaration owners are dependency-eligible but not yet validation-ready. Each
+engine consumes the complete shared discovery-language-registry fixture, whose
+OCaml workspace includes an exact Dune `_build` decoy that the expected result
+excludes, while none of those three discovery engines currently prunes the
+exact component. Their existing engine-scoped Dune owners have merged
+prerequisites, so each declaration owner now depends on its matching Dune
+repair. This makes the ownership graph explicit instead of allowing a known
+full-suite failure to be folded into an unrelated declaration tranche.
+
+The dependency/leverage pass selects
+`build-tool-rust-dune-build-discovery-exclusion` on branch
+`codex/build-tool-rust-dune-build-discovery-exclusion`. A complete exact-main
+Rust package run passes 148 tests and fails only the registered shared fixture,
+where unchanged discovery emits `ocaml/decoy`. Rust wins because this bounded
+repair unlocks both the documented next declaration lane after Ruby and the
+Dune completion umbrella. Rust 1.97.0, Clippy 0.1.97,
+`cargo-llvm-cov` 0.8.7, and `cargo-audit` 0.22.2 are installed locally.
+All five live PRs have zero exact overlap with the Rust discovery, package
+documentation, state, root changelog, and roadmap surfaces. After lifecycle
+reconciliation, dependency repair, and selection, the complete graph contains
+576 owners and 858 edges: 175 merged, 400 pending, and exactly one
+`in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

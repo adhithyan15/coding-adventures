@@ -11,24 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13492,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13492",
-    "branch": "codex/build-tool-ruby-extra-ci-toolchain-declaration-conformance",
-    "implementation_revision": "c723aea0dcfe0e9346bf6ca15b13d4a586e374af",
-    "status": "checks-pending",
-    "opened_at": "2026-08-30T12:31:10Z"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-30T12:31:14Z",
+    "observed_at": "2026-08-30T12:50:40Z",
     "pr_number": 13492,
     "run_id": null,
     "attempt": 1,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #13492 is open and non-draft. GitHub reports the branch mergeable and conflict-free, but required CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged-via-auto-merge",
+    "notes": "All 41 reported checks reached terminal acceptable conclusions: 34 successes, six expected skips, and one neutral result. GitHub reported validated head b629208ff664ed8787029a0a754c82a504fcf265 clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #13492 as 400fe841123ce0631b64770a7092bf5795bd1525 without a manual merge command."
   },
   "last_inventory": {
-    "revision": "0a5cfd29a338c4a24409ff6debbfef23bcbd0ef7",
+    "revision": "d43d10b0b716419cbb3bc4411e8fc1b7bbc25fcf",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -391,7 +384,7 @@
     {
       "id": "build-tool-ruby-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Ruby build tool consume extra CI toolchain declarations",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
       "branch": "codex/build-tool-ruby-extra-ci-toolchain-declaration-conformance",
       "pr_number": 13492,
@@ -407,13 +400,17 @@
       "validation_notes": "Test-first execution failed on the deliberately absent BuildTool::ToolchainDetection module before source was added. The completed pure evaluator independently consumes all 11 neutral declaration fixtures and passes encoded-UTF8 byte, logical-line, aggregate, CRLF, stable-deduplication, empty-front, null-versus-empty selection, forced-full, forced-toolchain, unsupported-precedence, frozen-registry, fresh-result, caller-mutation, public-parser ceiling, and unsupported-platform probes. Pre-implementation full-suite validation also reproduced one exact-main shared-fixture failure: PR #13366 added the Dune _build decoy, while byte-identical Ruby discovery emitted only ocaml/decoy beyond the expected set. The minimum exact-component repair now excludes _build while direct tests preserve _Build and _build-example; the unchanged full registry fixture passes. The literal Ruby BUILD workflow passes 347 tests and 848 assertions with one expected skip, 90.96% line coverage, 76.35% branch coverage, and 100% line coverage across the new 98-line production module. The public declaration parser rejects oversized bytes or logical lines before splitting, and target-platform validation runs before force-full or empty-selection shortcuts. The neutral schema and runner suites pass 22 and 62 tests, and the corpus validates 119 cases and 283 files across 16 implementations and 15 established lanes. Package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock suites pass 68 tests with two expected Windows skips. The Go oracle passes all packages, vet, and trimpath build; a real forced Ruby dry plan evaluates 45 Starlark files and reports all 305 Ruby packages WOULD-BUILD, while the exact diff plan selects only ruby/programs/build-tool with 304 skips. The schema-3 report remains collision-clean at 15 lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, 731 Rust singletons, zero OCaml packages, and zero unknown buckets. The expanded 576-owner/855-edge graph is unique and dependency-complete with 174 merged, 401 pending, and exactly this owner in progress. Fresh ruby-advisory-db c7562c261741 reports no vulnerability. Direct StandardRB reproduces the exact existing discovery baseline and reports only the repository's Windows line-ending policy on the new source/tests, with no substantive new offense. Dependency and BUILD metadata are unchanged; production-authority, credential-pattern, generated-artifact, JSON, diff, and collision gates are clean.",
       "review_notes": "Independent correctness review found and corrected one temporal roadmap claim, then confirmed exact declaration semantics, Dune case sensitivity, and fixture coverage. Independent security review found that the initially public parser could split over-ceiling direct input and that unsupported target platforms fell back to generic BUILD; direct red tests captured both, and the final implementation rejects both boundaries before selection or allocation. Independent state and inventory review confirmed the exact-main rebase, complete 576-owner/855-edge graph, all newly classified Dune lanes, and collision-clean inventory. The final six-PR audit has no overlap on Ruby code, tests, specs, changelogs, README, state, or roadmap; unrelated PR #12165 shares only lessons.md at a disjoint Rust-coverage hunk, while this tranche adds the required process-free-boundary lesson at the file top.",
       "publication_notes": "Opened ready-for-review PR #13492 from clean validated head c723aea0dcfe0e9346bf6ca15b13d4a586e374af after a normal first push. Immediately before publication, the branch was rebased onto exact origin/main 0a5cfd29a338c4a24409ff6debbfef23bcbd0ef7; the target remote branch and prior PR were absent; and six live PRs had no overlap on implementation, tests, specs, changelogs, README, state, or roadmap. Unrelated #12165 shares only lessons.md at a disjoint hunk. GitHub reports PR #13492 non-draft, mergeable, and conflict-free, currently blocked only by queued or in-progress CI and CodeQL checks; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "final_revision": "b629208ff664ed8787029a0a754c82a504fcf265",
+      "merged_at": "2026-08-30T12:50:40Z",
+      "merge_commit": "400fe841123ce0631b64770a7092bf5795bd1525",
+      "merge_notes": "All 41 final checks were acceptable: 34 successes, six expected skips, and one neutral result. GitHub reported the final head conflict-free; guarded squash auto-merge was enabled and GitHub merged the PR without a manual merge command.",
       "notes": "Adopt the merged process-free declaration corpus in the Ruby engine without widening execution authority. Pre-implementation full-suite validation also reproduced one exact-main failure introduced when PR #13366 added the Dune _build decoy to the shared language-registry fixture: unchanged Ruby discovery emits only ocaml/decoy beyond the expected set. This tranche carries the minimum exact-component discovery regression repair classified under build-tool-existing-remediation so the real Ruby BUILD and CI can pass; the separately owned generated-directory hashing repair remains out of scope."
     },
     {
       "id": "build-tool-rust-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Rust build tool consume extra CI toolchain declarations",
       "status": "pending",
-      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-rust-dune-build-discovery-exclusion"],
       "branch": null,
       "pr_number": null,
       "notes": "Adopt the merged process-free declaration corpus in the Rust engine without widening execution authority."
@@ -422,7 +419,7 @@
       "id": "build-tool-swift-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Swift build tool consume extra CI toolchain declarations",
       "status": "pending",
-      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-swift-dune-build-discovery-exclusion"],
       "branch": null,
       "pr_number": null,
       "notes": "Adopt the merged process-free declaration corpus in the Swift engine without widening execution authority."
@@ -431,7 +428,7 @@
       "id": "build-tool-typescript-extra-ci-toolchain-declaration-conformance",
       "title": "Make the TypeScript build tool consume extra CI toolchain declarations",
       "status": "pending",
-      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
+      "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening", "build-tool-typescript-dune-build-discovery-exclusion"],
       "branch": null,
       "pr_number": null,
       "notes": "Adopt the merged process-free declaration corpus in the TypeScript engine without widening execution authority."
@@ -460,10 +457,12 @@
     {
       "id": "build-tool-rust-dune-build-discovery-exclusion",
       "title": "Make Rust build-tool discovery honor the Dune _build exclusion",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-rust-language-identity-registry"],
-      "branch": null,
+      "branch": "codex/build-tool-rust-dune-build-discovery-exclusion",
       "pr_number": null,
+      "selection_revision": "d43d10b0b716419cbb3bc4411e8fc1b7bbc25fcf",
+      "selection_notes": "Selected after PR #13492 completed 41 terminal acceptable checks and merged through guarded squash auto-merge as 400fe841123ce0631b64770a7092bf5795bd1525, followed by a collision-checked exact-main inventory refresh. Merged PR #13491 then advanced main to d43d10b0b716419cbb3bc4411e8fc1b7bbc25fcf with only existing Tamil curriculum and TypeScript human-language data, script-ductus, language-ladder, and HL34 changes; it adds no package identity, build marker, build-tool surface, collision, or owner gap. The inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. A complete exact-main Rust package run reproduces the registered shared-fixture regression with 148 tests passing and only discovery-language-registry failing because ocaml/decoy is discovered below exact _build. The Rust, Swift, and TypeScript declaration owners now depend on their same-lane Dune repairs so full-package conformance cannot bypass a known fixture failure. Rust wins the dependency/leverage pass because it is the documented next declaration lane after Ruby, this repair unblocks that owner and the Dune completion umbrella, rustc/cargo/clippy 1.97.0 plus cargo-llvm-cov 0.8.7 and cargo-audit 0.22.2 are installed, and all five live PRs have zero exact overlap with the bounded Rust discovery/state/roadmap tranche.",
       "notes": "Rust consumes the complete shared discovery-language-registry fixture but does not prune the exact _build component. Add the bounded exact-component repair and preserve case variants and near names in its own engine tranche."
     },
     {
