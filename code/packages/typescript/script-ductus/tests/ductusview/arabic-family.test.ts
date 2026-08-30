@@ -90,6 +90,8 @@ const URDU_DAL = ductusFor("د", "urdu-nastaliq")!;
 const urduDalOutline = naskhOutline("د");
 const URDU_RE = ductusFor("ر", "urdu-nastaliq")!;
 const urduReOutline = naskhOutline("ر");
+const URDU_RRE = ductusFor("ڑ", "urdu-nastaliq")!;
+const urduRreOutline = naskhOutline("ڑ");
 const URDU_WAW = ductusFor("و", "urdu-nastaliq")!;
 const urduWawOutline = naskhOutline("و");
 const URDU_SIN = ductusFor("س", "urdu-nastaliq")!;
@@ -1232,6 +1234,26 @@ describe("Urdu ر — one downward line that continues left", () => {
     expect(
       paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d,
     ).toBe(penPathD(URDU_RE.strokes[0], 1));
+  });
+});
+
+describe("Urdu ڑ — re-series body followed by one retroflex mark", () => {
+  const steps = ductusSteps(URDU_RRE);
+  const strip = ductusFilmstrip(URDU_RRE, urduRreOutline);
+
+  it("starts the retroflex mark only after the lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      true,
+    ]);
+  });
+
+  it("reports three movements across two strokes", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
   });
 });
 

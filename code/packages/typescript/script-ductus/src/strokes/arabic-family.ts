@@ -2813,6 +2813,77 @@ export const mainEntries: DuctusEntry[] = [
       source: urduAlphabetSource("ر"),
     },
   ],
+  // Zer o Zabar demonstrates the independent re-series body first, then adds
+  // the small to'e-shaped retroflex mark after one lift. The body follows the
+  // independently sourced Urdu re geometry; the mark is fitted to ڑ itself.
+  [
+    "urdu-nastaliq:ڑ",
+    {
+      script: "urdu-nastaliq",
+      glyph: "ڑ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the independent re-series body downward",
+              path: [
+                { x: 250, y: 320 },
+                { x: 248, y: 280 },
+                { x: 255, y: 235 },
+                { x: 270, y: 190 },
+                { x: 287, y: 145 },
+                { x: 300, y: 95 },
+                { x: 304, y: 48 },
+              ],
+            },
+            {
+              label: "continue curving to the left",
+              path: [
+                { x: 304, y: 48 },
+                { x: 298, y: 8 },
+                { x: 284, y: -30 },
+                { x: 260, y: -68 },
+                { x: 226, y: -103 },
+                { x: 185, y: -130 },
+                { x: 140, y: -146 },
+                { x: 95, y: -151 },
+                { x: 52, y: -147 },
+                { x: 10, y: -136 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "after one lift, draw the small retroflex mark downward, back upward, and down again to close its loop",
+              path: [
+                { x: 172, y: 580 },
+                { x: 172, y: 540 },
+                { x: 172, y: 510 },
+                { x: 172, y: 540 },
+                { x: 172, y: 580 },
+                { x: 172, y: 540 },
+                { x: 172, y: 510 },
+                { x: 174, y: 480 },
+                { x: 170, y: 450 },
+                { x: 108, y: 436 },
+                { x: 140, y: 420 },
+                { x: 200, y: 412 },
+                { x: 260, y: 420 },
+                { x: 300, y: 440 },
+                { x: 316, y: 470 },
+                { x: 292, y: 500 },
+                { x: 250, y: 524 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: urduAlphabetSource("ڑ"),
+    },
+  ],
   [
     "urdu-nastaliq:و",
     {

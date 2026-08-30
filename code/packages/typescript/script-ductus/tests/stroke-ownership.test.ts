@@ -160,11 +160,11 @@ describe("stroke ownership migration baseline", () => {
         Object.entries(counts).sort(([a], [b]) => a.localeCompare(b)),
       ),
     }).toEqual({
-      keys: 339,
+      keys: 340,
       keyHash:
-        "6eee729823e77e5c66b93d2daf0170c45a4754b413d5204ae4c1e3c3b4691d0a",
+        "81442b3101ef9089f4b0431c482e86a6b1f8ef130c943b7b584bbc7207745a37",
       nonTamilDataHash:
-        "6c6b7e19adbbe80bd52498832ad0b7acc31cc24c13807cdfa5332ca5e842c7dd",
+        "59555e08039f3b580a3811b15470892c67380f44a463c668667906b9503c8927",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -181,7 +181,7 @@ describe("stroke ownership migration baseline", () => {
         "perso-arabic": 24,
         tamil: 25,
         telugu: 6,
-        "urdu-nastaliq": 29,
+        "urdu-nastaliq": 30,
       },
     });
   });
