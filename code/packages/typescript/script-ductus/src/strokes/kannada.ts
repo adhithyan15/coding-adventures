@@ -246,6 +246,104 @@ export const entries: DuctusEntry[] = [
       source: kannadaIndependentVowelSource("ಇ"),
     },
   ],
+  // Gopala Krishna A's 44-frame animation writes independent long-i ಈ in
+  // two runs. The rounded body flows through a retraced upper bar and high
+  // curl; after one lift, the crossbar continues into the right loop and hook.
+  [
+    "kannada:ಈ",
+    {
+      script: "kannada",
+      glyph: "ಈ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the broad rounded body and return to its upper-right join",
+              path: [
+                { x: 492, y: 507 },
+                { x: 419, y: 511 },
+                { x: 355, y: 513 },
+                { x: 291, y: 511 },
+                { x: 222, y: 501 },
+                { x: 144, y: 392 },
+                { x: 119, y: 333 },
+                { x: 115, y: 206 },
+                { x: 138, y: 144 },
+                { x: 177, y: 92 },
+                { x: 230, y: 54 },
+                { x: 292, y: 33 },
+                { x: 355, y: 28 },
+                { x: 418, y: 33 },
+                { x: 480, y: 53 },
+                { x: 533, y: 92 },
+                { x: 572, y: 144 },
+                { x: 594, y: 206 },
+                { x: 568, y: 393 },
+                { x: 528, y: 443 },
+                { x: 492, y: 507 },
+              ],
+            },
+            {
+              label: "sweep the upper bar left, retrace it right, and curl upward",
+              path: [
+                { x: 492, y: 507 },
+                { x: 450, y: 500 },
+                { x: 300, y: 500 },
+                { x: 150, y: 500 },
+                { x: 90, y: 500 },
+                { x: 220, y: 500 },
+                { x: 400, y: 500 },
+                { x: 540, y: 500 },
+                { x: 600, y: 540 },
+                { x: 625, y: 600 },
+                { x: 625, y: 680 },
+                { x: 600, y: 740 },
+                { x: 560, y: 760 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the horizontal crossbar from left to right",
+              path: [
+                { x: 30, y: 285 },
+                { x: 220, y: 285 },
+                { x: 420, y: 285 },
+                { x: 620, y: 285 },
+                { x: 830, y: 285 },
+              ],
+            },
+            {
+              label: "turn around the small right loop and descend into the lower hook",
+              path: [
+                { x: 830, y: 285 },
+                { x: 900, y: 285 },
+                { x: 950, y: 310 },
+                { x: 970, y: 400 },
+                { x: 930, y: 480 },
+                { x: 850, y: 480 },
+                { x: 760, y: 430 },
+                { x: 754, y: 400 },
+                { x: 760, y: 370 },
+                { x: 776, y: 340 },
+                { x: 850, y: 310 },
+                { x: 880, y: 260 },
+                { x: 884, y: 220 },
+                { x: 912, y: 180 },
+                { x: 924, y: 140 },
+                { x: 917, y: 100 },
+                { x: 875, y: 60 },
+                { x: 862, y: 30 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: kannadaIndependentVowelSource("ಈ"),
+    },
+  ],
   // Gopala Krishna A's 35-frame animation writes independent vowel ಉ in one
   // run: compact upper-left loop, broad lower-left bowl, tall middle arch,
   // lower-right bowl, and the open upper terminal. These four medians fit that
