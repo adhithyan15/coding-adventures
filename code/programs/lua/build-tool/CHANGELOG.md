@@ -4,6 +4,11 @@
 
 ### Added
 
+- A pure bounded toolchain-detection adapter now independently consumes all 11
+  language-neutral snapshots, including exact extra-CI declarations,
+  platform BUILD precedence, affected and forced scheduling, complete
+  canonical flags, stable unsupported diagnostics, and shared resource
+  ceilings without host or execution authority.
 - A pure orphan-crate snapshot validator now independently consumes all four
   language-neutral fixtures, with artifact filtering, fixed ancestor BUILD
   precedence, redacted portable-path and ledger failures, Unicode full-fold

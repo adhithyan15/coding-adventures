@@ -74,6 +74,14 @@ pure native boundary, including exact outcomes, all 16 canonical flags,
 diagnostics, platform precedence, CRLF grammar, scheduling, forced toolchains,
 and the shared byte, line, and aggregate ceilings.
 
+The Lua engine uses
+`require("build_tool.toolchain_detection").evaluate_snapshot`; its
+package-local Busted suite MUST discover and evaluate every
+`toolchain-detection-*.json` case through that pure native boundary. The
+adapter MUST remain process-free and host-state-free, preserve byte-exact CRLF
+grammar and platform-front precedence, return all 16 canonical flags, and
+enforce the shared per-file and aggregate resource ceilings before evaluation.
+
 C and C++ remain emerging implementation lanes. OCaml also begins as emerging
 and must implement this contract before promotion. WASM is an execution target,
 Mosaic and Twig are domain languages, and Starlark is a build language; none is

@@ -36,6 +36,12 @@ The build tool follows a pipeline:
    snapshots consume all four orphan-crate fixtures with the same pure
    boundary.
 
+7. **Toolchain Detection** (`lib/build_tool/toolchain_detection.lua`): Evaluate
+   caller-supplied BUILD snapshots for canonical package languages and exact
+   extra-CI declarations. The pure adapter owns platform-front precedence,
+   byte-exact CRLF grammar, scheduled and forced toolchain unions, and the
+   shared byte, line, and aggregate resource ceilings.
+
 ## Usage
 
 ```bash
@@ -101,8 +107,24 @@ and diagnostics are therefore deterministic across Lua hosts. The adapter does
 not enumerate the filesystem, inspect Git, follow links, launch processes,
 read the environment, or access the network.
 
+## Extra CI Toolchain Declarations
+
+`ToolchainDetection.evaluate_snapshot(platform, force_full, packages,
+scheduled_packages, forced_toolchains)` is the language-native conformance
+boundary for toolchain detection. It returns every canonical toolchain flag on
+success and the stable `TOOLCHAIN_UNSUPPORTED` diagnostic for an unsupported
+selected language or forced toolchain. The package-local Busted suite discovers
+and consumes all 11 language-neutral `toolchain-detection-*.json` fixtures.
+
+The adapter accepts only caller-owned strings. It does not enumerate a
+checkout, read the environment, launch processes, or access the network.
+Production CLI integration is intentionally a separate tranche because the
+current Lua front door does not yet expose affected-package or emitted-plan
+semantics.
+
 ## Dependencies
 
 - Lua 5.4 (for native integers and bitwise operators)
-- LuaFileSystem (optional, for faster directory traversal)
-- DKJSON (tests only, for consuming the shared JSON fixtures)
+- LuaFileSystem (optional for faster discovery and used by tests to enumerate
+  the shared fixture corpus)
+- DKJSON (tests only, for consuming the shared JSON fixture corpus)
