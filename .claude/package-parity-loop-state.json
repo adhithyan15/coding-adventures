@@ -11,14 +11,21 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 13506,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13506",
+    "branch": "codex/build-tool-swift-windows-test-front-failure-propagation",
+    "implementation_revision": "1a62f59b5db2bc3a71261220cf644c27753235a4",
+    "status": "checks-pending",
+    "opened_at": "2026-08-30T16:12:23Z"
+  },
   "last_ci_action": {
-    "observed_at": "2026-08-30T15:46:47Z",
-    "pr_number": 13502,
+    "observed_at": "2026-08-30T16:12:30Z",
+    "pr_number": 13506,
     "run_id": null,
     "attempt": 1,
-    "status": "merged-via-auto-merge",
-    "notes": "All 43 reported checks reached terminal acceptable conclusions: 36 successes, six expected skips, and one neutral CodeQL gate. GitHub reported validated head 7a02e9dc9b8093fc2e3e37a3233d2ce66462099a clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #13502 as d066aff6def388278bd0ad723ffc22bd8b8a766e without a manual merge command."
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #13506 is open from validated publication head 1a62f59b5db2bc3a71261220cf644c27753235a4. GitHub reports the PR mergeable and conflict-free, but required CI, Swift-app, and CodeQL checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "d5a47d9f709633d3656551d91d559467b64661ba",
@@ -534,10 +541,13 @@
     {
       "id": "build-tool-swift-windows-test-front-failure-propagation",
       "title": "Make the Swift build-tool Windows test front fail closed",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-swift-dune-build-discovery-exclusion"],
       "branch": "codex/build-tool-swift-windows-test-front-failure-propagation",
-      "pr_number": null,
+      "pr_number": 13506,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13506",
+      "opened_at": "2026-08-30T16:12:23Z",
+      "opened_revision": "1a62f59b5db2bc3a71261220cf644c27753235a4",
       "selection_revision": "d066aff6def388278bd0ad723ffc22bd8b8a766e",
       "rebase_revision": "d5a47d9f709633d3656551d91d559467b64661ba",
       "rebase_notes": "Rebased without conflict before final validation onto exact origin/main d5a47d9f709633d3656551d91d559467b64661ba. The intervening merged Malayalam curriculum change remains inside established human-language and TypeScript package owners, adds no package identity or build-tool contract, and has zero exact overlap with this tranche. The collision inventory and neutral fixture corpus are unchanged.",
@@ -545,6 +555,7 @@
       "validation_notes": "Tests-first validation first produced two expected failures: a fake present Swift returning 17 was mislabeled as absent and the front returned zero. The final Windows-only regression consumes the checked-in BUILD_windows command and pins present success, exact present failure propagation, and the stable absent-toolchain skip. The focused three-case suite, full parallel and coverage runs, generic BUILD-content run, and exact Windows BUILD-content run pass; the package reports 47 tests across seven suites with the one POSIX directory-symlink case explicitly skipped on Windows. Coverage remains 91.33% lines for Discovery.swift, 71.08% for Hasher.swift, and 58.23% across production Sources. Swift strict formatting of the new test, release build, package dump, and zero-external-dependency graph pass. The neutral corpus validates 119 cases and 283 files; 205 focused conformance tests pass with 23 expected skips, and all 10 parity-reporter tests pass. The Go oracle passes module verification, all tests, vet, and trimpath build; its real forced Swift dry plan evaluates 45 Starlark BUILD files, validates five reviewed orphan exemptions, discovers 167 Swift packages, and reports all 167 WOULD-BUILD. The schema-3 collision report remains at 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The 580-owner/864-edge state graph is unique, complete, acyclic, closed over merged dependencies, and contains exactly this one in-progress owner. Diff, artifact, dependency, credential-pattern, and authority checks pass, and the final eight-path tranche has zero exact overlap across five live PRs.",
       "review_notes": "Independent final review found no security, correctness, authority, or scope blocker. The implementation deliberately adds no production, filesystem, network, credential, or host authority. BUILD_windows decides tool absence before launching the native command, preserves the exact stable skip only for absence, and otherwise leaves swift test as the final command so its exact exit status owns the front. The regression runs absolute ComSpec with /d, controls Path and PATHEXT case-insensitively, uses only a temporary fake swift.bat plus System32 for resolution, emits no inherited environment data, and removes its fixture directory after each case. A separate inventory review confirmed the reporter counts, graph integrity, valid state transitions, coherent eight-path scope, and zero overlap across five live PRs after the initial seven-path metadata count was corrected.",
       "selection_notes": "Selected immediately after PR #13502 completed 43 terminal acceptable checks and merged through guarded squash auto-merge. The regenerated exact-main inventory remains schema 3 with 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Changes since c736080af3d9a1760be28d0eb352e2818b1fdf7b add or remove no package root and produce no newly unowned eligible gap. This owner's sole Swift Dune prerequisite is now merged; its bounded fail-closed front-door repair directly unlocks Swift declaration validation and preserves the documented Rust-to-Swift-to-TypeScript declaration lane order. TypeScript Dune has broader raw fan-out, but completing this already-open Swift chain first has greater immediate payoff and avoids claiming declaration coverage through a Windows front that masks test failures. Swift 6.3.3 is installed on Windows, the exact front is locally executable, the target remote branch and prior PR are absent, and six live PRs have zero exact overlap across the expected Swift BUILD_windows, test, documentation, state, roadmap, and root-changelog paths. Reconciliation plus selection leaves the complete 580-owner/864-edge graph unique, dependency-complete, and acyclic at 178 merged, 401 pending, and exactly this owner in progress.",
+      "publication_notes": "Opened ready-for-review PR #13506 from clean validated head 1a62f59b5db2bc3a71261220cf644c27753235a4 after a normal first push. Immediately before publication, the branch was based on exact origin/main d5a47d9f709633d3656551d91d559467b64661ba, the target remote branch and prior PR were absent, and all eight changed paths had zero exact overlap across five other live PRs. Independent security, correctness, authority, inventory, graph, transition, and scope reviews found no blocker. GitHub reports the PR mergeable, conflict-free, and non-draft; required checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Discovered during the post-Rust declaration audit. BUILD_windows chains `where swift && swift test || echo ...`, so every failing native test is mislabeled as a missing toolchain and exits successfully. Split toolchain absence from test execution, add a deterministic front-door regression, and require this owner before Swift declaration validation claims a trustworthy Windows lane."
     },
     {
