@@ -10991,13 +10991,16 @@ The exact-diff plan discovers 5,112 packages, selects only
 that the documentation and parity-state surfaces do not widen the executable
 affected closure.
 
-Before first push, `origin/main` advanced to
-`f07970112b79960d383018e9d3664437bf851a85` through merged PR #13528. The
-branch rebased conflict-free. That one-path change only increases the main CI
-shard count in `.github/workflows/ci.yml`; it has zero overlap with this
-tranche, adds no package or manifest, changes no build-tool contract or
-canonical identity, and creates no newly unowned eligible gap. The inventory
-revision advances without changing any count.
+Before first push, `origin/main` advanced twice. PR #13528 changed only
+`.github/workflows/ci.yml` to increase the main CI shard count. PR #13527 then
+changed 17 existing Mosaic task-app, Rust Mosaic emitter, TypeScript
+lexer/parser/SQL, and portability-test paths. The branch rebased conflict-free
+after each merge onto final base
+`edcf0dd65077852392a2b7dcf7a9df64a1b5704f`. Both intervening slices have
+zero exact overlap with this tranche, add no package root or manifest, change
+no package identity or shared .NET build-tool contract, and create no newly
+unowned eligible gap. The inventory revision advances without changing any
+count.
 
 ## Autonomous Loop Protocol
 
