@@ -10307,6 +10307,14 @@ cleanup. The exact-component match adds no realpath, normalization,
 symlink-follow, process, environment, network, dependency, credential, or other
 authority; the separately classified hashing gap remains honestly pending.
 
+PR #13493 later advanced main with 18 existing Tamil curriculum and TypeScript
+human-language paths and no package, BUILD, build-tool, state, roadmap, or
+collision overlap. The branch rebased conflict-free onto
+`cf2e546e1b90ec075f271b6fac614a0aed26f9eb`; the refreshed inventory retained
+every count above, and all 150 unit tests, three CLI integrations, and strict
+Clippy passed again at rebased implementation
+`b7a63a3c62a779c6adee6783fc897cbb5a794225`.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
