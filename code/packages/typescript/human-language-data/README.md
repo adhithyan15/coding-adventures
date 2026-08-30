@@ -427,18 +427,12 @@ and exact public `TrackGentleRamp` reconstruction. It rejects a resurrected flat
 aggregate, and generation validates a complete staged replacement before removing the
 old tree. See [`HL33`](../../../specs/HL33-sharded-gentle-ramp-ownership.md).
 
-Level coverage uses the same conflict-resistant shape. Each shard pins that track's
-exact lesson count, complete pre-A1-to-C2 histogram, unmapped count and highest
-reached level. The global totals and mapped percentage are derived from those exact
-shards, never maintained as a shared authored number:
-
-```bash
-npm run generate:level-snapshots  # write core/level-snapshots/*.json
-npm run check:level-snapshots     # fail if any language shard is stale or orphaned
-```
-
-This keeps the level summary derived from the canonical curricula and shared spine
-while allowing independent language tranches to merge independently.
+Level coverage is computed on demand from the canonical lessons, curricula, and shared
+spine by `summarizeLevels()`. The level tests prove exact registered-track closure,
+per-track and corpus arithmetic, unmapped accounting, and highest reached level. There
+is deliberately no tracked `core/level-snapshots/` copy: it duplicated a fully derived
+fact and forced two independent tranches in the same language to update one rollup.
+The tests reject resurrection of that retired generated directory.
 
 ### Continuity — does the course have a memory of itself? (HL09)
 

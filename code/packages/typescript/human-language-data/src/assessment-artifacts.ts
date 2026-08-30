@@ -38,9 +38,9 @@
 //     paying one debt and taking out another, which is the trade this file
 //     exists to make impossible.
 //
-// Per-track shards rather than one ledger, for the reason HL21 already gives
-// for the level snapshots: thirteen independent authors closing thirteen
-// independent debts must not collide on one file.
+// Per-track shards rather than one ledger, for the ownership reason HL21 gives:
+// thirteen independent authors closing thirteen independent debts must not
+// collide on one file.
 // ---------------------------------------------------------------------------
 import { readdirSync } from "node:fs";
 import { join, resolve } from "node:path";

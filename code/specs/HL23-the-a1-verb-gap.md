@@ -907,8 +907,8 @@ the noun tranches, not before them.
 
 Same instrument as §9.4, rebuilt from `sitting-2026-08-26.md` §8's description
 and recalibrated before use. It reproduces **689 / 756 / 810 / 40** on the
-pre-#13132 corpus, matches the committed `core/level-snapshots/spanish.json`
-histogram exactly, and reproduces the sitting's published ten most-missed lexemes
+pre-#13132 corpus, matches that revision's source-derived Spanish level histogram
+exactly, and reproduces the sitting's published ten most-missed lexemes
 (`gustar` 9, `hacer` 9, `tener` 8, `comprar` 5, `poder` 5, …) to the number. The
 band rule is not invented either: `sitting-2026-08-26.md` §5.3 states it — *band
 0 when more than 40 % of required lexis is missing* — and applying it with the
