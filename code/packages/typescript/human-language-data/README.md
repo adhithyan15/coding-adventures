@@ -16,10 +16,10 @@ It also produces the versioned migration-gap report published with every book
 bundle and deterministically renders configured LaTeX chapters from that same
 lesson AST.
 
-The Human Languages index is derived too. `npm run generate:progress` rewrites
-only the marked track table in `code/learning/human-languages/README.md`; CI runs
-`npm run check:progress` so registry additions, curriculum growth, and generated
-book chapters cannot leave its counts stale.
+The Human Languages progress table is derived too. `npm run report:progress`
+prints the current registry-ordered table on demand without rewriting tracked
+documentation; CI runs `npm run check:progress` so the 23 retired progress-card
+rollups cannot return.
 
 ```
 lessons/*.md frontmatter    ─┐
@@ -910,12 +910,12 @@ artifact fails `--check`. Generated book chapters rewrite the lesson's `.svg` im
 destination to `.pdf`; the books workflow creates that PDF with `rsvg-convert`
 before XeLaTeX runs.
 
-Regenerate or verify the registry-ordered track table in the top-level Human
-Languages index:
+Print the registry-ordered track table on demand, or verify that its former
+tracked projection remains absent:
 
 ```bash
 npm run build
-npm run generate:progress
+npm run report:progress
 npm run check:progress
 ```
 
@@ -990,8 +990,8 @@ until the existing corpus has been split.
 | `modality-cli.ts` | writes or checks `core/lesson-modality/<language>.d/*.json` | ⛔ (fs) |
 | `gentle-ramp-snapshot-cli.ts` | stages, writes, or checks `core/gentle-ramp-snapshots/<language>.d/` | ⛔ (fs) |
 | `narration-cli.ts` | writes or checks the narration export and its hash manifest | ⛔ (fs) |
-| `track-progress.ts` | registry/curriculum/book facts → per-language progress cards | ✅ |
-| `track-progress-cli.ts` | writes or checks `progress/*.md` | ⛔ (fs) |
+| `track-progress.ts` | registry/curriculum/book facts → progress rows and cards | ✅ |
+| `track-progress-cli.ts` | prints the progress table or rejects tracked rollups | ⛔ (fs) |
 
 Only the modules marked `fs` touch the filesystem (declared in
 `required_capabilities.json`); everything the app relies on is pure and unit-tested

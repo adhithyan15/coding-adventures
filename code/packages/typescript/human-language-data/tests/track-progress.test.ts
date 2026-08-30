@@ -1,10 +1,19 @@
-import { readFileSync } from "node:fs";
+import {
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import { defaultCurriculumRoot } from "../src/loader.js";
 import type { ParsedLesson } from "../src/parse.js";
 import {
   generatedTrackProgressOutputs,
+  progressDirectoryIsAbsent,
   runTrackProgress,
   TRACK_PROGRESS_DIR,
 } from "../src/track-progress-cli.js";
@@ -16,6 +25,21 @@ import {
 import type { BookCorpus, LanguageCurriculum, LanguageRegistry } from "../src/types.js";
 
 const lesson = (language: string) => ({ language }) as ParsedLesson;
+
+function canCreateSymlinks(): boolean {
+  const root = mkdtempSync(join(tmpdir(), "hl-progress-symlink-probe-"));
+  try {
+    const link = join(root, "link");
+    symlinkSync(join(root, "missing"), link);
+    return lstatSync(link).isSymbolicLink();
+  } catch {
+    return false;
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+const symlinksAvailable = canCreateSymlinks();
 
 describe("track progress", () => {
   it("derives registry-ordered counts from lessons, maps, and book data", () => {
@@ -59,16 +83,57 @@ describe("track progress", () => {
     expect(renderTrackProgressCard(tracks[1]!)).toContain("# Alpha progress");
   });
 
-  it("keeps every committed per-language card byte-current", () => {
+  it("keeps every per-language card in memory and the tracked directory absent", () => {
     const root = defaultCurriculumRoot();
     const outputs = generatedTrackProgressOutputs(root);
     expect(outputs.size).toBe(23);
     for (const [relative, expected] of outputs) {
       expect(relative.startsWith(`${TRACK_PROGRESS_DIR}/`)).toBe(true);
-      expect(readFileSync(join(root, relative), "utf8"), relative).toBe(expected);
+      expect(expected, relative).toContain("Canonical lessons:");
+      expect(expected, relative).toContain("Mapped lessons:");
+      expect(expected, relative).toContain("Book progress:");
     }
+    expect(() => lstatSync(join(root, TRACK_PROGRESS_DIR))).toThrow(/ENOENT/);
     expect(runTrackProgress(["--check"], root)).toBe(0);
   });
+
+  it("prints the registry-ordered table on demand without writing a card", () => {
+    const root = defaultCurriculumRoot();
+    const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    expect(runTrackProgress(["--report"], root)).toBe(0);
+    expect(stdout).toHaveBeenCalledWith(expect.stringContaining("| [Arabic]"));
+    expect(stdout).toHaveBeenCalledWith(
+      expect.stringContaining("| [Marwadi (Marwari)]"),
+    );
+    expect(() => lstatSync(join(root, TRACK_PROGRESS_DIR))).toThrow(/ENOENT/);
+  });
+
+  it("rejects a resurrected progress path whether it is a file or directory", () => {
+    const root = mkdtempSync(join(tmpdir(), "hl-progress-resurrection-"));
+    try {
+      const progress = join(root, TRACK_PROGRESS_DIR);
+      writeFileSync(progress, "not a generated card\n");
+      expect(progressDirectoryIsAbsent(root)).toBe(false);
+      rmSync(progress);
+      mkdirSync(progress);
+      expect(progressDirectoryIsAbsent(root)).toBe(false);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it.skipIf(!symlinksAvailable)(
+    "rejects a resurrected dangling progress symlink",
+    () => {
+      const root = mkdtempSync(join(tmpdir(), "hl-progress-resurrection-"));
+      try {
+        symlinkSync(join(root, "missing"), join(root, TRACK_PROGRESS_DIR));
+        expect(progressDirectoryIsAbsent(root)).toBe(false);
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    },
+  );
 
   it("changes only one output when one track changes", () => {
     const root = defaultCurriculumRoot();

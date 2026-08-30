@@ -10729,6 +10729,111 @@ conflict-free, and non-draft. Required CI, TypeScript-build, and CodeQL checks
 are queued or in progress, so auto-merge remains disabled until every required
 check is terminal and acceptable and GitHub still reports no conflict.
 
+### Post-PR #13514 refresh and selection
+
+PR #13514 completed all 41 checks acceptably with 34 successes, six expected
+skips, and one neutral CodeQL gate. Auto-merge was enabled only after GitHub
+reported final head `7f62a4f06214f847099de5b373cd57b53d42ec2f`
+conflict-free, and GitHub merged it as
+`582b246b810ae429a4aa06c8f7e52e3c38405454` at 2026-08-30T17:59:44Z
+without a manual merge command. The TypeScript Dune owner therefore advances
+to `merged` and the active PR is cleared.
+
+The collision-checked exact-main inventory at
+`582b246b810ae429a4aa06c8f7e52e3c38405454` remains schema 3 with 15
+established lanes, 1,388 implementation identities, 4,602 slots, and 1,427
+all-reported identities. Completion bands remain 175/265, 123/934, 170/2,139,
+and 920/12,880; Rust has 731 singletons, OCaml remains emerging at zero
+packages, and collisions and unknown buckets remain zero. PR #13514 changed
+only seven existing paths since the prior inventory, with no package root or
+manifest. Canonical identities are unchanged and no newly unowned eligible gap
+appeared.
+
+The dependency/leverage pass selects
+`build-tool-typescript-static-build-front-typecheck` on branch
+`codex/build-tool-typescript-static-build-front-typecheck`. Its sole
+TypeScript Dune prerequisite is merged. This bounded static front directly
+unlocks TypeScript declaration conformance; the other newly eligible child,
+generated-directory hashing, has no downstream owner and remains a separate
+required correctness item. Node 24.16.0 and npm 11.13.0 are
+installed. A strict no-emit compiler probe confirms that the production source
+needs direct, pinned TypeScript and Node declarations but no source repair.
+Six live PRs have zero exact overlap across the prospective TypeScript
+build-tool, state, roadmap, and root-changelog tranche. Reconciliation plus
+selection leaves the complete 580-owner/864-edge graph at 181 merged, 398
+pending, and exactly one `in-progress` owner.
+
+### TypeScript static build-front implementation and validation
+
+Test-first execution first produced exactly two expected failures: package
+metadata lacked the compiler script and exact pins, and the generic `BUILD`
+front lacked the compiler command. The final front adds exact development pins
+for TypeScript 7.0.2 and Node 22 declarations, an explicit strict no-emit
+`typecheck` script, Node types in the production configuration, and the fixed
+install-to-typecheck-to-coverage order. A two-case regression locks package,
+configuration, and front metadata. No production source, hasher, discovery,
+declaration adapter, workflow, neutral fixture, or conformance spec changed.
+
+Clean installation, the focused two tests, local Node 24 and explicit Node
+22.22.1 typechecks, and literal `BUILD` contents pass. The full package passes
+327 tests across 13 files; V8 coverage remains 90.50% statements, 83.93%
+branches, 94.84% functions, and 90.42% lines. The neutral corpus validates 119
+cases and 283 files across 16 implementations, 15 established lanes, and 12
+front doors. Focused conformance, parity-reporter, and capability families pass
+199 tests with 23 expected skips and 959 subtests.
+
+The canonical Go oracle passes module verification, all packages, vet, and a
+trimpath build. Its real exact-diff TypeScript plan evaluates 45 Starlark BUILD
+files, discovers 481 packages, selects only
+`typescript/programs/build-tool`, validates the five reviewed orphan
+exemptions, and skips the other 480. `npm pack` retains the 18-file allowlist
+with no bundled dependency. Production audit reports zero vulnerabilities;
+full audit retains only the separately owned development-only `nanoid`
+advisory. All 70 installed packages have verified registry signatures and 33
+have verified attestations.
+
+The collision inventory remains schema 3 with 15 lanes, 1,388 implementation
+identities, 4,602 slots, 1,427 all-reported identities, 731 Rust singletons,
+zero OCaml packages, zero collisions, and zero unknown buckets. The
+580-owner/864-edge graph is unique, dependency-complete, acyclic, and
+lifecycle-valid at 181 merged, 398 pending, and exactly this owner in progress.
+Independent security and state/documentation reviews pass after correcting one
+roadmap overclaim about the separately owned hashing gap. Seven live PRs are
+present at final review and all have zero exact overlap with this 11-path
+tranche. Once this owner merges, TypeScript declaration conformance becomes
+dependency-eligible; generated-directory hashing remains separately pending.
+
+Ready-for-review PR #13516 opened from validated head
+`5d0e1fe4386e1c04ab5ed68d2bf3763a0d82f33d` after a normal first push.
+Exact `origin/main` remained the selected base, all 10 changed paths have zero
+exact overlap across seven other live PRs, and GitHub reports the PR mergeable,
+conflict-free, and non-draft. Required CI and CodeQL checks are queued or in
+progress, so auto-merge remains disabled until every required check is
+terminal and acceptable and GitHub still reports no conflict.
+
+The first exact-head CI detect job failed only because the repository-wide
+TypeScript portability contract still expected 463 locked compilers after this
+owner intentionally added the 464th. Actual logs showed every preceding
+parity-metadata family passing before that exact assertion. The smallest repair
+increments the aggregate count and adds the build-tool reason beside it; all 16
+focused portability tests pass locally. The same PR branch now carries the
+11-path tranche, still with zero exact overlap across six other live PRs.
+Replacement CI is pending and auto-merge remains disabled.
+
+The repair branch rebased conflict-free onto exact `origin/main`
+`3dac02fa7680e102ac1da7ad5392d7856d30f9be`. Intervening PR #13513 changes
+33 human-language and generated-book paths, with no overlap on this 11-path
+tranche, package root, manifest, build-tool contract, or canonical identity.
+Clean installation, strict typechecking, all 327 package tests with unchanged
+coverage, all 16 focused portability tests, the complete Go oracle, the
+collision-clean inventory, state graph, diff hygiene, and exact-diff plan pass
+again. The plan still discovers 481 TypeScript packages, selects only
+`typescript/programs/build-tool`, and skips the other 480. Six other live PRs
+have zero exact path overlap, and an independent exact-rebased-head review
+found no remaining correctness, security, authority, lifecycle, or scope
+issue. The same PR therefore receives an exact lease-protected replacement
+push; replacement CI remains the only pre-auto-merge gate.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
