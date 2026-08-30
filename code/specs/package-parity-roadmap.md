@@ -10763,6 +10763,46 @@ build-tool, state, roadmap, and root-changelog tranche. Reconciliation plus
 selection leaves the complete 580-owner/864-edge graph at 181 merged, 398
 pending, and exactly one `in-progress` owner.
 
+### TypeScript static build-front implementation and validation
+
+Test-first execution first produced exactly two expected failures: package
+metadata lacked the compiler script and exact pins, and the generic `BUILD`
+front lacked the compiler command. The final front adds exact development pins
+for TypeScript 7.0.2 and Node 22 declarations, an explicit strict no-emit
+`typecheck` script, Node types in the production configuration, and the fixed
+install-to-typecheck-to-coverage order. A two-case regression locks package,
+configuration, and front metadata. No production source, hasher, discovery,
+declaration adapter, workflow, neutral fixture, or conformance spec changed.
+
+Clean installation, the focused two tests, local Node 24 and explicit Node
+22.22.1 typechecks, and literal `BUILD` contents pass. The full package passes
+327 tests across 13 files; V8 coverage remains 90.50% statements, 83.93%
+branches, 94.84% functions, and 90.42% lines. The neutral corpus validates 119
+cases and 283 files across 16 implementations, 15 established lanes, and 12
+front doors. Focused conformance, parity-reporter, and capability families pass
+199 tests with 23 expected skips and 959 subtests.
+
+The canonical Go oracle passes module verification, all packages, vet, and a
+trimpath build. Its real exact-diff TypeScript plan evaluates 45 Starlark BUILD
+files, discovers 481 packages, selects only
+`typescript/programs/build-tool`, validates the five reviewed orphan
+exemptions, and skips the other 480. `npm pack` retains the 18-file allowlist
+with no bundled dependency. Production audit reports zero vulnerabilities;
+full audit retains only the separately owned development-only `nanoid`
+advisory. All 70 installed packages have verified registry signatures and 33
+have verified attestations.
+
+The collision inventory remains schema 3 with 15 lanes, 1,388 implementation
+identities, 4,602 slots, 1,427 all-reported identities, 731 Rust singletons,
+zero OCaml packages, zero collisions, and zero unknown buckets. The
+580-owner/864-edge graph is unique, dependency-complete, acyclic, and
+lifecycle-valid at 181 merged, 398 pending, and exactly this owner in progress.
+Independent security and state/documentation reviews pass after correcting one
+roadmap overclaim about the separately owned hashing gap. Seven live PRs are
+present at final review and all have zero exact overlap with this 10-path
+tranche. Once this owner merges, TypeScript declaration conformance becomes
+dependency-eligible; generated-directory hashing remains separately pending.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
