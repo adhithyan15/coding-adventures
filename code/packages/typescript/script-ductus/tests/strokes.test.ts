@@ -124,6 +124,19 @@ describe("handwriting ductus", () => {
           penLifts: letter.penLifts,
           source: letter.strokeOrderSource,
         })),
+      ...(script.marks ?? [])
+        .filter(
+          (mark) =>
+            mark.penLifts !== undefined ||
+            mark.strokeOrderSource !== undefined,
+        )
+        .map((mark) => ({
+          script: script.script,
+          identity: mark.mark,
+          glyph: mark.mark,
+          penLifts: mark.penLifts,
+          source: mark.strokeOrderSource,
+        })),
       ...(script.ligatures ?? [])
         .filter(
           (ligature) =>

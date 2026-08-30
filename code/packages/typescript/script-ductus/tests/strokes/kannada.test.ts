@@ -25,6 +25,7 @@ const KANNADA_O = DUCTUS[ductusKey("kannada", "ಒ")];
 const KANNADA_OO = DUCTUS[ductusKey("kannada", "ಓ")];
 const KANNADA_AI = DUCTUS[ductusKey("kannada", "ಐ")];
 const KANNADA_VOCALIC_R = DUCTUS[ductusKey("kannada", "ಋ")];
+const KANNADA_VISARGA = DUCTUS[ductusKey("kannada", "ಃ")];
 
 const OWNER_SCRIPTS = new Set(["kannada"]);
 const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
@@ -227,6 +228,23 @@ describe("handwriting ductus", () => {
     ]);
     expect(KANNADA_VOCALIC_R.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ru.gif",
+    );
+  });
+
+  it("Kannada ಃ separates its upper and lower loops with one lift", () => {
+    expect(penLifts(KANNADA_VISARGA)).toBe(1);
+    expect(KANNADA_VISARGA.strokes).toHaveLength(2);
+    expect(
+      KANNADA_VISARGA.strokes.map((stroke) => stroke.segments[0].label),
+    ).toEqual([
+      "draw the upper dot as a closed loop",
+      "lift, then draw the lower dot as a closed loop",
+    ]);
+    expect(KANNADA_VISARGA.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-Alphabet-Aha.gif",
+    );
+    expect(verifiedLetterFont("ಃ", KANNADA_VISARGA.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
     );
   });
 });

@@ -28,7 +28,12 @@ export const fontForDuctus = (letter: LetterDuctus) => {
       entry.displayGlyph === letter.glyph &&
       entry.strokeOrderSource?.url === letter.source.url,
   );
-  if (!letterClaim && !ligatureClaim)
+  const markClaim = script.marks?.find(
+    (entry) =>
+      entry.mark === letter.glyph &&
+      entry.strokeOrderSource?.url === letter.source.url,
+  );
+  if (!letterClaim && !ligatureClaim && !markClaim)
     throw new Error(`${letter.script} does not verify ${letter.glyph}`);
   return parsedFont(script.font.split("/").pop()!);
 };

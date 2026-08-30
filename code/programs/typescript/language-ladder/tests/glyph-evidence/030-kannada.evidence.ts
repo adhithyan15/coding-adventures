@@ -3,6 +3,29 @@ import type { GlyphEvidence } from "./types";
 
 export default [
   {
+    suite: "shared Perso-Arabic letters retain script-owned provenance",
+    suiteOrder: 50,
+    caseOrder: 225,
+    name: "keeps Kannada visarga as two source-backed closed-loop runs",
+    verify: ({ SCRIPTS }) => {
+      const visarga = SCRIPTS.find((script) => script.script === "kannada")!
+        .marks!.find((entry) => entry.mark === "ಃ")!;
+      expect(visarga.sound).toBe("ḥ");
+      expect(visarga.role).toBe("other");
+      expect(visarga.penLifts).toBe(1);
+      expect(visarga.strokeOrder).toEqual([
+        "draw the upper dot as a closed loop",
+        "lift, then draw the lower dot as a closed loop",
+      ]);
+      expect(visarga.strokeOrderSource?.url).toBe(
+        "https://commons.wikimedia.org/wiki/File:Kannada-Alphabet-Aha.gif",
+      );
+      expect(visarga.strokeOrderSource?.variation).toMatch(
+        /standalone U\+0C83.*excludes that carrier/i,
+      );
+    },
+  },
+  {
     suite: "independent (word-initial) vowels",
     suiteOrder: 10,
     caseOrder: 30,

@@ -744,6 +744,12 @@ export interface Mark {
   /** Source-backed order for writing a carrier and then this attached sign. */
   compositionOrder?: string[];
   compositionSource?: StrokeOrderSource;
+  /** Optional standalone handwriting claim for a mark with a sourced ductus. */
+  components?: string[];
+  strokeOrder?: string[];
+  strokeOrderNote?: string;
+  penLifts?: number;
+  strokeOrderSource?: StrokeOrderSource;
 }
 
 /**

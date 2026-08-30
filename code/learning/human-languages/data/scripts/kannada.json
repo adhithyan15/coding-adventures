@@ -5713,6 +5713,32 @@
   ],
   "marks": [
     {
+      "mark": "ಃ",
+      "sound": "ḥ",
+      "role": "other",
+      "attachesAs": "the Kannada visarga written after its vowel-bearing carrier",
+      "example": {
+        "base": "ಅ",
+        "combined": "ಅಃ",
+        "sound": "aḥ"
+      },
+      "components": [
+        "an upper closed dot loop",
+        "a lower closed dot loop"
+      ],
+      "strokeOrder": [
+        "draw the upper dot as a closed loop",
+        "lift, then draw the lower dot as a closed loop"
+      ],
+      "strokeOrderNote": "Two visible movements in two pen-down runs: the standalone visarga takes the final two closed-loop runs from the source's repeated ಅಃ cycle, with the carrier excluded.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-Alphabet-Aha.gif, repeated animation of Kannada visarga ಃ, 569 frames, 22.76 seconds (Wikimedia Commons, 2 June 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-Alphabet-Aha.gif",
+        "variation": "The CC BY-SA 4.0 GIF repeats a complete ಅಃ writing cycle: it writes the ಅ carrier first, then the upper and lower visarga dots as separate closed-loop runs. The standalone U+0C83 learner path excludes that carrier and fits the final two runs, with one intervening lift, to the bundled Noto Sans Kannada outline rather than treating the print outline as handwriting."
+      }
+    },
+    {
       "mark": "ಂ",
       "sound": "ṃ (nasal)",
       "role": "anusvara",

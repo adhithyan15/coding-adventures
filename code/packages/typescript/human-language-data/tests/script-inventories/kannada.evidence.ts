@@ -81,6 +81,23 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ಂ") ?? 0).toBe(0);
     expect(missingByScript.get("kannada.json")?.has("ಅ")).toBe(false);
     expect(affected.get("ಅ") ?? 0).toBe(0);
+    const kannadaVisarga = scripts.kannada!.marks!.find(
+      (entry) => entry.mark === "ಃ",
+    )!;
+    expect(kannadaVisarga.sound).toBe("ḥ");
+    expect(kannadaVisarga.penLifts).toBe(1);
+    expect(kannadaVisarga.strokeOrder).toEqual([
+      "draw the upper dot as a closed loop",
+      "lift, then draw the lower dot as a closed loop",
+    ]);
+    expect(kannadaVisarga.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-Alphabet-Aha\.gif.*Kannada visarga ಃ.*569 frames.*22\.76 seconds.*Wikimedia Commons.*2 June 2016/i,
+    );
+    expect(kannadaVisarga.strokeOrderSource?.variation).toMatch(
+      /CC BY-SA 4\.0.*ಅಃ.*carrier first.*upper and lower visarga dots.*standalone U\+0C83.*excludes that carrier.*one intervening lift.*Noto Sans Kannada/i,
+    );
+    expect(missingByScript.get("kannada.json")?.has("ಃ")).toBe(false);
+    expect(affected.get("ಃ") ?? 0).toBe(0);
     const kannadaI = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಇ",
     )!;
@@ -272,6 +289,6 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ಆ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ಃ", 1]);
+    ).toEqual(["ಈ", 1]);
   },
 };
