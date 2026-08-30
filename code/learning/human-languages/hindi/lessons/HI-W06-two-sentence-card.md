@@ -8,7 +8,7 @@ spine_node: SPINE-EXCHANGE-NAMES
 sequence: 265
 delivery: script
 chapter: 2
-type: practice
+type: writing
 headword: "नमस्ते। मेरा नाम मीरा है।"
 gloss: assemble two separately practised pieces for a new classmate
 romanization: "namaste. merā nām Mīrā hai."

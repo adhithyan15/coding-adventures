@@ -8,7 +8,7 @@ spine_node: SPINE-EXCHANGE-NAMES
 sequence: 264
 delivery: script
 chapter: 2
-type: practice
+type: writing
 headword: "मेरा नाम अरुण है।"
 gloss: transcribe one complete known name sentence from a heard cue
 romanization: "merā nām Aruṇ hai"
@@ -37,7 +37,7 @@ reviews_of: [HI-W06-name-sentence-delayed, HI-C02-practice]
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERANAAMHAI-01] -->
 
 Cover the answer below. The heard sentence uses only the familiar frame and the
-other Chapter 2 practice name.
+familiar practice name Arun.
 
 ## Writing — sentence dictation
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERANAAMHAI-01] -->

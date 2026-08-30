@@ -8,14 +8,15 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
+      "writing-type",
       "writing-block"
     ],
-    "coreModality": "voice",
+    "coreModality": "pen",
     "coreReasons": [
-      "no-visual-dependency"
+      "writing-type"
     ],
-    "coreDrivable": true,
-    "sourceHash": "fnv1a64:56d07453c25d1031",
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7893d2184c0de4b6",
     "detachableSegments": [
       "Writing — complete the visible frame"
     ],

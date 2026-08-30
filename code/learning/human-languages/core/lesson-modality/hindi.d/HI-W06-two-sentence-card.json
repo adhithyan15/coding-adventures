@@ -8,14 +8,15 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
+      "writing-type",
       "writing-block"
     ],
-    "coreModality": "voice",
+    "coreModality": "pen",
     "coreReasons": [
-      "no-visual-dependency"
+      "writing-type"
     ],
-    "coreDrivable": true,
-    "sourceHash": "fnv1a64:d8602ffc0abb8440",
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:770a1446fa5c6297",
     "detachableSegments": [
       "Writing — assemble for one reader and purpose"
     ],

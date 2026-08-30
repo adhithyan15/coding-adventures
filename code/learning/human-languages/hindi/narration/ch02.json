@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:36457ad900a4b600",
+  "sourceHash": "fnv1a64:5913125d2c92b363",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -2463,14 +2463,17 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:56d07453c25d1031",
+      "sourceHash": "fnv1a64:7893d2184c0de4b6",
       "notice": {
         "modality": "pen",
-        "needs": [],
+        "needs": [
+          "a pen and something to write on"
+        ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -2557,14 +2560,17 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:a719a191c6ee9615",
+      "sourceHash": "fnv1a64:c67bedba35724894",
       "notice": {
         "modality": "pen",
-        "needs": [],
+        "needs": [
+          "a pen and something to write on"
+        ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -2643,14 +2649,17 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:0503650076a379e9",
+      "sourceHash": "fnv1a64:772e2908f2650690",
       "notice": {
         "modality": "pen",
-        "needs": [],
+        "needs": [
+          "a pen and something to write on"
+        ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -2728,14 +2737,17 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:be8b9bc657d0dcc6",
+      "sourceHash": "fnv1a64:bbf638ec3180b975",
       "notice": {
         "modality": "pen",
-        "needs": [],
+        "needs": [
+          "a pen and something to write on"
+        ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -2745,7 +2757,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Cover the answer below. The heard sentence uses only the familiar frame and the other Chapter 2 practice name."
+              "text": "Cover the answer below. The heard sentence uses only the familiar frame and the familiar practice name Arun."
             }
           ]
         },
@@ -2814,14 +2826,17 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d8602ffc0abb8440",
+      "sourceHash": "fnv1a64:770a1446fa5c6297",
       "notice": {
         "modality": "pen",
-        "needs": [],
+        "needs": [
+          "a pen and something to write on"
+        ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -2905,14 +2920,17 @@
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
+        "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:4f167b7401449863",
+      "sourceHash": "fnv1a64:2858edc5bb2df246",
       "notice": {
         "modality": "pen",
-        "needs": [],
+        "needs": [
+          "a pen and something to write on"
+        ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {

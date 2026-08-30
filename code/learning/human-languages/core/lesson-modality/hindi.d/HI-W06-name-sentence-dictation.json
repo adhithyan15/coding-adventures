@@ -8,14 +8,15 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
+      "writing-type",
       "writing-block"
     ],
-    "coreModality": "voice",
+    "coreModality": "pen",
     "coreReasons": [
-      "no-visual-dependency"
+      "writing-type"
     ],
-    "coreDrivable": true,
-    "sourceHash": "fnv1a64:be8b9bc657d0dcc6",
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bbf638ec3180b975",
     "detachableSegments": [
       "Writing — sentence dictation"
     ],

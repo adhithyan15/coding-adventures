@@ -8,7 +8,7 @@ spine_node: SPINE-EXCHANGE-NAMES
 sequence: 262
 delivery: script
 chapter: 2
-type: practice
+type: writing
 headword: "।"
 gloss: close one known Hindi sentence with a single visible boundary
 romanization: "pūrṇa virām"

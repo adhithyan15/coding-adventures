@@ -350,19 +350,23 @@ export function introducedAtoms(lesson: ParsedLesson): string[] {
  * An empty atom set is ambiguous in legacy prose: it can mean "this lesson
  * introduces nothing" or "nobody has migrated its knowledge contract yet."
  * Schema-v2 review and practice lessons can remove that ambiguity by explicitly
- * declaring an empty introduction list and a non-empty practice list. Writing
- * retrieval may do the same only when its parsed stage evidence is narrow and
- * atom-aligned: guided copy, delayed copy, or dictation/transcription, never
- * composition presented as retrieval. Missing/malformed fields and other lesson
- * types remain fail-closed as measurement-blind.
+ * declaring an empty introduction list and a non-empty practice list. Writing may
+ * do the same only when its parsed stage evidence is narrow and atom-aligned.
+ * Retrieval stages and untimed composition stages are separate kinds of work, but
+ * either can prove a zero-new frontier when every staged block assesses exactly the
+ * declared practised atoms and introduces none. Timed assessment, observation,
+ * missing/malformed fields, and other lesson types remain fail-closed as
+ * measurement-blind.
  */
-const WRITING_RETRIEVAL_STAGES = new Set([
+const ZERO_NEW_WRITING_STAGES = new Set([
   "guided-copy",
   "delayed-copy",
   "dictation-transcription",
+  "controlled-composition",
+  "connected-composition",
 ]);
 
-function hasExplicitWritingRetrievalContract(
+function hasExplicitZeroNewWritingContract(
   lesson: ParsedLesson,
   practises: readonly string[],
 ): boolean {
@@ -371,7 +375,7 @@ function hasExplicitWritingRetrievalContract(
 
   const stagedBlocks = lesson.blocks.filter((block) => block.writingStage !== undefined);
   if (stagedBlocks.length === 0) return false;
-  if (stagedBlocks.some((block) => !WRITING_RETRIEVAL_STAGES.has(block.writingStage!))) return false;
+  if (stagedBlocks.some((block) => !ZERO_NEW_WRITING_STAGES.has(block.writingStage!))) return false;
 
   const assessed = new Set<string>();
   for (const block of stagedBlocks) {
@@ -402,7 +406,7 @@ function isExplicitRetrievalOnlyLesson(lesson: ParsedLesson): boolean {
       type === "review" ||
       type === "practice" ||
       type === "practice-mix" ||
-      hasExplicitWritingRetrievalContract(lesson, practises)
+      hasExplicitZeroNewWritingContract(lesson, practises)
     )
   );
 }

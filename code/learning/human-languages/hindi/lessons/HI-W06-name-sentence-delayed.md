@@ -8,7 +8,7 @@ spine_node: SPINE-EXCHANGE-NAMES
 sequence: 263
 delivery: script
 chapter: 2
-type: practice
+type: writing
 headword: "मेरा नाम मीरा है।"
 gloss: hide the complete known sentence and produce it after a short delay
 romanization: "merā nām Mīrā hai"

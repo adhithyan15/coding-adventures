@@ -8,14 +8,15 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
+      "writing-type",
       "writing-block"
     ],
-    "coreModality": "voice",
+    "coreModality": "pen",
     "coreReasons": [
-      "no-visual-dependency"
+      "writing-type"
     ],
-    "coreDrivable": true,
-    "sourceHash": "fnv1a64:4f167b7401449863",
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2858edc5bb2df246",
     "detachableSegments": [
       "Writing — independent delayed checkpoint"
     ],

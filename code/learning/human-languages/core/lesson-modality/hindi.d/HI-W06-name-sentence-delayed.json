@@ -8,14 +8,15 @@
     "derived": "pen",
     "drivable": false,
     "reasons": [
+      "writing-type",
       "writing-block"
     ],
-    "coreModality": "voice",
+    "coreModality": "pen",
     "coreReasons": [
-      "no-visual-dependency"
+      "writing-type"
     ],
-    "coreDrivable": true,
-    "sourceHash": "fnv1a64:0503650076a379e9",
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:772e2908f2650690",
     "detachableSegments": [
       "Writing — delayed sentence production"
     ],
