@@ -10237,6 +10237,14 @@ prerequisites, so each declaration owner now depends on its matching Dune
 repair. This makes the ownership graph explicit instead of allowing a known
 full-suite failure to be folded into an unrelated declaration tranche.
 
+The pre-implementation Rust source audit found one additional portable gap.
+Both Rust hashing walkers recursively visit every descendant directory without
+applying the conformance registry for generated, dependency, VCS, cache, and
+temporary components, so Dune `_build` content can still affect source hashes
+after package discovery is corrected. The new pending
+`build-tool-rust-generated-directory-hashing-exclusion` owner classifies that
+separate hashing behavior. It remains outside this discovery-only tranche.
+
 The dependency/leverage pass selects
 `build-tool-rust-dune-build-discovery-exclusion` on branch
 `codex/build-tool-rust-dune-build-discovery-exclusion`. A complete exact-main
@@ -10248,7 +10256,7 @@ Dune completion umbrella. Rust 1.97.0, Clippy 0.1.97,
 All five live PRs have zero exact overlap with the Rust discovery, package
 documentation, state, root changelog, and roadmap surfaces. After lifecycle
 reconciliation, dependency repair, and selection, the complete graph contains
-576 owners and 858 edges: 175 merged, 400 pending, and exactly one
+577 owners and 859 edges: 175 merged, 401 pending, and exactly one
 `in-progress` owner.
 
 ## Autonomous Loop Protocol
