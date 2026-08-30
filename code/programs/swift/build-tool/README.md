@@ -118,6 +118,12 @@ swift run build-tool --emit-plan build-plan.json
 
 ## Development
 
+The Windows build front checks for Swift before launching the package suite.
+An absent toolchain emits the stable skip message and exits successfully. Once
+Swift is present, `swift test` owns the front's exit status, so native failures
+cannot be relabeled as toolchain absence. Package tests execute the checked-in
+front with controlled success, failure, and absent-toolchain fixtures.
+
 ```bash
 cd code/programs/swift/build-tool
 swift test

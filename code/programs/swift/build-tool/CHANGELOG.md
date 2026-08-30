@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Make `BUILD_windows` distinguish a missing Swift toolchain from a failing
+  native test run. Missing Swift still emits the stable skip diagnostic and
+  exits successfully; present-toolchain failures now propagate their exact
+  nonzero status.
 - Exclude Dune's exact, case-sensitive `_build` generated directory from
   package discovery and source hashing while preserving `_Build` and
   `_build-example`. Shared-fixture and focused Swift tests cover the boundary.

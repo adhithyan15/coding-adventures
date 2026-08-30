@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Swift build-tool Windows front
+
+- Made the Swift `BUILD_windows` front skip successfully only when Swift is
+  absent. When Swift is present, native test failures now retain their nonzero
+  exit status instead of being mislabeled as a missing toolchain.
+
 ### Swift build-tool Dune discovery
 
 - Excluded Dune's exact case-sensitive `_build` output component from Swift
