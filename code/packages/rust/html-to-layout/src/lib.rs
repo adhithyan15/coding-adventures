@@ -1499,10 +1499,9 @@ fn parse_css_length_in_context(
         (number, em_size)
     } else if let Some(number) = value.strip_suffix("px") {
         (number, 1.0)
-    } else if let Some(number) = value.strip_suffix('%') {
-        (number, percentage_basis / 100.0)
     } else {
-        return None;
+        let number = value.strip_suffix('%')?;
+        (number, percentage_basis / 100.0)
     };
     number
         .parse::<f64>()
