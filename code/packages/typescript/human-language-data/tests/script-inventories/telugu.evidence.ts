@@ -180,5 +180,26 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ఎ") ?? 0).toBe(0);
     expect(missingByScript.get("telugu.json")?.has("ఏ")).toBe(false);
     expect(affected.get("ఏ") ?? 0).toBe(0);
+    const teluguVocalicR = scripts.telugu!.independentVowels!.find(
+      (entry) => entry.glyph === "ఋ",
+    )!;
+    expect(teluguVocalicR.sound).toBe("r̥");
+    expect(teluguVocalicR.penLifts).toBe(5);
+    expect(teluguVocalicR.strokeOrder).toEqual([
+      "sweep right across the upper shoulder",
+      "restart and curve down around the left bowl",
+      "restart and sweep right around the lower bowl",
+      "restart and curl up around the first right lobe",
+      "restart and curl up around the middle lobe",
+      "restart and curl up around the final lobe",
+    ]);
+    expect(teluguVocalicR.strokeOrderSource?.citation).toMatch(
+      /Sathish Shanmugam.*independent vowel ఋ.*dot_stroke_v_7_ru\.png.*movements 1–6.*version 2\.6/i,
+    );
+    expect(teluguVocalicR.strokeOrderSource?.variation).toMatch(
+      /six disconnected directional movements.*separate pen-down run.*1.?3.*broad left body.*4.?6.*three successive right-side curls.*Noto Sans Telugu/i,
+    );
+    expect(missingByScript.get("telugu.json")?.has("ఋ")).toBe(false);
+    expect(affected.get("ఋ") ?? 0).toBe(0);
   },
 };
