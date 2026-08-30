@@ -4,6 +4,15 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed
+
+- The generated web host now completes a strict production TypeScript/Vite
+  build after emitting both TaskApp themes. The host's `BUILD` contract runs
+  that production build after Vitest, closing the CI gap that previously
+  allowed invalid generated React styles and transitive type errors to merge.
+- The copied `task-engine.mjs` accessor now has an extension-aware `.d.mts`
+  declaration that TypeScript's bundler resolution recognizes.
+
 ### Added
 
 - **A proper npm package for the web host.** Previously the host was a set of files

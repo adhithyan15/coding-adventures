@@ -51,6 +51,24 @@ import type {
   ParserGrammar,
 } from "@coding-adventures/grammar-tools";
 
+type TraceHost = typeof globalThis & {
+  process?: {
+    stderr?: {
+      write?: (message: string) => unknown;
+    };
+  };
+};
+
+/** Write parser traces without requiring Node globals in browser consumers. */
+function writeTrace(message: string): void {
+  const stderr = (globalThis as TraceHost).process?.stderr;
+  if (typeof stderr?.write === "function") {
+    stderr.write(message);
+    return;
+  }
+  console.error(message.replace(/\n$/, ""));
+}
+
 // =============================================================================
 // GENERIC AST NODES
 // =============================================================================
@@ -417,7 +435,7 @@ export class GrammarParser {
     // Format: [TRACE] rule '<name>' at token <index> (<TYPE> "<value>") → match|fail
     if (this.trace) {
       const tok = this.current();
-      process.stderr.write(
+      writeTrace(
         `[TRACE] rule '${ruleName}' at token ${startPos} (${tok.type} "${tok.value}") → `
       );
     }
@@ -426,7 +444,7 @@ export class GrammarParser {
 
     // Emit the match/fail outcome, completing the line started above.
     if (this.trace) {
-      process.stderr.write(children !== null ? "match\n" : "fail\n");
+      writeTrace(children !== null ? "match\n" : "fail\n");
     }
 
     // Cache result
