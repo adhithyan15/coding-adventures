@@ -10834,6 +10834,91 @@ found no remaining correctness, security, authority, lifecycle, or scope
 issue. The same PR therefore receives an exact lease-protected replacement
 push; replacement CI remains the only pre-auto-merge gate.
 
+### Post-PR #13516 refresh and TypeScript declaration selection
+
+PR #13516 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral CodeQL gate. Guarded squash auto-merge was
+enabled only after GitHub reported head
+`04e91dfcaef0ff5b86ab2bd20d5f4fc720cfec75` conflict-free, and GitHub merged
+it as `76ba0c1833f0a2d3f8f85a354b83468dbd2c6aae` at
+2026-08-30T18:50:43Z without a manual merge command. The TypeScript static
+front owner therefore advances to `merged` and the active PR is cleared.
+
+The collision-checked exact-main inventory remains schema 3 with 15
+established lanes, 1,388 implementation identities, 4,602 slots, and 1,427
+all-reported identities. Completion bands remain 175/265, 123/934, 170/2,139,
+and 920/12,880; Rust has 731 singletons, OCaml remains emerging at zero
+packages, and collisions and unknown buckets remain zero. The merge changed no
+package identity, and no newly unowned eligible gap appeared.
+
+The dependency/leverage pass selects
+`build-tool-typescript-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-typescript-extra-ci-toolchain-declaration-conformance`. All
+four prerequisites are merged, and this final eleventh existing declaration
+consumer is the sole remaining prerequisite for the remaining-engines
+declaration umbrella. It therefore outranks the independent TypeScript
+generated-directory hashing repair. Six live PRs have zero exact overlap with
+the expected eight-path tranche. Reconciliation plus selection leaves the
+complete 580-owner/864-edge graph at 182 merged, 397 pending, and exactly this
+owner in progress.
+
+### TypeScript declaration implementation and validation
+
+Test-first execution first failed at the deliberately absent native module.
+The package-local suite dynamically discovers all 11 neutral fixtures and
+evaluates them through the completed process-free
+`evaluateToolchainSnapshot()` adapter. The boundary pins exact UTF-8 byte and
+LF-line ceilings, fail-fast aggregate rejection, the five closed BUILD fronts,
+darwin/Linux/Windows precedence, exact CRLF grammar, stable deduplication,
+empty-front precedence, null-versus-empty scheduling, aliases, force-full,
+forced tools, unsupported diagnostics, and fresh frozen complete results.
+Direct-caller tests also lock schema-aligned collection and identifier bounds,
+uniqueness, sparse-array errors, null-prototype copies, and aggregate error
+precedence without granting filesystem, process, Git, environment, clock,
+randomness, credential, package-manager, network, or execution authority.
+
+The focused suite passes 11 tests and strict no-emit typechecking passes. The
+full package passes 338 tests across 14 files with 90.96% statement, 84.91%
+branch, 95.23% function, and 90.89% line coverage. The new module reaches
+95.00% statements, 90.13% branches, 100% functions, and 94.90% lines. The
+neutral corpus validates 119 cases and 283 files across 16 implementations,
+15 established lanes, and 12 front doors; focused conformance and parity
+families pass 248 tests with 25
+expected skips and 1,048 subtests. The canonical Go oracle passes module
+verification, all packages, vet, and a trimpath build. Its real exact-diff plan
+evaluates 45 Starlark BUILD files, discovers 481 TypeScript packages, selects
+only `typescript/programs/build-tool`, and skips the other 480 while validating
+five reviewed orphan exemptions.
+
+`npm pack --dry-run` contains 19 allowlisted files and no bundled dependency.
+Production audit reports zero vulnerabilities; all 70 installed packages have
+verified registry signatures and 33 have verified attestations. Independent
+correctness review found and closed fail-late aggregate and ambient `win32`
+contract drift. Independent security review then found and closed direct API
+cardinality, string, sparse-element, and Cartesian zero-byte-front bounds; its
+final exact-head re-review reports no remaining authority, mutation,
+prototype, leakage, dependency, packaging, or resource issue.
+
+Before first publication, `origin/main` advanced to
+`9bd71e2fa332e16f8490052726e80a5f972a6eac` through merged PR #13515. The
+branch rebased conflict-free. That 33-path human-language workflow, curriculum,
+progress, and existing TypeScript human-language-data slice has zero exact
+overlap with this eight-path tranche, adds no package root, and changes no
+package name. The collision-checked schema-3 inventory therefore remains
+unchanged at 1,388 implementation identities and 4,602 slots, with zero
+collisions, zero unknown buckets, and no newly unowned eligible gap.
+
+Ready-for-review PR #13530 opened from clean validated head
+`4d906d171dc25f8dc508260819eb20a9810fdf79` after a normal first push. Exact
+`origin/main` remained the rebased base, the target remote branch and prior PR
+were absent, and all current open PRs had zero exact overlap with the eight
+changed paths. Independent security, correctness, state, documentation,
+lifecycle, scope, inventory, and authority reviews found no remaining blocker.
+GitHub reports the PR mergeable and non-draft; required CI, CodeQL, and human-
+language checks are queued, so auto-merge remains disabled until every
+required check is terminal and acceptable and GitHub still reports no
+conflict.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
