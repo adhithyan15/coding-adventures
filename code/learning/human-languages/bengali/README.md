@@ -210,7 +210,8 @@ gap report is meant to surface; the entries land as those chapters migrate.
 ## Book / fonts
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Bengali font
-(`../../_fonts/NotoSansBengali-Static.ttf`). `latexmk -xelatex book.tex`.
+(`../../_fonts/NotoSansBengali-Static.ttf`). Build the isolated entrypoint with
+`code/scripts/check-book-compile.sh --strict bengali` from the repository root.
 Chapters 6 through 15 are generated from the canonical lessons; their
 Bengali-script runs use that font while their section bookmarks use authored
 romanization.

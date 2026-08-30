@@ -92,7 +92,8 @@ describe("book chapter modality projection", () => {
           `\\csname hlchaptermodality${entry.chapter}\\endcsname`,
         );
       }
-      const book = readFileSync(join(root, track.language, "book", "book.tex"), "utf8");
+      const book = outputs.get(`${track.language}/book/book.tex`);
+      expect(book, `${track.language} projected book root`).toBeDefined();
       expect(book).toContain("\\input{chapter-modalities}");
       for (const entry of track.chapters) {
         const chapterInput = book.match(

@@ -117,7 +117,8 @@ Devanagari, Noto Naskh Arabic, and Noto Sans Cyrillic fonts (`../../_fonts/`),
 loaded by relative path — so it builds identically locally and in CI, with no
 system-font dependency. Chapters 6–39 are generated from canonical lesson ASTs
 and checked against Language Ladder source hashes. A 164-page build reports
-**zero** missing characters and zero errors. `latexmk -xelatex book.tex`.
+**zero** missing characters and zero errors. Build the isolated entrypoint with
+`code/scripts/check-book-compile.sh --strict hindi` from the repository root.
 
 **What the main font cannot set.** The book's main face is Latin Modern, and it
 has no Greek, no Hebrew and no Han. Chapters 36–39 were drafted quoting Greek

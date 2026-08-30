@@ -39,6 +39,7 @@ import {
 import {
   defaultCurriculumRoot,
   loadChapterPolicy,
+  loadLanguageRegistry,
   loadLessons,
   loadTrackChapters,
 } from "./loader.js";
@@ -243,6 +244,7 @@ function safeOutput(root: string, relative: string): string {
 }
 
 const BOOK_COMPILE_INPUT_SUFFIXES = [
+  "/book/book.tex",
   "/book/chapter-modalities.tex",
   "/book/chapters/appendix-glossary.tex",
   "/book/chapters/appendix-answer-key.tex",
@@ -253,6 +255,10 @@ function isBookCompileInput(relative: string): boolean {
   return BOOK_COMPILE_INPUT_SUFFIXES.some((suffix) =>
     relative.endsWith(suffix),
   );
+}
+
+function isGeneratedBookRoot(relative: string): boolean {
+  return relative.endsWith("/book/book.tex");
 }
 
 function safeMarkdownSource(root: string, relative: string): string {
@@ -308,8 +314,9 @@ export function handwrittenBookChapters(
  * `existsSync` + `readFileSync` both follow symlinks, and `safeOutput` is purely
  * lexical so it cannot see one. A committed
  * `<track>/book/frontmatter.tex -> ~/.npmrc` would have that file's contents
- * copied verbatim into the generated `book.tex` and written into the working
- * tree — where the next `--write` commits it.
+ * copied verbatim into the projected `book.tex` and then into the published
+ * PDF. The projection living outside the checkout removes serialization, not
+ * the need to contain every authored read.
  */
 /**
  * `lstat`, or undefined when the path does not exist.
@@ -321,8 +328,43 @@ export function handwrittenBookChapters(
 function statIfPresent(path: string): ReturnType<typeof lstatSync> | undefined {
   try {
     return lstatSync(path);
-  } catch {
-    return undefined;
+  } catch (cause) {
+    if ((cause as NodeJS.ErrnoException).code === "ENOENT") return undefined;
+    throw cause;
+  }
+}
+
+/**
+ * Refuse any repository-resident copy of a projected book entrypoint.
+ *
+ * `lstat` is deliberate: unlike `existsSync`, it sees dangling links and does
+ * not follow a real link or junction before deciding that the retired path is
+ * present. A returned root is generated only for an isolated compile tree; a
+ * file, directory, real link, or dangling link at the tracked path is always a
+ * resurrection of the serialization point this boundary removes.
+ */
+function assertNoTrackedGeneratedBookRoots(
+  root: string,
+  relatives: Iterable<string>,
+): void {
+  for (const relative of relatives) {
+    if (!isGeneratedBookRoot(relative)) continue;
+    const output = safeOutput(root, relative);
+    if (statIfPresent(output)) {
+      throw new Error(
+        `generated book root '${relative}' must remain absent from the curriculum tree`,
+      );
+    }
+  }
+}
+
+function repositoryBoundary(root: string): string {
+  let current = realpathSync(root);
+  while (true) {
+    if (statIfPresent(join(current, ".git"))) return current;
+    const parent = dirname(current);
+    if (parent === current) return realpathSync(root);
+    current = parent;
   }
 }
 
@@ -729,9 +771,28 @@ export function generatedBookOutputs(
   // The authored halves live beside it as `frontmatter.tex` and
   // `backmatter.tex`; only the `\input` list in between is derived, and it is
   // derived from the ledger already in hand.
-  for (const language of [
-    ...new Set(config.targets.map((target) => target.language)),
-  ].sort()) {
+  let bookLanguages = [
+    ...new Set(
+      [...config.targets, ...(config.handwritten ?? [])].map(
+        (entry) => entry.language,
+      ),
+    ),
+  ].sort();
+  if (options.allowLegacyMonolith !== true) {
+    const registered = loadLanguageRegistry(root).languages
+      .map((entry) => entry.id)
+      .sort();
+    if (
+      bookLanguages.length !== registered.length ||
+      bookLanguages.some((language, index) => language !== registered[index])
+    ) {
+      throw new Error(
+        `book-generation languages must exactly match the active registry: projected=[${bookLanguages.join(", ")}], registered=[${registered.join(", ")}]`,
+      );
+    }
+    bookLanguages = registered;
+  }
+  for (const language of bookLanguages) {
     // Validated BEFORE the `join`, so the check covers the reads below and not
     // only the write. Checking it afterwards via `safeOutput` would still
     // contain the write, but a traversing `language` would reach `existsSync`
@@ -745,10 +806,15 @@ export function generatedBookOutputs(
     }
     const frontPath = join(root, language, "book", FRONTMATTER_TEX);
     const backPath = join(root, language, "book", BACKMATTER_TEX);
-    // A track that has not been migrated yet keeps its hand-written book.tex.
-    // Same reasoning as HL21's loader fallback: this lands one track at a time
-    // rather than needing a flag day.
-    if (!existsSync(frontPath) || !existsSync(backPath)) continue;
+    // The 23-track migration is complete. Missing either authored half must not
+    // silently shrink the returned root set and therefore the publication set.
+    if (!existsSync(frontPath) || !existsSync(backPath)) {
+      // Unit and migration fixtures still exercise pre-split legacy documents.
+      if (options.allowLegacyMonolith === true) continue;
+      throw new Error(
+        `${language}: authored frontmatter.tex and backmatter.tex are required`,
+      );
+    }
     const relative = `${language}/book/book.tex`;
     safeOutput(root, relative);
     outputs.set(
@@ -771,10 +837,11 @@ export function generatedBookOutputs(
  * owners can reproduce them exactly. The compile gate now gives this function a
  * fresh, isolated directory and exposes only the matching track through `TEXINPUTS`.
  *
- * Requiring an existing empty real directory is intentional. It keeps this API
- * from becoming a general "write generated files somewhere" escape hatch, and
- * means every descendant directory was created by this invocation rather than
- * supplied as a symlink or junction by repository content.
+ * Requiring an existing empty real directory outside the repository is
+ * intentional. It keeps this API from becoming a general "write generated
+ * files somewhere" escape hatch, and means every descendant directory was
+ * created by this invocation rather than supplied as a symlink or junction by
+ * repository content.
  */
 export function materializeBookCompileInputs(
   outputRoot: string,
@@ -788,14 +855,26 @@ export function materializeBookCompileInputs(
     );
   }
   const realOutputRoot = realpathSync(outputRoot);
+  const repositoryRoot = repositoryBoundary(root);
+  if (
+    realOutputRoot === repositoryRoot ||
+    realOutputRoot.startsWith(repositoryRoot + sep)
+  ) {
+    throw new Error(
+      `book compile input root '${outputRoot}' must resolve outside the repository`,
+    );
+  }
   if (readdirSync(realOutputRoot).length !== 0) {
     throw new Error(
       `book compile input root '${outputRoot}' must be empty`,
     );
   }
 
+  const outputs = generatedBookOutputs(root, options);
+  assertNoTrackedGeneratedBookRoots(root, outputs.keys());
+
   let written = 0;
-  for (const [relative, content] of generatedBookOutputs(root, options)) {
+  for (const [relative, content] of outputs) {
     if (!isBookCompileInput(relative)) continue;
     const output = safeOutput(realOutputRoot, relative);
     mkdirSync(dirname(output), { recursive: true });
@@ -851,6 +930,7 @@ export function runBookGeneration(
   const outputs = generatedBookOutputs(root, options);
   if (mode === "--check") {
     try {
+      assertNoTrackedGeneratedBookRoots(root, outputs.keys());
       assertGeneratedHashOwnerNames(
         root,
         BOOK_HASH_MANIFEST_DIR,
@@ -862,11 +942,14 @@ export function runBookGeneration(
       );
       return 1;
     }
+  } else {
+    assertNoTrackedGeneratedBookRoots(root, outputs.keys());
   }
   for (const [relative, expected] of outputs) {
-    // Compile-only inputs are projected and validated above, then materialized
-    // into an isolated temporary root by the compile gate. They must never be
-    // compared with or written into the tracked curriculum tree.
+    // Compile-only inputs, including the assembled book entrypoint, are
+    // projected and validated above, then materialized into an isolated
+    // temporary root by the compile gate. They must never be compared with or
+    // written into the tracked curriculum tree.
     if (isBookCompileInput(relative)) continue;
     const hashOwner = relative.startsWith(`${BOOK_HASH_MANIFEST_DIR}/`);
     const output = hashOwner
@@ -877,12 +960,10 @@ export function runBookGeneration(
     if (mode === "--write") {
       mkdirSync(dirname(output), { recursive: true });
       // `writeFileSync` FOLLOWS a symlink, and `safeOutput` is purely lexical so
-      // it cannot see one. This matters more than it used to: making
-      // `<track>/book/book.tex` a generated output turns a committed symlink at
-      // that path into an arbitrary-write primitive whose CONTENT is also
-      // attacker-chosen (it is the authored `frontmatter.tex`, verbatim). Target
-      // `~/.bashrc`, `.git/hooks/post-checkout`, a workflow file — and it fires
-      // on an ordinary `npm run generate:books`.
+      // it cannot see one. A committed symlink at any generated chapter or
+      // appendix path is an arbitrary-write primitive. Target `~/.bashrc`,
+      // `.git/hooks/post-checkout`, or a workflow file and it fires on an
+      // ordinary `npm run generate:books`.
       //
       // The read side of this feature already got `lstat` + `realpath`; leaving
       // the write side lexical would be a strange place to stop.

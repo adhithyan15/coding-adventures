@@ -205,7 +205,7 @@ ids, not atoms, so it cannot close a reinforcement window and never has.
 - [`chapters.json`](./chapters.json) — the HL05 chapter capability ledger.
 - [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)
   · [`roadmap.md`](./roadmap.md) · [`session-map.md`](./session-map.md)
-  · [`book/`](./book/) (`latexmk -xelatex book.tex`)
+  · [`book/`](./book/) (`code/scripts/check-book-compile.sh --strict german` from the repository root)
 
 Lessons are slug-named (e.g. `GE-C01-tag`); order lives in the book (LaTeX
 auto-numbers) and `session-map.md`.
