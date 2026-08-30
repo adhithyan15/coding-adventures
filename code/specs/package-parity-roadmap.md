@@ -9961,6 +9961,29 @@ dependency cache populated. All six live open PRs have zero exact overlap with
 the expected Haskell tranche paths. After reconciliation and selection, the 566-owner,
 833-edge graph contains 170 merged, 395 pending, and one `in-progress` owner.
 
+The Haskell engine now exposes the pure
+`ToolchainDetection.evaluateToolchainSnapshot` boundary and dynamically
+consumes all 11 neutral declaration fixtures. It owns platform BUILD
+precedence, the complete 16-key registry, language aliases, affected and
+force-full scheduling, forced workflow toolchains, exact CRLF grammar, stable
+unsupported diagnostics, and UTF-8 byte, logical-line, and aggregate limits.
+Exact Windows BUILD execution passes all 67 examples across the package and
+its graph dependencies; warning-as-error library and executable builds and
+`cabal check` pass. HPC reports 95% expression and 86% alternative coverage
+for the new module. The 119-case/283-file neutral corpus, 205 conformance
+tests, 68 parity/capability/toolchain-lock tests, complete Go oracle suite,
+Go vet, trimpath build, collision gate, state DAG, diff hygiene, overlap audit,
+and authority/credential review pass. No production dependency or host,
+filesystem, Git, process, environment, network, credential, or execution
+authority was added.
+
+The branch rebased without conflict onto exact `origin/main`
+`452583c6643a09ef7c3ed89cb7d0110ab2a50999`. The intervening Hindi pre-A1
+writing merge changes only human-language curriculum and an existing
+TypeScript package; it adds no package identity or build-tool overlap. The
+collision counts, neutral corpus, and all 67 exact Cabal examples remain
+unchanged after the rebase.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

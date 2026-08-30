@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- A pure bounded `ToolchainDetection.evaluateToolchainSnapshot` API that
+  independently consumes all 11 neutral extra-CI-toolchain cases, including
+  platform BUILD precedence, exact declaration grammar, scheduling, forced
+  toolchains, deterministic diagnostics, and byte, line, and aggregate limits.
 - A pure orphan-crate snapshot validator consuming all four shared neutral
   cases, with exact artifact filtering, direct and ancestor BUILD coverage,
   empty-BUILD diagnostics, reasoned exemption validation and stale cleanup,

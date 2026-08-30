@@ -67,6 +67,13 @@ is claimed. The Elixir engine uses
 MUST discover and evaluate every `toolchain-detection-*.json` case rather than
 relying on the neutral Python oracle or the Go front door.
 
+The Haskell engine uses
+`ToolchainDetection.evaluateToolchainSnapshot`; its package-local Hspec suite
+MUST discover and evaluate every `toolchain-detection-*.json` case through that
+pure native boundary, including exact outcomes, all 16 canonical flags,
+diagnostics, platform precedence, CRLF grammar, scheduling, forced toolchains,
+and the shared byte, line, and aggregate ceilings.
+
 C and C++ remain emerging implementation lanes. OCaml also begins as emerging
 and must implement this contract before promotion. WASM is an execution target,
 Mosaic and Twig are domain languages, and Starlark is a build language; none is
