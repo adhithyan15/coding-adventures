@@ -106627,8 +106627,8 @@
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1320,
-    "mainCharacters": 126,
+    "filesScanned": 1251,
+    "mainCharacters": 125,
     "scriptCharacters": 721,
     "gaps": 0
   }
