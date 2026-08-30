@@ -140,3 +140,14 @@ Completion requires all of the following:
 6. the affected-package build passes; and
 7. an independent security review finds no unresolved filesystem or build-time
    trust-boundary issue before push.
+
+## 8. Exact owner completeness
+
+HL34 adds a separate `data/script-owner-declarations/<script>/` tree with one
+ordinal-free declaration per stable glyph or mark identity. The declaration
+reader fixes the language/script boundary, validates the complete filename set
+before opening bodies, rejects unsafe filesystem shapes, and binds every body
+back to its path. `check:shards` compares those independent identities with the
+current inventory owners in both directions. `complete: false` continues to
+describe an intentionally growing repertoire; it no longer means that a clean
+owner deletion is structurally undetectable.

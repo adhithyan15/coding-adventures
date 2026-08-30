@@ -44,21 +44,17 @@ function withFixture(paths: string[], run: (root: string) => void): void {
 }
 
 describe("removed-monolith completeness declarations", () => {
-  it("gives all 47 exact generic plans an independent source", () => {
+  it("gives all 51 generic plans an exact independent source", () => {
     const exact = SHARD_PLANS.filter(
       (plan) =>
         plan.sections.length > 0 &&
-        plan.completeness !== undefined &&
-        plan.completeness.kind !== "structural-only",
+        plan.completeness !== undefined,
     );
-    expect(exact).toHaveLength(47);
+    expect(exact).toHaveLength(51);
     expect(
-      exact.reduce<Record<Exclude<ShardCompleteness["kind"], "structural-only">, number>>(
+      exact.reduce<Record<ShardCompleteness["kind"], number>>(
         (counts, plan) => {
-          const kind = plan.completeness!.kind as Exclude<
-            ShardCompleteness["kind"],
-            "structural-only"
-          >;
+          const kind = plan.completeness!.kind;
           counts[kind] += 1;
           return counts;
         },
@@ -66,25 +62,15 @@ describe("removed-monolith completeness declarations", () => {
           "curriculum-spine-union": 0,
           "generated-narration-chapters": 0,
           "curriculum-cross-references": 0,
+          "script-owner-declarations": 0,
         },
       ),
     ).toEqual({
       "curriculum-spine-union": 1,
       "generated-narration-chapters": 23,
       "curriculum-cross-references": 23,
+      "script-owner-declarations": 4,
     });
-  });
-
-  it("labels the four incomplete script inventories structural-only", () => {
-    const structural = SHARD_PLANS.filter(
-      (plan) => plan.completeness?.kind === "structural-only",
-    );
-    expect(structural.map((plan) => plan.path).sort()).toEqual([
-      "data/scripts/japanese.json",
-      "data/scripts/perso-arabic.json",
-      "data/scripts/tamil.json",
-      "data/scripts/urdu-nastaliq.json",
-    ]);
   });
 });
 

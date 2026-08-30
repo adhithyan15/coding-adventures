@@ -66,10 +66,13 @@ Ordinal prefixes remain ordering coordinates, so an id-bearing owner inserted
 at `0015` is accepted without renumbering its neighbours.
 
 The Japanese, Perso-Arabic, Tamil, and Urdu-Nastaliq script inventories declare
-`complete: false`; their generic plans are explicitly **structural-only** until
-#13381 supplies independent, per-glyph declarations. Their filename/body,
-parsing, safety, and aggregate-resurrection checks remain enforced, but
-`check:shards` does not yet claim that a clean glyph-owner deletion is detectable.
+`complete: false` because their learner repertoires are still growing. Their
+current owner sets are nevertheless exact: one strict, ordinal-free declaration
+under `data/script-owner-declarations/<script>/{letters,marks}/` independently
+names every glyph or mark. `check:shards` compares both sets in both directions,
+so a clean deletion, unexpected owner, duplicate identity, filename/body
+mismatch, unsafe path, or case-fold collision fails without restoring a shared
+script-sized manifest.
 
 Shared Markdown documents use `<document>.d/` and one strict, locale-free
 filename grammar. `_meta.md` is the only metadata shard. Every section shard is
