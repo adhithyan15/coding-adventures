@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:868957643f51d0d3",
+  "lessonIds": [
+    "ES-C402-costar",
+    "ES-C402-camisa",
+    "ES-C402-camiseta",
+    "ES-C402-talla",
+    "ES-C402-gorro",
+    "ES-C402-shopping-recall-1",
+    "ES-C402-shopping-recall-2"
+  ],
+  "tex": "spanish/book/chapters/ch402-camisa-camiseta-talla-gorro-costar.tex"
+}

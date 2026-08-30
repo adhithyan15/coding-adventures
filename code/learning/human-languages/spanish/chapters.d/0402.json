@@ -1,0 +1,22 @@
+{
+  "chapter": 402,
+  "title": "Five Words in a Clothes Shop",
+  "label": "ch:camisa-camiseta-talla-gorro-costar",
+  "canDo": "I can name a shirt, T-shirt, size and cap, and ask or say what something costs.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS",
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C402-shopping-recall-2",
+    "kind": "production",
+    "summary": "Complete ES-C402-gorro: identify four clothes-shop words and ask what an item costs.",
+    "assesses": [
+      "ES-LEX-COSTAR",
+      "ES-LEX-CAMISA",
+      "ES-LEX-CAMISETA",
+      "ES-LEX-TALLA",
+      "ES-LEX-GORRO"
+    ]
+  }
+}

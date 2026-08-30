@@ -1,0 +1,16 @@
+{
+  "id": "ES-EXT-402-SHOPPING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a shirt, T-shirt, clothing size and brimless cap.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C402-camisa",
+    "ES-C402-camiseta",
+    "ES-C402-talla",
+    "ES-C402-gorro",
+    "ES-C402-shopping-recall-1",
+    "ES-C402-shopping-recall-2"
+  ]
+}
