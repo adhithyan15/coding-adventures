@@ -10407,13 +10407,13 @@ unowned portable or build-tool gap appeared.
 The dependency/leverage pass selects
 `build-tool-swift-dune-build-discovery-exclusion` on branch
 `codex/build-tool-swift-dune-build-discovery-exclusion`. Its two prerequisites
-are merged, and the item directly unlocks both Swift declaration conformance
-and the remaining-engines Dune umbrella. Swift and TypeScript have equal graph
+are merged, and the item advances both the Swift declaration chain and the
+remaining-engines Dune umbrella. Swift and TypeScript have equal graph
 leverage, but Swift wins the documented lane order, has no broad-lane live PR,
 and already shares `Discovery.skipDirectories` between discovery and source
 hashing. Swift 6.3.3, SwiftPM, swift-format, `llvm-cov`, and `llvm-profdata` are
 installed; the package has no external dependency. Five live PRs have zero
-exact overlap on the seven expected Swift, state, roadmap, and root-changelog
+exact overlap on the eight final Swift, state, roadmap, and root-changelog
 paths; `lessons.md` remains untouched because #12165 changes it. After merge
 reconciliation and selection, exactly one owner is `in-progress`.
 
@@ -10434,17 +10434,22 @@ The selected Swift engine now prunes Dune's exact case-sensitive `_build`
 component from both package discovery and source hashing while retaining
 `_Build` and `_build-example`. The hashing walker uses sorted per-directory
 enumeration and entry attributes, preserving deterministic paths without
-following directory links. Test-first validation initially produced four
-expected failures across the direct discovery, direct hashing, and shared
-language-registry boundaries before the source repair was added.
+following POSIX directory symlinks. On Windows it rejects reparse-point
+directories through `GetFileAttributesW` before recursion. Test-first
+validation initially produced four expected failures across the direct
+discovery, direct hashing, and shared language-registry boundaries before the
+source repair was added.
 
-Swift 6.3.3 passes all 42 package tests through parallel, coverage, literal
-generic BUILD-content, and exact Windows BUILD-content runs. `Discovery.swift`
-reaches 91.33% line coverage, `Hasher.swift` reaches 67.33%, and production
-code reaches 58.03% overall. The release build, package dump, and zero-external-
-dependency graph pass. Swift-format remains a known package-wide baseline-red
-gate without a checked-in configuration; the touched files preserve the
-surrounding four-space repository style and formatter churn is excluded.
+Swift 6.3.3 has a green 44-test Windows package suite through parallel,
+coverage, literal generic BUILD-content, and exact Windows BUILD-content runs.
+The host executes 43 cases, including a real NTFS-junction regression, while
+the POSIX directory-symlink case is explicitly disabled; POSIX CI runs its 43
+applicable cases including that symlink regression. `Discovery.swift` reaches
+91.33% line coverage, `Hasher.swift` reaches 71.08%, and production code reaches
+58.23% overall. The release build, package dump, and zero-external-dependency
+graph pass. Swift-format remains a known package-wide baseline-red gate without
+a checked-in configuration; the touched files preserve the surrounding four-
+space repository style and formatter churn is excluded.
 
 The neutral corpus validates 119 cases and 283 files, and 94 focused Python
 tests plus 130 subtests pass. The Go oracle passes module verification, all
