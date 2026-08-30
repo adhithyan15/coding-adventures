@@ -1,4 +1,5 @@
 import Test.Hspec
+import ToolchainDetectionSpec (toolchainDetectionSpec)
 
 import BuildToolSpec (buildToolSpec)
 import HashingSpec (hashingSpec)
@@ -38,3 +39,4 @@ spec = do
     resolutionPerlSpec
     resolutionSwiftSpec
     resolutionTypescriptSpec
+    toolchainDetectionSpec

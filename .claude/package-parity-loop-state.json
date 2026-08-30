@@ -12,23 +12,23 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 13475,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13475",
-    "branch": "codex/build-tool-elixir-extra-ci-toolchain-declaration-conformance",
-    "implementation_revision": "c01387d3399f86c230a290f2e5402e6bf84d0560",
+    "number": 13481,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13481",
+    "branch": "codex/build-tool-haskell-extra-ci-toolchain-declaration-conformance",
+    "implementation_revision": "2adcaa51eeabe78ddd171ba8938936fe9bea83af",
     "status": "checks-pending",
-    "opened_at": "2026-08-30T07:43:22Z"
+    "opened_at": "2026-08-30T08:47:40Z"
   },
   "last_ci_action": {
-    "observed_at": "2026-08-30T07:43:30Z",
-    "pr_number": 13475,
+    "observed_at": "2026-08-30T08:47:46Z",
+    "pr_number": 13481,
     "run_id": null,
     "attempt": 1,
     "status": "checks-pending",
-    "notes": "Opened ready-for-review PR #13475 from validated head c01387d3399f86c230a290f2e5402e6bf84d0560. GitHub reports the branch mergeable and non-draft; CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict."
+    "notes": "Opened ready-for-review PR #13481 from validated implementation head 2adcaa51eeabe78ddd171ba8938936fe9bea83af. GitHub reports the branch mergeable and non-draft, but CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
-    "revision": "ee5068fe7b8161fa549a0d9891372706baa80c40",
+    "revision": "452583c6643a09ef7c3ed89cb7d0110ab2a50999",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -301,7 +301,7 @@
     {
       "id": "build-tool-elixir-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Elixir build tool consume extra CI toolchain declarations",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
       "branch": "codex/build-tool-elixir-extra-ci-toolchain-declaration-conformance",
       "pr_number": 13475,
@@ -319,15 +319,24 @@
       "security_review_notes": "The new evaluator accepts only caller-supplied in-memory snapshots and the production caller retains bytes from the BUILD front discovery already opened. It adds no enumeration, Git, process, environment, network, credential, secret, dependency, execution, write, or logging authority. Exact ASCII declaration grammar, canonical allowlisting, stable diagnostics, platform precedence, per-file byte and line ceilings, and an aggregate byte ceiling remain fail-closed; Hex reports no retired or vulnerable dependency.",
       "final_review_revision": "c01387d3399f86c230a290f2e5402e6bf84d0560",
       "publication_notes": "Opened ready-for-review PR #13475 from clean validated head c01387d3399f86c230a290f2e5402e6bf84d0560 after a normal first push from exact origin/main ee5068fe7b8161fa549a0d9891372706baa80c40. Immediately before publication, all 11 changed paths had zero exact overlap across seven other live open pull requests. GitHub reports the PR mergeable and non-draft; CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "merged_head_revision": "9c3a80300b8c2f1505591c2f26e93e2a2220f50b",
+      "merge_revision": "2ba900aa5eb47f8da8e7d42703a3b7a303c4087d",
+      "merged_at": "2026-08-30T07:55:29Z",
+      "merge_notes": "All 40 final checks reached terminal acceptable conclusions: 33 successes and seven expected skips. Auto-merge was enabled only after GitHub reported the branch conflict-free; GitHub then merged the PR without a manual merge command.",
       "notes": "Adopt the merged process-free declaration corpus in the Elixir engine without widening execution authority."
     },
     {
       "id": "build-tool-haskell-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Haskell build tool consume extra CI toolchain declarations",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-haskell-extra-ci-toolchain-declaration-conformance",
+      "pr_number": 13481,
+      "selection_revision": "2ba900aa5eb47f8da8e7d42703a3b7a303c4087d",
+      "selection_notes": "Selected after merged PR #13475 and a collision-clean exact-main refresh. The eight remaining declaration consumers have equal graph leverage; Haskell wins the documented ordering and independent-runtime diversity tie-break, and its exact GHC 9.4.8 plus Cabal 3.16.1.0 toolchain has the required dependency cache populated. The inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. All six live open PRs have zero exact overlap with the expected Haskell tranche paths, and no new eligible unowned gap exists.",
+      "validation_notes": "Test-first compilation failed on the deliberately absent ToolchainDetection module before source was added. The pure native evaluator dynamically discovers and consumes all 11 neutral declaration fixtures and adds direct UTF-8 byte, logical-line, aggregate, CRLF, affected-selection, and forced-toolchain coverage. Exact BUILD_windows execution passes all three Cabal suites: graph has four examples, directed-graph has three, and the build tool has 60, all with zero failures. Cabal warning-as-error library and executable builds plus cabal check pass; HPC reports 95% expression and 86% alternative coverage for ToolchainDetection. The neutral corpus validates 119 cases and 283 files, 205 conformance tests pass with 23 expected platform skips, and 68 package-parity/capability/Haskell/OCaml-lock tests pass with two expected Windows symlink skips. The complete Go build-tool suite, vet, and trimpath build pass. The schema-3 parity report remains collision-clean at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, completion bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, and zero unknown buckets. The 566-owner/833-edge state is complete and acyclic with 170 merged, 395 pending, and exactly this item in progress. Seven live PRs have zero exact overlap with all ten changed paths, the target remote branch remains absent, diff hygiene and credential scans are clean, and the new pure module imports no filesystem, Git, process, environment, network, credential, or execution authority. No production dependency changed; cabal outdated reports only the existing containers and time upper bounds.",
+      "rebase_notes": "Rebased without conflict onto exact origin/main 452583c6643a09ef7c3ed89cb7d0110ab2a50999 after classifying merged Hindi pre-A1 writing PR #13471 as human-language curriculum and an existing TypeScript package-only change with no package identity, BUILD marker, build-tool, state, roadmap, or Haskell overlap. The collision inventory and 119-case neutral corpus remain unchanged, and exact post-rebase Cabal tests pass all 67 examples.",
+      "publication_notes": "Opened ready-for-review PR #13481 from clean validated implementation head 2adcaa51eeabe78ddd171ba8938936fe9bea83af after a normal first push. Immediately before publication, the branch was based on exact origin/main 452583c6643a09ef7c3ed89cb7d0110ab2a50999, the target remote branch and prior PR were absent, and all ten changed paths had zero exact overlap across seven live PRs. GitHub reports the PR mergeable and non-draft, currently blocked only by queued or in-progress CI and CodeQL checks; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Adopt the merged process-free declaration corpus in the Haskell engine without widening execution authority."
     },
     {

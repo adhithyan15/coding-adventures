@@ -9,6 +9,18 @@ dependencies from package manifests, hashes package inputs for incremental
 builds, uses git diff information to narrow the build set, and executes
 `BUILD` scripts in dependency order.
 
+Extra CI toolchain detection is also available through the pure
+`ToolchainDetection.evaluateToolchainSnapshot` boundary. Callers supply an
+inert package/BUILD snapshot, platform, optional scheduled package set, and
+forced toolchains. The evaluator selects the same platform BUILD precedence,
+parses only exact `# needs-toolchain: NAME` records, maps selected package
+languages to the complete 16-key registry, and returns stable unsupported
+diagnostics. Its package-local suite independently discovers and consumes all
+11 language-neutral declaration cases, including CRLF boundaries, affected
+selection, force-full behavior, and the shared UTF-8 byte, logical-line, and
+aggregate ceilings. The module performs no filesystem, Git, process,
+environment, network, credential, or execution operations.
+
 Tracked-artifact validation is a pure adapter over caller-supplied snapshots.
 It rejects unsafe repository paths and every exact, case, or Unicode
 compatibility alias of a `node_modules` component. Invalid paths are redacted
