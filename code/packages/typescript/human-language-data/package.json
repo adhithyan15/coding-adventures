@@ -28,6 +28,8 @@
     "shard:docs": "node dist/doc-shard-cli.js --shard",
     "unshard:docs": "node dist/doc-shard-cli.js --unshard",
     "check:doc-shards": "node dist/doc-shard-cli.js --check",
+    "generate:script-owner-evidence": "node dist/script-owner-evidence-cli.js --write",
+    "check:script-owner-evidence": "node dist/script-owner-evidence-cli.js --check",
     "check:compile": "bash ../../../scripts/check-book-compile.sh",
     "report": "node dist/report-cli.js",
     "report:gentle-ramp": "node dist/gentle-ramp-cli.js",

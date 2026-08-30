@@ -14,10 +14,10 @@ still match the reviewable evidence accepted for that owner.
 
 ## 2. Stable ownership
 
-Evidence lives under a test-owned tree, one file per stable code-point identity:
+Evidence lives under a static data tree, one file per stable code-point identity:
 
 ```text
-tests/script-owner-evidence/<script>/
+data/script-owner-evidence/<script>/
   letters/U-<CODEPOINT>[-U-<CODEPOINT>...].json
   marks/U-<CODEPOINT>[-U-<CODEPOINT>...].json
 ```
