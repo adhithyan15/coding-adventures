@@ -116,6 +116,27 @@ scalar path ordering plus canonical ASCII JSON detail ordering. The adapter is
 pure: it never enumerates a checkout, reads a file, consults Git, launches a
 process, reads the environment, follows a link, or accesses the network.
 
+## Extra CI Toolchain Declarations
+
+`CodingAdventures::BuildTool::ToolchainDetection::evaluate_snapshot` is the
+language-native conformance boundary for toolchain detection. It accepts only
+caller-owned hashes, arrays, and BUILD strings; applies platform-front
+precedence; parses exact `# needs-toolchain:` declarations; and returns every
+canonical toolchain flag on success. Unsupported selected languages and forced
+toolchains produce the stable `TOOLCHAIN_UNSUPPORTED` diagnostic.
+
+The Test2 suite dynamically discovers and independently consumes all 11
+language-neutral `toolchain-detection-*.json` fixtures. UTF-8 byte, logical
+line, and aggregate ceilings are enforced before evaluation. The production
+module does not enumerate a checkout, consult Git, launch a process, read the
+environment, or access the network. Production CLI and emitted-plan
+integration remain a separate tranche.
+
+Both `BUILD` and `BUILD_windows` install the declared test dependency and run
+the complete Test2 suite. The Windows front uses the executor's existing
+sequential fallback and verifies the real UTF-8 CLI boundary plus this
+process-free declaration engine instead of skipping the package.
+
 Generated source-embedded Unicode 17.0.0 NFC, NFKC, full default-fold, and
 full-uppercase tables keep policy independent of the installed Perl runtime's
 Unicode data. Regenerate the module and its Unicode License v3 notice with an
@@ -143,6 +164,7 @@ python code/scripts/generate_tracked_artifact_unicode17.py \
 | `GlobMatch.pm` | Glob-to-regex conversion for Starlark `srcs` |
 | `StarlarkEval.pm` | Starlark BUILD detection and rule mapping |
 | `Validator.pm` | Build contracts plus pure tracked-artifact and orphan-crate snapshot policy |
+| `ToolchainDetection.pm` | Pure bounded package and extra-CI toolchain decisions |
 | `TrackedArtifactUnicode17.pm` | Generated, source-embedded Unicode 17 policy tables |
 
 ## Perl Idioms
@@ -207,12 +229,15 @@ t/10-integration.t   2 cases — end-to-end pipeline
 t/11-validator.t       BUILD/CI contracts and shared snapshot validation fixtures
 t/12-ci-workflow.t     canonical CI workflow validation
 t/13-resolution-utf8.t shared fixtures — strict Lua rockspec UTF-8 and CLI diagnostics
+t/14-toolchain-detection.t all 11 neutral extra-CI toolchain snapshots and limits
 ```
 
 Run all tests:
 ```bash
 prove -l -v t/
 ```
+
+The same command is the package's real Windows BUILD front.
 
 ## Comparison with Other Implementations
 

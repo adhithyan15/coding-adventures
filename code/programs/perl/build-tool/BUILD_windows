@@ -1,1 +1,2 @@
-echo "perl/build-tool: skipped on Windows (fork() not supported)"
+cpanm --installdeps --quiet .
+prove -l -v t/

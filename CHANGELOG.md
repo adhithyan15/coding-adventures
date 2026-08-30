@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Language-neutral extra CI toolchain declarations
 
+- Added the Perl build-tool consumer with a pure bounded native snapshot
+  evaluator and independent Test2 coverage of all 11 neutral cases. The
+  adapter owns platform BUILD precedence, UTF-8 byte ceilings, exact CRLF
+  declaration grammar, affected and forced scheduling, fresh canonical
+  boolean maps, and stable unsupported diagnostics without adding host or
+  execution authority. Its real Windows BUILD front now runs all 15 native
+  test files, including UTF-8 CLI and declaration conformance, rather than
+  skipping the package.
 - Added the Lua build-tool consumer with a pure bounded native snapshot
   evaluator and independent Busted coverage of all 11 neutral cases. The
   adapter owns platform BUILD precedence, exact CRLF declaration grammar,

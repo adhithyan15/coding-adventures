@@ -10030,6 +10030,47 @@ so no duplicate owner is needed. No newly eligible unowned gap displaces Lua.
 After reconciliation and selection, the 566-owner, 833-edge graph contains 171
 merged, 394 pending, and one `in-progress` owner.
 
+## Post-#13482 Refresh and Perl Declaration-Engine Selection
+
+PR #13482 completed 40 terminal acceptable checks: 33 successes and seven
+expected skips. Auto-merge was enabled only after GitHub reported the branch
+conflict-free, and GitHub merged validated head
+`3ab127450b717a8aa42ad1e652a6be153dd6c574` as
+`4c961589db3bdf1f658d5e009961a9df299c1af9` at 2026-08-30T09:59:41Z without a
+manual merge command. Lua therefore advances to `merged` and the active PR is
+cleared.
+
+The collision-checked exact-main inventory remains 15 established lanes,
+1,388 implementation identities, 4,602 slots, and 1,427 all-reported
+identities. Completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and collisions and unknown buckets remain zero. The neutral corpus remains
+schema 1 with 119 cases, 283 files, 16 implementations, 15 established lanes,
+and 12 front doors.
+
+The six unfinished declaration consumers have equal dependencies and graph
+leverage. The readiness pass selects
+`build-tool-perl-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-perl-extra-ci-toolchain-declaration-conformance`. Perl wins
+the documented ordering after Lua and adds another independent runtime through
+the same process-free boundary. Strawberry Perl 5.42.2, Test2::V0 1.302219,
+cpanm 1.7049, and TAP::Harness 3.52 are installed locally; optional coverage,
+lint, and advisory tools will be installed for this tranche.
+
+Six live PRs have zero exact overlap with the expected Perl tranche. PR #13455
+prospectively adds TypeScript-only `forme-cli`, which remains covered by the
+existing `forme-portable-core-family-classification` owner. PR #13483 is
+confined to existing human-language data and script-ductus roots. No newly
+eligible unowned gap displaces Perl. After reconciliation and selection, the
+566-owner, 833-edge graph contains 172 merged, 393 pending, and one
+`in-progress` owner.
+
+Before implementation publication, PR #13483 merged as
+`ed0fa54984dde17f8b8d1d61ee0cc0ac2f4c02f8`. Its state and roadmap updates
+were disjoint from the Perl selection, so the fresh parity branch rebased
+cleanly onto that exact `origin/main`. A repeat collision gate left every
+inventory count unchanged, and Perl remains the selected owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
