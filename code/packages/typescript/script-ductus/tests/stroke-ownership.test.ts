@@ -160,9 +160,9 @@ describe("stroke ownership migration baseline", () => {
         Object.entries(counts).sort(([a], [b]) => a.localeCompare(b)),
       ),
     }).toEqual({
-      keys: 341,
+      keys: 342,
       keyHash:
-        "fb5711c158184044a6d0b090ae02ec1f6da171d98d6553e2ba35bacf0032a992",
+        "29f6549d85031cd47ef6d99d245769a0707b6c5ed705d9f1d5552b48e9265f3a",
       nonTamilDataHash:
         "a01795782a9d6ed521878796557c22fc2b829aca5b548f71b71826e45807488d",
       sharedIdentityGroups: 17,
@@ -179,7 +179,7 @@ describe("stroke ownership migration baseline", () => {
         kannada: 13,
         malayalam: 10,
         "perso-arabic": 24,
-        tamil: 25,
+        tamil: 26,
         telugu: 6,
         "urdu-nastaliq": 31,
       },

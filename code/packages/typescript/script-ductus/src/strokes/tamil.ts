@@ -5,6 +5,7 @@ import { entry as uB86 } from "./tamil/U-B86.ts";
 import { entry as uB87 } from "./tamil/U-B87.ts";
 import { entry as uB89 } from "./tamil/U-B89.ts";
 import { entry as uB8A } from "./tamil/U-B8A.ts";
+import { entry as uB90 } from "./tamil/U-B90.ts";
 import { entry as uB92 } from "./tamil/U-B92.ts";
 import { entry as uB95 } from "./tamil/U-B95.ts";
 import { entry as uB99 } from "./tamil/U-B99.ts";
@@ -34,6 +35,7 @@ export const mainEntries: DuctusEntry[] = [
   uB87,
   uB89,
   uB8A,
+  uB90,
   uB92,
   uB95,
   uB99,

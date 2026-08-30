@@ -61,4 +61,20 @@ export default [
       expect(shortO.strokeOrderSource?.citation).toMatch(/Module 14.*Frame 14/i);
     },
   },
+  {
+    suite: "Tamil independent vowels in the starter inventory",
+    suiteOrder: 40,
+    caseOrder: 50,
+    name: "keeps ஐ sourced as five independently animated runs",
+    verify: ({ SCRIPTS }) => {
+      const tamil = SCRIPTS.find((script) => script.script === "tamil")!;
+      const ai = tamil.letters.find((entry) => entry.glyph === "ஐ")!;
+      expect(ai.sound).toBe("ai");
+      expect(ai.penLifts).toBe(4);
+      expect(ai.strokeOrder).toHaveLength(5);
+      expect(ai.strokeOrderSource?.url).toBe(
+        "https://commons.wikimedia.org/wiki/File:Writing_Tamil_10.gif",
+      );
+    },
+  },
 ] satisfies readonly GlyphEvidence[];

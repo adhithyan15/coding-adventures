@@ -62,10 +62,10 @@ const INVENTORIES = [
   {
     name: "tamil",
     plan: TAMIL_SCRIPT_PLAN,
-    letters: 25,
+    letters: 26,
     marks: 9,
     identityDigest:
-      "12edac447f5a0ae29f2b89a88d326b7893cbd7176ac1809c9dffad1f1f260421",
+      "6d973d4b32ee1d273d5de22fca773fdc599a81ea17bdcaea001554042d219b51",
     metadataDigest:
       "738d50ab1ce59e4b9ef40123c4c4d07d2f59ddef8347f857937b1274d0153e53",
   },
