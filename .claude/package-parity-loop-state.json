@@ -11,24 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 13558,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13558",
-    "branch": "codex/build-tool-python-generated-directory-hashing-exclusion",
-    "implementation_revision": "9a6c4ca9127160f05960250f599a201c6ff709ce",
-    "status": "checks-pending",
-    "opened_at": "2026-08-30T23:20:13Z"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-08-30T23:20:13Z",
+    "observed_at": "2026-08-30T23:40:04Z",
     "pr_number": 13558,
-    "run_id": null,
+    "run_id": 33341589625,
     "attempt": 1,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #13558 is open from validated initial head daec7a5701be106f1e1847871ec8249bf600c973. GitHub reports it non-draft and mergeable with required checks registered or pending; auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists."
+    "status": "merged",
+    "notes": "All 41 final-head checks were terminal and acceptable: 34 succeeded, six were expected skips, and one was neutral. GitHub reported final head 85ef7fcbf58d80b14500e3f80f481fd8935da2d1 clean and mergeable before guarded squash auto-merge completed; GitHub merged PR #13558 as 88e77a6309e1112f0cb16886f315ef05b020da37 without a manual merge command."
   },
   "last_inventory": {
-    "revision": "2ade18a0bb61275a1b9d5ae1cb3387ce58211448",
+    "revision": "88e77a6309e1112f0cb16886f315ef05b020da37",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -710,7 +703,7 @@
     {
       "id": "build-tool-python-generated-directory-hashing-exclusion",
       "title": "Exclude generated directories from Python build-tool source hashing",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-python-dune-build-discovery-conformance", "build-tool-generated-directory-hashing-conformance-corpus"],
       "branch": "codex/build-tool-python-generated-directory-hashing-exclusion",
       "pr_number": 13558,
@@ -725,15 +718,20 @@
       "validation_notes": "Tests-first validation produced the intended two failures: extension and declared-source walks both retained files beneath all 26 exact generated components. A final independent audit then found that os.walk followlinks=False does not reject Windows junctions; two direct mocked reparse regressions failed before the smallest repair. The focused suite now passes 20 tests with one platform skip, projects the registry from both neutral fixtures, and covers both collection modes, case and near names, directory links, file links, and a real Windows NTFS junction, with the POSIX real-link case reserved for POSIX CI. The complete Python package passes 463 tests with one platform skip at 91.23% total coverage and 96% changed-hasher coverage. Changed production MyPy and Ruff checks pass; the only direct Ruff finding is the unchanged pre-existing 89-character SPECIAL_FILENAMES line. Compileall and uv dependency compatibility pass. The neutral schema and runner suites pass 22 and 63 tests, and validate-corpus accepts 121 cases and 283 files across 16 implementations, 15 established lanes, and 12 front doors. The Go oracle passes module verification, all package tests, vet, and a trimmed all-package build. A real forced Python dry plan with build-file validation discovers 495 packages, reports all 495 WOULD-BUILD, and preserves the five reviewed orphan exemptions. The exact-main schema-3 inventory remains collision-free and unchanged, and the 594-owner/895-edge graph is unique, dependency-complete, and acyclic.",
       "security_notes": "Bandit passes the changed hasher, pip-audit finds no known vulnerability in third-party packages while correctly skipping the two local distributions absent from PyPI, uv pip check reports a compatible environment, and isolated sdist and wheel builds pass. The repair adds no dependency, process, environment, network, credential, or new filesystem authority. It reduces traversal by rejecting directory and file symlinks plus Windows junction/reparse attributes before matching or opening source files.",
       "publication_notes": "Opened ready-for-review PR #13558 from clean validated initial head daec7a5701be106f1e1847871ec8249bf600c973 after a normal first push from exact origin/main 2ade18a0bb61275a1b9d5ae1cb3387ce58211448. Immediately before publication, the target remote branch and prior PR were absent, and all seven changed paths had zero exact overlap across six live open PRs. GitHub reports the PR non-draft and mergeable with required checks registered or pending, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists.",
+      "merged_at": "2026-08-30T23:40:04Z",
+      "merge_commit": "88e77a6309e1112f0cb16886f315ef05b020da37",
+      "merge_notes": "All 41 final-head checks were terminal and acceptable: 34 succeeded, six were expected skips, and one was neutral. GitHub reported final head 85ef7fcbf58d80b14500e3f80f481fd8935da2d1 clean and mergeable before guarded squash auto-merge completed; no manual merge command was used.",
       "notes": "Discovered by the exact-main pre-selection conformance audit after PR #13535. Both Python hashing walkers ignore os.walk dirnames, so exact generated components such as _build remain inside package hashes contrary to the shared generated-artifact contract. Add exact case-sensitive pruning for the complete registry in a separate post-discovery tranche, preserving _Build and _build-example and avoiding symlink or host-authority expansion."
     },
     {
       "id": "build-tool-python-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Python build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-python-generated-directory-hashing-exclusion", "build-tool-generated-directory-hashing-conformance-corpus"],
-      "branch": null,
+      "branch": "codex/build-tool-python-portable-source-hashing-conformance",
       "pr_number": null,
+      "selection_revision": "88e77a6309e1112f0cb16886f315ef05b020da37",
+      "selection_notes": "Selected immediately after PR #13558 completed 41 terminal acceptable checks and merged through guarded squash auto-merge as 88e77a6309e1112f0cb16886f315ef05b020da37. The exact-main schema-3 inventory remains identity-neutral and collision-clean at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Intervening PRs #13555 and #13557 changed only existing Punjabi curriculum and Mosaic binding surfaces; no package root, BUILD, or manifest topology changed, and parallel inventory, dependency, fixture, and live-PR audits found no new eligible unowned gap. Both prerequisites are now merged. This bounded continuation closes the two remaining Python engine hashing-contract holes across its 503-package lane: OCaml source and metadata recognition plus unambiguous normalized relative-path framing. It directly advances the eleven-engine portable-source-hashing aggregate and outranks independent ready leaves by completing the chain unlocked by #13558. Six live PRs have zero exact overlap with the expected seven-path tranche, and the target branch, remote branch, and prior PR were absent before this fresh clean worktree was created. Reconciliation and selection leave the complete 594-owner/895-edge graph unique, dependency-complete, and acyclic at 187 merged, 406 pending, and exactly this owner in progress.",
       "notes": "Discovered by the post-#13544 source-hashing audit. Python recognizes source inputs only for Python, Ruby, Go, and Perl and concatenates content digests without normalized relative paths, so OCaml source/metadata changes and same-content renames can be invisible. After directory pruning lands, add complete portable source recognition and unambiguous normalized path framing without expanding host authority."
     },
     {

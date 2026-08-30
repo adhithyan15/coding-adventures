@@ -11231,6 +11231,42 @@ is terminal and acceptable and GitHub still reports no merge conflict. The
 ownership graph therefore contains 186 merged, 407 pending, and exactly one
 `pr-open` owner.
 
+### Post-PR #13558 refresh and Python portable hashing selection
+
+PR #13558 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral result. Guarded squash auto-merge was enabled
+only after GitHub reported final head
+`85ef7fcbf58d80b14500e3f80f481fd8935da2d1` clean and mergeable, and GitHub
+merged it as `88e77a6309e1112f0cb16886f315ef05b020da37` at
+2026-08-30T23:40:04Z without a manual merge command. The Python generated-
+directory hashing owner therefore advances to `merged` and the active PR is
+cleared.
+
+The exact-main schema-3 inventory remains collision-clean and identity-neutral:
+15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427
+all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880,
+731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown
+buckets. The 75 paths since the prior inventory revision belong to existing
+Punjabi, Mosaic, Python build-tool, state, or documentation surfaces. No
+package root, BUILD, or manifest topology changed, and parallel inventory,
+dependency, fixture, and live-PR audits found no newly eligible unowned gap.
+
+The dependency/leverage pass selects
+`build-tool-python-portable-source-hashing-conformance` on branch
+`codex/build-tool-python-portable-source-hashing-conformance`. Both
+prerequisites are merged. This bounded continuation closes the Python engine's
+two remaining portable hashing-contract holes: applicable OCaml source and
+metadata recognition plus normalized relative-path framing that makes same-
+content renames observable while preserving raw source bytes and file
+boundaries. It directly advances the eleven-engine portable-source-hashing
+aggregate across the 503-package Python lane and therefore outranks independent
+ready leaves. Six live PRs have zero exact overlap with the expected hasher,
+tests, README, changelog, state, roadmap, and root-changelog paths; the branch,
+remote branch, and prior PR were absent before the fresh clean worktree was
+created. Reconciliation and selection leave the complete 594-owner/895-edge
+graph unique, dependency-complete, and acyclic at 187 merged, 406 pending, and
+exactly one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
