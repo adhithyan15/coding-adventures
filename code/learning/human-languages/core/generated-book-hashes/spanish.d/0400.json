@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:4494a584c7e0b3df",
+  "lessonIds": [
+    "ES-C400-tren",
+    "ES-C400-vuelo",
+    "ES-C400-aparcamiento",
+    "ES-C400-abono",
+    "ES-C400-playa"
+  ],
+  "tex": "spanish/book/chapters/ch400-el-tren-y-la-playa.tex"
+}
