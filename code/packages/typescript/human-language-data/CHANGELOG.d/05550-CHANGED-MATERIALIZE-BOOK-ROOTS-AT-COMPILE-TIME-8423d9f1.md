@@ -1,3 +1,5 @@
+### Changed
+
 - The 23 generated `book/book.tex` entrypoints are no longer tracked. The book
   generator retains their exact in-memory projection, rejects any returned root
   resurrected in the curriculum tree, and materializes roots only inside the
