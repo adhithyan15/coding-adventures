@@ -182,6 +182,24 @@ This chapter teaches the printed questions before the learner chooses answers.
 Independent six-field completion remains the next runway; this chapter does not
 claim practical-form or A1 readiness.
 
+## Chapter 20 — A Message for Mira
+
+| Session | Lesson | One small writing job |
+|---|---|---|
+| 122 | A1M01-reader-greeting | trace one greeting line for **मीरा** |
+| 123 | A1M02-name-line | guided-copy Arun's identity line |
+| 124 | A1M03-meeting-line | guided-copy the familiar meeting line |
+| 125–133 | A1M04-language-line … A1M12-tomorrow-line | retrieve one known purpose or closing line after a short delay |
+| 134 | A1M13-opening-block | order three practised opening lines |
+| 135–136 | A1M14-skills-block-one / A1M15-skills-block-two | order two separate three-line skill blocks |
+| 137 | A1M16-closing-block | order the three practised closing lines |
+| 138 | A1M17-guided-message | connect four completed blocks into a 32-word message |
+| 139 | A1M18-independent-message | write the 30–40-word message from reader and purpose alone, without romanization or a visible model |
+
+Every line is practised separately before block ordering begins. The final
+checkpoint is independent but untimed; timed integration and full A1 readiness
+remain later work.
+
 ## Next
 
 The next Marathi script-closure tranche starts at the Chapter 5 doorway and
