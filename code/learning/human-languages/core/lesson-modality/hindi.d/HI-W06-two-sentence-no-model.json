@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "HI-W06-two-sentence-no-model",
+    "language": "hindi",
+    "chapter": 2,
+    "sequence": 266,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2858edc5bb2df246",
+    "detachableSegments": [
+      "Writing — independent delayed checkpoint"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

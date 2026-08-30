@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 2,
-  "sourceHash": "fnv1a64:0c43cebd6c440fa6",
+  "sourceHash": "fnv1a64:5913125d2c92b363",
   "lessonIds": [
     "HI-C02-naam",
     "HI-C02-meraa",
@@ -20,13 +20,19 @@
     "HI-W05-write-namaste",
     "HI-W05-namaste-delayed-copy",
     "HI-W05-namaste-dictation",
-    "HI-C02-practice"
+    "HI-C02-practice",
+    "HI-W06-name-sentence-frame",
+    "HI-W06-name-sentence-stop",
+    "HI-W06-name-sentence-delayed",
+    "HI-W06-name-sentence-dictation",
+    "HI-W06-two-sentence-card",
+    "HI-W06-two-sentence-no-model"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 0,
   "text": "hindi/narration/ch02.txt",
   "json": "hindi/narration/ch02.json",
-  "textHash": "fnv1a64:5c05db3c052c3713",
-  "jsonHash": "fnv1a64:795b3a69343fd259",
+  "textHash": "fnv1a64:17ee22e3f3825cda",
+  "jsonHash": "fnv1a64:4cdd8b712564429c",
   "findings": []
 }

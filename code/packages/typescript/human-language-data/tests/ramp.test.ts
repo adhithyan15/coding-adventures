@@ -156,21 +156,29 @@ describe("what the measurement cannot see", () => {
     expect(report.tracks[0]).toMatchObject({ measurable: 3, unmeasurable: 0 });
   });
 
-  it("measures explicit zero-new-atom writing retrieval without changing its modality type", () => {
+  it("measures explicit zero-new-atom writing without changing its modality type", () => {
     const lessons = [
       writingRetrievalLesson("ES-W1", { stage: "guided-copy" }),
       writingRetrievalLesson("ES-W2", { stage: "delayed-copy" }),
       writingRetrievalLesson("ES-W3", { stage: "dictation-transcription" }),
+      writingRetrievalLesson("ES-W4", { stage: "controlled-composition" }),
+      writingRetrievalLesson("ES-W5", { stage: "connected-composition" }),
     ];
     const report = measureRamp(lessons, POLICY);
 
-    expect(lessons.map((item) => item.frontmatter.type)).toEqual(["writing", "writing", "writing"]);
+    expect(lessons.map((item) => item.frontmatter.type)).toEqual([
+      "writing",
+      "writing",
+      "writing",
+      "writing",
+      "writing",
+    ]);
     expect(report.summary.unmeasurableLessons).toBe(0);
     expect(report.summary.measurablePercent).toBe(100);
-    expect(report.tracks[0]).toMatchObject({ measurable: 3, unmeasurable: 0 });
+    expect(report.tracks[0]).toMatchObject({ measurable: 5, unmeasurable: 0 });
   });
 
-  it("keeps incomplete, malformed, or composition-shaped writing contracts fail-closed", () => {
+  it("keeps incomplete, malformed, observation, timed, or mismatched writing contracts fail-closed", () => {
     const report = measureRamp(
       [
         writingRetrievalLesson("ES-W-NO-INTRO", { introductions: "missing" }),
@@ -182,13 +190,12 @@ describe("what the measurement cannot see", () => {
         writingRetrievalLesson("ES-W-UNKNOWN-STAGE", { stage: "mystery-stage" }),
         writingRetrievalLesson("ES-W-NO-BLOCK-KNOWLEDGE", { blockKnowledge: "missing" }),
         writingRetrievalLesson("ES-W-OBSERVE", { stage: "observe-trace" }),
-        writingRetrievalLesson("ES-W-COMPOSE", { stage: "controlled-composition" }),
         writingRetrievalLesson("ES-W-TIMED", { stage: "timed-assessment-production" }),
         writingRetrievalLesson("ES-W-MISMATCH", { assesses: ["OTHER-ATOM"] }),
       ],
       POLICY,
     );
-    expect(report.summary.unmeasurableLessons).toBe(12);
+    expect(report.summary.unmeasurableLessons).toBe(11);
     expect(report.summary.measurablePercent).toBe(0);
   });
 

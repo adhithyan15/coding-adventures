@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "HI-W06-name-sentence-dictation",
+    "language": "hindi",
+    "chapter": 2,
+    "sequence": 264,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bbf638ec3180b975",
+    "detachableSegments": [
+      "Writing — sentence dictation"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

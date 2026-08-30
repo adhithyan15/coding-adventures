@@ -11,7 +11,7 @@ it("pins Hindi continuity", () => expectLanguageContinuity("hindi"));
 it("pins Hindi modality", () => expectLanguageModality("hindi"));
 it("pins Hindi lesson-content budgets", () =>
   expectLanguageLessonBudgets("hindi", {
-    lessons: 275,
+    lessons: 281,
     idioms: 21,
     senses: 22,
     cultureClaims: 27,
@@ -46,4 +46,37 @@ it("removes support gently from a visible glyph trace to one heard known word", 
   ]);
   expect(stageLessons[2]?.frontmatter.prerequisites).toContain("HI-W05-write-namaste");
   expect(stageLessons[3]?.frontmatter.prerequisites).toContain("HI-W05-namaste-delayed-copy");
+});
+
+it("removes support gently from a known phrase to a no-model two-sentence purpose", () => {
+  const ordered = loadTrackLessons("hindi").sort(readingOrder);
+  const ids = [
+    "HI-W06-name-sentence-frame",
+    "HI-W06-name-sentence-stop",
+    "HI-W06-name-sentence-delayed",
+    "HI-W06-name-sentence-dictation",
+    "HI-W06-two-sentence-card",
+    "HI-W06-two-sentence-no-model",
+  ];
+  const lessons = ordered.filter((lesson) => ids.includes(lesson.realization.lessonId));
+
+  expect(lessons.map((lesson) => lesson.realization.lessonId)).toEqual(ids);
+  expect(lessons.map((lesson) => Number(lesson.frontmatter["duration.max_seconds"]))).toEqual([
+    150, 120, 150, 150, 180, 180,
+  ]);
+  for (let index = 1; index < lessons.length; index += 1) {
+    expect(lessons[index]?.frontmatter.prerequisites).toContain(ids[index - 1]);
+  }
+
+  const markdown = lessons.map((lesson) =>
+    lesson.blocks.map((block) => block.markdown).join("\n"),
+  );
+  expect(markdown[0]).toContain("four visible word groups");
+  expect(markdown[1]).toContain("changes only the sentence boundary");
+  expect(markdown[2]).toContain("no visible answer and no romanization");
+  expect(markdown[3]).toContain("from sound alone");
+  expect(markdown[4]).toContain("new classmate");
+  expect(markdown[5]).toContain("There is no Devanagari model and no romanized answer");
+  expect(markdown[5]).toContain("two meanings in the requested order");
+  expect(markdown[5]).toContain("one **।** after each sentence");
 });

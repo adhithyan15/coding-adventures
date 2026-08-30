@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "HI-W06-name-sentence-frame",
+    "language": "hindi",
+    "chapter": 2,
+    "sequence": 261,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7893d2184c0de4b6",
+    "detachableSegments": [
+      "Writing — complete the visible frame"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

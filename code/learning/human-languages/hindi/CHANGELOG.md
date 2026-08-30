@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Added — sentence-to-connected pre-A1 writing bridge
+
+Six new Chapter 2 micro-lessons reuse only previously practised language to
+move from a visible name-sentence choice through punctuation, delayed recall,
+and heard-cue transcription into a two-sentence card for a named reader and
+purpose. The final 180-second checkpoint removes the model, waits ten seconds,
+and separates meaning-order, spacing, spelling, and punctuation repair.
+
+This closes the short connected writing slice in #13446. It does not claim A1
+or exam readiness; the complete four-skill assessment bridge remains #13424.
+
 ### Added — a cumulative first Hindi writing-stage runway
 
 Hindi's existing writing lessons now expose an honest, machine-checkable first
