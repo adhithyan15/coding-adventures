@@ -242,10 +242,17 @@ function safeOutput(root: string, relative: string): string {
   return output;
 }
 
-const CHAPTER_MODALITY_COMPILE_INPUT = "/book/chapter-modalities.tex";
+const BOOK_COMPILE_INPUT_SUFFIXES = [
+  "/book/chapter-modalities.tex",
+  "/book/chapters/appendix-glossary.tex",
+  "/book/chapters/appendix-answer-key.tex",
+  "/book/chapters/appendix-index.tex",
+] as const;
 
 function isBookCompileInput(relative: string): boolean {
-  return relative.endsWith(CHAPTER_MODALITY_COMPILE_INPUT);
+  return BOOK_COMPILE_INPUT_SUFFIXES.some((suffix) =>
+    relative.endsWith(suffix),
+  );
 }
 
 function safeMarkdownSource(root: string, relative: string): string {
@@ -760,9 +767,9 @@ export function generatedBookOutputs(
  * Materialize the TeX definitions that a book needs only while it is compiling.
  *
  * These used to be committed beside every book. That made every lesson tranche
- * rewrite a per-language rollup even though the canonical lesson-modality owners
- * can reproduce it exactly. The compile gate now gives this function a fresh,
- * isolated directory and exposes only the matching track through `TEXINPUTS`.
+ * rewrite per-language modality and appendix rollups even though their canonical
+ * owners can reproduce them exactly. The compile gate now gives this function a
+ * fresh, isolated directory and exposes only the matching track through `TEXINPUTS`.
  *
  * Requiring an existing empty real directory is intentional. It keeps this API
  * from becoming a general "write generated files somewhere" escape hatch, and
@@ -811,7 +818,7 @@ export function materializeBookCompileInputs(
     written += 1;
   }
   if (written === 0) {
-    throw new Error("book compile input generation produced no modality files");
+    throw new Error("book compile input generation produced no files");
   }
   return written;
 }
