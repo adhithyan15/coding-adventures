@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 19,
+  "output": "marathi/book/chapters/ch19-a1-form-labels.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

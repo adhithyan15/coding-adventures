@@ -165,6 +165,23 @@ tranche durable.
 | 110 | R18-script-c-r4 | द ध ब |
 | 111 | R18-script-d-r4 | य ळ व |
 
+## Chapter 19 — Six Small Form Labels
+
+| Session | Lesson | One small writing job |
+|---|---|---|
+| 112 | A1F01-naav | trace **नाव: मीरा** |
+| 113 | A1F01-shahar | trace **शहर: पुणे** |
+| 114 | A1F01-bhasha | trace **भाषा: मराठी** |
+| 115 | A1F01-avdate-pey | trace **आवडते पेय: चहा** and notice neuter **-ते** |
+| 116 | A1F01-avadti-kruti | trace **आवडती कृती: वाचणे** and change only to feminine **-ती** |
+| 117 | A1F01-mitrache-naav | trace **मित्राचे नाव: अरुण** and notice neuter **-चे** |
+| 118–119 | A1F02-first-three-copy / last-three-copy | guided copy in two three-row batches |
+| 120–121 | A1F03-first-three-delayed / last-three-delayed | retrieve the same batches after a delay, without romanization |
+
+This chapter teaches the printed questions before the learner chooses answers.
+Independent six-field completion remains the next runway; this chapter does not
+claim practical-form or A1 readiness.
+
 ## Next
 
 The next Marathi script-closure tranche starts at the Chapter 5 doorway and
