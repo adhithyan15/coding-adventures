@@ -146,12 +146,20 @@ npx tsx src/index.ts --language python
 # Install pinned development dependencies
 npm ci
 
+# Typecheck production and adapter source without emitting generated files
+npm run typecheck
+
 # Run tests
 npx vitest run
 
 # Run tests with coverage
 npx vitest run --coverage
 ```
+
+The generic `BUILD` front runs dependency installation, this strict no-emit
+compiler gate, and then the coverage suite in that order. Tests stay outside
+the production `tsconfig.json`; every adapter added under `src/` is covered
+automatically without introducing a second test-only compiler contract.
 
 ## Design decisions
 
