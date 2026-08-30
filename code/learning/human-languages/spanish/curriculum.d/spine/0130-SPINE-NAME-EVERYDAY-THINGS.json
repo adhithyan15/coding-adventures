@@ -6,7 +6,8 @@
     "ES-PATH-392-01",
     "ES-PATH-393-01",
     "ES-PATH-394-01",
-    "ES-PATH-400-01"
+    "ES-PATH-400-01",
+    "ES-PATH-402-THINGS"
   ],
   "omits": [],
   "relocates": {}
