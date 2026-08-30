@@ -77,4 +77,20 @@ export default [
       );
     },
   },
+  {
+    suite: "Tamil consonants in the starter inventory",
+    suiteOrder: 40,
+    caseOrder: 60,
+    name: "keeps Grantha-derived ஷ sourced as four numbered runs",
+    verify: ({ SCRIPTS }) => {
+      const tamil = SCRIPTS.find((script) => script.script === "tamil")!;
+      const sha = tamil.letters.find((entry) => entry.glyph === "ஷ")!;
+      expect(sha.sound).toBe("ṣa");
+      expect(sha.penLifts).toBe(3);
+      expect(sha.strokeOrder).toHaveLength(4);
+      expect(sha.strokeOrderSource?.url).toBe(
+        "https://tamilnavarasam.in/Books/Others/Tamil_eng_hindi.pdf",
+      );
+    },
+  },
 ] satisfies readonly GlyphEvidence[];

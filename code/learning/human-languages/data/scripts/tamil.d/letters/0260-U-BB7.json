@@ -1,0 +1,25 @@
+{
+  "glyph": "ஷ",
+  "sound": "ṣa",
+  "role": "consonant",
+  "components": [
+    "an inner-left curl",
+    "a rounded outer-left body",
+    "a lower joining bar",
+    "a looped right body with a descending tail"
+  ],
+  "strokeOrder": [
+    "curl around the inner-left loop and descend to the lower-left join — then lift once",
+    "set the pen at the left side, climb around the rounded outer body, and descend to the lower join — then lift a second time",
+    "draw the lower joining bar from the left body to the right — then lift a third time",
+    "loop around the right body and finish with its descending tail"
+  ],
+  "strokeOrderNote": "four strokes — the inner-left curl, rounded outer-left body, lower joining bar, and looped right body with descending tail are separate pen-down runs; source-verified against the four numbered strokes in Learn Tamil Through English/Hindi",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "citation": "Ratnakar Narale, Learn Tamil Through English/Hindi, Reading and Writing Tamil Granthakshars, Third Tamil Granthakshar ஷ, Sanskrit Hindi Research Institute, p. 13",
+    "url": "https://tamilnavarasam.in/Books/Others/Tamil_eng_hindi.pdf",
+    "variation": "The printed ஷ diagram numbers four separate pen-down runs in order. This four-run learner path fits those runs to the bundled Noto Sans Tamil outline; Tamil handwriting varies by school."
+  },
+  "notes": "Grantha-derived ṣa appears in borrowed words such as சந்தோஷம் (cantōṣam, happiness). Its four-run construction distinguishes the curled left body from the loop-and-tail at the right."
+}

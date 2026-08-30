@@ -33,7 +33,7 @@ The four fixed declaration roots are:
 |---|---|---:|---:|
 | Japanese | `japanese` | 49 letters + 3 marks | 49 + 3 |
 | Persian | `perso-arabic` | 24 letters + 1 mark | 24 + 1 |
-| Tamil | `tamil` | 26 letters + 9 marks | 26 + 9 |
+| Tamil | `tamil` | 27 letters + 9 marks | 27 + 9 |
 | Urdu | `urdu-nastaliq` | 31 letters + 2 marks | 31 + 2 |
 
 The counts record the migration boundary, not permanent ceilings. The exact
@@ -99,7 +99,7 @@ runtime completeness source introduced here.
 
 Completion requires:
 
-1. 145 canonical declarations reconstruct the exact four current owner sets;
+1. 146 canonical declarations reconstruct the exact four current owner sets;
 2. all four script plans use exact declaration completeness and none remain
    `structural-only`;
 3. focused tests cover deletion on either side, an unexpected owner, duplicate

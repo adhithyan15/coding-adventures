@@ -24,7 +24,7 @@ const corpus = defaultCurriculumRoot();
 const CONFIGS = [
   { language: "japanese", script: "japanese", letters: 49, marks: 3 },
   { language: "persian", script: "perso-arabic", letters: 24, marks: 1 },
-  { language: "tamil", script: "tamil", letters: 26, marks: 9 },
+    { language: "tamil", script: "tamil", letters: 27, marks: 9 },
   { language: "urdu", script: "urdu-nastaliq", letters: 31, marks: 2 },
 ] as const;
 
