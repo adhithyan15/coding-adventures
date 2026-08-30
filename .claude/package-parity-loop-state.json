@@ -11,14 +11,21 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 13516,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13516",
+    "branch": "codex/build-tool-typescript-static-build-front-typecheck",
+    "implementation_revision": "5d0e1fe4386e1c04ab5ed68d2bf3763a0d82f33d",
+    "status": "checks-pending",
+    "opened_at": "2026-08-30T18:21:41Z"
+  },
   "last_ci_action": {
-    "observed_at": "2026-08-30T17:59:44Z",
-    "pr_number": 13514,
+    "observed_at": "2026-08-30T18:21:44Z",
+    "pr_number": 13516,
     "run_id": null,
     "attempt": 1,
-    "status": "merged-via-auto-merge",
-    "notes": "PR #13514 completed all 41 checks acceptably with 34 successes, six expected skips, and one neutral CodeQL gate. GitHub reported final head 7f62a4f06214f847099de5b373cd57b53d42ec2f clean and mergeable; the loop enabled guarded squash auto-merge only then, and GitHub merged it as 582b246b810ae429a4aa06c8f7e52e3c38405454 at 2026-08-30T17:59:44Z without a manual merge command."
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #13516 is open and non-draft from validated publication head 5d0e1fe4386e1c04ab5ed68d2bf3763a0d82f33d. GitHub reports it mergeable with no conflict, but required CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "582b246b810ae429a4aa06c8f7e52e3c38405454",
@@ -593,15 +600,19 @@
     {
       "id": "build-tool-typescript-static-build-front-typecheck",
       "title": "Add a TypeScript compiler gate to the TypeScript build-tool front",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-typescript-dune-build-discovery-exclusion"],
       "branch": "codex/build-tool-typescript-static-build-front-typecheck",
-      "pr_number": null,
+      "pr_number": 13516,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13516",
+      "opened_at": "2026-08-30T18:21:41Z",
+      "opened_revision": "5d0e1fe4386e1c04ab5ed68d2bf3763a0d82f33d",
       "selection_revision": "582b246b810ae429a4aa06c8f7e52e3c38405454",
       "selection_notes": "Selected after PR #13514 completed 41 acceptable checks and merged through guarded squash auto-merge as 582b246b810ae429a4aa06c8f7e52e3c38405454, followed by a collision-checked exact-main refresh. The schema-3 inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. PR #13514 changed only seven existing paths since 4abc7f001f7e3f924f6b7d4cc7bf3ae583b3dd45, with no package root or manifest and no newly unowned eligible gap. This owner's sole TypeScript Dune prerequisite is merged; its bounded static front directly unlocks TypeScript declaration conformance, while the newly eligible generated-directory hashing owner has no downstream children. Node 24.16.0 and npm 11.13.0 are installed; strict no-emit compilation proves that direct pinned TypeScript and Node declaration dependencies are required. The target branch and prior PR were absent, and six live PRs have zero exact overlap across the prospective TypeScript build-tool, state, roadmap, and root-changelog tranche. Reconciliation plus selection leaves the complete 580-owner/864-edge graph unique, dependency-complete, acyclic, and closed over merged dependencies at 181 merged, 398 pending, and exactly this owner in progress.",
       "implementation_revision": "5aa36f64b728201a7cd57a1f717b399faf4b8173",
       "validation_notes": "Test-first execution first produced exactly two expected failures: package metadata lacked the typecheck script and pins, and the generic BUILD front lacked the compiler command. The final exact 10-path tranche adds only direct dev pins for TypeScript 7.0.2 and @types/node 22.20.1, the explicit strict no-emit script, Node types in the production tsconfig, the generic install-to-typecheck-to-coverage BUILD order, a two-case contract test, and durable documentation; no production source, hasher, discovery, declaration adapter, workflow, neutral fixture, or conformance spec changed. Clean npm installation, the focused two tests, local Node 24 and explicit Node 22.22.1 typechecks, and literal BUILD contents pass. The full package passes 327 tests across 13 files; V8 coverage remains 90.50% statements, 83.93% branches, 94.84% functions, and 90.42% lines. The neutral corpus validates 119 cases and 283 files across 16 implementations, 15 established lanes, and 12 front doors; the focused conformance, parity-reporter, and capability families pass 199 tests with 23 expected skips and 959 subtests. The canonical Go oracle passes module verification, all packages, vet, and trimpath build; its real exact-diff TypeScript plan evaluates 45 Starlark BUILD files, discovers 481 packages, selects only typescript/programs/build-tool, validates the five reviewed orphan exemptions, and skips the other 480. npm pack retains the 18-file allowlist with no bundled dependency; production audit reports zero vulnerabilities, full audit retains only the separately owned development-only nanoid advisory, and all 70 installed packages have verified registry signatures with 33 attestations. The collision inventory remains schema 3 with 15 lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The 580-owner/864-edge graph is unique, dependency-complete, acyclic, and lifecycle-valid at 181 merged, 398 pending, and exactly this owner in progress. Diff, strict JSON, package metadata, generated-output, credential-pattern, artifact, and 10-path scope checks are clean.",
       "security_notes": "Independent security/correctness review passes with no actionable finding. The lock adds only exact integrity-pinned development compiler and Node declaration packages, undici-types, and TypeScript's optional platform compiler artifacts; none has an install script, runtime placement, bundled output, or production authority. Static compilation uses only checked-in source and configuration after package installation, adds no process, filesystem, Git, environment, network, credential, or write authority to production code, and runs before coverage on every generic-front platform. A separate state and documentation review caught and closed one roadmap overclaim that incorrectly associated the independent hashing owner with the Dune umbrella. Seven live PRs were present at final review and all have zero exact overlap; the selection-time six-PR snapshot remains historically accurate.",
+      "publication_notes": "Opened ready-for-review PR #13516 from clean validated head 5d0e1fe4386e1c04ab5ed68d2bf3763a0d82f33d after a normal first push. Immediately before publication, origin/main remained exact base 582b246b810ae429a4aa06c8f7e52e3c38405454, the target remote branch and prior PR were absent, and all 10 changed paths had zero exact overlap across seven other live PRs. Independent security, state, documentation, dependency, lockfile, scope, and authority reviews found no remaining blocker. GitHub reports the PR mergeable, conflict-free, and non-draft; required CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Discovered during the post-Rust declaration audit. The TypeScript build-tool package has Vitest and tsx but no compiler dependency or typecheck command, so its BUILD front can pass without static validation of production and adapter types. Add an explicit pinned TypeScript compiler gate and require it before the final TypeScript declaration consumer is claimed complete."
     },
     {
