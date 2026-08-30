@@ -11223,6 +11223,14 @@ human-language-data tests. Those paths do not overlap this tranche or add a
 package root, BUILD, manifest, build-tool contract, or unowned parity gap. The
 regenerated schema-3 inventory remains unchanged and collision-free.
 
+Ready-for-review PR #13558 is open from
+`codex/build-tool-python-generated-directory-hashing-exclusion`. GitHub reports
+the initial publication head non-draft and mergeable with required checks
+registered or pending. Auto-merge remains disabled until every final-head check
+is terminal and acceptable and GitHub still reports no merge conflict. The
+ownership graph therefore contains 186 merged, 407 pending, and exactly one
+`pr-open` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
