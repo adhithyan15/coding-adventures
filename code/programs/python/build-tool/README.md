@@ -126,6 +126,18 @@ predictable staging path. If staging or replacement fails, the previously
 published plan remains intact and the writer makes a best-effort cleanup of its
 temporary file.
 
+`build_tool.toolchain_detection.evaluate_snapshot` is the process-free native
+boundary for extra CI toolchain declarations. It accepts only caller-supplied
+platform, package, BUILD-front, selection, and forced-toolchain data; applies
+platform-front precedence without falling through an explicitly empty front;
+and returns a fresh complete 16-key boolean map or one stable unsupported
+diagnostic. Its package-local pytest suite discovers and consumes all 11
+language-neutral `toolchain-detection-*.json` fixtures and directly exercises
+the exact encoded UTF-8 byte, logical-line, aggregate, CRLF, caller-mutation,
+and scheduling boundaries. The module does not inspect the checkout, Git,
+installed programs, the environment, credentials, or the network, and it does
+not launch processes.
+
 The process-free tracked-artifact validator consumes the shared closed snapshot
 as inert ordinal, path, and entry-kind records. It normalizes separators,
 rejects unsafe paths at the fixed redacted `repository` location, and rejects

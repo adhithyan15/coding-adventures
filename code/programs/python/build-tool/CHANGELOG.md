@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.12] - 2026-08-30
+
+### Added
+
+- **Extra CI toolchain declaration conformance**: a pure bounded native
+  evaluator now independently consumes all 11 language-neutral toolchain
+  snapshots, including platform BUILD-front precedence, selected and forced
+  scheduling, complete canonical flags, and stable unsupported diagnostics.
+- **Byte-exact inert metadata parsing**: declarations use encoded UTF-8 byte,
+  logical-line, and aggregate ceilings plus exact LF/CRLF grammar while the
+  module remains free of filesystem, Git, process, environment, network, and
+  execution authority.
+
 ## [0.3.11] - 2026-08-25
 
 ### Added
