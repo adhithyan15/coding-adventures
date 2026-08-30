@@ -9993,6 +9993,43 @@ exact overlap across seven other live pull requests. The complete graph is now
 mergeable and non-draft, with CI and CodeQL checks queued or in progress, so
 auto-merge remains disabled.
 
+## Post-#13481 Refresh and Lua Declaration-Engine Selection
+
+PR #13481 completed 40 terminal acceptable checks: 33 successes and seven
+expected skips. Auto-merge was enabled only after GitHub reported the branch
+conflict-free, and GitHub merged validated head
+`bfc547836abe90d234563df823de76a3fc290fc6` as
+`9c11dc9188270efbaa9a2bb157c0622c55b874bc` at 2026-08-30T09:18:36Z without a
+manual merge command. Haskell therefore advances to `merged` and the active PR
+is cleared.
+
+The collision-checked exact-main inventory at
+`e6da7867b3f1937bafce6d3e19d4be963c19890e` remains 15 established lanes,
+1,388 implementation identities, 4,602 slots, and 1,427 all-reported
+identities. Completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and collisions and unknown buckets remain zero. The neutral corpus remains
+schema 1 with 119 cases, 283 files, 16 implementations, 15 established lanes,
+and 12 front doors. The intervening Kannada visarga merge is confined to
+human-language curriculum/data and changes no package identity or build-tool
+surface.
+
+The seven unfinished declaration consumers have equal dependencies and graph
+leverage. The readiness pass selects
+`build-tool-lua-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-lua-extra-ci-toolchain-declaration-conformance`. Lua wins the
+documented ordering after Haskell and adds another independent runtime through
+the same process-free boundary. Lua 5.4.5, LuaRocks 3.9.2, Busted 2.3.0,
+DKJSON 2.11, LuaFileSystem 1.9, LuaCov 0.17, and LuaCheck 1.2 are installed
+locally. Five live PRs have zero exact overlap with the expected Lua tranche
+after the final pre-publication refresh.
+
+PR #13455 prospectively adds TypeScript-only `forme-cli`; the existing
+`forme-portable-core-family-classification` owner now records that live block,
+so no duplicate owner is needed. No newly eligible unowned gap displaces Lua.
+After reconciliation and selection, the 566-owner, 833-edge graph contains 171
+merged, 394 pending, and one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

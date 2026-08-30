@@ -12,23 +12,23 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 13481,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13481",
-    "branch": "codex/build-tool-haskell-extra-ci-toolchain-declaration-conformance",
-    "implementation_revision": "2adcaa51eeabe78ddd171ba8938936fe9bea83af",
+    "number": 13482,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13482",
+    "branch": "codex/build-tool-lua-extra-ci-toolchain-declaration-conformance",
+    "implementation_revision": "aea4e4c1714b60b45a239e508286b7b2140ac538",
     "status": "checks-pending",
-    "opened_at": "2026-08-30T08:47:40Z"
+    "opened_at": "2026-08-30T09:46:29Z"
   },
   "last_ci_action": {
-    "observed_at": "2026-08-30T08:47:46Z",
-    "pr_number": 13481,
+    "observed_at": "2026-08-30T09:46:42Z",
+    "pr_number": 13482,
     "run_id": null,
     "attempt": 1,
     "status": "checks-pending",
-    "notes": "Opened ready-for-review PR #13481 from validated implementation head 2adcaa51eeabe78ddd171ba8938936fe9bea83af. GitHub reports the branch mergeable and non-draft, but CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict."
+    "notes": "Opened ready-for-review PR #13482 from validated implementation head aea4e4c1714b60b45a239e508286b7b2140ac538. GitHub reports the branch mergeable and non-draft, but CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
-    "revision": "452583c6643a09ef7c3ed89cb7d0110ab2a50999",
+    "revision": "e6da7867b3f1937bafce6d3e19d4be963c19890e",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -328,7 +328,7 @@
     {
       "id": "build-tool-haskell-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Haskell build tool consume extra CI toolchain declarations",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
       "branch": "codex/build-tool-haskell-extra-ci-toolchain-declaration-conformance",
       "pr_number": 13481,
@@ -337,15 +337,20 @@
       "validation_notes": "Test-first compilation failed on the deliberately absent ToolchainDetection module before source was added. The pure native evaluator dynamically discovers and consumes all 11 neutral declaration fixtures and adds direct UTF-8 byte, logical-line, aggregate, CRLF, affected-selection, and forced-toolchain coverage. Exact BUILD_windows execution passes all three Cabal suites: graph has four examples, directed-graph has three, and the build tool has 60, all with zero failures. Cabal warning-as-error library and executable builds plus cabal check pass; HPC reports 95% expression and 86% alternative coverage for ToolchainDetection. The neutral corpus validates 119 cases and 283 files, 205 conformance tests pass with 23 expected platform skips, and 68 package-parity/capability/Haskell/OCaml-lock tests pass with two expected Windows symlink skips. The complete Go build-tool suite, vet, and trimpath build pass. The schema-3 parity report remains collision-clean at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, completion bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, and zero unknown buckets. The 566-owner/833-edge state is complete and acyclic with 170 merged, 395 pending, and exactly this item in progress. Seven live PRs have zero exact overlap with all ten changed paths, the target remote branch remains absent, diff hygiene and credential scans are clean, and the new pure module imports no filesystem, Git, process, environment, network, credential, or execution authority. No production dependency changed; cabal outdated reports only the existing containers and time upper bounds.",
       "rebase_notes": "Rebased without conflict onto exact origin/main 452583c6643a09ef7c3ed89cb7d0110ab2a50999 after classifying merged Hindi pre-A1 writing PR #13471 as human-language curriculum and an existing TypeScript package-only change with no package identity, BUILD marker, build-tool, state, roadmap, or Haskell overlap. The collision inventory and 119-case neutral corpus remain unchanged, and exact post-rebase Cabal tests pass all 67 examples.",
       "publication_notes": "Opened ready-for-review PR #13481 from clean validated implementation head 2adcaa51eeabe78ddd171ba8938936fe9bea83af after a normal first push. Immediately before publication, the branch was based on exact origin/main 452583c6643a09ef7c3ed89cb7d0110ab2a50999, the target remote branch and prior PR were absent, and all ten changed paths had zero exact overlap across seven live PRs. GitHub reports the PR mergeable and non-draft, currently blocked only by queued or in-progress CI and CodeQL checks; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "merge_notes": "PR #13481 completed 40 terminal acceptable checks: 33 successes and seven expected skips. After GitHub reported the validated head conflict-free, guarded squash auto-merge merged it as 9c11dc9188270efbaa9a2bb157c0622c55b874bc at 2026-08-30T09:18:36Z without a manual merge command.",
       "notes": "Adopt the merged process-free declaration corpus in the Haskell engine without widening execution authority."
     },
     {
       "id": "build-tool-lua-extra-ci-toolchain-declaration-conformance",
       "title": "Make the Lua build tool consume extra CI toolchain declarations",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-extra-ci-toolchain-declaration-corpus", "build-tool-extra-ci-toolchain-crlf-grammar-cross-runtime-hardening"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-lua-extra-ci-toolchain-declaration-conformance",
+      "pr_number": 13482,
+      "selection_revision": "e6da7867b3f1937bafce6d3e19d4be963c19890e",
+      "selection_notes": "Selected after merged PR #13481 and a collision-clean exact-main refresh. The seven remaining declaration consumers have equal dependencies and graph leverage; Lua wins the documented ordering after Haskell and supplies another independent runtime through the same bounded pure boundary. Lua 5.4.5, LuaRocks 3.9.2, Busted 2.3.0, DKJSON 2.11, LuaFileSystem 1.9, LuaCov 0.17, and LuaCheck 1.2 are installed locally. The inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Five live PRs have zero exact overlap with the expected Lua tranche paths after the final pre-publication refresh. PR #13455 prospectively adds the already-owned TypeScript Forme CLI root and is recorded as a live block on its existing family owner; no new eligible unowned gap displaces Lua.",
+      "validation_notes": "Test-first Busted load failed on the deliberately absent build_tool.toolchain_detection module before source was added. The pure native evaluator dynamically discovers and consumes all 11 neutral declaration fixtures; direct byte, logical-line, aggregate, CRLF, fresh-registry, platform-front, affected-selection, force-full, forced-toolchain, unsupported-value, and caller-mutation probes pass. The complete Lua package suite passes 85 examples with zero failures, focused LuaCov reports 96.15% production-module and 100% native-test coverage, luac accepts both files, and LuaCheck reports zero warnings or errors. The local direct Busted runner equivalent of BUILD_windows passes all 85 examples. The neutral corpus validates 119 cases and 283 files, 182 conformance tests pass with 23 expected platform skips and 236 subtests, and 66 package-parity/capability/Haskell/OCaml-lock tests pass with two expected Windows symlink skips and 812 subtests. The Go oracle passes module verification, focused declaration tests, the complete test suite, vet, and trimpath build. The schema-3 parity report remains collision-clean at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, 731 Rust singletons, zero OCaml packages, and zero unknown buckets. The 566-owner/833-edge state is complete and acyclic with 171 merged, 394 pending, and exactly this item in progress. Five live PRs have zero exact overlap with all nine changed paths; diff hygiene, credential scans, and two independent final reviews are clean. The production module imports no filesystem, Git, process, environment, network, credential, FFI, or execution authority, and no production dependency changed.",
+      "publication_notes": "Opened ready-for-review PR #13482 from clean validated implementation head aea4e4c1714b60b45a239e508286b7b2140ac538 after a normal first push. Immediately before publication, the branch was based on exact origin/main e6da7867b3f1937bafce6d3e19d4be963c19890e, the target remote branch and prior PR were absent, and all nine changed paths had zero exact overlap across five live PRs. GitHub reports the PR mergeable and non-draft, currently blocked only by queued or in-progress CI and CodeQL checks; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Adopt the merged process-free declaration corpus in the Lua engine without widening execution authority."
     },
     {
@@ -1859,8 +1864,8 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "selection_blocked": false,
-      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, and asset/MIME derivation from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, #13401, #13409, and #13420 are merged. The collision-clean inventory includes TypeScript-only `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, and `forme-emit-site-fs`; all remain covered by this family rather than creating duplicate singleton owners. The former live-PR selection block is cleared."
+      "selection_blocked": true,
+      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, and asset/MIME derivation from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, #13401, #13409, and #13420 are merged. The collision-clean inventory includes TypeScript-only `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, and `forme-emit-site-fs`; all remain covered by this family rather than creating duplicate singleton owners. Live PR #13455 prospectively adds TypeScript-only `forme-cli` under this existing family owner, so selection is blocked until that overlap clears; no duplicate owner is needed."
     },
     {
       "id": "rust-singletons-20260730-classification",

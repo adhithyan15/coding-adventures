@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Language-neutral extra CI toolchain declarations
 
+- Added the Lua build-tool consumer with a pure bounded native snapshot
+  evaluator and independent Busted coverage of all 11 neutral cases. The
+  adapter owns platform BUILD precedence, exact CRLF declaration grammar,
+  affected and forced scheduling, stable unsupported diagnostics, and the
+  shared resource ceilings without adding host or execution authority.
 - Added the Haskell build-tool consumer with a pure bounded native snapshot
   evaluator and independent package-local coverage of all 11 neutral cases.
   The adapter owns platform BUILD precedence, exact CRLF declaration grammar,
