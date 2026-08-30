@@ -27,14 +27,77 @@ public struct ToolchainDiagnostic: Codable, Equatable, Sendable {
   }
 }
 
+/// A closed toolchain boolean map with explicit canonical iteration order.
+public struct ToolchainResultMap: Equatable, Sendable {
+  public struct Entry: Equatable, Sendable {
+    public let name: String
+    public var enabled: Bool
+
+    fileprivate init(name: String, enabled: Bool) {
+      self.name = name
+      self.enabled = enabled
+    }
+  }
+
+  private var entries: [Entry]
+
+  fileprivate init(enabled: Bool) {
+    self.entries = ToolchainDetection.canonicalToolchains.map {
+      Entry(name: $0, enabled: enabled)
+    }
+  }
+
+  fileprivate init() {
+    self.entries = []
+  }
+
+  public var orderedEntries: [Entry] {
+    entries
+  }
+
+  public var keys: [String] {
+    entries.map(\.name)
+  }
+
+  public var values: [Bool] {
+    entries.map(\.enabled)
+  }
+
+  public var valuesByName: [String: Bool] {
+    Dictionary(uniqueKeysWithValues: entries.map { ($0.name, $0.enabled) })
+  }
+
+  public var count: Int {
+    entries.count
+  }
+
+  public var isEmpty: Bool {
+    entries.isEmpty
+  }
+
+  public subscript(name: String) -> Bool? {
+    get {
+      entries.first { $0.name == name }?.enabled
+    }
+    set {
+      guard let index = entries.firstIndex(where: { $0.name == name }),
+        let newValue
+      else {
+        return
+      }
+      entries[index].enabled = newValue
+    }
+  }
+}
+
 public struct ToolchainEvaluation: Equatable, Sendable {
   public let outcome: String
-  public var toolchains: [String: Bool]
+  public var toolchains: ToolchainResultMap
   public let diagnostics: [ToolchainDiagnostic]
 
   public init(
     outcome: String,
-    toolchains: [String: Bool],
+    toolchains: ToolchainResultMap,
     diagnostics: [ToolchainDiagnostic]
   ) {
     self.outcome = outcome
@@ -284,14 +347,14 @@ public enum ToolchainDetection {
     byte == 0x20 || byte == 0x09
   }
 
-  private static func freshToolchainMap(enabled: Bool) -> [String: Bool] {
-    Dictionary(uniqueKeysWithValues: canonicalToolchains.map { ($0, enabled) })
+  private static func freshToolchainMap(enabled: Bool) -> ToolchainResultMap {
+    ToolchainResultMap(enabled: enabled)
   }
 
   private static func unsupported(package: String?) -> ToolchainEvaluation {
     ToolchainEvaluation(
       outcome: "error",
-      toolchains: [:],
+      toolchains: ToolchainResultMap(),
       diagnostics: [
         ToolchainDiagnostic(
           code: "TOOLCHAIN_UNSUPPORTED",

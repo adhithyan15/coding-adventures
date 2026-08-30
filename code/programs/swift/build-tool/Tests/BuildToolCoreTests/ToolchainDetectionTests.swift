@@ -45,7 +45,7 @@ struct ToolchainDetectionTests {
 
       #expect(actual.outcome == fixture.expected.outcome, Comment(rawValue: fixture.id))
       #expect(
-        actual.toolchains == (fixture.expected.result.toolchains ?? [:]),
+        actual.toolchains.valuesByName == (fixture.expected.result.toolchains ?? [:]),
         Comment(rawValue: fixture.id)
       )
       #expect(
@@ -55,7 +55,7 @@ struct ToolchainDetectionTests {
       if actual.outcome == "ok" {
         #expect(actual.toolchains.count == ToolchainDetection.canonicalToolchains.count)
         #expect(
-          Set(actual.toolchains.keys) == Set(ToolchainDetection.canonicalToolchains)
+          actual.toolchains.keys == ToolchainDetection.canonicalToolchains
         )
       }
     }
@@ -338,11 +338,13 @@ struct ToolchainDetectionTests {
       forcedToolchains: []
     )
     first.toolchains["rust"] = false
+    first.toolchains["zig"] = true
 
     #expect(second.toolchains["rust"] == true)
     #expect(packages == original)
     #expect(ToolchainDetection.canonicalToolchains == Self.fixtureRegistry)
-    #expect(Set(second.toolchains.keys) == Set(Self.fixtureRegistry))
+    #expect(first.toolchains.keys == Self.fixtureRegistry)
+    #expect(second.toolchains.keys == Self.fixtureRegistry)
   }
 
   private static let fixtureRegistry = [
