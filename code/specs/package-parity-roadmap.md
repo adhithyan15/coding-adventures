@@ -9984,6 +9984,15 @@ TypeScript package; it adds no package identity or build-tool overlap. The
 collision counts, neutral corpus, and all 67 exact Cabal examples remain
 unchanged after the rebase.
 
+Ready-for-review PR #13481 is now the sole active parity PR at validated
+implementation head `2adcaa51eeabe78ddd171ba8938936fe9bea83af`. It was opened
+after a normal first push from exact `origin/main`
+`452583c6643a09ef7c3ed89cb7d0110ab2a50999`; all ten changed paths had zero
+exact overlap across seven other live pull requests. The complete graph is now
+170 merged, 395 pending, and exactly one `pr-open` owner. GitHub reports the PR
+mergeable and non-draft, with CI and CodeQL checks queued or in progress, so
+auto-merge remains disabled.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
