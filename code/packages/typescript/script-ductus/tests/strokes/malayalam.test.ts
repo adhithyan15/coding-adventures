@@ -18,6 +18,7 @@ const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
 const MALAYALAM_AA = DUCTUS[ductusKey("malayalam", "ആ")];
 const MALAYALAM_I = DUCTUS[ductusKey("malayalam", "ഇ")];
 const MALAYALAM_U = DUCTUS[ductusKey("malayalam", "ഉ")];
+const MALAYALAM_UU = DUCTUS[ductusKey("malayalam", "ഊ")];
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
 const MALAYALAM_CHILLU_L = DUCTUS[ductusKey("malayalam", "ൽ")];
 const MALAYALAM_CHILLU_N = DUCTUS[ductusKey("malayalam", "ൻ")];
@@ -44,6 +45,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansMalayalam-Static.ttf",
     );
     expect(verifiedLetterFont("ഉ", MALAYALAM_U.source.url)).toBe(
+      "_fonts/NotoSansMalayalam-Static.ttf",
+    );
+    expect(verifiedLetterFont("ഊ", MALAYALAM_UU.source.url)).toBe(
       "_fonts/NotoSansMalayalam-Static.ttf",
     );
     expect(verifiedLetterFont("ൽ", MALAYALAM_CHILLU_L.source.url)).toBe(
@@ -141,6 +145,25 @@ describe("handwriting ductus", () => {
       "turn outward around the compact left spiral and carry the upper arch right",
       "descend around the broad right lobe and curl left below the line",
       "carry the finishing baseline to the right",
+    ]);
+  });
+
+  it("Malayalam ഊ lifts once before its joined right-side flourish", () => {
+    expect(penLifts(MALAYALAM_UU)).toBe(1);
+    expect(
+      MALAYALAM_UU.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "turn outward around the compact left spiral and carry the upper arch right",
+        "descend around the broad right lobe and curl left below the line",
+        "carry the finishing baseline to the right",
+      ],
+      [
+        "sweep over the compact upper arch and cross into the right lobe",
+        "circle the broad right lobe and descend its finishing tail",
+      ],
     ]);
   });
 
