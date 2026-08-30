@@ -5942,10 +5942,22 @@
       "sound": "ō",
       "role": "vowel",
       "components": [
-        "ഓ  ō — independent vowel (word-initial)"
+        "compact inner curl opening into the broad left arch",
+        "a lifted right shoulder and rounded lower lobe",
+        "a second lifted outer arc descending at the far right"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "begin at the compact inner tip, curl clockwise, and sweep outward through the broad left arch",
+        "after one lift, sweep right from the upper junction and descend around the rounded lower lobe",
+        "after a second lift, descend around the separate outer arc at the far right"
+      ],
+      "penLifts": 2,
+      "strokeOrderNote": "Independent long o. Three visible movements in three pen-down runs: the first two reproduce the short-o body; after a second lift, a separate outer arc descends at the far right.",
+      "strokeOrderSource": {
+        "citation": "Donald R. Davis Jr., The Malayalam Script, Initial Vowels, ഓ handwriting clip, 00:00–00:04 (University of Texas at Austin)",
+        "url": "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+        "variation": "The page identifies initial vowels as word-initial forms and directly links the four-second oo.mp4 handwriting clip. The clip visibly completes the same two lifted runs as short o, then lifts a second time and draws the separate far-right outer arc from top to bottom. This is one attested two-lift pedagogical order fitted to the bundled Noto Sans Malayalam outline."
+      }
     },
     {
       "glyph": "ഐ",

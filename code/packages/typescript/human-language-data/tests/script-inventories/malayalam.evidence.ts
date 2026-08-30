@@ -201,6 +201,28 @@ export const scriptInventoryEvidence = {
     expect(malayalamO.strokeOrderSource?.variation).toMatch(
       /word-initial forms.*o\.mp4.*compact inner curl.*broad left arch.*lifts once.*right shoulder.*rounded lower lobe.*one-lift.*Noto Sans Malayalam/i,
     );
+    const malayalamOo = scripts.malayalam!.independentVowels!.find(
+      (entry) => entry.glyph === "ഓ",
+    )!;
+    expect(malayalamOo.sound).toBe("ō");
+    expect(malayalamOo.penLifts).toBe(2);
+    expect(malayalamOo.strokeOrder).toEqual([
+      "begin at the compact inner tip, curl clockwise, and sweep outward through the broad left arch",
+      "after one lift, sweep right from the upper junction and descend around the rounded lower lobe",
+      "after a second lift, descend around the separate outer arc at the far right",
+    ]);
+    expect(malayalamOo.strokeOrderNote).toMatch(
+      /three visible movements.*three pen-down runs.*after a second lift/i,
+    );
+    expect(malayalamOo.strokeOrderSource?.url).toBe(
+      "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+    );
+    expect(malayalamOo.strokeOrderSource?.citation).toMatch(
+      /Donald R\. Davis Jr\..*The Malayalam Script.*Initial Vowels.*ഓ.*00:00.?00:04.*University of Texas at Austin/i,
+    );
+    expect(malayalamOo.strokeOrderSource?.variation).toMatch(
+      /word-initial forms.*oo\.mp4.*same two lifted runs as short o.*lifts a second time.*far-right outer arc.*top to bottom.*two-lift.*Noto Sans Malayalam/i,
+    );
     const malayalamChilluL = scripts.malayalam!.finalConsonants!.find(
       (entry) => entry.glyph === "ൽ",
     )!;
@@ -320,27 +342,29 @@ export const scriptInventoryEvidence = {
     expect(malayalamZha.notes).toMatch(
       /U\+0D34.*ISO 15919.*base consonant.*inherent a/i,
     );
-    expect(missingByScript.get("malayalam.json")?.has("്")).toBe(false);
+    expect(missingByScript.get("malayalam.json")?.has("്") ?? false).toBe(false);
     expect(affected.get("്") ?? 0).toBe(0);
-    expect(missingByScript.get("malayalam.json")?.has("ം")).toBe(false);
+    expect(missingByScript.get("malayalam.json")?.has("ം") ?? false).toBe(false);
     expect(affected.get("ം") ?? 0).toBe(0);
-    expect(missingByScript.get("malayalam.json")?.has("അ")).toBe(false);
+    expect(missingByScript.get("malayalam.json")?.has("അ") ?? false).toBe(false);
     expect(affected.get("അ") ?? 0).toBe(0);
-    expect(missingByScript.get("malayalam.json")?.has("ൽ")).toBe(false);
+    expect(missingByScript.get("malayalam.json")?.has("ൽ") ?? false).toBe(false);
     expect(affected.get("ൽ") ?? 0).toBe(0);
-    expect(missingByScript.get("malayalam.json")?.has("ൻ")).toBe(false);
+    expect(missingByScript.get("malayalam.json")?.has("ൻ") ?? false).toBe(false);
     expect(affected.get("ൻ") ?? 0).toBe(0);
-    expect(missingByScript.get("malayalam.json")?.has("ൾ")).toBe(false);
+    expect(missingByScript.get("malayalam.json")?.has("ൾ") ?? false).toBe(false);
     expect(affected.get("ൾ") ?? 0).toBe(0);
-    expect(missingByScript.get("malayalam.json")?.has("ർ")).toBe(false);
+    expect(missingByScript.get("malayalam.json")?.has("ർ") ?? false).toBe(false);
     expect(affected.get("ർ") ?? 0).toBe(0);
-    expect(missingByScript.get("malayalam.json")?.has("ഴ")).toBe(false);
+    expect(missingByScript.get("malayalam.json")?.has("ഴ") ?? false).toBe(false);
     expect(affected.get("ഴ") ?? 0).toBe(0);
-    expect(missingByScript.get("malayalam.json")?.has("ആ")).toBe(false);
+    expect(missingByScript.get("malayalam.json")?.has("ആ") ?? false).toBe(false);
     expect(affected.get("ആ") ?? 0).toBe(0);
     expect(missingByScript.get("malayalam.json")?.has("ഊ") ?? false).toBe(false);
     expect(affected.get("ഊ") ?? 0).toBe(0);
     expect(missingByScript.get("malayalam.json")?.has("ഒ") ?? false).toBe(false);
     expect(affected.get("ഒ") ?? 0).toBe(0);
+    expect(missingByScript.get("malayalam.json")?.has("ഓ") ?? false).toBe(false);
+    expect(affected.get("ഓ") ?? 0).toBe(0);
   },
 };

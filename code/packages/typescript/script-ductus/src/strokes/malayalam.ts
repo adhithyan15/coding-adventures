@@ -177,6 +177,102 @@ export const entries: DuctusEntry[] = [
       source: malayalamIndependentVowelSource("ഒ"),
     },
   ],
+  // Davis's four-second initial-vowel clip writes ഓ in three runs: the first
+  // two reproduce short ഒ, then a second lift starts the separate far-right
+  // outer arc and carries it continuously from top to bottom.
+  [
+    "malayalam:ഓ",
+    {
+      script: "malayalam",
+      glyph: "ഓ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "curl clockwise from the compact inner tip and sweep through the broad left arch",
+              path: [
+                { x: 190, y: 290 },
+                { x: 245, y: 293 },
+                { x: 300, y: 280 },
+                { x: 350, y: 230 },
+                { x: 365, y: 165 },
+                { x: 355, y: 95 },
+                { x: 300, y: 45 },
+                { x: 240, y: 20 },
+                { x: 180, y: 35 },
+                { x: 120, y: 95 },
+                { x: 95, y: 165 },
+                { x: 105, y: 220 },
+                { x: 145, y: 260 },
+                { x: 190, y: 290 },
+                { x: 190, y: 310 },
+                { x: 125, y: 315 },
+                { x: 95, y: 350 },
+                { x: 110, y: 390 },
+                { x: 140, y: 430 },
+                { x: 180, y: 465 },
+                { x: 240, y: 495 },
+                { x: 310, y: 520 },
+                { x: 400, y: 530 },
+                { x: 520, y: 510 },
+                { x: 620, y: 465 },
+                { x: 665, y: 410 },
+                { x: 655, y: 350 },
+                { x: 600, y: 300 },
+                { x: 490, y: 275 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "sweep right from the upper junction and descend around the rounded lower lobe",
+              path: [
+                { x: 490, y: 275 },
+                { x: 560, y: 275 },
+                { x: 625, y: 245 },
+                { x: 665, y: 195 },
+                { x: 675, y: 140 },
+                { x: 650, y: 85 },
+                { x: 600, y: 45 },
+                { x: 540, y: 25 },
+                { x: 475, y: 35 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "descend around the separate outer arc at the far right",
+              path: [
+                { x: 815, y: 385 },
+                { x: 850, y: 465 },
+                { x: 915, y: 520 },
+                { x: 995, y: 530 },
+                { x: 1070, y: 500 },
+                { x: 1130, y: 440 },
+                { x: 1170, y: 360 },
+                { x: 1175, y: 275 },
+                { x: 1160, y: 190 },
+                { x: 1120, y: 110 },
+                { x: 1050, y: 50 },
+                { x: 980, y: 20 },
+                { x: 910, y: 45 },
+                { x: 850, y: 100 },
+                { x: 815, y: 170 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamIndependentVowelSource("ഓ"),
+    },
+  ],
   [
     "malayalam:അ",
     {
