@@ -2,6 +2,9 @@ import Foundation
 #if canImport(CryptoKit)
 import CryptoKit
 #endif
+#if os(Windows)
+import WinSDK
+#endif
 
 public enum Hasher {
     private static let sourceExtensions: [String: Set<String>] = [
@@ -60,46 +63,53 @@ public enum Hasher {
         let fm = FileManager.default
         var files: [String] = []
 
-        guard let enumerator = fm.enumerator(atPath: root) else {
-            return []
-        }
-
         let extensions = sourceExtensions[package.language] ?? []
         let specials = specialFilenames[package.language] ?? []
 
-        while let entry = enumerator.nextObject() as? String {
-            let normalized = entry.replacingOccurrences(of: "\\", with: "/")
-            let fullPath = (root as NSString).appendingPathComponent(entry)
-            var isDirectory: ObjCBool = false
-            if fm.fileExists(atPath: fullPath, isDirectory: &isDirectory), isDirectory.boolValue {
-                if Discovery.skipDirectories.contains((normalized as NSString).lastPathComponent) {
-                    enumerator.skipDescendants()
+        func visit(directory: String, relativeDirectory: String) {
+            guard let entries = try? fm.contentsOfDirectory(atPath: directory) else {
+                return
+            }
+
+            for entry in entries.sorted() {
+                let relativePath = relativeDirectory.isEmpty
+                    ? entry
+                    : "\(relativeDirectory)/\(entry)"
+                let fullPath = (directory as NSString).appendingPathComponent(entry)
+                let attributes = try? fm.attributesOfItem(atPath: fullPath)
+                if isTraversableDirectory(path: fullPath, attributes: attributes) {
+                    if !Discovery.skipDirectories.contains(entry) {
+                        visit(directory: fullPath, relativeDirectory: relativePath)
+                    }
+                    continue
                 }
-                continue
-            }
 
-            let filename = (normalized as NSString).lastPathComponent
-            if isBuildFile(filename) {
-                files.append(fullPath)
-                continue
-            }
+                let normalized = relativePath.replacingOccurrences(of: "\\", with: "/")
+                let filename = (normalized as NSString).lastPathComponent
+                if isBuildFile(filename) {
+                    files.append(fullPath)
+                    continue
+                }
 
-            if package.isStarlark, !package.declaredSrcs.isEmpty {
-                if package.declaredSrcs.contains(where: { GlobMatch.matchPath($0, normalized) }) {
+                if package.isStarlark, !package.declaredSrcs.isEmpty {
+                    if package.declaredSrcs.contains(where: { GlobMatch.matchPath($0, normalized) }) {
+                        files.append(fullPath)
+                    }
+                    continue
+                }
+
+                if extensions.contains((filename as NSString).pathExtension.isEmpty ? "" : ".\((filename as NSString).pathExtension)") {
+                    files.append(fullPath)
+                    continue
+                }
+
+                if specials.contains(filename) {
                     files.append(fullPath)
                 }
-                continue
-            }
-
-            if extensions.contains((filename as NSString).pathExtension.isEmpty ? "" : ".\((filename as NSString).pathExtension)") {
-                files.append(fullPath)
-                continue
-            }
-
-            if specials.contains(filename) {
-                files.append(fullPath)
             }
         }
+
+        visit(directory: root, relativeDirectory: "")
 
         return files.sorted {
             relativePath($0, root: root) < relativePath($1, root: root)
@@ -108,6 +118,27 @@ public enum Hasher {
 
     private static func isBuildFile(_ filename: String) -> Bool {
         ["BUILD", "BUILD_mac", "BUILD_linux", "BUILD_windows", "BUILD_mac_and_linux"].contains(filename)
+    }
+
+    private static func isTraversableDirectory(
+        path: String,
+        attributes: [FileAttributeKey: Any]?
+    ) -> Bool {
+        guard attributes?[.type] as? FileAttributeType == .typeDirectory else {
+            return false
+        }
+
+        #if os(Windows)
+        let windowsAttributes = path.withCString(encodedAs: UTF16.self) {
+            GetFileAttributesW($0)
+        }
+        guard windowsAttributes != INVALID_FILE_ATTRIBUTES else {
+            return false
+        }
+        return windowsAttributes & DWORD(FILE_ATTRIBUTE_REPARSE_POINT) == 0
+        #else
+        return true
+        #endif
     }
 
     private static func relativePath(_ path: String, root: String) -> String {

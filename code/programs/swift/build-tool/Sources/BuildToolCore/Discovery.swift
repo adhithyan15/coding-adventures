@@ -41,6 +41,7 @@ public enum Discovery {
         "vendor",
         "dist",
         "dist-newstyle",
+        "_build",
         "build",
         "target",
         ".claude",
