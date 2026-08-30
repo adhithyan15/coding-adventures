@@ -180,6 +180,27 @@ export const scriptInventoryEvidence = {
     expect(malayalamUu.strokeOrderSource?.variation).toMatch(
       /word-initial forms.*uu\.mp4.*spiral-to-baseline body.*lifts once.*compact upper arch.*broad right loop.*descending tail.*one-lift.*Noto Sans Malayalam/i,
     );
+    const malayalamO = scripts.malayalam!.independentVowels!.find(
+      (entry) => entry.glyph === "ഒ",
+    )!;
+    expect(malayalamO.sound).toBe("o");
+    expect(malayalamO.penLifts).toBe(1);
+    expect(malayalamO.strokeOrder).toEqual([
+      "begin at the compact inner tip, curl clockwise, and sweep outward through the broad left arch",
+      "after one lift, sweep right from the upper junction and descend around the rounded lower lobe",
+    ]);
+    expect(malayalamO.strokeOrderNote).toMatch(
+      /two visible movements.*two pen-down runs.*after one lift/i,
+    );
+    expect(malayalamO.strokeOrderSource?.url).toBe(
+      "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+    );
+    expect(malayalamO.strokeOrderSource?.citation).toMatch(
+      /Donald R\. Davis Jr\..*The Malayalam Script.*Initial Vowels.*ഒ.*00:00.?00:04.*University of Texas at Austin/i,
+    );
+    expect(malayalamO.strokeOrderSource?.variation).toMatch(
+      /word-initial forms.*o\.mp4.*compact inner curl.*broad left arch.*lifts once.*right shoulder.*rounded lower lobe.*one-lift.*Noto Sans Malayalam/i,
+    );
     const malayalamChilluL = scripts.malayalam!.finalConsonants!.find(
       (entry) => entry.glyph === "ൽ",
     )!;
@@ -319,5 +340,7 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ആ") ?? 0).toBe(0);
     expect(missingByScript.get("malayalam.json")?.has("ഊ") ?? false).toBe(false);
     expect(affected.get("ഊ") ?? 0).toBe(0);
+    expect(missingByScript.get("malayalam.json")?.has("ഒ") ?? false).toBe(false);
+    expect(affected.get("ഒ") ?? 0).toBe(0);
   },
 };
