@@ -21,6 +21,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/arabic/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "arabic"
     },
@@ -45,6 +46,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/bengali/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "bengali"
     },
@@ -69,6 +71,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/chinese/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "chinese"
     },
@@ -93,6 +96,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/french/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "french"
     },
@@ -117,6 +121,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/german/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "german"
     },
@@ -141,6 +146,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/gujarati/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "gujarati"
     },
@@ -165,6 +171,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/hindi/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "hindi"
     },
@@ -189,6 +196,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/italian/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "italian"
     },
@@ -213,6 +221,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/japanese/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "japanese"
     },
@@ -237,6 +246,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/kannada/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "kannada"
     },
@@ -261,6 +271,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/latin/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "latin"
     },
@@ -285,6 +296,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/malayalam/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "malayalam"
     },
@@ -309,6 +321,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/marathi/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "marathi"
     },
@@ -326,6 +339,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/marwadi/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "unseeded",
       "track": "marwadi"
     },
@@ -350,6 +364,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/persian/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "persian"
     },
@@ -374,6 +389,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/portuguese/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "portuguese"
     },
@@ -398,6 +414,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/punjabi/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "punjabi"
     },
@@ -422,6 +439,9 @@
       "improvements": [],
       "log": "code/learning/human-languages/russian/book/book.log",
       "regressions": [],
+      "samples": {
+        "underfull": "Underfull \\hbox (badness 1009) in paragraph at lines 158--159"
+      },
       "status": "ok",
       "track": "russian"
     },
@@ -446,6 +466,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/sanskrit/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "sanskrit"
     },
@@ -470,6 +491,9 @@
       "improvements": [],
       "log": "code/learning/human-languages/spanish/book/book.log",
       "regressions": [],
+      "samples": {
+        "font_substitution": "LaTeX Font Warning: Font shape `TU/LatinModernMono(0)/b/n' undefined"
+      },
       "status": "ok",
       "track": "spanish"
     },
@@ -496,6 +520,7 @@
       ],
       "log": "code/learning/human-languages/tamil/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "under baseline",
       "track": "tamil"
     },
@@ -520,6 +545,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/telugu/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "telugu"
     },
@@ -544,6 +570,7 @@
       "improvements": [],
       "log": "code/learning/human-languages/urdu/book/book.log",
       "regressions": [],
+      "samples": {},
       "status": "ok",
       "track": "urdu"
     }
