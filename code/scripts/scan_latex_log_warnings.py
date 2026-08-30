@@ -157,6 +157,23 @@ def count_warnings(log_text: str) -> dict[str, int]:
     return counts
 
 
+def first_warning_lines(log_text: str) -> dict[str, str]:
+    """Return the first matching log line for each warning class.
+
+    Counts answer whether a baseline regressed; the matching line carries the
+    source-line or page context needed to repair it. TeX log lines are bounded,
+    and ``splitlines`` removes control newlines before any sample reaches a CI
+    annotation.
+    """
+
+    samples: dict[str, str] = {}
+    for line in log_text.splitlines():
+        for name, patterns in WARNING_PATTERNS.items():
+            if name not in samples and any(pattern.search(line) for pattern in patterns):
+                samples[name] = line.strip()
+    return samples
+
+
 def read_log(log_path: Path) -> str | None:
     """Read a TeX log, or return ``None`` when it is absent.
 
@@ -284,6 +301,7 @@ def scan(book_root: Path, baseline_tracks: dict[str, Any]) -> list[dict[str, Any
             continue
 
         counts = count_warnings(log_text)
+        samples = first_warning_lines(log_text)
         recorded = baseline_for(baseline_tracks, track)
 
         regressions: list[dict[str, int | str]] = []
@@ -312,6 +330,7 @@ def scan(book_root: Path, baseline_tracks: dict[str, Any]) -> list[dict[str, Any
                 "track": track,
                 "log": str(book_dir / "book.log"),
                 "counts": counts,
+                "samples": samples,
                 "baseline": recorded,
                 "regressions": regressions,
                 "improvements": improvements,
@@ -621,7 +640,8 @@ def main(argv: list[str] | None = None) -> int:
                 print(
                     f"::error::{track} {regression['class']} rose to "
                     f"{regression['observed']} against a baseline of "
-                    f"{regression['baseline']}"
+                    f"{regression['baseline']}; first log line: "
+                    f"{result['samples'].get(regression['class'], '<unavailable>')}"
                 )
 
     return 1 if any(result["blocking"] for result in results) else 0
