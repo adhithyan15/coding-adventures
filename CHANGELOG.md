@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Language-neutral extra CI toolchain declarations
 
+- Added the Elixir build-tool consumer with a native bounded snapshot evaluator
+  and independent coverage of all 11 neutral cases. Production discovery now
+  retains the selected BUILD front so exact declarations and toolchain-scoped
+  CI changes feed both detection output and emitted plans without adding host
+  or execution authority.
 - Added the F# shared-engine adapter for bounded toolchain snapshots and made
   its native test surface independently consume all 11 neutral declaration
   cases. The facade reuses the reviewed C# decision engine without granting

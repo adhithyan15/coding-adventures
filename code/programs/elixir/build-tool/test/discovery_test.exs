@@ -207,6 +207,7 @@ defmodule BuildTool.DiscoveryTest do
       assert pkg.name == "python/logic-gates"
       assert pkg.language == "python"
       assert pkg.build_commands == ["pytest"]
+      assert pkg.build_content == "pytest\n"
       assert pkg.path == pkg_dir
     end
 

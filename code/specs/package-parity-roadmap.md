@@ -9867,6 +9867,50 @@ required CI and CodeQL checks are queued, so auto-merge remains disabled until
 every required check is terminal and acceptable and the branch remains
 conflict-free.
 
+## Post-#13453 Refresh and Elixir Declaration-Engine Selection
+
+PR #13453 reached 40 terminal acceptable checks: 33 successes and seven
+expected skips. GitHub merged validated head
+`511385c52d4c76e6272a875ae34d8476700aa062` as
+`0ad7611d3701cacf40555556a7870346acb96c7c` at 2026-08-28T18:50:45Z without a
+manual merge command. The state therefore advances the F# owner from
+`pr-open` to `merged` and clears the sole active parity PR.
+
+The collision-checked schema-3 inventory at exact current `origin/main`
+`1885408daa6d9eac02713700127642fba6cd964d` remains unchanged at 15 established
+lanes, 1,388 implementation identities, 4,602 package slots, and 1,427
+all-reported identities. The four completion bands remain 175/265, 123/934,
+170/2,139, and 920/12,880; Rust has 731 singletons, OCaml remains emerging at
+zero packages, and canonical collisions and unknown buckets remain zero. The
+13 commits since the prior inventory touched existing package roots without
+adding or removing an identity or slot, and the ownership audit found no new
+eligible unowned topology or build-tool contract gap.
+
+The nine unfinished native declaration consumers have equal graph leverage:
+each advances the one remaining-engine umbrella. The quick readiness pass
+selects `build-tool-elixir-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-elixir-extra-ci-toolchain-declaration-conformance`. Elixir is
+the first child after the completed shared C#/F# pair and provides the strongest
+independent-runtime diversity tie-break while preserving the same process-free
+boundary. Its corpus and CRLF grammar dependencies are merged. The local lane
+uses exact Elixir 1.18.4 on Erlang/OTP 27.3.4.11 from SHA-256-verified official
+release archives.
+
+The selected engine exposes `BuildTool.ToolchainDetection.evaluate_snapshot/5`
+and dynamically consumes all 11 neutral cases. The pure evaluator owns the
+complete 16-key registry, shared language mappings, platform precedence,
+affected and forced-full scheduling, forced workflow toolchains, exact CRLF
+declaration grammar, deterministic unsupported diagnostics, and per-file plus
+aggregate resource ceilings. Production discovery retains only the raw BUILD
+front it already selected and feeds the same evaluator for `--detect-languages`
+and emitted plans. No new filesystem enumeration, Git, process, environment,
+network, credential, secret, dependency, execution, or logging authority is
+introduced.
+
+After lifecycle reconciliation and selection, the complete graph contains 566
+owners and 833 dependency edges: 169 merged, 396 pending, and exactly one
+`in-progress` owner. There is no active parity PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
