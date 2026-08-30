@@ -64,8 +64,8 @@ fun main() {
         val dispatched = objectMap(
             host.handleEvent(
                 mapOf(
-                    "name" to "increment",
-                    "payload" to mapOf("amount" to 4),
+                    "event" to "increment",
+                    "amount" to 4,
                 ),
             ),
             "dispatch update",

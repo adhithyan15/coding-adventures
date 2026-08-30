@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Accept both standard `{name, payload}` events and generated flat
+  `{event, ...payload}` envelopes in the Compose/JNA host, matching Flutter and
+  allowing emitted Compose controls to dispatch into the Rust engine.
 - Persist opaque Mosaic snapshots in every application-scoped Compose,
   SwiftUI, XAML, Flutter, and Qt host. Generated applications restore before
   first render, atomically replace state after successful dispatches, quarantine
