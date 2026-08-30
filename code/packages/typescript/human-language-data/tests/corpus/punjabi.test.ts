@@ -15,14 +15,14 @@ it("pins Punjabi continuity", () => expectLanguageContinuity("punjabi"));
 it("pins Punjabi modality", () => expectLanguageModality("punjabi"));
 it("pins Punjabi lesson-content budgets", () =>
   expectLanguageLessonBudgets("punjabi", {
-    lessons: 76,
+    lessons: 91,
     idioms: 4,
     senses: 3,
     cultureClaims: 7,
     unitPrefix: "PA",
   }));
 
-it("keeps Punjabi's 86-row session map aligned with canonical order", () => {
+it("keeps Punjabi's 101-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -37,8 +37,8 @@ it("keeps Punjabi's 86-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(86);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 86 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(101);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 101 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );
@@ -85,6 +85,7 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "dictation-transcription",
     "controlled-composition",
     "controlled-composition",
+    "controlled-composition",
   ]);
 });
 
@@ -120,6 +121,56 @@ it("builds the first Punjabi A1 form field without a copyable independent answer
   expect(activity?.prompt).not.toContain("Aman");
   expect(activity?.prompt).not.toContain("ਅਮਨ");
   expect(activity?.answer).toBe("ਅਮਨ");
+});
+
+it("builds the Punjabi A1 language field one script piece at a time", () => {
+  const ordered = loadTrackLessons("punjabi")
+    .sort((left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence));
+  const runway = ordered.filter((lesson) => lesson.frontmatter.chapter === "16");
+  const entry = ordered.filter((lesson) => lesson.frontmatter.chapter === "17");
+
+  expect(runway.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "PA-W03-bha",
+    "PA-W03-sha",
+    "PA-W03-language-label",
+    "PA-W03-pa",
+    "PA-W03-tippi",
+    "PA-W03-ja",
+    "PA-W03-ba",
+    "PA-W03-punjabi",
+    "PA-W03-sihari",
+    "PA-W03-da",
+    "PA-W03-hindi",
+  ]);
+  expect(entry.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "PA-W03-language-select",
+    "PA-W03-language-supported",
+    "PA-W03-language-delayed",
+    "PA-W03-language-no-model",
+  ]);
+  expect([...runway, ...entry].every(
+    (lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 180,
+  )).toBe(true);
+
+  const supported = entry.find(
+    (lesson) => lesson.realization.lessonId === "PA-W03-language-supported",
+  )!;
+  expect(supported.body).toContain("This is supported entry, not independent writing evidence.");
+  expect(supported.blocks.some((block) => block.writingStage !== undefined)).toBe(false);
+
+  const independent = entry.at(-1)!;
+  expect(independent.blocks.map((block) => block.writingStage).filter(Boolean)).toEqual([
+    "controlled-composition",
+  ]);
+  expect(independent.body).toContain(
+    "There is no value bank, support-language label, or\nromanized answer below.",
+  );
+  expect(independent.body).toContain("> A — **ਭਾਸ਼ਾ: __________**");
+  expect(independent.body).not.toContain("A — **ਪੰਜਾਬੀ**");
+  const [activity] = compileLessonActivities(independent.blocks);
+  expect(activity?.prompt).not.toContain("Punjabi");
+  expect(activity?.prompt).not.toContain("ਪੰਜਾਬੀ");
+  expect(activity?.answer).toBe("ਪੰਜਾਬੀ");
 });
 
 it("migrates Punjabi Chapter 2 without inventing Gurmukhi writing credit", () => {
@@ -229,5 +280,5 @@ it("closes Chapter 3's oral R1/R2/R3 windows without inventing script credit", (
   ]);
   const report = measureContinuity(ordered);
   expect(report.reinforcement.filter((defect) => chapter3Atoms.has(defect.atom))).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 29, R2: 57, R3: 89, R4: 6 });
+  expect(report.summary.missedByWindow).toEqual({ R1: 32, R2: 67, R3: 108, R4: 17 });
 });

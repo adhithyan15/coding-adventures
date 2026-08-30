@@ -1,0 +1,12 @@
+{
+  "language": "punjabi",
+  "chapter": 17,
+  "sourceHash": "fnv1a64:460e3574cda62e45",
+  "lessonIds": [
+    "PA-W03-language-select",
+    "PA-W03-language-supported",
+    "PA-W03-language-delayed",
+    "PA-W03-language-no-model"
+  ],
+  "tex": "punjabi/book/chapters/ch17-form-language-entry.tex"
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 16,
+  "title": "Build the Language Label and Values",
+  "label": "ch:pa-form-language-pieces",
+  "canDo": "I can build the Gurmukhi language label and guided-copy two separately practised language values after learning every new script piece one at a time.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W03-hindi",
+    "kind": "production",
+    "summary": "The learner builds ਭਾਸ਼ਾ, ਪੰਜਾਬੀ, and ਹਿੰਦੀ only after each new Gurmukhi piece has received its own tiny introduction.",
+    "assesses": [
+      "PA-FORM-LABEL-LANGUAGE-01",
+      "PA-SCRIPT-BHA-01",
+      "PA-SCRIPT-SHA-01",
+      "PA-SCRIPT-DA-01",
+      "PA-FORM-LANGUAGE-PUNJABI-01",
+      "PA-FORM-LANGUAGE-HINDI-01"
+    ]
+  }
+}

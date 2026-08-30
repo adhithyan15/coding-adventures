@@ -1,0 +1,385 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 17,
+  "title": "The Second Form Line: Language",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:a982733be0358673",
+  "lessons": [
+    {
+      "id": "PA-W03-language-select",
+      "sequence": 1090,
+      "title": "Select one known language value",
+      "headword": "A / B",
+      "romanization": "two language-value cues",
+      "gloss": "select between two separately practised language values",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ca431309acfedcb0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — attach one cue to each value"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — attach one cue to each value until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the closed bank once:"
+            },
+            {
+              "kind": "speech",
+              "text": "A — ਪੰਜਾਬੀ B — ਹਿੰਦੀ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — attach one cue to each value",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to A, then ਪੰਜਾਬੀ. Point to B, then ਹਿੰਦੀ. Cover the bank and say which value B requests. Selection is separate from spelling."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Reveal, point, cover, and select once more. Do not write the form line yet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This cue belongs only to this two-item practice bank."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-language-select-b",
+              "prompt": "In this closed practice bank, which Gurmukhi value is paired with B?",
+              "assesses": [
+                "PA-FORM-LANGUAGE-CUE-MAP-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ਹਿੰਦੀ"
+              ],
+              "feedback": {
+                "correct": "B requests ਹਿੰਦੀ.",
+                "incorrect": "Reveal the bank, point to B and ਹਿੰਦੀ, then cover it again."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W03-language-supported",
+      "sequence": 1100,
+      "title": "Fill one supported language field",
+      "headword": "ਭਾਸ਼ਾ: __________",
+      "romanization": "language field",
+      "gloss": "fill one language line with a visible two-value bank",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:926c486931cb2b9a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep this bank visible:"
+            },
+            {
+              "kind": "speech",
+              "text": "A — ਪੰਜਾਬੀ B — ਹਿੰਦੀ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — model visible",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete ਭਾਸ਼ਾ: __________ (language field after a short delay) for A. Read the label, select the A value, and copy it. This is supported entry, not independent writing evidence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare selection, spelling, spacing, and placement in separate passes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one supported line."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-language-supported-a",
+              "prompt": "With the two-value bank visible, complete the language field for A.",
+              "assesses": [
+                "PA-FORM-LANGUAGE-SUPPORTED-ENTRY-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "ਪੰਜਾਬੀ",
+                "ਭਾਸ਼ਾ: ਪੰਜਾਬੀ",
+                "ਭਾਸ਼ਾ:ਪੰਜਾਬੀ"
+              ],
+              "feedback": {
+                "correct": "A selects ਪੰਜਾਬੀ.",
+                "incorrect": "Use the visible bank and repair only the first differing piece."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W03-language-delayed",
+      "sequence": 1110,
+      "title": "Hide, wait, then fill the language field",
+      "headword": "ਭਾਸ਼ਾ: __________",
+      "romanization": "language field after a short delay",
+      "gloss": "fill one language line after hiding the known bank",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:0e1945b1a9246934",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read A — ਪੰਜਾਬੀ, B — ਹਿੰਦੀ once. Hide the bank and count slowly to ten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — short delayed entry",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With the bank hidden, complete ਭਾਸ਼ਾ: __________ (language field after a short delay) for B. Finish the attempt before revealing the bank."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Reveal and compare selection, spelling, spacing, then placement. Repair one dimension only."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One delayed line is enough today."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-language-delayed-b",
+              "prompt": "After hiding the bank for ten seconds, complete the language field for B.",
+              "assesses": [
+                "PA-FORM-LANGUAGE-DELAYED-ENTRY-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "ਹਿੰਦੀ",
+                "ਭਾਸ਼ਾ: ਹਿੰਦੀ",
+                "ਭਾਸ਼ਾ:ਹਿੰਦੀ"
+              ],
+              "feedback": {
+                "correct": "The hidden-bank cue selected ਹਿੰਦੀ.",
+                "incorrect": "Reveal the bank after the attempt and repair only one dimension."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W03-language-no-model",
+      "sequence": 1120,
+      "title": "One no-model language field",
+      "headword": "ਭਾਸ਼ਾ: __________",
+      "romanization": "language field",
+      "gloss": "choose and write one known language from a nonverbal cue with no model",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:76c5a04101a83520",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the previous lesson. There is no value bank, support-language label, or romanized answer below."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — independent controlled choice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete the requested field:"
+            },
+            {
+              "kind": "speech",
+              "text": "A — ਭਾਸ਼ਾ: __________ (language field after a short delay)."
+            },
+            {
+              "kind": "speech",
+              "text": "Choose the known value attached to A and write it from memory. Do not reopen an earlier lesson until the attempt is complete."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — separate repair passes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "After writing, compare selection, spelling, spacing, and placement. Repair only the first differing dimension."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This closes only the language-field ladder. The remaining form fields are still separate backlog work."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-language-no-model-a",
+              "prompt": "With no bank, romanization, or copyable answer, complete the language field for A.",
+              "assesses": [
+                "PA-FORM-LANGUAGE-PUNJABI-01",
+                "PA-FORM-LANGUAGE-NO-MODEL-01"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "ਪੰਜਾਬੀ",
+                "ਭਾਸ਼ਾ: ਪੰਜਾਬੀ",
+                "ਭਾਸ਼ਾ:ਪੰਜਾਬੀ"
+              ],
+              "feedback": {
+                "correct": "The nonverbal cue independently selected ਪੰਜਾਬੀ.",
+                "incorrect": "Finish the attempt first; then reopen the bank and repair one dimension."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

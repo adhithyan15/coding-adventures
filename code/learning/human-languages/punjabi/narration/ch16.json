@@ -1,0 +1,1001 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 16,
+  "title": "Build the Language Label and Values",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:f9381a1f99a75789",
+  "lessons": [
+    {
+      "id": "PA-W03-bha",
+      "sequence": 980,
+      "title": "ਭ (bha) — one new base for the next label",
+      "headword": "ਭ",
+      "romanization": "bha",
+      "gloss": "trace the Gurmukhi letter bha",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:81b0fdc01d42defd",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one tiny step"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep only the familiar long-vowel mark ਾ in view. Today adds one base letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one tiny step",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ਭ slowly once, then once more. Say bha. Do not attach a vowel mark yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete one careful attempt. Compare only the new shape or word, repair one difference, and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No later answer in this lesson adds a new spelling."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-bha-check",
+              "prompt": "Which new Gurmukhi base letter did you trace for bha?",
+              "assesses": [
+                "PA-SCRIPT-BHA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ਭ"
+              ],
+              "feedback": {
+                "correct": "ਭ is the new base; stop after this one shape.",
+                "incorrect": "ਭ is the new base; stop after this one shape."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W03-sha",
+      "sequence": 990,
+      "title": "ਸ਼ (sha) — one dotted sound",
+      "headword": "ਸ਼",
+      "romanization": "sha",
+      "gloss": "trace the Gurmukhi letter sha",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:26d5e315a947cafa",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one tiny step"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point once to ਭ (bha), then put it away. This session adds only ਸ਼ (sha)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one tiny step",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ਸ਼ (sha) once. Its dot belongs to the letter. Compare it with familiar ਸ, then cover the comparison."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete one careful attempt. Compare only the new shape or word, repair one difference, and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No later answer in this lesson adds a new spelling."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-sha-check",
+              "prompt": "Type the new Gurmukhi letter for sha.",
+              "assesses": [
+                "PA-SCRIPT-SHA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ਸ਼"
+              ],
+              "feedback": {
+                "correct": "ਸ਼ is sha; keep its dot with the letter.",
+                "incorrect": "ਸ਼ is sha; keep its dot with the letter."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W03-language-label",
+      "sequence": 1000,
+      "title": "ਭਾਸ਼ਾ (bhāshā) — assemble the language label",
+      "headword": "ਭਾਸ਼ਾ",
+      "romanization": "bhāshā",
+      "gloss": "the form label language",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c6e5b57f30d2fdc3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one tiny step"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Touch the two new bases in order: ਭ (bha), then ਸ਼ (sha). The long-vowel mark is already familiar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one tiny step",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Build ਭਾ + ਸ਼ਾ = ਭਾਸ਼ਾ (bhāshā). On a form, ਭਾਸ਼ਾ (bhāshā) asks which language belongs on the line. Copy the label once, then leave the answer line empty."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete one careful attempt. Compare only the new shape or word, repair one difference, and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No later answer in this lesson adds a new spelling."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-language-label-check",
+              "prompt": "A form shows ਭਾਸ਼ਾ (bhāshā). What information belongs on that line?",
+              "assesses": [
+                "PA-FORM-LABEL-LANGUAGE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "language"
+              ],
+              "feedback": {
+                "correct": "ਭਾਸ਼ਾ labels the language field.",
+                "incorrect": "ਭਾਸ਼ਾ labels the language field."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W03-pa",
+      "sequence": 1010,
+      "title": "ਪ — first piece of ਪੰਜਾਬੀ (panjābī)",
+      "headword": "ਪ",
+      "romanization": "pa",
+      "gloss": "trace pa before writing Punjabi",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:eb4ee69aea1984ac",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one tiny step"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read ਭਾਸ਼ਾ (bhāshā) as language. Now hide it; this session adds one value-letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one tiny step",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ਪ once, say pa, and stop. The complete language name comes later."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete one careful attempt. Compare only the new shape or word, repair one difference, and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No later answer in this lesson adds a new spelling."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-pa-check",
+              "prompt": "Type the Gurmukhi base letter pa.",
+              "assesses": [
+                "PA-SCRIPT-PA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ਪ"
+              ],
+              "feedback": {
+                "correct": "ਪ is pa, the first base in ਪੰਜਾਬੀ.",
+                "incorrect": "ਪ is pa, the first base in ਪੰਜਾਬੀ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W03-tippi",
+      "sequence": 1020,
+      "title": "ੰ (tippi) — the nasal mark inside ਪੰਜਾਬੀ (panjābī)",
+      "headword": "ੰ",
+      "romanization": "tippi",
+      "gloss": "place tippi above a base letter",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:99a1e1194298eba6",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one tiny step"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write ਪ (pa) once. Today adds only the nasal mark that sits above it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one tiny step",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Place ੰ (tippi) above ਪ (pa) to make ਪੰ. This is ṭippī, not the final-position bindi from ਹਾਂ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete one careful attempt. Compare only the new shape or word, repair one difference, and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No later answer in this lesson adds a new spelling."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-tippi-check",
+              "prompt": "Which mark sits above ਪ (pa) in ਪੰ?",
+              "assesses": [
+                "PA-SCRIPT-TIPPI-WRITING-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ੰ"
+              ],
+              "feedback": {
+                "correct": "ੰ is tippi; it sits above the base.",
+                "incorrect": "ੰ is tippi; it sits above the base."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W03-ja",
+      "sequence": 1030,
+      "title": "ਜ (ja) — the middle base",
+      "headword": "ਜ",
+      "romanization": "ja",
+      "gloss": "trace ja before writing Punjabi",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8f0e3200ab6af1b8",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one tiny step"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read ਪੰ once, then cover it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one tiny step",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ਜ once and say ja. Do not assemble the whole word yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete one careful attempt. Compare only the new shape or word, repair one difference, and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No later answer in this lesson adds a new spelling."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-ja-check",
+              "prompt": "Type the new Gurmukhi base letter ja.",
+              "assesses": [
+                "PA-SCRIPT-JA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ਜ"
+              ],
+              "feedback": {
+                "correct": "ਜ is ja, the middle base in ਪੰਜਾਬੀ.",
+                "incorrect": "ਜ is ja, the middle base in ਪੰਜਾਬੀ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W03-ba",
+      "sequence": 1040,
+      "title": "ਬ — the last new base in ਪੰਜਾਬੀ (panjābī)",
+      "headword": "ਬ",
+      "romanization": "ba",
+      "gloss": "trace ba before writing Punjabi",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7a6465e69711c489",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one tiny step"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to ਜ (ja). Today adds one final base."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one tiny step",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ਬ once and say ba. The familiar ੀ will attach to it in the next session."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete one careful attempt. Compare only the new shape or word, repair one difference, and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No later answer in this lesson adds a new spelling."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-ba-check",
+              "prompt": "Type the new Gurmukhi base letter ba.",
+              "assesses": [
+                "PA-SCRIPT-BA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ਬ"
+              ],
+              "feedback": {
+                "correct": "ਬ is ba.",
+                "incorrect": "ਬ is ba."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W03-punjabi",
+      "sequence": 1050,
+      "title": "ਪੰਜਾਬੀ (panjābī) — first language value",
+      "headword": "ਪੰਜਾਬੀ",
+      "romanization": "panjābī",
+      "gloss": "assemble and guided-copy Punjabi as a form value",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f977d3bc9ebb8cde",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one tiny step"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Touch the pieces without writing: ਪੰ, ਜਾ, ਬੀ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one tiny step",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Assemble ਪੰਜਾਬੀ (panjābī) and copy it once with the model visible. This supported copy teaches the value; it is not independent writing evidence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete one careful attempt. Compare only the new shape or word, repair one difference, and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No later answer in this lesson adds a new spelling."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-punjabi-check",
+              "prompt": "With the model visible, copy the first language value.",
+              "assesses": [
+                "PA-FORM-LANGUAGE-PUNJABI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ਪੰਜਾਬੀ"
+              ],
+              "feedback": {
+                "correct": "ਪੰਜਾਬੀ is the first value; check ਪੰ, then ਜਾ, then ਬੀ.",
+                "incorrect": "ਪੰਜਾਬੀ is the first value; check ਪੰ, then ਜਾ, then ਬੀ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W03-sihari",
+      "sequence": 1060,
+      "title": "ਿ (sihari) — a mark written before, read after",
+      "headword": "ਿ",
+      "romanization": "sihari",
+      "gloss": "place the short-i mark before its base",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5b27f4aac0b0a3ab",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one tiny step"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write familiar ਹ once."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one tiny step",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Add ਿ (sihari) to make ਹਿ. Sihari is drawn to the left of its base but read after it: hi."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete one careful attempt. Compare only the new shape or word, repair one difference, and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No later answer in this lesson adds a new spelling."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-sihari-check",
+              "prompt": "Type the short-i mark used in ਹਿ.",
+              "assesses": [
+                "PA-SCRIPT-SIHARI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ਿ"
+              ],
+              "feedback": {
+                "correct": "ਿ is sihari; it is written before the base and read after.",
+                "incorrect": "ਿ is sihari; it is written before the base and read after."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W03-da",
+      "sequence": 1070,
+      "title": "ਦ (da) — one dental base",
+      "headword": "ਦ",
+      "romanization": "da",
+      "gloss": "trace dental da before writing Hindi",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d8d6cb1afdebdaed",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one tiny step"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read ਹਿ once, then cover it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one tiny step",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ਦ once and say dental da. Do not add ੀ until the next session."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete one careful attempt. Compare only the new shape or word, repair one difference, and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No later answer in this lesson adds a new spelling."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-da-check",
+              "prompt": "Type the new dental da letter.",
+              "assesses": [
+                "PA-SCRIPT-DA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ਦ"
+              ],
+              "feedback": {
+                "correct": "ਦ is dental da.",
+                "incorrect": "ਦ is dental da."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W03-hindi",
+      "sequence": 1080,
+      "title": "ਹਿੰਦੀ (hindī) — second language value",
+      "headword": "ਹਿੰਦੀ",
+      "romanization": "hindī",
+      "gloss": "assemble and guided-copy Hindi as a form value",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ac934d4927d39864",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one tiny step"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point once to ਭਾਸ਼ਾ (bhāshā) and say language. Point once to ਪੰਜਾਬੀ (panjābī) and say Punjabi. Touch ਭ (bha), ਸ਼ (sha), then the pieces of the second value: ਹਿ, ਂ, ਦੀ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one tiny step",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Assemble ਹਿੰਦੀ (hindī) and copy it once with the model visible. Keep the tippi above the first unit and the long ੀ on ਦ (da)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Complete one careful attempt. Compare only the new shape or word, repair one difference, and stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No later answer in this lesson adds a new spelling."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W03-hindi-check",
+              "prompt": "With the model visible, copy the second language value.",
+              "assesses": [
+                "PA-FORM-LANGUAGE-HINDI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ਹਿੰਦੀ"
+              ],
+              "feedback": {
+                "correct": "ਹਿੰਦੀ is the second value; check ਹਿ, then tippi, then ਦੀ.",
+                "incorrect": "ਹਿੰਦੀ is the second value; check ਹਿ, then tippi, then ਦੀ."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

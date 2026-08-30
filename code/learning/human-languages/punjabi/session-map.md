@@ -93,6 +93,21 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 84 | 15 | PA-W02-name-supported | fill one name line with the two-value bank visible |
 | 85 | 15 | PA-W02-name-delayed | hide the bank, then fill one requested name line |
 | 86 | 15 | PA-W02-name-no-model | fill one name line from a nonverbal cue with no model |
+| 87 | 16 | PA-W03-bha | trace ਭ |
+| 88 | 16 | PA-W03-sha | trace ਸ਼ |
+| 89 | 16 | PA-W03-language-label | assemble and copy ਭਾਸ਼ਾ |
+| 90 | 16 | PA-W03-pa | trace ਪ |
+| 91 | 16 | PA-W03-tippi | place tippi ਂ above a base |
+| 92 | 16 | PA-W03-ja | trace ਜ |
+| 93 | 16 | PA-W03-ba | trace ਬ |
+| 94 | 16 | PA-W03-punjabi | assemble and guided-copy ਪੰਜਾਬੀ |
+| 95 | 16 | PA-W03-sihari | place sihari ਿ before its base |
+| 96 | 16 | PA-W03-da | trace ਦ |
+| 97 | 16 | PA-W03-hindi | assemble and guided-copy ਹਿੰਦੀ |
+| 98 | 17 | PA-W03-language-select | select between two known language values |
+| 99 | 17 | PA-W03-language-supported | fill one language line with the bank visible |
+| 100 | 17 | PA-W03-language-delayed | hide the bank, then fill one language line |
+| 101 | 17 | PA-W03-language-no-model | fill one language line from a nonverbal cue with no model |
 
-After session 86, the track continues through the dependency-linked backlog;
+After session 101, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

@@ -1,5 +1,15 @@
 # Changelog
 
+## Punjabi A1 language-field writing ladder (#13546)
+
+- Added fifteen lessons no longer than three minutes each: eight tiny script
+  passes, three label/value assemblies, then selection, supported entry,
+  delayed entry, and no-model controlled writing.
+- Taught the form label **ਭਾਸ਼ਾ** and closed values **ਪੰਜਾਬੀ** and **ਹਿੰਦੀ**;
+  every newly scored Gurmukhi piece is introduced before it is assessed.
+- Kept the independent prompt free of romanization and copyable answers, and
+  kept supported entry explicitly outside independent writing evidence.
+
 ## 2026-08-30 — the first A1 practical-form field
 
 - Added Chapter 15 as an eight-session, sub-five-minute runway for the
