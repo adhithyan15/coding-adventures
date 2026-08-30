@@ -6,6 +6,11 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Added
 
+- Add a pure bounded `evaluateToolchainSnapshot()` API and a package-local
+  suite that dynamically discovers all 11 language-neutral declaration
+  fixtures and evaluates them through it. The adapter preserves exact CRLF and
+  platform-front semantics, returns a fresh complete 16-key result, and rejects
+  hostile direct snapshots without adding host or execution authority.
 - Add exact pinned TypeScript and Node declaration development dependencies,
   an explicit strict no-emit `typecheck` command, and a generic BUILD-front
   gate that runs static validation before coverage on every platform.

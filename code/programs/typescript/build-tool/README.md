@@ -34,6 +34,7 @@ This is one of several build tool implementations in the monorepo (Python, Ruby,
 | `executor.ts` | Parallel build execution respecting dependency order |
 | `reporter.ts` | Human-readable build report formatting |
 | `validator.ts` | Build-contract checks plus pure orphan-crate and tracked-artifact snapshot validation |
+| `toolchain-detection.ts` | Pure bounded extra-CI toolchain declaration evaluation |
 | `tracked-artifact-unicode17.ts` | Generated, source-pinned Unicode 17 normalization and casing substrate |
 | `index.ts` | CLI entry point tying everything together |
 
@@ -107,6 +108,23 @@ python code/scripts/generate_tracked_artifact_unicode17.py --check
 Generation executes both the Python and TypeScript outputs against the pinned
 official normalization, case-folding, and uppercase vectors before accepting
 either artifact.
+
+## Process-free extra-CI toolchain declarations
+
+`evaluateToolchainSnapshot()` consumes only caller-owned package names,
+languages, and the five closed platform BUILD fronts. The package-local Vitest
+suite dynamically discovers every language-neutral
+`toolchain-detection-*.json` fixture and evaluates it through this native
+boundary. The API applies explicit darwin/Linux/Windows front precedence and
+returns a fresh frozen boolean map over the sorted 16-toolchain registry.
+
+The boundary meters UTF-8 bytes and LF-delimited logical lines before parsing,
+rejects aggregate snapshots immediately when their ceiling is crossed, and
+recognizes only exact bounded `# needs-toolchain: NAME` comments. Direct
+callers receive stable typed shape and resource errors for sparse, duplicate,
+oversized, or out-of-grammar snapshots. The evaluator does not enumerate the
+checkout, read files, invoke Git, inspect the environment, start a process, or
+access the network.
 
 ## Platform-specific BUILD files
 
