@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.13] - 2026-08-30
+
+### Fixed
+
+- **Exact Dune output exclusion**: package discovery now prunes only the
+  case-sensitive `_build` component while retaining `_Build` and
+  `_build-example` source directories.
+- **OCaml registry evidence**: the Python engine now classifies the emerging
+  OCaml package and program buckets and consumes their records from the shared
+  language-registry fixture without adding OCaml to the established-lane
+  denominator.
+
 ## [0.3.12] - 2026-08-30
 
 ### Added

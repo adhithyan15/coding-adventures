@@ -32,7 +32,7 @@ SHARED_LANGUAGE_REGISTRY = (
     / "discovery-language-registry.json"
 )
 FILTER_LANGUAGES = frozenset(
-    {"csharp", "dart", "fsharp", "haskell", "java", "kotlin"}
+    {"csharp", "dart", "fsharp", "haskell", "java", "kotlin", "ocaml"}
 )
 
 
@@ -340,7 +340,7 @@ class TestDiscoverRecursive:
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 destination.write_text(file_record["content_utf8"], encoding="utf-8")
 
-        assert len(selected_files) == 14
+        assert len(selected_files) == 17
         packages = discover_packages(tmp_path / "code")
         actual = [
             (
@@ -422,6 +422,23 @@ class TestDiscoverSkipList:
 
         packages = discover_packages(tmp_path)
         assert [package.name for package in packages] == ["haskell/pkg-a"]
+
+    def test_skips_only_exact_dune_build_component(self, tmp_path):
+        paths = (
+            "generated-a/_build/exact",
+            "generated-b/_Build/case-source",
+            "generated-c/_build-example/near-source",
+        )
+        for relative_path in paths:
+            package = tmp_path / "packages" / "ocaml" / relative_path
+            package.mkdir(parents=True)
+            (package / "BUILD").write_text("echo ocaml")
+
+        packages = discover_packages(tmp_path)
+        assert [package.name for package in packages] == [
+            "ocaml/case-source",
+            "ocaml/near-source",
+        ]
 
     def test_skips_claude_dir(self, tmp_path):
         pkg = tmp_path / "packages" / "python" / "pkg-a"

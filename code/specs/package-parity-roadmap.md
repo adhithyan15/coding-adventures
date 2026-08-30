@@ -11013,6 +11013,76 @@ every required check is terminal and acceptable and GitHub still reports no
 conflict. The ownership graph now contains 183 merged, 396 pending, and exactly
 one `pr-open` owner.
 
+### Post-PR #13535 refresh and Python Dune-discovery selection
+
+PR #13535 completed all 40 final-head checks acceptably with 33 successes and
+seven expected skips. Guarded squash auto-merge was enabled only after GitHub
+reported final head `9601823d3283a0f5e1db51c61ad992d6c15642ac`
+conflict-free, and GitHub merged it as
+`3810c7380ca67ae82f300af4d7d4134c25f2cef7` at 2026-08-30T20:38:56Z
+without a manual merge command. The shared .NET Dune-discovery owner therefore
+advances to `merged` and the active PR is cleared.
+
+The collision-checked exact-main inventory remains schema 3 with 15
+established lanes, 1,388 implementation identities, 4,602 slots, and 1,427
+all-reported identities. Completion bands remain 175/265, 123/934, 170/2,139,
+and 920/12,880; Rust has 731 singletons, OCaml remains emerging at zero
+packages, and collisions and unknown buckets remain zero. No package root or
+manifest changed and no newly eligible topology gap appeared.
+
+The pre-selection conformance audit did find an identity-neutral Python
+hashing gap: both hashing walkers currently retain exact generated directory
+components such as `_build`. A new separate pending owner records that repair
+behind the Python discovery leaf, increasing the complete acyclic state graph
+to 581 owners and 865 edges before selection.
+
+The dependency/leverage pass selects
+`build-tool-python-dune-build-discovery-conformance` on branch
+`codex/build-tool-python-dune-build-discovery-conformance`. Its sole
+prerequisite is merged. The bounded repair fixes Python's exact `_build` and
+OCaml-registry behavior in its 488-package lane, advances the Dune completion
+umbrella, and directly unlocks the new hashing owner. That combination gives
+it more leverage and a smaller implementation surface than the independent
+Haskell leaf. Seven live PRs have zero exact overlap with the expected Python
+build-tool, state, roadmap, and root-changelog paths. Reconciliation, owner
+addition, and selection leave 184 merged, 396 pending, and exactly one
+`in-progress` owner.
+
+Implementation followed the contract's tests-first order. The red phase
+produced three intended failures: OCaml registry records were classified as
+unknown, the generated Dune fixture decoy was discovered, and a direct
+exact/case/near-name regression retained exact `_build`. Adding exact `_build`
+to the discovery skip set and OCaml to the emerging discovery registry is the
+entire source repair. The focused suite then passed 68 tests, and the complete
+Python package passed 457 tests at 90.79% total coverage with `discovery.py` at
+96%. Changed-module mypy passes. BUILD and BUILD_windows are byte-identical.
+
+Cross-engine validation passes the language-neutral build-tool family with 150
+tests, two skips, and 941 subtests. The corpus validator accepts 119 cases and
+283 files across 16 implementations, 15 lanes, and 12 front doors. The Go
+oracle passes module verification, tests, vet, and a trimmed build. The real
+495-package plan evaluates 45 Starlark files, reports no unreviewed orphan, and
+retains the five reviewed exemptions. Repeating it from the committed head
+selects exactly `python/programs/build-tool`: one changed and one affected
+package, with the remaining 494 skipped. The exact-main inventory remains free
+of collisions and unknown buckets, and the 581-owner/865-edge state graph is
+unique, dependency-complete, and acyclic.
+
+Security and package checks pass: `pip-audit` finds no known vulnerabilities,
+`uv pip check` finds no incompatible installed packages, `compileall` passes,
+both sdist and wheel build, and Bandit passes for the changed discovery module.
+Full Ruff, mypy, and Bandit runs reproduce only pre-existing findings outside
+the changed behavior; the changed-module Ruff findings are existing style debt
+and no changed line introduces a new one.
+
+Ready-for-review PR #13544 is open from
+`codex/build-tool-python-dune-build-discovery-conformance`. GitHub reports the
+initial publication head mergeable and non-draft with required checks already
+registered or in progress. Auto-merge remains disabled until every final-head
+check is terminal and acceptable and GitHub still reports no merge conflict.
+The ownership graph therefore contains 184 merged, 396 pending, and exactly one
+`pr-open` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
