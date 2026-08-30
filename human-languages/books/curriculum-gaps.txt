@@ -106,4 +106,4 @@ lesson content budgets (report-only): 1744 of 4517 lessons measured -- 99 idioms
 metalanguage: 53 of 54 grammar terms appear in 4242 lessons; 14498 uses come before introduction, of which 3624 are technical terms across 1954 lessons
   most-used-before-introduction: verb (1156 lessons), noun (649 lessons), adjective (186 lessons), tense (165 lessons), regular (159 lessons), pronoun (151 lessons)
 literal markup: none in 4517 lessons or any generated book
-glyph coverage: every character renders -- 125 main-font and 721 script characters across 1254 generated files
+glyph coverage: every character renders -- 125 main-font and 721 script characters across 1231 generated files
