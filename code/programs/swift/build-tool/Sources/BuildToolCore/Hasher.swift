@@ -73,8 +73,8 @@ public enum Hasher {
                     ? entry
                     : "\(relativeDirectory)/\(entry)"
                 let fullPath = (directory as NSString).appendingPathComponent(entry)
-                var isDirectory: ObjCBool = false
-                if fm.fileExists(atPath: fullPath, isDirectory: &isDirectory), isDirectory.boolValue {
+                let attributes = try? fm.attributesOfItem(atPath: fullPath)
+                if attributes?[.type] as? FileAttributeType == .typeDirectory {
                     if !Discovery.skipDirectories.contains(entry) {
                         visit(directory: fullPath, relativeDirectory: relativePath)
                     }
