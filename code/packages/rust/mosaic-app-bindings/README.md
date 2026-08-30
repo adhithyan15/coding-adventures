@@ -12,6 +12,27 @@ Qt/QML uses Qt Core's `QLibrary`, JSON, and variant APIs. All five own the opaqu
 runtime handle and returned buffers, supply the native startup context, sequence
 semantic events, and return decoded updates to the generated view.
 
+Emitted applications also persist the runtime's opaque snapshot after every
+successful dispatch and supply it as `restoredSnapshot` before the first visible
+render. Writes use a same-directory temporary file plus the platform's atomic
+replacement facility. Invalid JSON and runtime-incompatible snapshots are moved
+to `mosaic-state.v1.json.corrupt`; the app starts clean and exposes a
+`persistenceWarning` (or native status warning) instead of becoming unusable.
+Set `MOSAIC_APP_STATE_PATH` to an explicit file for tests or portable launches.
+Otherwise the generated application id selects these per-user locations:
+
+| Host | Default state location |
+| --- | --- |
+| Compose | `%LOCALAPPDATA%/<app-id>/mosaic-state.v1.json` on Windows, `~/Library/Application Support/<app-id>/...` on macOS, `$XDG_DATA_HOME/<app-id>/...` or `~/.local/share/<app-id>/...` on Linux |
+| SwiftUI | Foundation's user Application Support directory, then `<app-id>/mosaic-state.v1.json` |
+| XAML | `Environment.SpecialFolder.LocalApplicationData/<app-id>/mosaic-state.v1.json` |
+| Flutter | the same Windows/macOS/Linux roots as Compose, derived without a plugin |
+| Qt | `QStandardPaths::AppDataLocation/<app-id>/mosaic-state.v1.json` |
+
+The unscoped binding helpers used by ABI conformance remain ephemeral. Artifact
+generation calls the application-scoped helpers, so independent apps never
+share state accidentally.
+
 Set the `mosaic.app.library` JVM property or `MOSAIC_APP_LIBRARY` environment
 variable to a library name or absolute path. The conventional fallback name is
 `mosaic_app`. Generated Compose native distributions add an app-relative lookup

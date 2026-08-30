@@ -12,9 +12,9 @@ It tracks the local-first, Rust-scheduled, native TaskApp completion loop and
 links existing Mosaic work instead of duplicating it.
 
 1. **P0 — [#13518](https://github.com/adhithyan15/coding-adventures/issues/13518):**
-   make the web release build reproducible and CI-gated. **In progress.**
+   make the web release build reproducible and CI-gated. **Done in #13527.**
 2. **P0 — [#13519](https://github.com/adhithyan15/coding-adventures/issues/13519):**
-   persist TaskApp locally in every strict generated native host.
+   persist TaskApp locally in every strict generated native host. **In progress.**
 3. **P0 — [#13520](https://github.com/adhithyan15/coding-adventures/issues/13520):**
    prove the native simple-todo scheduling flow end to end.
 4. **P1 — [#13521](https://github.com/adhithyan15/coding-adventures/issues/13521):**

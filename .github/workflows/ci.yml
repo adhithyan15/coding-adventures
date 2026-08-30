@@ -1499,7 +1499,16 @@ jobs:
           cp "$bundled_output/swiftui/Sources/CMosaicRuntime/CMosaicRuntime.c" "$harness/Sources/CMosaicRuntime/CMosaicRuntime.c"
           cp "$bundled_output/swiftui/Sources/CMosaicRuntime/include/CMosaicRuntime.h" "$harness/Sources/CMosaicRuntime/include/CMosaicRuntime.h"
 
-          env -u MOSAIC_APP_LIBRARY swift run --package-path "$harness" Conformance --library "$installed_runtime"
+          state_path="$RUNNER_TEMP/mosaic-swift-runtime-state.json"
+          rm -f "$state_path" "$state_path.corrupt" "$state_path.tmp"
+          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" \
+            swift run --package-path "$harness" Conformance --library "$installed_runtime"
+          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_RESTORED=1 \
+            swift run --package-path "$harness" Conformance --library "$installed_runtime"
+          printf '{}' > "$state_path"
+          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" \
+            MOSAIC_EXPECT_PERSISTENCE_WARNING=1 \
+            swift run --package-path "$harness" Conformance --library "$installed_runtime"
 
           cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
           task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.dylib"
@@ -1590,7 +1599,13 @@ jobs:
           cp "$harness/build/mosaic_qt_runtime_conformance" "$installed_harness"
           (
             cd /
-            env -u MOSAIC_APP_LIBRARY "$installed_harness"
+            state_path="$RUNNER_TEMP/mosaic-qt-runtime-state.json"
+            rm -f "$state_path" "$state_path.corrupt" "$state_path.tmp"
+            env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" "$installed_harness"
+            env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_RESTORED=1 "$installed_harness"
+            printf '{}' > "$state_path"
+            env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" \
+              MOSAIC_EXPECT_PERSISTENCE_WARNING=1 "$installed_harness"
             env -u MOSAIC_APP_LIBRARY "$installed_harness" --expect-missing-prop-failure
           )
 
@@ -1678,8 +1693,15 @@ jobs:
           (
             cd "$bundled_output/flutter"
             unset MOSAIC_APP_LIBRARY
+            state_path="$RUNNER_TEMP/mosaic-flutter-runtime-state.json"
+            rm -f "$state_path" "$state_path.corrupt" "$state_path.tmp"
             dart analyze bin/mosaic_runtime_conformance.dart
-            dart run bin/mosaic_runtime_conformance.dart
+            MOSAIC_APP_STATE_PATH="$state_path" dart run bin/mosaic_runtime_conformance.dart
+            MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_RESTORED=1 \
+              dart run bin/mosaic_runtime_conformance.dart
+            printf '{}' > "$state_path"
+            MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_PERSISTENCE_WARNING=1 \
+              dart run bin/mosaic_runtime_conformance.dart
           )
 
           cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
@@ -1786,7 +1808,18 @@ jobs:
           cp "$bundled_output/compose/src/main/kotlin/MosaicRuntimeHost.kt" "$harness/src/main/kotlin/MosaicRuntimeHost.kt"
 
           unset MOSAIC_APP_LIBRARY
-          JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_runtime")" gradle --no-daemon --stacktrace -p "$harness" run
+          state_path="$RUNNER_TEMP/mosaic-compose-runtime-state.json"
+          rm -f "$state_path" "$state_path.corrupt" "$state_path.tmp"
+          MOSAIC_APP_STATE_PATH="$state_path" \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_runtime")" \
+            gradle --no-daemon --stacktrace -p "$harness" run
+          MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_RESTORED=1 \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_runtime")" \
+            gradle --no-daemon --stacktrace -p "$harness" run
+          printf '{}' > "$state_path"
+          MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_PERSISTENCE_WARNING=1 \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_runtime")" \
+            gradle --no-daemon --stacktrace -p "$harness" run
 
           cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
           task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.so"
@@ -1905,10 +1938,19 @@ jobs:
           }
           Copy-Item $taskLibrary.Path (Join-Path $taskHarnessBinary.DirectoryName 'mosaic_app.dll')
           Remove-Item Env:MOSAIC_APP_LIBRARY -ErrorAction SilentlyContinue
+          $env:MOSAIC_APP_STATE_PATH = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp-state.json'
+          Remove-Item $env:MOSAIC_APP_STATE_PATH, "$($env:MOSAIC_APP_STATE_PATH).corrupt", "$($env:MOSAIC_APP_STATE_PATH).tmp" -Force -ErrorAction SilentlyContinue
           dotnet $taskHarnessBinary.FullName
           if ($LASTEXITCODE -ne 0) {
             throw "TaskApp XAML Rust runtime conformance failed with exit code $LASTEXITCODE"
           }
+          $env:MOSAIC_EXPECT_RESTORED = '1'
+          dotnet $taskHarnessBinary.FullName
+          if ($LASTEXITCODE -ne 0) {
+            throw "TaskApp XAML persisted-restart conformance failed with exit code $LASTEXITCODE"
+          }
+          Remove-Item Env:MOSAIC_EXPECT_RESTORED -ErrorAction SilentlyContinue
+          Remove-Item Env:MOSAIC_APP_STATE_PATH -ErrorAction SilentlyContinue
 
           $strictOutput = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-native-complete-rating-controls'
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend xaml --output $strictOutput --emit-project --profile native-complete --runtime-library $library.Path
@@ -2025,10 +2067,27 @@ jobs:
           }
           Copy-Item $library.Path (Join-Path $harnessBinary.DirectoryName 'mosaic_app.dll')
           Remove-Item Env:MOSAIC_APP_LIBRARY -ErrorAction SilentlyContinue
+          $env:MOSAIC_APP_STATE_PATH = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-runtime-state.json'
+          Remove-Item $env:MOSAIC_APP_STATE_PATH, "$($env:MOSAIC_APP_STATE_PATH).corrupt", "$($env:MOSAIC_APP_STATE_PATH).tmp" -Force -ErrorAction SilentlyContinue
           dotnet $harnessBinary.FullName
           if ($LASTEXITCODE -ne 0) {
             throw "Mosaic XAML Rust runtime conformance failed with exit code $LASTEXITCODE"
           }
+
+          $env:MOSAIC_EXPECT_RESTORED = '1'
+          dotnet $harnessBinary.FullName
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic XAML persisted-restart conformance failed with exit code $LASTEXITCODE"
+          }
+          Remove-Item Env:MOSAIC_EXPECT_RESTORED -ErrorAction SilentlyContinue
+
+          Set-Content -LiteralPath $env:MOSAIC_APP_STATE_PATH -Value '{}' -NoNewline
+          $env:MOSAIC_EXPECT_PERSISTENCE_WARNING = '1'
+          dotnet $harnessBinary.FullName
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic XAML incompatible-state recovery conformance failed with exit code $LASTEXITCODE"
+          }
+          Remove-Item Env:MOSAIC_EXPECT_PERSISTENCE_WARNING -ErrorAction SilentlyContinue
 
           dotnet $harnessBinary.FullName --expect-missing-prop-failure
           if ($LASTEXITCODE -ne 0) {

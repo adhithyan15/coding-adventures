@@ -1,5 +1,10 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — prove TaskApp restart restoration (#13519)
+
+The XAML runtime acceptance now launches twice against the same native snapshot
+file and verifies that a Rust-owned composer edit survives process restart.
+
 ## [Unreleased] — expose ring-percent-value as typed data (#12028 item 2)
 
 `"ring-gradient": ""` was an unconditional, always-empty placeholder in

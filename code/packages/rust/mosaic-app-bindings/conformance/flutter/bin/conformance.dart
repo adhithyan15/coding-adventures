@@ -32,6 +32,10 @@ String _expectedPlatform() {
 }
 
 Future<void> main() async {
+  final restoredOnLaunch = Platform.environment['MOSAIC_EXPECT_RESTORED'] == '1';
+  final expectWarning =
+      Platform.environment['MOSAIC_EXPECT_PERSISTENCE_WARNING'] == '1';
+  final initialCount = restoredOnLaunch ? 4 : 0;
   final host = MosaicHost.load();
   if (host == null) _fail('standard Flutter binding did not load the Rust app');
 
@@ -39,18 +43,25 @@ Future<void> main() async {
     final started = _object(await host.props(), 'startup update');
     final startedProps = _props(started, 'startup update');
     _require(
+      started.containsKey('persistenceWarning') == expectWarning,
+      'startup persistence warning',
+    );
+    _require(
       _integer(started['revision'], 'startup revision') == 1,
       'startup revision',
     );
     _require(
-      _integer(startedProps['count'], 'initial count') == 0,
+      _integer(startedProps['count'], 'initial count') == initialCount,
       'initial count',
     );
     _require(
       startedProps['platform'] == _expectedPlatform(),
       'startup platform',
     );
-    _require(startedProps['status'] == 'started', 'startup status');
+    _require(
+      startedProps['status'] == (restoredOnLaunch ? 'restored' : 'started'),
+      'startup status',
+    );
 
     var notificationCount = 0;
     host.setPropsChangedHandler(() => notificationCount += 1);
@@ -68,7 +79,7 @@ Future<void> main() async {
       'dispatch revision',
     );
     _require(
-      _integer(dispatchedProps['count'], 'dispatched count') == 4,
+      _integer(dispatchedProps['count'], 'dispatched count') == initialCount + 4,
       'dispatched count',
     );
     _require(dispatchedProps['status'] == 'dispatched', 'dispatch status');
@@ -94,7 +105,7 @@ Future<void> main() async {
       'restore revision',
     );
     _require(
-      _integer(restoredProps['count'], 'restored count') == 4,
+      _integer(restoredProps['count'], 'restored count') == initialCount + 4,
       'restored count',
     );
     _require(restoredProps['status'] == 'restored', 'restore status');

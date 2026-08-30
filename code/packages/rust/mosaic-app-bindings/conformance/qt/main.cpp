@@ -41,6 +41,11 @@ int main(int argc, char *argv[])
     QCoreApplication application(argc, argv);
     MosaicHost host;
     const QString mode = argc > 1 ? QString::fromLocal8Bit(argv[1]) : QString();
+    const bool restoredOnLaunch = qEnvironmentVariable("MOSAIC_EXPECT_RESTORED") ==
+        QStringLiteral("1");
+    const bool expectWarning = qEnvironmentVariable("MOSAIC_EXPECT_PERSISTENCE_WARNING") ==
+        QStringLiteral("1");
+    const qlonglong initialCount = restoredOnLaunch ? 4 : 0;
 
     if (mode == QStringLiteral("--expect-required-failure")) {
         try {
@@ -81,14 +86,16 @@ int main(int argc, char *argv[])
 
     const auto started = host.props();
     const auto startedProps = host.propsRequired();
+    require(started.contains(QStringLiteral("persistenceWarning")) == expectWarning,
+            "startup persistence warning");
     require(started.value(QStringLiteral("revision")).toULongLong() == 1,
             "startup revision");
-    require(startedProps.value(QStringLiteral("count")).toLongLong() == 0,
+    require(startedProps.value(QStringLiteral("count")).toLongLong() == initialCount,
             "initial count");
     require(startedProps.value(QStringLiteral("platform")).toString() == expectedPlatform(),
             "startup platform");
     require(startedProps.value(QStringLiteral("runtimeStatus")).toString() ==
-                QStringLiteral("started"),
+                (restoredOnLaunch ? QStringLiteral("restored") : QStringLiteral("started")),
             "startup mapped status");
     require(!startedProps.contains(QStringLiteral("status")),
             "startup source name removed after mapping");
@@ -101,7 +108,7 @@ int main(int argc, char *argv[])
     const auto dispatchedProps = props(dispatched, "dispatch update");
     require(dispatched.value(QStringLiteral("revision")).toULongLong() == 2,
             "dispatch revision");
-    require(dispatchedProps.value(QStringLiteral("count")).toLongLong() == 4,
+    require(dispatchedProps.value(QStringLiteral("count")).toLongLong() == initialCount + 4,
             "dispatched count");
     require(dispatchedProps.value(QStringLiteral("runtimeStatus")).toString() ==
                 QStringLiteral("dispatched"),
@@ -122,7 +129,7 @@ int main(int argc, char *argv[])
     const auto restoredProps = props(restored, "restore update");
     require(restored.value(QStringLiteral("revision")).toULongLong() == 3,
             "restore revision");
-    require(restoredProps.value(QStringLiteral("count")).toLongLong() == 4,
+    require(restoredProps.value(QStringLiteral("count")).toLongLong() == initialCount + 4,
             "restored count");
     require(restoredProps.value(QStringLiteral("status")).toString() ==
                 QStringLiteral("restored"),
