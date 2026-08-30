@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W02-name-supported",
+    "language": "punjabi",
+    "chapter": 15,
+    "sequence": 950,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d6b733fd236033f6",
+    "detachableSegments": [
+      "Writing — separate spelling check"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

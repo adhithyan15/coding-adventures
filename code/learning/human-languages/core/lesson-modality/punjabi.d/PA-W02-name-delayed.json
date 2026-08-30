@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W02-name-delayed",
+    "language": "punjabi",
+    "chapter": 15,
+    "sequence": 960,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a1ca280c44d012b5",
+    "detachableSegments": [
+      "Writing — delayed requested entry"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
