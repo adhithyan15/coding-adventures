@@ -40,6 +40,7 @@ mod hasher;
 pub mod plan;
 mod reporter;
 mod resolver;
+pub mod toolchain_detection;
 pub mod validator;
 
 use std::collections::HashMap;
