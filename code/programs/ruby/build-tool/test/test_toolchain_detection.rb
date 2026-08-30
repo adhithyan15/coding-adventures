@@ -109,6 +109,15 @@ class TestToolchainDetection < Minitest::Test
     assert_match(/per-file resource ceiling/, error.message)
   end
 
+  def test_public_parser_rejects_oversized_content_before_splitting
+    assert_empty BuildTool::ToolchainDetection.parse_extra_toolchains(
+      "# needs-toolchain: java\n" + ("x" * 65_537)
+    )
+    assert_empty BuildTool::ToolchainDetection.parse_extra_toolchains(
+      ("\n" * 4_096) + "# needs-toolchain: java"
+    )
+  end
+
   def test_enforces_aggregate_ceiling_across_every_front
     exact = (0...16).to_h { |index| ["BUILD_#{index}", "x" * 65_536] }
     assert_equal "ok", evaluate(packages: [package(build_files: exact)]).fetch("outcome")
@@ -227,5 +236,18 @@ class TestToolchainDetection < Minitest::Test
     assert_equal [
       {"code" => "TOOLCHAIN_UNSUPPORTED", "severity" => "error", "package" => "zig/app"}
     ], both_invalid.fetch("diagnostics")
+  end
+
+  def test_rejects_unsupported_platform_before_selection_shortcuts
+    error = assert_raises(ArgumentError) do
+      evaluate(
+        platform: "solaris",
+        force_full: true,
+        scheduled_packages: nil,
+        packages: []
+      )
+    end
+
+    assert_equal "unsupported target platform: solaris", error.message
   end
 end
