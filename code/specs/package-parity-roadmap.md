@@ -11216,6 +11216,13 @@ isolated sdist and wheel builds, pip audit, state-graph validation, inventory,
 JSON, and diff hygiene all pass; the two local packages are intentionally not
 auditable through PyPI. No dependency or production authority is added.
 
+Before publication, the branch rebased conflict-free onto exact `origin/main`
+`2ade18a0bb61275a1b9d5ae1cb3387ce58211448` after merged PR #13554 added
+only Spanish curriculum, generated book and narration evidence, and existing
+human-language-data tests. Those paths do not overlap this tranche or add a
+package root, BUILD, manifest, build-tool contract, or unowned parity gap. The
+regenerated schema-3 inventory remains unchanged and collision-free.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
