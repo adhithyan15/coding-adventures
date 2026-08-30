@@ -69,8 +69,8 @@ boundary from the dependency-ordered work still needed for pre-A1 through C2.
 - `lessons/` contains the authored micro-lessons; `narration/` contains generated
   narration manifests.
 - `book/` contains generated LaTeX chapters plus Gujarati-specific front matter.
-- `progress/gujarati.md` is generated at the shared human-languages root and
-  reports the current chapter and lesson counts.
+- `npm run report:progress` in the shared data package derives this track's
+  current chapter and lesson counts without committing a progress rollup.
 - The Gujarati corpus test pins continuity, modality, writing stages, the gentle
   opening, and exact agreement between canonical order and this track's session
   map.

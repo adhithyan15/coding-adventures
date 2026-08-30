@@ -284,10 +284,9 @@ jobs:
           # A stale vector must fail before it reaches rsvg or XeLaTeX.
           npm run check:figures
           npm run check:books
-          # One progress card per language is generated from the registry,
-          # curriculum maps, lessons, and book manifest. Independent curriculum
-          # PRs never rewrite a shared README table.
-          # Regenerate with `npm run generate:progress`.
+          # Progress is derived on demand from the registry, curriculum maps,
+          # lessons, and book manifest. This check keeps the 23 retired tracked
+          # cards absent while exercising every in-memory per-language row.
           npm run check:progress
           # Corpus debt stays exact, but each language owns a separate generated
           # snapshot so independent curriculum PRs do not collide on one test line.
