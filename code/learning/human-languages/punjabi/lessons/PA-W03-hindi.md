@@ -31,13 +31,13 @@ variety: standard-punjabi
 reviews_of: [PA-W03-da]
 ---
 
-# ਹਿੰਦੀ — second language value
+# ਹਿੰਦੀ — the Hindi value
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-LANGUAGE-01, PA-FORM-LANGUAGE-PUNJABI-01, PA-SCRIPT-BHA-01, PA-SCRIPT-SHA-01, PA-SCRIPT-HA-01, PA-SCRIPT-SIHARI-01, PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-DA-01, PA-SCRIPT-II-MATRA-01] -->
 
 Point once to **ਭਾਸ਼ਾ** and say language. Point once to **ਪੰਜਾਬੀ** and say
-Punjabi. Touch **ਭ**, **ਸ਼**, then the pieces of the second value:
+Punjabi. Touch **ਭ**, **ਸ਼**, then the pieces of the Hindi value:
 **ਹਿ · ਂ · ਦੀ**.
 
 ## Script — one tiny step
@@ -53,6 +53,6 @@ difference, and stop.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LANGUAGE-HINDI-01] -->
-<!-- hl-activity: {"id":"PA-W03-hindi-check","kind":"text","assesses":["PA-FORM-LANGUAGE-HINDI-01"],"prompt":"With the model visible, copy the second language value.","answer":"ਹਿੰਦੀ","accepted":[],"feedback":{"correct":"ਹਿੰਦੀ is the second value; check ਹਿ, then tippi, then ਦੀ.","incorrect":"ਹਿੰਦੀ is the second value; check ਹਿ, then tippi, then ਦੀ."},"response_seconds":12} -->
+<!-- hl-activity: {"id":"PA-W03-hindi-check","kind":"text","assesses":["PA-FORM-LANGUAGE-HINDI-01"],"prompt":"With the model visible, copy the Hindi value.","answer":"ਹਿੰਦੀ","accepted":[],"feedback":{"correct":"ਹਿੰਦੀ is the Hindi value; check ਹਿ, then tippi, then ਦੀ.","incorrect":"ਹਿੰਦੀ is the Hindi value; check ਹਿ, then tippi, then ਦੀ."},"response_seconds":12} -->
 
 No later answer in this lesson adds a new spelling.

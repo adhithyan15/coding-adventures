@@ -143,7 +143,7 @@ Type the new Gurmukhi base letter ba.
 
 
 Lesson 8 of 11.
-ਪੰਜਾਬੀ (panjābī) — first language value.
+ਪੰਜਾਬੀ (panjābī) — the Punjabi value.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it.
 
@@ -159,7 +159,7 @@ Complete one careful attempt. Compare only the new shape or word, repair one dif
 Wrap-up recall.
 No later answer in this lesson adds a new spelling.
 [question — say your answer, then pause 12 seconds]
-With the model visible, copy the first language value.
+With the model visible, copy the Punjabi value.
 
 
 Lesson 9 of 11.
@@ -203,12 +203,12 @@ Type the new dental da letter.
 
 
 Lesson 11 of 11.
-ਹਿੰਦੀ (hindī) — second language value.
+ਹਿੰਦੀ (hindī) — the Hindi value.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one tiny step until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
-Point once to ਭਾਸ਼ਾ (bhāshā) and say language. Point once to ਪੰਜਾਬੀ (panjābī) and say Punjabi. Touch ਭ (bha), ਸ਼ (sha), then the pieces of the second value: ਹਿ, ਂ, ਦੀ.
+Point once to ਭਾਸ਼ਾ (bhāshā) and say language. Point once to ਪੰਜਾਬੀ (panjābī) and say Punjabi. Touch ਭ (bha), ਸ਼ (sha), then the pieces of the Hindi value: ਹਿ, ਂ, ਦੀ.
 
 Script — one tiny step.
 Assemble ਹਿੰਦੀ (hindī) and copy it once with the model visible. Keep the tippi above the first unit and the long ੀ on ਦ (da).
@@ -219,4 +219,4 @@ Complete one careful attempt. Compare only the new shape or word, repair one dif
 Wrap-up recall.
 No later answer in this lesson adds a new spelling.
 [question — say your answer, then pause 12 seconds]
-With the model visible, copy the second language value.
+With the model visible, copy the Hindi value.

@@ -31,7 +31,7 @@ variety: standard-punjabi
 reviews_of: [PA-W03-ba]
 ---
 
-# ਪੰਜਾਬੀ — first language value
+# ਪੰਜਾਬੀ — the Punjabi value
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-PA-01, PA-SCRIPT-TIPPI-WRITING-01, PA-SCRIPT-JA-01, PA-SCRIPT-BA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-II-MATRA-01] -->
@@ -51,6 +51,6 @@ difference, and stop.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LANGUAGE-PUNJABI-01] -->
-<!-- hl-activity: {"id":"PA-W03-punjabi-check","kind":"text","assesses":["PA-FORM-LANGUAGE-PUNJABI-01"],"prompt":"With the model visible, copy the first language value.","answer":"ਪੰਜਾਬੀ","accepted":[],"feedback":{"correct":"ਪੰਜਾਬੀ is the first value; check ਪੰ, then ਜਾ, then ਬੀ.","incorrect":"ਪੰਜਾਬੀ is the first value; check ਪੰ, then ਜਾ, then ਬੀ."},"response_seconds":12} -->
+<!-- hl-activity: {"id":"PA-W03-punjabi-check","kind":"text","assesses":["PA-FORM-LANGUAGE-PUNJABI-01"],"prompt":"With the model visible, copy the Punjabi value.","answer":"ਪੰਜਾਬੀ","accepted":[],"feedback":{"correct":"ਪੰਜਾਬੀ is the Punjabi value; check ਪੰ, then ਜਾ, then ਬੀ.","incorrect":"ਪੰਜਾਬੀ is the Punjabi value; check ਪੰ, then ਜਾ, then ਬੀ."},"response_seconds":12} -->
 
 No later answer in this lesson adds a new spelling.

@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Build the Language Label and Values",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f9381a1f99a75789",
+  "sourceHash": "fnv1a64:a6e3ac548cc60e54",
   "lessons": [
     {
       "id": "PA-W03-bha",
@@ -639,7 +639,7 @@
     {
       "id": "PA-W03-punjabi",
       "sequence": 1050,
-      "title": "ਪੰਜਾਬੀ (panjābī) — first language value",
+      "title": "ਪੰਜਾਬੀ (panjābī) — the Punjabi value",
       "headword": "ਪੰਜਾਬੀ",
       "romanization": "panjābī",
       "gloss": "assemble and guided-copy Punjabi as a form value",
@@ -650,7 +650,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f977d3bc9ebb8cde",
+      "sourceHash": "fnv1a64:af9a9016e1b11934",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -709,7 +709,7 @@
               "kind": "activity",
               "scored": true,
               "id": "PA-W03-punjabi-check",
-              "prompt": "With the model visible, copy the first language value.",
+              "prompt": "With the model visible, copy the Punjabi value.",
               "assesses": [
                 "PA-FORM-LANGUAGE-PUNJABI-01"
               ],
@@ -718,8 +718,8 @@
                 "ਪੰਜਾਬੀ"
               ],
               "feedback": {
-                "correct": "ਪੰਜਾਬੀ is the first value; check ਪੰ, then ਜਾ, then ਬੀ.",
-                "incorrect": "ਪੰਜਾਬੀ is the first value; check ਪੰ, then ਜਾ, then ਬੀ."
+                "correct": "ਪੰਜਾਬੀ is the Punjabi value; check ਪੰ, then ਜਾ, then ਬੀ.",
+                "incorrect": "ਪੰਜਾਬੀ is the Punjabi value; check ਪੰ, then ਜਾ, then ਬੀ."
               }
             }
           ]
@@ -909,7 +909,7 @@
     {
       "id": "PA-W03-hindi",
       "sequence": 1080,
-      "title": "ਹਿੰਦੀ (hindī) — second language value",
+      "title": "ਹਿੰਦੀ (hindī) — the Hindi value",
       "headword": "ਹਿੰਦੀ",
       "romanization": "hindī",
       "gloss": "assemble and guided-copy Hindi as a form value",
@@ -920,7 +920,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ac934d4927d39864",
+      "sourceHash": "fnv1a64:fe65e71603263336",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -940,7 +940,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point once to ਭਾਸ਼ਾ (bhāshā) and say language. Point once to ਪੰਜਾਬੀ (panjābī) and say Punjabi. Touch ਭ (bha), ਸ਼ (sha), then the pieces of the second value: ਹਿ, ਂ, ਦੀ."
+              "text": "Point once to ਭਾਸ਼ਾ (bhāshā) and say language. Point once to ਪੰਜਾਬੀ (panjābī) and say Punjabi. Touch ਭ (bha), ਸ਼ (sha), then the pieces of the Hindi value: ਹਿ, ਂ, ਦੀ."
             }
           ]
         },
@@ -979,7 +979,7 @@
               "kind": "activity",
               "scored": true,
               "id": "PA-W03-hindi-check",
-              "prompt": "With the model visible, copy the second language value.",
+              "prompt": "With the model visible, copy the Hindi value.",
               "assesses": [
                 "PA-FORM-LANGUAGE-HINDI-01"
               ],
@@ -988,8 +988,8 @@
                 "ਹਿੰਦੀ"
               ],
               "feedback": {
-                "correct": "ਹਿੰਦੀ is the second value; check ਹਿ, then tippi, then ਦੀ.",
-                "incorrect": "ਹਿੰਦੀ is the second value; check ਹਿ, then tippi, then ਦੀ."
+                "correct": "ਹਿੰਦੀ is the Hindi value; check ਹਿ, then tippi, then ਦੀ.",
+                "incorrect": "ਹਿੰਦੀ is the Hindi value; check ਹਿ, then tippi, then ਦੀ."
               }
             }
           ]
