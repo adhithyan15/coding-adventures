@@ -1,3 +1,236 @@
+//! Pure, bounded extra-CI toolchain decisions over caller-supplied snapshots.
+//!
+//! This module deliberately has no filesystem, environment, process, Git,
+//! clock, randomness, or network access. BUILD fronts are inert UTF-8 data.
+
+use serde::Deserialize;
+use std::collections::{BTreeMap, BTreeSet};
+
+pub const MAX_BUILD_BYTES: usize = 65_536;
+pub const MAX_BUILD_LINES: usize = 4_096;
+pub const MAX_AGGREGATE_BUILD_BYTES: usize = 1_048_576;
+
+pub const CANONICAL_TOOLCHAINS: [&str; 16] = [
+    "cpp",
+    "dart",
+    "dotnet",
+    "elixir",
+    "go",
+    "haskell",
+    "java",
+    "kotlin",
+    "lua",
+    "ocaml",
+    "perl",
+    "python",
+    "ruby",
+    "rust",
+    "swift",
+    "typescript",
+];
+
+const DECLARATION_PREFIX: &str = "# needs-toolchain:";
+
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+pub struct PackageSnapshot {
+    pub name: String,
+    pub language: String,
+    pub build_files: BTreeMap<String, String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+pub struct ToolchainDiagnostic {
+    pub code: String,
+    pub severity: String,
+    #[serde(default)]
+    pub package: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolchainEvaluation {
+    pub outcome: String,
+    pub toolchains: BTreeMap<String, bool>,
+    pub diagnostics: Vec<ToolchainDiagnostic>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SnapshotError {
+    UnsupportedPlatform,
+    PerFileByteLimit,
+    PerFileLineLimit,
+    AggregateByteLimit,
+    ForceFullRequiresAllPackages,
+}
+
+fn logical_line_count(content: &str) -> usize {
+    content.bytes().filter(|byte| *byte == b'\n').count() + 1
+}
+
+fn meter_front(content: &str) -> Result<usize, SnapshotError> {
+    let bytes = content.len();
+    if bytes > MAX_BUILD_BYTES {
+        return Err(SnapshotError::PerFileByteLimit);
+    }
+    if logical_line_count(content) > MAX_BUILD_LINES {
+        return Err(SnapshotError::PerFileLineLimit);
+    }
+    Ok(bytes)
+}
+
+fn is_canonical_toolchain(name: &str) -> bool {
+    CANONICAL_TOOLCHAINS.binary_search(&name).is_ok()
+}
+
+fn trim_ascii_space_and_tab(value: &str) -> &str {
+    value.trim_matches([' ', '\t'])
+}
+
+/// Parse exact inert declarations from one already supplied BUILD front.
+///
+/// This public helper retains the same per-file bounds as the top-level
+/// evaluator so callers cannot bypass metering by invoking it directly.
+pub fn parse_extra_toolchains(content: &str) -> Result<Vec<String>, SnapshotError> {
+    meter_front(content)?;
+
+    let last_index = logical_line_count(content) - 1;
+    let mut seen = BTreeSet::new();
+    let mut declarations = Vec::new();
+    for (index, raw_line) in content.split('\n').enumerate() {
+        let line = if index < last_index {
+            raw_line.strip_suffix('\r').unwrap_or(raw_line)
+        } else {
+            raw_line
+        };
+        let line = trim_ascii_space_and_tab(line);
+        let Some(suffix) = line.strip_prefix(DECLARATION_PREFIX) else {
+            continue;
+        };
+        if !suffix.starts_with([' ', '\t']) {
+            continue;
+        }
+        let name = trim_ascii_space_and_tab(suffix);
+        if !is_canonical_toolchain(name) || !seen.insert(name) {
+            continue;
+        }
+        declarations.push(name.to_string());
+    }
+    Ok(declarations)
+}
+
+fn front_precedence(platform: &str) -> Result<&'static [&'static str], SnapshotError> {
+    match platform {
+        "windows" => Ok(&["BUILD_windows", "BUILD"]),
+        "darwin" => Ok(&["BUILD_mac", "BUILD_mac_and_linux", "BUILD"]),
+        "linux" => Ok(&["BUILD_linux", "BUILD_mac_and_linux", "BUILD"]),
+        _ => Err(SnapshotError::UnsupportedPlatform),
+    }
+}
+
+fn selected_front<'a>(build_files: &'a BTreeMap<String, String>, precedence: &[&str]) -> &'a str {
+    for front in precedence {
+        if let Some(content) = build_files.get(*front) {
+            return content;
+        }
+    }
+    ""
+}
+
+fn toolchain_for_language(language: &str) -> Option<&str> {
+    match language {
+        "c" | "cpp" => Some("cpp"),
+        "csharp" | "fsharp" | "dotnet" => Some("dotnet"),
+        "wasm" => Some("rust"),
+        canonical if is_canonical_toolchain(canonical) => Some(canonical),
+        _ => None,
+    }
+}
+
+fn fresh_toolchain_map(enabled: bool) -> BTreeMap<String, bool> {
+    CANONICAL_TOOLCHAINS
+        .into_iter()
+        .map(|name| (name.to_string(), enabled))
+        .collect()
+}
+
+fn unsupported(package: Option<&str>) -> ToolchainEvaluation {
+    ToolchainEvaluation {
+        outcome: "error".to_string(),
+        toolchains: BTreeMap::new(),
+        diagnostics: vec![ToolchainDiagnostic {
+            code: "TOOLCHAIN_UNSUPPORTED".to_string(),
+            severity: "error".to_string(),
+            package: package.map(str::to_string),
+        }],
+    }
+}
+
+/// Evaluate a complete caller-owned toolchain snapshot without host access.
+pub fn evaluate_snapshot(
+    platform: &str,
+    force_full: bool,
+    packages: &[PackageSnapshot],
+    scheduled_packages: Option<&[String]>,
+    forced_toolchains: &[String],
+) -> Result<ToolchainEvaluation, SnapshotError> {
+    let precedence = front_precedence(platform)?;
+
+    let mut aggregate_bytes = 0usize;
+    for package in packages {
+        for content in package.build_files.values() {
+            let bytes = meter_front(content)?;
+            aggregate_bytes = aggregate_bytes
+                .checked_add(bytes)
+                .ok_or(SnapshotError::AggregateByteLimit)?;
+            if aggregate_bytes > MAX_AGGREGATE_BUILD_BYTES {
+                return Err(SnapshotError::AggregateByteLimit);
+            }
+        }
+    }
+
+    if force_full && scheduled_packages.is_some() {
+        return Err(SnapshotError::ForceFullRequiresAllPackages);
+    }
+
+    let scheduled: Option<BTreeSet<&str>> =
+        scheduled_packages.map(|names| names.iter().map(String::as_str).collect());
+    let mut selected = Vec::new();
+    for package in packages.iter().filter(|package| {
+        scheduled
+            .as_ref()
+            .is_none_or(|names| names.contains(package.name.as_str()))
+    }) {
+        let Some(toolchain) = toolchain_for_language(&package.language) else {
+            return Ok(unsupported(Some(&package.name)));
+        };
+        selected.push((package, toolchain));
+    }
+
+    for forced in forced_toolchains {
+        if !is_canonical_toolchain(forced) {
+            return Ok(unsupported(None));
+        }
+    }
+
+    let mut toolchains = fresh_toolchain_map(force_full);
+    if !force_full {
+        for (package, language_toolchain) in selected {
+            toolchains.insert(language_toolchain.to_string(), true);
+            for extra in parse_extra_toolchains(selected_front(&package.build_files, precedence))? {
+                toolchains.insert(extra, true);
+            }
+        }
+    }
+    for forced in forced_toolchains {
+        toolchains.insert(forced.clone(), true);
+    }
+
+    Ok(ToolchainEvaluation {
+        outcome: "ok".to_string(),
+        toolchains,
+        diagnostics: Vec::new(),
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -101,9 +334,8 @@ mod tests {
         );
 
         for path in fixture_paths {
-            let case: FixtureCase =
-                serde_json::from_slice(&fs::read(&path).expect("read fixture"))
-                    .expect("parse fixture");
+            let case: FixtureCase = serde_json::from_slice(&fs::read(&path).expect("read fixture"))
+                .expect("parse fixture");
             let options = case.input.options;
             let actual = evaluate_snapshot(
                 &options.platform,
@@ -119,25 +351,24 @@ mod tests {
                 "{}",
                 case.id
             );
-            assert_eq!(
-                actual.diagnostics, case.expected.diagnostics,
-                "{}",
-                case.id
-            );
+            assert_eq!(actual.diagnostics, case.expected.diagnostics, "{}", case.id);
         }
     }
 
     #[test]
     fn parser_enforces_utf8_byte_and_logical_line_limits_before_splitting() {
         let ascii_at_limit = "x".repeat(MAX_BUILD_BYTES);
-        assert_eq!(parse_extra_toolchains(&ascii_at_limit).unwrap(), Vec::<String>::new());
+        assert_eq!(
+            parse_extra_toolchains(&ascii_at_limit).unwrap(),
+            Vec::<String>::new()
+        );
         assert_eq!(
             parse_extra_toolchains(&(ascii_at_limit + "x")),
             Err(SnapshotError::PerFileByteLimit)
         );
 
         let multibyte_at_limit = "é".repeat(MAX_BUILD_BYTES / 2);
-        assert_eq!(multibyte_at_limit.as_bytes().len(), MAX_BUILD_BYTES);
+        assert_eq!(multibyte_at_limit.len(), MAX_BUILD_BYTES);
         assert!(parse_extra_toolchains(&multibyte_at_limit).is_ok());
         assert_eq!(
             parse_extra_toolchains(&(multibyte_at_limit + "é")),
@@ -225,8 +456,8 @@ mod tests {
             ],
         );
         let actual = evaluate_snapshot("linux", false, &[snapshot], None, &[]).unwrap();
-        assert_eq!(actual.toolchains["rust"], true);
-        assert_eq!(actual.toolchains["python"], false);
+        assert!(actual.toolchains["rust"]);
+        assert!(!actual.toolchains["python"]);
     }
 
     #[test]
@@ -234,7 +465,7 @@ mod tests {
         let snapshots = [package("python/app", "python", [("BUILD", String::new())])];
         let all = evaluate_snapshot("linux", false, &snapshots, None, &[]).unwrap();
         let none = evaluate_snapshot("linux", false, &snapshots, Some(&[]), &[]).unwrap();
-        assert_eq!(all.toolchains["python"], true);
+        assert!(all.toolchains["python"]);
         assert!(none.toolchains.values().all(|enabled| !enabled));
     }
 
@@ -245,18 +476,12 @@ mod tests {
             package("fsharp/app", "fsharp", [("BUILD", String::new())]),
             package("wasm/app", "wasm", [("BUILD", String::new())]),
         ];
-        let selected = evaluate_snapshot(
-            "windows",
-            false,
-            &snapshots,
-            None,
-            &["kotlin".to_string()],
-        )
-        .unwrap();
-        assert_eq!(selected.toolchains["cpp"], true);
-        assert_eq!(selected.toolchains["dotnet"], true);
-        assert_eq!(selected.toolchains["rust"], true);
-        assert_eq!(selected.toolchains["kotlin"], true);
+        let selected =
+            evaluate_snapshot("windows", false, &snapshots, None, &["kotlin".to_string()]).unwrap();
+        assert!(selected.toolchains["cpp"]);
+        assert!(selected.toolchains["dotnet"]);
+        assert!(selected.toolchains["rust"]);
+        assert!(selected.toolchains["kotlin"]);
 
         let full = evaluate_snapshot("windows", true, &snapshots, None, &[]).unwrap();
         assert_eq!(full.toolchains.len(), CANONICAL_TOOLCHAINS.len());
@@ -266,14 +491,8 @@ mod tests {
     #[test]
     fn selected_package_error_precedes_forced_toolchain_error_even_when_full() {
         let snapshots = [package("zig/app", "zig", [("BUILD", String::new())])];
-        let actual = evaluate_snapshot(
-            "linux",
-            true,
-            &snapshots,
-            None,
-            &["zig".to_string()],
-        )
-        .unwrap();
+        let actual =
+            evaluate_snapshot("linux", true, &snapshots, None, &["zig".to_string()]).unwrap();
         assert_eq!(actual.outcome, "error");
         assert_eq!(actual.toolchains, BTreeMap::new());
         assert_eq!(
@@ -317,10 +536,14 @@ mod tests {
         let mut first = evaluate_snapshot("linux", false, &snapshots, None, &[]).unwrap();
         let second = evaluate_snapshot("linux", false, &snapshots, None, &[]).unwrap();
         first.toolchains.insert("rust".to_string(), false);
-        assert_eq!(second.toolchains["rust"], true);
+        assert!(second.toolchains["rust"]);
         assert_eq!(snapshots, original);
         assert_eq!(
-            second.toolchains.keys().map(String::as_str).collect::<Vec<_>>(),
+            second
+                .toolchains
+                .keys()
+                .map(String::as_str)
+                .collect::<Vec<_>>(),
             CANONICAL_TOOLCHAINS
         );
     }
