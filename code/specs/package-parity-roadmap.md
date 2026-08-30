@@ -10556,6 +10556,89 @@ every required check is terminal and acceptable and GitHub still reports no
 merge conflict. The owner advances from `in-progress` to `pr-open`; no second
 parity implementation starts while this PR is active.
 
+## Post-#13506 Refresh and Swift Declaration Selection
+
+PR #13506 completed all 43 reported checks acceptably: 36 successes, six
+expected skips, and one neutral CodeQL gate. Auto-merge was enabled only after
+GitHub reported final head
+`6924108676d3ae899d2c2c44215800c4267223b9` clean and mergeable, and GitHub
+merged it as `6ea19ec13f34599b9a9f48263d04d55e85efa873` at
+2026-08-30T16:38:49Z without a manual merge command. The Swift Windows front
+owner therefore advances to `merged` and the active PR is cleared.
+
+The collision-checked exact-main inventory at
+`aed89211922bd4e150b0bab8c8160bcb015a462a` remains schema 3 with 15
+established lanes, 1,388 implementation identities, 4,602 slots, and 1,427
+all-reported identities. Completion bands remain 175/265, 123/934, 170/2,139,
+and 920/12,880; Rust has 731 singletons, OCaml remains emerging at zero
+packages, and collisions and unknown buckets remain zero. The 49 paths changed
+since the prior inventory across PRs #13505, #13506, and #13507 add or remove
+no package root or manifest. Canonical identities are unchanged and no newly
+unowned eligible package or build-tool gap appeared.
+
+The dependency/leverage pass selects
+`build-tool-swift-extra-ci-toolchain-declaration-conformance` on branch
+`codex/build-tool-swift-extra-ci-toolchain-declaration-conformance`. All four
+of its prerequisites are now merged: the neutral declaration corpus, CRLF
+grammar hardening, Swift Dune exclusion, and the fail-closed Windows front.
+This is the ready dependency payoff, becomes the tenth of eleven declaration
+consumers, directly advances the remaining-engines umbrella, and preserves the
+documented Rust-to-Swift-to-TypeScript lane order before beginning the
+TypeScript Dune chain. Swift 6.3.3 is installed and the exact package is
+locally executable. The target branch and prior PR are absent, and five live
+PRs have zero exact overlap across the expected eight-path state, root/package
+documentation, Swift source/test, conformance-spec, and roadmap tranche.
+Reconciliation plus selection leaves the complete 580-owner/864-edge graph at
+179 merged, 400 pending, and exactly one `in-progress` owner.
+
+### Swift declaration implementation and validation
+
+The Swift engine now exposes a pure `ToolchainDetection.evaluateSnapshot`
+boundary over caller-owned data. It meters every supplied BUILD front before
+selection, uses UTF-8 bytes and LF-delimited logical lines, strips only the CR
+that directly terminates a CRLF line, preserves a present empty platform
+override, aliases the three shared language families, and returns either a
+fresh complete canonical result or the stable unsupported diagnostic. A custom
+value-semantic `ToolchainResultMap` owns the exact 16-key order instead of
+relying on Swift `Dictionary` iteration. Production imports no Foundation and
+has no filesystem, Git, process, environment, clock, randomness, credential,
+network, FFI, or execution authority.
+
+Test-first execution initially failed at the deliberately absent Swift types
+and evaluator. The final focused suite passes seven tests and dynamically
+consumes all 11 neutral declaration fixtures. The full coverage run passes 54
+tests across eight suites with one Windows-inapplicable symlink skip;
+`ToolchainDetection.swift` reaches 96.83% region, 97.62% function, and 97.77%
+line coverage. Strict swift-format passes for both new files, as do the release
+build, package dump, zero-external-dependency graph, literal Windows BUILD
+front, and the canonical Go build tool's real exact-diff execution of the Swift
+package. Its forced dry plan validates all 167 discovered Swift packages.
+
+The neutral conformance family passes 205 tests with 23 expected skips; corpus
+validation reports 119 cases and 283 files across 16 implementations, 15
+established lanes, and 12 front doors. Ten parity-reporter and seven capability-
+taxonomy tests pass. The Go oracle passes module verification, all packages,
+vet, and trimpath build. The collision-checked schema-3 inventory remains 15
+lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported
+identities, 731 Rust singletons, zero OCaml packages, zero collisions, and zero
+unknown buckets. Diff, dependency/build-metadata, credential-pattern, and
+production-authority scans are clean.
+
+An independent security/conformance review found that the first result type
+exposed native dictionary iteration even though the contract requires exact
+deterministic order. The ordered result-map repair and direct exact-order and
+closed-mutation regressions resolved that finding. Re-review at
+`104485fed0b8beead70f5e65e2c9ed4793ec8124` reports no remaining actionable
+correctness, security, authority, fixture, or mutation issue.
+
+Ready-for-review PR #13510 opened from validated head
+`75153a5c30568c1af3f9acd94f5d764cb2d14bfd` after a normal first push. Exact
+`origin/main` remained the selection base, all eight changed paths have zero
+exact overlap across six other live PRs, and GitHub reports the PR mergeable,
+conflict-free, and non-draft. Required CI, Swift-app, and CodeQL checks are
+queued or in progress, so auto-merge remains disabled until every required
+check is terminal and acceptable and GitHub still reports no conflict.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

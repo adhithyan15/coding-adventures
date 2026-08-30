@@ -16,6 +16,26 @@ This port mirrors the other build-tool implementations in the repo:
 7. Emits and consumes JSON build plans for CI
 8. Validates the CI full-build toolchain contract
 9. Validates bounded orphan-crate coverage snapshots and exemption records
+10. Evaluates bounded extra-CI toolchain declarations from inert snapshots
+
+## Extra CI toolchain declarations
+
+`ToolchainDetection.evaluateSnapshot` accepts caller-supplied package names,
+languages, BUILD-front strings, the explicit target platform, scheduling state,
+and forced toolchains. It returns a fresh complete result over the canonical
+sorted 16-key registry. Platform-specific fronts win by presence, including an
+empty override, and only selected packages contribute their language or exact
+`# needs-toolchain: NAME` declarations.
+
+The adapter meters every supplied front before selection: each string is
+limited to 65,536 UTF-8 bytes and 4,096 LF-delimited logical lines, with a 1 MiB
+aggregate ceiling. It strips only a CR that directly precedes an LF terminator,
+trims only ASCII space and tab, and keeps malformed or unknown declaration
+lookalikes inert. It imports no Foundation and cannot enumerate files, inspect
+Git or environment state, launch processes, consult clocks or randomness, read
+credentials, or access the network. The Swift Testing suite dynamically
+discovers and evaluates all 11 language-neutral toolchain snapshots plus direct
+boundary, precedence, alias, freshness, and error-ordering cases.
 
 ## Orphan-crate validation
 
