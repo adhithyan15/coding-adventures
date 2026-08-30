@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Python build-tool source hashing
+
+- Excluded the complete exact, case-sensitive generated-directory registry
+  from both Python source-collection modes before extension or declared-source
+  matching while preserving case variants and near names.
+- Kept the existing no-follow walk boundary explicit and added direct
+  extension and Starlark regressions for all 26 excluded components.
+
 ### Build-tool source-collection conformance
 
 - Added a language-neutral, process-free source-collection domain with

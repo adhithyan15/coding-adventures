@@ -56,6 +56,46 @@ SPECIAL_FILENAMES: dict[str, set[str]] = {
     "perl": {"Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"},
 }
 
+# Exact, case-sensitive generated, dependency, VCS, cache, and temporary
+# directory components excluded by the shared source-collection contract.
+GENERATED_DIRECTORY_COMPONENTS: frozenset[str] = frozenset(
+    {
+        ".git",
+        ".hg",
+        ".svn",
+        ".venv",
+        ".tox",
+        ".mypy_cache",
+        ".pytest_cache",
+        ".ruff_cache",
+        ".stack-work",
+        "__pycache__",
+        "node_modules",
+        "vendor",
+        "dist",
+        "dist-newstyle",
+        "_build",
+        "build",
+        "target",
+        ".claude",
+        "Pods",
+        ".gradle",
+        ".dart_tool",
+        "gradle-build",
+        "deps",
+        ".build",
+        ".cargo",
+        "cover",
+    }
+)
+
+
+def _prune_generated_directories(dirnames: list[str]) -> None:
+    """Prevent ``os.walk`` from descending into exact generated components."""
+    dirnames[:] = [
+        dirname for dirname in dirnames if dirname not in GENERATED_DIRECTORY_COMPONENTS
+    ]
+
 
 def _collect_source_files(package: Package) -> list[Path]:
     """Collect all source files in a package directory.
@@ -93,7 +133,8 @@ def _collect_source_files(package: Package) -> list[Path]:
         #
         # This replaces pathlib.glob/rglob which has inconsistent behavior
         # with ** patterns across Python versions and platforms.
-        for dirpath, _dirnames, filenames in os.walk(pkg_root):
+        for dirpath, dirnames, filenames in os.walk(pkg_root, followlinks=False):
+            _prune_generated_directories(dirnames)
             for filename in filenames:
                 abs_path = Path(dirpath) / filename
 
@@ -121,7 +162,8 @@ def _collect_source_files(package: Package) -> list[Path]:
         extensions = SOURCE_EXTENSIONS.get(package.language, set())
         special_names = SPECIAL_FILENAMES.get(package.language, set())
 
-        for dirpath, _dirnames, filenames in os.walk(pkg_root):
+        for dirpath, dirnames, filenames in os.walk(pkg_root, followlinks=False):
+            _prune_generated_directories(dirnames)
             for filename in filenames:
                 abs_path = Path(dirpath) / filename
 

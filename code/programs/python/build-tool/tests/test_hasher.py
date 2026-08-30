@@ -18,6 +18,37 @@ from build_tool.resolver import DirectedGraph, resolve_dependencies
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
+GENERATED_DIRECTORY_COMPONENTS = frozenset(
+    {
+        ".git",
+        ".hg",
+        ".svn",
+        ".venv",
+        ".tox",
+        ".mypy_cache",
+        ".pytest_cache",
+        ".ruff_cache",
+        ".stack-work",
+        "__pycache__",
+        "node_modules",
+        "vendor",
+        "dist",
+        "dist-newstyle",
+        "_build",
+        "build",
+        "target",
+        ".claude",
+        "Pods",
+        ".gradle",
+        ".dart_tool",
+        "gradle-build",
+        "deps",
+        ".build",
+        ".cargo",
+        "cover",
+    }
+)
+
 
 class TestCollectSourceFiles:
     """Tests for _collect_source_files."""
@@ -100,6 +131,48 @@ class TestCollectSourceFiles:
         pkg = Package(name="python/empty", path=pkg_dir, language="python")
         files = _collect_source_files(pkg)
         assert files == []
+
+    @pytest.mark.parametrize(
+        ("is_starlark", "declared_srcs"),
+        ((False, []), (True, ["**/*.py"])),
+        ids=("extension", "declared-sources"),
+    )
+    def test_prunes_exact_generated_directory_components(
+        self, tmp_path, is_starlark, declared_srcs
+    ):
+        pkg_dir = tmp_path / "packages" / "python" / "test-pkg"
+        pkg_dir.mkdir(parents=True)
+        (pkg_dir / "BUILD").write_text("echo hi")
+        (pkg_dir / "main.py").write_text("print('source')")
+
+        for index, component in enumerate(sorted(GENERATED_DIRECTORY_COMPONENTS)):
+            generated = pkg_dir / f"excluded-{index}" / component
+            generated.mkdir(parents=True)
+            (generated / "generated.py").write_text("print('generated')")
+
+        retained_paths = (
+            "retained-case/_Build/source.py",
+            "retained-near/_build-example/source.py",
+            "retained-cabal-case/Dist-newstyle/source.py",
+            "retained-cabal-near/dist-newstyle-example/source.py",
+        )
+        for relative_path in retained_paths:
+            source = pkg_dir / relative_path
+            source.parent.mkdir(parents=True)
+            source.write_text("print('retained')")
+
+        pkg = Package(
+            name="python/test-pkg",
+            path=pkg_dir,
+            language="python",
+            is_starlark=is_starlark,
+            declared_srcs=declared_srcs,
+        )
+        relative_files = {
+            path.relative_to(pkg_dir).as_posix() for path in _collect_source_files(pkg)
+        }
+
+        assert relative_files == {"BUILD", "main.py", *retained_paths}
 
 
 class TestHashFile:
