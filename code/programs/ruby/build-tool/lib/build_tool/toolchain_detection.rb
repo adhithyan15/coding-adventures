@@ -70,6 +70,9 @@ module BuildTool
     # one-CR terminator rule keeps a lone or doubled CR as ordinary content.
     def parse_extra_toolchains(content)
       utf8 = strict_utf8_copy(content)
+      return [] if utf8.bytesize > PER_FILE_BYTE_LIMIT
+      return [] if utf8.count("\n") + 1 > PER_FILE_LINE_LIMIT
+
       lines = utf8.split("\n", -1)
       seen = {}
       declarations = []
@@ -99,6 +102,8 @@ module BuildTool
     # snapshot on Linux; otherwise adapters could disagree merely because they
     # happened to ignore different hostile inputs.
     def evaluate_snapshot(platform, force_full, packages, scheduled_packages, forced_toolchains)
+      platform = platform.to_s
+      front_precedence(platform)
       normalized_packages = normalize_and_meter_packages(packages)
       selected_names = if scheduled_packages.nil?
         nil
@@ -127,7 +132,7 @@ module BuildTool
       unless force_full
         language_toolchains.each do |package, language_toolchain|
           toolchains[language_toolchain] = true
-          selected_front(package.fetch("build_files"), platform.to_s).then do |content|
+          selected_front(package.fetch("build_files"), platform).then do |content|
             parse_extra_toolchains(content).each { |name| toolchains[name] = true }
           end
         end
@@ -191,12 +196,19 @@ module BuildTool
     private_class_method :language_toolchain
 
     def selected_front(build_files, platform)
-      FRONT_PRECEDENCE.fetch(platform, ["BUILD"]).each do |front|
+      front_precedence(platform).each do |front|
         return build_files.fetch(front) if build_files.key?(front)
       end
       ""
     end
     private_class_method :selected_front
+
+    def front_precedence(platform)
+      FRONT_PRECEDENCE.fetch(platform) do
+        raise ArgumentError, "unsupported target platform: #{platform}"
+      end
+    end
+    private_class_method :front_precedence
 
     def fresh_toolchain_map(enabled)
       CANONICAL_TOOLCHAINS.to_h { |name| [name, enabled] }
