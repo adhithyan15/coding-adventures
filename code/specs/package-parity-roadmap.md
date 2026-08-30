@@ -11062,8 +11062,9 @@ tests, two skips, and 941 subtests. The corpus validator accepts 119 cases and
 283 files across 16 implementations, 15 lanes, and 12 front doors. The Go
 oracle passes module verification, tests, vet, and a trimmed build. The real
 495-package plan evaluates 45 Starlark files, reports no unreviewed orphan, and
-retains the five reviewed exemptions; an exact-diff plan will be repeated from
-the committed head before publication. The exact-main inventory remains free
+retains the five reviewed exemptions. Repeating it from the committed head
+selects exactly `python/programs/build-tool`: one changed and one affected
+package, with the remaining 494 skipped. The exact-main inventory remains free
 of collisions and unknown buckets, and the 581-owner/865-edge state graph is
 unique, dependency-complete, and acyclic.
 
