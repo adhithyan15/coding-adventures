@@ -57,8 +57,8 @@ fn canonical_const_42_then_ret_actually_executes_to_a_equals_42() {
     let bytes = compile(&ctx("fortytwo", &[], "i64"), &cir).expect("lowering");
 
     let mut sim = Intel8080Simulator::new(65536);
-    sim.load_program(&bytes);
-    let result = sim.run_loaded_with_limit(10);
+    sim.load_program(&bytes).unwrap();
+    let result = sim.run_loaded_with_limit(10).unwrap();
     assert!(result.halted);
     assert_eq!(result.steps, 2, "MVI A,42 then HLT is exactly two steps");
     assert_eq!(sim.regs.a, 42);
@@ -104,7 +104,12 @@ fn ret_void_alone_emits_just_hlt() {
 #[test]
 fn const_bool_true() {
     let cir = vec![
-        ci("const_bool", Some("b"), vec![CIROperand::Bool(true)], "bool"),
+        ci(
+            "const_bool",
+            Some("b"),
+            vec![CIROperand::Bool(true)],
+            "bool",
+        ),
         ci("ret_bool", None, vec![CIROperand::Var("b".into())], "bool"),
     ];
     let bytes = compile(&ctx("btrue", &[], "bool"), &cir).expect("lowering");
@@ -159,8 +164,14 @@ fn dangling_const_with_no_ret_still_gets_a_real_terminator() {
     assert_eq!(bytes, vec![0x3E, 0x07, 0x76]);
 
     let mut sim = Intel8080Simulator::new(64);
-    sim.load_program(&bytes);
-    let result = sim.run_loaded_with_limit(1000);
-    assert!(result.halted, "program should halt, not run out the step budget");
-    assert!(result.steps < 1000, "should halt well before the step limit");
+    sim.load_program(&bytes).unwrap();
+    let result = sim.run_loaded_with_limit(1000).unwrap();
+    assert!(
+        result.halted,
+        "program should halt, not run out the step budget"
+    );
+    assert!(
+        result.steps < 1000,
+        "should halt well before the step limit"
+    );
 }

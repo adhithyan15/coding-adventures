@@ -7,8 +7,8 @@
 //! [`code/specs/07i-intel8080-simulator.md`](../../../specs/07i-intel8080-simulator.md)
 //! for the full ISA writeup.
 //!
-//! Module split mirrors [`mips_r2000_simulator`] (the template for this,
-//! the third lane of the 9-architecture expansion):
+//! The package uses separate opcode, encoding, decode, execute, and simulator
+//! modules so each stage can be tested independently:
 //!
 //! ```text
 //! opcodes.rs   -- opcode / register / condition-code constant tables
@@ -33,9 +33,10 @@
 //! use intel8080_simulator::opcodes::HLT;
 //!
 //! let mut sim = Intel8080Simulator::new(65536);
-//! sim.run(&assemble(&[encode_mvi_a(42), vec![HLT]]));
+//! sim.run(&assemble(&[encode_mvi_a(42), vec![HLT]]), 10)?;
 //! assert_eq!(sim.regs.a, 42);
 //! assert!(sim.halted);
+//! # Ok::<(), intel8080_simulator::Intel8080Error>(())
 //! ```
 
 pub mod decode;
@@ -44,4 +45,6 @@ pub mod execute;
 pub mod opcodes;
 pub mod simulator;
 
-pub use simulator::{ExecutionResult, Intel8080Simulator};
+pub use simulator::{
+    ExecutionResult, Intel8080Error, Intel8080Simulator, Intel8080State, StepTrace,
+};

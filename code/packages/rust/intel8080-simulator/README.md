@@ -31,7 +31,7 @@ execute.rs   -- instruction executor + named-register state
 simulator.rs -- top-level Intel8080Simulator with fetch-decode-execute
 ```
 
-## What differs from the Python original (and from `mips-r2000-simulator`)
+## Completion contract
 
 - **Named registers, not an indexed register file.** The 8080 has seven
   individually named 8-bit registers (A, B, C, D, E, H, L) plus a 16-bit
@@ -46,11 +46,15 @@ simulator.rs -- top-level Intel8080Simulator with fetch-decode-execute
   this port computes the masked `u8` result first via `u16`-widened
   arithmetic, which is equivalent (masking to 8 bits never changes bits
   0-7) and more idiomatic Rust.
-- **Fail-closed halt on undefined opcodes** instead of the Python
-  original's `ValueError` — no exception channel through `step() ->
-  String`, so an undefined opcode halts the simulator, matching the
-  fail-closed convention `mips-r2000-simulator` uses for signed-overflow /
-  divide-by-zero.
+- **Typed, atomic failures.** Oversized programs, truncated instructions,
+  undefined opcodes, halted steps, and short-memory data accesses return
+  `Intel8080Error` before the failing operation mutates state.
+- **Owned full-state snapshots and traces.** `snapshot()` includes registers,
+  flags, every configured memory byte, PC, halt/interrupt state, and all 512
+  port latches. Every successful `step()` captures before/after snapshots.
+- **Transactional program runs.** `run(program, max_steps)` executes on a
+  fresh candidate machine and commits only on success; caller-supplied input
+  port values are preserved as external signals.
 
 ## Usage
 
@@ -65,6 +69,7 @@ sim.run_instructions(&[
     encode_mvi_a(2),
     vec![encode_alu_reg(ALU_ADD, REG_B)],
     vec![HLT],
-]);
+], 10)?;
 assert_eq!(sim.regs.a, 3);
+# Ok::<(), intel8080_simulator::Intel8080Error>(())
 ```

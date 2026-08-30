@@ -2216,8 +2216,11 @@ fn end_to_end_twig_42_emits_intel8080_bin_via_lang_aot() {
     // execute the emitted bytes in intel8080-simulator and check the
     // accumulator.
     let mut sim = intel8080_simulator::Intel8080Simulator::new(65536);
-    sim.load_program(&bytes);
-    let result = sim.run_loaded_with_limit(10);
+    sim.load_program(&bytes)
+        .expect("generated Intel 8080 program should load");
+    let result = sim
+        .run_loaded_with_limit(10)
+        .expect("generated Intel 8080 program should execute");
     assert!(result.halted);
     assert_eq!(sim.regs.a, 42);
 }
