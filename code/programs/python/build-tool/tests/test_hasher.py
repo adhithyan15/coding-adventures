@@ -54,6 +54,21 @@ FIXTURE_GENERATED_COMPONENTS = tuple(
 )
 
 
+def _expected_framed_package_hash(
+    package_root: Path, relative_paths: tuple[str, ...]
+) -> str:
+    """Build the portable package-hash frame independently of production code."""
+    package_hash = hashlib.sha256()
+    for relative_path in sorted(relative_paths):
+        path_bytes = relative_path.encode("utf-8")
+        package_hash.update(len(path_bytes).to_bytes(8, "big"))
+        package_hash.update(path_bytes)
+        package_hash.update(
+            hashlib.sha256((package_root / relative_path).read_bytes()).digest()
+        )
+    return package_hash.hexdigest()
+
+
 class TestCollectSourceFiles:
     """Tests for _collect_source_files."""
 
@@ -112,6 +127,46 @@ class TestCollectSourceFiles:
         assert "main.go" in names
         assert "go.mod" in names
         assert "go.sum" in names
+
+    @pytest.mark.parametrize(
+        ("case_path", "is_starlark"),
+        (
+            (SOURCE_COLLECTION_CASES[0], False),
+            (SOURCE_COLLECTION_CASES[1], True),
+        ),
+        ids=("extension", "declared-sources"),
+    )
+    def test_collects_neutral_ocaml_sources_and_metadata(
+        self, tmp_path, case_path, is_starlark
+    ):
+        case = json.loads(case_path.read_text(encoding="utf-8"))
+        options = case["input"]["options"]
+        expected_paths = tuple(
+            entry["path"] for entry in case["expected"]["result"]["files"]
+        )
+        pkg_dir = tmp_path / "packages" / "ocaml" / "test-pkg"
+
+        # Materialize the fixture's expected portable inputs plus representative
+        # non-source files. Generated and linked candidates are already covered
+        # by the exact pruning tests below and remain inert fixture records here.
+        for relative_path in (*expected_paths, "README.md"):
+            source = pkg_dir / relative_path
+            source.parent.mkdir(parents=True, exist_ok=True)
+            source.write_bytes(b"source\n")
+
+        pkg = Package(
+            name="ocaml/test-pkg",
+            path=pkg_dir,
+            language="ocaml",
+            is_starlark=is_starlark,
+            declared_srcs=options["declared_srcs"],
+        )
+        relative_files = tuple(
+            path.relative_to(pkg_dir).as_posix()
+            for path in _collect_source_files(pkg)
+        )
+
+        assert relative_files == expected_paths
 
     def test_sorted_lexicographically(self, tmp_path):
         pkg_dir = tmp_path / "packages" / "python" / "test"
@@ -320,6 +375,57 @@ class TestHashPackage:
         h2 = hash_package(pkg)
 
         assert h1 != h2
+
+    @pytest.mark.parametrize(
+        ("is_starlark", "declared_srcs"),
+        ((False, []), (True, ["**/*.py"])),
+        ids=("extension", "declared-sources"),
+    )
+    def test_changes_when_same_content_moves_to_a_new_path(
+        self, tmp_path, is_starlark, declared_srcs
+    ):
+        pkg_dir = tmp_path / "packages" / "python" / "test"
+        pkg_dir.mkdir(parents=True)
+        (pkg_dir / "BUILD").write_bytes(b"echo build\n")
+        source = pkg_dir / "source.py"
+        source.write_bytes(b"same bytes\x00\xff")
+        pkg = Package(
+            name="python/test",
+            path=pkg_dir,
+            language="python",
+            is_starlark=is_starlark,
+            declared_srcs=declared_srcs,
+        )
+        original_hash = hash_package(pkg)
+
+        moved = pkg_dir / "nested" / "renamed.py"
+        moved.parent.mkdir()
+        source.rename(moved)
+
+        assert hash_package(pkg) != original_hash
+
+    def test_frames_normalized_utf8_paths_and_raw_content_digests(self, tmp_path):
+        pkg_dir = tmp_path / "packages" / "python" / "test"
+        pkg_dir.mkdir(parents=True)
+        (pkg_dir / "BUILD").write_bytes(b"echo build\r\n")
+        nested = pkg_dir / "nested"
+        nested.mkdir()
+        (nested / "alpha.py").write_bytes(b"alpha\x00\xff\r\n")
+        (nested / "caf\N{LATIN SMALL LETTER E WITH ACUTE}.py").write_bytes(
+            b"same-content"
+        )
+        pkg = Package(name="python/test", path=pkg_dir, language="python")
+
+        expected = _expected_framed_package_hash(
+            pkg_dir,
+            (
+                "BUILD",
+                "nested/alpha.py",
+                "nested/caf\N{LATIN SMALL LETTER E WITH ACUTE}.py",
+            ),
+        )
+
+        assert hash_package(pkg) == expected
 
     def test_empty_package_hash(self, tmp_path):
         pkg_dir = tmp_path / "packages" / "python" / "empty"

@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.15] - 2026-08-30
+
+### Fixed
+
+- **Portable OCaml source hashing**: extension and declared-source collection
+  now include `.ml`, `.mli`, and `.opam` inputs plus exact `.ocamlformat`,
+  `dune`, and `dune-project` metadata while retaining the complete generated-
+  component and no-follow boundaries.
+- **Unambiguous path-aware digests**: package hashes now frame normalized
+  forward-slash UTF-8 relative paths with fixed raw-content SHA-256 digests, so
+  same-content renames invalidate caches without incorporating absolute paths
+  or host metadata.
+
 ## [0.3.14] - 2026-08-30
 
 ### Fixed

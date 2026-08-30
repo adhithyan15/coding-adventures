@@ -28,6 +28,14 @@ declared-source matching. Component names are exact and case-sensitive, so
 Directory and file symlinks plus Windows junction/reparse attributes are
 excluded before source matching or file reads.
 
+The source registry includes OCaml `.ml`, `.mli`, and `.opam` inputs plus the
+exact `.ocamlformat`, `dune`, and `dune-project` metadata names in extension
+and declared-source modes. Package digests sort forward-slash relative paths,
+encode each path as UTF-8 with an explicit byte-length frame, and append the
+fixed SHA-256 digest of the file's raw bytes. A same-content rename therefore
+invalidates the cache without leaking an absolute checkout path, host metadata,
+or locale-dependent decoding into the digest.
+
 ## Usage
 
 ```bash

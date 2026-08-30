@@ -11,15 +11,16 @@ How hashing works
 
 1. Collect all source files in the package directory, filtered by the
    language's relevant extensions. Always include the BUILD file.
-2. Sort the file list lexicographically (by relative path) for determinism.
-3. SHA256-hash each file's contents individually.
-4. Concatenate all individual hashes into one string.
-5. SHA256-hash that concatenated string to produce the final package hash.
+2. Normalize relative paths to forward-slash form and sort them for determinism.
+3. SHA256-hash each file's raw bytes individually.
+4. Frame each UTF-8 path with its byte length and its fixed-size content digest.
+5. SHA256-hash that unambiguous sequence to produce the final package hash.
 
 This two-level hashing means:
-- Reordering files doesn't change the hash (we sort first).
-- Adding or removing a file changes the hash (the concatenated string changes).
+- Reordering files doesn't change the hash (we sort normalized paths first).
+- Adding or removing a file changes the hash (the framed sequence changes).
 - Modifying any file's contents changes the hash.
+- Renaming a file changes the hash, even when its contents do not.
 
 Dependency hashing
 ------------------
@@ -47,6 +48,7 @@ SOURCE_EXTENSIONS: dict[str, set[str]] = {
     "ruby": {".rb", ".gemspec"},
     "go": {".go"},
     "perl": {".pl", ".pm", ".t", ".xs"},
+    "ocaml": {".ml", ".mli", ".opam"},
 }
 
 # Special filenames to always include regardless of extension.
@@ -54,7 +56,15 @@ SPECIAL_FILENAMES: dict[str, set[str]] = {
     "python": set(),
     "ruby": {"Gemfile", "Rakefile"},
     "go": {"go.mod", "go.sum"},
-    "perl": {"Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"},
+    "perl": {
+        "Makefile.PL",
+        "Build.PL",
+        "cpanfile",
+        "MANIFEST",
+        "META.json",
+        "META.yml",
+    },
+    "ocaml": {".ocamlformat", "dune", "dune-project"},
 }
 
 # Exact, case-sensitive generated, dependency, VCS, cache, and temporary
@@ -146,6 +156,8 @@ def _collect_source_files(package: Package) -> list[Path]:
     """
     files: list[Path] = []
     pkg_root = str(package.path)
+    extensions = SOURCE_EXTENSIONS.get(package.language, set())
+    special_names = SPECIAL_FILENAMES.get(package.language, set())
 
     if package.is_starlark and package.declared_srcs:
         # Starlark mode: use os.walk + glob_match for precise source matching.
@@ -170,6 +182,13 @@ def _collect_source_files(package: Package) -> list[Path]:
                     files.append(abs_path)
                     continue
 
+                # Manifests affect the package even when a Starlark target's
+                # declared source globs omit them. This is especially visible
+                # for OCaml's exact ``dune-project`` and ``.ocamlformat`` names.
+                if filename in special_names:
+                    files.append(abs_path)
+                    continue
+
                 # Compute the file's path relative to the package root.
                 # os.path.relpath gives us a platform-native path, but we
                 # need forward slashes for glob matching consistency.
@@ -184,9 +203,6 @@ def _collect_source_files(package: Package) -> list[Path]:
                         break
     else:
         # Extension mode: filter by language-specific extensions.
-        extensions = SOURCE_EXTENSIONS.get(package.language, set())
-        special_names = SPECIAL_FILENAMES.get(package.language, set())
-
         for dirpath, dirnames, filenames in os.walk(pkg_root, followlinks=False):
             _prune_generated_directories(dirpath, dirnames)
             for filename in filenames:
@@ -210,8 +226,10 @@ def _collect_source_files(package: Package) -> list[Path]:
                     files.append(abs_path)
                     continue
 
-    # Sort by relative path for determinism
-    files.sort(key=lambda f: str(f.relative_to(package.path)))
+    # ``Path`` renders separators according to the host. Hash ordering is part
+    # of the portable contract, so normalize before sorting rather than merely
+    # replacing separators later in ``hash_package``.
+    files.sort(key=lambda path: path.relative_to(package.path).as_posix())
     return files
 
 
@@ -241,10 +259,19 @@ def hash_package(package: Package) -> str:
         # No source files -- hash the empty string for consistency
         return hashlib.sha256(b"").hexdigest()
 
-    # Hash each file, concatenate, hash again
-    file_hashes = [_hash_file(f) for f in files]
-    combined = "".join(file_hashes)
-    return hashlib.sha256(combined.encode("utf-8")).hexdigest()
+    # A content-only sequence cannot distinguish a rename from an unchanged
+    # file. Prefix every normalized UTF-8 path with an unsigned 64-bit byte
+    # length, then append the file's fixed 32-byte SHA-256 digest. The path
+    # length and fixed digest size make file boundaries unambiguous without
+    # decoding source bytes or incorporating absolute checkout locations.
+    package_hash = hashlib.sha256()
+    for filepath in files:
+        relative_path = filepath.relative_to(package.path).as_posix()
+        path_bytes = relative_path.encode("utf-8")
+        package_hash.update(len(path_bytes).to_bytes(8, "big"))
+        package_hash.update(path_bytes)
+        package_hash.update(bytes.fromhex(_hash_file(filepath)))
+    return package_hash.hexdigest()
 
 
 def hash_deps(

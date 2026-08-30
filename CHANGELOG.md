@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Python build-tool portable source hashing
+
+- Added OCaml `.ml`, `.mli`, and `.opam` source recognition plus exact
+  `.ocamlformat`, `dune`, and `dune-project` metadata recognition to extension
+  and declared-source collection.
+- Framed each normalized forward-slash UTF-8 relative path with its fixed raw-
+  content SHA-256 digest, making same-content renames observable without
+  hashing absolute checkout paths, host metadata, or decoded text.
+
 ### Python build-tool source hashing
 
 - Excluded the complete exact, case-sensitive generated-directory registry
