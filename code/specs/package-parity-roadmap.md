@@ -10663,16 +10663,63 @@ The dependency/leverage pass selects
 `build-tool-typescript-dune-build-discovery-exclusion` on branch
 `codex/build-tool-typescript-dune-build-discovery-exclusion`. Its OCaml
 process-free substrate and TypeScript identity-registry prerequisites are both
-merged. This bounded exact-component repair is the final established-engine
-Dune discovery gap and unlocks four owned downstream nodes: TypeScript
-declaration conformance, TypeScript generated-directory hashing, the static
-build-front typecheck, and the selection-blocked Dune completion umbrella.
+merged. This bounded exact-component repair is the final Dune prerequisite in
+the current Rust-to-Swift-to-TypeScript declaration chain. It directly enables
+TypeScript generated-directory hashing and the static build-front typecheck,
+satisfies TypeScript's edge into the selection-blocked Dune completion
+umbrella, and advances the TypeScript declaration owner, which remains blocked
+on the static front. Six other engine-scoped Dune owners remain pending before
+the umbrella can complete.
 Node 24.16.0 and npm 11.13.0 are installed and the existing Vitest and tsx
 dependencies suffice. The target branch and prior PR were absent, and six live
 PRs have zero exact overlap across the expected seven-path state, roadmap,
 root/package documentation, TypeScript discovery, and discovery-test tranche.
 Reconciliation plus selection leaves the complete 580-owner/864-edge graph at
 180 merged, 399 pending, and exactly one `in-progress` owner.
+
+### TypeScript Dune implementation and validation
+
+Test-first execution produced exactly two expected failures: the direct
+exact/case/near regression discovered `ocaml/decoy` beneath `_build`, and the
+unchanged shared language-registry fixture reported the same extra identity
+after 37 passing discovery tests. The minimum production repair adds only
+exact, case-sensitive `_build` membership to TypeScript discovery's existing
+generated-component set. The direct test keeps `_build`, `_Build`, and
+`_build-example` beneath distinct parents so Windows and default macOS case
+folding cannot collapse the boundary. Source hashing remains honestly outside
+this owner under its separately pending generated-directory exclusion.
+
+The complete TypeScript build-tool package passes 325 tests across 12 files
+through both the coverage command and literal `BUILD` contents. V8 coverage is
+90.50% statements, 83.93% branches, 94.84% functions, and 90.42% lines
+overall; `discovery.ts` reaches 93.68% statements, 89.23% branches, 100%
+functions, and 93.40% lines. The neutral conformance family passes 205 tests
+with 23 expected skips, and the corpus validates 119 cases and 283 files across
+16 implementations, 15 established lanes, and 12 front doors. Ten parity-
+reporter and seven capability-taxonomy tests pass.
+
+The canonical Go oracle passes module verification, all packages, vet, and a
+trimpath build. Its real exact-diff TypeScript plan discovers 481 packages,
+selects only `typescript/programs/build-tool`, validates the five reviewed
+orphan exemptions, and skips the other 480. `npm pack` retains the unchanged
+18-file allowlist with no bundled dependency. Production-only `npm audit`
+reports zero vulnerabilities; full audit retains only the already registered
+development-only `nanoid` advisory. The collision inventory remains schema 3
+with 15 lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-
+reported identities, 731 Rust singletons, zero OCaml packages, zero collisions,
+and zero unknown buckets. The 580-owner/864-edge state graph is unique,
+dependency-complete, acyclic, and lifecycle-valid at 180 merged, 399 pending,
+and exactly this owner in progress.
+
+Before final validation the branch rebased without conflict onto exact
+`origin/main` `4abc7f001f7e3f924f6b7d4cc7bf3ae583b3dd45`. Intervening PR #13511 adds
+76 generated and TypeScript human-language book-appendix paths but no package
+root, manifest, build-tool contract, or exact tranche overlap. Independent
+security/correctness review passes with no authority or dependency finding. An
+independent conformance review caught and closed two documentation overclaims:
+this repair advances rather than immediately unlocks declaration conformance,
+which still depends on the pending static build front; and it satisfies only
+TypeScript's Dune-umbrella edge while six other engine owners remain pending.
 
 ## Autonomous Loop Protocol
 
