@@ -156,6 +156,30 @@ export const scriptInventoryEvidence = {
     expect(malayalamU.strokeOrderSource?.variation).toMatch(
       /word-initial forms.*u\.mp4.*compact inner tip.*left spiral.*broad upper and right lobe.*below-line curl.*finishing baseline.*zero-lift.*Noto Sans Malayalam/i,
     );
+    const malayalamUu = scripts.malayalam!.independentVowels!.find(
+      (entry) => entry.glyph === "ഊ",
+    )!;
+    expect(malayalamUu.sound).toBe("ū");
+    expect(malayalamUu.penLifts).toBe(1);
+    expect(malayalamUu.strokeOrder).toEqual([
+      "begin at the compact inner tip, turn outward around the left spiral, and carry the upper arch right",
+      "without lifting, descend around the broad right lobe and curl left below the line",
+      "without lifting, carry the finishing baseline to the right",
+      "after one lift, sweep over the compact upper arch and cross into the right lobe",
+      "without lifting, circle the broad right lobe and descend its finishing tail",
+    ]);
+    expect(malayalamUu.strokeOrderNote).toMatch(
+      /five visible movements.*two pen-down runs.*after one lift/i,
+    );
+    expect(malayalamUu.strokeOrderSource?.url).toBe(
+      "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+    );
+    expect(malayalamUu.strokeOrderSource?.citation).toMatch(
+      /Donald R\. Davis Jr\..*The Malayalam Script.*Initial Vowels.*ഊ.*00:00.?00:06.*University of Texas at Austin/i,
+    );
+    expect(malayalamUu.strokeOrderSource?.variation).toMatch(
+      /word-initial forms.*uu\.mp4.*spiral-to-baseline body.*lifts once.*compact upper arch.*broad right loop.*descending tail.*one-lift.*Noto Sans Malayalam/i,
+    );
     const malayalamChilluL = scripts.malayalam!.finalConsonants!.find(
       (entry) => entry.glyph === "ൽ",
     )!;
@@ -293,5 +317,7 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ഴ") ?? 0).toBe(0);
     expect(missingByScript.get("malayalam.json")?.has("ആ")).toBe(false);
     expect(affected.get("ആ") ?? 0).toBe(0);
+    expect(missingByScript.get("malayalam.json")?.has("ഊ") ?? false).toBe(false);
+    expect(affected.get("ഊ") ?? 0).toBe(0);
   },
 };

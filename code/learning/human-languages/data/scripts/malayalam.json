@@ -5865,10 +5865,24 @@
       "sound": "ū",
       "role": "vowel",
       "components": [
-        "ഊ  ū — independent vowel (word-initial)"
+        "compact left spiral expanding into the upper arch",
+        "broad right lobe, below-line curl, and finishing baseline",
+        "a lifted two-part flourish with a compact upper arch and broad right loop"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "begin at the compact inner tip, turn outward around the left spiral, and carry the upper arch right",
+        "without lifting, descend around the broad right lobe and curl left below the line",
+        "without lifting, carry the finishing baseline to the right",
+        "after one lift, sweep over the compact upper arch and cross into the right lobe",
+        "without lifting, circle the broad right lobe and descend its finishing tail"
+      ],
+      "penLifts": 1,
+      "strokeOrderNote": "Independent long u. Five visible movements in two pen-down runs: the main spiral-to-baseline body stays joined; after one lift, the compact upper arch flows into the broad right loop and its descending tail.",
+      "strokeOrderSource": {
+        "citation": "Donald R. Davis Jr., The Malayalam Script, Initial Vowels, ഊ handwriting clip, 00:00–00:06 (University of Texas at Austin)",
+        "url": "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+        "variation": "The page identifies initial vowels as word-initial forms and directly links the six-second uu.mp4 handwriting clip. The clip visibly completes the joined spiral-to-baseline body first, then lifts once and draws the compact upper arch continuously into the broad right loop and descending tail. This is one attested one-lift pedagogical order fitted to the bundled Noto Sans Malayalam outline."
+      }
     },
     {
       "glyph": "എ",
