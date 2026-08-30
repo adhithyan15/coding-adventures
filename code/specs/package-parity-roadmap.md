@@ -10146,6 +10146,18 @@ covered by the existing `forme-portable-core-family-classification` owner.
 After reconciliation and selection, the 566-owner, 833-edge graph contains 174
 merged, 391 pending, and one `in-progress` owner.
 
+The first complete Ruby package run then exposed one deterministic exact-main
+failure unrelated to declaration evaluation. PR #13366 added an OCaml Dune
+`_build` decoy to the shared language-registry fixture, while unchanged Ruby
+discovery prunes `.build` and `dist-newstyle` but not exact `_build`; the only
+extra identity is `ocaml/decoy`. The discovery source, identity test, and
+fixture blobs are identical between this branch and `origin/main`, and no
+reviewed exception applies. The gap is classified under the pending
+`build-tool-existing-remediation` umbrella. This Ruby tranche therefore also
+carries the minimum exact-component discovery regression needed to restore its
+canonical BUILD suite, while the separately owned generated-directory hashing
+repair remains out of scope.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

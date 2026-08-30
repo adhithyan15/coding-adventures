@@ -390,7 +390,7 @@
       "pr_number": null,
       "selection_revision": "ce60a7bbf98d4e169e20e6b66f2d5bcb5dd46349",
       "selection_notes": "Selected after PR #13490 completed 41 terminal acceptable checks and merged through guarded squash auto-merge, followed by a collision-checked exact-main inventory refresh. The four remaining declaration consumers have equal merged dependencies and graph leverage; Ruby wins the documented ordering after Python and supplies another independent runtime through the same bounded process-free boundary. Ruby 3.4.9 with PRISM and Bundler 2.6.9 are installed locally, and bundle check confirms the existing dependency set is satisfied. The inventory remains 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Merged PR #13488 changed only existing Urdu curriculum, human-language-data, script-ductus, and language-ladder roots. All six live open PRs have zero exact overlap with the expected nine Ruby paths. PR #13455 prospectively adds the already-owned TypeScript Forme CLI root; no newly eligible unowned gap displaces Ruby.",
-      "notes": "Adopt the merged process-free declaration corpus in the Ruby engine without widening execution authority."
+      "notes": "Adopt the merged process-free declaration corpus in the Ruby engine without widening execution authority. Pre-implementation full-suite validation also reproduced one exact-main failure introduced when PR #13366 added the Dune _build decoy to the shared language-registry fixture: unchanged Ruby discovery emits only ocaml/decoy beyond the expected set. This tranche carries the minimum exact-component discovery regression repair classified under build-tool-existing-remediation so the real Ruby BUILD and CI can pass; the separately owned generated-directory hashing repair remains out of scope."
     },
     {
       "id": "build-tool-rust-extra-ci-toolchain-declaration-conformance",
@@ -1498,7 +1498,7 @@
       "depends_on": ["build-tool-go-oracle"],
       "branch": null,
       "pr_number": null,
-      "notes": "Deliver one independent engine per PR; explicitly review the shared C#/F# engine exception."
+      "notes": "Deliver one independent engine per PR; explicitly review the shared C#/F# engine exception. The exact-main audit after PR #13490 discovered that PR #13366's new Dune generated-output decoy makes the unchanged Ruby identity-registry fixture emit ocaml/decoy because Ruby discovery does not yet prune the exact case-sensitive _build component. The selected Ruby declaration-engine tranche must apply the bounded discovery/test repair needed to restore its canonical package suite; keep the separately owned Ruby hashing exclusion out of scope."
     },
     {
       "id": "build-tool-jvm",
