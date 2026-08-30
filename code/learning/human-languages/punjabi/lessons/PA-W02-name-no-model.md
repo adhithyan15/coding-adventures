@@ -45,9 +45,9 @@ There is no value bank, support-language name, or romanized answer below.
 
 Complete the requested field:
 
-> ☀ &nbsp;&nbsp; **ਨਾਂ: __________**
+> A — **ਨਾਂ: __________**
 
-Choose the known value attached to the sun and write it from memory. Do not open
+Choose the known value attached to A and write it from memory. Do not open
 an earlier lesson until the attempt is complete.
 
 ## Guided Practice — separate repair passes
@@ -58,7 +58,7 @@ spacing, then label/value placement. Repair only the first differing dimension.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-NAME-AMAN-01, PA-FORM-NAME-NO-MODEL-01] -->
-<!-- hl-activity: {"id":"PA-W02-name-no-model-sun","kind":"text","assesses":["PA-FORM-NAME-AMAN-01","PA-FORM-NAME-NO-MODEL-01"],"prompt":"With no bank, romanization, or copyable answer, complete the name field for ☀.","answer":"ਅਮਨ","accepted":["ਨਾਂ: ਅਮਨ","ਨਾਂ:ਅਮਨ"],"feedback":{"correct":"The nonverbal cue independently selected ਅਮਨ.","incorrect":"Finish the attempt first; then reopen the bank and repair only selection, spelling, spacing, or placement."},"response_seconds":35} -->
+<!-- hl-activity: {"id":"PA-W02-name-no-model-a","kind":"text","assesses":["PA-FORM-NAME-AMAN-01","PA-FORM-NAME-NO-MODEL-01"],"prompt":"With no bank, romanization, or copyable answer, complete the name field for A.","answer":"ਅਮਨ","accepted":["ਨਾਂ: ਅਮਨ","ਨਾਂ:ਅਮਨ"],"feedback":{"correct":"The nonverbal cue independently selected ਅਮਨ.","incorrect":"Finish the attempt first; then reopen the bank and repair only selection, spelling, spacing, or placement."},"response_seconds":35} -->
 
 You have completed one field pattern. Five more field families remain before the
 published six-field form can be attempted.

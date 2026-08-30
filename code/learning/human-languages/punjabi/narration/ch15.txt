@@ -97,17 +97,17 @@ Read both names. Point to the first differing letter:
 
 Script — attach one nonverbal cue to each person.
 For this closed practice bank only:
-☀ becomes ਅਮਨ (Aman).
-★ becomes ਮਨਨ (Manan).
-Look for five seconds. Cover the Gurmukhi names. Point to the sun and recall its name; point to the star and recall its name. Uncover and compare.
+A becomes ਅਮਨ (Aman).
+B becomes ਮਨਨ (Manan).
+Look for five seconds. Cover the Gurmukhi names. Point to A and recall its name; point to B and recall its name. Uncover and compare.
 
 Guided Practice — value selection.
-With the bank visible, choose but do not copy: which value belongs to ★? Which belongs to ☀? The skill today is selecting the requested known value.
+With the bank visible, choose but do not copy: which value belongs to B? Which belongs to A? The skill today is selecting the requested known value.
 
 Wrap-up recall.
 Stop after the two-way contrast. No third name enters this field bank.
 [question — say your answer, then pause 10 seconds]
-In this practice bank, select the Gurmukhi name paired with ★.
+In this practice bank, select the Gurmukhi name paired with B.
 
 
 Lesson 6 of 8.
@@ -116,11 +116,11 @@ Fill one field with the bank visible — complete one name field with a visible 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
-Read the label ਨਾਂ (nāṁ). Recall the visible bank: ☀ ਅਮਨ (Aman), ★ ਮਨਨ (Manan).
+Read the label ਨਾਂ (nāṁ). Recall the visible bank: A ਅਮਨ (Aman), B ਮਨਨ (Manan).
 
 Guided Practice — supported entry.
-Keep the bank visible. The sun card requests its known value:
-☀ &nbsp;&nbsp; ਨਾਂ (nāṁ): __________ (name field).
+Keep the bank visible. Card A requests its known value:
+A — ਨਾਂ (nāṁ): __________ (name field).
 Select ਅਮਨ (Aman) and copy it on the line. Read the completed field from label to value. This is supported entry, not independent writing evidence.
 
 Writing — separate spelling check.
@@ -129,7 +129,7 @@ Check only spelling: ਅ | ਮ | ਨ. Do not check spacing or selection in this 
 Wrap-up recall.
 Stop after one supported field.
 [question — say your answer, then pause 20 seconds]
-With the two-value bank visible, complete the name field for ☀.
+With the two-value bank visible, complete the name field for A.
 
 
 Lesson 7 of 8.
@@ -138,11 +138,11 @@ Hide the bank, then fill one line — complete one requested name field after th
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
-Look once: ☀ ਅਮਨ (Aman), ★ ਮਨਨ (Manan). Cover the complete bank and wait ten seconds.
+Look once: A ਅਮਨ (Aman), B ਮਨਨ (Manan). Cover the complete bank and wait ten seconds.
 
 Writing — delayed requested entry.
 Keep the bank hidden. Complete only this field:
-★ &nbsp;&nbsp; ਨਾਂ (nāṁ): __________ (name field).
+B — ਨਾਂ (nāṁ): __________ (name field).
 The requested value is chosen from memory; there is no copyable answer beside the line. Reveal the bank only after writing.
 
 Guided Practice — separate repair passes.
@@ -151,7 +151,7 @@ Compare in order: (1) selected person, (2) three written positions, (3) any extr
 Wrap-up recall.
 This is one delayed choice, not a six-field form.
 [question — say your answer, then pause 30 seconds]
-After hiding the bank for ten seconds, complete ਨਾਂ (nāṁ) for ★. Do not reveal the bank until the attempt is finished.
+After hiding the bank for ten seconds, complete ਨਾਂ (nāṁ) for B. Do not reveal the bank until the attempt is finished.
 
 
 Lesson 8 of 8.
@@ -164,8 +164,8 @@ Close the previous lesson. Keep only the two learned identity symbols in memory.
 
 Writing — independent controlled choice.
 Complete the requested field:
-☀ &nbsp;&nbsp; ਨਾਂ (nāṁ): __________ (name field).
-Choose the known value attached to the sun and write it from memory. Do not open an earlier lesson until the attempt is complete.
+A — ਨਾਂ (nāṁ): __________ (name field).
+Choose the known value attached to A and write it from memory. Do not open an earlier lesson until the attempt is complete.
 
 Guided Practice — separate repair passes.
 After writing, compare in four bounded passes: requested person, spelling, spacing, then label/value placement. Repair only the first differing dimension.
@@ -173,4 +173,4 @@ After writing, compare in four bounded passes: requested person, spelling, spaci
 Wrap-up recall.
 You have completed one field pattern. Five more field families remain before the published six-field form can be attempted.
 [question — say your answer, then pause 35 seconds]
-With no bank, romanization, or copyable answer, complete the name field for ☀.
+With no bank, romanization, or copyable answer, complete the name field for A.

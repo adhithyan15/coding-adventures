@@ -36,14 +36,14 @@ reviews_of: [PA-W02-name-label, PA-W02-name-select]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-LABEL-NAME-01, PA-FORM-NAME-CUE-MAP-01] -->
 
-Read the label **ਨਾਂ**. Recall the visible bank: **☀ ਅਮਨ · ★ ਮਨਨ**.
+Read the label **ਨਾਂ**. Recall the visible bank: **A ਅਮਨ · B ਮਨਨ**.
 
 ## Guided Practice — supported entry
 <!-- hl-knowledge: introduces=[PA-FORM-NAME-SUPPORTED-ENTRY-01]; assesses=[PA-FORM-LABEL-NAME-01, PA-FORM-NAME-CUE-MAP-01] -->
 
-Keep the bank visible. The sun card requests its known value:
+Keep the bank visible. Card A requests its known value:
 
-> ☀ &nbsp;&nbsp; **ਨਾਂ: __________**
+> A — **ਨਾਂ: __________**
 
 Select **ਅਮਨ** and copy it on the line. Read the completed field from label to
 value. This is supported entry, not independent writing evidence.
@@ -56,6 +56,6 @@ pass. If one piece differs, repair that one piece.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-NAME-SUPPORTED-ENTRY-01] -->
-<!-- hl-activity: {"id":"PA-W02-name-supported-sun","kind":"text","assesses":["PA-FORM-NAME-SUPPORTED-ENTRY-01"],"prompt":"With the two-value bank visible, complete the name field for ☀.","answer":"ਅਮਨ","accepted":["ਨਾਂ: ਅਮਨ","ਨਾਂ:ਅਮਨ"],"feedback":{"correct":"The sun card selects ਅਮਨ.","incorrect":"Use the visible bank, select ☀ → ਅਮਨ, and repair only the first differing letter."},"response_seconds":20} -->
+<!-- hl-activity: {"id":"PA-W02-name-supported-a","kind":"text","assesses":["PA-FORM-NAME-SUPPORTED-ENTRY-01"],"prompt":"With the two-value bank visible, complete the name field for A.","answer":"ਅਮਨ","accepted":["ਨਾਂ: ਅਮਨ","ਨਾਂ:ਅਮਨ"],"feedback":{"correct":"Card A selects ਅਮਨ.","incorrect":"Use the visible bank, select A → ਅਮਨ, and repair only the first differing letter."},"response_seconds":20} -->
 
 Stop after one supported field.

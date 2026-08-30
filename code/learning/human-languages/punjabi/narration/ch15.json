@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The First Form Line: Name",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f95e252303926687",
+  "sourceHash": "fnv1a64:67b9b38c92096151",
   "lessons": [
     {
       "id": "PA-W02-a",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2cc8d09cdf9234b2",
+      "sourceHash": "fnv1a64:776a120e7a5ca8fc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -306,7 +306,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:54f053984a89feb2",
+      "sourceHash": "fnv1a64:7bd82fc9959fae59",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -390,7 +390,7 @@
       "id": "PA-W02-name-select",
       "sequence": 940,
       "title": "Two people, two already-known values",
-      "headword": "☀ ਅਮਨ · ★ ਮਨਨ",
+      "headword": "A ਅਮਨ · B ਮਨਨ",
       "romanization": "Aman; Manan",
       "gloss": "select one known name value from a nonverbal identity cue",
       "script": "gurmukhi",
@@ -400,7 +400,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:245a40686997fb42",
+      "sourceHash": "fnv1a64:c33082b9f9305232",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -439,15 +439,15 @@
             },
             {
               "kind": "speech",
-              "text": "☀ becomes ਅਮਨ (Aman)."
+              "text": "A becomes ਅਮਨ (Aman)."
             },
             {
               "kind": "speech",
-              "text": "★ becomes ਮਨਨ (Manan)."
+              "text": "B becomes ਮਨਨ (Manan)."
             },
             {
               "kind": "speech",
-              "text": "Look for five seconds. Cover the Gurmukhi names. Point to the sun and recall its name; point to the star and recall its name. Uncover and compare."
+              "text": "Look for five seconds. Cover the Gurmukhi names. Point to A and recall its name; point to B and recall its name. Uncover and compare."
             }
           ]
         },
@@ -458,7 +458,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "With the bank visible, choose but do not copy: which value belongs to ★? Which belongs to ☀? The skill today is selecting the requested known value."
+              "text": "With the bank visible, choose but do not copy: which value belongs to B? Which belongs to A? The skill today is selecting the requested known value."
             }
           ]
         },
@@ -474,8 +474,8 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "PA-W02-name-select-star",
-              "prompt": "In this practice bank, select the Gurmukhi name paired with ★.",
+              "id": "PA-W02-name-select-b",
+              "prompt": "In this practice bank, select the Gurmukhi name paired with B.",
               "assesses": [
                 "PA-FORM-NAME-CUE-MAP-01"
               ],
@@ -484,8 +484,8 @@
                 "ਮਨਨ"
               ],
               "feedback": {
-                "correct": "★ requests ਮਨਨ.",
-                "incorrect": "Reveal the two-item bank, point to ★ becomes ਮਨਨ, then cover it again."
+                "correct": "B requests ਮਨਨ.",
+                "incorrect": "Reveal the two-item bank, point to B becomes ਮਨਨ, then cover it again."
               }
             }
           ]
@@ -506,7 +506,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d6b733fd236033f6",
+      "sourceHash": "fnv1a64:3bba54cdcbc15bfc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -523,7 +523,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the label ਨਾਂ (nāṁ). Recall the visible bank: ☀ ਅਮਨ (Aman), ★ ਮਨਨ (Manan)."
+              "text": "Read the label ਨਾਂ (nāṁ). Recall the visible bank: A ਅਮਨ (Aman), B ਮਨਨ (Manan)."
             }
           ]
         },
@@ -534,11 +534,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep the bank visible. The sun card requests its known value:"
+              "text": "Keep the bank visible. Card A requests its known value:"
             },
             {
               "kind": "speech",
-              "text": "☀ &nbsp;&nbsp; ਨਾਂ (nāṁ): __________ (name field)."
+              "text": "A — ਨਾਂ (nāṁ): __________ (name field)."
             },
             {
               "kind": "speech",
@@ -569,8 +569,8 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "PA-W02-name-supported-sun",
-              "prompt": "With the two-value bank visible, complete the name field for ☀.",
+              "id": "PA-W02-name-supported-a",
+              "prompt": "With the two-value bank visible, complete the name field for A.",
               "assesses": [
                 "PA-FORM-NAME-SUPPORTED-ENTRY-01"
               ],
@@ -581,8 +581,8 @@
                 "ਨਾਂ:ਅਮਨ"
               ],
               "feedback": {
-                "correct": "The sun card selects ਅਮਨ.",
-                "incorrect": "Use the visible bank, select ☀ becomes ਅਮਨ, and repair only the first differing letter."
+                "correct": "Card A selects ਅਮਨ.",
+                "incorrect": "Use the visible bank, select A becomes ਅਮਨ, and repair only the first differing letter."
               }
             }
           ]
@@ -593,8 +593,8 @@
       "id": "PA-W02-name-delayed",
       "sequence": 960,
       "title": "Hide the bank, then fill one line",
-      "headword": "★ → ਮਨਨ",
-      "romanization": "star cue: Manan",
+      "headword": "B → ਮਨਨ",
+      "romanization": "B cue: Manan",
       "gloss": "complete one requested name field after the answer bank is hidden",
       "script": "gurmukhi",
       "modality": "pen",
@@ -603,7 +603,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:a1ca280c44d012b5",
+      "sourceHash": "fnv1a64:bc2d42edd7240e76",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -620,7 +620,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look once: ☀ ਅਮਨ (Aman), ★ ਮਨਨ (Manan). Cover the complete bank and wait ten seconds."
+              "text": "Look once: A ਅਮਨ (Aman), B ਮਨਨ (Manan). Cover the complete bank and wait ten seconds."
             }
           ]
         },
@@ -635,7 +635,7 @@
             },
             {
               "kind": "speech",
-              "text": "★ &nbsp;&nbsp; ਨਾਂ (nāṁ): __________ (name field)."
+              "text": "B — ਨਾਂ (nāṁ): __________ (name field)."
             },
             {
               "kind": "speech",
@@ -666,8 +666,8 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "PA-W02-name-delayed-star",
-              "prompt": "After hiding the bank for ten seconds, complete ਨਾਂ (nāṁ) for ★. Do not reveal the bank until the attempt is finished.",
+              "id": "PA-W02-name-delayed-b",
+              "prompt": "After hiding the bank for ten seconds, complete ਨਾਂ (nāṁ) for B. Do not reveal the bank until the attempt is finished.",
               "assesses": [
                 "PA-FORM-NAME-DELAYED-ENTRY-01"
               ],
@@ -700,7 +700,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:dde7a669e37bd0f0",
+      "sourceHash": "fnv1a64:40771d82b40dbc8e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -732,11 +732,11 @@
             },
             {
               "kind": "speech",
-              "text": "☀ &nbsp;&nbsp; ਨਾਂ (nāṁ): __________ (name field)."
+              "text": "A — ਨਾਂ (nāṁ): __________ (name field)."
             },
             {
               "kind": "speech",
-              "text": "Choose the known value attached to the sun and write it from memory. Do not open an earlier lesson until the attempt is complete."
+              "text": "Choose the known value attached to A and write it from memory. Do not open an earlier lesson until the attempt is complete."
             }
           ]
         },
@@ -763,8 +763,8 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "PA-W02-name-no-model-sun",
-              "prompt": "With no bank, romanization, or copyable answer, complete the name field for ☀.",
+              "id": "PA-W02-name-no-model-a",
+              "prompt": "With no bank, romanization, or copyable answer, complete the name field for A.",
               "assesses": [
                 "PA-FORM-NAME-AMAN-01",
                 "PA-FORM-NAME-NO-MODEL-01"

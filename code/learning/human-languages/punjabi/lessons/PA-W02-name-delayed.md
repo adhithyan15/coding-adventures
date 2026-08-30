@@ -6,8 +6,8 @@ sequence: 960
 delivery: script
 chapter: 15
 type: writing
-headword: "★ → ਮਨਨ"
-romanization: "star cue: Manan"
+headword: "B → ਮਨਨ"
+romanization: "B cue: Manan"
 gloss: "complete one requested name field after the answer bank is hidden"
 prerequisites: [PA-W02-name-supported]
 sounds: []
@@ -36,7 +36,7 @@ reviews_of: [PA-W02-name-select, PA-W02-name-supported]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-NAME-CUE-MAP-01] -->
 
-Look once: **☀ ਅਮਨ · ★ ਮਨਨ**. Cover the complete bank and wait ten seconds.
+Look once: **A ਅਮਨ · B ਮਨਨ**. Cover the complete bank and wait ten seconds.
 
 ## Writing — delayed requested entry
 <!-- hl-knowledge: introduces=[PA-FORM-NAME-DELAYED-ENTRY-01]; assesses=[PA-FORM-LABEL-NAME-01, PA-FORM-NAME-CUE-MAP-01] -->
@@ -44,7 +44,7 @@ Look once: **☀ ਅਮਨ · ★ ਮਨਨ**. Cover the complete bank and wait 
 
 Keep the bank hidden. Complete only this field:
 
-> ★ &nbsp;&nbsp; **ਨਾਂ: __________**
+> B — **ਨਾਂ: __________**
 
 The requested value is chosen from memory; there is no copyable answer beside
 the line. Reveal the bank only after writing.
@@ -57,6 +57,6 @@ extra space inside the name. Repair the first differing dimension and stop.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-NAME-DELAYED-ENTRY-01] -->
-<!-- hl-activity: {"id":"PA-W02-name-delayed-star","kind":"text","assesses":["PA-FORM-NAME-DELAYED-ENTRY-01"],"prompt":"After hiding the bank for ten seconds, complete ਨਾਂ for ★. Do not reveal the bank until the attempt is finished.","answer":"ਮਨਨ","accepted":["ਨਾਂ: ਮਨਨ","ਨਾਂ:ਮਨਨ"],"feedback":{"correct":"The hidden-bank cue selected ਮਨਨ independently.","incorrect":"Reveal the bank now, compare selection then spelling then spacing, and repair one dimension."},"response_seconds":30} -->
+<!-- hl-activity: {"id":"PA-W02-name-delayed-b","kind":"text","assesses":["PA-FORM-NAME-DELAYED-ENTRY-01"],"prompt":"After hiding the bank for ten seconds, complete ਨਾਂ for B. Do not reveal the bank until the attempt is finished.","answer":"ਮਨਨ","accepted":["ਨਾਂ: ਮਨਨ","ਨਾਂ:ਮਨਨ"],"feedback":{"correct":"The hidden-bank cue selected ਮਨਨ independently.","incorrect":"Reveal the bank now, compare selection then spelling then spacing, and repair one dimension."},"response_seconds":30} -->
 
 This is one delayed choice, not a six-field form.

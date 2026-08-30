@@ -114,8 +114,8 @@ it("builds the first Punjabi A1 form field without a copyable independent answer
     "controlled-composition",
   ]);
   expect(independent.body).toContain("There is no value bank, support-language name, or romanized answer below.");
-  expect(independent.body).toContain("> ☀ &nbsp;&nbsp; **ਨਾਂ: __________**");
-  expect(independent.body).not.toContain("☀ ਅਮਨ");
+  expect(independent.body).toContain("> A — **ਨਾਂ: __________**");
+  expect(independent.body).not.toContain("A ਅਮਨ");
   const [activity] = compileLessonActivities(independent.blocks);
   expect(activity?.prompt).not.toContain("Aman");
   expect(activity?.prompt).not.toContain("ਅਮਨ");

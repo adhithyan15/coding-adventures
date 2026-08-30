@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-INDEPENDENT-A-01]
+  knowledge: [PA-SCRIPT-NAMASTE-READ-01, PA-SCRIPT-INDEPENDENT-A-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]

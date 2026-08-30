@@ -9,7 +9,7 @@ type: writing
 headword: ਨਾਂ
 romanization: "nāṁ"
 gloss: "the form label name"
-prerequisites: [PA-W02-manan]
+prerequisites: [PA-W02-manan, PA-C02-naam]
 sounds: [kanna-aa, bindi-nasal]
 roots: []
 duration:
