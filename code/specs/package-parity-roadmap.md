@@ -10468,6 +10468,15 @@ or conformance specification. The separately registered Swift Windows test-
 front failure-propagation owner remains pending, so this tranche makes no
 declaration-conformance claim.
 
+Before publication, the branch rebased without conflict onto exact
+`origin/main` `68b2fa7642d78909868da5b9c95518a5822a87f1`. The intervening merged
+Telugu curriculum work stays inside established human-language and TypeScript
+package owners, adds no package identity or build-tool contract, and has zero
+exact overlap with this tranche. The collision inventory and neutral fixture
+corpus remain unchanged; all six live PRs still have zero exact overlap across
+the eight tranche paths, and the target remote branch and prior PR remain
+absent.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
