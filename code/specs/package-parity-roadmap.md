@@ -10591,6 +10591,46 @@ documentation, Swift source/test, conformance-spec, and roadmap tranche.
 Reconciliation plus selection leaves the complete 580-owner/864-edge graph at
 179 merged, 400 pending, and exactly one `in-progress` owner.
 
+### Swift declaration implementation and validation
+
+The Swift engine now exposes a pure `ToolchainDetection.evaluateSnapshot`
+boundary over caller-owned data. It meters every supplied BUILD front before
+selection, uses UTF-8 bytes and LF-delimited logical lines, strips only the CR
+that directly terminates a CRLF line, preserves a present empty platform
+override, aliases the three shared language families, and returns either a
+fresh complete canonical result or the stable unsupported diagnostic. A custom
+value-semantic `ToolchainResultMap` owns the exact 16-key order instead of
+relying on Swift `Dictionary` iteration. Production imports no Foundation and
+has no filesystem, Git, process, environment, clock, randomness, credential,
+network, FFI, or execution authority.
+
+Test-first execution initially failed at the deliberately absent Swift types
+and evaluator. The final focused suite passes seven tests and dynamically
+consumes all 11 neutral declaration fixtures. The full coverage run passes 54
+tests across eight suites with one Windows-inapplicable symlink skip;
+`ToolchainDetection.swift` reaches 96.83% region, 97.62% function, and 97.77%
+line coverage. Strict swift-format passes for both new files, as do the release
+build, package dump, zero-external-dependency graph, literal Windows BUILD
+front, and the canonical Go build tool's real exact-diff execution of the Swift
+package. Its forced dry plan validates all 167 discovered Swift packages.
+
+The neutral conformance family passes 205 tests with 23 expected skips; corpus
+validation reports 119 cases and 283 files across 16 implementations, 15
+established lanes, and 12 front doors. Ten parity-reporter and seven capability-
+taxonomy tests pass. The Go oracle passes module verification, all packages,
+vet, and trimpath build. The collision-checked schema-3 inventory remains 15
+lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported
+identities, 731 Rust singletons, zero OCaml packages, zero collisions, and zero
+unknown buckets. Diff, dependency/build-metadata, credential-pattern, and
+production-authority scans are clean.
+
+An independent security/conformance review found that the first result type
+exposed native dictionary iteration even though the contract requires exact
+deterministic order. The ordered result-map repair and direct exact-order and
+closed-mutation regressions resolved that finding. Re-review at
+`104485fed0b8beead70f5e65e2c9ed4793ec8124` reports no remaining actionable
+correctness, security, authority, fixture, or mutation issue.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

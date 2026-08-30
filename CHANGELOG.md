@@ -27,6 +27,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Language-neutral extra CI toolchain declarations
 
+- Added the Swift build-tool consumer with a pure bounded native snapshot
+  evaluator and independent Swift Testing coverage of all 11 neutral cases.
+  The adapter owns platform BUILD precedence, UTF-8 byte and LF-delimited line
+  ceilings, exact CRLF declaration grammar, selected and forced scheduling,
+  fresh complete 16-key results, and stable unsupported diagnostics without
+  importing Foundation or adding host or execution authority.
 - Added the Rust build-tool consumer with a pure bounded native snapshot
   evaluator and independent coverage of all 11 neutral cases. The adapter owns
   platform BUILD precedence, UTF-8 byte and logical-line ceilings, exact CRLF

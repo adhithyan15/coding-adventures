@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add a pure bounded extra-CI toolchain snapshot evaluator that consumes all 11
+  language-neutral declaration fixtures. It enforces selected BUILD-front
+  precedence, UTF-8 byte and LF-delimited logical-line ceilings, exact CRLF
+  grammar, stable deduplication, the complete 16-key registry, and deterministic
+  unsupported diagnostics without importing Foundation or gaining host
+  authority.
 - Make `BUILD_windows` distinguish a missing Swift toolchain from a failing
   native test run. Missing Swift still emits the stable skip diagnostic and
   exits successfully; present-toolchain failures now propagate their exact
