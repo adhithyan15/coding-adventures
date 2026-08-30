@@ -87,11 +87,12 @@ The shared `discovery/language-registry` and
 `discovery/duplicate-identity` fixtures cover this behavior through the Swift
 API and the real executable without disclosing the checkout root.
 
-Discovery also excludes Cabal's exact, case-sensitive `dist-newstyle`
-generated-directory component. A near-name such as `dist-newstyle-example`
-remains discoverable. The shared language-registry fixture and focused Swift
-coverage enforce that boundary, and source hashing reuses the same exclusion
-registry.
+Discovery also excludes Cabal's exact, case-sensitive `dist-newstyle` and
+Dune's exact, case-sensitive `_build` generated-directory components. Near and
+case-variant names such as `dist-newstyle-example`, `_build-example`, and
+`_Build` remain discoverable. The shared language-registry fixture and focused
+Swift coverage enforce those boundaries, and source hashing reuses the same
+exclusion registry.
 
 ## Usage
 

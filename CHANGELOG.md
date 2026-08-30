@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Swift build-tool Dune discovery
+
+- Excluded Dune's exact case-sensitive `_build` output component from Swift
+  package discovery and source hashing. Shared and direct fixture coverage
+  verifies that `_Build` and `_build-example` remain discoverable and hashed.
+
 ### Rust build-tool Dune discovery
 
 - Excluded Dune's exact case-sensitive `_build` output component from Rust
