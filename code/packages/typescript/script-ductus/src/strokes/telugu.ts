@@ -486,6 +486,75 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:ఒ",
+    {
+      script: "telugu",
+      glyph: "ఒ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep right across the upper arch",
+              path: [
+                { x: 85, y: 365 },
+                { x: 90, y: 405 },
+                { x: 125, y: 445 },
+                { x: 175, y: 463 },
+                { x: 225, y: 460 },
+                { x: 275, y: 438 },
+                { x: 315, y: 400 },
+                { x: 320, y: 360 },
+                { x: 300, y: 320 },
+                { x: 270, y: 280 },
+                { x: 230, y: 250 },
+                { x: 190, y: 225 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curve down around the left bowl",
+              path: [
+                { x: 90, y: 300 },
+                { x: 80, y: 245 },
+                { x: 80, y: 180 },
+                { x: 95, y: 115 },
+                { x: 130, y: 70 },
+                { x: 180, y: 40 },
+                { x: 235, y: 35 },
+                { x: 285, y: 50 },
+                { x: 325, y: 85 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep right around the broad lower bowl",
+              path: [
+                { x: 350, y: 115 },
+                { x: 390, y: 65 },
+                { x: 440, y: 40 },
+                { x: 500, y: 30 },
+                { x: 560, y: 35 },
+                { x: 610, y: 65 },
+                { x: 650, y: 110 },
+                { x: 665, y: 155 },
+                { x: 650, y: 205 },
+                { x: 615, y: 250 },
+                { x: 575, y: 285 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguIndependentVowelSource("ఒ"),
+    },
+  ],
+  [
     "telugu:ఐ",
     {
       script: "telugu",

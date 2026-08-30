@@ -5600,8 +5600,19 @@
       "components": [
         "ఒ  o — independent vowel (word-initial)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "sweep right across the upper arch",
+        "restart and curve down around the left bowl",
+        "restart and sweep right around the broad lower bowl"
+      ],
+      "strokeOrderNote": "Three numbered movements shown as three separate pen-down runs: the upper arch, left bowl, and broad lower bowl returning upward at the right.",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "url": "https://write-telugu-alphabets.en.aptoide.com/app",
+        "citation": "Sathish Shanmugam, Write Telugu Alphabets, independent vowel ఒ packaged tracing guide res/drawable/dot_stroke_v_12_o.png, movements 1–3 (version 2.6)",
+        "accessed": "2026-08-30",
+        "variation": "The packaged tracing guide numbers three disconnected directional movements, each drawn as a separate pen-down run: movement 1 forms the upper arch, movement 2 curves around the left bowl, and movement 3 sweeps around the broad lower bowl and rises at the right. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+      }
     },
     {
       "glyph": "ఓ",
