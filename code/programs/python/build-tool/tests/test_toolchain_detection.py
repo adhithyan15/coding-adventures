@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from copy import deepcopy
 import json
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -47,9 +47,8 @@ def _package(
 
 
 def test_independently_consumes_every_neutral_toolchain_fixture():
-    fixture_names = tuple(
-        path.name for path in sorted(CONFORMANCE_CASES.glob("toolchain-detection-*.json"))
-    )
+    fixture_paths = sorted(CONFORMANCE_CASES.glob("toolchain-detection-*.json"))
+    fixture_names = tuple(path.name for path in fixture_paths)
     assert fixture_names == EXPECTED_FIXTURES
 
     for fixture_name in fixture_names:
@@ -80,8 +79,7 @@ def test_enforces_exact_utf8_byte_ceiling():
 
     assert evaluate_snapshot("linux", False, [exact_ascii], None, [])["outcome"] == "ok"
     assert (
-        evaluate_snapshot("linux", False, [exact_unicode], None, [])["outcome"]
-        == "ok"
+        evaluate_snapshot("linux", False, [exact_unicode], None, [])["outcome"] == "ok"
     )
 
     with pytest.raises(ValueError, match="per-file resource ceiling"):
@@ -202,7 +200,7 @@ def test_null_and_empty_schedules_remain_distinct():
 
 
 def test_returns_immutable_registry_and_fresh_complete_maps():
-    assert CANONICAL_TOOLCHAINS == tuple(sorted(CANONICAL_TOOLCHAINS))
+    assert tuple(sorted(CANONICAL_TOOLCHAINS)) == CANONICAL_TOOLCHAINS
     assert len(CANONICAL_TOOLCHAINS) == 16
 
     packages = [_package()]
@@ -231,9 +229,7 @@ def test_keeps_unsupported_package_and_forced_diagnostics_stable():
         }
     ]
 
-    unsupported_forced = evaluate_snapshot(
-        "linux", False, [_package()], [], ["zig"]
-    )
+    unsupported_forced = evaluate_snapshot("linux", False, [_package()], [], ["zig"])
     assert unsupported_forced["diagnostics"] == [
         {"code": "TOOLCHAIN_UNSUPPORTED", "severity": "error"}
     ]
