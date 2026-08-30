@@ -18,6 +18,7 @@ const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const KANNADA_AA = DUCTUS[ductusKey("kannada", "ಆ")];
 const KANNADA_I = DUCTUS[ductusKey("kannada", "ಇ")];
 const KANNADA_U = DUCTUS[ductusKey("kannada", "ಉ")];
+const KANNADA_UU = DUCTUS[ductusKey("kannada", "ಊ")];
 const KANNADA_E = DUCTUS[ductusKey("kannada", "ಎ")];
 const KANNADA_EE = DUCTUS[ductusKey("kannada", "ಏ")];
 const KANNADA_O = DUCTUS[ductusKey("kannada", "ಒ")];
@@ -99,6 +100,22 @@ describe("handwriting ductus", () => {
     ]);
     expect(KANNADA_U.source.url).toBe(
       "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-u.gif",
+    );
+  });
+
+  it("Kannada ಊ carries both arches into the lower-right spiral without lifting", () => {
+    expect(penLifts(KANNADA_UU)).toBe(0);
+    expect(KANNADA_UU.strokes).toHaveLength(1);
+    expect(
+      KANNADA_UU.strokes[0].segments.map((segment) => segment.label),
+    ).toEqual([
+      "turn counterclockwise around the compact upper-left spiral",
+      "descend through the left shoulder and sweep around the broad lower-left bowl",
+      "climb over the first tall arch, descend through the middle trough, and climb over the second arch",
+      "descend the outer-right curve and curl around the small lower-right spiral",
+    ]);
+    expect(KANNADA_UU.source.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-uu.gif",
     );
   });
 

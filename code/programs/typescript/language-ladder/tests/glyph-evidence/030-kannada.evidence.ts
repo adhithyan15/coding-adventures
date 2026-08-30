@@ -6,7 +6,7 @@ export default [
     suite: "independent (word-initial) vowels",
     suiteOrder: 10,
     caseOrder: 30,
-    name: "keeps Kannada independent ಅ, ಆ, ಇ, ಉ, ಎ, ಏ, ಒ, ಓ, ಐ, and ಋ sourced while the remaining vowels stay unverified",
+    name: "keeps Kannada independent ಅ, ಆ, ಇ, ಉ, ಊ, ಎ, ಏ, ಒ, ಓ, ಐ, and ಋ sourced while the remaining vowels stay unverified",
     verify: ({ SCRIPTS }) => {
       const kannada = SCRIPTS.find((s) => s.script === "kannada")!;
       const iv = kannada.independentVowels!;
@@ -33,6 +33,12 @@ export default [
       expect(iv[4]!.penLifts).toBe(0);
       expect(iv[4]!.strokeOrderSource?.url).toBe(
         "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-u.gif",
+      );
+      expect(iv[5]!.glyph).toBe("ಊ");
+      expect(iv[5]!.strokeOrder).toHaveLength(4);
+      expect(iv[5]!.penLifts).toBe(0);
+      expect(iv[5]!.strokeOrderSource?.url).toBe(
+        "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-uu.gif",
       );
       expect(iv[6]!.glyph).toBe("ಎ");
       expect(iv[6]!.strokeOrder).toHaveLength(4);
@@ -70,7 +76,7 @@ export default [
       expect(iv[12]!.strokeOrderSource?.url).toBe(
         "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-ru.gif",
       );
-      expect(iv.filter((_, index) => ![0, 1, 2, 4, 6, 7, 8, 9, 10, 12].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
+      expect(iv.filter((_, index) => ![0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 12].includes(index)).every((v) => v.strokeOrder.length === 0)).toBe(true);
     },
   },
   {
@@ -98,6 +104,26 @@ export default [
     suite: "shared Perso-Arabic letters retain script-owned provenance",
     suiteOrder: 50,
     caseOrder: 170,
+    name: "keeps Kannada ಊ as a source-backed one-run independent vowel",
+    verify: ({ SCRIPTS }) => {
+      const kannada = SCRIPTS.find((script) => script.script === "kannada")!
+        .independentVowels!.find((entry) => entry.glyph === "ಊ")!;
+      expect(kannada.sound).toBe("ū");
+      expect(kannada.role).toBe("vowel");
+      expect(kannada.penLifts).toBe(0);
+      expect(kannada.strokeOrder).toHaveLength(4);
+      expect(kannada.strokeOrder[0]).toMatch(/upper-left spiral/i);
+      expect(kannada.strokeOrder[2]).toMatch(/without lifting.*first tall arch.*second arch/i);
+      expect(kannada.strokeOrder[3]).toMatch(/without lifting.*lower-right spiral/i);
+      expect(kannada.strokeOrderSource?.url).toBe(
+        "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-uu.gif",
+      );
+    },
+  },
+  {
+    suite: "shared Perso-Arabic letters retain script-owned provenance",
+    suiteOrder: 50,
+    caseOrder: 180,
     name: "keeps Kannada ಏ as a source-backed two-run independent vowel",
     verify: ({ SCRIPTS }) => {
       const kannada = SCRIPTS.find((script) => script.script === "kannada")!
@@ -117,7 +143,7 @@ export default [
   {
     suite: "shared Perso-Arabic letters retain script-owned provenance",
     suiteOrder: 50,
-    caseOrder: 180,
+    caseOrder: 190,
     name: "keeps Kannada ಒ as a source-backed one-run independent vowel",
     verify: ({ SCRIPTS }) => {
       const kannada = SCRIPTS.find((script) => script.script === "kannada")!
@@ -137,7 +163,7 @@ export default [
   {
     suite: "shared Perso-Arabic letters retain script-owned provenance",
     suiteOrder: 50,
-    caseOrder: 190,
+    caseOrder: 200,
     name: "keeps Kannada ಓ as a source-backed two-run independent vowel",
     verify: ({ SCRIPTS }) => {
       const kannada = SCRIPTS.find((script) => script.script === "kannada")!
@@ -157,7 +183,7 @@ export default [
   {
     suite: "shared Perso-Arabic letters retain script-owned provenance",
     suiteOrder: 50,
-    caseOrder: 200,
+    caseOrder: 210,
     name: "keeps Kannada ಐ as a source-backed one-run independent vowel",
     verify: ({ SCRIPTS }) => {
       const kannada = SCRIPTS.find((script) => script.script === "kannada")!
@@ -177,7 +203,7 @@ export default [
   {
     suite: "shared Perso-Arabic letters retain script-owned provenance",
     suiteOrder: 50,
-    caseOrder: 210,
+    caseOrder: 220,
     name: "keeps Kannada ಋ as a source-backed three-run independent vowel",
     verify: ({ SCRIPTS }) => {
       const kannada = SCRIPTS.find((script) => script.script === "kannada")!
