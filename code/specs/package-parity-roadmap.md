@@ -10428,6 +10428,41 @@ final TypeScript declaration consumer. These additions do not displace the
 dependency-ready Swift Dune repair. The complete graph now contains 580 owners
 and 864 edges: 177 merged, 402 pending, and exactly one `in-progress` owner.
 
+### Swift Dune implementation and validation
+
+The selected Swift engine now prunes Dune's exact case-sensitive `_build`
+component from both package discovery and source hashing while retaining
+`_Build` and `_build-example`. The hashing walker uses sorted per-directory
+enumeration and entry attributes, preserving deterministic paths without
+following directory links. Test-first validation initially produced four
+expected failures across the direct discovery, direct hashing, and shared
+language-registry boundaries before the source repair was added.
+
+Swift 6.3.3 passes all 42 package tests through parallel, coverage, literal
+generic BUILD-content, and exact Windows BUILD-content runs. `Discovery.swift`
+reaches 91.33% line coverage, `Hasher.swift` reaches 67.33%, and production
+code reaches 58.03% overall. The release build, package dump, and zero-external-
+dependency graph pass. Swift-format remains a known package-wide baseline-red
+gate without a checked-in configuration; the touched files preserve the
+surrounding four-space repository style and formatter churn is excluded.
+
+The neutral corpus validates 119 cases and 283 files, and 94 focused Python
+tests plus 130 subtests pass. The Go oracle passes module verification, all
+tests, vet, and trimpath build. Its real forced Swift dry plan evaluates 45
+Starlark BUILD files, validates the five reviewed orphan exemptions, discovers
+167 Swift packages, and reports all 167 as `WOULD-BUILD`. The collision report
+remains schema 3 with the stored post-#13498 counts, and the complete 580-owner,
+864-edge graph remains unique, dependency-complete, acyclic, and free of
+merged-to-unmerged edges at 177 merged, 402 pending, and exactly one in-
+progress owner.
+
+Six live PRs have zero exact path overlap. Diff, generated-artifact,
+dependency, credential-pattern, and production-authority checks pass. This
+bounded tranche changes no manifest, BUILD front, workflow, neutral fixture,
+or conformance specification. The separately registered Swift Windows test-
+front failure-propagation owner remains pending, so this tranche makes no
+declaration-conformance claim.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
