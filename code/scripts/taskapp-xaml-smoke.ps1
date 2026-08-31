@@ -84,6 +84,15 @@ function Find-ByName($root, $name, $controlType) {
     return $root.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $cond)
 }
 
+function Find-ByAutomationId($root, $automationId, $controlType) {
+    $cond = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition(
+            [System.Windows.Automation.AutomationElement]::AutomationIdProperty, $automationId)),
+        (New-Object System.Windows.Automation.PropertyCondition(
+            [System.Windows.Automation.AutomationElement]::ControlTypeProperty, $controlType)))
+    return $root.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $cond)
+}
+
 try {
     # ── 1. It launches at all ────────────────────────────────────────────
     #
@@ -124,15 +133,21 @@ try {
     # the component object is not the same as the screen updating: with
     # x:Bind defaulting to OneTime, the object was correct and the window was
     # frozen.
-    $composer = Find-ByName $root 'What needs doing?' ([System.Windows.Automation.ControlType]::Edit)
+    $composer = Find-ByAutomationId $root 'name-input' ([System.Windows.Automation.ControlType]::Edit)
     if (-not $composer) {
         throw "Could not find the task composer input. Buttons present: $((Get-ButtonNames $root) -join ', ')"
     }
     $taskName = 'CI smoke task'
     $composer.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($taskName)
+    $due = '2026-01-09'
+    $dueInput = Find-ByAutomationId $root 'due-input' ([System.Windows.Automation.ControlType]::Edit)
+    if (-not $dueInput) {
+        throw "Could not find the due-date input."
+    }
+    $dueInput.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($due)
     Start-Sleep -Seconds 2
 
-    $addButton = Find-ByName $root 'Add task' ([System.Windows.Automation.ControlType]::Button)
+    $addButton = Find-ByAutomationId $root 'add-btn' ([System.Windows.Automation.ControlType]::Button)
     if (-not $addButton) {
         throw "Could not find the 'Add task' button."
     }
@@ -165,6 +180,107 @@ try {
     } else {
         Write-Host "  task row rendered: $taskName"
     }
+
+    $visible = Get-TextValues $root
+    if ($visible -notcontains "due $due") {
+        $failures += "The new task row did not render its due date."
+    }
+
+    # ── 5. Scheduling detail is reachable through the emitted control ───
+    $complexity = Find-ByAutomationId $root 'complexity-toggle' ([System.Windows.Automation.ControlType]::Button)
+    if (-not $complexity) {
+        throw "Could not find the project-complexity control."
+    }
+    $complexity.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    $schedule = '2026-01-05 → 2026-01-05'
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 500
+        if ((Get-TextValues $root) -contains $schedule) { break }
+    }
+    if ((Get-TextValues $root) -notcontains $schedule) {
+        $failures += "Switching to Full CPM did not render the Rust schedule '$schedule'."
+    } else {
+        Write-Host "  schedule rendered: $schedule"
+    }
+
+    # ── 6. Complete, reopen, and delete through emitted row controls ────
+    $toggle = Find-ByAutomationId $root 'toggle' ([System.Windows.Automation.ControlType]::Button)
+    if (-not $toggle) { throw "Could not find the task completion control." }
+    $toggle.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 500
+        if ((Get-ButtonNames $root) -contains '✓') { break }
+    }
+    if ((Get-ButtonNames $root) -notcontains '✓') {
+        $failures += "Completing the task did not render the completed state."
+    }
+    $toggle.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 500
+        if ((Get-ButtonNames $root) -contains '○') { break }
+    }
+    if ((Get-ButtonNames $root) -notcontains '○') {
+        $failures += "Reopening the task did not render the open state."
+    }
+
+    $delete = Find-ByAutomationId $root 'del-btn' ([System.Windows.Automation.ControlType]::Button)
+    if (-not $delete) { throw "Could not find the task delete control." }
+    $delete.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 500
+        if ((Get-ButtonNames $root) -notcontains $taskName) { break }
+    }
+    if ((Get-ButtonNames $root) -contains $taskName) {
+        $failures += "Deleting the task left its row visible."
+    }
+
+    # ── 7. Persist a second task, restart, and prove it is restored ─────
+    $persistedTask = 'Persisted native task'
+    $composer.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($persistedTask)
+    $dueInput.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($due)
+    Start-Sleep -Seconds 1
+    $addButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 500
+        if ((Get-ButtonNames $root) -contains $persistedTask) { break }
+    }
+    if ((Get-ButtonNames $root) -notcontains $persistedTask) {
+        throw "Could not create the task used for restart persistence."
+    }
+
+    Stop-Process -Id $proc.Id -Force
+    $proc.WaitForExit()
+    $proc = Start-Process -FilePath $ExePath -PassThru
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 500
+        $proc.Refresh()
+        if ($proc.HasExited) {
+            throw "TaskApp exited during persisted restart with code $($proc.ExitCode)."
+        }
+        if ($proc.MainWindowHandle -ne [IntPtr]::Zero) { break }
+    }
+    if ($proc.MainWindowHandle -eq [IntPtr]::Zero) {
+        throw "TaskApp never produced a window after persisted restart."
+    }
+    $root = [System.Windows.Automation.AutomationElement]::FromHandle($proc.MainWindowHandle)
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 500
+        if ((Get-ButtonNames $root) -contains $persistedTask) { break }
+    }
+    if ((Get-ButtonNames $root) -notcontains $persistedTask) {
+        $failures += "The persisted task was not restored after restarting the native app."
+    } elseif ((Get-TextValues $root) -notcontains $schedule) {
+        $failures += "The restored task lost its Rust schedule projection."
+    } else {
+        Write-Host "  persisted restart restored: $persistedTask"
+    }
 }
 catch {
     $failures += $_.Exception.Message
@@ -183,5 +299,5 @@ if ($failures.Count -gt 0) {
 }
 
 Write-Host ''
-Write-Host 'TaskApp XAML smoke test passed: the app launched, and a dispatched event changed the screen.'
+Write-Host 'TaskApp XAML smoke test passed: native controls completed the scheduled todo lifecycle and restored it after restart.'
 exit 0

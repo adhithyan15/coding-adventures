@@ -1515,11 +1515,24 @@ jobs:
           taskapp_output="$RUNNER_TEMP/mosaic-swift-taskapp"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/swiftui/mosaic-degradations.json"
+          python3 code/scripts/taskapp_native_control_contract.py --backend swiftui --generated-dir "$taskapp_output/swiftui"
           swift build --package-path "$taskapp_output/swiftui"
           taskapp_bin="$(swift build --package-path "$taskapp_output/swiftui" --show-bin-path)"
           installed_taskapp_runtime="$(find "$taskapp_bin" -type f -path '*/Runtime/libmosaic_app.dylib' -print -quit)"
           test -n "$installed_taskapp_runtime"
           cmp "$task_runtime_library" "$installed_taskapp_runtime"
+          task_harness="$RUNNER_TEMP/mosaic-swift-taskapp-runtime-conformance"
+          cp -R code/packages/rust/task-mosaic-app/conformance/swiftui "$task_harness"
+          mkdir -p "$task_harness/Sources/CMosaicRuntime/include"
+          cp "$taskapp_output/swiftui/Sources/App/MosaicRuntimeHost.swift" "$task_harness/Sources/Conformance/MosaicRuntimeHost.swift"
+          cp "$taskapp_output/swiftui/Sources/CMosaicRuntime/CMosaicRuntime.c" "$task_harness/Sources/CMosaicRuntime/CMosaicRuntime.c"
+          cp "$taskapp_output/swiftui/Sources/CMosaicRuntime/include/CMosaicRuntime.h" "$task_harness/Sources/CMosaicRuntime/include/CMosaicRuntime.h"
+          task_state_path="$RUNNER_TEMP/mosaic-swift-taskapp-state.json"
+          rm -f "$task_state_path" "$task_state_path.corrupt" "$task_state_path.tmp"
+          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$task_state_path" \
+            swift run --package-path "$task_harness" Conformance --library "$installed_taskapp_runtime"
+          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$task_state_path" MOSAIC_EXPECT_RESTORED=1 \
+            swift run --package-path "$task_harness" Conformance --library "$installed_taskapp_runtime"
           installed_taskapp="$taskapp_bin/App"
           test -x "$installed_taskapp"
           taskapp_log="$RUNNER_TEMP/mosaic-swift-taskapp-launch.log"
@@ -1615,6 +1628,7 @@ jobs:
           taskapp_output="$RUNNER_TEMP/mosaic-qt-taskapp"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend qt --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/qt/mosaic-degradations.json"
+          python3 code/scripts/taskapp_native_control_contract.py --backend qt --generated-dir "$taskapp_output/qt"
           cmake -S "$taskapp_output/qt" -B "$taskapp_output/qt/build" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$taskapp_output/install"
           cmake --build "$taskapp_output/qt/build" --config Release --parallel
           cmake --install "$taskapp_output/qt/build" --config Release
@@ -1630,6 +1644,20 @@ jobs:
           test "$taskapp_status" -eq 124
           ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
           ! grep -E "missing required MIL prop|ReferenceError|TypeError" "$taskapp_log"
+
+          task_ui_source="$RUNNER_TEMP/mosaic-qt-taskapp-ui-conformance"
+          cp -R "$taskapp_output/qt" "$task_ui_source"
+          cp code/packages/rust/task-mosaic-app/conformance/qt/ui-main.cpp "$task_ui_source/main.cpp"
+          cmake -S "$task_ui_source" -B "$task_ui_source/acceptance-build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$task_ui_source/acceptance-build" --config Release --parallel
+          task_ui_binary="$task_ui_source/acceptance-build/TaskApp"
+          test -x "$task_ui_binary"
+          task_state_path="$RUNNER_TEMP/mosaic-qt-taskapp-state.json"
+          rm -f "$task_state_path" "$task_state_path.corrupt" "$task_state_path.tmp"
+          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$task_state_path" \
+            "$task_ui_binary"
+          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$task_state_path" \
+            MOSAIC_EXPECT_RESTORED=1 "$task_ui_binary"
 
           toolkit_output="$RUNNER_TEMP/mosaic-qt-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt --output "$toolkit_output" --emit-project
@@ -1709,6 +1737,7 @@ jobs:
           taskapp_output="$RUNNER_TEMP/mosaic-flutter-taskapp"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/flutter/mosaic-degradations.json"
+          python3 code/scripts/taskapp_native_control_contract.py --backend flutter --generated-dir "$taskapp_output/flutter"
           (
             cd "$taskapp_output/flutter"
             flutter create --platforms=linux --project-name mosaic_taskapp_acceptance .
@@ -1730,6 +1759,25 @@ jobs:
           test "$taskapp_status" -eq 124
           ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
           ! grep -E "Unhandled Exception|MissingPluginException|NoSuchMethodError|TypeError" "$taskapp_log"
+
+          cp code/packages/rust/task-mosaic-app/conformance/flutter/task_app_conformance.dart \
+            "$taskapp_output/flutter/bin/task_app_conformance.dart"
+          cp code/packages/rust/task-mosaic-app/conformance/flutter/widget_test.dart \
+            "$taskapp_output/flutter/test/task_app_lifecycle_test.dart"
+          (
+            cd "$taskapp_output/flutter"
+            unset MOSAIC_APP_LIBRARY
+            host_state_path="$RUNNER_TEMP/mosaic-flutter-taskapp-host-state.json"
+            rm -f "$host_state_path" "$host_state_path.corrupt" "$host_state_path.tmp"
+            MOSAIC_APP_STATE_PATH="$host_state_path" dart run bin/task_app_conformance.dart
+            MOSAIC_APP_STATE_PATH="$host_state_path" MOSAIC_EXPECT_RESTORED=1 \
+              dart run bin/task_app_conformance.dart
+            ui_state_path="$RUNNER_TEMP/mosaic-flutter-taskapp-ui-state.json"
+            rm -f "$ui_state_path" "$ui_state_path.corrupt" "$ui_state_path.tmp"
+            MOSAIC_APP_STATE_PATH="$ui_state_path" flutter test test/task_app_lifecycle_test.dart
+            MOSAIC_APP_STATE_PATH="$ui_state_path" MOSAIC_EXPECT_RESTORED=1 \
+              flutter test test/task_app_lifecycle_test.dart
+          )
 
           strict_output="$RUNNER_TEMP/mosaic-flutter-native-complete-rating-controls"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend flutter --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
@@ -1826,6 +1874,7 @@ jobs:
           taskapp_output="$RUNNER_TEMP/mosaic-compose-taskapp"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend compose --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/compose/mosaic-degradations.json"
+          python3 code/scripts/taskapp_native_control_contract.py --backend compose --generated-dir "$taskapp_output/compose"
           gradle --no-daemon --stacktrace -Pcompose.desktop.packaging.checkJdkVendor=false -p "$taskapp_output/compose" compileKotlin createDistributable
           installed_taskapp_runtime="$(find "$taskapp_output/compose/build/compose/binaries/main/app" -path '*/resources/libmosaic_app.so' -print -quit)"
           test -n "$installed_taskapp_runtime"
@@ -1840,6 +1889,34 @@ jobs:
           test "$taskapp_status" -eq 124
           ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
           ! grep -E "missing required MIL prop|Exception in thread|NoClassDefFoundError|UnsatisfiedLinkError" "$taskapp_log"
+
+          task_host_harness="$RUNNER_TEMP/mosaic-compose-taskapp-runtime-conformance"
+          cp -R code/packages/rust/task-mosaic-app/conformance/compose "$task_host_harness"
+          cp "$taskapp_output/compose/src/main/kotlin/MosaicRuntimeHost.kt" "$task_host_harness/MosaicRuntimeHost.kt"
+          mkdir -p "$task_host_harness/src/main/kotlin"
+          mv "$task_host_harness/Conformance.kt" "$task_host_harness/src/main/kotlin/Conformance.kt"
+          mv "$task_host_harness/MosaicRuntimeHost.kt" "$task_host_harness/src/main/kotlin/MosaicRuntimeHost.kt"
+          rm -f "$task_host_harness/TaskAppUiTest.kt"
+          host_state_path="$RUNNER_TEMP/mosaic-compose-taskapp-host-state.json"
+          rm -f "$host_state_path" "$host_state_path.corrupt" "$host_state_path.tmp"
+          MOSAIC_APP_STATE_PATH="$host_state_path" \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
+            gradle --no-daemon --stacktrace -p "$task_host_harness" run
+          MOSAIC_APP_STATE_PATH="$host_state_path" MOSAIC_EXPECT_RESTORED=1 \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
+            gradle --no-daemon --stacktrace -p "$task_host_harness" run
+
+          mkdir -p "$taskapp_output/compose/src/test/kotlin"
+          cp code/packages/rust/task-mosaic-app/conformance/compose/TaskAppUiTest.kt \
+            "$taskapp_output/compose/src/test/kotlin/TaskAppUiTest.kt"
+          ui_state_path="$RUNNER_TEMP/mosaic-compose-taskapp-ui-state.json"
+          rm -f "$ui_state_path" "$ui_state_path.corrupt" "$ui_state_path.tmp"
+          MOSAIC_APP_STATE_PATH="$ui_state_path" \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
+            xvfb-run -a gradle --no-daemon --stacktrace -p "$taskapp_output/compose" test
+          MOSAIC_APP_STATE_PATH="$ui_state_path" MOSAIC_EXPECT_RESTORED=1 \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
+            xvfb-run -a gradle --no-daemon --stacktrace -p "$taskapp_output/compose" test
 
           toolkit_output="$RUNNER_TEMP/mosaic-compose-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend compose --output "$toolkit_output" --emit-project
@@ -1875,6 +1952,10 @@ jobs:
           python3 code/scripts/mosaic_xaml_windows_ci_acceptance.py --validate-taskapp-report (Join-Path $output 'xaml/mosaic-degradations.json')
           if ($LASTEXITCODE -ne 0) {
             throw "TaskApp XAML degradation validation failed with exit code $LASTEXITCODE"
+          }
+          python3 code/scripts/taskapp_native_control_contract.py --backend xaml --generated-dir (Join-Path $output 'xaml')
+          if ($LASTEXITCODE -ne 0) {
+            throw "TaskApp XAML emitted-control contract failed with exit code $LASTEXITCODE"
           }
 
           $project = Join-Path $output 'xaml/TaskApp.csproj'
@@ -1918,10 +1999,13 @@ jobs:
           #
           # UI Automation does not need a foreground window, so no interactive
           # desktop session is required.
+          $env:MOSAIC_APP_STATE_PATH = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp-ui-state.json'
+          Remove-Item $env:MOSAIC_APP_STATE_PATH, "$($env:MOSAIC_APP_STATE_PATH).corrupt", "$($env:MOSAIC_APP_STATE_PATH).tmp" -Force -ErrorAction SilentlyContinue
           pwsh -NoProfile -ExecutionPolicy Bypass -File code/scripts/taskapp-xaml-smoke.ps1 -ExePath $executable.FullName
           if ($LASTEXITCODE -ne 0) {
             throw "TaskApp XAML smoke test failed with exit code $LASTEXITCODE"
           }
+          Remove-Item Env:MOSAIC_APP_STATE_PATH -ErrorAction SilentlyContinue
 
           $taskHarness = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp-runtime-conformance'
           New-Item -ItemType Directory -Path $taskHarness -Force | Out-Null

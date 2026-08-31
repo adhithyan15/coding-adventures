@@ -43,12 +43,17 @@ engine. CI requires zero degradations, builds the generated native project,
 verifies the bundled library byte-for-byte, and launches the installed app without
 an injected runtime path. The ABI conformance fixture remains a separate gate, so
 a passing TaskApp launch cannot mask a regression in the standard host binding.
+Task-specific emitted-control acceptance additionally drives the same simple-todo
+lifecycle through the generated UI: create with an optional due date, reveal the
+Rust schedule, complete and reopen, delete, reject malformed input atomically, and
+restore a persisted task in a second process.
 The generated SwiftUI sources also compile for the iOS 16 deployment target; that
 gate is source portability rather than a claim that a macOS dylib can run on iOS.
 
 XAML/WinUI also bundles the concrete adapter and verifies it byte-for-byte beside
 `TaskApp.exe`. A task-specific console fixture drives startup props and a semantic
-event through the generated .NET binding without an injected path. Its strict
+event lifecycle plus restart restoration through the generated .NET binding
+without an injected path. Its strict
 `native-complete` build has zero degradations: the canonical Sheet exposes native
 UI Automation table semantics, while board and calendar interactions use native
 WinUI pointer/touch drag/drop plus an accessible keyboard path. GitHub-hosted Windows workers
@@ -64,7 +69,9 @@ or self-hosted interactive Windows gate.
 - Tasks scheduled to finish after their due date are flagged **overdue**.
 - Click a row to complete it (✓); Delete to remove it.
 - **Everything persists** — the whole workspace is saved to IndexedDB after each change
-  and restored on reload (see `host/web/`).
+  and restored on reload (see `host/web/`); generated native hosts use their
+  platform application-data directory and atomically replace their snapshot after
+  each successful event.
 
 Everything above runs on the pure Rust engine — the browser only holds UI state,
 persists snapshots, and calls the engine's operations/queries.

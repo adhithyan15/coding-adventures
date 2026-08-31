@@ -19,10 +19,12 @@ cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
 
 Pass the resulting platform library to `mosaic-compile --runtime-library` when
 emitting `code/programs/mosaic/task-app`. Use the `native-complete` profile on
-backends whose capability report is empty; XAML remains permissive until its
-native drag/drop and table-semantics gaps close.
+all five supported native backends; TaskApp currently emits with zero reported
+degradations on Qt, Flutter, Compose Desktop, SwiftUI, and XAML.
 
-`conformance/xaml` is the task-specific .NET binding fixture. Windows CI combines
-it with the binding generated beside the complete TaskApp, places the built
-adapter under the conventional app-local `mosaic_app.dll` name, and verifies both
-initial props and a real semantic event without an environment override.
+The `conformance/{qt,flutter,compose,swiftui,xaml}` fixtures are task-specific
+functional gates. CI combines each one with the complete generated TaskApp and its
+standard binding, then drives create, scheduling, complete/reopen, delete,
+invalid-input atomicity, and persisted restart restoration against the real Rust
+adapter. `code/scripts/taskapp_native_control_contract.py` separately rejects
+generated sources with inert controls, sample fallbacks, or missing runtime wiring.

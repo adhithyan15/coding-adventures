@@ -1,5 +1,13 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — exercise the native simple-todo lifecycle (#13520)
+
+Task-specific conformance fixtures now drive generated Qt, Flutter, Compose
+Desktop, SwiftUI/macOS, and XAML controls through create, Rust scheduling,
+complete/reopen, delete, invalid-input atomicity, and persisted restart
+restoration. A shared generated-source contract rejects inert controls, sample
+fallbacks, and missing standard-runtime wiring before platform execution.
+
 ## [Unreleased] — prove TaskApp restart restoration (#13519)
 
 The XAML runtime acceptance now launches twice against the same native snapshot
