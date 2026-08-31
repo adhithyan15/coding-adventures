@@ -45558,6 +45558,34 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::TestSimulator,
         ]),
         base_entry(
+            "dsmr_p1",
+            "DSMR P1",
+            "Bounded serial DSMR 5.0.2 electricity and optional gas telemetry.",
+            IntegrationCategory::EnergyClimate,
+            ConnectivityClass::LocalPush,
+            ImplementationStatus::FirstPartyRuntime,
+            4,
+            "dsmr",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Sensor])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor("dsmr_p1_5_0_2".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ])
+        .with_notes(&[
+            "Production setup is one explicit 115200 8N1 serial path; local TCP gateways and Data Request GPIO control are outside this runtime boundary.",
+            "D23 read authorization precedes each bounded serial open; only CRC-verified fixed-allowlist telemetry enters normalized state.",
+            "Credentials, writes, arbitrary OBIS selection, raw telegram retention, discovery, and long-lived serial sessions are not exposed.",
+        ]),
+        base_entry(
             "airgradient",
             "AirGradient",
             "Local AirGradient telemetry, indicator/display control, calibration, typed configuration, and consent-bound custom egress.",
@@ -82358,6 +82386,37 @@ mod tests {
             PrimitiveFamily::TestSimulator,
         ] {
             assert!(homewizard.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn dsmr_entry_exposes_supervised_serial_energy_telemetry_runtime() {
+        let catalog = first_party_catalog();
+        let dsmr = find_entry(&catalog, &IntegrationId::trusted("dsmr_p1")).unwrap();
+
+        assert_eq!(
+            dsmr.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(dsmr.connectivity, ConnectivityClass::LocalPush);
+        assert_eq!(dsmr.auth_modes, vec![AuthMode::None]);
+        assert_eq!(dsmr.discovery_mechanisms, vec![DiscoveryMechanism::Manual]);
+        assert_eq!(
+            dsmr.supported_protocols,
+            vec![ProtocolFamily::Vendor("dsmr_p1_5_0_2".to_string())]
+        );
+        assert_eq!(
+            dsmr.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        for primitive in [
+            PrimitiveFamily::SerialController,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(dsmr.required_primitives.contains(&primitive));
         }
     }
 
