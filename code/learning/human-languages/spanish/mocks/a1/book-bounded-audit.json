@@ -1,0 +1,399 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "level": "A1",
+  "policy": {
+    "description": "Credit explicit A1 headwords, their article-free and token forms, documented citation aliases, and Spanish numerals 0-100.",
+    "citationFormCredits": [
+      "llevar",
+      "andar",
+      "dar",
+      "llover",
+      "amigo",
+      "sol",
+      "vivir",
+      "llamar",
+      "llamarse",
+      "año",
+      "mes"
+    ],
+    "numberWordCredits": [
+      "cero",
+      "uno",
+      "dos",
+      "tres",
+      "cuatro",
+      "cinco",
+      "seis",
+      "siete",
+      "ocho",
+      "nueve",
+      "diez",
+      "once",
+      "doce",
+      "trece",
+      "catorce",
+      "quince",
+      "dieciséis",
+      "diecisiete",
+      "dieciocho",
+      "diecinueve",
+      "veinte",
+      "veintiuno",
+      "veintidós",
+      "veintitrés",
+      "veinticuatro",
+      "veinticinco",
+      "veintiséis",
+      "veintisiete",
+      "veintiocho",
+      "veintinueve",
+      "treinta",
+      "cuarenta",
+      "cincuenta",
+      "sesenta",
+      "setenta",
+      "ochenta",
+      "noventa",
+      "cien"
+    ],
+    "numericCredits": "0-100"
+  },
+  "lessonCount": 893,
+  "taughtForms": 1517,
+  "objectiveFailed": 22,
+  "mocks": [
+    {
+      "mock": 1,
+      "reading": 22,
+      "listening": 19,
+      "objectiveFailed": 9,
+      "failed": [
+        {
+          "paper": 1,
+          "item": 12,
+          "missing": [
+            "gimnasio",
+            "deporte"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 17,
+          "missing": [
+            "academia",
+            "francés"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 21,
+          "missing": [
+            "estudiante"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 27,
+          "missing": [
+            "medio"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 28,
+          "missing": [
+            "debajo"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 34,
+          "missing": [
+            "pastilla"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 35,
+          "missing": [
+            "fuera"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 45,
+          "missing": [
+            "examen"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 49,
+          "missing": [
+            "cansado"
+          ]
+        }
+      ]
+    },
+    {
+      "mock": 2,
+      "reading": 21,
+      "listening": 16,
+      "objectiveFailed": 13,
+      "failed": [
+        {
+          "paper": 1,
+          "item": 11,
+          "missing": [
+            "curso",
+            "nadar",
+            "adulto"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 14,
+          "missing": [
+            "música",
+            "concierto"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 18,
+          "missing": [
+            "lado"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 24,
+          "missing": [
+            "apuntarse",
+            "recepción"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 27,
+          "missing": [
+            "doctor"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 30,
+          "missing": [
+            "helado"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 35,
+          "missing": [
+            "paquete",
+            "extranjero"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 39,
+          "missing": [
+            "terminar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 41,
+          "missing": [
+            "preparar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 42,
+          "missing": [
+            "fin de semana"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 44,
+          "missing": [
+            "reservar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 45,
+          "missing": [
+            "quedarse",
+            "mayo"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 47,
+          "missing": [
+            "incluir"
+          ]
+        }
+      ]
+    }
+  ],
+  "missingObjectiveLexemes": [
+    "academia",
+    "adulto",
+    "apuntarse",
+    "cansado",
+    "concierto",
+    "curso",
+    "debajo",
+    "deporte",
+    "doctor",
+    "estudiante",
+    "examen",
+    "extranjero",
+    "fin de semana",
+    "francés",
+    "fuera",
+    "gimnasio",
+    "helado",
+    "incluir",
+    "lado",
+    "mayo",
+    "medio",
+    "música",
+    "nadar",
+    "paquete",
+    "pastilla",
+    "preparar",
+    "quedarse",
+    "recepción",
+    "reservar",
+    "terminar"
+  ],
+  "missingFrequency": [
+    {
+      "lexeme": "academia",
+      "count": 1
+    },
+    {
+      "lexeme": "adulto",
+      "count": 1
+    },
+    {
+      "lexeme": "apuntarse",
+      "count": 1
+    },
+    {
+      "lexeme": "cansado",
+      "count": 1
+    },
+    {
+      "lexeme": "concierto",
+      "count": 1
+    },
+    {
+      "lexeme": "curso",
+      "count": 1
+    },
+    {
+      "lexeme": "debajo",
+      "count": 1
+    },
+    {
+      "lexeme": "deporte",
+      "count": 1
+    },
+    {
+      "lexeme": "doctor",
+      "count": 1
+    },
+    {
+      "lexeme": "estudiante",
+      "count": 1
+    },
+    {
+      "lexeme": "examen",
+      "count": 1
+    },
+    {
+      "lexeme": "extranjero",
+      "count": 1
+    },
+    {
+      "lexeme": "fin de semana",
+      "count": 1
+    },
+    {
+      "lexeme": "francés",
+      "count": 1
+    },
+    {
+      "lexeme": "fuera",
+      "count": 1
+    },
+    {
+      "lexeme": "gimnasio",
+      "count": 1
+    },
+    {
+      "lexeme": "helado",
+      "count": 1
+    },
+    {
+      "lexeme": "incluir",
+      "count": 1
+    },
+    {
+      "lexeme": "lado",
+      "count": 1
+    },
+    {
+      "lexeme": "mayo",
+      "count": 1
+    },
+    {
+      "lexeme": "medio",
+      "count": 1
+    },
+    {
+      "lexeme": "música",
+      "count": 1
+    },
+    {
+      "lexeme": "nadar",
+      "count": 1
+    },
+    {
+      "lexeme": "paquete",
+      "count": 1
+    },
+    {
+      "lexeme": "pastilla",
+      "count": 1
+    },
+    {
+      "lexeme": "preparar",
+      "count": 1
+    },
+    {
+      "lexeme": "quedarse",
+      "count": 1
+    },
+    {
+      "lexeme": "recepción",
+      "count": 1
+    },
+    {
+      "lexeme": "reservar",
+      "count": 1
+    },
+    {
+      "lexeme": "terminar",
+      "count": 1
+    }
+  ]
+}
