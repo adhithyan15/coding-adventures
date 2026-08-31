@@ -6279,27 +6279,28 @@ impl HtmlParser {
         if self.current_element_is("colgroup") {
             let leading_end = text
                 .char_indices()
-                .find(|(_, character)| !character.is_whitespace())
+                .find(|(_, character)| !is_html_whitespace(*character))
                 .map(|(index, _)| index);
-            match leading_end {
-                Some(0) => {
-                    if self.foster_text_before_open_table(text.clone()) {
-                        return;
-                    }
-                }
-                Some(index) => {
+            if let Some(index) = leading_end {
+                if index > 0 {
                     self.append_text_to_current(text[..index].to_string());
-                    if self.foster_text_before_open_table(text[index..].to_string()) {
-                        return;
-                    }
                 }
-                None => {}
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-character-in-table",
+                        "non-whitespace character data in a table context was foster parented",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
+                if self.foster_text_before_open_table(text[index..].to_string()) {
+                    return;
+                }
             }
         }
 
         if self.current_element_is_table_structure() && !self.current_element_is("colgroup") {
             self.pending_table_text.push_str(&text);
-            if self.pending_table_text.chars().all(char::is_whitespace) {
+            if is_html_whitespace_text(&self.pending_table_text) {
                 return;
             }
             let pending = std::mem::take(&mut self.pending_table_text);
@@ -6316,7 +6317,7 @@ impl HtmlParser {
         }
 
         if self.current_element_is_table_structure()
-            && !text.chars().all(char::is_whitespace)
+            && !is_html_whitespace_text(&text)
             && self.foster_text_before_open_table(text.clone())
         {
             return;
@@ -6325,8 +6326,7 @@ impl HtmlParser {
         let pending_formatting_is_before_open_table = self
             .previous_pending_formatting_path_before_open_table()
             .is_some();
-        if (!text.chars().all(char::is_whitespace)
-            || !self.pending_formatting_reconstruction.is_empty())
+        if (!is_html_whitespace_text(&text) || !self.pending_formatting_reconstruction.is_empty())
             && (!self.current_parent_has_table_ancestor()
                 || !pending_formatting_is_before_open_table
                 || self.current_parent_is_fostered_before_open_table())
@@ -6377,7 +6377,7 @@ impl HtmlParser {
             return;
         }
         let pending = std::mem::take(&mut self.pending_table_text);
-        if pending.chars().all(char::is_whitespace) {
+        if is_html_whitespace_text(&pending) {
             self.append_text_to_current(pending);
         } else {
             self.foster_text_before_open_table(pending);
@@ -6935,9 +6935,7 @@ impl HtmlParser {
     }
 
     fn foster_text_before_open_table(&mut self, text: String) -> bool {
-        if self.pending_formatting_reconstruction.is_empty()
-            || text.chars().all(char::is_whitespace)
-        {
+        if self.pending_formatting_reconstruction.is_empty() || is_html_whitespace_text(&text) {
             return self
                 .insert_node_before_open_table(Node::text(text))
                 .is_some();
@@ -49715,6 +49713,50 @@ mod tests {
         );
         assert!(repeated_source.len() > repeated_source.chars().count());
 
+        let unicode_source =
+            "<!doctype html><!--é-->\r\n<table>\u{a0}\u{2003}\r\n\t<tr><td>x</td></tr></table>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert_eq!(
+            unicode
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-character-in-table")
+                .collect::<Vec<_>>(),
+            vec![&character_in_table_recovery(unicode_source, "<tr>")]
+        );
+        let body = find_first_element_in_nodes(&unicode.document.children, "body").unwrap();
+        assert_eq!(body.children[0], Node::text("\u{a0}\u{2003}\n\t"));
+        assert_eq!(element(&body.children[1]).name, "table");
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        let colgroup_source =
+            "<!doctype html><!--é-->\r\n<table><colgroup> \r\n\t\u{a0}\u{2003}<col></colgroup></table>";
+        let colgroup = parse_html_with_diagnostics(colgroup_source).unwrap();
+        assert_eq!(
+            colgroup
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-character-in-table")
+                .collect::<Vec<_>>(),
+            vec![&character_in_table_recovery(colgroup_source, "<col>")]
+        );
+        let body = find_first_element_in_nodes(&colgroup.document.children, "body").unwrap();
+        assert_eq!(body.children[0], Node::text("\u{a0}\u{2003}"));
+        let table = element(&body.children[1]);
+        let colgroup_element = element(&table.children[0]);
+        assert_eq!(colgroup_element.name, "colgroup");
+        assert_eq!(colgroup_element.children[0], Node::text(" \n\t"));
+        assert_eq!(element(&colgroup_element.children[1]).name, "col");
+
+        let formatted = parse_html_with_diagnostics(
+            "<!doctype html><table><b>\u{a0}\u{2003}</b></table>",
+        )
+        .unwrap();
+        let body = find_first_element_in_nodes(&formatted.document.children, "body").unwrap();
+        let bold = element(&body.children[0]);
+        assert_eq!(bold.name, "b");
+        assert_eq!(bold.children, vec![Node::text("\u{a0}\u{2003}")]);
+
         let whitespace = parse_html_with_diagnostics("<!doctype html><table> \n</table>").unwrap();
         assert!(whitespace
             .parser_diagnostics
@@ -49733,7 +49775,7 @@ mod tests {
             attributes: Vec::new(),
             self_closing: false,
         });
-        unpositioned.process_token(Token::Text("x".to_string()));
+        unpositioned.process_token(Token::Text("\u{a0}\u{2003}".to_string()));
         let diagnostic = unpositioned
             .diagnostics()
             .iter()
