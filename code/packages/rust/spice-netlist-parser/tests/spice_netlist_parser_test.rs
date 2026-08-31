@@ -1821,6 +1821,30 @@ fn rejects_invalid_jfet_drain_resistance() {
 }
 
 #[test]
+fn parses_jfet_source_resistance() {
+    let parsed = parse_netlist(".model shaped NJF(RS=75)\nJ1 drain gate source shaped").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(jfet.source_resistance, 75.0);
+}
+
+#[test]
+fn rejects_invalid_jfet_source_resistance() {
+    for source_resistance in ["-0.1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model bad NJF(RS={source_resistance})\nJ1 drain gate source bad"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("JFET RS must be finite and non-negative"));
+    }
+}
+
+#[test]
 fn parses_jfet_b_as_doping_tail_parameter_not_beta_alias() {
     let parsed = parse_netlist(
         r#"

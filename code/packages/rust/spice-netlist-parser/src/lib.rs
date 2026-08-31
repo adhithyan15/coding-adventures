@@ -2584,6 +2584,12 @@ fn parse_element(
                     "JFET RD must be finite and non-negative",
                 ));
             }
+            let source_resistance = *model.params.get("RS").unwrap_or(&0.0);
+            if !source_resistance.is_finite() || source_resistance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "JFET RS must be finite and non-negative",
+                ));
+            }
             let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
@@ -2607,6 +2613,7 @@ fn parse_element(
             jfet.noise_equation_level = noise_equation_level;
             jfet.channel_noise_coefficient = channel_noise_coefficient;
             jfet.drain_resistance = drain_resistance;
+            jfet.source_resistance = source_resistance;
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
         }
