@@ -11401,6 +11401,18 @@ broker, backend-parity, and package-report suites pass 118 tests with 12
 expected skips. Isolated sdist/wheel builds, uv compatibility, pip audit, the
 collision inventory, the 605-owner/916-edge DAG, and diff hygiene pass.
 
+Before publication, the branch rebased conflict-free onto exact `origin/main`
+`024bac642e04eab0c00395aa7a009b85eef452bb`. Intervening PR #13570 changed
+existing TaskApp workflow, test, and changelog surfaces, while PR #13567 changed
+existing Spanish curriculum and generated learning artifacts. Their 39 paths
+have zero exact overlap with this nine-path tranche and add no package root,
+BUILD, manifest, dependency, build-tool contract, or parity-owner topology.
+Post-rebase package tests, neutral schema/runner/corpus checks, Go reference
+tests/vet/build, lint/type/security checks, schema-3 inventory, and state DAG
+remain acceptable. Two independent final reviewers clear the repaired
+discovery-order behavior, exact fixture framing, caller immutability, authority
+boundary, inventory, and documentation.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
