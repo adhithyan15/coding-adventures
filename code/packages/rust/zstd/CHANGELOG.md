@@ -101,6 +101,15 @@ implement.
 - Literals `Regenerated_Size` is capped at the 128 KB block maximum, which
   bounds both the allocation and the expansion an `RLE_Literals_Block` can
   claim from a single payload byte.
+- **A declared `Frame_Content_Size` is now cross-checked against what the
+  blocks actually produced.** It was previously read and discarded. Since
+  this crate carries no xxHash64 and so cannot verify the trailing content
+  checksum, that size is the *only* end-to-end check available: without it a
+  structurally well-formed but semantically wrong frame returns short output
+  silently. It doubles as a cheap decompression-bomb signal — a frame
+  declaring 100 bytes and producing 200 MB is corrupt regardless of how valid
+  each individual block looked. Streamed frames (which carry no size field at
+  all) are unaffected.
 - **A frame with a non-zero `Dictionary_ID` is now refused by name.** The
   Dictionary_ID field used to be skipped and decoding attempted anyway. But a
   dictionary pre-seeds the match history *and* all four entropy tables, so a

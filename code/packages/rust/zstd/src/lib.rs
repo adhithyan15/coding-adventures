@@ -2664,7 +2664,12 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     }
 
     // ── Frame Content Size ───────────────────────────────────────────────
-    // We read but don't validate FCS (we trust the blocks to be correct).
+    //
+    // Width depends on FCS_Field_Size and, for the 0 case, on whether this
+    // is a single-segment frame. A frame with FCS_Field_Size 0 and
+    // Single_Segment_Flag clear carries NO content size at all — that is the
+    // normal shape for anything compressed as a stream, where the size was
+    // not known when the header was written.
     let fcs_bytes = match fcs_flag {
         0 => {
             if single_seg == 1 { 1 } else { 0 }
@@ -2674,7 +2679,21 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
         3 => 8,
         _ => unreachable!(),
     };
-    pos += fcs_bytes; // skip FCS
+    if pos + fcs_bytes > data.len() {
+        return Err("truncated Frame_Content_Size".into());
+    }
+    let declared_size: Option<u64> = if fcs_bytes == 0 {
+        None
+    } else {
+        let mut v: u64 = 0;
+        for i in 0..fcs_bytes {
+            v |= (data[pos + i] as u64) << (8 * i);
+        }
+        // The 2-byte form is stored biased by 256, so that it can express
+        // 256..=65791 rather than duplicating the 1-byte form's range.
+        Some(if fcs_bytes == 2 { v + 256 } else { v })
+    };
+    pos += fcs_bytes;
 
     // ── Blocks ───────────────────────────────────────────────────────────
     // Guard against decompression bombs: cap total output at MAX_OUTPUT.
@@ -2751,6 +2770,27 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     // `--no-check`), so any real-world interop input is likely to have it.
     if checksum_flag == 1 && pos + 4 > data.len() {
         return Err("truncated content checksum".into());
+    }
+
+    // ── Frame_Content_Size cross-check ───────────────────────────────────
+    //
+    // When the header declared a size, the blocks must have produced exactly
+    // it. This is the only end-to-end check available here: the crate has no
+    // xxHash64, so the trailing content checksum cannot be verified, which
+    // means a frame that is structurally well-formed but semantically wrong
+    // would otherwise be returned as if it were correct — short output,
+    // silently.
+    //
+    // It is also a cheap decompression-bomb signal: a frame declaring 100
+    // bytes and producing 200 MB is corrupt (or hostile) regardless of how
+    // valid each individual block looked.
+    if let Some(declared) = declared_size {
+        if declared != out.len() as u64 {
+            return Err(format!(
+                "frame declared {declared} bytes of content but produced {}",
+                out.len()
+            ));
+        }
     }
 
     Ok(out)
@@ -4024,6 +4064,33 @@ mod tests {
         // the payload length is undefined.
         block = vec![0x00, 0x01, 0x00, 0x00];
         assert!(decompress(&frame(&block)).is_err());
+    }
+
+    #[test]
+    fn declared_frame_content_size_is_enforced() {
+        // A frame's header may declare the decompressed size. When it does,
+        // that is the only end-to-end check this crate has — it carries no
+        // xxHash64, so the trailing content checksum cannot be verified, and
+        // without the size cross-check a structurally valid but semantically
+        // wrong frame returns short output silently.
+        let original = b"the quick brown fox jumps over the lazy dog".repeat(10);
+        let good = compress(&original);
+        assert_eq!(decompress(&good).unwrap(), original);
+
+        // `compress` writes an 8-byte Frame_Content_Size at offset 5. Bump
+        // it and the frame must be rejected rather than quietly returning
+        // the (correct, but no longer matching) content.
+        let mut bad = good.clone();
+        bad[5] = bad[5].wrapping_add(1);
+        let err = decompress(&bad).unwrap_err();
+        assert!(err.contains("declared"), "unexpected error: {err}");
+
+        // A frame with NO declared size (the streaming shape) must still be
+        // accepted — there is nothing to cross-check against.
+        let streamed = include_bytes!("../tests/vectors/prose-20k-level3-streamed.zst");
+        assert_eq!((streamed[4] >> 6) & 3, 0, "vector should carry no FCS field");
+        assert_eq!((streamed[4] >> 5) & 1, 0, "vector should be multi-segment");
+        assert_eq!(decompress(streamed).unwrap().len(), 20_000);
     }
 
     #[test]

@@ -171,7 +171,7 @@ files:
 cargo test -p zstd
 ```
 
-48 unit tests + 3 doctests. Grouped by what they can and cannot prove:
+49 unit tests + 3 doctests. Grouped by what they can and cannot prove:
 
 | Test group | What it checks | Can it catch a wire-format bug? |
 |------------|----------------|---------------------------------|
