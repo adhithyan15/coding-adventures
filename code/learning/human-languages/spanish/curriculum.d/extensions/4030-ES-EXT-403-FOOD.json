@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-403-FOOD",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name chicken, vegetables and paella.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C403-pollo",
+    "ES-C403-verdura",
+    "ES-C403-paella",
+    "ES-C403-food-recall-1",
+    "ES-C403-food-recall-2"
+  ]
+}

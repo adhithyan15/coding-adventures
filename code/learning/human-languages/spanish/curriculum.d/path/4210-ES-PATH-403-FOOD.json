@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-403-FOOD",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C403-pollo",
+    "ES-C403-verdura",
+    "ES-C403-paella",
+    "ES-C403-food-recall-1",
+    "ES-C403-food-recall-2"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-403-FOOD"
+  ],
+  "after": []
+}
