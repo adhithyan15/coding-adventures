@@ -4914,6 +4914,21 @@ the Rust, Python, and TypeScript surfaces together.
      the selected value through to the engine, and rejects non-finite or
      non-positive junction potentials before lowering.
 
+507. Rust JFET forward-bias depletion-coefficient parser parity.
+   - Status: implemented in the Rust JFET forward-bias depletion slice.
+   - The Rust element lowerer passes valid `FC` values through to the engine
+     and rejects values that are non-finite or outside `[0, 1)` before lowering.
+
+508. Rust JFET gate saturation-current parser parity.
+   - Status: implemented in the Rust JFET gate-current slice.
+   - The Rust element lowerer passes valid `IS` values through to the engine
+     and rejects values that are non-finite or non-positive before lowering.
+
+509. Rust JFET gate-current temperature-exponent parser parity.
+   - Status: implemented in the Rust JFET gate-temperature slice.
+   - The Rust element lowerer passes finite `XTI` values through to the engine
+     and rejects non-finite values before lowering.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
@@ -4923,8 +4938,9 @@ the Rust, Python, and TypeScript surfaces together.
 
 2. Rust JFET model-card parser parity audit.
    - Status: in progress; threshold, channel-length-modulation, and
-     gate-capacitance, flicker-noise, and junction-potential parameters are
-     completed in the current slices.
+     gate-capacitance, flicker-noise, junction-potential, and forward-bias
+     depletion, gate saturation-current, and gate-current temperature-exponent
+     parameters are completed in the current slices.
    - Live audit found the Rust element lowerer accepts fewer already-supported
      JFET aliases and model-card validations than the Python and TypeScript
      facades. Audit the remaining direct aliases and finite/range validation as
@@ -4951,12 +4967,27 @@ the Rust, Python, and TypeScript surfaces together.
      when non-finite or non-positive before element lowering.
 
 7. Rust JFET forward-bias depletion-coefficient parser parity.
-   - Status: prioritized next after the junction-potential slice merges.
-   - The engine and Python/TypeScript facades lower JFET `FC` and require a
-     finite value in the interval `[0, 1)`; confirm Rust lowering and implement
-     the smallest compatible correction.
+   - Status: completed by the forward-bias depletion slice.
+   - Finite `FC` values in `[0, 1)` now lower into the engine JFET field, while
+     invalid inputs are rejected before element lowering.
 
-8. Grammar-backed parser and app facade.
+8. Rust JFET gate saturation-current parser parity.
+   - Status: completed by the JFET gate-current slice.
+   - Positive finite `IS` values now lower into the engine JFET field, while
+     invalid inputs are rejected before element lowering.
+
+9. Rust JFET gate-current temperature-exponent parser parity.
+   - Status: completed by the JFET gate-temperature slice.
+   - Finite `XTI` values now lower into the engine JFET field, while non-finite
+     inputs are rejected before element lowering.
+
+10. Rust JFET bandgap-voltage parser parity.
+   - Status: prioritized next after the gate-temperature slice.
+   - The engine and Python/TypeScript facades lower positive finite JFET `EG`
+     values into the gate-current temperature-scaling field; audit the Rust
+     element lowerer and implement the smallest compatible correction.
+
+11. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -4964,7 +4995,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-9. Deck compatibility follow-up.
+12. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -4975,7 +5006,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-10. Production solver core follow-up.
+13. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
@@ -4986,14 +5017,14 @@ the Rust, Python, and TypeScript surfaces together.
      damping, device limiting, tolerance policy, and additional convergence
      diagnostics for difficult transistor decks.
 
-11. Device model depth.
+14. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-12. Analysis completion.
+15. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and
@@ -5002,14 +5033,14 @@ the Rust, Python, and TypeScript surfaces together.
      Carlo trials.
    - Stabilize raw, CSV, JSON, and browser-friendly result formats.
 
-13. Mixed-signal integration.
+16. Mixed-signal integration.
    - Connect SPICE transient stepping to the hardware VM scheduler.
    - Support bidirectional analog/digital thresholds, event scheduling,
      breakpoint coordination, and VCD correlation.
    - Keep mixed-signal coupling deterministic across Python, Rust, and
      TypeScript.
 
-10. Verilog-A and custom models.
+17. Verilog-A and custom models.
    - Specify the accepted model subset and residual/Jacobian hooks.
    - Add parser or compiler support with sandboxing for TypeScript/web usage.
    - Provide a Rust-native fast path for compiled models.

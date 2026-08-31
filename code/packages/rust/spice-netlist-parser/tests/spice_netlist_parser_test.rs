@@ -1659,6 +1659,71 @@ fn rejects_invalid_jfet_junction_potential_aliases() {
 }
 
 #[test]
+fn parses_jfet_forward_bias_depletion_coefficient() {
+    let parsed = parse_netlist(".model shaped NJF(FC=0.35)\nJ1 drain gate source shaped").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(jfet.forward_bias_depletion_coefficient, 0.35);
+}
+
+#[test]
+fn rejects_invalid_jfet_forward_bias_depletion_coefficient() {
+    for coefficient in ["-0.1", "1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model bad NJF(FC={coefficient})\nJ1 drain gate source bad"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("JFET FC must be finite and in [0, 1)"));
+    }
+}
+
+#[test]
+fn parses_jfet_gate_saturation_current() {
+    let parsed = parse_netlist(".model fast NJF(IS=2p)\nJ1 drain gate source fast").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(jfet.gate_saturation_current, 2.0e-12);
+}
+
+#[test]
+fn rejects_invalid_jfet_gate_saturation_current() {
+    for current in ["0", "-1p", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model bad NJF(IS={current})\nJ1 drain gate source bad"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("JFET IS must be finite and positive"));
+    }
+}
+
+#[test]
+fn parses_jfet_gate_current_temperature_exponent() {
+    let parsed = parse_netlist(".model shaped NJF(XTI=2.5)\nJ1 drain gate source shaped").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(jfet.gate_saturation_current_temperature_exponent, 2.5);
+}
+
+#[test]
+fn rejects_non_finite_jfet_gate_current_temperature_exponent() {
+    let error = parse_netlist(".model bad NJF(XTI=1e999)\nJ1 drain gate source bad").unwrap_err();
+
+    assert!(error.to_string().contains("JFET XTI must be finite"));
+}
+
+#[test]
 fn parses_jfet_b_as_doping_tail_parameter_not_beta_alias() {
     let parsed = parse_netlist(
         r#"

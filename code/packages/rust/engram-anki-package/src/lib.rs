@@ -7,6 +7,8 @@
 
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt;
+// Only the zstd call sites need this; without `modern-format` there are none.
+#[cfg(feature = "modern-format")]
 use std::io::Cursor;
 
 use coding_adventures_sha1::sum1;
@@ -476,11 +478,106 @@ pub fn read_media_file(data: &[u8], archive_name: &str) -> Result<ResolvedMediaF
     })
 }
 
+/// Floor for the total decompressed media a package may expand to.
+///
+/// Small packages are still allowed to expand generously; the multiplier below
+/// takes over once the archive itself is large enough for a ratio to be
+/// meaningful.
+const MEDIA_EXPANSION_FLOOR: u64 = 16 * 1024 * 1024;
+
+/// How many times its own size a package's media may expand to in total.
+///
+/// Legitimately-compressed media (audio, images) is already compressed and
+/// barely shrinks inside a zip, so a real collection sits near 1x. Fifty leaves
+/// enormous headroom for text-heavy or oddly-packed archives while still bounding
+/// the total.
+const MEDIA_EXPANSION_RATIO: u64 = 50;
+
+/// Absolute ceiling, whatever the archive's size.
+///
+/// Without this the ratio is self-defeating: a large package authorises a
+/// proportionally larger expansion, so an attacker only has to pad the archive to
+/// raise their own limit. A 100 MB package would licence 5 GB of retained media.
+///
+/// ## Why wasm gets a much smaller one
+///
+/// The ceiling has to be set against the peak memory an import actually reaches,
+/// not the bytes it retains, and on wasm those differ by more than an order of
+/// magnitude. `MediaAssetRecord.data` is a `Vec<u8>` with a derived `Serialize`,
+/// so returning state through the JSON facade renders each media byte as a
+/// decimal number in a JSON array, by way of an intermediate `serde_json::Value`
+/// tree holding one `Value` per byte — roughly 24 bytes of transient heap for
+/// every byte of media, on a target whose whole address space is 4 GB.
+///
+/// So 32 MiB of media is already ~768 MB of peak on wasm. Allowing the native
+/// figure there would guarantee a trap on a *legitimate* import, never mind a
+/// hostile one.
+///
+/// This is a limit on browser media size, and it is deliberately visible as one
+/// rather than hidden. The real fix is to stop amplifying — serialise media as
+/// base64 and stream with `to_writer` instead of building a `Value` tree — which
+/// changes the wire format every host adapter reads and so belongs in its own
+/// change, not this one.
+#[cfg(target_arch = "wasm32")]
+const MEDIA_EXPANSION_CEILING: u64 = 32 * 1024 * 1024;
+
+/// See the wasm variant above for why these differ.
+#[cfg(not(target_arch = "wasm32"))]
+const MEDIA_EXPANSION_CEILING: u64 = 256 * 1024 * 1024;
+
+/// Total decompressed media an archive of `archive_len` bytes may expand to.
+///
+/// Computed in `u64`, deliberately. `usize` is 32 bits on `wasm32`, where
+/// `archive_len * 50` saturates to `usize::MAX` for any archive over about
+/// 82 MiB — and because the running total saturates to that same value, the
+/// `spent > budget` test becomes `usize::MAX > usize::MAX` and never fires. The
+/// first version of this budget had exactly that bug: present, readable, and
+/// completely inert at precisely the sizes where it mattered.
+fn media_budget(archive_len: usize) -> u64 {
+    (archive_len as u64)
+        .saturating_mul(MEDIA_EXPANSION_RATIO)
+        .clamp(MEDIA_EXPANSION_FLOOR, MEDIA_EXPANSION_CEILING)
+}
+
+// `clamp` panics if its bounds are inverted, so pin the ordering at compile time
+// rather than trusting whoever next edits the two constants — including the
+// target-specific ceiling, which is easy to lower past the floor by accident.
+const _: () = assert!(MEDIA_EXPANSION_FLOOR <= MEDIA_EXPANSION_CEILING);
+// A ceiling at the type maximum would bound nothing.
+const _: () = assert!(MEDIA_EXPANSION_CEILING < u64::MAX);
+
+/// Read and decode every media file a package declares.
+///
+/// ## Why there is a budget
+///
+/// Nothing in the ZIP format stops a central directory from listing thousands of
+/// entries that all point at the *same* local header, and nothing dedupes them
+/// here — each becomes its own `MediaFile`, is read separately, and is **retained**
+/// in the returned vector. A ~1 MB archive can therefore expand to well over a
+/// gigabyte of retained memory before this function returns, and layering a
+/// DEFLATE bomb behind each alias multiplies it further.
+///
+/// This was never truly survivable — Rust's `handle_alloc_error` aborts on every
+/// target, whatever the panic strategy, so an out-of-memory here kills a native
+/// host too. It is simply far easier to reach now: a browser accepts a file from
+/// anywhere, and on wasm the abort takes the user's unsaved collection with it,
+/// because
+/// `wasm32-unknown-unknown` also builds with `panic = "abort"`, so the
+/// `catch_unwind` the JSON facade wraps every call in never runs. Exposing this
+/// path to the browser is what makes the budget necessary rather than merely
+/// prudent.
+///
+/// The budget is on **total decompressed output**, not entry count, because entry
+/// count is not what exhausts memory.
 pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError> {
+    let archive_len = data.len();
     let reader = ZipReader::new(data).map_err(apkg_error)?;
     let entries = archive_entries(&reader);
     let collection = collection_member(&reader, &entries)?;
     let manifest = media_manifest(&reader, collection.format)?;
+
+    let budget = media_budget(archive_len);
+    let mut spent: u64 = 0;
 
     manifest
         .media_files
@@ -494,6 +591,16 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
                 ))
             })?;
             let data = decode_package_payload(collection.format, "media file", &data)?;
+
+            spent = spent.saturating_add(data.len() as u64);
+            if spent > budget {
+                return Err(apkg_error(format!(
+                    "media in this package expands to more than {budget} bytes, \
+                     past the limit for an archive of {archive_len} bytes; \
+                     refusing to continue"
+                )));
+            }
+
             Ok(ResolvedMediaFile {
                 archive_name: media.archive_name,
                 filename: media.filename,
@@ -502,6 +609,7 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
         })
         .collect()
 }
+
 
 fn media_matches_archive_name(media: &MediaFile, archive_name: &str) -> bool {
     media.archive_name == archive_name
@@ -4202,22 +4310,61 @@ fn collection_member_for_format(
     })
 }
 
+/// The message a build without `modern-format` returns for a modern package.
+#[cfg(not(feature = "modern-format"))]
+///
+/// It names the format and the limitation rather than saying "unsupported", so a
+/// user who drags a `.colpkg` into browser Engram learns that legacy `.apkg` is
+/// the way through, instead of concluding the app is broken.
+const MODERN_FORMAT_UNAVAILABLE: &str = "this build supports legacy Anki .apkg packages only; \
+     modern .anki21b / .colpkg packages need zstd decompression, which is not \
+     available here — export from Anki in the legacy format, or use a desktop build";
+
+/// Decompress a package member.
+///
+/// Legacy packages store members uncompressed, so this is a copy for them and the
+/// `modern-format` feature is irrelevant. Only the modern branch needs zstd, which
+/// is why turning the feature off still leaves a fully working legacy importer
+/// rather than no importer at all.
 fn decode_package_payload(
     format: CollectionFormat,
     label: &str,
     bytes: &[u8],
 ) -> Result<Vec<u8>, ApkgError> {
     if format.is_modern() {
-        zstd_crate::stream::decode_all(Cursor::new(bytes))
-            .map_err(|err| apkg_error(format!("failed to decode zstd-compressed {label}: {err}")))
-    } else {
-        Ok(bytes.to_vec())
+        #[cfg(feature = "modern-format")]
+        {
+            return zstd_crate::stream::decode_all(Cursor::new(bytes)).map_err(|err| {
+                apkg_error(format!("failed to decode zstd-compressed {label}: {err}"))
+            });
+        }
+        #[cfg(not(feature = "modern-format"))]
+        {
+            // Deliberately an error, not a fallback to the raw bytes. Handing back
+            // a zstd frame as if it were a collection would surface much later as
+            // corrupt data of unclear origin; failing here says what happened.
+            let _ = (label, bytes);
+            return Err(apkg_error(MODERN_FORMAT_UNAVAILABLE));
+        }
     }
+    Ok(bytes.to_vec())
 }
 
+/// Compress a package member for a modern package.
+///
+/// Only ever called on the modern write path, so without `modern-format` there is
+/// nothing meaningful to return.
 fn encode_package_payload(label: &str, bytes: &[u8]) -> Result<Vec<u8>, ApkgError> {
-    zstd_crate::stream::encode_all(Cursor::new(bytes), 0)
-        .map_err(|err| apkg_error(format!("failed to encode zstd-compressed {label}: {err}")))
+    #[cfg(feature = "modern-format")]
+    {
+        zstd_crate::stream::encode_all(Cursor::new(bytes), 0)
+            .map_err(|err| apkg_error(format!("failed to encode zstd-compressed {label}: {err}")))
+    }
+    #[cfg(not(feature = "modern-format"))]
+    {
+        let _ = (label, bytes);
+        Err(apkg_error(MODERN_FORMAT_UNAVAILABLE))
+    }
 }
 
 fn media_manifest(
@@ -4353,10 +4500,12 @@ mod tests {
         writer.finish()
     }
 
+    #[cfg(feature = "modern-format")]
     fn zstd_encode(data: &[u8]) -> Vec<u8> {
         zstd_crate::stream::encode_all(Cursor::new(data), 0).unwrap()
     }
 
+    #[cfg(feature = "modern-format")]
     fn modern_package(collection: &[u8], media_assets: &[MediaAsset<'_>]) -> Vec<u8> {
         let mut writer = ZipWriter::new();
 
@@ -4669,6 +4818,7 @@ CREATE TABLE graves (
         assert_eq!(manifest.media.unmapped_files, vec!["2"]);
     }
 
+    #[cfg(feature = "modern-format")]
     #[test]
     fn recognizes_modern_collection_members() {
         let apkg = modern_package(b"modern collection", &[]);
@@ -4681,6 +4831,7 @@ CREATE TABLE graves (
         assert_eq!(collection, b"modern collection");
     }
 
+    #[cfg(feature = "modern-format")]
     #[test]
     fn reads_collection_members_across_legacy_and_modern_packages() {
         let legacy = package(&[(LEGACY_COLLECTION, b"legacy collection")]);
@@ -6560,6 +6711,79 @@ CREATE TABLE graves (
         assert!(imported.card_progress.is_empty());
     }
 
+    /// Without `modern-format`, a modern package fails with a message that says
+    /// what to do — it does not import partial data.
+    ///
+    /// This is the configuration wasm is built in, so it is the behaviour a
+    /// browser user actually meets when they drag in a `.colpkg`. The failure mode
+    /// worth guarding against is not the error; it is a build that treats the
+    /// still-compressed payload as a collection and imports something plausible
+    /// and wrong.
+    ///
+    /// The package here carries deliberately invalid payload bytes. That is the
+    /// point: format is detected by member name, so the code must refuse before it
+    /// ever looks at the content, and the test needs no zstd to construct.
+    /// The media budget's arithmetic, which is where it went wrong before.
+    ///
+    /// The first version used `usize::saturating_mul`. On `wasm32`, `usize` is 32
+    /// bits, so any archive over ~82 MiB saturated the budget to `usize::MAX` —
+    /// and since the running total saturated to the same value, `spent > budget`
+    /// was `usize::MAX > usize::MAX`, always false. The control was inert exactly
+    /// where it mattered most, and nothing failed to say so.
+    ///
+    /// Testing the arithmetic directly rather than through a crafted archive is
+    /// deliberate: exceeding the 16 MiB floor end to end requires building a
+    /// multi-megabyte compressed fixture, which is slow enough to be a poor CI
+    /// test — and it would not have caught the saturation bug on a 64-bit host
+    /// anyway, since `usize` is 64 bits there. The bug lived in the arithmetic,
+    /// so the arithmetic is what to pin.
+    #[test]
+    fn media_budget_is_clamped_at_both_ends() {
+        // Small archives get the floor, not a proportionally tiny budget.
+        assert_eq!(media_budget(0), MEDIA_EXPANSION_FLOOR);
+        assert_eq!(media_budget(1024), MEDIA_EXPANSION_FLOOR);
+
+        // In the middle, the ratio applies.
+        let mid = 2 * 1024 * 1024;
+        assert_eq!(
+            media_budget(mid),
+            (mid as u64) * MEDIA_EXPANSION_RATIO,
+            "between the floor and the ceiling the ratio should govern"
+        );
+
+        // Large archives are capped rather than authorising ever more expansion.
+        // This is the assertion the saturating version failed: it produced a
+        // value at the integer maximum instead of the ceiling.
+        assert_eq!(media_budget(usize::MAX), MEDIA_EXPANSION_CEILING);
+        assert_eq!(media_budget(1024 * 1024 * 1024), MEDIA_EXPANSION_CEILING);
+
+        // That the ceiling is a real bound, and ordered against the floor, are
+        // compile-time properties — see the `const _: () = assert!(..)` pair
+        // beside `media_budget`, which clippy rightly refuses to let masquerade
+        // as runtime assertions here.
+    }
+
+    #[cfg(not(feature = "modern-format"))]
+    #[test]
+    fn modern_packages_fail_with_an_actionable_error_when_zstd_is_unavailable() {
+        let apkg = package(&[(SQLITE_21B_COLLECTION, b"not actually zstd")]);
+
+        let error = read_v11_collection(&apkg)
+            .expect_err("a modern package must not import in a legacy-only build");
+
+        assert!(
+            error.message.contains("legacy Anki .apkg"),
+            "the error should point at the legacy format as the way through, got: {}",
+            error.message
+        );
+        assert!(
+            error.message.contains(".anki21b") || error.message.contains(".colpkg"),
+            "the error should name the format that failed, got: {}",
+            error.message
+        );
+    }
+
+    #[cfg(feature = "modern-format")]
     #[test]
     fn v11_collection_reader_accepts_modern_zstd_envelope() {
         let sqlite = v11_sqlite_collection_bytes();
@@ -6609,6 +6833,7 @@ CREATE TABLE graves (
         assert_eq!(audio.data, b"mp3");
     }
 
+    #[cfg(feature = "modern-format")]
     #[test]
     fn inspects_and_reads_modern_zstd_media_entries() {
         let apkg = modern_package(
@@ -6678,6 +6903,7 @@ CREATE TABLE graves (
         assert_eq!(state.media_assets[0].data, b"mp3");
     }
 
+    #[cfg(feature = "modern-format")]
     #[test]
     fn reads_modern_media_payloads_via_legacy_zip_filename() {
         let mut writer = ZipWriter::new();
@@ -6780,6 +7006,7 @@ CREATE TABLE graves (
         assert_eq!(image.data, b"png");
     }
 
+    #[cfg(feature = "modern-format")]
     #[test]
     fn writes_modern_apkg_envelope_and_state_export() {
         let sqlite = v11_sqlite_collection_bytes();

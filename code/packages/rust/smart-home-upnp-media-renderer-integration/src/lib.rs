@@ -1,0 +1,1567 @@
+//! Bounded MediaRenderer UPnP discovery, telemetry, and media control for D23.
+
+#![forbid(unsafe_code)]
+
+use http1::{parse_response_head, Http1ParseError};
+use http_core::BodyKind;
+use smart_home_core::{
+    AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode,
+    CommandResult, CommandType, Device, DeviceId, Entity, EntityId, EntityKind, Health,
+    IntegrationId, MediaCommandType, Metadata, ProtocolFamily, ProtocolIdentifier, SmartHomeTool,
+    StateConfidence, StateSnapshot, StateSource, Value, ValueKind,
+};
+use smart_home_discovery::{
+    DiscoveryConfidence, DiscoveryRecord, DiscoverySource, PairingRequirement,
+};
+use smart_home_runtime::{RuntimeCommandToolRequest, RuntimeError, SmartHomeRuntime};
+use std::collections::BTreeMap;
+use std::fmt;
+use std::io::{Read, Write};
+use std::net::{IpAddr, Ipv6Addr, SocketAddr, TcpStream};
+use std::time::Duration;
+use udp_client::{send_to_and_collect, UdpDiscoveryEndpoint, UdpError, UdpOptions};
+use upnp_av_protocol::{
+    decode_mute, decode_position_info, decode_transport_info, decode_volume, encode_action,
+    parse_renderer_description, Action as UpnpAvAction, UpnpAvError,
+};
+use url_parser::{Url, UrlError};
+
+pub const VERSION: &str = "0.1.0";
+pub const INTEGRATION_ID: &str = "upnp_media_renderer";
+pub const PROTOCOL_ID: &str = "upnp_av";
+pub const MEDIA_RENDERER_DEVICE_TYPE: &str = upnp_av_protocol::MEDIA_RENDERER_DEVICE_TYPE;
+pub const AV_TRANSPORT_SERVICE_TYPE: &str = upnp_av_protocol::AV_TRANSPORT_SERVICE_TYPE;
+pub const RENDERING_CONTROL_SERVICE_TYPE: &str = upnp_av_protocol::RENDERING_CONTROL_SERVICE_TYPE;
+pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
+
+#[derive(Debug)]
+pub enum MediaRendererError {
+    Validation(String),
+    Url(UrlError),
+    Udp(UdpError),
+    Io(String),
+    Http(String),
+    HttpStatus(u16),
+    Xml(String),
+    ResponseTooLarge {
+        limit: usize,
+    },
+    TruncatedBody {
+        expected: usize,
+        actual: usize,
+    },
+    MissingService(&'static str),
+    MissingInspection,
+    UnsupportedCommand(CommandType),
+    InvalidCommandArguments {
+        command_type: CommandType,
+        expected: &'static str,
+    },
+    PlaybackPostcondition {
+        expected: MediaRendererPlaybackState,
+        actual: MediaRendererPlaybackState,
+    },
+    VolumePostcondition {
+        expected: u8,
+        actual: u8,
+    },
+    MutePostcondition {
+        expected: bool,
+        actual: bool,
+    },
+    Runtime(RuntimeError),
+}
+
+impl fmt::Display for MediaRendererError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Validation(message) => {
+                write!(formatter, "invalid MediaRenderer input: {message}")
+            }
+            Self::Url(error) => write!(formatter, "invalid MediaRenderer URL: {error}"),
+            Self::Udp(error) => write!(formatter, "MediaRenderer SSDP failed: {error}"),
+            Self::Io(message) => write!(formatter, "MediaRenderer LAN I/O failed: {message}"),
+            Self::Http(message) => {
+                write!(formatter, "invalid MediaRenderer HTTP response: {message}")
+            }
+            Self::HttpStatus(status) => {
+                write!(formatter, "MediaRenderer endpoint returned HTTP {status}")
+            }
+            Self::Xml(message) => write!(formatter, "invalid MediaRenderer XML: {message}"),
+            Self::ResponseTooLarge { limit } => {
+                write!(formatter, "MediaRenderer response exceeds {limit} bytes")
+            }
+            Self::TruncatedBody { expected, actual } => write!(
+                formatter,
+                "MediaRenderer response body is truncated: expected {expected} bytes, got {actual}"
+            ),
+            Self::MissingService(service) => {
+                write!(
+                    formatter,
+                    "MediaRenderer description has no {service} service"
+                )
+            }
+            Self::MissingInspection => {
+                formatter.write_str("MediaRenderer must be inspected before command routing")
+            }
+            Self::UnsupportedCommand(command) => {
+                write!(
+                    formatter,
+                    "MediaRenderer does not support command {command:?}"
+                )
+            }
+            Self::InvalidCommandArguments {
+                command_type,
+                expected,
+            } => write!(
+                formatter,
+                "MediaRenderer command {command_type:?} expects {expected}"
+            ),
+            Self::PlaybackPostcondition { expected, actual } => write!(
+                formatter,
+                "MediaRenderer playback postcondition failed: expected {}, got {}",
+                expected.as_str(),
+                actual.as_str()
+            ),
+            Self::VolumePostcondition { expected, actual } => write!(
+                formatter,
+                "MediaRenderer volume postcondition failed: expected {expected}, got {actual}"
+            ),
+            Self::MutePostcondition { expected, actual } => write!(
+                formatter,
+                "MediaRenderer mute postcondition failed: expected {expected}, got {actual}"
+            ),
+            Self::Runtime(error) => error.fmt(formatter),
+        }
+    }
+}
+
+impl std::error::Error for MediaRendererError {}
+
+impl From<UrlError> for MediaRendererError {
+    fn from(error: UrlError) -> Self {
+        Self::Url(error)
+    }
+}
+
+impl From<UdpError> for MediaRendererError {
+    fn from(error: UdpError) -> Self {
+        Self::Udp(error)
+    }
+}
+
+impl From<RuntimeError> for MediaRendererError {
+    fn from(error: RuntimeError) -> Self {
+        Self::Runtime(error)
+    }
+}
+
+impl From<UpnpAvError> for MediaRendererError {
+    fn from(error: UpnpAvError) -> Self {
+        match error {
+            UpnpAvError::Validation(message) => Self::Validation(message),
+            UpnpAvError::Xml(message) => Self::Xml(message),
+            UpnpAvError::MissingService(service) => Self::MissingService(service),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MediaRendererConfig {
+    pub bridge_id: BridgeId,
+    pub setup_url: String,
+}
+
+impl MediaRendererConfig {
+    pub fn new(
+        bridge_id: BridgeId,
+        setup_url: impl Into<String>,
+    ) -> Result<Self, MediaRendererError> {
+        let setup_url = setup_url.into();
+        let parsed = Url::parse(&setup_url)?;
+        if parsed.scheme != "http"
+            || parsed.host.is_none()
+            || parsed.userinfo.is_some()
+            || parsed.query.is_some()
+            || parsed.fragment.is_some()
+            || parsed.path.is_empty()
+        {
+            return Err(MediaRendererError::Validation(
+                "setup URL must be credential-free local HTTP with a path".to_string(),
+            ));
+        }
+        validate_local_ip_url(&parsed, "setup URL")?;
+        Ok(Self {
+            bridge_id,
+            setup_url,
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MediaRendererSsdpCandidate {
+    pub location: String,
+    pub usn: String,
+    pub server: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MediaRendererService {
+    pub service_type: String,
+    pub control_url: String,
+    pub event_subscription_url: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MediaRendererDeviceDescription {
+    pub friendly_name: String,
+    pub manufacturer: Option<String>,
+    pub model_name: String,
+    pub model_number: Option<String>,
+    pub serial_number: Option<String>,
+    pub udn: String,
+    pub firmware_version: Option<String>,
+    pub room_name: Option<String>,
+    pub av_transport: MediaRendererService,
+    pub rendering_control: MediaRendererService,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MediaRendererSnapshot {
+    pub device: MediaRendererDeviceDescription,
+    pub playback_state: MediaRendererPlaybackState,
+    pub volume: u8,
+    pub muted: bool,
+    pub track_uri: Option<String>,
+    pub track_title: Option<String>,
+    pub track_artist: Option<String>,
+}
+
+pub type MediaRendererPlaybackState = upnp_av_protocol::PlaybackState;
+
+pub fn ssdp_search_request() -> Vec<u8> {
+    format!(
+        "M-SEARCH * HTTP/1.1\r\nST: {MEDIA_RENDERER_DEVICE_TYPE}\r\nMX: 2\r\nMAN: \"ssdp:discover\"\r\nHOST: 239.255.255.250:1900\r\n\r\n"
+    )
+    .into_bytes()
+}
+
+pub fn discover_ssdp_ipv4(
+    timeout: Duration,
+    max_responses: usize,
+) -> Result<Vec<MediaRendererSsdpCandidate>, MediaRendererError> {
+    let endpoint = UdpDiscoveryEndpoint::ssdp_ipv4();
+    discover_ssdp(
+        endpoint.destination,
+        endpoint.options(65_507, Some(timeout), Some(timeout)),
+        max_responses,
+    )
+}
+
+pub fn discover_ssdp(
+    destination: SocketAddr,
+    options: UdpOptions,
+    max_responses: usize,
+) -> Result<Vec<MediaRendererSsdpCandidate>, MediaRendererError> {
+    let datagrams =
+        send_to_and_collect(destination, &ssdp_search_request(), options, max_responses)?;
+    let mut candidates = BTreeMap::new();
+    for datagram in datagrams {
+        if let Ok(candidate) = parse_ssdp_response(&datagram.payload) {
+            candidates.entry(candidate.usn.clone()).or_insert(candidate);
+        }
+    }
+    Ok(candidates.into_values().collect())
+}
+
+pub fn parse_ssdp_response(bytes: &[u8]) -> Result<MediaRendererSsdpCandidate, MediaRendererError> {
+    let source = std::str::from_utf8(bytes)
+        .map_err(|_| MediaRendererError::Validation("SSDP response is not UTF-8".to_string()))?;
+    let mut lines = source.split("\r\n");
+    let status = lines.next().unwrap_or_default();
+    if !status.starts_with("HTTP/1.1 200") && !status.starts_with("HTTP/1.0 200") {
+        return Err(MediaRendererError::Validation(
+            "SSDP response is not HTTP 200".to_string(),
+        ));
+    }
+    let mut headers = BTreeMap::new();
+    for line in lines.filter(|line| !line.is_empty()) {
+        let Some((name, value)) = line.split_once(':') else {
+            continue;
+        };
+        headers.insert(name.trim().to_ascii_lowercase(), value.trim().to_string());
+    }
+    let st = required_header(&headers, "st")?;
+    if !st.eq_ignore_ascii_case(MEDIA_RENDERER_DEVICE_TYPE) {
+        return Err(MediaRendererError::Validation(format!(
+            "unexpected SSDP search target `{st}`"
+        )));
+    }
+    let location = required_header(&headers, "location")?;
+    MediaRendererConfig::new(
+        BridgeId::trusted("upnp_media_renderer.ssdp.validation"),
+        location,
+    )?;
+    Ok(MediaRendererSsdpCandidate {
+        location: location.to_string(),
+        usn: required_header(&headers, "usn")?.to_string(),
+        server: headers.get("server").cloned(),
+    })
+}
+
+fn required_header<'a>(
+    headers: &'a BTreeMap<String, String>,
+    name: &str,
+) -> Result<&'a str, MediaRendererError> {
+    headers
+        .get(name)
+        .map(String::as_str)
+        .filter(|value| !value.is_empty())
+        .ok_or_else(|| MediaRendererError::Validation(format!("SSDP response is missing {name}")))
+}
+
+pub fn discovery_record(
+    candidate: &MediaRendererSsdpCandidate,
+    discovered_at_ms: u64,
+) -> Result<DiscoveryRecord, MediaRendererError> {
+    Ok(DiscoveryRecord::new(
+        IntegrationId::trusted(INTEGRATION_ID),
+        ProtocolFamily::Vendor(PROTOCOL_ID.to_string()),
+        stable_component(candidate.usn.split("::").next().unwrap_or(&candidate.usn)),
+        DiscoverySource::Ssdp,
+        BridgeTransport::LanHttp,
+        discovered_at_ms,
+    )
+    .map_err(|error| MediaRendererError::Validation(error.to_string()))?
+    .with_display_name("MediaRenderer UPnP device")
+    .with_address(candidate.location.clone())
+    .with_confidence(DiscoveryConfidence::Verified)
+    .with_pairing_requirement(PairingRequirement::None)
+    .with_metadata(
+        "smart_home.discovery.search_target",
+        MEDIA_RENDERER_DEVICE_TYPE,
+    ))
+}
+
+pub trait MediaRendererTransport {
+    fn get(&mut self, endpoint: &str) -> Result<Vec<u8>, MediaRendererError>;
+    fn soap(
+        &mut self,
+        endpoint: &str,
+        soap_action: &str,
+        body: &[u8],
+    ) -> Result<Vec<u8>, MediaRendererError>;
+}
+
+#[derive(Debug, Clone)]
+pub struct MediaRendererLanTransport {
+    timeout: Duration,
+    maximum_response_bytes: usize,
+}
+
+impl Default for MediaRendererLanTransport {
+    fn default() -> Self {
+        Self {
+            timeout: Duration::from_secs(5),
+            maximum_response_bytes: DEFAULT_MAX_RESPONSE_BYTES,
+        }
+    }
+}
+
+impl MediaRendererLanTransport {
+    pub fn with_timeout(mut self, timeout: Duration) -> Self {
+        self.timeout = timeout.max(Duration::from_millis(1));
+        self
+    }
+
+    pub fn with_maximum_response_bytes(mut self, maximum: usize) -> Self {
+        self.maximum_response_bytes = maximum.max(1);
+        self
+    }
+
+    fn execute(&self, endpoint: &str, request: &[u8]) -> Result<Vec<u8>, MediaRendererError> {
+        let url = Url::parse(endpoint)?;
+        if url.scheme != "http" {
+            return Err(MediaRendererError::Validation(
+                "MediaRenderer UPnP requires local HTTP".to_string(),
+            ));
+        }
+        let host = url.host.as_deref().ok_or_else(|| {
+            MediaRendererError::Validation("endpoint is missing a host".to_string())
+        })?;
+        let port = url.effective_port().ok_or_else(|| {
+            MediaRendererError::Validation("endpoint is missing a port".to_string())
+        })?;
+        let mut stream = connect_tcp(host, port, self.timeout)?;
+        stream
+            .write_all(request)
+            .map_err(|error| MediaRendererError::Io(error.to_string()))?;
+        stream
+            .flush()
+            .map_err(|error| MediaRendererError::Io(error.to_string()))?;
+        let response = read_bounded(&mut stream, self.maximum_response_bytes)?;
+        decode_http_response(&response, self.maximum_response_bytes)
+    }
+}
+
+impl MediaRendererTransport for MediaRendererLanTransport {
+    fn get(&mut self, endpoint: &str) -> Result<Vec<u8>, MediaRendererError> {
+        let url = Url::parse(endpoint)?;
+        self.execute(endpoint, &encode_request(&url, "GET", &[], &[])?)
+    }
+
+    fn soap(
+        &mut self,
+        endpoint: &str,
+        soap_action: &str,
+        body: &[u8],
+    ) -> Result<Vec<u8>, MediaRendererError> {
+        let url = Url::parse(endpoint)?;
+        self.execute(
+            endpoint,
+            &encode_request(
+                &url,
+                "POST",
+                &[
+                    ("Content-Type", "text/xml; charset=\"utf-8\""),
+                    ("SOAPACTION", soap_action),
+                ],
+                body,
+            )?,
+        )
+    }
+}
+
+pub struct MediaRendererClient<T> {
+    config: MediaRendererConfig,
+    transport: T,
+    description: Option<MediaRendererDeviceDescription>,
+}
+
+impl<T: MediaRendererTransport> MediaRendererClient<T> {
+    pub fn new(config: MediaRendererConfig, transport: T) -> Self {
+        Self {
+            config,
+            transport,
+            description: None,
+        }
+    }
+
+    pub fn config(&self) -> &MediaRendererConfig {
+        &self.config
+    }
+
+    pub fn inspect(&mut self) -> Result<MediaRendererSnapshot, MediaRendererError> {
+        let description = parse_device_description(&self.transport.get(&self.config.setup_url)?)?;
+        let av_transport_url = resolve_control_url(
+            &self.config.setup_url,
+            &description.av_transport.control_url,
+        )?;
+        let rendering_url = resolve_control_url(
+            &self.config.setup_url,
+            &description.rendering_control.control_url,
+        )?;
+        let transport = self.soap_action(&av_transport_url, UpnpAvAction::GetTransportInfo)?;
+        let position = self.soap_action(&av_transport_url, UpnpAvAction::GetPositionInfo)?;
+        let volume = self.soap_action(&rendering_url, UpnpAvAction::GetVolume)?;
+        let mute = self.soap_action(&rendering_url, UpnpAvAction::GetMute)?;
+        let playback_state = decode_transport_info(&transport)?;
+        let volume = decode_volume(&volume)?;
+        let muted = decode_mute(&mute)?;
+        let position = decode_position_info(&position)?;
+        let track_uri = position.track_uri;
+        let metadata = position.track_metadata;
+        let (track_title, track_artist) = metadata
+            .as_deref()
+            .map(upnp_av_protocol::parse_didl_metadata)
+            .transpose()?
+            .unwrap_or((None, None));
+        self.description = Some(description.clone());
+        Ok(MediaRendererSnapshot {
+            device: description,
+            playback_state,
+            volume,
+            muted,
+            track_uri,
+            track_title,
+            track_artist,
+        })
+    }
+
+    pub fn playback_state(&mut self) -> Result<MediaRendererPlaybackState, MediaRendererError> {
+        let control_url = self.av_transport_control_url()?;
+        let response = self.soap_action(&control_url, UpnpAvAction::GetTransportInfo)?;
+        Ok(decode_transport_info(&response)?)
+    }
+
+    pub fn volume(&mut self) -> Result<u8, MediaRendererError> {
+        let control_url = self.rendering_control_url()?;
+        let response = self.soap_action(&control_url, UpnpAvAction::GetVolume)?;
+        Ok(decode_volume(&response)?)
+    }
+
+    pub fn muted(&mut self) -> Result<bool, MediaRendererError> {
+        let control_url = self.rendering_control_url()?;
+        let response = self.soap_action(&control_url, UpnpAvAction::GetMute)?;
+        Ok(decode_mute(&response)?)
+    }
+
+    fn set_playback_state(
+        &mut self,
+        desired: &MediaRendererPlaybackState,
+    ) -> Result<(), MediaRendererError> {
+        let action = match desired {
+            MediaRendererPlaybackState::Play => UpnpAvAction::Play,
+            MediaRendererPlaybackState::Pause => UpnpAvAction::Pause,
+            MediaRendererPlaybackState::Stop => UpnpAvAction::Stop,
+            MediaRendererPlaybackState::Transitioning
+            | MediaRendererPlaybackState::NoMedia
+            | MediaRendererPlaybackState::Other(_) => {
+                return Err(MediaRendererError::Validation(
+                    "unsupported MediaRenderer playback target".to_string(),
+                ))
+            }
+        };
+        let control_url = self.av_transport_control_url()?;
+        self.soap_action(&control_url, action)?;
+        Ok(())
+    }
+
+    fn set_volume(&mut self, volume: u8) -> Result<(), MediaRendererError> {
+        let control_url = self.rendering_control_url()?;
+        self.soap_action(&control_url, UpnpAvAction::SetVolume(volume))?;
+        Ok(())
+    }
+
+    fn set_muted(&mut self, muted: bool) -> Result<(), MediaRendererError> {
+        let control_url = self.rendering_control_url()?;
+        self.soap_action(&control_url, UpnpAvAction::SetMute(muted))?;
+        Ok(())
+    }
+
+    fn av_transport_control_url(&self) -> Result<String, MediaRendererError> {
+        let description = self
+            .description
+            .as_ref()
+            .ok_or(MediaRendererError::MissingInspection)?;
+        resolve_control_url(
+            &self.config.setup_url,
+            &description.av_transport.control_url,
+        )
+    }
+
+    fn rendering_control_url(&self) -> Result<String, MediaRendererError> {
+        let description = self
+            .description
+            .as_ref()
+            .ok_or(MediaRendererError::MissingInspection)?;
+        resolve_control_url(
+            &self.config.setup_url,
+            &description.rendering_control.control_url,
+        )
+    }
+
+    fn soap_action(
+        &mut self,
+        control_url: &str,
+        action: UpnpAvAction,
+    ) -> Result<Vec<u8>, MediaRendererError> {
+        let request = encode_action(action)?;
+        self.transport
+            .soap(control_url, &request.action_header, &request.body)
+    }
+}
+
+pub struct MediaRendererRuntimeIntegration<T> {
+    client: MediaRendererClient<T>,
+    entity_id: Option<EntityId>,
+}
+
+impl<T: MediaRendererTransport> MediaRendererRuntimeIntegration<T> {
+    pub fn new(client: MediaRendererClient<T>) -> Self {
+        Self {
+            client,
+            entity_id: None,
+        }
+    }
+
+    pub fn inspect_and_install_authorized(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        principal_id: AgentId,
+        observed_at_ms: u64,
+    ) -> Result<EntityId, MediaRendererError> {
+        let decision = runtime.authorize_tool_for_principal(
+            principal_id.clone(),
+            SmartHomeTool::GetState,
+            observed_at_ms,
+        );
+        if !decision.missing_capabilities.is_empty() {
+            return Err(MediaRendererError::Runtime(
+                RuntimeError::UnauthorizedTool {
+                    principal_id,
+                    tool: SmartHomeTool::GetState,
+                    missing_capabilities: decision.missing_capabilities,
+                },
+            ));
+        }
+        let snapshot = self.client.inspect()?;
+        let entity_id = install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)?;
+        self.entity_id = Some(entity_id.clone());
+        Ok(entity_id)
+    }
+
+    pub fn dispatch_command_authorized(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        principal_id: AgentId,
+        request: RuntimeCommandToolRequest,
+        now_ms: u64,
+    ) -> Result<CommandResult, MediaRendererError> {
+        if self.entity_id.as_ref() != Some(&request.entity_id) {
+            return Err(MediaRendererError::InvalidCommandArguments {
+                command_type: request.command_type,
+                expected: "the installed MediaRenderer media entity",
+            });
+        }
+        let command = upnp_media_renderer_command(&request)?;
+        let result = runtime.execute_command_tool(principal_id, request, now_ms)?;
+        execute_command(&mut self.client, command)?;
+        Ok(result)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum MediaRendererCommand {
+    Playback(MediaRendererPlaybackState),
+    Volume(u8),
+    Mute(bool),
+}
+
+fn upnp_media_renderer_command(
+    request: &RuntimeCommandToolRequest,
+) -> Result<MediaRendererCommand, MediaRendererError> {
+    match request.command_type {
+        CommandType::Media(MediaCommandType::SetPlaybackState) => {
+            let Value::Text(state) = &request.arguments else {
+                return invalid_command_arguments(
+                    request.command_type,
+                    "play, pause, or stop text",
+                );
+            };
+            match state.as_str() {
+                "play" => Ok(MediaRendererCommand::Playback(
+                    MediaRendererPlaybackState::Play,
+                )),
+                "pause" => Ok(MediaRendererCommand::Playback(
+                    MediaRendererPlaybackState::Pause,
+                )),
+                "stop" => Ok(MediaRendererCommand::Playback(
+                    MediaRendererPlaybackState::Stop,
+                )),
+                _ => invalid_command_arguments(request.command_type, "play, pause, or stop text"),
+            }
+        }
+        CommandType::Media(MediaCommandType::SetVolume) => {
+            let Value::Percentage(volume) = request.arguments else {
+                return invalid_command_arguments(request.command_type, "a percentage volume");
+            };
+            Ok(MediaRendererCommand::Volume(volume))
+        }
+        CommandType::Media(MediaCommandType::SetMute) => {
+            let Value::Bool(muted) = request.arguments else {
+                return invalid_command_arguments(request.command_type, "a boolean mute state");
+            };
+            Ok(MediaRendererCommand::Mute(muted))
+        }
+        command_type => Err(MediaRendererError::UnsupportedCommand(command_type)),
+    }
+}
+
+fn invalid_command_arguments<T>(
+    command_type: CommandType,
+    expected: &'static str,
+) -> Result<T, MediaRendererError> {
+    Err(MediaRendererError::InvalidCommandArguments {
+        command_type,
+        expected,
+    })
+}
+
+fn execute_command<T: MediaRendererTransport>(
+    client: &mut MediaRendererClient<T>,
+    command: MediaRendererCommand,
+) -> Result<(), MediaRendererError> {
+    match command {
+        MediaRendererCommand::Playback(expected) => {
+            if client.playback_state()? == expected {
+                return Ok(());
+            }
+            client.set_playback_state(&expected)?;
+            let actual = client.playback_state()?;
+            if actual != expected {
+                return Err(MediaRendererError::PlaybackPostcondition { expected, actual });
+            }
+        }
+        MediaRendererCommand::Volume(expected) => {
+            if client.volume()? == expected {
+                return Ok(());
+            }
+            client.set_volume(expected)?;
+            let actual = client.volume()?;
+            if actual != expected {
+                return Err(MediaRendererError::VolumePostcondition { expected, actual });
+            }
+        }
+        MediaRendererCommand::Mute(expected) => {
+            if client.muted()? == expected {
+                return Ok(());
+            }
+            client.set_muted(expected)?;
+            let actual = client.muted()?;
+            if actual != expected {
+                return Err(MediaRendererError::MutePostcondition { expected, actual });
+            }
+        }
+    }
+    Ok(())
+}
+
+pub fn parse_device_description(
+    bytes: &[u8],
+) -> Result<MediaRendererDeviceDescription, MediaRendererError> {
+    let description = parse_renderer_description(bytes, MEDIA_RENDERER_DEVICE_TYPE)?;
+    let service = |service: upnp_av_protocol::Service| MediaRendererService {
+        service_type: service.service_type,
+        control_url: service.control_url,
+        event_subscription_url: service.event_subscription_url,
+    };
+    Ok(MediaRendererDeviceDescription {
+        friendly_name: description.friendly_name,
+        manufacturer: description.manufacturer,
+        model_name: description.model_name,
+        model_number: description.model_number,
+        serial_number: description.serial_number,
+        udn: description.udn,
+        firmware_version: description.firmware_version,
+        room_name: description.room_name,
+        av_transport: service(description.av_transport),
+        rendering_control: service(description.rendering_control),
+    })
+}
+
+pub fn parse_playback_state(value: &str) -> MediaRendererPlaybackState {
+    upnp_av_protocol::parse_playback_state(value)
+}
+
+pub fn parse_didl_metadata(
+    source: &str,
+) -> Result<(Option<String>, Option<String>), MediaRendererError> {
+    Ok(upnp_av_protocol::parse_didl_metadata(source)?)
+}
+
+pub fn install_snapshot(
+    runtime: &mut SmartHomeRuntime,
+    config: &MediaRendererConfig,
+    snapshot: &MediaRendererSnapshot,
+    observed_at_ms: u64,
+) -> Result<EntityId, MediaRendererError> {
+    let native_id = stable_component(&snapshot.device.udn);
+    if native_id.is_empty() {
+        return Err(MediaRendererError::Validation(
+            "device UDN is empty".to_string(),
+        ));
+    }
+    let mut bridge = Bridge::new(
+        config.bridge_id.clone(),
+        IntegrationId::trusted(INTEGRATION_ID),
+        BridgeTransport::LanHttp,
+    );
+    bridge.address = Some(config.setup_url.clone());
+    bridge.hardware_model = Some(snapshot.device.model_name.clone());
+    bridge.firmware_version = snapshot.device.firmware_version.clone();
+    bridge.health = Health::Online;
+    bridge.last_seen_at_ms = Some(observed_at_ms);
+    bridge.metadata = vec![Metadata::new("upnp_media_renderer.protocol", PROTOCOL_ID)];
+    runtime.upsert_bridge(bridge)?;
+
+    let device_id = DeviceId::trusted(format!("upnp_media_renderer:{native_id}"));
+    let entity_id = EntityId::trusted(format!("upnp_media_renderer:{native_id}:player"));
+    let mut identifiers = vec![protocol_identifier("udn", &snapshot.device.udn)?];
+    if let Some(serial) = snapshot.device.serial_number.as_deref() {
+        identifiers.push(protocol_identifier("serial", serial)?);
+    }
+    runtime.upsert_device(Device {
+        device_id: device_id.clone(),
+        bridge_id: config.bridge_id.clone(),
+        manufacturer: snapshot
+            .device
+            .manufacturer
+            .clone()
+            .unwrap_or_else(|| "UPnP".to_string()),
+        model: snapshot.device.model_name.clone(),
+        name: snapshot.device.friendly_name.clone(),
+        serial: snapshot.device.serial_number.clone(),
+        firmware_version: snapshot.device.firmware_version.clone(),
+        room_id: None,
+        entity_ids: vec![entity_id.clone()],
+        identifiers,
+        health: Health::Online,
+        metadata: Vec::new(),
+    })?;
+    let state = Value::Object(vec![
+        (
+            "playback_state".to_string(),
+            Value::Text(snapshot.playback_state.as_str().to_string()),
+        ),
+        ("volume".to_string(), Value::Percentage(snapshot.volume)),
+        ("muted".to_string(), Value::Bool(snapshot.muted)),
+        (
+            "track_uri".to_string(),
+            snapshot
+                .track_uri
+                .clone()
+                .map(Value::Text)
+                .unwrap_or(Value::Null),
+        ),
+        (
+            "track_title".to_string(),
+            snapshot
+                .track_title
+                .clone()
+                .map(Value::Text)
+                .unwrap_or(Value::Null),
+        ),
+        (
+            "track_artist".to_string(),
+            snapshot
+                .track_artist
+                .clone()
+                .map(Value::Text)
+                .unwrap_or(Value::Null),
+        ),
+    ]);
+    runtime.upsert_entity(Entity {
+        entity_id: entity_id.clone(),
+        device_id,
+        kind: EntityKind::Unknown,
+        name: snapshot
+            .device
+            .room_name
+            .clone()
+            .unwrap_or_else(|| snapshot.device.friendly_name.clone()),
+        capabilities: vec![
+            Capability::new(
+                CapabilityId::trusted("media.player_state"),
+                CapabilityMode::Observe,
+                ValueKind::Object,
+            ),
+            Capability::media_playback(),
+            Capability::media_volume(),
+        ],
+        state: Some(StateSnapshot {
+            entity_id: entity_id.clone(),
+            value: state,
+            source: StateSource::Poll,
+            observed_at_ms,
+            received_at_ms: observed_at_ms,
+            expires_at_ms: None,
+            confidence: StateConfidence::Confirmed,
+        }),
+        metadata: vec![Metadata::new(
+            "upnp_media_renderer.control_surface",
+            "bounded_media",
+        )],
+    })?;
+    Ok(entity_id)
+}
+
+fn resolve_control_url(setup_url: &str, control_url: &str) -> Result<String, MediaRendererError> {
+    let setup = Url::parse(setup_url)?;
+    let host = setup
+        .host
+        .as_deref()
+        .ok_or_else(|| MediaRendererError::Validation("setup URL is missing a host".to_string()))?;
+    let authority = setup
+        .port
+        .map_or_else(|| host.to_string(), |port| format!("{host}:{port}"));
+    let resolved = if control_url.starts_with("http://") {
+        control_url.to_string()
+    } else {
+        let path = if control_url.starts_with('/') {
+            control_url.to_string()
+        } else {
+            let directory = setup.path.rsplit_once('/').map_or("/", |(dir, _)| dir);
+            format!("{directory}/{control_url}")
+        };
+        format!("http://{authority}{path}")
+    };
+    let endpoint = Url::parse(&resolved)?;
+    validate_local_ip_url(&endpoint, "control URL")?;
+    if endpoint.host != setup.host || endpoint.effective_port() != setup.effective_port() {
+        return Err(MediaRendererError::Validation(
+            "control URL must share the configured setup authority".to_string(),
+        ));
+    }
+    Ok(resolved)
+}
+
+fn validate_local_ip_url(url: &Url, label: &str) -> Result<(), MediaRendererError> {
+    if url.scheme != "http"
+        || url.userinfo.is_some()
+        || url.query.is_some()
+        || url.fragment.is_some()
+        || url.path.is_empty()
+        || url.effective_port() == Some(0)
+    {
+        return Err(MediaRendererError::Validation(format!(
+            "{label} must be credential-free local HTTP with a path"
+        )));
+    }
+    let host = url
+        .host
+        .as_deref()
+        .ok_or_else(|| MediaRendererError::Validation(format!("{label} is missing a host")))?;
+    let address = strip_ipv6_brackets(host).parse::<IpAddr>().map_err(|_| {
+        MediaRendererError::Validation(format!("{label} host must be an IP literal"))
+    })?;
+    if !is_local_ip(address) {
+        return Err(MediaRendererError::Validation(format!(
+            "{label} host must be private, link-local, or loopback"
+        )));
+    }
+    Ok(())
+}
+
+fn is_local_ip(address: IpAddr) -> bool {
+    match address {
+        IpAddr::V4(address) => {
+            address.is_private() || address.is_link_local() || address.is_loopback()
+        }
+        IpAddr::V6(address) => {
+            address.is_loopback()
+                || address.is_unicast_link_local()
+                || is_unique_local_ipv6(address)
+        }
+    }
+}
+
+fn is_unique_local_ipv6(address: Ipv6Addr) -> bool {
+    address.segments()[0] & 0xfe00 == 0xfc00
+}
+
+fn strip_ipv6_brackets(host: &str) -> &str {
+    host.strip_prefix('[')
+        .and_then(|host| host.strip_suffix(']'))
+        .unwrap_or(host)
+}
+
+fn protocol_identifier(kind: &str, value: &str) -> Result<ProtocolIdentifier, MediaRendererError> {
+    ProtocolIdentifier::new(ProtocolFamily::Vendor(PROTOCOL_ID.to_string()), kind, value)
+        .map_err(|error| MediaRendererError::Validation(error.to_string()))
+}
+
+fn stable_component(value: &str) -> String {
+    value
+        .chars()
+        .filter(|character| character.is_ascii_alphanumeric())
+        .flat_map(char::to_lowercase)
+        .collect()
+}
+
+fn encode_request(
+    url: &Url,
+    method: &str,
+    headers: &[(&str, &str)],
+    body: &[u8],
+) -> Result<Vec<u8>, MediaRendererError> {
+    let host = url
+        .host
+        .as_deref()
+        .ok_or_else(|| MediaRendererError::Validation("endpoint is missing a host".to_string()))?;
+    if url.path.contains(['\r', '\n'])
+        || headers
+            .iter()
+            .any(|(name, value)| name.contains(['\r', '\n']) || value.contains(['\r', '\n']))
+    {
+        return Err(MediaRendererError::Validation(
+            "unsafe HTTP request text".to_string(),
+        ));
+    }
+    let host_header = url
+        .port
+        .map_or_else(|| host.to_string(), |port| format!("{host}:{port}"));
+    let mut request = format!(
+        "{method} {} HTTP/1.1\r\nHost: {host_header}\r\nConnection: close\r\nAccept: text/xml\r\n",
+        url.path
+    )
+    .into_bytes();
+    for (name, value) in headers {
+        request.extend_from_slice(format!("{name}: {value}\r\n").as_bytes());
+    }
+    if !body.is_empty() {
+        request.extend_from_slice(format!("Content-Length: {}\r\n", body.len()).as_bytes());
+    }
+    request.extend_from_slice(b"\r\n");
+    request.extend_from_slice(body);
+    Ok(request)
+}
+
+fn connect_tcp(host: &str, port: u16, timeout: Duration) -> Result<TcpStream, MediaRendererError> {
+    let address = strip_ipv6_brackets(host).parse::<IpAddr>().map_err(|_| {
+        MediaRendererError::Validation("endpoint host must be an IP literal".to_string())
+    })?;
+    if !is_local_ip(address) {
+        return Err(MediaRendererError::Validation(
+            "endpoint host must be private, link-local, or loopback".to_string(),
+        ));
+    }
+    let stream = TcpStream::connect_timeout(&SocketAddr::new(address, port), timeout)
+        .map_err(|error| MediaRendererError::Io(error.to_string()))?;
+    stream
+        .set_read_timeout(Some(timeout))
+        .map_err(|error| MediaRendererError::Io(error.to_string()))?;
+    stream
+        .set_write_timeout(Some(timeout))
+        .map_err(|error| MediaRendererError::Io(error.to_string()))?;
+    Ok(stream)
+}
+
+fn read_bounded(reader: &mut dyn Read, maximum: usize) -> Result<Vec<u8>, MediaRendererError> {
+    let mut bytes = Vec::new();
+    let mut buffer = [0u8; 8192];
+    loop {
+        let read = reader
+            .read(&mut buffer)
+            .map_err(|error| MediaRendererError::Io(error.to_string()))?;
+        if read == 0 {
+            break;
+        }
+        if read > maximum.saturating_sub(bytes.len()) {
+            return Err(MediaRendererError::ResponseTooLarge { limit: maximum });
+        }
+        bytes.extend_from_slice(&buffer[..read]);
+    }
+    Ok(bytes)
+}
+
+fn decode_http_response(bytes: &[u8], maximum: usize) -> Result<Vec<u8>, MediaRendererError> {
+    let parsed = parse_response_head(bytes)
+        .map_err(|error: Http1ParseError| MediaRendererError::Http(error.to_string()))?;
+    if !(200..300).contains(&parsed.head.status) {
+        return Err(MediaRendererError::HttpStatus(parsed.head.status));
+    }
+    let input = &bytes[parsed.body_offset..];
+    let body = match parsed.body_kind {
+        BodyKind::None => Vec::new(),
+        BodyKind::ContentLength(expected) => {
+            if input.len() < expected {
+                return Err(MediaRendererError::TruncatedBody {
+                    expected,
+                    actual: input.len(),
+                });
+            }
+            input[..expected].to_vec()
+        }
+        BodyKind::UntilEof => input.to_vec(),
+        BodyKind::Chunked => {
+            return Err(MediaRendererError::Http(
+                "chunked MediaRenderer responses are unsupported".to_string(),
+            ))
+        }
+    };
+    if body.len() > maximum {
+        return Err(MediaRendererError::ResponseTooLarge { limit: maximum });
+    }
+    Ok(body)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
+    use std::collections::VecDeque;
+    use std::net::{TcpListener, UdpSocket};
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    use std::sync::{Arc, Mutex};
+    use std::thread;
+
+    const SETUP: &str = r#"<root xmlns="urn:schemas-upnp-org:device-1-0"><device><deviceType>urn:schemas-upnp-org:device:MediaRenderer:1</deviceType><friendlyName>Living Room Player</friendlyName><manufacturer>Example Audio</manufacturer><modelName>Renderer One</modelName><modelNumber>MR-1</modelNumber><softwareVersion>1.4.2</softwareVersion><UDN>uuid:renderer-347e5caabbcc</UDN><serviceList><service><serviceType>urn:schemas-upnp-org:service:AVTransport:1</serviceType><controlURL>/upnp/control/avtransport</controlURL><eventSubURL>/upnp/event/avtransport</eventSubURL></service><service><serviceType>urn:schemas-upnp-org:service:RenderingControl:1</serviceType><controlURL>/upnp/control/rendering</controlURL><eventSubURL>/upnp/event/rendering</eventSubURL></service></serviceList></device></root>"#;
+    const TRANSPORT: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetTransportInfoResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><CurrentTransportState>PLAYING</CurrentTransportState><CurrentTransportStatus>OK</CurrentTransportStatus><CurrentSpeed>1</CurrentSpeed></u:GetTransportInfoResponse></s:Body></s:Envelope>"#;
+    const POSITION: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetPositionInfoResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><TrackURI>x-upnp_media_renderer-http:track.mp3</TrackURI><TrackMetaData>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot;&gt;&lt;item&gt;&lt;dc:title&gt;Night Drive&lt;/dc:title&gt;&lt;dc:creator&gt;The Tests&lt;/dc:creator&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</TrackMetaData></u:GetPositionInfoResponse></s:Body></s:Envelope>"#;
+    const VOLUME: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetVolumeResponse xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><CurrentVolume>27</CurrentVolume></u:GetVolumeResponse></s:Body></s:Envelope>"#;
+    const MUTE: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetMuteResponse xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><CurrentMute>0</CurrentMute></u:GetMuteResponse></s:Body></s:Envelope>"#;
+    const TRANSPORT_PAUSED: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetTransportInfoResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><CurrentTransportState>PAUSED_PLAYBACK</CurrentTransportState></u:GetTransportInfoResponse></s:Body></s:Envelope>"#;
+    const TRANSPORT_STOPPED: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetTransportInfoResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><CurrentTransportState>STOPPED</CurrentTransportState></u:GetTransportInfoResponse></s:Body></s:Envelope>"#;
+    const VOLUME_42: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetVolumeResponse xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><CurrentVolume>42</CurrentVolume></u:GetVolumeResponse></s:Body></s:Envelope>"#;
+    const MUTED: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetMuteResponse xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><CurrentMute>1</CurrentMute></u:GetMuteResponse></s:Body></s:Envelope>"#;
+
+    struct ScriptedTransport {
+        responses: VecDeque<Vec<u8>>,
+        calls: Arc<Mutex<Vec<String>>>,
+    }
+
+    impl MediaRendererTransport for ScriptedTransport {
+        fn get(&mut self, endpoint: &str) -> Result<Vec<u8>, MediaRendererError> {
+            self.calls.lock().unwrap().push(format!("GET {endpoint}"));
+            self.responses
+                .pop_front()
+                .ok_or_else(|| MediaRendererError::Io("scripted response exhausted".to_string()))
+        }
+
+        fn soap(
+            &mut self,
+            endpoint: &str,
+            soap_action: &str,
+            body: &[u8],
+        ) -> Result<Vec<u8>, MediaRendererError> {
+            self.calls.lock().unwrap().push(format!(
+                "SOAP {endpoint} {soap_action} {}",
+                String::from_utf8_lossy(body)
+            ));
+            self.responses
+                .pop_front()
+                .ok_or_else(|| MediaRendererError::Io("scripted response exhausted".to_string()))
+        }
+    }
+
+    fn scripted_integration(
+        responses: &[&str],
+        calls: Arc<Mutex<Vec<String>>>,
+    ) -> MediaRendererRuntimeIntegration<ScriptedTransport> {
+        let config = MediaRendererConfig::new(
+            BridgeId::trusted("upnp_media_renderer:scripted"),
+            "http://127.0.0.1:1400/xml/device_description.xml",
+        )
+        .unwrap();
+        MediaRendererRuntimeIntegration::new(MediaRendererClient::new(
+            config,
+            ScriptedTransport {
+                responses: responses
+                    .iter()
+                    .map(|response| response.as_bytes().to_vec())
+                    .collect(),
+                calls,
+            },
+        ))
+    }
+
+    fn grant_all(runtime: &mut SmartHomeRuntime, principal: &AgentId) {
+        let _ = runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted(format!("grant:{}", principal.as_str())),
+                principal.clone(),
+                PrivilegeTier::LowRisk,
+                "test",
+                1,
+            )
+            .with_expiry(1_000),
+        );
+    }
+
+    #[test]
+    fn parses_ssdp_description_and_player_state() {
+        let candidate = parse_ssdp_response(
+            b"HTTP/1.1 200 OK\r\nST: urn:schemas-upnp-org:device:MediaRenderer:1\r\nUSN: uuid:renderer-347e5caabbcc::urn:schemas-upnp-org:device:MediaRenderer:1\r\nLOCATION: http://127.0.0.1:1400/xml/device_description.xml\r\nSERVER: Linux UPnP/1.0 Example/1.4.2\r\n\r\n",
+        )
+        .unwrap();
+        let description = parse_device_description(SETUP.as_bytes()).unwrap();
+        assert_eq!(
+            candidate.location,
+            "http://127.0.0.1:1400/xml/device_description.xml"
+        );
+        assert_eq!(description.friendly_name, "Living Room Player");
+        assert_eq!(description.manufacturer.as_deref(), Some("Example Audio"));
+        assert_eq!(description.serial_number, None);
+        assert_eq!(
+            decode_transport_info(TRANSPORT.as_bytes()).unwrap(),
+            MediaRendererPlaybackState::Play
+        );
+        assert_eq!(decode_volume(VOLUME.as_bytes()).unwrap(), 27);
+        assert!(!decode_mute(MUTE.as_bytes()).unwrap());
+        let metadata = decode_position_info(POSITION.as_bytes())
+            .unwrap()
+            .track_metadata
+            .unwrap();
+        assert_eq!(
+            parse_didl_metadata(&metadata).unwrap(),
+            (
+                Some("Night Drive".to_string()),
+                Some("The Tests".to_string())
+            )
+        );
+    }
+
+    #[test]
+    fn configuration_rejects_dns_public_and_cross_origin_control_urls() {
+        for setup_url in [
+            "http://speaker.local:1400/xml/device_description.xml",
+            "http://203.0.113.9:1400/xml/device_description.xml",
+            "http://127.0.0.1:0/xml/device_description.xml",
+        ] {
+            assert!(matches!(
+                MediaRendererConfig::new(
+                    BridgeId::trusted("upnp_media_renderer:invalid"),
+                    setup_url
+                ),
+                Err(MediaRendererError::Validation(_))
+            ));
+        }
+        assert!(matches!(
+            resolve_control_url(
+                "http://127.0.0.1:1400/xml/device_description.xml",
+                "http://127.0.0.2:1400/upnp/control/avtransport"
+            ),
+            Err(MediaRendererError::Validation(_))
+        ));
+    }
+
+    #[test]
+    fn authorized_commands_are_fixed_idempotent_verified_and_denied_before_io() {
+        let calls = Arc::new(Mutex::new(Vec::new()));
+        let mut integration = scripted_integration(
+            &[
+                SETUP,
+                TRANSPORT,
+                POSITION,
+                VOLUME,
+                MUTE,
+                TRANSPORT,
+                TRANSPORT,
+                "",
+                TRANSPORT_PAUSED,
+                VOLUME,
+                "",
+                VOLUME_42,
+                MUTE,
+                "",
+                MUTED,
+                TRANSPORT_PAUSED,
+                "",
+                TRANSPORT_STOPPED,
+            ],
+            Arc::clone(&calls),
+        );
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:upnp_media_renderer-command");
+        grant_all(&mut runtime, &principal);
+        let entity_id = integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 10)
+            .unwrap();
+
+        for request in [
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetPlaybackState),
+                Value::Text("play".to_string()),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetPlaybackState),
+                Value::Text("pause".to_string()),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetVolume),
+                Value::Percentage(42),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetMute),
+                Value::Bool(true),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetPlaybackState),
+                Value::Text("stop".to_string()),
+            ),
+        ] {
+            assert!(integration
+                .dispatch_command_authorized(&mut runtime, principal.clone(), request, 20)
+                .unwrap()
+                .is_accepted());
+        }
+
+        let captured = calls.lock().unwrap().clone();
+        assert_eq!(captured.len(), 18);
+        assert!(captured[7].contains("#Pause\"") && captured[7].contains("<InstanceID>0"));
+        assert!(
+            captured[10].contains("#SetVolume\"")
+                && captured[10].contains("<DesiredVolume>42</DesiredVolume>")
+        );
+        assert!(
+            captured[13].contains("#SetMute\"")
+                && captured[13].contains("<DesiredMute>1</DesiredMute>")
+        );
+        assert!(captured[16].contains("#Stop\"") && captured[16].contains("<InstanceID>0"));
+
+        let before_denial = calls.lock().unwrap().len();
+        assert!(matches!(
+            integration.dispatch_command_authorized(
+                &mut runtime,
+                AgentId::trusted("agent:upnp_media_renderer-denied"),
+                RuntimeCommandToolRequest::new(
+                    entity_id,
+                    CommandType::Media(MediaCommandType::SetPlaybackState),
+                    Value::Text("play".to_string()),
+                ),
+                30,
+            ),
+            Err(MediaRendererError::Runtime(_))
+        ));
+        assert_eq!(calls.lock().unwrap().len(), before_denial);
+    }
+
+    #[test]
+    fn command_postconditions_and_allowlist_fail_closed() {
+        let calls = Arc::new(Mutex::new(Vec::new()));
+        let mut integration = scripted_integration(
+            &[
+                SETUP, TRANSPORT, POSITION, VOLUME, MUTE, TRANSPORT, "", TRANSPORT,
+            ],
+            Arc::clone(&calls),
+        );
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:upnp_media_renderer-postcondition");
+        grant_all(&mut runtime, &principal);
+        let entity_id = integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 10)
+            .unwrap();
+
+        assert!(matches!(
+            integration.dispatch_command_authorized(
+                &mut runtime,
+                principal.clone(),
+                RuntimeCommandToolRequest::new(
+                    entity_id.clone(),
+                    CommandType::Media(MediaCommandType::SetPlaybackState),
+                    Value::Text("pause".to_string()),
+                ),
+                20,
+            ),
+            Err(MediaRendererError::PlaybackPostcondition {
+                expected: MediaRendererPlaybackState::Pause,
+                actual: MediaRendererPlaybackState::Play,
+            })
+        ));
+        let before_unsupported = calls.lock().unwrap().len();
+        assert!(matches!(
+            integration.dispatch_command_authorized(
+                &mut runtime,
+                principal,
+                RuntimeCommandToolRequest::new(
+                    entity_id,
+                    CommandType::Media(MediaCommandType::PlayNext),
+                    Value::Null,
+                ),
+                30,
+            ),
+            Err(MediaRendererError::UnsupportedCommand(CommandType::Media(
+                MediaCommandType::PlayNext
+            )))
+        ));
+        assert_eq!(calls.lock().unwrap().len(), before_unsupported);
+    }
+
+    #[test]
+    fn authorization_denies_before_transport_io() {
+        struct CountingTransport(Arc<AtomicUsize>);
+        impl MediaRendererTransport for CountingTransport {
+            fn get(&mut self, _endpoint: &str) -> Result<Vec<u8>, MediaRendererError> {
+                self.0.fetch_add(1, Ordering::SeqCst);
+                Ok(Vec::new())
+            }
+            fn soap(
+                &mut self,
+                _endpoint: &str,
+                _soap_action: &str,
+                _body: &[u8],
+            ) -> Result<Vec<u8>, MediaRendererError> {
+                self.0.fetch_add(1, Ordering::SeqCst);
+                Ok(Vec::new())
+            }
+        }
+        let calls = Arc::new(AtomicUsize::new(0));
+        let config = MediaRendererConfig::new(
+            BridgeId::trusted("upnp_media_renderer:test"),
+            "http://127.0.0.1:1400/xml/device_description.xml",
+        )
+        .unwrap();
+        let client = MediaRendererClient::new(config, CountingTransport(Arc::clone(&calls)));
+        let mut integration = MediaRendererRuntimeIntegration::new(client);
+        let mut runtime = SmartHomeRuntime::new();
+        let error = integration
+            .inspect_and_install_authorized(&mut runtime, AgentId::trusted("agent:test"), 10)
+            .unwrap_err();
+        assert!(matches!(
+            error,
+            MediaRendererError::Runtime(RuntimeError::UnauthorizedTool { .. })
+        ));
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+    }
+
+    #[test]
+    fn loopback_discovery_inspection_and_install() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let http_address = listener.local_addr().unwrap();
+        let requests = Arc::new(Mutex::new(Vec::new()));
+        let server_requests = Arc::clone(&requests);
+        let http_handle = thread::spawn(move || {
+            for body in [SETUP, TRANSPORT, POSITION, VOLUME, MUTE] {
+                let (mut stream, _) = listener.accept().unwrap();
+                let mut request = [0u8; 4096];
+                let read = stream.read(&mut request).unwrap();
+                server_requests
+                    .lock()
+                    .unwrap()
+                    .push(String::from_utf8_lossy(&request[..read]).to_string());
+                write!(
+                    stream,
+                    "HTTP/1.1 200 OK\r\nContent-Type: text/xml\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                    body.len(),
+                    body
+                )
+                .unwrap();
+            }
+        });
+        let udp = UdpSocket::bind("127.0.0.1:0").unwrap();
+        let udp_address = udp.local_addr().unwrap();
+        let udp_handle = thread::spawn(move || {
+            let mut request = [0u8; 2048];
+            let (_, source) = udp.recv_from(&mut request).unwrap();
+            let response = format!(
+                "HTTP/1.1 200 OK\r\nST: {MEDIA_RENDERER_DEVICE_TYPE}\r\nUSN: uuid:renderer-347e5caabbcc::{MEDIA_RENDERER_DEVICE_TYPE}\r\nLOCATION: http://{http_address}/xml/device_description.xml\r\nSERVER: Linux UPnP/1.0 Example/1.4.2\r\n\r\n"
+            );
+            udp.send_to(response.as_bytes(), source).unwrap();
+        });
+        let candidates = discover_ssdp(
+            udp_address,
+            UdpOptions {
+                bind_addr: Some("127.0.0.1:0".parse().unwrap()),
+                max_datagram_size: 4096,
+                read_timeout: Some(Duration::from_millis(100)),
+                write_timeout: Some(Duration::from_millis(100)),
+            },
+            4,
+        )
+        .unwrap();
+        assert_eq!(candidates.len(), 1);
+
+        let config = MediaRendererConfig::new(
+            BridgeId::trusted("upnp_media_renderer:test"),
+            &candidates[0].location,
+        )
+        .unwrap();
+        let client = MediaRendererClient::new(config, MediaRendererLanTransport::default());
+        let mut integration = MediaRendererRuntimeIntegration::new(client);
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:upnp_media_renderer-test");
+        let _ = runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant:upnp_media_renderer-test"),
+                principal.clone(),
+                PrivilegeTier::LowRisk,
+                "test",
+                1,
+            )
+            .with_expiry(100),
+        );
+        let entity_id = integration
+            .inspect_and_install_authorized(&mut runtime, principal, 10)
+            .unwrap();
+        let entity = runtime.registry().entity(&entity_id).unwrap();
+        assert_eq!(entity.kind, EntityKind::Unknown);
+        assert_eq!(
+            entity.capabilities[0].capability_id.as_str(),
+            "media.player_state"
+        );
+        assert!(entity.capabilities.iter().any(|capability| {
+            capability.capability_id.as_str() == "media.playback"
+                && capability.mode == CapabilityMode::ObserveAndCommand
+        }));
+        assert!(entity.capabilities.iter().any(|capability| {
+            capability.capability_id.as_str() == "media.volume"
+                && capability.mode == CapabilityMode::ObserveAndCommand
+        }));
+        udp_handle.join().unwrap();
+        http_handle.join().unwrap();
+        let requests = requests.lock().unwrap();
+        assert!(requests[0].starts_with("GET /xml/device_description.xml HTTP/1.1"));
+        assert!(requests[1].contains("GetTransportInfo"));
+        assert!(requests[2].contains("GetPositionInfo"));
+        assert!(requests[3].contains("GetVolume"));
+        assert!(requests[4].contains("GetMute"));
+    }
+
+    #[test]
+    fn loopback_http_pause_uses_fixed_soap_action_and_verifies_readback() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let requests = Arc::new(Mutex::new(Vec::new()));
+        let server_requests = Arc::clone(&requests);
+        let action_ok = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:PauseResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"/></s:Body></s:Envelope>"#;
+        let server = thread::spawn(move || {
+            for body in [
+                SETUP,
+                TRANSPORT,
+                POSITION,
+                VOLUME,
+                MUTE,
+                TRANSPORT,
+                action_ok,
+                TRANSPORT_PAUSED,
+            ] {
+                let (mut stream, _) = listener.accept().unwrap();
+                let mut request = [0u8; 4096];
+                let read = stream.read(&mut request).unwrap();
+                server_requests
+                    .lock()
+                    .unwrap()
+                    .push(String::from_utf8_lossy(&request[..read]).to_string());
+                write!(
+                    stream,
+                    "HTTP/1.1 200 OK\r\nContent-Type: text/xml\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                    body.len(),
+                    body
+                )
+                .unwrap();
+            }
+        });
+
+        let config = MediaRendererConfig::new(
+            BridgeId::trusted("upnp_media_renderer:loopback-command"),
+            format!("http://{address}/xml/device_description.xml"),
+        )
+        .unwrap();
+        let mut integration = MediaRendererRuntimeIntegration::new(MediaRendererClient::new(
+            config,
+            MediaRendererLanTransport::default(),
+        ));
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:upnp_media_renderer-loopback-command");
+        grant_all(&mut runtime, &principal);
+        let entity_id = integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 10)
+            .unwrap();
+        integration
+            .dispatch_command_authorized(
+                &mut runtime,
+                principal,
+                RuntimeCommandToolRequest::new(
+                    entity_id,
+                    CommandType::Media(MediaCommandType::SetPlaybackState),
+                    Value::Text("pause".to_string()),
+                ),
+                20,
+            )
+            .unwrap();
+
+        server.join().unwrap();
+        let requests = requests.lock().unwrap();
+        assert_eq!(requests.len(), 8);
+        assert!(requests[5].contains("#GetTransportInfo\""));
+        assert!(requests[6].contains("#Pause\""));
+        assert!(requests[6].contains("<InstanceID>0</InstanceID>"));
+        assert!(requests[7].contains("#GetTransportInfo\""));
+    }
+}

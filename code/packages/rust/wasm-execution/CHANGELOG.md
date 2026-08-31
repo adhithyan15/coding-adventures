@@ -2,6 +2,60 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.76] - 2026-08-31 (W30 follow-up — real memory64 bulk operations)
+
+### Added
+
+- **Real `is64` memory bulk operations**: `memory.copy`/`memory.fill`/
+  `memory.init` now honor the TARGET memory's own `is64` (memory64
+  proposal — W25's own first slice widened plain scalar load/store and
+  `memory.size`/`memory.grow`, but left this bulk-memory family assuming
+  a hardcoded `i32` operand unconditionally; see `code/specs/
+  W25-wasm-memory64-first-slice.md`'s "Explicitly out of scope" section).
+  Mirrors that first slice's own `pop_effective_addr` is64/is32 branch —
+  and the table64 follow-up's identical `pop_table_operand` shape (W26) —
+  applied one level down to `LinearMemory`'s dest/src/len operands
+  instead of a load/store address or a table index.
+- New `pop_bulk_memory_operand` helper: pops a real `i64` operand for an
+  `is64` memory, `i32` otherwise. Unlike table64's `pop_table_operand`,
+  no `u64`-to-`u32` narrowing sentinel is needed — `LinearMemory`'s
+  storage is already `usize`-addressed directly (not `u32`-bounded like
+  `Table`), and its `copy`/`copy_between`/`fill` methods already
+  bounds-check every range via `usize::checked_add`, independent of
+  `is64`. `u64 as usize` is a lossless, non-truncating identity cast on
+  the 64-bit hosts this interpreter targets, so a huge, adversarial
+  `i64` operand (e.g. `bulk64.wast`'s own `(i64.const -1)` length) still
+  reaches that existing bounds check as the same huge value and traps
+  cleanly, rather than silently wrapping into a small, coincidentally
+  in-bounds one.
+- `memory.copy`'s `dest` operand follows the DESTINATION memory's own
+  `is64`, `src` follows the SOURCE memory's own `is64`, independently;
+  `len` is `i64` ONLY when BOTH memories are `is64` — otherwise `i32`,
+  same "the smaller of the two index types governs a shared length/count
+  operand" rule `table.copy` already established for the analogous mixed
+  is64/is32 table case (W26 / `table_copy_mixed.wast`). No real vendored
+  corpus file exercises the mixed-memory case (`memory_copy64.wast`
+  declares only one, `is64` memory per module), but the implementation
+  handles it generically per the combined memory64/table64 proposal's
+  own stated rule, exercised by this crate's own binary-encoded unit
+  tests (see below) and `wasm-validator`'s matching test.
+- `memory.init`'s `dest` operand widens per the TARGET memory's own
+  `is64`; `src`/`len` (positions within the passive data segment) always
+  stay `i32` — a data segment isn't itself address-typed. Verified
+  against the real `bulk64.wast`/`memory_init64.wast` corpus.
+- `memory.grow`/`memory.size` needed **no changes** — their `is64`
+  awareness was already part of the first slice (W25); confirmed by
+  re-reading `register_memory`'s existing `0x3F`/`0x40` handlers before
+  assuming otherwise (the real `memory_grow64.wast` corpus vendors with
+  100% pass, zero code changes).
+
+### Tests
+
+- 4 new unit tests: `memory.fill`/`memory.copy`/`memory.init` against a
+  real `is64` memory (dest/src/len widening, including the
+  init-widens-only-dest case), plus a huge-`i64`-length `memory.fill`
+  boundary case confirming a clean trap, not a panic.
+
 ## [0.9.75] - 2026-08-31 (extended-const proposal — real operand stack in `evaluate_const_expr`)
 
 ### Added

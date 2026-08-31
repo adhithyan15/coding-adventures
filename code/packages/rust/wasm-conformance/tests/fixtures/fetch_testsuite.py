@@ -1298,6 +1298,75 @@ TESTSUITE_FILES = [
     "binary.wast",
     "binary-leb128.wast",
     "binary_leb128_64.wast",
+    # memory64 proposal, REAL BULK OPERATIONS follow-up (W30 -- see
+    # code/specs/W25-wasm-memory64-first-slice.md's own "Addendum: real
+    # memory64 bulk operations" section, which named exactly this file
+    # list as the deferred follow-on): `memory.copy`/`memory.fill`/
+    # `memory.init` against a real `is64` memory, plus the plain scalar
+    # load/store address-computation/alignment/endianness/trap corpus
+    # splits the first slice's own vendoring pass didn't get to.
+    # `bulk64.wast` is the one file exercising all three bulk ops in a
+    # single self-contained module; `memory_copy64.wast`/
+    # `memory_fill64.wast`/`memory_init64.wast` are each op's own dense,
+    # generated corpus split (mirroring their is32 siblings `memory_
+    # copy0/1.wast`/`memory_fill0.wast`/`memory_init0.wast`, already
+    # vendored). `memory_grow64.wast` needed NO new code at all --
+    # `memory.size`/`memory.grow`'s is64-awareness was already part of the
+    # first slice (W25), confirmed by re-reading `wasm-execution::
+    # register_memory`'s existing `0x3F`/`0x40` handlers before assuming
+    # otherwise. `memory_redundancy64.wast`/`memory_trap64.wast`/
+    # `address64.wast`/`align64.wast`/`endianness64.wast`/`load64.wast`/
+    # `float_memory64.wast` are all plain scalar load/store address-
+    # computation edge cases with zero bulk-memory/table content (verified
+    # by reading each file, not assumed from its name) -- already fully
+    # covered by the first slice's `pop_effective_addr` is64/is32 branch,
+    # vendored here purely because nobody had fetched them yet.
+    "bulk64.wast",
+    "memory_copy64.wast",
+    "memory_fill64.wast",
+    "memory_init64.wast",
+    "memory_grow64.wast",
+    "memory_redundancy64.wast",
+    "memory_trap64.wast",
+    "address64.wast",
+    "align64.wast",
+    "endianness64.wast",
+    "load64.wast",
+    "float_memory64.wast",
+    # One additional census-flagged file, unrelated to memory64 itself,
+    # vendored in the same pass after independently verifying (not
+    # assuming) what it actually needs: `bulk.wast`, the plain (is32)
+    # bulk-memory-operations proposal test file (`memory.copy`/`memory.
+    # fill`/`memory.init`/`table.init`/`elem.drop` for ordinary 32-bit
+    # memories/tables, plus a segment-index LEB128-encoding edge case) --
+    # every op it exercises was already implemented (tasks #94/#95/#97),
+    # it had simply never been fetched. 100% pass, zero fail.
+    #
+    # `extern.wast` (the OTHER census-flagged file) was tried too and is
+    # deliberately NOT in this list -- read in full before deciding, it is
+    # NOT a simple omission of the MVP-era externref this repo already
+    # supports (W08). Every directive uses real WasmGC surface this repo
+    # doesn't have (`anyref`, `any.convert_extern`/`extern.convert_any`,
+    # `struct.new_default`, `array.new_default`, `ref.i31` interop,
+    # `(elem declare func ...)` declarative segments), AND its
+    # `assert_return` expected-value position uses a `ref.host N` literal
+    # `wasm-wast-parser`'s constant-expression parser doesn't recognize at
+    # all -- unlike the GC-proposal batch above (`ref.wast`, `call_ref.
+    # wast`, etc.), which all gracefully degrade to all-`not_yet_supported`
+    # at the DIRECTIVE level, this file fails to parse as a SCRIPT
+    # entirely (`FAILED TO PARSE SCRIPT: at byte 1150: expected a *.const
+    # expression, found "ref.host"`, confirmed by actually running it, not
+    # assumed) -- the same "genuinely blocked, not just under-scoped"
+    # non-null-concrete-reference-type wall three independent prior
+    # sessions (W20/W23/W24) already found, reached from yet another
+    # direction. This crate's own committed baseline has zero pre-existing
+    # `parse_failures` entries (a real, load-bearing policy: only vendor
+    # files that at least parse as a script, even when most of their
+    # individual directives grade `not_yet_supported`) -- adding one here
+    # would be the first, and would need its own dedicated follow-up
+    # session's worth of GC/ref-literal work to close, not a small fix
+    # bundled into this one.
+    "bulk.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

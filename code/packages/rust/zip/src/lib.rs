@@ -622,6 +622,18 @@ pub struct ZipEntry {
 pub struct ZipReader<'a> {
     data: &'a [u8],
     entries: Vec<ZipEntry>,
+    /// Name to index into `entries`, built once when the archive is parsed.
+    ///
+    /// `read_by_name` used to scan `entries` linearly. That is fine for the
+    /// handful of members a real archive has, but callers that look up one name
+    /// per entry — the Anki media reader does exactly this — turn it quadratic,
+    /// and entry count is linear in archive size (a central-directory header is
+    /// 46 bytes plus the name). A few hundred thousand entries sharing a long
+    /// common prefix is then billions of string comparisons: a frozen tab, with
+    /// no memory pressure and no error to show for it.
+    ///
+    /// First name wins, matching the previous `find` behaviour for duplicates.
+    by_name: std::collections::HashMap<String, usize>,
 }
 
 /// Read a little-endian u16 from `data` at `offset`. Returns None on OOB.
@@ -653,18 +665,23 @@ impl<'a> ZipReader<'a> {
         let _num_entries = read_u16(data, eocd_offset + 10)
             .ok_or("zip: EOCD too short")?;
 
-        // Validate CD range.
-        if cd_offset + cd_size > data.len() {
+        // Validate CD range. Checked: both terms are `u32` fields from the
+        // archive, and `usize` is 32 bits on `wasm32`, so an unchecked sum wraps
+        // and the bounds test below passes on a nonsense range.
+        let cd_end = cd_offset
+            .checked_add(cd_size)
+            .ok_or("zip: Central Directory range overflows the address space")?;
+        if cd_end > data.len() {
             return Err(format!(
                 "zip: Central Directory [{}, {}) out of bounds (file size {})",
-                cd_offset, cd_offset + cd_size, data.len()
+                cd_offset, cd_end, data.len()
             ));
         }
 
         // Parse all Central Directory headers.
         let mut entries = Vec::new();
         let mut pos = cd_offset;
-        while pos + 4 <= cd_offset + cd_size {
+        while pos.checked_add(4).is_some_and(|end| end <= cd_end) {
             let sig = read_u32(data, pos).unwrap_or(0);
             if sig != 0x02014B50 {
                 break; // end of CD or padding
@@ -679,8 +696,12 @@ impl<'a> ZipReader<'a> {
             let comment_len      = read_u16(data, pos + 32).ok_or("zip: CD entry truncated")? as usize;
             let local_offset     = read_u32(data, pos + 42).ok_or("zip: CD entry truncated")?;
 
-            let name_start = pos + 46;
-            let name_end   = name_start + name_len;
+            let name_start = pos
+                .checked_add(46)
+                .ok_or("zip: CD entry name offset overflows the address space")?;
+            let name_end = name_start
+                .checked_add(name_len)
+                .ok_or("zip: CD entry name length overflows the address space")?;
             if name_end > data.len() {
                 return Err("zip: CD entry name out of bounds".into());
             }
@@ -691,10 +712,23 @@ impl<'a> ZipReader<'a> {
                 name, size, compressed_size, method, crc32, is_directory, local_offset,
             });
 
-            pos = name_end + extra_len + comment_len;
+            pos = name_end
+                .checked_add(extra_len)
+                .and_then(|value| value.checked_add(comment_len))
+                .ok_or("zip: CD entry advance overflows the address space")?;
         }
 
-        Ok(Self { data, entries })
+        // First occurrence wins, matching the linear `find` this replaces.
+        let mut by_name = std::collections::HashMap::with_capacity(entries.len());
+        for (index, entry) in entries.iter().enumerate() {
+            by_name.entry(entry.name.clone()).or_insert(index);
+        }
+
+        Ok(Self {
+            data,
+            entries,
+            by_name,
+        })
     }
 
     /// Return all entries in the archive (files and directories).
@@ -709,8 +743,15 @@ impl<'a> ZipReader<'a> {
         if entry.is_directory {
             return Ok(Vec::new());
         }
-        // Reject encrypted entries (GP flag bit 0).
-        let local_flags = read_u16(self.data, entry.local_offset as usize + 6)
+        // Checked like the rest of this function. Safe in the shipping `--release`
+        // build either way, since the `checked_add` below rejects any offset large
+        // enough to wrap here — but under `overflow-checks` (the default `dev`
+        // profile, and `cargo test`) an unchecked `+` panics on attacker input,
+        // and on wasm a panic is an uncatchable trap.
+        let lh_off = entry.local_offset as usize;
+        let local_flags = lh_off
+            .checked_add(6)
+            .and_then(|offset| read_u16(self.data, offset))
             .ok_or("zip: local header out of bounds")?;
         if local_flags & 1 != 0 {
             return Err(format!("zip: entry '{}' is encrypted; not supported", entry.name));
@@ -719,11 +760,33 @@ impl<'a> ZipReader<'a> {
         // Skip the Local Header to reach the file data.
         // The Local Header has variable-length name + extra fields (which may
         // differ in length from the CD header). We must re-read them here.
-        let lh_off = entry.local_offset as usize;
-        let lh_name_len  = read_u16(self.data, lh_off + 26).ok_or("zip: local header truncated")? as usize;
-        let lh_extra_len = read_u16(self.data, lh_off + 28).ok_or("zip: local header truncated")? as usize;
-        let data_start   = lh_off + 30 + lh_name_len + lh_extra_len;
-        let data_end     = data_start + entry.compressed_size as usize;
+        let lh_name_len = lh_off
+            .checked_add(26)
+            .and_then(|offset| read_u16(self.data, offset))
+            .ok_or("zip: local header truncated")? as usize;
+        let lh_extra_len = lh_off
+            .checked_add(28)
+            .and_then(|offset| read_u16(self.data, offset))
+            .ok_or("zip: local header truncated")? as usize;
+        // Checked, because `usize` is 32 bits on `wasm32` and every term here is
+        // attacker-controlled: `local_offset` and `compressed_size` are `u32`
+        // fields read straight from the archive. Unchecked `+` wraps, and a
+        // wrapped-small `data_end` sails through the bounds check below only to
+        // panic on `&self.data[data_start..data_end]` with `start > end`.
+        //
+        // A panic is not recoverable here. `wasm32-unknown-unknown` builds with
+        // `panic = "abort"`, so the `catch_unwind` the JSON facade wraps every
+        // call in never runs — the whole module traps and the user's in-memory
+        // collection is lost. On 64-bit hosts these sums cannot overflow, which
+        // is why this went unnoticed while the package layer was native-only.
+        let data_start = lh_off
+            .checked_add(30)
+            .and_then(|value| value.checked_add(lh_name_len))
+            .and_then(|value| value.checked_add(lh_extra_len))
+            .ok_or("zip: local header offset overflows the address space")?;
+        let data_end = data_start
+            .checked_add(entry.compressed_size as usize)
+            .ok_or("zip: entry size overflows the address space")?;
 
         if data_end > self.data.len() {
             return Err(format!(
@@ -774,9 +837,11 @@ impl<'a> ZipReader<'a> {
 
     /// Find an entry by name and return its decompressed data.
     pub fn read_by_name(&self, name: &str) -> Result<Vec<u8>, String> {
-        let entry = self.entries.iter()
-            .find(|e| e.name == name)
+        let index = *self
+            .by_name
+            .get(name)
             .ok_or_else(|| format!("zip: entry '{}' not found", name))?;
+        let entry = &self.entries[index];
         self.read(entry)
     }
 

@@ -2,6 +2,38 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.73] - 2026-08-31 (W30 follow-up — real memory64 bulk operations)
+
+### Added
+
+- `memory.copy`/`memory.fill`/`memory.init`'s type-check rules now pick
+  `I64` vs. `I32` for their dest/src/len operand(s) per the relevant
+  memory's own `is64`, reading the already-existing per-memory
+  `memory_is64: Vec<bool>` (W25) the same way `table_is64` (W26) is
+  already read for the analogous table ops — previously all three
+  unconditionally required `I32`, rejecting a real `is64` memory's own
+  correctly-`i64`-typed operands.
+- `memory.copy`'s `dest`/`src` operands type-check independently against
+  the DESTINATION/SOURCE memory's own `is64`; `len` type-checks as `I64`
+  ONLY when BOTH memories are `is64` — otherwise `I32`, mirroring
+  `table.copy`'s identical mixed-index-width rule (W26).
+- `memory.init`'s `dest` operand type-checks per the TARGET memory's own
+  `is64`; `src`/`len` (positions within the passive data segment) always
+  stay `I32`.
+
+### Tests
+
+- 9 new `assert_valid`/`assert_invalid` cases covering `memory.fill`/
+  `memory.copy`/`memory.init` against a real `is64` memory, plus a
+  binary-encoded (`module_with_body`) mixed is64/is32 `memory.copy` case
+  — the text form can't reach it: `wasm-wast-parser`'s `memory.copy`
+  encoder has no leading-memidx-token support at all (unlike
+  `memory.fill`/`memory.init`), always emitting the implicit `memidx=0`
+  pair, so a genuinely two-memory `memory.copy` can only be constructed
+  at the binary level today. No real vendored corpus file needs the text
+  form either (every `*64.wast` file declares a single memory), so this
+  is left as a pre-existing, unrelated gap rather than fixed here.
+
 ## [0.2.72] - 2026-08-26 (W26 follow-up — real table64 operations)
 
 ### Added

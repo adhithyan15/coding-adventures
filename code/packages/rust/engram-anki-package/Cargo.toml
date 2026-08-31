@@ -5,6 +5,29 @@ edition = "2021"
 description = "APKG archive inspection foundation for Engram Anki compatibility."
 license = "MIT"
 
+# `modern-format` covers Anki's modern `.anki21b` / `.colpkg` packages, whose
+# collection and media payloads are zstd-compressed. It is on by default, so
+# native hosts keep full Anki compatibility with no change.
+#
+# It exists to be turned *off* for `wasm32`. The only zstd implementation that
+# handles arbitrary real-world frames today is the third-party `zstd` crate,
+# which reaches libzstd's C sources through `zstd-sys` and cannot target
+# `wasm32-unknown-unknown` — `clang` has no such target, so the build script
+# fails outright.
+#
+# Legacy V11 `.apkg` never touches zstd: `write_legacy_apkg` stores its members
+# uncompressed through the repo's own zero-dependency `zip` crate. So switching
+# this feature off yields a package layer that builds for the browser and still
+# does legacy import and export, rather than the current situation where the
+# whole layer is compiled out and every APKG call fails.
+#
+# Completing the repo's own zero-dependency `zstd` to RFC 8878 would let this
+# feature go away entirely — see the tracking issue for Huffman literals and FSE
+# table descriptions.
+[features]
+default = ["modern-format"]
+modern-format = ["dep:zstd_crate"]
+
 [dependencies]
 coding_adventures_sha1 = { path = "../sha1" }
 engram-core = { path = "../engram-core" }
@@ -13,7 +36,7 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sqlite-file = { path = "../sqlite-file" }
 zip = { path = "../zip" }
-zstd_crate = { package = "zstd", version = "0.13" }
+zstd_crate = { package = "zstd", version = "0.13", optional = true }
 
 # `rusqlite` is a DEV-dependency only. It no longer writes anything: the V11
 # export is emitted by `sqlite-file`'s zero-dependency writer, so the production

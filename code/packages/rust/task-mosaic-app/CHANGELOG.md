@@ -1,5 +1,12 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — pin the first-release upgrade fixture (#13614)
+
+The adapter now restores a committed TaskApp v0.1.0 semantic fixture in its unit
+suite, including the saved task, due date, Rust schedule, and Full CPM project
+setting. Release packaging materializes this same fixture into the standard host
+snapshot envelope before exercising each desktop bundle's stable data path.
+
 ## [Unreleased] — share the web/native presentation contract (#13521)
 
 The native adapter now consumes the same data-driven lifecycle fixture as the

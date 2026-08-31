@@ -2,7 +2,6 @@
 
 #![forbid(unsafe_code)]
 
-use coding_adventures_xml_parser::{parse_xml, XmlElement, XmlNode};
 use http1::{parse_response_head, Http1ParseError};
 use http_core::BodyKind;
 use smart_home_core::{
@@ -21,14 +20,18 @@ use std::io::{Read, Write};
 use std::net::{IpAddr, Ipv6Addr, SocketAddr, TcpStream};
 use std::time::Duration;
 use udp_client::{send_to_and_collect, UdpDiscoveryEndpoint, UdpError, UdpOptions};
+use upnp_av_protocol::{
+    decode_mute, decode_position_info, decode_transport_info, decode_volume, encode_action,
+    parse_renderer_description, Action as UpnpAvAction, UpnpAvError,
+};
 use url_parser::{Url, UrlError};
 
 pub const VERSION: &str = "0.1.0";
 pub const INTEGRATION_ID: &str = "sonos";
 pub const PROTOCOL_ID: &str = "sonos_upnp";
 pub const ZONE_PLAYER_DEVICE_TYPE: &str = "urn:schemas-upnp-org:device:ZonePlayer:1";
-pub const AV_TRANSPORT_SERVICE_TYPE: &str = "urn:schemas-upnp-org:service:AVTransport:1";
-pub const RENDERING_CONTROL_SERVICE_TYPE: &str = "urn:schemas-upnp-org:service:RenderingControl:1";
+pub const AV_TRANSPORT_SERVICE_TYPE: &str = upnp_av_protocol::AV_TRANSPORT_SERVICE_TYPE;
+pub const RENDERING_CONTROL_SERVICE_TYPE: &str = upnp_av_protocol::RENDERING_CONTROL_SERVICE_TYPE;
 pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
 
 #[derive(Debug)]
@@ -141,6 +144,16 @@ impl From<RuntimeError> for SonosError {
     }
 }
 
+impl From<UpnpAvError> for SonosError {
+    fn from(error: UpnpAvError) -> Self {
+        match error {
+            UpnpAvError::Validation(message) => Self::Validation(message),
+            UpnpAvError::Xml(message) => Self::Xml(message),
+            UpnpAvError::MissingService(service) => Self::MissingService(service),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SonosConfig {
     pub bridge_id: BridgeId,
@@ -208,28 +221,7 @@ pub struct SonosSnapshot {
     pub track_artist: Option<String>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum SonosPlaybackState {
-    Play,
-    Pause,
-    Stop,
-    Transitioning,
-    NoMedia,
-    Other(String),
-}
-
-impl SonosPlaybackState {
-    pub fn as_str(&self) -> &str {
-        match self {
-            Self::Play => "play",
-            Self::Pause => "pause",
-            Self::Stop => "stop",
-            Self::Transitioning => "transitioning",
-            Self::NoMedia => "no_media",
-            Self::Other(state) => state,
-        }
-    }
-}
+pub type SonosPlaybackState = upnp_av_protocol::PlaybackState;
 
 pub fn ssdp_search_request() -> Vec<u8> {
     format!(
@@ -451,41 +443,19 @@ impl<T: SonosTransport> SonosClient<T> {
             &self.config.setup_url,
             &description.rendering_control.control_url,
         )?;
-        let transport = self.soap_action(
-            &av_transport_url,
-            AV_TRANSPORT_SERVICE_TYPE,
-            "GetTransportInfo",
-            "<InstanceID>0</InstanceID>",
-        )?;
-        let position = self.soap_action(
-            &av_transport_url,
-            AV_TRANSPORT_SERVICE_TYPE,
-            "GetPositionInfo",
-            "<InstanceID>0</InstanceID>",
-        )?;
-        let volume = self.soap_action(
-            &rendering_url,
-            RENDERING_CONTROL_SERVICE_TYPE,
-            "GetVolume",
-            "<InstanceID>0</InstanceID><Channel>Master</Channel>",
-        )?;
-        let mute = self.soap_action(
-            &rendering_url,
-            RENDERING_CONTROL_SERVICE_TYPE,
-            "GetMute",
-            "<InstanceID>0</InstanceID><Channel>Master</Channel>",
-        )?;
-        let playback_state = parse_playback_state(&required_response_text(
-            &transport,
-            "CurrentTransportState",
-        )?);
-        let volume = parse_percentage(&required_response_text(&volume, "CurrentVolume")?)?;
-        let muted = parse_boolean(&required_response_text(&mute, "CurrentMute")?)?;
-        let track_uri = response_text(&position, "TrackURI")?;
-        let metadata = response_text(&position, "TrackMetaData")?;
+        let transport = self.soap_action(&av_transport_url, UpnpAvAction::GetTransportInfo)?;
+        let position = self.soap_action(&av_transport_url, UpnpAvAction::GetPositionInfo)?;
+        let volume = self.soap_action(&rendering_url, UpnpAvAction::GetVolume)?;
+        let mute = self.soap_action(&rendering_url, UpnpAvAction::GetMute)?;
+        let playback_state = decode_transport_info(&transport)?;
+        let volume = decode_volume(&volume)?;
+        let muted = decode_mute(&mute)?;
+        let position = decode_position_info(&position)?;
+        let track_uri = position.track_uri;
+        let metadata = position.track_metadata;
         let (track_title, track_artist) = metadata
             .as_deref()
-            .map(parse_didl_metadata)
+            .map(upnp_av_protocol::parse_didl_metadata)
             .transpose()?
             .unwrap_or((None, None));
         self.description = Some(description.clone());
@@ -502,45 +472,27 @@ impl<T: SonosTransport> SonosClient<T> {
 
     pub fn playback_state(&mut self) -> Result<SonosPlaybackState, SonosError> {
         let control_url = self.av_transport_control_url()?;
-        let response = self.soap_action(
-            &control_url,
-            AV_TRANSPORT_SERVICE_TYPE,
-            "GetTransportInfo",
-            "<InstanceID>0</InstanceID>",
-        )?;
-        Ok(parse_playback_state(&required_response_text(
-            &response,
-            "CurrentTransportState",
-        )?))
+        let response = self.soap_action(&control_url, UpnpAvAction::GetTransportInfo)?;
+        Ok(decode_transport_info(&response)?)
     }
 
     pub fn volume(&mut self) -> Result<u8, SonosError> {
         let control_url = self.rendering_control_url()?;
-        let response = self.soap_action(
-            &control_url,
-            RENDERING_CONTROL_SERVICE_TYPE,
-            "GetVolume",
-            "<InstanceID>0</InstanceID><Channel>Master</Channel>",
-        )?;
-        parse_percentage(&required_response_text(&response, "CurrentVolume")?)
+        let response = self.soap_action(&control_url, UpnpAvAction::GetVolume)?;
+        Ok(decode_volume(&response)?)
     }
 
     pub fn muted(&mut self) -> Result<bool, SonosError> {
         let control_url = self.rendering_control_url()?;
-        let response = self.soap_action(
-            &control_url,
-            RENDERING_CONTROL_SERVICE_TYPE,
-            "GetMute",
-            "<InstanceID>0</InstanceID><Channel>Master</Channel>",
-        )?;
-        parse_boolean(&required_response_text(&response, "CurrentMute")?)
+        let response = self.soap_action(&control_url, UpnpAvAction::GetMute)?;
+        Ok(decode_mute(&response)?)
     }
 
     fn set_playback_state(&mut self, desired: &SonosPlaybackState) -> Result<(), SonosError> {
-        let (action, arguments) = match desired {
-            SonosPlaybackState::Play => ("Play", "<InstanceID>0</InstanceID><Speed>1</Speed>"),
-            SonosPlaybackState::Pause => ("Pause", "<InstanceID>0</InstanceID>"),
-            SonosPlaybackState::Stop => ("Stop", "<InstanceID>0</InstanceID>"),
+        let action = match desired {
+            SonosPlaybackState::Play => UpnpAvAction::Play,
+            SonosPlaybackState::Pause => UpnpAvAction::Pause,
+            SonosPlaybackState::Stop => UpnpAvAction::Stop,
             SonosPlaybackState::Transitioning
             | SonosPlaybackState::NoMedia
             | SonosPlaybackState::Other(_) => {
@@ -550,34 +502,21 @@ impl<T: SonosTransport> SonosClient<T> {
             }
         };
         let control_url = self.av_transport_control_url()?;
-        self.soap_action(&control_url, AV_TRANSPORT_SERVICE_TYPE, action, arguments)?;
+        self.soap_action(&control_url, action)?;
         Ok(())
     }
 
     fn set_volume(&mut self, volume: u8) -> Result<(), SonosError> {
         let control_url = self.rendering_control_url()?;
-        self.soap_action(
-            &control_url,
-            RENDERING_CONTROL_SERVICE_TYPE,
-            "SetVolume",
-            &format!(
-                "<InstanceID>0</InstanceID><Channel>Master</Channel><DesiredVolume>{volume}</DesiredVolume>"
-            ),
-        )?;
+        let action = UpnpAvAction::SetVolume(volume);
+        self.soap_action(&control_url, action)?;
         Ok(())
     }
 
     fn set_muted(&mut self, muted: bool) -> Result<(), SonosError> {
         let control_url = self.rendering_control_url()?;
-        let desired = u8::from(muted);
-        self.soap_action(
-            &control_url,
-            RENDERING_CONTROL_SERVICE_TYPE,
-            "SetMute",
-            &format!(
-                "<InstanceID>0</InstanceID><Channel>Master</Channel><DesiredMute>{desired}</DesiredMute>"
-            ),
-        )?;
+        let action = UpnpAvAction::SetMute(muted);
+        self.soap_action(&control_url, action)?;
         Ok(())
     }
 
@@ -606,16 +545,11 @@ impl<T: SonosTransport> SonosClient<T> {
     fn soap_action(
         &mut self,
         control_url: &str,
-        service_type: &str,
-        action: &str,
-        arguments: &str,
+        action: UpnpAvAction,
     ) -> Result<Vec<u8>, SonosError> {
-        let body = format!(
-            "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:{action} xmlns:u=\"{service_type}\">{arguments}</u:{action}></s:Body></s:Envelope>"
-        );
-        let soap_action = format!("\"{service_type}#{action}\"");
+        let request = encode_action(action)?;
         self.transport
-            .soap(control_url, &soap_action, body.as_bytes())
+            .soap(control_url, &request.action_header, &request.body)
     }
 }
 
@@ -765,107 +699,35 @@ fn execute_command<T: SonosTransport>(
 }
 
 pub fn parse_device_description(bytes: &[u8]) -> Result<SonosDeviceDescription, SonosError> {
-    let source = std::str::from_utf8(bytes)
-        .map_err(|_| SonosError::Xml("device description is not UTF-8".to_string()))?;
-    let document = parse_xml(source).map_err(|error| SonosError::Xml(error.to_string()))?;
-    let device = descendant(&document.root, "device")
-        .ok_or_else(|| SonosError::Xml("description is missing device".to_string()))?;
-    let mut services = Vec::new();
-    collect_descendants(device, "service", &mut services);
-    let service = |service_type: &'static str| {
-        services
-            .iter()
-            .find_map(|service| {
-                let found_type = child_text(service, "serviceType")?;
-                if found_type != service_type {
-                    return None;
-                }
-                Some(SonosService {
-                    service_type: found_type,
-                    control_url: child_text(service, "controlURL").unwrap_or_default(),
-                    event_subscription_url: child_text(service, "eventSubURL"),
-                })
-            })
-            .filter(|service| !service.control_url.is_empty())
-            .ok_or(SonosError::MissingService(service_type))
+    let description = parse_renderer_description(bytes, ZONE_PLAYER_DEVICE_TYPE)?;
+    let serial_number = description
+        .serial_number
+        .filter(|value| !value.trim().is_empty())
+        .ok_or_else(|| SonosError::Xml("device is missing serialNumber".to_string()))?;
+    let service = |service: upnp_av_protocol::Service| SonosService {
+        service_type: service.service_type,
+        control_url: service.control_url,
+        event_subscription_url: service.event_subscription_url,
     };
     Ok(SonosDeviceDescription {
-        friendly_name: required_child_text(device, "friendlyName")?,
-        model_name: required_child_text(device, "modelName")?,
-        model_number: child_text(device, "modelNumber"),
-        serial_number: required_child_text(device, "serialNumber")?,
-        udn: required_child_text(device, "UDN")?,
-        firmware_version: child_text(device, "softwareVersion")
-            .or_else(|| child_text(device, "firmwareVersion")),
-        room_name: child_text(device, "roomName"),
-        av_transport: service(AV_TRANSPORT_SERVICE_TYPE)?,
-        rendering_control: service(RENDERING_CONTROL_SERVICE_TYPE)?,
+        friendly_name: description.friendly_name,
+        model_name: description.model_name,
+        model_number: description.model_number,
+        serial_number,
+        udn: description.udn,
+        firmware_version: description.firmware_version,
+        room_name: description.room_name,
+        av_transport: service(description.av_transport),
+        rendering_control: service(description.rendering_control),
     })
 }
 
-pub fn response_text(bytes: &[u8], name: &str) -> Result<Option<String>, SonosError> {
-    let source = std::str::from_utf8(bytes)
-        .map_err(|_| SonosError::Xml("SOAP response is not UTF-8".to_string()))?;
-    let document = parse_xml(source).map_err(|error| SonosError::Xml(error.to_string()))?;
-    if descendant(&document.root, "Fault").is_some() {
-        return Err(SonosError::Xml(
-            "SOAP response contains a fault".to_string(),
-        ));
-    }
-    Ok(descendant(&document.root, name)
-        .map(XmlElement::text_content)
-        .map(|value| value.trim().to_string())
-        .filter(|value| !value.is_empty() && value != "NOT_IMPLEMENTED"))
-}
-
-fn required_response_text(bytes: &[u8], name: &str) -> Result<String, SonosError> {
-    response_text(bytes, name)?
-        .ok_or_else(|| SonosError::Xml(format!("SOAP response is missing {name}")))
-}
-
-fn parse_percentage(value: &str) -> Result<u8, SonosError> {
-    value
-        .parse::<u8>()
-        .ok()
-        .filter(|value| *value <= 100)
-        .ok_or_else(|| SonosError::Xml(format!("invalid Sonos percentage `{value}`")))
-}
-
-fn parse_boolean(value: &str) -> Result<bool, SonosError> {
-    match value {
-        "0" | "false" => Ok(false),
-        "1" | "true" => Ok(true),
-        _ => Err(SonosError::Xml(format!("invalid Sonos boolean `{value}`"))),
-    }
-}
-
 pub fn parse_playback_state(value: &str) -> SonosPlaybackState {
-    match value {
-        "PLAYING" => SonosPlaybackState::Play,
-        "PAUSED_PLAYBACK" => SonosPlaybackState::Pause,
-        "STOPPED" => SonosPlaybackState::Stop,
-        "TRANSITIONING" => SonosPlaybackState::Transitioning,
-        "NO_MEDIA_PRESENT" => SonosPlaybackState::NoMedia,
-        state => SonosPlaybackState::Other(state.to_ascii_lowercase()),
-    }
+    upnp_av_protocol::parse_playback_state(value)
 }
 
 pub fn parse_didl_metadata(source: &str) -> Result<(Option<String>, Option<String>), SonosError> {
-    if source.trim().is_empty() {
-        return Ok((None, None));
-    }
-    let document = parse_xml(source).map_err(|error| SonosError::Xml(error.to_string()))?;
-    Ok((
-        descendant(&document.root, "title")
-            .map(XmlElement::text_content)
-            .map(|value| value.trim().to_string())
-            .filter(|value| !value.is_empty()),
-        descendant(&document.root, "creator")
-            .or_else(|| descendant(&document.root, "artist"))
-            .map(XmlElement::text_content)
-            .map(|value| value.trim().to_string())
-            .filter(|value| !value.is_empty()),
-    ))
+    Ok(upnp_av_protocol::parse_didl_metadata(source)?)
 }
 
 pub fn install_snapshot(
@@ -973,46 +835,6 @@ pub fn install_snapshot(
         metadata: vec![Metadata::new("sonos.control_surface", "bounded_media")],
     })?;
     Ok(entity_id)
-}
-
-fn child_text(root: &XmlElement, name: &str) -> Option<String> {
-    root.children
-        .iter()
-        .find_map(|child| match child {
-            XmlNode::Element(element) if element.local_name == name => Some(element),
-            _ => None,
-        })
-        .map(|element| element.text_content())
-        .map(|value| value.trim().to_string())
-        .filter(|value| !value.is_empty())
-}
-
-fn required_child_text(root: &XmlElement, name: &str) -> Result<String, SonosError> {
-    child_text(root, name).ok_or_else(|| SonosError::Xml(format!("device is missing {name}")))
-}
-
-fn descendant<'a>(root: &'a XmlElement, name: &str) -> Option<&'a XmlElement> {
-    if root.local_name == name {
-        return Some(root);
-    }
-    root.children.iter().find_map(|child| match child {
-        XmlNode::Element(element) => descendant(element, name),
-        XmlNode::Text(_)
-        | XmlNode::CData(_)
-        | XmlNode::Comment(_)
-        | XmlNode::ProcessingInstruction { .. } => None,
-    })
-}
-
-fn collect_descendants<'a>(root: &'a XmlElement, name: &str, output: &mut Vec<&'a XmlElement>) {
-    if root.local_name == name {
-        output.push(root);
-    }
-    for child in &root.children {
-        if let XmlNode::Element(element) = child {
-            collect_descendants(element, name, output);
-        }
-    }
 }
 
 fn resolve_control_url(setup_url: &str, control_url: &str) -> Result<String, SonosError> {
@@ -1312,15 +1134,14 @@ mod tests {
         assert_eq!(description.friendly_name, "Living Room");
         assert_eq!(description.room_name.as_deref(), Some("Living Room"));
         assert_eq!(
-            parse_playback_state(
-                &required_response_text(TRANSPORT.as_bytes(), "CurrentTransportState").unwrap()
-            ),
+            decode_transport_info(TRANSPORT.as_bytes()).unwrap(),
             SonosPlaybackState::Play
         );
-        assert_eq!(parse_percentage("27").unwrap(), 27);
-        assert!(!parse_boolean("0").unwrap());
-        let metadata = response_text(POSITION.as_bytes(), "TrackMetaData")
+        assert_eq!(decode_volume(VOLUME.as_bytes()).unwrap(), 27);
+        assert!(!decode_mute(MUTE.as_bytes()).unwrap());
+        let metadata = decode_position_info(POSITION.as_bytes())
             .unwrap()
+            .track_metadata
             .unwrap();
         assert_eq!(
             parse_didl_metadata(&metadata).unwrap(),

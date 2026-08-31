@@ -45156,6 +45156,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             "Only play, pause, stop, master volume, and master mute are D23-authorized and mapped to fixed UPnP actions with native readback verification.",
             "GENA subscriptions, topology, group control, browse, queue mutation, seek, next/previous, media transfer, cloud control, and credentials remain out of scope.",
         ]),
+        upnp_media_renderer_entry(),
         base_entry(
             "heos",
             "HEOS",
@@ -49574,6 +49575,52 @@ fn upnp_ssdp_entry() -> IntegrationCatalogEntry {
             "https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf"
                 .to_string(),
         external_id: Some("UPnP Device Architecture 2.0".to_string()),
+    });
+    entry
+}
+
+fn upnp_media_renderer_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "upnp_media_renderer",
+        "UPnP MediaRenderer",
+        "Standards-level local MediaRenderer discovery, player telemetry, and verified media control.",
+        IntegrationCategory::CameraMedia,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "upnp_media_renderer",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("upnp_av".to_string())])
+    .with_capabilities(&["smart_home.read", "smart_home.command.media"])
+    .with_entities(&[EntityKind::Unknown])
+    .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime accepts one explicit credential-free local-IP HTTP description URL and requires device-advertised AVTransport and RenderingControl URLs to retain that exact authority.",
+        "A shared typed UPnP AV codec limits reads to transport, position, master volume, and master mute and limits D23 commands to response-verified play, pause, stop, volume, and mute.",
+        "GENA subscriptions, ContentDirectory browse, queue mutation, seek, next/previous, URI or media transfer, topology or group control, credentials, DNS/public endpoints, and long-lived connections remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Ssdp,
+        PrimitiveFamily::Udp,
+        PrimitiveFamily::Tcp,
+        PrimitiveFamily::LocalHttp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CommandMapping,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "OCF UPnP AVTransport Service".to_string(),
+        url: "https://openconnectivity.org/wp-content/uploads/2015/11/UPnP-av-AVTransport-Service.pdf".to_string(),
+        external_id: Some("UPnP AVTransport:1".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "OCF UPnP RenderingControl Service".to_string(),
+        url: "https://openconnectivity.org/wp-content/uploads/2015/11/UPnP-av-RenderingControl-v3-Service-20101231.pdf".to_string(),
+        external_id: Some("UPnP RenderingControl:1".to_string()),
     });
     entry
 }
@@ -82760,6 +82807,46 @@ mod tests {
         ] {
             assert!(!upnp.required_primitives.contains(&primitive));
         }
+    }
+
+    #[test]
+    fn upnp_media_renderer_entry_exposes_typed_verified_media_control() {
+        let catalog = first_party_catalog();
+        let renderer =
+            find_entry(&catalog, &IntegrationId::trusted("upnp_media_renderer")).unwrap();
+        assert_eq!(
+            renderer.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(renderer.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(renderer.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            renderer.supported_protocols,
+            vec![ProtocolFamily::Vendor("upnp_av".to_string())]
+        );
+        assert_eq!(renderer.target_entity_kinds, vec![EntityKind::Unknown]);
+        assert!(renderer
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.read")));
+        assert!(renderer
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.media")));
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Ssdp,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(renderer.required_primitives.contains(&primitive));
+        }
+        assert!(!renderer
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
     }
 
     #[test]

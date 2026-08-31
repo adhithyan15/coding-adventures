@@ -2415,18 +2415,47 @@ pagination, and exact response fields in section 6.21 of the application
 protocol specification:
 https://modbus.org/docs/Modbus_Application_Protocol_V1_1b3.pdf.
 
-## Newly Prioritized Smart Home Breadth Backlog
+## Current Generic UPnP MediaRenderer Breadth Slice
 
-The next prioritization pass starts from these newly identified candidates and
-must revalidate them against live `origin/main` before implementation:
+This slice promotes the standards-level UPnP AV renderer contract beyond the
+existing discovery-only SSDP path without duplicating the Sonos SOAP core:
 
-1. **Generic UPnP MediaRenderer inspection and low-risk control — executable
-   candidate.** Reuse the strict SSDP and same-authority UPnP boundaries already
-   proven by Sonos, but target the standardized MediaRenderer device contract
-   rather than a vendor model. Keep AVTransport and RenderingControl to fixed
-   state reads plus response-verified play, pause, stop, volume, and mute. Audit
-   repository reuse first so the slice does not duplicate the Sonos SOAP core.
-2. **DSMR P1 meter telemetry — prerequisite blocked.** The official P1
+- `upnp-av-protocol` owns exact MediaRenderer description parsing, typed
+  AVTransport and RenderingControl response decoding, DIDL-Lite title/artist
+  extraction, and a closed action enum for transport, position, master volume,
+  master mute, play, pause, stop, volume, and mute. Callers cannot select an
+  arbitrary service, action, instance, channel, speed, or SOAP body.
+- `smart-home-sonos-upnp-integration` consumes that shared codec while retaining
+  its exact ZonePlayer identity, required serial, endpoint, D23 policy, and
+  readback-verification boundaries.
+- `smart-home-upnp-media-renderer-integration` targets only the standard
+  MediaRenderer:1 SSDP/device contract. One explicit credential-free private,
+  link-local, or loopback IP description URL is accepted; advertised
+  AVTransport and RenderingControl URLs must retain that exact authority.
+- D23 read authorization occurs before description or SOAP I/O. The bounded
+  inspection normalizes native UDN identity, optional vendor identity, playback
+  state, current track metadata, master volume, and master mute. Missing serial
+  numbers remain valid because UDN owns stable native identity.
+- D23-authorized play, pause, stop, volume, and mute are idempotent: each command
+  reads first, emits one fixed SOAP mutation only when required, then reads back
+  and verifies the exact postcondition.
+- Credentials, DNS/public endpoints, cross-authority control URLs, arbitrary
+  SOAP, GENA subscriptions, ContentDirectory browse, queue mutation, seek,
+  next/previous, URI or media transfer, topology or group control, cloud
+  access, and long-lived connections remain out of scope.
+
+The fixed read and command semantics follow the OCF UPnP AVTransport and
+RenderingControl service specifications:
+https://openconnectivity.org/wp-content/uploads/2015/11/UPnP-av-AVTransport-Service.pdf
+and
+https://openconnectivity.org/wp-content/uploads/2015/11/UPnP-av-RenderingControl-v3-Service-20101231.pdf.
+
+## Remaining Prioritized Smart Home Breadth Backlog
+
+The next prioritization pass must revalidate this candidate against live
+`origin/main` before implementation:
+
+1. **DSMR P1 meter telemetry — prerequisite blocked.** The official P1
    companion standard provides a concrete telegram and checksum contract, but
    production work waits for one supervised bounded stream owner and an exact
    serial-versus-local-TCP transport decision. Do not publish a parser-only or
