@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-405-IMAGE-REVIEWS",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C405-images-recall-1",
+    "ES-C405-images-recall-2"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-405-IMAGE-REVIEWS"
+  ],
+  "after": []
+}

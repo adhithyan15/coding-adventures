@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C405-permitir",
+    "language": "spanish",
+    "chapter": 405,
+    "sequence": 9080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99b379251d506b75"
+  },
+  "findings": []
+}

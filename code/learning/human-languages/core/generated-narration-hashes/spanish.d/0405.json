@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:3a12debc4520b4a8",
+  "lessonIds": [
+    "ES-C405-fotografia",
+    "ES-C405-foto",
+    "ES-C405-permitir",
+    "ES-C405-images-recall-1",
+    "ES-C405-images-recall-2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch405.txt",
+  "json": "spanish/narration/ch405.json",
+  "textHash": "fnv1a64:389bfa62927acbd3",
+  "jsonHash": "fnv1a64:7e759ba08d757f1f",
+  "findings": []
+}

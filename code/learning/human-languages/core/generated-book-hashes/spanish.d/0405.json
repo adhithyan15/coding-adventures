@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:dac8c6aa4f82ee95",
+  "lessonIds": [
+    "ES-C405-fotografia",
+    "ES-C405-foto",
+    "ES-C405-permitir",
+    "ES-C405-images-recall-1",
+    "ES-C405-images-recall-2"
+  ],
+  "tex": "spanish/book/chapters/ch405-fotografia-foto-permitir.tex"
+}

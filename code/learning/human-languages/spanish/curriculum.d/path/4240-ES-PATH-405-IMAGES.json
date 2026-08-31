@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-405-IMAGES",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C405-fotografia",
+    "ES-C405-foto"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-405-IMAGES"
+  ],
+  "after": []
+}
