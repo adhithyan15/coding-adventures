@@ -129,6 +129,9 @@ decorate.**
   projected finish date, an **on-track / at-risk pill** (semantic color), and a
   progress ring. The projected finish and the pill both come from the engine's
   schedule, never computed here. Then the **view switcher** and the theme toggle.
+  Native row layouts must reserve a finite visible width for the progress group
+  at their default desktop window size; a flexible title may grow on web but must
+  not consume the complete native viewport before progress is measured.
 - **Content** — one view at a time, chosen by the switcher, crossfaded on change.
 
 The summary line is the top of the progressive-disclosure funnel: glanceable state

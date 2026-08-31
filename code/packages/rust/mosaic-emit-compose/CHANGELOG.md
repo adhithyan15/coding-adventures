@@ -5,6 +5,15 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Compose Rows now measure ordinary container children intrinsically instead
+  of assigning every child `fillMaxWidth()`. A direct child with `flex-grow`
+  or `width: 100%` receives scoped `Modifier.weight(...)`, including in
+  split `RowScope` section functions. This keeps TaskApp completion progress
+  visible after the flexible title without imposing Compose-specific pixel
+  widths on Flutter, SwiftUI, or web (#13565).
+
 ### Added
 
 - `elevation` native shadow lowering (#12028 item 1, UI41). A part

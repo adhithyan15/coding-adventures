@@ -1,5 +1,11 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — require visible Compose completion progress (#13565)
+
+The generated Compose lifecycle fixture once again requires the Rust-owned
+`100%` completion value to be displayed in the default desktop viewport, not
+merely present in the off-screen semantics tree.
+
 ## [Unreleased] — exercise the native simple-todo lifecycle (#13520)
 
 Task-specific conformance fixtures now drive generated Qt, Flutter, Compose

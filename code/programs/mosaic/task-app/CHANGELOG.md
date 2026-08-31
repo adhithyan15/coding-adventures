@@ -4,6 +4,15 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed - visible Compose completion progress (#13565)
+
+Compose now measures the top-bar title as the row's flexible remainder and the
+progress group at its intrinsic width. The title no longer consumes the entire
+row and places the Rust-owned completion percentage beyond the default desktop
+viewport; the real-runtime lifecycle again requires `100%` to be displayed
+after completing a task. Shared TaskApp styles remain unchanged for web,
+Flutter, and SwiftUI.
+
 ### Fixed - self-contained browser storage entrypoint (#13543)
 
 The web host now imports IndexedDB and its CRUD-only memory fallback through the

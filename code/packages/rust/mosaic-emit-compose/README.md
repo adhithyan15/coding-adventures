@@ -86,7 +86,10 @@ disappearing.
 MSL part styles lower into native `Modifier` chains and inherited Compose text
 styles, including state-dependent backgrounds, borders, dimensions, spacing,
 alignment, colors, fonts, and test tags. Hosts can still wrap the result in
-their own `MaterialTheme` for platform-level theming.
+their own `MaterialTheme` for platform-level theming. Direct `Row` children are
+intrinsically measured by default; `flex-grow` and `width: 100%` lower to a
+scoped `Modifier.weight(...)`, so one flexible child cannot push later controls
+beyond the native viewport.
 
 ## Tests
 

@@ -46,7 +46,9 @@ a passing TaskApp launch cannot mask a regression in the standard host binding.
 Task-specific emitted-control acceptance additionally drives the same simple-todo
 lifecycle through the generated UI: create with an optional due date, reveal the
 Rust schedule, complete and reopen, delete, reject malformed input atomically, and
-restore a persisted task in a second process.
+restore a persisted task in a second process. Compose acceptance also requires the
+Rust-owned `100%` completion progress to remain displayed in the default desktop
+viewport rather than merely existing in an off-screen semantics tree.
 The generated SwiftUI sources also compile for the iOS 16 deployment target; that
 gate is source portability rather than a claim that a macOS dylib can run on iOS.
 
