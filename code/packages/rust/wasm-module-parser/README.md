@@ -67,6 +67,36 @@ match WasmModuleParser::parse(bytes) {
 └──────┴───────────────────────────────────────────────────────────┘
 ```
 
+## Malformed-binary rejection
+
+This crate rejects, not just accepts — a real robustness property, since a
+malformed-but-parsed module could smuggle unintended behavior past parsing.
+As of 0.2.10 it correctly rejects:
+
+- **Overlong LEB128**: more bytes than a field's bit width allows (e.g. a
+  6-byte encoding of a `u32` field — the max is 5).
+- **Out-of-range LEB128**: byte count is fine, but the value's padding bits
+  don't zero-extend (unsigned) or sign-extend (signed) correctly — e.g. a
+  `u32` field encoding `2^32`.
+- **Truncated streams**: a LEB128 sequence, string, or section that runs
+  out of bytes mid-field.
+- **Unrecognized section ids**, and numbered sections that repeat or
+  appear out of the required canonical order.
+- **Section-size mismatches**: bytes left over after a section's own
+  parser runs, still inside its declared boundary.
+- **Function/code section length mismatches**, **malformed `limits`
+  flags**, and a **function body not ending in `end` (0x0B)**.
+- An unreasonably large **total locals count** in a single function body
+  (a DoS guard, not a spec rule — a few attacker-controlled bytes
+  shouldn't be able to request billions of allocated locals).
+
+Deliberately NOT yet caught: anything living inside a function body's
+bytecode itself (a `memarg`'s `align`/`offset` LEB128 fields, an illegal
+opcode, unbalanced block/loop/if nesting) — this crate reads a function
+body as a raw byte blob after its locals, deferring instruction-level
+decoding to a future validator. See `CHANGELOG.md`'s `0.2.10` entry for
+the full "deliberately not fixed" list.
+
 ## Error handling
 
 `WasmModuleParser::parse` returns `Result<WasmModule, WasmParseError>`. The error type

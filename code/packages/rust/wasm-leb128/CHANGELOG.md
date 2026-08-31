@@ -2,6 +2,58 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-08-31 — LEB128/malformed-binary hardening
+
+Real bug, found while vendoring the official WebAssembly testsuite's
+`binary.wast`/`binary-leb128.wast`/`binary_leb128_64.wast` (dense
+`assert_malformed` corpora specifically targeting LEB128 encoding rules)
+into `wasm-conformance`: `decode_unsigned`/`decode_signed` accumulated
+every byte's data bits into a native `u64`/`i64` with no check that the
+value actually FIT in 64 bits. A 10-byte encoding (the max this crate
+already allowed) whose final byte's padding bits carried a value one bit
+past `u64::MAX` (unsigned) or inconsistent with the encoded sign (signed)
+had those extra bits silently shifted away by ordinary `u64` arithmetic
+instead of being rejected — a genuinely malformed binary (per the WASM
+spec's own `uN`/`sN` grammar) decoded successfully to a wrong, wrapped
+value.
+
+### Added
+
+- `decode_unsigned_bounded(data, offset, max_bits)` / `decode_signed_bounded(data, offset, max_bits)`
+  — the width-aware siblings of `decode_unsigned`/`decode_signed`, needed
+  by any caller decoding a field narrower than 64 bits (the overwhelming
+  majority of the WASM binary format: every `u32` count/index/length).
+  Enforce, for ANY `max_bits` (not hardcoded to 32 or 64):
+  - **Overlong**: at most `ceil(max_bits / 7)` bytes — a continuation flag
+    on the byte the width's budget says must be the last one is malformed
+    ("integer representation too long" in the spec's own wording), even
+    though every individual byte is well-formed LEB128 and the byte
+    count would be fine for a WIDER field.
+  - **Out of range**: on the terminal byte, the bits above `max_bits` must
+    be all zero (unsigned) or repeat the value's own sign bit (signed) —
+    otherwise the encoding claims a value that doesn't fit in `max_bits`
+    at all ("integer too large"), independent of the overlong check.
+  - Non-minimal (padded, but in-budget) encodings remain explicitly legal
+    — the spec permits them, and this crate always has.
+- `decode_bits_core`: the shared private implementation both the new
+  bounded functions AND `decode_unsigned`/`decode_signed` (now defined as
+  `decode_{unsigned,signed}_bounded(.., 64)`) go through — a `u64`/`i64`
+  is itself just a 64-bit-wide `uN`/`sN`, so the exact same padding-bits
+  rule that fixes the bounded case ALSO closes the native 64-bit
+  overflow bug described above, with one implementation instead of two.
+- 15 new unit tests, one per malformed-encoding class this fix closes
+  (overlong/out-of-range at both a 32-bit and the native 64-bit width,
+  truncated streams through the bounded entry point, the 7-bit-width edge
+  case, and confirmation that non-minimal-but-in-budget encodings are
+  still accepted).
+
+### Notes
+
+- `decode_unsigned`/`decode_signed`'s public signatures and return
+  contracts are unchanged — this is a pure bug fix plus additive API,
+  not a breaking change. Every existing round-trip test (`u64::MAX`,
+  `i64::MIN`/`MAX`, non-minimal encodings) still passes.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

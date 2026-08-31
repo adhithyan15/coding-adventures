@@ -1,7 +1,7 @@
 [package]
 name = "wasm-leb128"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "LEB128 variable-length integer encoding for WASM binary format"
+description = "LEB128 variable-length integer encoding for WASM binary format. v0.2.0: decode_unsigned/decode_signed now reject a value that overflows the full 64-bit width instead of silently wrapping, and new decode_unsigned_bounded/decode_signed_bounded(max_bits) enforce the same overlong-byte-count and out-of-range-padding-bits rules at any bit width (32, 7, ...), not just 64."
 
 [dependencies]

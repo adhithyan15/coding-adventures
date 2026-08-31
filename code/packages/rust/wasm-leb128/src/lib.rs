@@ -137,50 +137,80 @@ impl std::error::Error for Leb128Error {}
 /// assert_eq!(decode_unsigned(&buf, 2).unwrap(), (624485, 3));
 /// ```
 pub fn decode_unsigned(data: &[u8], offset: usize) -> Result<(u64, usize), Leb128Error> {
-    if offset >= data.len() {
-        return Err(Leb128Error {
-            message: format!(
-                "offset {} is out of bounds for data of length {}",
-                offset,
-                data.len()
-            ),
-            offset,
-        });
-    }
+    decode_unsigned_bounded(data, offset, 64)
+}
 
-    let mut value: u64 = 0;
-    let mut shift: u32 = 0;
-    let mut bytes_consumed: usize = 0;
-
-    for &byte in &data[offset..] {
-        // The low 7 bits carry data; shift them into place.
-        let data_bits = (byte & 0x7F) as u64;
-        value |= data_bits << shift;
-        bytes_consumed += 1;
-        shift += 7;
-
-        // High bit is the continuation flag.
-        if byte & 0x80 == 0 {
-            // Flag is clear → this was the last byte.
-            return Ok((value, bytes_consumed));
-        }
-
-        // Guard against absurdly large encodings (u64 can hold at most 10
-        // bytes of LEB128 data).
-        if shift >= 70 {
-            return Err(Leb128Error {
-                message: "LEB128 sequence exceeds maximum u64 width (70 bits)".to_string(),
-                offset,
-            });
-        }
-    }
-
-    // If we get here, we ran out of bytes while continuation flag was still
-    // set — the sequence is unterminated.
-    Err(Leb128Error {
-        message: "unexpected end of data: LEB128 sequence is unterminated".to_string(),
-        offset,
-    })
+/// Decode an **unsigned** LEB128 integer, but bounded to `max_bits`
+/// significant bits — the width-aware sibling of [`decode_unsigned`], and the
+/// primitive every WASM `uN` field (`u32` section sizes/counts/indices, a
+/// `u64` memory64 limit, …) should really be decoded through.
+///
+/// ## Why `decode_unsigned` alone isn't enough
+///
+/// [`decode_unsigned`] happily decodes into a full `u64` — reasonable for a
+/// truly 64-bit field, but a caller that needs a `u32` (the overwhelming
+/// majority: every count, index, and length in the WASM binary format) would
+/// otherwise have to narrow the result itself with something like
+/// `value as u32`, which **silently discards the high bits** instead of
+/// rejecting a value that doesn't actually fit. That was a real bug in this
+/// crate's own consumer (`wasm-module-parser`'s `read_u32leb`) before this
+/// function existed: a 5-byte-or-fewer LEB128 encoding of, say, `2^32`
+/// (one bit too many for a `u32`) decoded successfully and then silently
+/// wrapped to `0` on the `as u32` cast.
+///
+/// The WASM spec's own binary grammar (`webassembly.github.io/spec/core/
+/// binary/values.html#binary-int`) defines `uN` recursively over the bit
+/// width `N`, which bakes in two rules that a width-*less* decoder cannot
+/// enforce:
+///
+/// 1. **Overlong**: at most `ceil(N / 7)` bytes are allowed. A continuation
+///    flag on the last byte the width permits means the encoding is asking
+///    for more precision than the type has — malformed ("integer
+///    representation too long" in the spec's own wording).
+/// 2. **Out of range**: on the final byte, any data bits *above* position
+///    `N` must be zero — a nonzero one encodes a value that doesn't fit in
+///    `N` bits at all, even though the byte *count* was within budget
+///    ("integer too large").
+///
+/// Non-minimal (but in-budget) encodings are explicitly **not** an error —
+/// the WASM spec permits padding a small value out to more bytes than
+/// strictly necessary, as long as rule 1's byte cap and rule 2's padding-bits
+/// rule both hold. `[0x82, 0x80, 0x80, 0x80, 0x00]` (5 bytes for the value 2,
+/// the max allowed for `max_bits = 32`) is perfectly legal; a 6th byte would
+/// not be.
+///
+/// ## Worked example: `max_bits = 32`, rejecting `2^32`
+///
+/// ```text
+/// bytes: [0x80, 0x80, 0x80, 0x80, 0x10]     (5 bytes — within the u32 budget)
+/// byte 0..3: data=0, shift=0,7,14,21        → contributes nothing
+/// byte 4 (the LAST allowed byte, shift=28): data = 0x10 = 0b0010000
+///   valid_bits = 32 - 28 = 4   (only the low 4 data bits are "in range")
+///   extra = data >> 4 = 0b001 = 1           ← nonzero!
+///   → "integer too large": this byte's bit 4 represents value-bit 32,
+///     one bit past what a u32 can hold.
+/// ```
+///
+/// # Examples
+///
+/// ```rust
+/// use wasm_leb128::decode_unsigned_bounded;
+///
+/// // Non-minimal but in-budget: fine.
+/// assert_eq!(
+///     decode_unsigned_bounded(&[0x82, 0x80, 0x80, 0x80, 0x00], 0, 32).unwrap(),
+///     (2, 5)
+/// );
+///
+/// // One byte past the u32 budget: "integer representation too long".
+/// assert!(decode_unsigned_bounded(&[0x82, 0x80, 0x80, 0x80, 0x80, 0x00], 0, 32).is_err());
+///
+/// // In-budget byte count, but the value is 2^32 (one bit too many): "integer too large".
+/// assert!(decode_unsigned_bounded(&[0x80, 0x80, 0x80, 0x80, 0x10], 0, 32).is_err());
+/// ```
+pub fn decode_unsigned_bounded(data: &[u8], offset: usize, max_bits: u32) -> Result<(u64, usize), Leb128Error> {
+    let (value, consumed, _sign_bit) = decode_bits_core(data, offset, max_bits, false)?;
+    Ok((value, consumed))
 }
 
 /// Decode a **signed** LEB128 integer from `data` starting at `offset`.
@@ -237,6 +267,93 @@ pub fn decode_unsigned(data: &[u8], offset: usize) -> Result<(u64, usize), Leb12
 /// );
 /// ```
 pub fn decode_signed(data: &[u8], offset: usize) -> Result<(i64, usize), Leb128Error> {
+    decode_signed_bounded(data, offset, 64)
+}
+
+/// Decode a **signed** LEB128 integer, bounded to `max_bits` significant
+/// bits — the width-aware sibling of [`decode_signed`], analogous to
+/// [`decode_unsigned_bounded`] but with two's-complement sign extension
+/// instead of zero-fill.
+///
+/// ## The two padding rules, signed edition
+///
+/// Same two rules as [`decode_unsigned_bounded`] (byte-count cap, padding
+/// bits above `max_bits` must be consistent), except rule 2 is now about
+/// *sign* consistency rather than "must be zero": the bits above `max_bits`
+/// in the terminal byte must all equal the value's own sign bit (bit
+/// `max_bits - 1`) — i.e. the encoding must look like a properly
+/// sign-extended `max_bits`-wide two's-complement number, not an arbitrary
+/// wider one that happens to share the low bits.
+///
+/// ```text
+/// bytes: [0x80, 0x80, 0x80, 0x80, 0x70]     (5 bytes — i32 budget)
+/// byte 4 (shift=28): data = 0x70 = 0b1110000
+///   valid_bits = 32 - 28 = 4
+///   sign bit = bit (valid_bits - 1) = bit 3 of data = 0        → "positive"
+///   extra = data >> 4 = 0b111 = 7
+///   expected (sign=0) = 0                    ← 7 ≠ 0, mismatch!
+///   → "integer too large": bits 32-34 don't repeat the (positive) sign bit.
+/// ```
+///
+/// The returned `i64` is always the *fully* sign-extended 64-bit value, not
+/// truncated to `max_bits` — exactly like [`decode_signed`]'s existing
+/// contract, so `decode_signed_bounded(&[0x7F], 0, 7)` and
+/// `decode_signed(&[0x7F], 0)` agree: both return `-1`, not some
+/// 7-bit-truncated bit pattern.
+///
+/// # Examples
+///
+/// ```rust
+/// use wasm_leb128::decode_signed_bounded;
+///
+/// // i32.const -1, minimal encoding: fine, fully sign-extended to i64.
+/// assert_eq!(decode_signed_bounded(&[0x7F], 0, 32).unwrap(), (-1, 1));
+///
+/// // i32.const -1, non-minimal but in-budget (5 bytes): still fine.
+/// assert_eq!(
+///     decode_signed_bounded(&[0xFF, 0xFF, 0xFF, 0xFF, 0x7F], 0, 32).unwrap(),
+///     (-1, 5)
+/// );
+///
+/// // One byte past the i32 budget (6 bytes): "integer representation too long".
+/// assert!(decode_signed_bounded(&[0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F], 0, 32).is_err());
+///
+/// // In-budget byte count, but padding bits don't match the sign: "integer too large".
+/// assert!(decode_signed_bounded(&[0x80, 0x80, 0x80, 0x80, 0x70], 0, 32).is_err());
+/// ```
+pub fn decode_signed_bounded(data: &[u8], offset: usize, max_bits: u32) -> Result<(i64, usize), Leb128Error> {
+    let (mut value, consumed, sign_bit) = decode_bits_core(data, offset, max_bits, true)?;
+    if let Some(extend_from) = sign_bit {
+        if extend_from < 64 {
+            value |= !0u64 << extend_from;
+        }
+    }
+    Ok((value as i64, consumed))
+}
+
+/// Shared decoding core for [`decode_unsigned_bounded`] and
+/// [`decode_signed_bounded`] (and, via `max_bits = 64`, for the original
+/// unbounded [`decode_unsigned`]/[`decode_signed`] too — a `u64`/`i64` is
+/// itself just a 64-bit-wide `uN`/`sN`, so the SAME padding-bits rule
+/// applies at the 10th byte, which is exactly the "zero-extend"/
+/// "sign-extend" `assert_malformed` cases the real corpus's own
+/// `binary_leb128_64.wast` and `binary-leb128.wast` test).
+///
+/// Reads 7-bit continuation-flagged groups into a raw accumulator, enforcing
+/// the `ceil(max_bits / 7)`-byte cap along the way, then — on the terminal
+/// byte — validates that any bits beyond `max_bits` are correctly
+/// zero-filled (`signed = false`) or sign-extended (`signed = true`).
+///
+/// Returns `(value, bytes_consumed, sign_info)`:
+/// - `value`: the raw accumulated bits (low `max_bits` of it meaningful;
+///   `decode_unsigned_bounded` returns this as-is, `decode_signed_bounded`
+///   still needs to fill in the bits *above* `sign_info` itself).
+/// - `sign_info`: `None` when `signed = false`; when `signed = true`, `None`
+///   if the value's sign bit was 0 (no extension needed — `value`'s upper
+///   bits are already correctly zero) or `Some(bit_position)` giving the bit
+///   position from which the caller should OR in `!0u64 << bit_position` to
+///   finish sign-extending to a full 64 bits.
+fn decode_bits_core(data: &[u8], offset: usize, max_bits: u32, signed: bool) -> Result<(u64, usize, Option<u32>), Leb128Error> {
     if offset >= data.len() {
         return Err(Leb128Error {
             message: format!(
@@ -248,35 +365,76 @@ pub fn decode_signed(data: &[u8], offset: usize) -> Result<(i64, usize), Leb128E
         });
     }
 
+    // ceil(max_bits / 7): the most bytes a `max_bits`-wide LEB128 value is
+    // ever allowed to use. E.g. 32 -> 5, 64 -> 10, 7 -> 1.
+    let max_bytes = max_bits.div_ceil(7);
+
     let mut value: u64 = 0;
     let mut shift: u32 = 0;
-    let mut bytes_consumed: usize = 0;
+    let mut bytes_consumed: u32 = 0;
 
     for &byte in &data[offset..] {
-        let data_bits = (byte & 0x7F) as u64;
-        value |= data_bits << shift;
         bytes_consumed += 1;
-        shift += 7;
+        let data_bits = (byte & 0x7F) as u64;
+        let continues = byte & 0x80 != 0;
 
-        if byte & 0x80 == 0 {
-            // Last byte — now check if we need sign extension.
-            //
-            // Condition: the top data bit of the last byte (bit 6) is set,
-            // AND `shift` is less than 64 (meaning we haven't filled all 64
-            // bits — if shift == 64 the full value is already there).
-            if shift < 64 && (byte & 0x40) != 0 {
-                // Fill all bits above `shift` with 1s.
-                value |= !0u64 << shift;
+        if continues {
+            // A continuation flag on the very last byte the width permits
+            // means the encoding wants MORE bytes than `max_bits` allows --
+            // malformed, regardless of what value those extra bytes would
+            // have contributed.
+            if bytes_consumed >= max_bytes {
+                return Err(Leb128Error {
+                    message: format!(
+                        "integer representation too long: LEB128 sequence uses more than {max_bytes} bytes for a {max_bits}-bit value"
+                    ),
+                    offset,
+                });
             }
-            return Ok((value as i64, bytes_consumed));
+            // Not yet at the width boundary, so all 7 data bits are always
+            // "in range" here -- safe to fold in directly.
+            value |= data_bits << shift;
+            shift += 7;
+            continue;
         }
 
-        if shift >= 70 {
+        // Terminal byte. How many of ITS 7 data bits actually fall within
+        // `max_bits`? Anywhere short of the width boundary this is the full
+        // 7 (nothing to check); AT the boundary (only possible on the last
+        // allowed byte, by construction of `max_bytes` as a ceiling) it's
+        // fewer, and the bits above that must be zero-filled or
+        // sign-extended correctly.
+        let valid_bits = max_bits.saturating_sub(shift).min(7);
+
+        if valid_bits == 7 {
+            // No width restriction applies to this byte.
+            value |= data_bits << shift;
+            let sign_info = if signed && (byte & 0x40) != 0 { Some(shift + 7) } else { None };
+            return Ok((value, bytes_consumed as usize, sign_info));
+        }
+
+        // At the width boundary: `valid_bits` (0..=6) of this byte's data
+        // bits are meaningful; the rest are padding that must agree with
+        // what a correctly-truncated `max_bits`-wide value would produce.
+        let extra = data_bits >> valid_bits;
+        let sign_bit_set = signed && valid_bits > 0 && (data_bits >> (valid_bits - 1)) & 1 != 0;
+        let expected_extra = if sign_bit_set { 0x7Fu64 >> valid_bits } else { 0 };
+
+        if extra != expected_extra {
             return Err(Leb128Error {
-                message: "LEB128 sequence exceeds maximum i64 width (70 bits)".to_string(),
+                message: format!(
+                    "integer too large: does not fit in {max_bits} bits (padding bits at offset {} don't {} extend correctly)",
+                    offset + bytes_consumed as usize - 1,
+                    if signed { "sign" } else { "zero" }
+                ),
                 offset,
             });
         }
+
+        let mask = if valid_bits == 0 { 0 } else { (1u64 << valid_bits) - 1 };
+        value |= (data_bits & mask) << shift;
+        let sign_info = if sign_bit_set { Some(max_bits) } else { None };
+        return Ok((value, bytes_consumed as usize, sign_info));
     }
 
     Err(Leb128Error {
@@ -639,6 +797,139 @@ mod tests {
                 v
             );
         }
+    }
+
+    // ── Bounded Decoding: the malformed-encoding classes the real WASM
+    //    corpus's `binary-leb128.wast`/`binary_leb128_64.wast` files exist
+    //    to exercise. Each class gets its own test rather than relying only
+    //    on corpus coverage, per this crate's own testing standard.
+    // ─────────────────────────────────────────────────────────────────────
+
+    /// Class 1: **non-minimal but in-budget** encodings are legal, not
+    /// malformed -- the WASM spec explicitly permits padding a small value
+    /// out to more bytes than strictly necessary, as long as the byte count
+    /// stays within `ceil(max_bits / 7)`.
+    #[test]
+    fn bounded_unsigned_non_minimal_is_not_malformed() {
+        // Value 2, padded out to the full 5-byte budget for a 32-bit field.
+        let (value, consumed) = decode_unsigned_bounded(&[0x82, 0x80, 0x80, 0x80, 0x00], 0, 32).unwrap();
+        assert_eq!((value, consumed), (2, 5));
+    }
+
+    /// Class 2: **overlong** -- a continuation flag on the byte the width's
+    /// budget says must be the last one. `ceil(32/7) = 5` bytes is the
+    /// budget for a 32-bit field; a 6th byte (even one that would decode to
+    /// a perfectly reasonable value) is malformed.
+    #[test]
+    fn bounded_unsigned_overlong_is_rejected() {
+        let err = decode_unsigned_bounded(&[0x82, 0x80, 0x80, 0x80, 0x80, 0x00], 0, 32).unwrap_err();
+        assert!(err.message.contains("too long"), "unexpected message: {}", err.message);
+    }
+
+    #[test]
+    fn bounded_signed_overlong_is_rejected() {
+        // i32.const -1, padded to 6 bytes -- one past the 5-byte i32 budget.
+        let err = decode_signed_bounded(&[0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F], 0, 32).unwrap_err();
+        assert!(err.message.contains("too long"), "unexpected message: {}", err.message);
+    }
+
+    /// Class 3: **out of range** (unsigned) -- byte count is within budget,
+    /// but the value's padding bits are nonzero, meaning it doesn't actually
+    /// fit in `max_bits`. `[0x80, 0x80, 0x80, 0x80, 0x10]` decodes as
+    /// `2^32` under a width-less reader: one bit past what a `u32` can hold.
+    #[test]
+    fn bounded_unsigned_out_of_range_is_rejected() {
+        let err = decode_unsigned_bounded(&[0x80, 0x80, 0x80, 0x80, 0x10], 0, 32).unwrap_err();
+        assert!(err.message.contains("too large"), "unexpected message: {}", err.message);
+    }
+
+    /// The same class, but for a genuinely 64-bit field -- the ORIGINAL
+    /// bug this crate had before `decode_bits_core` existed: `decode_unsigned`
+    /// stored the accumulator natively in a `u64`, so an out-of-range 10-byte
+    /// encoding (offset `2^64`, one bit past `u64::MAX`) simply had its
+    /// overflow bit silently shifted away instead of being rejected. This is
+    /// exactly `binary_leb128_64.wast`'s own `assert_malformed` case (a
+    /// memarg offset of `2^64` against a memory64 instruction).
+    #[test]
+    fn decode_unsigned_rejects_value_one_bit_past_u64_max() {
+        // 2^64 - 1 (u64::MAX) is fine: all 64 bits legitimately used.
+        let ok = decode_unsigned(&[0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01], 0);
+        assert_eq!(ok.unwrap().0, u64::MAX);
+
+        // 2^64 (one unused bit set past bit 63): must be rejected, not
+        // silently truncated back down to some smaller wrapped value.
+        let err = decode_unsigned(&[0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x02], 0).unwrap_err();
+        assert!(err.message.contains("too large"), "unexpected message: {}", err.message);
+    }
+
+    /// Signed edition of the same 64-bit boundary bug: `i64.const -1` with
+    /// unused high bits deliberately left UNSET (not properly sign-extended)
+    /// must be rejected -- it doesn't round-trip as a correctly-encoded
+    /// 64-bit two's-complement value even though every individual byte is
+    /// well-formed LEB128.
+    #[test]
+    fn decode_signed_rejects_inconsistent_sign_extension_past_i64() {
+        // i64.const -1, properly sign-extended through all 10 bytes: fine.
+        let ok = decode_signed(&[0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f], 0);
+        assert_eq!(ok.unwrap().0, -1);
+
+        // Same low bits, but the 10th byte's padding doesn't match the sign
+        // bit it itself carries (bit0=1 => negative, yet bits1-6 are 0
+        // instead of the required all-1s).
+        let err = decode_signed(&[0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01], 0).unwrap_err();
+        assert!(err.message.contains("too large"), "unexpected message: {}", err.message);
+    }
+
+    /// Class 3, signed edition, at a 32-bit width: padding bits must repeat
+    /// the sign bit, not just be zero. `i32.const 0` encoded with the last
+    /// byte's padding bits set to 1 (looks like it should sign-extend to a
+    /// huge negative number, inconsistent with the low bits all being 0).
+    #[test]
+    fn bounded_signed_out_of_range_positive_with_negative_padding() {
+        let err = decode_signed_bounded(&[0x80, 0x80, 0x80, 0x80, 0x70], 0, 32).unwrap_err();
+        assert!(err.message.contains("too large"), "unexpected message: {}", err.message);
+    }
+
+    /// ...and the mirror image: a value whose low bits look negative
+    /// (`i32.const -1`) but whose padding bits are 0 instead of sign-extended
+    /// 1s -- the exact "unused bits unset" corpus phrasing.
+    #[test]
+    fn bounded_signed_out_of_range_negative_with_positive_padding() {
+        let err = decode_signed_bounded(&[0xff, 0xff, 0xff, 0xff, 0x0f], 0, 32).unwrap_err();
+        assert!(err.message.contains("too large"), "unexpected message: {}", err.message);
+    }
+
+    /// Class 4: **truncated stream** -- a continuation flag set on the very
+    /// last byte actually present in the input, with nothing left to read.
+    /// Already covered for the unbounded decoders by
+    /// `decode_unsigned_unterminated`/`decode_signed_unterminated` above;
+    /// confirmed here to behave identically through the bounded entry point
+    /// (same underlying `decode_bits_core`).
+    #[test]
+    fn bounded_decode_truncated_stream_is_rejected() {
+        let err = decode_unsigned_bounded(&[0x80, 0x80], 0, 32).unwrap_err();
+        assert!(err.message.contains("unterminated"), "unexpected message: {}", err.message);
+    }
+
+    /// A single-byte (`max_bits = 7`) field: the narrowest possible width,
+    /// and a useful edge case since `max_bytes = ceil(7/7) = 1` means ANY
+    /// continuation byte at all is already "too long".
+    #[test]
+    fn bounded_unsigned_seven_bit_width_rejects_any_continuation() {
+        assert_eq!(decode_unsigned_bounded(&[0x7F], 0, 7).unwrap(), (127, 1));
+        let err = decode_unsigned_bounded(&[0x80, 0x00], 0, 7).unwrap_err();
+        assert!(err.message.contains("too long"), "unexpected message: {}", err.message);
+    }
+
+    /// `decode_signed_bounded` must still return a value fully sign-extended
+    /// to a 64-bit `i64`, matching `decode_signed`'s own contract -- a
+    /// caller bounding to `max_bits = 7` shouldn't get back some
+    /// 7-bit-truncated bit pattern instead of the true mathematical value.
+    #[test]
+    fn bounded_signed_returns_fully_sign_extended_i64() {
+        assert_eq!(decode_signed_bounded(&[0x7F], 0, 7).unwrap(), (-1, 1));
+        assert_eq!(decode_signed_bounded(&[0x3F], 0, 7).unwrap(), (63, 1));
+        assert_eq!(decode_signed_bounded(&[0x40], 0, 7).unwrap(), (-64, 1));
     }
 
     // ── Error Display ───────────────────────────────────────────────────────

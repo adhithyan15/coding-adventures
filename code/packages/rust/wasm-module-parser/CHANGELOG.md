@@ -2,6 +2,122 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.10] — 2026-08-31 — LEB128/malformed-binary hardening pass
+
+Vendored the official testsuite's `binary.wast`/`binary-leb128.wast`/
+`binary_leb128_64.wast` — dense `assert_malformed` corpora specifically
+targeting the binary format's LEB128 encoding rules and other structural
+malformed-binary shapes. Found and fixed several distinct, genuine
+input-validation gaps: a WASM interpreter that doesn't correctly reject a
+malformed binary isn't just failing a conformance test, it's a real
+robustness gap (a malformed-but-accepted module could smuggle unintended
+behavior past parsing).
+
+### Fixed — LEB128 malformed-encoding classes
+
+- **`read_u32leb` silently truncated out-of-range values.** Every `u32`
+  field in the format (section sizes, every vector count, every index
+  space, string/name lengths, …) went through `decode_unsigned` (no
+  byte-count cap beyond the generic 10-byte/`u64` limit) followed by
+  `val as u32`, which wraps instead of erroring. A value like `2^32`
+  (one bit too many for `u32`, comfortably inside `decode_unsigned`'s own
+  range) silently became `0`. Now routed through `wasm-leb128`
+  0.2.0's new `decode_unsigned_bounded(.., 32)`, which rejects both this
+  ("integer too large") and an overlong (>5-byte) encoding ("integer
+  representation too long") — see that crate's own changelog for the
+  shared fix underneath.
+- **`read_expr`'s `i32.const`/`i64.const` immediates were decoded
+  UNSIGNED** (`decode_unsigned`) even though both are spec-signed (`s32`/
+  `s64`) immediates. Byte-consumption happened to match either way (the
+  two decoders share the same continuation-bit loop), which is why this
+  was invisible for any well-formed input — but it meant a deliberately
+  badly-padded encoding (e.g. `i32.const -1` with its high padding bits
+  left unset instead of properly sign-extended) parsed as valid instead
+  of being rejected. `i32.const` now goes through
+  `decode_signed_bounded(.., 32)`; `i64.const` through `decode_signed`
+  (native 64-bit, now itself overflow-checked). `global.get`'s index
+  immediate (always unsigned) now goes through
+  `decode_unsigned_bounded(.., 32)` for the same overlong/out-of-range
+  protection every other index space already needed.
+
+### Fixed — structural malformed-binary classes
+
+- **Unrecognized section ids were silently skipped.** The old code's own
+  doc comment claimed this was deliberate spec forward-compatibility;
+  it isn't — the binary format defines exactly ids 0–12, and anything
+  else (`0x0E`, `0x7F`, `0x80`, …) is malformed, not a future extension
+  to tolerate.
+- **No section-ordering enforcement at all.** Numbered sections (1–11,
+  plus the bulk-memory proposal's DataCount at byte id 12) must appear
+  at most once, in a fixed canonical order — `canonical_section_order`
+  maps each id to its position in that order (`DataCount`'s byte id, 12,
+  is numerically LARGER than `Code`'s, 10, but must appear BEFORE it —
+  see that function's own doc comment for why comparing raw id bytes
+  would be wrong). A repeated or out-of-order section is now rejected;
+  Custom (id 0) is exempt, as always (any number, anywhere).
+- **No section-size-mismatch check.** A section's declared `size` was
+  taken on faith — bytes left unconsumed inside a section's own declared
+  boundary after its parser ran were silently dropped instead of
+  flagged. (Surfaced, while fixing this, two PRE-EXISTING and genuinely
+  invisible-until-now decode bugs elsewhere in this file: the element
+  section's mode-2 [explicit-table-index active segment] entries were
+  missing their `elemkind` byte read entirely, silently desyncing every
+  subsequent field by one byte; and a table entry whose leading byte is
+  `0x40` [function-references proposal's "table with an explicit init
+  expression" form] was being misread as an ordinary two-field table
+  entry instead of the differently-shaped one it actually is. The first
+  is now fixed for real; the second now fails loudly with a clear
+  "not yet supported" message instead of silently misparsing — full
+  support needs a `wasm-types`/`wasm-runtime` init-expression feature
+  this crate doesn't have yet.)
+- **Function/code section length mismatch was never checked** — the
+  function section declares one type index per function, the code
+  section one body per function; the same index space, so they must
+  agree, the same shape as the existing data-count-vs-data-section
+  cross-check.
+- **A function body wasn't required to end in the `end` (0x0B) opcode.**
+  `body_size`, taken at face value, let a body whose declared last byte
+  is something else (e.g. `drop`) parse as an ordinary, if truncated,
+  function.
+- **`limits` flags accepted any byte value** — only bits 0 (has-max), 1
+  (shared), 2 (64-bit index) are defined by any proposal this crate
+  supports; a stray bit elsewhere (`0x08`, `0x10`, `0x81`, …) silently
+  parsed identically to whatever the recognized bits happened to say.
+- **No cap on a function body's total local count** — same
+  attacker-controlled-tiny-file-claims-enormous-allocation shape
+  `MAX_PREALLOC` already guards against for the element section's
+  `func_count`, just summed across a body's run-length-encoded local
+  groups instead of a single field. New `MAX_LOCALS` (1,000,000) cap,
+  checked incrementally so the huge allocation itself never happens.
+
+### Added
+
+- 24 new unit tests, one per malformed-encoding/structural class above,
+  living directly in this crate's own test suite (not just implicitly
+  covered by the vendored corpus).
+
+### Deliberately not fixed here
+
+- A `memarg`'s `align`/`offset` LEB128 immediates, and an extended
+  (`0xFC`/`0xFD`-prefixed) opcode's own LEB128 sub-number, live INSIDE a
+  function body — which this crate still reads as an opaque raw byte
+  blob after its locals (`parse_code_section`), deferring all
+  instruction-level decoding to a future `wasm-validator` walker (see
+  that crate's "no instruction-level type-checker yet" doc comment).
+  Fixing these specific LEB128 fields correctly would require building
+  that walker (a per-opcode immediate-shape table for every instruction,
+  not just memory ops, since skipping past every OTHER instruction to
+  find the next one requires knowing its shape too) — a much larger,
+  separate architectural undertaking than LEB128 boundary validation.
+  `binary_leb128_64.wast`'s one `assert_malformed` case and 7 of
+  `binary-leb128.wast`'s live here; everything else in both files (and
+  in `binary.wast`) is fixed.
+- A handful of `binary.wast` cases that need real per-opcode
+  instruction-level decoding for the same reason (an illegal top-level
+  opcode byte, unbalanced block/loop/if nesting, detecting a
+  `memory.init`/`data.drop` opcode's presence to require a DataCount
+  section) are likewise deferred to that same future work.
+
 ## [0.2.9] — 2026-08-26 — W26: table64 proposal, first slice
 
 ### Changed
