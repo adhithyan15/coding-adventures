@@ -11,14 +11,21 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 13579,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13579",
+    "branch": "codex/build-tool-typescript-generated-directory-hashing-exclusion",
+    "implementation_revision": "d870e64f81304e92961e4a887b555fff4492258f",
+    "status": "checks-pending",
+    "opened_at": "2026-08-31T02:42:04Z"
+  },
   "last_ci_action": {
-    "observed_at": "2026-08-31T02:10:25Z",
-    "pr_number": 13574,
+    "observed_at": "2026-08-31T02:42:08Z",
+    "pr_number": 13579,
     "run_id": null,
     "attempt": null,
-    "status": "merged",
-    "notes": "All 41 final-head checks were terminal and acceptable: 34 succeeded, six were expected skips, and one was neutral. GitHub reported final head a25e96e2fe51115838beddc472370846f6dc8942 clean and mergeable before guarded squash auto-merge completed as bb7e19c9b66531bf406d66c3976e5c31e23e0200; no manual merge command was used."
+    "status": "checks-pending",
+    "notes": "Opened ready-for-review PR #13579 from clean validated head d1aebc44507fdff29fbeaca04b19f7d67cfaff1e after a normal first push. GitHub reports it non-draft and mergeable; required CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists."
   },
   "last_inventory": {
     "revision": "0f4fa0b6716a0cd7acb49ecab5baedc31c6bca8f",
@@ -597,16 +604,20 @@
     {
       "id": "build-tool-typescript-generated-directory-hashing-exclusion",
       "title": "Exclude generated directories from TypeScript build-tool source hashing",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-typescript-dune-build-discovery-exclusion", "build-tool-generated-directory-hashing-conformance-corpus"],
       "branch": "codex/build-tool-typescript-generated-directory-hashing-exclusion",
-      "pr_number": null,
+      "pr_number": 13579,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13579",
+      "opened_at": "2026-08-31T02:42:04Z",
+      "opened_revision": "d1aebc44507fdff29fbeaca04b19f7d67cfaff1e",
       "selection_revision": "bb7e19c9b66531bf406d66c3976e5c31e23e0200",
       "implementation_revision": "d870e64f81304e92961e4a887b555fff4492258f",
       "selection_notes": "Selected immediately after PR #13574 completed 41 terminal acceptable checks and merged through guarded squash auto-merge as exact origin/main bb7e19c9b66531bf406d66c3976e5c31e23e0200. The regenerated schema-3 inventory remains identity-neutral and collision-clean at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The paths since the stored inventory revision belong only to merged Punjabi curriculum/data and Python dependency-hashing work; no package root, BUILD, recognized manifest, or dependency topology changed, and an independent collision audit found no newly eligible unowned gap. This exact generated-directory hashing leaf ties the Ruby and Rust leaves at four downstream owners but is the smallest bounded implementation: one TypeScript walkFiles seam serves extension and declared-source collection and unlocks TypeScript portable source hashing, TypeScript dependency hashing, and both completion aggregates. Six live PRs have zero exact overlap with the seven expected TypeScript hasher, test, README, changelog, state, roadmap, and root-changelog paths; the target local branch, remote branch, and prior PR were absent before the fresh clean worktree and branch were created. At selection, the complete 605-owner/916-edge graph is unique, dependency-complete, and acyclic at 189 merged, 415 pending, and exactly this owner in progress.",
       "validation_notes": "Tests-first execution produced four intended fixture-projection failures because both extension and declared-source collectors traversed all 26 exact generated-directory candidates. The final focused hasher suite passes 34 tests. The complete package passes 345 tests across 14 files with 90.98% statement, 85.04% branch, 95.23% function, and 90.90% line coverage; hasher.ts reaches 100% statements, functions, and lines plus 92.10% branches. Pinned npm ci, strict no-emit typecheck, exact Prettier 3.6.2 check, package coverage front, production npm audit, and npm pack dry run pass; the full npm audit retains only the already owned development-only nanoid advisory. The neutral schema and runner suites pass 85 tests and 132 subtests, and validate-corpus accepts 121 cases and 283 files across 16 implementations, 15 established lanes, and 12 front doors. Capability, Haskell, OCaml-lock, broker, backend, authority, and package-parity suites pass 114 tests and 854 subtests with 22 expected platform skips. The Go oracle passes module verification, all tests, vet, and trimpath build; a real forced TypeScript dry plan evaluates 45 Starlark BUILD files, validates five reviewed orphan exemptions, discovers 481 TypeScript packages, and reports all 481 WOULD-BUILD. The schema-3 inventory remains 15 lanes, 1,388 identities, 4,602 slots, 1,427 all-reported identities, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets; the 605-owner/916-edge graph is unique, dependency-complete, and acyclic.",
       "security_notes": "The production change adds one immutable in-process exact string registry and rejects matching directory entries before recursion. It adds no dependency, process, Git, environment, clock, network, credential, metadata, BUILD-front, workflow, or capability authority. Exact case-sensitive Dirent.name membership preserves case variants and near names; directory symlinks and a real Windows junction remain non-directory entries and are not traversed. Production npm audit reports zero vulnerabilities. The full audit's existing development-only nanoid advisory remains under build-tool-typescript-nanoid-dev-security-floor. Independent review classifies the pre-existing unbounded recursive host walker and race-resistant whole-path link handling as separate selection-excluded host/resource hardening rather than a blocker to this lexical pure-contract owner; this tranche reduces traversal and does not broaden that authority.",
       "review_notes": "Independent conformance and inventory/security reviews clear the exact 26-component registry, the shared walkFiles seam, both neutral-fixture projections through both collection modes, exact near-name and case preservation, explicit specs-directory eligibility, the real Windows junction boundary, documentation, seven-path scope, inventory, and state graph. The reviewers found no correctness, security, authority, dependency, fixture, or publication blocker. No BUILD, manifest, package root, dependency, lockfile, package metadata, workflow, or generated artifact changed, and six live PRs have zero exact overlap. Before publication, origin/main advanced only through merged Spanish curriculum/data work; the branch rebased cleanly onto exact revision 0f4fa0b6716a0cd7acb49ecab5baedc31c6bca8f, focused hashing tests and strict typecheck passed again, and the collision-checked schema-3 inventory retained every recorded count with zero collisions and zero unknown buckets.",
+      "publication_notes": "Opened ready-for-review PR #13579 from clean validated head d1aebc44507fdff29fbeaca04b19f7d67cfaff1e after a normal first push from exact origin/main 0f4fa0b6716a0cd7acb49ecab5baedc31c6bca8f. Immediately before publication, the target remote branch and prior PR were absent, the exact seven-path diff was clean, and six other live open PRs had zero exact path overlap. GitHub reports the PR non-draft and mergeable with required CI and CodeQL checks queued or in progress, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists.",
       "notes": "Discovered during the post-Rust declaration audit. TypeScript discovery has an exact skip registry, but hasher.ts recursively walks every descendant independently, so generated _build content can still affect source hashes after discovery is repaired. Add bounded exact-component hashing fixtures, preserve case variants and near names, and keep this independent from pure declaration evaluation."
     },
     {
