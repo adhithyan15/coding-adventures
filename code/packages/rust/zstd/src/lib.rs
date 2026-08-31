@@ -2212,8 +2212,24 @@ fn decompress_block(
     let mut pos = lit_consumed;
 
     // ── Sequences count ──────────────────────────────────────────────────
+    //
+    // Both early returns below grow `out`, so both must be budgeted. They were
+    // not, and that was a decompression bomb: a block consisting of nothing but
+    // an RLE literals section is 7 wire bytes and yields 128 KiB, and because
+    // these paths bypassed `check_output_budget` the total was unbounded. A
+    // 112 KB frame produced 2.1 GB and returned `Ok`.
+    //
+    // The block-level cap on `Regenerated_Size` does not help: it bounds one
+    // block, and nothing bounded the sum. Omitting `Frame_Content_Size` also
+    // disarms the closing cross-check, so the only backstop was this one.
+    //
+    // Every point at which `out` can grow has to be checked, which is exactly
+    // what `check_output_budget`'s own doc comment says; two of the three sites
+    // simply missed it, and every test that went through the sequence loop hit
+    // the third and looked fine.
     if pos >= data.len() {
         // Block has only literals, no sequences.
+        check_output_budget(out.len(), lits.len())?;
         out.extend_from_slice(&lits);
         return Ok(());
     }
@@ -2223,6 +2239,7 @@ fn decompress_block(
 
     if n_seqs == 0 {
         // No sequences — all content is in literals.
+        check_output_budget(out.len(), lits.len())?;
         out.extend_from_slice(&lits);
         return Ok(());
     }
@@ -2768,8 +2785,44 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     // a future trailing-bytes-must-be-empty check) don't misinterpret it as
     // corruption. Real `zstd` writes this by default (`zstd -c` without
     // `--no-check`), so any real-world interop input is likely to have it.
-    if checksum_flag == 1 && pos + 4 > data.len() {
-        return Err("truncated content checksum".into());
+    if checksum_flag == 1 {
+        if pos + 4 > data.len() {
+            return Err("truncated content checksum".into());
+        }
+        pos += 4;
+    }
+
+    // ── Nothing may follow the frame ─────────────────────────────────────
+    //
+    // Returning `Ok` here while bytes remain is silent data loss, not leniency.
+    // The call this decoder is meant to replace — `zstd::stream::decode_all` —
+    // decodes *every* frame in its input, so accepting only the first and
+    // reporting success would turn a multi-frame `.colpkg` member into a
+    // partial one that looks fine. That is worse than a rejection: the importer
+    // sees a short deck, and a scanner using real libzstd sees the frames the
+    // importer silently dropped.
+    //
+    // The residual is named rather than lumped into "trailing garbage", because
+    // concatenated and skippable frames are legal Zstandard that this decoder
+    // has simply not implemented, and saying so points at the fix.
+    if pos < data.len() {
+        let rest = &data[pos..];
+        if rest.len() >= 4 {
+            let magic = u32::from_le_bytes([rest[0], rest[1], rest[2], rest[3]]);
+            if magic == MAGIC {
+                return Err(
+                    "concatenated frames are not supported: a second Zstandard frame follows                      this one, and decoding only the first would silently drop its content"
+                        .into(),
+                );
+            }
+            if (0x184D_2A50..=0x184D_2A5F).contains(&magic) {
+                return Err("skippable frames are not supported".into());
+            }
+        }
+        return Err(format!(
+            "{} unexpected byte(s) after the end of the frame",
+            rest.len()
+        ));
     }
 
     // ── Frame_Content_Size cross-check ───────────────────────────────────
@@ -2801,6 +2854,88 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Blocks made only of literals cannot exceed the output budget.
+    ///
+    /// A Compressed block whose body is nothing but an RLE literals section is
+    /// seven wire bytes and yields 64 KiB, and the two literals-only early
+    /// returns in `decompress_block` used to bypass `check_output_budget`
+    /// entirely. Measured against that version: **42,006 input bytes produced
+    /// 393,216,000 output bytes**, past `MAX_OUTPUT`, returning `Ok`.
+    ///
+    /// The per-block `Regenerated_Size` cap does not help — it bounds one block
+    /// and nothing bounded the sum — and omitting `Frame_Content_Size` disarms
+    /// the closing cross-check, so this was the only backstop. Reachable from an
+    /// ordinary shared deck, and on wasm an allocator abort is an unrecoverable
+    /// module trap.
+    #[test]
+    fn literals_only_blocks_cannot_exceed_the_output_budget() {
+        // magic + FHD (no FCS, Single_Segment clear) + Window_Descriptor
+        let mut frame = vec![0x28, 0xB5, 0x2F, 0xFD, 0x00, 0x00];
+        let blocks = 6000;
+        for i in 0..blocks {
+            let last = u32::from(i + 1 == blocks);
+            // RLE literals, size_format=3, Regenerated_Size = 65536.
+            let lits = [0b0000_1101u8, 0x00, 0x10, b'A'];
+            let header = (lits.len() as u32) << 3 | (2 << 1) | last;
+            frame.extend_from_slice(&header.to_le_bytes()[..3]);
+            frame.extend_from_slice(&lits);
+        }
+
+        // Report only the length on failure. `expect_err` would otherwise render
+        // the whole decompressed Vec — a few hundred megabytes of 'A' — which
+        // buries the actual result in the test log.
+        let error = match decompress(&frame) {
+            Err(error) => error,
+            Ok(out) => panic!(
+                "a literals-only bomb must be refused: {} input bytes produced {} output bytes",
+                frame.len(),
+                out.len()
+            ),
+        };
+        assert!(
+            error.contains("output") || error.contains("limit"),
+            "expected an output-budget error, got: {error}"
+        );
+    }
+
+    /// Bytes after the frame are an error, not something to ignore.
+    ///
+    /// Returning `Ok` while input remains is silent data loss. The call this
+    /// decoder replaces (`zstd::stream::decode_all`) decodes every frame, so
+    /// accepting only the first would turn a multi-frame `.colpkg` member into a
+    /// partial one that looks fine — worse than a rejection, because nothing
+    /// reports it.
+    #[test]
+    fn trailing_data_after_a_frame_is_refused_by_name() {
+        let frame = compress(b"the quick brown fox jumps over the lazy dog");
+        assert_eq!(decompress(&frame).unwrap(), b"the quick brown fox jumps over the lazy dog");
+
+        let mut concatenated = frame.clone();
+        concatenated.extend_from_slice(&frame);
+        let error = decompress(&concatenated).expect_err("a second frame must not be dropped");
+        assert!(
+            error.contains("concatenated"),
+            "the error should name concatenated frames, got: {error}"
+        );
+
+        let mut skippable = frame.clone();
+        skippable.extend_from_slice(&0x184D_2A50u32.to_le_bytes());
+        skippable.extend_from_slice(&0u32.to_le_bytes());
+        let error = decompress(&skippable).expect_err("a skippable frame must not be dropped");
+        assert!(
+            error.contains("skippable"),
+            "the error should name skippable frames, got: {error}"
+        );
+
+        let mut junk = frame.clone();
+        junk.extend_from_slice(b"trailing");
+        let error = decompress(&junk).expect_err("trailing bytes must not be ignored");
+        assert!(
+            error.contains("after the end of the frame"),
+            "the error should report bytes after the frame, got: {error}"
+        );
+    }
 
     // Helper: round-trip via our own compress/decompress.
     fn rt(data: &[u8]) -> Vec<u8> {

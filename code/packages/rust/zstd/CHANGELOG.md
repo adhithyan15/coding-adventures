@@ -2,6 +2,31 @@
 
 ## 0.2.0 — 2026-08-31
 
+**Security fixes found by review of this release's decoder.**
+
+*Decompression bomb (high).* Two of the three points where `decompress_block`
+grows its output — the literals-only early returns — bypassed
+`check_output_budget`. A Compressed block whose body is only an RLE literals
+section is seven wire bytes and yields 64 KiB, so the total was unbounded:
+**42,006 input bytes produced 393,216,000 output bytes and returned `Ok`**. The
+per-block `Regenerated_Size` cap bounds one block and nothing bounded the sum,
+and omitting `Frame_Content_Size` disarms the closing cross-check, so this was
+the only backstop. Reachable from an ordinary shared deck; on wasm an allocator
+abort is an unrecoverable module trap. Every test that went through the sequence
+loop hit the one guarded site and looked fine.
+
+*Silent truncation of concatenated frames (medium).* Decoding stopped at the last
+block of the first frame and returned `Ok` with input remaining. That is data
+loss, not leniency: the call this decoder is meant to replace,
+`zstd::stream::decode_all`, decodes every frame, so a multi-frame `.colpkg`
+member would have become a partial one that looks correct. Trailing bytes are now
+refused and named — a second Zstandard magic and the skippable-frame magic range
+each get their own message, because both are legal Zstandard this decoder has not
+implemented rather than corruption. The content checksum is now consumed rather
+than merely bounds-checked.
+
+Both have regression tests, each verified to fail against the unfixed decoder.
+
 The headline of this release is that `decompress()` can now read `.zst`
 files that real encoders actually produce. Before it, the decoder handled
 exactly one shape of Compressed block — `Raw_Literals` plus all-Predefined
