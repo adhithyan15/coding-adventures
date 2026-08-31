@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed — declare the full Hindi weather set
+
+- Chapter 20 now declares **मौसम / गर्मी है / ठंड है / बारिश हो रही है** as
+  its phrase headword instead of naming only **मौसम**. The lesson already
+  defines, practises, and assesses the hot, cold, and everyday rain forms;
+  formal **वर्षा** remains declared by the earlier season-set lesson.
+
 ### Changed — declare the spoken Hindi tea request
 
 - Chapter 37 now declares **एक चाय दीजिए** as a phrase headword instead of
