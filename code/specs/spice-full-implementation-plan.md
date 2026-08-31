@@ -5049,10 +5049,12 @@ the Rust, Python, and TypeScript surfaces together.
      rejects non-finite input before element lowering.
 
 19. Rust JFET alternative mobility-temperature-coefficient parser parity.
-   - Status: prioritized next after the mobility-temperature-exponent slice.
+   - Status: completed by the JFET alternative mobility-temperature-coefficient
+     slice.
    - The engine and Python/TypeScript facades lower finite optional JFET
-     `BETATCE` values into the mobility-temperature-coefficient field; audit
-     the Rust element lowerer while preserving omitted `None` semantics.
+     `BETATCE` values into the mobility-temperature-coefficient field; Rust
+     now does the same while preserving omitted `None` semantics for `BEX`
+     fallback and rejecting non-finite input before element lowering.
 
 20. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust

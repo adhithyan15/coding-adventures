@@ -1930,6 +1930,39 @@ fn rejects_non_finite_jfet_mobility_temperature_exponent() {
 }
 
 #[test]
+fn parses_jfet_alternative_mobility_temperature_coefficient() {
+    let parsed =
+        parse_netlist(".model shaped NJF(BETATCE=-0.5)\nJ1 drain gate source shaped").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(
+        jfet.mobility_temperature_coefficient
+            .expect("BETATCE must be present"),
+        -0.5,
+    );
+}
+
+#[test]
+fn omits_jfet_alternative_mobility_temperature_coefficient() {
+    let parsed = parse_netlist(".model shaped NJF(BEX=1.5)\nJ1 drain gate source shaped").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_eq!(jfet.mobility_temperature_coefficient, None);
+}
+
+#[test]
+fn rejects_non_finite_jfet_alternative_mobility_temperature_coefficient() {
+    let error =
+        parse_netlist(".model bad NJF(BETATCE=1e999)\nJ1 drain gate source bad").unwrap_err();
+
+    assert!(error.to_string().contains("JFET BETATCE must be finite"));
+}
+
+#[test]
 fn parses_jfet_b_as_doping_tail_parameter_not_beta_alias() {
     let parsed = parse_netlist(
         r#"
