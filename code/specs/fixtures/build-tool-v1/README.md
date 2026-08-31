@@ -77,7 +77,7 @@ The 131-case bootstrap corpus covers every process-free v1 domain:
   retention, inert symlink/reparse boundaries, Android signing/SDK-property
   exclusion, and per-file SHA-256 digests. Shared ancestors, tracked generated-
   pruned inputs, and exact cross-package inputs remain outside this package-
-  root authority. A separate closed repository-relative registry admits 19
+  root authority. A separate closed repository-relative registry admits 18
   reviewed boundaries, 21 input registrations over 19 tracked regular files,
   481 consumer scopes, and 484 input-to-scope authorizations. It covers exact
   Haskell, Lua, and Python shared inputs; Rust workspace, Cargo, and Windows-

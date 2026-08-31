@@ -202,7 +202,7 @@
       "inputs": [
         {"path": "code/packages/rust/Cargo.toml", "role": "shared_ancestor"}
       ],
-      "reason": "Rust workspace members use the tracked root manifest; the standalone os-kernel crate is explicitly excluded.",
+      "reason": "Rust workspace members use the tracked root manifest; six echo-only BUILD fronts and the standalone os-kernel crate are explicitly excluded because they do not invoke Cargo.",
       "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
     },
     {
