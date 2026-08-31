@@ -63,7 +63,115 @@ pub fn expect_get(items: &[SExpr], idx: usize) -> Result<&SExpr, WastParseError>
 
 pub fn parse_source(src: &str) -> Result<Vec<SExpr>, WastParseError> {
     let tokens = tokenize(src)?;
-    parse_sexprs(&tokens)
+    let exprs = parse_sexprs(&tokens)?;
+    strip_annotations(exprs)
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Annotations — WAT's `(@id ...)` custom out-of-band tooling syntax.
+// ─────────────────────────────────────────────────────────────────────────
+
+/// Recursively removes annotation forms — `(@id ...)`, used by tooling for
+/// source maps and similar metadata that has no effect on module semantics
+/// — from a parsed S-expression tree.
+///
+/// ## Why a whole-tree pass here, not per-call-site skipping
+///
+/// The real corpus's own `annotations.wast` sprinkles `(@a)` between
+/// **every single token** of a module — inside `param`/`result` lists,
+/// `export`/`import` clauses, folded instruction operands, `offset`
+/// expressions, and more. `module.rs`'s field/instruction dispatch is
+/// ~8000 lines of code that indexes into a field's items *positionally*
+/// (`items[1]`, `items[2]`, ...) — teaching every one of those call sites
+/// to notice and skip an interloping annotation would mean touching all
+/// of them, and missing even one would silently misparse (wrong item at
+/// the wrong index) rather than cleanly error.
+///
+/// Instead, this runs ONCE, immediately after [`parse_sexprs`] builds the
+/// tree (see [`parse_source`]), and removes every annotation at every
+/// depth before any semantic code ever sees the tree. Downstream code
+/// (`module.rs`, `script.rs`) stays completely unaware annotations exist
+/// — the tree it walks is indistinguishable from the same source with
+/// every annotation deleted by hand.
+///
+/// ## Recognizing an annotation
+///
+/// A list `(head ...)` is an annotation iff `head` is an atom starting
+/// with `@` — no real WAT keyword (`module`, `func`, `i32.add`, ...) ever
+/// starts with `@`, so this is unambiguous. The annotation's `id` is
+/// either:
+/// - the rest of that atom after `@` (`(@a ...)` → id `"a"`), or
+/// - an immediately-adjacent (no intervening whitespace/comment — checked
+///   via byte position, since the tokenizer discards whitespace) quoted
+///   string (`(@"a" ...)` → id `"a"`), which must itself be valid UTF-8.
+///
+/// A missing, empty, or non-adjacent id is malformed
+/// ([`WastParseError::EmptyAnnotationId`]) — see `annotations.wast`'s own
+/// `(@)`/`(@ x)`/`(@"")` cases. This is a best-effort check, not a
+/// guarantee every malformed annotation in the real corpus is caught:
+/// `wasm-conformance`'s `assert_malformed` grading treats an unexpectedly
+/// *accepted* malformed case as `NotYetSupported`, never a hard failure
+/// (see that crate's own `grade_assert_malformed` doc comment), so a
+/// missed case here costs one directive's pass tally, not correctness.
+/// Once a list IS recognized as an annotation, everything else about its
+/// contents — arbitrary nesting, strings, even other `(@...)` forms — is
+/// simply discarded whole; the annotation's own internal grammar doesn't
+/// matter because none of it reaches any semantic code either way.
+pub fn strip_annotations(exprs: Vec<SExpr>) -> Result<Vec<SExpr>, WastParseError> {
+    let mut out = Vec::with_capacity(exprs.len());
+    for e in exprs {
+        if let Some(kept) = strip_one(e)? {
+            out.push(kept);
+        }
+    }
+    Ok(out)
+}
+
+fn is_annotation_head(items: &[SExpr]) -> bool {
+    matches!(items.first(), Some(SExpr::Atom(s, _)) if s.starts_with('@'))
+}
+
+/// Validate an annotation list's id, per [`strip_annotations`]'s doc
+/// comment. `items[0]` is already known to be an atom starting with `@`.
+fn validate_annotation_id(items: &[SExpr]) -> Result<(), WastParseError> {
+    let head_atom = items[0].as_atom().unwrap();
+    let head_pos = items[0].pos();
+    let suffix = &head_atom[1..];
+    if !suffix.is_empty() {
+        // e.g. `(@a ...)` -- the id came from the atom itself.
+        return Ok(());
+    }
+    // Bare `@` -- the id must come from an immediately-adjacent string.
+    match items.get(1) {
+        Some(SExpr::Str(bytes, str_pos)) if *str_pos == head_pos + 1 => {
+            let text = std::str::from_utf8(bytes).map_err(|_| WastParseError::InvalidUtf8 { pos: *str_pos })?;
+            if text.is_empty() {
+                Err(WastParseError::EmptyAnnotationId { pos: head_pos })
+            } else {
+                Ok(())
+            }
+        }
+        _ => Err(WastParseError::EmptyAnnotationId { pos: head_pos }),
+    }
+}
+
+fn strip_one(e: SExpr) -> Result<Option<SExpr>, WastParseError> {
+    match e {
+        SExpr::List(items, pos) => {
+            if is_annotation_head(&items) {
+                validate_annotation_id(&items)?;
+                return Ok(None);
+            }
+            let mut kept = Vec::with_capacity(items.len());
+            for item in items {
+                if let Some(k) = strip_one(item)? {
+                    kept.push(k);
+                }
+            }
+            Ok(Some(SExpr::List(kept, pos)))
+        }
+        other => Ok(Some(other)),
+    }
 }
 
 /// Nesting depth ceiling for `(...)` forms. Chosen well above anything a
@@ -162,5 +270,78 @@ mod tests {
         let exprs = parse_source("(func $f)").unwrap();
         assert!(exprs[0].is_keyword_list("func"));
         assert!(!exprs[0].is_keyword_list("import"));
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // strip_annotations -- see its own doc comment for the design.
+    // parse_source already calls it, so these exercise it end-to-end.
+    // ══════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn a_top_level_annotation_disappears_entirely() {
+        let exprs = parse_source("(@a) (func)").unwrap();
+        assert_eq!(exprs.len(), 1);
+        assert!(exprs[0].is_keyword_list("func"));
+    }
+
+    #[test]
+    fn an_annotation_nested_inside_a_list_disappears_leaving_the_rest_intact() {
+        let exprs = parse_source("(func (@a) (param i32) (@a) (result i32))").unwrap();
+        let func = exprs[0].as_list().unwrap();
+        // Exactly `func`, `(param i32)`, `(result i32)` -- both annotations
+        // gone, nothing else disturbed.
+        assert_eq!(func.len(), 3);
+        assert_eq!(func[0].as_atom(), Some("func"));
+        assert!(func[1].is_keyword_list("param"));
+        assert!(func[2].is_keyword_list("result"));
+    }
+
+    #[test]
+    fn annotations_are_stripped_at_every_depth_of_nesting() {
+        let exprs = parse_source("(a (b (@x) (c (@y) d)))").unwrap();
+        let a = exprs[0].as_list().unwrap();
+        let b = a[1].as_list().unwrap();
+        assert_eq!(b.len(), 2); // "b", (c d) -- (@x) gone
+        let c = b[1].as_list().unwrap();
+        assert_eq!(c.len(), 2); // "c", "d" -- (@y) gone
+    }
+
+    #[test]
+    fn an_annotation_whose_own_body_is_never_visited() {
+        // Once a list is recognized as an annotation, its contents -- no
+        // matter how deeply nested or exotic -- are discarded whole,
+        // without recursing into them for further stripping.
+        let exprs = parse_source("(@a (b (c (d)))) (func)").unwrap();
+        assert_eq!(exprs.len(), 1);
+        assert!(exprs[0].is_keyword_list("func"));
+    }
+
+    #[test]
+    fn a_bare_at_sign_with_no_id_is_empty_annotation_id() {
+        assert!(matches!(parse_source("(@)"), Err(WastParseError::EmptyAnnotationId { .. })));
+    }
+
+    #[test]
+    fn at_sign_then_whitespace_then_an_id_is_empty_annotation_id() {
+        // The id must be IMMEDIATELY adjacent to `@` -- a separate atom
+        // after whitespace doesn't count as the id.
+        assert!(matches!(parse_source("(@ x)"), Err(WastParseError::EmptyAnnotationId { .. })));
+    }
+
+    #[test]
+    fn an_adjacent_quoted_id_is_a_valid_annotation() {
+        let exprs = parse_source(r#"(@"a") (func)"#).unwrap();
+        assert_eq!(exprs.len(), 1);
+        assert!(exprs[0].is_keyword_list("func"));
+    }
+
+    #[test]
+    fn an_adjacent_but_empty_quoted_id_is_empty_annotation_id() {
+        assert!(matches!(parse_source(r#"(@"")"#), Err(WastParseError::EmptyAnnotationId { .. })));
+    }
+
+    #[test]
+    fn a_non_adjacent_quoted_id_is_empty_annotation_id() {
+        assert!(matches!(parse_source(r#"(@ "a")"#), Err(WastParseError::EmptyAnnotationId { .. })));
     }
 }

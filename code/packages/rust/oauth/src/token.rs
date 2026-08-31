@@ -1,8 +1,8 @@
 //! Token endpoint, refresh, and revocation primitives.
 
 use super::{
-    audited, render_secret_form, validate_scopes, Audited, OAuthAuditAction, OAuthError,
-    OAuthTraceId, ProviderConfig, ProviderId, TokenExchangeRequest,
+    audited, json_nesting_within_limit, render_secret_form, validate_scopes, Audited,
+    OAuthAuditAction, OAuthError, OAuthTraceId, ProviderConfig, ProviderId, TokenExchangeRequest,
 };
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
@@ -499,6 +499,9 @@ impl Fields {
 }
 
 fn parse_json_fields(text: &str) -> Result<Fields, OAuthError> {
+    if !json_nesting_within_limit(text.as_bytes()) {
+        return Err(invalid(TokenResponseViolation::Encoding));
+    }
     let mut root = coding_adventures_json_value::parse(text)
         .map_err(|_| invalid(TokenResponseViolation::Encoding))?;
     let outcome = if let JsonValue::Object(pairs) = &root {
@@ -663,7 +666,7 @@ fn zeroize_object(pairs: &mut [(String, JsonValue)]) {
     }
 }
 
-fn zeroize_json(value: &mut JsonValue) {
+pub(crate) fn zeroize_json(value: &mut JsonValue) {
     match value {
         JsonValue::String(value) => value.zeroize(),
         JsonValue::Object(pairs) => zeroize_object(pairs),
@@ -927,6 +930,19 @@ mod tests {
             .publish_then_release(&mut Sink::default())
             .unwrap_err(),
             invalid(TokenResponseViolation::Expiry)
+        );
+
+        let deeply_nested = format!("{}null{}", "[".repeat(65), "]".repeat(65)).into_bytes();
+        assert_eq!(
+            decode_token_response(
+                context(TokenGrantKind::AuthorizationCode),
+                200,
+                TokenResponseFormat::Json,
+                Zeroizing::new(deeply_nested),
+            )
+            .publish_then_release(&mut Sink::default())
+            .unwrap_err(),
+            invalid(TokenResponseViolation::Encoding)
         );
     }
 

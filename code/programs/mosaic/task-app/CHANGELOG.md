@@ -4,6 +4,28 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed - exact release packaging pull-request gates (#13651)
+
+Release-relevant pull requests now run the same web and five-platform native
+artifact matrix as a real TaskApp release, using a reserved non-publishable CI
+SemVer identity. Tag/release availability checks and the publisher remain limited
+to manual `main` dispatches, so this adds exact pre-merge packaging evidence
+without granting pull requests release authority.
+
+### Added - self-contained portable Windows application (#13613)
+
+The TaskApp release lane now publishes a directly runnable Windows x64 folder
+with a `Trestle.exe` entrypoint, embedded Trestle product/version/icon metadata,
+the self-contained .NET and Windows App SDK runtimes, and the exact
+`task_mosaic_app.dll` installed as `mosaic_app.dll`. Windows CI extracts an
+original and replacement copy, drives the real WinUI controls through UI
+Automation without a runtime override, and proves the replacement restores the
+stable `%LOCALAPPDATA%\task-app` snapshot. A separate console harness retains ABI
+coverage. The bundle metadata explicitly says it is unsigned and not an MSIX.
+The exact gate also exposed `dotnet publish` dropping the generated PRI and XBF
+resources; emitted XAML projects now preserve them in `PublishDir`, preventing a
+cleanly built portable app from dying during WinUI startup (#13658).
+
 ### Added - unsigned macOS Trestle application bundle (#13612)
 
 The TaskApp release lane now turns the strict SwiftUI release build into a real

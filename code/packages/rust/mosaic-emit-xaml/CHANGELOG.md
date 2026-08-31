@@ -1,5 +1,15 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — preserve WinUI application resources in publish output (#13658)
+
+Emitted unpackaged WinUI projects now copy their application PRI and generated
+XBF files from the build output into `PublishDir`. `dotnet publish` previously
+omitted those app-owned resources even though `dotnet build` produced them, so a
+self-contained publish built cleanly and then exited during XAML startup with
+stowed exception `0xC000027B`. The PRI lookup follows `AssemblyName`, preserving
+product overrides such as Trestle, while the XBF glob is restricted to the
+generated build-output directory.
+
 ## [Unreleased] — retain typed row payloads for native button events (#13573)
 
 `HostButton` and internal `HostLink` controls inside `For` templates now bind

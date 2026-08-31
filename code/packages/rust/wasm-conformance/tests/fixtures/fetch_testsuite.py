@@ -1072,24 +1072,71 @@ TESTSUITE_FILES = [
     # BINARY variant has no `not_yet_supported` escape hatch at all, unlike
     # the `quote`/text variant, so any case this crate doesn't yet reject
     # grades a hard `fail`, not a capability-gap `not_yet_supported`);
-    # `data.wast` (the SEPARATE extended-const proposal -- `i32.add`/
-    # `i32.sub` inside a data segment's offset expression -- needs a real
-    # operator stack, not the single-accumulator evaluator this crate's
-    # `evaluate_const_expr` currently is); `instance.wast` (needs a
-    # separate, not-yet-implemented `(module definition ...)`/`(module
-    # instance ...)` generative-instantiation directive form this crate's
-    # `wasm-wast-parser` has zero grammar support for at all -- see W28's
-    # own PR description; a distinct, self-contained follow-on from the
-    # shared-memory/table fix just below, not blocked BY it); `annotations.
-    # wast`/`inline-module.wast` (two more genuinely separate, unimplemented
-    # text-format features -- custom `@id` annotation syntax, and a
-    # `.wast` script with no enclosing `(module ...)` wrapper at all). The
-    # `table*64.wast`/`call_indirect64.wast`/`table_copy_mixed.wast` family
-    # (table64 REAL operations against an `is64` table) that a PRIOR
-    # revision of this comment named as still deferred here is no longer
-    # out of scope -- see the dedicated "table64 proposal, REAL OPERATIONS
-    # follow-up" entry earlier in this same list, which vendors all 9 of
-    # them.
+    # `instance.wast` (needs a separate, not-yet-implemented `(module
+    # definition ...)`/`(module instance ...)` generative-instantiation
+    # directive form this crate's `wasm-wast-parser` has zero grammar
+    # support for at all -- see W28's own PR description; a distinct,
+    # self-contained follow-on from the shared-memory/table fix just below,
+    # not blocked BY it -- NOT the same gap `annotations.wast`/`inline-
+    # module.wast` had, see the three-file follow-up entry below, which
+    # investigated the real upstream files and found `inline-module.wast`
+    # needs something else entirely). The `table*64.wast`/
+    # `call_indirect64.wast`/`table_copy_mixed.wast` family (table64 REAL
+    # operations against an `is64` table) that a PRIOR revision of this
+    # comment named as still deferred here is no longer out of scope -- see
+    # the dedicated "table64 proposal, REAL OPERATIONS follow-up" entry
+    # earlier in this same list, which vendors all 9 of them.
+    #
+    # `data.wast`/`annotations.wast`/`inline-module.wast` follow-up (W29):
+    # three independent, previously-skipped gaps, each investigated against
+    # the REAL fetched upstream file rather than assumed from a prior
+    # session's guess:
+    #   - `data.wast` needed the extended-const proposal (`i32.add`/
+    #     `i32.sub`/`i32.mul` inside a data segment's offset expression) --
+    #     see `code/specs/W29-wasm-extended-const.md` and `wasm-execution`'s
+    #     own CHANGELOG for the real fix (a `Vec<WasmValue>` operand stack
+    #     replacing `evaluate_const_expr`'s old single-value accumulator).
+    #     `wasm-wast-parser`'s text encoder and `wasm-module-parser`'s
+    #     binary reader needed NO changes -- both already round-tripped
+    #     these opcodes correctly.
+    #   - `annotations.wast` needed real support for WAT's custom `(@id
+    #     ...)` out-of-band annotation syntax, wherever an ordinary form is
+    #     allowed. Two real, distinct gaps, both in `wasm-wast-parser`: (1)
+    #     no annotation-skipping at all (fixed via `sexpr::
+    #     strip_annotations`, a single recursive pass over the whole parsed
+    #     tree run immediately after `parse_sexprs`, rather than teaching
+    #     every one of `module.rs`'s ~8000 lines of positional field/
+    #     instruction dispatch to notice and skip one); (2) the ordinary
+    #     `idchar`-based tokenizer can't even TOKENIZE an annotation's BODY
+    #     (`(@a , ; ] [ }} }x{ ({) ,{{};}] ;)` uses characters like `,`/`[`/
+    #     `]` no real WAT atom ever contains), needing its own permissive
+    #     scan (`tokenizer::scan_annotation_body`) that still respects
+    #     paren balance, nested comments, and string literals. Real
+    #     numbers: `module` 4/4 (+6 not-yet-supported, the file's own
+    #     `spectest`-importing modules -- a pre-existing, unrelated gap),
+    #     `assert_malformed` 62/64 (2 not-yet-supported -- see that
+    #     directive kind's own grading rule: an unexpectedly-ACCEPTED
+    #     malformed case degrades gracefully, never a hard fail).
+    #   - `inline-module.wast` needed something DIFFERENT from what a prior
+    #     session's lightweight scan guessed (a `(module definition ...)`/
+    #     `(module instance ...)` generative-instantiation form, the SAME
+    #     gap `instance.wast` above has) -- the real fetched file is just
+    #     `(func) (memory 0) (func (export "f"))`: a whole `.wast` SCRIPT
+    #     with no `(module ...)` wrapper and no directives at all, module
+    #     fields written directly at the top level. `wasm-wast-parser::
+    #     module::parse_module` already supported this "abbreviated module"
+    #     shorthand for standalone `.wat` text and `module quote` bodies
+    #     (see that function's own doc comment); the real gap was
+    #     `script::parse_script` never extending the same shorthand to a
+    #     whole SCRIPT. Fixed with a small fallback: when every top-level
+    #     item in a script looks like a module field (never a directive
+    #     keyword), synthesize one `(module <fields...>)` wrapping all of
+    #     them. `module` 1/1 (100%) -- a real, unconditional pass.
+    # Full before/after baseline diff confirms zero tally change in any of
+    # the 233 previously-vendored files -- purely additive.
+    "annotations.wast",
+    "data.wast",
+    "inline-module.wast",
     "address0.wast",
     "address1.wast",
     "align0.wast",

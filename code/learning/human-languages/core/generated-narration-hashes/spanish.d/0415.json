@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:48bac7afd274b0cd",
+  "lessonIds": [
+    "ES-C415-paquete",
+    "ES-C415-extranjero",
+    "ES-C415-package-recall-1",
+    "ES-C415-package-recall-2"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch415.txt",
+  "json": "spanish/narration/ch415.json",
+  "textHash": "fnv1a64:306717c57da8fbef",
+  "jsonHash": "fnv1a64:81b1842a2971595d",
+  "findings": []
+}

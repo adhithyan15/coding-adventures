@@ -1,0 +1,430 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 414,
+  "title": "Sign Up at Reception",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:d6b3adc9c84466ae",
+  "lessons": [
+    {
+      "id": "ES-C414-apuntarse",
+      "sequence": 9510,
+      "title": "apuntarse — put your name on the list",
+      "headword": "apuntarse",
+      "romanization": "apuntarse",
+      "gloss": "to sign up, to put one's name down",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5a3033dabc99528",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall el punto, a point or item. Spanish builds apuntar from that family, and apuntarse can mean to put your own name down: to sign up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The base punto goes back to Latin punctum, a mark made by a prick. To apuntar is to note or point something; with se, apuntarse often means to add oneself to a list. The root is already anchored in punto, so this lesson extends that family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: who signs up?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The pronoun changes with the person: me apunto for “I sign up” and apuntarse after another verb, as in hay que apuntarse, “one must sign up.” Use a for the activity: apuntarse a una clase."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apuntarse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apuntarse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me apunto a la clase",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *me apunto a la clase*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hay que apuntarse antes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hay que apuntarse antes*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To sign up? (Apuntarse.) One must sign up beforehand? (Hay que apuntarse antes.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: apuntar."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C414-recepcion",
+      "sequence": 9520,
+      "title": "la recepción — the place that receives you",
+      "headword": "la recepción",
+      "romanization": "la recepción",
+      "gloss": "reception, the reception desk",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:818e95d696306061",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall apuntarse, to put your name on a list. At a sports centre, the list may be kept at la recepción, the reception desk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin receptio meant a receiving. Spanish recepción and English reception belong to the same family. The place receives visitors, questions and sign-up requests."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: place after en",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Use en la recepción for “at the reception desk.” The written accent marks the final stress: re-cep-CIÓN. A useful notice says Hay que apuntarse en la recepción."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la recepción",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la recepción*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "en la recepción",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *en la recepción*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hay que apuntarse en la recepción",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hay que apuntarse en la recepción*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Reception desk? (La recepción.) At reception? (En la recepción.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: recepción."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C414-signup-recall-1",
+      "sequence": 9530,
+      "title": "sign-up recall one — action and place",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "first retrieval of sign up and reception",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88ad04e8f07a7cd0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the action and the place. (Apuntarse, recepción.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apuntarse a una clase",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apuntarse a una clase*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "en la recepción",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *en la recepción*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hay que apuntarse en la recepción",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hay que apuntarse en la recepción*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sign up, reception? (Apuntarse, recepción.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C414-signup-recall-2",
+      "sequence": 9540,
+      "title": "sign-up recall two — read the class notice",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "second retrieval of sign up and reception",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c761a862140e17c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A yoga class has limited places. The notice tells visitors what to do before class and where to do it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "“One must sign up beforehand.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Hay que apuntarse antes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Hay que apuntarse antes.*]"
+            },
+            {
+              "kind": "speech",
+              "text": "“One must sign up at reception.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Hay que apuntarse en la recepción.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Hay que apuntarse en la recepción.*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What must a visitor do before the class? (Apuntarse en la recepción.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -105,6 +105,7 @@ def artifact_names(version: str) -> list[str]:
         for target in LINUX_BUNDLES.values()
     )
     names.append(f"task-app-swiftui-macos-bundle-v{version}.zip")
+    names.append(f"task-app-xaml-windows-bundle-v{version}.zip")
     return names
 
 
@@ -352,6 +353,38 @@ def _trestle_icns() -> bytes:
     return b"icns" + struct.pack(">I", len(body) + 8) + body
 
 
+def _trestle_ico() -> bytes:
+    images = [_trestle_icon_png(size) for size in (16, 32, 48, 64, 128, 256)]
+    header_size = 6 + 16 * len(images)
+    entries = []
+    offset = header_size
+    for size, payload in zip((16, 32, 48, 64, 128, 256), images, strict=True):
+        encoded_size = 0 if size == 256 else size
+        entries.append(
+            struct.pack(
+                "<BBBBHHII",
+                encoded_size,
+                encoded_size,
+                0,
+                0,
+                1,
+                32,
+                len(payload),
+                offset,
+            )
+        )
+        offset += len(payload)
+    return struct.pack("<HHH", 0, 1, len(images)) + b"".join(entries) + b"".join(images)
+
+
+def write_windows_icon(output: Path) -> Path:
+    """Write the stable multi-resolution Trestle Windows application icon."""
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_bytes(_trestle_ico())
+    return output
+
+
 def _add_zip_member(
     archive: zipfile.ZipFile,
     name: str,
@@ -486,6 +519,105 @@ macOS artifacts and are not presented as an iOS build.
     return output
 
 
+def archive_windows_app(
+    version: str,
+    commit: str,
+    source: Path,
+    executable: Path,
+    runtime: Path,
+    expected_runtime: Path,
+    output_dir: Path,
+) -> Path:
+    """Verify and archive the self-contained unpackaged Windows application."""
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}", commit)
+    if not source.is_dir():
+        raise ValueError(f"Windows publish directory does not exist: {source}")
+    executable_relative = _relative_bundle_path(source, executable, "executable")
+    runtime_relative = _relative_bundle_path(source, runtime, "runtime")
+    if executable_relative.as_posix() != "Trestle.exe":
+        raise ValueError("Windows release executable must be Trestle.exe")
+    if runtime_relative.as_posix() != "mosaic_app.dll":
+        raise ValueError("Windows Rust runtime must be mosaic_app.dll beside Trestle.exe")
+    if not executable.is_file() or not runtime.is_file() or not expected_runtime.is_file():
+        raise ValueError("Windows executable and Rust runtime files must exist")
+    if runtime.read_bytes() != expected_runtime.read_bytes():
+        raise ValueError("bundled Windows Rust runtime does not match the selected build artifact")
+    required_resources = ("Trestle.pri", "App.xbf", "MainWindow.xbf", "TaskApp.xbf")
+    missing_resources = [name for name in required_resources if not (source / name).is_file()]
+    if missing_resources:
+        raise ValueError(
+            "Windows publish directory is missing required WinUI resources: "
+            + ", ".join(missing_resources)
+        )
+
+    source_root = source.resolve(strict=True)
+    for path in source.rglob("*"):
+        try:
+            path.resolve(strict=True).relative_to(source_root)
+        except ValueError as error:
+            raise ValueError(f"Windows bundle contains an external path: {path}") from error
+
+    root_name = f"Trestle-windows-x64-v{version}"
+    metadata = {
+        "schemaVersion": 1,
+        "product": "Trestle",
+        "applicationId": "task-app",
+        "applicationIdentity": "org.codingadventures.trestle",
+        "version": version,
+        "sourceCommit": commit.lower(),
+        "platform": "Windows 10 2004+",
+        "architecture": "x64",
+        "toolkit": "WinUI 3 / XAML",
+        "executable": "Trestle.exe",
+        "rustRuntime": "mosaic_app.dll",
+        "statePath": "%LOCALAPPDATA%\\task-app\\mosaic-state.v1.json",
+        "dotnetSelfContained": True,
+        "windowsAppSdkSelfContained": True,
+        "signed": False,
+        "msix": False,
+    }
+    instructions = f"""Trestle {version} — portable Windows x64 application
+
+Extract the entire directory and run Trestle.exe on Windows 10 version 2004 or
+newer. Keep all files together. This release carries its .NET and Windows App SDK
+runtimes, so it does not require a separate framework install.
+
+This is an unsigned, unpackaged development build rather than an MSIX installer.
+Windows SmartScreen may require an explicit first-run confirmation. Do not disable
+system-wide security controls. Local task state remains under the stable
+%LOCALAPPDATA%\\task-app identity.
+"""
+    output = output_dir / f"task-app-xaml-windows-bundle-v{version}.zip"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for path in sorted(source.rglob("*")):
+            if path.is_file():
+                relative = path.relative_to(source).as_posix()
+                archive.write(path, f"{root_name}/{relative}")
+        _add_zip_member(
+            archive,
+            f"{root_name}/Trestle.ico",
+            _trestle_ico(),
+        )
+        _add_zip_member(
+            archive,
+            f"{root_name}/SOURCE_COMMIT",
+            f"{commit.lower()}\n".encode(),
+        )
+        _add_zip_member(
+            archive,
+            f"{root_name}/BUNDLE.json",
+            (json.dumps(metadata, indent=2, sort_keys=True) + "\n").encode(),
+        )
+        _add_zip_member(
+            archive,
+            f"{root_name}/INSTALL.txt",
+            instructions.encode(),
+        )
+    return output
+
+
 def build_manifest(
     version: str,
     tag: str,
@@ -560,6 +692,24 @@ def build_manifest(
             ),
         }
     )
+    artifacts.append(
+        {
+            "name": f"task-app-xaml-windows-bundle-v{version}.zip",
+            "kind": "portable-windows-application",
+            "platform": "Windows 10 2004+ / x64",
+            "toolkit": "WinUI 3 / XAML",
+            "installable": False,
+            "runnable": True,
+            "signed": False,
+            "msix": False,
+            "applicationId": "task-app",
+            "applicationIdentity": "org.codingadventures.trestle",
+            "verification": (
+                "self-contained publish, byte-identical bundled Rust runtime, "
+                "UI Automation launch, and replacement-state restoration"
+            ),
+        }
+    )
     return {
         "schemaVersion": 1,
         "product": "TaskApp/Trestle",
@@ -570,7 +720,7 @@ def build_manifest(
         "knownLimitations": [
             "Linux bundles are portable archives, not signed distribution packages.",
             "The macOS app is unsigned and not notarized.",
-            "Windows remains a generated project; see GitHub issue #13522.",
+            "The Windows app is unsigned and unpackaged; no MSIX is provided.",
             "Linux bundles require the compatible system libraries named in INSTALL.txt.",
         ],
     }
@@ -639,6 +789,7 @@ Rust engine.
   project for Windows.
 - Unzip and run the unsigned SwiftUI `Trestle.app` on the matching macOS 13+
   architecture recorded in its `BUNDLE.json`.
+- Extract and run the self-contained Windows x64 `Trestle.exe` bundle.
 
 ## Artifact and platform coverage
 
@@ -654,6 +805,7 @@ Rust engine.
 | `task-app-flutter-linux-bundle-v{version}.tar.gz` | Linux x86_64 / Flutter | Verified portable bundle; compatible GTK 3 system required |
 | `task-app-compose-linux-bundle-v{version}.tar.gz` | Linux x86_64 / Compose Desktop | Verified portable bundle with bundled JVM runtime |
 | `task-app-swiftui-macos-bundle-v{version}.zip` | macOS 13+ / runner-native architecture | Verified unsigned `Trestle.app`; not notarized |
+| `task-app-xaml-windows-bundle-v{version}.zip` | Windows 10 2004+ / x64 | Verified self-contained portable app; unsigned, no MSIX |
 
 `task-app-release-manifest-v{version}.json` records the source commit and exact
 verification claim for every payload. `SHA256SUMS` authenticates every payload and
@@ -662,7 +814,8 @@ the manifest.
 ## Known limitations
 
 - Linux payloads are portable archives rather than signed distribution packages.
-- The macOS app is unsigned/not notarized; Windows remains source-only: [#{13522}]({issue_root}/13522).
+- The macOS app is unsigned/not notarized; the Windows app is unsigned and unpackaged.
+- Signing and installer lifecycle remain tracked in [#13522]({issue_root}/13522).
 - Mobile binaries are not release artifacts in this version.
 
 ## TaskApp GitHub history
@@ -712,6 +865,18 @@ def _parser() -> argparse.ArgumentParser:
     macos_parser.add_argument("--runtime", type=Path, required=True)
     macos_parser.add_argument("--expected-runtime", type=Path, required=True)
     macos_parser.add_argument("--output-dir", type=Path, required=True)
+
+    icon_parser = subparsers.add_parser("write-windows-icon")
+    icon_parser.add_argument("--output", type=Path, required=True)
+
+    windows_parser = subparsers.add_parser("archive-windows-app")
+    windows_parser.add_argument("--version", required=True)
+    windows_parser.add_argument("--commit", required=True)
+    windows_parser.add_argument("--source", type=Path, required=True)
+    windows_parser.add_argument("--executable", type=Path, required=True)
+    windows_parser.add_argument("--runtime", type=Path, required=True)
+    windows_parser.add_argument("--expected-runtime", type=Path, required=True)
+    windows_parser.add_argument("--output-dir", type=Path, required=True)
 
     manifest_parser = subparsers.add_parser("write-manifest")
     manifest_parser.add_argument("--version", required=True)
@@ -764,6 +929,18 @@ def main(argv: list[str] | None = None) -> int:
                 args.architecture,
                 args.executable,
                 args.resource_bundle,
+                args.runtime,
+                args.expected_runtime,
+                args.output_dir,
+            )
+        elif args.command == "write-windows-icon":
+            write_windows_icon(args.output)
+        elif args.command == "archive-windows-app":
+            archive_windows_app(
+                args.version,
+                args.commit,
+                args.source,
+                args.executable,
                 args.runtime,
                 args.expected_runtime,
                 args.output_dir,
