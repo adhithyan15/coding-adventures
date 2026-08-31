@@ -1,5 +1,30 @@
 # Changelog — sqlite-file
 
+## 0.19.0 - Unreleased
+
+**Writer: `DbOptions`, so a caller can set the user version through the front
+door.** 0.18.0 put `user_version` on `Header`, but `write_multi_table_db` still
+hardcoded `0`, so the only way to emit a non-zero user version was to parse the
+writer's output, mutate the header, re-encode it, and splice the 100 bytes back.
+That works — it is what the cross-check test does deliberately — but it is a
+ritual every caller would otherwise have to re-derive, and getting the splice
+wrong corrupts the header.
+
+New `DbOptions { page_size, user_version }` and
+`write_multi_table_db_with(options, tables)`. `write_multi_table_db(page_size,
+tables)` stays, delegating with `user_version: 0`, so existing callers and their
+emitted bytes are unchanged.
+
+Options are a struct rather than extra positional parameters because
+`user_version: 11` says what it means at the call site where a bare `11` beside a
+page size would not, and because the next header field will not need another
+signature change.
+
+Gated by `writer_options_user_version_reaches_real_sqlite`, which asserts real
+bundled-C SQLite reports the requested version, that `integrity_check` passes,
+that a rowid-alias column written as NULL reads back from the rowid, and that the
+default constructor still emits `0`.
+
 ## 0.18.0 - Unreleased
 
 **Header: the user version (offset 60).** `Header` gained a `user_version` field,

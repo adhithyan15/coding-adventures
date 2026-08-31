@@ -333,8 +333,41 @@ pub fn write_single_table_db(
 /// [`write_multi_table_db`] writes. `rows` is `(rowid, column values)` per row.
 pub type TableSpec<'a> = (&'a str, &'a str, &'a [(i64, Vec<crate::record::SqlValue>)]);
 
+/// Everything about the database being written that is not the tables themselves.
+///
+/// [`write_multi_table_db`] covers the common case with defaults. Reach for this
+/// and [`write_multi_table_db_with`] when a header field has to carry a specific
+/// value — today that means [`user_version`](DbOptions::user_version), which Anki
+/// V11 collections require.
+///
+/// Passing options as a struct rather than as extra positional parameters keeps
+/// the requirement legible at the call site: `user_version: 11` says what it means,
+/// where a bare `11` alongside a page size would not.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct DbOptions {
+    /// Bytes per page — a power of two in `512..=65536`.
+    pub page_size: usize,
+    /// The value `PRAGMA user_version` will report. SQLite never interprets it;
+    /// applications use it to stamp a schema version. Anki V11 uses 11.
+    pub user_version: u32,
+}
+
+impl DbOptions {
+    /// Options for `page_size` with every other field at its default — exactly
+    /// what [`write_multi_table_db`] uses.
+    pub fn new(page_size: usize) -> Self {
+        DbOptions {
+            page_size,
+            user_version: 0,
+        }
+    }
+}
+
 /// Emit a complete, re-readable SQLite database holding **several** tables in one
 /// call — the multi-table generalisation of [`write_single_table_db`].
+///
+/// This is [`write_multi_table_db_with`] with default options; see [`DbOptions`]
+/// when a header field such as the user version has to carry a specific value.
 ///
 /// ## Page layout
 ///
@@ -361,6 +394,21 @@ pub type TableSpec<'a> = (&'a str, &'a str, &'a [(i64, Vec<crate::record::SqlVal
 /// leaf even after overflow (a schema large enough to need page 1 to become an
 /// interior b-tree is a later rung).
 pub fn write_multi_table_db(page_size: usize, tables: &[TableSpec]) -> Result<Vec<u8>, SqliteError> {
+    write_multi_table_db_with(DbOptions::new(page_size), tables)
+}
+
+/// [`write_multi_table_db`], with control over the header fields in [`DbOptions`].
+///
+/// # Errors
+/// The same as [`write_multi_table_db`].
+pub fn write_multi_table_db_with(
+    options: DbOptions,
+    tables: &[TableSpec],
+) -> Result<Vec<u8>, SqliteError> {
+    let DbOptions {
+        page_size,
+        user_version,
+    } = options;
     if !(512..=65536).contains(&page_size) || !page_size.is_power_of_two() {
         return Err(SqliteError::BadPageSize(page_size as u32));
     }
@@ -426,7 +474,7 @@ pub fn write_multi_table_db(page_size: usize, tables: &[TableSpec]) -> Result<Ve
         schema_cookie: 1,
         schema_format: 1,
         text_encoding: TextEncoding::Utf8,
-        user_version: 0,
+        user_version,
     };
     let mut page1 = vec![0u8; page_size];
     page1[0..100].copy_from_slice(&header.encode());

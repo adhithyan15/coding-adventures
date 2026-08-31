@@ -9,10 +9,25 @@ license = "MIT"
 coding_adventures_sha1 = { path = "../sha1" }
 engram-core = { path = "../engram-core" }
 protobuf = { path = "../protobuf" }
-rusqlite = { version = "0.32", features = ["bundled", "serialize"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sqlite-file = { path = "../sqlite-file" }
-tempfile = "3"
 zip = { path = "../zip" }
 zstd_crate = { package = "zstd", version = "0.13" }
+
+# `rusqlite` is a DEV-dependency only. It no longer writes anything: the V11
+# export is emitted by `sqlite-file`'s zero-dependency writer, so the production
+# graph links no C SQLite and the library can be built for `wasm32`, where the
+# bundled amalgamation cannot go.
+#
+# It stays here in an oracle role, the same one it holds in `sqlite-file`'s
+# cross-check suite: the import tests build genuine `.anki2` fixtures with the
+# real C library and assert our reader decodes what SQLite actually wrote.
+# Replacing that with our own writer would make the test circular — it would only
+# prove we can read back our own bytes.
+#
+# The `serialize` feature is gone with the export path that used it; `bundled`
+# remains so the tests do not depend on a system SQLite.
+[dev-dependencies]
+rusqlite = { version = "0.32", features = ["bundled"] }
+tempfile = "3"

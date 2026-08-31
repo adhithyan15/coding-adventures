@@ -823,3 +823,67 @@ fn our_user_version_is_read_back_by_real_sqlite() {
     drop(conn);
     let _ = std::fs::remove_dir_all(&dir);
 }
+
+/// `DbOptions::user_version` reaches the emitted file, and real SQLite reports it.
+///
+/// The sibling test above stamps the version by re-encoding a parsed header, which
+/// proves the *offset*. This one proves the *writer front door*: that a caller who
+/// never touches `Header` still gets the version they asked for. Both matter — the
+/// first could pass while `write_multi_table_db_with` silently ignored its options.
+#[test]
+fn writer_options_user_version_reaches_real_sqlite() {
+    use sqlite_file::page_writer::{write_multi_table_db_with, DbOptions, TableSpec};
+    use sqlite_file::SqlValue;
+
+    let rows = vec![(1i64, vec![SqlValue::Null, SqlValue::Text("alpha".into())])];
+    let tables: &[TableSpec] = &[("notes", "CREATE TABLE notes(id integer primary key, body)", &rows)];
+    let db = write_multi_table_db_with(
+        DbOptions {
+            page_size: 4096,
+            user_version: 11,
+        },
+        tables,
+    )
+    .unwrap();
+
+    static COUNTER_OPT: AtomicU64 = AtomicU64::new(14_000_000);
+    let unique = COUNTER_OPT.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_optuv_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let user_version: i64 = conn
+        .query_row("PRAGMA user_version", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(user_version, 11, "the option must reach the emitted header");
+
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(integrity, "ok");
+
+    // The rowid-alias contract: `id integer primary key` is stored as NULL in the
+    // record and read back from the rowid. Writing NULL is what real SQLite does;
+    // asserting the read-back value here pins that we got it right.
+    let got: Vec<(i64, String)> = conn
+        .prepare("SELECT id, body FROM notes")
+        .unwrap()
+        .query_map([], |r| Ok((r.get(0)?, r.get::<_, String>(1)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    assert_eq!(got, vec![(1, "alpha".to_string())]);
+
+    // The default constructor must still emit 0, so existing callers are unchanged.
+    let plain = sqlite_file::page_writer::write_multi_table_db(4096, tables).unwrap();
+    assert_eq!(
+        sqlite_file::header::Header::parse(&plain).unwrap().user_version,
+        0
+    );
+
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+}
