@@ -4,6 +4,13 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed - clean-runner release prerequisites (#13543)
+
+The release lane now checks in the web host's npm lockfile so dependency caching
+and `npm ci` work in a fresh GitHub checkout. Linux native-source jobs install
+the Cairo development package required transitively by the shared Rust workspace
+before building the TaskApp runtime.
+
 ### Added - incremental SemVer GitHub releases (#13543)
 
 TaskApp now has a manual, main-only release lane using immutable product-scoped

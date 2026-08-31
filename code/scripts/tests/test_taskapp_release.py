@@ -8,11 +8,17 @@ from pathlib import Path
 import pytest
 
 SCRIPTS = Path(__file__).resolve().parents[1]
-WORKFLOW = (
-    Path(__file__).resolve().parents[3]
-    / ".github"
-    / "workflows"
-    / "release-task-app.yml"
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+WORKFLOW = REPOSITORY_ROOT / ".github" / "workflows" / "release-task-app.yml"
+WEB_LOCK = (
+    REPOSITORY_ROOT
+    / "code"
+    / "programs"
+    / "mosaic"
+    / "task-app"
+    / "host"
+    / "web"
+    / "package-lock.json"
 )
 sys.path.insert(0, str(SCRIPTS))
 
@@ -169,3 +175,5 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "--latest=false" in workflow
     assert 'RUST_VERSION: "1.97.0"' in workflow
     assert "git diff --exit-code" in workflow
+    assert "sudo apt-get install -y libcairo2-dev" in workflow
+    assert WEB_LOCK.is_file()

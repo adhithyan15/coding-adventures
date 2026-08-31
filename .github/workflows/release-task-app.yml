@@ -206,6 +206,14 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Install Linux Rust build dependencies
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev
+
       - name: Build the Rust runtime and strict generated project
         shell: bash
         env:
