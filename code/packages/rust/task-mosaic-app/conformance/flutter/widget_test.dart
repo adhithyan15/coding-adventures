@@ -6,6 +6,8 @@ import 'package:mosaic_task_app/main.dart';
 import 'package:mosaic_task_app/mosaic_host.dart';
 
 const _taskName = 'Native acceptance task';
+const _editedTaskName = 'Edited native task';
+const _editedDue = '2026-01-12';
 const _persistedTaskName = 'Persisted native task';
 const _due = '2026-01-09';
 const _schedule = '2026-01-05 → 2026-01-05';
@@ -69,6 +71,15 @@ void main() {
     await _settle(tester);
     expect(find.text(_schedule), findsOneWidget);
 
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Edit'));
+    await _settle(tester);
+    await tester.enterText(_input('Task name'), _editedTaskName);
+    await tester.enterText(_input('Due (optional)').last, _editedDue);
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Save'));
+    await _settle(tester);
+    expect(find.text(_editedTaskName), findsOneWidget);
+    expect(find.text('due $_editedDue'), findsOneWidget);
+
     await tester.tap(find.widgetWithText(ElevatedButton, '○'));
     await _settle(tester);
     expect(find.widgetWithText(ElevatedButton, '✓'), findsOneWidget);
@@ -79,7 +90,7 @@ void main() {
 
     await tester.tap(find.widgetWithText(ElevatedButton, 'Delete'));
     await _settle(tester);
-    expect(find.text(_taskName), findsNothing);
+    expect(find.text(_editedTaskName), findsNothing);
 
     await tester.enterText(_input('What needs doing?'), _persistedTaskName);
     await _settle(tester);

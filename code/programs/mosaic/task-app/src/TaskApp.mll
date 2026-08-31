@@ -552,45 +552,77 @@ layout TaskApp {
                   }
                 }
                 Column [ task-card ] {
-                  Row [ task-row ] {
-                    HostButton [ toggle ] ( label : ( row[0] ) , onClick : emit: onToggleTask )
-                    // The name is the disclosure control: it opens this row's detail.
-                    HostButton [ task-name ] ( label : ( row[1] ) , onClick : emit: onExpandTask )
-                    If ( when: ( row[2] ) ) {
-                      Text [ chip-due ] ( content : ( row[2] ) )
+                  If ( when: ( row[15] ) ) {
+                    Column [ edit-form ] {
+                      HostInput [ edit-name-input ] (
+                        value : slot: edit-task-name ,
+                        placeholder : "Task name" ,
+                        a11y-label : "Task name" ,
+                        auto-focus : true ,
+                        onChange : emit: onEditTaskNameChange ,
+                        onCommit : emit: onSaveTaskEdit
+                      )
+                      HostInput [ edit-due-input ] (
+                        value : slot: edit-task-due ,
+                        placeholder : "Due (optional)" ,
+                        a11y-label : "Due date (optional)" ,
+                        onChange : emit: onEditTaskDueChange ,
+                        onCommit : emit: onSaveTaskEdit
+                      )
+                      If ( when: slot: edit-task-name-error ) {
+                        Text [ edit-name-error ] ( content : slot: edit-task-name-error )
+                      }
+                      If ( when: slot: edit-task-due-error ) {
+                        Text [ edit-due-error ] ( content : slot: edit-task-due-error )
+                      }
+                      Row [ edit-action-row ] {
+                        HostButton [ edit-save-btn ] ( label : "Save" , onClick : emit: onSaveTaskEdit )
+                        HostButton [ edit-cancel-btn ] ( label : "Cancel" , onClick : emit: onCancelTaskEdit )
+                      }
                     }
-                    If ( when: ( row[3] ) ) {
-                      Text [ chip-sched ] ( content : ( row[3] ) )
-                    }
-                    If ( when: ( row[4] ) ) {
-                      Text [ chip-over ] ( content : ( row[4] ) )
-                    }
-                    If ( when: ( row[10] ) ) {
-                      Text [ chip-priority ] ( content : ( row[10] ) )
-                    }
-                    If ( when: ( row[11] ) ) {
-                      Text [ chip-labels ] ( content : ( row[11] ) )
-                    }
-                    HostButton [ del-btn ] ( label : "Delete" , onClick : emit: onDeleteTask )
                   }
-                  // Progressive disclosure: the scheduling detail exists for every
-                  // task but is rendered only for the open row.
-                  If ( when: ( row[5] ) ) {
-                    Column [ task-detail ] {
-                      If ( when: ( row[6] ) ) {
-                        Text [ detail-sched ] ( content : ( row[6] ) )
+                  Else {
+                    Row [ task-row ] {
+                      HostButton [ toggle ] ( label : ( row[0] ) , onClick : emit: onToggleTask )
+                      // The name is the disclosure control: it opens this row's detail.
+                      HostButton [ task-name ] ( label : ( row[1] ) , onClick : emit: onExpandTask )
+                      If ( when: ( row[2] ) ) {
+                        Text [ chip-due ] ( content : ( row[2] ) )
                       }
-                      If ( when: ( row[7] ) ) {
-                        Text [ detail-slack ] ( content : ( row[7] ) )
+                      If ( when: ( row[3] ) ) {
+                        Text [ chip-sched ] ( content : ( row[3] ) )
                       }
-                      If ( when: ( row[8] ) ) {
-                        Text [ detail-free ] ( content : ( row[8] ) )
+                      If ( when: ( row[4] ) ) {
+                        Text [ chip-over ] ( content : ( row[4] ) )
                       }
-                      If ( when: ( row[12] ) ) {
-                        Text [ detail-deps ] ( content : ( row[12] ) )
+                      If ( when: ( row[10] ) ) {
+                        Text [ chip-priority ] ( content : ( row[10] ) )
                       }
-                      If ( when: ( row[13] ) ) {
-                        Text [ detail-notes ] ( content : ( row[13] ) )
+                      If ( when: ( row[11] ) ) {
+                        Text [ chip-labels ] ( content : ( row[11] ) )
+                      }
+                      HostButton [ edit-btn ] ( label : "Edit" , onClick : emit: onEditTask )
+                      HostButton [ del-btn ] ( label : "Delete" , onClick : emit: onDeleteTask )
+                    }
+                    // Progressive disclosure: the scheduling detail exists for every
+                    // task but is rendered only for the open row.
+                    If ( when: ( row[5] ) ) {
+                      Column [ task-detail ] {
+                        If ( when: ( row[6] ) ) {
+                          Text [ detail-sched ] ( content : ( row[6] ) )
+                        }
+                        If ( when: ( row[7] ) ) {
+                          Text [ detail-slack ] ( content : ( row[7] ) )
+                        }
+                        If ( when: ( row[8] ) ) {
+                          Text [ detail-free ] ( content : ( row[8] ) )
+                        }
+                        If ( when: ( row[12] ) ) {
+                          Text [ detail-deps ] ( content : ( row[12] ) )
+                        }
+                        If ( when: ( row[13] ) ) {
+                          Text [ detail-notes ] ( content : ( row[13] ) )
+                        }
                       }
                     }
                   }

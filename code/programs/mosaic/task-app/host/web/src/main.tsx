@@ -321,6 +321,11 @@ export function makeController(engine: any, init: ControllerInit = {}) {
   let newDueError = "";
   let newNameFocus = "";
   let newDueFocus = "";
+  let editingTask: string | null = null;
+  let editTaskName = "";
+  let editTaskDue = "";
+  let editTaskNameError = "";
+  let editTaskDueError = "";
   let newProject = "";
   let newLabel = "";
   // Which view is showing. A string rather than a set of booleans, so the six
@@ -772,6 +777,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           // Present only alongside the heading cell above (row[9]) — TaskApp.mil's
           // doc comment on task-rows documents this pairing.
           heading ? String(groupSizes.get(group)) : "",
+          id === editingTask ? "editing" : "",
         ];
       });
       const doneCount = ids.filter((id) => byTask.get(id)!.value[DONE]?.value === true).length;
@@ -900,6 +906,10 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         newTaskDueError: newDueError,
         newTaskNameFocus: newNameFocus,
         newTaskDueFocus: newDueFocus,
+        editTaskName,
+        editTaskDue,
+        editTaskNameError,
+        editTaskDueError,
         emptyList: ids.length === 0 ? "empty" : "",
         newProjectName: newProject,
         projectRows,
@@ -922,6 +932,64 @@ export function makeController(engine: any, init: ControllerInit = {}) {
             if (newDueError) newDueFocus = "focus";
             newDueError = "";
           }
+          break;
+        case "editTaskNameChange":
+          editTaskName = event.value;
+          if (editTaskName.trim()) {
+            editTaskNameError = "";
+          }
+          break;
+        case "editTaskDueChange":
+          editTaskDue = event.value;
+          if (!editTaskDue.trim() || isoToDays(editTaskDue) != null) {
+            editTaskDueError = "";
+          }
+          break;
+        case "editTask": {
+          const { byTask } = rows();
+          const id = displayIds()[event.index];
+          if (!id) break;
+          const row = byTask.get(id);
+          editingTask = id;
+          expanded = null;
+          editTaskName = String(row?.display[NAME] ?? "");
+          editTaskDue = String(row?.display[DEADLINE] ?? "");
+          editTaskNameError = "";
+          editTaskDueError = "";
+          break;
+        }
+        case "saveTaskEdit": {
+          if (!editingTask) break;
+          const name = editTaskName.trim();
+          if (!name) {
+            editTaskNameError = "Enter a task name.";
+            break;
+          }
+          editTaskNameError = "";
+          const dueText = editTaskDue.trim();
+          const due = dueText ? isoToDays(dueText) : null;
+          if (dueText && due == null) {
+            editTaskDueError = "Use a real date in YYYY-MM-DD format.";
+            break;
+          }
+          engine.renameTask({ id: editingTask, name });
+          engine.setDeadline({ id: editingTask, deadline: due });
+          editingTask = null;
+          editTaskName = "";
+          editTaskDue = "";
+          editTaskNameError = "";
+          editTaskDueError = "";
+          newNameFocus = "focus";
+          persist();
+          break;
+        }
+        case "cancelTaskEdit":
+          editingTask = null;
+          editTaskName = "";
+          editTaskDue = "";
+          editTaskNameError = "";
+          editTaskDueError = "";
+          newNameFocus = "focus";
           break;
         case "expandTask": {
           // Resolve through the same ordered id list the rows were drawn from, so the
@@ -1197,6 +1265,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           // Persist so the choice survives a reload — otherwise you'd come back to the
           // first project and your tasks would look like they'd vanished.
           if (id && engine.setActiveProject({ id })?.ok !== false) {
+            editingTask = null;
             // A Board-tier project never shows Timeline (see the .mll's
             // allow-timeline gate) — switching INTO one while it's the
             // active view would otherwise leave the switcher unable to
@@ -1278,6 +1347,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           if (id) {
             engine.deleteTask({ id });
             if (expanded === id) expanded = null;
+            if (editingTask === id) editingTask = null;
             const at = order.indexOf(id);
             if (at >= 0) order.splice(at, 1);
             persist();

@@ -54,6 +54,17 @@ struct TaskAppState {
     new_task_name_focus: String,
     #[serde(skip)]
     new_task_due_focus: String,
+    // List editing is transient: only committed values belong in the engine snapshot.
+    #[serde(skip)]
+    editing_task: Option<TaskId>,
+    #[serde(skip)]
+    edit_task_name: String,
+    #[serde(skip)]
+    edit_task_due: String,
+    #[serde(skip)]
+    edit_task_name_error: String,
+    #[serde(skip)]
+    edit_task_due_error: String,
     new_project_name: String,
     new_label_name: String,
     expanded_task: Option<TaskId>,
@@ -95,6 +106,11 @@ impl Default for TaskAppState {
             new_task_due_error: String::new(),
             new_task_name_focus: String::new(),
             new_task_due_focus: String::new(),
+            editing_task: None,
+            edit_task_name: String::new(),
+            edit_task_due: String::new(),
+            edit_task_name_error: String::new(),
+            edit_task_due_error: String::new(),
             new_project_name: String::new(),
             new_label_name: String::new(),
             expanded_task: None,
@@ -383,6 +399,10 @@ impl TaskMosaicApp {
             "new-task-due-error": self.state.new_task_due_error,
             "new-task-name-focus": self.state.new_task_name_focus,
             "new-task-due-focus": self.state.new_task_due_focus,
+            "edit-task-name": self.state.edit_task_name,
+            "edit-task-due": self.state.edit_task_due,
+            "edit-task-name-error": self.state.edit_task_name_error,
+            "edit-task-due-error": self.state.edit_task_due_error,
             "empty-list": if ids.is_empty() { "empty" } else { "" },
             "new-project-name": self.state.new_project_name,
             "project-rows": project_rows,
@@ -590,6 +610,12 @@ impl TaskMosaicApp {
                     } else {
                         group_size(group).to_string()
                     },
+                    if self.state.editing_task.as_ref() == Some(id) {
+                        "editing"
+                    } else {
+                        ""
+                    }
+                    .to_string(),
                 ]
             })
             .collect()
@@ -822,6 +848,20 @@ impl TaskMosaicApp {
                     }
                 }
             }
+            "editTaskNameChange" => {
+                self.state.edit_task_name = text_payload(event, "value")?;
+                if !self.state.edit_task_name.trim().is_empty() {
+                    self.state.edit_task_name_error.clear();
+                }
+            }
+            "editTaskDueChange" => {
+                self.state.edit_task_due = text_payload(event, "value")?;
+                if self.state.edit_task_due.trim().is_empty()
+                    || parse_date(&self.state.edit_task_due).is_some()
+                {
+                    self.state.edit_task_due_error.clear();
+                }
+            }
             "newProjectNameChange" => self.state.new_project_name = text_payload(event, "value")?,
             "newLabelNameChange" => self.state.new_label_name = text_payload(event, "value")?,
             "noteTitleChange" => self.state.note_title = text_payload(event, "value")?,
@@ -861,6 +901,9 @@ impl TaskMosaicApp {
             "toggleTask" => return self.toggle_task(index_payload(event, "index")?),
             "deleteTask" => return self.delete_task(index_payload(event, "index")?),
             "expandTask" => self.expand_task(index_payload(event, "index")?),
+            "editTask" => self.edit_task(index_payload(event, "index")?),
+            "saveTaskEdit" => return self.save_task_edit(),
+            "cancelTaskEdit" => self.clear_task_edit(true),
             "addProject" => return self.add_project(false),
             "addSubproject" => return self.add_project(true),
             "selectProject" => self.select_project(index_payload(event, "index")?),
@@ -957,7 +1000,73 @@ impl TaskMosaicApp {
         if self.state.expanded_task.as_ref() == Some(&id) {
             self.state.expanded_task = None;
         }
+        if self.state.editing_task.as_ref() == Some(&id) {
+            self.clear_task_edit(true);
+        }
         Ok(self.announced_update(format!("Deleted {name}")))
+    }
+
+    fn edit_task(&mut self, index: usize) {
+        let Some(id) = self.task_ids().get(index).cloned() else {
+            return;
+        };
+        let (name, due) = {
+            let task = &self.active_project().tasks[&id];
+            (
+                task.name.clone(),
+                task.schedule
+                    .as_ref()
+                    .and_then(|schedule| schedule.deadline)
+                    .map(format_date)
+                    .unwrap_or_default(),
+            )
+        };
+        self.state.edit_task_name = name;
+        self.state.edit_task_due = due;
+        self.state.editing_task = Some(id.clone());
+        self.state.expanded_task = None;
+        self.state.edit_task_name_error.clear();
+        self.state.edit_task_due_error.clear();
+    }
+
+    fn save_task_edit(&mut self) -> Result<AppUpdate, TaskAppError> {
+        let Some(id) = self.state.editing_task.clone() else {
+            return Ok(self.update());
+        };
+        let name = self.state.edit_task_name.trim().to_string();
+        if name.is_empty() {
+            self.state.edit_task_name_error = "Enter a task name.".to_string();
+            return Ok(self.update());
+        }
+        self.state.edit_task_name_error.clear();
+        let due_text = self.state.edit_task_due.trim();
+        let due = if due_text.is_empty() {
+            None
+        } else if let Some(due) = parse_date(due_text) {
+            Some(due)
+        } else {
+            self.state.edit_task_due_error = "Use a real date in YYYY-MM-DD format.".to_string();
+            return Ok(self.update());
+        };
+        self.state.edit_task_due_error.clear();
+        let project = self.active_project_mut();
+        project
+            .rename_task(&id, name.trim())
+            .map_err(engine_error)?;
+        project.set_deadline(&id, due).map_err(engine_error)?;
+        self.clear_task_edit(true);
+        Ok(self.announced_update(format!("Saved {name}")))
+    }
+
+    fn clear_task_edit(&mut self, return_focus: bool) {
+        self.state.editing_task = None;
+        self.state.edit_task_name.clear();
+        self.state.edit_task_due.clear();
+        self.state.edit_task_name_error.clear();
+        self.state.edit_task_due_error.clear();
+        if return_focus {
+            self.state.new_task_name_focus = "focus".to_string();
+        }
     }
 
     fn expand_task(&mut self, index: usize) {
@@ -992,6 +1101,7 @@ impl TaskMosaicApp {
         if let Some(id) = self.project_rows().0.get(index).cloned() {
             self.state.active_project = id;
             self.state.expanded_task = None;
+            self.clear_task_edit(false);
             self.repair();
         }
     }
@@ -1442,6 +1552,10 @@ mod tests {
         "new-task-due-error",
         "new-task-name-focus",
         "new-task-due-focus",
+        "edit-task-name",
+        "edit-task-due",
+        "edit-task-name-error",
+        "edit-task-due-error",
         "empty-list",
         "project-rows",
         "new-project-name",
@@ -1714,6 +1828,67 @@ mod tests {
     }
 
     #[test]
+    fn list_edit_validates_atomically_and_commits_through_task_core() {
+        let mut app = TaskMosaicApp::default();
+        app.start(context()).unwrap();
+        app.dispatch(event(1, "newTaskNameChange", json!({"value":"Draft plan"})))
+            .unwrap();
+        app.dispatch(event(2, "addTask", json!({}))).unwrap();
+
+        let editing = app
+            .dispatch(event(3, "editTask", json!({"index":0})))
+            .unwrap();
+        assert_eq!(editing.props["task-rows"][0][15], "editing");
+        assert_eq!(editing.props["edit-task-name"], "Draft plan");
+
+        app.dispatch(event(4, "editTaskNameChange", json!({"value":""})))
+            .unwrap();
+        app.dispatch(event(5, "editTaskDueChange", json!({"value":"2026-02-31"})))
+            .unwrap();
+        let before_invalid = app.snapshot().unwrap();
+        let invalid_name = app.dispatch(event(6, "saveTaskEdit", json!({}))).unwrap();
+        assert_eq!(
+            invalid_name.props["edit-task-name-error"],
+            "Enter a task name."
+        );
+        assert_eq!(
+            app.active_project().tasks[&TaskId::from_raw("task-1")].name,
+            "Draft plan"
+        );
+        assert_eq!(app.snapshot().unwrap(), before_invalid);
+
+        app.dispatch(event(
+            7,
+            "editTaskNameChange",
+            json!({"value":"Launch plan"}),
+        ))
+        .unwrap();
+        let invalid_due = app.dispatch(event(8, "saveTaskEdit", json!({}))).unwrap();
+        assert_eq!(
+            invalid_due.props["edit-task-due-error"],
+            "Use a real date in YYYY-MM-DD format."
+        );
+        assert_eq!(
+            app.active_project().tasks[&TaskId::from_raw("task-1")].name,
+            "Draft plan"
+        );
+
+        app.dispatch(event(9, "editTaskDueChange", json!({"value":"2026-02-28"})))
+            .unwrap();
+        let saved = app.dispatch(event(10, "saveTaskEdit", json!({}))).unwrap();
+        let task = &app.active_project().tasks[&TaskId::from_raw("task-1")];
+        assert_eq!(task.name, "Launch plan");
+        assert_eq!(
+            task.schedule
+                .as_ref()
+                .and_then(|schedule| schedule.deadline),
+            Date::from_ymd(2026, 2, 28)
+        );
+        assert_eq!(saved.props["task-rows"][0][15], "");
+        assert_eq!(saved.props["new-task-name-focus"], "focus");
+    }
+
+    #[test]
     fn index_payload_accepts_only_in_range_integral_json_numbers() {
         assert_eq!(json_index(&json!(0)), Some(0));
         assert_eq!(json_index(&json!(42.0)), Some(42));
@@ -1744,6 +1919,8 @@ mod tests {
         let cases = [
             ("newTaskNameChange", json!({"value":"Task"})),
             ("newTaskDueChange", json!({"value":""})),
+            ("editTaskNameChange", json!({"value":"Task"})),
+            ("editTaskDueChange", json!({"value":""})),
             ("newProjectNameChange", json!({"value":"Project"})),
             ("addProject", json!({})),
             ("addSubproject", json!({})),
@@ -1784,6 +1961,9 @@ mod tests {
             ("deleteNote", json!({})),
             ("cancelNote", json!({})),
             ("expandTask", json!({"index":0})),
+            ("editTask", json!({"index":0})),
+            ("saveTaskEdit", json!({})),
+            ("cancelTaskEdit", json!({})),
             ("addTask", json!({})),
             ("toggleTask", json!({"index":0})),
             ("deleteTask", json!({"index":0})),
