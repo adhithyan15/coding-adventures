@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 893,
-  "taughtForms": 1517,
-  "objectiveFailed": 22,
+  "lessonCount": 899,
+  "taughtForms": 1523,
+  "objectiveFailed": 18,
   "mocks": [
     {
       "mock": 1,
       "reading": 22,
-      "listening": 19,
-      "objectiveFailed": 9,
+      "listening": 22,
+      "objectiveFailed": 6,
       "failed": [
         {
           "paper": 1,
@@ -94,30 +94,9 @@
         },
         {
           "paper": 2,
-          "item": 27,
-          "missing": [
-            "medio"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 28,
-          "missing": [
-            "debajo"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 34,
           "missing": [
             "pastilla"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 35,
-          "missing": [
-            "fuera"
           ]
         },
         {
@@ -138,9 +117,9 @@
     },
     {
       "mock": 2,
-      "reading": 21,
+      "reading": 22,
       "listening": 16,
-      "objectiveFailed": 13,
+      "objectiveFailed": 12,
       "failed": [
         {
           "paper": 1,
@@ -157,13 +136,6 @@
           "missing": [
             "música",
             "concierto"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 18,
-          "missing": [
-            "lado"
           ]
         },
         {
@@ -249,7 +221,6 @@
     "cansado",
     "concierto",
     "curso",
-    "debajo",
     "deporte",
     "doctor",
     "estudiante",
@@ -257,13 +228,10 @@
     "extranjero",
     "fin de semana",
     "francés",
-    "fuera",
     "gimnasio",
     "helado",
     "incluir",
-    "lado",
     "mayo",
-    "medio",
     "música",
     "nadar",
     "paquete",
@@ -300,10 +268,6 @@
       "count": 1
     },
     {
-      "lexeme": "debajo",
-      "count": 1
-    },
-    {
       "lexeme": "deporte",
       "count": 1
     },
@@ -332,10 +296,6 @@
       "count": 1
     },
     {
-      "lexeme": "fuera",
-      "count": 1
-    },
-    {
       "lexeme": "gimnasio",
       "count": 1
     },
@@ -348,15 +308,7 @@
       "count": 1
     },
     {
-      "lexeme": "lado",
-      "count": 1
-    },
-    {
       "lexeme": "mayo",
-      "count": 1
-    },
-    {
-      "lexeme": "medio",
       "count": 1
     },
     {

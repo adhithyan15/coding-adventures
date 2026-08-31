@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:0fef11599fce6707",
+  "lessonIds": [
+    "ES-C407-medio",
+    "ES-C407-debajo",
+    "ES-C407-fuera",
+    "ES-C407-lado",
+    "ES-C407-location-recall-1",
+    "ES-C407-location-recall-2"
+  ],
+  "tex": "spanish/book/chapters/ch407-medio-debajo-fuera-lado.tex"
+}

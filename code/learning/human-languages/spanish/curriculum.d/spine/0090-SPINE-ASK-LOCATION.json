@@ -19,7 +19,9 @@
     "ES-PATH-363-01",
     "ES-PATH-369-01",
     "ES-PATH-370-01",
-    "ES-PATH-378-01"
+    "ES-PATH-378-01",
+    "ES-PATH-407-LOCATIONS",
+    "ES-PATH-407-REVIEWS"
   ],
   "omits": [],
   "relocates": {}

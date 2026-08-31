@@ -1,0 +1,20 @@
+{
+  "chapter": 407,
+  "title": "Middle, Below, Outside and Beside",
+  "label": "ch:medio-debajo-fuera-lado",
+  "canDo": "I can place something in the middle, underneath, outside or beside a reference point.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C407-location-recall-2",
+    "kind": "production",
+    "summary": "Use four location frames without translating.",
+    "assesses": [
+      "ES-LEX-MEDIO",
+      "ES-LEX-DEBAJO",
+      "ES-LEX-FUERA",
+      "ES-LEX-LADO"
+    ]
+  }
+}

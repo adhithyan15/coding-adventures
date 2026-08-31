@@ -323,6 +323,24 @@ describe("real curriculum", () => {
     ).toEqual([]);
   });
 
+  it("keeps the Spanish chapter 407 location tranche at A1", () => {
+    const a1Ids = new Set(
+      lessonsUpToLevel(lessons, curricula, spine, "A1")
+        .filter((lesson) => lesson.language === "spanish")
+        .map((lesson) => lesson.realization.lessonId),
+    );
+    expect(
+      [
+        "ES-C407-medio",
+        "ES-C407-debajo",
+        "ES-C407-fuera",
+        "ES-C407-lado",
+        "ES-C407-location-recall-1",
+        "ES-C407-location-recall-2",
+      ].filter((id) => !a1Ids.has(id)),
+    ).toEqual([]);
+  });
+
   it("keeps the Spanish Chapters 1-3 schema-v2 pilot closed and under five minutes", () => {
     const report = buildCurriculumGapReport({ registry, lessons, books });
     const pilot = lessons.filter(
