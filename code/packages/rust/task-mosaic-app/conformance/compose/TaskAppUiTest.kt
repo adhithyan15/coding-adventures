@@ -79,7 +79,10 @@ class TaskAppUiTest {
         compose.waitForIdle()
         compose.onAllNodesWithText(UI_TASK_NAME).assertCountEquals(0)
 
-        compose.onNodeWithTag("name-input").performTextInput(UI_PERSISTED_TASK_NAME)
+        // A successful add deliberately returns focus to the composer through
+        // its focus-preserving branch. Exercise that live branch instead of
+        // assuming the initial, never-focused control is still mounted.
+        compose.onNodeWithTag("name-input-corrected").performTextInput(UI_PERSISTED_TASK_NAME)
         compose.waitForIdle()
         compose.onNodeWithTag("due-input").performTextInput(UI_DUE)
         compose.waitForIdle()
