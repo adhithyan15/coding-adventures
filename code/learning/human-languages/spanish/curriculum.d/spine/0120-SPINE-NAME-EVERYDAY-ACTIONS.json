@@ -22,7 +22,8 @@
     "ES-PATH-388-01",
     "ES-PATH-395-01",
     "ES-PATH-396-01",
-    "ES-PATH-402-ACTIONS"
+    "ES-PATH-402-ACTIONS",
+    "ES-PATH-404-ACTIONS"
   ],
   "omits": [
     "VERB-GIVE"

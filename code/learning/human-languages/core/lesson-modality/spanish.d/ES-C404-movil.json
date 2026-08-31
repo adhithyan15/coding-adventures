@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C404-movil",
+    "language": "spanish",
+    "chapter": 404,
+    "sequence": 9020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1dd98f3160977e5"
+  },
+  "findings": []
+}

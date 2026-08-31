@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-404-MEDIA",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C404-wifi",
+    "ES-C404-movil",
+    "ES-C404-pelicula",
+    "ES-C404-media-recall-1",
+    "ES-C404-media-recall-2"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-404-MEDIA"
+  ],
+  "after": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:47fb9defb7c6fd27",
+  "lessonIds": [
+    "ES-C404-apagar",
+    "ES-C404-wifi",
+    "ES-C404-movil",
+    "ES-C404-pelicula",
+    "ES-C404-media-recall-1",
+    "ES-C404-media-recall-2"
+  ],
+  "tex": "spanish/book/chapters/ch404-wifi-movil-pelicula-apagar.tex"
+}
