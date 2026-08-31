@@ -1760,6 +1760,7 @@ jobs:
           ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
           ! grep -E "Unhandled Exception|MissingPluginException|NoSuchMethodError|TypeError" "$taskapp_log"
 
+          mkdir -p "$taskapp_output/flutter/bin"
           cp code/packages/rust/task-mosaic-app/conformance/flutter/task_app_conformance.dart \
             "$taskapp_output/flutter/bin/task_app_conformance.dart"
           cp code/packages/rust/task-mosaic-app/conformance/flutter/widget_test.dart \
