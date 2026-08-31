@@ -1,0 +1,20 @@
+{
+  "chapter": 410,
+  "title": "Academy, French, Student and Exam",
+  "label": "ch:academia-frances-estudiante-examen",
+  "canDo": "I can identify an academy, French, a student and an exam in simple education messages.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C410-education-recall-2",
+    "kind": "production",
+    "summary": "Retrieve four education words across course, identity and assessment messages.",
+    "assesses": [
+      "ES-LEX-ACADEMIA",
+      "ES-LEX-FRANCES",
+      "ES-LEX-ESTUDIANTE",
+      "ES-LEX-EXAMEN"
+    ]
+  }
+}

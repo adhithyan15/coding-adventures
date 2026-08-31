@@ -1,6 +1,6 @@
 {
   "id": "ES-PATH-030-ESTUDIANTE",
-  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
     "ES-C09-estudiante"
   ],
