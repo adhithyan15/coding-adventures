@@ -5,6 +5,7 @@
 #include <QCoreApplication>
 #include <QHash>
 #include <QModelIndex>
+#include <QQuickItem>
 #include <QQuickStyle>
 #include <QQuickView>
 #include <QThread>
