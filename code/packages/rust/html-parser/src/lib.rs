@@ -10565,7 +10565,7 @@ impl HtmlParser {
 
     fn body_has_non_whitespace_child(&self) -> bool {
         self.document.children.iter().any(|node| {
-            if matches!(node, Node::Text(text) if !text.data.chars().all(char::is_whitespace)) {
+            if matches!(node, Node::Text(text) if !text.data.chars().all(is_html_whitespace)) {
                 return true;
             }
             let Node::Element(element) = node else {
@@ -10575,17 +10575,17 @@ impl HtmlParser {
                 return element
                     .children
                     .iter()
-                    .any(|child| !matches!(child, Node::Text(text) if text.data.chars().all(char::is_whitespace)));
+                    .any(|child| !matches!(child, Node::Text(text) if text.data.chars().all(is_html_whitespace)));
             }
             if element.name != "html" {
                 return false;
             }
             element.children.iter().any(|child| match child {
-                Node::Text(text) => !text.data.chars().all(char::is_whitespace),
+                Node::Text(text) => !text.data.chars().all(is_html_whitespace),
                 Node::Element(body) if body.name == "body" => body.children.iter().any(|child| {
                     !matches!(
                         child,
-                        Node::Text(text) if text.data.chars().all(char::is_whitespace)
+                        Node::Text(text) if text.data.chars().all(is_html_whitespace)
                     )
                 }),
                 _ => false,
@@ -41116,6 +41116,121 @@ mod tests {
         let paragraph = element(&body(&document).children[0]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn treats_non_ascii_whitespace_as_body_content_during_noscript_recovery() {
+        for marker in ['\u{00A0}', '\u{2003}', '\u{3000}'] {
+            let source = format!(
+                "<!doctype html><noscript><!--</noscript>\r\n{marker}<noscript>--></noscript>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+
+            let head = head(&output.document);
+            assert_eq!(
+                head.children
+                    .iter()
+                    .filter(|node| {
+                        matches!(node, Node::Element(element) if element.name == "noscript")
+                    })
+                    .count(),
+                1,
+                "source {source:?}"
+            );
+            let head_noscript = element(&head.children[0]);
+            assert_eq!(head_noscript.children, vec![Node::text("<!--")]);
+
+            let body = body(&output.document);
+            assert_eq!(body.children[0], Node::text(marker.to_string()));
+            let body_noscript = element(&body.children[1]);
+            assert_eq!(body_noscript.name, "noscript", "source {source:?}");
+            assert_eq!(body_noscript.children, vec![Node::text("-->")]);
+            assert!(output.parser_diagnostics.is_empty(), "source {source:?}");
+        }
+
+        for marker in ["", " \r\n\t"] {
+            let source = format!(
+                "<!doctype html><noscript><!--</noscript>{marker}<noscript>--></noscript>"
+            );
+            let document = parse_html(&source).unwrap();
+            assert_eq!(
+                head(&document)
+                    .children
+                    .iter()
+                    .filter(|node| {
+                        matches!(node, Node::Element(element) if element.name == "noscript")
+                    })
+                    .count(),
+                2,
+                "source {source:?}"
+            );
+            assert!(body(&document).children.is_empty(), "source {source:?}");
+        }
+
+        let incomplete =
+            parse_html("<!doctype html><noscript><!--</noscript>\u{00A0}<noscript>tail").unwrap();
+        assert!(body(&incomplete)
+            .children
+            .iter()
+            .any(|node| matches!(node, Node::Element(element) if element.name == "noscript")));
+
+        let disabled = parse_html_with_options(
+            "<!doctype html><noscript><!--</noscript>\u{00A0}<noscript>--></noscript>",
+            HtmlParseOptions {
+                scripting: HtmlScriptingMode::Disabled,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(element(&head(&disabled).children[0]).name, "noscript");
+
+        let fragment = parse_html_fragment_with_options(
+            "<noscript><!--</noscript>\u{00A0}<noscript>--></noscript>",
+            HtmlParseOptions {
+                scripting: HtmlScriptingMode::Enabled,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert!(fragment
+            .iter()
+            .any(|node| matches!(node, Node::Text(text) if text.data.contains('\u{00A0}'))));
+
+        let mut direct = HtmlParser::new();
+        for token in [
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: false,
+            },
+            Token::StartTag {
+                name: "noscript".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("<!--".to_string()),
+            Token::EndTag {
+                name: "noscript".to_string(),
+            },
+            Token::Text("\u{00A0}".to_string()),
+            Token::StartTag {
+                name: "noscript".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("-->".to_string()),
+            Token::EndTag {
+                name: "noscript".to_string(),
+            },
+            Token::Eof,
+        ] {
+            direct.process_token(token);
+        }
+        assert!(direct
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
