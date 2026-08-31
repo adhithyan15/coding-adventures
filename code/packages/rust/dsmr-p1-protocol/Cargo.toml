@@ -1,0 +1,7 @@
+[package]
+name = "dsmr-p1-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "Strict bounded DSMR 5.0.2 P1 telegram framing and telemetry decoding"
+license = "MIT"
+

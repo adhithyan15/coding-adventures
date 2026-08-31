@@ -2450,16 +2450,42 @@ https://openconnectivity.org/wp-content/uploads/2015/11/UPnP-av-AVTransport-Serv
 and
 https://openconnectivity.org/wp-content/uploads/2015/11/UPnP-av-RenderingControl-v3-Service-20101231.pdf.
 
+## Current DSMR P1 Telemetry Breadth Slice
+
+The next breadth slice closes the recorded DSMR prerequisite block with one
+serial-only, bounded, supervised runtime rather than a parser midpoint:
+
+- `dsmr-p1-protocol` owns strict DSMR 5.0.2 telegram framing, CRLF structure,
+  `/` through `!` CRC-16 validation, required identity and electricity fields,
+  and a fixed typed allowlist for tariff totals, live import/export power,
+  optional per-phase voltage/current/power, and optional gas delivery;
+- `smart-home-dsmr-p1-integration` owns one explicitly configured serial path
+  at the standard's fixed `115200 8N1` settings, reads one complete telegram
+  under a hard byte and timeout bound, and records connection, event cursor,
+  checkpoint, disconnect, and restart state through the shared
+  `smart-home-event-streams` serial-frame supervisor;
+- D23 `smart_home.read` authorization occurs before the serial port is opened,
+  and only CRC-verified typed measurements enter normalized bridge, device,
+  entity, and expiring event-stream state;
+- local TCP P1 gateways remain outside the standard physical transport and are
+  deliberately not accepted as an alternate endpoint. Data Request GPIO
+  ownership also remains outside this runtime, so deployment requires a meter
+  or adapter that already presents an active P1 serial data stream; and
+- the slice accepts no credentials and exposes no arbitrary OBIS selection,
+  raw telegram retention, write/control path, discovery, local TCP gateway,
+  Data Request pin mutation, or long-lived serial session.
+
+Official protocol evidence: Netbeheer Nederland, *DSMR 5.0.2 P1 Companion
+Standard*, sections 5.7 and 6, including the fixed transfer settings, telegram
+framing, checksum polynomial, and represented data objects:
+https://www.netbeheernederland.nl/sites/default/files/2024-02/dsmr_5.0.2_p1_companion_standard.pdf.
+
 ## Remaining Prioritized Smart Home Breadth Backlog
 
-The next prioritization pass must revalidate this candidate against live
-`origin/main` before implementation:
-
-1. **DSMR P1 meter telemetry — prerequisite blocked.** The official P1
-   companion standard provides a concrete telegram and checksum contract, but
-   production work waits for one supervised bounded stream owner and an exact
-   serial-versus-local-TCP transport decision. Do not publish a parser-only or
-   documentation-only midpoint.
+No additional executable Smart Home breadth candidate is currently recorded.
+After this slice merges, re-audit live `origin/main` once for newly concrete
+protocol, device-family, migration/import, or supervised-host work; if that
+pass remains empty, the completion loop is complete.
 
 ## Current BACnet/IP Breadth Slice
 

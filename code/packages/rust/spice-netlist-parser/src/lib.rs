@@ -2563,6 +2563,15 @@ fn parse_element(
                     "JFET EG must be finite and positive",
                 ));
             }
+            let noise_equation_level = *model.params.get("NLEV").unwrap_or(&1.0);
+            if !noise_equation_level.is_finite()
+                || noise_equation_level < 1.0
+                || noise_equation_level.fract() != 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "JFET NLEV must be a finite integer greater than or equal to 1",
+                ));
+            }
             let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
@@ -2583,6 +2592,7 @@ fn parse_element(
             jfet.gate_saturation_current_temperature_exponent =
                 gate_saturation_current_temperature_exponent;
             jfet.bandgap_voltage = bandgap_voltage;
+            jfet.noise_equation_level = noise_equation_level;
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
         }
