@@ -1,123 +1,257 @@
-# Electron Release — Engram Desktop App
-#
-# Builds the Engram desktop app for macOS, Windows, and Linux,
-# then attaches the installers to a GitHub Release.
-#
-# Triggered by pushing a tag matching `engram-v*`:
-#   git tag engram-v0.2.0
-#   git push origin engram-v0.2.0
-#
-# Build steps per platform:
-#   1. Install engram-app dependencies and build the Vite SPA
-#      (base: "./" — relative paths work with Electron's file:// protocol)
-#   2. Copy engram-app/dist/ → engram-electron/renderer/
-#      (electron-builder bundles renderer/ into the packaged app)
-#   3. Install engram-electron dependencies
-#   4. Compile electron/main.ts → dist-electron/
-#   5. Run electron-builder for the target platform
-#
-# Why a separate release job?
-# Each platform produces a `builder-debug.yml` file. Collecting artifacts
-# first and uploading once avoids conflicts on immutable releases.
-
 name: Release Engram
 
+run-name: ${{ github.event_name == 'workflow_dispatch' && format('Release Engram {0}', inputs.tag) || 'Validate Engram release payloads' }}
+
+# Engram v0.3.0 ships the WEB build of the Mosaic app plus the Rust core.
+#
+# This workflow used to build the hand-written TypeScript Electron SPA at
+# code/programs/typescript/engram-app and attach installers on any `engram-v*`
+# tag push. That app has not changed since March apart from dependency bumps,
+# while everything since went into the Rust core and the Mosaic app — so tagging
+# would have published five-month-old software regardless of intent. Leaving the
+# trigger alone was itself a decision, so it is changed here.
+#
+# Native installers follow in a later tag, once the native lanes verify them.
+#
+# The trigger is `workflow_dispatch` rather than a tag push, matching
+# release-task-app.yml: a tag push publishes whatever it points at, while an
+# explicit dispatch names the version and tag up front so they can be validated
+# against each other before anything is built. Pull requests run the same jobs
+# minus publication, so the lane itself is tested by the PRs that change it.
+
 on:
-  push:
-    tags:
-      - "engram-v*"
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/release-engram.yml
+      - code/scripts/engram_release.py
+      - code/scripts/tests/test_engram_release.py
+      - code/programs/mosaic/engram-app/**
+      - code/packages/rust/engram-core/**
+      - code/packages/rust/engram-core-wasm/**
+      - code/packages/rust/engram-wasm/**
+      - code/packages/rust/engram-anki-package/**
+      - code/packages/mosaic/mosaic-pkg-**
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Strict SemVer without the product prefix (for example, 0.3.0)"
+        required: true
+        type: string
+      tag:
+        description: "Matching product tag (for example, engram-v0.3.0)"
+        required: true
+        type: string
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: release-engram
+  cancel-in-progress: false
 
 jobs:
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: macos-latest
-            platform: mac
-          - os: ubuntu-latest
-            platform: linux
-          - os: windows-latest
-            platform: win
-
-    runs-on: ${{ matrix.os }}
-
+  validate:
+    name: Validate release identity
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+      commit: ${{ steps.release.outputs.commit }}
     steps:
-      - name: Checkout
+      - name: Checkout the selected release commit
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
-      - name: Setup Node.js
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Test the release helper itself
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s code/scripts/tests -p 'test_engram_release.py'
+
+      - name: Validate version and tag
+        id: release
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || '0.0.0-ci' }}
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || 'engram-v0.0.0-ci' }}
+        run: |
+          set -euo pipefail
+          commit="$(git rev-parse HEAD)"
+          python code/scripts/engram_release.py validate \
+            --version "$RELEASE_VERSION" --tag "$RELEASE_TAG" --commit "$commit"
+          {
+            echo "version=$RELEASE_VERSION"
+            echo "tag=$RELEASE_TAG"
+            echo "commit=$commit"
+          } >> "$GITHUB_OUTPUT"
+
+  build-web:
+    name: Build and verify the web release
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the validated release commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.validate.outputs.commit }}
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
           node-version: 22
 
-      - name: Install shared package dependencies
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      # `mosaic-compile` links `cairo-sys-rs` through the paint backend, and the
+      # runner has no system cairo. Without this the emit step fails with
+      # "Package cairo was not found in the pkg-config search path" — nothing to
+      # do with Engram, but it stops the bundle being built at all.
+      - name: Install Linux Rust build dependencies
         shell: bash
         run: |
-          cd code/packages/typescript/indexeddb && npm install
-          cd ../store && npm install
-          cd ../ui-components && npm install
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev
 
-      - name: Install and build engram-app (renderer)
+      - name: Test the Rust release inputs
         shell: bash
-        working-directory: code/programs/typescript/engram-app
         run: |
-          npm install
-          npm run build
+          set -euo pipefail
+          cargo test --manifest-path code/packages/rust/Cargo.toml \
+            -p engram-core-wasm -p engram-wasm -p engram-anki-package
 
-      - name: Copy renderer into engram-electron
+      # The package layer must build for wasm with Anki support included. It is
+      # excluded on wasm only when `modern-format` is on, so this also pins that
+      # the feature gating still works — a regression there would silently
+      # restore the old "handled by native hosts" behaviour.
+      - name: Verify the browser engine builds with Anki support
         shell: bash
-        run: cp -r code/programs/typescript/engram-app/dist code/programs/typescript/engram-electron/renderer
+        run: |
+          set -euo pipefail
+          cargo build --manifest-path code/packages/rust/Cargo.toml \
+            -p engram-anki-package --no-default-features --target wasm32-unknown-unknown
 
-      - name: Install engram-electron dependencies
+      - name: Build the production web bundle
         shell: bash
-        working-directory: code/programs/typescript/engram-electron
-        run: npm install
+        run: |
+          set -euo pipefail
+          bash code/programs/mosaic/engram-app/scripts/build-web.sh \
+            --output "$RUNNER_TEMP/engram-web" --build
 
-      - name: Compile Electron main process
-        working-directory: code/programs/typescript/engram-electron
+      # The engine is what makes this release worth cutting, and a bundle
+      # missing it builds, loads, and runs — it simply cannot import a deck.
+      # A committed artifact went two months stale exactly this way, so the
+      # freshly built engine is compared against what landed in dist/.
+      - name: Verify the shipped engine is the one just built
         shell: bash
-        run: npx tsc -p electron/tsconfig.json
+        run: |
+          set -euo pipefail
+          cmp code/packages/rust/engram-wasm/pkg/engram_engine.wasm \
+              "$RUNNER_TEMP/engram-web/react/dist/engram_engine.wasm"
+          node code/packages/rust/engram-wasm/js/smoke.mjs
 
-      - name: Package with electron-builder
-        working-directory: code/programs/typescript/engram-electron
+      - name: Archive the verified web bundle
         shell: bash
-        run: npx electron-builder --${{ matrix.platform }} --publish never
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          set -euo pipefail
+          python code/scripts/engram_release.py archive-web \
+            --version "$RELEASE_VERSION" \
+            --commit "$RELEASE_COMMIT" \
+            --source "$RUNNER_TEMP/engram-web/react/dist" \
+            --output-dir release-assets
 
-      # Upload only the platform-specific installer files, not builder-debug.yml
-      # or latest-*.yml which are duplicated across platforms.
-      - name: Upload build artifacts
+      - name: Upload the verified web payload
         uses: actions/upload-artifact@v7
         with:
-          name: release-${{ matrix.platform }}
-          path: |
-            code/programs/typescript/engram-electron/release/*.AppImage
-            code/programs/typescript/engram-electron/release/*.dmg
-            code/programs/typescript/engram-electron/release/*.dmg.blockmap
-            code/programs/typescript/engram-electron/release/*.zip
-            code/programs/typescript/engram-electron/release/*.zip.blockmap
-            code/programs/typescript/engram-electron/release/*.exe
-            code/programs/typescript/engram-electron/release/*.yml
+          name: engram-web-release
+          path: release-assets/*.zip
           if-no-files-found: error
+          retention-days: 7
 
-  release:
-    needs: build
+  publish:
+    name: Publish one Engram release
+    if: github.event_name == 'workflow_dispatch'
+    needs: [validate, build-web]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Download all artifacts
+      - name: Checkout the validated release commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.validate.outputs.commit }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Download every verified payload
         uses: actions/download-artifact@v8
         with:
-          path: artifacts
+          path: release-assets
           merge-multiple: true
 
-      - name: Upload to GitHub Release
+      # Only artifacts that passed their own verification are published. This
+      # asserts the set on disk is exactly the set declared for this version, so
+      # a job that silently produced nothing cannot result in a release that
+      # quietly ships less than it claims.
+      - name: Verify the payload set matches what this version declares
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          set -euo pipefail
+          expected="$(python code/scripts/engram_release.py artifact-names --version "$RELEASE_VERSION" | sort)"
+          actual="$(cd release-assets && ls -1 ./*.zip | sed 's|^\./||' | sort)"
+          if [[ "$expected" != "$actual" ]]; then
+            echo "release payload mismatch" >&2
+            diff <(echo "$expected") <(echo "$actual") >&2 || true
+            exit 1
+          fi
+          echo "$actual"
+
+      - name: Publish the release
         uses: softprops/action-gh-release@v2
         with:
-          files: artifacts/*
+          tag_name: ${{ needs.validate.outputs.tag }}
+          target_commitish: ${{ needs.validate.outputs.commit }}
+          files: release-assets/*.zip
+          fail_on_unmatched_files: true
+          body: |
+            Engram ${{ needs.validate.outputs.version }} — web build.
+
+            The browser app, built from the Mosaic package on the Rust core.
+            **Legacy Anki `.apkg` import and export run in the browser**; earlier
+            builds delegated both to native hosts and refused them on the web.
+
+            Modern `.anki21b` / `.colpkg` are not supported in this build — they
+            need zstd decompression, which the browser engine does not carry yet.
+            Export from Anki in the legacy format, and the app will say so
+            explicitly rather than failing silently.
+
+            Media import is capped at 32 MiB in the browser.
+
+            Native installers are not part of this release.
+
+            Built from ${{ needs.validate.outputs.commit }}.
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
