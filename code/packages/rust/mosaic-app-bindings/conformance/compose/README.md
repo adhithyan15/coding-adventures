@@ -3,7 +3,8 @@
 This JVM console harness compiles the exact `MosaicRuntimeHost.kt` emitted into a
 generated Compose Desktop project. It loads the shared `mosaic-app-conformance`
 native library through JNA and verifies startup, revisions, prop projection,
-semantic dispatch, snapshot/restore, notification, buffer ownership, and teardown.
+generated flat-envelope semantic dispatch, snapshot/restore, notification,
+buffer ownership, and teardown.
 
 CI composes the Rust fixture with the adjacent `package/` Mosaic UI, emits a
 strict Compose native distribution with `--runtime-library`, and verifies the

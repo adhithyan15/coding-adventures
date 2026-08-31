@@ -1909,14 +1909,16 @@ jobs:
           mkdir -p "$taskapp_output/compose/src/test/kotlin"
           cp code/packages/rust/task-mosaic-app/conformance/compose/TaskAppUiTest.kt \
             "$taskapp_output/compose/src/test/kotlin/TaskAppUiTest.kt"
-          ui_state_path="$RUNNER_TEMP/mosaic-compose-taskapp-ui-state.json"
-          rm -f "$ui_state_path" "$ui_state_path.corrupt" "$ui_state_path.tmp"
-          MOSAIC_APP_STATE_PATH="$ui_state_path" \
+          taskapp_ui_state="$RUNNER_TEMP/mosaic-compose-taskapp-ui-state.json"
+          rm -f "$taskapp_ui_state" "$taskapp_ui_state.corrupt" "$taskapp_ui_state.tmp"
+          MOSAIC_APP_STATE_PATH="$taskapp_ui_state" \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
-            xvfb-run -a gradle --no-daemon --stacktrace -p "$taskapp_output/compose" test
-          MOSAIC_APP_STATE_PATH="$ui_state_path" MOSAIC_EXPECT_RESTORED=1 \
+            xvfb-run -a gradle --no-daemon --stacktrace -p "$taskapp_output/compose" \
+              test --tests TaskAppUiTest.generatedControlsDriveRustSchedulingLifecycle
+          MOSAIC_APP_STATE_PATH="$taskapp_ui_state" MOSAIC_EXPECT_RESTORED=1 \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
-            xvfb-run -a gradle --no-daemon --stacktrace -p "$taskapp_output/compose" test
+            xvfb-run -a gradle --no-daemon --stacktrace --rerun-tasks -p "$taskapp_output/compose" \
+              test --tests TaskAppUiTest.generatedControlsDriveRustSchedulingLifecycle
 
           toolkit_output="$RUNNER_TEMP/mosaic-compose-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend compose --output "$toolkit_output" --emit-project

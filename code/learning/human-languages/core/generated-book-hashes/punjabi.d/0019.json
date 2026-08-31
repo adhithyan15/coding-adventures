@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:0fae19ce226cf5b4",
+  "lessonIds": [
+    "PA-W04-residence-select",
+    "PA-W04-residence-supported",
+    "PA-W04-residence-spacing",
+    "PA-W04-residence-delayed",
+    "PA-W04-residence-repair",
+    "PA-W04-residence-no-model"
+  ],
+  "tex": "punjabi/book/chapters/ch19-form-residence-entry.tex"
+}

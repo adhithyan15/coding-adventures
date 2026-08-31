@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W05-au-matra",
+    "language": "punjabi",
+    "chapter": 20,
+    "sequence": 1290,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d2e5703a5282ccde",
+    "detachableSegments": [
+      "Script — one tiny step"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

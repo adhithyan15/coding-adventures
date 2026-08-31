@@ -756,6 +756,78 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "    throw StateError(\"Mosaic runtime prop '$name' contains a non-boolean\");\n",
             "  }}).toList(growable: false);\n",
             "}}\n\n",
+            "typedef MosaicValueDecoder<T> = T Function(Object? value, String path);\n\n",
+            "// ignore: unused_element\n",
+            "List<T> _mosaicDecodeList<T>(\n",
+            "  Object? value,\n",
+            "  String path,\n",
+            "  MosaicValueDecoder<T> decodeItem,\n",
+            ") {{\n",
+            "  if (value is! List) {{\n",
+            "    throw StateError(\"Mosaic runtime prop '$path' is not a list\");\n",
+            "  }}\n",
+            "  return List<T>.generate(\n",
+            "    value.length,\n",
+            "    (index) => decodeItem(value[index], '$path[$index]'),\n",
+            "    growable: false,\n",
+            "  );\n",
+            "}}\n\n",
+            "// ignore: unused_element\n",
+            "String _mosaicDecodeString(Object? value, String path) {{\n",
+            "  if (value == null) {{\n",
+            "    throw StateError(\"Mosaic runtime prop '$path' is null\");\n",
+            "  }}\n",
+            "  return value.toString();\n",
+            "}}\n\n",
+            "// ignore: unused_element\n",
+            "double _mosaicDecodeDouble(Object? value, String path) {{\n",
+            "  if (value is num) return value.toDouble();\n",
+            "  if (value is String) {{\n",
+            "    final parsed = double.tryParse(value);\n",
+            "    if (parsed != null) return parsed;\n",
+            "  }}\n",
+            "  throw StateError(\"Mosaic runtime prop '$path' is not a number\");\n",
+            "}}\n\n",
+            "// ignore: unused_element\n",
+            "bool _mosaicDecodeBoolean(Object? value, String path) {{\n",
+            "  if (value is bool) return value;\n",
+            "  if (value is String) {{\n",
+            "    final lowered = value.toLowerCase();\n",
+            "    if (lowered == 'true') return true;\n",
+            "    if (lowered == 'false') return false;\n",
+            "  }}\n",
+            "  throw StateError(\"Mosaic runtime prop '$path' is not a boolean\");\n",
+            "}}\n\n",
+            "// ignore: unused_element\n",
+            "Widget _mosaicDecodeWidget(Object? value, String path) {{\n",
+            "  if (value is Widget) return value;\n",
+            "  throw StateError(\"Mosaic runtime prop '$path' is not a Widget\");\n",
+            "}}\n\n",
+            "// ignore: unused_element\n",
+            "T _mosaicDecodeTyped<T>(Object? value, String path) {{\n",
+            "  if (value is T) return value;\n",
+            "  throw StateError(\"Mosaic runtime prop '$path' has the wrong type\");\n",
+            "}}\n\n",
+            "List<T>? mosaicOptionalNestedList<T>(\n",
+            "  Map<String, Object?> props,\n",
+            "  String name,\n",
+            "  MosaicValueDecoder<T> decodeItem,\n",
+            ") {{\n",
+            "  final value = props[name];\n",
+            "  if (value == null) return null;\n",
+            "  return _mosaicDecodeList<T>(value, name, decodeItem);\n",
+            "}}\n\n",
+            "List<T> mosaicRequiredNestedList<T>(\n",
+            "  Map<String, Object?> props,\n",
+            "  String name,\n",
+            "  MosaicValueDecoder<T> decodeItem,\n",
+            ") {{\n",
+            "  final value = props[name];\n",
+            "  if (value == null) {{\n",
+            "    throw StateError(\"Mosaic runtime omitted required list prop '$name'\");\n",
+            "  }}\n",
+            "  return _mosaicDecodeList<T>(value, name, decodeItem);\n",
+            "}}\n\n",
             "Widget? mosaicOptionalWidget(Map<String, Object?> props, String name) {{\n",
             "  final value = props[name];\n",
             "  if (value == null) return null;\n",
@@ -922,6 +994,11 @@ fn runtime_required_host_value_for_slot(slot: &SlotDecl) -> String {
                 ListInnerType::Bool => {
                     format!("mosaicOptionalBooleanList(_hostProps, \"{slot_name}\")")
                 }
+                ListInnerType::List(_) => format!(
+                    "mosaicOptionalNestedList<{}>(_hostProps, \"{slot_name}\", {})",
+                    list_inner_to_dart(inner),
+                    dart_list_value_decoder(inner)
+                ),
                 _ => format!(
                     "mosaicOptionalValue<{}>(_hostProps, \"{slot_name}\")",
                     slot_type_to_dart(&slot.r#type)
@@ -950,6 +1027,11 @@ fn runtime_required_host_value_for_slot(slot: &SlotDecl) -> String {
             ListInnerType::Bool => {
                 format!("mosaicRequiredBooleanList(_hostProps, \"{slot_name}\")")
             }
+            ListInnerType::List(_) => format!(
+                "mosaicRequiredNestedList<{}>(_hostProps, \"{slot_name}\", {})",
+                list_inner_to_dart(inner),
+                dart_list_value_decoder(inner)
+            ),
             _ => format!(
                 "mosaicRequiredValue<{}>(_hostProps, \"{slot_name}\")",
                 slot_type_to_dart(&slot.r#type)
@@ -5532,35 +5614,43 @@ fn slot_type_to_dart(t: &SlotType) -> String {
         SlotType::Bool => "bool".to_string(),
         SlotType::Node => "Widget".to_string(),
         SlotType::Component(name) => name.clone(),
-        SlotType::List(inner) => {
-            use mosmodel_compiler::ListInnerType;
-            let inner_str = match inner.as_ref() {
-                ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
-                    "String".to_string()
-                }
-                ListInnerType::Number => "double".to_string(),
-                ListInnerType::Bool => "bool".to_string(),
-                ListInnerType::Node => "Widget".to_string(),
-                ListInnerType::Component(n) => n.clone(),
-                // Nested list — `list<list<text>>` etc. Recursively
-                // map the inner; the natural-shape VisiCalc case is
-                // `List<List<String>>` for viewport-rows.
-                ListInnerType::List(deeper) => {
-                    let deeper_str = match deeper.as_ref() {
-                        ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
-                            "String"
-                        }
-                        ListInnerType::Number => "double",
-                        ListInnerType::Bool => "bool",
-                        ListInnerType::Node => "Widget",
-                        ListInnerType::Component(_) => "Object",
-                        ListInnerType::List(_) => "Object", // 3+ deep — collapse defensively
-                    };
-                    format!("List<{deeper_str}>")
-                }
-            };
-            format!("List<{inner_str}>")
+        SlotType::List(inner) => format!("List<{}>", list_inner_to_dart(inner)),
+    }
+}
+
+/// Dart type for an arbitrarily nested Mosaic list element.
+fn list_inner_to_dart(inner: &ListInnerType) -> String {
+    match inner {
+        ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => "String".to_string(),
+        ListInnerType::Number => "double".to_string(),
+        ListInnerType::Bool => "bool".to_string(),
+        ListInnerType::Node => "Widget".to_string(),
+        ListInnerType::Component(name) => name.clone(),
+        ListInnerType::List(deeper) => format!("List<{}>", list_inner_to_dart(deeper)),
+    }
+}
+
+/// Decoder expression used by strict runtime shells for nested JSON lists.
+///
+/// Dart's JSON decoder returns `List<dynamic>` at every level. An exact
+/// `value is List<List<String>>` check therefore rejects a valid
+/// `list<list<text>>` before the widget can render. These expressions rebuild
+/// each level with its declared generic element type and retain an indexed
+/// path for precise shape errors.
+fn dart_list_value_decoder(inner: &ListInnerType) -> String {
+    match inner {
+        ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
+            "_mosaicDecodeString".to_string()
         }
+        ListInnerType::Number => "_mosaicDecodeDouble".to_string(),
+        ListInnerType::Bool => "_mosaicDecodeBoolean".to_string(),
+        ListInnerType::Node => "_mosaicDecodeWidget".to_string(),
+        ListInnerType::Component(name) => format!("_mosaicDecodeTyped<{name}>"),
+        ListInnerType::List(deeper) => format!(
+            "(value, path) => _mosaicDecodeList<{}>(value, path, {})",
+            list_inner_to_dart(deeper),
+            dart_list_value_decoder(deeper)
+        ),
     }
 }
 
@@ -9414,6 +9504,53 @@ mod tests {
         assert!(project
             .readme
             .contains("never substitutes preview/sample values"));
+    }
+
+    #[test]
+    fn native_complete_shell_rebuilds_nested_json_lists_with_declared_types() {
+        let required_rows = slot(
+            "required-rows",
+            SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+            true,
+        );
+        let optional_cube = slot(
+            "optional-cube",
+            SlotType::List(Box::new(ListInnerType::List(Box::new(
+                ListInnerType::List(Box::new(ListInnerType::Number)),
+            )))),
+            false,
+        );
+        let model = component("Grid", vec![required_rows, optional_cube], vec![]);
+        let project = from_pipeline_with_options(
+            &model,
+            &layout("Grid", node("Box")),
+            &empty_style("Grid"),
+            &EmitOptions {
+                emit_project: true,
+                require_runtime: true,
+                ..EmitOptions::default()
+            },
+        )
+        .unwrap()
+        .project
+        .expect("strict project shell");
+
+        assert!(project.main_dart.contains(
+            "mosaicRequiredNestedList<List<String>>(_hostProps, \"required-rows\", \
+             (value, path) => _mosaicDecodeList<String>(value, path, _mosaicDecodeString))"
+        ));
+        assert!(project.main_dart.contains(
+            "mosaicOptionalNestedList<List<List<double>>>(_hostProps, \"optional-cube\", \
+             (value, path) => _mosaicDecodeList<List<double>>(value, path, \
+             (value, path) => _mosaicDecodeList<double>(value, path, _mosaicDecodeDouble)))"
+        ));
+        assert!(project.main_dart.contains("'$path[$index]'"));
+        assert!(project
+            .main_dart
+            .contains("throw StateError(\"Mosaic runtime prop '$path' is not a list\")"));
+        assert!(!project
+            .main_dart
+            .contains("mosaicRequiredValue<List<List<String>>>"));
     }
 
     #[test]

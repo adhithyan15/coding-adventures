@@ -1,5 +1,51 @@
 # Changelog
 
+## Punjabi A1 work-field writing ladder (#13548)
+
+- Added fourteen work-field lessons no longer than three minutes each: three tiny
+  script passes, label and value assembly, then selection, supported entry,
+  spelling, spacing, field-value agreement, delayed entry, repair, and no-model
+  controlled writing.
+- Taught the form label **ਕੰਮ** and closed neutral values **ਖੇਤੀ** and
+  **ਨੌਕਰੀ**; every newly scored Gurmukhi piece is introduced before assessment.
+- Kept spelling, spacing, semantic agreement, and repair as separate bounded
+  passes so the ramp never hides several new demands inside one exercise.
+- Kept the independent prompt free of romanization and copyable answers, and
+  kept supported entry explicitly outside independent writing evidence.
+
+## Punjabi A1 residence-field writing ladder (#13547)
+
+- Added twelve residence lessons no longer than three minutes each: three tiny script
+  passes, label and value assembly, then selection, supported entry, spacing,
+  delayed entry, repair, and no-model controlled writing.
+- Added one no-new-language oral R4 retrieval before field entry, discovered
+  when the longer book reopened Chapter 3's distant continuity window (#13563).
+- Taught the form label **ਰਿਹਾਇਸ਼** and closed neutral values **ਪਿੰਡ** and
+  **ਸ਼ਹਿਰ**; every newly scored Gurmukhi piece is introduced before assessment.
+- Kept the independent prompt free of romanization and copyable answers, and
+  kept supported entry explicitly outside independent writing evidence.
+
+## Punjabi A1 language-field writing ladder (#13546)
+
+- Added fifteen lessons no longer than three minutes each: eight tiny script
+  passes, three label/value assemblies, then selection, supported entry,
+  delayed entry, and no-model controlled writing.
+- Taught the form label **ਭਾਸ਼ਾ** and closed values **ਪੰਜਾਬੀ** and **ਹਿੰਦੀ**;
+  every newly scored Gurmukhi piece is introduced before it is assessed.
+- Kept the independent prompt free of romanization and copyable answers, and
+  kept supported entry explicitly outside independent writing evidence.
+
+## 2026-08-30 — the first A1 practical-form field
+
+- Added Chapter 15 as an eight-session, sub-five-minute runway for the
+  Gurmukhi label **ਨਾਂ** and a closed bank of two separately practised names.
+- Moved from one new independent vowel through name assembly, label recognition,
+  value selection, supported entry, delayed entry, and a no-model controlled
+  choice from a nonverbal identity cue.
+- Kept romanization and copyable Gurmukhi answers out of independent evidence;
+  spelling, spacing, selection, placement, and repair receive separate bounded
+  checks. This chapter proves one field pattern, not the six-field A1 form.
+
 ## 2026-08-26 — Close Chapter 3's oral R1/R2/R3 windows (#13085)
 
 - Added three no-new-language checkpoints at positions 24, 32, and 47, each

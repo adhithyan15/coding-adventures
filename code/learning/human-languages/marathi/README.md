@@ -211,7 +211,8 @@ gap report is meant to surface; the entries land as those chapters migrate.
 ## Book / fonts
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Devanagari font
-(`../../_fonts/`) — the same font as the Hindi track. `latexmk -xelatex book.tex`.
+(`../../_fonts/`) — the same font as the Hindi track. Build the isolated
+entrypoint with `code/scripts/check-book-compile.sh --strict marathi` from the repository root.
 The fifteen-chapter build is warning-clean — zero `Missing character`,
 zero overfull or underfull boxes, zero package warnings — and its PDF outline
 preserves readable Devanagari while generated non-Latin sections use

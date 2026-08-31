@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-08-30
+
+- Added two process-free source-collection cases that pin the complete exact,
+  case-sensitive generated-artifact registry, extension and declared-source
+  selection, near-name retention, inert symlink/reparse boundaries, and
+  per-file SHA-256 results from a closed candidate snapshot.
+
 ## 2026-08-28
 
 - Added the toolchain-declaration CRLF grammar boundary case. It accepts a

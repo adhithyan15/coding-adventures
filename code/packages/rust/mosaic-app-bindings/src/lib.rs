@@ -289,6 +289,25 @@ mod tests {
     }
 
     #[test]
+    fn compose_binding_accepts_generated_and_explicit_event_envelopes() {
+        let source = compose_jna_binding();
+        assert!(source.contains("(event[\"name\"] ?: event[\"event\"]) as? String"));
+        assert!(source.contains("require(!name.isNullOrEmpty())"));
+        assert!(source.contains("if (explicitPayload is Map<*, *>)"));
+        assert!(source.contains(
+            "event.filterKeys { key -> key !in setOf(\"name\", \"event\", \"payload\") }"
+        ));
+        assert!(source.contains("put(\"payload\", payload.toJsonElement())"));
+    }
+
+    #[test]
+    fn compose_binding_preserves_json_primitive_types() {
+        let source = compose_jna_binding();
+        assert!(source.contains("isString -> content"));
+        assert!(source.contains("else -> booleanOrNull ?: longOrNull ?: doubleOrNull ?: content"));
+    }
+
+    #[test]
     fn compose_binding_has_cross_platform_library_and_startup_context() {
         let source = compose_jna_binding();
         assert!(source.contains("System.getProperty(\"mosaic.app.library\")"));

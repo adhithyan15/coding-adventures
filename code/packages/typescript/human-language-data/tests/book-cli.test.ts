@@ -1,5 +1,6 @@
 import {
   existsSync,
+  lstatSync,
   mkdtempSync,
   mkdirSync,
   readFileSync,
@@ -112,6 +113,20 @@ Read the [curriculum guide](../guide.md) and the
   return root;
 }
 
+function addAuthoredBookFragments(root: string): string {
+  const book = join(root, "test", "book");
+  mkdirSync(book, { recursive: true });
+  writeFileSync(
+    join(book, "frontmatter.tex"),
+    "\\documentclass{book}\n\\begin{document}\n\\mainmatter\n\n",
+  );
+  writeFileSync(
+    join(book, "backmatter.tex"),
+    "\n\\backmatter\n\\end{document}\n",
+  );
+  return join(book, "book.tex");
+}
+
 describe("book-generation storage boundary", () => {
   it("requires an explicit opt-in before reading a legacy monolith fixture", () => {
     const root = fixture();
@@ -133,6 +148,63 @@ afterEach(() => {
 });
 
 describe("canonical book generator filesystem shell", () => {
+  it("materializes the projected book root only inside the isolated compile tree", () => {
+    const root = fixture();
+    const retiredRoot = addAuthoredBookFragments(root);
+    const relative = "test/book/book.tex";
+    const projected = generatedBookOutputs(root).get(relative);
+    expect(projected).toContain("\\input{chapters/ch01-first}");
+    expect(existsSync(retiredRoot)).toBe(false);
+
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    expect(runBookGeneration(["--write"], root)).toBe(0);
+    expect(existsSync(retiredRoot)).toBe(false);
+
+    const compileInputs = mkdtempSync(
+      join(tmpdir(), "human-language-book-inputs-"),
+    );
+    roots.push(compileInputs);
+    expect(materializeBookCompileInputs(compileInputs, root)).toBe(2);
+    expect(
+      readFileSync(join(compileInputs, relative), "utf8"),
+    ).toBe(projected);
+  });
+
+  it("rejects a returned generated root resurrected as a file or directory", () => {
+    for (const kind of ["file", "directory"] as const) {
+      const root = fixture();
+      const retiredRoot = addAuthoredBookFragments(root);
+      if (kind === "file") writeFileSync(retiredRoot, "resurrected\n");
+      else mkdirSync(retiredRoot);
+
+      vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+      expect(runBookGeneration(["--check"], root), kind).toBe(1);
+      expect(() => runBookGeneration(["--write"], root), kind).toThrow(
+        /must remain absent/,
+      );
+    }
+  });
+
+  it.runIf(process.platform !== "win32")(
+    "rejects a returned generated root resurrected as a real or dangling link",
+    () => {
+      for (const dangling of [false, true]) {
+        const root = fixture();
+        const retiredRoot = addAuthoredBookFragments(root);
+        const target = join(root, dangling ? "missing.tex" : "outside.tex");
+        if (!dangling) writeFileSync(target, "outside\n");
+        symlinkSync(target, retiredRoot);
+
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        expect(runBookGeneration(["--check"], root), String(dangling)).toBe(1);
+        expect(
+          () => runBookGeneration(["--write"], root),
+          String(dangling),
+        ).toThrow(/must remain absent/);
+      }
+    },
+  );
+
   it("refuses to write through a symlinked hash-owner directory or file", () => {
     const root = fixture();
     const outside = mkdtempSync(join(tmpdir(), "human-language-book-outside-"));
@@ -235,6 +307,12 @@ describe("canonical book generator filesystem shell", () => {
     const missing = join(compileInputs, "missing");
     expect(() => materializeBookCompileInputs(missing, root)).toThrow(
       /existing real directory/,
+    );
+
+    const insideSource = join(root, "compile-inputs");
+    mkdirSync(insideSource);
+    expect(() => materializeBookCompileInputs(insideSource, root)).toThrow(
+      /outside the repository/,
     );
   });
 
@@ -905,9 +983,10 @@ describe("pronunciation reference coverage", () => {
     const registry = JSON.parse(
       readFileSync(join(root, "core", "languages.json"), "utf8"),
     ) as { languages: Array<{ id: string }> };
+    const outputs = generatedBookOutputs(root);
     expect(registry.languages.length).toBeGreaterThan(0);
     for (const { id } of registry.languages) {
-      const book = join(root, id, "book", "book.tex");
+      const relativeBook = `${id}/book/book.tex`;
       const appendix = join(
         root,
         id,
@@ -915,8 +994,10 @@ describe("pronunciation reference coverage", () => {
         "chapters",
         "appendix-pronunciation.tex",
       );
-      expect(existsSync(book), `${id} book`).toBe(true);
-      expect(readFileSync(book, "utf8"), `${id} book input`).toContain(
+      expect(() => lstatSync(join(root, relativeBook)), relativeBook).toThrow(
+        /ENOENT/,
+      );
+      expect(outputs.get(relativeBook), `${id} book input`).toContain(
         "\\input{chapters/appendix-pronunciation}",
       );
       expect(existsSync(appendix), `${id} pronunciation appendix`).toBe(true);
@@ -952,7 +1033,7 @@ describe("glossary coverage", () => {
       expect(outputs.get(relative), relative).toMatch(/^% GENERATED FILE\./);
       expect(existsSync(join(root, relative)), `${id} glossary`).toBe(false);
       expect(
-        readFileSync(join(root, id, "book", "book.tex"), "utf8"),
+        outputs.get(`${id}/book/book.tex`),
         `${id} book input`,
       ).toContain("\\input{chapters/appendix-glossary}");
     }
@@ -976,7 +1057,7 @@ describe("answer-key coverage", () => {
       );
       expect(existsSync(join(root, relative)), `${id} answer key`).toBe(false);
       expect(
-        readFileSync(join(root, id, "book", "book.tex"), "utf8"),
+        outputs.get(`${id}/book/book.tex`),
         `${id} book input`,
       ).toContain("\\input{chapters/appendix-answer-key}");
     }
@@ -1000,7 +1081,7 @@ describe("subject-index coverage", () => {
       );
       expect(existsSync(join(root, relative)), `${id} index`).toBe(false);
       expect(
-        readFileSync(join(root, id, "book", "book.tex"), "utf8"),
+        outputs.get(`${id}/book/book.tex`),
         `${id} book input`,
       ).toContain("\\input{chapters/appendix-index}");
     }
@@ -1107,13 +1188,14 @@ describe("the manifest covers the corpus", () => {
       byLanguage.set(entry.language, set);
     }
     const inputs = new Map<string, string>();
+    const outputs = generatedBookOutputs(root);
     const offenders: string[] = [];
     for (const track of loadTrackChapters()) {
       const language = track.language;
       if (!inputs.has(language)) {
         inputs.set(
           language,
-          readFileSync(join(root, language, "book", "book.tex"), "utf8"),
+          outputs.get(`${language}/book/book.tex`) ?? "",
         );
       }
       const bookTex = inputs.get(language)!;
@@ -1159,11 +1241,11 @@ describe("chapter order against the back matter", () => {
       readFileSync(join(root, "core", "languages.json"), "utf8"),
     ) as { languages: Array<{ id: string }> };
     expect(registry.languages.length).toBeGreaterThan(0);
+    const outputs = generatedBookOutputs(root);
     for (const { id } of registry.languages) {
-      const lines = readFileSync(
-        join(root, id, "book", "book.tex"),
-        "utf8",
-      ).split("\n");
+      const book = outputs.get(`${id}/book/book.tex`);
+      expect(book, `${id} projected book root`).toBeDefined();
+      const lines = book!.split("\n");
       const backmatter = lines.findIndex(
         (line) => line.trim() === "\\backmatter",
       );

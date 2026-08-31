@@ -228,8 +228,9 @@ is behind.
 
 ## Read and practise
 
-- [`book/book.tex`](./book/book.tex) builds the free two-chapter starter edition
-  with XeLaTeX and the vendored Cyrillic font.
+- [`book/`](./book/) holds the authored starter-edition fragments and chapters;
+  build their isolated generated entrypoint with
+  `code/scripts/check-book-compile.sh --strict russian` from the repository root.
 - Merged editions appear in the public human-languages book catalog.
 
 ## Status

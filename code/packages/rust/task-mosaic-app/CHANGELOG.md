@@ -8,6 +8,21 @@ complete/reopen, delete, invalid-input atomicity, and persisted restart
 restoration. A shared generated-source contract rejects inert controls, sample
 fallbacks, and missing standard-runtime wiring before platform execution.
 
+## [Unreleased] — align Compose scheduling lifecycle with its selected view (#13559)
+
+The generated Compose TaskApp UI fixture now proves Rust scheduling through the
+always-present projected-finish summary instead of assuming that one complexity
+toggle selects Timeline. Its two-launch lifecycle keeps invalid-input atomicity,
+create, complete/reopen, delete, persistence, restoration, and restored-delete
+coverage against the real Rust dynamic library.
+
+## [Unreleased] — accept native integral index numbers (#13560)
+
+Indexed TaskApp events now accept both JSON integer values and mathematically
+integral floating-point values emitted by native Mosaic backends. Fractional,
+negative, non-numeric, and out-of-range values remain invalid instead of being
+silently truncated.
+
 ## [Unreleased] — prove TaskApp restart restoration (#13519)
 
 The XAML runtime acceptance now launches twice against the same native snapshot

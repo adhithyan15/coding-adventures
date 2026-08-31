@@ -6,6 +6,39 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Python build-tool portable source hashing
+
+- Added OCaml `.ml`, `.mli`, and `.opam` source recognition plus exact
+  `.ocamlformat`, `dune`, and `dune-project` metadata recognition to extension
+  and declared-source collection, including applicable `.opam` manifests that
+  declared source globs omit.
+- Framed each normalized repository-relative UTF-8 path with its unsigned
+  64-bit content length and exact raw bytes, matching the language-neutral
+  hashing-v1 oracle and making same-content renames observable without hashing
+  absolute checkout paths, host metadata, or decoded text.
+- Closed ancestor replacement races by retaining no-follow component handles,
+  rejecting Windows reparses through the package root, and binding the opened
+  source handle to its exact lexical path before streaming.
+
+### Python build-tool source hashing
+
+- Excluded the complete exact, case-sensitive generated-directory registry
+  from both Python source-collection modes before extension or declared-source
+  matching while preserving case variants and near names.
+- Enforced the no-follow boundary for directory and file symlinks plus Windows
+  junction/reparse attributes, with direct extension and Starlark regressions
+  for all 26 excluded components and a real NTFS-junction check.
+
+### Build-tool source-collection conformance
+
+- Added a language-neutral, process-free source-collection domain with
+  extension and declared-source fixtures, exact case-sensitive generated
+  directory pruning, near-name retention, no-follow link boundaries, and
+  deterministic per-file SHA-256 oracles.
+- Extended the closed schemas, semantic validator, canonicalizer, and corpus
+  tests without granting filesystem, process, environment, or network
+  authority.
+
 ### Python build-tool Dune discovery
 
 - Excluded Dune's exact case-sensitive `_build` output component from Python

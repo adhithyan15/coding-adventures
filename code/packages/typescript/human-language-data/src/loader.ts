@@ -532,9 +532,19 @@ export function loadBookCorpus(root = defaultCurriculumRoot()): BookCorpus {
   for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) continue;
     const bookDir = join(root, track.name, "book");
-    const entrypoint = join(bookDir, "book.tex");
+    const frontmatter = join(bookDir, "frontmatter.tex");
+    const backmatter = join(bookDir, "backmatter.tex");
     const chaptersDir = join(bookDir, "chapters");
-    if (!existsSync(entrypoint) || !existsSync(chaptersDir)) continue;
+    // `book.tex` is an on-demand projection, so the two authored halves are
+    // the durable evidence that this track owns a book. Requiring the retired
+    // generated root here would silently erase every migrated track from data
+    // consumers even though its chapters and canonical generation owners are
+    // still present.
+    if (
+      !existsSync(frontmatter) ||
+      !existsSync(backmatter) ||
+      !existsSync(chaptersDir)
+    ) continue;
 
     const chapters: BookChapter[] = [];
     for (const file of readdirSync(chaptersDir).sort()) {

@@ -1,0 +1,19 @@
+{
+  "chapter": 18,
+  "title": "Build the Residence Label and Values",
+  "label": "ch:pa-form-residence-runway",
+  "canDo": "I can recognise and copy the Gurmukhi residence label and two separately practised neutral values.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W04-city",
+    "kind": "production",
+    "summary": "The learner assembles the residence label and copies two neutral values after each new Gurmukhi piece has received its own bounded pass.",
+    "assesses": [
+      "PA-FORM-LABEL-RESIDENCE-01",
+      "PA-FORM-RESIDENCE-VILLAGE-01",
+      "PA-FORM-RESIDENCE-CITY-01"
+    ]
+  }
+}

@@ -145,7 +145,8 @@ where they become visible:
 ## Book
 
 The 37-chapter book compiles warning-free with XeLaTeX (Latin script, Latin
-Modern font — no vendored font needed): `latexmk -xelatex book.tex`.
+Modern font — no vendored font needed). Build the isolated entrypoint with
+`code/scripts/check-book-compile.sh --strict latin` from the repository root.
 
 ## Files
 

@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 17,
+  "output": "punjabi/book/chapters/ch17-form-language-entry.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

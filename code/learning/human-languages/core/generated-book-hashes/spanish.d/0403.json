@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:a8b206ef27b668d7",
+  "lessonIds": [
+    "ES-C403-pollo",
+    "ES-C403-verdura",
+    "ES-C403-paella",
+    "ES-C403-food-recall-1",
+    "ES-C403-food-recall-2"
+  ],
+  "tex": "spanish/book/chapters/ch403-pollo-verdura-paella.tex"
+}

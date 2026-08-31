@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Preserve JSON strings as Kotlin strings in the Compose/JNA host even when
+  their contents look numeric or boolean, while keeping actual JSON numbers
+  and booleans mapped to native Kotlin primitives.
+- Accept both standard `{name, payload}` events and generated flat
+  `{event, ...payload}` envelopes in the Compose/JNA host, matching Flutter and
+  allowing emitted Compose controls to dispatch into the Rust engine.
 - Persist opaque Mosaic snapshots in every application-scoped Compose,
   SwiftUI, XAML, Flutter, and Qt host. Generated applications restore before
   first render, atomically replace state after successful dispatches, quarantine

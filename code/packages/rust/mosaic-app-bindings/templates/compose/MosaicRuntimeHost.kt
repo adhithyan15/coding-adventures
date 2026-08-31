@@ -140,13 +140,19 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
     override fun handleEvent(event: Map<String, Any?>): Map<String, Any?> {
         val app = requireHandle()
         val nextSequence = Math.addExact(sequence, 1L)
-        val name = event["name"] as? String
-            ?: throw IllegalArgumentException("Mosaic event is missing a string name")
+        val name = (event["name"] ?: event["event"]) as? String
+        require(!name.isNullOrEmpty()) { "Mosaic event is missing a string name" }
+        val explicitPayload = event["payload"]
+        val payload = if (explicitPayload is Map<*, *>) {
+            explicitPayload
+        } else {
+            event.filterKeys { key -> key !in setOf("name", "event", "payload") }
+        }
         val envelope = buildJsonObject {
             put("protocolVersion", MOSAIC_PROTOCOL_VERSION)
             put("sequence", nextSequence)
             put("name", name)
-            put("payload", event["payload"].toJsonElement())
+            put("payload", payload.toJsonElement())
         }
         val update = withJsonInput(envelope) { input ->
             invoke { output -> api.mosaic_app_dispatch(app, input, output) }
@@ -360,7 +366,10 @@ private fun JsonElement.toKotlinValue(): Any? = when (this) {
     JsonNull -> null
     is JsonObject -> toKotlinMap()
     is JsonArray -> map(JsonElement::toKotlinValue)
-    is JsonPrimitive -> booleanOrNull ?: longOrNull ?: doubleOrNull ?: content
+    is JsonPrimitive -> when {
+        isString -> content
+        else -> booleanOrNull ?: longOrNull ?: doubleOrNull ?: content
+    }
 }
 
 private fun Any?.toJsonElement(): JsonElement = when (this) {

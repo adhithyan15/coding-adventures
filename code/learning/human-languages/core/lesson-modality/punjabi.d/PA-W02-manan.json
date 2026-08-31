@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "PA-W02-manan",
+    "language": "punjabi",
+    "chapter": 15,
+    "sequence": 920,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f607ae05c8b749f6",
+    "detachableSegments": [
+      "Script — assemble the second practice name",
+      "Writing — guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

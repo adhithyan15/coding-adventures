@@ -11083,6 +11083,248 @@ check is terminal and acceptable and GitHub still reports no merge conflict.
 The ownership graph therefore contains 184 merged, 396 pending, and exactly one
 `pr-open` owner.
 
+### Post-PR #13544 refresh and hashing-corpus selection
+
+PR #13544 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral conclusion. Guarded squash auto-merge was
+enabled only after GitHub reported final head
+`6cab3bdeb9865501abac192294660fea5802713c` conflict-free, and GitHub merged it
+as `7733faf74a21ebe4211dbf3200af6f81cac2ee27` at 2026-08-30T21:34:49Z
+without a manual merge command. The Python Dune-discovery owner therefore
+advances to `merged` and the active PR is cleared.
+
+The exact-main collision inventory remains schema 3 with 15 established lanes,
+1,388 implementation identities, 4,602 slots, and 1,427 all-reported
+identities. Completion bands remain 175/265, 123/934, 170/2,139, and
+920/12,880; Rust has 731 singletons, OCaml remains emerging at zero packages,
+and collisions and unknown buckets remain zero. All seven merged paths modify
+existing Python build-tool, state, or documentation surfaces. No package root,
+BUILD, or manifest topology changed and no new unowned eligible gap appeared.
+
+The pre-selection conformance audit found a broader ownership prerequisite.
+The three neutral hashing-cache cases accept already filtered `include_paths`,
+so they cannot prove exact generated-directory pruning, case and near-name
+preservation, extension versus declared-source collection, or no-follow
+authority. The audit also found separate portable source-recognition and path-
+framing gaps in Python, Go, Elixir, Perl, Haskell, shared C#/F#, Swift, Ruby,
+Rust, and TypeScript, plus a missing hashing/cache layer in Lua. These are now
+engine-scoped pending leaves behind a selection-blocked completion aggregate;
+the four existing generated-directory owners also gain the shared corpus as a
+prerequisite.
+
+The dependency/leverage pass therefore selects
+`build-tool-generated-directory-hashing-conformance-corpus` on branch
+`codex/build-tool-generated-directory-hashing-conformance-corpus`. Its two
+prerequisites are merged. One bounded inert candidate-path operation can define
+the exact generated, dependency, VCS, cache, and temporary component registry;
+preserve case variants and near names; exercise both collector modes; return
+normalized included paths and digests; and reject symlink or reparse traversal
+without reading a checkout. This shared contract unlocks every implementation
+repair and therefore outranks both the newly unblocked Python leaf and the
+independent Haskell Dune leaf. Six live PRs have zero exact overlap with the
+expected shared spec, schema, fixture, adapter/test, state, roadmap, and root-
+changelog paths. Adding all newly discovered work before selection leaves the
+complete graph unique, dependency-complete, and acyclic at 594 owners and 895
+edges, with 185 merged, 408 pending, and exactly one `in-progress` owner.
+
+The selected implementation now defines a closed `source_collection` pure
+domain, two 45-candidate extension/declared-source cases, the complete exact
+26-component artifact registry, no-follow symlink/reparse boundaries, and
+deterministic per-file SHA-256 results. Tests-first validation failed on the
+unmodeled domain before source was added. The completed focused suite passes 85
+tests and 132 subtests with 90% branch-aware runner coverage; the corpus accepts
+121 cases and 283 files across 16 implementations, 15 established lanes, and
+12 front doors. The Go oracle passes module verification, tests, vet, and a
+trimmed build. The real all-language plan evaluates 45 Starlark files,
+discovers 5,112 packages, correctly finds no changed package files in this
+shared-fixture-only diff, and retains the five reviewed orphan exemptions.
+Bandit, compileall, Ruff, schema parsing, JSON semantics, collision, state
+graph, and diff checks pass. The broader conformance family passes 177 tests,
+23 skips, and 238 subtests except for five unchanged Windows execution-snapshot
+tests that fail locally at the existing NTFS volume/file identity boundary
+before schema evaluation.
+
+The branch rebased cleanly onto `49507e7daaf2304a670297f68ebd85ba10d4b009`
+after unrelated Mosaic, Punjabi, and human-language build merges advanced
+`origin/main`. The
+post-rebase schema-3 inventory is unchanged at 15 lanes, 1,388 identities,
+4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139,
+and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and
+zero unknown buckets.
+
+Ready-for-review PR #13552 is open from
+`codex/build-tool-generated-directory-hashing-conformance-corpus`. GitHub
+reports the initial publication head non-draft and mergeable, with required
+checks queued or in progress. Auto-merge remains disabled until every
+final-head check is terminal and acceptable and GitHub still reports no merge
+conflict. The ownership graph now contains 185 merged, 408 pending, and exactly
+one `pr-open` owner.
+
+### Post-PR #13552 refresh and Python hashing selection
+
+PR #13552 completed all 40 final-head checks acceptably with 33 successes and
+seven expected skips. Guarded squash auto-merge was enabled only after GitHub
+reported final head `394df78a595e022218ea837cef68c0307f93f528` clean and
+mergeable, and GitHub merged it as
+`f6216b422f593bbb0961f1572b3d485829d246a6` at 2026-08-30T22:45:40Z
+without a manual merge command. The source-collection-corpus owner therefore
+advances to `merged` and the active PR is cleared.
+
+The exact-main schema-3 inventory remains collision-clean and identity-neutral:
+15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427
+all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880,
+731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown
+buckets. The merged fixture-only paths add no package root, BUILD, or manifest
+topology. The complete 594-owner/895-edge graph remains unique,
+dependency-complete, and acyclic, with no newly eligible unowned gap.
+
+The dependency/leverage pass selects
+`build-tool-python-generated-directory-hashing-exclusion` on branch
+`codex/build-tool-python-generated-directory-hashing-exclusion`. Both
+prerequisites are merged. This bounded repair closes the concrete
+shared-contract violation in both Python source walkers across the 503-package
+lane and directly unlocks Python portable source-hashing conformance. Seven
+live PRs have zero exact overlap with the expected Python hasher, tests, state,
+roadmap, changelog, and README surfaces; the branch and prior PR were absent
+before the fresh clean worktree was created. Reconciliation and selection leave
+186 merged, 407 pending, and exactly one `in-progress` owner.
+
+Tests-first evidence reproduced the defect in both extension and declared-
+source modes: all 26 exact generated components remained hash inputs. The
+bounded implementation now prunes those components by exact case-sensitive
+name before file filtering, preserves `_Build`, `_build-example`,
+`Dist-newstyle`, and `dist-newstyle-example`, and keeps the source walk's
+no-follow link boundary explicit. Independent final review caught a Windows
+junction gap in `os.walk(followlinks=False)` before publication. The smallest
+repair now rejects directory and file symlinks plus Windows junction/reparse
+attributes before matching or opening files; direct mocked tests cover both
+collection modes, a real NTFS-junction test passes locally, and the real POSIX
+link case is reserved for POSIX CI.
+
+The focused hasher suite passes 20 tests with one platform skip, and the
+complete Python build-tool package passes 463 tests with one platform skip at
+91.23% total coverage with `hasher.py` at 96%.
+Changed production MyPy and Ruff checks pass; the sole direct Ruff finding is
+the unchanged pre-existing 89-character special-filename line. The neutral
+schema and runner suites pass 22 and 63 tests, while `validate-corpus` accepts
+121 cases and 283 files across 16 implementations, 15 established lanes, and
+12 front doors. The Go oracle passes module verification, all package tests,
+vet, and a trimmed build. A real forced Python dry plan with build-file
+validation discovers 495 packages, reports all 495 WOULD-BUILD, and retains the
+five reviewed orphan exemptions. Bandit, compileall, dependency compatibility,
+isolated sdist and wheel builds, pip audit, state-graph validation, inventory,
+JSON, and diff hygiene all pass; the two local packages are intentionally not
+auditable through PyPI. No dependency or production authority is added.
+
+Before publication, the branch rebased conflict-free onto exact `origin/main`
+`2ade18a0bb61275a1b9d5ae1cb3387ce58211448` after merged PR #13554 added
+only Spanish curriculum, generated book and narration evidence, and existing
+human-language-data tests. Those paths do not overlap this tranche or add a
+package root, BUILD, manifest, build-tool contract, or unowned parity gap. The
+regenerated schema-3 inventory remains unchanged and collision-free.
+
+Ready-for-review PR #13558 is open from
+`codex/build-tool-python-generated-directory-hashing-exclusion`. GitHub reports
+the initial publication head non-draft and mergeable with required checks
+registered or pending. Auto-merge remains disabled until every final-head check
+is terminal and acceptable and GitHub still reports no merge conflict. The
+ownership graph therefore contains 186 merged, 407 pending, and exactly one
+`pr-open` owner.
+
+### Post-PR #13558 refresh and Python portable hashing selection
+
+PR #13558 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral result. Guarded squash auto-merge was enabled
+only after GitHub reported final head
+`85ef7fcbf58d80b14500e3f80f481fd8935da2d1` clean and mergeable, and GitHub
+merged it as `88e77a6309e1112f0cb16886f315ef05b020da37` at
+2026-08-30T23:40:04Z without a manual merge command. The Python generated-
+directory hashing owner therefore advances to `merged` and the active PR is
+cleared.
+
+The exact-main schema-3 inventory remains collision-clean and identity-neutral:
+15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427
+all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880,
+731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown
+buckets. The 75 paths since the prior inventory revision belong to existing
+Punjabi, Mosaic, Python build-tool, state, or documentation surfaces. No
+package root, BUILD, or manifest topology changed, and parallel inventory,
+dependency, fixture, and live-PR audits found no newly eligible unowned gap.
+
+The dependency/leverage pass selects
+`build-tool-python-portable-source-hashing-conformance` on branch
+`codex/build-tool-python-portable-source-hashing-conformance`. Both
+prerequisites are merged. This bounded continuation closes the Python engine's
+two remaining portable source/package-hashing contract holes: applicable OCaml
+source and metadata recognition plus normalized relative-path framing that
+makes same-content renames observable while preserving raw source bytes and
+file boundaries. It directly advances the eleven-engine portable-source-hashing
+aggregate across the 503-package Python lane and therefore outranks independent
+ready leaves. Six live PRs have zero exact overlap with the expected hasher,
+tests, README, changelog, state, roadmap, and root-changelog paths; the branch,
+remote branch, and prior PR were absent before the fresh clean worktree was
+created. At selection, reconciliation left the complete 594-owner/895-edge
+graph unique, dependency-complete, and acyclic at 187 merged, 406 pending, and
+exactly one `in-progress` owner.
+
+Independent implementation review then found a distinct dependency-hashing
+gap before publication. Python still concatenates transitive dependency digest
+hex strings without hashing-v1 frames for the sorted package identity and
+decoded 32-byte digest. That behavior is now classified as the separate
+pending `build-tool-python-portable-dependency-hashing-conformance` owner,
+dependent on this source/package-hashing slice; this tranche makes no complete
+hashing-v1 or combined-cache claim. The complete graph therefore expands to
+595 owners/896 edges with 187 merged, 407 pending, and exactly one
+`in-progress` owner.
+
+The implementation now recognizes OCaml `.ml`, `.mli`, and `.opam` inputs plus
+exact `.ocamlformat`, `dune`, and `dune-project` metadata in both collection
+modes. Root `.opam` manifests remain applicable when declared globs omit them;
+nested `.opam` inputs still require a declared match. Package hashes use the
+shared hashing-v1 frame over normalized repository-relative UTF-8 path length,
+path bytes, unsigned 64-bit content length, and exact streamed raw bytes. A
+direct regression materializes the language-neutral hashing-cache fixture and
+matches its package digest. POSIX opens every lexical directory component and
+the leaf with no-follow semantics. Windows retains non-delete-sharing handles
+for every directory component through the source parent, rejects reparse
+attributes including at the package root, opens the leaf while ancestry stays
+locked, and requires the final opened-handle path to equal the lexical source
+path. Both platforms then prove regular-file and path/handle identity and
+reject replacement or same-size mutation through before/after descriptor
+signatures without exposing the checkout path.
+
+The focused suite passes 35 tests with four expected platform skips. The
+complete package and literal generic/Windows BUILD recipe each pass 478 tests
+with four skips at 90.80% coverage, with `hasher.py` at 89%. Changed
+source/tests pass
+Ruff, direct MyPy, compileall, and Bandit; package-wide Ruff and broad fixture
+MyPy retain only inherited baseline findings outside this seven-path diff. The
+neutral schema/runner suite passes 85 tests and 132 subtests, `validate-corpus`
+accepts 121 cases and 283 files, and parity/capability/Haskell/OCaml-lock suites
+pass 66 tests and 811 subtests with two expected Windows skips. The Go oracle
+passes module verification, tests, vet, and trimpath build; a freshly compiled
+binary evaluates 45 Starlark BUILD files, validates five reviewed orphan
+exemptions, forces all 495 Python packages, and selects exactly
+`python/programs/build-tool` for the branch diff. Isolated sdist/wheel builds,
+uv dependency compatibility, pip audit, schema-3 collision inventory, the
+595-owner/896-edge DAG, and diff hygiene pass.
+
+Independent adversarial review first reproduced an external read by replacing
+a collected ancestor with an NTFS junction, then found same-package,
+package-root, post-lock FSCTL mutation, and toggle-back variants. Exact opened-
+handle path binding rejects all real probes while an ordinary nested source
+remains accepted. POSIX review also found and verified closure of a lexical
+parent escape plus the missing-`O_NOFOLLOW` fallback. No remaining entire-path
+no-follow or authority blocker was found.
+
+Before publication, the branch rebased conflict-free onto exact `origin/main`
+`248a6ff20767d12dc1f6d91040382bcc675494bb` after PRs #13561, #13562, #13564,
+and #13566 added only Spanish/Punjabi learning artifacts plus existing Mosaic
+binding/type-test, human-language-data test, and Rust task-mosaic-app source/
+changelog changes. Those 94 paths add no package root, BUILD, manifest, build-
+tool contract, parity owner, or exact overlap with this tranche. The inventory
+remains unchanged and collision-free.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

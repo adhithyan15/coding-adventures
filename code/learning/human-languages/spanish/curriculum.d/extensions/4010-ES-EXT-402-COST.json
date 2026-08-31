@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-402-COST",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask or say what something costs.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C402-costar"
+  ]
+}

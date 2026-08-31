@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 119)
+        self.assertEqual(summary["case_count"], 121)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -150,6 +150,7 @@ class CorpusTests(unittest.TestCase):
                 "plan",
                 "resolution",
                 "sharding",
+                "source_collection",
                 "starlark",
                 "toolchain_detection",
                 "validation",
@@ -1202,6 +1203,75 @@ class PureDomainValidationTests(unittest.TestCase):
 
         runner.validate_case_document(case, **self._schema_args())
 
+    def test_source_collection_corpus_closes_registry_modes_and_links(self) -> None:
+        expected_components = {
+            ".git",
+            ".hg",
+            ".svn",
+            ".venv",
+            ".tox",
+            ".mypy_cache",
+            ".pytest_cache",
+            ".ruff_cache",
+            ".stack-work",
+            "__pycache__",
+            "node_modules",
+            "vendor",
+            "dist",
+            "dist-newstyle",
+            "_build",
+            "build",
+            "target",
+            ".claude",
+            "Pods",
+            ".gradle",
+            ".dart_tool",
+            "gradle-build",
+            "deps",
+            ".build",
+            ".cargo",
+            "cover",
+        }
+        cases = [
+            load_case("source-collection-extension.json"),
+            load_case("source-collection-declared.json"),
+        ]
+        self.assertEqual(
+            {case["input"]["options"]["mode"] for case in cases},
+            {"extension", "declared_sources"},
+        )
+
+        for case in cases:
+            candidates = case["input"]["options"]["candidates"]
+            excluded_components = {
+                candidate["path"].split("/")[1]
+                for candidate in candidates
+                if candidate["path"].startswith("excluded-")
+            }
+            self.assertEqual(excluded_components, expected_components)
+            self.assertEqual(
+                {candidate["kind"] for candidate in candidates},
+                {"file", "symlink", "reparse_point"},
+            )
+            included = {
+                entry["path"] for entry in case["expected"]["result"]["files"]
+            }
+            self.assertTrue(
+                {
+                    "case/_Build/generated.ml",
+                    "near/Build/generated.ml",
+                    "near/Dist-newstyle/generated.ml",
+                    "near/_build-example/generated.ml",
+                    "near/dist-newstyle-example/generated.ml",
+                }.issubset(included)
+            )
+            self.assertTrue(
+                all(
+                    not path.startswith(("excluded-", "linked/", "reparse/"))
+                    for path in included
+                )
+            )
+
     def test_dependency_cycles_are_rejected_without_recursion(self) -> None:
         cyclic = load_case("diff-selection-transitive.json")
         cyclic["input"]["options"]["edges"].append(["python/app", "python/base"])
@@ -1241,6 +1311,15 @@ class PureDomainValidationTests(unittest.TestCase):
         with self.assertRaises(runner.ConformanceError) as raised:
             runner.validate_case_document(hashing, **schema_args)
         self.assertEqual(raised.exception.code, "EXPECTED_HASH_MISMATCH")
+
+        source_collection = load_case("source-collection-extension.json")
+        source_collection["expected"]["result"]["files"][0]["digest"] = "0" * 64
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(source_collection, **schema_args)
+        self.assertEqual(
+            raised.exception.code,
+            "EXPECTED_SOURCE_COLLECTION_MISMATCH",
+        )
 
         mutations = (
             (
@@ -1340,6 +1419,13 @@ class PureDomainValidationTests(unittest.TestCase):
                 ),
                 "CASE_PURE_AUTHORITY",
             ),
+            (
+                "source-collection-extension.json",
+                lambda case: case["input"]["options"]["candidates"].append(
+                    copy.deepcopy(case["input"]["options"]["candidates"][0])
+                ),
+                "CASE_SOURCE_CANDIDATE_DUPLICATE",
+            ),
         )
         for filename, mutate, code in mutations:
             with self.subTest(filename=filename, code=code):
@@ -1363,6 +1449,14 @@ class PureDomainValidationTests(unittest.TestCase):
         self.assertEqual(
             runner.assert_result_matches(shard, actual),
             shard["expected"],
+        )
+
+        source_collection = load_case("source-collection-extension.json")
+        actual = copy.deepcopy(source_collection["expected"])
+        actual["result"]["files"].reverse()
+        self.assertEqual(
+            runner.assert_result_matches(source_collection, actual),
+            source_collection["expected"],
         )
 
     def test_pure_domain_validation_has_no_host_side_effects(self) -> None:
@@ -1421,7 +1515,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 119)
+        self.assertEqual(summary["case_count"], 121)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

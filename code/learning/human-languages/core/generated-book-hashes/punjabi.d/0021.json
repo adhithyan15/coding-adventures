@@ -1,0 +1,16 @@
+{
+  "language": "punjabi",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:bf6f1b4a5ab37caa",
+  "lessonIds": [
+    "PA-W05-work-select",
+    "PA-W05-work-supported",
+    "PA-W05-work-spelling",
+    "PA-W05-work-spacing",
+    "PA-W05-work-agreement",
+    "PA-W05-work-delayed",
+    "PA-W05-work-repair",
+    "PA-W05-work-no-model"
+  ],
+  "tex": "punjabi/book/chapters/ch21-form-work-entry.tex"
+}

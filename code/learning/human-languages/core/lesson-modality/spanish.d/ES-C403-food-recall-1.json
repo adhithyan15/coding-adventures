@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C403-food-recall-1",
+    "language": "spanish",
+    "chapter": 403,
+    "sequence": 8980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1138412b42d2cbe"
+  },
+  "findings": []
+}

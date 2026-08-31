@@ -1,4 +1,4 @@
-# Session Map — Punjabi Chapters 1–14
+# Session Map — Punjabi Chapters 1–21
 
 This is the authoritative book order. Every row is one session of at most five
 minutes. Sound and meaning come before load-bearing decoding; writing grows from
@@ -85,6 +85,56 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 76 | 14 | PA-W01-ta | add dental ਤ |
 | 77 | 14 | PA-W01-e-matra | add ੇ |
 | 78 | 14 | PA-W01-namaste-read | assemble and read ਨਮਸਤੇ |
+| 79 | 15 | PA-W02-a | trace the independent vowel ਅ |
+| 80 | 15 | PA-W02-aman | assemble and guided-copy ਅਮਨ |
+| 81 | 15 | PA-W02-manan | assemble and guided-copy ਮਨਨ |
+| 82 | 15 | PA-W02-name-label | recognise and write the label ਨਾਂ |
+| 83 | 15 | PA-W02-name-select | select between two known values from identity symbols |
+| 84 | 15 | PA-W02-name-supported | fill one name line with the two-value bank visible |
+| 85 | 15 | PA-W02-name-delayed | hide the bank, then fill one requested name line |
+| 86 | 15 | PA-W02-name-no-model | fill one name line from a nonverbal cue with no model |
+| 87 | 16 | PA-W03-bha | trace ਭ |
+| 88 | 16 | PA-W03-sha | trace ਸ਼ |
+| 89 | 16 | PA-W03-language-label | assemble and copy ਭਾਸ਼ਾ |
+| 90 | 16 | PA-W03-pa | trace ਪ |
+| 91 | 16 | PA-W03-tippi | place tippi ਂ above a base |
+| 92 | 16 | PA-W03-ja | trace ਜ |
+| 93 | 16 | PA-W03-ba | trace ਬ |
+| 94 | 16 | PA-W03-punjabi | assemble and guided-copy ਪੰਜਾਬੀ |
+| 95 | 16 | PA-W03-sihari | place sihari ਿ before its base |
+| 96 | 16 | PA-W03-da | trace ਦ |
+| 97 | 16 | PA-W03-hindi | assemble and guided-copy ਹਿੰਦੀ |
+| 98 | 17 | PA-W03-language-select | select between two known language values |
+| 99 | 17 | PA-W03-language-supported | fill one language line with the bank visible |
+| 100 | 17 | PA-W03-language-delayed | hide the bank, then fill one language line |
+| 101 | 17 | PA-W03-language-no-model | fill one language line from a nonverbal cue with no model |
+| 102 | 18 | PA-W04-ra | trace ਰ |
+| 103 | 18 | PA-W04-independent-i | trace independent ਇ |
+| 104 | 18 | PA-W04-residence-label | assemble and copy ਰਿਹਾਇਸ਼ |
+| 105 | 18 | PA-W04-dda | trace ਡ |
+| 106 | 18 | PA-W04-village | assemble and guided-copy ਪਿੰਡ |
+| 107 | 18 | PA-W04-city | assemble and guided-copy ਸ਼ਹਿਰ |
+| 108 | 18 | PA-R18-wellbeing-r4 | retrieve the Chapter 3 oral wellbeing exchange at R4 |
+| 109 | 19 | PA-W04-residence-select | select between two known residence values |
+| 110 | 19 | PA-W04-residence-supported | fill one residence line with the bank visible |
+| 111 | 19 | PA-W04-residence-spacing | separate the label and value clearly |
+| 112 | 19 | PA-W04-residence-delayed | hide the bank, then fill one residence line |
+| 113 | 19 | PA-W04-residence-repair | repair one dimension of a residence line |
+| 114 | 19 | PA-W04-residence-no-model | fill one residence line from a nonverbal cue with no model |
+| 115 | 20 | PA-W05-ka | trace ਕ |
+| 116 | 20 | PA-W05-work-label | assemble and copy ਕੰਮ |
+| 117 | 20 | PA-W05-kha | trace ਖ |
+| 118 | 20 | PA-W05-farming | assemble and guided-copy ਖੇਤੀ |
+| 119 | 20 | PA-W05-au-matra | trace and place ੌ |
+| 120 | 20 | PA-W05-job | assemble and guided-copy ਨੌਕਰੀ |
+| 121 | 21 | PA-W05-work-select | select between two known work values |
+| 122 | 21 | PA-W05-work-supported | fill one work line with the bank visible |
+| 123 | 21 | PA-W05-work-spelling | check one work value piece by piece |
+| 124 | 21 | PA-W05-work-spacing | separate the label and value clearly |
+| 125 | 21 | PA-W05-work-agreement | keep a work value on the work field |
+| 126 | 21 | PA-W05-work-delayed | hide the bank, then fill one work line |
+| 127 | 21 | PA-W05-work-repair | repair one dimension of a work line |
+| 128 | 21 | PA-W05-work-no-model | fill one work line from a nonverbal cue with no model |
 
-After session 78, the track continues through the dependency-linked backlog;
+After session 128, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

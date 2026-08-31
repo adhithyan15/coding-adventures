@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Chicken, Vegetables and Paella",
+  "label": "ch:pollo-verdura-paella",
+  "canDo": "I can name chicken, vegetables and paella in a menu, market or family-kitchen context.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C403-food-recall-2",
+    "kind": "production",
+    "summary": "Retrieve the three food words across the menu, supermarket and family-kitchen scenes.",
+    "assesses": [
+      "ES-LEX-POLLO",
+      "ES-LEX-VERDURA",
+      "ES-LEX-PAELLA"
+    ]
+  }
+}

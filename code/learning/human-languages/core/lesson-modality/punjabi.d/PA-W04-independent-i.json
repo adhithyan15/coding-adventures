@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W04-independent-i",
+    "language": "punjabi",
+    "chapter": 18,
+    "sequence": 1140,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d8cdd4aa7da031e5",
+    "detachableSegments": [
+      "Script — one tiny step"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

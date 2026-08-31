@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "id": "source-collection/declared-sources-exact-pruning",
+  "domain": "source_collection",
+  "summary": "Declared-source collection applies the same exact pruning and link boundary before portable glob matching.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "source_collection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "source_collection",
+    "options": {
+      "mode": "declared_sources",
+      "include_extensions": [],
+      "special_filenames": [
+        ".ocamlformat",
+        "BUILD",
+        "BUILD_windows",
+        "dune",
+        "dune-project"
+      ],
+      "declared_srcs": [
+        "*.opam",
+        "**/*.ml",
+        "**/*.mli",
+        "**/dune",
+        "assets/**/*.txt"
+      ],
+      "candidates": [
+        {"path": ".ocamlformat", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "BUILD", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "BUILD_windows", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "README.md", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "assets/config.txt", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "case/_Build/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "dune", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "dune-project", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-01/.git/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-02/.hg/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-03/.svn/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-04/.venv/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-05/.tox/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-06/.mypy_cache/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-07/.pytest_cache/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-08/.ruff_cache/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-09/.stack-work/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-10/__pycache__/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-11/node_modules/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-12/vendor/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-13/dist/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-14/dist-newstyle/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-15/_build/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-16/build/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-17/target/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-18/.claude/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-19/Pods/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-20/.gradle/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-21/.dart_tool/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-22/gradle-build/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-23/deps/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-24/.build/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-25/.cargo/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "excluded-26/cover/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "linked", "kind": "symlink"},
+        {"path": "linked/external.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "near/Build/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "near/Dist-newstyle/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "near/_build-example/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "near/dist-newstyle-example/generated.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "pkg.opam", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "reparse", "kind": "reparse_point"},
+        {"path": "reparse/external.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "src/main.ml", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "src/main.mli", "kind": "file", "content_hex": "736f757263650a"}
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "source-collection/declared-sources-exact-pruning",
+    "domain": "source_collection",
+    "outcome": "ok",
+    "result": {
+      "files": [
+        {"path": ".ocamlformat", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "BUILD", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "BUILD_windows", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "assets/config.txt", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "case/_Build/generated.ml", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "dune", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "dune-project", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "near/Build/generated.ml", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "near/Dist-newstyle/generated.ml", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "near/_build-example/generated.ml", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "near/dist-newstyle-example/generated.ml", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "pkg.opam", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "src/main.ml", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "src/main.mli", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"}
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

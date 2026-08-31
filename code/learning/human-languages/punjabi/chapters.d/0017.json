@@ -1,0 +1,20 @@
+{
+  "chapter": 17,
+  "title": "The Second Form Line: Language",
+  "label": "ch:pa-form-language",
+  "canDo": "I can select between two separately practised values and fill one requested Gurmukhi language line from a nonverbal cue with no model.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W03-language-no-model",
+    "kind": "production",
+    "summary": "The learner fills one language field from a nonverbal cue after selection, supported entry, delayed entry, spelling, spacing, and repair have each received a bounded pass.",
+    "assesses": [
+      "PA-FORM-LABEL-LANGUAGE-01",
+      "PA-FORM-LANGUAGE-PUNJABI-01",
+      "PA-FORM-LANGUAGE-CUE-MAP-01",
+      "PA-FORM-LANGUAGE-NO-MODEL-01"
+    ]
+  }
+}

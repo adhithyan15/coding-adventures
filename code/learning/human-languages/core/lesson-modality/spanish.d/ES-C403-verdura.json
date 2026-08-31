@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C403-verdura",
+    "language": "spanish",
+    "chapter": 403,
+    "sequence": 8960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d970dcffb3df93d0"
+  },
+  "findings": []
+}

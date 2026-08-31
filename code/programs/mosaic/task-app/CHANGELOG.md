@@ -15,6 +15,13 @@ and launches a second process against the same application-data snapshot to prov
 restart restoration. A shared structural contract also rejects frozen controls,
 sample-runtime fallbacks, and missing runtime wiring before platform execution.
 
+### Fixed - Compose scheduling-view lifecycle assertion (#13559)
+
+The generated Compose UI acceptance follows the actual selected view and checks
+the Rust engine's always-visible projected-finish summary instead of expecting a
+Timeline interval after one complexity toggle. The fixture exercises the full
+two-launch create, complete/reopen, delete, persistence, and restore lifecycle.
+
 ### Added - local state across generated native app restarts (#13519)
 
 Native-complete TaskApp packages now restore the Rust engine's opaque snapshot
