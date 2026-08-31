@@ -6,7 +6,8 @@
     "PA-PATH-016",
     "PA-PATH-017",
     "PA-PATH-026",
-    "PA-PATH-028"
+    "PA-PATH-028",
+    "PA-PATH-030"
   ],
   "omits": [
     "WORD-GOOD",

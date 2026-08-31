@@ -1,0 +1,13 @@
+{
+  "id": "PA-EXT-034-A1-FORM-SUPPORTED-R3",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can rebuild the old two-line and three-line supported Punjabi forms at R3 distance while every answer bank remains visible.",
+  "prerequisites": [
+    "PA-EXT-033-A1-BODY-WORDS-R4"
+  ],
+  "lessons": [
+    "PA-R28-form-supported-r3"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "PA-R28-form-supported-r3",
+    "language": "punjabi",
+    "chapter": 28,
+    "sequence": 1630,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0cf3e7a1cae6f88d",
+    "delivery": "script"
+  },
+  "findings": []
+}

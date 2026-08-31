@@ -1,0 +1,13 @@
+{
+  "id": "PA-EXT-035-A1-HEAD-SCRIPT-R4",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can retrieve the Punjabi word for head, its horn history, and the already-taught na shape at R4 distance without claiming new writing evidence.",
+  "prerequisites": [
+    "PA-EXT-034-A1-FORM-SUPPORTED-R3"
+  ],
+  "lessons": [
+    "PA-R28-head-na-r4"
+  ]
+}

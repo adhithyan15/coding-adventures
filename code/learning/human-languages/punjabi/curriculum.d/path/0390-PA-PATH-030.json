@@ -1,0 +1,12 @@
+{
+  "id": "PA-PATH-030",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "PA-R28-head-na-r4"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-035-A1-HEAD-SCRIPT-R4"
+  ],
+  "after": []
+}
