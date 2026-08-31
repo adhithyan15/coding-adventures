@@ -4133,7 +4133,13 @@ fn emit_host_button(
         _ => "\"\"".to_string(),
     };
     let enabled_expr = disabled_prop_enabled_expr(node)?;
-    let modifier_expr = host_control_modifier_expr(node, style.as_ref());
+    let mut modifier_expr = host_control_modifier_expr(node, style.as_ref());
+    if let Some(accessible_label) = text_prop_expr(node, "a11y-label")? {
+        let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
+        modifier_expr = Some(format!(
+            "{base}.semantics {{ contentDescription = {accessible_label} }}"
+        ));
+    }
 
     let mut out = String::new();
     if enabled_expr.is_some() || modifier_expr.is_some() {
@@ -6689,6 +6695,30 @@ mod tests {
             "got:\n{out}"
         );
         assert!(out.contains("import androidx.compose.ui.platform.testTag"));
+    }
+
+    #[test]
+    fn host_button_projects_expression_accessible_label_to_semantics() {
+        let m = component("Bar", vec![], vec![]);
+        let l = layout(
+            "Bar",
+            styled_node(
+                "HostButton",
+                "toggle",
+                vec![
+                    expr_prop("label", "( row [ 0 ] )"),
+                    expr_prop("a11y-label", "( row [ 16 ] )"),
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Bar")).unwrap().output;
+        assert!(
+            out.contains(
+                "modifier = Modifier.testTag(\"toggle\").semantics { contentDescription = ( row [ 16 ] ) },"
+            ),
+            "expected native accessible name on the button, got:\n{out}"
+        );
     }
 
     #[test]

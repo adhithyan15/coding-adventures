@@ -85,9 +85,8 @@ layout TaskApp {
         // The theme toggle (task-app-icon-assets-v1.md) — see `theme-is-dark`'s
         // doc comment in TaskApp.mil. `HostButton` has no way to render a
         // child (only its flat `label`, per mosaic-emit-react's
-        // `host_button_label_body` — a real kernel gap, not something this
-        // slice works around by inventing one) and no `a11y-label`-style prop
-        // either, so the accessible name has to be the `label` text itself
+        // `host_button_label_body`), so the accessible name is intentionally
+        // carried by the `label` text itself here
         // — kept real (a screen reader announces it), just visually hidden
         // (`color: transparent` in the .msl part; the button's own box stays
         // its full clickable size, only the text glyphs vanish). The crescent
@@ -583,7 +582,11 @@ layout TaskApp {
                   }
                   Else {
                     Row [ task-row ] {
-                      HostButton [ toggle ] ( label : ( row[0] ) , onClick : emit: onToggleTask )
+                      HostButton [ toggle ] (
+                        label : ( row[0] ) ,
+                        a11y-label : ( row[16] ) ,
+                        onClick : emit: onToggleTask
+                      )
                       // The name is the disclosure control: it opens this row's detail.
                       HostButton [ task-name ] ( label : ( row[1] ) , onClick : emit: onExpandTask )
                       If ( when: ( row[2] ) ) {

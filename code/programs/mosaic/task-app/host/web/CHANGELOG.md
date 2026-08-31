@@ -6,6 +6,9 @@ All notable changes to the `task-app-web` host are documented here.
 
 ### Fixed
 
+- List completion buttons now have state-aware ARIA names that include the
+  task name while retaining the compact circle/check visual.
+
 - A blank first-run or legacy root project is now presented as **Inbox**, matching
   `task-mosaic-app`, instead of exposing task-core's internal `project` id.
 

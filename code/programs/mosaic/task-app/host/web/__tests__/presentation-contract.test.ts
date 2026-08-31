@@ -137,7 +137,24 @@ describe("shared TaskApp web/native presentation contract", () => {
     expect(Object.keys(engine.workspace().data.projects.project.tasks)).toEqual(["t1"]);
     expect(controller.getProps().newTaskNameFocus).toBe("focus");
     expect(controller.getProps().newTaskDueFocus).toBe("");
+    expect(controller.getProps().taskRows[0][16]).toBe("Complete task: Plan the launch");
     expect(mutations).toBe(1);
+  });
+
+  it("gives completion controls action-oriented names that track task state", async () => {
+    const wasmPath = path.resolve(
+      process.cwd(),
+      "../../../../../packages/rust/target/wasm32-unknown-unknown/release/task_wasm.wasm",
+    );
+    const engine = createTaskEngine(await readFile(wasmPath));
+    const controller = makeController(engine);
+
+    controller.apply({ type: "newTaskNameChange", value: "Draft release" });
+    controller.apply({ type: "addTask" });
+    expect(controller.getProps().taskRows[0][16]).toBe("Complete task: Draft release");
+
+    controller.apply({ type: "toggleTask", index: 0 } as never);
+    expect(controller.getProps().taskRows[0][16]).toBe("Reopen task: Draft release");
   });
 
   it("edits a List task atomically and persists through the Rust engine", async () => {
