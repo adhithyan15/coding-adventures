@@ -50,8 +50,15 @@ cd host/web && npm install && npm run dev   # http://localhost:5173
 ## Test
 
 ```bash
-npm install && npm test            # vitest — persistence round-trips (jsdom)
+rustup target add wasm32-unknown-unknown
+cargo build --manifest-path ../../../../../packages/rust/Cargo.toml \
+  -p task-wasm --target wasm32-unknown-unknown --release
+npm install && npm test            # unit tests + real-WASM presentation contract
 ```
 
-The persistence seam is unit-tested here; the live IndexedDB path and the full
-add → schedule → reload → restore loop are verified end-to-end in a browser.
+The shared presentation fixture drives the production JavaScript ABI accessor
+and controller through List/Board navigation, task/due-date scheduling,
+complete/reopen/delete, project and complexity changes, and snapshot restoration.
+`task-mosaic-app` consumes the same fixture in Rust, so either adapter drifting
+from the shared engine state or core slot values fails CI. The persistence seam
+is also unit-tested here; the live IndexedDB path remains browser-verified.

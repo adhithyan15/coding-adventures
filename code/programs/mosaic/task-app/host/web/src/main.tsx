@@ -267,9 +267,11 @@ const gridStartDays = (monthStart: number): number =>
   monthStart - daysToDateUtc(monthStart).getUTCDay();
 
 // State the controller can be seeded with on boot (restored from storage).
-interface ControllerInit {
+export interface ControllerInit {
   initialOrder?: string[];
   initialCounter?: number;
+  /** Deterministic UTC day used by the shared web/native behavior contract. */
+  today?: number;
   // Called after every *structural* mutation with the data worth persisting.
   onMutate?: (
     snapshot: string,
@@ -283,8 +285,22 @@ interface ControllerInit {
 // state (the two input values, the display order) and turns TaskApp events into engine
 // operations, then re-derives the slot props from engine queries. After any mutation
 // that changes the project it calls onMutate so the host can persist.
-function makeController(engine: any, init: ControllerInit = {}) {
-  const { initialOrder = [], initialCounter = 0, onMutate } = init;
+export function makeController(engine: any, init: ControllerInit = {}) {
+  const {
+    initialOrder = [],
+    initialCounter = 0,
+    today = Math.floor(Date.now() / DAY_MS),
+    onMutate,
+  } = init;
+  // task-core's bare workspace deliberately has no product-facing root name.
+  // The native adapter already repairs that root to Inbox; do the same at the
+  // web presentation boundary so first-run state and legacy blank snapshots do
+  // not expose the internal `project` id as UI copy.
+  const initialActiveId = engine.activeProject().data as string;
+  const initialActive = engine.workspace().data.projects?.[initialActiveId];
+  if (!String(initialActive?.name ?? "").trim()) {
+    engine.setProjectName({ name: "Inbox" });
+  }
   let newName = "";
   let newDue = "";
   let newProject = "";
@@ -328,7 +344,6 @@ function makeController(engine: any, init: ControllerInit = {}) {
   // project's table() knows about.
   const order: string[] = [...initialOrder]; // task ids in creation order
   let counter = initialCounter;
-  const today = Math.floor(Date.now() / DAY_MS);
   // Calendar nav state: the first day (UTC) of the currently shown month,
   // seeded to the current month.
   let calendarMonthStart = monthStartDays(today);
@@ -1371,4 +1386,6 @@ async function boot() {
   );
 }
 
-void boot();
+// The guard keeps the presentation controller importable in headless contract
+// tests without booting React. The production document always owns this root.
+if (document.getElementById("root")) void boot();

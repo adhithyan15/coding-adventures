@@ -28,9 +28,9 @@ links existing Mosaic work instead of duplicating it.
    runner fixes in #13590, #13593, and #13596; `task-app-v0.1.0` published.**
 6. **P1 — [#13565](https://github.com/adhithyan15/coding-adventures/issues/13565):**
    keep native completion progress visible in the generated Compose viewport.
-   **Done in the #13565 work item.**
+   **Done in #13602.**
 7. **P1 — [#13521](https://github.com/adhithyan15/coding-adventures/issues/13521):**
-   enforce web/native presentation-contract parity.
+   enforce web/native presentation-contract parity. **Done in #13607.**
 8. **P1 — [#13522](https://github.com/adhithyan15/coding-adventures/issues/13522):**
    package installable local apps on supported platforms.
 9. **P1 — [#13523](https://github.com/adhithyan15/coding-adventures/issues/13523):**

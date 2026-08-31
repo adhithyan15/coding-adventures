@@ -1360,6 +1360,32 @@ mod tests {
     use super::*;
     use mosaic_app_runtime::{MosaicRuntime, Platform, PROTOCOL_VERSION};
 
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct PresentationContract {
+        schema_version: u32,
+        today: i32,
+        today_iso: String,
+        host_only_differences: Value,
+        steps: Vec<PresentationStep>,
+    }
+
+    #[derive(Debug, Deserialize)]
+    struct PresentationStep {
+        id: String,
+        event: Option<PresentationEvent>,
+        #[serde(default)]
+        restore: bool,
+        expected: Value,
+    }
+
+    #[derive(Debug, Deserialize)]
+    struct PresentationEvent {
+        #[serde(rename = "type")]
+        event_type: String,
+        payload: Value,
+    }
+
     const REQUIRED_PROPS: &[&str] = &[
         "app-title",
         "new-task-name",
@@ -1417,6 +1443,119 @@ mod tests {
 
     fn event(sequence: u64, name: &str, payload: Value) -> Event {
         Event::new(sequence, format!("on{}", capitalize(name)), payload)
+    }
+
+    fn canonical_contract(app: &TaskMosaicApp, props: &Value) -> Value {
+        let active = app.active_project();
+        let mut projects = app
+            .state
+            .workspace
+            .projects
+            .values()
+            .map(|project| {
+                let mut tasks = project
+                    .tasks
+                    .values()
+                    .map(|task| {
+                        json!({
+                            "name": task.name,
+                            "completed": task.completed,
+                            "deadline": task.schedule.as_ref().and_then(|schedule| schedule.deadline).map(|date| date.0),
+                        })
+                    })
+                    .collect::<Vec<_>>();
+                tasks.sort_by_key(|task| task["name"].as_str().unwrap_or_default().to_string());
+                json!({
+                    "name": project.name,
+                    "complexity": match project.settings.complexity {
+                        ProjectComplexity::Board => "board",
+                        ProjectComplexity::Full => "full",
+                    },
+                    "tasks": tasks,
+                })
+            })
+            .collect::<Vec<_>>();
+        projects.sort_by_key(|project| project["name"].as_str().unwrap_or_default().to_string());
+        let view = if props["board-mode"] == "board" {
+            "board"
+        } else if props["timeline-mode"] == "timeline" {
+            "timeline"
+        } else if props["sheet-mode"] == "sheet" {
+            "sheet"
+        } else if props["calendar-mode"] == "calendar" {
+            "calendar"
+        } else if props["notes-mode"] == "notes" {
+            "notes"
+        } else {
+            "list"
+        };
+        let task_rows = props["task-rows"]
+            .as_array()
+            .expect("task rows are an array")
+            .iter()
+            .map(|row| {
+                Value::Array(
+                    row.as_array()
+                        .expect("task row is an array")
+                        .iter()
+                        .take(4)
+                        .cloned()
+                        .collect(),
+                )
+            })
+            .collect::<Vec<_>>();
+        json!({
+            "engine": {
+                "activeProject": active.name,
+                "projects": projects,
+            },
+            "slots": {
+                "view": view,
+                "summary": props["summary"],
+                "ringPercent": props["ring-percent"],
+                "complexityLabel": props["complexity-label"],
+                "newTaskName": props["new-task-name"],
+                "newTaskDue": props["new-task-due"],
+                "newProjectName": props["new-project-name"],
+                "projectRows": props["project-rows"],
+                "taskRows": task_rows,
+            },
+        })
+    }
+
+    #[test]
+    fn shared_web_native_presentation_contract() {
+        let fixture: PresentationContract = serde_json::from_str(include_str!(
+            "../../../../programs/mosaic/task-app/fixtures/presentation-contract-v1.json"
+        ))
+        .expect("valid presentation contract fixture");
+        assert_eq!(fixture.schema_version, 1);
+        assert_eq!(fixture.today, PROJECT_START.0);
+        assert_eq!(fixture.today_iso, format_date(PROJECT_START));
+        assert!(fixture.host_only_differences.is_object());
+
+        let mut app = TaskMosaicApp::default();
+        let mut update = app.start(context()).unwrap();
+        let mut sequence = 1;
+        for step in fixture.steps {
+            if step.restore {
+                let snapshot = app.snapshot().unwrap().expect("TaskApp snapshot");
+                let mut restored = TaskMosaicApp::default();
+                update = restored.restore(snapshot).unwrap();
+                app = restored;
+            } else if let Some(input) = step.event {
+                update = app
+                    .dispatch(event(sequence, &input.event_type, input.payload))
+                    .unwrap_or_else(|error| panic!("{}: {error}", step.id));
+                sequence += 1;
+            }
+            assert_eq!(
+                canonical_contract(&app, &update.props),
+                step.expected,
+                "{}",
+                step.id
+            );
+        }
     }
 
     #[test]
