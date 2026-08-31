@@ -407,6 +407,12 @@ export {
 } from "./level-gate.js";
 export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
+export {
+  measureGlossedNotTaught,
+  renderGlossedNotTaught,
+  type GlossedNotTaughtCandidate,
+  type GlossedNotTaughtReport,
+} from "./glossed-not-taught.js";
 export { runGentleRampReport } from "./gentle-ramp-cli.js";
 export { runCompletionPlan } from "./plan-cli.js";
 export {
