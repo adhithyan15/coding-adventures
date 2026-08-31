@@ -735,6 +735,15 @@
       "notes": "Discovered by the post-#13544 source-hashing audit. Python recognizes source inputs only for Python, Ruby, Go, and Perl and concatenates content digests without normalized relative paths, so OCaml source/metadata changes and same-content renames can be invisible. After directory pruning lands, add complete portable source recognition and unambiguous normalized path framing without expanding host authority."
     },
     {
+      "id": "build-tool-python-portable-dependency-hashing-conformance",
+      "title": "Complete portable dependency hashing in the Python build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-python-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the independent review of the Python portable source-hashing tranche. Python still concatenates transitive dependency digest hex strings without framing their sorted package identities or decoding the 32-byte digests, while hashing v1 requires package-name and raw-digest frames. Add a direct language-neutral hashing-cache oracle regression and repair dependency plus combined cache digests in a separate coherent tranche; do not overclaim complete hashing-v1 coverage from the source-only owner."
+    },
+    {
       "id": "build-tool-go-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Go build tool",
       "status": "pending",

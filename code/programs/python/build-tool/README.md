@@ -30,11 +30,13 @@ excluded before source matching or file reads.
 
 The source registry includes OCaml `.ml`, `.mli`, and `.opam` inputs plus the
 exact `.ocamlformat`, `dune`, and `dune-project` metadata names in extension
-and declared-source modes. Package digests sort forward-slash relative paths,
-encode each path as UTF-8 with an explicit byte-length frame, and append the
-fixed SHA-256 digest of the file's raw bytes. A same-content rename therefore
-invalidates the cache without leaking an absolute checkout path, host metadata,
-or locale-dependent decoding into the digest.
+and declared-source modes; applicable `.opam` manifests remain inputs even
+when declared source globs omit them. Package digests sort normalized
+repository-relative paths, encode each path as UTF-8 with an explicit byte-
+length frame, then append an unsigned 64-bit content length and the file's
+exact raw bytes. A same-content rename therefore invalidates the cache without
+leaking an absolute checkout path, host metadata, or locale-dependent decoding
+into the digest.
 
 ## Usage
 

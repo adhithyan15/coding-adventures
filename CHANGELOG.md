@@ -10,10 +10,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Added OCaml `.ml`, `.mli`, and `.opam` source recognition plus exact
   `.ocamlformat`, `dune`, and `dune-project` metadata recognition to extension
-  and declared-source collection.
-- Framed each normalized forward-slash UTF-8 relative path with its fixed raw-
-  content SHA-256 digest, making same-content renames observable without
-  hashing absolute checkout paths, host metadata, or decoded text.
+  and declared-source collection, including applicable `.opam` manifests that
+  declared source globs omit.
+- Framed each normalized repository-relative UTF-8 path with its unsigned
+  64-bit content length and exact raw bytes, matching the language-neutral
+  hashing-v1 oracle and making same-content renames observable without hashing
+  absolute checkout paths, host metadata, or decoded text.
 
 ### Python build-tool source hashing
 

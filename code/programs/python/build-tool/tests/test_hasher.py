@@ -38,6 +38,15 @@ SOURCE_COLLECTION_CASES = (
     / "cases"
     / "source-collection-declared.json",
 )
+HASHING_CACHE_MISSING_CASE = (
+    REPO_ROOT
+    / "code"
+    / "specs"
+    / "fixtures"
+    / "build-tool-v1"
+    / "cases"
+    / "hashing-cache-missing.json"
+)
 
 
 def _fixture_generated_components(case_path: Path) -> frozenset[str]:
@@ -55,17 +64,17 @@ FIXTURE_GENERATED_COMPONENTS = tuple(
 
 
 def _expected_framed_package_hash(
-    package_root: Path, relative_paths: tuple[str, ...]
+    repository_root: Path, repository_relative_paths: tuple[str, ...]
 ) -> str:
     """Build the portable package-hash frame independently of production code."""
     package_hash = hashlib.sha256()
-    for relative_path in sorted(relative_paths):
+    for relative_path in sorted(repository_relative_paths):
         path_bytes = relative_path.encode("utf-8")
+        content = (repository_root / relative_path).read_bytes()
         package_hash.update(len(path_bytes).to_bytes(8, "big"))
         package_hash.update(path_bytes)
-        package_hash.update(
-            hashlib.sha256((package_root / relative_path).read_bytes()).digest()
-        )
+        package_hash.update(len(content).to_bytes(8, "big"))
+        package_hash.update(content)
     return package_hash.hexdigest()
 
 
@@ -167,6 +176,26 @@ class TestCollectSourceFiles:
         )
 
         assert relative_files == expected_paths
+
+    def test_declared_ocaml_sources_always_include_opam_manifest(self, tmp_path):
+        pkg_dir = tmp_path / "packages" / "ocaml" / "test-pkg"
+        pkg_dir.mkdir(parents=True)
+        (pkg_dir / "BUILD").write_text("ocaml_library(name='test')")
+        (pkg_dir / "test-pkg.opam").write_text('opam-version: "2.0"')
+        (pkg_dir / "main.ml").write_text("let answer = 42")
+
+        pkg = Package(
+            name="ocaml/test-pkg",
+            path=pkg_dir,
+            language="ocaml",
+            is_starlark=True,
+            declared_srcs=["**/*.ml"],
+        )
+
+        assert tuple(
+            path.relative_to(pkg_dir).as_posix()
+            for path in _collect_source_files(pkg)
+        ) == ("BUILD", "main.ml", "test-pkg.opam")
 
     def test_sorted_lexicographically(self, tmp_path):
         pkg_dir = tmp_path / "packages" / "python" / "test"
@@ -404,8 +433,32 @@ class TestHashPackage:
 
         assert hash_package(pkg) != original_hash
 
-    def test_frames_normalized_utf8_paths_and_raw_content_digests(self, tmp_path):
-        pkg_dir = tmp_path / "packages" / "python" / "test"
+    def test_matches_language_neutral_hashing_cache_oracle(self, tmp_path):
+        case = json.loads(HASHING_CACHE_MISSING_CASE.read_text(encoding="utf-8"))
+        include_paths = tuple(case["input"]["options"]["include_paths"])
+        repository_root = tmp_path / "repository"
+        for entry in case["workspace"]["files"]:
+            source = repository_root / entry["path"]
+            source.parent.mkdir(parents=True, exist_ok=True)
+            source.write_text(entry["content_utf8"], encoding="utf-8", newline="")
+
+        pkg = Package(
+            name=case["input"]["options"]["package"],
+            path=repository_root / "code" / "packages" / "python" / "demo",
+            language="python",
+            is_starlark=True,
+            declared_srcs=["src/data.bin"],
+        )
+
+        assert hash_package(pkg) == case["expected"]["result"]["package_digest"]
+        assert hash_package(pkg) == _expected_framed_package_hash(
+            repository_root, include_paths
+        )
+
+    def test_frames_normalized_utf8_paths_lengths_and_raw_content(self, tmp_path):
+        repository_root = tmp_path / "repository"
+        pkg_dir = repository_root / "code" / "packages" / "python" / "test"
+        package_prefix = "code/packages/python/test"
         pkg_dir.mkdir(parents=True)
         (pkg_dir / "BUILD").write_bytes(b"echo build\r\n")
         nested = pkg_dir / "nested"
@@ -417,11 +470,11 @@ class TestHashPackage:
         pkg = Package(name="python/test", path=pkg_dir, language="python")
 
         expected = _expected_framed_package_hash(
-            pkg_dir,
+            repository_root,
             (
-                "BUILD",
-                "nested/alpha.py",
-                "nested/caf\N{LATIN SMALL LETTER E WITH ACUTE}.py",
+                f"{package_prefix}/BUILD",
+                f"{package_prefix}/nested/alpha.py",
+                f"{package_prefix}/nested/caf\N{LATIN SMALL LETTER E WITH ACUTE}.py",
             ),
         )
 

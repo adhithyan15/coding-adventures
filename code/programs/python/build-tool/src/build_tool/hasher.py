@@ -12,11 +12,11 @@ How hashing works
 1. Collect all source files in the package directory, filtered by the
    language's relevant extensions. Always include the BUILD file.
 2. Normalize relative paths to forward-slash form and sort them for determinism.
-3. SHA256-hash each file's raw bytes individually.
-4. Frame each UTF-8 path with its byte length and its fixed-size content digest.
+3. Frame each repository-relative UTF-8 path with its byte length.
+4. Append each file's unsigned 64-bit content length and exact raw bytes.
 5. SHA256-hash that unambiguous sequence to produce the final package hash.
 
-This two-level hashing means:
+This framed hashing means:
 - Reordering files doesn't change the hash (we sort normalized paths first).
 - Adding or removing a file changes the hash (the framed sequence changes).
 - Modifying any file's contents changes the hash.
@@ -36,6 +36,7 @@ import hashlib
 import os
 import stat
 from pathlib import Path
+from typing import Protocol
 
 from build_tool.discovery import Package
 from build_tool.glob_match import match_path
@@ -65,6 +66,13 @@ SPECIAL_FILENAMES: dict[str, set[str]] = {
         "META.yml",
     },
     "ocaml": {".ocamlformat", "dune", "dune-project"},
+}
+
+# Manifest extensions that affect the package independently of a Starlark
+# target's declared source globs. Source extensions such as ``.ml`` remain
+# governed by ``declared_srcs``; package manifests such as ``.opam`` do not.
+DECLARED_MANIFEST_EXTENSIONS: dict[str, set[str]] = {
+    "ocaml": {".opam"},
 }
 
 # Exact, case-sensitive generated, dependency, VCS, cache, and temporary
@@ -99,6 +107,12 @@ GENERATED_DIRECTORY_COMPONENTS: frozenset[str] = frozenset(
         "cover",
     }
 )
+
+
+class _HashUpdater(Protocol):
+    """Structural type for the byte-update surface used by hashlib objects."""
+
+    def update(self, data: bytes, /) -> None: ...
 
 
 def _is_link_or_reparse(path: Path) -> bool:
@@ -158,6 +172,9 @@ def _collect_source_files(package: Package) -> list[Path]:
     pkg_root = str(package.path)
     extensions = SOURCE_EXTENSIONS.get(package.language, set())
     special_names = SPECIAL_FILENAMES.get(package.language, set())
+    manifest_extensions = DECLARED_MANIFEST_EXTENSIONS.get(
+        package.language, set()
+    )
 
     if package.is_starlark and package.declared_srcs:
         # Starlark mode: use os.walk + glob_match for precise source matching.
@@ -185,7 +202,10 @@ def _collect_source_files(package: Package) -> list[Path]:
                 # Manifests affect the package even when a Starlark target's
                 # declared source globs omit them. This is especially visible
                 # for OCaml's exact ``dune-project`` and ``.ocamlformat`` names.
-                if filename in special_names:
+                if (
+                    filename in special_names
+                    or Path(filename).suffix in manifest_extensions
+                ):
                     files.append(abs_path)
                     continue
 
@@ -242,6 +262,50 @@ def _hash_file(filepath: Path) -> str:
     return sha.hexdigest()
 
 
+def _repository_relative_package_path(package: Package) -> str:
+    """Return the package root in normalized repository-relative form.
+
+    Production packages live below the canonical ``code/packages`` or
+    ``code/programs`` buckets. Locating that bucket in the absolute checkout
+    path removes machine-specific prefixes while preserving any nested package
+    path. The identity fallback keeps isolated unit fixtures deterministic.
+    """
+    parts = package.path.parts
+    for index in range(len(parts) - 1, -1, -1):
+        if parts[index] in {"packages", "programs"}:
+            return "/".join(("code", *parts[index:]))
+
+    identity = package.name.split("/")
+    if len(identity) == 3 and identity[1] == "programs":
+        return "/".join(("code", "programs", identity[0], identity[2]))
+    if len(identity) == 2:
+        return "/".join(("code", "packages", *identity))
+    raise ValueError(f"cannot derive repository path for package {package.name!r}")
+
+
+def _update_file_frame(
+    package_hash: _HashUpdater, repository_path: str, filepath: Path
+) -> None:
+    """Append one hashing-v1 path/content frame without decoding file bytes."""
+    path_bytes = repository_path.encode("utf-8")
+    package_hash.update(len(path_bytes).to_bytes(8, "big"))
+    package_hash.update(path_bytes)
+
+    with open(filepath, "rb") as source:
+        source.seek(0, os.SEEK_END)
+        content_length = source.tell()
+        source.seek(0)
+        package_hash.update(content_length.to_bytes(8, "big"))
+
+        bytes_read = 0
+        for chunk in iter(lambda: source.read(8192), b""):
+            package_hash.update(chunk)
+            bytes_read += len(chunk)
+
+    if bytes_read != content_length:
+        raise OSError(f"source changed while hashing: {filepath}")
+
+
 def hash_package(package: Package) -> str:
     """Compute a SHA256 hash representing all source files in the package.
 
@@ -260,17 +324,17 @@ def hash_package(package: Package) -> str:
         return hashlib.sha256(b"").hexdigest()
 
     # A content-only sequence cannot distinguish a rename from an unchanged
-    # file. Prefix every normalized UTF-8 path with an unsigned 64-bit byte
-    # length, then append the file's fixed 32-byte SHA-256 digest. The path
-    # length and fixed digest size make file boundaries unambiguous without
-    # decoding source bytes or incorporating absolute checkout locations.
+    # file. Hashing v1 frames every normalized repository-relative UTF-8 path
+    # and exact raw content with unsigned 64-bit byte lengths. This makes file
+    # boundaries unambiguous without decoding bytes or incorporating absolute
+    # checkout locations.
     package_hash = hashlib.sha256()
+    package_root = _repository_relative_package_path(package)
     for filepath in files:
         relative_path = filepath.relative_to(package.path).as_posix()
-        path_bytes = relative_path.encode("utf-8")
-        package_hash.update(len(path_bytes).to_bytes(8, "big"))
-        package_hash.update(path_bytes)
-        package_hash.update(bytes.fromhex(_hash_file(filepath)))
+        _update_file_frame(
+            package_hash, f"{package_root}/{relative_path}", filepath
+        )
     return package_hash.hexdigest()
 
 
