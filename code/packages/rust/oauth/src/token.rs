@@ -382,6 +382,17 @@ impl TokenCredentials {
     pub fn id_token(&self) -> Option<&str> {
         self.id_token.as_ref().map(|token| token.as_str())
     }
+
+    /// Transfer credential ownership to an opaque custodian without cloning.
+    pub fn into_parts(
+        self,
+    ) -> (
+        Zeroizing<String>,
+        RefreshTokenUpdate,
+        Option<Zeroizing<String>>,
+    ) {
+        (self.access_token, self.refresh_token, self.id_token)
+    }
 }
 
 impl Debug for TokenCredentials {

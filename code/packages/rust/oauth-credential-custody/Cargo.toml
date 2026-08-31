@@ -1,0 +1,9 @@
+[package]
+name = "coding_adventures_oauth_credential_custody"
+version = "0.1.0"
+edition = "2021"
+description = "Audit-first storage-agnostic OAuth credential custody"
+
+[dependencies]
+coding_adventures_oauth = { path = "../oauth" }
+coding_adventures_zeroize = { path = "../zeroize" }

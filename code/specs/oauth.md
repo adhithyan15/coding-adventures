@@ -1,10 +1,11 @@
 # OAuth
 
-**Status:** Phase 2 installed-app host boundary implemented — provider-neutral
+**Status:** Phase 2 credential-custody boundary implemented — provider-neutral
 installed-app Authorization Code + PKCE, token/error codecs, refresh rotation,
 revocation request preparation, RFC 8414 metadata validation, and an audited
-literal-loopback callback host; broker, transport, token custody, device flow,
-and provider integrations remain prioritized below.
+literal-loopback callback host plus storage-agnostic audit-before-disclosure
+credential custody; broker orchestration, transport, concrete encrypted-store
+adapters, device flow, and provider integrations remain prioritized below.
 
 ## Overview
 
@@ -92,10 +93,13 @@ The delivery order is:
    closed immediately after the first accepted connection. Browser launch is
    an injected platform adapter; provider behavior remains data in the pure
    OAuth core.
-5. **Credential custody and broker:** opaque credential references, atomic
-   refresh rotation, multiple accounts per provider, audit-before-browser,
-   audit-before-token-exchange, and audit-before-access-token disclosure. Audit
-   publication failure fails the operation closed.
+5. **Shipped credential-custody primitive; broker remains:** opaque account
+   keys, injected compare-and-swap storage, zeroizing credential records,
+   no-clone codec handoff, atomic refresh-token retain/rotation, conditional
+   deletion, and audit-before-access-token or refresh-token disclosure. Audit
+   publication failure fails the operation closed. The next broker slice owns
+   provider registration, multiple accounts, clock/expiry policy, transport
+   orchestration, and a concrete encrypted-vault adapter.
 6. **Confidential-client authentication:** web-service profiles for
    `client_secret_basic`, `client_secret_post`, and `private_key_jwt`, using
    opaque custody references and audit-before-release rather than secrets in
@@ -111,10 +115,12 @@ The delivery order is:
 10. **Later hardening:** DPoP and full OpenID
    Connect discovery/JWKS/ID-token validation.
 
-The current slices intentionally stop before provider HTTPS transport and
-durable credential custody. The loopback host owns only local TCP and injected
-browser authority; the preceding slices remain complete pure protocol
-boundaries, not mock transports or provider-specific midpoints.
+The current slices intentionally stop before provider HTTPS transport and a
+concrete encrypted credential-store adapter. The loopback host owns only local
+TCP and injected browser authority; the custody primitive owns only audited
+secret lifecycle over an injected compare-and-swap contract. The preceding
+slices remain complete boundaries, not mock transports or provider-specific
+midpoints.
 
 ---
 
