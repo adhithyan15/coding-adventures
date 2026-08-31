@@ -312,17 +312,93 @@ def _validate_open_source(filepath: Path, source_stat: os.stat_result) -> None:
         raise OSError("source path changed or is not a regular file")
 
 
+def _windows_final_handle_path(descriptor: int) -> str:
+    """Return the final resolved path owned by an open Windows descriptor."""
+    import ctypes
+    import msvcrt
+    from ctypes import wintypes
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    get_final_path = kernel32.GetFinalPathNameByHandleW
+    get_final_path.argtypes = (
+        wintypes.HANDLE,
+        wintypes.LPWSTR,
+        wintypes.DWORD,
+        wintypes.DWORD,
+    )
+    get_final_path.restype = wintypes.DWORD
+    handle = msvcrt.get_osfhandle(descriptor)
+    buffer = ctypes.create_unicode_buffer(32768)
+    length = get_final_path(handle, buffer, len(buffer), 0)
+    if length == 0 or length >= len(buffer):
+        raise OSError("cannot resolve opened source path")
+
+    final_path = buffer.value
+    if final_path.startswith("\\\\?\\UNC\\"):
+        return f"\\\\{final_path[8:]}"
+    if final_path.startswith("\\\\?\\"):
+        return final_path[4:]
+    return final_path
+
+
+def _open_source_no_follow(package_root: Path, filepath: Path) -> int:
+    """Open a source without following a linked component or escaping its root."""
+    try:
+        filepath.relative_to(package_root)
+    except ValueError as error:
+        raise OSError("source path is outside its package") from error
+
+    if os.name == "nt":
+        descriptor = os.open(filepath, os.O_RDONLY | os.O_BINARY)
+        try:
+            final_path = os.path.normcase(
+                os.path.normpath(_windows_final_handle_path(descriptor))
+            )
+            final_root = os.path.normcase(
+                os.path.normpath(str(package_root.resolve(strict=True)))
+            )
+            if os.path.commonpath((final_root, final_path)) != final_root:
+                raise OSError("opened source escaped its package")
+        except BaseException:
+            os.close(descriptor)
+            raise
+        return descriptor
+
+    absolute_path = filepath.absolute()
+    parts = absolute_path.parts
+    no_follow = getattr(os, "O_NOFOLLOW", 0)
+    directory_flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | no_follow
+    directory = os.open(parts[0], directory_flags)
+    try:
+        for component in parts[1:-1]:
+            child = os.open(
+                component,
+                directory_flags,
+                dir_fd=directory,
+            )
+            os.close(directory)
+            directory = child
+        return os.open(
+            parts[-1],
+            os.O_RDONLY | no_follow,
+            dir_fd=directory,
+        )
+    finally:
+        os.close(directory)
+
+
 def _update_file_frame(
-    package_hash: _HashUpdater, repository_path: str, filepath: Path
+    package_hash: _HashUpdater,
+    repository_path: str,
+    filepath: Path,
+    package_root: Path,
 ) -> None:
     """Append one hashing-v1 path/content frame without decoding file bytes."""
     path_bytes = repository_path.encode("utf-8")
     package_hash.update(len(path_bytes).to_bytes(8, "big"))
     package_hash.update(path_bytes)
 
-    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0)
-    flags |= getattr(os, "O_NOFOLLOW", 0)
-    descriptor = os.open(filepath, flags)
+    descriptor = _open_source_no_follow(package_root, filepath)
     with os.fdopen(descriptor, "rb") as source:
         before = os.fstat(source.fileno())
         _validate_open_source(filepath, before)
@@ -369,7 +445,10 @@ def hash_package(package: Package) -> str:
     for filepath in files:
         relative_path = filepath.relative_to(package.path).as_posix()
         _update_file_frame(
-            package_hash, f"{package_root}/{relative_path}", filepath
+            package_hash,
+            f"{package_root}/{relative_path}",
+            filepath,
+            package.path,
         )
     return package_hash.hexdigest()
 

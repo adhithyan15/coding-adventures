@@ -401,7 +401,9 @@ class TestHashFile:
         with pytest.raises(
             OSError, match="source path changed or is not a regular file"
         ):
-            _update_file_frame(hashlib.sha256(), "code/source.py", source)
+            _update_file_frame(
+                hashlib.sha256(), "code/source.py", source, tmp_path
+            )
 
     def test_frame_rejects_same_size_mutation_metadata(self, tmp_path, monkeypatch):
         source = tmp_path / "source.py"
@@ -422,7 +424,65 @@ class TestHashFile:
         monkeypatch.setattr(os, "fstat", changing_fstat)
 
         with pytest.raises(OSError, match="source changed while hashing"):
-            _update_file_frame(hashlib.sha256(), "code/source.py", source)
+            _update_file_frame(
+                hashlib.sha256(), "code/source.py", source, tmp_path
+            )
+
+    @pytest.mark.skipif(os.name != "nt", reason="Windows junction semantics")
+    def test_frame_rejects_ancestor_replaced_by_windows_junction(self, tmp_path):
+        package_root = tmp_path / "package"
+        nested = package_root / "nested"
+        nested.mkdir(parents=True)
+        collected_source = nested / "source.py"
+        collected_source.write_bytes(b"inside")
+
+        external = tmp_path / "external"
+        external.mkdir()
+        (external / "source.py").write_bytes(b"outside")
+        collected_source.unlink()
+        nested.rmdir()
+        created = subprocess.run(
+            ["cmd", "/c", "mklink", "/J", str(nested), str(external)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if created.returncode != 0:
+            pytest.skip(f"junction creation unavailable: {created.stderr.strip()}")
+
+        try:
+            with pytest.raises(OSError, match="opened source escaped its package"):
+                _update_file_frame(
+                    hashlib.sha256(),
+                    "code/packages/python/test/source.py",
+                    collected_source,
+                    package_root,
+                )
+        finally:
+            os.rmdir(nested)
+
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
+    def test_frame_rejects_ancestor_replaced_by_posix_symlink(self, tmp_path):
+        package_root = tmp_path / "package"
+        nested = package_root / "nested"
+        nested.mkdir(parents=True)
+        collected_source = nested / "source.py"
+        collected_source.write_bytes(b"inside")
+
+        external = tmp_path / "external"
+        external.mkdir()
+        (external / "source.py").write_bytes(b"outside")
+        collected_source.unlink()
+        nested.rmdir()
+        nested.symlink_to(external, target_is_directory=True)
+
+        with pytest.raises(OSError):
+            _update_file_frame(
+                hashlib.sha256(),
+                "code/packages/python/test/source.py",
+                collected_source,
+                package_root,
+            )
 
 
 class TestHashPackage:
