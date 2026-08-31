@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-08-31
+
+### Release automation
+
+- Publish immutable GitHub prereleases from fully populated drafts so every
+  generated project, native bridge, and checksum is attached before release.
+- Provision Cairo consistently for portable tests, generated backend emission,
+  and the Linux bridge build.
+
 ## [0.9.0] - 2026-08-31
 
 ### Computed box and flow values

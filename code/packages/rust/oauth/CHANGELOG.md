@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exposed read-only provider, trace, and redirect-URI ceremony bindings on
+  `AuthorizationRequest` so an authorized host can reject cross-ceremony or
+  cross-provider browser release without exposing transaction secrets.
 - Added provider-neutral RFC 8414 request preparation and bounded metadata
   decoding with exact issuer comparison, strict HTTPS endpoints, explicit
   Authorization Code, public-client `none`, PKCE `S256`, and RFC 9207 response

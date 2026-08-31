@@ -1,10 +1,10 @@
 # OAuth
 
-**Status:** Phase 2 metadata trust boundary implemented — provider-neutral
+**Status:** Phase 2 installed-app host boundary implemented — provider-neutral
 installed-app Authorization Code + PKCE, token/error codecs, refresh rotation,
-revocation request preparation, and RFC 8414 metadata validation; broker,
-transport, token custody, device flow, and provider integrations remain
-prioritized below.
+revocation request preparation, RFC 8414 metadata validation, and an audited
+literal-loopback callback host; broker, transport, token custody, device flow,
+and provider integrations remain prioritized below.
 
 ## Overview
 
@@ -85,9 +85,13 @@ The delivery order is:
    `signed_metadata` and unknown fields are ignored and scrubbed, not trusted.
    RFC 9207 response-issuer support is retained exactly; providers that omit it
    require the existing registry-owned distinct-redirect defense.
-4. **Installed-app host:** external browser launch and a transient listener on
-   an IP-literal loopback redirect, with exact request-line/header bounds and
-   the listener closed immediately after the one accepted transaction.
+4. **Shipped installed-app host:** audit-bracketed external-browser release and
+   a transient listener bound only to an IP-literal loopback redirect, with
+   provider/trace/redirect binding, exact aggregate/request-line/header/Host
+   bounds, zeroizing callback ownership, closed diagnostics, and the listener
+   closed immediately after the first accepted connection. Browser launch is
+   an injected platform adapter; provider behavior remains data in the pure
+   OAuth core.
 5. **Credential custody and broker:** opaque credential references, atomic
    refresh rotation, multiple accounts per provider, audit-before-browser,
    audit-before-token-exchange, and audit-before-access-token disclosure. Audit
@@ -107,9 +111,10 @@ The delivery order is:
 10. **Later hardening:** DPoP and full OpenID
    Connect discovery/JWKS/ID-token validation.
 
-The current slices intentionally stop before network and durable credential
-custody. They are complete pure protocol boundaries, not mock transports or
-provider-specific midpoints.
+The current slices intentionally stop before provider HTTPS transport and
+durable credential custody. The loopback host owns only local TCP and injected
+browser authority; the preceding slices remain complete pure protocol
+boundaries, not mock transports or provider-specific midpoints.
 
 ---
 
