@@ -1,5 +1,13 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — align Compose scheduling lifecycle with its selected view (#13559)
+
+The generated Compose TaskApp UI fixture now proves Rust scheduling through the
+always-present projected-finish summary instead of assuming that one complexity
+toggle selects Timeline. Its two-launch lifecycle keeps invalid-input atomicity,
+create, complete/reopen, delete, persistence, restoration, and restored-delete
+coverage against the real Rust dynamic library.
+
 ## [Unreleased] — accept native integral index numbers (#13560)
 
 Indexed TaskApp events now accept both JSON integer values and mathematically
