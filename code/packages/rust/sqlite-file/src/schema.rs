@@ -243,6 +243,7 @@ mod tests {
             schema_cookie: 1,
             schema_format: 1,
             text_encoding: TextEncoding::Utf8,
+            user_version: 0,
         };
         let mut page1 = vec![0u8; ps];
         page1[0..100].copy_from_slice(&header.encode());

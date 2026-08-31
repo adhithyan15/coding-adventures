@@ -1,5 +1,30 @@
 # Changelog — sqlite-file
 
+## 0.18.0 - Unreleased
+
+**Header: the user version (offset 60).** `Header` gained a `user_version` field,
+parsed and encoded at header offset 60 — the four application-defined bytes that
+`PRAGMA user_version` reads and writes. SQLite never interprets them, which is
+precisely why they are the conventional place to stamp a schema version, and why
+a writer aiming to reproduce someone else's file has to carry them.
+
+The immediate consumer is Anki: V11 collections set `user_version = 11`, and the
+Engram export path is being ported off the third-party `rusqlite` C dependency
+onto this crate's writer so the Anki package layer can build for `wasm32`.
+Without this field that port would have silently emitted `0`.
+
+Encoding is unchanged for anyone who leaves the field at its default: bytes
+60..64 were previously part of the fixed zero tail, so `user_version: 0` produces
+byte-identical output to 0.17.0.
+
+Gated by a cross-check against **real** bundled-C SQLite
+(`our_user_version_is_read_back_by_real_sqlite`): we build a file, stamp the
+version through `parse` → mutate → `encode`, and assert the C library's own
+`PRAGMA user_version` reports it, alongside `PRAGMA integrity_check` and a
+re-read of the table. A self-round-trip alone could not have caught a
+wrong-offset write — our parser would have read it back from the same wrong
+offset — and the test was confirmed to fail when the encode offset was moved.
+
 ## 0.17.0 - Unreleased
 
 **Phase F (writer): page-1 `sqlite_schema` overflow — completes F2.** A schema

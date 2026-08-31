@@ -16,18 +16,23 @@ Engram imports `.apkg` decks; inside each is a real SQLite database from which
 Engram reads a few tables (`col`, `notes`, `cards`, `revlog`, `graves`). That
 was the last thing forcing `rusqlite` (and bundled C SQLite) into the graph.
 This crate replaces the **read** path with a small, auditable, dependency-free
-byte parser. (Writing SQLite files — the reverse direction — is the separate,
-larger Phase F.)
+byte parser, and now carries a **write** path too (Phase F) — enough to emit a
+complete, re-readable database, which is what lets the Engram export drop
+`rusqlite` entirely.
 
 ## Scope
 
-Read-only, and only what Engram's collections use:
+Only what Engram's collections use:
 
 - **Table** b-trees (leaf `0x0D` + interior `0x05`) — no index b-trees.
 - **Overflow chains** for records too large for one page.
 - Standard page sizes and **UTF-8** text (encoding = 1).
+- **Writing** a whole database in one call (`page_writer::write_multi_table_db`):
+  several tables, overflow chains, and multi-level b-trees. Whole-database emit
+  only — there is no incremental update.
 
-Out of scope: writing, WAL, index b-trees, encryption, non-UTF-8 encodings.
+Out of scope: WAL, index b-trees, encryption, non-UTF-8 encodings, and
+in-place modification of an existing file.
 
 ## Status
 
@@ -37,7 +42,7 @@ Built leaf-to-root; this is the foundation:
 |-------|--------|-------|
 | varint (1–9 byte integers) | `varint` | ✅ read + write, golden-vector + sweep tests |
 | record / serial types → `SqlValue` | `record` | ✅ decode, golden-row tests |
-| DB header + in-memory pager | `header`, `pager` | ✅ header fields + zero-copy 1-based pages |
+| DB header + in-memory pager | `header`, `pager` | ✅ header fields (incl. `user_version`) + zero-copy 1-based pages |
 | table b-tree walk (leaf + interior) | `btree` | ✅ `walk_table(root)` → `(rowid, record)` |
 | overflow chains (records spanning pages) | `btree` | ✅ reassembled inline + overflow; cycle/size guarded |
 | `sqlite_schema` + `read_table(bytes, name)` | `schema` | ✅ read API |
