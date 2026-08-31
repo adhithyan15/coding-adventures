@@ -12000,6 +12000,15 @@ log-injection gap and found no remaining publication blocker. The remaining
 same-user check/open/check race is explicitly documented as a non-atomic TOCTOU
 boundary rather than overclaimed away.
 
+Ready-for-review PR #13608 opened from clean validated head
+`1eeda1bcdace08711b27b174df52bc66d58c5862` after a normal first push from
+exact `origin/main` `83127966b0112dd0ffe88d328e040e70b581848b`.
+Immediately before publication, the target remote branch and prior PR were
+absent, every local gate above remained acceptable, and six other live PRs had
+zero exact overlap across the nine paths. GitHub reports the PR non-draft,
+mergeable, and conflict-free with checks queued or in progress, so auto-merge
+remains disabled until all final-head checks are terminal and acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
