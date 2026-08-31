@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:2ba2606631f826f1",
+  "lessonIds": [
+    "ES-C410-academia",
+    "ES-C410-frances",
+    "ES-C410-examen",
+    "ES-C410-education-recall-1",
+    "ES-C410-education-recall-2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch410.txt",
+  "json": "spanish/narration/ch410.json",
+  "textHash": "fnv1a64:87089276e4c093fe",
+  "jsonHash": "fnv1a64:ca16758ea55aafc1",
+  "findings": []
+}

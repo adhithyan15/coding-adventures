@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 911,
-  "taughtForms": 1536,
-  "objectiveFailed": 10,
+  "lessonCount": 917,
+  "taughtForms": 1543,
+  "objectiveFailed": 7,
   "mocks": [
     {
       "mock": 1,
-      "reading": 22,
-      "listening": 24,
-      "objectiveFailed": 4,
+      "reading": 24,
+      "listening": 25,
+      "objectiveFailed": 1,
       "failed": [
         {
           "paper": 1,
@@ -75,28 +75,6 @@
           "missing": [
             "gimnasio",
             "deporte"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 17,
-          "missing": [
-            "academia",
-            "francés"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 21,
-          "missing": [
-            "estudiante"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 45,
-          "missing": [
-            "examen"
           ]
         }
       ]
@@ -159,16 +137,12 @@
     }
   ],
   "missingObjectiveLexemes": [
-    "academia",
     "adulto",
     "apuntarse",
     "concierto",
     "curso",
     "deporte",
-    "estudiante",
-    "examen",
     "extranjero",
-    "francés",
     "gimnasio",
     "helado",
     "mayo",
@@ -179,10 +153,6 @@
     "recepción"
   ],
   "missingFrequency": [
-    {
-      "lexeme": "academia",
-      "count": 1
-    },
     {
       "lexeme": "adulto",
       "count": 1
@@ -204,19 +174,7 @@
       "count": 1
     },
     {
-      "lexeme": "estudiante",
-      "count": 1
-    },
-    {
-      "lexeme": "examen",
-      "count": 1
-    },
-    {
       "lexeme": "extranjero",
-      "count": 1
-    },
-    {
-      "lexeme": "francés",
       "count": 1
     },
     {

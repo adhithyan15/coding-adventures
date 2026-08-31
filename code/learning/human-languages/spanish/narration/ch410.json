@@ -1,0 +1,583 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 410,
+  "title": "Academy, French, Student and Exam",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2ba2606631f826f1",
+  "lessons": [
+    {
+      "id": "ES-C410-academia",
+      "sequence": 9350,
+      "title": "la academia — from a place-name to a place of learning",
+      "headword": "la academia",
+      "romanization": "la academia",
+      "gloss": "academy, language school",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66c39665b2ef7f41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall estudiante, a student. A student may learn at la academia, an academy or teaching centre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish academia came through Latin academia from Greek Akadēmía, the place-name associated with Plato's school. English academy belongs to the same travelled family. In an A1 message, una academia de idiomas is a language school, not necessarily a university institution."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what kind of academy?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Use de to name the subject: una academia de idiomas. The noun is feminine: la academia, una academia."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la academia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la academia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una academia de idiomas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una academia de idiomas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soy estudiante en una academia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soy estudiante en una academia*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Academy or teaching centre? (La academia.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: academia."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C410-frances",
+      "sequence": 9360,
+      "title": "francés / francesa — language and person",
+      "headword": "francés / francesa",
+      "romanization": "francés / francesa",
+      "gloss": "French; French person",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71d868b6a9fd9f10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "At una academia de idiomas, one possible subject is francés, French."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish francés came from French français. The language name is the masculine singular form: hablo francés. For people and adjectives, the ending agrees: un estudiante francés, una estudiante francesa."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the accent comes and goes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The final stress of francés needs its written accent. Adding -a moves the natural stress: francesa, with no accent mark. The plural follows the same pattern: franceses, francesas."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "francés",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *francés*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una academia de francés",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una academia de francés*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una estudiante francesa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una estudiante francesa*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "French? (Francés.) A French woman or feminine adjective? (Francesa.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: francés."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C410-examen",
+      "sequence": 9370,
+      "title": "el examen — a weighing of what you know",
+      "headword": "el examen",
+      "romanization": "el examen",
+      "gloss": "exam, examination",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6cb2e417abf2ec8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A student of French may take un examen de francés, a French exam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish examen is Latin exāmen, a weighing or examination. English exam and examination are learned relatives. The old weighing image is a useful memory hook: an exam weighs what has been learned."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: singular and plural stress",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The singular is el examen, with no written accent because the stress falls naturally on -xa-. The plural is los exámenes; the accent appears to keep that stress when another syllable is added."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el examen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el examen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un examen de francés",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un examen de francés*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "los exámenes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *los exámenes*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Exam? (El examen.) Exams? (Los exámenes.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: examen."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C410-education-recall-1",
+      "sequence": 9380,
+      "title": "education recall one — place, subject, learner, assessment",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "first retrieval of academy, French, student and exam",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97ba847f8c3b2093",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the place, subject, learner and assessment. (Academia, francés, estudiante, examen.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una academia de idiomas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una academia de idiomas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hablo francés",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hablo francés*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soy estudiante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soy estudiante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un examen de francés",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un examen de francés*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Academy, French, student, exam? (Academia, francés, estudiante, examen.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C410-education-recall-2",
+      "sequence": 9390,
+      "title": "education recall two — complete the message",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "second retrieval of academy, French, student and exam",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ccfa17793f641fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Complete each education message from meaning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "“It is a language academy.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Es una academia de idiomas.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Es una academia de idiomas.*]"
+            },
+            {
+              "kind": "speech",
+              "text": "“I speak French.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Hablo francés.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Hablo francés.*]"
+            },
+            {
+              "kind": "speech",
+              "text": "“I am a student.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Soy estudiante.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Soy estudiante.*]"
+            },
+            {
+              "kind": "speech",
+              "text": "“The exam is difficult.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "El examen es difícil.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *El examen es difícil.*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the four education words once more. (Academia, francés, estudiante, examen.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

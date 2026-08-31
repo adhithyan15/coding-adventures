@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C09-estudiante
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-NAME-EVERYDAY-THINGS
 sequence: 965
 chapter: 52
 type: word
