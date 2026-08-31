@@ -4766,12 +4766,17 @@ impl HtmlParser {
                                 eof_open_element_limit,
                             )
                             || self.has_pending_formatting_at_seeded_table_context();
-                        if (self.is_fragment
-                            || self.open_element_prefix_has_name(eof_open_element_limit, "body")
-                            || self.open_element_prefix_current_is(
-                                eof_open_element_limit,
-                                "plaintext",
-                            ))
+                        if matches!(self.document_tail_mode, DocumentTailMode::InBody)
+                            && (self.is_fragment
+                                || self.open_element_prefix_has_name(
+                                    eof_open_element_limit,
+                                    "body",
+                                )
+                                || self.document_body_is_in_scope()
+                                || self.open_element_prefix_current_is(
+                                    eof_open_element_limit,
+                                    "plaintext",
+                                ))
                             && has_disallowed_eof_state
                         {
                             if self.eof_open_element_prefix_is_in_table(eof_open_element_limit) {
@@ -7883,8 +7888,7 @@ impl HtmlParser {
         if (!self.is_fragment || self.open_fragment_context_name() == Some("html"))
             && !self.document_has_closed_frameset()
             && name == "body"
-            && self.has_open_element("body")
-            && !self.has_disallowed_open_element_for_body_end_tag()
+            && self.document_body_is_in_scope()
         {
             self.document_tail_mode = DocumentTailMode::AfterBody;
             self.document_tail_reentered_in_body = false;
@@ -7894,8 +7898,7 @@ impl HtmlParser {
             && name == "html"
             && self.has_open_element("html")
             && !self.has_open_table_context()
-            && (!self.has_open_element("body")
-                || !self.has_disallowed_open_element_for_body_end_tag())
+            && (!self.document_has_body_element() || self.document_body_is_in_scope())
         {
             self.document_tail_mode = DocumentTailMode::AfterHtml;
             self.document_tail_reentered_in_body = false;
@@ -7911,7 +7914,7 @@ impl HtmlParser {
             self.explicit_html_end_seen = true;
         }
         if matches!(name, "body" | "html")
-            && self.has_open_element("body")
+            && self.document_body_is_in_scope()
             && self.has_disallowed_open_element_for_body_end_tag()
         {
             self.diagnostics.push(
@@ -7971,7 +7974,11 @@ impl HtmlParser {
                     "end tag `</body>` inside a table context was ignored",
                 ));
             }
-            "body" if !self.has_open_element("body") && !self.open_elements.is_empty() => {
+            "body"
+                if !self.has_open_element("body")
+                    && !self.document_body_is_in_scope()
+                    && !self.open_elements.is_empty() =>
+            {
                 self.open_elements.clear();
             }
             "body" if self.open_elements.is_empty() && !self.has_document_element() => {
@@ -7980,6 +7987,9 @@ impl HtmlParser {
                 self.open_elements.clear();
                 self.document_tail_mode = DocumentTailMode::AfterBody;
             }
+            // The in-body rules only switch insertion mode for a body end tag;
+            // they leave the stack of open elements intact for later reprocessing.
+            "body" => {}
             "br" => {
                 self.diagnostics.push(
                     ParserDiagnostic::new(
@@ -8122,6 +8132,7 @@ impl HtmlParser {
                 }
             }
             name @ ("dd" | "dt") => self.close_open_description_item(name),
+            "html" if self.document_body_is_in_scope() => {}
             "html" => {
                 if self.has_open_element("html") {
                     self.pop_current_if(|current| current == "body");
@@ -10352,6 +10363,29 @@ impl HtmlParser {
             }
         }
         None
+    }
+
+    fn document_body_is_in_scope(&self) -> bool {
+        if self.open_html_element_in_scope_index("body").is_some() {
+            return true;
+        }
+        if self.is_fragment
+            || (!self.document_has_body_element() && !self.explicit_head_end_seen)
+        {
+            return false;
+        }
+        for path in self.open_elements.iter().rev() {
+            let Some(element) = element_ref_at_path(&self.document, path) else {
+                continue;
+            };
+            if element.namespace.is_none() && element.name == "html" {
+                return true;
+            }
+            if is_ordinary_scope_boundary(element) {
+                return false;
+            }
+        }
+        false
     }
 
     fn open_html_element_in_button_scope_index(&self, target_name: &str) -> Option<usize> {
@@ -52909,9 +52943,9 @@ mod tests {
             )
         }));
 
-        let ignored_html_end =
+        let reprocessed_html_end =
             parse_html_with_diagnostics("<!doctype html><menuitem></html><p>x").unwrap();
-        assert!(!ignored_html_end.parser_diagnostics.iter().any(|diagnostic| {
+        assert!(reprocessed_html_end.parser_diagnostics.iter().any(|diagnostic| {
             diagnostic.code == "unexpected-token-after-html"
         }));
     }
@@ -53278,6 +53312,91 @@ mod tests {
     }
 
     #[test]
+    fn preserves_open_descendants_when_shell_end_tags_reenter_in_body() {
+        for (source, outer_name, inner_name, expected_text) in [
+            ("<!doctype html><body><b>x</body>X", "b", None, "xX"),
+            ("<!doctype html><body><p>x</body>X", "p", None, "xX"),
+            (
+                "<!doctype html><body><div><i>x</body>X",
+                "div",
+                Some("i"),
+                "xX",
+            ),
+            ("<!doctype html><body><b>x</html>X", "b", None, "xX"),
+            (
+                "<!doctype html>\r\n<body><b>é</body>\r\nΩ",
+                "b",
+                None,
+                "é\nΩ",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let outer = element(&body(&output.document).children[0]);
+            assert_eq!(outer.name, outer_name, "source {source:?}");
+            let text_parent = inner_name.map_or(outer, |expected| {
+                let inner = element(&outer.children[0]);
+                assert_eq!(inner.name, expected, "source {source:?}");
+                inner
+            });
+            assert_eq!(
+                text_parent.children,
+                vec![Node::text(expected_text)],
+                "source {source:?}"
+            );
+
+            let diagnostic = output
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| {
+                    matches!(
+                        diagnostic.code.as_str(),
+                        "unexpected-token-after-body" | "unexpected-token-after-html"
+                    )
+                })
+                .expect("tail text should be reprocessed with a parse error");
+            assert_eq!(diagnostic.position, Some(eof_position(source)));
+        }
+
+        let mut direct = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "body".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("x".to_string()),
+            Token::EndTag {
+                name: "body".to_string(),
+            },
+            Token::Text("X".to_string()),
+            Token::Eof,
+        ] {
+            direct.process_token(token);
+        }
+        let diagnostic = direct
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-token-after-body")
+            .expect("direct tail text should be reprocessed with a parse error");
+        assert_eq!(diagnostic.position, None);
+        let document = direct.finish_document();
+        assert_eq!(
+            element(&body(&document).children[0]).children,
+            vec![Node::text("xX")]
+        );
+    }
+
+    #[test]
     fn reports_unexpected_tokens_after_after_frameset() {
         for (source, expected_count) in [
             ("<!doctype html><frameset></frameset></html>text", 1),
@@ -53575,34 +53694,42 @@ mod tests {
         let output = parse_html_with_diagnostics(source).unwrap();
 
         assert_eq!(
-            output.parser_diagnostics,
-            vec![shell_end_tag_with_unclosed_elements(source, "html", 0)]
+            output
+                .parser_diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            vec![
+                "unexpected-token-after-body",
+                "shell-end-tag-with-unclosed-elements",
+                "unexpected-token-after-html",
+                "eof-with-unclosed-elements",
+            ]
+        );
+        assert_eq!(
+            output.parser_diagnostics[1],
+            shell_end_tag_with_unclosed_elements(source, "html", 0)
         );
         assert_eq!(element(&head(&output.document).children[0]).name, "title");
 
         let output_body = body(&output.document);
-        assert_eq!(output_body.children.len(), 4);
+        assert_eq!(output_body.children.len(), 2);
 
         let first = element(&output_body.children[0]);
         assert_eq!(first.name, "p");
-        assert_eq!(first.children, vec![Node::text("before")]);
+        assert_eq!(first.children, vec![Node::text("beforeafter")]);
 
-        assert_eq!(output_body.children[1], Node::text("after"));
-
-        let section = element(&output_body.children[2]);
+        let section = element(&output_body.children[1]);
         assert_eq!(section.name, "section");
-        assert_eq!(section.children, vec![Node::text("next")]);
-
-        assert_eq!(output_body.children[3], Node::text("tail"));
+        assert_eq!(section.children, vec![Node::text("nexttail")]);
 
         let explicit = parse_html("<html><body><p>x</body>y</html>z").unwrap();
         let explicit_body = body(&explicit);
-        assert_eq!(explicit_body.children.len(), 2);
+        assert_eq!(explicit_body.children.len(), 1);
         assert_eq!(
             element(&explicit_body.children[0]).children,
-            vec![Node::text("x")]
+            vec![Node::text("xyz")]
         );
-        assert_eq!(explicit_body.children[1], Node::text("yz"));
     }
 
     #[test]
