@@ -1048,17 +1048,21 @@ TESTSUITE_FILES = [
     #     out to gracefully degrade to all-`not_yet_supported`/zero-real-
     #     `fail` rather than hard-failing, meeting the exact same "vendor
     #     it" bar every other near-0%-pass file already vendored here
-    #     meets (e.g. `imports1.wast` below). Only `array.wast`,
-    #     `array_new_data.wast`, `array_new_elem.wast`, `struct.wast`
-    #     (fail to PARSE at all -- real array/struct type-declaration
-    #     grammar this crate has zero support for), `ref_null.wast` (a
-    #     null BOTTOM reference type, e.g. `nullfuncref`, needs to
-    #     type-check as a subtype of a concrete `(ref null $t)` result
-    #     type -- the same non-null-concrete-ref subtyping wall, just
-    #     reached from a different direction), `type-rec.wast`, and
-    #     `type-subtyping.wast` (real recursive-type-group/explicit-
-    #     subtype-declaration semantics) stay genuinely blocked and are
-    #     deliberately NOT in this list.
+    #     meets (e.g. `imports1.wast` below). At the time this comment was
+    #     first written, `array.wast`/`array_new_data.wast`/
+    #     `array_new_elem.wast`/`struct.wast`/`ref_null.wast`/
+    #     `type-rec.wast`/`type-subtyping.wast` looked genuinely blocked
+    #     and were deliberately left out. A LATER follow-up pass (see the
+    #     dedicated "GC-proposal type-declaration grammar follow-up" entry
+    #     near the end of this list) re-investigated all of them plus
+    #     `instance.wast` fresh: `array.wast`/`array_new_data.wast`/
+    #     `array_new_elem.wast`/`struct.wast`/`instance.wast`/
+    #     `type-rec.wast` turned out tractable after all (none of them
+    #     actually needed the non-null-ref wall to at least PARSE and grade
+    #     honestly) and are now vendored below; `ref_null.wast`/
+    #     `type-subtyping.wast` were confirmed to have real, non-gradeable
+    #     `fail`s and stay out -- see that same later entry for the full
+    #     story on both outcomes.
     #   - `i32x4_relaxed_trunc.wast`/`table-sub.wast`/`simd_linking.wast`/
     #     `simd_memory-multi.wast`: each independently double-checked NOT
     #     to secretly need anything blocked -- all four gracefully degrade
@@ -1072,15 +1076,18 @@ TESTSUITE_FILES = [
     # BINARY variant has no `not_yet_supported` escape hatch at all, unlike
     # the `quote`/text variant, so any case this crate doesn't yet reject
     # grades a hard `fail`, not a capability-gap `not_yet_supported`);
-    # `instance.wast` (needs a separate, not-yet-implemented `(module
-    # definition ...)`/`(module instance ...)` generative-instantiation
-    # directive form this crate's `wasm-wast-parser` has zero grammar
-    # support for at all -- see W28's own PR description; a distinct,
-    # self-contained follow-on from the shared-memory/table fix just below,
-    # not blocked BY it -- NOT the same gap `annotations.wast`/`inline-
+    # `instance.wast` (at the time this comment was first written, needed a
+    # separate, not-yet-implemented `(module definition ...)`/`(module
+    # instance ...)` generative-instantiation directive form this crate's
+    # `wasm-wast-parser` had zero grammar support for at all -- see W28's
+    # own PR description; NOT the same gap `annotations.wast`/`inline-
     # module.wast` had, see the three-file follow-up entry below, which
     # investigated the real upstream files and found `inline-module.wast`
-    # needs something else entirely). The `table*64.wast`/
+    # needs something else entirely. A LATER follow-up pass implemented
+    # this generative-instantiation form for real -- see the dedicated
+    # "GC-proposal type-declaration grammar follow-up" entry near the end
+    # of this list -- and `instance.wast` is now vendored below). The
+    # `table*64.wast`/
     # `call_indirect64.wast`/`table_copy_mixed.wast` family (table64 REAL
     # operations against an `is64` table) that a PRIOR revision of this
     # comment named as still deferred here is no longer out of scope -- see
@@ -1367,6 +1374,152 @@ TESTSUITE_FILES = [
     # session's worth of GC/ref-literal work to close, not a small fix
     # bundled into this one.
     "bulk.wast",
+    #
+    # GC-proposal type-declaration grammar follow-up (real corpus vendoring
+    # pass): the remaining 9 files a prior session's comment above named as
+    # "genuinely blocked" (`array.wast`/`array_new_data.wast`/
+    # `array_new_elem.wast`/`struct.wast`/`ref_null.wast`/`type-rec.wast`/
+    # `type-subtyping.wast`/`extern.wast`/`instance.wast`) were each
+    # RE-investigated fresh against the real fetched files rather than
+    # trusting that categorization, and the picture turned out more mixed
+    # than "all blocked":
+    #   - `array.wast`/`array_new_data.wast`/`array_new_elem.wast`/
+    #     `struct.wast` did NOT actually fail to parse because of missing
+    #     `(type $t (array ...))`/`(type $t (struct ...))` GRAMMAR (that
+    #     grammar turns out not to be the blocker at all -- see below). The
+    #     REAL cause: three new GC `assert_return` EXPECTED-value wildcards
+    #     this crate's `wasm_wast_parser::script::parse_expected` had never
+    #     seen -- bare `(ref.array)`/`(ref.struct)`/`(ref.eq)` (the array/
+    #     struct/eqref counterparts of the `(ref.func)`/`(ref.i31)`
+    #     wildcards already supported) -- which raised a hard parse error
+    #     that (unlike an unsupported MODULE body, which `Directive::
+    #     Module`'s own `Result` capture already isolates) propagated all
+    #     the way out of `parse_script`'s directive loop and aborted
+    #     reading the ENTIRE script, not just that one `assert_return`.
+    #     Fixed by adding `Expected::RefArrayAny`/`RefStructAny`/`RefEqAny`,
+    #     graded the same conservative "any non-null ref handle" way
+    #     `RefFuncAny` already is (plus `RefEqAny` also accepting an i31,
+    #     since `eqref`'s members include `i31ref`) -- see each variant's
+    #     own doc comment. This alone was enough for all four files to
+    #     parse cleanly; their actual array/struct INSTRUCTION directives
+    #     (`array.new`/`array.get`/`struct.new`/etc. bodies, and every
+    #     non-null `(ref $t)` field/param the real GC grammar uses
+    #     pervasively) still correctly grade `not_yet_supported` -- the
+    #     non-null-concrete-reference-type wall independently confirmed
+    #     genuinely blocked below is still real, just not what was
+    #     stopping these four files from parsing at all. Zero real `fail`:
+    #     `array.wast` module 1/1 (+6 not-yet-supported), `assert_invalid`
+    #     3/3 (+3 not-yet-supported); `struct.wast` module 1/1 (+5
+    #     not-yet-supported), `assert_invalid` 2/2 (+2 not-yet-supported);
+    #     `array_new_data.wast`/`array_new_elem.wast` are 100%
+    #     not-yet-supported (every directive needs real array-instruction
+    #     execution) but PARSE and grade honestly, zero `fail`.
+    #   - `instance.wast` needed the `(module definition $M ...)`/`(module
+    #     instance $I $M)` generative-instantiation script-directive forms
+    #     a prior session's comment above named as needing dedicated
+    #     grammar support this crate had "zero support for at all" --
+    #     confirmed still genuinely missing, but tractable: two new
+    #     `wasm_wast_parser::script::Directive` variants (`ModuleDefinition`/
+    #     `ModuleInstance`), recognized in `parse_directive` BEFORE the
+    #     ordinary `(module ...)` fallback (see that match arm's own doc
+    #     comment for why silently falling through there was actively
+    #     dangerous: it would parse `definition`/`instance` as harmless
+    #     unrecognized atoms and quietly build a WRONG anonymous/empty
+    #     module rather than erroring). `wasm-conformance::Executor` gained
+    #     a `definitions: HashMap<String, WasmModule>` template store (a
+    #     "definition" is validated but deliberately NOT instantiated) and
+    #     an `instantiate_and_register` helper shared with `Directive::
+    #     Module`'s own success path, so instantiating the SAME definition
+    #     twice (`instance.wast`'s "Instantiation is generative" tests)
+    #     naturally gets two independent live instances -- each
+    #     `instantiate()` call already builds fresh global/table/memory
+    #     state from the `WasmModule` template, with no extra bookkeeping
+    #     needed. `register` 3/3 (100%), `module` 5/5 (+3 not-yet-supported
+    #     -- an unrelated, separate, honest gap: `(elem declare func $f)`
+    #     declarative element segments, `wasm-wast-parser` doesn't parse
+    #     the `declare` elem-segment mode at all yet), `assert_return` 0/12
+    #     (100% not-yet-supported, cascading from that same `declare` gap).
+    #     Zero real `fail`.
+    #   - A general, separately-motivated harness bugfix this same
+    #     investigation surfaced: `Directive::Register`'s "target not
+    #     found" fallback only checked capability-gap tracking for the
+    #     `None` ("current module") registry key, never an explicit `$id`
+    #     key -- so `(register "I1" $I1)` naming an `$id` that never built
+    #     for a genuine capability-gap reason (exactly `instance.wast`'s
+    #     own case, and `type-rec.wast`'s `(register "M" $M)` where `$M`
+    #     used a `(rec ...)` type group this crate can't build yet) graded
+    #     a hard `Fail` that looked like a real script/harness bug instead
+    #     of the honest `NotYetSupported` capability gap it actually is.
+    #     Generalized `current_module_status` into `unavailable_reasons:
+    #     HashMap<Option<String>, String>`, keyed by ANY registry key, not
+    #     just `None`. This fix is why `linking.wast`'s pre-existing
+    #     `register` 2 `fail` became 0 `fail`/3 `not_yet_supported` (a
+    #     genuine improvement to an ALREADY-vendored file, confirmed via a
+    #     full before/after baseline diff -- no other already-vendored
+    #     file's tally changed from this fix).
+    #   - `memory.wast`/`table.wast`/`memory64.wast`/`table64.wast` (already
+    #     vendored) each contain an anonymous `(module definition
+    #     (memory/table ...))` directive at a boundary-case size (e.g.
+    #     exactly the max page count) -- recognizing `module definition`
+    #     explicitly (see above) means these are now correctly validated
+    #     WITHOUT being instantiated (the real point of writing them as
+    #     "definition"s: avoid actually allocating a multi-gigabyte
+    #     memory), fixing a genuine, previously-unnoticed correctness bug:
+    #     before this change, the bare-atom `definition` keyword was
+    #     silently ignored and the module was built AND INSTANTIATED as an
+    #     ordinary anonymous module, which is why `memory64.wast`/
+    #     `table64.wast` each had a `module` `trap` (an actual runtime trap
+    #     from instantiating/executing against a huge i64 memory/table)
+    #     that's simply gone now -- confirmed via the same full before/
+    #     after baseline diff, `memory.wast`/`table.wast` were unaffected
+    #     (their boundary case never actually trapped, just wasted the
+    #     allocation) and no file's `module` PASS count went down anywhere.
+    #   - `type-rec.wast` needed real `(rec (type $a ...) (type $b ...))`
+    #     recursive type-group semantics to fully pass -- confirmed still
+    #     genuinely out of scope for this pass -- but the file parses and
+    #     grades entirely honestly with the `Register` fix above: `module`
+    #     0/11 (100% not-yet-supported), `assert_invalid` 9/10 (still a
+    #     real, mostly-passing structural-validation file even without
+    #     `rec` semantics), `assert_unlinkable` 2/2 (100%). Zero real
+    #     `fail`.
+    #   - `ref_null.wast` and `type-subtyping.wast` were investigated fully
+    #     (not just re-asserted from a prior session's notes) and are
+    #     DELIBERATELY NOT in this list -- both have genuine, non-gradeable
+    #     `fail`s a capability-gap grading trick can't honestly paper over:
+    #     `ref_null.wast`'s second module fails REAL structural validation
+    #     (`TypeMismatch: expected ConcreteFuncRef(0), found Funcref`) --
+    #     `(global nullfuncref (ref.null nofunc))`'s `nullfuncref` is
+    #     represented as the plain abstract `ValueType::Funcref` (a
+    #     deliberate, documented simplification elsewhere in this crate,
+    #     since `WasmValue::Ref` carries no runtime type tag), which is
+    #     UNSOUND to then also accept wherever a concrete `ConcreteFuncRef`
+    #     ref type is declared (`is_assignable`'s own doc comment names the
+    #     opposite direction -- concrete-to-abstract -- as the ONE
+    #     deliberate exception, and widening it to also cover
+    #     abstract-to-concrete would silently make `return_call.wast`'s/
+    #     `return_call_indirect.wast`'s own mirror-image `assert_invalid`
+    #     "Result subtyping" case wrongly valid). Fixing this for real needs
+    #     genuine BOTTOM reference types (`nullfuncref`/`nullexternref`/
+    #     `nullexnref`/`nullref` as their own `ValueType` variants, each a
+    #     subtype of every compatible ref type) -- see this PR's own
+    #     description for a fuller scoping note. `type-subtyping.wast`
+    #     needs real structural func-type subtype checking for
+    #     `call_indirect`/`ref.cast` (2 `assert_trap` + 2 `assert_unlinkable`
+    #     cases where this crate's interpreter is simply too PERMISSIVE --
+    #     it lets a call/cast through that a real subtype checker would
+    #     reject -- confirmed by direct debugging, not assumed) -- a
+    #     different, and likely larger, gap than `type-rec.wast`'s.
+    # Full before/after baseline diff confirms the only already-vendored
+    # files whose tally changed are `linking.wast` (2 register `fail` -> 0
+    # `fail`/3 `not_yet_supported`) and `memory64.wast`/`table64.wast` (a
+    # `module` `trap` each -> `pass`, both explained above) -- every other
+    # already-vendored file's tally is byte-for-byte identical.
+    "array.wast",
+    "array_new_data.wast",
+    "array_new_elem.wast",
+    "struct.wast",
+    "instance.wast",
+    "type-rec.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

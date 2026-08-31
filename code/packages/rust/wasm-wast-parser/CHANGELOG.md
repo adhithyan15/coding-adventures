@@ -1,5 +1,51 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.85 — 2026-08-31 — GC `ref.*` wildcard expectations + `module definition`/`module instance`
+
+### Added
+
+- **Three new bare `assert_return` wildcard expectations** — `(ref.array)`,
+  `(ref.struct)`, `(ref.eq)` (`Expected::RefArrayAny`/`RefStructAny`/
+  `RefEqAny`), the array/struct/eqref counterparts of the already-supported
+  `(ref.func)`/`(ref.i31)` wildcards. Real corpus motivated
+  (`WebAssembly/testsuite`'s `array.wast`/`array_new_data.wast`/
+  `array_new_elem.wast`/`struct.wast`, pinned SHA
+  `28864811cf03bdbf880733786148feaba339582d`): before this, hitting any of
+  these three forms in `parse_expected` raised a hard `WastParseError`
+  that — unlike an unsupported MODULE body, which `Directive::Module`'s own
+  `Result` capture already isolates — propagated all the way out of
+  `parse_script`'s directive loop and aborted reading the ENTIRE script,
+  not just that one `assert_return`. All four fixture files above went
+  from `FAILED TO PARSE SCRIPT` to parsing cleanly from this fix alone —
+  it turned out to be the actual blocker, not the GC type-declaration
+  grammar a prior investigation had assumed (see `wasm-conformance`'s own
+  CHANGELOG and this crate's `fetch_testsuite.py` for the fuller story).
+- **`(module definition $M ...)` / `(module instance $I $M)` script
+  directives** — two new `script::Directive` variants (`ModuleDefinition`,
+  `ModuleInstance`), recognized in `parse_directive` BEFORE the ordinary
+  `(module ...)` fallback. Real corpus motivated (`instance.wast`'s
+  "Instantiation is generative" / "Import is not generative" / "Export is
+  not generative" tests, which need to build ONE module template and
+  instantiate it more than once, each instantiation getting independent
+  mutable state — something a single eagerly-built `WasmModule` +
+  `Directive::Module`'s "build once, instantiate once" shape can't
+  express). `$name` is optional on `module definition` (an anonymous
+  `(module definition <fields...>)` — the real corpus's own `memory.wast`/
+  `table.wast` boundary-case shape — validates without ever being
+  instantiated) and on the instance side of `module instance` (`(module
+  instance $M)`, an anonymous instance of `$M`); `module instance`'s
+  definition name is always required. Recognizing these two forms
+  explicitly was NOT optional politeness — falling through to the ordinary
+  `(module ...)` path would silently treat the bare `definition`/
+  `instance` atoms as harmless unrecognized module fields (every
+  module-field loop in `module.rs` only matches specific `SExpr::List`
+  keyword forms and silently ignores anything else), quietly building a
+  WRONG anonymous-or-empty module instead of erroring — confirmed to
+  actually happen before this fix (see `wasm-conformance`'s own CHANGELOG
+  for the observable symptom: `register` directives naming the never-
+  really-registered `$I1`/`$I2` hard-`Fail`ing instead of the file's
+  actual generative-instantiation semantics ever running at all).
+
 ## 0.1.84 — 2026-08-31 — annotations (`(@id ...)`) + inline-module script shorthand
 
 ### Added
