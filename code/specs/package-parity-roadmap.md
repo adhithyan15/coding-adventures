@@ -12330,8 +12330,8 @@ and F#, and Rust C headers copied by Swift wrappers. The new pending
 `build-tool-cross-lane-native-dependency-metadata-repair` owns exact dependency
 metadata and neutral resolution/diff/hash regressions for those paths.
 
-The nine-commit branch finally rebased conflict-free onto exact current main
-`cef4da52127c37e64b065288f64855a7a0dbd28c`. Intervening PRs #13718 through
+The ten-commit branch finally rebased conflict-free onto exact current main
+`4f3981a727b2583163f111ffce7ca2c9e4b1b08a`. Intervening PRs #13718 through
 #13735 change existing SPICE, HTML, TaskApp, Engram, and human-language roots
 plus one new Rust `oauth-credential-custody` identity. Engram's new web helper
 is package-local and is not invoked by its BUILD front, so it does not widen
@@ -12346,7 +12346,9 @@ package-local tracked inputs. Pending
 registration, tracked-byte fixtures, and digest regeneration, and all eleven
 engine adoptions now depend on it. This gap does not widen or invalidate the
 separate repository-boundary registry. The refreshed collision-checked
-schema-3 inventory records
+schema-3 inventory records the same counts after PR #13737 changed only the
+existing Rust `intel8080-gatelevel` package and its specs, without adding a
+package identity, build-tool input, or tranche overlap:
 15 established lanes, 1,396 implementation identities, 4,610 slots, and 1,435
 all-reported identities. Its bands are 175/265, 123/934, 170/2,139, and
 928/12,992; Rust has 739 singletons, OCaml remains at zero packages, and
