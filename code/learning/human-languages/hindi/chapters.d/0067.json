@@ -1,0 +1,20 @@
+{
+  "chapter": 67,
+  "title": "The First Form Line: Name",
+  "label": "ch:hi-a1-name-field",
+  "canDo": "I can recognise the Hindi name label and fill one requested name line from a nonverbal cue without a model.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-A1F01-name-no-model",
+    "kind": "production",
+    "summary": "Complete HI-A1F01-name-no-model and fill one Hindi name field from a nonverbal identity cue after separate label, selection, supported-entry, delayed-entry, spelling, spacing, and repair passes.",
+    "assesses": [
+      "HI-FORM-LABEL-NAME-01",
+      "HI-FORM-NAME-MIRA-01",
+      "HI-FORM-NAME-CUE-MAP-01",
+      "HI-FORM-NAME-NO-MODEL-01"
+    ]
+  }
+}

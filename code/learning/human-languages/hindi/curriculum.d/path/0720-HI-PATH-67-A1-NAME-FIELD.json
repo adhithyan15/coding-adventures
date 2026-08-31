@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-67-A1-NAME-FIELD",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "HI-A1F01-name-label",
+    "HI-A1F01-name-select",
+    "HI-A1F01-name-supported",
+    "HI-A1F01-name-delayed",
+    "HI-A1F01-name-no-model"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-067-A1-NAME-FIELD"
+  ],
+  "after": []
+}

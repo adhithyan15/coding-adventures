@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:5fa9de6630a0ba4a",
+  "lessonIds": [
+    "HI-A1F01-name-label",
+    "HI-A1F01-name-select",
+    "HI-A1F01-name-supported",
+    "HI-A1F01-name-delayed",
+    "HI-A1F01-name-no-model"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "hindi/narration/ch67.txt",
+  "json": "hindi/narration/ch67.json",
+  "textHash": "fnv1a64:09c3483fd154b57c",
+  "jsonHash": "fnv1a64:37c16307aa44718d",
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "HI-A1F01-name-delayed",
+    "language": "hindi",
+    "chapter": 67,
+    "sequence": 2590,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3e11110db77a4133",
+    "detachableSegments": [
+      "Writing — delayed requested entry"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

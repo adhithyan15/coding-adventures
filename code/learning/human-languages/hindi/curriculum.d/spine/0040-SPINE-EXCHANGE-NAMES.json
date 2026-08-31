@@ -8,7 +8,8 @@
     "HI-PATH-033",
     "HI-PATH-47-ROLE",
     "HI-PATH-54-ANIMAL",
-    "HI-PATH-62-HANDS"
+    "HI-PATH-62-HANDS",
+    "HI-PATH-67-A1-NAME-FIELD"
   ],
   "omits": [
     "PRONOUN-ME"

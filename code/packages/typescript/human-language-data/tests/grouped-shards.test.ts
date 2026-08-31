@@ -78,9 +78,9 @@ function sandbox(): string {
 describe("the chapter-owned real book-generation ledger", () => {
   it("reconstructs the exact fresh-main canonical bytes", () => {
     const bytes = unshardContents(root, BOOK_GENERATION_PLAN);
-    expect(Buffer.byteLength(bytes)).toBe(193_709);
+    expect(Buffer.byteLength(bytes)).toBe(193_875);
     expect(createHash("sha256").update(bytes).digest("hex")).toBe(
-      "5b45a419106ec6b878cb8b667dae10ce72621921f5a05c3fef6bf861d93b5bfb",
+      "167243f5638eb0018c521d91661ce14e55bcbf2e2bc239705fe4ce0e8be91eff",
     );
   });
 
@@ -91,7 +91,7 @@ describe("the chapter-owned real book-generation ledger", () => {
     expect(readdirSync(join(directory, "glossaries.d"))).toHaveLength(23);
     expect(readdirSync(join(directory, "answer-keys.d"))).toHaveLength(23);
     expect(readdirSync(join(directory, "indexes.d"))).toHaveLength(23);
-    expect(readdirSync(join(directory, "targets.d"))).toHaveLength(1_119);
+    expect(readdirSync(join(directory, "targets.d"))).toHaveLength(1_120);
     expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(69);
   });
 
@@ -114,9 +114,9 @@ describe("the chapter-owned real book-generation ledger", () => {
     const identities = bookGenerationIdentitySets(
       readBookGenerationOwners(root).document,
     );
-    expect(identities.targets.size).toBe(1_119);
+    expect(identities.targets.size).toBe(1_120);
     expect(identities.handwritten.size).toBe(69);
-    expect(identities.combined.size).toBe(1_188);
+    expect(identities.combined.size).toBe(1_189);
     expect(identities.languages.size).toBe(23);
   });
 });
