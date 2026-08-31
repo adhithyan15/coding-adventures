@@ -4951,9 +4951,9 @@ the Rust, Python, and TypeScript surfaces together.
      gate-capacitance, flicker-noise, junction-potential, and forward-bias
      depletion, gate saturation-current, and gate-current temperature-exponent
      bandgap-voltage, noise-equation-level, channel-noise-coefficient, drain-
-     resistance, source-resistance, threshold-temperature-coefficient, and
-     alternative-threshold-temperature-coefficient parameters are completed in
-     the current slices.
+     resistance, source-resistance, threshold-temperature-coefficient,
+     alternative-threshold-temperature-coefficient, and nominal-temperature
+     parameters are completed in the current slices.
    - Live audit found the Rust element lowerer accepts fewer already-supported
      JFET aliases and model-card validations than the Python and TypeScript
      facades. Audit the remaining direct aliases and finite/range validation as
@@ -5036,14 +5036,19 @@ the Rust, Python, and TypeScript surfaces together.
      rejecting non-finite inputs before element lowering.
 
 17. Rust JFET nominal-temperature parser parity.
-   - Status: prioritized next after the alternative-threshold-temperature
-     slice.
+   - Status: completed by the JFET nominal-temperature slice.
    - The engine and Python/TypeScript facades lower finite, positive JFET
-     `TNOM` / `T_NOM` values into the nominal-temperature field; audit Rust
-     canonical precedence, Kelvin conversion, and validation as one coherent
-     slice.
+     `TNOM` / `T_NOM` values into the nominal-temperature field; Rust now uses
+     canonical `TNOM` precedence, converts Celsius to Kelvin, and rejects an
+     invalid selected value before element lowering.
 
-18. Grammar-backed parser and app facade.
+18. Rust JFET mobility-temperature-exponent parser parity.
+   - Status: prioritized next after the nominal-temperature slice.
+   - The engine and Python/TypeScript facades lower finite JFET `BEX` values
+     into the mobility-temperature-exponent field; audit the Rust element
+     lowerer and implement the smallest compatible correction.
+
+19. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -5051,7 +5056,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-19. Deck compatibility follow-up.
+20. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -5062,7 +5067,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-20. Production solver core follow-up.
+21. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
@@ -5073,14 +5078,14 @@ the Rust, Python, and TypeScript surfaces together.
      damping, device limiting, tolerance policy, and additional convergence
      diagnostics for difficult transistor decks.
 
-21. Device model depth.
+22. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-22. Analysis completion.
+23. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and
