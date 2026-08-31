@@ -4,6 +4,16 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Documented - first-run simple-todo usability audit (#13523)
+
+The List-first experience now has an explicit acceptance record spanning the
+real web/WASM presentation contract, both authored themes, compact and desktop
+layout constraints, startup/persistence behavior, and a freshly emitted WinUI
+application driven through UI Automation. The audit keeps the working simple
+task lifecycle distinct from seven focused usability findings (#13687, #13688,
+#13689, #13690, #13691, #13692, and #13695) rather than widening one review into
+an untestable redesign.
+
 ### Added - verified local-data operations and upgrade recovery (#13614)
 
 Every released desktop archive now carries offline backup, restore, upgrade,
