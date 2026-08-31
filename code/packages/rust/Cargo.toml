@@ -1141,6 +1141,7 @@ members = [
   "chief-of-staff-agent-stdio-host",
   "vault-pm-storage",
   "oauth",
+  "oauth-installed-app-host",
   "vault-pm-storage-storage-core",
   "vault-pm-storage-removable",
   "vault-pm-repository",

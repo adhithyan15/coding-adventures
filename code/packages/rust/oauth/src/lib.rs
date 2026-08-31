@@ -315,6 +315,21 @@ pub struct AuthorizationRequest {
 }
 
 impl AuthorizationRequest {
+    /// Return the provider identity bound to this authorization ceremony.
+    pub fn provider(&self) -> &ProviderId {
+        &self.transaction.provider
+    }
+
+    /// Return the exact trace shared by the browser and callback host.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.transaction.trace
+    }
+
+    /// Borrow the exact redirect URI registered in the transaction.
+    pub fn redirect_uri(&self) -> &str {
+        &self.transaction.redirect_uri
+    }
+
     /// Borrow the authorization URL before consuming this value into its parts.
     pub fn url(&self) -> &AuthorizationUrl {
         &self.url
