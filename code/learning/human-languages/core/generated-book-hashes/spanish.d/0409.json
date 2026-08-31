@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:031b1d703a09ae7c",
+  "lessonIds": [
+    "ES-C409-terminar",
+    "ES-C409-preparar",
+    "ES-C409-fin-de-semana",
+    "ES-C409-reservar",
+    "ES-C409-incluir",
+    "ES-C409-planning-recall-1",
+    "ES-C409-planning-recall-2"
+  ],
+  "tex": "spanish/book/chapters/ch409-terminar-preparar-fin-semana-reservar-incluir.tex"
+}
