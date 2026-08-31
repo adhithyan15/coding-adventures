@@ -1,5 +1,12 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — accept native integral index numbers (#13560)
+
+Indexed TaskApp events now accept both JSON integer values and mathematically
+integral floating-point values emitted by native Mosaic backends. Fractional,
+negative, non-numeric, and out-of-range values remain invalid instead of being
+silently truncated.
+
 ## [Unreleased] — prove TaskApp restart restoration (#13519)
 
 The XAML runtime acceptance now launches twice against the same native snapshot

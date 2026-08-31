@@ -1258,12 +1258,26 @@ fn index_payload(event: &Event, field: &'static str) -> Result<usize, TaskAppErr
     event
         .payload
         .get(field)
-        .and_then(Value::as_u64)
-        .and_then(|value| usize::try_from(value).ok())
+        .and_then(json_index)
         .ok_or_else(|| TaskAppError::InvalidPayload {
             event: event.name.clone(),
             field,
         })
+}
+
+fn json_index(value: &Value) -> Option<usize> {
+    if let Some(value) = value.as_u64() {
+        return usize::try_from(value).ok();
+    }
+
+    let value = value.as_f64()?;
+    let exclusive_upper_bound = 2.0_f64.powi(usize::BITS as i32);
+    if !value.is_finite() || value < 0.0 || value >= exclusive_upper_bound || value.fract() != 0.0 {
+        return None;
+    }
+
+    let index = value as usize;
+    (index as f64 == value).then_some(index)
 }
 
 fn engine_error(error: task_core::ops::OpError) -> TaskAppError {
@@ -1433,7 +1447,7 @@ mod tests {
         assert_eq!(added.props["task-rows"][0][1], "Ship native TaskApp");
         assert_eq!(added.props["task-rows"][0][2], "due 2026-01-09");
         let completed = runtime
-            .dispatch(event(4, "toggleTask", json!({"index":0})))
+            .dispatch(event(4, "toggleTask", json!({"index":0.0})))
             .unwrap();
         assert_eq!(completed.props["task-rows"][0][0], "✓");
         assert_eq!(completed.props["ring-percent"], "100%");
@@ -1442,9 +1456,33 @@ mod tests {
         // rendering of the progress ring would consume.
         assert_eq!(completed.props["ring-percent-value"], 100);
         let deleted = runtime
-            .dispatch(event(5, "deleteTask", json!({"index":0})))
+            .dispatch(event(5, "deleteTask", json!({"index":0.0})))
             .unwrap();
         assert_eq!(deleted.props["task-rows"], json!([]));
+    }
+
+    #[test]
+    fn index_payload_accepts_only_in_range_integral_json_numbers() {
+        assert_eq!(json_index(&json!(0)), Some(0));
+        assert_eq!(json_index(&json!(42.0)), Some(42));
+        assert_eq!(json_index(&json!(-0.0)), Some(0));
+        assert_eq!(json_index(&json!(0.5)), None);
+        assert_eq!(json_index(&json!(-1.0)), None);
+        assert_eq!(json_index(&json!(2.0_f64.powi(usize::BITS as i32))), None);
+        assert_eq!(json_index(&json!("0")), None);
+    }
+
+    #[test]
+    fn fractional_index_event_is_rejected_without_mutating_state() {
+        let mut app = TaskMosaicApp::default();
+        app.start(context()).unwrap();
+        let before = app.snapshot().unwrap();
+
+        assert!(matches!(
+            app.dispatch(event(1, "toggleTask", json!({"index":0.5}))),
+            Err(TaskAppError::InvalidPayload { field: "index", .. })
+        ));
+        assert_eq!(app.snapshot().unwrap(), before);
     }
 
     #[test]
