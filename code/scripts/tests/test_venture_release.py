@@ -15,14 +15,14 @@ SPEC.loader.exec_module(venture_release)
 
 
 class VentureReleaseTests(unittest.TestCase):
-    def test_repository_versions_form_the_0_9_0_release(self) -> None:
+    def test_repository_versions_form_the_0_9_1_release(self) -> None:
         self.assertEqual(
-            venture_release.validate_release(REPO_ROOT, "venture-v0.9.0"),
-            "0.9.0",
+            venture_release.validate_release(REPO_ROOT, "venture-v0.9.1"),
+            "0.9.1",
         )
 
     def test_rejects_a_mismatched_tag(self) -> None:
-        with self.assertRaisesRegex(ValueError, "release tag must be venture-v0.9.0"):
+        with self.assertRaisesRegex(ValueError, "release tag must be venture-v0.9.1"):
             venture_release.validate_release(REPO_ROOT, "venture-v0.8.0")
 
     def test_semver_parser_rejects_numeric_prerelease_leading_zeroes(self) -> None:
