@@ -26,6 +26,8 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
       - name: Test release contract
         run: python3 -m unittest discover -s code/scripts/tests -p test_venture_release.py
+      - name: Install Cairo
+        run: sudo apt-get update && sudo apt-get install -y libcairo2-dev
       - name: Test portable Venture packages
         working-directory: code/packages/rust
         run: cargo test -p venture-browser-core -p venture-browser-cairo -p venture-browser-qt
