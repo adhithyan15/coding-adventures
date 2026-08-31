@@ -296,6 +296,310 @@ fn build_decode_table(norm: &[i16], acc_log: u8) -> Vec<FseDe> {
     tbl
 }
 
+// ─── Forward bit-reader (table descriptions) ─────────────────────────────────
+//
+// ZStd contains TWO bitstream conventions, and mixing them up is a classic
+// source of "decodes our own output, rejects everyone else's" bugs:
+//
+//   * The *payload* bitstreams (sequences, Huffman literals, Huffman weights)
+//     are written BACKWARD and read from the end — that's `RevBitReader`.
+//   * The *table description* bitstreams (RFC 8878 §4.1.1, the FSE
+//     distribution header) are written FORWARD, low bit of byte 0 first,
+//     bytes in little-endian order — that's this reader.
+//
+// Concretely, if the first two description bytes are `0xA7 0x03`, the value
+// as a little-endian integer is `0x03A7 = 0b11_1010_0111`, and successive
+// reads peel bits off the BOTTOM: `read(4)` yields `0b0111 = 7`,
+// then `read(4)` yields `0b1010 = 10`, then `read(2)` yields `0b11 = 3`.
+//
+// The reader deliberately treats bytes past the end of `data` as zero rather
+// than failing on the spot. The reference implementation does the same (it
+// reads a fixed 4-byte window and only validates afterwards), because the
+// header parser legitimately *peeks* more bits than the final symbol needs
+// before deciding how many to consume. Over-reads are caught once, at the
+// end, by [`FwdBitReader::finish`].
+struct FwdBitReader<'a> {
+    data: &'a [u8],
+    /// Bit cursor: bit `n` of the stream is bit `n % 8` of byte `n / 8`.
+    bitpos: usize,
+}
+
+impl<'a> FwdBitReader<'a> {
+    fn new(data: &'a [u8]) -> Self {
+        FwdBitReader { data, bitpos: 0 }
+    }
+
+    /// Read the next `nb` bits (`nb <= 25`) without advancing the cursor.
+    ///
+    /// Gathers 5 bytes so that even a 7-bit misalignment plus a 25-bit field
+    /// (32 bits total) is covered by the assembled 40-bit window.
+    fn peek(&self, nb: u32) -> u32 {
+        debug_assert!(nb <= 25, "FwdBitReader::peek supports at most 25 bits");
+        if nb == 0 {
+            return 0;
+        }
+        let byte = self.bitpos >> 3;
+        let shift = (self.bitpos & 7) as u32;
+        let mut window: u64 = 0;
+        for i in 0..5usize {
+            let b = self.data.get(byte + i).copied().unwrap_or(0) as u64;
+            window |= b << (8 * i);
+        }
+        ((window >> shift) & ((1u64 << nb) - 1)) as u32
+    }
+
+    /// Advance the cursor by `nb` bits.
+    fn skip(&mut self, nb: u32) {
+        self.bitpos += nb as usize;
+    }
+
+    /// Peek-and-advance in one step.
+    fn read(&mut self, nb: u32) -> u32 {
+        let v = self.peek(nb);
+        self.skip(nb);
+        v
+    }
+
+    /// Finish parsing: return how many whole bytes the description occupied,
+    /// or an error if the parse ran past the end of the buffer.
+    ///
+    /// Rounding UP is correct and required: a description that ends
+    /// mid-byte still owns that whole byte on the wire — the next field
+    /// starts at the following byte boundary.
+    fn finish(self) -> Result<usize, String> {
+        let bytes = self.bitpos.div_ceil(8);
+        if bytes > self.data.len() {
+            return Err(format!(
+                "FSE table description overruns its buffer (needs {bytes} bytes, have {})",
+                self.data.len()
+            ));
+        }
+        Ok(bytes)
+    }
+}
+
+// ─── FSE table description (RFC 8878 §4.1.1) ─────────────────────────────────
+
+/// Absolute maximum accuracy_log this decoder will build a table for.
+///
+/// RFC 8878 caps the sequence tables individually (LL 9, ML 9, OF 8) and the
+/// Huffman-weight table at 6; this is the ceiling across all of them, used to
+/// bound the table allocation an attacker-controlled `accuracy_log` can
+/// request. The wire field is 4 bits plus the constant 5, so the raw range is
+/// 5..=20 — a 20-bit accuracy_log would mean a 1M-entry table built from a
+/// handful of bytes, which is exactly the kind of amplification a malformed
+/// `.apkg` would use.
+const MAX_ACC_LOG: u8 = 9;
+
+/// Decode an FSE table description into a normalised distribution.
+///
+/// Returns `(normalised_counts, accuracy_log, bytes_consumed)`.
+///
+/// # The encoding (and why it is shaped this way)
+///
+/// The description transmits one count per symbol, in symbol order, such that
+/// the counts sum to `2^accuracy_log`. The clever part is that it spends
+/// *fewer bits per count as it goes*: once the decoder has read some counts it
+/// knows how much probability mass is still unassigned, so the remaining
+/// counts cannot be arbitrarily large, so they need fewer bits. Both sides
+/// derive the field width from state they already share — nothing about the
+/// width is transmitted.
+///
+/// Mechanically, with `remaining` = mass still to assign (starting at
+/// `2^accuracy_log + 1`) and `threshold` = the largest power of two `<=
+/// remaining`:
+///
+/// - A count is drawn from `0 ..= remaining`, which needs `log2(threshold)+1`
+///   bits in general — but only the `max = (2*threshold-1) - remaining`
+///   smallest values need the full width. So the decoder first peeks
+///   `nbits-1` bits: if that short value is `< max` it IS the value, and only
+///   `nbits-1` bits are consumed. Otherwise the full `nbits` are consumed and
+///   `max` is subtracted back off if the value landed in the upper half.
+///   This is a self-synchronising variable-width integer, saving roughly one
+///   bit per symbol.
+/// - The transmitted value is one MORE than the count, so that value `0` can
+///   mean "probability less than one" — the RFC's `-1` count, a symbol that
+///   gets exactly one table slot.
+/// - A count of exactly `0` (symbol absent) is followed by a 2-bit repeat
+///   field, because absent symbols cluster: `0b11` means "three more absent
+///   symbols, and another repeat field follows", any smaller value means
+///   "that many more absent symbols, and we're done repeating". Encoding a
+///   run of 30 unused symbols therefore costs ~20 bits instead of ~180.
+///
+/// # Safety of the loop bound
+///
+/// Every iteration either advances `charnum` (bounded by `max_symbol`) or
+/// reduces `remaining` (bounded below by the `remaining <= 1` break), and the
+/// repeat-run loop advances `charnum` by 3 each time it spins. A malformed
+/// description therefore always terminates with an `Err`, never a hang.
+fn read_fse_table_description(
+    data: &[u8],
+    max_acc_log: u8,
+    max_symbol: usize,
+) -> Result<(Vec<i16>, u8, usize), String> {
+    debug_assert!(max_acc_log <= MAX_ACC_LOG);
+    debug_assert!(max_symbol < 256);
+
+    if data.is_empty() {
+        return Err("empty FSE table description".into());
+    }
+
+    let mut br = FwdBitReader::new(data);
+
+    // accuracy_log is stored biased by 5 (the RFC's FSE_MIN_TABLELOG).
+    let acc_log = br.read(4) as u8 + 5;
+    if acc_log > max_acc_log {
+        return Err(format!(
+            "FSE accuracy_log {acc_log} exceeds maximum {max_acc_log}"
+        ));
+    }
+
+    let table_size = 1i32 << acc_log;
+    let mut remaining = table_size + 1;
+    let mut threshold = table_size;
+    let mut nbits = acc_log as u32 + 1;
+
+    let mut norm: Vec<i16> = Vec::with_capacity(max_symbol + 1);
+    let mut previous0 = false;
+
+    while remaining > 1 && norm.len() <= max_symbol {
+        if previous0 {
+            // Run of absent symbols, coded as 2-bit chunks; 0b11 = "three
+            // more, and keep reading".
+            loop {
+                let flag = br.read(2) as usize;
+                let run = flag.min(3);
+                if norm.len() + run > max_symbol + 1 {
+                    return Err(format!(
+                        "FSE zero-run overruns symbol space (max symbol {max_symbol})"
+                    ));
+                }
+                norm.resize(norm.len() + run, 0);
+                if flag < 3 {
+                    break;
+                }
+            }
+            if norm.len() > max_symbol {
+                break;
+            }
+            // `previous0` is re-derived from the count read just below, so
+            // there is nothing to clear here.
+        }
+
+        // Variable-width count field — see the doc comment above.
+        let max = (2 * threshold - 1) - remaining;
+        let short = br.peek(nbits - 1) as i32;
+        let value = if short < max {
+            br.skip(nbits - 1);
+            short
+        } else {
+            let mut v = br.peek(nbits) as i32;
+            br.skip(nbits);
+            if v >= threshold {
+                v -= max;
+            }
+            v
+        };
+
+        // Transmitted value is count+1, so that 0 encodes the "-1" count.
+        let count = value - 1;
+        remaining -= count.unsigned_abs() as i32;
+        norm.push(count as i16);
+        previous0 = count == 0;
+
+        // Shrink the field width to match the mass that is still unassigned.
+        if remaining < threshold {
+            if remaining <= 1 {
+                break;
+            }
+            // nbits = floor(log2(remaining)) + 1
+            nbits = 32 - (remaining as u32).leading_zeros();
+            threshold = 1 << (nbits - 1);
+        }
+    }
+
+    if remaining != 1 {
+        return Err(format!(
+            "FSE table description probabilities sum to the wrong total \
+             (residual {remaining}, expected 1)"
+        ));
+    }
+    if norm.is_empty() {
+        return Err("FSE table description contains no symbols".into());
+    }
+    if norm.len() > max_symbol + 1 {
+        return Err(format!(
+            "FSE table description has {} symbols, maximum is {}",
+            norm.len(),
+            max_symbol + 1
+        ));
+    }
+
+    let consumed = br.finish()?;
+    Ok((norm, acc_log, consumed))
+}
+
+// ─── FSE decode table (owned) ────────────────────────────────────────────────
+
+/// A built FSE decode table plus the accuracy_log it was built at.
+///
+/// The accuracy_log has to travel WITH the table, because it is what the
+/// sequences bitstream reads to prime the initial state — and with
+/// `FSE_Compressed_Mode` and `Repeat_Mode` in play it is no longer the fixed
+/// `LL_ACC_LOG` / `ML_ACC_LOG` / `OF_ACC_LOG` constants but a per-block value
+/// (or a value inherited from an earlier block).
+#[derive(Clone)]
+struct FseTable {
+    de: Vec<FseDe>,
+    acc_log: u8,
+}
+
+impl FseTable {
+    /// Build a table from a normalised distribution, validating it first.
+    ///
+    /// The validation is not optional politeness: [`build_decode_table`]
+    /// assumes the counts sum to exactly `2^acc_log`, and silently produces a
+    /// table with duplicate/unwritten cells when they don't. Reading such a
+    /// table can then compute an out-of-range next state, so the check
+    /// belongs here, at the one place attacker-controlled distributions
+    /// enter.
+    fn from_norm(norm: &[i16], acc_log: u8) -> Result<Self, String> {
+        if acc_log > MAX_ACC_LOG {
+            return Err(format!("FSE accuracy_log {acc_log} exceeds {MAX_ACC_LOG}"));
+        }
+        if norm.is_empty() || norm.len() > 256 {
+            return Err(format!("FSE distribution has {} symbols", norm.len()));
+        }
+        let table_size = 1usize << acc_log;
+        let mut total = 0usize;
+        for (s, &c) in norm.iter().enumerate() {
+            if c < -1 {
+                return Err(format!("FSE symbol {s} has invalid count {c}"));
+            }
+            total += if c == -1 { 1 } else { c as usize };
+            if total > table_size {
+                return Err(format!(
+                    "FSE distribution sums past table size {table_size} by symbol {s}"
+                ));
+            }
+        }
+        if total != table_size {
+            return Err(format!(
+                "FSE distribution sums to {total}, expected table size {table_size}"
+            ));
+        }
+        Ok(FseTable { de: build_decode_table(norm, acc_log), acc_log })
+    }
+
+    /// The degenerate one-state table used by `RLE_Mode`: every state decodes
+    /// the same symbol and consumes no bits, so the whole stream costs zero
+    /// bits for this field. `accuracy_log` is 0, meaning the initial-state
+    /// read is also zero bits wide.
+    fn rle(sym: u8) -> Self {
+        FseTable { de: vec![FseDe { sym, nb: 0, base: 0 }], acc_log: 0 }
+    }
+}
+
 // ─── FSE encode symbol table entry ───────────────────────────────────────────
 
 /// Encode transform for one symbol.
@@ -515,6 +819,32 @@ struct RevBitReader<'a> {
     reg: u64,   // shift register, valid bits packed at the TOP (MSB side)
     bits: u8,   // how many valid bits are loaded (count from MSB)
     pos: usize, // index of the next byte to load (decrements toward 0)
+    /// How many payload bits are still UNREAD, as a *signed* count.
+    ///
+    /// This mirrors the `i64 offset` of RFC 8878's own reference "educational
+    /// decoder": it starts at the total number of payload bits in the stream
+    /// (everything below the sentinel), and every [`read_bits`] call
+    /// subtracts the bits it consumed — even when the register had already
+    /// run dry and those bits were zero-fill rather than real data.
+    ///
+    /// Going NEGATIVE is therefore the precise, checkable definition of "this
+    /// stream is exhausted", which two RFC 8878 constructs need:
+    ///
+    /// - the **2-state interleaved FSE stream** that carries Huffman weights
+    ///   (§4.2.1.1) has no symbol count on the wire at all; the decoder is
+    ///   supposed to keep alternating between its two states until the
+    ///   bitstream runs out, then emit one last symbol from the state whose
+    ///   turn it was. Without a bit budget there is no way to know when to
+    ///   stop, and a corrupt stream would spin forever.
+    /// - every other bitstream here (Huffman literal streams, the sequences
+    ///   bitstream) knows its symbol count up front, but a *conforming*
+    ///   stream must end EXACTLY — `remaining == 0` after the last symbol.
+    ///   The reference decoder enforces this via `BIT_endOfDStream`, and it
+    ///   is a genuinely load-bearing corruption check: a truncated or
+    ///   mis-parsed stream otherwise silently decodes zero-filled garbage.
+    ///
+    /// [`read_bits`]: RevBitReader::read_bits
+    remaining: i64,
 }
 
 impl<'a> RevBitReader<'a> {
@@ -551,6 +881,10 @@ impl<'a> RevBitReader<'a> {
             reg,
             bits: valid_bits,
             pos: data.len() - 1, // sentinel byte already consumed; load from here-1
+            // Total payload bits = every bit of every earlier byte, plus the
+            // bits below the sentinel in the last byte. The sentinel itself
+            // and the zero padding above it are NOT payload.
+            remaining: (data.len() as i64 - 1) * 8 + valid_bits as i64,
         };
 
         // Fill the register from earlier bytes.
@@ -586,10 +920,44 @@ impl<'a> RevBitReader<'a> {
         // Shift the register left to consume those bits.
         self.reg = if nb == 64 { 0 } else { self.reg << nb };
         self.bits = self.bits.saturating_sub(nb);
+        // Charge the bit budget even when the register had already run dry:
+        // an over-read is exactly what `remaining < 0` is meant to record.
+        self.remaining -= nb as i64;
         if self.bits < 24 {
             self.reload();
         }
         val
+    }
+
+    /// Look at the next `nb` bits WITHOUT consuming them.
+    ///
+    /// Huffman decoding needs this: a canonical Huffman code is decoded by
+    /// indexing a `2^max_bits`-entry table with the next `max_bits` bits and
+    /// then consuming only as many bits as the matched code actually uses
+    /// (RFC 8878 §4.2.1.3). Peeking more bits than remain is fine and
+    /// deliberate — the register's unloaded low bits are zero, which is the
+    /// same zero-fill the reference decoder performs past the stream start.
+    fn peek_bits(&self, nb: u8) -> u64 {
+        if nb == 0 {
+            0
+        } else {
+            self.reg >> (64 - nb)
+        }
+    }
+
+    /// Consume `nb` bits, discarding their value. Pairs with [`peek_bits`].
+    ///
+    /// [`peek_bits`]: RevBitReader::peek_bits
+    fn skip_bits(&mut self, nb: u8) {
+        let _ = self.read_bits(nb);
+    }
+
+    /// True once more bits have been requested than the stream actually
+    /// contained. See the [`remaining`] field's doc comment.
+    ///
+    /// [`remaining`]: RevBitReader::remaining
+    fn is_overrun(&self) -> bool {
+        self.remaining < 0
     }
 }
 
@@ -656,18 +1024,6 @@ fn fse_init_state(sym: u8, ee: &[FseEe], st: &[u16]) -> u32 {
     st[slot] as u32
 }
 
-/// Peek the symbol encoded at the current FSE decode state, WITHOUT
-/// consuming any bits.
-///
-/// The FSE state itself IS the decode-table index — `de[state]` is a bare
-/// table lookup that costs nothing. Only the subsequent state UPDATE
-/// ([`fse_update_state`]) reads bits. RFC 8878 §3.1.1.3.2.1.2 requires all
-/// three symbols (LL, ML, OF) to be peeked from their CURRENT states before
-/// any extra bits or state updates are read — see [`decompress_block`].
-fn fse_peek(state: u16, de: &[FseDe]) -> FseDe {
-    de[state as usize]
-}
-
 /// Consume `entry.nb` bits from the bitstream and compute the next FSE
 /// decode state from a previously peeked table entry.
 ///
@@ -681,7 +1037,10 @@ fn fse_peek(state: u16, de: &[FseDe]) -> FseDe {
 /// unconditionally consumes bits that were never written, corrupting the
 /// position of every read that follows. See lessons.md Lesson 96.
 fn fse_update_state(entry: FseDe, br: &mut RevBitReader) -> u16 {
-    entry.base + br.read_bits(entry.nb) as u16
+    // Wrapping, not checked: for a validated table `base + bits` is always
+    // inside the table, but a malformed one must produce an out-of-range
+    // state that [`fse_cell`] rejects — never a debug-mode overflow panic.
+    entry.base.wrapping_add(br.read_bits(entry.nb) as u16)
 }
 
 // ─── LL/ML/OF code number computation ────────────────────────────────────────
@@ -762,6 +1121,316 @@ fn tokens_to_seqs(tokens: &[lzss::Token]) -> (Vec<u8>, Vec<Seq>) {
     (lits, seqs)
 }
 
+// ─── Two-state interleaved FSE stream (Huffman weights) ──────────────────────
+
+/// Decode the 2-state interleaved FSE bitstream that carries Huffman weights
+/// (RFC 8878 §4.2.1.1, `FSE_decompress_usingDTable` in the reference).
+///
+/// # Why two states
+///
+/// A single FSE state has a serial dependency: you cannot compute symbol
+/// `n+1`'s table lookup until symbol `n`'s state update has finished. ZStd
+/// therefore runs TWO independent FSE states over ONE shared bitstream,
+/// alternating: state A decodes symbol 0, state B decodes symbol 1, state A
+/// decodes symbol 2, and so on. The two lookups in a pair are independent, so
+/// a real decoder overlaps them.
+///
+/// # Why the termination rule is what it is
+///
+/// Nothing on the wire says how many weights there are — the count is
+/// *implied* by where the bitstream runs out. The rule (verbatim from the
+/// RFC's reference decoder) is: keep alternating; the moment a state update
+/// reads past the start of the stream, stop, and emit ONE more symbol by
+/// peeking the other state's current cell without consuming anything. That
+/// trailing peek is not an off-by-one — it is how the final weight is
+/// transmitted for free, and dropping it silently truncates every Huffman
+/// table by one symbol.
+///
+/// `max_out` bounds the run so a corrupt table (e.g. one whose cells all read
+/// zero bits) cannot produce an unbounded stream of symbols.
+fn fse_decompress_interleaved2(
+    tbl: &FseTable,
+    src: &[u8],
+    max_out: usize,
+) -> Result<Vec<u8>, String> {
+    let mut br = RevBitReader::new(src)?;
+
+    // Both states are primed from the front of the (backward) stream.
+    let mut s1 = br.read_bits(tbl.acc_log) as usize;
+    let mut s2 = br.read_bits(tbl.acc_log) as usize;
+    if br.is_overrun() {
+        return Err("FSE weight stream too short to prime both states".into());
+    }
+
+    let cell = |state: usize| -> Result<FseDe, String> {
+        tbl.de
+            .get(state)
+            .copied()
+            .ok_or_else(|| format!("FSE state {state} out of range (table size {})", tbl.de.len()))
+    };
+
+    let mut out = Vec::new();
+    loop {
+        if out.len() + 2 > max_out {
+            return Err(format!("FSE weight stream exceeds {max_out} symbols"));
+        }
+
+        let e1 = cell(s1)?;
+        out.push(e1.sym);
+        s1 = e1.base as usize + br.read_bits(e1.nb) as usize;
+        if br.is_overrun() {
+            out.push(cell(s2)?.sym);
+            break;
+        }
+
+        let e2 = cell(s2)?;
+        out.push(e2.sym);
+        s2 = e2.base as usize + br.read_bits(e2.nb) as usize;
+        if br.is_overrun() {
+            out.push(cell(s1)?.sym);
+            break;
+        }
+    }
+
+    Ok(out)
+}
+
+// ─── Huffman table (RFC 8878 §4.2.1.1) ───────────────────────────────────────
+
+/// One cell of the flattened Huffman decode table.
+///
+/// The table is indexed by the next `max_bits` bits of the stream, so a code
+/// that is shorter than `max_bits` simply occupies several adjacent cells —
+/// every cell reachable by "this code, followed by any suffix". Decoding is
+/// then one array read plus a variable-width skip, with no bit-by-bit tree
+/// walk.
+#[derive(Clone, Copy, Default)]
+struct HuffEntry {
+    sym: u8,
+    /// Bits this code actually uses (`<= max_bits`); the rest of the peeked
+    /// window belongs to the following codes.
+    nb: u8,
+}
+
+/// A built Huffman decode table.
+struct HuffTable {
+    /// `2^max_bits` cells.
+    entries: Vec<HuffEntry>,
+    /// Length of the longest code = number of bits to peek per symbol.
+    max_bits: u8,
+}
+
+/// RFC 8878's ceiling on Huffman code length (`HUF_TABLELOG_MAX`).
+///
+/// Bounds the decode table at 4096 cells, and bounds any single weight.
+const HUF_MAX_BITS: u8 = 12;
+
+/// Parse a Huffman_Tree_Description, returning the table and the number of
+/// bytes it occupied.
+///
+/// # Weights, not code lengths
+///
+/// The description does not transmit code lengths directly; it transmits
+/// *weights*. A symbol with weight `w > 0` gets a code of length
+/// `max_bits + 1 - w`, so a bigger weight means a SHORTER code. The point of
+/// the indirection is that weights are small, dense, non-monotonic integers
+/// that compress well, whereas code lengths are dominated by a few large
+/// values.
+///
+/// The relation that makes it work: a code of length `L` occupies `2^-L` of
+/// the code space, so weight `w` occupies `2^(w-1)` units out of `2^max_bits`.
+/// Summing `2^(w-1)` over all symbols must therefore land exactly on
+/// `2^max_bits` for the code to be complete (Kraft equality).
+///
+/// # The free last weight
+///
+/// The LAST symbol's weight is never transmitted. The decoder sums what it
+/// received, rounds up to the next power of two to learn `max_bits`, and the
+/// shortfall `left = 2^max_bits - total` *is* the last symbol's contribution
+/// — so its weight is `log2(left) + 1`. This is only well-defined when `left`
+/// is itself a power of two, which is precisely the check that rejects a
+/// malformed description (an over-full or unfillable code space).
+fn read_huffman_table(data: &[u8]) -> Result<(HuffTable, usize), String> {
+    if data.is_empty() {
+        return Err("empty Huffman tree description".into());
+    }
+
+    let header = data[0];
+    let (mut weights, consumed) = if header >= 128 {
+        // ── Direct representation ────────────────────────────────────────
+        // Weights are stored raw, 4 bits each, two per byte, HIGH nibble
+        // first. Used when FSE coding the weights would not pay for its own
+        // table description (few symbols, or near-uniform weights).
+        let n = header as usize - 127;
+        let bytes = n.div_ceil(2);
+        if data.len() < 1 + bytes {
+            return Err(format!(
+                "truncated direct Huffman weights: need {} bytes, have {}",
+                1 + bytes,
+                data.len()
+            ));
+        }
+        let mut w = Vec::with_capacity(n);
+        for i in 0..n {
+            let b = data[1 + i / 2];
+            w.push(if i % 2 == 0 { b >> 4 } else { b & 0x0F });
+        }
+        (w, 1 + bytes)
+    } else {
+        // ── FSE-compressed representation ────────────────────────────────
+        // The header byte IS the compressed size, so a 1-byte header buys a
+        // 0..127-byte payload: an FSE table description followed by the
+        // 2-state interleaved weight stream.
+        let csize = header as usize;
+        if csize == 0 {
+            return Err("FSE-compressed Huffman weights have zero size".into());
+        }
+        if data.len() < 1 + csize {
+            return Err(format!(
+                "truncated FSE Huffman weights: need {} bytes, have {}",
+                1 + csize,
+                data.len()
+            ));
+        }
+        let body = &data[1..1 + csize];
+        // The weight alphabet is 0..=12, but the RFC builds the table with
+        // the generic FSE reader (max symbol 255, max accuracy_log 6).
+        let (norm, acc_log, hdr_len) = read_fse_table_description(body, 6, 255)?;
+        let tbl = FseTable::from_norm(&norm, acc_log)?;
+        if hdr_len >= body.len() {
+            return Err("FSE Huffman weights: table description leaves no payload".into());
+        }
+        // At most 255 weights: the 256th symbol's weight is always the
+        // deduced one.
+        let w = fse_decompress_interleaved2(&tbl, &body[hdr_len..], 255)?;
+        (w, 1 + csize)
+    };
+
+    if weights.is_empty() || weights.len() > 255 {
+        return Err(format!("Huffman description has {} weights", weights.len()));
+    }
+
+    // ── Kraft sum over the transmitted weights ───────────────────────────
+    let mut total: u32 = 0;
+    for (s, &w) in weights.iter().enumerate() {
+        if w > HUF_MAX_BITS {
+            return Err(format!(
+                "Huffman weight {w} for symbol {s} exceeds maximum {HUF_MAX_BITS}"
+            ));
+        }
+        if w > 0 {
+            total += 1 << (w - 1);
+        }
+    }
+    if total == 0 {
+        return Err("Huffman description assigns no code space".into());
+    }
+
+    // max_bits = floor(log2(total)) + 1: the smallest power of two strictly
+    // greater than `total`, expressed as an exponent.
+    let max_bits = (32 - total.leading_zeros()) as u8;
+    if max_bits > HUF_MAX_BITS {
+        return Err(format!(
+            "Huffman table log {max_bits} exceeds maximum {HUF_MAX_BITS}"
+        ));
+    }
+    let left = (1u32 << max_bits) - total;
+    if left == 0 || !left.is_power_of_two() {
+        return Err(format!(
+            "Huffman weights leave {left} units of code space, which is not a power of two \
+             (description is over- or under-full)"
+        ));
+    }
+    let last_weight = (32 - left.leading_zeros()) as u8; // log2(left) + 1
+    weights.push(last_weight);
+
+    if weights.len() > 256 {
+        return Err(format!("Huffman description has {} symbols", weights.len()));
+    }
+
+    // ── Lay out the flattened table ──────────────────────────────────────
+    //
+    // Canonical order in ZStd runs from the LONGEST codes to the shortest:
+    // rank 1 (weight 1, longest code) starts at index 0, then rank 2, and so
+    // on; within a rank, symbols keep their natural order. Each symbol of
+    // weight `w` claims `2^(w-1)` consecutive cells. Because the Kraft sum is
+    // exactly `2^max_bits`, the cells tile the table with no gaps and no
+    // overlap.
+    let mut rank_count = [0u32; HUF_MAX_BITS as usize + 1];
+    for &w in &weights {
+        rank_count[w as usize] += 1;
+    }
+    let mut rank_start = [0u32; HUF_MAX_BITS as usize + 1];
+    let mut next = 0u32;
+    for w in 1..=max_bits as usize {
+        rank_start[w] = next;
+        next += rank_count[w] << (w - 1);
+    }
+
+    let table_size = 1usize << max_bits;
+    let mut entries = vec![HuffEntry::default(); table_size];
+    for (sym, &w) in weights.iter().enumerate() {
+        if w == 0 {
+            continue; // symbol absent from the alphabet
+        }
+        let span = 1usize << (w - 1);
+        let start = rank_start[w as usize] as usize;
+        if start + span > table_size {
+            return Err("Huffman code assignment overflows its table".into());
+        }
+        let nb = max_bits + 1 - w;
+        for cell in &mut entries[start..start + span] {
+            *cell = HuffEntry { sym: sym as u8, nb };
+        }
+        rank_start[w as usize] += span as u32;
+    }
+
+    Ok((HuffTable { entries, max_bits }, consumed))
+}
+
+/// Decode exactly `n` symbols from one Huffman literal stream, appending them
+/// to `out`.
+///
+/// Literal streams are backward bitstreams like the sequences stream: the
+/// final byte carries a sentinel `1` bit marking the end of payload, and
+/// decoding walks from there toward byte 0.
+///
+/// The stream must end EXACTLY on the `n`-th symbol. That check is what
+/// distinguishes "decoded correctly" from "decoded plausible-looking garbage
+/// out of a truncated stream", because zero-fill past the start of a stream
+/// is indistinguishable from real data without it.
+fn huff_decode_stream(
+    tbl: &HuffTable,
+    src: &[u8],
+    n: usize,
+    out: &mut Vec<u8>,
+) -> Result<(), String> {
+    if n == 0 {
+        // A zero-length sub-stream still occupies a byte on the wire (its
+        // sentinel), but there is nothing to decode from it.
+        return Ok(());
+    }
+    let mut br = RevBitReader::new(src)?;
+    out.reserve(n);
+    for _ in 0..n {
+        // Index by the next `max_bits` bits, then consume only the matched
+        // code's own length. `peek_bits` masks to `max_bits`, so the index is
+        // in range by construction.
+        let idx = br.peek_bits(tbl.max_bits) as usize;
+        let entry = tbl.entries[idx];
+        br.skip_bits(entry.nb);
+        out.push(entry.sym);
+    }
+    if br.remaining != 0 {
+        return Err(format!(
+            "Huffman literal stream did not end exactly ({} bits {})",
+            br.remaining.abs(),
+            if br.remaining < 0 { "over-read" } else { "left unread" }
+        ));
+    }
+    Ok(())
+}
+
 // ─── Literals section encoding ────────────────────────────────────────────────
 //
 // ZStd literals can be Huffman-coded or raw. We use **Raw_Literals** (type=0),
@@ -806,63 +1475,261 @@ fn encode_literals_section(lits: &[u8]) -> Vec<u8> {
     out
 }
 
-/// Decode literals section, returning (literals, bytes_consumed).
-fn decode_literals_section(data: &[u8]) -> Result<(Vec<u8>, usize), String> {
+/// Read a little-endian integer from up to 5 leading bytes of `data`.
+///
+/// The compressed-literals headers are bit fields packed across 3-5 bytes
+/// with no byte alignment, so they are easiest to read as one little-endian
+/// integer and then shift/mask. Returns an error rather than reading short.
+fn le_uint(data: &[u8], nbytes: usize) -> Result<u64, String> {
+    if data.len() < nbytes {
+        return Err(format!(
+            "truncated literals header: need {nbytes} bytes, have {}",
+            data.len()
+        ));
+    }
+    let mut v = 0u64;
+    for (i, &b) in data[..nbytes].iter().enumerate() {
+        v |= (b as u64) << (8 * i);
+    }
+    Ok(v)
+}
+
+/// Decode a literals section, returning `(literals, bytes_consumed)`.
+///
+/// Handles all four `Literals_Block_Type`s of RFC 8878 §3.1.1.2:
+///
+/// | Type | Name       | Content                                            |
+/// |------|------------|----------------------------------------------------|
+/// | 0    | Raw        | literal bytes verbatim                             |
+/// | 1    | RLE        | one byte, repeated `Regenerated_Size` times        |
+/// | 2    | Compressed | Huffman tree description, then Huffman bitstream(s)|
+/// | 3    | Treeless   | Huffman bitstream(s), reusing the PREVIOUS tree    |
+///
+/// `huff` is the frame-scoped Huffman table slot: type 2 overwrites it, type
+/// 3 requires it to already hold a table. That statefulness is why real zstd
+/// output cannot be decoded block-by-block in isolation — a Treeless block is
+/// meaningless without the block that defined the tree.
+fn decode_literals_section(
+    data: &[u8],
+    huff: &mut Option<HuffTable>,
+) -> Result<(Vec<u8>, usize), String> {
     if data.is_empty() {
         return Err("empty literals section".into());
     }
 
     let b0 = data[0];
     let ltype = b0 & 0b11; // bottom 2 bits = Literals_Block_Type
+    let size_format = (b0 >> 2) & 0b11; // bits [3:2]
 
-    if ltype != 0 {
-        // Only Raw_Literals (type=0) is implemented in this crate.
-        // Huffman-coded literals (type=2,3) are not emitted by our encoder,
-        // so if we see them here it means the input came from another encoder.
-        return Err(format!("unsupported literals type {ltype} (only Raw=0 supported)"));
+    match ltype {
+        // ── Raw (0) and RLE (1) ──────────────────────────────────────────
+        //
+        // Both use the same size encoding; they differ only in whether the
+        // payload is `Regenerated_Size` bytes or a single byte to repeat.
+        //
+        //   0b00 or 0b10 → 1-byte header: size = b0[7:3]  (5 bits, 0..31)
+        //   0b01         → 2-byte LE header: size in bits [11:4]  (12 bits)
+        //   0b11         → 3-byte LE header: size in bits [19:4]  (20 bits)
+        0 | 1 => {
+            let (n, header_bytes) = match size_format {
+                0 | 2 => ((b0 >> 3) as usize, 1usize),
+                1 => {
+                    let v = le_uint(data, 2)?;
+                    (((v >> 4) & 0xFFF) as usize, 2usize)
+                }
+                _ => {
+                    let v = le_uint(data, 3)?;
+                    (((v >> 4) & 0xF_FFFF) as usize, 3usize)
+                }
+            };
+            if n > MAX_BLOCK_SIZE {
+                return Err(format!(
+                    "literals Regenerated_Size {n} exceeds block maximum {MAX_BLOCK_SIZE}"
+                ));
+            }
+
+            if ltype == 0 {
+                let end = header_bytes + n;
+                if end > data.len() {
+                    return Err(format!(
+                        "raw literals truncated: need {end}, have {}",
+                        data.len()
+                    ));
+                }
+                Ok((data[header_bytes..end].to_vec(), end))
+            } else {
+                // RLE: exactly one payload byte, whatever the size field says.
+                if data.len() < header_bytes + 1 {
+                    return Err("RLE literals missing their payload byte".into());
+                }
+                Ok((vec![data[header_bytes]; n], header_bytes + 1))
+            }
+        }
+
+        // ── Compressed (2) and Treeless (3) ──────────────────────────────
+        //
+        // Header carries BOTH a Regenerated_Size (decoded byte count) and a
+        // Compressed_Size (wire byte count of everything after the header),
+        // packed as bit fields after the 4 type/format bits:
+        //
+        //   format 00 → 3 bytes,  10+10 bits, ONE  bitstream
+        //   format 01 → 3 bytes,  10+10 bits, FOUR bitstreams
+        //   format 10 → 4 bytes,  14+14 bits, FOUR bitstreams
+        //   format 11 → 5 bytes,  18+18 bits, FOUR bitstreams
+        //
+        // Note that format 00 and 01 are byte-identical apart from the stream
+        // count — the only place in the format where the number of streams is
+        // signalled.
+        _ => {
+            let (regen, comp, header_bytes, four_streams) = match size_format {
+                0 | 1 => {
+                    let v = le_uint(data, 3)?;
+                    (
+                        ((v >> 4) & 0x3FF) as usize,
+                        ((v >> 14) & 0x3FF) as usize,
+                        3usize,
+                        size_format == 1,
+                    )
+                }
+                2 => {
+                    let v = le_uint(data, 4)?;
+                    (
+                        ((v >> 4) & 0x3FFF) as usize,
+                        ((v >> 18) & 0x3FFF) as usize,
+                        4usize,
+                        true,
+                    )
+                }
+                _ => {
+                    let v = le_uint(data, 5)?;
+                    (
+                        ((v >> 4) & 0x3_FFFF) as usize,
+                        ((v >> 22) & 0x3_FFFF) as usize,
+                        5usize,
+                        true,
+                    )
+                }
+            };
+
+            if regen > MAX_BLOCK_SIZE {
+                return Err(format!(
+                    "literals Regenerated_Size {regen} exceeds block maximum {MAX_BLOCK_SIZE}"
+                ));
+            }
+            let end = header_bytes + comp;
+            if end > data.len() {
+                return Err(format!(
+                    "compressed literals truncated: need {end}, have {}",
+                    data.len()
+                ));
+            }
+            let body = &data[header_bytes..end];
+
+            // Type 2 defines a new tree; type 3 (Treeless) reuses the last
+            // one defined in this frame.
+            let streams = if ltype == 2 {
+                let (table, used) = read_huffman_table(body)?;
+                *huff = Some(table);
+                &body[used..]
+            } else {
+                if huff.is_none() {
+                    return Err(
+                        "Treeless_Literals_Block with no preceding Huffman tree in this frame"
+                            .into(),
+                    );
+                }
+                body
+            };
+            let table = huff.as_ref().expect("Huffman table present by construction");
+
+            let mut lits = Vec::with_capacity(regen);
+            if !four_streams {
+                huff_decode_stream(table, streams, regen, &mut lits)?;
+            } else {
+                decode_four_huffman_streams(table, streams, regen, &mut lits)?;
+            }
+
+            if lits.len() != regen {
+                return Err(format!(
+                    "Huffman literals produced {} bytes, header promised {regen}",
+                    lits.len()
+                ));
+            }
+            Ok((lits, end))
+        }
+    }
+}
+
+/// Decode the 4-stream Huffman literals layout (RFC 8878 §3.1.1.2.2).
+///
+/// # Why four streams
+///
+/// Huffman decoding is inherently serial — you cannot start symbol `n+1`
+/// until symbol `n`'s length is known. ZStd therefore splits the literal run
+/// into four quarters and gives each its own independent bitstream, so a
+/// decoder can run four of these serial chains at once. The cost is a 6-byte
+/// **jump table** at the front: three little-endian `u16` sizes for streams
+/// 1-3. Stream 4's size is whatever is left over, which is why only three are
+/// transmitted.
+///
+/// The split is by OUTPUT bytes, not input bytes: streams 1-3 each regenerate
+/// `ceil(regen/4)` literals and stream 4 regenerates the remainder. A
+/// `Regenerated_Size` below 6 cannot be split this way and is rejected by the
+/// reference decoder, so it is rejected here too.
+fn decode_four_huffman_streams(
+    tbl: &HuffTable,
+    data: &[u8],
+    regen: usize,
+    out: &mut Vec<u8>,
+) -> Result<(), String> {
+    // 6-byte jump table + a minimum of one byte (the sentinel) per stream.
+    if data.len() < 10 {
+        return Err(format!(
+            "4-stream Huffman literals need at least 10 bytes, have {}",
+            data.len()
+        ));
+    }
+    if regen < 6 {
+        return Err(format!(
+            "4-stream Huffman literals cannot regenerate only {regen} bytes"
+        ));
     }
 
-    // Decode size_format from bits [3:2] of b0
-    let size_format = (b0 >> 2) & 0b11;
+    let s1 = u16::from_le_bytes([data[0], data[1]]) as usize;
+    let s2 = u16::from_le_bytes([data[2], data[3]]) as usize;
+    let s3 = u16::from_le_bytes([data[4], data[5]]) as usize;
+    let payload = &data[6..];
+    let used = s1
+        .checked_add(s2)
+        .and_then(|v| v.checked_add(s3))
+        .ok_or("4-stream Huffman jump table sizes overflow")?;
+    if used > payload.len() {
+        return Err(format!(
+            "4-stream Huffman jump table claims {used} bytes of a {}-byte payload",
+            payload.len()
+        ));
+    }
+    let s4 = payload.len() - used;
 
-    // Decode the literal length and header byte count from size_format.
-    //
-    // Raw_Literals size_format encoding (RFC 8878 §3.1.1.2.1):
-    //   0b00 or 0b10 → 1-byte header: size = b0[7:3] (5 bits, values 0..31)
-    //   0b01          → 2-byte LE header: size in bits [11:4] (12 bits, values 0..4095)
-    //   0b11          → 3-byte LE header: size in bits [19:4] (20 bits, values 0..1MB)
-    let (n, header_bytes) = match size_format {
-        0 | 2 => {
-            // 1-byte header: size in bits [7:3] (5 bits = values 0..31)
-            let n = (b0 >> 3) as usize;
-            (n, 1usize)
-        }
-        1 => {
-            // 2-byte header: 12-bit size
-            if data.len() < 2 {
-                return Err("truncated literals header (2-byte)".into());
-            }
-            let n = ((b0 >> 4) as usize) | ((data[1] as usize) << 4);
-            (n, 2usize)
-        }
-        3 => {
-            // 3-byte header: 20-bit size (enough for blocks up to 1 MB)
-            if data.len() < 3 {
-                return Err("truncated literals header (3-byte)".into());
-            }
-            let n = ((b0 >> 4) as usize) | ((data[1] as usize) << 4) | ((data[2] as usize) << 12);
-            (n, 3usize)
-        }
-        _ => unreachable!(), // size_format is 2 bits, all cases covered above
-    };
+    // Streams 1-3 regenerate a quarter each (rounded up); stream 4 takes the
+    // remainder, which the `regen >= 6` guard keeps non-negative.
+    let quarter = regen.div_ceil(4);
+    let last = regen
+        .checked_sub(3 * quarter)
+        .ok_or("4-stream Huffman literals: quarters exceed Regenerated_Size")?;
 
-    let start = header_bytes;
-    let end = start + n;
-    if end > data.len() {
-        return Err(format!("literals data truncated: need {end}, have {}", data.len()));
+    let mut start = 0usize;
+    for (i, (size, count)) in [(s1, quarter), (s2, quarter), (s3, quarter), (s4, last)]
+        .into_iter()
+        .enumerate()
+    {
+        let stream = &payload[start..start + size];
+        huff_decode_stream(tbl, stream, count, out)
+            .map_err(|e| format!("Huffman literal stream {}: {e}", i + 1))?;
+        start += size;
     }
 
-    Ok((data[start..end].to_vec(), end))
+    Ok(())
 }
 
 // ─── Sequences section encoding ───────────────────────────────────────────────
@@ -1115,6 +1982,173 @@ fn compress_block(block: &[u8]) -> Option<Vec<u8>> {
     }
 }
 
+// ─── Frame-scoped decoder state ──────────────────────────────────────────────
+
+/// Everything a Compressed block may inherit from earlier blocks in the SAME
+/// frame.
+///
+/// ZStd blocks are deliberately *not* independent. Three separate mechanisms
+/// carry state forward, and a decoder that resets any of them per block will
+/// mis-decode most real-world files:
+///
+/// 1. **Repeated offsets** (§3.1.1.3.2.1.1) — a 3-slot history of recently
+///    used match offsets, so a periodic file can say "same distance as last
+///    time" instead of respelling the offset.
+/// 2. **The Huffman table** (§3.1.1.2) — a `Treeless_Literals_Block` ships
+///    literal bitstreams with NO tree description, reusing the tree from an
+///    earlier block. Re-sending a 100+ byte tree for every 128 KB block is
+///    pure waste when the literal distribution barely moves.
+/// 3. **The three sequence FSE tables** (§3.1.1.3.2.1) — `Repeat_Mode` says
+///    "same distribution as last block", for the same reason.
+///
+/// Bundling them in one struct keeps "what survives a block boundary"
+/// answerable by reading one type, rather than by auditing a parameter list.
+struct FrameState {
+    /// Most recent match offset. Starts at 1 for a new frame.
+    rep1: u32,
+    /// Second most recent. Starts at 4.
+    rep2: u32,
+    /// Third most recent. Starts at 8.
+    rep3: u32,
+    /// Huffman table from the last `Compressed_Literals_Block`, if any.
+    huff: Option<HuffTable>,
+    /// Literal-length FSE table from the last Compressed block, if any.
+    ll_table: Option<FseTable>,
+    /// Offset FSE table from the last Compressed block, if any.
+    of_table: Option<FseTable>,
+    /// Match-length FSE table from the last Compressed block, if any.
+    ml_table: Option<FseTable>,
+}
+
+impl FrameState {
+    /// The state at the start of a frame. The 1/4/8 offset seeds are
+    /// mandated by RFC 8878 — they are not arbitrary, and a file may rely on
+    /// them from its very first sequence.
+    fn new() -> Self {
+        FrameState {
+            rep1: 1,
+            rep2: 4,
+            rep3: 8,
+            huff: None,
+            ll_table: None,
+            of_table: None,
+            ml_table: None,
+        }
+    }
+}
+
+// ─── Sequence FSE table selection (RFC 8878 §3.1.1.3.2.1) ────────────────────
+
+/// The per-field constants that differ between the three sequence FSE tables.
+struct SeqTableSpec {
+    /// Human-readable field name, used only in error messages.
+    name: &'static str,
+    /// Predefined distribution used by `Predefined_Mode`.
+    norm: &'static [i16],
+    /// Accuracy log of the predefined distribution.
+    acc_log: u8,
+    /// Largest legal symbol value for this field. Enforcing it at table-build
+    /// time is what keeps the decode loop's code-table indexing in range.
+    max_symbol: usize,
+    /// Largest accuracy log RFC 8878 allows a transmitted table to use.
+    max_acc_log: u8,
+}
+
+const LL_SPEC: SeqTableSpec = SeqTableSpec {
+    name: "literal-length",
+    norm: &LL_NORM,
+    acc_log: LL_ACC_LOG,
+    max_symbol: 35,
+    max_acc_log: 9,
+};
+const OF_SPEC: SeqTableSpec = SeqTableSpec {
+    name: "offset",
+    norm: &OF_NORM,
+    acc_log: OF_ACC_LOG,
+    max_symbol: 31,
+    max_acc_log: 8,
+};
+const ML_SPEC: SeqTableSpec = SeqTableSpec {
+    name: "match-length",
+    norm: &ML_NORM,
+    acc_log: ML_ACC_LOG,
+    max_symbol: 52,
+    max_acc_log: 9,
+};
+
+/// Resolve one field's `Symbol_Compression_Mode` into an actual decode table,
+/// advancing `pos` past whatever the mode consumed on the wire.
+///
+/// The four modes trade description size against adaptivity:
+///
+/// | Mode | Name            | Wire cost | Meaning                            |
+/// |------|-----------------|-----------|------------------------------------|
+/// | 0    | Predefined      | 0 bytes   | RFC's fixed distribution           |
+/// | 1    | RLE             | 1 byte    | one symbol, every time, 0 bits     |
+/// | 2    | FSE_Compressed  | variable  | distribution described in-band     |
+/// | 3    | Repeat          | 0 bytes   | reuse the previous block's table    |
+///
+/// A tiny block cannot afford mode 2 (the description would cost more than
+/// the sequences), which is exactly why modes 0/1/3 exist — and why a decoder
+/// that only implements mode 0 fails on small real-world files just as badly
+/// as on large ones.
+fn decode_seq_table(
+    data: &[u8],
+    pos: &mut usize,
+    mode: u8,
+    spec: &SeqTableSpec,
+    previous: Option<&FseTable>,
+) -> Result<FseTable, String> {
+    if *pos > data.len() {
+        return Err(format!("truncated block before {} table", spec.name));
+    }
+    match mode {
+        0 => FseTable::from_norm(spec.norm, spec.acc_log),
+        1 => {
+            let sym = *data
+                .get(*pos)
+                .ok_or_else(|| format!("truncated {} RLE symbol", spec.name))?;
+            *pos += 1;
+            if sym as usize > spec.max_symbol {
+                return Err(format!(
+                    "{} RLE symbol {sym} exceeds maximum {}",
+                    spec.name, spec.max_symbol
+                ));
+            }
+            Ok(FseTable::rle(sym))
+        }
+        2 => {
+            let (norm, acc_log, used) =
+                read_fse_table_description(&data[*pos..], spec.max_acc_log, spec.max_symbol)
+                    .map_err(|e| format!("{} table: {e}", spec.name))?;
+            *pos += used;
+            FseTable::from_norm(&norm, acc_log).map_err(|e| format!("{} table: {e}", spec.name))
+        }
+        _ => previous.cloned().ok_or_else(|| {
+            format!(
+                "{} table uses Repeat_Mode but no previous table exists in this frame",
+                spec.name
+            )
+        }),
+    }
+}
+
+/// Look up the decode-table cell an FSE state points at, with a bounds check.
+///
+/// A well-formed table can never produce an out-of-range state, but a
+/// malformed one can — and this decoder is meant to survive hostile input
+/// (`.apkg`/`.colpkg` archives), where an index panic is a denial of service
+/// rather than a debugging aid. On `wasm32-unknown-unknown`, built with
+/// `panic = "abort"`, it would be an unrecoverable trap.
+fn fse_cell(state: u16, tbl: &FseTable, name: &str) -> Result<FseDe, String> {
+    tbl.de.get(state as usize).copied().ok_or_else(|| {
+        format!(
+            "{name} FSE state {state} out of range (table size {})",
+            tbl.de.len()
+        )
+    })
+}
+
 /// Decompress one ZStd compressed block.
 ///
 /// Reads the literals section, sequences section, and applies the sequences
@@ -1152,12 +2186,14 @@ fn compress_block(block: &[u8]) -> Option<Vec<u8>> {
 fn decompress_block(
     data: &[u8],
     out: &mut Vec<u8>,
-    rep1: &mut u32,
-    rep2: &mut u32,
-    rep3: &mut u32,
+    frame: &mut FrameState,
 ) -> Result<(), String> {
+    // Split the frame state into independent field borrows so the rest of
+    // this function can hold several of them at once.
+    let FrameState { rep1, rep2, rep3, huff, ll_table, of_table, ml_table } = frame;
+
     // ── Literals section ─────────────────────────────────────────────────
-    let (lits, lit_consumed) = decode_literals_section(data)?;
+    let (lits, lit_consumed) = decode_literals_section(data, huff)?;
     let mut pos = lit_consumed;
 
     // ── Sequences count ──────────────────────────────────────────────────
@@ -1183,33 +2219,55 @@ fn decompress_block(
     let modes_byte = data[pos];
     pos += 1;
 
-    // Check that all modes are Predefined (0).
     let ll_mode = (modes_byte >> 6) & 3;
     let of_mode = (modes_byte >> 4) & 3;
     let ml_mode = (modes_byte >> 2) & 3;
-    if ll_mode != 0 || of_mode != 0 || ml_mode != 0 {
-        return Err(format!(
-            "unsupported FSE modes: LL={ll_mode} OF={of_mode} ML={ml_mode} (only Predefined=0 supported)"
-        ));
+    if modes_byte & 3 != 0 {
+        return Err("reserved bits set in Symbol_Compression_Modes".into());
     }
 
+    // ── Per-field FSE tables ─────────────────────────────────────────────
+    //
+    // The three table descriptions, when present, appear on the wire in the
+    // order Literals_Lengths, Offsets, Match_Lengths — note that this is NOT
+    // the order the mode bits are packed in (LL, OF, ML is the same, but the
+    // per-sequence decode order below is different again). Each is parsed
+    // in-place, advancing `pos`, so a Repeat/Predefined/RLE field contributes
+    // 0/0/1 bytes and an FSE_Compressed field contributes as many as its
+    // description needs.
+    let ll_t = decode_seq_table(data, &mut pos, ll_mode, &LL_SPEC, ll_table.as_ref())?;
+    let of_t = decode_seq_table(data, &mut pos, of_mode, &OF_SPEC, of_table.as_ref())?;
+    let ml_t = decode_seq_table(data, &mut pos, ml_mode, &ML_SPEC, ml_table.as_ref())?;
+
+    // Publish them for a later block's Repeat_Mode. Predefined and RLE
+    // tables count as "the previous table" too: RFC 8878's Repeat_Mode
+    // repeats whatever table the previous Compressed block ended up using,
+    // not specifically an FSE_Compressed one.
+    *ll_table = Some(ll_t.clone());
+    *of_table = Some(of_t.clone());
+    *ml_table = Some(ml_t.clone());
+
     // ── FSE bitstream ────────────────────────────────────────────────────
+    if pos > data.len() {
+        return Err("sequence table descriptions overran the block".into());
+    }
     let bitstream = &data[pos..];
     let mut br = RevBitReader::new(bitstream)?;
-
-    // Build decode tables from predefined distributions.
-    let dt_ll = build_decode_table(&LL_NORM, LL_ACC_LOG);
-    let dt_ml = build_decode_table(&ML_NORM, ML_ACC_LOG);
-    let dt_of = build_decode_table(&OF_NORM, OF_ACC_LOG);
 
     // Initialise FSE states from the bitstream. RFC 8878 §3.1.1.3.2.1.2: the
     // initial states are read in order LL, OF, ML (note: this is a
     // DIFFERENT order from the per-sequence symbol decode below, which is
     // OF, ML, LL for extras and LL, ML, OF for updates — the RFC is
     // asymmetric here; verified against the real `zstd` CLI, see Lesson 96).
-    let mut state_ll = br.read_bits(LL_ACC_LOG) as u16;
-    let mut state_of = br.read_bits(OF_ACC_LOG) as u16;
-    let mut state_ml = br.read_bits(ML_ACC_LOG) as u16;
+    // Each state is as wide as ITS OWN table's accuracy_log, which with
+    // FSE_Compressed/RLE modes is a per-block value rather than the fixed
+    // predefined constant.
+    let mut state_ll = br.read_bits(ll_t.acc_log) as u16;
+    let mut state_of = br.read_bits(of_t.acc_log) as u16;
+    let mut state_ml = br.read_bits(ml_t.acc_log) as u16;
+    if br.is_overrun() {
+        return Err("sequence bitstream too short to prime the FSE states".into());
+    }
 
     // Track position in the literals buffer.
     let mut lit_pos = 0usize;
@@ -1220,9 +2278,9 @@ fn decompress_block(
         // table lookup (table[state].sym) and consumes NO bits — the FSE
         // state itself already IS the decode-table index. Only the
         // subsequent state UPDATE (step 3 below) reads bits.
-        let ll_entry = fse_peek(state_ll, &dt_ll);
-        let ml_entry = fse_peek(state_ml, &dt_ml);
-        let of_entry = fse_peek(state_of, &dt_of);
+        let ll_entry = fse_cell(state_ll, &ll_t, LL_SPEC.name)?;
+        let ml_entry = fse_cell(state_ml, &ml_t, ML_SPEC.name)?;
+        let of_entry = fse_cell(state_of, &of_t, OF_SPEC.name)?;
         let ll_code = ll_entry.sym;
         let ml_code = ml_entry.sym;
         let of_code = of_entry.sym;
@@ -1232,6 +2290,13 @@ fn decompress_block(
         }
         if ml_code as usize >= ML_CODES.len() {
             return Err(format!("invalid ML code {ml_code}"));
+        }
+        // Offset codes are the exponent of a power of two, so anything above
+        // 31 would shift a u32 out of existence. `OF_SPEC.max_symbol` already
+        // rejects such tables at build time; this is the second line of
+        // defence at the point of use.
+        if of_code > 31 {
+            return Err(format!("invalid offset code {of_code}"));
         }
         let ll_info = LL_CODES[ll_code as usize];
         let ml_info = ML_CODES[ml_code as usize];
@@ -1360,6 +2425,19 @@ fn decompress_block(
             let byte = out[copy_start + j];
             out.push(byte);
         }
+    }
+
+    // The sequences bitstream must end EXACTLY where the last sequence left
+    // it — the reference decoder's `BIT_endOfDStream` check. Leftover bits
+    // mean the block claimed fewer sequences than it encoded; missing bits
+    // mean the decoder read zero-fill past the front of the stream and the
+    // sequences it produced are fiction.
+    if br.remaining != 0 {
+        return Err(format!(
+            "sequence bitstream did not end exactly ({} bits {})",
+            br.remaining.abs(),
+            if br.remaining < 0 { "over-read" } else { "left unread" }
+        ));
     }
 
     // Any remaining literals after the last sequence.
@@ -1546,14 +2624,10 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     // not just once per Raw/RLE block here.
     let mut out = Vec::new();
 
-    // Repeated_Offset registers (RFC 8878 §3.1.1.3.2.1.1): frame-scoped —
-    // default 1/4/8 "for the first block", then threaded unmodified through
-    // every Compressed block's sequences for the rest of the frame (Raw/RLE
-    // blocks don't touch them). See `decompress_block`'s doc comment and
-    // lessons.md Lesson 98.
-    let mut rep1: u32 = 1;
-    let mut rep2: u32 = 4;
-    let mut rep3: u32 = 8;
+    // Frame-scoped decoder state: repeated offsets, the Huffman table, and
+    // the three sequence FSE tables all survive block boundaries. See
+    // [`FrameState`] for why each of them has to.
+    let mut frame = FrameState::new();
 
     loop {
         if pos + 3 > data.len() {
@@ -1595,7 +2669,7 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
                 }
                 let block_data = &data[pos..pos + bsize];
                 pos += bsize;
-                decompress_block(block_data, &mut out, &mut rep1, &mut rep2, &mut rep3)?;
+                decompress_block(block_data, &mut out, &mut frame)?;
             }
             3 => {
                 return Err("reserved block type 3".into());
@@ -2068,7 +3142,7 @@ mod tests {
     fn test_literals_section_roundtrip_short() {
         let lits: Vec<u8> = (0..20).map(|i| i as u8).collect();
         let encoded = encode_literals_section(&lits);
-        let (decoded, _) = decode_literals_section(&encoded).unwrap();
+        let (decoded, _) = decode_literals_section(&encoded, &mut None).unwrap();
         assert_eq!(decoded, lits);
     }
 
@@ -2076,7 +3150,7 @@ mod tests {
     fn test_literals_section_roundtrip_medium() {
         let lits: Vec<u8> = (0..200).map(|i| (i % 256) as u8).collect();
         let encoded = encode_literals_section(&lits);
-        let (decoded, _) = decode_literals_section(&encoded).unwrap();
+        let (decoded, _) = decode_literals_section(&encoded, &mut None).unwrap();
         assert_eq!(decoded, lits);
     }
 
@@ -2084,7 +3158,7 @@ mod tests {
     fn test_literals_section_roundtrip_large() {
         let lits: Vec<u8> = (0..5000).map(|i| (i % 256) as u8).collect();
         let encoded = encode_literals_section(&lits);
-        let (decoded, _) = decode_literals_section(&encoded).unwrap();
+        let (decoded, _) = decode_literals_section(&encoded, &mut None).unwrap();
         assert_eq!(decoded, lits);
     }
 
@@ -2139,9 +3213,9 @@ mod tests {
     /// itself proves nothing about wire conformance — only the CLI interop
     /// tests below do that).
     fn decode_seqs_for_test(bitstream: &[u8], n_seqs: usize) -> Vec<Seq> {
-        let dt_ll = build_decode_table(&LL_NORM, LL_ACC_LOG);
-        let dt_ml = build_decode_table(&ML_NORM, ML_ACC_LOG);
-        let dt_of = build_decode_table(&OF_NORM, OF_ACC_LOG);
+        let dt_ll = FseTable::from_norm(&LL_NORM, LL_ACC_LOG).unwrap();
+        let dt_ml = FseTable::from_norm(&ML_NORM, ML_ACC_LOG).unwrap();
+        let dt_of = FseTable::from_norm(&OF_NORM, OF_ACC_LOG).unwrap();
 
         let mut br = RevBitReader::new(bitstream).unwrap();
         let mut state_ll = br.read_bits(LL_ACC_LOG) as u16;
@@ -2150,9 +3224,9 @@ mod tests {
 
         let mut out = Vec::with_capacity(n_seqs);
         for i in 0..n_seqs {
-            let ll_entry = fse_peek(state_ll, &dt_ll);
-            let ml_entry = fse_peek(state_ml, &dt_ml);
-            let of_entry = fse_peek(state_of, &dt_of);
+            let ll_entry = fse_cell(state_ll, &dt_ll, "LL").unwrap();
+            let ml_entry = fse_cell(state_ml, &dt_ml, "ML").unwrap();
+            let of_entry = fse_cell(state_of, &dt_of, "OF").unwrap();
 
             let ll_info = LL_CODES[ll_entry.sym as usize];
             let ml_info = ML_CODES[ml_entry.sym as usize];
