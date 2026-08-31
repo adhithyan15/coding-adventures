@@ -152,6 +152,26 @@ def _expand_affected_set_with_prereqs(
     return expanded
 
 
+def _compute_package_and_dependency_hashes(
+    packages: list[Package], graph: DirectedGraph
+) -> tuple[dict[str, str], dict[str, str]]:
+    """Compute complete package hashes before resolving dependency hashes.
+
+    Discovery order is lexical rather than topological, so a dependent can
+    precede one or more prerequisites. Dependency hashing fails closed when a
+    prerequisite digest is absent; completing the package map in a first pass
+    makes that validation independent of discovery order in every CLI flow.
+    """
+    package_hashes = {
+        package.name: hash_package(package) for package in packages
+    }
+    dependency_hashes = {
+        package.name: hash_deps(package.name, graph, package_hashes)
+        for package in packages
+    }
+    return package_hashes, dependency_hashes
+
+
 def _find_repo_root(start: Path | None = None) -> Path | None:
     """Walk up from ``start`` (or cwd) looking for a ``.git`` directory.
 
@@ -415,12 +435,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     # Step 6: Hash all packages (needed for cache fallback)
-    package_hashes: dict[str, str] = {}
-    deps_hashes: dict[str, str] = {}
-
-    for pkg in packages:
-        package_hashes[pkg.name] = hash_package(pkg)
-        deps_hashes[pkg.name] = hash_deps(pkg.name, graph, package_hashes)
+    package_hashes, deps_hashes = _compute_package_and_dependency_hashes(
+        packages, graph
+    )
 
     # Step 7: Load cache (fallback if git diff didn't work)
     cache_path = args.cache_file
@@ -629,13 +646,9 @@ def _run_from_plan(args: argparse.Namespace, root: Path) -> int:
     # hash, cache, execute, report.
 
     # Hash all packages
-    package_hashes: dict[str, str] = {}
-    deps_hashes: dict[str, str] = {}
-    from build_tool.hasher import hash_deps, hash_package
-
-    for pkg in packages:
-        package_hashes[pkg.name] = hash_package(pkg)
-        deps_hashes[pkg.name] = hash_deps(pkg.name, graph, package_hashes)
+    package_hashes, deps_hashes = _compute_package_and_dependency_hashes(
+        packages, graph
+    )
 
     # Load cache
     cache_path = args.cache_file

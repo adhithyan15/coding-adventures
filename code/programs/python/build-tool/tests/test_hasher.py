@@ -868,15 +868,27 @@ class TestHashDeps:
         packages = discover_packages(FIXTURES / "diamond")
         graph = resolve_dependencies(packages)
         pkg_hashes = {p.name: hash_package(p) for p in packages}
+        original_hashes = dict(pkg_hashes)
+        original_nodes = set(graph.nodes())
+        original_edges = set(graph.edges())
 
         # A depends on B, C, D transitively
         h_a = hash_deps("python/pkg-a", graph, pkg_hashes)
         # D has no deps
         h_d = hash_deps("python/pkg-d", graph, pkg_hashes)
 
+        assert h_a == _expected_framed_dependency_hash(
+            {
+                name: pkg_hashes[name]
+                for name in ("python/pkg-b", "python/pkg-c", "python/pkg-d")
+            }
+        )
         assert h_a != h_d
         # D should be hash of empty string (no deps)
         assert h_d == hashlib.sha256(b"").hexdigest()
+        assert pkg_hashes == original_hashes
+        assert set(graph.nodes()) == original_nodes
+        assert set(graph.edges()) == original_edges
 
     def test_no_deps_returns_empty_hash(self):
         g = DirectedGraph()
