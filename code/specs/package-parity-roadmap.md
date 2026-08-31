@@ -11967,6 +11967,39 @@ recognized manifest, dependency, lockfile, identity, owner gap, or exact
 overlap with the selected nine paths. The refreshed schema-3 inventory and
 607-owner/919-edge graph remain structurally unchanged.
 
+### Go source-hashing implementation and validation
+
+The Go engine now consumes the complete case-sensitive 26-component generated
+directory registry in both collection modes, recognizes the five exact BUILD
+fronts plus OCaml sources and metadata, retains only the package-root OPAM
+manifest implicitly, and rejects a linked or reparse-backed package root before
+walking. Nested POSIX links and Windows junctions are inert. Hashing v1 sorts
+portable UTF-8 repository-relative paths and frames every path and raw file
+body with unsigned 64-bit big-endian lengths before SHA-256. The front door
+propagates checked hash errors as exit `2` with one root-redacted, Go-quoted,
+control-safe package identity.
+
+The focused and complete Go suites pass, including real nonprivileged Windows
+junction coverage and the literal `BUILD` front. `go vet`, a trimpath build,
+and the hasher race test pass. Hasher coverage is 84.8% of statements, with
+`HashPackage` at 85.7%; the new run and diagnostic seams are fully executed.
+The neutral corpus validates 121 cases and 283 files, and 85 schema/runner tests
+plus 132 subtests pass. A forced Go dry plan evaluates 45 Starlark BUILD files,
+discovers 306 packages, keeps the five-entry orphan ledger valid, and reports
+all 306 as `WOULD-BUILD`. Govulncheck finds no called vulnerability, while
+dependency, BUILD, workflow, credential-pattern, generated-artifact,
+formatting, and diff gates are clean.
+
+The final schema-3 inventory remains 15 established lanes, 1,388 identities,
+4,602 slots, 1,427 all-reported identities, 731 Rust singletons, zero
+collisions, and zero unknown buckets. The 607-owner/919-edge graph is unique,
+dependency-complete, and acyclic with 195 merged, 411 pending, and exactly one
+in-progress owner. Three independent read-only reviews closed every reported
+root-junction, Windows-evidence, panic, one-file-oracle, front-door-test, and
+log-injection gap and found no remaining publication blocker. The remaining
+same-user check/open/check race is explicitly documented as a non-atomic TOCTOU
+boundary rather than overclaimed away.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
