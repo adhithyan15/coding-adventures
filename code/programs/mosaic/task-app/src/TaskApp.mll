@@ -454,8 +454,12 @@ layout TaskApp {
                   }
                 }
                 Else {
-                  If ( when: slot: new-task-name-focus ) {
-                    Box [ name-corrected-focus ] {
+                  // Keep the nested focus switch behind one stable flex item.
+                  // Flutter otherwise lowers the nested If/Else to a Column
+                  // containing an Expanded TextField, which is invalid under
+                  // the composer's unbounded vertical constraints.
+                  Column [ name-input-focus ] {
+                    If ( when: slot: new-task-name-focus ) {
                       HostInput [ name-input-corrected ] (
                         value : slot: new-task-name ,
                         placeholder : "What needs doing?" ,
@@ -465,16 +469,16 @@ layout TaskApp {
                         onCommit : emit: onAddTask
                       )
                     }
-                  }
-                  Else {
-                    HostInput [ name-input ] (
-                      value : slot: new-task-name ,
-                      placeholder : "What needs doing?" ,
-                      a11y-label : "Task name" ,
-                      auto-focus : true ,
-                      onChange : emit: onNewTaskNameChange ,
-                      onCommit : emit: onAddTask
-                    )
+                    Else {
+                      HostInput [ name-input ] (
+                        value : slot: new-task-name ,
+                        placeholder : "What needs doing?" ,
+                        a11y-label : "Task name" ,
+                        auto-focus : true ,
+                        onChange : emit: onNewTaskNameChange ,
+                        onCommit : emit: onAddTask
+                      )
+                    }
                   }
                 }
                 If ( when: slot: new-task-due-error ) {
@@ -490,8 +494,10 @@ layout TaskApp {
                   }
                 }
                 Else {
-                  If ( when: slot: new-task-due-focus ) {
-                    Box [ due-corrected-focus ] {
+                  // As above, the fixed-width wrapper is the composer's direct
+                  // Row child while the focus switch remains internal.
+                  Box [ due-input-focus ] {
+                    If ( when: slot: new-task-due-focus ) {
                       HostInput [ due-input-corrected ] (
                         value : slot: new-task-due ,
                         placeholder : "Due (optional)" ,
@@ -501,15 +507,15 @@ layout TaskApp {
                         onCommit : emit: onAddTask
                       )
                     }
-                  }
-                  Else {
-                    HostInput [ due-input ] (
-                      value : slot: new-task-due ,
-                      placeholder : "Due (optional)" ,
-                      a11y-label : "Due date (optional)" ,
-                      onChange : emit: onNewTaskDueChange ,
-                      onCommit : emit: onAddTask
-                    )
+                    Else {
+                      HostInput [ due-input ] (
+                        value : slot: new-task-due ,
+                        placeholder : "Due (optional)" ,
+                        a11y-label : "Due date (optional)" ,
+                        onChange : emit: onNewTaskDueChange ,
+                        onCommit : emit: onAddTask
+                      )
+                    }
                   }
                 }
                 HostButton [ add-btn ] ( label : "Add task" , onClick : emit: onAddTask )

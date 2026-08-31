@@ -70,15 +70,20 @@ links existing Mosaic work instead of duplicating it.
    lower authored `HostInput.a11y-label` values across every Mosaic backend.
    Discovered while validating #13689; adjacent semantic error text keeps the
    current correction accessible without overstating input-label coverage.
-21. **P1 — [#13690](https://github.com/adhithyan15/coding-adventures/issues/13690):**
+21. **P1 — [#13725](https://github.com/adhithyan15/coding-adventures/issues/13725):**
+   make Flutter preserve the correct flex context through nested Mosaic
+   `If`/`Else` branches. Discovered by the #13689 native widget lifecycle; the
+   TaskApp layout now avoids the invalid lowering, while the emitter needs a
+   focused regression so another app cannot recreate it.
+22. **P1 — [#13690](https://github.com/adhithyan15/coding-adventures/issues/13690):**
    expose durable-storage fallback, recovery, and backup information in the UI.
-22. **P1 — [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
+23. **P1 — [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
    replace blank startup with loading and failure states.
-23. **P1 — [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
+24. **P1 — [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
    make the List-first shell usable in compact windows.
-24. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
+25. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
    move the Vitest config to Vite's native ESM loading contract.
-25. **P2 — [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
+26. **P2 — [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
    roll the TaskApp changelog forward after each published product release and
    gate against already-published versions remaining marked Unreleased.
 

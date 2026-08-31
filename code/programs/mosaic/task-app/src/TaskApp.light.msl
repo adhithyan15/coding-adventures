@@ -885,7 +885,7 @@ style TaskApp {
     border-radius : 8 ;
   }
   part name-error-focus {
-    width : 100% ;
+    flex-grow : 1 ;
   }
   part name-input-corrected {
     width : 100% ;
@@ -896,8 +896,8 @@ style TaskApp {
     border-width : 0 ;
     border-radius : 8 ;
   }
-  part name-corrected-focus {
-    width : 100% ;
+  part name-input-focus {
+    flex-grow : 1 ;
   }
   part due-input {
     width : 150 ;
@@ -936,7 +936,7 @@ style TaskApp {
     width : 150 ;
     flex-shrink : 0 ;
   }
-  part due-corrected-focus {
+  part due-input-focus {
     width : 150 ;
     flex-shrink : 0 ;
   }
