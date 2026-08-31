@@ -158,6 +158,8 @@ metadata for interactive backends. Arbitrary JSON-valued actor properties are
 also preserved in scene metadata. DOM-referenced `details` element IDs survive
 the native pipeline; resolving host document contents remains an embedding-layer
 compatibility gap.
+Pinned actor-property fixtures and the native renderer exercise authored links,
+properties, and details references through PaintScene metadata without IR injection.
 Actor identifiers may contain multiple whitespace-separated words; the full ID
 is retained consistently across declarations, messages, notes, lifecycle events,
 and metadata commands.

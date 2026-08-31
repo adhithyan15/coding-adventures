@@ -279,6 +279,10 @@
       "source": "sequenceDiagram\nAlice->Bob: Hello Bob, how are you?\npar;Bob-->Alice: I am good thanks!\nand # comment\nBob-->Alice: I am good thanks!\nend"
     },
     {
+      "id": "actor-properties",
+      "source": "sequenceDiagram\nparticipant a as Alice\nparticipant b as Bob\nparticipant c as Charlie\nproperties a: {\"class\": \"internal-service-actor\", \"icon\": \"@clock\"}\nproperties b: {\"class\": \"external-service-actor\", \"icon\": \"@computer\"}"
+    },
+    {
       "id": "empty-message-label",
       "source": "sequenceDiagram\nAlice->>Bob:\nBob->>Alice:Got it!"
     }
