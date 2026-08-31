@@ -4950,8 +4950,8 @@ the Rust, Python, and TypeScript surfaces together.
    - Status: in progress; threshold, channel-length-modulation, and
      gate-capacitance, flicker-noise, junction-potential, and forward-bias
      depletion, gate saturation-current, and gate-current temperature-exponent
-     bandgap-voltage, and noise-equation-level parameters are completed in the
-     current slices.
+     bandgap-voltage, noise-equation-level, and channel-noise-coefficient
+     parameters are completed in the current slices.
    - Live audit found the Rust element lowerer accepts fewer already-supported
      JFET aliases and model-card validations than the Python and TypeScript
      facades. Audit the remaining direct aliases and finite/range validation as
@@ -5003,12 +5003,18 @@ the Rust, Python, and TypeScript surfaces together.
      field, while invalid inputs are rejected before element lowering.
 
 12. Rust JFET channel-noise-coefficient parser parity.
-   - Status: prioritized next after the noise-level slice.
-   - The engine and Python/TypeScript facades lower finite non-negative JFET
-     `GDSNOI` values into the channel-noise-coefficient field; audit the Rust
-     element lowerer and implement the smallest compatible correction.
+   - Status: completed by the JFET channel-noise slice.
+   - Finite, non-negative `GDSNOI` values now lower into the engine JFET
+     channel-noise-coefficient field, while invalid inputs are rejected before
+     element lowering.
 
-13. Grammar-backed parser and app facade.
+13. Rust JFET drain-resistance parser parity.
+   - Status: prioritized next after the channel-noise slice.
+   - The engine and Python/TypeScript facades lower finite non-negative JFET
+     `RD` values into the drain-resistance field; audit the Rust element lowerer
+     and implement the smallest compatible correction.
+
+14. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -5016,7 +5022,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-14. Deck compatibility follow-up.
+15. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -5027,7 +5033,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-15. Production solver core follow-up.
+16. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
@@ -5038,14 +5044,14 @@ the Rust, Python, and TypeScript surfaces together.
      damping, device limiting, tolerance policy, and additional convergence
      diagnostics for difficult transistor decks.
 
-16. Device model depth.
+17. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-17. Analysis completion.
+18. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and

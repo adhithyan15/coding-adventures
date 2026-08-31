@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower valid JFET `GDSNOI` channel-noise coefficients and reject invalid
+  inputs.
 - Lower valid JFET `NLEV` noise-equation levels and reject invalid inputs.
 - Lower valid JFET `EG` bandgap voltages and reject invalid inputs.
 - Lower finite JFET `XTI` gate-current temperature exponents.
