@@ -2602,6 +2602,17 @@ fn parse_element(
             {
                 return Err(NetlistParseError::new("JFET VTOTC must be finite"));
             }
+            let nominal_temperature = model
+                .params
+                .get("TNOM")
+                .or_else(|| model.params.get("T_NOM"));
+            if nominal_temperature
+                .is_some_and(|temperature| !temperature.is_finite() || *temperature <= 0.0)
+            {
+                return Err(NetlistParseError::new(
+                    "JFET TNOM must be finite and positive",
+                ));
+            }
             let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
@@ -2630,6 +2641,8 @@ fn parse_element(
                 threshold_voltage_temperature_coefficient;
             jfet.alternative_threshold_voltage_temperature_coefficient =
                 alternative_threshold_voltage_temperature_coefficient;
+            jfet.nominal_temperature_kelvin =
+                nominal_temperature.map(|temperature| *temperature + 273.15);
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
         }

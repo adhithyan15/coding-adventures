@@ -1884,6 +1884,35 @@ fn rejects_non_finite_jfet_alternative_threshold_voltage_temperature_coefficient
 }
 
 #[test]
+fn parses_jfet_nominal_temperature_with_canonical_precedence() {
+    let parsed =
+        parse_netlist(".model shaped NJF(TNOM=50 T_NOM=75)\nJ1 drain gate source shaped").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(
+        jfet.nominal_temperature_kelvin
+            .expect("TNOM must be present"),
+        323.15,
+    );
+}
+
+#[test]
+fn rejects_invalid_jfet_nominal_temperature() {
+    for nominal_temperature in ["0", "-0.1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model bad NJF(TNOM={nominal_temperature})\nJ1 drain gate source bad"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("JFET TNOM must be finite and positive"));
+    }
+}
+
+#[test]
 fn parses_jfet_b_as_doping_tail_parameter_not_beta_alias() {
     let parsed = parse_netlist(
         r#"

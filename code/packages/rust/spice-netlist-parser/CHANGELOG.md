@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower valid JFET `TNOM` / `T_NOM` nominal temperatures with canonical
+  precedence and Kelvin conversion.
 - Lower finite JFET `VTOTC` alternative threshold-voltage temperature
   coefficients.
 - Lower finite JFET `TCV` threshold-voltage temperature coefficients.
