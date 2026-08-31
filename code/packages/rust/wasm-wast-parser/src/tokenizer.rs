@@ -115,32 +115,13 @@ pub fn tokenize(src: &str) -> Result<Vec<SpannedToken>, WastParseError> {
         // as ordinary whitespace on the next iteration) -- the WASM spec
         // testsuite's comments.wast exercises all three explicitly.
         if c == ';' && bytes.get(i + 1) == Some(&b';') {
-            i += 2;
-            while i < bytes.len() && bytes[i] != b'\n' && bytes[i] != b'\r' {
-                i += 1;
-            }
+            i = skip_line_comment(bytes, i);
             continue;
         }
 
         // Nestable block comment: `(; ... ;)`.
         if c == '(' && bytes.get(i + 1) == Some(&b';') {
-            let start = i;
-            i += 2;
-            let mut depth = 1usize;
-            while depth > 0 {
-                if i + 1 >= bytes.len() {
-                    return Err(WastParseError::UnterminatedBlockComment { pos: start });
-                }
-                if bytes[i] == b'(' && bytes[i + 1] == b';' {
-                    depth += 1;
-                    i += 2;
-                } else if bytes[i] == b';' && bytes[i + 1] == b')' {
-                    depth -= 1;
-                    i += 2;
-                } else {
-                    i += 1;
-                }
-            }
+            i = skip_block_comment(bytes, i)?;
             continue;
         }
 
@@ -224,6 +205,46 @@ pub fn tokenize(src: &str) -> Result<Vec<SpannedToken>, WastParseError> {
     }
 
     Ok(out)
+}
+
+/// Skip a `;;`-to-end-of-line comment starting at `bytes[i] == b';'` (with
+/// `bytes[i + 1] == b';'` already confirmed by the caller). Returns the
+/// index of the line terminator (LF or CR), not consumed -- the caller's
+/// own whitespace handling picks it up on the next iteration. Shared by
+/// the main [`tokenize`] loop and [`scan_annotation_body`] (an annotation
+/// body's own comments must be skipped the same way, including a stray
+/// `)` inside one not affecting paren-depth tracking).
+fn skip_line_comment(bytes: &[u8], i: usize) -> usize {
+    let mut i = i + 2; // past `;;`
+    while i < bytes.len() && bytes[i] != b'\n' && bytes[i] != b'\r' {
+        i += 1;
+    }
+    i
+}
+
+/// Skip a nestable `(; ... ;)` block comment starting at `bytes[start] ==
+/// b'('` (with `bytes[start + 1] == b';'` already confirmed by the
+/// caller). Returns the index just past the closing `;)`. Shared by
+/// [`tokenize`] and [`scan_annotation_body`] -- see [`skip_line_comment`]'s
+/// doc comment for why both need the exact same skipping behavior.
+fn skip_block_comment(bytes: &[u8], start: usize) -> Result<usize, WastParseError> {
+    let mut i = start + 2; // past `(;`
+    let mut depth = 1usize;
+    while depth > 0 {
+        if i + 1 >= bytes.len() {
+            return Err(WastParseError::UnterminatedBlockComment { pos: start });
+        }
+        if bytes[i] == b'(' && bytes[i + 1] == b';' {
+            depth += 1;
+            i += 2;
+        } else if bytes[i] == b';' && bytes[i + 1] == b')' {
+            depth -= 1;
+            i += 2;
+        } else {
+            i += 1;
+        }
+    }
+    Ok(i)
 }
 
 /// Scan a `"..."` string literal starting at `bytes[start] == b'"'`, decoding
@@ -368,30 +389,11 @@ fn scan_annotation_body(bytes: &[u8], mut i: usize) -> Result<usize, WastParseEr
         }
         let b = bytes[i];
         if b == b';' && bytes.get(i + 1) == Some(&b';') {
-            i += 2;
-            while i < bytes.len() && bytes[i] != b'\n' && bytes[i] != b'\r' {
-                i += 1;
-            }
+            i = skip_line_comment(bytes, i);
             continue;
         }
         if b == b'(' && bytes.get(i + 1) == Some(&b';') {
-            let start = i;
-            i += 2;
-            let mut comment_depth = 1usize;
-            while comment_depth > 0 {
-                if i + 1 >= bytes.len() {
-                    return Err(WastParseError::UnterminatedBlockComment { pos: start });
-                }
-                if bytes[i] == b'(' && bytes[i + 1] == b';' {
-                    comment_depth += 1;
-                    i += 2;
-                } else if bytes[i] == b';' && bytes[i + 1] == b')' {
-                    comment_depth -= 1;
-                    i += 2;
-                } else {
-                    i += 1;
-                }
-            }
+            i = skip_block_comment(bytes, i)?;
             continue;
         }
         if b == b'"' {
