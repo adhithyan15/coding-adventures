@@ -72,13 +72,27 @@ files. The 26-name registry is case-sensitive: `_build`, `dist-newstyle`, and
 `build` are generated output, while `_Build`, `_build-example`,
 `Dist-newstyle`, `dist-newstyle-example`, and discovery-only `specs`
 directories remain eligible source. Top-down pruning avoids enumerating
-generated descendants, and the existing `lstat` traversal boundary does not
-follow directory links.
+generated descendants, and lexical `lstat` checks keep stable file and
+directory links outside collection and package hashing.
 
-The native hasher tests project both language-neutral source-collection
-fixtures through extension and declared-source modes and derive the exact
-registry from those fixtures, so the implementation cannot silently drift from
-the shared contract.
+The portable source registry includes OCaml `.ml`, `.mli`, and `.opam` inputs
+plus exact `.ocamlformat`, `dune`, and `dune-project` metadata. Declared source
+mode retains a root `.opam` manifest when its globs omit it; nested manifests
+still require an explicit match. It also retains only the five exact supported
+BUILD fronts rather than accepting arbitrary `BUILD_*` lookalikes. Package digests sort normalized
+repository-relative paths by UTF-8 bytes, then frame each path and exact raw
+file body with unsigned 64-bit big-endian lengths. Same-content renames thus
+change the cache identity without incorporating absolute checkout prefixes,
+host locale, decoded source text, or host metadata.
+
+The native hasher tests consume both complete language-neutral OCaml source-
+collection fixtures and derive the exact generated-directory registry from
+them. They also pin the hashing-v1 package oracle, raw and boundary bytes,
+UTF-8 ordering, exact BUILD and manifest scope, repository anchors, rename
+invalidation, and the stable no-follow boundary. Ruby does not expose the
+descriptor-relative primitives needed to claim an atomic adversarial TOCTOU
+boundary, so the implementation and documentation deliberately make no such
+claim.
 
 ## Extra CI Toolchain Declarations
 

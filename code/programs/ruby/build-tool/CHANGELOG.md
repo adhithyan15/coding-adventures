@@ -6,6 +6,15 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- Source hashing now recognizes OCaml `.ml`, `.mli`, and `.opam` inputs plus
+  exact `.ocamlformat`, `dune`, `dune-project`, and supported BUILD-front
+  metadata in extension and declared-source modes. Declared mode retains a
+  root `.opam` manifest independently of globs while nested manifests require
+  an explicit match. Package hashes use the
+  language-neutral hashing-v1 stream of sorted repository-relative UTF-8 paths
+  and exact raw bodies framed by unsigned 64-bit big-endian lengths, so
+  same-content renames invalidate the cache without leaking checkout paths or
+  host metadata.
 - Source hashing now prunes the complete exact, case-sensitive 26-component
   generated-directory registry before extension or declared-source matching.
   Both neutral source-collection fixtures cover the native Ruby projection,

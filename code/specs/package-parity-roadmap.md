@@ -11810,6 +11810,77 @@ repair uses the compiler-suggested `as_chunks::<2>().0.iter()` form; local Rust
 repair changes no production behavior, dependency, or authority, and
 replacement final-head checks remain required before auto-merge.
 
+### Post-PR #13599 refresh and Ruby portable source-hashing selection
+
+PR #13599 completed all 40 final-head checks acceptably with 33 successes and
+seven expected skips. Guarded squash auto-merge was enabled only after GitHub
+reported final head `9400e89524e22670b42fce6674df2e35522c6608`
+conflict-free and every check terminal and acceptable. GitHub merged it as
+`ab03d4eb1fa639e14f301be4da36dcea7f601df5` at 2026-08-31T07:30:51Z
+without a manual merge command. The Rust generated-directory hashing owner
+therefore advances from `pr-open` to `merged`, and the active PR is cleared.
+
+The regenerated exact-main schema-3 inventory remains collision-clean and
+identity-neutral at 15 established lanes, 1,388 implementation identities,
+4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934,
+170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero
+collisions, and zero unknown buckets. No package root, BUILD front, recognized
+manifest, dependency, lockfile, or identity changed since the preceding
+inventory revision, and no newly eligible unowned gap appeared. The prospective
+`forme-cli` root in live PR #13455 remains owned by
+`forme-portable-core-family-classification`. The complete 606-owner/917-edge
+graph remains unique, dependency-complete, and acyclic.
+
+The dependency/leverage pass selects
+`build-tool-ruby-portable-source-hashing-conformance` on branch
+`codex/build-tool-ruby-portable-source-hashing-conformance`. Ruby and Rust each
+have two direct and three total unfinished descendants, but Ruby is the smaller
+truthful tranche because production already passes declared Starlark sources
+into hashing. Rust still needs extra discovery/runtime metadata wiring before
+both source modes are reachable in production. All live PRs have zero exact
+overlap with the seven expected Ruby hasher, test, documentation, state,
+roadmap, and root-changelog paths; the target local branch, remote branch, and
+prior PR were absent before the clean branch was created from exact main.
+Reconciliation plus selection yields 194 merged, 411 pending, and exactly this
+owner in progress.
+
+The Ruby implementation adds OCaml `.ml`, `.mli`, and `.opam` inputs plus
+exact `.ocamlformat`, `dune`, `dune-project`, and five supported BUILD fronts
+to both source modes. It consumes both complete neutral OCaml source-collection
+fixtures, preserves the exact 26-component generated-directory registry and
+near names, and rejects arbitrary `BUILD_*` lookalikes. Declared mode retains
+root `.opam` metadata independently of globs while nested manifests require an
+explicit match. Package hashing now uses hashing v1: normalized repository-relative
+UTF-8 paths sort by bytes, and each path and exact raw file body is framed by an
+unsigned 64-bit big-endian length. Tests pin the neutral package-digest oracle,
+same-content renames, NUL and malformed-text content bytes, CRLF, UTF-8 paths,
+empty and 8 KiB boundaries, repository anchors, and stable no-follow checks.
+The Ruby runtime does not expose descriptor-relative no-follow primitives, so
+the tranche explicitly does not claim an atomic adversarial TOCTOU boundary.
+
+The complete Ruby package passes 364 tests and 872 assertions with four
+expected platform skips; SimpleCov reports 91.13% line and 75.80% branch
+coverage. Ruby syntax and Standard style are clean, and bundle-audit reports
+no vulnerabilities. The literal BUILD front passes after bundle installation.
+The neutral corpus validates all 121 cases and 283 files; 85 conformance tests
+plus 132 subtests pass, and the Python reference independently passes four
+hashing-v1 oracle variants. A real forced Ruby dry plan evaluates 45 Starlark
+BUILD files, discovers 305 Ruby packages, and reports all 305 `WOULD-BUILD`.
+The schema-3 parity report remains unchanged and collision-free, and the
+606-owner/917-edge graph remains unique, dependency-complete, and acyclic. The
+seven-path diff has no dependency, lockfile, BUILD, workflow, generated-
+artifact, or credential-pattern change and is diff-check clean.
+
+Independent read-only correctness review found and repaired two bounded issues
+before publication. Extension mode had incorrectly root-scoped `.opam` even
+though it is an OCaml source extension, and unconditional backslash replacement
+could alias a legal POSIX filename to a nested portable path. Extension mode
+now includes nested `.opam` sources, while only declared-mode unconditional
+manifest retention is root-scoped; path normalization translates only the host
+separator and rejects a literal POSIX backslash. Direct regressions cover both
+boundaries. The reviewer also reproduced stable NTFS-junction pruning on Ruby
+3.4.9 and confirmed that the documentation makes no atomic TOCTOU claim.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
