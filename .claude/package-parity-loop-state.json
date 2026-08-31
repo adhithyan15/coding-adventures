@@ -11,14 +11,21 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 13574,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13574",
+    "branch": "codex/build-tool-python-portable-dependency-hashing-conformance",
+    "implementation_revision": "a4b4e3045b2841f0adc1b6057ff886a34b7841af",
+    "status": "checks-pending",
+    "opened_at": "2026-08-31T01:50:14Z"
+  },
   "last_ci_action": {
-    "observed_at": "2026-08-31T01:17:28Z",
-    "pr_number": 13569,
+    "observed_at": "2026-08-31T01:50:18Z",
+    "pr_number": 13574,
     "run_id": null,
     "attempt": null,
-    "status": "merged",
-    "notes": "All 41 final-head checks were terminal and acceptable: 34 succeeded, six were expected skips, and one was neutral. GitHub reported final head eb3562b7fcbc065087e589b06960e16bf04f9b75 clean and mergeable before guarded squash auto-merge completed as 17efb090089afcb51c926d0fa549c8da556b8e08; no manual merge command was used."
+    "status": "checks-pending",
+    "notes": "Opened ready-for-review PR #13574 from clean validated head 204de42860615f168a4da7c46fea3a53ed79deec. GitHub reports it non-draft and mergeable, with required checks queued or in progress; auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists."
   },
   "last_inventory": {
     "revision": "024bac642e04eab0c00395aa7a009b85eef452bb",
@@ -751,10 +758,13 @@
     {
       "id": "build-tool-python-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Python build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-python-portable-source-hashing-conformance"],
       "branch": "codex/build-tool-python-portable-dependency-hashing-conformance",
-      "pr_number": null,
+      "pr_number": 13574,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13574",
+      "opened_at": "2026-08-31T01:50:14Z",
+      "opened_revision": "204de42860615f168a4da7c46fea3a53ed79deec",
       "selection_revision": "17efb090089afcb51c926d0fa549c8da556b8e08",
       "implementation_revision": "a4b4e3045b2841f0adc1b6057ff886a34b7841af",
       "rebase_revision": "024bac642e04eab0c00395aa7a009b85eef452bb",
@@ -763,6 +773,7 @@
       "validation_notes": "Tests-first execution failed at collection because the new combined-digest helper did not exist. Independent review then reproduced a real dependent-before-prerequisite failure in both one-pass CLI flows; the two-pass regression failed before the shared helper repaired both normal and plan-file execution paths. The focused hasher/CLI suite now passes 72 tests with four expected Windows/POSIX platform skips. The complete literal generic/Windows BUILD recipe passes 492 tests with four skips at 90.84% total coverage and 89% hasher coverage on Python 3.13.14; BUILD and BUILD_windows are byte-identical. Hasher source/tests pass Ruff, direct hasher MyPy, compileall, and Bandit; package-wide CLI Ruff/MyPy retain only inherited baseline findings outside the changed helper. The neutral schema suite passes 22 tests, the runner passes 63 tests, and validate-corpus accepts 121 cases and 283 files across 16 implementations, 15 established lanes, and 12 front doors. The Go reference passes module verification, all package tests, vet, and trimpath build; a freshly compiled binary evaluates 45 Starlark BUILD files, validates five reviewed orphan exemptions, forces all 495 Python packages, and selects exactly one affected package for the branch diff. The Python build-tool itself also hashes and plans all 495 Python packages without a missing-digest failure. Capability, Haskell, OCaml-lock, broker, backend-parity, and package-report suites pass 118 tests with 12 expected skips. Isolated sdist/wheel builds, uv dependency compatibility, and pip-audit pass. The schema-3 inventory remains 15 lanes, 1,388 identities, 4,602 slots, 1,427 all-reported identities, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets; the 605-owner/916-edge graph is unique, dependency-complete, and acyclic.",
       "security_notes": "The implementation is pure SHA-256 framing over caller-supplied graph identities and digest strings. It adds no filesystem, process, Git, environment, clock, network, credential, cache-format, or dependency authority. Required dependency digests must be canonical lowercase 64-character hex, are decoded to exactly 32 bytes, and fail closed when missing or malformed without echoing digest content. The caller-owned graph and digest map are not mutated. Changed-source Bandit is clean, pip-audit finds no known third-party vulnerability while correctly skipping the two editable local packages absent from PyPI, and uv reports a compatible environment.",
       "review_notes": "Two independent reviewers found the same production compatibility defect after the first exact-oracle implementation: both normal and plan-file CLI flows computed dependency hashes before the complete package-hash map existed, so lexical discovery order could place a dependent before its prerequisites and trigger the new fail-closed validation. A tests-first diamond regression captured the exact failure before a shared two-pass helper repaired both flows. Review also requested exact transitive diamond framing and graph/map immutability evidence; the focused suite now proves both. Both reviewers clear the repaired exact code, fixture coverage, caller immutability, authority boundary, nine-path scope, inventory, and documentation. The conflict-free rebase onto 024bac642e04eab0c00395aa7a009b85eef452bb has zero upstream overlap and all post-rebase checks remain acceptable.",
+      "publication_notes": "Opened ready-for-review PR #13574 from clean validated head 204de42860615f168a4da7c46fea3a53ed79deec after a normal first push from exact origin/main 024bac642e04eab0c00395aa7a009b85eef452bb. Immediately before publication, the target remote branch and prior PR were absent, the exact nine-path diff was clean, five live open PRs had zero exact overlap, dependency/BUILD/manifest/package-root changes were zero, and secret-pattern scanning was clean. GitHub reports the PR non-draft and mergeable with required checks queued or in progress, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists.",
       "notes": "Discovered by the independent review of the Python portable source-hashing tranche. Python still concatenates transitive dependency digest hex strings without framing their sorted package identities or decoding the 32-byte digests, while hashing v1 requires package-name and raw-digest frames. Add a direct language-neutral hashing-cache oracle regression and repair dependency plus combined cache digests in a separate coherent tranche; do not overclaim complete hashing-v1 coverage from the source-only owner."
     },
     {
