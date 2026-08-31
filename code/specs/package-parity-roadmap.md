@@ -11726,6 +11726,45 @@ the PR non-draft and mergeable with required CI and CodeQL checks queued or in
 progress, so auto-merge remains disabled until every final-head check is
 terminal and acceptable and no merge conflict exists.
 
+### Post-PR #13592 refresh and Rust generated-directory hashing selection
+
+PR #13592 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral result. Guarded squash auto-merge was enabled
+only after GitHub reported final head
+`4e0ba42f011f1612dcc38e2633f39b508eb6b8e4` clean and mergeable, and GitHub
+merged it as `d75229daa921a7cf281b76d01ef10f5be2ff8c9d` at
+2026-08-31T05:57:18Z without a manual merge command. The Ruby generated-
+directory hashing owner therefore advances to `merged` and the active PR is
+cleared.
+
+Exact `origin/main` advanced through an existing Mosaic TaskApp lockfile and
+Punjabi curriculum/data work to
+`acef52d0e1d82d0c4432fcab8d077bfcb08f73e3`. The regenerated schema-3 inventory
+remains collision-clean and identity-neutral at 15 established lanes, 1,388
+implementation identities, 4,602 slots, 1,427 all-reported identities, bands
+175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml
+packages, zero collisions, and zero unknown buckets. No package root, BUILD
+front, recognized manifest, identity, or eligible unowned gap was introduced.
+The complete 606-owner/917-edge graph remains unique, dependency-complete, and
+acyclic.
+
+The dependency/leverage pass selects
+`build-tool-rust-generated-directory-hashing-exclusion` on branch
+`codex/build-tool-rust-generated-directory-hashing-exclusion`. Both
+prerequisites are merged. This is the final standalone exact generated-
+directory pruning leaf and has four unfinished descendants: Rust portable
+source and dependency hashing plus both hashing aggregates. It therefore
+outranks ready portable-source owners with three descendants and the broader
+from-scratch Lua hashing/cache owner. The bounded tranche reuses the neutral
+26-component contract in both Rust collectors, preserves case and near names,
+and closes directory-link and Windows reparse traversal without changing
+Cargo metadata, lockfiles, dependencies, BUILD fronts, manifests, or execution
+authority. Seven live PRs have zero exact overlap with the expected six Rust
+hasher, package-documentation, state, roadmap, and root-changelog paths; the
+target local branch, remote branch, and prior PR were absent before the fresh
+clean branch was created from exact main. Reconciliation plus selection leaves
+193 merged, 412 pending, and exactly one `in-progress` owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

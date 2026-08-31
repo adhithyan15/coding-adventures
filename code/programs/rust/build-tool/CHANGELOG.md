@@ -4,6 +4,16 @@ All notable changes to the Rust build tool will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.10] - 2026-08-30
+
+### Fixed
+
+- Exclude the language-neutral source-collection contract's exact 26 generated,
+  dependency, VCS, cache, and temporary directory components from extension
+  and declared-source hashing before matching files. Preserve case variants
+  and near names, and do not traverse POSIX directory links or Windows
+  junction/reparse points.
+
 ## [0.2.9] - 2026-08-30
 
 ### Added
