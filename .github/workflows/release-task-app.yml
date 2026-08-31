@@ -569,6 +569,7 @@ jobs:
               -r win-x64 `
               -p:Platform=x64 `
               -p:SelfContained=true `
+              -p:AssemblyName=Trestle `
               -p:Product=Trestle `
               "-p:Version=$($env:RELEASE_VERSION)" `
               "-p:AssemblyVersion=$coreVersion" `
@@ -582,15 +583,9 @@ jobs:
             Pop-Location
           }
 
-          $taskAppExecutable = Join-Path $publish 'TaskApp.exe'
           $trestleExecutable = Join-Path $publish 'Trestle.exe'
-          if (!(Test-Path $taskAppExecutable)) { throw 'WinUI publish did not produce TaskApp.exe' }
-          Copy-Item $taskAppExecutable $trestleExecutable
-          foreach ($suffix in @('.deps.json', '.runtimeconfig.json')) {
-            $taskAppMetadata = Join-Path $publish "TaskApp$suffix"
-            if (Test-Path $taskAppMetadata) {
-              Copy-Item $taskAppMetadata (Join-Path $publish "Trestle$suffix")
-            }
+          if (!(Test-Path $trestleExecutable)) {
+            throw 'WinUI publish did not produce the build-time Trestle executable identity'
           }
           Remove-Item $taskAppExecutable
           Copy-Item $expected.Path (Join-Path $publish 'mosaic_app.dll') -Force
