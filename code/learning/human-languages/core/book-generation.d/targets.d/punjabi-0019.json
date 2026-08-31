@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 19,
+  "output": "punjabi/book/chapters/ch19-form-residence-entry.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

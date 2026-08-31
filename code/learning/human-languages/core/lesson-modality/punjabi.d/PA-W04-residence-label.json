@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W04-residence-label",
+    "language": "punjabi",
+    "chapter": 18,
+    "sequence": 1150,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3e03390882dcc1b3",
+    "detachableSegments": [
+      "Script — one label"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "PA-PATH-020",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "PA-W04-ra",
+    "PA-W04-independent-i",
+    "PA-W04-residence-label",
+    "PA-W04-dda",
+    "PA-W04-village",
+    "PA-W04-city",
+    "PA-R18-wellbeing-r4",
+    "PA-W04-residence-select",
+    "PA-W04-residence-supported",
+    "PA-W04-residence-spacing",
+    "PA-W04-residence-delayed",
+    "PA-W04-residence-repair",
+    "PA-W04-residence-no-model"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-025-A1-RESIDENCE-FIELD"
+  ],
+  "after": []
+}

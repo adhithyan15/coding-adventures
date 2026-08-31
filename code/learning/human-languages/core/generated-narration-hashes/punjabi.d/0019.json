@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 19,
+  "sourceHash": "fnv1a64:b65dc632d05991d5",
+  "lessonIds": [
+    "PA-W04-residence-select",
+    "PA-W04-residence-supported",
+    "PA-W04-residence-spacing",
+    "PA-W04-residence-delayed",
+    "PA-W04-residence-repair",
+    "PA-W04-residence-no-model"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch19.txt",
+  "json": "punjabi/narration/ch19.json",
+  "textHash": "fnv1a64:cd2d4f40e6f7ce20",
+  "jsonHash": "fnv1a64:c408db03ca951fed",
+  "findings": []
+}
