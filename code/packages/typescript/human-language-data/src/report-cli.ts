@@ -22,22 +22,25 @@ import { measureLessonBudgets, renderLessonBudgets } from "./lesson-budgets.js";
 import { measureMetalanguage, renderMetalanguage } from "./metalanguage.js";
 import { measureLiteralMarkup, renderLiteralMarkup } from "./literal-markup.js";
 import { measureGlyphCoverage, renderGlyphCoverage } from "./glyph-coverage.js";
+import { measureGlossedNotTaught, renderGlossedNotTaught } from "./glossed-not-taught.js";
 
 interface ReportOptions {
   root?: string;
   format: "json" | "text";
+  glossedNotTaught?: string;
 }
 
 function parseOptions(args: string[]): ReportOptions {
   const options: ReportOptions = { format: "text" };
   for (let index = 0; index < args.length; index += 1) {
     const flag = args[index];
-    if (flag !== "--root" && flag !== "--format") {
+    if (flag !== "--root" && flag !== "--format" && flag !== "--glossed-not-taught") {
       throw new Error(`unknown argument '${flag}'`);
     }
     const value = args[index + 1];
     if (!value) throw new Error(`${flag} requires a value`);
     if (flag === "--root") options.root = resolve(value);
+    else if (flag === "--glossed-not-taught") options.glossedNotTaught = value;
     else if (value === "json" || value === "text") options.format = value;
     else throw new Error(`--format must be 'json' or 'text'`);
     index += 1;
@@ -54,6 +57,20 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     return 2;
   }
   const { registry, lessons, books, curricula, spine } = loadEverything(options.root);
+  if (options.glossedNotTaught) {
+    try {
+      const candidateReport = measureGlossedNotTaught(lessons, options.glossedNotTaught);
+      process.stdout.write(
+        options.format === "json"
+          ? `${JSON.stringify(candidateReport, null, 2)}\n`
+          : `${renderGlossedNotTaught(candidateReport).join("\n")}\n`,
+      );
+      return 0;
+    } catch (error) {
+      process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+      return 2;
+    }
+  }
   // The report's drivable percentages and the committed narration export must be
   // computed at the same table width, or the report will advertise a car-friendly
   // corpus the export cannot actually deliver. One policy file, read by both.
