@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-409-REVIEWS",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C409-planning-recall-1",
+    "ES-C409-planning-recall-2"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-409-REVIEWS"
+  ],
+  "after": []
+}

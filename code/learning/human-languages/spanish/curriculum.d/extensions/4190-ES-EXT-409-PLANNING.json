@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-409-PLANNING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a simple plan from finishing and preparing to booking and checking what is included.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C409-terminar",
+    "ES-C409-preparar",
+    "ES-C409-fin-de-semana",
+    "ES-C409-reservar",
+    "ES-C409-incluir"
+  ]
+}

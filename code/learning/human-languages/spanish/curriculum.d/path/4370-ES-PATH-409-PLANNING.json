@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-409-PLANNING",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C409-terminar",
+    "ES-C409-preparar",
+    "ES-C409-fin-de-semana",
+    "ES-C409-reservar",
+    "ES-C409-incluir"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-409-PLANNING"
+  ],
+  "after": []
+}

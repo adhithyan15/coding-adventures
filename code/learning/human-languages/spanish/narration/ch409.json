@@ -1,0 +1,841 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 409,
+  "title": "Finish, Prepare and Plan the Weekend",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:40afcdabf84e731e",
+  "lessons": [
+    {
+      "id": "ES-C409-terminar",
+      "sequence": 9280,
+      "title": "terminar — reach the boundary",
+      "headword": "terminar",
+      "romanization": "terminar",
+      "gloss": "to finish, to end",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3566605934806959",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall el trabajo, the work. Now add the action that brings it to its endpoint: terminar, “to finish” or “to end.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin termināre meant to set a boundary or bring something to an end. Its base was terminus, a boundary. English term, terminal and terminate keep the same boundary picture. Spanish terminar is the everyday verb: terminar el trabajo, finish the work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the regular -ar frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For “I finish,” remove -ar and add -o: termino. After another verb, keep the infinitive: quiero terminar. Hear the difference between a plan and a completed statement: quiero terminar / termino."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "terminar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *terminar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "terminar el trabajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *terminar el trabajo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quiero terminar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quiero terminar*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To finish? (Terminar.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: terminar."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C409-preparar",
+      "sequence": 9290,
+      "title": "preparar — make ready beforehand",
+      "headword": "preparar",
+      "romanization": "preparar",
+      "gloss": "to prepare",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb6490909a05ce59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall el postre, dessert. Before it is served, someone has to make it ready: preparar un postre, “to prepare a dessert.” You can terminar a task; first you may need to preparar its parts."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin praeparāre joined prae, “before,” to parāre, “make ready.” Spanish preparar and English prepare preserve that family almost unchanged. The older verb parar is visible inside, but do not translate the modern compound as “pre-stop”: use the whole word, “prepare.”"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: prepare a thing or prepare to act",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Use a noun directly: preparar un postre. Before another action, Spanish can use prepararse para; this lesson keeps the simpler A1 object frame."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preparar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *preparar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preparar un postre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *preparar un postre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me gusta preparar postres",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *me gusta preparar postres*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To prepare? (Preparar.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: preparar."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C409-fin-de-semana",
+      "sequence": 9300,
+      "title": "el fin de semana — the week's end",
+      "headword": "el fin de semana",
+      "romanization": "el fin de semana",
+      "gloss": "the weekend",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94250624be62f894",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish builds “weekend” as a transparent phrase: el fin de semana, literally “the end of the week.” It gives a time for a plan: voy a preparar el postre este fin de semana."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Fin continues Latin fīnis, “boundary” or “end.” Semana continues Late Latin septimāna, the seven-day period. The little de joins them: fin de semana. Learn the three words as one planning block."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one weekend, many weekends",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For one, say el fin de semana. In the plural, only the first noun changes: los fines de semana. For a regular habit, trabajo los fines de semana; for one upcoming period, este fin de semana."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el fin de semana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el fin de semana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "este fin de semana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *este fin de semana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "los fines de semana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *los fines de semana*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The weekend? (El fin de semana.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: DLE: fin; DLE: semana."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C409-reservar",
+      "sequence": 9310,
+      "title": "reservar — set it aside",
+      "headword": "reservar",
+      "romanization": "reservar",
+      "gloss": "to reserve, to book",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38bfbd41f5bf202a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have chosen el fin de semana. To book a room for it, use reservar: reservar una habitación."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin reservāre meant “keep back” or “preserve.” That image still works: a hotel sets a room aside for you. English reserve is a close relative. Keep the history at that safe level; resemblance to servir is not a reason to invent a separate family story."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: book a thing for people",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The thing follows directly: reservar una habitación. Add the people with para: para dos personas. Together: quiero reservar una habitación para dos personas."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reservar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reservar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reservar una habitación",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reservar una habitación*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "para dos personas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *para dos personas*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To reserve or book? (Reservar.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: reservar."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C409-incluir",
+      "sequence": 9320,
+      "title": "incluir — close it inside the whole",
+      "headword": "incluir",
+      "romanization": "incluir",
+      "gloss": "to include",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dee06aa9bbef6f55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can reservar a room. Now ask what comes inside the price: ¿Incluye el desayuno?, “Does it include breakfast?”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish borrowed incluir from Latin inclūdere, literally “close in”: in, “in,” plus claudere, “close.” English include, exclude and conclude share the same learned family. Something included is enclosed inside the whole."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the useful third-person form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The infinitive is incluir, but hotel messages often use incluye: el precio incluye el desayuno. In a question, keep the same form and lift the intonation: ¿Incluye el desayuno?"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "incluir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *incluir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "incluye el desayuno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *incluye el desayuno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el precio incluye el desayuno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el precio incluye el desayuno*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To include? (Incluir.) Does it include breakfast? (¿Incluye el desayuno?)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: incluir."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C409-planning-recall-1",
+      "sequence": 9330,
+      "title": "planning recall one — work, food, weekend, hotel",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "first retrieval of finish, prepare, weekend, reserve and include",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85175420f17b30c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the five planning blocks. (Terminar, preparar, fin de semana, reservar, incluir.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "terminar el trabajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *terminar el trabajo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preparar postres",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *preparar postres*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "este fin de semana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *este fin de semana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reservar una habitación",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reservar una habitación*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "incluye el desayuno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *incluye el desayuno*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Finish, prepare, weekend, reserve, include? (Terminar, preparar, fin de semana, reservar, incluir.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C409-planning-recall-2",
+      "sequence": 9340,
+      "title": "planning recall two — complete the message",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "second retrieval of finish, prepare, weekend, reserve and include",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e76530caeb1c5296",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Complete each short message from meaning, not from the first letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "“I finish at one.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Termino a la una.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Termino a la una.*]"
+            },
+            {
+              "kind": "speech",
+              "text": "“I like preparing desserts.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Me gusta preparar postres.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Me gusta preparar postres.*]"
+            },
+            {
+              "kind": "speech",
+              "text": "“I work on weekends.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Trabajo los fines de semana.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Trabajo los fines de semana.*]"
+            },
+            {
+              "kind": "speech",
+              "text": "“I want to book a room.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Quiero reservar una habitación.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Quiero reservar una habitación.*]"
+            },
+            {
+              "kind": "speech",
+              "text": "“The price includes breakfast.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "El precio incluye el desayuno.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *El precio incluye el desayuno.*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the five planning blocks once more. (Terminar, preparar, fin de semana, reservar, incluir.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

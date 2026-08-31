@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C409-reservar",
+    "language": "spanish",
+    "chapter": 409,
+    "sequence": 9310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38bfbd41f5bf202a"
+  },
+  "findings": []
+}

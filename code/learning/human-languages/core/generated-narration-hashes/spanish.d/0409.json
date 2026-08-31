@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:40afcdabf84e731e",
+  "lessonIds": [
+    "ES-C409-terminar",
+    "ES-C409-preparar",
+    "ES-C409-fin-de-semana",
+    "ES-C409-reservar",
+    "ES-C409-incluir",
+    "ES-C409-planning-recall-1",
+    "ES-C409-planning-recall-2"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch409.txt",
+  "json": "spanish/narration/ch409.json",
+  "textHash": "fnv1a64:0173ff4e3028faf0",
+  "jsonHash": "fnv1a64:78547143ba3fa5d0",
+  "findings": []
+}
