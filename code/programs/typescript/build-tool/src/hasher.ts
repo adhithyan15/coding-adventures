@@ -76,9 +76,59 @@ export const SPECIAL_FILENAMES: Record<string, Set<string>> = {
   rust: new Set(["Cargo.lock"]),
   typescript: new Set(["package-lock.json"]),
   elixir: new Set(["mix.lock"]),
-  perl: new Set(["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"]),
+  perl: new Set([
+    "Makefile.PL",
+    "Build.PL",
+    "cpanfile",
+    "MANIFEST",
+    "META.json",
+    "META.yml",
+  ]),
   haskell: new Set(),
 };
+
+/**
+ * Exact directory components that never contain package source.
+ *
+ * This registry belongs to source hashing rather than package discovery. A
+ * discovered package may legitimately contain a directory named `specs`, for
+ * example, while generated output beneath `_build` must never invalidate that
+ * package. Keeping the list here prevents the two policies from drifting into
+ * one over-broad skip set.
+ *
+ * Membership is deliberately case-sensitive and component-wise. `_build` is
+ * generated output; `_Build` and `_build-example` remain ordinary source
+ * directories. Testing `Dirent.name` before recursion also means we never need
+ * to open or resolve anything below an excluded component.
+ */
+const SOURCE_HASH_EXCLUDED_DIRECTORIES = new Set([
+  ".git",
+  ".hg",
+  ".svn",
+  ".venv",
+  ".tox",
+  ".mypy_cache",
+  ".pytest_cache",
+  ".ruff_cache",
+  ".stack-work",
+  "__pycache__",
+  "node_modules",
+  "vendor",
+  "dist",
+  "dist-newstyle",
+  "_build",
+  "build",
+  "target",
+  ".claude",
+  "Pods",
+  ".gradle",
+  ".dart_tool",
+  "gradle-build",
+  "deps",
+  ".build",
+  ".cargo",
+  "cover",
+]);
 
 // ---------------------------------------------------------------------------
 // Internal helpers
@@ -103,6 +153,7 @@ function walkFiles(dir: string): string[] {
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
+      if (SOURCE_HASH_EXCLUDED_DIRECTORIES.has(entry.name)) continue;
       results.push(...walkFiles(fullPath));
     } else if (entry.isFile()) {
       results.push(fullPath);

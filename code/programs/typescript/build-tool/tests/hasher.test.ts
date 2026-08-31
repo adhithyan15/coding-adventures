@@ -26,6 +26,57 @@ import {
 import { DirectedGraph } from "../src/resolver.js";
 import type { Package } from "../src/discovery.js";
 
+type SourceCollectionFixture = {
+  input: {
+    options: {
+      candidates: Array<{
+        path: string;
+        kind: "file" | "symlink" | "reparse_point";
+        content_hex?: string;
+      }>;
+    };
+  };
+  expected: {
+    result: {
+      files: Array<{ path: string }>;
+    };
+  };
+};
+
+const SOURCE_COLLECTION_FIXTURES = [
+  "source-collection-extension.json",
+  "source-collection-declared.json",
+] as const;
+
+const EXPECTED_EXCLUDED_COMPONENTS = [
+  ".build",
+  ".cargo",
+  ".claude",
+  ".dart_tool",
+  ".git",
+  ".gradle",
+  ".hg",
+  ".mypy_cache",
+  ".pytest_cache",
+  ".ruff_cache",
+  ".stack-work",
+  ".svn",
+  ".tox",
+  ".venv",
+  "Pods",
+  "__pycache__",
+  "_build",
+  "build",
+  "cover",
+  "deps",
+  "dist",
+  "dist-newstyle",
+  "gradle-build",
+  "node_modules",
+  "target",
+  "vendor",
+] as const;
+
 // ---------------------------------------------------------------------------
 // Test helpers
 // ---------------------------------------------------------------------------
@@ -43,17 +94,50 @@ function writeFile(filepath: string, content: string): void {
   fs.writeFileSync(filepath, content, "utf-8");
 }
 
-function makePkg(
-  pkgPath: string,
-  language: string,
-  name?: string,
-): Package {
+function makePkg(pkgPath: string, language: string, name?: string): Package {
   return {
     name: name ?? `${language}/test-pkg`,
     path: pkgPath,
     buildCommands: ["echo test"],
     language,
   };
+}
+
+function readSourceCollectionFixture(
+  filename: (typeof SOURCE_COLLECTION_FIXTURES)[number],
+): SourceCollectionFixture {
+  const fixtureUrl = new URL(
+    `../../../../specs/fixtures/build-tool-v1/cases/${filename}`,
+    import.meta.url,
+  );
+  return JSON.parse(
+    fs.readFileSync(fixtureUrl, "utf-8"),
+  ) as SourceCollectionFixture;
+}
+
+function projectFixturePath(filepath: string): string {
+  return filepath.replace(/\.mli?$/, ".ts");
+}
+
+function materializeProjectedFixture(
+  root: string,
+  fixture: SourceCollectionFixture,
+): void {
+  for (const candidate of fixture.input.options.candidates) {
+    if (candidate.kind !== "file") continue;
+    if (!/^(?:excluded-\d+|case\/|near\/)/.test(candidate.path)) continue;
+    writeFile(
+      path.join(root, ...projectFixturePath(candidate.path).split("/")),
+      Buffer.from(candidate.content_hex ?? "", "hex").toString("utf-8"),
+    );
+  }
+}
+
+function projectedExpectedPaths(fixture: SourceCollectionFixture): string[] {
+  return fixture.expected.result.files
+    .map(({ path: filepath }) => projectFixturePath(filepath))
+    .filter((filepath) => /^(?:case\/|near\/)/.test(filepath))
+    .sort((a, b) => a.localeCompare(b));
 }
 
 // ---------------------------------------------------------------------------
@@ -174,6 +258,53 @@ describe("collectSourceFiles", () => {
     // output is deterministic by checking it matches its own sort.
     const sortedNames = [...names].sort((a, b) => a.localeCompare(b));
     expect(names).toEqual(sortedNames);
+  });
+
+  it.each(SOURCE_COLLECTION_FIXTURES)(
+    "projects %s exact generated-directory pruning into extension collection",
+    (fixtureFilename) => {
+      const fixture = readSourceCollectionFixture(fixtureFilename);
+      materializeProjectedFixture(tmpDir, fixture);
+
+      const actual = collectSourceFiles(makePkg(tmpDir, "typescript"))
+        .map((filepath) =>
+          path.relative(tmpDir, filepath).split(path.sep).join("/"),
+        )
+        .sort((a, b) => a.localeCompare(b));
+
+      expect(actual).toEqual(projectedExpectedPaths(fixture));
+    },
+  );
+
+  it("keeps the neutral fixture's exact 26-component exclusion registry", () => {
+    for (const fixtureFilename of SOURCE_COLLECTION_FIXTURES) {
+      const fixture = readSourceCollectionFixture(fixtureFilename);
+      const excluded = fixture.input.options.candidates
+        .filter(({ path: filepath }) => filepath.startsWith("excluded-"))
+        .map(({ path: filepath }) => filepath.split("/")[1])
+        .sort((a, b) => a.localeCompare(b));
+
+      expect(excluded).toEqual(
+        [...EXPECTED_EXCLUDED_COMPONENTS].sort((a, b) => a.localeCompare(b)),
+      );
+    }
+  });
+
+  it("keeps discovery-only directory names eligible in both source modes", () => {
+    writeFile(
+      path.join(tmpDir, "specs", "contract.ts"),
+      "export const contract = true;\n",
+    );
+    const pkg = makePkg(tmpDir, "typescript");
+
+    for (const files of [
+      collectSourceFiles(pkg),
+      collectSourceFilesGlob(pkg, ["**/*.ts"]),
+    ]) {
+      expect(
+        files.map((filepath) => path.relative(tmpDir, filepath)),
+      ).toContain(path.join("specs", "contract.ts"));
+    }
   });
 });
 
@@ -380,6 +511,58 @@ describe("collectSourceFilesGlob", () => {
     // most systems using localeCompare, so verify sorted order.
     expect(basenames).toEqual(["a.py", "b.py", "BUILD", "c.py"]);
   });
+
+  it.each(SOURCE_COLLECTION_FIXTURES)(
+    "projects %s exact generated-directory pruning into declared-source collection",
+    (fixtureFilename) => {
+      const fixture = readSourceCollectionFixture(fixtureFilename);
+      materializeProjectedFixture(tmpDir, fixture);
+
+      const actual = collectSourceFilesGlob(makePkg(tmpDir, "typescript"), [
+        "**/*.ts",
+      ])
+        .map((filepath) =>
+          path.relative(tmpDir, filepath).split(path.sep).join("/"),
+        )
+        .sort((a, b) => a.localeCompare(b));
+
+      expect(actual).toEqual(projectedExpectedPaths(fixture));
+    },
+  );
+
+  it("does not follow directory symlinks or Windows junctions", ({ skip }) => {
+    const outside = makeTempDir();
+    const linked = path.join(tmpDir, "linked");
+    try {
+      writeFile(
+        path.join(outside, "external.ts"),
+        "export const outside = true;\n",
+      );
+      try {
+        fs.symlinkSync(
+          outside,
+          linked,
+          process.platform === "win32" ? "junction" : "dir",
+        );
+      } catch (error) {
+        const code = (error as NodeJS.ErrnoException).code;
+        if (
+          process.platform === "win32" &&
+          (code === "EPERM" || code === "EACCES")
+        ) {
+          skip("this Windows host does not permit a directory link fixture");
+          return;
+        }
+        throw error;
+      }
+
+      const pkg = makePkg(tmpDir, "typescript");
+      expect(collectSourceFiles(pkg)).toEqual([]);
+      expect(collectSourceFilesGlob(pkg, ["**/*.ts"])).toEqual([]);
+    } finally {
+      rmDir(outside);
+    }
+  });
 });
 
 describe("SPECIAL_FILENAMES", () => {
@@ -396,7 +579,10 @@ describe("SPECIAL_FILENAMES", () => {
 describe("walkFiles error-handling branch", () => {
   it("returns an empty list when the package directory does not exist", () => {
     // walkFiles wraps `readdirSync` in try/catch — exercises the catch branch.
-    const ghost = path.join(os.tmpdir(), "build-tool-hasher-ghost-" + Date.now());
+    const ghost = path.join(
+      os.tmpdir(),
+      "build-tool-hasher-ghost-" + Date.now(),
+    );
     const pkg = makePkg(ghost, "python");
     expect(collectSourceFilesGlob(pkg, ["**/*"])).toEqual([]);
   });
