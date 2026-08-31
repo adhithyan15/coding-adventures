@@ -823,3 +823,125 @@ fn our_user_version_is_read_back_by_real_sqlite() {
     drop(conn);
     let _ = std::fs::remove_dir_all(&dir);
 }
+
+/// `DbOptions::user_version` reaches the emitted file, and real SQLite reports it.
+///
+/// The sibling test above stamps the version by re-encoding a parsed header, which
+/// proves the *offset*. This one proves the *writer front door*: that a caller who
+/// never touches `Header` still gets the version they asked for. Both matter — the
+/// first could pass while `write_multi_table_db_with` silently ignored its options.
+#[test]
+fn writer_options_user_version_reaches_real_sqlite() {
+    use sqlite_file::page_writer::{write_multi_table_db_with, DbOptions, TableSpec};
+    use sqlite_file::SqlValue;
+
+    let rows = vec![(1i64, vec![SqlValue::Null, SqlValue::Text("alpha".into())])];
+    let tables: &[TableSpec] = &[("notes", "CREATE TABLE notes(id integer primary key, body)", &rows)];
+    let db = write_multi_table_db_with(
+        DbOptions {
+            page_size: 4096,
+            user_version: 11,
+        },
+        tables,
+    )
+    .unwrap();
+
+    static COUNTER_OPT: AtomicU64 = AtomicU64::new(14_000_000);
+    let unique = COUNTER_OPT.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_optuv_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let user_version: i64 = conn
+        .query_row("PRAGMA user_version", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(user_version, 11, "the option must reach the emitted header");
+
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(integrity, "ok");
+
+    // The rowid-alias contract: `id integer primary key` is stored as NULL in the
+    // record and read back from the rowid. Writing NULL is what real SQLite does;
+    // asserting the read-back value here pins that we got it right.
+    let got: Vec<(i64, String)> = conn
+        .prepare("SELECT id, body FROM notes")
+        .unwrap()
+        .query_map([], |r| Ok((r.get(0)?, r.get::<_, String>(1)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    assert_eq!(got, vec![(1, "alpha".to_string())]);
+
+    // The default constructor must still emit 0, so existing callers are unchanged.
+    let plain = sqlite_file::page_writer::write_multi_table_db(4096, tables).unwrap();
+    assert_eq!(
+        sqlite_file::header::Header::parse(&plain).unwrap().user_version,
+        0
+    );
+
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+/// A table with far more than 65535 rows writes, and real SQLite reads it back.
+///
+/// `order_cells` used to reject any table over 65535 cells with "more than 65535
+/// cells on one leaf page". That limit was true when a table was a single leaf and
+/// stale once `encode_table_btree` grew multi-level b-trees — it capped whole
+/// *tables*, not pages.
+///
+/// It is not a hypothetical bound. Anki's `revlog` gains one row per answered
+/// card, so an ordinary collection with about a year of history crosses 65535 and
+/// would have failed to export at all — with the user's data reachable only
+/// through the app that could no longer write it out.
+///
+/// 70000 rows is deliberately just past the old cliff: enough to prove the fix,
+/// small enough to stay a fast test.
+#[test]
+fn tables_larger_than_65535_rows_write_and_read_back() {
+    use sqlite_file::page_writer::{write_multi_table_db, TableSpec};
+    use sqlite_file::SqlValue;
+
+    const ROWS: i64 = 70_000;
+    let rows: Vec<(i64, Vec<SqlValue>)> = (1..=ROWS)
+        .map(|n| (n, vec![SqlValue::Null, SqlValue::Int(n * 2)]))
+        .collect();
+    let tables: &[TableSpec] = &[("revlog", "CREATE TABLE revlog(id integer primary key, ivl)", &rows)];
+    let db = write_multi_table_db(4096, tables).expect("a table past 65535 rows must write");
+
+    static COUNTER_BIG: AtomicU64 = AtomicU64::new(15_000_000);
+    let unique = COUNTER_BIG.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_bigtable_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(integrity, "ok", "real SQLite integrity_check on a >65535-row table");
+
+    let count: i64 = conn
+        .query_row("SELECT count(*) FROM revlog", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(count, ROWS, "every row must survive");
+
+    // Spot-check the ends and the old cliff, and confirm the rowid alias still
+    // resolves across a multi-level tree.
+    for probe in [1_i64, 65_535, 65_536, ROWS] {
+        let ivl: i64 = conn
+            .query_row("SELECT ivl FROM revlog WHERE id = ?1", [probe], |r| r.get(0))
+            .unwrap_or_else(|e| panic!("row {probe} missing: {e}"));
+        assert_eq!(ivl, probe * 2, "row {probe} must read back correctly");
+    }
+
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+}

@@ -20,9 +20,9 @@ use engram_core::{
     LeechAction, MediaAssetRecord, Note, NoteFieldValue, NoteType, Rating, Review, Session,
     SessionStatus, TemplateRequirementMode, INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
-use rusqlite::{Connection, DatabaseName};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use sqlite_file::page_writer::{write_multi_table_db_with, DbOptions, TableSpec};
 use sqlite_file::SqlValue;
 use zip::{ZipReader, ZipWriter};
 
@@ -578,17 +578,21 @@ pub fn write_v11_collection_bytes_from_engram_state(
     state: &AppState,
 ) -> Result<Vec<u8>, ApkgError> {
     let export = ExportModel::from_state(state)?;
-    let connection = Connection::open_in_memory().map_err(|err| {
-        apkg_error(format!(
-            "failed to open in-memory Anki V11 SQLite collection: {err}"
-        ))
-    })?;
-    create_v11_export_schema(&connection)?;
-    write_v11_export_rows(&connection, &export)?;
-    connection
-        .serialize(DatabaseName::Main)
-        .map(|data| data.to_vec())
-        .map_err(|err| apkg_error(format!("failed to serialize Anki V11 collection: {err}")))
+    let tables = v11_export_rows(&export)?;
+    // `TableSpec` borrows each table's rows, so the owning Vec has to outlive the
+    // specs — hence the two steps rather than one chained expression.
+    let specs: Vec<TableSpec> = tables
+        .iter()
+        .map(|(name, create_sql, rows)| (*name, *create_sql, rows.as_slice()))
+        .collect();
+    write_multi_table_db_with(
+        DbOptions {
+            page_size: V11_EXPORT_PAGE_SIZE,
+            user_version: ANKI_V11_USER_VERSION,
+        },
+        &specs,
+    )
+    .map_err(|err| apkg_error(format!("failed to write Anki V11 collection: {err}")))
 }
 
 pub fn write_legacy_apkg_from_engram_state(
@@ -1512,12 +1516,19 @@ const SYNTHETIC_BASIC_FRONT_FIELD: &str = "engram-basic:field:0";
 const SYNTHETIC_BASIC_BACK_FIELD: &str = "engram-basic:field:1";
 const SYNTHETIC_BASIC_TEMPLATE: &str = "engram-basic:template:0";
 
-fn create_v11_export_schema(connection: &Connection) -> Result<(), ApkgError> {
-    connection
-        .execute_batch(
-            r#"
-PRAGMA user_version = 11;
-CREATE TABLE col (
+/// The Anki V11 export schema, one `CREATE TABLE` per table.
+///
+/// These strings are stored verbatim in `sqlite_schema.sql`, and SQLite reparses
+/// them to rebuild the schema when the file is opened — so they are load-bearing
+/// bytes, not documentation. They are reproduced exactly as the previous
+/// `rusqlite` `execute_batch` wrote them.
+///
+/// Four of the five tables declare `id integer primary key`. That column is a
+/// *rowid alias*: SQLite stores NULL for it in the record and carries the value in
+/// the cell's rowid. `graves` has no such column, so all three of its columns are
+/// ordinary stored values and its rowids are synthesised. See
+/// [`v11_export_tables`] for where that distinction is applied.
+const COL_DDL: &str = r#"CREATE TABLE col (
   id integer primary key,
   crt integer not null,
   mod integer not null,
@@ -1531,8 +1542,9 @@ CREATE TABLE col (
   decks text not null,
   dconf text not null,
   tags text not null
-);
-CREATE TABLE notes (
+)"#;
+
+const NOTES_DDL: &str = r#"CREATE TABLE notes (
   id integer primary key,
   guid text not null,
   mid integer not null,
@@ -1544,8 +1556,9 @@ CREATE TABLE notes (
   csum integer not null,
   flags integer not null,
   data text not null
-);
-CREATE TABLE cards (
+)"#;
+
+const CARDS_DDL: &str = r#"CREATE TABLE cards (
   id integer primary key,
   nid integer not null,
   did integer not null,
@@ -1564,8 +1577,9 @@ CREATE TABLE cards (
   odid integer not null,
   flags integer not null,
   data text not null
-);
-CREATE TABLE revlog (
+)"#;
+
+const REVLOG_DDL: &str = r#"CREATE TABLE revlog (
   id integer primary key,
   cid integer not null,
   usn integer not null,
@@ -1575,18 +1589,50 @@ CREATE TABLE revlog (
   factor integer not null,
   time integer not null,
   type integer not null
-);
-CREATE TABLE graves (
+)"#;
+
+const GRAVES_DDL: &str = r#"CREATE TABLE graves (
   usn integer not null,
   oid integer not null,
   type integer not null
-);
-"#,
-        )
-        .map_err(|err| apkg_error(format!("failed to create Anki V11 export schema: {err}")))
-}
+)"#;
 
-fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Result<(), ApkgError> {
+/// Anki V11 stamps `PRAGMA user_version = 11` on its collection database.
+const ANKI_V11_USER_VERSION: u32 = 11;
+
+/// Page size for the exported collection. SQLite's own default since 3.12.0, and
+/// what the previous in-memory `rusqlite` database produced, so the emitted file
+/// keeps the same page geometry it had before the port.
+const V11_EXPORT_PAGE_SIZE: usize = 4096;
+
+
+/// One table's rows in the shape `sqlite_file`'s writer takes: `(rowid, columns)`.
+type ExportRows = Vec<(i64, Vec<SqlValue>)>;
+
+/// Build every row of the Anki V11 export, table by table.
+///
+/// ## The rowid-alias rule, and why it is easy to get quietly wrong
+///
+/// `col`, `notes`, `cards`, and `revlog` all declare `id integer primary key`.
+/// SQLite treats such a column as an *alias for the rowid*: the record stores
+/// NULL for it and the real value travels in the cell's rowid field. So each of
+/// those rows is built as `(id, vec![SqlValue::Null, ..rest])`.
+///
+/// Getting this wrong fails silently rather than loudly. Writing
+/// `SqlValue::Int(id)` into column 0 would still let `SELECT id FROM notes`
+/// return the right number — SQLite reads the rowid for an alias column and
+/// ignores whatever sits in the record — so a SQL-level round-trip would pass
+/// while the emitted bytes differed from anything real Anki writes. Only a
+/// byte-level or `PRAGMA integrity_check` comparison catches it, which is why the
+/// export is cross-checked against the real C library rather than only against
+/// our own reader.
+///
+/// `graves` declares no `integer primary key`, so all three of its values are
+/// genuinely stored and its rowids are synthesised sequentially from 1. Nothing
+/// references them.
+fn v11_export_rows(
+    export: &ExportModel,
+) -> Result<Vec<(&'static str, &'static str, ExportRows)>, ApkgError> {
     let decks_json = serde_json::to_string(&export_decks_json(export))
         .map_err(|err| apkg_error(format!("failed to serialize Anki deck map: {err}")))?;
     let models_json = serde_json::to_string(&export_note_types_json(export))
@@ -1598,28 +1644,36 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
     let tags_json = serde_json::to_string(&export_tags_json(export))
         .map_err(|err| apkg_error(format!("failed to serialize Anki tag map: {err}")))?;
 
-    connection
-        .execute(
-            "INSERT INTO col VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
-            rusqlite::params![
-                export_collection_i64(export, "id").unwrap_or(1_i64),
-                export.created_at_days,
+    // --- col: exactly one row, the collection header. ------------------------
+    let col_id = export_collection_i64(export, "id").unwrap_or(1_i64);
+    let col_rows: ExportRows = vec![(
+        col_id,
+        vec![
+            SqlValue::Null, // id — rowid alias
+            SqlValue::Int(export.created_at_days),
+            SqlValue::Int(
                 export_collection_i64(export, "modifiedAt").unwrap_or(export.modified_at_seconds),
+            ),
+            SqlValue::Int(
                 export_collection_i64(export, "schemaModifiedAt")
                     .unwrap_or(export.modified_at_seconds),
-                export_collection_i64(export, "version").unwrap_or(11_i64),
-                export_collection_i64(export, "dirty").unwrap_or(0_i64),
+            ),
+            SqlValue::Int(export_collection_i64(export, "version").unwrap_or(11_i64)),
+            SqlValue::Int(export_collection_i64(export, "dirty").unwrap_or(0_i64)),
+            SqlValue::Int(
                 export_collection_i64(export, "updateSequenceNumber").unwrap_or(-1_i64),
-                export_collection_i64(export, "lastSync").unwrap_or(0_i64),
-                config_json,
-                models_json,
-                decks_json,
-                deck_config_json,
-                tags_json,
-            ],
-        )
-        .map_err(|err| apkg_error(format!("failed to write Anki col row: {err}")))?;
+            ),
+            SqlValue::Int(export_collection_i64(export, "lastSync").unwrap_or(0_i64)),
+            SqlValue::Text(config_json),
+            SqlValue::Text(models_json),
+            SqlValue::Text(decks_json),
+            SqlValue::Text(deck_config_json),
+            SqlValue::Text(tags_json),
+        ],
+    )];
 
+    // --- notes ---------------------------------------------------------------
+    let mut note_rows: ExportRows = Vec::with_capacity(export.notes.len());
     for note in &export.notes {
         let note_type = export
             .note_types
@@ -1637,27 +1691,31 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
         let note_type_source =
             anki_source(export, ExternalSourceTarget::NoteType, &note.note_type_key);
         let sort_field = export_note_sort_field(&fields, note_type_source);
-        connection
-            .execute(
-                "INSERT INTO notes VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
-                rusqlite::params![
-                    export.note_ids[&note.key],
+        let checksum = export_note_checksum(source, &sort_field);
+        let note_id = export.note_ids[&note.key];
+        note_rows.push((
+            note_id,
+            vec![
+                SqlValue::Null, // id — rowid alias
+                SqlValue::Text(
                     source_string(source, "guid")
-                        .unwrap_or_else(|| export_note_guid(&note.key, export.note_ids[&note.key])),
-                    export.note_type_ids[&note.note_type_key],
-                    export_note_modified_at(note, source),
-                    source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64),
-                    join_anki_tags(&note.tags),
-                    field_join,
-                    sort_field,
-                    export_note_checksum(source, &sort_field),
-                    source_i64(source, "flags").unwrap_or_default(),
-                    source_string(source, "data").unwrap_or_default(),
-                ],
-            )
-            .map_err(|err| apkg_error(format!("failed to write Anki note {}: {err}", note.key)))?;
+                        .unwrap_or_else(|| export_note_guid(&note.key, note_id)),
+                ),
+                SqlValue::Int(export.note_type_ids[&note.note_type_key]),
+                SqlValue::Int(export_note_modified_at(note, source)),
+                SqlValue::Int(source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64)),
+                SqlValue::Text(join_anki_tags(&note.tags)),
+                SqlValue::Text(field_join),
+                SqlValue::Text(sort_field),
+                SqlValue::Int(checksum),
+                SqlValue::Int(source_i64(source, "flags").unwrap_or_default()),
+                SqlValue::Text(source_string(source, "data").unwrap_or_default()),
+            ],
+        ));
     }
 
+    // --- cards ---------------------------------------------------------------
+    let mut card_rows: ExportRows = Vec::with_capacity(export.cards.len());
     for (index, card) in export.cards.iter().enumerate() {
         let progress = export.progress_by_card.get(&card.key);
         let source = anki_source(export, ExternalSourceTarget::Card, &card.key);
@@ -1673,34 +1731,35 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
             source,
             deck_options,
         );
-        connection
-            .execute(
-                "INSERT INTO cards VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18)",
-                rusqlite::params![
-                    export.card_ids[&card.key],
-                    export.note_ids[&card.note_key],
-                    export.deck_ids[&card.deck_key],
-                    i64::from(card.template_ordinal),
-                    export_card_modified_at(card, progress, source),
-                    source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64),
-                    scheduling.kind,
-                    scheduling.queue,
-                    scheduling.due,
-                    scheduling.interval,
-                    scheduling.factor,
-                    scheduling.repetitions,
-                    scheduling.lapses,
-                    scheduling.left,
-                    source_i64(source, "originalDue").unwrap_or_default(),
-                    export_original_deck_id(export, source),
-                    scheduling.flags,
-                    export_card_data(progress, source),
-                ],
-            )
-            .map_err(|err| apkg_error(format!("failed to write Anki card {}: {err}", card.key)))?;
+        card_rows.push((
+            export.card_ids[&card.key],
+            vec![
+                SqlValue::Null, // id — rowid alias
+                SqlValue::Int(export.note_ids[&card.note_key]),
+                SqlValue::Int(export.deck_ids[&card.deck_key]),
+                SqlValue::Int(i64::from(card.template_ordinal)),
+                SqlValue::Int(export_card_modified_at(card, progress, source)),
+                SqlValue::Int(source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64)),
+                SqlValue::Int(scheduling.kind),
+                SqlValue::Int(scheduling.queue),
+                SqlValue::Int(scheduling.due),
+                SqlValue::Int(scheduling.interval),
+                SqlValue::Int(scheduling.factor),
+                SqlValue::Int(scheduling.repetitions),
+                SqlValue::Int(scheduling.lapses),
+                SqlValue::Int(scheduling.left),
+                SqlValue::Int(source_i64(source, "originalDue").unwrap_or_default()),
+                SqlValue::Int(export_original_deck_id(export, source)),
+                SqlValue::Int(scheduling.flags),
+                SqlValue::Text(export_card_data(progress, source)),
+            ],
+        ));
     }
 
+    // --- revlog --------------------------------------------------------------
     let mut used_review_ids = BTreeSet::new();
+    let mut highest_review_id = 0_i64;
+    let mut review_rows: ExportRows = Vec::with_capacity(export.reviews.len());
     for review in &export.reviews {
         let source = anki_source(export, ExternalSourceTarget::Review, &review.id);
         let card_id = export
@@ -1714,66 +1773,73 @@ fn write_v11_export_rows(connection: &Connection, export: &ExportModel) -> Resul
                     review.id, review.card_id
                 ))
             })?;
-        let review_id = unique_review_id(review, &mut used_review_ids);
-        connection
-            .execute(
-                "INSERT INTO revlog VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
-                rusqlite::params![
-                    review_id,
-                    card_id,
-                    source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64),
-                    source_i64(source, "ease").unwrap_or_else(|| rating_to_v11_ease(review.rating)),
-                    source_i64(source, "interval").unwrap_or_else(|| {
-                        review
-                            .resulting_progress
-                            .as_ref()
-                            .map(|progress| i64::from(progress.interval))
-                            .unwrap_or_default()
-                    }),
-                    source_i64(source, "lastInterval").unwrap_or_else(|| {
-                        review
-                            .previous_progress
-                            .as_ref()
-                            .map(|progress| i64::from(progress.interval))
-                            .unwrap_or_default()
-                    }),
-                    source_i64(source, "factor").unwrap_or_else(|| {
-                        review
-                            .resulting_progress
-                            .as_ref()
-                            .map(progress_factor_to_anki)
-                            .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64)
-                    }),
+        let review_id = unique_review_id(review, &mut used_review_ids, &mut highest_review_id)?;
+        review_rows.push((
+            review_id,
+            vec![
+                SqlValue::Null, // id — rowid alias
+                SqlValue::Int(card_id),
+                SqlValue::Int(source_i64(source, "updateSequenceNumber").unwrap_or(-1_i64)),
+                SqlValue::Int(
+                    source_i64(source, "ease")
+                        .unwrap_or_else(|| rating_to_v11_ease(review.rating)),
+                ),
+                SqlValue::Int(source_i64(source, "interval").unwrap_or_else(|| {
+                    review
+                        .resulting_progress
+                        .as_ref()
+                        .map(|progress| i64::from(progress.interval))
+                        .unwrap_or_default()
+                })),
+                SqlValue::Int(source_i64(source, "lastInterval").unwrap_or_else(|| {
+                    review
+                        .previous_progress
+                        .as_ref()
+                        .map(|progress| i64::from(progress.interval))
+                        .unwrap_or_default()
+                })),
+                SqlValue::Int(source_i64(source, "factor").unwrap_or_else(|| {
+                    review
+                        .resulting_progress
+                        .as_ref()
+                        .map(progress_factor_to_anki)
+                        .unwrap_or((INITIAL_EASE_FACTOR * 1000.0).round() as i64)
+                })),
+                SqlValue::Int(
                     source_i64(source, "time")
                         .or_else(|| review.answer_time_ms.map(i64::from))
                         .unwrap_or_default(),
-                    source_i64(source, "kind").unwrap_or_else(|| review_kind(
-                        export,
-                        review,
-                        &review.card_id
-                    )),
-                ],
-            )
-            .map_err(|err| {
-                apkg_error(format!("failed to write Anki review {}: {err}", review.id))
-            })?;
+                ),
+                SqlValue::Int(source_i64(source, "kind").unwrap_or_else(|| {
+                    review_kind(export, review, &review.card_id)
+                })),
+            ],
+        ));
     }
 
-    for grave in export_collection_graves(export) {
-        connection
-            .execute(
-                "INSERT INTO graves VALUES (?1, ?2, ?3)",
-                rusqlite::params![grave.update_sequence_number, grave.object_id, grave.kind],
-            )
-            .map_err(|err| {
-                apkg_error(format!(
-                    "failed to write Anki grave {}:{}: {err}",
-                    grave.kind, grave.object_id
-                ))
-            })?;
+    // --- graves: no rowid alias, so every column is stored and rowids are ours.
+    let graves = export_collection_graves(export);
+    let mut grave_rows: ExportRows = Vec::with_capacity(graves.len());
+    for (index, grave) in graves.iter().enumerate() {
+        let rowid = i64::try_from(index + 1)
+            .map_err(|_| apkg_error("Anki grave count exceeds the addressable rowid range"))?;
+        grave_rows.push((
+            rowid,
+            vec![
+                SqlValue::Int(grave.update_sequence_number),
+                SqlValue::Int(grave.object_id),
+                SqlValue::Int(grave.kind),
+            ],
+        ));
     }
 
-    Ok(())
+    Ok(vec![
+        ("col", COL_DDL, col_rows),
+        ("notes", NOTES_DDL, note_rows),
+        ("cards", CARDS_DDL, card_rows),
+        ("revlog", REVLOG_DDL, review_rows),
+        ("graves", GRAVES_DDL, grave_rows),
+    ])
 }
 
 fn export_decks_json(export: &ExportModel) -> Value {
@@ -2729,7 +2795,35 @@ fn is_dynamic_anki_deck(export: &ExportModel, deck_key: &str) -> bool {
             .is_some_and(|dyn_value| dyn_value != 0)
 }
 
-fn unique_review_id(review: &Review, used: &mut BTreeSet<i64>) -> i64 {
+/// Pick a unique revlog id for `review`, preferring its own id when free.
+///
+/// `used` holds every id handed out so far; `highest` is the largest of them, and
+/// is what keeps this O(1).
+///
+/// ## Why this is not a probing loop
+///
+/// It used to resolve collisions by walking `candidate += 1` until the set
+/// accepted it, which had two problems, both reachable from an untrusted file
+/// (review ids are the revlog b-tree's cell rowids, and `walk_table` sorts but
+/// does not deduplicate, so a crafted `.anki2` controls them entirely):
+///
+/// * With `saturating_add` it did not terminate at `i64::MAX` — the add became a
+///   no-op and the loop spun at 100% CPU forever.
+/// * Even with `checked_add`, the probe is **quadratic**. The normalisation below
+///   sends every id `<= 0` to `1`, so N revlog rows with rowid `0` all start at
+///   the same candidate and row *k* probes *k* times: O(N²). Measured at ~91s for
+///   80k rows and roughly an hour at 500k — and because the rows are
+///   near-identical, that collection compresses to tens of kilobytes inside the
+///   `.apkg` zip. A small upload could pin a core for hours.
+///
+/// Since the ids only need to be *unique*, a collision can jump straight past
+/// everything handed out so far instead of walking to it. `highest + 1` is free
+/// by construction, so one step always suffices.
+fn unique_review_id(
+    review: &Review,
+    used: &mut BTreeSet<i64>,
+    highest: &mut i64,
+) -> Result<i64, ApkgError> {
     let mut candidate = review
         .id
         .parse::<i64>()
@@ -2739,10 +2833,16 @@ fn unique_review_id(review: &Review, used: &mut BTreeSet<i64>) -> i64 {
     if candidate <= 0 {
         candidate = 1;
     }
-    while !used.insert(candidate) {
-        candidate = candidate.saturating_add(1);
+    if used.contains(&candidate) {
+        // Everything at or below `highest` may be taken; the next slot above it
+        // cannot be. `checked_add` keeps exhaustion an error rather than a hang.
+        candidate = highest
+            .checked_add(1)
+            .ok_or_else(|| apkg_error("Anki review ids exhaust the addressable id range"))?;
     }
-    candidate
+    used.insert(candidate);
+    *highest = (*highest).max(candidate);
+    Ok(candidate)
 }
 
 fn assign_anki_ids<'a>(
@@ -4293,7 +4393,7 @@ mod tests {
     fn v11_sqlite_collection_bytes() -> Vec<u8> {
         let sqlite = tempfile::NamedTempFile::new().unwrap();
         {
-            let connection = Connection::open(sqlite.path()).unwrap();
+            let connection = rusqlite::Connection::open(sqlite.path()).unwrap();
             connection
                 .execute_batch(
                     r#"
@@ -4479,7 +4579,7 @@ CREATE TABLE graves (
         let sqlite = tempfile::NamedTempFile::new().unwrap();
         std::fs::write(sqlite.path(), v11_sqlite_collection_bytes()).unwrap();
         {
-            let connection = Connection::open(sqlite.path()).unwrap();
+            let connection = rusqlite::Connection::open(sqlite.path()).unwrap();
             let decks = r#"{
   "1": {"id": 1, "name": "Default", "desc": "Root deck"},
   "2": {"id": 2, "name": "Spanish::Latin", "desc": "Story deck", "conf": 1},
@@ -5244,6 +5344,217 @@ CREATE TABLE graves (
 
         assert_eq!(exported.notes[0].tags, vec!["spanish", "marked"]);
         assert_eq!(exported.metadata.tags["marked"], serde_json::json!(1));
+    }
+
+    /// The exported V11 collection is a real SQLite database, according to real
+    /// SQLite.
+    ///
+    /// Every other export test round-trips through *our* reader, which cannot
+    /// catch a file that is self-consistent but wrong. Two failure modes in
+    /// particular are invisible that way:
+    ///
+    /// * a malformed page or b-tree that our reader happens to tolerate;
+    /// * an `id integer primary key` column written as an integer instead of
+    ///   NULL. That column is a rowid alias, so SQLite returns the rowid and
+    ///   ignores the record's value — `SELECT id` would look correct either way,
+    ///   while the bytes differed from anything real Anki writes.
+    ///
+    /// So this test hands the export to the bundled C library and asks it.
+    /// Two reviews colliding at `i64::MAX` terminate instead of hanging.
+    ///
+    /// Review ids come from the revlog b-tree's cell rowids, and `walk_table`
+    /// sorts but does not deduplicate, so a crafted `.anki2` can carry two rows
+    /// with the same extreme rowid. The old `saturating_add` spun forever on that
+    /// input; this asserts it now ends, either by finding a free id or by saying
+    /// it cannot.
+    /// A dense run of colliding review ids stays linear.
+    ///
+    /// `unique_review_id` normalises every id `<= 0` to `1`, so a crafted `.anki2`
+    /// whose revlog rows all carry rowid `0` collapses them onto one starting
+    /// candidate. The old linear probe made that quadratic — row *k* walked *k*
+    /// steps — which measured ~91 seconds at 80k rows and about an hour at 500k,
+    /// from an `.apkg` of a few tens of kilobytes once zipped.
+    ///
+    /// 50000 rows is chosen so the old behaviour would not plausibly finish inside
+    /// a CI run while the fixed version is instant, and the assertion is on the
+    /// invariant that matters — every id distinct — rather than on a wall-clock
+    /// threshold, which would be flaky.
+    #[test]
+    fn dense_colliding_review_ids_do_not_go_quadratic() {
+        const ROWS: usize = 50_000;
+        let mut used = BTreeSet::new();
+        let mut highest = 0_i64;
+        let mut assigned = Vec::with_capacity(ROWS);
+
+        for _ in 0..ROWS {
+            // id "0" fails the `> 0` filter, so every row normalises to candidate 1.
+            let review = Review {
+                id: "0".to_string(),
+                session_id: "s".to_string(),
+                card_id: "c".to_string(),
+                rating: Rating::Good,
+                reviewed_at: 0,
+                answer_time_ms: None,
+                leech_event: None,
+                previous_progress: None,
+                resulting_progress: None,
+                previous_active_session: None,
+                sibling_progress_snapshots: Vec::new(),
+            };
+            assigned.push(unique_review_id(&review, &mut used, &mut highest).unwrap());
+        }
+
+        assert_eq!(assigned.len(), ROWS);
+        let distinct: BTreeSet<i64> = assigned.iter().copied().collect();
+        assert_eq!(
+            distinct.len(),
+            ROWS,
+            "every review must receive a distinct id"
+        );
+        assert!(
+            assigned.iter().all(|id| *id > 0),
+            "revlog ids must stay positive"
+        );
+    }
+
+    #[test]
+    fn duplicate_extreme_review_ids_terminate_instead_of_hanging() {
+        let mut used = BTreeSet::new();
+        let review = |id: &str| Review {
+            id: id.to_string(),
+            session_id: "s".to_string(),
+            card_id: "c".to_string(),
+            rating: Rating::Good,
+            reviewed_at: 1,
+            answer_time_ms: None,
+            leech_event: None,
+            previous_progress: None,
+            resulting_progress: None,
+            previous_active_session: None,
+            sibling_progress_snapshots: Vec::new(),
+        };
+
+        let mut highest = 0_i64;
+        let first =
+            unique_review_id(&review(&i64::MAX.to_string()), &mut used, &mut highest).unwrap();
+        assert_eq!(first, i64::MAX);
+
+        // The second one cannot be placed: MAX is taken and there is nothing above
+        // it. It must return an error rather than loop.
+        let second = unique_review_id(&review(&i64::MAX.to_string()), &mut used, &mut highest);
+        assert!(
+            second.is_err(),
+            "a second id at i64::MAX must error, not hang or silently collide"
+        );
+    }
+
+    #[test]
+    fn exported_v11_collection_opens_in_real_sqlite() {
+        let collection = parse_v11_collection_bytes(&v11_sqlite_collection_bytes()).unwrap();
+        let state = v11_collection_to_engram_state(&collection).unwrap();
+        let bytes = write_v11_collection_bytes_from_engram_state(&state).unwrap();
+
+        let file = tempfile::NamedTempFile::new().unwrap();
+        std::fs::write(file.path(), &bytes).unwrap();
+        let connection = rusqlite::Connection::open(file.path()).unwrap();
+
+        let integrity: String = connection
+            .query_row("PRAGMA integrity_check", [], |row| row.get(0))
+            .unwrap();
+        assert_eq!(integrity, "ok", "real SQLite integrity_check on our export");
+
+        let user_version: i64 = connection
+            .query_row("PRAGMA user_version", [], |row| row.get(0))
+            .unwrap();
+        assert_eq!(user_version, 11, "Anki V11 stamps user_version = 11");
+
+        let mut tables: Vec<String> = connection
+            .prepare("SELECT name FROM sqlite_schema WHERE type='table'")
+            .unwrap()
+            .query_map([], |row| row.get::<_, String>(0))
+            .unwrap()
+            .map(|row| row.unwrap())
+            .collect();
+        tables.sort();
+        assert_eq!(
+            tables,
+            vec![
+                "cards".to_string(),
+                "col".to_string(),
+                "graves".to_string(),
+                "notes".to_string(),
+                "revlog".to_string(),
+            ],
+            "all five V11 tables must be present and reparsable from their stored DDL"
+        );
+
+        // Exactly one col row, and its rowid-aliased id reads back as the value
+        // we placed in the rowid rather than as NULL.
+        let (col_id, col_ver): (i64, i64) = connection
+            .query_row("SELECT id, ver FROM col", [], |row| {
+                Ok((row.get(0)?, row.get(1)?))
+            })
+            .unwrap();
+        assert!(col_id > 0, "col.id must come back from the rowid, not NULL");
+        assert_eq!(col_ver, 11);
+
+        // Row counts match what we exported, so no table silently lost rows.
+        let note_count: i64 = connection
+            .query_row("SELECT count(*) FROM notes", [], |row| row.get(0))
+            .unwrap();
+        let card_count: i64 = connection
+            .query_row("SELECT count(*) FROM cards", [], |row| row.get(0))
+            .unwrap();
+        assert_eq!(note_count, collection.notes.len() as i64);
+        assert_eq!(card_count, collection.cards.len() as i64);
+
+        // Every note id is distinct and non-zero — the rowid-alias contract again,
+        // this time across a whole table rather than one row.
+        let note_ids: Vec<i64> = connection
+            .prepare("SELECT id FROM notes ORDER BY id")
+            .unwrap()
+            .query_map([], |row| row.get::<_, i64>(0))
+            .unwrap()
+            .map(|row| row.unwrap())
+            .collect();
+        assert!(
+            note_ids.iter().all(|id| *id > 0),
+            "note ids must survive as rowids, got {note_ids:?}"
+        );
+        let mut unique = note_ids.clone();
+        unique.dedup();
+        assert_eq!(unique.len(), note_ids.len(), "note ids must be distinct");
+
+        // The rowid-alias contract, asserted at the byte level.
+        //
+        // Everything above this point passes even when the `id` column is
+        // (wrongly) written as an integer instead of NULL — verified by making
+        // that exact mutation and watching all 42 tests, `PRAGMA
+        // integrity_check` included, still go green. SQLite reads the rowid for
+        // an alias column and never looks at the record's value, so no amount of
+        // SQL can distinguish the two encodings.
+        //
+        // `sqlite_file::read_table` returns what is actually *stored*, alongside
+        // the rowid, so it can see what SQL cannot.
+        for table in ["col", "notes", "cards", "revlog"] {
+            for (rowid, columns) in sqlite_file::read_table(&bytes, table).unwrap() {
+                assert_eq!(
+                    columns[0],
+                    SqlValue::Null,
+                    "{table}.id is an INTEGER PRIMARY KEY rowid alias and must be \
+                     stored as NULL, with the value carried by the rowid"
+                );
+                assert!(rowid > 0, "{table} rowid must carry the real id");
+            }
+        }
+
+        // `graves` is the exception: no rowid alias, so every column is stored.
+        for (_rowid, columns) in sqlite_file::read_table(&bytes, "graves").unwrap() {
+            assert!(
+                columns.iter().all(|value| *value != SqlValue::Null),
+                "graves has no INTEGER PRIMARY KEY, so all three columns are stored"
+            );
+        }
     }
 
     #[test]

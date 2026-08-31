@@ -1,5 +1,48 @@
 # Changelog — sqlite-file
 
+## 0.19.0 - Unreleased
+
+**Writer: a stale cell-count cap limited whole tables to 65535 rows.**
+`order_cells` rejected any table with more than 65535 cells, reporting "more than
+65535 cells on one leaf page". That was correct when a table *was* one leaf; once
+`encode_table_btree` grew multi-level b-trees it capped whole tables at a limit
+that only ever applied to a page.
+
+Not hypothetical: Anki's `revlog` gains a row per answered card, so a collection
+with roughly a year of history crossed it and could not be exported at all.
+
+The guard moves to `pack_leaf_cells`, the only place a page is actually framed —
+which also closes a latent silent truncation there, since the cell count is
+written with an unchecked `n as u16`. Callers split by size long before reaching
+65535 cells, so it is now an unreachable invariant guard rather than a limit.
+
+Regression test writes a 70000-row table and reads it back through real
+bundled-C SQLite (`integrity_check`, full row count, and probes at rows 1,
+65535, 65536, and 70000); it fails with the old guard restored.
+
+**Writer: `DbOptions`, so a caller can set the user version through the front
+door.** 0.18.0 put `user_version` on `Header`, but `write_multi_table_db` still
+hardcoded `0`, so the only way to emit a non-zero user version was to parse the
+writer's output, mutate the header, re-encode it, and splice the 100 bytes back.
+That works — it is what the cross-check test does deliberately — but it is a
+ritual every caller would otherwise have to re-derive, and getting the splice
+wrong corrupts the header.
+
+New `DbOptions { page_size, user_version }` and
+`write_multi_table_db_with(options, tables)`. `write_multi_table_db(page_size,
+tables)` stays, delegating with `user_version: 0`, so existing callers and their
+emitted bytes are unchanged.
+
+Options are a struct rather than extra positional parameters because
+`user_version: 11` says what it means at the call site where a bare `11` beside a
+page size would not, and because the next header field will not need another
+signature change.
+
+Gated by `writer_options_user_version_reaches_real_sqlite`, which asserts real
+bundled-C SQLite reports the requested version, that `integrity_check` passes,
+that a rowid-alias column written as NULL reads back from the rowid, and that the
+default constructor still emits `0`.
+
 ## 0.18.0 - Unreleased
 
 **Header: the user version (offset 60).** `Header` gained a `user_version` field,

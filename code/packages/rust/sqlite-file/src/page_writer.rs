@@ -150,6 +150,19 @@ fn pack_leaf_cells(
 ) -> Result<(), SqliteError> {
     let n = cells.len();
 
+    // A page's cell count is a 16-bit field, so more than 65535 cells cannot be
+    // represented — and the `as u16` below would silently truncate it, writing a
+    // page that claims a handful of cells while holding tens of thousands. Reject
+    // it here, where a page is actually framed.
+    //
+    // Callers split by *size* long before reaching this many cells, so in practice
+    // this is an unreachable invariant guard rather than a limit anyone meets.
+    if n > u16::MAX as usize {
+        return Err(SqliteError::Unsupported(
+            "more than 65535 cells on one leaf page",
+        ));
+    }
+
     // --- 8-byte page header. Freeblock (1..3) and fragmented-free (7) stay 0. --
     page[header_offset] = LEAF_TABLE;
     page[header_offset + 3..header_offset + 5].copy_from_slice(&(n as u16).to_be_bytes());
@@ -280,11 +293,15 @@ fn encode_overflow_pages(
 /// Sort `(rowid, record)` cells by rowid and reject duplicate rowids — the
 /// shared preamble for any table-leaf page. Returns borrowed refs in key order.
 fn order_cells(cells: &[(i64, Vec<u8>)]) -> Result<Vec<&(i64, Vec<u8>)>, SqliteError> {
-    if cells.len() > u16::MAX as usize {
-        return Err(SqliteError::Unsupported(
-            "more than 65535 cells on one leaf page",
-        ));
-    }
+    // No cell-count cap here. This function sorts a *whole table's* cells, and a
+    // table is no longer one page: `encode_table_btree` splits them across as many
+    // leaves as it needs and stacks interior levels above them. The 65535 limit is
+    // a property of one page's cell-pointer array, so it belongs in
+    // `pack_leaf_cells`, which is the only place a page is actually framed.
+    //
+    // It used to live here, from when a table was a single leaf, and capped whole
+    // tables at 65535 rows long after that stopped being true — which quietly made
+    // any collection with a year of review history unexportable.
     let mut ordered: Vec<&(i64, Vec<u8>)> = cells.iter().collect();
     ordered.sort_by_key(|(rowid, _)| *rowid);
     for pair in ordered.windows(2) {
@@ -333,8 +350,41 @@ pub fn write_single_table_db(
 /// [`write_multi_table_db`] writes. `rows` is `(rowid, column values)` per row.
 pub type TableSpec<'a> = (&'a str, &'a str, &'a [(i64, Vec<crate::record::SqlValue>)]);
 
+/// Everything about the database being written that is not the tables themselves.
+///
+/// [`write_multi_table_db`] covers the common case with defaults. Reach for this
+/// and [`write_multi_table_db_with`] when a header field has to carry a specific
+/// value — today that means [`user_version`](DbOptions::user_version), which Anki
+/// V11 collections require.
+///
+/// Passing options as a struct rather than as extra positional parameters keeps
+/// the requirement legible at the call site: `user_version: 11` says what it means,
+/// where a bare `11` alongside a page size would not.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct DbOptions {
+    /// Bytes per page — a power of two in `512..=65536`.
+    pub page_size: usize,
+    /// The value `PRAGMA user_version` will report. SQLite never interprets it;
+    /// applications use it to stamp a schema version. Anki V11 uses 11.
+    pub user_version: u32,
+}
+
+impl DbOptions {
+    /// Options for `page_size` with every other field at its default — exactly
+    /// what [`write_multi_table_db`] uses.
+    pub fn new(page_size: usize) -> Self {
+        DbOptions {
+            page_size,
+            user_version: 0,
+        }
+    }
+}
+
 /// Emit a complete, re-readable SQLite database holding **several** tables in one
 /// call — the multi-table generalisation of [`write_single_table_db`].
+///
+/// This is [`write_multi_table_db_with`] with default options; see [`DbOptions`]
+/// when a header field such as the user version has to carry a specific value.
 ///
 /// ## Page layout
 ///
@@ -361,6 +411,21 @@ pub type TableSpec<'a> = (&'a str, &'a str, &'a [(i64, Vec<crate::record::SqlVal
 /// leaf even after overflow (a schema large enough to need page 1 to become an
 /// interior b-tree is a later rung).
 pub fn write_multi_table_db(page_size: usize, tables: &[TableSpec]) -> Result<Vec<u8>, SqliteError> {
+    write_multi_table_db_with(DbOptions::new(page_size), tables)
+}
+
+/// [`write_multi_table_db`], with control over the header fields in [`DbOptions`].
+///
+/// # Errors
+/// The same as [`write_multi_table_db`].
+pub fn write_multi_table_db_with(
+    options: DbOptions,
+    tables: &[TableSpec],
+) -> Result<Vec<u8>, SqliteError> {
+    let DbOptions {
+        page_size,
+        user_version,
+    } = options;
     if !(512..=65536).contains(&page_size) || !page_size.is_power_of_two() {
         return Err(SqliteError::BadPageSize(page_size as u32));
     }
@@ -426,7 +491,7 @@ pub fn write_multi_table_db(page_size: usize, tables: &[TableSpec]) -> Result<Ve
         schema_cookie: 1,
         schema_format: 1,
         text_encoding: TextEncoding::Utf8,
-        user_version: 0,
+        user_version,
     };
     let mut page1 = vec![0u8; page_size];
     page1[0..100].copy_from_slice(&header.encode());

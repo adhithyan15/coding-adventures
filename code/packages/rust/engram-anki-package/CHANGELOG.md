@@ -2,6 +2,72 @@
 
 ## Unreleased
 
+**Fixed two DoS paths in revlog id assignment, both reachable from an imported
+file.** Review ids come straight from the revlog b-tree's cell rowids, and
+`walk_table` sorts but does not deduplicate, so a crafted `.anki2` controls them
+entirely.
+
+`unique_review_id` resolved collisions by linear probing. That did not terminate
+at `i64::MAX` — `saturating_add` became a no-op and the loop spun at 100% CPU
+forever. It was also **quadratic**: the function normalises every id `<= 0` to
+`1`, so N revlog rows with rowid `0` all start at the same candidate and row *k*
+probes *k* times. Measured at ~91s for 80k rows and about an hour at 500k, from
+an `.apkg` of tens of kilobytes once zipped, since the rows compress well.
+
+Since the ids only need to be unique, a collision now jumps past the highest id
+handed out so far rather than walking to it — O(1) per review, one step always
+sufficient because `highest + 1` is free by construction. `checked_add` keeps
+exhaustion an error rather than a hang.
+
+Regression tests cover both: two ids at `i64::MAX` must error rather than loop,
+and 50000 rows all colliding on candidate 1 must produce 50000 distinct ids (that
+test alone would take roughly 35 seconds under the old probe; it now runs in
+0.06s).
+
+Pre-existing rather than introduced by the port, fixed because the export path
+calls it.
+
+**The V11 export no longer uses `rusqlite`.** `write_v11_collection_bytes_from_engram_state`
+built its `.anki2` database by opening an in-memory `rusqlite` connection, running
+a `CREATE TABLE` batch, executing five `INSERT` loops, and calling `serialize()`.
+It now builds rows directly and emits the file with `sqlite-file`'s
+zero-dependency writer (`write_multi_table_db_with`).
+
+`rusqlite` and `tempfile` move to **dev-dependencies**. The production graph
+therefore links no bundled C SQLite, which is what the `wasm32` build needs — the
+C amalgamation cannot target it. `rusqlite` stays as a test **oracle**, the same
+role it holds in `sqlite-file`'s cross-check suite: the import tests build genuine
+`.anki2` fixtures with the real C library and assert our reader decodes what
+SQLite actually wrote. Replacing that with our own writer would make it circular.
+
+The five `CREATE TABLE` statements are preserved verbatim as constants — they are
+stored in `sqlite_schema.sql` and SQLite reparses them on open, so they are
+load-bearing bytes.
+
+**The rowid-alias trap.** `col`, `notes`, `cards`, and `revlog` declare
+`id integer primary key`, which SQLite treats as an alias for the rowid: the
+record stores NULL and the value travels in the cell's rowid. `graves` has no such
+column, so all three of its values are stored and its rowids are synthesised.
+
+This one is worth spelling out because it fails silently. Writing the id as an
+integer instead of NULL was tried deliberately, and **all 42 tests passed** —
+including both golden `.apkg` round-trips, `SELECT id FROM notes`, and
+`PRAGMA integrity_check` on the export opened in real SQLite. SQLite reads the
+rowid for an alias column and never consults the stored value, so no SQL-level
+check can see the difference. The export is now gated by an assertion on what is
+actually *stored* (`sqlite_file::read_table` returns the record's columns
+alongside the rowid), which does fail on that mutation.
+
+New test `exported_v11_collection_opens_in_real_sqlite` hands the export to
+bundled-C SQLite and asserts `integrity_check`, `user_version = 11`, all five
+tables reparsing from their stored DDL, row counts, and the rowid-alias contract.
+
+Note that this does **not** yet make the crate `wasm32`-buildable: `zstd_crate`
+remains an unconditional production dependency and its `zstd-sys` build script
+cannot target wasm either. Gating that behind a feature is tracked separately.
+
+## Unreleased
+
 ### Started sqlite-file reader cutover for Anki V11 imports
 
 `parse_v11_collection_bytes` now reads the `col`, `notes`, `cards`, `revlog`,
