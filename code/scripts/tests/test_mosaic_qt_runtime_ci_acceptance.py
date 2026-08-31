@@ -49,6 +49,7 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
             "rust/mosaic-app-conformance",
             "rust/mosaic-app-runtime",
             "rust/task-mosaic-app",
+            "rust/engram-mosaic-app",
         ):
             with self.subTest(package=package):
                 self.assertTrue(
@@ -165,6 +166,36 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
             '! grep -E "missing required MIL prop|ReferenceError|TypeError" "$taskapp_log"',
             workflow,
         )
+        # Engram's Qt step gates EMISSION, not a runtime round-trip — it
+        # overrides MosaicHost.cpp, so the emitted app never calls the bundled
+        # engine. These assertions pin that distinction so the step cannot
+        # quietly grow a launch that would read as more than it proves.
+        self.assertIn("mosaic-qt-engram", workflow)
+        self.assertIn(
+            "cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app",
+            workflow,
+        )
+        self.assertIn(
+            "pkg code/programs/mosaic/engram-app --backend qt --output \"$engram_output\" --emit-project --profile native-complete --runtime-library \"$engram_runtime_library\"",
+            workflow,
+        )
+        self.assertIn(
+            "'.nativeComplete == true and (.degradations | length == 0)' \"$engram_output/qt/mosaic-degradations.json\"",
+            workflow,
+        )
+        # The override is pinned to exactly two files, so a third replacement
+        # (main.cpp, CMakeLists.txt — either also unhooks the runtime) fails.
+        self.assertIn(
+            "'.replacedGeneratedFiles == [\"MosaicHost.cpp\", \"MosaicHost.h\"]'",
+            workflow,
+        )
+        self.assertIn(
+            'cmp "$engram_runtime_library" "$installed_engram_runtime"',
+            workflow,
+        )
+        # No launch: it would pass while never touching the standard runtime.
+        self.assertNotIn('"$installed_engram"', workflow)
+
         self.assertIn("mosaic-qt-toolkit", workflow)
         self.assertIn(
             "pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt",
