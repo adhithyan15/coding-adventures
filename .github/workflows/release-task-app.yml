@@ -432,6 +432,91 @@ jobs:
           ! grep -Fq "Mosaic Rust runtime unavailable" release-work/compose-launch.log
           cmp "$probe" "$state_root/task-app/backups/pre-v${RELEASE_VERSION}-compose.json"
 
+      - name: Build, verify, and archive the SwiftUI macOS application
+        if: matrix.backend == 'swiftui'
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: |
+          set -euo pipefail
+          generated="$PWD/release-work/generated/swiftui"
+          expected="$PWD/code/packages/rust/target/release/libtask_mosaic_app.dylib"
+          swift build -c release --package-path "$generated"
+          swift_bin="$(swift build -c release --package-path "$generated" --show-bin-path)"
+          executable="$swift_bin/App"
+          resource_bundle="$(find "$swift_bin" -maxdepth 1 -type d -name 'App_App.bundle' -print -quit)"
+          runtime="$(find "$resource_bundle" -type f -path '*/Runtime/libmosaic_app.dylib' -print -quit)"
+          test -x "$executable"
+          test -n "$runtime"
+          cmp "$expected" "$runtime"
+          python code/scripts/taskapp_release.py archive-macos-app \
+            --version "$RELEASE_VERSION" \
+            --commit "$RELEASE_COMMIT" \
+            --architecture "$(uname -m)" \
+            --executable "$executable" \
+            --resource-bundle "$resource_bundle" \
+            --runtime "$runtime" \
+            --expected-runtime "$expected" \
+            --output-dir release-assets
+
+          mkdir -p release-work/macos-v1 release-work/macos-replacement
+          unzip -q "release-assets/task-app-swiftui-macos-bundle-v${RELEASE_VERSION}.zip" \
+            -d release-work/macos-v1
+          unzip -q "release-assets/task-app-swiftui-macos-bundle-v${RELEASE_VERSION}.zip" \
+            -d release-work/macos-replacement
+          app_v1="$PWD/release-work/macos-v1/Trestle.app"
+          app_replacement="$PWD/release-work/macos-replacement/Trestle.app"
+          plist="release-work/macos-v1/Trestle.app/Contents/Info.plist"
+          plutil -lint "$plist"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$plist")" \
+            = "org.codingadventures.trestle"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$plist")" \
+            = "Trestle"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$plist")" \
+            = "$RELEASE_VERSION"
+          sips -g format "$app_v1/Contents/Resources/Trestle.icns" | grep -F "format: icns"
+          cmp "$expected" "$app_v1/App_App.bundle/Runtime/libmosaic_app.dylib"
+
+          harness="$PWD/release-work/swiftui-conformance"
+          cp -R code/packages/rust/task-mosaic-app/conformance/swiftui "$harness"
+          mkdir -p "$harness/Sources/CMosaicRuntime/include"
+          cp "$generated/Sources/App/MosaicRuntimeHost.swift" \
+            "$harness/Sources/Conformance/MosaicRuntimeHost.swift"
+          cp "$generated/Sources/CMosaicRuntime/CMosaicRuntime.c" \
+            "$harness/Sources/CMosaicRuntime/CMosaicRuntime.c"
+          cp "$generated/Sources/CMosaicRuntime/include/CMosaicRuntime.h" \
+            "$harness/Sources/CMosaicRuntime/include/CMosaicRuntime.h"
+          state="$PWD/release-work/macos-upgrade-state.json"
+          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state" \
+            swift run --package-path "$harness" Conformance \
+            --library "$app_v1/App_App.bundle/Runtime/libmosaic_app.dylib"
+
+          launch_app() {
+            local app="$1"
+            local log="$2"
+            (
+              cd /
+              env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state" \
+                "$app/Contents/MacOS/Trestle" >"$log" 2>&1 &
+              app_pid=$!
+              trap 'kill "$app_pid" 2>/dev/null || true' EXIT
+              sleep 5
+              kill -0 "$app_pid"
+              kill "$app_pid"
+              wait "$app_pid" || true
+              trap - EXIT
+            )
+            ! grep -Fq "Mosaic Rust runtime unavailable" "$log"
+            ! grep -E "missing required MIL prop|Mosaic runtime failed|Fatal error|Precondition failed" "$log"
+          }
+          launch_app "$app_v1" "$PWD/release-work/macos-v1-launch.log"
+          launch_app "$app_replacement" "$PWD/release-work/macos-replacement-launch.log"
+          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state" \
+            MOSAIC_EXPECT_RESTORED=1 \
+            swift run --package-path "$harness" Conformance \
+            --library "$app_replacement/App_App.bundle/Runtime/libmosaic_app.dylib"
+
       - name: Upload the verified native payload
         uses: actions/upload-artifact@v7
         with:

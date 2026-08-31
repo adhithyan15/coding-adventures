@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import plistlib
 import sys
 import tarfile
 import zipfile
@@ -27,6 +28,7 @@ from taskapp_release import (
     LINUX_BUNDLES,
     NATIVE_TARGETS,
     archive_linux_bundle,
+    archive_macos_app,
     archive_native,
     archive_web,
     artifact_names,
@@ -182,6 +184,60 @@ def test_linux_bundle_rejects_runtime_mismatch_and_external_paths(
         )
 
 
+def test_archives_unsigned_macos_app_with_stable_identity(tmp_path: Path) -> None:
+    executable = tmp_path / "App"
+    executable.write_bytes(b"mach-o")
+    executable.chmod(0o755)
+    resources = tmp_path / "App_App.bundle"
+    runtime = resources / "Runtime" / "libmosaic_app.dylib"
+    runtime.parent.mkdir(parents=True)
+    runtime.write_bytes(b"rust-runtime")
+    expected_runtime = tmp_path / "libtask_mosaic_app.dylib"
+    expected_runtime.write_bytes(b"rust-runtime")
+
+    payload = archive_macos_app(
+        "0.2.0",
+        COMMIT,
+        "arm64",
+        executable,
+        resources,
+        runtime,
+        expected_runtime,
+        tmp_path / "assets",
+    )
+
+    with zipfile.ZipFile(payload) as archive:
+        plist = plistlib.loads(archive.read("Trestle.app/Contents/Info.plist"))
+        metadata = json.loads(
+            archive.read("Trestle.app/Contents/Resources/BUNDLE.json")
+        )
+        icon = archive.read("Trestle.app/Contents/Resources/Trestle.icns")
+        executable_mode = (
+            archive.getinfo("Trestle.app/Contents/MacOS/Trestle").external_attr >> 16
+        )
+    assert plist["CFBundleDisplayName"] == "Trestle"
+    assert plist["CFBundleIdentifier"] == "org.codingadventures.trestle"
+    assert plist["CFBundleShortVersionString"] == "0.2.0"
+    assert plist["CFBundleIconFile"] == "Trestle"
+    assert metadata["architecture"] == "arm64"
+    assert metadata["signed"] is False
+    assert metadata["iosArtifact"] is False
+    assert icon.startswith(b"icns")
+    assert executable_mode & 0o111
+
+    with pytest.raises(ValueError, match="unsupported macOS architecture"):
+        archive_macos_app(
+            "0.2.0",
+            COMMIT,
+            "universal",
+            executable,
+            resources,
+            runtime,
+            expected_runtime,
+            tmp_path / "assets",
+        )
+
+
 def test_manifest_requires_the_exact_release_payload_set(tmp_path: Path) -> None:
     for name in artifact_names("0.1.0"):
         (tmp_path / name).write_bytes(b"payload")
@@ -210,6 +266,10 @@ def test_manifest_requires_the_exact_release_payload_set(tmp_path: Path) -> None
         target["toolkit"] for target in NATIVE_TARGETS.values()
     }
     assert {artifact["backend"] for artifact in bundle_artifacts} == set(LINUX_BUNDLES)
+    macos_artifact = manifest["artifacts"][-1]
+    assert macos_artifact["kind"] == "unsigned-macos-application"
+    assert macos_artifact["runnable"] is True
+    assert macos_artifact["signed"] is False
 
     (tmp_path / "unexpected.zip").write_bytes(b"unexpected")
     with pytest.raises(ValueError, match="payload mismatch"):
@@ -247,6 +307,8 @@ def test_release_notes_are_product_scoped_and_filter_previous_history() -> None:
     assert "no installer" in notes.lower()
     assert "portable bundle" in notes.lower()
     assert "task-app-compose-linux-bundle-v0.1.0.tar.gz" in notes
+    assert "task-app-swiftui-macos-bundle-v0.1.0.zip" in notes
+    assert "not notarized" in notes.lower()
     assert "issues/13522" in notes
     assert "SHA256SUMS" in notes
 
@@ -275,6 +337,8 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "cmake --install" in workflow
     assert "launch-trestle" in workflow
     assert "*.tar.gz" in workflow
+    assert "archive-macos-app" in workflow
+    assert "Trestle.app/Contents/Info.plist" in workflow
     assert "code/packages/rust/task-wasm/pkg/task_engine.wasm" in workflow
     assert "host/web/public/task_engine.wasm" in workflow
     assert "':(exclude)code/packages/rust/task-wasm/pkg/task_engine.wasm'" in workflow
