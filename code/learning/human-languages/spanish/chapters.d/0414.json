@@ -1,0 +1,18 @@
+{
+  "chapter": 414,
+  "title": "Sign Up at Reception",
+  "label": "ch:apuntarse-recepcion",
+  "canDo": "I can understand where and when to sign up for a class.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C414-signup-recall-2",
+    "kind": "production",
+    "summary": "Retrieve sign up and reception in a simple class notice.",
+    "assesses": [
+      "ES-LEX-APUNTARSE",
+      "ES-LEX-RECEPCION"
+    ]
+  }
+}

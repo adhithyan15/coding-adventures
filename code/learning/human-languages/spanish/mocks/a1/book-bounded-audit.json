@@ -59,9 +59,9 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 928,
-  "taughtForms": 1553,
-  "objectiveFailed": 4,
+  "lessonCount": 932,
+  "taughtForms": 1556,
+  "objectiveFailed": 3,
   "mocks": [
     {
       "mock": 1,
@@ -72,9 +72,9 @@
     },
     {
       "mock": 2,
-      "reading": 23,
+      "reading": 24,
       "listening": 23,
-      "objectiveFailed": 4,
+      "objectiveFailed": 3,
       "failed": [
         {
           "paper": 1,
@@ -83,14 +83,6 @@
             "curso",
             "nadar",
             "adulto"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 24,
-          "missing": [
-            "apuntarse",
-            "recepción"
           ]
         },
         {
@@ -114,22 +106,16 @@
   ],
   "missingObjectiveLexemes": [
     "adulto",
-    "apuntarse",
     "curso",
     "extranjero",
     "mayo",
     "nadar",
     "paquete",
-    "quedarse",
-    "recepción"
+    "quedarse"
   ],
   "missingFrequency": [
     {
       "lexeme": "adulto",
-      "count": 1
-    },
-    {
-      "lexeme": "apuntarse",
       "count": 1
     },
     {
@@ -154,10 +140,6 @@
     },
     {
       "lexeme": "quedarse",
-      "count": 1
-    },
-    {
-      "lexeme": "recepción",
       "count": 1
     }
   ]

@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:b137e8aae8e34ca2",
+  "lessonIds": [
+    "ES-C414-apuntarse",
+    "ES-C414-recepcion",
+    "ES-C414-signup-recall-1",
+    "ES-C414-signup-recall-2"
+  ],
+  "tex": "spanish/book/chapters/ch414-apuntarse-recepcion.tex"
+}
