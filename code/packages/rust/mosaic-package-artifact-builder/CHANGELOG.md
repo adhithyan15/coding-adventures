@@ -1,5 +1,58 @@
 # Changelog
 
+## Unreleased
+
+**The emit report now records when a package overwrites generated files.** New
+`DegradationReport::replaced_generated_files` (`replacedGeneratedFiles` in the
+JSON), listing generated files a package's `[host_assets]` replaced.
+
+Overwriting them is **supported** — the generated Qt README says so outright:
+"Explicit package host assets may replace `MosaicHost.h/.cpp` when specialized
+platform integration is required." What was missing is that it happened silently.
+Generated code is what loads and calls the library `--runtime-library` bundles,
+so overwriting it can leave the selected engine installed and never invoked —
+while the report still said `nativeComplete: true` with no degradations. A CI
+lane that bundles a runtime, byte-compares the installed copy, and launches the
+app could pass every check without executing a line of it.
+
+**Derived from what the build actually wrote, not from a list of filenames.** A
+first attempt used a hand-maintained table of runtime-binding paths, and it was
+the wrong shape twice over: one entry named a path the builder never emits, and —
+worse — overwriting the binding is not the only way to unhook the runtime.
+Replacing Qt's `main.cpp` removes the `MosaicHost` construction; replacing
+`CMakeLists.txt` drops the `target_sources` line that compiles the binding at
+all, leaving it byte-identical on disk and never built. Each is one manifest line,
+and each reported an empty list.
+
+`install_host_assets` runs after emission, so the backend directory already holds
+what the build produced: a target landing on a file already there is a
+replacement. The list is read from disk, not from the accumulated artifact vector
+— that vector is a parallel record every emitter must remember to push to, and
+two already do not (`emit_index_file` writes `index-shell.html` and `pubspec.yaml`
+but returns only one path each, so overwriting the HTML app shell that inlines
+every component reported nothing). Reading the directory is the only version that
+cannot be reopened by a future emitter forgetting a push.
+
+Collisions are resolved through `fs::canonicalize`, so the filesystem decides
+what counts as the same file rather than a guess about the platform —
+`mosaichost.cpp` overwrites `MosaicHost.cpp` on macOS and Windows and does not on
+Linux, and the report follows suit. The generated file's own name is reported,
+not the manifest's spelling, since a consumer checking that the binding survived
+looks for `MosaicHost.cpp`.
+
+Kept out of `degradations`/`nativeComplete` for the same reason
+`styleDegradations` is: a supported choice, not a backend failing to express
+something. A consumer that needs generated code intact asserts the list is empty.
+
+Analysis-only callers (`analyze_package_degradations`) get an empty list — they
+emit nothing, so nothing has been replaced, and predicting it would mean
+re-deriving the emitter's behaviour, which is the drift this avoids.
+
+Found by putting Engram on the standard ABI: it ships its own `MosaicHost.cpp`
+bound to `engram-capi`, and the real package now reports
+`["MosaicHost.cpp", "MosaicHost.h"]`. TaskApp declares no Qt host assets, so the
+existing native lanes could not have surfaced this.
+
 ## [Unreleased] - install application-scoped native persistence (#13519)
 
 All five generated native project shells now install a standard Mosaic runtime
