@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W08-phone-supported",
+    "language": "punjabi",
+    "chapter": 30,
+    "sequence": 1880,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dafa9dc05c9fa467",
+    "detachableSegments": [
+      "Writing — bank visible"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

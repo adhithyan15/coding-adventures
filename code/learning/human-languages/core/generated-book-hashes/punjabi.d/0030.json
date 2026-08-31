@@ -1,0 +1,23 @@
+{
+  "language": "punjabi",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:4fabd3a9486f235b",
+  "lessonIds": [
+    "PA-W08-pha",
+    "PA-W08-pairin-bindi",
+    "PA-W08-hora",
+    "PA-W08-phone-label",
+    "PA-W08-digit-zero",
+    "PA-W08-phone-a",
+    "PA-W08-phone-b",
+    "PA-W08-digit-recognition",
+    "PA-W08-phone-select",
+    "PA-W08-phone-supported",
+    "PA-W08-phone-grouping",
+    "PA-W08-phone-delayed",
+    "PA-W08-phone-dictation",
+    "PA-W08-phone-repair",
+    "PA-W08-phone-no-model"
+  ],
+  "tex": "punjabi/book/chapters/ch30-phone-field.tex"
+}

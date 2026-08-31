@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W08-phone-grouping",
+    "language": "punjabi",
+    "chapter": 30,
+    "sequence": 1890,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0540629d90fa217c",
+    "detachableSegments": [
+      "Script — one grouping boundary"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

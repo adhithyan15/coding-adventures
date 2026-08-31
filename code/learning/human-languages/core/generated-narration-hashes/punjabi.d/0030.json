@@ -1,0 +1,29 @@
+{
+  "language": "punjabi",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:4f20dc662bea5247",
+  "lessonIds": [
+    "PA-W08-pha",
+    "PA-W08-pairin-bindi",
+    "PA-W08-hora",
+    "PA-W08-phone-label",
+    "PA-W08-digit-zero",
+    "PA-W08-phone-a",
+    "PA-W08-phone-b",
+    "PA-W08-digit-recognition",
+    "PA-W08-phone-select",
+    "PA-W08-phone-supported",
+    "PA-W08-phone-grouping",
+    "PA-W08-phone-delayed",
+    "PA-W08-phone-dictation",
+    "PA-W08-phone-repair",
+    "PA-W08-phone-no-model"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch30.txt",
+  "json": "punjabi/narration/ch30.json",
+  "textHash": "fnv1a64:5bd40f9aa1601591",
+  "jsonHash": "fnv1a64:737993a014d7ef25",
+  "findings": []
+}

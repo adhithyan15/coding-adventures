@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "PA-W08-phone-repair",
+    "language": "punjabi",
+    "chapter": 30,
+    "sequence": 1920,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8ae2fa6f9290123e",
+    "delivery": "script"
+  },
+  "findings": []
+}
