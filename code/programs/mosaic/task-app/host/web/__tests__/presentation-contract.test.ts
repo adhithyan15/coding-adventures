@@ -106,4 +106,37 @@ describe("shared TaskApp web/native presentation contract", () => {
       ).toEqual(step.expected);
     }
   });
+
+  it("rejects blank names and impossible due dates without mutating the workspace", async () => {
+    const wasmPath = path.resolve(
+      process.cwd(),
+      "../../../../../packages/rust/target/wasm32-unknown-unknown/release/task_wasm.wasm",
+    );
+    const engine = createTaskEngine(await readFile(wasmPath));
+    let mutations = 0;
+    const controller = makeController(engine, { onMutate: () => mutations++ });
+
+    controller.apply({ type: "addTask" });
+    expect(controller.getProps().newTaskNameError).toBe("Enter a task name.");
+    expect(Object.keys(engine.workspace().data.projects.project.tasks)).toHaveLength(0);
+    expect(mutations).toBe(0);
+
+    controller.apply({ type: "newTaskNameChange", value: "Plan the launch" });
+    expect(controller.getProps().newTaskNameError).toBe("");
+    controller.apply({ type: "newTaskDueChange", value: "2026-02-31" });
+    controller.apply({ type: "addTask" });
+    expect(controller.getProps().newTaskDueError).toBe(
+      "Use a real date in YYYY-MM-DD format.",
+    );
+    expect(Object.keys(engine.workspace().data.projects.project.tasks)).toHaveLength(0);
+    expect(mutations).toBe(0);
+
+    controller.apply({ type: "newTaskDueChange", value: "2026-02-28" });
+    expect(controller.getProps().newTaskDueError).toBe("");
+    controller.apply({ type: "addTask" });
+    expect(Object.keys(engine.workspace().data.projects.project.tasks)).toEqual(["t1"]);
+    expect(controller.getProps().newTaskNameFocus).toBe("focus");
+    expect(controller.getProps().newTaskDueFocus).toBe("");
+    expect(mutations).toBe(1);
+  });
 });

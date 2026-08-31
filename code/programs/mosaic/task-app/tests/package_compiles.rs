@@ -35,6 +35,10 @@ fn task_app_sources_compile() {
         "app-title",
         "new-task-name",
         "new-task-due",
+        "new-task-name-error",
+        "new-task-due-error",
+        "new-task-name-focus",
+        "new-task-due-focus",
         "summary",
         "task-rows",
     ] {

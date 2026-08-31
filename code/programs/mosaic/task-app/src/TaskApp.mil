@@ -13,6 +13,14 @@ component TaskApp {
   slot app-title     : text ;
   slot new-task-name : text ;
   slot new-task-due  : text ;
+  // Plain-language validation feedback. Each marker also selects an auto-focused
+  // error-labelled HostInput branch, so the same correction path works natively.
+  slot new-task-name-error : text ;
+  slot new-task-due-error  : text ;
+  // Focus-preserving wrappers keep a corrected field stable and move successful
+  // keyboard capture back to the task name. Like the errors, these are transient.
+  slot new-task-name-focus : text ;
+  slot new-task-due-focus  : text ;
   // Non-empty only while the active List has no tasks. The layout uses this
   // marker for first-run guidance without teaching the UI to count rows.
   slot empty-list    : text ;
