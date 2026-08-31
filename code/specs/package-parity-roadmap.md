@@ -12211,14 +12211,43 @@ server-metadata owners. Metadata HTTP execution, provider-registry ownership,
 redirect uniqueness, credential custody, clocks, and storage remain outside
 the pure metadata contract.
 
-OAuth decomposition therefore records four portable items and two selection-
-blocked host or credential reviews. Host review now waits for metadata trust
-and token-wire contracts, while credential custody also waits for the host
-authority review. With the five engine-adoption children and the
-shared/generated boundary child wired into all eleven exact-registry engine
-leaves, the complete state contains 621 unique owners and 967 dependency
-edges: 197 merged, 423 pending, and exactly this registry owner in progress.
-The graph is dependency-complete and acyclic.
+OAuth decomposition therefore records portable core, metadata, token-wire,
+loopback callback, applicable-lane, and focused Rust repair items plus
+selection-blocked host and credential reviews. Host review waits for metadata,
+token-wire, loopback, and audit-continuity contracts, while credential custody
+also waits for the host authority review.
+
+Before publication, the two-commit branch rebased conflict-free onto exact
+`origin/main` `d2dbd94aeb4a8975ab66f46663164291333f2e19`. The refreshed
+collision-checked schema-3 inventory records 15 established lanes, 1,393
+implementation identities, 4,607 implementation slots, and 1,432 all-reported
+identities. Its completion bands are 175 packages with 265 missing slots,
+123/934, 170/2,139, and 925/12,950; Rust has 736 singletons, OCaml remains at
+zero packages, and canonical collisions and unknown buckets remain zero.
+
+Four new Rust-only identities are classified before publication.
+`engram-mosaic-app` is an application-specific native Mosaic ABI and clock
+adapter under a blocked review that depends on the portable runtime, C ABI,
+and generated-binding owners. A second blocked Engram review owns the existing
+file-picker, arbitrary-path APKG/snapshot import/export, sidecar process,
+redaction, archive/SQLite bounds, and currently inaccurate empty capability
+declaration rather than assigning that authority to generic Mosaic owners.
+`upnp-av-protocol` receives an authority-free
+portable codec owner; `smart-home-upnp-media-renderer-integration` is split
+between portable SSDP/endpoint/command-state fixtures and a blocked concrete
+network, CLI, capability, and runtime-mutation review. The reusable protocol
+also becomes a prerequisite of the existing Sonos portable owner, and the
+same audit records the previously missing Sonos native-authority review.
+`oauth-installed-app-host` is split between a portable callback/audit contract,
+applicable-lane parity, and the existing blocked socket/browser/provider host
+review. A focused eligible Rust repair owns the independently reproduced
+post-browser audit failure that currently leaves the loopback listener usable
+despite the documented fail-closed contract.
+
+With the five engine-adoption children, shared/generated boundary child, and
+post-rebase classifications wired, the complete state contains 630 unique
+owners and 987 dependency edges: 197 merged, 432 pending, and exactly this
+registry owner in progress. The graph is dependency-complete and acyclic.
 
 ## Autonomous Loop Protocol
 

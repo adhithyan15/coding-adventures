@@ -19,21 +19,21 @@
     "notes": "PR #13647 completed all 43 final-head checks acceptably at exact head 1bb2228ece74e136b6fc7f52570d596e9ddb7aef: 36 succeeded, six were skipped, and one completed neutral. GitHub then executed the previously enabled guarded squash auto-merge without a manual merge at 2026-08-31T13:01:27Z, producing exact origin/main merge commit 138457fbc2ff2ae7c26c5177148f1460938b0d73. The active parity PR is cleared."
   },
   "last_inventory": {
-    "revision": "138457fbc2ff2ae7c26c5177148f1460938b0d73",
+    "revision": "d2dbd94aeb4a8975ab66f46663164291333f2e19",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1389,
-    "implementation_package_slots": 4603,
-    "all_reported_identities": 1428,
+    "implementation_identities": 1393,
+    "implementation_package_slots": 4607,
+    "all_reported_identities": 1432,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 170,
     "two_to_four_missing_slots": 2139,
-    "singleton_packages": 921,
-    "singleton_missing_slots": 12894,
-    "rust_singletons": 732,
+    "singleton_packages": 925,
+    "singleton_missing_slots": 12950,
+    "rust_singletons": 736,
     "ocaml_packages": 0,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -851,7 +851,12 @@
       "pr_number": null,
       "selection_revision": "138457fbc2ff2ae7c26c5177148f1460938b0d73",
       "selection_notes": "Selected only after PR #13647 completed all 43 final-head checks acceptably and GitHub executed guarded squash auto-merge as exact origin/main 138457fbc2ff2ae7c26c5177148f1460938b0d73. The refreshed collision-checked schema-3 inventory now contains 15 established lanes, 1,389 implementation identities, 4,603 slots, 1,428 all-reported identities, bands 175/265, 123/934, 170/2,139, and 921/12,894, 732 Rust singletons, zero OCaml packages, zero canonical collisions, and zero unknown buckets. The new Rust-only oauth identity was initially classified before selection and is now decomposed under oauth-authorization-code-pkce-language-neutral-conformance plus explicit portable and blocked authority children. At selection, PR #13650 was not current-main evidence; it and later PR #13657 have since merged and are classified under the token-wire and metadata children. The resulting 610-owner/930-edge graph at selection was expected to remain unique, dependency-complete, and acyclic at 197 merged, 412 pending, and exactly this owner in progress. This registry audit is the highest-leverage genuinely eligible dependency-shaped item: its sole prerequisite is merged, it directly blocked seven pending owners and reached 13 pending descendants before the complete engine audit added exact-registry adoption children. Higher graph ranks are aggregate umbrellas or network, host-security, credential, native-runtime, and external-approval work excluded from autonomous selection. The clean branch and worktree were created from exact origin/main only after the local branch, remote branch, prior PR, and worktree path were verified absent. This tranche is limited to a neutral collision-checked source-input registry and fixtures, corpus/schema/runner coverage, a complete read-only engine audit, and registration of concrete adoption children; it does not mix engine adoption implementations, native host authority, provider integration, or credential custody.",
-      "classification_notes": "The complete read-only engine and tracked-corpus audit registered five previously missing exact-registry adoption children for Go, Python, Ruby, TypeScript, and Swift. Together with the six existing Elixir, Perl, Haskell, shared .NET, Rust, and Lua hashing owners, every current build-tool engine now has an explicit child that must prove complete production lookup equality with this registry. The package-root registry now covers every reviewed directly consumed input, including exact BUILD-invoked scripts, shared Unix command specs, and bounded test/resource families. The remaining shared-ancestor and generated-pruning boundary is classified under build-tool-shared-and-generated-boundary-source-input-contract, and all eleven engine children depend on it so no adoption can silently omit those exact repository-relative inputs or add ambient access. The same audit decomposed OAuth into four portable contracts and two selection-blocked host or credential applicability reviews after merged PRs #13650 and #13657 extended current-main Rust behavior. The resulting 621-owner/967-edge graph is expected to remain unique, dependency-complete, and acyclic at 197 merged, 423 pending, and exactly this owner in progress.",
+      "classification_notes": "The complete read-only engine and tracked-corpus audit registered five previously missing exact-registry adoption children for Go, Python, Ruby, TypeScript, and Swift. Together with the six existing Elixir, Perl, Haskell, shared .NET, Rust, and Lua hashing owners, every current build-tool engine now has an explicit child that must prove complete production lookup equality with this registry. The package-root registry now covers every reviewed directly consumed input, including exact BUILD-invoked scripts, shared Unix command specs, and bounded test/resource families. The remaining shared-ancestor and generated-pruning boundary is classified under build-tool-shared-and-generated-boundary-source-input-contract, and all eleven engine children depend on it so no adoption can silently omit those exact repository-relative inputs or add ambient access. The same audit decomposed OAuth into portable contracts and selection-blocked host or credential applicability reviews after merged PRs #13650, #13657, and #13670 extended current-main Rust behavior. The post-rebase inventory added four Rust-only identities: engram-mosaic-app, oauth-installed-app-host, upnp-av-protocol, and smart-home-upnp-media-renderer-integration. They and the newly exposed pre-existing Sonos and Engram import/export native-authority gaps are classified under two blocked Engram reviews, three portable OAuth loopback/repair owners plus the existing blocked host review, three generic UPnP portable/native owners, and a Sonos native review. The resulting 630-owner/987-edge graph is unique, dependency-complete, and acyclic at 197 merged, 432 pending, and exactly this owner in progress.",
+      "implementation_revision": "20a4993e60f9d054f19a49846d4b7b1df673129d",
+      "rebase_revision": "20a4993e60f9d054f19a49846d4b7b1df673129d",
+      "rebase_notes": "The two-commit branch rebased conflict-free onto exact origin/main d2dbd94aeb4a8975ab66f46663164291333f2e19. Intervening TaskApp, Venture, Engram, WASM, Smart Home, OAuth, SPICE, and human-language merges have no exact overlap with this neutral registry tranche. The refreshed schema-3 inventory is collision-clean at 15 established lanes, 1,393 implementation identities, 4,607 slots, 1,432 all-reported identities, bands 175/265, 123/934, 170/2,139, and 925/12,950, 736 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Four new Rust identities and one surfaced pre-existing Sonos native-authority gap are explicitly classified before publication.",
+      "validation_revision": "20a4993e60f9d054f19a49846d4b7b1df673129d",
+      "validation_notes": "The closed schema and semantic runner validate 122 process-free cases, 283 files, 23 canonical language keys, 754 bounded selectors, and canonical registry digest a64e491e7be2d1e2985cebb7dd1576607c2525ab6590a31af3e98cb2329c55d0. The combined runner and schema suites pass 88 tests plus 174 subtests at 92% branch-aware coverage, with build_tool_conformance.py at 90%; the focused complete runner passes 66 tests plus 158 subtests. Repository projection pins 22 real Git-tracked scripts, command specs, and resources, including the repaired Ruby build-tool Python/TOML fixtures. Package-parity, capability, Haskell-capability, and OCaml-lock suites pass 66 tests plus 811 subtests with two expected platform skips. The Go oracle passes every package test, vet, and trimpath build; its real forced Go dry plan evaluates 45 Starlark BUILD files, discovers 306 packages, preserves the five reviewed orphan exemptions, and reports all 306 WOULD-BUILD. The collision-checked schema-3 report records 1,393 implementation identities, 4,607 slots, 1,432 all-reported identities, zero collisions, zero unknown buckets, and zero OCaml packages. The 630-owner/987-edge state is strict JSON, unique, dependency-complete, and acyclic at 197 merged, 432 pending, and one in progress. Changed-file Ruff and format gates pass while the three unchanged UP033/SIM114/SIM102 recommendations reproduce from origin/main; focused Bandit, diff hygiene, and all eight open-PR exact-path overlap checks pass. Independent audits found and closed missing scripts/resources, the Ruby nested fixtures, unsafe shared-boundary widening, inaccurate BUILD-invoked wording, and false assignment of Engram file-picker/sidecar authority to generic Mosaic owners; the surfaced OAuth audit-continuity defect and native Engram/UPnP/Sonos authority gaps are explicitly owned rather than hidden in this neutral implementation.",
       "notes": "Discovered during the Swift source-hashing conformance review. Existing engines define language source extensions and package metadata independently, and several maps omit established Java, Kotlin, Dart, C#, or F# inputs while hybrid C/C++, WASM, Mosaic, and native-companion roots have no reviewed language-neutral contract. This owner completes the collision-checked neutral registry and fixtures, corpus validation, complete read-only engine audit, and registration of concrete engine-adoption children. The eleven production engines then adopt the exact checked registry through those serial dependent children; no engine-local approximation completes an adoption child."
     },
     {
@@ -3264,13 +3269,51 @@
       "notes": "Discovered in the post-#12520 exact-main audit after merged Wemo PR #12515 expanded recognized outlet/switch mutation behavior. The Rust host owns idempotent pre-read/set/readback execution, local-IP SSDP/TCP/HTTP endpoint policy, catalog-command capability, CLI effects, and concrete runtime mutation while the crate has no required_capabilities.json. Review truthful least-privilege network, endpoint, CLI/process, and runtime-mutation capabilities plus error redaction after the portable core and shared Rust network-substrate truthfulness owners land. This native-authority work is excluded from autonomous parity selection."
     },
     {
+      "id": "upnp-av-protocol-portable-conformance",
+      "title": "Fixture and expand the portable UPnP AV MediaRenderer protocol",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean d2dbd94aeb inventory after merged PR #13681 added the Rust-only upnp-av-protocol identity. Define bounded language-neutral fixtures and established-lane implementations for exact MediaRenderer, AVTransport, and RenderingControl service selection; the fixed SOAP request/action allowlist; typed playback, volume, mute, track, DIDL title/artist, response, and Fault decoding; stable errors; and explicit input-byte, XML-depth, node, text, and service ceilings. The current Rust reference depends only on the repository XML parser but delegates bounds to callers. Keep arbitrary SOAP, ContentDirectory, subscriptions, queues, URI transfer, seek/next/previous, files, sockets, transport, clocks, credentials, and runtime mutation outside this portable owner."
+    },
+    {
+      "id": "smart-home-upnp-media-renderer-portable-core-conformance",
+      "title": "Fixture the portable generic UPnP MediaRenderer integration core",
+      "status": "pending",
+      "depends_on": ["upnp-av-protocol-portable-conformance", "ssdp-protocol-portable-conformance", "smart-home-media-entity-command-contract"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean d2dbd94aeb inventory after merged PR #13681 added the Rust-only smart-home-upnp-media-renderer-integration identity. Fixture injected SSDP response validation and deduplication, exact local-IP and same-authority URL policy, UDN identity plus optional serial/vendor projection, the fixed four-read inspection plan, authorized idempotent play/pause/stop/volume/mute pre-read-mutate-readback postconditions, stable redacted errors, and transactional protocol-neutral media-player projection. Keep concrete UDP multicast, TCP/HTTP, timeouts, CLI effects, host endpoint approval, and SmartHomeRuntime mutation in the native review."
+    },
+    {
+      "id": "smart-home-upnp-media-renderer-native-authority-review",
+      "title": "Review native generic UPnP MediaRenderer network and mutation authority",
+      "status": "pending",
+      "depends_on": ["smart-home-upnp-media-renderer-portable-core-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Merged PR #13681 added concrete SSDP UDP multicast/bind/send/receive, TCP/HTTP execution, source and LOCATION trust, timeouts, a 2 MiB body ceiling, CLI argv/stdout/stderr effects, authorization sequencing, readback, and runtime mutation without required_capabilities.json. Review truthful minimum runtime, network, endpoint, CLI/process, and mutation capabilities, first-response policy, redaction, and production approval after the portable core and shared Rust network-substrate owners land. The CLI currently performs discovery and inspection outside runtime authorization. This native-runtime work is excluded from autonomous parity selection."
+    },
+    {
       "id": "smart-home-sonos-upnp-portable-core-extraction-and-conformance",
       "title": "Extract, fixture, and expand the portable Sonos UPnP core",
       "status": "pending",
-      "depends_on": ["smart-home-media-entity-command-contract"],
+      "depends_on": ["smart-home-media-entity-command-contract", "ssdp-protocol-portable-conformance", "upnp-av-protocol-portable-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Share SSDP request/response parsing, bounded UPnP setup and SOAP validation, AVTransport/RenderingControl/DIDL normalization, deterministic inspection planning, stable identities/errors, and protocol-neutral media-player projection through language-neutral fixtures. UDP multicast, DNS/TCP, LAN HTTP execution, timeouts, endpoint approval, CLI I/O, authorization, and SmartHomeRuntime mutation remain in the native Rust host. Discovered after rebasing the Dart document-ast slice onto merged Sonos PR #9461."
+      "notes": "Build on the shared SSDP and UPnP AV protocol owners to fixture Sonos-specific ZonePlayer identity, serial/vendor normalization, deterministic inspection and command policy, stable errors, and protocol-neutral media-player projection. UDP multicast, DNS/TCP, LAN HTTP execution, timeouts, endpoint approval, CLI I/O, authorization, and SmartHomeRuntime mutation remain in the native Rust host. Discovered after rebasing the Dart document-ast slice onto merged Sonos PR #9461; the generic MediaRenderer codec introduced by PR #13681 is a real reusable prerequisite rather than Sonos-local behavior."
+    },
+    {
+      "id": "smart-home-sonos-upnp-native-authority-review",
+      "title": "Review native Sonos UPnP network, CLI, and mutation authority",
+      "status": "pending",
+      "depends_on": ["smart-home-sonos-upnp-portable-core-extraction-and-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered by the post-#13681 ownership audit. The existing Sonos Rust integration owns concrete UDP discovery, LAN HTTP/SOAP execution, timeouts, endpoint approval, CLI effects, authorization, and SmartHomeRuntime mutation, but only its portable normalization and command policy were explicitly owned. Review truthful capabilities, network and endpoint constraints, authorization/mutation ordering, response bounds, and redaction after the portable Sonos and shared network-substrate owners land. This pre-existing native-runtime gap is excluded from autonomous parity selection."
     },
     {
       "id": "dart-neural-consumer-matrix-loss-migration",
@@ -4348,6 +4391,26 @@
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Discovered in the collision-clean 399a87fff3 inventory after merged PR #10859 added Rust-only task-mosaic-app. The crate is a TaskApp-specific cdylib/rlib adapter: it maps the authored TaskApp MIL slot/event vocabulary and presentation cursor to the separately owned pure task-core engine, provides transactional no-mutation dispatch failures and versioned snapshots through mosaic-app-runtime, and exports the reviewed fixed mosaic-app-capi ABI for generated Qt, Flutter, Compose, and SwiftUI hosts. Review exact complete slot/event coverage, deterministic startup/dispatch/snapshot/restore behavior, stable payload-free errors, dynamic-library symbols and buffer/lifetime/panic containment through the existing Mosaic ABI owners, platform packaging/launch evidence, and add explicit empty capability metadata. Do not manufacture fifteen implementations of this application-specific native ABI adapter; reusable runtime semantics remain in mosaic-app-runtime, domain behavior in task-core, and host bindings in mosaic-app-bindings. This wrapper-applicability item is excluded from autonomous parity selection."
+    },
+    {
+      "id": "engram-mosaic-app-native-abi-review",
+      "title": "Review the Engram Mosaic application adapter applicability and clock authority",
+      "status": "pending",
+      "depends_on": ["mosaic-app-runtime-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-bindings-generated-wrapper-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-clean d2dbd94aeb inventory after merged PR #13674 added Rust-only engram-mosaic-app. The Engram-specific cdylib/rlib adapter maps the compiled EngramApp MIL surface of 254 props and 88 events plus a selected-deck cursor to EngramSession, supplies production SystemTime, provides versioned snapshots, and exports the fixed mosaic-app-capi ABI for generated Qt, Flutter, Compose, SwiftUI, and XAML hosts. Review complete slot/event and envelope-name coverage, payload mapping, transactional failures, snapshot schema/version and byte bounds, stable payload-free errors, dynamic-library symbols, returned-buffer/lifetime/panic containment through the existing Mosaic ABI owners, truthful time:read:* capability metadata, and real platform packaging/launch evidence. Before claiming a standard runtime lane, resolve or explicitly retain PR #13686's report that Engram host assets replace generated MosaicHost.cpp/.h. Protocol-v1 effect completion remains with the portable runtime, C ABI, and generated-binding owners, while the existing bespoke file-picker, sidecar, and import/export authority is explicitly owned by engram-native-host-import-export-authority-review. Keep the bespoke engram-capi adapters until the generic contract supports completion. Do not manufacture fifteen implementations of this application-specific native adapter. This wrapper/native-authority item is excluded from autonomous parity selection."
+    },
+    {
+      "id": "engram-native-host-import-export-authority-review",
+      "title": "Review Engram native host import, export, picker, and sidecar authority",
+      "status": "pending",
+      "depends_on": ["engram-mosaic-app-native-abi-review", "capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered by the post-#13674 Engram authority audit. The existing engram_host_cli reads argv and environment, opens arbitrary APKG and snapshot paths, writes arbitrary output and snapshot paths, creates parent directories, and is invoked through native/web file-picker and sidecar hosts, while engram-capi required_capabilities.json declares an empty authority set. Review explicit picker consent and origin binding; repository-independent path, symlink, reparse, overwrite, atomic-replace, and TOCTOU policy; CLI/process invocation and environment scope; APKG/ZIP/SQLite and snapshot byte, entry, depth, row, and time bounds; diagnostic redaction; cleanup; and truthful capability metadata or separation of the authority-bearing CLI from the pure C ABI. This filesystem, process, and user-consent surface is excluded from autonomous parity selection."
     },
     {
       "id": "smart-home-axis-pairing-service-native-authority-review",
@@ -7473,14 +7536,42 @@
       "notes": "Implement the neutral provider-independent PKCE, URL, callback, request-form, error, and audit contract in each applicable established lane or record a narrow reviewed exception. Do not add network, browser, loopback, credential, storage, or provider authority as part of parity."
     },
     {
+      "id": "oauth-installed-app-loopback-callback-language-neutral-conformance",
+      "title": "Fixture the portable OAuth installed-app loopback callback contract",
+      "status": "pending",
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean d2dbd94aeb inventory after merged PR #13670 added the Rust-only oauth-installed-app-host identity. Define bounded language-neutral fixtures for callback-path grammar, literal-loopback redirect construction, exact Host and dynamic-port binding, ASCII HTTP/1.1 request parsing, ambiguous-body rejection, opaque query handoff, provider/trace/redirect ceremony binding, stable closed diagnostics, redaction, durable audit event/state semantics, byte/header/time limits, and first-connection policy. Keep listener sockets, browser adapters, OS commands, provider registration proof, capability approval, clocks, retries, token transport, and credential custody outside this portable contract."
+    },
+    {
+      "id": "oauth-installed-app-loopback-established-lane-parity",
+      "title": "Expand the portable OAuth loopback callback contract across applicable lanes",
+      "status": "pending",
+      "depends_on": ["oauth-installed-app-loopback-callback-language-neutral-conformance", "oauth-authorization-code-pkce-established-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the neutral callback parser, ceremony binding, redirect construction, audit-state, limits, and closed-error surface in each applicable established lane or record a narrow reviewed exception. Require separately reviewed native loopback/browser hosts where applicable; do not manufacture socket, browser, process, provider-registry, credential, or token-transport authority in every lane."
+    },
+    {
+      "id": "oauth-installed-app-host-audit-continuity-repair",
+      "title": "Make Rust installed-app browser audit failure consume the loopback listener",
+      "status": "pending",
+      "depends_on": ["oauth-installed-app-loopback-callback-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Security audit of merged PR #13670 found that open_browser(&self) performs the external browser effect before publishing the result audit; when that post-effect audit fails, the caller still owns a usable live listener, contradicting the documented fail-closed contract. Add a consuming typestate transition that returns an armed host only after successful post-effect audit and drops/releases the listener on every failure. Pin browser post-audit failure, port release, and impossible callback-continuation behavior without widening browser or socket authority."
+    },
+    {
       "id": "oauth-installed-app-host-authority-review",
       "title": "Review installed-app OAuth host authority and provider redirect proof",
       "status": "pending",
-      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-wire-codecs-refresh-revocation-conformance"],
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-installed-app-loopback-callback-language-neutral-conformance", "oauth-installed-app-host-audit-continuity-repair", "oauth-wire-codecs-refresh-revocation-conformance"],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Review browser launch, loopback listener, trusted metadata and token transport, canonical provider registry ownership, redirect URI equivalence and uniqueness, host-native approval, clocks, randomness, and device-flow applicability. The current distinct-URI assertion is not proof of provider registration. This host-security and external-approval surface is excluded from autonomous parity selection."
+      "classification_notes": "Merged PR #13670 added current-main Rust oauth-installed-app-host with a literal IPv4/IPv6 loopback listener, injected external-user-agent opener, bounded one-shot callback parser, and durable audit events. Its portable callback/audit semantics and focused post-browser audit-continuity defect are split into explicit eligible owners; this blocked item retains only native and external-approval authority.",
+      "notes": "Review direct TcpListener bind and accept, literal-loopback and peer proof, monotonic timeout and blocking behavior, first-local-connection denial-of-service policy, listen capability approval, injected browser adapter command/URL safety, trusted metadata and token transport, canonical provider registry ownership, exact registered redirect proof including dynamic-port policy, durable audit integration, OS diagnostics, clocks, randomness, and device-flow applicability. The current distinct-URI assertion is not proof of provider registration. This host-security and external-approval surface is excluded from autonomous parity selection."
     },
     {
       "id": "oauth-wire-codecs-refresh-revocation-conformance",
