@@ -1,5 +1,63 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.88 — 2026-08-31 — W32 addendum: unrecognized top-level module fields are rejected, not silently dropped
+
+Investigating `type-subtyping.wast` (the W32 spec's own "what's still
+open" item) for real, per `code/specs/W32-wasm-non-null-concrete-reference-types.md`'s
+third addendum, surfaced a real, demonstrated bug of the same shape as
+0.1.87's struct/array fix below, in a different spot: `build`'s top-level
+module-field dispatch match ended in a bare `_ => {}`, so ANY field
+neither `collect_symbols` (pass 1) nor `build` (pass 2) explicitly
+recognized was silently ignored rather than rejected. `(rec (type $a
+...) (type $b ...))` — the GC proposal's recursive-type-group construct,
+which this crate has never implemented — is exactly such a field: it
+matches neither `is_keyword_list("type")` (it's a `rec`, not a `type`,
+at the module's top level) nor any keyword `build`'s match recognizes.
+The practical effect: a module made ENTIRELY of `rec` blocks whose
+declared types are never referenced by anything else outside the block
+silently parsed as a trivially-valid EMPTY module instead of failing
+with a clear error — demonstrated directly (not assumed) via two of
+`type-subtyping.wast`'s own "Recursive definitions" modules, which
+reported a spurious `Pass` under the conformance harness's
+`assert_invalid`-shaped "did this get rejected" grading before this fix,
+and an honest `NotYetSupported` after it. A module whose `rec`-declared
+types ARE referenced elsewhere already failed correctly before this fix
+too (via "unknown type identifier", since `collect_symbols` never
+registers names for types declared inside a `rec` block) — this fix only
+changes the previously-silent "declared but never used" case.
+
+### Fixed
+
+- `build`'s top-level field-dispatch match now has an explicit `"type" =>
+  {}` arm (documenting that pass 1 already fully handles it) and a final
+  `other => Err(UnexpectedToken { .. })` arm instead of `_ => {}`, so
+  every unrecognized top-level module field is a clean parse error. A
+  corpus-wide scan (a throwaway diagnostic tool, not shipped) confirmed
+  `rec` is the ONLY unrecognized top-level keyword anywhere in the pinned
+  257-file testsuite — `array.wast`, `struct.wast`, `tag.wast`,
+  `type-canon.wast`, `type-equivalence.wast`, `type-rec.wast`, and
+  `type-subtyping.wast` are the only files affected, so this fix closes
+  the whole gap without guessing at other cases.
+- New regression tests: `rec_type_group_is_rejected_not_silently_dropped`
+  and `every_other_unrecognized_top_level_module_field_is_also_rejected`
+  (the latter guards the general case, not just `rec` specifically).
+
+Full-corpus baseline diff (`wasm-conformance` 0.1.105) confirms this is a
+pure honesty fix, not a functional regression: total `fail` count across
+the whole 257-file corpus is unchanged (198 before, 198 after). Three
+pre-existing files' tallies shifted, every shift an improvement or an
+honest reclassification, never a new `fail`:
+- `type-canon.wast`: `module` 2/2 → **0/2**, both now honestly
+  `not_yet_supported` (the two false passes fixed).
+- `type-rec.wast`: `module` 1/11 → **0/11** (the one false pass fixed);
+  `assert_invalid` 8/10 → **9/10** (a case that used to be
+  `not_yet_supported` — because the module it wrapped spuriously
+  "parsed" — is now honestly rejected, since the wrapped module's `rec`
+  block is what's actually invalid here).
+- `annotations.wast`: `assert_malformed` 62/64 → **63/64** (a quote-text
+  module containing a `rec` block used to be wrongly accepted; now
+  correctly rejected as malformed).
+
 ## 0.1.87 — 2026-08-31 — W32 second slice: non-null concrete reference types
 
 ### Added

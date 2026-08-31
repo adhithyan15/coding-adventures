@@ -466,3 +466,68 @@ regression tests, zero conformance-corpus regressions):
 
 See `wasm-module-parser`'s and `wasm-execution`'s own CHANGELOGs for the
 full technical writeup of each fix.
+
+## Addendum (2026-08-31): third addendum — `type-subtyping.wast` re-investigated, confirmed genuinely open; vendored as-is; `extern.wast` re-checked
+
+Per this spec's own repeated deferral of "structural subtyping for
+`call_indirect`/`ref.cast` against concrete function/struct types" and
+this session's own track record of deferred items turning out more
+tractable than assumed (true of `call_ref.wast`/`return_call_ref.wast`
+above), `type-subtyping.wast` was re-fetched fresh and re-investigated
+from scratch rather than trusting the prior deferral.
+
+**Conclusion: the deferral holds. This is NOT a bounded slice.** Full
+scoping, with corpus line citations, now lives in the new
+`code/specs/W33-wasm-gc-recursive-type-subtyping.md` — summary: every
+real module in the file uses GC-proposal `(sub [final] $parent*
+(...))` nominal subtype declarations and/or `(rec ...)` recursive type
+groups, neither of which this crate parses at all (verified: zero
+matches for `"sub"`/`"final"` as keywords anywhere in
+`wasm-wast-parser::module`, before this addendum). Cross-checked
+against `WebAssembly/function-references`'s own `Overview.md` per this
+spec's own suggestion: that proposal's function-type subtyping is
+explicitly "invariant for now", with the real pointwise
+contravariant/covariant rule listed as a *possible future extension*
+deferred to the GC proposal — confirming this file tests GC-proposal
+machinery, not the (already-implemented, already-sufficient)
+function-references baseline `call_ref.wast`/`return_call_ref.wast`
+needed. The genuinely hard remaining piece is recursive type-group
+**canonical equivalence** (needed for cross-module import/linking
+checks and dynamic `ref.test`/`ref.cast`/`call_indirect` checks) — a
+real type-theory algorithm, not an extension of the existing bounds
+check.
+
+Rather than force that implementation, the file was vendored AS-IS
+using this crate's own already-established `assert_invalid`/
+`assert_unlinkable` grading (any real rejection counts, matching
+`struct.wast`/`array.wast`/`type-rec.wast`'s own precedent):
+**`type-subtyping.wast` vendored, corpus now 257/257 files** (real
+numbers: `module` 0/46, `assert_invalid` 36/36, `assert_unlinkable`
+8/8, everything else honestly `not_yet_supported` — see
+`wasm-conformance` 0.1.105's own changelog for the full breakdown).
+
+A genuine side-finding while sanity-checking this file's own two
+initially-suspicious module `Pass`es (an honesty check per this
+session's own precedent of not trusting a `Pass` without understanding
+why it happened): `wasm-wast-parser`'s top-level module-field dispatch
+silently ignored ANY unrecognized field (a bare `_ => {}`), which let a
+module made entirely of unreferenced `(rec ...)` type declarations
+"pass" as a trivially-valid empty module. Fixed generally (not just for
+`rec`) — see `wasm-wast-parser` 0.1.88's changelog. Diffed the
+regenerated baseline programmatically: zero regressions (total `fail`
+count unchanged, 198 → 198); the fix's side effects on
+`type-canon.wast`/`type-rec.wast`/`annotations.wast` are all honest
+reclassifications, detailed in `wasm-conformance` 0.1.105's changelog.
+
+`extern.wast` was also re-checked, per this spec's own ask, specifically
+whether the second slice's declarative element segment support closed
+any of its gap. **It did not** — `extern.wast` independently needs
+struct/array text declarations, `struct.new_default`/`array.new_default`,
+`ref.i31`, and `any.convert_extern`/`extern.convert_any`, none of which
+exist, PLUS a `ref.host N` script literal this crate has never parsed at
+all (only `ref.extern N` exists) — the last of which fails the WHOLE
+SCRIPT to parse, unlike every other gap here which degrades to a
+per-directive `not_yet_supported`. Not vendored (would introduce this
+corpus's first whole-file parse failure); status simply re-confirmed,
+no scope changes to this spec's own already-correct "explicitly out of
+scope" list for it.
