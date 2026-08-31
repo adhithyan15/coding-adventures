@@ -4,6 +4,14 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - focused first-task empty state (#13687)
+
+An empty project now explains the shortest path to a useful Inbox without
+introducing scheduling terminology. The task-name field receives initial native
+focus through the shared Mosaic `HostInput` contract, and Enter commits a task
+without moving focus away from the composer, supporting rapid keyboard capture
+on the web and every generated native backend.
+
 ### Documented - first-run simple-todo usability audit (#13523)
 
 The List-first experience now has an explicit acceptance record spanning the

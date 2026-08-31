@@ -2572,6 +2572,12 @@ fn parse_element(
                     "JFET NLEV must be a finite integer greater than or equal to 1",
                 ));
             }
+            let channel_noise_coefficient = *model.params.get("GDSNOI").unwrap_or(&1.0);
+            if !channel_noise_coefficient.is_finite() || channel_noise_coefficient < 0.0 {
+                return Err(NetlistParseError::new(
+                    "JFET GDSNOI must be finite and non-negative",
+                ));
+            }
             let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
@@ -2593,6 +2599,7 @@ fn parse_element(
                 gate_saturation_current_temperature_exponent;
             jfet.bandgap_voltage = bandgap_voltage;
             jfet.noise_equation_level = noise_equation_level;
+            jfet.channel_noise_coefficient = channel_noise_coefficient;
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
         }

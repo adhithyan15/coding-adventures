@@ -3638,6 +3638,10 @@ fn emit_text_input_qml(
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
+    if find_keyword_prop(node, "auto-focus") == Some("true") {
+        writeln!(out, "{inner_pad}Component.onCompleted: forceActiveFocus()").unwrap();
+    }
+
     // Qt exposes TextArea's native editable-text role. Use its placeholder as
     // the default accessible name too, matching SwiftUI's legacy Input lowering
     // and ensuring the unlabeled legacy primitive is still announced usefully.

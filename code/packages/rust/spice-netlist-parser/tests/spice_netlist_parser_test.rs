@@ -1772,6 +1772,31 @@ fn rejects_invalid_jfet_noise_equation_level() {
 }
 
 #[test]
+fn parses_jfet_channel_noise_coefficient() {
+    let parsed =
+        parse_netlist(".model shaped NJF(GDSNOI=1.5)\nJ1 drain gate source shaped").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(jfet.channel_noise_coefficient, 1.5);
+}
+
+#[test]
+fn rejects_invalid_jfet_channel_noise_coefficient() {
+    for channel_noise_coefficient in ["-0.1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model bad NJF(GDSNOI={channel_noise_coefficient})\nJ1 drain gate source bad"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("JFET GDSNOI must be finite and non-negative"));
+    }
+}
+
+#[test]
 fn parses_jfet_b_as_doping_tail_parameter_not_beta_alias() {
     let parsed = parse_netlist(
         r#"

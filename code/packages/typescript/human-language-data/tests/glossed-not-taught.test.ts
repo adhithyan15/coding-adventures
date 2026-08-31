@@ -42,17 +42,18 @@ describe("measureGlossedNotTaught", () => {
   it("reports native-script tokens that never occur in a headword", () => {
     const report = measureGlossedNotTaught(
       [
-        lesson("HI-C01", "नमस्ते", "Say नमस्ते. अलमारी means cupboard."),
-        lesson("HI-C02", "शुभ रात", "Retrieve रात and compare अलमारी again."),
+        lesson("HI-C01", "नमस्ते", "Say नमस्ते. चाबी means key. अमरूद means guava."),
+        lesson("HI-C02", "शुभ रात", "Retrieve रात and compare चाबी again."),
       ],
       "hindi",
     );
 
     expect(report.distinctHeadwordTokens).toBe(3);
     expect(report.candidates).toEqual([
-      { token: "अलमारी", occurrences: 2, lessonIds: ["HI-C01", "HI-C02"] },
+      { token: "चाबी", occurrences: 2, lessonIds: ["HI-C01", "HI-C02"] },
+      { token: "अमरूद", occurrences: 1, lessonIds: ["HI-C01"] },
     ]);
-    expect(renderGlossedNotTaught(report)).toContain("candidates: 1");
+    expect(renderGlossedNotTaught(report)).toContain("candidates: 2");
   });
 
   it("rejects an unknown track", () => {

@@ -88,6 +88,14 @@ component package.
 | `HostTable` | semantic data table *(new)* | `<table>` (with `<colgroup>`/`<thead>`/`<tbody>` slots) | `SwiftUI.Table { ... }` | `TableView { ... }` |
 | `HostScroll` | scrollable viewport *(new)* | `<div style={overflow:auto}>` | `ScrollView { ... }` | `Flickable { ... }` / `ScrollView` |
 
+`HostInput` also accepts `auto-focus: true`. The generated control requests
+initial focus when it mounts; XAML suppresses that request when its host already
+has a restored focus target, and host restoration on every backend remains
+authoritative after mount. This is an entry affordance, not a persistent focus
+trap: normal keyboard and pointer traversal remain platform-native. Web emitters
+use the corresponding `autofocus`/`autoFocus` surface, while SwiftUI, XAML,
+Compose, Flutter, and Qt use their native focus APIs.
+
 ### 2.2 Inclusion criteria
 
 A primitive belongs in the kernel iff:

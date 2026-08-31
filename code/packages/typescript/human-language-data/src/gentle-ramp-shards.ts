@@ -54,13 +54,22 @@ export const GENTLE_RAMP_METRIC_OWNERS = [
 
 type MetricName = (typeof GENTLE_RAMP_METRICS)[number];
 
-export interface GentleRampOwnerReadOptions {
+interface GentleRampOwnerReadOptionsBase {
   expectedLanguages: readonly string[];
-  expectedLessonIds: ReadonlyMap<string, readonly string[]>;
-  expectedNarrationLessonIds: ReadonlyMap<string, readonly string[]>;
   rejectAggregates?: boolean;
   requireCanonicalBytes?: boolean;
 }
+
+export type GentleRampOwnerReadOptions = GentleRampOwnerReadOptionsBase & ({
+  expectedLessonIds: ReadonlyMap<string, readonly string[]>;
+  expectedNarrationLessonIds: ReadonlyMap<string, readonly string[]>;
+  deriveLessonCountsFromOwners?: false;
+} | {
+  /** Migration-only mode for validating a canonical prior tree after lesson identities changed. */
+  deriveLessonCountsFromOwners: true;
+  expectedLessonIds?: never;
+  expectedNarrationLessonIds?: never;
+});
 
 const LANGUAGE = /^[a-z][a-z0-9-]*$/;
 const LESSON_ID = /^[A-Za-z0-9][A-Za-z0-9-]*$/;
@@ -382,14 +391,16 @@ export function readGentleRampOwners(root: string, options: GentleRampOwnerReadO
     if (!safeLanguage(language)) throw new Error(`gentle-ramp expected language '${language}' is unsafe`);
   }
   assertNoCaseFoldCollisions(options.expectedLanguages, "gentle-ramp expected languages");
-  assertIdentityMap(options.expectedLessonIds, options.expectedLanguages, "source");
-  assertIdentityMap(options.expectedNarrationLessonIds, options.expectedLanguages, "narration");
-  for (const language of options.expectedLanguages) {
-    assertIdentitySet(
-      options.expectedNarrationLessonIds.get(language) ?? [],
-      options.expectedLessonIds.get(language) ?? [],
-      `narration lesson identities for ${language}`,
-    );
+  if (!options.deriveLessonCountsFromOwners) {
+    assertIdentityMap(options.expectedLessonIds, options.expectedLanguages, "source");
+    assertIdentityMap(options.expectedNarrationLessonIds, options.expectedLanguages, "narration");
+    for (const language of options.expectedLanguages) {
+      assertIdentitySet(
+        options.expectedNarrationLessonIds.get(language) ?? [],
+        options.expectedLessonIds.get(language) ?? [],
+        `narration lesson identities for ${language}`,
+      );
+    }
   }
 
   const directory = join(root, GENTLE_RAMP_SNAPSHOT_DIR);
@@ -506,7 +517,9 @@ export function readGentleRampOwners(root: string, options: GentleRampOwnerReadO
     const firstWritingPracticeAt = metrics.get("firstWritingPracticeAt") as number | null;
     const track: TrackGentleRamp = {
       language,
-      lessonCount: options.expectedLessonIds.get(language)!.length,
+      lessonCount: options.deriveLessonCountsFromOwners
+        ? number("atomMeasurableLessons") + number("atomMeasurementBlindLessons")
+        : options.expectedLessonIds.get(language)!.length,
       atomMeasurableLessons: number("atomMeasurableLessons"),
       atomMeasurementBlindLessons: number("atomMeasurementBlindLessons"),
       durationViolations: number("durationViolations"),

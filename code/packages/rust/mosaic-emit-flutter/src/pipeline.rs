@@ -3630,6 +3630,9 @@ fn emit_host_input(
     if let Some(read_only) = bool_prop_expression(node, "read-only")? {
         writeln!(out, "{field_pad}  readOnly: {read_only},").unwrap();
     }
+    if find_keyword_prop(node, "auto-focus") == Some("true") {
+        writeln!(out, "{field_pad}  autofocus: true,").unwrap();
+    }
 
     // onChange — wraps the new value in a dispatched event.
     //

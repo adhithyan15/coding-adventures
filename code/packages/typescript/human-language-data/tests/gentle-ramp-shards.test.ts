@@ -3,6 +3,7 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  renameSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -14,6 +15,7 @@ import {
   GENTLE_RAMP_SNAPSHOT_DIR,
   generatedGentleRampSnapshotOutputsFromReport,
   installGentleRampOwnerTree,
+  replaceGentleRampOwnerTree,
   safeGentleRampOwnerOutput,
 } from "../src/gentle-ramp-snapshot-cli.js";
 import {
@@ -292,6 +294,50 @@ describe("gentle-ramp direct owners", () => {
     })).toThrow(/injected installed-verification failure/);
 
     expect(readOwners(root, before)).toEqual(before);
+    expect(existsSync(join(root, `${GENTLE_RAMP_SNAPSHOT_DIR}.backup`))).toBe(false);
+  });
+
+  it("replaces a valid prior owner tree after lesson identities change", () => {
+    const root = temporaryRoot();
+    const before = tracks();
+    writeOwners(root, before);
+    const after = [track("alpha", 3), track("beta", 1)];
+    const ids = identities(after);
+    const generatedReport = report(after);
+
+    replaceGentleRampOwnerTree(root, {
+      report: generatedReport,
+      languages: after.map((value) => value.language),
+      sourceIds: ids,
+      narrationIds: ids,
+      outputs: generatedGentleRampSnapshotOutputsFromReport(generatedReport),
+    });
+
+    expect(readOwners(root, after)).toEqual(after);
+    expect(existsSync(join(root, `${GENTLE_RAMP_SNAPSHOT_DIR}.backup`))).toBe(false);
+  });
+
+  it("recovers a valid prior tree before replacing it after an interrupted install", () => {
+    const root = temporaryRoot();
+    const before = tracks();
+    writeOwners(root, before);
+    renameSync(
+      join(root, GENTLE_RAMP_SNAPSHOT_DIR),
+      join(root, `${GENTLE_RAMP_SNAPSHOT_DIR}.backup`),
+    );
+    const after = [track("alpha", 3), track("beta", 1)];
+    const ids = identities(after);
+    const generatedReport = report(after);
+
+    replaceGentleRampOwnerTree(root, {
+      report: generatedReport,
+      languages: after.map((value) => value.language),
+      sourceIds: ids,
+      narrationIds: ids,
+      outputs: generatedGentleRampSnapshotOutputsFromReport(generatedReport),
+    });
+
+    expect(readOwners(root, after)).toEqual(after);
     expect(existsSync(join(root, `${GENTLE_RAMP_SNAPSHOT_DIR}.backup`))).toBe(false);
   });
 });

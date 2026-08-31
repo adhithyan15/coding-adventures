@@ -1838,6 +1838,9 @@ fn emit_host_input(
         }
         _ => {}
     }
+    if matches!(find_prop(node, "auto-focus"), Some(LayoutPropValue::Keyword(k)) if k == "true") {
+        attrs.push_str(" autofocus");
+    }
     append_emit_marker(&mut attrs, node, "onChange", "data-on-change");
     append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
     append_emit_marker(&mut attrs, node, "onCancel", "data-on-cancel");
