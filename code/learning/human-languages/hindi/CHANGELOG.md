@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed — declare the evening doublet the lesson already teaches
+
+- Expanded the chapter-32 headword declaration from **शुभ संध्या** to **शुभ
+  संध्या / साँझ**. The lesson already defines, contrasts, practises, and assesses
+  **साँझ**; the metadata now tells reports and downstream cards that it is taught
+  rather than merely mentioned.
+
 ### Added — sentence-to-connected pre-A1 writing bridge
 
 Six new Chapter 2 micro-lessons reuse only previously practised language to

@@ -4,13 +4,13 @@
   "chapter": 32,
   "title": "Good Evening",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:34225b0fb8fd42cf",
+  "sourceHash": "fnv1a64:bfe96668f284bfa9",
   "lessons": [
     {
       "id": "HI-C32-shubh-sandhya",
       "sequence": 830,
       "title": "शुभ संध्या (shubh sandhyā) — \"good evening,\" a twilight word with two lives",
-      "headword": "शुभ संध्या",
+      "headword": "शुभ संध्या / साँझ",
       "romanization": "",
       "gloss": "\"good evening\" — sandhyā is the Sanskrit junction of day and night, with the register-crossing doublet sāñjh",
       "script": "devanagari",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25051b767dd4837c",
+      "sourceHash": "fnv1a64:3e3e6a9a502f5dd3",
       "notice": null,
       "blocks": [
         {

@@ -8,7 +8,7 @@ spine_node: SPINE-TIME-OF-DAY
 sequence: 830
 chapter: 32
 type: phrase
-headword: शुभ संध्या
+headword: शुभ संध्या / साँझ
 gloss: "good evening" — sandhyā is the Sanskrit junction of day and night, with the register-crossing doublet sāñjh
 concept_tag: GREETING-EVENING
 prerequisites: [HI-C29-shaam, HI-C31-suprabhat, HI-C27-shubh-raatri]
