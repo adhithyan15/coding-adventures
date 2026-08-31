@@ -308,26 +308,26 @@ fn parse_value_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> Result<V
         "funcref" => Ok(ValueType::Funcref),
         "externref" => Ok(ValueType::Externref),
         "i31ref" => Ok(ValueType::I31ref),
-        // `anyref` (GC proposal top reference type -- `ValueType::Anyref`,
-        // already wired for W20's i31 slice) and the four BOTTOM reference
-        // types (`nullref`/`nullfuncref`/`nullexternref`/`nullexnref`,
-        // real corpus vendoring pass -- `ref_null.wast`'s own `(global
-        // $null nullref (ref.null none))` etc.): every bottom type is a
-        // strict subtype of exactly one of this crate's existing four
-        // reference `ValueType`s (`nullref` <: `anyref`, `nullfuncref` <:
-        // `funcref`, `nullexternref` <: `externref`, `nullexnref` <:
-        // `exnref`), and this crate's `WasmValue::Ref` carries no runtime
-        // type tag at all (every null is the same null -- see
-        // `wasm-conformance::value_matches_expected`'s own doc comment),
-        // so aliasing each bottom type straight to its one possible
-        // supertype is exact, not an approximation: nothing observable
-        // here ever depends on telling a `nullfuncref`-typed value apart
-        // from a plain `funcref` one.
+        // `anyref` (GC proposal top reference type) and the four BOTTOM
+        // reference types (`nullref`/`nullfuncref`/`nullexternref`/
+        // `nullexnref`, W32 first slice: `code/specs/
+        // W32-wasm-non-null-concrete-reference-types.md`, real corpus
+        // vendoring pass -- `ref_null.wast`'s own `(global $null nullref
+        // (ref.null none))` etc.): each bottom type is now its OWN genuine
+        // `ValueType` variant, a real strict subtype of its hierarchy's
+        // nullable supertype (checked by `wasm_validator::type_check::
+        // is_assignable`/`ValueType::is_bottom_subtype_of`), not aliased
+        // straight to that supertype the way an earlier pass did -- that
+        // lossy aliasing made `nullfuncref` and `funcref` indistinguishable
+        // even where the corpus itself expects the ASYMMETRIC subtyping
+        // (a nullfuncref-typed value flows where funcref is expected, but
+        // not vice versa in principle, mirroring `ConcreteFuncRef <:
+        // Funcref` one level up the same lattice).
         "anyref" => Ok(ValueType::Anyref),
-        "nullref" => Ok(ValueType::Anyref),
-        "nullfuncref" => Ok(ValueType::Funcref),
-        "nullexternref" => Ok(ValueType::Externref),
-        "nullexnref" => Ok(ValueType::Exnref),
+        "nullref" => Ok(ValueType::NullRef),
+        "nullfuncref" => Ok(ValueType::NullFuncref),
+        "nullexternref" => Ok(ValueType::NullExternref),
+        "nullexnref" => Ok(ValueType::NullExnref),
         // `exnref` (exceptions proposal, W-next): recognized so a module
         // mixing `exnref`-typed functions (`catch_ref`/`catch_all_ref`
         // targets) alongside ordinary `catch`/`catch_all`-only ones -- the
@@ -376,23 +376,26 @@ fn parse_ref_null_heap_type(expr: &SExpr, type_names: &HashMap<String, u32>) -> 
         // vendoring pass, `ref_null.wast`'s own `(ref.null exn)`.
         "exn" => Ok(vec![0x69]),
         // The four BOTTOM heap types (`none`/`nofunc`/`noextern`/`noexn`,
-        // real corpus vendoring pass -- `ref_null.wast`'s own `(ref.null
-        // none)`/`(ref.null nofunc)`/etc.): this crate's own decoder
-        // (`wasm-execution`'s `0xD0` handler) treats every abstract heap
-        // type identically -- skip exactly one byte, push `Ref(None)`, see
-        // that handler's own doc comment -- so any single byte distinct
-        // from the `0x63` concrete-type-ref tag round-trips correctly.
-        // These four are NOT claimed to match the upstream GC-proposal
-        // binary encoding byte-for-byte (unlike `func`/`extern`/`any`/
-        // `i31`/`exn` above, which do) -- nothing in this crate ever reads
-        // a `ref.null` heap-type byte back out to distinguish one
-        // abstract type from another, so an internally-consistent,
-        // deliberately-chosen distinct byte is exact for this crate's
-        // purposes without needing to be spec-canonical.
-        "none" => Ok(vec![0x65]),
-        "nofunc" => Ok(vec![0x66]),
-        "noextern" => Ok(vec![0x67]),
-        "noexn" => Ok(vec![0x68]),
+        // W32 first slice: `code/specs/
+        // W32-wasm-non-null-concrete-reference-types.md`; real corpus
+        // vendoring pass -- `ref_null.wast`'s own `(ref.null none)`/
+        // `(ref.null nofunc)`/etc.): unlike an earlier pass's internal,
+        // non-spec-canonical placeholder bytes, these now match the REAL
+        // GC/function-references proposal binary encoding exactly --
+        // verified independently against the reference interpreter's own
+        // `interpreter/binary/decode.ml` (`NoFuncHT = -0x0d`, `NoExternHT
+        // = -0x0e`, `NoneHT = -0x0f`, `NoExnHT = -0x0c`; SLEB128
+        // single-byte encoding of a small negative number is `value mod
+        // 128`, e.g. `-0x0d mod 128 = 0x73`), the same discipline W24's
+        // `exnref` tag-byte bug established -- and match `ValueType::
+        // NullFuncref`/`NullExternref`/`NullRef`/`NullExnref`'s own
+        // `byte_tag()`/`encode()`, so `wasm-validator`'s `0xD0` handler can
+        // recognize these bytes and push the REAL bottom-type `ValueType`
+        // instead of falling back to `Unknown`.
+        "none" => Ok(vec![0x71]),
+        "nofunc" => Ok(vec![0x73]),
+        "noextern" => Ok(vec![0x72]),
+        "noexn" => Ok(vec![0x74]),
         _ => {
             let idx = resolve_idx(type_names, expr, "type")?;
             let mut bytes = vec![0x63u8];
@@ -8241,5 +8244,80 @@ mod tests {
     fn v128_const_too_few_lanes_is_a_clear_error() {
         let err = parse_module(r#"(module (func (drop (v128.const i32x4 1 2 3))))"#).unwrap_err();
         assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    // ── W32 first slice: the four bottom reference-type keywords ─────────────
+    //
+    // `code/specs/W32-wasm-non-null-concrete-reference-types.md` -- each
+    // value-type keyword must parse to its OWN genuine `ValueType` variant,
+    // not an earlier pass's lossy alias to its nullable supertype.
+
+    #[test]
+    fn nullfuncref_keyword_parses_to_its_own_value_type() {
+        let m = parse_module(r#"(module (global $g nullfuncref (ref.null nofunc)))"#).unwrap();
+        assert_eq!(m.globals[0].global_type.value_type, ValueType::NullFuncref);
+    }
+
+    #[test]
+    fn nullexternref_keyword_parses_to_its_own_value_type() {
+        let m = parse_module(r#"(module (global $g nullexternref (ref.null noextern)))"#).unwrap();
+        assert_eq!(m.globals[0].global_type.value_type, ValueType::NullExternref);
+    }
+
+    #[test]
+    fn nullexnref_keyword_parses_to_its_own_value_type() {
+        let m = parse_module(r#"(module (global $g nullexnref (ref.null noexn)))"#).unwrap();
+        assert_eq!(m.globals[0].global_type.value_type, ValueType::NullExnref);
+    }
+
+    #[test]
+    fn nullref_keyword_parses_to_its_own_value_type() {
+        let m = parse_module(r#"(module (global $g nullref (ref.null none)))"#).unwrap();
+        assert_eq!(m.globals[0].global_type.value_type, ValueType::NullRef);
+    }
+
+    #[test]
+    fn bottom_ref_type_keywords_also_work_as_function_result_types() {
+        let m = parse_module(
+            r#"(module
+                 (global $nf nullfuncref (ref.null nofunc))
+                 (func (export "f") (result nullfuncref) (global.get $nf)))"#,
+        )
+        .unwrap();
+        assert_eq!(m.types[0].results, vec![ValueType::NullFuncref]);
+    }
+
+    // ── W32 first slice: `ref.null <bottom heap type>` emits the REAL,
+    //    verified GC/function-references proposal tag bytes ────────────────
+    //
+    // Not an earlier pass's internal, non-spec-canonical placeholder bytes
+    // (0x65-0x68) -- these now match `ValueType::Null*::byte_tag()` exactly
+    // (independently verified against the reference interpreter's own
+    // `interpreter/binary/decode.ml`, see that doc comment for the
+    // derivation), which is what lets `wasm-validator`'s `0xD0` handler
+    // recognize them and push the genuine bottom-type static type.
+
+    #[test]
+    fn ref_null_nofunc_emits_the_verified_tag_byte() {
+        let m = parse_module(r#"(module (global $g nullfuncref (ref.null nofunc)))"#).unwrap();
+        assert_eq!(m.globals[0].init_expr, vec![0xD0, 0x73, 0x0B]);
+    }
+
+    #[test]
+    fn ref_null_noextern_emits_the_verified_tag_byte() {
+        let m = parse_module(r#"(module (global $g nullexternref (ref.null noextern)))"#).unwrap();
+        assert_eq!(m.globals[0].init_expr, vec![0xD0, 0x72, 0x0B]);
+    }
+
+    #[test]
+    fn ref_null_noexn_emits_the_verified_tag_byte() {
+        let m = parse_module(r#"(module (global $g nullexnref (ref.null noexn)))"#).unwrap();
+        assert_eq!(m.globals[0].init_expr, vec![0xD0, 0x74, 0x0B]);
+    }
+
+    #[test]
+    fn ref_null_none_emits_the_verified_tag_byte() {
+        let m = parse_module(r#"(module (global $g nullref (ref.null none)))"#).unwrap();
+        assert_eq!(m.globals[0].init_expr, vec![0xD0, 0x71, 0x0B]);
     }
 }

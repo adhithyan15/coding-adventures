@@ -224,3 +224,69 @@ trap-on-null where the spec says non-null is required."
   types only, no structural subtyping needed) as the smallest possible
   proof this design is sound before attempting `type-subtyping.wast` or the
   `call_ref`/GC-array follow-on work.
+
+## Addendum (2026-08-31): first slice shipped
+
+This spec's first slice — the four bottom reference types and their
+subtyping rules (section 1's four `Null*` variants, section 2's
+bottom-type rules) — has SHIPPED. `NonNullStructRef`/`NonNullConcreteFuncRef`
+and structural subtyping were deliberately left for a later slice, per this
+spec's own scoping; see below for what's still open.
+
+What landed:
+
+- `wasm-types` 0.1.13: `ValueType::NullFuncref`/`NullExternref`/
+  `NullExnref`/`NullRef`, plus `ValueType::is_bottom_subtype_of` — the
+  section 2 lattice. Tag bytes `0x73`/`0x72`/`0x74`/`0x71` were
+  independently re-verified (not just re-asserted from this document)
+  against the real reference interpreter's `interpreter/binary/decode.ml`
+  — they match this spec's own claimed values exactly, so unlike W24's
+  `exnref` bug, there was no discrepancy to fix here.
+- `wasm-validator` 0.2.74: `is_assignable` now checks the bottom-type
+  lattice; `decode_blocktype`'s and `wasm-execution`'s matching blocktype
+  decoders gained explicit arms for the four new tag bytes (same
+  defensive treatment as `exnref`'s `0x69`, closing the same class of
+  type-index collision hazard pre-emptively, since none of the vendored
+  corpus actually exercises a bottom type as a blocktype yet).
+- `wasm-wast-parser` 0.1.86: the four value-type keywords
+  (`nullref`/`nullfuncref`/`nullexternref`/`nullexnref`) and the four
+  `ref.null` heap-type keywords (`none`/`nofunc`/`noextern`/`noexn`) now
+  parse to the REAL `ValueType` variants and REAL tag bytes, replacing an
+  earlier pass's lossy aliasing straight onto the nullable supertypes
+  (which had already added text-format recognition for these keywords,
+  just aliased, not subtyped).
+- `wasm-module-parser` 0.2.11 / `wasm-module-encoder` 0.2.7: binary
+  decode/encode for the four new tag bytes (encoder needed no code change
+  — it already calls `ValueType::encode()` universally).
+- `ref_null.wast` vendored: **2/2 module (100%), 32/32 assert_return
+  (100%)**, zero `not_yet_supported`. Corpus: **256/257**. Baseline diffed
+  programmatically against the pre-change one — the only difference is
+  the new file's entry, confirming zero regressions elsewhere.
+
+One discrepancy from this spec's own assumption, worth recording: the
+real `ref_null.wast` (re-fetched fresh, not assumed) uses `none`/
+`nofunc`/`noextern`/`noexn` as the `ref.null` **heap-type** keywords, but
+`nullref`/`nullfuncref`/`nullexternref`/`nullexnref` as the **value-type**
+keywords (e.g. `(global $g nullfuncref (ref.null nofunc))`) — two
+different keyword spellings for the same underlying bottom type,
+depending on grammatical position. This spec's section 3 anticipated
+`nullref`/`none` as alternate spellings of the SAME keyword in the SAME
+position ("`nullref`/`none`"); the real grammar instead uses them in two
+different positions. Both were already implemented before this
+discrepancy was even noticed (the value-type and heap-type parsing paths
+are two separate functions in `wasm-wast-parser::module`), so this cost
+nothing to accommodate — noted here only so a future spec-writer doesn't
+re-assume they're interchangeable spellings.
+
+What's left for a later slice (unchanged from this spec's own scoping):
+
+- `NonNullStructRef`/`NonNullConcreteFuncRef` (non-null concrete refs,
+  `(ref $t)` with no `null` keyword) — section 1's other two variants.
+- Structural subtyping for `call_indirect`/`ref.cast` against concrete
+  function/struct types — `type-subtyping.wast`'s actual remaining gap,
+  confirmed still open (not touched by this slice).
+- Everything downstream of those two (`call_ref.wast`/
+  `return_call_ref.wast`, `struct.wast`'s non-null field types,
+  `array.wast`'s remaining gaps, `ref_cast.wast`/`ref_test.wast`/
+  `br_on_cast*.wast`/`br_on_non_null.wast`) — still blocked, exactly as
+  this spec's "Purpose" section described.

@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.15] — 2026-08-31 (W32 first slice — bottom reference types)
+
+### Added
+
+- `call()`'s argument-conversion match gained arms for the four new
+  bottom reference types (`NullFuncref`/`NullExternref`/`NullExnref`/
+  `NullRef`, `wasm-types` 0.1.13) — required just to keep this exhaustive
+  match compiling; joins the same lossy-legacy-path placeholder group as
+  the pre-existing GC/funcref/externref/exnref arms (no vendored corpus
+  directive passes one as a top-level `invoke` argument either). See
+  `code/specs/W32-wasm-non-null-concrete-reference-types.md`.
+
 ## [0.6.14] — 2026-08-26 (W26 follow-up — real table64 operations)
 
 ### Fixed

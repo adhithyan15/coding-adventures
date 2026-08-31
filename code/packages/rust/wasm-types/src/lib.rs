@@ -241,6 +241,49 @@ pub enum ValueType {
     /// section) — that parsing/validation role is unchanged, now backed by
     /// real runtime semantics too.
     Exnref,
+
+    /// `nullfuncref` (a.k.a. `(ref null nofunc)`) -- the **bottom type** of
+    /// the func hierarchy (GC/function-references proposals, W32 first
+    /// slice: `code/specs/W32-wasm-non-null-concrete-reference-types.md`).
+    ///
+    /// A strict subtype of every nullable func-hierarchy type: `Funcref`,
+    /// and (once concrete non-null funcrefs land in a later slice)
+    /// `ConcreteFuncRef(_)` for every index. It is the type WASM assigns to
+    /// a bare `(ref.null nofunc)`/`(ref.null func)` result before that null
+    /// value has been narrowed to a more specific slot -- see
+    /// `ref_null.wast`.
+    ///
+    /// Encoded as a single byte `0x73` -- verified against the real
+    /// reference interpreter's `interpreter/binary/decode.ml`
+    /// (`NoFuncHT = -0x0d`, and `-13 mod 128 = 0x73`), independently of
+    /// this crate's own doc comments, per the discipline W24's `exnref`
+    /// tag-byte bug established.
+    NullFuncref,
+
+    /// `nullexternref` (a.k.a. `(ref null noextern)`) -- the bottom type of
+    /// the extern hierarchy. A strict subtype of `Externref` only (the
+    /// extern hierarchy has no concrete subtypes in this repo).
+    ///
+    /// Encoded as a single byte `0x72` -- verified against
+    /// `decode.ml`'s `NoExternHT = -0x0e` (`-14 mod 128 = 0x72`).
+    NullExternref,
+
+    /// `nullexnref` (a.k.a. `(ref null noexn)`) -- the bottom type of the
+    /// exn hierarchy. A strict subtype of `Exnref` only.
+    ///
+    /// Encoded as a single byte `0x74` -- verified against
+    /// `decode.ml`'s `NoExnHT = -0x0c` (`-12 mod 128 = 0x74`).
+    NullExnref,
+
+    /// `nullref` (a.k.a. `none`, `(ref null none)`) -- the bottom type of
+    /// the `any` hierarchy. A strict subtype of `Anyref`, `I31ref`, and
+    /// `StructRef(_)` for every index (and, once it lands in a later
+    /// slice, `NonNullStructRef(_)`'s nullable counterpart only -- never
+    /// the non-null variant itself).
+    ///
+    /// Encoded as a single byte `0x71` -- verified against
+    /// `decode.ml`'s `NoneHT = -0x0f` (`-15 mod 128 = 0x71`).
+    NullRef,
 }
 
 impl ValueType {
@@ -269,6 +312,10 @@ impl ValueType {
             ValueType::Externref => Some(0x6F),
             ValueType::V128 => Some(0x7B),
             ValueType::Exnref => Some(0x69),
+            ValueType::NullFuncref => Some(0x73),
+            ValueType::NullExternref => Some(0x72),
+            ValueType::NullExnref => Some(0x74),
+            ValueType::NullRef => Some(0x71),
         }
     }
 
@@ -312,7 +359,47 @@ impl ValueType {
             ValueType::Externref => vec![0x6F],
             ValueType::V128 => vec![0x7B],
             ValueType::Exnref => vec![0x69],
+            ValueType::NullFuncref => vec![0x73],
+            ValueType::NullExternref => vec![0x72],
+            ValueType::NullExnref => vec![0x74],
+            ValueType::NullRef => vec![0x71],
         }
+    }
+
+    /// Whether `self` is a strict (never bidirectional) subtype of `other`
+    /// under the W32 first-slice bottom-type lattice
+    /// (`code/specs/W32-wasm-non-null-concrete-reference-types.md` §2).
+    ///
+    /// This is intentionally narrow: it only encodes the four bottom types'
+    /// relationships to the nullable reference types that already exist in
+    /// this crate. It does NOT attempt general reference-type subtyping
+    /// (that's `wasm-validator`'s `is_assignable`-shaped logic, which calls
+    /// this as one part of its lattice) and it does NOT include reflexivity
+    /// (`T <: T`) -- callers that need "is `have` assignable to `want`"
+    /// should check `have == want || have.is_bottom_subtype_of(want)`.
+    ///
+    /// ```text
+    /// Func hierarchy:    NullFuncref   <: Funcref
+    /// Extern hierarchy:  NullExternref <: Externref
+    /// Exn hierarchy:     NullExnref    <: Exnref
+    /// Any hierarchy:     NullRef       <: Anyref, I31ref, StructRef(_)
+    /// ```
+    ///
+    /// The reverse direction never holds -- a nullable supertype is never a
+    /// subtype of a narrower bottom type, matching the asymmetry
+    /// `ConcreteFuncRef <: Funcref` (W11-B) already established one level
+    /// up the same lattice.
+    pub fn is_bottom_subtype_of(&self, other: &ValueType) -> bool {
+        matches!(
+            (self, other),
+            (ValueType::NullFuncref, ValueType::Funcref)
+                | (ValueType::NullFuncref, ValueType::ConcreteFuncRef(_))
+                | (ValueType::NullExternref, ValueType::Externref)
+                | (ValueType::NullExnref, ValueType::Exnref)
+                | (ValueType::NullRef, ValueType::Anyref)
+                | (ValueType::NullRef, ValueType::I31ref)
+                | (ValueType::NullRef, ValueType::StructRef(_))
+        )
     }
 }
 
@@ -1521,5 +1608,146 @@ mod tests {
     #[test]
     fn funcref_constant() {
         assert_eq!(FUNCREF, 0x70);
+    }
+
+    // ── W32 first slice: the four bottom reference types ─────────────────────
+    //
+    // `code/specs/W32-wasm-non-null-concrete-reference-types.md` section 1
+    // adds `NullFuncref`/`NullExternref`/`NullExnref`/`NullRef`. The tag
+    // bytes below were independently verified against the real reference
+    // interpreter's `interpreter/binary/decode.ml` (`NoFuncHT = -0x0d`,
+    // `NoExternHT = -0x0e`, `NoExnHT = -0x0c`, `NoneHT = -0x0f`; SLEB128
+    // single-byte encoding of a small negative value is `value mod 128`),
+    // NOT just re-asserted from this crate's own doc comments -- the same
+    // "verify independently" discipline W24's `exnref` tag-byte bug
+    // established.
+
+    #[test]
+    fn bottom_ref_types_encode_to_the_verified_tag_bytes() {
+        assert_eq!(ValueType::NullFuncref.encode(), vec![0x73], "nullfuncref / nofunc");
+        assert_eq!(ValueType::NullExternref.encode(), vec![0x72], "nullexternref / noextern");
+        assert_eq!(ValueType::NullExnref.encode(), vec![0x74], "nullexnref / noexn");
+        assert_eq!(ValueType::NullRef.encode(), vec![0x71], "nullref / none");
+    }
+
+    #[test]
+    fn bottom_ref_types_byte_tag_matches_encode() {
+        assert_eq!(ValueType::NullFuncref.byte_tag(), Some(0x73));
+        assert_eq!(ValueType::NullExternref.byte_tag(), Some(0x72));
+        assert_eq!(ValueType::NullExnref.byte_tag(), Some(0x74));
+        assert_eq!(ValueType::NullRef.byte_tag(), Some(0x71));
+    }
+
+    #[test]
+    fn bottom_ref_types_are_distinct_from_each_other_and_their_supertypes() {
+        // PartialEq must never conflate a bottom type with its nullable
+        // supertype (the exact mistake an earlier "lossy aliasing" pass
+        // made -- see `wasm-wast-parser::module::parse_value_type`'s own
+        // doc comment on this variant).
+        assert_ne!(ValueType::NullFuncref, ValueType::Funcref);
+        assert_ne!(ValueType::NullExternref, ValueType::Externref);
+        assert_ne!(ValueType::NullExnref, ValueType::Exnref);
+        assert_ne!(ValueType::NullRef, ValueType::Anyref);
+        assert_ne!(ValueType::NullRef, ValueType::I31ref);
+        assert_ne!(ValueType::NullRef, ValueType::StructRef(0));
+        // And distinct from each other, across hierarchies.
+        assert_ne!(ValueType::NullFuncref, ValueType::NullExternref);
+        assert_ne!(ValueType::NullFuncref, ValueType::NullExnref);
+        assert_ne!(ValueType::NullFuncref, ValueType::NullRef);
+        assert_ne!(ValueType::NullExternref, ValueType::NullExnref);
+        assert_ne!(ValueType::NullExternref, ValueType::NullRef);
+        assert_ne!(ValueType::NullExnref, ValueType::NullRef);
+    }
+
+    // ── W32 §2: bottom-type subtyping lattice -- POSITIVE directions ─────────
+    //
+    // Each rule from the spec's section 2 needs both a positive test (the
+    // subtype IS accepted) and a negative test (the reverse direction is
+    // REJECTED) -- see the spec's own "Verification plan".
+
+    #[test]
+    fn nullfuncref_is_a_bottom_subtype_of_funcref_and_concrete_funcref() {
+        assert!(ValueType::NullFuncref.is_bottom_subtype_of(&ValueType::Funcref));
+        assert!(ValueType::NullFuncref.is_bottom_subtype_of(&ValueType::ConcreteFuncRef(0)));
+        assert!(ValueType::NullFuncref.is_bottom_subtype_of(&ValueType::ConcreteFuncRef(99)), "bottom of the WHOLE func hierarchy, every index");
+    }
+
+    #[test]
+    fn nullexternref_is_a_bottom_subtype_of_externref() {
+        assert!(ValueType::NullExternref.is_bottom_subtype_of(&ValueType::Externref));
+    }
+
+    #[test]
+    fn nullexnref_is_a_bottom_subtype_of_exnref() {
+        assert!(ValueType::NullExnref.is_bottom_subtype_of(&ValueType::Exnref));
+    }
+
+    #[test]
+    fn nullref_is_a_bottom_subtype_of_anyref_i31ref_and_every_structref() {
+        assert!(ValueType::NullRef.is_bottom_subtype_of(&ValueType::Anyref));
+        assert!(ValueType::NullRef.is_bottom_subtype_of(&ValueType::I31ref));
+        assert!(ValueType::NullRef.is_bottom_subtype_of(&ValueType::StructRef(0)));
+        assert!(ValueType::NullRef.is_bottom_subtype_of(&ValueType::StructRef(42)), "any struct-type index");
+    }
+
+    // ── W32 §2: bottom-type subtyping lattice -- NEGATIVE directions ─────────
+    //
+    // "The reverse direction never holds" -- a nullable supertype is never
+    // a subtype of its hierarchy's bottom type, and NEITHER direction holds
+    // for a NON-NULL slot (bottom types are still nullable, just never
+    // satisfy a slot this crate doesn't yet model as non-null anyway --
+    // this slice has no non-null variants to test against, see the spec's
+    // "explicitly out of scope"). Also: no cross-hierarchy subtyping.
+
+    #[test]
+    fn funcref_is_never_a_bottom_subtype_of_nullfuncref() {
+        assert!(!ValueType::Funcref.is_bottom_subtype_of(&ValueType::NullFuncref));
+        assert!(!ValueType::ConcreteFuncRef(0).is_bottom_subtype_of(&ValueType::NullFuncref));
+    }
+
+    #[test]
+    fn externref_is_never_a_bottom_subtype_of_nullexternref() {
+        assert!(!ValueType::Externref.is_bottom_subtype_of(&ValueType::NullExternref));
+    }
+
+    #[test]
+    fn exnref_is_never_a_bottom_subtype_of_nullexnref() {
+        assert!(!ValueType::Exnref.is_bottom_subtype_of(&ValueType::NullExnref));
+    }
+
+    #[test]
+    fn anyref_i31ref_structref_are_never_bottom_subtypes_of_nullref() {
+        assert!(!ValueType::Anyref.is_bottom_subtype_of(&ValueType::NullRef));
+        assert!(!ValueType::I31ref.is_bottom_subtype_of(&ValueType::NullRef));
+        assert!(!ValueType::StructRef(0).is_bottom_subtype_of(&ValueType::NullRef));
+    }
+
+    #[test]
+    fn bottom_types_never_cross_into_a_different_hierarchy() {
+        // NullFuncref is bottom of the FUNC hierarchy only -- never a
+        // subtype of extern/exn/any-hierarchy types, and vice versa for
+        // the other three bottom types.
+        assert!(!ValueType::NullFuncref.is_bottom_subtype_of(&ValueType::Externref));
+        assert!(!ValueType::NullFuncref.is_bottom_subtype_of(&ValueType::Exnref));
+        assert!(!ValueType::NullFuncref.is_bottom_subtype_of(&ValueType::Anyref));
+        assert!(!ValueType::NullExternref.is_bottom_subtype_of(&ValueType::Funcref));
+        assert!(!ValueType::NullExternref.is_bottom_subtype_of(&ValueType::Exnref));
+        assert!(!ValueType::NullExternref.is_bottom_subtype_of(&ValueType::Anyref));
+        assert!(!ValueType::NullExnref.is_bottom_subtype_of(&ValueType::Funcref));
+        assert!(!ValueType::NullExnref.is_bottom_subtype_of(&ValueType::Externref));
+        assert!(!ValueType::NullExnref.is_bottom_subtype_of(&ValueType::Anyref));
+        assert!(!ValueType::NullRef.is_bottom_subtype_of(&ValueType::Funcref));
+        assert!(!ValueType::NullRef.is_bottom_subtype_of(&ValueType::Externref));
+        assert!(!ValueType::NullRef.is_bottom_subtype_of(&ValueType::Exnref));
+    }
+
+    #[test]
+    fn is_bottom_subtype_of_is_not_reflexive_and_ignores_equal_types() {
+        // Documented contract: this method does NOT encode reflexivity --
+        // callers combine it with `==` themselves (see `wasm_validator::
+        // type_check::is_assignable`, which does exactly that).
+        assert!(!ValueType::Funcref.is_bottom_subtype_of(&ValueType::Funcref));
+        assert!(!ValueType::NullFuncref.is_bottom_subtype_of(&ValueType::NullFuncref));
+        assert!(!ValueType::I32.is_bottom_subtype_of(&ValueType::I32));
     }
 }

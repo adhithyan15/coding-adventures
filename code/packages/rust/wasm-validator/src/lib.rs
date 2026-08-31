@@ -868,6 +868,28 @@ mod tests {
         assert!(matches!(err, ValidationError::TypeIndexOutOfBounds(_)), "{err:?}");
     }
 
+    // ── W32 first slice: `NullRef <: StructRef(_)` ──────────────────────────
+    //
+    // `wasm-wast-parser` has no struct-type TEXT-format declarations at all
+    // (see `ValueType::StructRef`'s own doc comment), so this direction of
+    // the bottom-type lattice -- unlike the func/extern/exn-hierarchy ones,
+    // covered via WAT text in `tests/type_check.rs` -- needs a directly
+    // constructed `WasmModule`, matching this file's own
+    // `accepts_in_range_concrete_func_ref_in_function_result` pattern just
+    // above.
+
+    #[test]
+    fn accepts_nullref_flowing_into_a_structref_result() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![ValueType::StructRef(0)] }],
+            functions: vec![0],
+            // ref.null none (0xD0 0x71) -- pushes NullRef; end.
+            code: vec![FunctionBody { locals: vec![], code: vec![0xD0, 0x71, 0x0B] }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok(), "{:?}", validate(&module).unwrap_err());
+    }
+
     #[test]
     fn rejects_duplicate_exports() {
         let module = WasmModule {

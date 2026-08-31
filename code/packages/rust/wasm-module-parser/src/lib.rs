@@ -558,6 +558,28 @@ fn decode_value_type(byte: u8, offset: usize) -> Result<ValueType, WasmParseErro
         // [`read_value_type`], which is why it is absent here.
         0x6E => Ok(ValueType::Anyref),
         0x6C => Ok(ValueType::I31ref),
+        // WASM1.0/reference-types-proposal single-byte reference types.
+        // `funcref`/`externref` were previously only recognized in
+        // table-element-type/heap-type-immediate contexts elsewhere in
+        // this crate, never as a plain value-type byte here -- adding
+        // them alongside the four W32 bottom types below (rather than
+        // leaving that pre-existing gap for this addendum to silently
+        // paper over) keeps this decoder able to round-trip every
+        // `ValueType::encode()` output byte-for-byte, matching
+        // `wasm-module-encoder`'s universal `.encode()` call sites.
+        0x70 => Ok(ValueType::Funcref),
+        0x6F => Ok(ValueType::Externref),
+        0x69 => Ok(ValueType::Exnref),
+        // The four W32-first-slice BOTTOM reference types (`code/specs/
+        // W32-wasm-non-null-concrete-reference-types.md`): single-byte,
+        // independently verified against the real reference interpreter's
+        // `interpreter/binary/decode.ml` (see `ValueType::NullFuncref`'s
+        // own doc comment for the derivation), matching `ValueType::
+        // encode()`'s output for these variants exactly.
+        0x73 => Ok(ValueType::NullFuncref),
+        0x72 => Ok(ValueType::NullExternref),
+        0x74 => Ok(ValueType::NullExnref),
+        0x71 => Ok(ValueType::NullRef),
         _ => Err(WasmParseError {
             message: format!("unknown value type byte: 0x{:02X}", byte),
             offset,

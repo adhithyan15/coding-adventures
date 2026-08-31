@@ -1,5 +1,26 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.86 — 2026-08-31 — W32 first slice: real bottom reference-type keywords
+
+### Changed
+
+- `parse_value_type`'s `nullref`/`nullfuncref`/`nullexternref`/
+  `nullexnref` keywords now parse to their OWN genuine `ValueType`
+  variants (`wasm_types::ValueType::NullRef`/`NullFuncref`/
+  `NullExternref`/`NullExnref`, W32 first slice) instead of an earlier
+  pass's lossy alias straight onto their nullable supertype. This is what
+  lets `wasm-validator`'s bottom-type subtyping lattice actually see and
+  check these types, rather than treating e.g. `nullfuncref` and
+  `funcref` as the exact same type.
+- `parse_ref_null_heap_type`'s `none`/`nofunc`/`noextern`/`noexn` heap-type
+  keywords now emit the REAL, independently-verified GC/function-
+  references proposal binary tag bytes (`0x71`/`0x73`/`0x72`/`0x74`,
+  matching `ValueType::Null*::byte_tag()` exactly) instead of an earlier
+  pass's internal, non-spec-canonical placeholder bytes (`0x65`-`0x68`).
+- Real corpus vendoring: `ref_null.wast` now vendors with a genuine,
+  fully-passing baseline (2/2 module, 32/32 assert_return) — see
+  `code/specs/W32-wasm-non-null-concrete-reference-types.md`'s addendum.
+
 ## 0.1.85 — 2026-08-31 — GC `ref.*` wildcard expectations + `module definition`/`module instance`
 
 ### Added

@@ -1787,13 +1787,22 @@ impl WasmRuntime {
                 // directive ever passes one as a top-level `invoke`
                 // argument (only ever appears as a `try_table` catch
                 // target's declared block-result type).
+                // The four W32-first-slice bottom reference types join
+                // this same lossy-legacy-path placeholder group -- no
+                // vendored corpus directive passes one as a top-level
+                // `invoke` argument either (only appears as a global/
+                // function-result declared type in `ref_null.wast`).
                 ValueType::Anyref
                 | ValueType::I31ref
                 | ValueType::StructRef(_)
                 | ValueType::ConcreteFuncRef(_)
                 | ValueType::Funcref
                 | ValueType::Externref
-                | ValueType::Exnref => WasmValue::I32(arg as i32),
+                | ValueType::Exnref
+                | ValueType::NullFuncref
+                | ValueType::NullExternref
+                | ValueType::NullExnref
+                | ValueType::NullRef => WasmValue::I32(arg as i32),
                 // v128 (SIMD): same lossy-legacy-path placeholder as the
                 // reference types above -- `call()`'s i64 round-trip
                 // cannot represent a 128-bit value at all; use `call_typed()`

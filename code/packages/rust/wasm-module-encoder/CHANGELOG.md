@@ -1,5 +1,16 @@
 # Changelog
 
+- 0.2.7 (W32 first slice — bottom reference types): no code change needed
+  in this crate itself -- every value-type encode call site already goes
+  through `ValueType::encode()` universally, so the four new
+  `NullFuncref`/`NullExternref`/`NullExnref`/`NullRef` variants (added in
+  `wasm-types` 0.1.13) encode correctly automatically. Added a round-trip
+  test (`encodes_bottom_ref_types_in_a_func_signature_round_trip`) proving
+  a function signature using all four in its params/results, plus a
+  `ref.null`-based function body, round-trips through this crate's
+  `encode_module` and `wasm-module-parser::WasmModuleParser::parse`
+  byte-for-byte. See `code/specs/
+  W32-wasm-non-null-concrete-reference-types.md`.
 - 0.2.6 (W26 — table64 proposal, first slice): `encode_table_type` becomes
   `is64`-aware, mirroring `encode_memory_type`'s own `is64` branch (minus
   the `shared` bit, which tables never carry) — emits binary `limits`
