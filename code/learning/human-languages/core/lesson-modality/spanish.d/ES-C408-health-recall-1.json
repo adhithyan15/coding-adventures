@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "ES-C09-cansado",
+    "id": "ES-C408-health-recall-1",
     "language": "spanish",
-    "chapter": 59,
-    "sequence": 1020,
+    "chapter": 408,
+    "sequence": 9260,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:67215d0bbc85e436"
+    "sourceHash": "fnv1a64:0269451a31219f9e"
   },
   "findings": []
 }

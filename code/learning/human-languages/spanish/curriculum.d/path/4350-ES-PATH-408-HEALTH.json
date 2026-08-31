@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-408-HEALTH",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C408-doctor",
+    "ES-C408-pastilla"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-408-HEALTH"
+  ],
+  "after": []
+}

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 59,
-  "sourceHash": "fnv1a64:a7a858c85159a9d1",
+  "sourceHash": "fnv1a64:1fa96f1291f0e47f",
   "lessonIds": [
     "ES-C09-cansado"
   ],
@@ -10,6 +10,6 @@
   "text": "spanish/narration/ch59.txt",
   "json": "spanish/narration/ch59.json",
   "textHash": "fnv1a64:c84b9b169771af86",
-  "jsonHash": "fnv1a64:4f105a7aa26f9f1d",
+  "jsonHash": "fnv1a64:07e6c2ab6b5d14b3",
   "findings": []
 }

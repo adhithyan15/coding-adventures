@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Cansado --- a State, Not a Quality",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a7a858c85159a9d1",
+  "sourceHash": "fnv1a64:1fa96f1291f0e47f",
   "lessons": [
     {
       "id": "ES-C09-cansado",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e2900002b69c403",
+      "sourceHash": "fnv1a64:67215d0bbc85e436",
       "notice": null,
       "blocks": [
         {

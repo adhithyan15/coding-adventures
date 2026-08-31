@@ -1,0 +1,424 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 408,
+  "title": "Doctor, Pills and Tiredness",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:5c94c478d58606d6",
+  "lessons": [
+    {
+      "id": "ES-C408-doctor",
+      "sequence": 9240,
+      "title": "el doctor / la doctora — the teacher-word at the clinic",
+      "headword": "el doctor / la doctora",
+      "romanization": "el doctor / la doctora",
+      "gloss": "doctor",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef2eb8ec350721ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall el médico, the physician. Spanish has another word you will hear when making an appointment: el doctor or la doctora."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Medieval Latin doctor meant “teacher,” from docēre, “to teach.” English kept the same academic word. Spanish also uses doctor for a physician and as a form of address. That does not erase the older academic meaning: context tells you whether the doctor holds a doctorate or is treating a patient."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: name the person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ending follows the person: el doctor, la doctora. To ask for an appointment, use the frame pedir cita con el doctor. Médico remains the more specific profession-word; doctor is the word the mock message uses."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el doctor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el doctor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la doctora",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la doctora*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una cita con el doctor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una cita con el doctor*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Doctor? (El doctor; la doctora.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: doctor."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C408-pastilla",
+      "sequence": 9250,
+      "title": "la pastilla — a small formed portion",
+      "headword": "la pastilla",
+      "romanization": "la pastilla",
+      "gloss": "pill or tablet",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36132c9f1e07f9bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have an appointment with el doctor. The next message names what you take: la pastilla."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pastilla belongs transparently with pasta and the small-form ending -illa: a little formed portion. The older physical idea survives in a bar of soap or a mint. In the clinic, una pastilla is a small medicinal tablet."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not overtranslate the shape. In this health frame, pastilla means the pill or tablet, not pasta to eat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la pastilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la pastilla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una pastilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una pastilla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el doctor y la pastilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el doctor y la pastilla*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pill or tablet? (La pastilla.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: DLE: pastilla; RAE, derivation and composition: pastilla from pasta."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C408-health-recall-1",
+      "sequence": 9260,
+      "title": "health recall one — person, medicine, state",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "first retrieval of doctor, pill and tired",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0269451a31219f9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the person, the medicine and the state. (El doctor, la pastilla, cansado.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una cita con el doctor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una cita con el doctor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una pastilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una pastilla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estoy cansado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estoy cansado*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Doctor, pill, tired? (Doctor, pastilla, cansado.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C408-health-recall-2",
+      "sequence": 9270,
+      "title": "health recall two — close the three messages",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "delayed production of three health blockers",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:193783467a3e7680",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Complete the three cues: cita con el ___; una ___; estoy ___. (Doctor, pastilla, cansado.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el doctor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el doctor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la pastilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la pastilla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estoy cansado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estoy cansado*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve all three without translating. (Doctor, pastilla, cansado.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ES-EXT-408-HEALTH",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can identify a doctor and a medicinal tablet.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C408-doctor",
+    "ES-C408-pastilla"
+  ]
+}
