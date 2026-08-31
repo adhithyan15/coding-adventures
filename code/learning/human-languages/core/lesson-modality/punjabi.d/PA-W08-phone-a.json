@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W08-phone-a",
+    "language": "punjabi",
+    "chapter": 30,
+    "sequence": 1840,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:715752e41d1fbdd6",
+    "detachableSegments": [
+      "Script — six places"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

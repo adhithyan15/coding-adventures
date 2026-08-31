@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W08-phone-no-model",
+    "language": "punjabi",
+    "chapter": 30,
+    "sequence": 1930,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:63bae9fa78c00d42",
+    "detachableSegments": [
+      "Writing — independent controlled choice"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

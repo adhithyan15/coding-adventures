@@ -175,6 +175,21 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 166 | 29 | PA-W07-age-dictation | transcribe one heard support-language number into Gurmukhi digits |
 | 167 | 29 | PA-W07-age-repair | repair one age-field dimension at a time |
 | 168 | 29 | PA-W07-age-no-model | fill one fictional age line from a nonverbal cue with no model |
+| 169 | 30 | PA-W08-pha | trace the base letter ਫ |
+| 170 | 30 | PA-W08-pairin-bindi | add the below-letter dot to form ਫ਼ |
+| 171 | 30 | PA-W08-hora | add hora ੋ above-right |
+| 172 | 30 | PA-W08-phone-label | assemble and copy the phone label ਫ਼ੋਨ |
+| 173 | 30 | PA-W08-digit-zero | trace Gurmukhi digit ੦ |
+| 174 | 30 | PA-W08-phone-a | build fictional phone value A digit by digit |
+| 175 | 30 | PA-W08-phone-b | build fictional phone value B digit by digit |
+| 176 | 30 | PA-W08-digit-recognition | recognise and transcribe each introduced phone digit |
+| 177 | 30 | PA-W08-phone-select | select between the two taught fictional phone values |
+| 178 | 30 | PA-W08-phone-supported | fill one phone line with the bank visible |
+| 179 | 30 | PA-W08-phone-grouping | group six digits as three plus three |
+| 180 | 30 | PA-W08-phone-delayed | hide the bank, then fill one requested phone line |
+| 181 | 30 | PA-W08-phone-dictation | transcribe one heard fictional phone value into grouped Gurmukhi digits |
+| 182 | 30 | PA-W08-phone-repair | repair one phone-field dimension at a time |
+| 183 | 30 | PA-W08-phone-no-model | fill one fictional phone line from a nonverbal cue with no model |
 
-After session 168, the track continues through the dependency-linked backlog;
+After session 183, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

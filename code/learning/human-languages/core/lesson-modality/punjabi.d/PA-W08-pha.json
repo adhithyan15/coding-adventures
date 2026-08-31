@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W08-pha",
+    "language": "punjabi",
+    "chapter": 30,
+    "sequence": 1790,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cf1dc96dc3fd2f59",
+    "detachableSegments": [
+      "Script — one letter"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

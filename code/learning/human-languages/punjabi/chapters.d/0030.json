@@ -1,0 +1,22 @@
+{
+  "chapter": 30,
+  "title": "Build One Fictional Phone Field",
+  "label": "ch:pa-form-phone-runway",
+  "canDo": "I can recognise the Gurmukhi phone label and independently select and write one of two taught fictional phone values digit by digit from a nonverbal cue.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W08-phone-no-model",
+    "kind": "production",
+    "summary": "The learner fills one fictional phone line from a remembered nonverbal cue with no romanization, Latin digits, or copyable Gurmukhi answer, then checks selection, six digit positions, grouping, and placement separately.",
+    "assesses": [
+      "PA-FORM-LABEL-PHONE-01",
+      "PA-FORM-PHONE-B-01",
+      "PA-FORM-PHONE-CUE-MAP-01",
+      "PA-FORM-PHONE-DIGIT-ORDER-01",
+      "PA-FORM-PHONE-GROUPING-01",
+      "PA-FORM-PHONE-REPAIR-01"
+    ]
+  }
+}
