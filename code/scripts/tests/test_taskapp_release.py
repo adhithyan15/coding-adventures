@@ -252,6 +252,8 @@ def test_archives_self_contained_windows_app_with_stable_identity(tmp_path: Path
     expected_runtime = tmp_path / "task_mosaic_app.dll"
     expected_runtime.write_bytes(b"rust-runtime")
     (source / "Trestle.dll").write_bytes(b"managed-app")
+    for name in ("Trestle.pri", "App.xbf", "MainWindow.xbf", "TaskApp.xbf"):
+        (source / name).write_bytes(b"winui-resource")
     icon_path = write_windows_icon(tmp_path / "Trestle.ico")
 
     payload = archive_windows_app(
@@ -271,12 +273,36 @@ def test_archives_self_contained_windows_app_with_stable_identity(tmp_path: Path
         names = archive.namelist()
     assert f"{root}/Trestle.exe" in names
     assert f"{root}/mosaic_app.dll" in names
+    assert f"{root}/Trestle.pri" in names
+    assert f"{root}/TaskApp.xbf" in names
     assert metadata["applicationIdentity"] == "org.codingadventures.trestle"
     assert metadata["statePath"] == "%LOCALAPPDATA%\\task-app\\mosaic-state.v1.json"
     assert metadata["dotnetSelfContained"] is True
     assert metadata["msix"] is False
     assert icon == icon_path.read_bytes()
     assert icon[:6] == struct.pack("<HHH", 0, 1, 6)
+
+
+def test_windows_archive_rejects_publish_without_application_resources(tmp_path: Path) -> None:
+    source = tmp_path / "publish"
+    source.mkdir()
+    executable = source / "Trestle.exe"
+    executable.write_bytes(b"pe-app")
+    runtime = source / "mosaic_app.dll"
+    runtime.write_bytes(b"rust-runtime")
+    expected_runtime = tmp_path / "task_mosaic_app.dll"
+    expected_runtime.write_bytes(b"rust-runtime")
+
+    with pytest.raises(ValueError, match="missing required WinUI resources"):
+        archive_windows_app(
+            "0.2.0",
+            COMMIT,
+            source,
+            executable,
+            runtime,
+            expected_runtime,
+            tmp_path / "assets",
+        )
 
 
 def test_manifest_requires_the_exact_release_payload_set(tmp_path: Path) -> None:
@@ -394,6 +420,7 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "-p:SelfContained=true" in workflow
     assert "-p:AssemblyName=Trestle" in workflow
     assert "$taskAppExecutable" not in workflow
+    assert "@('Trestle.pri', 'App.xbf', 'MainWindow.xbf', 'TaskApp.xbf')" in workflow
     assert "-RestartExePath $replacementExecutable" in workflow
     assert "code/packages/rust/task-wasm/pkg/task_engine.wasm" in workflow
     assert "host/web/public/task_engine.wasm" in workflow

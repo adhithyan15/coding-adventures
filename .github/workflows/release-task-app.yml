@@ -587,6 +587,11 @@ jobs:
           if (!(Test-Path $trestleExecutable)) {
             throw 'WinUI publish did not produce the build-time Trestle executable identity'
           }
+          foreach ($resourceName in @('Trestle.pri', 'App.xbf', 'MainWindow.xbf', 'TaskApp.xbf')) {
+            if (!(Test-Path (Join-Path $publish $resourceName))) {
+              throw "WinUI publish omitted required application resource $resourceName"
+            }
+          }
           Copy-Item $expected.Path (Join-Path $publish 'mosaic_app.dll') -Force
           $runtime = Join-Path $publish 'mosaic_app.dll'
           if ((Get-FileHash $expected.Path -Algorithm SHA256).Hash -ne

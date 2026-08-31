@@ -22,6 +22,9 @@ original and replacement copy, drives the real WinUI controls through UI
 Automation without a runtime override, and proves the replacement restores the
 stable `%LOCALAPPDATA%\task-app` snapshot. A separate console harness retains ABI
 coverage. The bundle metadata explicitly says it is unsigned and not an MSIX.
+The exact gate also exposed `dotnet publish` dropping the generated PRI and XBF
+resources; emitted XAML projects now preserve them in `PublishDir`, preventing a
+cleanly built portable app from dying during WinUI startup (#13658).
 
 ### Added - unsigned macOS Trestle application bundle (#13612)
 

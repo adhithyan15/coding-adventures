@@ -35,6 +35,9 @@ not a claimed Windows package identity. The stable live state path is
 `Trestle-windows-x64-v<VERSION>` root. The self-contained `dotnet publish` output
 is kept intact, with its entry apphost exposed as `Trestle.exe`. The selected Rust
 library is installed beside it under the standard binding name `mosaic_app.dll`.
+The emitted project explicitly carries `Trestle.pri` plus the generated XBF files
+from the build output into `PublishDir`; WinUI needs those application resources
+at startup even though the stock publish target omits them.
 
 The root also contains:
 
@@ -55,13 +58,15 @@ The Windows release job must:
 1. build `task-mosaic-app` and generate XAML under `native-complete`;
 2. apply release-only Trestle title, product, version, and icon metadata;
 3. publish `win-x64` with both .NET and Windows App SDK self-contained;
-4. install and compare `mosaic_app.dll` byte-for-byte with
+4. require `Trestle.pri` and every generated application XBF in the publish
+   directory;
+5. install and compare `mosaic_app.dll` byte-for-byte with
    `task_mosaic_app.dll`;
-5. archive and extract independent original/replacement directories;
-6. use UI Automation to drive the real todo and Rust scheduling lifecycle from
+6. archive and extract independent original/replacement directories;
+7. use UI Automation to drive the real todo and Rust scheduling lifecycle from
    the first executable, restart through the replacement executable, and restore
    the standard LocalApplicationData snapshot without `MOSAIC_APP_LIBRARY`; and
-7. retain hosted-runner console conformance against the replacement runtime.
+8. retain hosted-runner console conformance against the replacement runtime.
 
 The hosted Windows UI Automation gate does not require a foreground desktop, but
 it launches the real WinUI executable and inspects native controls. This is a

@@ -543,6 +543,13 @@ def archive_windows_app(
         raise ValueError("Windows executable and Rust runtime files must exist")
     if runtime.read_bytes() != expected_runtime.read_bytes():
         raise ValueError("bundled Windows Rust runtime does not match the selected build artifact")
+    required_resources = ("Trestle.pri", "App.xbf", "MainWindow.xbf", "TaskApp.xbf")
+    missing_resources = [name for name in required_resources if not (source / name).is_file()]
+    if missing_resources:
+        raise ValueError(
+            "Windows publish directory is missing required WinUI resources: "
+            + ", ".join(missing_resources)
+        )
 
     source_root = source.resolve(strict=True)
     for path in source.rglob("*"):
