@@ -331,5 +331,5 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   ]);
   const report = measureContinuity(ordered);
   expect(report.reinforcement.filter((defect) => chapter3Atoms.has(defect.atom))).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 73, R3: 121, R4: 17 });
+  expect(report.summary.missedByWindow).toEqual({ R1: 36, R2: 73, R3: 121, R4: 17 });
 });
