@@ -42,7 +42,8 @@
 //! 7 × 8-bit + flags ≈ 336 + 40 gates.
 //! 2 × 16-bit (PC + SP) ≈ 192 gates.
 
-use crate::bits::{add_16bit, bits_to_u16, int_to_bits16};
+use crate::bits::add_16bit;
+use crate::state::StateRegister;
 
 // Register index constants matching the 3-bit opcode encoding
 pub const REG_B: u8 = 0;
@@ -64,9 +65,9 @@ pub const PAIR_SP: u8 = 3;
 ///
 /// Internal layout: indices 0–5 = B,C,D,E,H,L; index 6 = A.
 /// The M pseudo-register (opcode code 6) is NOT stored here.
+#[derive(Clone)]
 pub struct RegisterFile {
-    // bits[reg][bit]: bit[0] = LSB, bit[7] = MSB (LSB-first flip-flop ordering)
-    bits: [[u8; 8]; 7],
+    registers: [StateRegister; 7],
 }
 
 impl Default for RegisterFile {
@@ -78,7 +79,9 @@ impl Default for RegisterFile {
 impl RegisterFile {
     /// Create a register file with all bits cleared.
     pub fn new() -> Self {
-        RegisterFile { bits: [[0u8; 8]; 7] }
+        RegisterFile {
+            registers: std::array::from_fn(|_| StateRegister::new(8)),
+        }
     }
 
     /// Read a register by its 3-bit opcode code.
@@ -87,8 +90,7 @@ impl RegisterFile {
     /// Panics if `reg == REG_M` (6) — caller must handle M as a memory access.
     pub fn read(&self, reg: u8) -> u8 {
         let idx = self.idx(reg);
-        let bits = &self.bits[idx];
-        bits.iter().enumerate().fold(0u8, |acc, (i, &b)| acc | (b << i))
+        self.registers[idx].read() as u8
     }
 
     /// Write a register by its 3-bit opcode code.
@@ -97,9 +99,7 @@ impl RegisterFile {
     /// Panics if `reg == REG_M` (6).
     pub fn write(&mut self, reg: u8, value: u8) {
         let idx = self.idx(reg);
-        for i in 0..8 {
-            self.bits[idx][i] = (value >> i) & 1;
-        }
+        self.registers[idx].write(u16::from(value));
     }
 
     /// Read a 16-bit register pair, returning (high, low) bytes.
@@ -133,8 +133,8 @@ impl RegisterFile {
 
     fn idx(&self, reg: u8) -> usize {
         match reg {
-            0..=5 => reg as usize,       // B=0, C=1, D=2, E=3, H=4, L=5
-            7 => 6,                       // A maps to internal index 6
+            0..=5 => reg as usize, // B=0, C=1, D=2, E=3, H=4, L=5
+            7 => 6,                // A maps to internal index 6
             6 => panic!("REG_M (6) is a pseudo-register; handle as memory access"),
             _ => panic!("invalid register code {reg}"),
         }
@@ -147,8 +147,9 @@ impl RegisterFile {
 ///
 /// Every increment or decrement routes through the `add_16bit` gate chain —
 /// 16 full-adder stages, the same ripple-carry adder used for DAD.
+#[derive(Clone)]
 pub struct Register16 {
-    bits: [u8; 16],
+    state: StateRegister,
 }
 
 impl Default for Register16 {
@@ -160,18 +161,19 @@ impl Default for Register16 {
 impl Register16 {
     /// Create a 16-bit register cleared to 0.
     pub fn new() -> Self {
-        Register16 { bits: [0u8; 16] }
+        Register16 {
+            state: StateRegister::new(16),
+        }
     }
 
     /// Read the current value.
     pub fn read(&self) -> u16 {
-        bits_to_u16(&self.bits)
+        self.state.read()
     }
 
     /// Write a new value (clock all 16 flip-flops).
     pub fn write(&mut self, value: u16) {
-        let bits = int_to_bits16(value);
-        self.bits.copy_from_slice(&bits);
+        self.state.write(value);
     }
 
     /// Increment by `n` through the 16-bit ripple-carry adder chain.

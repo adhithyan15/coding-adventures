@@ -28,9 +28,11 @@
 //!
 //! let mut cpu = GateLevelCpu::new();
 //! // MVI A,10; MVI B,5; ADD B; HLT
-//! let (traces, state) = cpu.run(&[0x3E, 0x0A, 0x06, 0x05, 0x80, 0x76], 100);
-//! assert_eq!(state.a, 15);
-//! assert!(!state.flag_cy);
+//! let result = cpu
+//!     .run(&[0x3E, 0x0A, 0x06, 0x05, 0x80, 0x76], 100)
+//!     .unwrap();
+//! assert_eq!(result.final_state.regs.a, 15);
+//! assert!(!result.final_state.flags.cy);
 //! ```
 
 pub mod alu;
@@ -38,5 +40,7 @@ pub mod bits;
 pub mod cpu;
 pub mod decoder;
 pub mod registers;
+mod state;
 
-pub use cpu::{CpuState, GateLevelCpu, StepTrace};
+pub use cpu::{GateLevelCpu, FLIP_FLOP_COUNT};
+pub use intel8080_simulator::{ExecutionResult, Intel8080Error, Intel8080State, StepTrace};

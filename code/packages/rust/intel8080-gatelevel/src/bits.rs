@@ -21,7 +21,7 @@
 //! is exactly the carry into bit 4. We capture this as `ac` in `add_8bit`.
 
 use arithmetic::adders::full_adder;
-use logic_gates::gates::{not_gate, xor_n};
+use logic_gates::gates::{not_gate, or_gate, xor_n};
 
 // ─── 8-bit helpers ──────────────────────────────────────────────────────────
 
@@ -75,8 +75,12 @@ pub fn bits_to_u16(bits: &[u8]) -> u16 {
 /// P = NOT(xor_chain)   ← 0 from even-count XOR → P = 1
 /// ```
 pub fn compute_parity(bits: &[u8]) -> u8 {
-    if bits.is_empty() { return 1; }
-    if bits.len() == 1 { return not_gate(bits[0]); }
+    if bits.is_empty() {
+        return 1;
+    }
+    if bits.len() == 1 {
+        return not_gate(bits[0]);
+    }
     not_gate(xor_n(bits))
 }
 
@@ -84,7 +88,7 @@ pub fn compute_parity(bits: &[u8]) -> u8 {
 ///
 /// In hardware this is a NOR tree; here we use a fold.
 pub fn compute_zero(bits: &[u8]) -> u8 {
-    u8::from(bits.iter().all(|&b| b == 0))
+    not_gate(bits.iter().copied().fold(0, or_gate))
 }
 
 // ─── 8-bit addition ──────────────────────────────────────────────────────────
@@ -134,12 +138,17 @@ pub fn add_8bit(a: u8, b: u8, carry_in: u8) -> (u8, u8, u8) {
 /// Implementation: `a + NOT(b) + NOT(borrow_in)`.
 /// The 8080 sets CY=1 when borrow occurred (i.e., adder carry = 0).
 pub fn sub_8bit(a: u8, b: u8, borrow_in: u8) -> (u8, u8, u8) {
-    let not_b = !b;  // bitwise NOT (8 NOT gates in parallel)
-    let cin = 1 - borrow_in; // NOT(borrow_in): borrow=0 → cin=1
+    let not_b = bits_to_u8(
+        &int_to_bits8(b)
+            .into_iter()
+            .map(not_gate)
+            .collect::<Vec<_>>(),
+    );
+    let cin = not_gate(borrow_in);
     let (result, adder_carry, adder_ac) = add_8bit(a, not_b, cin);
     // 8080 subtraction convention: CY = NOT(adder_carry), AC = NOT(adder_ac)
-    let borrow_out = 1 - adder_carry;
-    let aux_borrow = 1 - adder_ac;
+    let borrow_out = not_gate(adder_carry);
+    let aux_borrow = not_gate(adder_ac);
     (result, borrow_out, aux_borrow)
 }
 
@@ -170,7 +179,12 @@ pub fn add_16bit(a: u16, b: u16, carry_in: u8) -> (u16, u8) {
 /// Used for DCX (decrement register pair by 1).
 pub fn sub_16bit(a: u16, b: u16) -> (u16, u8) {
     // a - b = a + NOT(b) + 1
-    let not_b = !b;
+    let not_b = bits_to_u16(
+        &int_to_bits16(b)
+            .into_iter()
+            .map(not_gate)
+            .collect::<Vec<_>>(),
+    );
     add_16bit(a, not_b, 1)
 }
 

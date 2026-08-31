@@ -28,3 +28,18 @@
 - `CpuState` snapshot struct for test assertions
 - `StepTrace` for per-instruction trace output
 - 76 unit tests across all modules
+
+## Unreleased
+
+### Changed
+
+- Backed all 528,479 persistent bits—64 KiB memory, registers, flags, control
+  state, and 512 I/O latches—with D flip-flops.
+- Replaced unchecked lifecycle behavior with the functional simulator's typed,
+  atomic errors, transactional bounded runs, complete snapshots, and full traces.
+- Routed decrement, subtraction, DAA adjustment, and zero detection through gate
+  primitives, and fixed routing for XTHL, PCHL, XCHG, and SPHL.
+- Added exhaustive full-state differential coverage for all 244 defined opcodes,
+  plus topology, failure-boundary, and multi-instruction workload contracts.
+- Updated the actual test count to 51 unit, 4 integration, and 5 doctests.
+- Raised core line coverage to 95.53% (855/895).
