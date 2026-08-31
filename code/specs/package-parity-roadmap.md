@@ -11881,6 +11881,15 @@ separator and rejects a literal POSIX backslash. Direct regressions cover both
 boundaries. The reviewer also reproduced stable NTFS-junction pruning on Ruby
 3.4.9 and confirmed that the documentation makes no atomic TOCTOU claim.
 
+Before publication, `origin/main` advanced through PR #13601's Spanish
+health-frame curriculum and generated-data work to exact revision
+`dcc7444eedd313e8d259917c797c23f0af236878`. The implementation commit
+rebased without conflict onto that main. The intervening 46 human-language
+and existing TypeScript human-language-data paths add no package root, BUILD
+front, recognized manifest, dependency, lockfile, identity, collision, owner
+gap, or exact overlap with this seven-path tranche. The refreshed schema-3
+inventory and 606-owner/917-edge graph remain structurally unchanged.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
