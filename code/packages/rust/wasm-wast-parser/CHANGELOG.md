@@ -1,5 +1,76 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.89 — 2026-08-31 — W33 first slice: `(rec ...)` group parsing + `(sub [final] ...)` nominal subtyping
+
+Implements items (3a) and half of (1)/(2) of `code/specs/
+W33-wasm-gc-recursive-type-subtyping.md`'s "first slice" scope (the other
+half — structural subtype CHECKING — lands in `wasm-validator`). This
+crate now actually PARSES the two GC-proposal constructs 0.1.88 could only
+detect-and-reject: `(rec (type $a ...) (type $b ...))` type groups, and
+`(sub [final] $parent (func ...))` nominal-subtyping declarations.
+Struct/array TEXT-format bodies remain unparseable (unchanged, still
+rejected the same way 0.1.87/0.1.88 already did) — every `rec`/`sub` this
+slice recognizes wraps a `func` body only.
+
+### Added
+
+- **`(rec ...)` group parsing**, replacing `collect_symbols`'s old
+  single-shot "register name, immediately parse body" scheme for type
+  declarations with a two-phase-PER-GROUP one: phase A registers every
+  member's name and reserves its type-section index (with a placeholder
+  body) for the WHOLE group at once; phase B then parses every member's
+  real body, so a member can forward-reference (even self-reference) any
+  OTHER member of its own group — the exact gap W32's own `type-rec.wast`
+  investigation flagged ("plain `idx < types.len()` bounds checking is
+  insufficient inside a `rec` group"). A plain, non-`rec`-wrapped `(type
+  ...)` is treated as its own implicit SINGLETON group (the real GC
+  proposal's own rule), which is what lets `type-rec.wast`'s own first
+  module self-reference via `(ref 0)` on a bare `(type ...)`.
+  - A NAMED forward reference to a type in a LATER, not-yet-started group
+    already failed naturally under the old scheme too (the name isn't
+    registered until its own group's phase A runs) — unchanged. A
+    NUMERIC reference (`(ref 2)`) needed a new explicit check: unlike
+    named lookups, `resolve_idx`'s numeric path has no notion of "has
+    this index been declared yet," so a reference to an index that
+    happens to exist by the time the WHOLE MODULE finishes parsing would
+    otherwise silently succeed even when it names a not-yet-started
+    LATER group — rejected as `UnknownIdentifier` now, matching
+    `type-rec.wast`'s own `assert_invalid "unknown type"` cases (lines
+    21-34) exactly.
+  - `build`'s pass-2 dispatch gained an explicit `"rec" => {}` arm
+    (mirroring `"type"`'s own pre-existing no-op arm) — before this
+    slice, `rec` fell through to 0.1.88's `other => Err(..)` catch-all and
+    was correctly, but only honestly-rejected; it's now a real, supported
+    construct.
+- **`(sub [final] $parent? (func ...))` parsing** (`parse_type_body`,
+  `reject_non_func_body`): a type with no `sub` clause at all defaults to
+  final with no declared supertype (the pre-GC/MVP shape, unchanged
+  behavior); `(sub (func ...))` is open for further subtyping with no
+  parent; `(sub $parent (func ...))` records the declared parent;
+  `(sub final ...)` (with or without a parent) forecloses further
+  subtyping. Recorded into the new `WasmModule::type_subtyping` parallel
+  array (`wasm-types` 0.1.15) — this crate only PARSES the declaration;
+  `wasm-validator` checks it structurally.
+- **`WasmModule::type_subtyping`/`dedup_type` kept in lockstep**: every
+  push to `module.types` anywhere in this crate (the new group-parsing
+  loop, and `dedup_type`'s "genuinely new implicit type" branch) now
+  pushes a matching `TypeSubtyping` entry — `dedup_type`'s "found an
+  existing structural match" branch deliberately does NOT push a new one,
+  since reusing an existing entry's index means reusing its `sub`/`final`
+  metadata too (an anonymous inline signature that matches `$t`'s shape
+  exactly IS `$t`, not a fresh type).
+
+### Changed
+
+- `rec_type_group_is_rejected_not_silently_dropped` (0.1.88) renamed to
+  `rec_type_group_is_real_not_silently_dropped` and rewritten: its module
+  now parses successfully (this slice's own point) instead of erroring,
+  asserting the declared type is the real, non-empty parsed body instead.
+
+Full-corpus baseline diff (`wasm-conformance`, this slice) confirms zero
+regressions — see that crate's own changelog entry for the exact
+before/after tallies across every affected file.
+
 ## 0.1.88 — 2026-08-31 — W32 addendum: unrecognized top-level module fields are rejected, not silently dropped
 
 Investigating `type-subtyping.wast` (the W32 spec's own "what's still
