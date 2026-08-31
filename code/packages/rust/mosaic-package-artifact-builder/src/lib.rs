@@ -185,6 +185,28 @@ pub struct DegradationReport {
     /// Currently populated for the XAML backend only — see
     /// `mosaic_emit_xaml::pipeline::dropped_style_properties`.
     pub style_degradations: Vec<Degradation>,
+    /// Generated runtime-host files this package's `[host_assets]` replaced.
+    ///
+    /// Replacing them is **supported** — the generated Qt README says so
+    /// outright: "Explicit package host assets may replace `MosaicHost.h/.cpp`
+    /// when specialized platform integration is required." A package with its own
+    /// native integration has a legitimate reason to override the standard
+    /// binding.
+    ///
+    /// What was missing is that it happened *silently*. The generated host is
+    /// what actually loads the library `--runtime-library` bundles, so replacing
+    /// it means the selected engine is installed and never called — while this
+    /// report still said `nativeComplete: true` with no degradations. A CI lane
+    /// that bundles a runtime, byte-compares it, and launches the app therefore
+    /// could not tell whether it had exercised the standard runtime or the
+    /// package's own; every check passed either way.
+    ///
+    /// Recorded rather than rejected, and deliberately kept OUT of
+    /// `degradations`/`native_complete` for the same reason `style_degradations`
+    /// is: this is a supported choice, not a backend failing to express
+    /// something. A consumer that needs the standard binding asserts this list is
+    /// empty; one that expects an override asserts it contains the file.
+    pub replaced_runtime_host_files: Vec<String>,
 }
 
 impl Backend {
@@ -1110,15 +1132,73 @@ fn analyze_package_degradations_with_runtime_and_tokens(
         }
     }
 
+    let replaced_host_files = replaced_runtime_host_files(&manifest, opts.backend);
+
     Ok(DegradationReport {
         schema_version: 1,
         profile,
         package: manifest.package.name,
         backend: opts.backend.dir_name().to_string(),
+        // Deliberately unaffected by `replaced_host_files`: replacing the
+        // generated binding is a supported choice, not a backend gap.
         native_complete: degradations.is_empty(),
         degradations,
         style_degradations,
+        replaced_runtime_host_files: replaced_host_files,
     })
+}
+
+/// The files a backend's generated project uses to talk to the standard Mosaic
+/// application ABI.
+///
+/// Sourced from `mosaic-app-bindings/templates/<backend>/` — these are the ones
+/// whose contents call `mosaic_app_create` and friends. A package `host_asset`
+/// landing on any of them takes over the runtime binding.
+fn generated_runtime_host_files(backend: Backend) -> &'static [&'static str] {
+    match backend {
+        Backend::Qt => &["MosaicHost.cpp", "MosaicHost.h"],
+        Backend::SwiftUI => &[
+            "Sources/App/MosaicRuntimeHost.swift",
+            "Sources/CMosaicRuntime/CMosaicRuntime.c",
+            "include/CMosaicRuntime.h",
+        ],
+        Backend::Compose => &["src/main/kotlin/MosaicRuntimeHost.kt"],
+        Backend::Flutter => &["lib/mosaic_host.dart"],
+        Backend::Xaml => &["MosaicRuntimeHost.cs"],
+        // Web backends have no standard native runtime host to replace.
+        _ => &[],
+    }
+}
+
+/// Which generated runtime-host files this package's `host_assets` overwrite.
+///
+/// Compared on the normalised target path, since a manifest may spell the same
+/// destination different ways.
+fn replaced_runtime_host_files(manifest: &MosaicPackage, backend: Backend) -> Vec<String> {
+    let backend_name = backend.dir_name();
+    let generated = generated_runtime_host_files(backend);
+    let mut replaced: Vec<String> = manifest
+        .host_assets
+        .files
+        .iter()
+        .filter(|asset| asset.backend == backend_name || asset.backend == "*")
+        .filter_map(|asset| {
+            let target = asset.target.replace('\\', "/");
+            generated
+                .iter()
+                .find(|candidate| {
+                    let candidate = **candidate;
+                    target == candidate
+                        // A manifest may name only the file where the generated
+                        // one sits in a subdirectory.
+                        || candidate.rsplit('/').next() == Some(target.as_str())
+                })
+                .map(|candidate| (*candidate).to_string())
+        })
+        .collect();
+    replaced.sort();
+    replaced.dedup();
+    replaced
 }
 
 fn write_degradation_report(path: &Path, report: &DegradationReport) -> Result<(), BuildError> {
@@ -6876,6 +6956,130 @@ layout NativeEvents {
         assert!(
             result.artifacts.iter().any(|path| path == &lattice),
             "Lattice sidecar should appear in BuildResult.artifacts"
+        );
+    }
+
+    /// A `host_asset` that overwrites the generated Qt runtime host is recorded.
+    ///
+    /// This is the case Engram hits: it ships its own `MosaicHost.cpp` bound to
+    /// `engram-capi`, which lands on the same filename the standard Qt binding is
+    /// generated into. Replacing it is supported — the generated README says so —
+    /// but before this it happened silently, so an artifact whose selected runtime
+    /// was never reachable still reported `nativeComplete: true` with no
+    /// degradations. A CI lane could bundle a runtime, byte-compare it, launch the
+    /// app, and pass every check without executing a line of the standard runtime.
+    #[test]
+    fn replacing_the_generated_runtime_host_is_recorded_in_the_report() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let host_dir = pkg.path().join("host").join("qt");
+        fs::create_dir_all(&host_dir).unwrap();
+        fs::write(host_dir.join("MosaicHost.cpp"), "// bespoke binding\n").unwrap();
+        fs::write(host_dir.join("MosaicHost.h"), "// bespoke header\n").unwrap();
+        append_host_assets(
+            pkg.path(),
+            r#"[host_assets]
+files = [
+  { backend = "qt", source = "host/qt/MosaicHost.cpp", target = "MosaicHost.cpp" },
+  { backend = "qt", source = "host/qt/MosaicHost.h", target = "MosaicHost.h" },
+]"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Qt,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::Permissive,
+        )
+        .expect("qt build");
+
+        let report: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(out.path().join("qt/mosaic-degradations.json")).unwrap(),
+        )
+        .unwrap();
+
+        assert_eq!(
+            report["replacedRuntimeHostFiles"],
+            serde_json::json!(["MosaicHost.cpp", "MosaicHost.h"]),
+            "both replaced binding files should be named in the report"
+        );
+
+        // The override is supported, so it must not be treated as a backend gap.
+        // (This fixture has unrelated Qt degradations of its own, so the claim is
+        // that *none of them is about the replacement* — not that the package is
+        // native-complete.)
+        let degradation_codes: Vec<&str> = report["degradations"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|entry| entry["code"].as_str().unwrap())
+            .collect();
+        assert!(
+            !degradation_codes
+                .iter()
+                .any(|code| code.contains("runtime-host") || code.contains("host-asset")),
+            "replacing the binding is a supported choice, not a degradation; got {degradation_codes:?}"
+        );
+
+        // And the replacement really did happen — the assertion above would be
+        // worth little if the generated file had survived.
+        let host = fs::read_to_string(out.path().join("qt/MosaicHost.cpp")).unwrap();
+        assert_eq!(host, "// bespoke binding\n");
+        assert!(
+            !host.contains("mosaic_app_create"),
+            "the package's file should have replaced the standard binding"
+        );
+    }
+
+    /// A package with no colliding assets reports an empty list.
+    ///
+    /// Without this, the assertion above could pass while the detection matched
+    /// everything.
+    #[test]
+    fn packages_that_keep_the_generated_runtime_host_report_no_replacement() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let host_dir = pkg.path().join("host").join("qt");
+        fs::create_dir_all(&host_dir).unwrap();
+        fs::write(host_dir.join("extra.cpp"), "// unrelated\n").unwrap();
+        append_host_assets(
+            pkg.path(),
+            r#"[host_assets]
+files = [
+  { backend = "qt", source = "host/qt/extra.cpp", target = "extra.cpp" },
+]"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Qt,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::Permissive,
+        )
+        .expect("qt build");
+
+        let report: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(out.path().join("qt/mosaic-degradations.json")).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(
+            report["replacedRuntimeHostFiles"],
+            serde_json::json!([]),
+            "an unrelated host asset must not be reported as replacing the binding"
+        );
+
+        let host = fs::read_to_string(out.path().join("qt/MosaicHost.cpp")).unwrap();
+        assert!(
+            host.contains("mosaic_app_create"),
+            "the standard binding should survive when nothing overwrites it"
         );
     }
 

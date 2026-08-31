@@ -1,5 +1,40 @@
 # Changelog
 
+## Unreleased
+
+**The emit report now records when a package replaces the generated runtime
+host.** New `DegradationReport::replaced_runtime_host_files`
+(`replacedRuntimeHostFiles` in the JSON), listing the generated binding files a
+package's `[host_assets]` overwrote.
+
+Replacing them is **supported** — the generated Qt README says so outright:
+"Explicit package host assets may replace `MosaicHost.h/.cpp` when specialized
+platform integration is required." A package with its own native integration has
+a legitimate reason to override the standard binding.
+
+What was missing is that it happened silently. The generated host is what
+actually loads the library `--runtime-library` bundles, so replacing it means the
+selected engine is installed and never called — while the report still said
+`nativeComplete: true` with no degradations. A CI lane could bundle a runtime,
+byte-compare the installed copy against the build artifact, launch the app, and
+pass every check **without executing a line of the standard runtime**.
+
+Found by putting Engram on the standard ABI: it ships its own `MosaicHost.cpp`
+bound to `engram-capi`, which lands on exactly the filename the Qt binding is
+generated into. TaskApp declares no Qt host assets, so the existing native lanes
+could not have surfaced this.
+
+Recorded rather than rejected, and deliberately kept out of
+`degradations`/`nativeComplete` for the same reason `styleDegradations` is: this
+is a supported choice, not a backend failing to express something. A consumer
+that needs the standard binding asserts the list is empty; one that expects an
+override asserts it contains the file.
+
+Covers the generated runtime-host files for all five native backends: Qt
+(`MosaicHost.cpp`/`.h`), SwiftUI (`MosaicRuntimeHost.swift`, `CMosaicRuntime.c`/`.h`),
+Compose (`MosaicRuntimeHost.kt`), Flutter (`mosaic_host.dart`), XAML
+(`MosaicRuntimeHost.cs`).
+
 ## [Unreleased] - install application-scoped native persistence (#13519)
 
 All five generated native project shells now install a standard Mosaic runtime
