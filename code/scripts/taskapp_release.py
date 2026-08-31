@@ -4,9 +4,11 @@
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import re
 import sys
+import tarfile
 import zipfile
 from datetime import datetime
 from pathlib import Path
@@ -52,6 +54,27 @@ NATIVE_TARGETS: dict[str, dict[str, str]] = {
     },
 }
 
+LINUX_BUNDLES: dict[str, dict[str, str]] = {
+    "qt": {
+        "artifact_label": "qt-linux",
+        "toolkit": "Qt",
+        "state_path": "TaskApp/task-app/mosaic-state.v1.json",
+        "prerequisites": "A compatible Linux x86_64 system with Qt 6.8 libraries.",
+    },
+    "flutter": {
+        "artifact_label": "flutter-linux",
+        "toolkit": "Flutter",
+        "state_path": "task-app/mosaic-state.v1.json",
+        "prerequisites": "A compatible Linux x86_64 system with GTK 3 libraries.",
+    },
+    "compose": {
+        "artifact_label": "compose-linux",
+        "toolkit": "Compose Desktop",
+        "state_path": "task-app/mosaic-state.v1.json",
+        "prerequisites": "A compatible glibc-based Linux x86_64 system.",
+    },
+}
+
 
 def validate_identifiers(version: str, tag: str, commit: str | None = None) -> None:
     """Reject invalid or mismatched release identifiers."""
@@ -73,6 +96,10 @@ def artifact_names(version: str) -> list[str]:
     names.extend(
         f"task-app-{target['artifact_label']}-project-v{version}.zip"
         for target in NATIVE_TARGETS.values()
+    )
+    names.extend(
+        f"task-app-{target['artifact_label']}-bundle-v{version}.tar.gz"
+        for target in LINUX_BUNDLES.values()
     )
     return names
 
@@ -128,6 +155,138 @@ def archive_native(
     return output
 
 
+def _relative_bundle_path(source: Path, candidate: Path, label: str) -> Path:
+    source_root = source.resolve(strict=True)
+    resolved = candidate.resolve(strict=True)
+    try:
+        return resolved.relative_to(source_root)
+    except ValueError as error:
+        raise ValueError(f"{label} must be inside the bundle source: {candidate}") from error
+
+
+def _add_text_member(
+    archive: tarfile.TarFile,
+    name: str,
+    content: str,
+    mode: int = 0o644,
+) -> None:
+    payload = content.encode("utf-8")
+    info = tarfile.TarInfo(name)
+    info.size = len(payload)
+    info.mode = mode
+    info.mtime = 0
+    archive.addfile(info, io.BytesIO(payload))
+
+
+def _linux_launcher(version: str, backend: str, executable: str) -> str:
+    state_path = LINUX_BUNDLES[backend]["state_path"]
+    return f"""#!/bin/sh
+set -eu
+
+BUNDLE_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+STATE_ROOT=${{XDG_DATA_HOME:-${{HOME:?HOME is required}}/.local/share}}
+STATE_FILE="$STATE_ROOT/{state_path}"
+BACKUP_DIR="$STATE_ROOT/task-app/backups"
+BACKUP_FILE="$BACKUP_DIR/pre-v{version}-{backend}.json"
+
+if [ -f "$STATE_FILE" ] && [ ! -e "$BACKUP_FILE" ]; then
+  mkdir -p "$BACKUP_DIR"
+  TEMP_BACKUP="$BACKUP_FILE.tmp.$$"
+  cp -- "$STATE_FILE" "$TEMP_BACKUP"
+  mv -- "$TEMP_BACKUP" "$BACKUP_FILE"
+fi
+
+exec "$BUNDLE_DIR/{executable}" "$@"
+"""
+
+
+def archive_linux_bundle(
+    version: str,
+    commit: str,
+    backend: str,
+    source: Path,
+    executable: Path,
+    runtime: Path,
+    expected_runtime: Path,
+    output_dir: Path,
+) -> Path:
+    """Verify and archive one runnable Linux application tree."""
+
+    validate_identifiers(version, f"{TAG_PREFIX}{version}", commit)
+    if backend not in LINUX_BUNDLES:
+        raise ValueError(f"unsupported Linux bundle backend: {backend}")
+    if not source.is_dir():
+        raise ValueError(f"bundle source directory does not exist: {source}")
+    executable_relative = _relative_bundle_path(source, executable, "executable")
+    runtime_relative = _relative_bundle_path(source, runtime, "runtime")
+    if not executable.is_file():
+        raise ValueError(f"bundle executable does not exist: {executable}")
+    if not runtime.is_file() or not expected_runtime.is_file():
+        raise ValueError("bundled and expected Rust runtime files must exist")
+    if runtime.read_bytes() != expected_runtime.read_bytes():
+        raise ValueError("bundled Rust runtime does not match the selected build artifact")
+
+    source_root = source.resolve(strict=True)
+    for path in source.rglob("*"):
+        try:
+            path.resolve(strict=True).relative_to(source_root)
+        except ValueError as error:
+            raise ValueError(f"bundle contains a path outside its source: {path}") from error
+
+    target = LINUX_BUNDLES[backend]
+    root_name = f"task-app-{target['artifact_label']}-bundle-v{version}"
+    output = output_dir / f"{root_name}.tar.gz"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    executable_name = executable_relative.as_posix()
+    runtime_name = runtime_relative.as_posix()
+    metadata = {
+        "schemaVersion": 1,
+        "product": "Trestle",
+        "applicationId": "task-app",
+        "version": version,
+        "sourceCommit": commit.lower(),
+        "platform": "Linux x86_64",
+        "backend": backend,
+        "toolkit": target["toolkit"],
+        "executable": executable_name,
+        "rustRuntime": runtime_name,
+        "statePath": f"$XDG_DATA_HOME/{target['state_path']}",
+        "launcher": "launch-trestle",
+    }
+    instructions = f"""Trestle {version} — {target['toolkit']} portable Linux bundle
+
+This is an unpack-and-run bundle for compatible Linux x86_64 systems. It is not
+a distribution-native installer and it is not signed.
+
+Prerequisite: {target['prerequisites']}
+
+Run from any working directory:
+  /path/to/{root_name}/launch-trestle
+
+The launcher preserves one version-and-backend-specific pre-upgrade copy of an
+existing local state file under $XDG_DATA_HOME/task-app/backups (or
+~/.local/share/task-app/backups) before starting Trestle. The app continues to
+own its live state under the stable application identity `task-app`.
+"""
+    launcher = _linux_launcher(version, backend, executable_name)
+    with tarfile.open(output, "w:gz", format=tarfile.PAX_FORMAT) as archive:
+        archive.add(source, arcname=root_name, recursive=True)
+        _add_text_member(archive, f"{root_name}/SOURCE_COMMIT", f"{commit.lower()}\n")
+        _add_text_member(
+            archive,
+            f"{root_name}/BUNDLE.json",
+            json.dumps(metadata, indent=2, sort_keys=True) + "\n",
+        )
+        _add_text_member(archive, f"{root_name}/INSTALL.txt", instructions)
+        _add_text_member(
+            archive,
+            f"{root_name}/launch-trestle",
+            launcher,
+            mode=0o755,
+        )
+    return output
+
+
 def build_manifest(
     version: str,
     tag: str,
@@ -167,6 +326,23 @@ def build_manifest(
                 ),
             }
         )
+    for backend, target in LINUX_BUNDLES.items():
+        artifacts.append(
+            {
+                "name": f"task-app-{target['artifact_label']}-bundle-v{version}.tar.gz",
+                "kind": "portable-linux-bundle",
+                "platform": "Linux x86_64",
+                "toolkit": target["toolkit"],
+                "installable": False,
+                "runnable": True,
+                "applicationId": "task-app",
+                "verification": (
+                    "release build, byte-identical bundled Rust runtime, "
+                    "unrelated-working-directory launch, and pre-upgrade snapshot contract"
+                ),
+                "backend": backend,
+            }
+        )
     return {
         "schemaVersion": 1,
         "product": "TaskApp/Trestle",
@@ -175,8 +351,9 @@ def build_manifest(
         "sourceCommit": commit.lower(),
         "artifacts": artifacts,
         "knownLimitations": [
-            "No platform installer packages yet; see GitHub issue #13522.",
-            "Native archives are generated projects for their named platform.",
+            "Linux bundles are portable archives, not signed distribution packages.",
+            "macOS and Windows remain generated projects; see GitHub issue #13522.",
+            "Linux bundles require the compatible system libraries named in INSTALL.txt.",
         ],
     }
 
@@ -240,7 +417,8 @@ Rust engine.
   reopen, and delete them.
 - Restore the local workspace after a web reload or generated native app restart.
 - Serve the production web ZIP from any static web server.
-- Build the strict generated native project for the named desktop platform.
+- Unpack and run a verified Linux bundle, or build a strict generated native
+  project for macOS or Windows.
 
 ## Artifact and platform coverage
 
@@ -252,6 +430,9 @@ Rust engine.
 | `task-app-compose-linux-project-v{version}.zip` | Linux x86_64 / Compose Desktop | Generated native-complete project; no installer |
 | `task-app-swiftui-macos-project-v{version}.zip` | macOS / SwiftUI | Generated native-complete project; no installer |
 | `task-app-xaml-windows-project-v{version}.zip` | Windows / WinUI | Generated native-complete project; no installer |
+| `task-app-qt-linux-bundle-v{version}.tar.gz` | Linux x86_64 / Qt | Verified portable bundle; compatible Qt 6.8 system required |
+| `task-app-flutter-linux-bundle-v{version}.tar.gz` | Linux x86_64 / Flutter | Verified portable bundle; compatible GTK 3 system required |
+| `task-app-compose-linux-bundle-v{version}.tar.gz` | Linux x86_64 / Compose Desktop | Verified portable bundle with bundled JVM runtime |
 
 `task-app-release-manifest-v{version}.json` records the source commit and exact
 verification claim for every payload. `SHA256SUMS` authenticates every payload and
@@ -259,8 +440,8 @@ the manifest.
 
 ## Known limitations
 
-- Platform installers are not included yet: [#{13522}]({issue_root}/13522).
-- Generated native presentation parity continues in [#{13521}]({issue_root}/13521).
+- Linux payloads are portable archives rather than signed distribution packages.
+- macOS and Windows installers are not included yet: [#{13522}]({issue_root}/13522).
 - Mobile binaries are not release artifacts in this version.
 
 ## TaskApp GitHub history
@@ -290,6 +471,16 @@ def _parser() -> argparse.ArgumentParser:
     native_parser.add_argument("--backend", required=True)
     native_parser.add_argument("--source", type=Path, required=True)
     native_parser.add_argument("--output-dir", type=Path, required=True)
+
+    bundle_parser = subparsers.add_parser("archive-linux-bundle")
+    bundle_parser.add_argument("--version", required=True)
+    bundle_parser.add_argument("--commit", required=True)
+    bundle_parser.add_argument("--backend", required=True)
+    bundle_parser.add_argument("--source", type=Path, required=True)
+    bundle_parser.add_argument("--executable", type=Path, required=True)
+    bundle_parser.add_argument("--runtime", type=Path, required=True)
+    bundle_parser.add_argument("--expected-runtime", type=Path, required=True)
+    bundle_parser.add_argument("--output-dir", type=Path, required=True)
 
     manifest_parser = subparsers.add_parser("write-manifest")
     manifest_parser.add_argument("--version", required=True)
@@ -322,6 +513,17 @@ def main(argv: list[str] | None = None) -> int:
                 args.commit,
                 args.backend,
                 args.source,
+                args.output_dir,
+            )
+        elif args.command == "archive-linux-bundle":
+            archive_linux_bundle(
+                args.version,
+                args.commit,
+                args.backend,
+                args.source,
+                args.executable,
+                args.runtime,
+                args.expected_runtime,
                 args.output_dir,
             )
         elif args.command == "write-manifest":
