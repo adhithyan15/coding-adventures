@@ -8,16 +8,16 @@ import {
 describe("Spanish A1 book-bounded mock audit", () => {
   it("pins the current whole-item residual and its reproducible credit policy", () => {
     const audit = buildSpanishA1MockAudit();
-    expect(audit.objectiveFailed).toBe(1);
+    expect(audit.objectiveFailed).toBe(0);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
       { reading: 25, listening: 25, objectiveFailed: 0 },
-      { reading: 24, listening: 25, objectiveFailed: 1 },
+      { reading: 25, listening: 25, objectiveFailed: 0 },
     ]);
-    expect(audit.missingObjectiveLexemes).toHaveLength(3);
+    expect(audit.missingObjectiveLexemes).toHaveLength(0);
     expect(audit.policy.citationFormCredits).toContain("llamarse");
   });
 
