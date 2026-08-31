@@ -18,11 +18,16 @@
 //!   40     4    schema cookie (u32-be)
 //!   44     4    schema format number (u32-be)
 //!   56     4    text encoding (u32-be): 1=UTF-8, 2=UTF-16le, 3=UTF-16be
+//!   60     4    user version (u32-be) — `PRAGMA user_version`
 //! ```
 //!
-//! (The remaining fields — payload fractions, version numbers, user version,
+//! (The remaining fields — payload fractions, version numbers,
 //! incremental-vacuum settings — do not affect *reading* table rows, so we skip
 //! them. They matter to the Phase F writer.)
+//!
+//! The user version is the exception to that rule: it holds nothing SQLite reads,
+//! but applications stamp a schema version there, so a *writer* that has to
+//! reproduce such a file needs to carry it. Anki's V11 collections set it to 11.
 //!
 //! ## The page-size quirk
 //!
@@ -75,6 +80,19 @@ pub struct Header {
     pub schema_format: u32,
     /// Text encoding of `TEXT` columns.
     pub text_encoding: TextEncoding,
+    /// The **user version** (offset 60) — the value `PRAGMA user_version` reads
+    /// and writes.
+    ///
+    /// SQLite itself never interprets this field. It reserves the four bytes and
+    /// hands them to the application to use as it likes, which makes it the
+    /// conventional place to stamp a schema version. Anki does exactly that: its
+    /// V11 collections carry `user_version = 11`, so a writer that emits Anki
+    /// packages has to be able to set it.
+    ///
+    /// Zero is the natural default — a database that has never set a user version
+    /// reads back as 0, which is why leaving the field unwritten was
+    /// indistinguishable from writing 0 before this field existed.
+    pub user_version: u32,
 }
 
 /// The magic bytes every SQLite file begins with.
@@ -139,6 +157,7 @@ impl Header {
             schema_cookie: be_u32(buf, 40),
             schema_format: be_u32(buf, 44),
             text_encoding,
+            user_version: be_u32(buf, 60),
         })
     }
 
@@ -175,15 +194,16 @@ impl Header {
     ///   40       4    schema cookie               schema_cookie
     ///   44       4    schema format number        schema_format
     ///   56       4    text encoding               1/2/3 for UTF-8/16le/16be
+    ///   60       4    user version                user_version
     ///   …             everything else             0
     /// ```
     ///
     /// The three payload-fraction bytes (64/32/32) are constants SQLite fixes;
     /// writing anything else makes the file unreadable by the C library. Fields
     /// our reader does not surface (default page-cache size, largest-root-page,
-    /// user/application version, the version-valid-for and library-version
-    /// numbers) are left zero — valid, since a zeroed field simply reads back as
-    /// zero. Page size 65536 is stored as the special value 1.
+    /// application version, the version-valid-for and library-version numbers)
+    /// are left zero — valid, since a zeroed field simply reads back as zero.
+    /// Page size 65536 is stored as the special value 1.
     pub fn encode(&self) -> Vec<u8> {
         let mut buf = vec![0u8; 100];
         buf[0..16].copy_from_slice(MAGIC);
@@ -227,6 +247,11 @@ impl Header {
             TextEncoding::Utf16Be => 3,
         };
         buf[56..60].copy_from_slice(&encoding.to_be_bytes());
+        // The user version is the application's to define; we pass it through
+        // untouched. Writing 0 here is exactly what the old fixed-zero tail did,
+        // so a caller that leaves the field at its default emits the same bytes
+        // as before.
+        buf[60..64].copy_from_slice(&self.user_version.to_be_bytes());
 
         buf
     }
@@ -260,12 +285,18 @@ mod tests {
             schema_cookie: 9,
             schema_format: 4,
             text_encoding: TextEncoding::Utf8,
+            user_version: 11,
         };
         let bytes = h.encode();
         assert_eq!(bytes.len(), 100, "header must be exactly 100 bytes");
         assert_eq!(&bytes[0..16], MAGIC);
         // Payload-fraction constants SQLite requires.
         assert_eq!((bytes[21], bytes[22], bytes[23]), (64, 32, 32));
+        // The user version lands at offset 60, big-endian. Asserting the bytes
+        // directly (not just the round-trip) is what pins the *offset*: a field
+        // written to the wrong place would still survive parse/encode, because
+        // our own parser would read it back from that same wrong place.
+        assert_eq!(&bytes[60..64], &11u32.to_be_bytes());
         assert_eq!(Header::parse(&bytes).unwrap(), h);
     }
 
@@ -283,6 +314,8 @@ mod tests {
             schema_cookie: 0,
             schema_format: 1,
             text_encoding: TextEncoding::Utf16Le,
+            // Exercise the full 32-bit range, so a narrowed field would fail.
+            user_version: u32::MAX,
         };
         let bytes = h.encode();
         // 65536 is written as the u16 value 1.
@@ -304,6 +337,7 @@ mod tests {
             schema_cookie: 0,
             schema_format: 1,
             text_encoding: TextEncoding::Utf8,
+            user_version: 0,
         };
         let mut file = vec![0u8; 512 * 2];
         file[0..100].copy_from_slice(&h.encode());

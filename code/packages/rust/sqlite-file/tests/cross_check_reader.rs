@@ -739,3 +739,87 @@ fn our_multi_level_btree_reads_in_real_sqlite() {
     let want: Vec<(i64, i64, String)> = (1..=3000).map(|n| (n, n * 3, format!("row-{n}"))).collect();
     assert_eq!(got, want, "real SQLite must read every row of the multi-level tree in order");
 }
+
+/// Real SQLite agrees with us about **where** the user version lives.
+///
+/// `PRAGMA user_version` is a four-byte application-defined field at header
+/// offset 60. Nothing inside SQLite reads it, so a self-round-trip proves almost
+/// nothing: if we wrote it to the wrong offset, our own parser would read it back
+/// from that same wrong offset and the test would pass while the file was wrong.
+/// The only assertion that actually pins the offset is a foreign one — build the
+/// file, hand it to the real C library, and ask *it* what the user version is.
+///
+/// The test also re-checks integrity and re-reads the table, because splicing a
+/// re-encoded header over page 1 is exactly the operation that could corrupt the
+/// surrounding bytes (the page-size field, the page count, the schema cookie) if
+/// `encode` ever wrote outside its 100-byte window.
+#[test]
+fn our_user_version_is_read_back_by_real_sqlite() {
+    use sqlite_file::header::Header;
+    use sqlite_file::page_writer::{write_multi_table_db, TableSpec};
+    use sqlite_file::SqlValue;
+
+    // Anki's V11 collections stamp 11 here; that is the value this whole field
+    // exists to let us reproduce.
+    const ANKI_V11_USER_VERSION: u32 = 11;
+
+    let notes = vec![
+        (1i64, vec![SqlValue::Int(1), SqlValue::Text("alpha".into())]),
+        (2, vec![SqlValue::Int(2), SqlValue::Text("beta".into())]),
+    ];
+    let tables: &[TableSpec] = &[("notes", "CREATE TABLE notes(nid, body)", &notes)];
+    let mut db = write_multi_table_db(4096, tables).unwrap();
+
+    // Parse the writer's header, stamp the user version, and put it back. This
+    // is the round trip a caller performs, so it is the one worth gating.
+    let mut header = Header::parse(&db).unwrap();
+    assert_eq!(header.user_version, 0, "writer output defaults to 0");
+    header.user_version = ANKI_V11_USER_VERSION;
+    db[0..100].copy_from_slice(&header.encode());
+
+    static COUNTER_UV: AtomicU64 = AtomicU64::new(12_000_000);
+    let unique = COUNTER_UV.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!(
+        "sqlite_file_uservers_{}_{}",
+        std::process::id(),
+        unique
+    ));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+
+    let user_version: i64 = conn
+        .query_row("PRAGMA user_version", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(
+        user_version, ANKI_V11_USER_VERSION as i64,
+        "real SQLite must report the user version we encoded at offset 60"
+    );
+
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(
+        integrity, "ok",
+        "stamping the user version must not disturb the rest of the header"
+    );
+
+    let rows: Vec<(i64, String)> = conn
+        .prepare("SELECT nid, body FROM notes ORDER BY nid")
+        .unwrap()
+        .query_map([], |r| Ok((r.get(0)?, r.get::<_, String>(1)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    assert_eq!(
+        rows,
+        vec![(1, "alpha".to_string()), (2, "beta".to_string())],
+        "the table must still read after the header is re-encoded"
+    );
+
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+}

@@ -426,6 +426,7 @@ pub fn write_multi_table_db(page_size: usize, tables: &[TableSpec]) -> Result<Ve
         schema_cookie: 1,
         schema_format: 1,
         text_encoding: TextEncoding::Utf8,
+        user_version: 0,
     };
     let mut page1 = vec![0u8; page_size];
     page1[0..100].copy_from_slice(&header.encode());
