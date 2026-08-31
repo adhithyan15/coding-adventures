@@ -366,7 +366,10 @@ private fun JsonElement.toKotlinValue(): Any? = when (this) {
     JsonNull -> null
     is JsonObject -> toKotlinMap()
     is JsonArray -> map(JsonElement::toKotlinValue)
-    is JsonPrimitive -> booleanOrNull ?: longOrNull ?: doubleOrNull ?: content
+    is JsonPrimitive -> when {
+        isString -> content
+        else -> booleanOrNull ?: longOrNull ?: doubleOrNull ?: content
+    }
 }
 
 private fun Any?.toJsonElement(): JsonElement = when (this) {

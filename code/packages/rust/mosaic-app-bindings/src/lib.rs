@@ -301,6 +301,13 @@ mod tests {
     }
 
     #[test]
+    fn compose_binding_preserves_json_primitive_types() {
+        let source = compose_jna_binding();
+        assert!(source.contains("isString -> content"));
+        assert!(source.contains("else -> booleanOrNull ?: longOrNull ?: doubleOrNull ?: content"));
+    }
+
+    #[test]
     fn compose_binding_has_cross_platform_library_and_startup_context() {
         let source = compose_jna_binding();
         assert!(source.contains("System.getProperty(\"mosaic.app.library\")"));
