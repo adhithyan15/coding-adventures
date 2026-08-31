@@ -4589,6 +4589,24 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("3.14\n.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — mixed numeric/string DATA (VM-017). One shared pointer
+    // walks the source-ordered kind/numeric/string parallel pools. The first
+    // pass reads numeric scalars around two string-array elements and prints
+    // `42` plus `OK`; RESTORE rewinds the same pointer, then a numeric scalar
+    // and a string scalar read the first two items again and print `20` plus
+    // `O`. This proves ordered mixed storage, both scalar and array string READ,
+    // numeric READ, and representation-independent rewind on all seven standard
+    // backends. Every READ also checks the runtime kind tag before loading its
+    // typed value pool, so dynamic control flow cannot silently cross types.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 DIM S$(1)\n20 DATA 20, \"O\", 22, \"K\"\n\
+              30 READ A, S$(0), B, S$(1)\n40 PRINT A + B\n50 PRINT S$(0) + S$(1)\n\
+              60 RESTORE\n70 READ C, T$\n80 PRINT C\n90 PRINT T$\n100 END\n",
+        expect: Expect::Stdout("42\nOK\n20\nO"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — *unstructured `GOSUB` / `RETURN`* (LANG-FULL BA1, enabler
     // **E7**). The headline proof that one `RETURN` resumes at the *dynamically
     // most-recent* `GOSUB`: line 100 is `GOSUB`'d twice and its single `RETURN`

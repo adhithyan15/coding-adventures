@@ -80,9 +80,11 @@ numeric array but carrying an E4-dyn string handle per element — so `A$(i) = s
 is a `str`-typed `array_set` and `A$(i)` reads a `str`-typed `array_get` that
 feeds PRINT / `+` concat on all seven backends. The matrix also executes
 `str_concat` over two independently read `INPUT` strings on all seven, proving
-the operation is not limited to compile-time-backed operands. Mixed
-numeric/string `DATA`, `READ`, and `RESTORE` remain the documented string-data
-gap; the current DATA pool is numeric-only.
+the operation is not limited to compile-time-backed operands. Mixed numeric and
+string `DATA` items share one source-ordered read pointer and live in parallel
+kind/`array<f64>`/`array<str>` pools. `READ` validates the next item's kind and
+supports numeric or string scalar and array targets; `RESTORE` rewinds the whole
+mixed stream.
 See [CHANGELOG.md](CHANGELOG.md) for the full table.
 
 `LET`, `PRINT`, `IF … THEN <line>`, `GOTO`, `FOR`/`NEXT`, `DEF FN`
@@ -100,9 +102,10 @@ ALGOL's value procedures); **BA3/BA7** now provide one-dimensional real arrays �
 `n + 1` elements), `LET A(i) = e` → `array_set`, and `A(i)` in an expression →
 `array_get`, with subscripts explicitly truncated through E8; **BA6/BA7** added
 `READ`/`DATA`/`RESTORE` on top of that array substrate — a pre-pass gathers all
-finite `DATA` literals into a pool materialised at the top of `main` as an
-`array<f64>` plus an `i64` read-pointer register, `READ` does `array_get pool,
-ptr` + `ptr := ptr + 1`, and `RESTORE` resets the pointer.  A `DEF` body may reference only its own
+numeric and string `DATA` literals into source-ordered parallel kind,
+`array<f64>`, and `array<str>` pools plus an `i64` read-pointer register. `READ`
+checks the next kind, loads the matching typed pool, and advances the pointer;
+`RESTORE` resets the pointer. A `DEF` body may reference only its own
 parameter — global access from inside a function needs enabler E6 (see
 `code/specs/LANG-FULL-IMPLEMENTATION.md`).  **BA2** made `PRINT` print several
 items on one line: each numeric item lowers to a `call __basic_print_int` — a

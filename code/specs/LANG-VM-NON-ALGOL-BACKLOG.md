@@ -39,10 +39,11 @@ one fresh worktree and one PR; remove the worktree after merge.
 | — | VM-014 | decomposed | Extend the unified matrix to every wired frontend, especially FLOW-MATIC and Macsyma/JIT. | Split into VM-020 and VM-021 because FLOW-MATIC needs an executed matrix baseline while Macsyma needs new universal-JIT runtime glue. |
 | — | VM-020 | done ([#13428](https://github.com/adhithyan15/coding-adventures/pull/13428)) | Add FLOW-MATIC's first unified matrix baseline. | A field `MOVE` plus `WRITE-ITEM` program prints `0` on NativeAOT, LLVM, WASM, JVM, CLR, VM, and JIT. |
 | — | VM-021 | done ([#13442](https://github.com/adhithyan15/coding-adventures/pull/13442)) | Add Macsyma to the universal JIT and its cross-backend conformance suite. | Macsyma's integer arithmetic corpus agrees across VM, NativeAOT, LLVM, WASM, JVM, CLR, and JIT. |
-| 1 | VM-017 | queued | Add mixed numeric/string Dartmouth BASIC `DATA`, `READ`, and `RESTORE` semantics. | Scalar and array string reads preserve source order with numeric values and execute on all applicable standard backends. |
-| 2 | VM-012 | queued | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
-| 3 | VM-018 | decision required | Define and implement portable Dartmouth BASIC `RND` semantics. | The accepted seed/repeatability contract is documented and executed consistently across all standard backends. |
-| 4 | VM-013 | decision required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `adc`, `sbb`, rotations, carry, parity). | The accepted semantics are documented and every intrinsic has executed portable and 8008 proofs. |
+| 1 | VM-017 | in progress ([#13452](https://github.com/adhithyan15/coding-adventures/pull/13452)) | Add mixed numeric/string Dartmouth BASIC `DATA`, `READ`, and `RESTORE` semantics. | Scalar and array string reads preserve source order with numeric values and execute on all applicable standard backends. |
+| 2 | VM-022 | queued | Repair the TypeScript Dartmouth BASIC parser `BUILD` so it runs that package's tests instead of ending in the generic parser package. | `BUILD` executes the Dartmouth parser suite itself and includes a mixed numeric/string `DATA` regression. |
+| 3 | VM-012 | queued | Implement Nib BCD storage semantics and Intel-4004 RAM mapping. | Hardware-faithful programs agree across the portable matrix and the 4004 simulator. |
+| 4 | VM-018 | decision required | Define and implement portable Dartmouth BASIC `RND` semantics. | The accepted seed/repeatability contract is documented and executed consistently across all standard backends. |
+| 5 | VM-013 | decision required | Define portable semantics for Oct's Intel-8008 intrinsics (`in`, `adc`, `sbb`, rotations, carry, parity). | The accepted semantics are documented and every intrinsic has executed portable and 8008 proofs. |
 
 ## Discovery log
 
@@ -113,6 +114,23 @@ one fresh worktree and one PR; remove the worktree after merge.
   generic VM/JIT `box`/`unbox` are identity operations. The dedicated
   `run_macsyma_on_jit` runner therefore adds no language-specific runtime
   callbacks; all 21 programs execute and agree across seven engines.
+- **VM-D014 — confirmed 2026-08-28:** VM-017 needs one dynamically ordered
+  stream without imposing a new tagged-value ABI on seven backends. Parallel
+  kind, `array<f64>`, and `array<str>` pools retain one source index and shared
+  `RESTORE` pointer. Every `READ` first bounds-checks the kind array and then
+  validates the target type; a mismatch deliberately enters the existing
+  cross-backend array-bounds trap contract instead of reading a placeholder.
+- **VM-D015 — confirmed 2026-08-28:** the shared Dartmouth BASIC grammar is
+  embedded in generated parser artifacts outside the Rust LANG VM frontend.
+  CI caught the required Ruby regeneration; auditing the same source boundary
+  found Python, Lua, and TypeScript parser artifacts with the old numeric-only
+  `DATA` rule. VM-017 regenerates all four alongside Rust so no checked-in
+  parser silently disagrees with the authoritative grammar.
+- **VM-D016 — confirmed 2026-08-28:** the TypeScript Dartmouth BASIC parser's
+  `BUILD` chains relative `cd` commands through its dependencies and finishes
+  in `../parser`, so its reported 117 tests belong to the generic parser while
+  the Dartmouth package's own 61-test suite never runs. Promoted to VM-022 and
+  ranked above new semantics as a missing-test-protection defect.
 
 ## Ownership boundary
 

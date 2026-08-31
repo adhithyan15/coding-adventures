@@ -33,7 +33,7 @@
 //! | `REM …`        | no-op |
 //! | `GOSUB n`      | push call-site id on the `array<i64>` return stack, `jmp line_n`, drop `gosub_ret_<id>` (BA1 / E7) |
 //! | `RETURN`       | pop the id, computed-`goto` (`cmp_eq`+`jmp_if_true`) to its `gosub_ret_<id>` (BA1 / E7) |
-//! | `READ` / `DATA` / `RESTORE` | real `DATA` pool over `array<f64>` (BA6 / BA7) |
+//! | `READ` / `DATA` / `RESTORE` | source-ordered mixed pool over kind + `array<f64>` + `array<str>`, with runtime target-type checks (BA6 / BA7 / VM-017) |
 //! | `DIM A(n)`     | `alloc_array A = <n+1>` (`array<f64>`, 0-based, inclusive) — BA3 / BA7 |
 //! | `LET A(i)=e`   | `<eval i → x>; <eval e → v>; array_set A, x, v` (BA3) |
 //! | `A(i)` (rvalue) | `<eval i → x>; array_get A, x -> t` (BA3) |
@@ -54,8 +54,9 @@
 //! fold.  **String arrays** (`DIM A$(n)`; `A$(i) = …`; `PRINT A$(i)`) reuse the
 //! E5 aggregate substrate with a `str` element type (`array<str>`), so each
 //! element holds an E4-dyn runtime string handle — enabler **E4-dyn**, work item
-//! **E4d-BA-arr**.  String `READ`/`DATA` (numeric `DATA` only today) remains a
-//! follow-up.
+//! **E4d-BA-arr**. `DATA` accepts numeric and string items in one source-ordered
+//! stream; `READ` supports both scalar and array targets and validates the next
+//! item's kind at run time before loading its typed parallel pool.
 //!
 //! ## Variables
 //!
@@ -271,14 +272,13 @@ struct Compiler {
     /// scalar values real (`f64`); the few integer slots left are true
     /// structural boundaries such as indexes, read pointers, and return PCs.
     scalar_types: std::collections::HashMap<String, BasicScalarType>,
-    /// The `DATA` pool (BA6): every numeric literal from every `DATA`
-    /// statement, gathered in line-number order by a pre-pass.  `READ`
-    /// consumes these sequentially through a run-time pointer; `RESTORE`
-    /// rewinds the pointer.  Because the BASIC program is a single `main`
-    /// function (no `GOSUB` yet), the pool is materialised once at the top of
-    /// `main` as an `array<f64>` ([[E5]] arrays, with BA7 real elements) plus
-    /// an `i64` pointer register — no module global is needed.
-    data_pool: Vec<f64>,
+    /// The ordered `DATA` pool (BA6 / VM-017): every numeric or string literal
+    /// from every `DATA` statement, gathered in line-number order by a
+    /// pre-pass. `READ` consumes these sequentially through one run-time
+    /// pointer; `RESTORE` rewinds the pointer. The pool is materialised as
+    /// parallel kind/numeric/string arrays so a dynamic read position retains
+    /// both source order and target-type validation on every backend.
+    data_pool: Vec<BasicDataValue>,
     /// Set once any `PRINT` lowers a numeric item (BA2/BA7).  When true,
     /// `compile_program` appends the synthetic digit-printing helper functions
     /// (`__basic_print_int` / `__basic_print_uint` / `__basic_print_real`) after `main`
@@ -339,6 +339,12 @@ struct ForState {
 enum BasicScalarType {
     Int,
     Real,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+enum BasicDataValue {
+    Number(f64),
+    String(String),
 }
 
 impl BasicScalarType {
@@ -752,7 +758,7 @@ impl Compiler {
         Ok(())
     }
 
-    /// BA6/BA7 pre-pass: append a `DATA` statement's numeric literals to
+    /// BA6/BA7/VM-017 pre-pass: append a `DATA` statement's literals to
     /// [`data_pool`].  Called once per line before any statement is lowered,
     /// so the pool ends up in line-number (source) order.
     fn collect_data(&mut self, line: &GrammarASTNode) -> Result<(), CompileError> {
@@ -761,56 +767,115 @@ impl Compiler {
         else { return Ok(()); };
         let Some(inner) = child_nodes(stmt).into_iter().next() else { return Ok(()); };
         if inner.rule_name != "data_stmt" { return Ok(()); }
-        // `data_stmt = "DATA" NUMBER { COMMA NUMBER }` — collect every NUMBER
-        // token (the `DATA` keyword and `,` separators are not NUMBERs).
+        // `data_stmt = "DATA" (NUMBER | STRING) ...` — collect value tokens in
+        // source order; the keyword and comma separators are ignored.
         for c in &inner.children {
             if let ASTNodeOrToken::Token(t) = c {
-                if t.effective_type_name() != "NUMBER" { continue; }
-                let raw = t.value.trim();
-                let f = raw.parse::<f64>().map_err(|_| CompileError::Malformed(
-                    format!("DATA value `{raw}` is not a number")))?;
-                if !f.is_finite() {
-                    return Err(CompileError::Unsupported(format!(
-                        "non-finite DATA value `{raw}`")));
+                match t.effective_type_name() {
+                    "NUMBER" => {
+                        let raw = t.value.trim();
+                        let f = raw.parse::<f64>().map_err(|_| CompileError::Malformed(
+                            format!("DATA value `{raw}` is not a number")))?;
+                        if !f.is_finite() {
+                            return Err(CompileError::Unsupported(format!(
+                                "non-finite DATA value `{raw}`")));
+                        }
+                        self.data_pool.push(BasicDataValue::Number(f));
+                    }
+                    "STRING" => self.data_pool.push(BasicDataValue::String(
+                        unquote_basic_string(&t.value))),
+                    _ => {}
                 }
-                self.data_pool.push(f);
             }
         }
         Ok(())
     }
 
-    /// BA6: materialise the gathered `DATA` pool at the top of `main`.  Emits
-    /// nothing when there is no `DATA`.  Otherwise allocates an `array<f64>`
-    /// of the literals (one `array_set` per value) and seeds the read pointer
-    /// `__basic_data_ptr` to 0.  Both live in `main`'s register file — the
-    /// program is a single function, so no module global is needed for the
-    /// pointer to persist across `READ`s.
+    /// Materialise the gathered `DATA` pool at the top of `main` as parallel
+    /// kind (`array<i64>`), numeric (`array<f64>`), and string (`array<str>`)
+    /// arrays, then seed the shared read pointer to zero. The kind array uses
+    /// 0 for numeric and 1 for string; every item occupies its source-order
+    /// index in all three arrays, though only the matching value array is set.
     fn emit_data_pool_init(&mut self) {
         if self.data_pool.is_empty() {
             return;
         }
         let count = self.data_pool.len() as i64;
-        let len = self.fresh_temp();
-        self.emit("const", Some(&len), vec![Operand::Int(count)], "i64");
+        self.emit("const", Some(BASIC_DATA_COUNT), vec![Operand::Int(count)], "i64");
+        self.emit("alloc_array", Some(BASIC_DATA_KIND_ARRAY),
+            vec![Operand::Var(BASIC_DATA_COUNT.into())], "array<i64>");
         self.emit("alloc_array", Some(BASIC_DATA_ARRAY),
-            vec![Operand::Var(len.clone())], "array<f64>");
-        // Fill the pool.  `self.data_pool` is cloned to a local first so the
-        // immutable borrow doesn't clash with the `&mut self` emits.
-        let values: Vec<f64> = self.data_pool.clone();
+            vec![Operand::Var(BASIC_DATA_COUNT.into())], "array<f64>");
+        self.emit("alloc_array", Some(BASIC_DATA_STRING_ARRAY),
+            vec![Operand::Var(BASIC_DATA_COUNT.into())], "array<str>");
+        // Clone first so the immutable pool borrow does not overlap the emits.
+        let values = self.data_pool.clone();
         for (i, value) in values.into_iter().enumerate() {
             let idx = self.fresh_temp();
             self.emit("const", Some(&idx), vec![Operand::Int(i as i64)], "i64");
-            let val = self.fresh_temp();
-            self.emit("const", Some(&val), vec![Operand::Float(value)], "f64");
+            let kind = self.fresh_temp();
+            let kind_value = if matches!(value, BasicDataValue::String(_)) { 1 } else { 0 };
+            self.emit("const", Some(&kind), vec![Operand::Int(kind_value)], "i64");
             self.emit("array_set", None,
-                vec![Operand::Var(BASIC_DATA_ARRAY.into()),
-                     Operand::Var(idx), Operand::Var(val)], "f64");
+                vec![Operand::Var(BASIC_DATA_KIND_ARRAY.into()),
+                     Operand::Var(idx.clone()), Operand::Var(kind)], "i64");
+            match value {
+                BasicDataValue::Number(number) => {
+                    let val = self.fresh_temp();
+                    self.emit("const", Some(&val), vec![Operand::Float(number)], "f64");
+                    self.emit("array_set", None,
+                        vec![Operand::Var(BASIC_DATA_ARRAY.into()),
+                             Operand::Var(idx), Operand::Var(val)], "f64");
+                }
+                BasicDataValue::String(text) => {
+                    let val = self.fresh_temp();
+                    self.emit_str_const_to(&val, text);
+                    self.emit("array_set", None,
+                        vec![Operand::Var(BASIC_DATA_STRING_ARRAY.into()),
+                             Operand::Var(idx), Operand::Var(val)], "str");
+                }
+            }
         }
         // Read pointer starts at the first value.
         let zero = self.fresh_temp();
         self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
         self.emit("mov", Some(BASIC_DATA_PTR),
             vec![Operand::Var(zero)], "i64");
+    }
+
+    /// Validate the next DATA item's runtime kind and fetch its typed value.
+    /// A mismatch forces an out-of-bounds read at index `data_count`, reusing
+    /// the array substrate's existing cross-backend trap contract.
+    fn emit_data_value(&mut self, string: bool) -> String {
+        let kind = self.fresh_temp();
+        self.emit("array_get", Some(&kind),
+            vec![Operand::Var(BASIC_DATA_KIND_ARRAY.into()),
+                 Operand::Var(BASIC_DATA_PTR.into())], "i64");
+        let expected = self.fresh_temp();
+        self.emit("const", Some(&expected),
+            vec![Operand::Int(if string { 1 } else { 0 })], "i64");
+        let matches = self.fresh_temp();
+        self.emit("cmp_eq", Some(&matches),
+            vec![Operand::Var(kind), Operand::Var(expected)], "bool");
+        let ok_label = format!("basic_data_kind_ok_{}", self.temp_counter);
+        self.temp_counter += 1;
+        self.emit("jmp_if_true", None,
+            vec![Operand::Var(matches), Operand::Var(ok_label.clone())], "void");
+        let trap_result = self.fresh_temp();
+        self.emit("array_get", Some(&trap_result),
+            vec![Operand::Var(BASIC_DATA_KIND_ARRAY.into()),
+                 Operand::Var(BASIC_DATA_COUNT.into())], "i64");
+        self.emit("label", None, vec![Operand::Var(ok_label)], "void");
+
+        let value = self.fresh_temp();
+        let (pool, ty) = if string {
+            (BASIC_DATA_STRING_ARRAY, "str")
+        } else {
+            (BASIC_DATA_ARRAY, "f64")
+        };
+        self.emit("array_get", Some(&value),
+            vec![Operand::Var(pool.into()), Operand::Var(BASIC_DATA_PTR.into())], ty);
+        value
     }
 
     /// BA6: `READ var { , var }` — consume the next `DATA` value(s) through
@@ -827,12 +892,7 @@ impl Compiler {
         for var_node in child_nodes(stmt).into_iter()
             .filter(|n| n.rule_name == "variable")
         {
-            // Fetch `__basic_data[__basic_data_ptr]`.
-            let value = self.fresh_temp();
-            self.emit("array_get", Some(&value),
-                vec![Operand::Var(BASIC_DATA_ARRAY.into()),
-                     Operand::Var(BASIC_DATA_PTR.into())], "f64");
-            // Store it into the target — array element or scalar.
+            // Store the next type-checked item into an array element or scalar.
             let subs = array_subscript_indices(var_node);
             if !subs.is_empty() {
                 let name = array_target_name(var_node)?;
@@ -840,16 +900,22 @@ impl Compiler {
                     return Err(CompileError::Unsupported(format!(
                         "READ into `{name}(...)` but `{name}` was never DIMmed")));
                 }
-                if is_basic_string_name(&name) {
-                    return Err(CompileError::Unsupported(format!(
-                        "READ into string array `{name}(...)` — DATA is numeric today")));
-                }
                 let flat = self.emit_flat_index(&name, &subs)?;
+                let string = self.string_arrays.contains(&name);
+                let value = self.emit_data_value(string);
                 self.emit("array_set", None,
-                    vec![Operand::Var(name), Operand::Var(flat),
-                         Operand::Var(value)], "f64");
+                    vec![Operand::Var(basic_array_handle(&name)), Operand::Var(flat),
+                         Operand::Var(value)], if string { "str" } else { "f64" });
             } else {
-                let target = numeric_scalar_variable_name(var_node)?;
+                let target = scalar_variable_name(var_node)?;
+                if is_basic_string_name(&target) {
+                    let value = self.emit_data_value(true);
+                    self.emit("mov", Some(&basic_string_slot(&target)),
+                        vec![Operand::Var(value)], "str");
+                    self.advance_data_ptr();
+                    continue;
+                }
+                let value = self.emit_data_value(false);
                 let value = ExprValue { slot: value, ty: BasicScalarType::Real };
                 let target_ty = self.scalar_types.get(&target).copied()
                     .unwrap_or(BasicScalarType::Real);
@@ -858,14 +924,16 @@ impl Compiler {
                     vec![Operand::Var(value.slot)], value.ty.iir());
                 self.scalar_types.insert(target, value.ty);
             }
-            // Advance the pointer: `__basic_data_ptr = __basic_data_ptr + 1`.
-            let one = self.fresh_temp();
-            self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
-            self.emit("add", Some(BASIC_DATA_PTR),
-                vec![Operand::Var(BASIC_DATA_PTR.into()), Operand::Var(one)],
-                "i64");
+            self.advance_data_ptr();
         }
         Ok(())
+    }
+
+    fn advance_data_ptr(&mut self) {
+        let one = self.fresh_temp();
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        self.emit("add", Some(BASIC_DATA_PTR),
+            vec![Operand::Var(BASIC_DATA_PTR.into()), Operand::Var(one)], "i64");
     }
 
     /// BA6: `RESTORE` — rewind the `DATA` read pointer to the first value.
@@ -2069,9 +2137,6 @@ fn array_target_name(var: &GrammarASTNode) -> Result<String, CompileError> {
 /// bound above this is a clean `Unsupported` error, never a panic.
 const MAX_DIM_BOUND: i64 = 16_777_216; // 2^24 elements — generous for BASIC
 
-/// The IIR register holding the `DATA` pool array handle (BA6).  Underscore-
-/// and lowercase-bearing, so it can never collide with a BASIC variable (which
-/// is an uppercase letter + optional digit, e.g. `A`, `X7`).
 /// The `GOSUB` return-address stack (BA1 / enabler E7): an `array<i64>` holding
 /// the id of each pending `GOSUB`'s return site, LIFO.
 const BASIC_GOSUB_STACK: &str = "__basic_gosub_stack";
@@ -2082,7 +2147,12 @@ const BASIC_GOSUB_SP: &str = "__basic_gosub_sp";
 /// (the faithful "GOSUB nesting too deep" runtime error).
 const BASIC_GOSUB_STACK_DEPTH: i64 = 64;
 
-const BASIC_DATA_ARRAY: &str = "__basic_data";
+/// Parallel DATA arrays and their shared length/pointer. These internal names
+/// cannot collide with uppercase BASIC variables.
+const BASIC_DATA_KIND_ARRAY: &str = "__basic_data_kind";
+const BASIC_DATA_ARRAY: &str = "__basic_data_num";
+const BASIC_DATA_STRING_ARRAY: &str = "__basic_data_str";
+const BASIC_DATA_COUNT: &str = "__basic_data_count";
 /// The IIR register holding the `READ`/`RESTORE` pointer into the pool (BA6).
 const BASIC_DATA_PTR: &str = "__basic_data_ptr";
 
@@ -3758,9 +3828,13 @@ mod tests {
         assert!(body.iter().any(|i| i.op == "alloc_array"),
             "DATA must materialise a pool array; got {:?}",
             body.iter().map(|i| &i.op).collect::<Vec<_>>());
-        // Two DATA values ⇒ two array_set fills.
-        assert_eq!(body.iter().filter(|i| i.op == "array_set").count(), 2,
-            "two DATA values should produce two array_set fills");
+        // Two numeric DATA values fill two kind tags and two numeric slots.
+        assert_eq!(body.iter().filter(|i| i.op == "array_set"
+            && i.type_hint == "i64").count(), 2,
+            "two DATA values should produce two kind-tag fills");
+        assert_eq!(body.iter().filter(|i| i.op == "array_set"
+            && i.type_hint == "f64").count(), 2,
+            "two numeric DATA values should produce two numeric fills");
         // READ reads through the pointer (array_get) and advances it (add).
         assert!(body.iter().any(|i| i.op == "array_get"), "READ must array_get");
         assert!(body.iter().any(|i| i.op == "add"
@@ -3798,7 +3872,7 @@ mod tests {
         let body = &m.functions[0].instructions;
         assert!(body.iter().any(|i|
             i.op == "alloc_array"
-                && i.dest.as_deref() == Some("__basic_data")
+                && i.dest.as_deref() == Some("__basic_data_num")
                 && i.type_hint == "array<f64>"),
             "DATA must materialise an f64 pool");
         assert!(body.iter().any(|i|
@@ -3808,8 +3882,37 @@ mod tests {
         assert!(body.iter().any(|i|
             i.op == "array_get"
                 && i.type_hint == "f64"
-                && var_name(i.srcs.first()) == Some("__basic_data")),
+                && var_name(i.srcs.first()) == Some("__basic_data_num")),
             "READ should fetch f64 DATA values");
+    }
+
+    /// Mixed DATA preserves one source-order pointer while carrying numeric and
+    /// string values in typed parallel arrays. READ emits a runtime kind guard
+    /// before loading each target's matching pool.
+    #[test]
+    fn mixed_data_lowers_to_typed_parallel_pools() {
+        let src = "10 DIM S$(0)\n20 DATA 7, \"OK\"\n30 READ X, S$(0)\n40 END\n";
+        let m = compile(src).expect("mixed DATA should compile");
+        let body = &m.functions[0].instructions;
+        for (name, ty) in [
+            ("__basic_data_kind", "array<i64>"),
+            ("__basic_data_num", "array<f64>"),
+            ("__basic_data_str", "array<str>"),
+        ] {
+            assert!(body.iter().any(|i| i.op == "alloc_array"
+                && i.dest.as_deref() == Some(name) && i.type_hint == ty),
+                "missing {name} {ty} pool");
+        }
+        assert!(body.iter().any(|i| i.op == "str_const"
+            && matches!(i.srcs.first(), Some(Operand::Str(s)) if s == "OK")),
+            "string DATA item should remain a string handle");
+        assert!(body.iter().filter(|i| i.op == "cmp_eq"
+            && i.type_hint == "bool").count() >= 2,
+            "each READ should validate the runtime DATA kind");
+        assert!(body.iter().any(|i| i.op == "array_set"
+            && var_name(i.srcs.first()) == Some("__basic_strarr_S")
+            && i.type_hint == "str"),
+            "READ S$(0) should store the string handle into the string array");
     }
 
     // -----------------------------------------------------------------------

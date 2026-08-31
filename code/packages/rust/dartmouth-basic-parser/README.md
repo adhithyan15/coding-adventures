@@ -54,7 +54,7 @@ The 17 statement types in the 1964 specification:
 | STOP      | Halt with message (resumable in DTSS) |
 | REM       | Comment / remark |
 | READ      | Read from DATA pool: `90 READ X, Y` |
-| DATA      | Define data pool: `100 DATA 1, 2, 3` |
+| DATA      | Define a mixed data pool: `100 DATA 1, "OK", 2` |
 | RESTORE   | Reset DATA pool pointer |
 | DIM       | Declare array size: `110 DIM A(100)` |
 | DEF       | Define user function: `120 DEF FNA(X) = X*X` |

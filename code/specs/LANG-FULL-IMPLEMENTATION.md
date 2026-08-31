@@ -16,7 +16,7 @@ language**, and each frontend was a **deliberate subset**:
 | Twig | Scalars, variadic and boxed dynamic arithmetic, typed and forward-referenced globals, cons/list operations, records, unions/`match`, closures (including capture), and typed E4 string literal/named/local/function-call proofs run on the five code generators; lists, records, unions, and closures also run on VM/JIT | VM/JIT still lack the executed symbol/quote and forward-referenced-global cells; boxed dynamic-global arithmetic and captured/reassigned or otherwise untyped strings remain |
 | Nib | typed calls, `*`/`/`, `for`, bitwise, short-circuit logic, logical `!`, consts, const/static-expression folding, wrap/sat arithmetic, and module `static`s all run on all 7 backends | BCD semantics and Intel-4004 RAM mapping remain |
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
-| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays incl. multi-dimensional `DIM A(m,n)` (BA3/BA7/BA-DIM-2D), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
+| Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | scalar and array strings, runtime input and concat, mixed numeric/string `DATA`/`READ`/`RESTORE`, general `^`, deterministic math builtins, `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN`, multi-dimensional real arrays, `GOSUB`/`RETURN`, and BA7 `f64` arithmetic/formatting all run on every backend; portable `RND` remains |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
 | McCarthy Lisp | F1–F7 — scalars, cons/car/cdr, predicates, `COND`, symbols, `LAMBDA`/`LABEL`, capture, and recursion — run uniformly on its dedicated VM, native AOT, JIT, WASM, JVM, CLR, BEAM, and LLVM | no open McCarthy core/backend gap; W16 is the authoritative 19-program × 8-backend conformance proof |
 | ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures including `real` returns and `boolean` results feeding control flow ✅ (AL13, all 7 backends), direct name- and value-mode formal procedures including declared, nested-capturing, self- and mutually-recursively-forwarded, implemented-standard-function, and implementation-defined standard-output-procedure actuals plus direct call-by-name scalars (including Jensen-style expression thunks and strings), scalar forwarding/remapping recursion, and rank-inferred arrays with forwarding plus direct/mutual array recursion ✅ (AL7, all 7 backends), nested procedures capturing scalar and array value formals ✅, switches including conditional/nested designators, rank-inferred array value parameters with isolated element copies ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays with per-coordinate and declaration-extent validation ✅ (AL-multidim / AL-multidim-real, all 7 backends), `boolean array` declarations and value formals ✅ (all 7 standard backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), right-associative `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus finite literal-only real `+`/`-`/`*`/`/`, exact checked straight-line integer and real scalar snapshots including path-independent conditional integer subexpressions, capped side-effect-free tracked integer powers with checked arithmetic and integer-valued standard-function exponents, checked tracked-arithmetic and pure `abs`/`sign` plus exact-widening `entier` and path-independent pure conditional real-power exponent unrolling, plus bounded tracked integer, tracked-function, and path-independent conditional exponents in real-value metadata, integer-valued standard functions, and path-independent equal conditional assignments, capped signed integral arithmetic real power exponents, conditional/composed static standard-function output including canonical transcendental identities and exact integer-valued results, and initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); runtime real formatting, changed recursive scalar actuals requiring a thunk ABI, and dynamic procedure descriptors remain follow-up work |
@@ -682,8 +682,10 @@ backend immediately) come before the enabler-dependent items.
   are `str`-typed `array_set`/`array_get` feeding PRINT / `+` concat. Static
   backends carry an 8-byte (LLVM/native) or 4-byte (WASM) handle element; JVM/CLR
   use native reference arrays (`String[]` / `System.String[]`). Matrix cell
-  `DIM A$(2); A$(0)="O"; A$(1)="K"; PRINT A$(0)+A$(1)` → `OK` on all 7. Broader
-  dynamic string expressions and string `READ`/`DATA` remain.
+  `DIM A$(2); A$(0)="O"; A$(1)="K"; PRINT A$(0)+A$(1)` → `OK` on all 7. Mixed
+  string/numeric `DATA` and scalar/array `READ` are also complete on all 7:
+  parallel kind/real/string pools preserve one source-ordered pointer, validate
+  every target type at run time, and rewind together under `RESTORE` (VM-017).
 - ✅ **BA5** — `DEF FN` single-line user functions. `DEF FNx(P) = expr` lowers to a
   sibling `IIRFunction` (one numeric param, `FullyTyped`) and `FNx(arg)` lowers to the
   shared IIR `call` — the same convention ALGOL's value procedures (AL3) run on every
@@ -698,7 +700,7 @@ backend immediately) come before the enabler-dependent items.
   numeric parameter; body references its parameter only (globals need **E6**); built-in
   maths fns (`SIN`/`ABS`/…) need **E3**.
 - ✅ **BA6** — `READ` / `DATA` / `RESTORE` (`dartmouth-basic-iir-compiler` 0.8.0,
-  real-valued in 0.12.0).
+  real-valued in 0.12.0, mixed numeric/string in 0.39.0).
   Lowers onto the **E5 array** substrate — no new IIR op, no enabler: a pre-pass
   gathers all finite `DATA` literals (line order) into a pool materialised once at
   the top of `main` as an `array<f64>` + an `i64` `__basic_data_ptr` register (a
@@ -707,7 +709,10 @@ backend immediately) come before the enabler-dependent items.
   the bounds-checked `array_get`. **Runs on all 7 backends**: `DATA 21 / READ A /
   RESTORE / READ B / PRINT A+B` ⇒ 42 (proves sequential consumption + rewind).
   BA7-3 adds the fractional proof: `DATA 3.14, 0.25 / READ A(0) / READ B / PRINT
-  A(0) / PRINT B` ⇒ `3.14` and `.25` on all 7 backends.
+  A(0) / PRINT B` ⇒ `3.14` and `.25` on all 7 backends. VM-017 adds a shared
+  source-ordered stream over parallel kind, `array<f64>`, and `array<str>` pools;
+  numeric/string scalar and array targets are checked at run time, and the mixed
+  read plus `RESTORE` program runs on all 7 backends.
 - ✅ **BA7** — floating-point (needs **E3**, ✅; **E8**, ✅). Design spec is
   **decision-complete** ([`lang-full-ba7-floating-point.md`](lang-full-ba7-floating-point.md))
   by historical Dartmouth BASIC fidelity (no sign-off gate). **BA7-1a/1b landed**
