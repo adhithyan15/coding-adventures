@@ -15,20 +15,23 @@ links existing Mosaic work instead of duplicating it.
    make the web release build reproducible and CI-gated. **Done in #13527.**
 2. **P0 — [#13519](https://github.com/adhithyan15/coding-adventures/issues/13519):**
    persist TaskApp locally in every strict generated native host. **Done in #13542.**
-3. **P0 — [#13520](https://github.com/adhithyan15/coding-adventures/issues/13520):**
+3. **P0 — [#13573](https://github.com/adhithyan15/coding-adventures/issues/13573):**
+   retain typed `For` row payloads in emitted XAML button handlers.
+   **Discovered and fixed while validating #13520.**
+4. **P0 — [#13520](https://github.com/adhithyan15/coding-adventures/issues/13520):**
    prove the native simple-todo scheduling flow end to end. **In progress.**
-4. **P1 — [#13543](https://github.com/adhithyan15/coding-adventures/issues/13543):**
+5. **P1 — [#13543](https://github.com/adhithyan15/coding-adventures/issues/13543):**
    publish incremental SemVer TaskApp GitHub releases, beginning at
    `task-app-v0.1.0` with only the artifacts that are actually verified.
-5. **P1 — [#13565](https://github.com/adhithyan15/coding-adventures/issues/13565):**
+6. **P1 — [#13565](https://github.com/adhithyan15/coding-adventures/issues/13565):**
    keep native completion progress visible in the generated Compose viewport.
-6. **P1 — [#13521](https://github.com/adhithyan15/coding-adventures/issues/13521):**
+7. **P1 — [#13521](https://github.com/adhithyan15/coding-adventures/issues/13521):**
    enforce web/native presentation-contract parity.
-7. **P1 — [#13522](https://github.com/adhithyan15/coding-adventures/issues/13522):**
+8. **P1 — [#13522](https://github.com/adhithyan15/coding-adventures/issues/13522):**
    package installable local apps on supported platforms.
-8. **P1 — [#13523](https://github.com/adhithyan15/coding-adventures/issues/13523):**
+9. **P1 — [#13523](https://github.com/adhithyan15/coding-adventures/issues/13523):**
    audit and refine the first-run simple-todo experience.
-9. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
+10. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
    move the Vitest config to Vite's native ESM loading contract.
 
 Newly discovered work is filed as an issue and the queue is reprioritized before

@@ -8391,6 +8391,9 @@ fn emit_host_button(
         let component = ctx.component_name;
         let event_ctor = if let Some(payload_expr) = host_button_click_payload_expr(emit_name, ctx)
         {
+            if payload_expr_uses_row_tag(&payload_expr) {
+                attrs.push_str(" Tag=\"{x:Bind}\"");
+            }
             format!("new {component}Event.{case_pascal}({payload_expr})")
         } else {
             format!("new {component}Event.{case_pascal}()")
@@ -8438,19 +8441,23 @@ fn host_button_click_payload_expr(emit_name: &str, ctx: &EmitContext<'_>) -> Opt
     let element_property = kebab_to_pascal_case(&binding.as_name);
     match (param_name.as_str(), param_type.as_str()) {
         ("index", "double") if binding.index_name.is_some() => Some(format!(
-            "(sender as Microsoft.UI.Xaml.FrameworkElement)?.DataContext is {vm_class} row ? (double)row.Index : -1.0"
+            "(sender as Microsoft.UI.Xaml.FrameworkElement)?.Tag is {vm_class} row ? (double)row.Index : -1.0"
         )),
         (_, "string") => Some(format!(
-            "(sender as Microsoft.UI.Xaml.FrameworkElement)?.DataContext is {vm_class} row ? row.{element_property} : string.Empty"
+            "(sender as Microsoft.UI.Xaml.FrameworkElement)?.Tag is {vm_class} row ? row.{element_property} : string.Empty"
         )),
         (_, "double") if binding.element_type == "double" => Some(format!(
-            "(sender as Microsoft.UI.Xaml.FrameworkElement)?.DataContext is {vm_class} row ? row.{element_property} : 0.0"
+            "(sender as Microsoft.UI.Xaml.FrameworkElement)?.Tag is {vm_class} row ? row.{element_property} : 0.0"
         )),
         (_, "bool") if binding.element_type == "bool" => Some(format!(
-            "(sender as Microsoft.UI.Xaml.FrameworkElement)?.DataContext is {vm_class} row && row.{element_property}"
+            "(sender as Microsoft.UI.Xaml.FrameworkElement)?.Tag is {vm_class} row && row.{element_property}"
         )),
         _ => None,
     }
+}
+
+fn payload_expr_uses_row_tag(payload_expr: &str) -> bool {
+    payload_expr.contains("?.Tag is ")
 }
 
 // =====================================================================
@@ -8831,7 +8838,7 @@ fn host_link_click_payload_expr(
 /// `this.<Pascal>` (a *component-level* property reference) since this
 /// function has no for-scope awareness at all. Real per-row `Expr`
 /// support (`value: (row[1])` as a click payload) needs the same
-/// sender-`DataContext`-cast-to-row-VM-type codegen
+/// sender-`Tag`-cast-to-row-VM-type codegen
 /// `host_button_click_payload_expr` already does for its own params --
 /// a materially different, more novel code shape with no existing
 /// precedent for an arbitrary expression, and a real feature addition
@@ -9707,6 +9714,9 @@ fn emit_host_link(
             let component = ctx.component_name;
             let event_ctor =
                 if let Some(payload_expr) = host_link_click_payload_expr(emit_name, node, ctx)? {
+                    if payload_expr_uses_row_tag(&payload_expr) {
+                        attrs.push_str(" Tag=\"{x:Bind}\"");
+                    }
                     format!("new {component}Event.{case_pascal}({payload_expr})")
                 } else {
                     format!("new {component}Event.{case_pascal}()")
@@ -14294,8 +14304,13 @@ mod tests {
             r.xaml
         );
         assert!(
+            r.xaml.contains("Tag=\"{x:Bind}\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
             r.code_behind.contains(
-                "new FooEvent.Select((sender as Microsoft.UI.Xaml.FrameworkElement)?.DataContext is Foo_ItemVm row ? (double)row.Index : -1.0)"
+                "new FooEvent.Select((sender as Microsoft.UI.Xaml.FrameworkElement)?.Tag is Foo_ItemVm row ? (double)row.Index : -1.0)"
             ),
             "got:\n{}",
             r.code_behind
@@ -14344,8 +14359,13 @@ mod tests {
             r.xaml
         );
         assert!(
+            r.xaml.contains("Tag=\"{x:Bind}\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
             r.code_behind.contains(
-                "new FooEvent.Change((sender as Microsoft.UI.Xaml.FrameworkElement)?.DataContext is Foo_OptionVm row ? row.Option : string.Empty)"
+                "new FooEvent.Change((sender as Microsoft.UI.Xaml.FrameworkElement)?.Tag is Foo_OptionVm row ? row.Option : string.Empty)"
             ),
             "got:\n{}",
             r.code_behind
@@ -17284,8 +17304,13 @@ mod tests {
             r.xaml
         );
         assert!(
+            r.xaml.contains("Tag=\"{x:Bind}\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
             r.code_behind.contains(
-                "new NavEvent.Select((sender as Microsoft.UI.Xaml.FrameworkElement)?.DataContext is Nav_ItemVm row ? (double)row.Index : -1.0)"
+                "new NavEvent.Select((sender as Microsoft.UI.Xaml.FrameworkElement)?.Tag is Nav_ItemVm row ? (double)row.Index : -1.0)"
             ),
             "expected HostLink to dispatch For index payload, got:\n{}",
             r.code_behind

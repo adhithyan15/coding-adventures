@@ -111,6 +111,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             'AutomationProperties.AutomationId="complexity-toggle"',
             "Click=\"ComplexityToggle_Click\"",
             'AutomationProperties.AutomationId="toggle"',
+            'Tag="{x:Bind}"',
             "Click=\"Toggle_Click\"",
             'AutomationProperties.AutomationId="del-btn"',
             "Click=\"DelBtn_Click\"",
@@ -123,6 +124,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             "new TaskAppEvent.ToggleProjectComplexity()",
             "new TaskAppEvent.ToggleTask(",
             "new TaskAppEvent.DeleteTask(",
+            "?.Tag is TaskApp_Row2Vm row",
         ),
     },
 }

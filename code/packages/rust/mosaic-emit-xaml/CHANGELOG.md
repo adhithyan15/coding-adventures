@@ -1,5 +1,13 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — retain typed row payloads for native button events (#13573)
+
+`HostButton` and internal `HostLink` controls inside `For` templates now bind
+their generated row VM into `FrameworkElement.Tag`. Click handlers recover index,
+text, number, and boolean payloads from that stable binding instead of assuming
+WinUI's `ItemsRepeater` populated `DataContext`. This fixes visibly inert TaskApp
+completion and delete controls that previously dispatched the fallback index `-1`.
+
 ## [Unreleased] — drive `ThemeShadow` from the new `elevation` property (UI41, #12028 item 1)
 
 Second PR of the elevation-tokens cascade (mosstyle contract → **XAML**
