@@ -1,0 +1,20 @@
+{
+  "chapter": 408,
+  "title": "Doctor, Pills and Tiredness",
+  "label": "ch:doctor-pastilla-cansado",
+  "canDo": "I can identify a doctor, a medicinal tablet and the state of being tired.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS",
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ES-C408-health-recall-2",
+    "kind": "production",
+    "summary": "Retrieve three health words across appointment, medicine and state messages.",
+    "assesses": [
+      "ES-LEX-DOCTOR",
+      "ES-LEX-PASTILLA",
+      "ES-LEX-CANSADO"
+    ]
+  }
+}

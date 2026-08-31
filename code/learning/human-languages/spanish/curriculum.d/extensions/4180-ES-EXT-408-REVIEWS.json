@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-408-REVIEWS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can retrieve doctor, pill and tired as one health chain.",
+  "prerequisites": [
+    "ES-EXT-408-HEALTH",
+    "ES-EXT-030-CANSADO"
+  ],
+  "lessons": [
+    "ES-C408-health-recall-1",
+    "ES-C408-health-recall-2"
+  ]
+}

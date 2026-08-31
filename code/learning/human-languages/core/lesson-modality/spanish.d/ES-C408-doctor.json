@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "ES-C09-cansado",
+    "id": "ES-C408-doctor",
     "language": "spanish",
-    "chapter": 59,
-    "sequence": 1020,
+    "chapter": 408,
+    "sequence": 9240,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:67215d0bbc85e436"
+    "sourceHash": "fnv1a64:ef2eb8ec350721ea"
   },
   "findings": []
 }

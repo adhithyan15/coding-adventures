@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:7299b501d5ccb528",
+  "lessonIds": [
+    "ES-C408-doctor",
+    "ES-C408-pastilla",
+    "ES-C408-health-recall-1",
+    "ES-C408-health-recall-2"
+  ],
+  "tex": "spanish/book/chapters/ch408-doctor-pastilla-cansado.tex"
+}

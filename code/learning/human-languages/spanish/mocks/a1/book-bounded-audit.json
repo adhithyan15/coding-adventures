@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 899,
-  "taughtForms": 1523,
-  "objectiveFailed": 18,
+  "lessonCount": 904,
+  "taughtForms": 1530,
+  "objectiveFailed": 15,
   "mocks": [
     {
       "mock": 1,
       "reading": 22,
-      "listening": 22,
-      "objectiveFailed": 6,
+      "listening": 24,
+      "objectiveFailed": 4,
       "failed": [
         {
           "paper": 1,
@@ -94,23 +94,9 @@
         },
         {
           "paper": 2,
-          "item": 34,
-          "missing": [
-            "pastilla"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 45,
           "missing": [
             "examen"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 49,
-          "missing": [
-            "cansado"
           ]
         }
       ]
@@ -118,8 +104,8 @@
     {
       "mock": 2,
       "reading": 22,
-      "listening": 16,
-      "objectiveFailed": 12,
+      "listening": 17,
+      "objectiveFailed": 11,
       "failed": [
         {
           "paper": 1,
@@ -144,13 +130,6 @@
           "missing": [
             "apuntarse",
             "recepción"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 27,
-          "missing": [
-            "doctor"
           ]
         },
         {
@@ -218,11 +197,9 @@
     "academia",
     "adulto",
     "apuntarse",
-    "cansado",
     "concierto",
     "curso",
     "deporte",
-    "doctor",
     "estudiante",
     "examen",
     "extranjero",
@@ -235,7 +212,6 @@
     "música",
     "nadar",
     "paquete",
-    "pastilla",
     "preparar",
     "quedarse",
     "recepción",
@@ -256,10 +232,6 @@
       "count": 1
     },
     {
-      "lexeme": "cansado",
-      "count": 1
-    },
-    {
       "lexeme": "concierto",
       "count": 1
     },
@@ -269,10 +241,6 @@
     },
     {
       "lexeme": "deporte",
-      "count": 1
-    },
-    {
-      "lexeme": "doctor",
       "count": 1
     },
     {
@@ -321,10 +289,6 @@
     },
     {
       "lexeme": "paquete",
-      "count": 1
-    },
-    {
-      "lexeme": "pastilla",
       "count": 1
     },
     {

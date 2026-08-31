@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C09-cansado
-spine_node: SPINE-SAY-WHAT-I-DO
+spine_node: SPINE-DESCRIBE-QUALITIES
 sequence: 1020
 chapter: 59
 type: word
