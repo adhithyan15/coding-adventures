@@ -37,14 +37,19 @@ properties (read from each **child** node).
 
 ```
 FlexContainerExt {
-  direction:       "row" | "column"           // default: "column"
-  wrap:            "nowrap" | "wrap"          // default: "nowrap"
+  direction:       "row" | "row-reverse" | "column" | "column-reverse"
+                                              // CSS default: "row"
+  wrap:            "nowrap" | "wrap" | "wrap-reverse"
+                                              // default: "nowrap"
   alignItems:      "start" | "center" | "end" | "stretch"   // default: "stretch"
   justifyContent:  "start" | "center" | "end" | "between" | "around" | "evenly"
                                               // default: "start"
   gap:             float                      // uniform gap between items, default 0
   rowGap:          float                      // gap between rows (wrap), default = gap
   columnGap:       float                      // gap between columns, default = gap
+  alignContent:    "start" | "center" | "end" | "stretch" |
+                   "space-between" | "space-around" | "space-evenly"
+                                              // default: "stretch"
 }
 ```
 
@@ -187,9 +192,10 @@ For each item within its line:
 
 ### Step 9 — Determine line positions (multi-line only)
 
-If `wrap = "wrap"`, stack lines along the cross axis. Currently: lines are
-packed start-to-start with `rowGap` between them. (Align-content variants
-are a future extension.)
+Wrapped lines are stacked along the cross axis with `rowGap` / `columnGap`
+preserved. `alignContent` distributes remaining cross-axis space between or
+around lines, centers or edge-packs them, or stretches each line equally.
+`wrap-reverse` mirrors the resulting line positions along the cross axis.
 
 ### Step 10 — Recursively lay out children
 
@@ -253,10 +259,10 @@ For container nodes:
 ## What this package does NOT do
 
 - Does not choose the layout algorithm for child containers
-- Does not validate `ext["flex"]` fields — missing fields use defaults, unknown
-  fields are ignored
+- Layout remains tolerant of malformed `ext["flex"]` fields: missing fields use
+  defaults and unknown fields are ignored. Implementations may expose optional
+  producer diagnostics without making layout fail.
 - Does not implement CSS `position: absolute` or `position: fixed`
 - Does not implement `flex-flow` shorthand parsing (use `direction` + `wrap`)
-- Does not implement `align-content` for multi-line containers (future extension)
 - Does not implement `z-index` (handled by `paint-ir` layer ordering)
 - Does not manage fonts or load resources

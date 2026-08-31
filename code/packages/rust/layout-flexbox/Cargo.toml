@@ -1,0 +1,8 @@
+[package]
+name = "layout-flexbox"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable CSS flex formatting context for the shared Layout IR"
+
+[dependencies]
+layout-ir = { path = "../layout-ir" }

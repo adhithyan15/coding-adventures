@@ -846,6 +846,7 @@ members = [
     "text-native-coretext",
     "layout-ir",
     "layout-inline",
+    "layout-flexbox",
     "layout-block",
     "layout-text-measure-native",
     "layout-to-paint",

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Dispatch `flex` and atomic `inline-flex` containers through the reusable
+  flex formatting context while preserving recursive block/inline children.
 - Resolve percentage widths against the containing block and distribute
   horizontal free space through shared two-sided/left `auto` margin metadata.
 

@@ -27,6 +27,7 @@ pub const MISSING_IMAGE_PATH: &str = "/missing.gif";
 pub const STYLESHEET_PATH: &str = "/fixture.css";
 pub const IMPORTED_STYLESHEET_PATH: &str = "/fixture-base.css";
 pub const INTERNATIONAL_FIXTURE_PATH: &str = "/international.html";
+pub const FLEX_FIXTURE_PATH: &str = "/flex.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -76,6 +77,10 @@ pub const INTERNATIONAL_FIXTURE_HTML: &str = r#"<!doctype html>
   <p id="cluster-run">Café 👩‍💻 🇺🇳 uses whole grapheme geometry and fallback → glyphs.</p>
 </body>
 </html>"#;
+
+/// Compact flex geometry shared by every Venture host through the normal
+/// HTML-to-layout-to-paint pipeline.
+pub const FLEX_FIXTURE_HTML: &str = r#"<!doctype html><html><body><div id="flex-deck" style="display:flex;width:240px;height:100px;flex-flow:row wrap;gap:10px;align-content:space-between"><div id="flex-a" style="flex:0 0 100px;height:20px;order:2;background:red">A</div><div id="flex-b" style="flex:0 0 100px;height:20px;order:0;background:green">B</div><div id="flex-c" style="flex:0 0 100px;height:20px;order:1;background:blue">C</div></div></body></html>"#;
 
 /// A compact backend-neutral oracle for isolated GPU composition.
 ///
@@ -467,6 +472,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let stylesheet_url = format!("{origin}{STYLESHEET_PATH}");
     let imported_stylesheet_url = format!("{origin}{IMPORTED_STYLESHEET_PATH}");
     let international_url = format!("{origin}{INTERNATIONAL_FIXTURE_PATH}");
+    let flex_url = format!("{origin}{FLEX_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -498,6 +504,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             Some("text/html; charset=utf-8".into()),
             INTERNATIONAL_FIXTURE_HTML.as_bytes().to_vec(),
         )),
+        url if url == flex_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            FLEX_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
         }
@@ -522,6 +534,23 @@ pub fn load_international_page(origin: &str) -> Result<BrowserPage, String> {
         "{}{INTERNATIONAL_FIXTURE_PATH}",
         origin.trim_end_matches('/')
     );
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_flex_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!("{}{FLEX_FIXTURE_PATH}", origin.trim_end_matches('/'));
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())
@@ -1025,6 +1054,20 @@ mod tests {
         let imported = fixture_response(origin, "http://venture.test/fixture-base.css").unwrap();
         assert_eq!(imported.body, IMPORTED_FIXTURE_CSS.as_bytes());
         assert!(fixture_response(origin, "http://venture.test/missing.gif").is_err());
+    }
+
+    #[test]
+    fn flex_fixture_converges_geometry_and_paint_for_every_host() {
+        let page = load_flex_page("http://venture.test").expect("flex fixture page");
+        let deck = find_positioned_id(&page.paint.positioned, "flex-deck").expect("flex deck");
+        assert_eq!(deck.children.len(), 3);
+        assert_eq!(deck.children[0].id.as_deref(), Some("flex-b"));
+        assert_eq!(deck.children[1].id.as_deref(), Some("flex-c"));
+        assert_eq!(deck.children[2].id.as_deref(), Some("flex-a"));
+        assert_eq!((deck.children[0].x, deck.children[0].y), (0.0, 0.0));
+        assert_eq!((deck.children[1].x, deck.children[1].y), (110.0, 0.0));
+        assert_eq!((deck.children[2].x, deck.children[2].y), (0.0, 80.0));
+        assert!(!page.paint.scene.instructions.is_empty());
     }
 
     #[test]
