@@ -34,6 +34,29 @@ percent_of_builder = importlib.import_module("build_adj_percent_of_provenance")
 proportion_builder = importlib.import_module("build_adj_proportion_provenance")
 formula_inventory_migration = importlib.import_module("migrate_adj_formula_inventories")
 
+# ── Liveness bounds versus performance assertions ──────────────────
+#
+# Several tests in this file exercise process containment: closing a
+# Windows Job Object must kill the descendants that inherited the output
+# pipes, a stuck raw-pipe close must not wedge teardown, and so on.
+# Those are statements about *causality*, and none of them is a
+# statement about speed.
+#
+# The temptation is to use elapsed wall-clock time as a stand-in --
+# "teardown finished in under half a second, therefore it did not block"
+# -- but on a shared CI runner elapsed time measures the runner's load,
+# not the code.  A tight ceiling there is a performance assertion
+# wearing a liveness costume, and it fails on pull requests that touch
+# nothing nearby.
+#
+# So the rule in this file is: assert the observable invariant (the
+# descendant is gone, the flag is still unset, the call returned rather
+# than hung), and where a bound genuinely is the point, make it a
+# hang detector that is generous by orders of magnitude.  This constant
+# is that hang detector.  It is never expected to be reached; if it ever
+# is, something deadlocked.
+_LIVENESS_TIMEOUT_SECONDS = 30.0
+
 
 def acquire_cas_lock_and_exit(cas_root: str, ready: object) -> None:
     with provenance.CasRootLock(Path(cas_root), blocking=False):
@@ -579,7 +602,15 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             return False
         return True
 
-    def assert_process_exits(self, pid: int, *, timeout: float = 3) -> None:
+    def assert_process_exits(
+        self, pid: int, *, timeout: float = _LIVENESS_TIMEOUT_SECONDS
+    ) -> None:
+        # Poll for the invariant "the process is gone" rather than sleeping
+        # a fixed amount and hoping.  The deadline is a hang detector: a
+        # contained descendant dies as the job/cgroup is torn down, so the
+        # loop normally exits on its first or second pass.  A generous
+        # ceiling costs nothing when the code is correct and only extends
+        # the wait when it is not.
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             if not self.process_is_alive(pid):
@@ -599,8 +630,11 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         return fields[19] if len(fields) > 19 else None
 
     def assert_linux_process_identity_exits(
-        self, pid: int, starttime: str, *, timeout: float = 5
+        self, pid: int, starttime: str, *, timeout: float = _LIVENESS_TIMEOUT_SECONDS
     ) -> None:
+        # Same shape as `assert_process_exits`, but immune to PID reuse:
+        # the /proc starttime field pins the process *identity*, so a
+        # recycled PID reads as "exited" rather than "still alive".
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             if self.linux_process_starttime(pid) != starttime:
@@ -3596,11 +3630,29 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         process.stderr.close.assert_called_once_with()
 
     def test_raw_pipe_close_attempt_has_independent_observation_bound(self) -> None:
+        # The property under test is *independence*, not speed: `observe`
+        # must return while the underlying `raw.close()` is still in
+        # flight, rather than joining the worker that performs it.
+        #
+        # Elapsed time is a poor witness for that.  On a shared runner
+        # the observing thread can easily be descheduled for longer than
+        # the observation bound it just asked for, which makes a
+        # wall-clock ceiling a statement about the runner, not about the
+        # code.  The witness used here instead is the worker's own
+        # completion flag: `release` gates the close and is set only
+        # further down this method, so the worker *cannot* have finished
+        # when a correct `observe` returns.  An implementation that
+        # joined the worker would leave `_done` set, and the assertion
+        # fails deterministically no matter how the machine was loaded.
         release = threading.Event()
         raw = mock.Mock()
 
         def blocked_close() -> None:
-            release.wait(5)
+            # HANG DETECTOR, not a timing knob.  Only `release.set()`
+            # below is expected to end this wait; the ceiling exists so a
+            # buggy `observe` that joins the worker terminates the test
+            # with a real assertion failure instead of deadlocking it.
+            release.wait(_LIVENESS_TIMEOUT_SECONDS)
             raise OSError(5, "late close failure")
 
         raw.close.side_effect = blocked_close
@@ -3609,16 +3661,18 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             "stdout", stream, bytearray(), 1, 0
         )
         attempt = provenance._RawPipeCloseAttempt(endpoint)
-        started = time.monotonic()
         failure = attempt.observe(0.05)
 
-        self.assertLess(time.monotonic() - started, 0.5)
+        self.assertFalse(
+            attempt._done.is_set(),
+            "observe() returned only after the raw close had completed",
+        )
         self.assertIsNotNone(failure)
         assert failure is not None
         self.assertEqual(failure.stage, "pipe.close")
         self.assertIn("timed out", failure.message)
         release.set()
-        self.assertTrue(attempt._done.wait(1))
+        self.assertTrue(attempt._done.wait(_LIVENESS_TIMEOUT_SECONDS))
         self.assertIn("timed out", failure.message)
 
     @mock.patch.object(provenance.os, "name", "nt")
@@ -4140,36 +4194,57 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         "strict process containment backend",
     )
     def test_process_tree_timeout_kills_descendant_pipe_holders(self) -> None:
+        # Containment under timeout: when the command exceeds its budget,
+        # the grandchild that inherited the output pipes must die with the
+        # tree.  The witness is `assert_process_exits` -- the descendant is
+        # gone -- and nothing here asserts how long any of it took.
+        #
+        # The fixture is arranged so that "a descendant existed" is not a
+        # race.  The parent records `Popen.pid`, which is valid the moment
+        # the process exists: CreateProcess has returned on Windows, fork()
+        # has returned on Linux, and in both cases the inherited pipe
+        # handles/descriptors are already held.  The previous fixture
+        # instead waited for the grandchild to *run Python* and write its
+        # own PID, which put a second cold interpreter start on the
+        # critical path -- and on a busy runner that lost to the verifier's
+        # one-second timeout, leaving no PID file and the misleading
+        # "descendant never reached readiness" failure.
         with tempfile.TemporaryDirectory() as directory:
             pid_path = Path(directory) / "child.pid"
-            child = (
-                "import os, pathlib, time; "
-                f"pathlib.Path({str(pid_path)!r}).write_text(str(os.getpid())); "
-                "time.sleep(30)"
-            )
+            child = "import time; time.sleep(120)"
             parent = (
                 "import pathlib, subprocess, sys, time; "
-                f"subprocess.Popen([sys.executable, '-c', {child!r}]); "
-                f"p = pathlib.Path({str(pid_path)!r}); "
-                "deadline = time.monotonic() + 5; "
-                "exec(\"while not p.exists() and time.monotonic() < deadline:\\n time.sleep(0.01)\"); "
-                "time.sleep(30)"
+                f"child = subprocess.Popen([sys.executable, '-c', {child!r}]); "
+                f"pathlib.Path({str(pid_path)!r}).write_text(str(child.pid)); "
+                "time.sleep(120)"
             )
-            started = time.monotonic()
 
+            # `timeout_seconds` here is a readiness allowance, not a
+            # performance assertion.  It only has to exceed one interpreter
+            # start plus one small file write -- a fifth of a second
+            # nominally -- so ten seconds is roughly fifty times the cost.
+            # The fixture sleeps for two minutes, so the timeout path is
+            # always the branch under test.  `drain_timeout_seconds` is
+            # likewise a hang detector: with containment working, EOF
+            # arrives as soon as the job dies.  Two minutes comfortably
+            # outlasts the timeout plus the exit poll, while keeping a
+            # genuine containment bug from leaking a process for the whole
+            # life of the runner.
             with self.assertRaisesRegex(
-                provenance.ProvenanceError, "timed out after 1 second"
+                provenance.ProvenanceError, "timed out after 10 seconds"
             ):
                 provenance._run_json_command(
                     [sys.executable, "-c", parent],
                     [],
                     label="descendant timeout fixture",
-                    timeout_seconds=1,
-                    drain_timeout_seconds=2,
+                    timeout_seconds=10,
+                    drain_timeout_seconds=_LIVENESS_TIMEOUT_SECONDS,
                 )
 
-            self.assertTrue(pid_path.exists(), "descendant never reached readiness")
-            self.assertLess(time.monotonic() - started, 8)
+            self.assertTrue(
+                pid_path.exists(),
+                "fixture parent never recorded its descendant's PID",
+            )
             self.assert_process_exits(int(pid_path.read_text()))
 
     @unittest.skipUnless(
@@ -4177,22 +4252,31 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         "strict process containment backend",
     )
     def test_process_tree_parent_exit_kills_descendant_pipe_holders(self) -> None:
+        # Containment when the command exits on its own: the parent leaves
+        # immediately, but the grandchild still holds duplicates of the
+        # output pipe write ends, so a naive drain would block on it until
+        # the grandchild's own sleep expired.  The invariants are that the
+        # call *returned* with the parse failure (rather than hanging on a
+        # descendant-held pipe) and that the descendant is gone.
+        #
+        # This fixture is now race-free by construction rather than by
+        # timing: the parent writes the PID file and only then exits, and
+        # `_run_json_command` cannot return before the parent has exited,
+        # so the file is guaranteed to be there when it is read.  The
+        # ordering is causal, so no deadline is needed to make it hold.
         with tempfile.TemporaryDirectory() as directory:
             pid_path = Path(directory) / "child.pid"
-            child = (
-                "import os, pathlib, time; "
-                f"pathlib.Path({str(pid_path)!r}).write_text(str(os.getpid())); "
-                "time.sleep(30)"
-            )
+            child = "import time; time.sleep(120)"
             parent = (
-                "import pathlib, subprocess, sys, time; "
-                f"subprocess.Popen([sys.executable, '-c', {child!r}]); "
-                f"p = pathlib.Path({str(pid_path)!r}); "
-                "deadline = time.monotonic() + 5; "
-                "exec(\"while not p.exists() and time.monotonic() < deadline:\\n time.sleep(0.01)\")"
+                "import pathlib, subprocess, sys; "
+                f"child = subprocess.Popen([sys.executable, '-c', {child!r}]); "
+                f"pathlib.Path({str(pid_path)!r}).write_text(str(child.pid))"
             )
-            started = time.monotonic()
 
+            # Both bounds are hang detectors, never reached on the happy
+            # path: the parent exits as soon as it has recorded the PID,
+            # and the drain sees EOF as soon as containment kills the
+            # descendant that holds the other copy of the pipe.
             with self.assertRaisesRegex(
                 provenance.ProvenanceError, "did not emit UTF-8 JSON"
             ):
@@ -4200,12 +4284,14 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     [sys.executable, "-c", parent],
                     [],
                     label="parent exit fixture",
-                    timeout_seconds=5,
-                    drain_timeout_seconds=2,
+                    timeout_seconds=_LIVENESS_TIMEOUT_SECONDS,
+                    drain_timeout_seconds=_LIVENESS_TIMEOUT_SECONDS,
                 )
 
-            self.assertTrue(pid_path.exists(), "descendant never reached readiness")
-            self.assertLess(time.monotonic() - started, 4)
+            self.assertTrue(
+                pid_path.exists(),
+                "fixture parent never recorded its descendant's PID",
+            )
             self.assert_process_exits(int(pid_path.read_text()))
 
     @unittest.skipUnless(
