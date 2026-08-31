@@ -58,22 +58,26 @@ links existing Mosaic work instead of duplicating it.
    queued below.
 16. **P1 — [#13687](https://github.com/adhithyan15/coding-adventures/issues/13687):**
    give an empty Inbox useful guidance and deterministic first-task focus.
-   **In review in #13706.**
+   **Done in #13706.**
 17. **P1 — [#13689](https://github.com/adhithyan15/coding-adventures/issues/13689):**
-   surface composer validation errors with useful focus behavior.
+   surface composer validation errors with useful focus behavior. **In progress.**
 18. **P1 — [#13688](https://github.com/adhithyan15/coding-adventures/issues/13688):**
    edit task names and due dates directly from List.
 19. **P1 — [#13691](https://github.com/adhithyan15/coding-adventures/issues/13691):**
    give completion controls descriptive accessible names.
-20. **P1 — [#13690](https://github.com/adhithyan15/coding-adventures/issues/13690):**
+20. **P1 — [#13717](https://github.com/adhithyan15/coding-adventures/issues/13717):**
+   lower authored `HostInput.a11y-label` values across every Mosaic backend.
+   Discovered while validating #13689; adjacent semantic error text keeps the
+   current correction accessible without overstating input-label coverage.
+21. **P1 — [#13690](https://github.com/adhithyan15/coding-adventures/issues/13690):**
    expose durable-storage fallback, recovery, and backup information in the UI.
-21. **P1 — [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
+22. **P1 — [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
    replace blank startup with loading and failure states.
-22. **P1 — [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
+23. **P1 — [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
    make the List-first shell usable in compact windows.
-23. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
+24. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
    move the Vitest config to Vite's native ESM loading contract.
-24. **P2 — [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
+25. **P2 — [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
    roll the TaskApp changelog forward after each published product release and
    gate against already-published versions remaining marked Unreleased.
 

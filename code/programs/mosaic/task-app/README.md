@@ -78,6 +78,8 @@ window without one.
 - Add a task (name + optional `YYYY-MM-DD` due date).
 - A new empty Inbox points to the task-name field, focuses it initially, and lets
   Enter add tasks without leaving the keyboard capture flow.
+- Blank names and invalid or impossible due dates are rejected before any task
+  state changes; the composer explains the correction and focuses the invalid field.
 - Tasks are chained into a work queue and **auto-scheduled** — each starts when the
   previous finishes, on working days (weekends skipped), with a projected finish date.
 - Tasks scheduled to finish after their due date are flagged **overdue**.

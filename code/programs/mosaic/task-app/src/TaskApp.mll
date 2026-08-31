@@ -431,28 +431,95 @@ layout TaskApp {
         }
         Else {
           Column [ list-wrap ] {
-            Row [ composer ] {
-              // The dashed-box plus mark ahead of the inputs — decoration, not a
-              // button (the mock's own `.composer .plus` is `aria-hidden`); the
-              // real "add" action is the `add-btn` below. Two crossed bars in a
-              // Stack, no SVG (task-app-icon-assets-v1.md).
-              Stack [ composer-plus ] {
-                Box [ plus-bar-h ] { }
-                Box [ plus-bar-v ] { }
+            Column [ composer-block ] {
+              Row [ composer ] {
+                // The dashed-box plus mark ahead of the inputs — decoration, not a
+                // button (the mock's own `.composer .plus` is `aria-hidden`); the
+                // real "add" action is the `add-btn` below. Two crossed bars in a
+                // Stack, no SVG (task-app-icon-assets-v1.md).
+                Stack [ composer-plus ] {
+                  Box [ plus-bar-h ] { }
+                  Box [ plus-bar-v ] { }
+                }
+                If ( when: slot: new-task-name-error ) {
+                  Box [ name-error-focus ] {
+                    HostInput [ name-input-error ] (
+                      value : slot: new-task-name ,
+                      placeholder : "What needs doing?" ,
+                      a11y-label : "Task name. Enter a task name." ,
+                      auto-focus : true ,
+                      onChange : emit: onNewTaskNameChange ,
+                      onCommit : emit: onAddTask
+                    )
+                  }
+                }
+                Else {
+                  If ( when: slot: new-task-name-focus ) {
+                    Box [ name-corrected-focus ] {
+                      HostInput [ name-input-corrected ] (
+                        value : slot: new-task-name ,
+                        placeholder : "What needs doing?" ,
+                        a11y-label : "Task name" ,
+                        auto-focus : true ,
+                        onChange : emit: onNewTaskNameChange ,
+                        onCommit : emit: onAddTask
+                      )
+                    }
+                  }
+                  Else {
+                    HostInput [ name-input ] (
+                      value : slot: new-task-name ,
+                      placeholder : "What needs doing?" ,
+                      a11y-label : "Task name" ,
+                      auto-focus : true ,
+                      onChange : emit: onNewTaskNameChange ,
+                      onCommit : emit: onAddTask
+                    )
+                  }
+                }
+                If ( when: slot: new-task-due-error ) {
+                  Box [ due-error-focus ] {
+                    HostInput [ due-input-error ] (
+                      value : slot: new-task-due ,
+                      placeholder : "Due (optional)" ,
+                      a11y-label : "Due date. Use a real date in YYYY-MM-DD format." ,
+                      auto-focus : true ,
+                      onChange : emit: onNewTaskDueChange ,
+                      onCommit : emit: onAddTask
+                    )
+                  }
+                }
+                Else {
+                  If ( when: slot: new-task-due-focus ) {
+                    Box [ due-corrected-focus ] {
+                      HostInput [ due-input-corrected ] (
+                        value : slot: new-task-due ,
+                        placeholder : "Due (optional)" ,
+                        a11y-label : "Due date (optional)" ,
+                        auto-focus : true ,
+                        onChange : emit: onNewTaskDueChange ,
+                        onCommit : emit: onAddTask
+                      )
+                    }
+                  }
+                  Else {
+                    HostInput [ due-input ] (
+                      value : slot: new-task-due ,
+                      placeholder : "Due (optional)" ,
+                      a11y-label : "Due date (optional)" ,
+                      onChange : emit: onNewTaskDueChange ,
+                      onCommit : emit: onAddTask
+                    )
+                  }
+                }
+                HostButton [ add-btn ] ( label : "Add task" , onClick : emit: onAddTask )
               }
-              HostInput [ name-input ] (
-                value : slot: new-task-name ,
-                placeholder : "What needs doing?" ,
-                auto-focus : true ,
-                onChange : emit: onNewTaskNameChange ,
-                onCommit : emit: onAddTask
-              )
-              HostInput [ due-input ] (
-                value : slot: new-task-due ,
-                placeholder : "Due (optional)" ,
-                onChange : emit: onNewTaskDueChange
-              )
-              HostButton [ add-btn ] ( label : "Add task" , onClick : emit: onAddTask )
+              If ( when: slot: new-task-name-error ) {
+                Text [ composer-name-error ] ( content : slot: new-task-name-error )
+              }
+              If ( when: slot: new-task-due-error ) {
+                Text [ composer-due-error ] ( content : slot: new-task-due-error )
+              }
             }
 
             If ( when: slot: empty-list ) {

@@ -44,6 +44,16 @@ struct TaskAppState {
     dark_theme: bool,
     new_task_name: String,
     new_task_due: String,
+    // Composer errors are transient presentation state. They should guide the
+    // current correction, not survive a process restart in the durable snapshot.
+    #[serde(skip)]
+    new_task_name_error: String,
+    #[serde(skip)]
+    new_task_due_error: String,
+    #[serde(skip)]
+    new_task_name_focus: String,
+    #[serde(skip)]
+    new_task_due_focus: String,
     new_project_name: String,
     new_label_name: String,
     expanded_task: Option<TaskId>,
@@ -81,6 +91,10 @@ impl Default for TaskAppState {
             dark_theme: false,
             new_task_name: String::new(),
             new_task_due: String::new(),
+            new_task_name_error: String::new(),
+            new_task_due_error: String::new(),
+            new_task_name_focus: String::new(),
+            new_task_due_focus: String::new(),
             new_project_name: String::new(),
             new_label_name: String::new(),
             expanded_task: None,
@@ -365,6 +379,10 @@ impl TaskMosaicApp {
             "app-title": "Tasks — auto-scheduled",
             "new-task-name": self.state.new_task_name,
             "new-task-due": self.state.new_task_due,
+            "new-task-name-error": self.state.new_task_name_error,
+            "new-task-due-error": self.state.new_task_due_error,
+            "new-task-name-focus": self.state.new_task_name_focus,
+            "new-task-due-focus": self.state.new_task_due_focus,
             "empty-list": if ids.is_empty() { "empty" } else { "" },
             "new-project-name": self.state.new_project_name,
             "project-rows": project_rows,
@@ -786,8 +804,24 @@ impl TaskMosaicApp {
     fn dispatch_inner(&mut self, event: &Event) -> Result<AppUpdate, TaskAppError> {
         let normalized_name = normalize_event_name(&event.name);
         match normalized_name.as_str() {
-            "newTaskNameChange" => self.state.new_task_name = text_payload(event, "value")?,
-            "newTaskDueChange" => self.state.new_task_due = text_payload(event, "value")?,
+            "newTaskNameChange" => {
+                self.state.new_task_name = text_payload(event, "value")?;
+                if !self.state.new_task_name.trim().is_empty() {
+                    self.state.new_task_name_error.clear();
+                }
+            }
+            "newTaskDueChange" => {
+                self.state.new_task_due = text_payload(event, "value")?;
+                let correcting_error = !self.state.new_task_due_error.is_empty();
+                if self.state.new_task_due.trim().is_empty()
+                    || parse_date(&self.state.new_task_due).is_some()
+                {
+                    self.state.new_task_due_error.clear();
+                    if correcting_error {
+                        self.state.new_task_due_focus = "focus".to_string();
+                    }
+                }
+            }
             "newProjectNameChange" => self.state.new_project_name = text_payload(event, "value")?,
             "newLabelNameChange" => self.state.new_label_name = text_payload(event, "value")?,
             "noteTitleChange" => self.state.note_title = text_payload(event, "value")?,
@@ -850,11 +884,22 @@ impl TaskMosaicApp {
     fn add_task(&mut self) -> Result<AppUpdate, TaskAppError> {
         let name = self.state.new_task_name.trim().to_string();
         if name.is_empty() {
+            self.state.new_task_name_error = "Enter a task name.".to_string();
             return Ok(self.update());
         }
+        self.state.new_task_name_error.clear();
+        let due_text = self.state.new_task_due.trim();
+        let due = if due_text.is_empty() {
+            None
+        } else if let Some(due) = parse_date(due_text) {
+            Some(due)
+        } else {
+            self.state.new_task_due_error = "Use a real date in YYYY-MM-DD format.".to_string();
+            return Ok(self.update());
+        };
+        self.state.new_task_due_error.clear();
         let previous = self.ordered_task_ids().last().cloned();
         let id = self.next_task_id();
-        let due = parse_date(&self.state.new_task_due);
         let project_id = self.state.active_project.clone();
         self.state
             .workspace
@@ -880,6 +925,8 @@ impl TaskMosaicApp {
         self.state.task_order.push(id);
         self.state.new_task_name.clear();
         self.state.new_task_due.clear();
+        self.state.new_task_name_focus = "focus".to_string();
+        self.state.new_task_due_focus.clear();
         Ok(self.announced_update(format!("Added {name}")))
     }
 
@@ -1391,6 +1438,10 @@ mod tests {
         "app-title",
         "new-task-name",
         "new-task-due",
+        "new-task-name-error",
+        "new-task-due-error",
+        "new-task-name-focus",
+        "new-task-due-focus",
         "empty-list",
         "project-rows",
         "new-project-name",
@@ -1614,6 +1665,52 @@ mod tests {
             .dispatch(event(7, "deleteTask", json!({"index":0.0})))
             .unwrap();
         assert_eq!(deleted.props["task-rows"], json!([]));
+    }
+
+    #[test]
+    fn composer_validation_is_visible_correctable_and_atomic() {
+        let mut app = TaskMosaicApp::default();
+        let started = app.start(context()).unwrap();
+        assert_eq!(started.props["new-task-name-error"], "");
+        assert_eq!(started.props["new-task-due-error"], "");
+        assert_eq!(started.props["new-task-name-focus"], "");
+        assert_eq!(started.props["new-task-due-focus"], "");
+
+        let before_blank = app.snapshot().unwrap();
+        let blank = app.dispatch(event(1, "addTask", json!({}))).unwrap();
+        assert_eq!(blank.props["new-task-name-error"], "Enter a task name.");
+        assert_eq!(blank.props["task-rows"], json!([]));
+        assert_eq!(app.snapshot().unwrap(), before_blank);
+
+        let corrected_name = app
+            .dispatch(event(
+                2,
+                "newTaskNameChange",
+                json!({"value":"Plan the launch"}),
+            ))
+            .unwrap();
+        assert_eq!(corrected_name.props["new-task-name-error"], "");
+        app.dispatch(event(3, "newTaskDueChange", json!({"value":"2026-02-31"})))
+            .unwrap();
+        let before_bad_due = app.snapshot().unwrap();
+        let bad_due = app.dispatch(event(4, "addTask", json!({}))).unwrap();
+        assert_eq!(
+            bad_due.props["new-task-due-error"],
+            "Use a real date in YYYY-MM-DD format."
+        );
+        assert_eq!(bad_due.props["task-rows"], json!([]));
+        assert_eq!(app.snapshot().unwrap(), before_bad_due);
+
+        let corrected_due = app
+            .dispatch(event(5, "newTaskDueChange", json!({"value":"2026-02-28"})))
+            .unwrap();
+        assert_eq!(corrected_due.props["new-task-due-error"], "");
+        assert_eq!(corrected_due.props["new-task-due-focus"], "focus");
+        let added = app.dispatch(event(6, "addTask", json!({}))).unwrap();
+        assert_eq!(added.props["task-rows"][0][1], "Plan the launch");
+        assert_eq!(added.props["task-rows"][0][2], "due 2026-02-28");
+        assert_eq!(added.props["new-task-name-focus"], "focus");
+        assert_eq!(added.props["new-task-due-focus"], "");
     }
 
     #[test]

@@ -4,6 +4,16 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed - visible, focus-safe composer validation (#13689)
+
+Blank task names and malformed or impossible due dates now produce concise
+messages beside the composer before any workspace or id state changes. The
+invalid field remounts with native initial focus while adjacent error text stays
+in the accessibility tree; its error clears as soon as the value becomes valid.
+Both composer fields accept Enter, and web date parsing now rejects normalized
+dates such as `2026-02-31` instead of silently creating an undated task. Mosaic's
+separate dropped-`HostInput.a11y-label` gap is tracked in #13717.
+
 ### Added - focused first-task empty state (#13687)
 
 An empty project now explains the shortest path to a useful Inbox without

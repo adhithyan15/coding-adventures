@@ -1,5 +1,12 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — expose atomic composer validation (#13689)
+
+The native adapter now publishes plain-language task-name and due-date error
+slots. Invalid submissions leave the workspace and id sequence unchanged;
+correcting the relevant value clears its error, while transient validation
+state remains outside durable snapshots.
+
 ## [Unreleased] — pin the first-release upgrade fixture (#13614)
 
 The adapter now restores a committed TaskApp v0.1.0 semantic fixture in its unit
