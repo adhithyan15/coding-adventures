@@ -6,6 +6,15 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- **Source collection and package digests now match portable hashing v1.**
+  Extension and declared-source modes share the exact case-sensitive
+  26-component generated-directory registry, all five BUILD fronts, OCaml
+  source/metadata recognition, root-only unconditional `.opam` manifests, and
+  stable symlink/reparse rejection. Sorted normalized repository-relative
+  UTF-8 paths and exact raw file bodies are framed with unsigned 64-bit
+  big-endian lengths before SHA-256, so same-content renames and binary bytes
+  are observable without hashing absolute paths, host metadata, or locale.
+
 - **Extra CI toolchain declarations strip carriage return only as part of
   CRLF.** A final lone CR and a CR before trailing ASCII whitespace remain
   content and make the lookalike inert. The Go parser now matches the hardened
