@@ -11654,6 +11654,78 @@ the PR non-draft and mergeable with required CI and CodeQL checks queued, so
 auto-merge remains disabled until every final-head check is terminal and
 acceptable and no merge conflict exists.
 
+### Post-PR #13586 refresh and Ruby generated-directory hashing selection
+
+PR #13586 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral result. Guarded squash auto-merge was enabled
+only after GitHub reported final head
+`2377d4cc1f681d083ddedf48390960c10eda1103` clean and mergeable, and GitHub
+merged it as `e2fe54508b1d880955f83fa716fdd1058608c302` at
+2026-08-31T05:05:26Z without a manual merge command. The TypeScript portable
+source-hashing owner therefore advances to `merged` and the active PR is
+cleared.
+
+Exact `origin/main` then advanced through TaskApp release-lane PR #13587 to
+`d03479b941ddcc48277efe451be43d371c40d223`. The regenerated schema-3 inventory
+remains collision-clean and identity-neutral at 15 established lanes, 1,388
+implementation identities, 4,602 slots, 1,427 all-reported identities, bands
+175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml
+packages, zero collisions, and zero unknown buckets. The new workflow, release
+script and tests, documentation, WASM binary, and existing TaskApp package
+changes add no package root, BUILD front, recognized manifest, lockfile,
+dependency, or identity topology. The complete 606-owner/917-edge graph remains
+unique, dependency-complete, and acyclic; TypeScript dependency hashing is
+already owned, and no eligible unowned gap was discovered.
+
+The dependency/leverage pass selects
+`build-tool-ruby-generated-directory-hashing-exclusion` on branch
+`codex/build-tool-ruby-generated-directory-hashing-exclusion`. Both
+prerequisites are merged. The owner immediately unlocks Ruby portable source
+hashing and has four total unfinished descendants including Ruby dependency
+hashing and both hashing aggregates. It ties the ready Rust exclusion leaf on
+graph leverage, but closes older debt through the smaller shared `Pathname`
+traversal seam; TypeScript dependency hashing has only one total descendant,
+while Lua hashing/cache remains a broader from-scratch engine. Seven expected
+Ruby hasher, test, package README/changelog, root changelog, state, and roadmap
+paths overlap no live PR. Selection leaves 192 merged, 413 pending, and exactly
+this owner in progress.
+
+Tests-first execution produced the intended missing-registry error and showed
+both collectors admitting all 26 generated Ruby paths. The implementation adds
+one hasher-owned exact, case-sensitive registry and one shared top-down
+`Pathname`/`Find.prune` walker used before extension or declared-source
+selection. Both neutral source-collection fixtures are projected independently
+to Ruby while retaining `_Build`, `_build-example`, `Dist-newstyle`,
+`dist-newstyle-example`, and discovery-only `specs` paths. The existing
+no-follow boundary remains intact; an independent real NTFS directory-junction
+probe returned only the in-package source.
+
+The literal generic BUILD front passes 352 tests and 856 assertions with zero
+failures or errors, two expected platform skips, 91.0% line coverage, and
+76.27% branch coverage. Ruby syntax checks pass, and StandardRB reports exactly
+the same 27 pre-existing line-ending/style offenses as exact main with no
+offense on an added line. The neutral corpus validates 121 cases and 283 files;
+206 conformance tests pass with 23 expected platform skips, and 68 package-
+parity, capability, Haskell-capability, and OCaml-lock tests pass with two
+expected skips. The Go oracle passes module verification, all tests, vet, and
+trimpath build. Its real forced Ruby dry plan validates five reviewed orphan
+exemptions and reports all 305 Ruby packages WOULD-BUILD; the native Ruby CLI
+independently reports the same 305-package plan. Fresh ruby-advisory-db
+`c7562c2617416f453c366ffc976c804315365e33` reports no vulnerability. Inventory,
+state-DAG, diff, dependency, credential, authority, live-PR overlap, and three
+independent reviews are clean. No BUILD front, manifest, lockfile, dependency,
+package root, process, environment, network, credential, diagnostic, or
+execution authority changed.
+
+Ready-for-review PR #13592 opened from clean validated head
+`81776db2d758e345ceaaf15430167cd31f961d86` after a normal first push from exact
+`origin/main` `d03479b941ddcc48277efe451be43d371c40d223`. The target remote
+branch and prior PR were absent before publication; the exact seven-path diff
+is clean, and all seven other live PRs have zero exact overlap. GitHub reports
+the PR non-draft and mergeable with required CI and CodeQL checks queued or in
+progress, so auto-merge remains disabled until every final-head check is
+terminal and acceptable and no merge conflict exists.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

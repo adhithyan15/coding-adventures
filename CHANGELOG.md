@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Ruby build-tool generated-directory hashing exclusion
+
+- Excluded the complete exact, case-sensitive 26-component generated,
+  dependency, VCS, cache, and temporary-directory registry from both
+  extension and declared-source hashing before file selection.
+- Projected both language-neutral source-collection fixtures into native Ruby
+  tests while preserving case variants, near names, discovery-only `specs`
+  directories, and the existing no-follow boundary for directory links.
+
 ### TypeScript build-tool portable source hashing
 
 - Added OCaml `.ml`, `.mli`, and `.opam` source recognition plus exact

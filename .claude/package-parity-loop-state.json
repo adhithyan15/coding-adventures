@@ -12,23 +12,23 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 13586,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/13586",
-    "branch": "codex/build-tool-typescript-portable-source-hashing-conformance",
-    "implementation_revision": "f5eb17277a6b730651d6e3a20a45982c0e7fc1be",
+    "number": 13592,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/13592",
+    "branch": "codex/build-tool-ruby-generated-directory-hashing-exclusion",
+    "implementation_revision": "81776db2d758e345ceaaf15430167cd31f961d86",
     "status": "checks-pending",
-    "opened_at": "2026-08-31T04:38:25Z"
+    "opened_at": "2026-08-31T05:32:08Z"
   },
   "last_ci_action": {
-    "observed_at": "2026-08-31T04:38:31Z",
-    "pr_number": 13586,
+    "observed_at": "2026-08-31T05:32:16Z",
+    "pr_number": 13592,
     "run_id": null,
     "attempt": null,
     "status": "checks-pending",
-    "notes": "Opened ready-for-review PR #13586 from clean validated head 912f9ee4293b2f5d2b7192d3297b1fd0f77353d9 after a normal first push. GitHub reports it non-draft and mergeable; required CI and CodeQL checks are queued, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists."
+    "notes": "Opened ready-for-review PR #13592 from clean validated head 81776db2d758e345ceaaf15430167cd31f961d86 after a normal first push. GitHub reports it non-draft and mergeable; required CI and CodeQL checks are queued or in progress, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists."
   },
   "last_inventory": {
-    "revision": "e45d85dac5fd4e43d28510a650f608d590f1b824",
+    "revision": "d03479b941ddcc48277efe451be43d371c40d223",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1388,
@@ -171,10 +171,21 @@
     {
       "id": "build-tool-ruby-generated-directory-hashing-exclusion",
       "title": "Exclude generated directories from Ruby build-tool source hashing",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-dist-newstyle-discovery-exclusion-remaining-engines", "build-tool-generated-directory-hashing-conformance-corpus"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-ruby-generated-directory-hashing-exclusion",
+      "pr_number": 13592,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13592",
+      "opened_at": "2026-08-31T05:32:08Z",
+      "opened_revision": "81776db2d758e345ceaaf15430167cd31f961d86",
+      "selection_revision": "d03479b941ddcc48277efe451be43d371c40d223",
+      "implementation_revision": "253b5426922fdde143dccbda686a451da038bcdc",
+      "validation_revision": "253b5426922fdde143dccbda686a451da038bcdc",
+      "final_review_revision": "253b5426922fdde143dccbda686a451da038bcdc",
+      "final_review_notes": "Three independent read-only reviews clear the exact seven-path tranche. They reproduced exact 26-component fixture parity, both top-down source modes, case and near-name retention, discovery-only specs eligibility, real NTFS-junction non-traversal, full package coverage, legal lifecycle state, complete acyclic ownership, exact-main inventory, zero live-PR overlap, and the absence of added dependency, supply-chain, credential, process, environment, network, diagnostic, or execution authority.",
+      "selection_notes": "Selected after PR #13586 completed all 41 final-head checks acceptably and merged through guarded squash auto-merge as e2fe54508b1d880955f83fa716fdd1058608c302, followed by TaskApp release-lane PR #13587 on exact current main d03479b941ddcc48277efe451be43d371c40d223. The regenerated schema-3 inventory remains collision-clean and identity-neutral at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. The new TaskApp workflow, script, tests, documentation, WASM binary, and existing task package changes add no package root, BUILD front, recognized manifest, lockfile, dependency, or identity topology. The complete 606-owner/917-edge graph is unique, dependency-complete, and acyclic. Ruby has both prerequisites merged, immediately unlocks Ruby portable source hashing, and has four total unfinished descendants including both hashing aggregates. It ties Rust on graph leverage but is older debt with the smaller shared Pathname traversal seam; TypeScript dependency hashing has one total descendant, while Lua hashing/cache is a broader from-scratch engine. Seven expected Ruby hasher, test, package README/changelog, root changelog, state, and roadmap paths overlap no live PR, and no newly eligible unowned gap was found. Selection leaves 192 merged, 413 pending, and exactly this owner in progress.",
+      "validation_notes": "Tests-first execution produced the intended missing-registry error and showed both collectors including every forbidden generated Ruby path. The completed hasher owns the exact 26-component case-sensitive registry and one shared top-down Pathname/Find.prune walker used before extension or declared-source selection. Both neutral source-collection fixtures are projected independently into native Ruby paths; direct coverage retains _Build, _build-example, Dist-newstyle, dist-newstyle-example, and discovery-only specs paths. The existing no-follow boundary remains intact, and an independent real NTFS directory-junction probe returned only the in-package source. The literal generic BUILD front passes the complete 352-test, 856-assertion suite with zero failures or errors, two expected platform skips, 91.0% line coverage, and 76.27% branch coverage; Ruby syntax checks pass. StandardRB reports exactly the same 27 pre-existing line-ending and style offenses as origin/main and no offense on an added line. The neutral corpus validates 121 cases and 283 files; 206 conformance tests pass with 23 expected platform skips, while package-parity, capability, Haskell-capability, and OCaml-lock suites add 68 passing tests with two expected skips. The Go oracle passes module verification, all tests, vet, and trimpath build. Its real forced Ruby dry plan validates the five reviewed orphan exemptions and reports all 305 Ruby packages WOULD-BUILD; the native Ruby CLI independently discovers and reports the same 305-package plan. Fresh ruby-advisory-db c7562c261741 reports no vulnerability. The collision inventory remains unchanged and clean; the 606-owner/917-edge state is unique, complete, and acyclic at 192 merged, 413 pending, and one in progress. Three independent reviews clear correctness, exact fixture coverage, NTFS link boundaries, lifecycle, inventory, live-PR overlap, security, and scope. No BUILD, manifest, lockfile, dependency, package root, generated artifact, process, environment, network, credential, diagnostic, or execution authority changed.",
+      "publication_notes": "Opened ready-for-review PR #13592 from clean validated head 81776db2d758e345ceaaf15430167cd31f961d86 after a normal first push from exact origin/main d03479b941ddcc48277efe451be43d371c40d223. Immediately before publication, the target remote branch and prior PR were absent, the exact seven-path diff was clean, all seven other live PRs had zero exact overlap, and package, coverage, conformance, Go-oracle, real-plan, inventory, state-DAG, dependency, security, and three independent review gates were acceptable. GitHub reports the PR non-draft and mergeable with required CI and CodeQL checks queued or in progress, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists.",
       "notes": "Discovered in the post-#12683 source audit. Build-tool conformance requires every hasher to exclude generated, dependency, VCS, cache, and temporary directories, but Ruby's extension and declared-src collectors recursively visit every descendant file without pruning any directory component. Add a bounded exact-component skip registry with focused hashing fixtures, preserve source directories with similar names or different case, and keep the repair separate from discovery and process-free validation consumers."
     },
     {
@@ -868,13 +879,17 @@
     {
       "id": "build-tool-typescript-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the TypeScript build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-typescript-generated-directory-hashing-exclusion"],
       "branch": "codex/build-tool-typescript-portable-source-hashing-conformance",
       "pr_number": 13586,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/13586",
       "opened_at": "2026-08-31T04:38:25Z",
       "opened_revision": "912f9ee4293b2f5d2b7192d3297b1fd0f77353d9",
+      "merged_head_revision": "2377d4cc1f681d083ddedf48390960c10eda1103",
+      "merge_revision": "e2fe54508b1d880955f83fa716fdd1058608c302",
+      "merged_at": "2026-08-31T05:05:26Z",
+      "merge_notes": "All 41 final-head checks reached terminal acceptable conclusions: 34 successes, six expected skips, and one neutral result, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled guarded squash auto-merge, and GitHub merged PR #13586 without a manual merge command.",
       "selection_revision": "a8fc033619f68033562c6288a3f8353f6a4981a6",
       "selection_notes": "Selected immediately after PR #13582 completed 40 terminal acceptable checks and merged through guarded squash auto-merge as a8fc033619f68033562c6288a3f8353f6a4981a6. The exact-main schema-3 inventory remains identity-neutral and collision-clean at 15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427 all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880, 731 Rust singletons, zero OCaml packages, zero collisions, and zero unknown buckets. Since the stored e3ecc38f revision, only the same seven existing Lua discovery, test, documentation, and parity-ledger paths changed; no package root, BUILD, manifest, lockfile, dependency, or identity topology changed. Reconciliation retains the complete 606-owner/917-edge graph, with both newly unblocked Lua leaves already owned. This bounded TypeScript continuation has its sole prerequisite merged and three total descendants: it immediately unlocks TypeScript portable dependency hashing and advances both hashing aggregates. That closes an existing native hashing contract through one source module and focused tests, outranking the ready zero-descendant Lua identity leaf and broader from-scratch Lua hashing/cache implementation. The expected seven TypeScript hasher, test, README, changelog, state, roadmap, and root-changelog paths overlap no live PR; the target branch, remote branch, prior PR, and worktree path were absent before the fresh clean branch and worktree were created. Selection leaves 191 merged, 414 pending, and exactly this owner in progress.",
       "implementation_revision": "f5eb17277a6b730651d6e3a20a45982c0e7fc1be",

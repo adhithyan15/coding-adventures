@@ -6,6 +6,11 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- Source hashing now prunes the complete exact, case-sensitive 26-component
+  generated-directory registry before extension or declared-source matching.
+  Both neutral source-collection fixtures cover the native Ruby projection,
+  including retained case variants and near names, `specs` eligibility, and
+  the existing directory-link boundary.
 - Extra CI toolchain declarations now use a pure bounded Ruby snapshot
   evaluator that independently consumes all 11 language-neutral fixtures. It
   applies exact platform BUILD precedence, UTF-8 byte and logical-line limits,
