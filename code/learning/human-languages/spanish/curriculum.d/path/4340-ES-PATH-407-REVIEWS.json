@@ -1,8 +1,13 @@
 {
   "id": "ES-PATH-407-REVIEWS",
   "spine_node": "SPINE-ASK-LOCATION",
-  "lessons": ["ES-C407-location-recall-1", "ES-C407-location-recall-2"],
+  "lessons": [
+    "ES-C407-location-recall-1",
+    "ES-C407-location-recall-2"
+  ],
   "before": [],
-  "inline": ["ES-EXT-407-REVIEWS"],
+  "inline": [
+    "ES-EXT-407-REVIEWS"
+  ],
   "after": []
 }
