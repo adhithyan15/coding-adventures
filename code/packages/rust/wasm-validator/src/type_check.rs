@@ -184,7 +184,14 @@ fn is_numeric_or_vector(vt: ValueType) -> bool {
     matches!(vt, ValueType::I32 | ValueType::I64 | ValueType::F32 | ValueType::F64 | ValueType::V128)
 }
 
-fn is_assignable(actual: ValueType, expected: ValueType) -> bool {
+/// `actual` flows where `expected` is required. `module` supplies the W33
+/// first-slice nominal `sub`-chain (`code/specs/
+/// W33-wasm-gc-recursive-type-subtyping.md`) needed for the two new
+/// `ConcreteFuncRef`/`NonNullConcreteFuncRef` arms below -- every OTHER
+/// arm here predates W33 and never looks at `module` at all, so a
+/// `WasmModule` that never populated `type_subtyping` (see that field's
+/// own doc comment) behaves exactly as before.
+fn is_assignable(actual: ValueType, expected: ValueType, module: &WasmModule) -> bool {
     actual == expected
         || matches!((actual, expected), (ValueType::ConcreteFuncRef(_), ValueType::Funcref))
         || actual.is_bottom_subtype_of(&expected)
@@ -193,16 +200,32 @@ fn is_assignable(actual: ValueType, expected: ValueType) -> bool {
         // see `ValueType::is_non_null_subtype_of`'s own doc comment for why
         // both hops of each chain are direct rules, not composed ones.
         || actual.is_non_null_subtype_of(&expected)
+        // W33 first slice: a reference to a DECLARED NOMINAL SUBTYPE of a
+        // concrete function type flows wherever a reference to that
+        // supertype is expected -- `(ref $t2)`/`(ref null $t2)` is
+        // assignable to a `(ref $t1)`/`(ref null $t1)` slot whenever `$t2
+        // <: $t1` per the module's own `sub` chain (`type-subtyping.wast`'s
+        // "Subsumption" section: `$f2`'s param `(ref $t2)` flowing into
+        // `$f1`'s `(ref $t1)` param at a `call` site is EXACTLY this,
+        // combined with `ValueType`'s own pre-existing ref-covariance).
+        // Deliberately does NOT attempt canonical/structural equivalence
+        // between two independently-declared, unrelated-by-`sub` types
+        // even if byte-identical in shape -- that's W33's own explicitly
+        // out-of-scope item (3b), see `WasmModule::
+        // func_type_is_nominal_subtype`'s own doc comment.
+        || matches!((actual, expected), (ValueType::ConcreteFuncRef(i), ValueType::ConcreteFuncRef(j)) if module.func_type_is_nominal_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullConcreteFuncRef(i), ValueType::NonNullConcreteFuncRef(j)) if module.func_type_is_nominal_subtype(i, j))
+        || matches!((actual, expected), (ValueType::NonNullConcreteFuncRef(i), ValueType::ConcreteFuncRef(j)) if module.func_type_is_nominal_subtype(i, j))
 }
 
 /// Pop one value and require it to be assignable to `expected` (an
 /// `Unknown` actual or expected always matches -- see [`pop_val`]; a
 /// `Known` actual must satisfy [`is_assignable`], not bare equality, so a
 /// concrete function-type ref can flow wherever `funcref` is expected).
-fn pop_expect(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: ValueType) -> Result<(), ValidationError> {
+fn pop_expect(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: ValueType, module: &WasmModule) -> Result<(), ValidationError> {
     match pop_val(stack, frame)? {
         StackType::Unknown => Ok(()),
-        StackType::Known(actual) if is_assignable(actual, expected) => Ok(()),
+        StackType::Known(actual) if is_assignable(actual, expected, module) => Ok(()),
         StackType::Known(actual) => Err(ValidationError::Other(format!(
             "TypeMismatch: expected {expected:?}, found {actual:?}"
         ))),
@@ -211,9 +234,9 @@ fn pop_expect(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: ValueT
 
 /// Pop and verify a whole type list, in reverse (the last-listed type is
 /// on top of the stack -- e.g. `store`'s `[I32, T]` pops `T` first).
-fn pop_expect_many(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: &[ValueType]) -> Result<(), ValidationError> {
+fn pop_expect_many(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: &[ValueType], module: &WasmModule) -> Result<(), ValidationError> {
     for &t in expected.iter().rev() {
-        pop_expect(stack, frame, t)?;
+        pop_expect(stack, frame, t, module)?;
     }
     Ok(())
 }
@@ -225,9 +248,9 @@ fn pop_expect_many(stack: &mut Vec<StackType>, frame: &ControlFrame, expected: &
 /// see [`is_assignable`]). Arity must match exactly (WASM has no
 /// result-count subtyping); each pairwise result must be assignable in
 /// the same direction `pop_expect` already checks.
-fn results_assignable(callee_results: &[ValueType], function_results: &[ValueType]) -> bool {
+fn results_assignable(callee_results: &[ValueType], function_results: &[ValueType], module: &WasmModule) -> bool {
     callee_results.len() == function_results.len()
-        && callee_results.iter().zip(function_results.iter()).all(|(&a, &b)| is_assignable(a, b))
+        && callee_results.iter().zip(function_results.iter()).all(|(&a, &b)| is_assignable(a, b, module))
 }
 
 fn push_val(stack: &mut Vec<StackType>, t: ValueType) {
@@ -313,13 +336,14 @@ fn push_ctrl(
     kind: FrameKind,
     start_types: Vec<ValueType>,
     end_types: Vec<ValueType>,
+    module: &WasmModule,
 ) -> Result<(), ValidationError> {
     let outer = control_stack.last().cloned();
     // The enclosing frame is the "current" one for the purposes of popping
     // these params off of it (they live in the enclosing scope until this
     // call moves them into the new one).
     if let Some(outer_frame) = &outer {
-        pop_expect_many(stack, outer_frame, &start_types)?;
+        pop_expect_many(stack, outer_frame, &start_types, module)?;
     } else {
         pop_expect_many(
             stack,
@@ -332,6 +356,7 @@ fn push_ctrl(
                 saw_else: false,
             },
             &start_types,
+            module,
         )?;
     }
     let stack_height = stack.len();
@@ -351,12 +376,12 @@ fn push_ctrl(
 /// the stack (dead-code-tolerant), require nothing extra is left over
 /// (skipped while unreachable -- dead code may leave any shape, so it's
 /// simply flushed down to the frame's own floor instead), then pop it.
-fn pop_ctrl(stack: &mut Vec<StackType>, control_stack: &mut Vec<ControlFrame>) -> Result<ControlFrame, ValidationError> {
+fn pop_ctrl(stack: &mut Vec<StackType>, control_stack: &mut Vec<ControlFrame>, module: &WasmModule) -> Result<ControlFrame, ValidationError> {
     let frame = control_stack
         .last()
         .cloned()
         .ok_or_else(|| ValidationError::Other("unexpected `end`/`else`: no open block".to_string()))?;
-    pop_expect_many(stack, &frame, &frame.end_types)?;
+    pop_expect_many(stack, &frame, &frame.end_types, module)?;
     if frame.unreachable {
         stack.truncate(frame.stack_height);
     } else if stack.len() != frame.stack_height {
@@ -544,7 +569,7 @@ fn is_boolean_result_numeric(suffix: &str) -> bool {
 /// `*.const`, 1 for unary/`eqz`, 2 for binary/comparison) already come from
 /// `wasm-opcodes`' metadata, so this one rule covers the whole family
 /// instead of ~130 individually hand-listed opcodes.
-fn type_check_numeric(stack: &mut Vec<StackType>, frame: &ControlFrame, name: &str, stack_pop: u8) -> Result<(), ValidationError> {
+fn type_check_numeric(stack: &mut Vec<StackType>, frame: &ControlFrame, name: &str, stack_pop: u8, module: &WasmModule) -> Result<(), ValidationError> {
     let (prefix, suffix) = name.split_once('.').ok_or_else(|| ValidationError::Other(format!("malformed numeric opcode name {name:?}")))?;
     let operand_type = match prefix {
         "i32" => ValueType::I32,
@@ -559,7 +584,7 @@ fn type_check_numeric(stack: &mut Vec<StackType>, frame: &ControlFrame, name: &s
         return Ok(());
     }
     for _ in 0..stack_pop {
-        pop_expect(stack, frame, operand_type)?;
+        pop_expect(stack, frame, operand_type, module)?;
     }
     let result_type = if is_boolean_result_numeric(suffix) { ValueType::I32 } else { operand_type };
     push_val(stack, result_type);
@@ -783,7 +808,82 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
 
 /// Type-check every function body in `module`. The first ill-typed
 /// function (by index) determines the error.
+/// Validates every declared `(sub [final] $parent (func ...))` relationship
+/// in `module.types`/`module.type_subtyping` (W33 first slice: `code/specs/
+/// W33-wasm-gc-recursive-type-subtyping.md`) -- WITHIN this one module's own
+/// type section, by absolute type-section index (never cross-module; the
+/// canonical type-group equivalence that would need is item (3b), this
+/// slice's own explicitly out-of-scope piece).
+///
+/// Two things reject a declared `sub $parent`:
+/// - **`$parent` is final** (`type-subtyping.wast`'s own "Finality
+///   violation" section, lines 780-811): a type with no `sub` clause at
+///   all, or an explicit `(sub final ...)`, forecloses further subtyping,
+///   checked here rather than merely documented.
+/// - **The declared child/parent pair doesn't satisfy the GC proposal's
+///   real structural function-subtyping rule** (`func_is_structural_
+///   subtype`'s own doc comment) -- invariant arity, contravariant params,
+///   covariant results (`type-subtyping.wast` lines 944-949's arity-
+///   mismatch case, the pure-func member of its "Invalid subtyping
+///   definitions" section — every OTHER case there targets a struct/array
+///   body, which stays unparseable and therefore unreachable here, see
+///   `wasm-wast-parser`'s own struct/array doc comments).
+///
+/// Struct/array composite-type-kind invariance and field-list
+/// width/depth/variance rules (the SAME section's remaining cases) are not
+/// checked here at all -- this slice only ever produces `FuncType`
+/// entries in `module.types` (struct/array TEXT-format bodies are still
+/// unparseable), so there is nothing of that shape to validate yet.
+fn check_type_subtyping(module: &WasmModule) -> Result<(), ValidationError> {
+    for (i, child) in module.types.iter().enumerate() {
+        let Some(parent_idx) = module.type_subtyping_at(i as u32).supertype else {
+            continue;
+        };
+        let Some(parent) = module.types.get(parent_idx as usize) else {
+            return Err(ValidationError::TypeIndexOutOfBounds(format!(
+                "type #{i} declares supertype index {parent_idx}, but only {} types exist",
+                module.types.len()
+            )));
+        };
+        if module.type_subtyping_at(parent_idx).is_final {
+            return Err(ValidationError::Other(format!("sub type: type #{i} declares #{parent_idx} as its supertype, but #{parent_idx} is final")));
+        }
+        if !func_is_structural_subtype(child, parent, module) {
+            return Err(ValidationError::Other(format!(
+                "sub type: type #{i} is not a valid structural subtype of its declared supertype #{parent_idx} (arity must match, params contravariant, results covariant)"
+            )));
+        }
+    }
+    Ok(())
+}
+
+/// The GC proposal's real function-type structural subtyping rule --
+/// **invariant arity, contravariant params, covariant results** -- NOT
+/// function-references' narrower "invariant for now" rule (`code/specs/
+/// W33-wasm-gc-recursive-type-subtyping.md`'s own "Why this needs GC, not
+/// function-references" section verified this against the real
+/// `WebAssembly/function-references` `Overview.md` text; not re-litigated
+/// here).
+///
+/// `type-subtyping.wast` lines 28-31 demonstrate the real rule directly:
+/// `$f1 (func (param (ref $s')) (result anyref))`, its declared sub `$f2
+/// (func (param (ref $s)) (result (ref any)))` -- `$s <: $s'` is FALSE
+/// ($s' is $s's own sub), yet accepting the WIDER `(ref $s)` param in the
+/// subtype is correct because params are contravariant; the result
+/// position (`(ref any) <: anyref`) is covariant.
+fn func_is_structural_subtype(child: &FuncType, parent: &FuncType, module: &WasmModule) -> bool {
+    child.params.len() == parent.params.len()
+        && child.results.len() == parent.results.len()
+        // Contravariant: the PARENT's param must be assignable to the
+        // CHILD's param slot (the child may accept a WIDER param type).
+        && child.params.iter().zip(parent.params.iter()).all(|(&c, &p)| is_assignable(p, c, module))
+        // Covariant: the CHILD's result must be assignable to the
+        // PARENT's result slot (the child may return something NARROWER).
+        && child.results.iter().zip(parent.results.iter()).all(|(&c, &p)| is_assignable(c, p, module))
+}
+
 pub(crate) fn type_check_module(module: &WasmModule) -> Result<(), ValidationError> {
+    check_type_subtyping(module)?;
     let ctx = build_module_context(module)?;
     let imported_function_count = ctx.func_types.len() - module.functions.len();
 
@@ -873,7 +973,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         ][sub as usize];
                         let (input, output) = conversion_types(name)
                             .expect("trunc_sat names are all in conversion_types");
-                        pop_expect(&mut stack, frame!(), input)?;
+                        pop_expect(&mut stack, frame!(), input, ctx.module)?;
                         push_val(&mut stack, output);
                     }
                     0x08 => {
@@ -915,9 +1015,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // `dest` as `i64` for an `is64` memory 0, but
                         // `src`/`len` stay `i32` even there.
                         let dest_type = if ctx.memory_is64.get(memory as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length (segment-side, always i32)
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // source (segment-side, always i32)
-                        pop_expect(&mut stack, frame!(), dest_type)?; // destination
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // length (segment-side, always i32)
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // source (segment-side, always i32)
+                        pop_expect(&mut stack, frame!(), dest_type, ctx.module)?; // destination
                     }
                     0x09 => {
                         // `data.drop` (task #95): no stack operands, no
@@ -971,9 +1071,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         let dst_type = if dst_is64 { ValueType::I64 } else { ValueType::I32 };
                         let src_type = if src_is64 { ValueType::I64 } else { ValueType::I32 };
                         let len_type = if dst_is64 && src_is64 { ValueType::I64 } else { ValueType::I32 };
-                        pop_expect(&mut stack, frame!(), len_type)?; // length
-                        pop_expect(&mut stack, frame!(), src_type)?; // source
-                        pop_expect(&mut stack, frame!(), dst_type)?; // destination
+                        pop_expect(&mut stack, frame!(), len_type, ctx.module)?; // length
+                        pop_expect(&mut stack, frame!(), src_type, ctx.module)?; // source
+                        pop_expect(&mut stack, frame!(), dst_type, ctx.module)?; // destination
                     }
                     0x0B => {
                         if !ctx.has_memory {
@@ -993,9 +1093,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // dest/len-only widening (W26).
                         let is64 = ctx.memory_is64.get(memory as usize).copied().unwrap_or(false);
                         let idx_type = if is64 { ValueType::I64 } else { ValueType::I32 };
-                        pop_expect(&mut stack, frame!(), idx_type)?; // length
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // byte value
-                        pop_expect(&mut stack, frame!(), idx_type)?; // destination
+                        pop_expect(&mut stack, frame!(), idx_type, ctx.module)?; // length
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // byte value
+                        pop_expect(&mut stack, frame!(), idx_type, ctx.module)?; // destination
                     }
                     0x0F => {
                         // `table.grow` (task #98): pops `[init, delta]`
@@ -1018,8 +1118,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             _ => ValueType::Funcref,
                         };
                         let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
-                        pop_expect(&mut stack, frame!(), idx_type)?; // delta
-                        pop_expect(&mut stack, frame!(), elem_type)?; // init value
+                        pop_expect(&mut stack, frame!(), idx_type, ctx.module)?; // delta
+                        pop_expect(&mut stack, frame!(), elem_type, ctx.module)?; // init value
                         push_val(&mut stack, idx_type);
                     }
                     0x10 => {
@@ -1052,9 +1152,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             _ => ValueType::Funcref,
                         };
                         let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
-                        pop_expect(&mut stack, frame!(), idx_type)?; // length
-                        pop_expect(&mut stack, frame!(), elem_type)?; // value
-                        pop_expect(&mut stack, frame!(), idx_type)?; // destination
+                        pop_expect(&mut stack, frame!(), idx_type, ctx.module)?; // length
+                        pop_expect(&mut stack, frame!(), elem_type, ctx.module)?; // value
+                        pop_expect(&mut stack, frame!(), idx_type, ctx.module)?; // destination
                     }
                     0x0C => {
                         // `table.init` (task #97): pops `[dest, src, len]`,
@@ -1084,9 +1184,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             err!("table.init references table index {table_idx}, but only {} tables exist", ctx.table_count);
                         }
                         let dest_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // length (segment-side, always i32)
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?; // source (segment-side, always i32)
-                        pop_expect(&mut stack, frame!(), dest_type)?; // destination
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // length (segment-side, always i32)
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // source (segment-side, always i32)
+                        pop_expect(&mut stack, frame!(), dest_type, ctx.module)?; // destination
                     }
                     0x0D => {
                         // `elem.drop` (task #97): no stack operands, no
@@ -1141,9 +1241,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         let dst_type = if dst_is64 { ValueType::I64 } else { ValueType::I32 };
                         let src_type = if src_is64 { ValueType::I64 } else { ValueType::I32 };
                         let len_type = if dst_is64 && src_is64 { ValueType::I64 } else { ValueType::I32 };
-                        pop_expect(&mut stack, frame!(), len_type)?; // length
-                        pop_expect(&mut stack, frame!(), src_type)?; // source
-                        pop_expect(&mut stack, frame!(), dst_type)?; // destination
+                        pop_expect(&mut stack, frame!(), len_type, ctx.module)?; // length
+                        pop_expect(&mut stack, frame!(), src_type, ctx.module)?; // source
+                        pop_expect(&mut stack, frame!(), dst_type, ctx.module)?; // destination
                     }
                     other => err!("unsupported 0xFC sub-opcode {other:#x}"),
                 }
@@ -1201,7 +1301,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     0x1C => {
                         // ref.i31 (W20; this crate previously called it
                         // i31.new): pops I32, pushes i31ref.
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
                         stack.push(StackType::Unknown);
                     }
                     0x1D => {
@@ -1346,24 +1446,24 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // block
                 let (params, results, size) = decode_blocktype(ctx.module, code, offset)?;
                 offset += size;
-                push_ctrl(&mut stack, &mut control_stack, FrameKind::Block, params, results)?;
+                push_ctrl(&mut stack, &mut control_stack, FrameKind::Block, params, results, ctx.module)?;
             }
             0x03 => {
                 // loop
                 let (params, results, size) = decode_blocktype(ctx.module, code, offset)?;
                 offset += size;
-                push_ctrl(&mut stack, &mut control_stack, FrameKind::Loop, params, results)?;
+                push_ctrl(&mut stack, &mut control_stack, FrameKind::Loop, params, results, ctx.module)?;
             }
             0x04 => {
                 // if
                 let (params, results, size) = decode_blocktype(ctx.module, code, offset)?;
                 offset += size;
-                pop_expect(&mut stack, frame!(), ValueType::I32)?; // condition
-                push_ctrl(&mut stack, &mut control_stack, FrameKind::If, params, results)?;
+                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // condition
+                push_ctrl(&mut stack, &mut control_stack, FrameKind::If, params, results, ctx.module)?;
             }
             0x05 => {
                 // else
-                let closed = pop_ctrl(&mut stack, &mut control_stack)?;
+                let closed = pop_ctrl(&mut stack, &mut control_stack, ctx.module)?;
                 if closed.kind != FrameKind::If || closed.saw_else {
                     err!("unexpected `else` (not inside an `if`, or `if` already had one)");
                 }
@@ -1401,7 +1501,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 let tag_type = ctx.tag_types.get(tag_idx as usize).ok_or_else(|| {
                     ValidationError::Other(format!("function #{func_idx}: unknown tag {tag_idx}"))
                 })?;
-                pop_expect_many(&mut stack, frame!(), &tag_type.params)?;
+                pop_expect_many(&mut stack, frame!(), &tag_type.params, ctx.module)?;
                 mark_unreachable(&mut stack, frame_mut!());
             }
             0x0A => {
@@ -1416,7 +1516,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // `assert_invalid` cases (`(func (throw_ref))`, `(func
                 // (block (throw_ref)))`, both "type mismatch") are exactly
                 // this: an empty stack has nothing to pop.
-                pop_expect(&mut stack, frame!(), ValueType::Exnref)?;
+                pop_expect(&mut stack, frame!(), ValueType::Exnref, ctx.module)?;
                 mark_unreachable(&mut stack, frame_mut!());
             }
             0x1F => {
@@ -1495,7 +1595,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         other => err!("try_table: unknown catch clause kind {other}"),
                     }
                 }
-                push_ctrl(&mut stack, &mut control_stack, FrameKind::Block, params, results)?;
+                push_ctrl(&mut stack, &mut control_stack, FrameKind::Block, params, results, ctx.module)?;
             }
             0x0B => {
                 // end
@@ -1516,7 +1616,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         code.len() - offset
                     );
                 }
-                let closed = pop_ctrl(&mut stack, &mut control_stack)?;
+                let closed = pop_ctrl(&mut stack, &mut control_stack, ctx.module)?;
                 if closed.kind == FrameKind::If && !closed.saw_else && closed.start_types != closed.end_types {
                     err!("`if` without a matching `else` must have identical param and result types");
                 }
@@ -1529,18 +1629,18 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 let target = resolve_label_target(control_stack.len(), depth)
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: br target {depth} out of range")))?;
                 let types = label_types(&control_stack[target]).to_vec();
-                pop_expect_many(&mut stack, frame!(), &types)?;
+                pop_expect_many(&mut stack, frame!(), &types, ctx.module)?;
                 mark_unreachable(&mut stack, frame_mut!());
             }
             0x0D => {
                 // br_if
                 let (depth, size) = decode_idx(code, offset)?;
                 offset += size;
-                pop_expect(&mut stack, frame!(), ValueType::I32)?; // condition
+                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // condition
                 let target = resolve_label_target(control_stack.len(), depth)
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: br_if target {depth} out of range")))?;
                 let types = label_types(&control_stack[target]).to_vec();
-                pop_expect_many(&mut stack, frame!(), &types)?;
+                pop_expect_many(&mut stack, frame!(), &types, ctx.module)?;
                 push_vals(&mut stack, &types); // not taken: stack preserved
             }
             0x0E => {
@@ -1556,7 +1656,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 size += sz;
                 offset += size;
 
-                pop_expect(&mut stack, frame!(), ValueType::I32)?; // index
+                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // index
                 let default_target = resolve_label_target(control_stack.len(), default_label)
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: br_table default target {default_label} out of range")))?;
                 let default_types = label_types(&control_stack[default_target]).to_vec();
@@ -1569,10 +1669,10 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     }
                     // Verify without permanently consuming (every target
                     // must type-check against the SAME current stack).
-                    pop_expect_many(&mut stack, frame!(), &types)?;
+                    pop_expect_many(&mut stack, frame!(), &types, ctx.module)?;
                     push_vals(&mut stack, &types);
                 }
-                pop_expect_many(&mut stack, frame!(), &default_types)?;
+                pop_expect_many(&mut stack, frame!(), &default_types, ctx.module)?;
                 mark_unreachable(&mut stack, frame_mut!());
             }
             0x0F => {
@@ -1582,7 +1682,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: return with no open block")))?
                     .end_types
                     .clone();
-                pop_expect_many(&mut stack, frame!(), &results)?;
+                pop_expect_many(&mut stack, frame!(), &results, ctx.module)?;
                 mark_unreachable(&mut stack, frame_mut!());
             }
             0x10 => {
@@ -1593,7 +1693,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     .func_types
                     .get(callee as usize)
                     .ok_or_else(|| ValidationError::FuncIndexOutOfBounds(format!("function #{func_idx}: call references function index {callee}, but only {} functions exist", ctx.func_types.len())))?;
-                pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
+                pop_expect_many(&mut stack, frame!(), &callee_type.params, ctx.module)?;
                 push_vals(&mut stack, &callee_type.results);
             }
             0x11 => {
@@ -1617,8 +1717,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // W26 (table64): the table-index operand is i64 for an
                 // `is64` table, i32 otherwise.
                 let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
-                pop_expect(&mut stack, frame!(), idx_type)?; // table index
-                pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
+                pop_expect(&mut stack, frame!(), idx_type, ctx.module)?; // table index
+                pop_expect_many(&mut stack, frame!(), &callee_type.params, ctx.module)?;
                 push_vals(&mut stack, &callee_type.results);
             }
             0x12 => {
@@ -1642,10 +1742,10 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     .first()
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: return_call with no open block")))?
                     .end_types;
-                if !results_assignable(&callee_type.results, function_results) {
+                if !results_assignable(&callee_type.results, function_results, ctx.module) {
                     err!("return_call to function #{callee} returning {:?}, but the current function returns {function_results:?}", callee_type.results);
                 }
-                pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
+                pop_expect_many(&mut stack, frame!(), &callee_type.params, ctx.module)?;
                 mark_unreachable(&mut stack, frame_mut!());
             }
             0x13 => {
@@ -1669,14 +1769,14 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     .first()
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: return_call_indirect with no open block")))?
                     .end_types;
-                if !results_assignable(&callee_type.results, function_results) {
+                if !results_assignable(&callee_type.results, function_results, ctx.module) {
                     err!("return_call_indirect to type #{type_idx} returning {:?}, but the current function returns {function_results:?}", callee_type.results);
                 }
                 // W26 (table64): same is64-dependent table-index operand
                 // width as `call_indirect` (0x11) above.
                 let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
-                pop_expect(&mut stack, frame!(), idx_type)?; // table index
-                pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
+                pop_expect(&mut stack, frame!(), idx_type, ctx.module)?; // table index
+                pop_expect_many(&mut stack, frame!(), &callee_type.params, ctx.module)?;
                 mark_unreachable(&mut stack, frame_mut!());
             }
             0x14 => {
@@ -1698,8 +1798,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     .types
                     .get(type_idx as usize)
                     .ok_or_else(|| ValidationError::TypeIndexOutOfBounds(format!("function #{func_idx}: call_ref references type index {type_idx}, but only {} types exist", ctx.module.types.len())))?;
-                pop_expect(&mut stack, frame!(), ValueType::ConcreteFuncRef(type_idx))?; // the ref operand
-                pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
+                pop_expect(&mut stack, frame!(), ValueType::ConcreteFuncRef(type_idx), ctx.module)?; // the ref operand
+                pop_expect_many(&mut stack, frame!(), &callee_type.params, ctx.module)?;
                 push_vals(&mut stack, &callee_type.results);
             }
             0x15 => {
@@ -1719,11 +1819,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     .first()
                     .ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: return_call_ref with no open block")))?
                     .end_types;
-                if !results_assignable(&callee_type.results, function_results) {
+                if !results_assignable(&callee_type.results, function_results, ctx.module) {
                     err!("return_call_ref to type #{type_idx} returning {:?}, but the current function returns {function_results:?}", callee_type.results);
                 }
-                pop_expect(&mut stack, frame!(), ValueType::ConcreteFuncRef(type_idx))?; // the ref operand
-                pop_expect_many(&mut stack, frame!(), &callee_type.params)?;
+                pop_expect(&mut stack, frame!(), ValueType::ConcreteFuncRef(type_idx), ctx.module)?; // the ref operand
+                pop_expect_many(&mut stack, frame!(), &callee_type.params, ctx.module)?;
                 mark_unreachable(&mut stack, frame_mut!());
             }
 
@@ -1754,7 +1854,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // unparseable, so these three cases passed only via a
                 // lucky parse failure, never by this check actually
                 // running.
-                pop_expect(&mut stack, frame!(), ValueType::I32)?; // condition
+                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // condition
                 let t2 = pop_val(&mut stack, frame!())?;
                 let t1 = pop_val(&mut stack, frame!())?;
                 let result = match (t1, t2) {
@@ -1784,14 +1884,14 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 let (idx, size) = decode_idx(code, offset)?;
                 offset += size;
                 let ty = *locals.get(idx as usize).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: local.set index {idx} out of bounds ({} locals)", locals.len())))?;
-                pop_expect(&mut stack, frame!(), ty)?;
+                pop_expect(&mut stack, frame!(), ty, ctx.module)?;
             }
             0x22 => {
                 // local.tee
                 let (idx, size) = decode_idx(code, offset)?;
                 offset += size;
                 let ty = *locals.get(idx as usize).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: local.tee index {idx} out of bounds ({} locals)", locals.len())))?;
-                pop_expect(&mut stack, frame!(), ty)?;
+                pop_expect(&mut stack, frame!(), ty, ctx.module)?;
                 push_val(&mut stack, ty);
             }
             0x23 => {
@@ -1817,7 +1917,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 if !gt.mutable {
                     err!("global.set on immutable global {idx}");
                 }
-                pop_expect(&mut stack, frame!(), gt.value_type)?;
+                pop_expect(&mut stack, frame!(), gt.value_type, ctx.module)?;
             }
             0x25 => {
                 // table.get <tableidx> (WASM17, generalized task #96):
@@ -1840,7 +1940,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // W26 (table64): the index operand is i64 for an `is64`
                 // table, i32 otherwise.
                 let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
-                pop_expect(&mut stack, frame!(), idx_type)?;
+                pop_expect(&mut stack, frame!(), idx_type, ctx.module)?;
                 push_val(&mut stack, elem_type);
             }
             0x26 => {
@@ -1858,8 +1958,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     _ => ValueType::Funcref,
                 };
                 let idx_type = if ctx.table_is64.get(table_idx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
-                pop_expect(&mut stack, frame!(), elem_type)?;
-                pop_expect(&mut stack, frame!(), idx_type)?;
+                pop_expect(&mut stack, frame!(), elem_type, ctx.module)?;
+                pop_expect(&mut stack, frame!(), idx_type, ctx.module)?;
             }
 
             // ── Memory ───────────────────────────────────────────────────────
@@ -1910,11 +2010,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // bounds-checked above) is `is64`.
                 let addr_type = if ctx.memory_is64.get(memidx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
                 if info.stack_push == 1 {
-                    pop_expect(&mut stack, frame!(), addr_type)?; // address
+                    pop_expect(&mut stack, frame!(), addr_type, ctx.module)?; // address
                     push_val(&mut stack, value_type);
                 } else {
-                    pop_expect(&mut stack, frame!(), value_type)?; // stored value (top)
-                    pop_expect(&mut stack, frame!(), addr_type)?; // address
+                    pop_expect(&mut stack, frame!(), value_type, ctx.module)?; // stored value (top)
+                    pop_expect(&mut stack, frame!(), addr_type, ctx.module)?; // address
                 }
             }
             0x3F => {
@@ -1949,7 +2049,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // W25 (memory64): delta/result types are `I64` for an
                 // `is64` memory, same shape as `memory.size` above.
                 let grow_type = if ctx.memory_is64.get(memidx as usize).copied().unwrap_or(false) { ValueType::I64 } else { ValueType::I32 };
-                pop_expect(&mut stack, frame!(), grow_type)?;
+                pop_expect(&mut stack, frame!(), grow_type, ctx.module)?;
                 push_val(&mut stack, grow_type);
             }
 
@@ -2004,25 +2104,25 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     match atomic_op.kind {
                         wasm_opcodes::AtomicOpKind::Load => {
                             let value_type = atomic_op.value_type.ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: atomic op {} has no value type", atomic_op.name)))?;
-                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                            pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // address
                             push_val(&mut stack, value_type);
                         }
                         wasm_opcodes::AtomicOpKind::Store => {
                             let value_type = atomic_op.value_type.ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: atomic op {} has no value type", atomic_op.name)))?;
-                            pop_expect(&mut stack, frame!(), value_type)?; // value
-                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                            pop_expect(&mut stack, frame!(), value_type, ctx.module)?; // value
+                            pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // address
                         }
                         wasm_opcodes::AtomicOpKind::Rmw => {
                             let value_type = atomic_op.value_type.ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: atomic op {} has no value type", atomic_op.name)))?;
-                            pop_expect(&mut stack, frame!(), value_type)?; // operand
-                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                            pop_expect(&mut stack, frame!(), value_type, ctx.module)?; // operand
+                            pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // address
                             push_val(&mut stack, value_type); // old value
                         }
                         wasm_opcodes::AtomicOpKind::Cmpxchg => {
                             let value_type = atomic_op.value_type.ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: atomic op {} has no value type", atomic_op.name)))?;
-                            pop_expect(&mut stack, frame!(), value_type)?; // replacement
-                            pop_expect(&mut stack, frame!(), value_type)?; // expected
-                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                            pop_expect(&mut stack, frame!(), value_type, ctx.module)?; // replacement
+                            pop_expect(&mut stack, frame!(), value_type, ctx.module)?; // expected
+                            pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // address
                             push_val(&mut stack, value_type); // old value
                         }
                         wasm_opcodes::AtomicOpKind::Notify => {
@@ -2030,8 +2130,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             // i32), push i32 (how many woken -- always 0
                             // with one native thread, see AtomicOpKind::
                             // Notify's own doc comment).
-                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // count
-                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                            pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // count
+                            pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // address
                             push_val(&mut stack, ValueType::I32);
                         }
                         wasm_opcodes::AtomicOpKind::Wait => {
@@ -2039,9 +2139,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             // i32, expected: value_type, timeout: i64),
                             // push i32 (result code).
                             let value_type = atomic_op.value_type.ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: atomic op {} has no value type", atomic_op.name)))?;
-                            pop_expect(&mut stack, frame!(), ValueType::I64)?; // timeout
-                            pop_expect(&mut stack, frame!(), value_type)?; // expected
-                            pop_expect(&mut stack, frame!(), ValueType::I32)?; // address
+                            pop_expect(&mut stack, frame!(), ValueType::I64, ctx.module)?; // timeout
+                            pop_expect(&mut stack, frame!(), value_type, ctx.module)?; // expected
+                            pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?; // address
                             push_val(&mut stack, ValueType::I32);
                         }
                         wasm_opcodes::AtomicOpKind::Fence => unreachable!("handled in the branch above"),
@@ -2092,8 +2192,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // before any further bytes) -- the type checker's
                         // stack effect doesn't depend on this ordering.
                         read_shuffle_lane_indices(code, &mut offset, func_idx)?;
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::Splat
@@ -2103,26 +2203,26 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // "pop I32, push V128" shape as i32x4.splat --
                         // only the low bits of the popped i32 matter at
                         // runtime, invisible to the type checker.
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::SplatI64x2 => {
                         // i64x2.splat (SIMD widen PR16): the FIRST splat
                         // that pops I64 instead of I32.
-                        pop_expect(&mut stack, frame!(), ValueType::I64)?;
+                        pop_expect(&mut stack, frame!(), ValueType::I64, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::SplatF32x4 => {
                         // f32x4.splat (SIMD widen PR17): the FIRST
                         // floating-point-typed SIMD op in this crate's
                         // type rules -- pop F32, push V128.
-                        pop_expect(&mut stack, frame!(), ValueType::F32)?;
+                        pop_expect(&mut stack, frame!(), ValueType::F32, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::SplatF64x2 => {
                         // f64x2.splat (SIMD widen PR17): pop F64, push
                         // V128. Same shape as SplatF32x4.
-                        pop_expect(&mut stack, frame!(), ValueType::F64)?;
+                        pop_expect(&mut stack, frame!(), ValueType::F64, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::Add
@@ -2301,8 +2401,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // (see wasm-opcodes' `SimdOpKind::
                         // RelaxedDotI8x16I7x16S` doc comment) is entirely
                         // a runtime concern, invisible here.
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::Eq
@@ -2367,8 +2467,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // PR32) join too, a direct 2-lane mirror of the
                         // `f32x4` comparison family just above -- still
                         // just two V128 pops, one V128 push.
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::Neg
@@ -2493,7 +2593,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // `SimdOpKind::NearestF32x4`'s own doc comment in
                         // wasm-opcodes) is entirely a runtime concern,
                         // invisible here.
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::Bitselect
@@ -2544,9 +2644,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // doc comment in wasm-opcodes) -- entirely a
                         // runtime concern, invisible here: still just
                         // three V128 pops, one V128 push.
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::ExtractLane => {
@@ -2564,7 +2664,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 "function #{func_idx}: i32x4.extract_lane lane index {lane_idx} out of range (must be 0-3)"
                             )));
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::I32);
                     }
                     wasm_opcodes::SimdOpKind::ExtractLaneI8x16S | wasm_opcodes::SimdOpKind::ExtractLaneI8x16U => {
@@ -2587,7 +2687,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 "function #{func_idx}: i8x16.extract_lane_s/u lane index {lane_idx} out of range (must be 0-15)"
                             )));
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::I32);
                     }
                     wasm_opcodes::SimdOpKind::ReplaceLaneI8x16 => {
@@ -2610,8 +2710,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 "function #{func_idx}: i8x16.replace_lane lane index {lane_idx} out of range (must be 0-15)"
                             )));
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?;
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::ExtractLaneI16x8S | wasm_opcodes::SimdOpKind::ExtractLaneI16x8U => {
@@ -2624,7 +2724,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 "function #{func_idx}: i16x8.extract_lane_s/u lane index {lane_idx} out of range (must be 0-7)"
                             )));
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::I32);
                     }
                     wasm_opcodes::SimdOpKind::ReplaceLaneI16x8 => {
@@ -2637,8 +2737,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 "function #{func_idx}: i16x8.replace_lane lane index {lane_idx} out of range (must be 0-7)"
                             )));
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?;
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::ReplaceLaneI32x4 => {
@@ -2651,8 +2751,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 "function #{func_idx}: i32x4.replace_lane lane index {lane_idx} out of range (must be 0-3)"
                             )));
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?;
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::ExtractLaneI64x2 => {
@@ -2668,7 +2768,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 "function #{func_idx}: i64x2.extract_lane lane index {lane_idx} out of range (must be 0-1)"
                             )));
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::I64);
                     }
                     wasm_opcodes::SimdOpKind::ReplaceLaneI64x2 => {
@@ -2682,8 +2782,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 "function #{func_idx}: i64x2.replace_lane lane index {lane_idx} out of range (must be 0-1)"
                             )));
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::I64)?;
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::I64, ctx.module)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::ExtractLaneF32x4 => {
@@ -2697,7 +2797,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 "function #{func_idx}: f32x4.extract_lane lane index {lane_idx} out of range (must be 0-3)"
                             )));
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::F32);
                     }
                     wasm_opcodes::SimdOpKind::ReplaceLaneF32x4 => {
@@ -2711,8 +2811,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 "function #{func_idx}: f32x4.replace_lane lane index {lane_idx} out of range (must be 0-3)"
                             )));
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::F32)?;
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::F32, ctx.module)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::ExtractLaneF64x2 => {
@@ -2724,7 +2824,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 "function #{func_idx}: f64x2.extract_lane lane index {lane_idx} out of range (must be 0-1)"
                             )));
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::F64);
                     }
                     wasm_opcodes::SimdOpKind::ReplaceLaneF64x2 => {
@@ -2740,8 +2840,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 "function #{func_idx}: f64x2.replace_lane lane index {lane_idx} out of range (must be 0-1)"
                             )));
                         }
-                        pop_expect(&mut stack, frame!(), ValueType::F64)?;
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::F64, ctx.module)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::AnyTrue
@@ -2757,7 +2857,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // above, but with NO lane-index immediate (these
                         // reduce over ALL lanes, not select one) -- pops
                         // one v128, pushes one i32.
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::I32);
                     }
                     wasm_opcodes::SimdOpKind::ShlI8x16
@@ -2778,8 +2878,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // so the i32 is on TOP of stack and must be
                         // popped FIRST, then the v128, matching
                         // wasm-execution's own pop order.
-                        pop_expect(&mut stack, frame!(), ValueType::I32)?;
-                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::Load
@@ -2860,12 +2960,12 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 // independently sign/zero-extended
                                 // ("load_extend") changes nothing at the
                                 // TYPE level, only at execution time.
-                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
                                 push_val(&mut stack, ValueType::V128);
                             }
                             wasm_opcodes::SimdOpKind::Store => {
-                                pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                                pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
                             }
                             _ => unreachable!("only Load/Store/Load8Splat/Load16Splat/Load32Splat/Load64Splat/Load32Zero/Load64Zero/Load8x8S/Load8x8U/Load16x4S/Load16x4U/Load32x2S/Load32x2U reach this arm"),
                         }
@@ -2925,8 +3025,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 // preserved at runtime, invisible at the
                                 // type level), pop the i32 address, push
                                 // the updated v128.
-                                pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                                pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
                                 push_val(&mut stack, ValueType::V128);
                             }
                             wasm_opcodes::SimdOpKind::Store8Lane => {
@@ -2934,8 +3034,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 // the i32 address, no result -- same
                                 // pop-order and no-push shape as `Store`
                                 // above.
-                                pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                                pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
                             }
                             _ => unreachable!("only Load8Lane/Store8Lane reach this arm"),
                         }
@@ -2994,8 +3094,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 // preserved at runtime, invisible at the
                                 // type level), pop the i32 address, push
                                 // the updated v128.
-                                pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                                pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
                                 push_val(&mut stack, ValueType::V128);
                             }
                             wasm_opcodes::SimdOpKind::Store16Lane => {
@@ -3003,8 +3103,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 // the i32 address, no result -- same
                                 // pop-order and no-push shape as
                                 // `Store8Lane` above.
-                                pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                                pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
                             }
                             _ => unreachable!("only Load16Lane/Store16Lane reach this arm"),
                         }
@@ -3063,8 +3163,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 // preserved at runtime, invisible at the
                                 // type level), pop the i32 address, push
                                 // the updated v128.
-                                pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                                pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
                                 push_val(&mut stack, ValueType::V128);
                             }
                             wasm_opcodes::SimdOpKind::Store32Lane => {
@@ -3072,8 +3172,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 // the i32 address, no result -- same
                                 // pop-order and no-push shape as
                                 // `Store16Lane` above.
-                                pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                                pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
                             }
                             _ => unreachable!("only Load32Lane/Store32Lane reach this arm"),
                         }
@@ -3132,8 +3232,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 // preserved at runtime, invisible at the
                                 // type level), pop the i32 address, push
                                 // the updated v128.
-                                pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                                pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
                                 push_val(&mut stack, ValueType::V128);
                             }
                             wasm_opcodes::SimdOpKind::Store64Lane => {
@@ -3141,8 +3241,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 // the i32 address, no result -- same
                                 // pop-order and no-push shape as
                                 // `Store32Lane` above.
-                                pop_expect(&mut stack, frame!(), ValueType::V128)?;
-                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                                pop_expect(&mut stack, frame!(), ValueType::V128, ctx.module)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32, ctx.module)?;
                             }
                             _ => unreachable!("only Load64Lane/Store64Lane reach this arm"),
                         }
@@ -3154,7 +3254,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
             0xA7..=0xC4 => {
                 let info = get_opcode(byte).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: unknown conversion opcode {byte:#x}")))?;
                 let (input, output) = conversion_types(info.name).ok_or_else(|| ValidationError::Other(format!("function #{func_idx}: no type rule for conversion opcode {}", info.name)))?;
-                pop_expect(&mut stack, frame!(), input)?;
+                pop_expect(&mut stack, frame!(), input, ctx.module)?;
                 push_val(&mut stack, output);
             }
 
@@ -3182,7 +3282,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         ["f64"] => offset += 8,
                         _ => err!("unexpected immediates {:?} on numeric opcode {}", info.immediates, info.name),
                     }
-                    type_check_numeric(&mut stack, frame!(), info.name, info.stack_pop)?;
+                    type_check_numeric(&mut stack, frame!(), info.name, info.stack_pop, ctx.module)?;
                 } else {
                     err!("no type rule implemented for opcode {} (category {})", info.name, info.category);
                 }
