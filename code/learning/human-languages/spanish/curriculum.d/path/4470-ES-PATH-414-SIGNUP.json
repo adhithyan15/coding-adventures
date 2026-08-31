@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-414-SIGNUP",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "ES-C414-apuntarse",
+    "ES-C414-recepcion"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-414-SIGNUP"
+  ],
+  "after": []
+}
