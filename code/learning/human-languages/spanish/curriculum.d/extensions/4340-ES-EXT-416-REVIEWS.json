@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-416-REVIEWS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can retrieve stay and May in a short hotel exchange.",
+  "prerequisites": [
+    "ES-EXT-416-STAY"
+  ],
+  "lessons": [
+    "ES-C416-stay-recall-1",
+    "ES-C416-stay-recall-2"
+  ]
+}

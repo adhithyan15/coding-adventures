@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-416-STAY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can identify the action and month of a hotel stay.",
+  "prerequisites": [
+    "ES-EXT-415-REVIEWS"
+  ],
+  "lessons": [
+    "ES-C416-quedarse",
+    "ES-C416-mayo"
+  ]
+}

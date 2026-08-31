@@ -30,7 +30,9 @@
     "ES-PATH-409-PLANNING",
     "ES-PATH-409-REVIEWS",
     "ES-PATH-414-SIGNUP",
-    "ES-PATH-414-REVIEWS"
+    "ES-PATH-414-REVIEWS",
+    "ES-PATH-416-STAY",
+    "ES-PATH-416-REVIEWS"
   ],
   "omits": [
     "VERB-GIVE"
