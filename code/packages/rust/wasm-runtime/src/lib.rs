@@ -1792,10 +1792,20 @@ impl WasmRuntime {
                 // vendored corpus directive passes one as a top-level
                 // `invoke` argument either (only appears as a global/
                 // function-result declared type in `ref_null.wast`).
+                // W32 second slice: `NonNullStructRef`/
+                // `NonNullConcreteFuncRef` join this same lossy-legacy-path
+                // placeholder group -- no vendored corpus directive passes
+                // one as a top-level `invoke` argument here either (this
+                // slice's own real corpus wins, `call_ref.wast`/
+                // `return_call_ref.wast`, exercise non-null concrete refs
+                // only as PARAMS/LOCALS/GLOBALS inside a function body,
+                // never as a top-level `call()` boundary argument).
                 ValueType::Anyref
                 | ValueType::I31ref
                 | ValueType::StructRef(_)
                 | ValueType::ConcreteFuncRef(_)
+                | ValueType::NonNullStructRef(_)
+                | ValueType::NonNullConcreteFuncRef(_)
                 | ValueType::Funcref
                 | ValueType::Externref
                 | ValueType::Exnref

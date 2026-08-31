@@ -2,6 +2,40 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.14] - 2026-08-31 (W32 second slice — non-null concrete reference types)
+
+### Added
+
+- **`ValueType::NonNullStructRef(u32)`/`NonNullConcreteFuncRef(u32)`**: the
+  **non-null concrete reference types** from the GC/function-references
+  proposals — `(ref $T)`/`(ref $t)`, no `null` keyword — per
+  `code/specs/W32-wasm-non-null-concrete-reference-types.md`'s addendum
+  section 1. Binary tag `0x64 <LEB128(idx)>`, independently verified
+  against the real reference interpreter's `interpreter/binary/decode.ml`
+  (`ref_type`'s `-0x1c -> (NoNull, heap_type s)` arm: `-28 mod 128 =
+  0x64`) — one more than `StructRef`/`ConcreteFuncRef`'s existing `0x63`
+  ("nullable"), matching the spec document's own claimed value exactly
+  (no discrepancy to fix here, unlike W24's `exnref` bug or this same
+  spec's own first-slice keyword-spelling correction).
+- **`ValueType::is_non_null_subtype_of`**: the non-null subtyping lattice
+  from the spec's section 2 — `NonNullStructRef(i) <: StructRef(i) <:
+  Anyref` and `NonNullConcreteFuncRef(i) <: ConcreteFuncRef(i) <: Funcref`
+  (both hops of each chain are direct rules, not composed, matching how
+  `ConcreteFuncRef <: Funcref` (W11-B) and the four W32-first-slice bottom
+  types were each direct rules too). The reverse direction never holds —
+  a nullable type is never accepted where non-null is required, and
+  NEITHER bottom type (`NullRef`/`NullFuncref`) satisfies a non-null slot
+  either.
+
+### Scope note
+
+This is the **second slice** of W32: the two non-null concrete-ref
+variants and their subtyping rules only. Structural subtyping for
+`call_indirect`/`ref.cast` against concrete function/struct types (needed
+by `type-subtyping.wast`), real recursive type groups' own nominal
+identity rules, and array types remain a later slice — see this
+package's own addendum to the spec document.
+
 ## [0.1.13] - 2026-08-31 (W32 first slice — bottom reference types)
 
 ### Added

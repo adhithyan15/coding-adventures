@@ -516,10 +516,10 @@
         "not_yet_supported": 0
       },
       "assert_invalid": {
-        "pass": 3,
+        "pass": 6,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 3
+        "not_yet_supported": 0
       },
       "assert_malformed": {
         "pass": 0,
@@ -546,10 +546,10 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 1,
+        "pass": 0,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 6
+        "not_yet_supported": 7
       },
       "register": {
         "pass": 0,
@@ -1769,9 +1769,9 @@
       },
       "assert_return": {
         "pass": 0,
-        "fail": 0,
+        "fail": 161,
         "trap": 0,
-        "not_yet_supported": 161
+        "not_yet_supported": 0
       },
       "assert_trap": {
         "pass": 0,
@@ -1787,9 +1787,9 @@
       },
       "module": {
         "pass": 0,
-        "fail": 0,
+        "fail": 1,
         "trap": 0,
-        "not_yet_supported": 1
+        "not_yet_supported": 0
       },
       "register": {
         "pass": 0,
@@ -2128,10 +2128,10 @@
         "not_yet_supported": 0
       },
       "assert_invalid": {
-        "pass": 4,
+        "pass": 2,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 0
+        "not_yet_supported": 2
       },
       "assert_malformed": {
         "pass": 0,
@@ -2140,16 +2140,16 @@
         "not_yet_supported": 0
       },
       "assert_return": {
-        "pass": 0,
+        "pass": 23,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 23
+        "not_yet_supported": 0
       },
       "assert_trap": {
-        "pass": 0,
+        "pass": 4,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 4
+        "not_yet_supported": 0
       },
       "assert_unlinkable": {
         "pass": 0,
@@ -2158,10 +2158,10 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 0,
+        "pass": 4,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 4
+        "not_yet_supported": 0
       },
       "register": {
         "pass": 0,
@@ -2716,14 +2716,14 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 22,
+        "pass": 26,
         "fail": 0,
-        "trap": 1,
-        "not_yet_supported": 53
+        "trap": 0,
+        "not_yet_supported": 50
       },
       "register": {
-        "pass": 2,
-        "fail": 1,
+        "pass": 3,
+        "fail": 0,
         "trap": 0,
         "not_yet_supported": 0
       }
@@ -3988,10 +3988,10 @@
         "not_yet_supported": 0
       },
       "assert_invalid": {
-        "pass": 52,
+        "pass": 51,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 0
+        "not_yet_supported": 1
       },
       "assert_malformed": {
         "pass": 7,
@@ -5116,10 +5116,10 @@
         "not_yet_supported": 0
       },
       "assert_return": {
-        "pass": 0,
-        "fail": 0,
+        "pass": 10,
+        "fail": 2,
         "trap": 0,
-        "not_yet_supported": 12
+        "not_yet_supported": 0
       },
       "assert_trap": {
         "pass": 0,
@@ -5134,10 +5134,10 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 5,
+        "pass": 8,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 3
+        "not_yet_supported": 0
       },
       "register": {
         "pass": 3,
@@ -8266,10 +8266,10 @@
         "not_yet_supported": 0
       },
       "assert_invalid": {
-        "pass": 12,
+        "pass": 10,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 0
+        "not_yet_supported": 2
       },
       "assert_malformed": {
         "pass": 0,
@@ -8496,10 +8496,10 @@
     },
     "ref_func.wast": {
       "action": {
-        "pass": 0,
+        "pass": 2,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 2
+        "not_yet_supported": 0
       },
       "assert_exception": {
         "pass": 0,
@@ -8526,10 +8526,10 @@
         "not_yet_supported": 0
       },
       "assert_return": {
-        "pass": 0,
+        "pass": 8,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 8
+        "not_yet_supported": 0
       },
       "assert_trap": {
         "pass": 0,
@@ -8544,10 +8544,10 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 1,
+        "pass": 2,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 2
+        "not_yet_supported": 1
       },
       "register": {
         "pass": 1,
@@ -9196,10 +9196,10 @@
         "not_yet_supported": 0
       },
       "assert_invalid": {
-        "pass": 11,
+        "pass": 9,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 0
+        "not_yet_supported": 2
       },
       "assert_malformed": {
         "pass": 0,
@@ -9208,16 +9208,16 @@
         "not_yet_supported": 0
       },
       "assert_return": {
-        "pass": 0,
+        "pass": 31,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 31
+        "not_yet_supported": 0
       },
       "assert_trap": {
-        "pass": 0,
+        "pass": 4,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 4
+        "not_yet_supported": 0
       },
       "assert_unlinkable": {
         "pass": 0,
@@ -9226,10 +9226,10 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 0,
+        "pass": 4,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 5
+        "not_yet_supported": 1
       },
       "register": {
         "pass": 0,
@@ -9258,10 +9258,10 @@
         "not_yet_supported": 0
       },
       "assert_invalid": {
-        "pass": 28,
+        "pass": 30,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 2
+        "not_yet_supported": 0
       },
       "assert_malformed": {
         "pass": 0,
@@ -13474,16 +13474,16 @@
         "not_yet_supported": 0
       },
       "assert_invalid": {
-        "pass": 2,
+        "pass": 4,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 2
+        "not_yet_supported": 0
       },
       "assert_malformed": {
-        "pass": 0,
+        "pass": 1,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 1
+        "not_yet_supported": 0
       },
       "assert_return": {
         "pass": 0,
@@ -13504,10 +13504,10 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 1,
+        "pass": 0,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 5
+        "not_yet_supported": 6
       },
       "register": {
         "pass": 0,
@@ -13690,16 +13690,16 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 10,
+        "pass": 11,
         "fail": 1,
         "trap": 0,
-        "not_yet_supported": 7
+        "not_yet_supported": 6
       },
       "register": {
-        "pass": 0,
+        "pass": 1,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 1
+        "not_yet_supported": 0
       }
     },
     "table64.wast": {
@@ -14230,10 +14230,10 @@
         "not_yet_supported": 0
       },
       "assert_return": {
-        "pass": 31,
+        "pass": 35,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 4
+        "not_yet_supported": 0
       },
       "assert_trap": {
         "pass": 6,
@@ -14248,10 +14248,10 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 6,
+        "pass": 8,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 2
+        "not_yet_supported": 0
       },
       "register": {
         "pass": 2,
@@ -15086,10 +15086,10 @@
         "not_yet_supported": 0
       },
       "assert_invalid": {
-        "pass": 7,
+        "pass": 6,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 2
+        "not_yet_supported": 3
       },
       "assert_malformed": {
         "pass": 2,
@@ -15223,9 +15223,9 @@
       },
       "assert_return": {
         "pass": 1,
-        "fail": 0,
+        "fail": 1,
         "trap": 0,
-        "not_yet_supported": 3
+        "not_yet_supported": 2
       },
       "assert_trap": {
         "pass": 0,
@@ -15240,16 +15240,16 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 1,
-        "fail": 0,
+        "pass": 4,
+        "fail": 4,
         "trap": 0,
-        "not_yet_supported": 20
+        "not_yet_supported": 13
       },
       "register": {
-        "pass": 0,
+        "pass": 2,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 6
+        "not_yet_supported": 4
       }
     },
     "type-rec.wast": {
@@ -15272,10 +15272,10 @@
         "not_yet_supported": 0
       },
       "assert_invalid": {
-        "pass": 9,
+        "pass": 8,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 1
+        "not_yet_supported": 2
       },
       "assert_malformed": {
         "pass": 0,
@@ -15302,10 +15302,10 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 0,
+        "pass": 1,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 11
+        "not_yet_supported": 10
       },
       "register": {
         "pass": 0,
@@ -15458,10 +15458,10 @@
         "not_yet_supported": 0
       },
       "assert_invalid": {
-        "pass": 71,
+        "pass": 69,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 50
+        "not_yet_supported": 52
       },
       "assert_malformed": {
         "pass": 0,
@@ -15538,10 +15538,10 @@
         "not_yet_supported": 0
       },
       "assert_trap": {
-        "pass": 1,
+        "pass": 10,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 9
+        "not_yet_supported": 0
       },
       "assert_unlinkable": {
         "pass": 0,
@@ -15550,10 +15550,10 @@
         "not_yet_supported": 0
       },
       "module": {
-        "pass": 1,
+        "pass": 2,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 2
+        "not_yet_supported": 1
       },
       "register": {
         "pass": 0,
@@ -15875,10 +15875,10 @@
   },
   "aggregate": {
     "action": {
-      "pass": 355,
+      "pass": 357,
       "fail": 0,
       "trap": 0,
-      "not_yet_supported": 60
+      "not_yet_supported": 58
     },
     "assert_exception": {
       "pass": 18,
@@ -15893,28 +15893,28 @@
       "not_yet_supported": 10
     },
     "assert_invalid": {
-      "pass": 2588,
+      "pass": 2584,
       "fail": 0,
       "trap": 0,
-      "not_yet_supported": 138
+      "not_yet_supported": 142
     },
     "assert_malformed": {
-      "pass": 1302,
+      "pass": 1303,
       "fail": 9,
       "trap": 0,
-      "not_yet_supported": 629
+      "not_yet_supported": 628
     },
     "assert_return": {
-      "pass": 51475,
-      "fail": 19,
+      "pass": 51551,
+      "fail": 183,
       "trap": 0,
-      "not_yet_supported": 1253
+      "not_yet_supported": 1013
     },
     "assert_trap": {
-      "pass": 2931,
+      "pass": 2948,
       "fail": 0,
       "trap": 0,
-      "not_yet_supported": 2025
+      "not_yet_supported": 2008
     },
     "assert_unlinkable": {
       "pass": 246,
@@ -15923,16 +15923,16 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 1883,
-      "fail": 1,
-      "trap": 1,
-      "not_yet_supported": 322
+      "pass": 1905,
+      "fail": 6,
+      "trap": 0,
+      "not_yet_supported": 296
     },
     "register": {
-      "pass": 54,
-      "fail": 1,
+      "pass": 58,
+      "fail": 0,
       "trap": 0,
-      "not_yet_supported": 12
+      "not_yet_supported": 9
     }
   },
   "parse_failures": {}

@@ -1316,6 +1316,39 @@ mod tests {
         assert_eq!(parsed.code, module.code);
     }
 
+    // ── W32 second slice: `NonNullStructRef`/`NonNullConcreteFuncRef`
+    //    round-trip through a REAL binary encode/decode ────────────────────
+    //
+    // Unlike the four bottom types just above (all single-byte, so they
+    // round-trip fine through a func signature's params/results too), the
+    // new `0x64`-tagged variants are MULTI-byte -- same as their nullable
+    // `StructRef`/`ConcreteFuncRef` counterparts, this crate's own
+    // `decode_value_type` (used for func params/results/locals/globals)
+    // cannot decode them; only `read_value_type` (struct FIELD context)
+    // can. This test therefore round-trips through a struct type's field
+    // list, mirroring `module_with_struct_types_has_extended_type_section`
+    // above -- confirming the encoder needed NO code change (it already
+    // calls `ValueType::encode()` universally) and the decoder's new
+    // `REF_NON_NULL_CONCRETE_TAG` arm agrees byte-for-byte.
+    #[test]
+    fn encodes_non_null_structref_field_round_trip() {
+        use wasm_types::{FieldType, StructType};
+        let module = WasmModule {
+            struct_types: vec![StructType {
+                fields: vec![
+                    FieldType { val_type: ValueType::NonNullStructRef(0), mutable: false },
+                    FieldType { val_type: ValueType::StructRef(0), mutable: true },
+                ],
+            }],
+            ..Default::default()
+        };
+        let encoded = encode_module(&module).unwrap();
+        assert!(encoded.windows(2).any(|w| w == [0x64, 0x00]), "expected a 0x64 0x00 (non-null) field encoding");
+        assert!(encoded.windows(2).any(|w| w == [0x63, 0x00]), "expected a 0x63 0x00 (nullable) field encoding");
+        let parsed = WasmModuleParser::parse(&encoded).unwrap();
+        assert_eq!(parsed.struct_types, module.struct_types);
+    }
+
     /// Minimal LEB128 decoder for test assertions — decode one unsigned value.
     fn decode_leb128(bytes: &[u8]) -> (usize, usize) {
         let mut result = 0usize;

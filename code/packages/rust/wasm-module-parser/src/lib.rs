@@ -131,6 +131,16 @@ const STRUCT_TYPE_MARKER: u8 = 0x5F;
 /// e.g. `structref` to a named struct type: `0x63 <typeidx: u32 LEB>`.
 const REF_NULL_CONCRETE_TAG: u8 = 0x63;
 
+/// The leading byte of a NON-NULL concrete reference type (`(ref $n)`, no
+/// `null` keyword) -- `0x64 <typeidx: u32 LEB>`, one more than
+/// [`REF_NULL_CONCRETE_TAG`] (W32 second slice: `code/specs/
+/// W32-wasm-non-null-concrete-reference-types.md`). Independently verified
+/// against the real reference interpreter's `interpreter/binary/decode.ml`
+/// (`ref_type`'s `-0x1c -> (NoNull, heap_type s)` arm: `-28 mod 128 =
+/// 0x64`), same discipline `wasm_types::ValueType::NonNullStructRef`'s own
+/// doc comment uses.
+const REF_NON_NULL_CONCRETE_TAG: u8 = 0x64;
+
 /// An upper bound on how much a length-prefixed vector may **pre-allocate**.
 /// The byte stream is untrusted, so a crafted count (e.g. `0xFFFFFFFF`) must not
 /// trigger a multi-gigabyte allocation before the (failing) element reads. We
@@ -492,6 +502,47 @@ impl<'a> Parser<'a> {
                     self.pos += consumed;
                     let _ = val;
                 }
+                // ref.func <funcidx: u32 leb128> -- a function INDEX, same
+                // shape/bound as `global.get`'s immediate above. Added
+                // alongside `read_value_type` reuse for `ref.null` (0xD0)
+                // below as part of the W32 security-review follow-up: this
+                // catch-all previously did NOT know `ref.func` has an
+                // immediate at all, so its funcidx byte(s) were treated as
+                // the START of the next "instruction" -- a genuine
+                // byte-stream desync on any real `(global funcref (ref.func
+                // $f))`/`(elem ... (item (ref.func $f)))`-shaped constant
+                // expression, confirmed by direct execution: a funcidx
+                // whose LEB128 encoding happens to end in `0x0B` (e.g. 11)
+                // was misread as an early `end`, and the genuinely-leftover
+                // byte then silently became the FIRST byte of whatever data
+                // followed the expression in the section (demonstrated to
+                // corrupt a data-segment's payload without any parse
+                // error). `read_u32leb` (not the unbounded `decode_unsigned`)
+                // for the same overlong/out-of-range rejection every other
+                // index-space read in this crate already gets.
+                0xD2 => {
+                    let before = self.data;
+                    self.read_u32leb()?;
+                    let consumed = before.len() - self.data.len();
+                    expr.extend_from_slice(&before[..consumed]);
+                }
+                // ref.null <heaptype> -- either a single abstract-heap-type
+                // byte (`funcref`=0x70, `externref`=0x6F, the four W32
+                // bottom types, etc.) or a 2-byte concrete-type-index form
+                // (`0x63`/`0x64 <typeidx: u32 leb128>`), exactly the same
+                // shapes `read_value_type` already knows how to decode for
+                // struct field types -- reused here rather than
+                // reimplementing the tag-byte dispatch a second time. Same
+                // desync bug class as `ref.func` above: the catch-all
+                // previously consumed only `ref.null`'s own opcode byte and
+                // left its heap-type immediate to be misread as the next
+                // instruction.
+                0xD0 => {
+                    let before = self.data;
+                    read_value_type(self)?;
+                    let consumed = before.len() - self.data.len();
+                    expr.extend_from_slice(&before[..consumed]);
+                }
                 _ => {
                     // Unknown opcode inside an init_expr. The spec restricts
                     // constant expressions to a small fixed set, but for
@@ -599,6 +650,18 @@ fn read_value_type(p: &mut Parser) -> Result<ValueType, WasmParseError> {
     if byte == REF_NULL_CONCRETE_TAG {
         let idx = p.read_u32leb()?;
         return Ok(ValueType::StructRef(idx));
+    }
+    // W32 second slice: a NON-NULL concrete reference in a struct field
+    // (`(field (ref $t))`, no `null` keyword) -- same 2-byte shape, one
+    // more than `REF_NULL_CONCRETE_TAG`. This function is only ever called
+    // for STRUCT FIELD types (see its own doc comment), so -- exactly like
+    // `REF_NULL_CONCRETE_TAG` immediately above -- the index always names
+    // a struct type here, never a function type: `wasm-wast-parser` has no
+    // struct-type TEXT-format declarations at all, so no real `.wast`
+    // source can produce `NonNullConcreteFuncRef` via THIS path either.
+    if byte == REF_NON_NULL_CONCRETE_TAG {
+        let idx = p.read_u32leb()?;
+        return Ok(ValueType::NonNullStructRef(idx));
     }
     // `offset()` now points one past `byte`, so the error offset is `- 1`.
     decode_value_type(byte, p.offset().saturating_sub(1))
@@ -1756,6 +1819,29 @@ mod tests {
     }
 
     #[test]
+    fn test_struct_field_non_null_concrete_ref_roundtrips() {
+        // W32 second slice: `0x64 <typeidx>` -- the NON-NULL counterpart to
+        // `0x63`'s nullable `(ref null $t)` immediately above, verified
+        // against the real reference interpreter's `interpreter/binary/
+        // decode.ml` (see `REF_NON_NULL_CONCRETE_TAG`'s own doc comment).
+        let payload = vec![
+            0x01, // count = 1
+            0x50, 0x00, 0x5F, // sub-type, 0 supers, struct
+            0x02, // 2 fields
+            0x64, 0x00, 0x01, // field 0: (ref $0), mutable
+            0x64, 0x01, 0x00, // field 1: (ref $1), immutable
+        ];
+        let data = wasm_with_sections(&[make_section(1, &payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+
+        let st = &m.struct_types[0];
+        assert_eq!(st.fields[0].val_type, ValueType::NonNullStructRef(0));
+        assert!(st.fields[0].mutable);
+        assert_eq!(st.fields[1].val_type, ValueType::NonNullStructRef(1));
+        assert!(!st.fields[1].mutable);
+    }
+
+    #[test]
     fn test_struct_type_bad_marker_is_clean_error() {
         // 0x50 followed by a non-0x5F composite marker must be a clean Err.
         let payload = vec![
@@ -2054,6 +2140,48 @@ mod tests {
             }
         );
         assert_eq!(m.globals[0].init_expr, vec![0x41, 0x2A, 0x0B]);
+    }
+
+    /// Security-review regression (W32 second slice follow-up): `read_expr`
+    /// didn't know `ref.func` (`0xD2`) has a `funcidx` immediate, so a
+    /// funcidx whose LEB128 encoding equals `0x0B` (i.e. 11) was misread as
+    /// an early `end`, leaving the TRUE `end` byte unconsumed in the
+    /// section stream. Demonstrated exactly this way against the pre-fix
+    /// code: `(global funcref (ref.func 11))` failed with a bogus "section
+    /// size mismatch" instead of parsing.
+    #[test]
+    fn test_global_ref_func_funcidx_immediate_is_not_misparsed_as_end() {
+        let payload = vec![
+            0x01, // count = 1
+            0x70, // funcref
+            0x00, // immutable
+            0xD2, 0x0B, 0x0B, // ref.func 11; end
+        ];
+        let data = wasm_with_sections(&[make_section(6, &payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert_eq!(m.globals.len(), 1);
+        assert_eq!(m.globals[0].init_expr, vec![0xD2, 0x0B, 0x0B]);
+    }
+
+    /// Same bug class as above, for `ref.null`'s heap-type immediate
+    /// (`0xD0`) in its 2-byte CONCRETE-type-index form (`0x63 <typeidx
+    /// leb128>`) rather than the 1-byte abstract-heap-type form: a type
+    /// index whose LEB128 byte equals `0x0B` (11) was misread as `end`
+    /// one byte early, leaving the true `end` unconsumed.
+    #[test]
+    fn test_global_ref_null_concrete_typeidx_immediate_is_not_misparsed_as_end() {
+        let payload = vec![
+            0x01, // count = 1
+            0x6E, // anyref (the global's OWN declared type -- single-byte,
+            // independent of the concrete type index named inside its
+            // init expression)
+            0x00, // immutable
+            0xD0, 0x63, 0x0B, 0x0B, // ref.null (struct-type index 11); end
+        ];
+        let data = wasm_with_sections(&[make_section(6, &payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+        assert_eq!(m.globals.len(), 1);
+        assert_eq!(m.globals[0].init_expr, vec![0xD0, 0x63, 0x0B, 0x0B]);
     }
 
     /// Task #82 (prioritization scan after task #80, PR #11844): a global's

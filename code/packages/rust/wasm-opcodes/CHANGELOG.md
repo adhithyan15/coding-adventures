@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.58] - 2026-08-31 - W32 second slice: call_ref / return_call_ref
+
+### Added
+
+- `call_ref` (`0x14`, one `typeidx` immediate) and `return_call_ref`
+  (`0x15`, same shape) — function-references proposal, opcode bytes and
+  immediate independently verified against WebAssembly/function-
+  references's own `Overview.md` binary-encoding table. Needed to make
+  `call_ref.wast`/`return_call_ref.wast` vendorable now that non-null
+  concrete function references exist to type their operands/results (see
+  `code/specs/W32-wasm-non-null-concrete-reference-types.md`).
+
 ## [0.2.57] - 2026-08-26 - W24: exceptions proposal, fourth slice (exnref/catch_ref/throw_ref)
 
 ### Added

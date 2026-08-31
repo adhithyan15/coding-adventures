@@ -4029,3 +4029,208 @@ fn invalid_nullref_does_not_cross_the_any_hierarchy_into_funcref() {
              (func (result funcref) (global.get $g)))"#,
     );
 }
+
+// ── W32 second slice: non-null concrete reference types ──────────────────
+//
+// `code/specs/W32-wasm-non-null-concrete-reference-types.md`'s addendum
+// section 2 -- `NonNullConcreteFuncRef(i) <: ConcreteFuncRef(i) <: Funcref`,
+// never the reverse. `ref.func $f` (real spec rule, verified against
+// WebAssembly/function-references's `Overview.md`: `ref.func $f : [] ->
+// [(ref $t)]` where `$t` is `$f`'s own type) is this crate's only TEXT-
+// expressible source of a `NonNullConcreteFuncRef` value -- `(ref $t)`
+// itself (a PARAM/LOCAL/GLOBAL declaration) only ever names the func-type
+// index space too (see that variant's own doc comment), matching the real
+// corpus's own `call_ref.wast`/`return_call_ref.wast` shape throughout.
+
+#[test]
+fn valid_non_null_concrete_func_ref_param() {
+    // `(ref $t)` (no `null`) as a parameter type -- the real corpus's own
+    // `call_ref.wast` shape: `(func $apply (param $f (ref $ii)) ...)`.
+    assert_valid(
+        r#"(module
+             (type $t (func (param i32) (result i32)))
+             (func (param $f (ref $t)) (param $x i32) (result i32)
+               (call_ref $t (local.get $x) (local.get $f))))"#,
+    );
+}
+
+#[test]
+fn valid_ref_func_result_is_non_null_and_satisfies_the_same_concrete_func_type() {
+    assert_valid(
+        r#"(module
+             (type $t (func))
+             (func $f (type $t))
+             (func (result (ref null $t)) (ref.func $f)))"#,
+    );
+}
+
+#[test]
+fn valid_ref_func_result_flows_into_a_non_null_concrete_func_ref_slot() {
+    // `NonNullConcreteFuncRef(i) <: ConcreteFuncRef(i)` alone would only
+    // get a NULLABLE result to validate -- this checks the non-null result
+    // slot ITSELF accepts `ref.func`'s naturally non-null result directly
+    // (reflexive, `actual == expected`, but exercised through the real
+    // `ref.func` producer rather than a bare local, matching the real
+    // corpus's own `call_ref.wast` global shape: `(global $fac (ref $ll)
+    // (ref.func $fac))`).
+    assert_valid(
+        r#"(module
+             (type $t (func))
+             (func $f (type $t))
+             (func (result (ref $t)) (ref.func $f)))"#,
+    );
+}
+
+#[test]
+fn valid_ref_func_result_satisfies_plain_funcref() {
+    assert_valid(r#"(module (type $t (func)) (func $f (type $t)) (func (result funcref) (ref.func $f)))"#);
+}
+
+#[test]
+fn invalid_concrete_func_ref_does_not_satisfy_a_non_null_concrete_func_ref_result() {
+    // The reverse direction never holds -- a NULLABLE `(ref null $t)`
+    // carries no static guarantee it's actually non-null, so it cannot
+    // stand in for the non-null slot (the exact asymmetry this slice's own
+    // "Verification plan" calls out).
+    assert_invalid(
+        r#"(module
+             (type $t (func))
+             (func $f (param $x (ref null $t)) (result (ref $t))
+               (local.get $x)))"#,
+    );
+}
+
+#[test]
+fn invalid_funcref_does_not_satisfy_a_non_null_concrete_func_ref_result() {
+    assert_invalid(
+        r#"(module
+             (type $t (func))
+             (func $f (param $x funcref) (result (ref $t))
+               (local.get $x)))"#,
+    );
+}
+
+#[test]
+fn invalid_non_null_concrete_func_ref_flows_into_a_mismatched_concrete_type() {
+    assert_invalid(
+        r#"(module
+             (type $t1 (func))
+             (type $t2 (func (param i32)))
+             (func $f (type $t1))
+             (func (result (ref null $t2)) (ref.func $f)))"#,
+    );
+}
+
+// ── W32 second slice: `call_ref` / `return_call_ref` ─────────────────────
+//
+// Real spec typing rule (verified against WebAssembly/function-references's
+// `Overview.md`, NOT the non-null-only operand this repo's own W32 spec
+// document first assumed): `call_ref $t : [t1* (ref null $t)] -> [t2*]`,
+// `return_call_ref $t : [t1* (ref null $t)] -> [t2*]` (with `t2* <:` the
+// caller's own result types), both trapping on a null ref operand at
+// runtime.
+
+#[test]
+fn valid_call_ref_matches_and_reflects_the_named_type() {
+    assert_valid(
+        r#"(module
+             (type $t (func (param i32) (result i32)))
+             (func $f (type $t) (local.get 0))
+             (func (param $x i32) (result i32)
+               (call_ref $t (local.get $x) (ref.func $f))))"#,
+    );
+}
+
+#[test]
+fn valid_call_ref_accepts_a_non_null_concrete_func_ref_operand() {
+    // `NonNullConcreteFuncRef(i) <: ConcreteFuncRef(i)` -- `call_ref`'s own
+    // nullable operand slot happily accepts the STRICTLY narrower non-null
+    // type too.
+    assert_valid(
+        r#"(module
+             (type $t (func))
+             (func $f (type $t))
+             (func (param $r (ref $t)) (call_ref $t (local.get $r))))"#,
+    );
+}
+
+#[test]
+fn valid_return_call_ref_matches_the_callers_own_result_type() {
+    assert_valid(
+        r#"(module
+             (type $t (func (result i32)))
+             (func $f (type $t) (i32.const 1))
+             (func (result i32) (return_call_ref $t (ref.func $f))))"#,
+    );
+}
+
+#[test]
+fn invalid_call_ref_rejects_an_externref_operand() {
+    // Real corpus shape: `call_ref.wast`'s own `(func $f (param $r
+    // externref) (call_ref $t (local.get $r)))` -- `externref` is not
+    // assignable to ANY concrete func-hierarchy type.
+    assert_invalid(
+        r#"(module
+             (type $t (func))
+             (func $f (param $r externref) (call_ref $t (local.get $r))))"#,
+    );
+}
+
+#[test]
+fn invalid_call_ref_rejects_a_plain_funcref_operand() {
+    // Real corpus shape: `call_ref.wast`'s own `(func $f (param $r
+    // funcref) (call_ref $t (local.get $r)))` -- a general `funcref`
+    // carries no static guarantee it names type `$t` specifically, so it
+    // is NOT assignable to `ConcreteFuncRef($t)` (the reverse of the
+    // `ConcreteFuncRef <: Funcref` direction W11-B already established).
+    assert_invalid(
+        r#"(module
+             (type $t (func))
+             (func $f (param $r funcref) (call_ref $t (local.get $r))))"#,
+    );
+}
+
+#[test]
+fn invalid_return_call_ref_rejects_a_mismatched_caller_result_type() {
+    assert_invalid(
+        r#"(module
+             (type $t (func (result i32)))
+             (func $f (type $t) (i32.const 1))
+             (func (result i64) (return_call_ref $t (ref.func $f))))"#,
+    );
+}
+
+// ── W32 second slice: untyped `select` rejects reference operands ────────
+//
+// Real corpus regression this slice found and fixed (not a hypothetical):
+// `select.wast`'s own `type-ref-implicit`/`type-funcref-implicit`/
+// `type-externref-implicit` cases -- the untyped `select` (no explicit
+// `(result t)` immediate) is restricted to `numtype`/`vectype` operands
+// only; a reference-typed operand pair (even with matching types) needs
+// the explicit typed form instead.
+
+#[test]
+fn invalid_untyped_select_rejects_matching_non_null_concrete_func_ref_operands() {
+    assert_invalid(
+        r#"(module
+             (type $t (func))
+             (func $f (param $r (ref $t))
+               (drop (select (local.get $r) (local.get $r) (i32.const 1)))))"#,
+    );
+}
+
+#[test]
+fn invalid_untyped_select_rejects_matching_funcref_operands() {
+    assert_invalid(
+        r#"(module
+             (func $f (param $r funcref)
+               (drop (select (local.get $r) (local.get $r) (i32.const 1)))))"#,
+    );
+}
+
+#[test]
+fn valid_untyped_select_still_accepts_matching_numeric_operands() {
+    // Same instruction, non-reference operands -- must NOT be swept up by
+    // the new reference-type rejection.
+    assert_valid("(module (func (result i32) (select (i32.const 1) (i32.const 2) (i32.const 1))))");
+}

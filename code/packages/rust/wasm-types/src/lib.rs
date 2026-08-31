@@ -277,13 +277,82 @@ pub enum ValueType {
 
     /// `nullref` (a.k.a. `none`, `(ref null none)`) -- the bottom type of
     /// the `any` hierarchy. A strict subtype of `Anyref`, `I31ref`, and
-    /// `StructRef(_)` for every index (and, once it lands in a later
-    /// slice, `NonNullStructRef(_)`'s nullable counterpart only -- never
-    /// the non-null variant itself).
+    /// `StructRef(_)` for every index -- but NOT of `NonNullStructRef(_)`
+    /// (W32 second slice): a null value can never satisfy a non-null slot,
+    /// no matter how far down the bottom of the lattice it sits. See
+    /// [`ValueType::is_bottom_subtype_of`].
     ///
     /// Encoded as a single byte `0x71` -- verified against
     /// `decode.ml`'s `NoneHT = -0x0f` (`-15 mod 128 = 0x71`).
     NullRef,
+
+    /// `(ref $T)` -- NON-NULL reference to a concrete struct type (GC
+    /// proposal; W32 second slice: `code/specs/
+    /// W32-wasm-non-null-concrete-reference-types.md`).
+    ///
+    /// The nullable counterpart is [`ValueType::StructRef`] -- see that
+    /// variant's own doc comment for the shared index-space convention
+    /// (`WasmModule::struct_types`, offset by `types.len()`). This variant
+    /// is its STRICT subtype: `NonNullStructRef(i) <: StructRef(i)` and,
+    /// transitively, `<: Anyref` (see [`ValueType::is_non_null_subtype_of`])
+    /// -- never the reverse, matching the exact one-directional shape
+    /// `ConcreteFuncRef <: Funcref` (W11-B) and the four W32-first-slice
+    /// bottom types already established one level of this lattice up.
+    ///
+    /// Binary: `0x64 <LEB128(idx)>` -- the function-references proposal's
+    /// "non-null" type-constructor byte, independently verified against
+    /// the real reference interpreter's `interpreter/binary/decode.ml`
+    /// (`ref_type`'s `-0x1c -> (NoNull, heap_type s)` arm: `-28 mod 128 =
+    /// 0x64`), distinct from `StructRef`/`ConcreteFuncRef`'s `0x63`
+    /// ("nullable", `decode.ml`'s `-0x1d -> (Null, heap_type s)`,
+    /// `-29 mod 128 = 0x63`) by exactly one.
+    ///
+    /// This crate's own `wasm-wast-parser` has no struct-type TEXT-format
+    /// declarations at all (see `StructRef`/`ConcreteFuncRef`'s own doc
+    /// comments) -- so, like its nullable counterpart, no real `.wast`
+    /// TEXT source can produce this variant naming a struct type today,
+    /// only a func type (`NonNullConcreteFuncRef`, via `(ref $t)` in the
+    /// function-type index space, the shape `call_ref.wast`/
+    /// `return_call_ref.wast` actually exercise). It exists as a real,
+    /// independently-constructible Rust variant (used directly in this
+    /// crate's own subtyping unit tests, and reachable via binary struct-
+    /// field decoding -- see `wasm-module-parser::read_value_type`) so the
+    /// struct-type half of the lattice is not silently missing.
+    NonNullStructRef(u32),
+
+    /// `(ref $t)` -- NON-NULL reference to a concrete function type
+    /// (function-references proposal; W32 second slice).
+    ///
+    /// The nullable counterpart is [`ValueType::ConcreteFuncRef`] -- see
+    /// that variant's own doc comment for the shared function-type index
+    /// space (`WasmModule::types`, index 0..N-1 directly, no offset). This
+    /// variant is its STRICT subtype: `NonNullConcreteFuncRef(i) <:
+    /// ConcreteFuncRef(i) <: Funcref` (both directions checked directly,
+    /// not derived by chaining -- see [`ValueType::is_non_null_subtype_of`])
+    /// -- never the reverse.
+    ///
+    /// Binary: `0x64 <LEB128(idx)>`, same 2-byte shape and same
+    /// independently-verified tag byte as `NonNullStructRef`'s own doc
+    /// comment describes -- disambiguated from it purely by which index
+    /// space `idx` falls in, exactly like `StructRef`/`ConcreteFuncRef`'s
+    /// existing `0x63` disambiguation.
+    ///
+    /// This is the type `call_ref`/`return_call_ref`'s real spec typing
+    /// rule needs on the PRODUCING side: `ref.func $f : [] -> [(ref $t)]`
+    /// (function-references proposal's `Overview.md`, verified directly,
+    /// not assumed) pushes a non-null reference typed to `$f`'s OWN
+    /// function-type index -- this repo's `wasm-validator` now reflects
+    /// that real rule instead of the pre-W32-second-slice placeholder of
+    /// pushing bare `Funcref` for every `ref.func`. `call_ref`/
+    /// `return_call_ref` THEMSELVES, however, accept the NULLABLE
+    /// `ConcreteFuncRef` on their consuming side and trap on null at
+    /// runtime (`call_ref $t : [t1* (ref null $t)] -> [t2*]`, "traps on
+    /// null" -- independently verified against the real spec text, NOT
+    /// the non-null-only operand this repo's own W32 spec document
+    /// originally assumed before this slice checked): a
+    /// `NonNullConcreteFuncRef` value flows into that nullable slot fine
+    /// via the direct subtyping rule above, it is simply never REQUIRED.
+    NonNullConcreteFuncRef(u32),
 }
 
 impl ValueType {
@@ -316,6 +385,9 @@ impl ValueType {
             ValueType::NullExternref => Some(0x72),
             ValueType::NullExnref => Some(0x74),
             ValueType::NullRef => Some(0x71),
+            // W32 second slice: multi-byte, like `StructRef`/`ConcreteFuncRef`.
+            ValueType::NonNullStructRef(_) => None,
+            ValueType::NonNullConcreteFuncRef(_) => None,
         }
     }
 
@@ -363,6 +435,22 @@ impl ValueType {
             ValueType::NullExternref => vec![0x72],
             ValueType::NullExnref => vec![0x74],
             ValueType::NullRef => vec![0x71],
+            // W32 second slice: `0x64` -- the function-references
+            // proposal's "non-null" type-constructor byte, independently
+            // verified against the real reference interpreter's
+            // `interpreter/binary/decode.ml` (see `NonNullStructRef`'s own
+            // doc comment for the derivation) -- one more than `StructRef`/
+            // `ConcreteFuncRef`'s `0x63` ("nullable"), same 2-byte shape.
+            ValueType::NonNullStructRef(idx) => {
+                let mut bytes = vec![0x64u8];
+                bytes.extend(encode_unsigned(*idx as u64));
+                bytes
+            }
+            ValueType::NonNullConcreteFuncRef(idx) => {
+                let mut bytes = vec![0x64u8];
+                bytes.extend(encode_unsigned(*idx as u64));
+                bytes
+            }
         }
     }
 
@@ -399,6 +487,54 @@ impl ValueType {
                 | (ValueType::NullRef, ValueType::Anyref)
                 | (ValueType::NullRef, ValueType::I31ref)
                 | (ValueType::NullRef, ValueType::StructRef(_))
+        )
+    }
+
+    /// Whether `self` is a strict (never bidirectional) subtype of `other`
+    /// under the W32 SECOND-slice non-null lattice (`code/specs/
+    /// W32-wasm-non-null-concrete-reference-types.md` §2):
+    ///
+    /// ```text
+    /// NonNullStructRef(i)     <: StructRef(i)        (same index)
+    /// NonNullStructRef(i)     <: Anyref              (any index)
+    /// NonNullConcreteFuncRef(i) <: ConcreteFuncRef(i)  (same index)
+    /// NonNullConcreteFuncRef(i) <: Funcref             (any index)
+    /// ```
+    ///
+    /// Both hops of each chain (`NonNullStructRef <: StructRef <: Anyref`,
+    /// `NonNullConcreteFuncRef <: ConcreteFuncRef <: Funcref`) are listed
+    /// here directly rather than derived by composing two separate
+    /// one-hop checks -- `is_assignable` (`wasm-validator`) does not do
+    /// transitive closure, so a type two hops down the lattice needs its
+    /// own direct rule to the top, exactly the same non-derived shape
+    /// `ConcreteFuncRef <: Funcref` (W11-B) already used one level up.
+    ///
+    /// The reverse direction never holds -- a NULLABLE type is never a
+    /// subtype of its non-null counterpart, no matter how it's reached
+    /// (see [`ValueType::is_bottom_subtype_of`]'s own doc comment on
+    /// `NullRef`/`NullFuncref` for the same asymmetry one level further
+    /// down): `StructRef(i)` is NOT `<: NonNullStructRef(i)`, and neither
+    /// bottom type (`NullRef`/`NullFuncref`) is `<:` either non-null
+    /// variant -- a null value can never satisfy a non-null slot.
+    ///
+    /// Named distinctly from `is_bottom_subtype_of` (rather than merged
+    /// into one lattice method) because these two rule sets were added in
+    /// two different slices of the same spec and check membership in two
+    /// different-shaped relations (bottom-of-hierarchy vs. non-null-of-
+    /// nullable) -- keeping them separate mirrors how the doc comments on
+    /// each new `ValueType` variant already attribute their rules to a
+    /// specific slice.
+    pub fn is_non_null_subtype_of(&self, other: &ValueType) -> bool {
+        matches!(
+            (self, other),
+            (ValueType::NonNullStructRef(i), ValueType::StructRef(j)) if i == j
+        ) || matches!(
+            (self, other),
+            (ValueType::NonNullStructRef(_), ValueType::Anyref)
+                | (ValueType::NonNullConcreteFuncRef(_), ValueType::Funcref)
+        ) || matches!(
+            (self, other),
+            (ValueType::NonNullConcreteFuncRef(i), ValueType::ConcreteFuncRef(j)) if i == j
         )
     }
 }
@@ -1749,5 +1885,109 @@ mod tests {
         assert!(!ValueType::Funcref.is_bottom_subtype_of(&ValueType::Funcref));
         assert!(!ValueType::NullFuncref.is_bottom_subtype_of(&ValueType::NullFuncref));
         assert!(!ValueType::I32.is_bottom_subtype_of(&ValueType::I32));
+    }
+
+    // ── W32 second slice: non-null concrete reference types ──────────────────
+    //
+    // `code/specs/W32-wasm-non-null-concrete-reference-types.md`'s addendum
+    // section 1 adds `NonNullStructRef(u32)`/`NonNullConcreteFuncRef(u32)`,
+    // tag byte `0x64` -- independently verified against the real reference
+    // interpreter's `interpreter/binary/decode.ml` (`ref_type`'s
+    // `-0x1c -> (NoNull, heap_type s)` arm: `-28 mod 128 = 0x64`), NOT just
+    // re-asserted from this crate's own doc comments.
+
+    #[test]
+    fn non_null_concrete_refs_encode_to_the_verified_0x64_tag_byte() {
+        assert_eq!(ValueType::NonNullStructRef(0).encode(), vec![0x64, 0x00], "non-null struct ref tag");
+        assert_eq!(ValueType::NonNullStructRef(5).encode(), vec![0x64, 0x05]);
+        assert_eq!(ValueType::NonNullConcreteFuncRef(0).encode(), vec![0x64, 0x00], "non-null concrete func ref tag");
+        assert_eq!(ValueType::NonNullConcreteFuncRef(1).encode(), vec![0x64, 0x01]);
+        // Large index needs 2 LEB128 bytes, same as StructRef/ConcreteFuncRef.
+        let enc = ValueType::NonNullStructRef(128).encode();
+        assert_eq!(enc[0], 0x64);
+        assert!(enc.len() >= 3);
+    }
+
+    #[test]
+    fn non_null_concrete_refs_have_no_single_byte_tag() {
+        // Multi-byte, like their nullable counterparts.
+        assert_eq!(ValueType::NonNullStructRef(0).byte_tag(), None);
+        assert_eq!(ValueType::NonNullConcreteFuncRef(0).byte_tag(), None);
+    }
+
+    #[test]
+    fn non_null_concrete_refs_are_distinct_rust_variants_from_their_nullable_counterparts() {
+        // Same discipline as `ConcreteFuncRef`/`StructRef`'s own test: two
+        // Rust enum variants that happen to share a binary tag-byte SHAPE
+        // (0x63 vs 0x64 here -- distinct bytes, but the same "index space
+        // disambiguates" convention) must never be `==` to each other, nor
+        // to the wrong index of themselves.
+        assert_ne!(ValueType::NonNullStructRef(0), ValueType::StructRef(0));
+        assert_ne!(ValueType::NonNullConcreteFuncRef(0), ValueType::ConcreteFuncRef(0));
+        assert_ne!(ValueType::NonNullStructRef(0), ValueType::NonNullConcreteFuncRef(0));
+        assert_ne!(ValueType::NonNullStructRef(0), ValueType::NonNullStructRef(1));
+        assert_eq!(ValueType::NonNullConcreteFuncRef(3), ValueType::NonNullConcreteFuncRef(3));
+    }
+
+    // ── W32 §2 (second slice): non-null subtyping lattice -- POSITIVE ────────
+
+    #[test]
+    fn non_null_structref_is_a_subtype_of_structref_same_index_and_of_anyref() {
+        assert!(ValueType::NonNullStructRef(0).is_non_null_subtype_of(&ValueType::StructRef(0)));
+        assert!(ValueType::NonNullStructRef(7).is_non_null_subtype_of(&ValueType::StructRef(7)));
+        assert!(ValueType::NonNullStructRef(0).is_non_null_subtype_of(&ValueType::Anyref));
+        assert!(ValueType::NonNullStructRef(99).is_non_null_subtype_of(&ValueType::Anyref), "any index");
+    }
+
+    #[test]
+    fn non_null_concrete_funcref_is_a_subtype_of_concrete_funcref_same_index_and_of_funcref() {
+        assert!(ValueType::NonNullConcreteFuncRef(0).is_non_null_subtype_of(&ValueType::ConcreteFuncRef(0)));
+        assert!(ValueType::NonNullConcreteFuncRef(3).is_non_null_subtype_of(&ValueType::ConcreteFuncRef(3)));
+        assert!(ValueType::NonNullConcreteFuncRef(0).is_non_null_subtype_of(&ValueType::Funcref));
+        assert!(ValueType::NonNullConcreteFuncRef(50).is_non_null_subtype_of(&ValueType::Funcref), "any index");
+    }
+
+    // ── W32 §2 (second slice): non-null subtyping lattice -- NEGATIVE ────────
+    //
+    // "The reverse direction never holds" -- this is the asymmetry the
+    // spec calls out explicitly: a NULLABLE type must NOT be accepted
+    // where non-null is required, no matter how it's reached.
+
+    #[test]
+    fn structref_and_anyref_are_never_non_null_subtypes_of_non_null_structref() {
+        assert!(!ValueType::StructRef(0).is_non_null_subtype_of(&ValueType::NonNullStructRef(0)));
+        assert!(!ValueType::Anyref.is_non_null_subtype_of(&ValueType::NonNullStructRef(0)));
+    }
+
+    #[test]
+    fn concrete_funcref_and_funcref_are_never_non_null_subtypes_of_non_null_concrete_funcref() {
+        assert!(!ValueType::ConcreteFuncRef(0).is_non_null_subtype_of(&ValueType::NonNullConcreteFuncRef(0)));
+        assert!(!ValueType::Funcref.is_non_null_subtype_of(&ValueType::NonNullConcreteFuncRef(0)));
+    }
+
+    #[test]
+    fn non_null_structref_does_not_flow_across_a_mismatched_index() {
+        assert!(!ValueType::NonNullStructRef(0).is_non_null_subtype_of(&ValueType::StructRef(1)));
+        assert!(!ValueType::NonNullConcreteFuncRef(0).is_non_null_subtype_of(&ValueType::ConcreteFuncRef(1)));
+    }
+
+    #[test]
+    fn bottom_types_never_satisfy_a_non_null_slot() {
+        // A null value can never satisfy a non-null slot, no matter how
+        // far down the bottom of the lattice it sits -- neither
+        // `is_bottom_subtype_of` nor `is_non_null_subtype_of` should ever
+        // report a bottom type as flowing into a `NonNull*` variant (the
+        // asymmetry `NullRef`/`NullFuncref`'s own doc comments call out).
+        assert!(!ValueType::NullRef.is_bottom_subtype_of(&ValueType::NonNullStructRef(0)));
+        assert!(!ValueType::NullRef.is_non_null_subtype_of(&ValueType::NonNullStructRef(0)));
+        assert!(!ValueType::NullFuncref.is_bottom_subtype_of(&ValueType::NonNullConcreteFuncRef(0)));
+        assert!(!ValueType::NullFuncref.is_non_null_subtype_of(&ValueType::NonNullConcreteFuncRef(0)));
+    }
+
+    #[test]
+    fn is_non_null_subtype_of_is_not_reflexive_and_ignores_equal_types() {
+        assert!(!ValueType::NonNullStructRef(0).is_non_null_subtype_of(&ValueType::NonNullStructRef(0)));
+        assert!(!ValueType::Funcref.is_non_null_subtype_of(&ValueType::Funcref));
+        assert!(!ValueType::I32.is_non_null_subtype_of(&ValueType::I32));
     }
 }

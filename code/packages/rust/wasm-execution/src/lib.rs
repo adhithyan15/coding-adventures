@@ -59,7 +59,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 use virtual_machine::{
     CodeObject, GenericVM, Instruction, Operand, TypedVMValue, VMError, VMResult, Value,
 };
-use wasm_leb128::{decode_signed, decode_unsigned};
+use wasm_leb128::{decode_signed, decode_unsigned, decode_unsigned_bounded};
 use wasm_opcodes::get_opcode;
 use wasm_types::{FuncType, FunctionBody, GlobalType, ValueType};
 
@@ -281,9 +281,22 @@ impl WasmValue {
             // §5: "non-null"/"bottom" is purely a static, validator-
             // enforced property, never a value-level distinction in this
             // repo) -- so they default the exact same way.
+            // W32 second slice: `NonNullStructRef`/`NonNullConcreteFuncRef`
+            // join this same group -- "non-null" is purely a static,
+            // validator-enforced property (see the spec's §5), never a
+            // value-level distinction, so there is no separate non-null
+            // runtime representation to default to. In practice a
+            // genuinely non-null LOCAL is never defaultable under the
+            // real spec (a `(local (ref $t))` needs an explicit
+            // `local.set` before its first `local.get`, which this
+            // repo's validator does not yet enforce -- out of scope for
+            // this slice), so this arm should never observably matter;
+            // it exists only so the match stays exhaustive.
             ValueType::Anyref
             | ValueType::StructRef(_)
             | ValueType::ConcreteFuncRef(_)
+            | ValueType::NonNullStructRef(_)
+            | ValueType::NonNullConcreteFuncRef(_)
             | ValueType::Funcref
             | ValueType::Externref
             | ValueType::Exnref
@@ -2024,6 +2037,56 @@ pub fn evaluate_const_expr(
                 }
                 stack.push(WasmValue::Ref(None));
             }
+            // `ref.func <funcidx>` (`0xD2`) as a constant expression --
+            // the real spec explicitly calls this out as a *constant
+            // instruction* (WebAssembly/function-references's own
+            // `Overview.md`, verified directly), and the real corpus
+            // exercises it pervasively as a GLOBAL init expression once
+            // non-null concrete function refs exist to type such a global
+            // (W32 second slice's own real corpus win, `call_ref.wast`'s
+            // `(global $fac (ref $ll) (ref.func $fac))`): a real,
+            // previously undetected gap -- `ref.func` was already a legal
+            // ORDINARY instruction (main decode loop, 0xD2 above) and a
+            // legal ELEMENT-segment entry, but never a legal constant
+            // expression, so any such global simply trapped at
+            // instantiation with "illegal opcode 0xD2" instead of
+            // producing the function reference it always evaluates to.
+            // No bounds-check against a real function count here -- unlike
+            // `global.get` just above, which HAS a `globals` slice to
+            // check against, this function is given no function-count
+            // parameter (adding one would ripple across every one of its
+            // ~28 call sites). CORRECTION (security review, W32 second
+            // slice): this arm previously claimed "`wasm-validator`'s own
+            // structural pass already bounds-checks every `ref.func`
+            // funcidx, including inside global init expressions" -- that
+            // claim was independently verified FALSE (zero production
+            // reads of `globals[..].init_expr`/`elements[..].offset_expr`
+            // exist in `wasm-validator` outside test fixtures; its `0xD2`
+            // bounds check only ever runs on function BODIES). A
+            // 32-bit-representable out-of-range index here still produces
+            // a `Ref(Some(idx))` that a LATER real use (`call_ref`, a
+            // table read, ...) safely rejects via its own `.get()`-shaped
+            // bounds check -- no panic, same "checked at the point of
+            // use" contract `ref.null`'s unchecked concrete-type-index
+            // skip just above already relies on. What WAS a real bug:
+            // this arm used the raw, unbounded `decode_unsigned` (a `u64`
+            // decoder) then narrowed with `idx as u32`, which SILENTLY
+            // TRUNCATES instead of rejecting -- a crafted funcidx like
+            // `0x1_0000_0003` decoded to `Ref(Some(3))`, i.e. an
+            // out-of-range reference silently ALIASED a real, different,
+            // legitimate function 3 instead of being cleanly rejected as
+            // out of range. `decode_unsigned_bounded(.., 32)` closes that:
+            // any encoding whose true value doesn't fit in 32 bits (or is
+            // overlong) is now a clean `Err`, matching every other index
+            // space this crate decodes (see `wasm-module-parser::
+            // read_u32leb`'s own doc comment for the same "overlong /
+            // out-of-range" rule).
+            0xD2 => {
+                let (idx, consumed) = decode_unsigned_bounded(expr, pos, 32)
+                    .map_err(|e| TrapError::new(e.message))?;
+                pos += consumed;
+                stack.push(WasmValue::Ref(Some(idx as u32)));
+            }
             // end -- pop the one value that must remain on the stack. A
             // well-formed constant expression (checked by
             // `wasm-validator`'s own structural checks, where it checks at
@@ -2941,6 +3004,37 @@ fn decode_immediates(code: &[u8], offset: usize, immediates: &[&str]) -> (Decode
                 // multi-byte type-index prefix collision.
                 0x40 | 0x7F | 0x7E | 0x7D | 0x7C | 0x7B | 0x70 | 0x6F | 0x69 | 0x71..=0x74 => {
                     (DecodedOperand::Int(byte as i64), 1)
+                }
+                // `(ref null $t)` / `(ref $t)` as a single-value blocktype
+                // result (W32 second slice: same real gap `wasm-validator`'s
+                // `decode_blocktype` fixes for its own copy, see that
+                // function's doc comment on the exact `ref.wast`
+                // `block-result-invalid`/`loop-result-invalid` regression
+                // this closes here too) -- `0x63`/`0x64` are TWO-byte
+                // encodings (tag + LEB128 type index), unlike every sentinel
+                // in the arm above, so this must consume BOTH bytes, not
+                // just the tag -- falling into the generic single-byte
+                // signed-LEB128 branch below would silently desync the rest
+                // of the instruction stream on any module with 99+/100+
+                // declared types (`0x63`/`0x64` decode as standalone SLEB128
+                // values -29/-28 on their own).
+                //
+                // `block_arity` doesn't need the ACTUAL type index -- a
+                // single-value blocktype is always exactly (0 params, 1
+                // result) regardless of WHICH concrete type it names -- so
+                // this discards the index after skipping it and returns the
+                // SAME sentinel value `decode_signed` would have produced
+                // for the tag byte alone (`-29`/`-28`), taught to
+                // `block_arity` as its own explicit arm below (distinct
+                // from a real type-section index, which is never negative
+                // in this repr).
+                0x63 => {
+                    let (_idx, idx_size) = decode_unsigned(code, offset + 1).unwrap_or((0, 1));
+                    (DecodedOperand::Int(-29), 1 + idx_size)
+                }
+                0x64 => {
+                    let (_idx, idx_size) = decode_unsigned(code, offset + 1).unwrap_or((0, 1));
+                    (DecodedOperand::Int(-28), 1 + idx_size)
                 }
                 _ => {
                     // Type index (signed LEB128)
@@ -4133,6 +4227,14 @@ fn block_arity(block_type: i64, types: &[FuncType]) -> (usize, usize) {
         // "blocktype" operand-decode arm just above for the full
         // rationale and the tag-byte verification.
         0x71..=0x74 => (0, 1),
+        // `(ref null $t)` / `(ref $t)` single-value blocktype results (W32
+        // second slice) -- the sentinels `decode_function_body`'s matching
+        // "blocktype" operand-decode arm returns for the two-byte `0x63`/
+        // `0x64` tag+index encodings (`-29`/`-28`, `decode_signed`'s own
+        // single-byte-SLEB128 reading of each tag byte alone -- see that
+        // arm's own doc comment). Always exactly one result, zero params,
+        // regardless of which concrete type the index actually names.
+        -29 | -28 => (0, 1),
         n if n >= 0 && (n as usize) < types.len() => {
             let t = &types[n as usize];
             (t.params.len(), t.results.len())
@@ -10621,6 +10723,90 @@ fn register_control(vm: &mut GenericVM) {
         vm.halted = true;
         Ok(None)
     });
+
+    // call_ref (0x14, function-references proposal, W32 second slice):
+    // pops a function reference off the TOP of the stack (the real spec's
+    // `[t1* (ref null $t)] -> [t2*]` typing rule, verified against
+    // WebAssembly/function-references's `Overview.md` -- NOT restricted
+    // to a non-null-only operand), traps if it's null, then calls the
+    // referenced function exactly like `call` would. The wrapped `u32` in
+    // a `WasmValue::Ref(Some(handle))` funcref IS the function index
+    // directly (see `ref.func`'s own runtime handler, 0xD2, just above --
+    // this repo's uniform `Ref(Option<u32>)` representation), so no
+    // GC-heap lookup is needed, only the null check the real spec
+    // requires.
+    vm.register_context_opcode(0x14, |vm, instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let type_idx = operand_int(instr) as usize;
+        let func_index = match pop_wasm(vm)? {
+            WasmValue::Ref(Some(idx)) => idx as usize,
+            WasmValue::Ref(None) => return Err(VMError::GenericError("call_ref: null function reference".into())),
+            other => return Err(VMError::GenericError(format!("call_ref: expected a function reference, found {other:?}"))),
+        };
+        // Defensive re-check, same shape `call_indirect` (0x11) already
+        // uses: `wasm-validator` already proved the operand's STATIC type
+        // is assignable to `ConcreteFuncRef(type_idx)`, but this engine's
+        // own tests (and any embedder) can construct a context that skips
+        // validation entirely, so the runtime value is still DATA, not
+        // something this handler may assume matches `type_idx` unchecked.
+        //
+        // SECURITY REVIEW FIX (W32 second slice): this callee-existence
+        // check used to live INSIDE the `if let Some(expected) = ...`
+        // block below, so an unresolvable `type_idx` (out of range, or an
+        // engine built with no type section at all -- exactly what the
+        // sibling `return_call_ref` (0x15) and this crate's own
+        // `engine_from_wat` test helper construct) silently skipped BOTH
+        // the existence check and the signature comparison, falling
+        // through to `call_function` with a stack-derived index that had
+        // never been validated at all. `return_call_ref` already ran this
+        // exact check unconditionally; `call_ref` is now consistent with
+        // it -- hoisted out so it always runs regardless of whether
+        // `type_idx` resolves.
+        let actual = ctx
+            .func_types
+            .get(func_index)
+            .ok_or_else(|| VMError::GenericError("call_ref: reference names an undefined function".into()))?;
+        if let Some(expected) = ctx.types.get(type_idx) {
+            if expected.params != actual.params || expected.results != actual.results {
+                return Err(VMError::GenericError("call_ref type mismatch".into()));
+            }
+        }
+        call_function(vm, ctx, func_index)?;
+        Ok(None)
+    });
+
+    // return_call_ref (0x15, function-references proposal, W32 second
+    // slice): same ref-operand/null-trap/type-mismatch shape as `call_ref`
+    // (0x14) above, but signals a tail call exactly like `return_call`/
+    // `return_call_indirect` do -- replace the CURRENT frame instead of
+    // recursing.
+    vm.register_context_opcode(0x15, |vm, instr, _code, ctx| {
+        let ctx = get_ctx(ctx);
+        let type_idx = operand_int(instr) as usize;
+        let func_index = match pop_wasm(vm)? {
+            WasmValue::Ref(Some(idx)) => idx as usize,
+            WasmValue::Ref(None) => return Err(VMError::GenericError("return_call_ref: null function reference".into())),
+            other => return Err(VMError::GenericError(format!("return_call_ref: expected a function reference, found {other:?}"))),
+        };
+        let func_type = ctx
+            .func_types
+            .get(func_index)
+            .ok_or_else(|| VMError::GenericError("return_call_ref: reference names an undefined function".into()))?
+            .clone();
+        if let Some(expected) = ctx.types.get(type_idx) {
+            if expected.params != func_type.params || expected.results != func_type.results {
+                return Err(VMError::GenericError("return_call_ref type mismatch".into()));
+            }
+        }
+        let mut args = Vec::with_capacity(func_type.params.len());
+        for _ in 0..func_type.params.len() {
+            args.push(pop_wasm(vm)?);
+        }
+        args.reverse();
+        ctx.pending_tail_call = Some((func_index, args));
+        vm.halted = true;
+        Ok(None)
+    });
 }
 
 /// Execute a function call within the WASM execution context.
@@ -12088,6 +12274,53 @@ mod tests {
         let globals = vec![WasmValue::I32(100)];
         let result = evaluate_const_expr(&expr, &globals, &mut Vec::new()).unwrap();
         assert_eq!(result, WasmValue::I32(100));
+    }
+
+    // ── W32 second slice: `ref.func` as a constant expression ────────────
+    //
+    // Real, previously-undetected gap: `ref.func` (0xD2) was already legal
+    // as an ORDINARY instruction and as an ELEMENT-segment entry, but this
+    // evaluator had no `0xD2` arm at all -- any `(global <reftype>
+    // (ref.func $f))` (the real corpus's own `call_ref.wast` shape,
+    // `(global $fac (ref $ll) (ref.func $fac))`) trapped at instantiation
+    // with "illegal opcode 0xD2" instead of producing the function
+    // reference the real spec explicitly calls a *constant instruction*
+    // (WebAssembly/function-references's `Overview.md`).
+
+    #[test]
+    fn test_evaluate_const_expr_ref_func_pushes_a_function_reference() {
+        // ref.func 3; end
+        let expr = vec![0xD2, 0x03, 0x0B];
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
+        assert_eq!(result, WasmValue::Ref(Some(3)));
+    }
+
+    #[test]
+    fn test_evaluate_const_expr_ref_func_with_multi_byte_leb128_index() {
+        // ref.func 200 (LEB128: 0xC8 0x01); end
+        let expr = vec![0xD2, 0xC8, 0x01, 0x0B];
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
+        assert_eq!(result, WasmValue::Ref(Some(200)));
+    }
+
+    /// Security-review regression (W32 second slice follow-up): `ref.func`'s
+    /// funcidx used the raw, unbounded `decode_unsigned` (a `u64` decoder)
+    /// then narrowed with `idx as u32`, which SILENTLY TRUNCATES rather
+    /// than rejecting. A crafted funcidx of `0x1_0000_0003` (one bit past
+    /// `u32::MAX`) used to decode to `Ref(Some(3))` -- an out-of-range
+    /// reference silently ALIASING a real, different, legitimate function
+    /// 3 instead of being cleanly rejected as malformed. Must now be a
+    /// clean `Err`, matching every other index space this crate decodes.
+    #[test]
+    fn test_evaluate_const_expr_ref_func_rejects_out_of_range_funcidx_instead_of_truncating() {
+        // ref.func 0x1_0000_0003 (LEB128: 0x83 0x80 0x80 0x80 0x10); end
+        let expr = vec![0xD2, 0x83, 0x80, 0x80, 0x80, 0x10, 0x0B];
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new());
+        assert!(
+            result.is_err(),
+            "expected an out-of-range funcidx to be rejected, got {:?}",
+            result
+        );
     }
 
     #[test]

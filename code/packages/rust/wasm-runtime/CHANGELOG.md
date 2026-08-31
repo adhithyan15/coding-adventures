@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.16] — 2026-08-31 (W32 second slice — non-null concrete reference types)
+
+### Added
+
+- `call()`'s argument-conversion match gained arms for the two new
+  non-null concrete-ref variants (`NonNullStructRef`/
+  `NonNullConcreteFuncRef`, `wasm-types` 0.1.14) — required just to keep
+  this exhaustive match compiling; joins the same lossy-legacy-path
+  placeholder group as the pre-existing GC/funcref/externref/exnref arms.
+  See `code/specs/W32-wasm-non-null-concrete-reference-types.md`.
+
 ## [0.6.15] — 2026-08-31 (W32 first slice — bottom reference types)
 
 ### Added

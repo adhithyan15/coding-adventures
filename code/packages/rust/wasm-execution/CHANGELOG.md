@@ -2,6 +2,68 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.79] - 2026-08-31 (security review follow-up to W32 second slice)
+
+### Fixed
+
+- `evaluate_const_expr`'s `ref.func` (`0xD2`) arm used the raw, unbounded
+  `decode_unsigned` then narrowed the result with `idx as u32`, silently
+  truncating instead of rejecting: a crafted funcidx like
+  `0x1_0000_0003` decoded to `Ref(Some(3))`, aliasing a real, different,
+  legitimate function 3 rather than being cleanly rejected as malformed.
+  The arm's own comment also claimed `wasm-validator` already
+  bounds-checks every `ref.func` funcidx inside global init expressions
+  — independently verified false (that crate's own type-checker only
+  ever runs its `0xD2` bounds check on function bodies, never on
+  `globals[..].init_expr`/`elements[..].offset_expr`) and corrected.
+  Fixed with `decode_unsigned_bounded(.., 32)`, the same bounded decoder
+  every other 32-bit index space in this crate already uses; new
+  regression test `test_evaluate_const_expr_ref_func_rejects_out_of_range_funcidx_instead_of_truncating`.
+- `call_ref` (`0x14`)'s callee-existence check lived inside the
+  `if let Some(expected) = ctx.types.get(type_idx)` block, so an
+  unresolvable `type_idx` silently skipped it entirely, falling through
+  to `call_function` with an unvalidated function index — no panic
+  either way, but silently weaker than the sibling `return_call_ref`
+  (`0x15`), which already ran the equivalent check unconditionally.
+  Hoisted `call_ref`'s check out to match.
+
+## [0.9.78] - 2026-08-31 (W32 second slice — non-null concrete reference types)
+
+### Added
+
+- `call_ref` (`0x14`)/`return_call_ref` (`0x15`) runtime handlers:
+  pop a function reference off the top of the stack, trap on null (real
+  spec: "traps on null" — independently verified against WebAssembly/
+  function-references's own `Overview.md`), then call/tail-call through
+  it exactly like `call`/`return_call` do by immediate funcidx —
+  `ref.func`'s own runtime representation (the wrapped `u32` IS the
+  function index directly) means no GC-heap lookup is needed.
+- `evaluate_const_expr` (the GLOBAL-init-expression / element-offset
+  constant evaluator) gained a `ref.func` (`0xD2`) arm — a real,
+  previously undetected gap: `ref.func` was already legal as an ordinary
+  instruction and as an element-segment entry, but the real spec's own
+  rule that it is a *constant instruction* (usable in a global's init
+  expression, e.g. `call_ref.wast`'s own `(global $fac (ref $ll)
+  (ref.func $fac))`) was unimplemented here, trapping "illegal opcode
+  0xD2" at instantiation instead.
+- `decode_blocktype`'s runtime-side twin (`decode_function_body`'s
+  "blocktype" operand decoder, plus `block_arity`) gained explicit arms
+  for `0x63`/`0x64` (nullable/non-null concrete-ref single-value blocktype
+  results), the same defensive treatment `wasm-validator`'s own copy
+  gained — real corpus regression found and fixed (`ref.wast`'s
+  `block-result-invalid`/`loop-result-invalid` cases exercise this shape,
+  though the SPECIFIC construct those two cases use is still not fully
+  caught, for an unrelated, separately-scoped reason: `wasm-wast-parser`
+  dedups a single-result concrete-ref blocktype into a brand-new
+  anonymous type-section entry, so an out-of-range index written in the
+  original source can spuriously fall back in bounds once that new entry
+  is appended — see this package's own addendum to the spec document).
+- `ValueType::default_for`/`wasm-runtime`'s `call()` argument-conversion
+  match gained arms for the two new non-null concrete-ref variants
+  (`NonNullStructRef`/`NonNullConcreteFuncRef`, `wasm-types` 0.1.14) —
+  required just to keep these exhaustive matches compiling; behaviorally
+  identical to their nullable siblings.
+
 ## [0.9.77] - 2026-08-31 (W32 first slice — bottom reference types)
 
 ### Added

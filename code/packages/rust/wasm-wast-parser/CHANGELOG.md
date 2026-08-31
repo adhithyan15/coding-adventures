@@ -1,5 +1,41 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.87 — 2026-08-31 — W32 second slice: non-null concrete reference types
+
+### Added
+
+- `parse_value_type` now recognizes `(ref $t)` (no `null` keyword) —
+  section 3's new branch alongside the existing `(ref null $t)` path,
+  resolving into `ValueType::NonNullConcreteFuncRef` via the same
+  `type_names` lookup (no struct-type text declarations exist in this
+  crate either way, see that variant's own doc comment). Real corpus
+  vendoring win: `call_ref.wast`'s/`return_call_ref.wast`'s own `(param
+  $f (ref $ii))`/`(global $fac (ref $ll) (ref.func $fac))` shapes.
+- `call_ref $t`/`return_call_ref $t` (function-references proposal) now
+  parse in both folded and flat instruction forms, mirroring `call`/
+  `ref.func`'s existing shape (a leading type reference, then every
+  remaining operand-expression, in stack order).
+- `(elem declare func $f $g ...)` (declarative element segments,
+  reference-types proposal) now parses — a third element-segment mode
+  this crate models as `is_passive: true` (see `build_elem`'s own doc
+  comment for why that's a sound simplification, not a distinct
+  representation). Needed by `call_ref.wast`/`return_call_ref.wast`'s own
+  pervasive use of this construct to make `ref.func` legal on functions
+  never otherwise referenced.
+
+### Fixed
+
+- A `(type ... (struct ...))`/`(type ... (array ...))` type body used to
+  be silently swallowed by `parse_func_signature` (which only recognizes
+  `(param ...)`/`(result ...)` fields) into a bogus EMPTY `(func)` type —
+  invisible before this slice (nothing could reference the resulting
+  bogus type in a way that validated), but this slice's own `(ref $t)`
+  parsing made it possible to reference that bogus type and have it
+  silently "pass" for the wrong reason (found via a full-corpus baseline
+  diff, not by inspection — `struct.wast`'s/`array.wast`'s own bare `(type
+  ... (struct/array ...))`-only modules). Now a clean, honest parse
+  error instead.
+
 ## 0.1.86 — 2026-08-31 — W32 first slice: real bottom reference-type keywords
 
 ### Changed
