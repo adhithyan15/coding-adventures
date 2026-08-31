@@ -4929,6 +4929,11 @@ the Rust, Python, and TypeScript surfaces together.
    - The Rust element lowerer passes finite `XTI` values through to the engine
      and rejects non-finite values before lowering.
 
+510. Rust JFET bandgap-voltage parser parity.
+   - Status: implemented in the Rust JFET bandgap slice.
+   - The Rust element lowerer passes valid `EG` values through to the engine
+     and rejects values that are non-finite or non-positive before lowering.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
@@ -4940,7 +4945,7 @@ the Rust, Python, and TypeScript surfaces together.
    - Status: in progress; threshold, channel-length-modulation, and
      gate-capacitance, flicker-noise, junction-potential, and forward-bias
      depletion, gate saturation-current, and gate-current temperature-exponent
-     parameters are completed in the current slices.
+     and bandgap-voltage parameters are completed in the current slices.
    - Live audit found the Rust element lowerer accepts fewer already-supported
      JFET aliases and model-card validations than the Python and TypeScript
      facades. Audit the remaining direct aliases and finite/range validation as
@@ -4982,12 +4987,17 @@ the Rust, Python, and TypeScript surfaces together.
      inputs are rejected before element lowering.
 
 10. Rust JFET bandgap-voltage parser parity.
-   - Status: prioritized next after the gate-temperature slice.
-   - The engine and Python/TypeScript facades lower positive finite JFET `EG`
-     values into the gate-current temperature-scaling field; audit the Rust
+   - Status: completed by the JFET bandgap slice.
+   - Positive finite `EG` values now lower into the engine JFET field, while
+     invalid inputs are rejected before element lowering.
+
+11. Rust JFET noise-equation-level parser parity.
+   - Status: prioritized next after the bandgap slice.
+   - The engine and Python/TypeScript facades lower finite integral JFET `NLEV`
+     values at least `1` into the noise-equation-level field; audit the Rust
      element lowerer and implement the smallest compatible correction.
 
-11. Grammar-backed parser and app facade.
+12. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -4995,7 +5005,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-12. Deck compatibility follow-up.
+13. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -5006,7 +5016,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-13. Production solver core follow-up.
+14. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
@@ -5017,14 +5027,14 @@ the Rust, Python, and TypeScript surfaces together.
      damping, device limiting, tolerance policy, and additional convergence
      diagnostics for difficult transistor decks.
 
-14. Device model depth.
+15. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-15. Analysis completion.
+16. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and
@@ -5033,14 +5043,14 @@ the Rust, Python, and TypeScript surfaces together.
      Carlo trials.
    - Stabilize raw, CSV, JSON, and browser-friendly result formats.
 
-16. Mixed-signal integration.
+17. Mixed-signal integration.
    - Connect SPICE transient stepping to the hardware VM scheduler.
    - Support bidirectional analog/digital thresholds, event scheduling,
      breakpoint coordination, and VCD correlation.
    - Keep mixed-signal coupling deterministic across Python, Rust, and
      TypeScript.
 
-17. Verilog-A and custom models.
+18. Verilog-A and custom models.
    - Specify the accepted model subset and residual/Jacobian hooks.
    - Add parser or compiler support with sandboxing for TypeScript/web usage.
    - Provide a Rust-native fast path for compiled models.

@@ -2557,6 +2557,12 @@ fn parse_element(
             if !gate_saturation_current_temperature_exponent.is_finite() {
                 return Err(NetlistParseError::new("JFET XTI must be finite"));
             }
+            let bandgap_voltage = *model.params.get("EG").unwrap_or(&1.11);
+            if !bandgap_voltage.is_finite() || bandgap_voltage <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "JFET EG must be finite and positive",
+                ));
+            }
             let mut jfet = Jfet::with_model_and_capacitance(
                 name,
                 &fields[1],
@@ -2576,6 +2582,7 @@ fn parse_element(
             jfet.gate_saturation_current = gate_saturation_current;
             jfet.gate_saturation_current_temperature_exponent =
                 gate_saturation_current_temperature_exponent;
+            jfet.bandgap_voltage = bandgap_voltage;
             jfet.doping_tail_parameter = doping_tail_parameter;
             Ok(Element::Jfet(jfet))
         }
