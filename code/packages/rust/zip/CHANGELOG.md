@@ -16,6 +16,14 @@ That is not a recoverable error there. `wasm32-unknown-unknown` builds with
 `panic = "abort"`, so a caller's `catch_unwind` never runs — the whole module
 traps and any unsaved in-memory state goes with it.
 
+`read_by_name` also no longer scans linearly. A caller that looks up one name per
+entry — the Anki media reader does — made the pair quadratic in entry count, and
+entry count is linear in archive size, so a modest archive with very many
+similarly-named entries could burn billions of string comparisons with no memory
+pressure and no error. `ZipReader` now builds a `HashMap` name index when it
+parses the central directory; the first occurrence of a duplicate name still
+wins, matching the previous `find`.
+
 Verified on the real target, not by inspection: a 135-byte archive with one
 central-directory `compressed_size` field set to `0xFFFFFFD7`, run through a
 wasm32 build under Node. Before: `RuntimeError: unreachable`. After: a clean

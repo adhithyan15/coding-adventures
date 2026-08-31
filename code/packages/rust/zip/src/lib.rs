@@ -622,6 +622,18 @@ pub struct ZipEntry {
 pub struct ZipReader<'a> {
     data: &'a [u8],
     entries: Vec<ZipEntry>,
+    /// Name to index into `entries`, built once when the archive is parsed.
+    ///
+    /// `read_by_name` used to scan `entries` linearly. That is fine for the
+    /// handful of members a real archive has, but callers that look up one name
+    /// per entry — the Anki media reader does exactly this — turn it quadratic,
+    /// and entry count is linear in archive size (a central-directory header is
+    /// 46 bytes plus the name). A few hundred thousand entries sharing a long
+    /// common prefix is then billions of string comparisons: a frozen tab, with
+    /// no memory pressure and no error to show for it.
+    ///
+    /// First name wins, matching the previous `find` behaviour for duplicates.
+    by_name: std::collections::HashMap<String, usize>,
 }
 
 /// Read a little-endian u16 from `data` at `offset`. Returns None on OOB.
@@ -706,7 +718,17 @@ impl<'a> ZipReader<'a> {
                 .ok_or("zip: CD entry advance overflows the address space")?;
         }
 
-        Ok(Self { data, entries })
+        // First occurrence wins, matching the linear `find` this replaces.
+        let mut by_name = std::collections::HashMap::with_capacity(entries.len());
+        for (index, entry) in entries.iter().enumerate() {
+            by_name.entry(entry.name.clone()).or_insert(index);
+        }
+
+        Ok(Self {
+            data,
+            entries,
+            by_name,
+        })
     }
 
     /// Return all entries in the archive (files and directories).
@@ -721,8 +743,15 @@ impl<'a> ZipReader<'a> {
         if entry.is_directory {
             return Ok(Vec::new());
         }
-        // Reject encrypted entries (GP flag bit 0).
-        let local_flags = read_u16(self.data, entry.local_offset as usize + 6)
+        // Checked like the rest of this function. Safe in the shipping `--release`
+        // build either way, since the `checked_add` below rejects any offset large
+        // enough to wrap here — but under `overflow-checks` (the default `dev`
+        // profile, and `cargo test`) an unchecked `+` panics on attacker input,
+        // and on wasm a panic is an uncatchable trap.
+        let lh_off = entry.local_offset as usize;
+        let local_flags = lh_off
+            .checked_add(6)
+            .and_then(|offset| read_u16(self.data, offset))
             .ok_or("zip: local header out of bounds")?;
         if local_flags & 1 != 0 {
             return Err(format!("zip: entry '{}' is encrypted; not supported", entry.name));
@@ -731,9 +760,14 @@ impl<'a> ZipReader<'a> {
         // Skip the Local Header to reach the file data.
         // The Local Header has variable-length name + extra fields (which may
         // differ in length from the CD header). We must re-read them here.
-        let lh_off = entry.local_offset as usize;
-        let lh_name_len  = read_u16(self.data, lh_off + 26).ok_or("zip: local header truncated")? as usize;
-        let lh_extra_len = read_u16(self.data, lh_off + 28).ok_or("zip: local header truncated")? as usize;
+        let lh_name_len = lh_off
+            .checked_add(26)
+            .and_then(|offset| read_u16(self.data, offset))
+            .ok_or("zip: local header truncated")? as usize;
+        let lh_extra_len = lh_off
+            .checked_add(28)
+            .and_then(|offset| read_u16(self.data, offset))
+            .ok_or("zip: local header truncated")? as usize;
         // Checked, because `usize` is 32 bits on `wasm32` and every term here is
         // attacker-controlled: `local_offset` and `compressed_size` are `u32`
         // fields read straight from the archive. Unchecked `+` wraps, and a
@@ -803,9 +837,11 @@ impl<'a> ZipReader<'a> {
 
     /// Find an entry by name and return its decompressed data.
     pub fn read_by_name(&self, name: &str) -> Result<Vec<u8>, String> {
-        let entry = self.entries.iter()
-            .find(|e| e.name == name)
+        let index = *self
+            .by_name
+            .get(name)
             .ok_or_else(|| format!("zip: entry '{}' not found", name))?;
+        let entry = &self.entries[index];
         self.read(entry)
     }
 

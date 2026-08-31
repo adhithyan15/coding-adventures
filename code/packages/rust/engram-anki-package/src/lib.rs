@@ -483,7 +483,7 @@ pub fn read_media_file(data: &[u8], archive_name: &str) -> Result<ResolvedMediaF
 /// Small packages are still allowed to expand generously; the multiplier below
 /// takes over once the archive itself is large enough for a ratio to be
 /// meaningful.
-const MEDIA_EXPANSION_FLOOR: usize = 16 * 1024 * 1024;
+const MEDIA_EXPANSION_FLOOR: u64 = 16 * 1024 * 1024;
 
 /// How many times its own size a package's media may expand to in total.
 ///
@@ -491,7 +491,60 @@ const MEDIA_EXPANSION_FLOOR: usize = 16 * 1024 * 1024;
 /// barely shrinks inside a zip, so a real collection sits near 1x. Fifty leaves
 /// enormous headroom for text-heavy or oddly-packed archives while still bounding
 /// the total.
-const MEDIA_EXPANSION_RATIO: usize = 50;
+const MEDIA_EXPANSION_RATIO: u64 = 50;
+
+/// Absolute ceiling, whatever the archive's size.
+///
+/// Without this the ratio is self-defeating: a large package authorises a
+/// proportionally larger expansion, so an attacker only has to pad the archive to
+/// raise their own limit. A 100 MB package would licence 5 GB of retained media.
+///
+/// ## Why wasm gets a much smaller one
+///
+/// The ceiling has to be set against the peak memory an import actually reaches,
+/// not the bytes it retains, and on wasm those differ by more than an order of
+/// magnitude. `MediaAssetRecord.data` is a `Vec<u8>` with a derived `Serialize`,
+/// so returning state through the JSON facade renders each media byte as a
+/// decimal number in a JSON array, by way of an intermediate `serde_json::Value`
+/// tree holding one `Value` per byte — roughly 24 bytes of transient heap for
+/// every byte of media, on a target whose whole address space is 4 GB.
+///
+/// So 32 MiB of media is already ~768 MB of peak on wasm. Allowing the native
+/// figure there would guarantee a trap on a *legitimate* import, never mind a
+/// hostile one.
+///
+/// This is a limit on browser media size, and it is deliberately visible as one
+/// rather than hidden. The real fix is to stop amplifying — serialise media as
+/// base64 and stream with `to_writer` instead of building a `Value` tree — which
+/// changes the wire format every host adapter reads and so belongs in its own
+/// change, not this one.
+#[cfg(target_arch = "wasm32")]
+const MEDIA_EXPANSION_CEILING: u64 = 32 * 1024 * 1024;
+
+/// See the wasm variant above for why these differ.
+#[cfg(not(target_arch = "wasm32"))]
+const MEDIA_EXPANSION_CEILING: u64 = 256 * 1024 * 1024;
+
+/// Total decompressed media an archive of `archive_len` bytes may expand to.
+///
+/// Computed in `u64`, deliberately. `usize` is 32 bits on `wasm32`, where
+/// `archive_len * 50` saturates to `usize::MAX` for any archive over about
+/// 82 MiB — and because the running total saturates to that same value, the
+/// `spent > budget` test becomes `usize::MAX > usize::MAX` and never fires. The
+/// first version of this budget had exactly that bug: present, readable, and
+/// completely inert at precisely the sizes where it mattered.
+fn media_budget(archive_len: usize) -> u64 {
+    (archive_len as u64)
+        .saturating_mul(MEDIA_EXPANSION_RATIO)
+        .clamp(MEDIA_EXPANSION_FLOOR, MEDIA_EXPANSION_CEILING)
+}
+
+// `clamp` panics if its bounds are inverted, so pin the ordering at compile time
+// rather than trusting whoever next edits the two constants — including the
+// target-specific ceiling, which is easy to lower past the floor by accident.
+const _: () = assert!(MEDIA_EXPANSION_FLOOR <= MEDIA_EXPANSION_CEILING);
+// A ceiling at the type maximum would bound nothing.
+const _: () = assert!(MEDIA_EXPANSION_CEILING < u64::MAX);
 
 /// Read and decode every media file a package declares.
 ///
@@ -504,11 +557,13 @@ const MEDIA_EXPANSION_RATIO: usize = 50;
 /// gigabyte of retained memory before this function returns, and layering a
 /// DEFLATE bomb behind each alias multiplies it further.
 ///
-/// That was survivable while this code was native-only: a large allocation fails
-/// as an `Err` and the app carries on. It is not survivable in a browser.
-/// `wasm32-unknown-unknown` builds with `panic = "abort"`, so a failed allocation
-/// aborts the whole module — the `catch_unwind` the JSON facade wraps every call
-/// in never runs, and the user's unsaved collection goes with it. Exposing this
+/// This was never truly survivable — Rust's `handle_alloc_error` aborts on every
+/// target, whatever the panic strategy, so an out-of-memory here kills a native
+/// host too. It is simply far easier to reach now: a browser accepts a file from
+/// anywhere, and on wasm the abort takes the user's unsaved collection with it,
+/// because
+/// `wasm32-unknown-unknown` also builds with `panic = "abort"`, so the
+/// `catch_unwind` the JSON facade wraps every call in never runs. Exposing this
 /// path to the browser is what makes the budget necessary rather than merely
 /// prudent.
 ///
@@ -521,8 +576,8 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
     let collection = collection_member(&reader, &entries)?;
     let manifest = media_manifest(&reader, collection.format)?;
 
-    let budget = MEDIA_EXPANSION_FLOOR.max(data.len().saturating_mul(MEDIA_EXPANSION_RATIO));
-    let mut spent: usize = 0;
+    let budget = media_budget(archive_len);
+    let mut spent: u64 = 0;
 
     manifest
         .media_files
@@ -537,7 +592,7 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
             })?;
             let data = decode_package_payload(collection.format, "media file", &data)?;
 
-            spent = spent.saturating_add(data.len());
+            spent = spent.saturating_add(data.len() as u64);
             if spent > budget {
                 return Err(apkg_error(format!(
                     "media in this package expands to more than {budget} bytes, \
@@ -6668,6 +6723,46 @@ CREATE TABLE graves (
     /// The package here carries deliberately invalid payload bytes. That is the
     /// point: format is detected by member name, so the code must refuse before it
     /// ever looks at the content, and the test needs no zstd to construct.
+    /// The media budget's arithmetic, which is where it went wrong before.
+    ///
+    /// The first version used `usize::saturating_mul`. On `wasm32`, `usize` is 32
+    /// bits, so any archive over ~82 MiB saturated the budget to `usize::MAX` —
+    /// and since the running total saturated to the same value, `spent > budget`
+    /// was `usize::MAX > usize::MAX`, always false. The control was inert exactly
+    /// where it mattered most, and nothing failed to say so.
+    ///
+    /// Testing the arithmetic directly rather than through a crafted archive is
+    /// deliberate: exceeding the 16 MiB floor end to end requires building a
+    /// multi-megabyte compressed fixture, which is slow enough to be a poor CI
+    /// test — and it would not have caught the saturation bug on a 64-bit host
+    /// anyway, since `usize` is 64 bits there. The bug lived in the arithmetic,
+    /// so the arithmetic is what to pin.
+    #[test]
+    fn media_budget_is_clamped_at_both_ends() {
+        // Small archives get the floor, not a proportionally tiny budget.
+        assert_eq!(media_budget(0), MEDIA_EXPANSION_FLOOR);
+        assert_eq!(media_budget(1024), MEDIA_EXPANSION_FLOOR);
+
+        // In the middle, the ratio applies.
+        let mid = 2 * 1024 * 1024;
+        assert_eq!(
+            media_budget(mid),
+            (mid as u64) * MEDIA_EXPANSION_RATIO,
+            "between the floor and the ceiling the ratio should govern"
+        );
+
+        // Large archives are capped rather than authorising ever more expansion.
+        // This is the assertion the saturating version failed: it produced a
+        // value at the integer maximum instead of the ceiling.
+        assert_eq!(media_budget(usize::MAX), MEDIA_EXPANSION_CEILING);
+        assert_eq!(media_budget(1024 * 1024 * 1024), MEDIA_EXPANSION_CEILING);
+
+        // That the ceiling is a real bound, and ordered against the floor, are
+        // compile-time properties — see the `const _: () = assert!(..)` pair
+        // beside `media_budget`, which clippy rightly refuses to let masquerade
+        // as runtime assertions here.
+    }
+
     #[cfg(not(feature = "modern-format"))]
     #[test]
     fn modern_packages_fail_with_an_actionable_error_when_zstd_is_unavailable() {

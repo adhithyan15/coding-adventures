@@ -2,7 +2,33 @@
 
 ## Unreleased
 
-**Media expansion is now budgeted.** Nothing in the ZIP format stops a central
+**Media expansion is now budgeted**, with the budget clamped at both ends and
+computed in `u64`. An earlier draft used `usize::saturating_mul`, which on
+`wasm32` saturates to `usize::MAX` for any archive over ~82 MiB — and since the
+running total saturated to the same value, the comparison became
+`usize::MAX > usize::MAX` and never fired. The control was inert at exactly the
+sizes where it mattered. The arithmetic now has its own unit test, which fails if
+the ceiling clamp is removed.
+
+The ceiling is target-aware: 32 MiB on wasm, 256 MiB elsewhere. That is not
+arbitrary — returning state through the JSON facade amplifies media roughly 24x
+in transient memory (`Vec<u8>` serialises as a JSON number array through an
+intermediate `Value` tree), so the wasm ceiling is set against the amplified
+peak. It is a visible limit on browser media size; removing the amplification is
+tracked in #13671.
+
+Bounding each decode to the *remaining* budget, rather than measuring after the
+allocation, is tracked in #13672.
+
+**The lookup by name is no longer linear.** `ZipReader::read_by_name` scanned
+entries; `read_media_files` calls it once per media entry, so the pair was
+quadratic in entry count — and entry count is linear in archive size. A ~8 MB
+archive with ~148,000 aliased entries sharing a long name prefix is on the order
+of 10^10 string comparisons: a frozen tab, with no memory pressure and no error
+to show for it, which the media budget cannot catch because the payloads are
+tiny. `ZipReader` now builds a name index once.
+
+ Nothing in the ZIP format stops a central
 directory from listing thousands of entries pointing at the *same* local header,
 and `read_media_files` read and **retained** each one. A ~1 MB archive was measured
 expanding to over 1.3 GB of retained memory (a 1278x ratio) with plain stored
