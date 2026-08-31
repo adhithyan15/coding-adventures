@@ -111,8 +111,58 @@ Discovery also excludes Cabal's exact, case-sensitive `dist-newstyle` and
 Dune's exact, case-sensitive `_build` generated-directory components. Near and
 case-variant names such as `dist-newstyle-example`, `_build-example`, and
 `_Build` remain discoverable. The shared language-registry fixture and focused
-Swift coverage enforce those boundaries, and source hashing reuses the same
-exclusion registry.
+Swift coverage enforce those boundaries. Source hashing applies its complete
+related registry separately because discovery-only directories are still
+eligible package source.
+
+## Portable source hashing
+
+Source collection has its own exact generated-output boundary: `.git`, `.hg`,
+`.svn`, `.venv`, `.tox`, `.mypy_cache`, `.pytest_cache`, `.ruff_cache`,
+`.stack-work`, `__pycache__`, `node_modules`, `vendor`, `dist`,
+`dist-newstyle`, `_build`, `build`, `target`, `.claude`, `Pods`, `.gradle`,
+`.dart_tool`, `gradle-build`, `deps`, `.build`, `.cargo`, and `cover`. These
+names are case-sensitive whole path components. Near names and the
+discovery-only `specs` directory remain hashable source.
+
+Legacy packages collect the registered sources and metadata for every
+established lane. Starlark packages use strict `srcs` glob matching while
+retaining supported BUILD fronts, fixed-name package metadata, and root-only
+variable manifests: `.gemspec`, `.rockspec`, `.cabal`, `.opam`, `.csproj`, and
+`.fsproj`. Nested variable manifests require an explicit glob. OCaml packages
+recognize `.ml`, `.mli`, `.opam`, `.ocamlformat`, `dune`, and `dune-project`.
+This is the primary/reference lane registry. Hybrid native companions,
+tool scripts, wrappers, resources, and generated-versus-authored binary inputs
+remain under a separate language-neutral registry audit rather than being
+silently guessed by this engine.
+
+Package hashing sorts portable repository-relative paths by UTF-8 bytes and
+feeds this byte stream to the repository-local pure Swift SHA-256 package for
+every file:
+
+```text
+uint64_be(path_utf8_length) || path_utf8 ||
+uint64_be(raw_file_length)  || raw_file_bytes
+```
+
+Absolute checkout paths, timestamps, ownership, locale, and directory order
+never enter the digest. Every read walks down from the trusted repository root
+through retained no-follow handles; symbolic links, Windows reparse points,
+ancestor identity changes, and file identity/size/timestamp changes fail
+closed. Missing, unreadable, or unstable inputs produce CLI exit `2` and one
+quoted, root-redacted diagnostic whose control and format characters are
+escaped:
+
+```text
+HASH_PACKAGE_FAILED: package="swift/example"
+```
+
+The test suite consumes both neutral source-collection fixtures and the shared
+hashing-v1 missing-cache oracle, then independently covers binary bytes, CRLF,
+Unicode path ordering, same-content renames, empty packages, every established
+language registry entry, declared root manifests, nested links, real Windows
+junctions (including an ancestor-junction plan path), and fresh executable
+failure paths.
 
 ## Usage
 

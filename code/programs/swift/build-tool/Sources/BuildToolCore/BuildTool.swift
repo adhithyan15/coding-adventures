@@ -26,6 +26,9 @@ public enum BuildTool {
         } catch let error as DuplicatePackageIdentityError {
             FileHandle.standardError.write(Data((error.localizedDescription + "\n").utf8))
             return 2
+        } catch let error as PackageHashError {
+            FileHandle.standardError.write(Data((error.localizedDescription + "\n").utf8))
+            return 2
         } catch {
             fputs("Error: \(error.localizedDescription)\n", stderr)
             return 1
@@ -179,7 +182,11 @@ public enum BuildTool {
             return 0
         }
 
-        let packageHashes = Dictionary(uniqueKeysWithValues: packages.map { ($0.name, Hasher.hashPackage($0)) })
+        let packageHashes = try Dictionary(
+            uniqueKeysWithValues: packages.map {
+                ($0.name, try Hasher.hashPackage($0, repositoryRoot: repoRoot))
+            }
+        )
         let depsHashes = Dictionary(uniqueKeysWithValues: packages.map { ($0.name, Hasher.hashDeps(packageName: $0.name, graph: graph, packageHashes: packageHashes)) })
 
         let cachePath = absolutePath(options.cacheFile, repoRoot: repoRoot)
@@ -255,7 +262,11 @@ public enum BuildTool {
             let affectedSet = plan.affectedPackages.map(Set.init)
             print("Loaded plan: \(packages.count) packages")
 
-            let packageHashes = Dictionary(uniqueKeysWithValues: packages.map { ($0.name, Hasher.hashPackage($0)) })
+            let packageHashes = try Dictionary(
+                uniqueKeysWithValues: packages.map {
+                    ($0.name, try Hasher.hashPackage($0, repositoryRoot: repoRoot))
+                }
+            )
             let depsHashes = Dictionary(uniqueKeysWithValues: packages.map { ($0.name, Hasher.hashDeps(packageName: $0.name, graph: graph, packageHashes: packageHashes)) })
             let cachePath = absolutePath(options.cacheFile, repoRoot: repoRoot)
 
@@ -280,6 +291,9 @@ public enum BuildTool {
 
             print(Reporter.formatReport(results: results), terminator: "")
             return results.values.contains(where: { $0.status == .failed }) ? 1 : 0
+        } catch let error as PackageHashError {
+            FileHandle.standardError.write(Data((error.localizedDescription + "\n").utf8))
+            return 2
         } catch {
             fputs("Error: \(error.localizedDescription)\n", stderr)
             return 1

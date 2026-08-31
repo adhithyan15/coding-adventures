@@ -1521,6 +1521,41 @@ fn rejects_non_finite_jfet_threshold_aliases() {
 }
 
 #[test]
+fn parses_jfet_channel_length_modulation_aliases_with_canonical_precedence() {
+    let parsed = parse_netlist(
+        r#"
+.model canonical NJF(LAMBDA=0.02 LAM=0.03)
+.model aliased NJF(LAM=0.04)
+J1 drain gate source canonical
+J2 drain gate source aliased
+"#,
+    )
+    .unwrap();
+
+    let elements = parsed.circuit.elements();
+    let Element::Jfet(canonical) = &elements[0] else {
+        panic!("expected JFET");
+    };
+    let Element::Jfet(aliased) = &elements[1] else {
+        panic!("expected JFET");
+    };
+    assert_close(canonical.channel_length_modulation, 0.02);
+    assert_close(aliased.channel_length_modulation, 0.04);
+}
+
+#[test]
+fn rejects_non_finite_jfet_channel_length_modulation_aliases() {
+    for parameter in ["LAMBDA", "LAM"] {
+        let error = parse_netlist(&format!(
+            ".model bad NJF({parameter}=1e999)\nJ1 drain gate source bad"
+        ))
+        .unwrap_err();
+
+        assert!(error.to_string().contains("JFET LAMBDA must be finite"));
+    }
+}
+
+#[test]
 fn parses_jfet_b_as_doping_tail_parameter_not_beta_alias() {
     let parsed = parse_netlist(
         r#"

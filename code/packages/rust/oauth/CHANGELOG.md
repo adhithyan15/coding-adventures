@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added provider-neutral bounded JSON/form token response decoding, closed
+  token-endpoint errors, explicit refresh-token rotation decisions, audited
+  public-client refresh and RFC 7009 revocation request preparation, recursive
+  response-tree scrubbing, and a separate audit gate before parsed credential
+  material can leave the codec. Secret form encoders now write directly into a
+  zeroizing destination without ordinary heap-string intermediates.
 - Added the first provider-neutral OAuth 2.0 installed-app primitive: strict
   configuration, caller-injected 256-bit state and PKCE entropy, mandatory
   `S256`, authorization URL construction, exact callback/state/issuer

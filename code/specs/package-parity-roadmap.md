@@ -12009,6 +12009,94 @@ zero exact overlap across the nine paths. GitHub reports the PR non-draft,
 mergeable, and conflict-free with checks queued or in progress, so auto-merge
 remains disabled until all final-head checks are terminal and acceptable.
 
+### Post-PR #13608 refresh and Swift portable source-hashing selection
+
+PR #13608 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral result. GitHub reported final head
+`aa9170cfe6863c9040c51c495dcffc1b06f71732` clean and mergeable before guarded
+squash auto-merge was enabled with an exact head lease. GitHub merged it as
+`b89043a02264bfdae4193723ab3f27e8b562caa1` at 2026-08-31T10:26:44Z
+without a plain manual merge command. The Go source-hashing owner therefore
+advances from `pr-open` to `merged`, and the active parity PR is cleared.
+
+The collision-checked schema-3 inventory refreshed through exact current main
+`5de6681bcbd010e3511819c18da7cd012263759f` remains structurally unchanged:
+15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427
+all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880,
+731 Rust singletons, zero OCaml packages, zero canonical collisions, and zero
+unknown buckets. Intervening PRs #13606 and #13607 changed only existing
+human-language and TaskApp paths. They add no package root, BUILD front,
+recognized manifest, dependency, lockfile, identity, or newly eligible owner
+gap. Six live PRs overlap none of the selected Swift build-tool, state,
+roadmap, or changelog paths.
+
+The readiness and security audit registered one prerequisite before selecting
+the next implementation. The dormant Rust build-tool evaluator constructs the
+repository-local interpreter with an `FsResolver` that concatenates the root
+and caller label without containment, and that interpreter currently meters
+only recursion. New pending owner
+`build-tool-rust-starlark-evaluator-safety-conformance` owns repository-
+contained immutable loads, root-redacted diagnostics, and the neutral step,
+aggregate, range/value, load-depth, module-count, cycle, and output limits.
+Rust declared-source metadata plumbing now depends on that safety owner, and
+the remaining-engines Starlark aggregate records it as the early Rust child.
+This prevents production metadata wiring from activating host traversal or an
+incompletely bounded evaluator while the broader aggregate remains blocked on
+the canonical Go oracle.
+
+The dependency/leverage pass selects
+`build-tool-swift-portable-source-hashing-conformance` on branch
+`codex/build-tool-swift-portable-source-hashing-conformance`. Its sole neutral-
+corpus prerequisite is merged, while Rust source hashing is correctly blocked
+on the new safety and metadata chain. Swift's current production collector
+omits OCaml sources and metadata, package hashing drops read errors and hashes
+only concatenated per-file digest text without portable path/length frames,
+and its Windows fallback is 64-bit FNV rather than SHA-256. This bounded tranche
+will add checked source collection and hashing-v1 framing, a real cross-platform
+SHA-256 path, exact language-neutral fixture projections, checked front-door
+error propagation, package documentation, state, and this roadmap. It will not
+mix dependency-hash framing, Starlark evaluation, discovery, BUILD-front,
+workflow, or execution-authority work. Reconciliation, classification, and
+selection leave the complete 608-owner/922-edge graph unique, dependency-
+complete, and acyclic at 196 merged, 411 pending, and exactly this owner in
+progress.
+
+### Swift portable source-hashing implementation review
+
+The Swift build tool now consumes both neutral source-collection fixtures and
+the hashing-v1 oracle through the local Swift SHA-256 package. Its bounded
+primary/reference registry covers the 15 established implementation lanes plus
+OCaml, preserves exact generated-directory pruning, sorts relative paths by raw
+UTF-8 bytes, and frames path and content lengths as unsigned 64-bit big-endian
+values. Non-empty declared Starlark sources remain authoritative, empty
+declarations fall back to the language registry, supported root variable-name
+manifests remain metadata, and all read and traversal failures reach the CLI as
+stable root-redacted diagnostics with exit status 2.
+
+Security review verified repository-root-bound component walks with retained
+no-follow handles or descriptors, ancestor and directory identity
+revalidation, reparse-point and symlink rejection, singly-linked regular-file
+requirements, and nonblocking close-on-exec POSIX opens. Real package-root,
+ancestor-link, and outside-hardlink regressions exercise those fail-closed
+boundaries. The full Swift package passes 68 tests across 9 suites with one
+expected Windows symlink-capability skip, release and literal Windows build
+fronts pass, the local SHA-256 dependency passes 29 tests, and the neutral
+corpus validates 121 cases, 283 files, 15 languages, and 16 implementations.
+Independent conformance and security reviews found no blocker within this
+bounded tranche.
+
+The review also classified a broader neutral-contract gap under the new
+pending `build-tool-language-source-input-registry-corpus-and-engine-audit`
+owner. That audit must inventory hybrid/native build inputs such as companion
+C/C++ sources, wrappers, resources, version catalogs, headers, module maps, and
+host-language companions, add collision-checked neutral fixtures, and register
+concrete engine adoption children before completion. The six still-pending
+portable-source engine leaves and the remaining-engines aggregate now depend
+on that audit; merged leaves and this in-progress Swift tranche are not
+retroactively blocked. The synchronized state graph contains 609 unique
+owners and 930 dependency edges, is dependency-complete and acyclic, and stands
+at 196 merged, 412 pending, and exactly this owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

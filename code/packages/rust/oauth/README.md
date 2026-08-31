@@ -1,8 +1,7 @@
 # `coding_adventures_oauth`
 
 Provider-neutral OAuth 2.0 client primitives implemented in this repository.
-The first slice owns the security-sensitive, pure portion of an installed-app
-Authorization Code flow:
+The crate owns the security-sensitive, pure portion of installed-app OAuth:
 
 - strict provider/end-point configuration;
 - 256-bit caller-injected state and PKCE entropy;
@@ -11,20 +10,27 @@ Authorization Code flow:
 - exact redirect, state, and optional authorization-server issuer validation;
 - closed provider-denial and callback errors;
 - one-use callback completion into an opaque token-exchange request; and
-- caller-owned trace correlation plus privacy-safe audit descriptors for begin
-  and completion attempts. `Audited::publish_then_release` is the only result
-  release path, so audit publication failure fails closed before a browser URL,
-  callback error, authorization code, or exchange request becomes observable.
+- bounded JSON and form token/error decoding, explicit refresh-token rotation,
+  public-client refresh grants, and RFC 7009 revocation preparation.
+
+Caller-owned trace correlation and privacy-safe audit descriptors cover every
+implemented boundary. `Audited::publish_then_release` is the only result
+release path, so audit failure closes before a browser URL, secret-bearing
+request, provider error, parsed response, or credential material is exposed.
+Raw response bytes, attacker descriptions, URLs, scopes, and credentials never
+enter audit records or diagnostics. Parsed JSON trees and request/response
+buffers containing credentials are wipe-on-drop or explicitly scrubbed; secret
+form bodies are zeroizing from their first byte and create no encoded temporary
+strings.
 
 The crate performs no network, browser, listener, clock, storage, or credential
 I/O. Those authorities are deliberately injected by later broker and host
 packages. Provider differences are data in `ProviderConfig`; the core contains
 no Google, Microsoft, GitHub, Dropbox, or other provider branch.
 
-This is the first implementation slice of `code/specs/oauth.md`. Refresh,
-device authorization, token parsing/custody, loopback hosting, discovery,
-DPoP, and a production HTTPS transport remain separately testable backlog
-items rather than hidden fallbacks.
+This is the token-boundary implementation slice of `code/specs/oauth.md`.
+Credential custody, loopback hosting, discovery, device authorization, DPoP,
+and production HTTPS transport remain separately testable backlog items.
 
 ## Verification
 

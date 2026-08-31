@@ -1,8 +1,9 @@
 # OAuth
 
-**Status:** Phase 1 implemented — provider-neutral installed-app Authorization
-Code + PKCE pure core; broker, transport, token custody, refresh, device flow,
-and provider integrations remain prioritized below.
+**Status:** Phase 2 token boundary implemented — provider-neutral installed-app
+Authorization Code + PKCE, token/error codecs, refresh rotation, and revocation
+request preparation; broker, transport, token custody, device flow, and provider
+integrations remain prioritized below.
 
 ## Overview
 
@@ -70,31 +71,39 @@ The delivery order is:
    descriptors for successful, denied, and failed begin/completion attempts.
    The result wrapper exposes no bypass around durable
    `publish_then_release`, so audit failure fails closed.
-2. **OAuth wire codecs:** bounded JSON and form token/error responses, refresh
-   grant requests, rotating refresh-token semantics, revocation, and RFC 8414
-   authorization-server metadata validation. Token or raw provider response
-   bytes never enter errors or audit data.
-3. **Installed-app host:** external browser launch and a transient listener on
+2. **OAuth token boundary (active):** bounded JSON and form token/error
+   responses, refresh grant requests, explicit rotating refresh-token
+   semantics, and RFC 7009 revocation preparation. Token or raw provider
+   response bytes never enter errors or audit data, and both decoded material
+   and secret-bearing requests are audit-gated before release.
+3. **Authorization-server metadata:** bounded RFC 8414 metadata decoding,
+   exact issuer validation, endpoint policy, supported-flow negotiation, and a
+   cache record that never silently widens provider configuration.
+4. **Installed-app host:** external browser launch and a transient listener on
    an IP-literal loopback redirect, with exact request-line/header bounds and
    the listener closed immediately after the one accepted transaction.
-4. **Credential custody and broker:** opaque credential references, atomic
+5. **Credential custody and broker:** opaque credential references, atomic
    refresh rotation, multiple accounts per provider, audit-before-browser,
    audit-before-token-exchange, and audit-before-access-token disclosure. Audit
    publication failure fails the operation closed.
-5. **Device Authorization Grant:** RFC 8628 preparation and a caller-driven
+6. **Confidential-client authentication:** web-service profiles for
+   `client_secret_basic`, `client_secret_post`, and `private_key_jwt`, using
+   opaque custody references and audit-before-release rather than secrets in
+   provider configuration. Public native clients remain `none` + PKCE.
+7. **Device Authorization Grant:** RFC 8628 preparation and a caller-driven
    polling state machine with no internal sleep or network authority.
-6. **HTTPS transport:** provider-neutral request/response types over the
+8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
    before any socket is opened.
-7. **Provider data fixtures:** Google, Microsoft, GitHub, Dropbox, Slack,
+9. **Provider data fixtures:** Google, Microsoft, GitHub, Dropbox, Slack,
    Spotify, and user-defined providers validated through the same conformance
    suite. Provider quirks remain data; none creates a new OAuth implementation.
-8. **Later hardening:** DPoP, asymmetric client authentication, and full OpenID
+10. **Later hardening:** DPoP and full OpenID
    Connect discovery/JWKS/ID-token validation.
 
-The first slice intentionally stops before network or token parsing. It is a
-complete pure protocol boundary, not a mock transport and not a provider-
-specific midpoint.
+The current slices intentionally stop before network and durable credential
+custody. They are complete pure protocol boundaries, not mock transports or
+provider-specific midpoints.
 
 ---
 
