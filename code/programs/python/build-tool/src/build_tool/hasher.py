@@ -378,7 +378,6 @@ def _windows_lock_unlinked_directories(directory: Path) -> list[int]:
 
     file_read_attributes = 0x0080
     file_share_read = 0x00000001
-    file_share_write = 0x00000002
     open_existing = 3
     file_attribute_reparse_point = 0x00000400
     file_flag_backup_semantics = 0x02000000
@@ -393,7 +392,7 @@ def _windows_lock_unlinked_directories(directory: Path) -> list[int]:
             handle = create_file(
                 str(current),
                 file_read_attributes,
-                file_share_read | file_share_write,
+                file_share_read,
                 None,
                 open_existing,
                 file_flag_backup_semantics | file_flag_open_reparse_point,
@@ -449,11 +448,11 @@ def _open_source_no_follow(package_root: Path, filepath: Path) -> int:
                 final_path = os.path.normcase(
                     os.path.normpath(_windows_final_handle_path(descriptor))
                 )
-                final_root = os.path.normcase(
-                    os.path.normpath(str(package_root.absolute()))
+                lexical_path = os.path.normcase(
+                    os.path.normpath(str(filepath.absolute()))
                 )
-                if os.path.commonpath((final_root, final_path)) != final_root:
-                    raise OSError("opened source escaped its package")
+                if final_path != lexical_path:
+                    raise OSError("opened source did not retain its lexical path")
             except BaseException:
                 os.close(descriptor)
                 raise

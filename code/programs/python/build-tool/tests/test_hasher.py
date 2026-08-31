@@ -10,6 +10,7 @@ from pathlib import Path
 
 import pytest
 
+import build_tool.hasher as hasher_module
 from build_tool.discovery import Package, discover_packages
 from build_tool.hasher import (
     GENERATED_DIRECTORY_COMPONENTS,
@@ -533,6 +534,108 @@ class TestHashFile:
                 )
         finally:
             os.rmdir(package_root)
+
+    @pytest.mark.skipif(os.name != "nt", reason="Windows reparse semantics")
+    def test_frame_rejects_ancestor_mutated_after_directory_lock(
+        self, tmp_path, monkeypatch
+    ):
+        import ctypes
+        import struct
+        from ctypes import wintypes
+
+        package_root = tmp_path / "package"
+        nested = package_root / "nested"
+        nested.mkdir(parents=True)
+        collected_source = nested / "source.py"
+        sibling = package_root / "sibling"
+        sibling.mkdir()
+        (sibling / "source.py").write_bytes(b"different")
+
+        real_lock = hasher_module._windows_lock_unlinked_directories
+
+        def lock_then_mutate(directory):
+            handles = real_lock(directory)
+            kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+            create_file = kernel32.CreateFileW
+            create_file.argtypes = (
+                wintypes.LPCWSTR,
+                wintypes.DWORD,
+                wintypes.DWORD,
+                wintypes.LPVOID,
+                wintypes.DWORD,
+                wintypes.DWORD,
+                wintypes.HANDLE,
+            )
+            create_file.restype = wintypes.HANDLE
+            device_io_control = kernel32.DeviceIoControl
+            device_io_control.argtypes = (
+                wintypes.HANDLE,
+                wintypes.DWORD,
+                wintypes.LPVOID,
+                wintypes.DWORD,
+                wintypes.LPVOID,
+                wintypes.DWORD,
+                ctypes.POINTER(wintypes.DWORD),
+                wintypes.LPVOID,
+            )
+            device_io_control.restype = wintypes.BOOL
+
+            write_handle = create_file(
+                str(nested),
+                0x40000000,
+                0x00000001 | 0x00000002,
+                None,
+                3,
+                0x02000000 | 0x00200000,
+                None,
+            )
+            invalid_handle_value = ctypes.c_void_p(-1).value
+            assert write_handle != invalid_handle_value
+            try:
+                substitute = ("\\??\\" + str(sibling)).encode("utf-16-le")
+                print_name = str(sibling).encode("utf-16-le")
+                paths = substitute + b"\0\0" + print_name + b"\0\0"
+                payload = struct.pack(
+                    "<IHHHHHH",
+                    0xA0000003,
+                    8 + len(paths),
+                    0,
+                    0,
+                    len(substitute),
+                    len(substitute) + 2,
+                    len(print_name),
+                ) + paths
+                buffer = ctypes.create_string_buffer(payload)
+                returned = wintypes.DWORD()
+                assert device_io_control(
+                    write_handle,
+                    0x000900A4,
+                    buffer,
+                    len(payload),
+                    None,
+                    0,
+                    ctypes.byref(returned),
+                    None,
+                )
+            finally:
+                kernel32.CloseHandle(write_handle)
+            return handles
+
+        monkeypatch.setattr(
+            hasher_module, "_windows_lock_unlinked_directories", lock_then_mutate
+        )
+        try:
+            with pytest.raises(
+                OSError, match="opened source did not retain its lexical path"
+            ):
+                _update_file_frame(
+                    hashlib.sha256(),
+                    "code/packages/python/test/source.py",
+                    collected_source,
+                    package_root,
+                )
+        finally:
+            os.rmdir(nested)
 
     @pytest.mark.skipif(os.name == "nt", reason="POSIX symlink semantics")
     def test_frame_rejects_ancestor_replaced_by_posix_symlink(self, tmp_path):
