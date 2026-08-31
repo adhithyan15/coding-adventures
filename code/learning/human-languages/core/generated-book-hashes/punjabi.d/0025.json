@@ -1,0 +1,12 @@
+{
+  "language": "punjabi",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:72b8cf0aba7ce6b0",
+  "lessonIds": [
+    "PA-R25-drink-request-r4",
+    "PA-R25-milk-bread-r4",
+    "PA-R25-friend-family-r4",
+    "PA-R25-kin-eye-r4"
+  ],
+  "tex": "punjabi/book/chapters/ch25-request-people-r4-bridge.tex"
+}

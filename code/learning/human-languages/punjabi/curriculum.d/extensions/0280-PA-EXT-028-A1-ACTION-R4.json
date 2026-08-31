@@ -1,0 +1,16 @@
+{
+  "id": "PA-EXT-028-A1-ACTION-R4",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can retrieve the already-taught know, think, understand, read, write, take, ask, help, and liking families at R4 distance without adding language or claiming writing credit.",
+  "prerequisites": [
+    "PA-EXT-027-A1-THREE-FIELD-INTEGRATION"
+  ],
+  "lessons": [
+    "PA-R24-know-think-r4",
+    "PA-R24-understand-read-r4",
+    "PA-R24-write-take-ask-r4",
+    "PA-R24-help-like-r4"
+  ]
+}

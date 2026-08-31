@@ -145,6 +145,14 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 136 | 23 | PA-W06-placement-repair | move one correct value to its correct field |
 | 137 | 23 | PA-W06-mixed-repair | identify and repair only the first differing dimension |
 | 138 | 23 | PA-W06-three-field-no-model | fill three requested fields from cues with no model |
+| 139 | 24 | PA-R24-know-think-r4 | retrieve know and think with their old contrasts and histories |
+| 140 | 24 | PA-R24-understand-read-r4 | retrieve understand and read with falling tone and subjoined ha recognition |
+| 141 | 24 | PA-R24-write-take-ask-r4 | retrieve write, take, and ask with their old root stories |
+| 142 | 24 | PA-R24-help-like-r4 | retrieve help and liking while keeping their grammar distinct |
+| 143 | 25 | PA-R25-drink-request-r4 | retrieve polite water and tea requests with tone and source cues |
+| 144 | 25 | PA-R25-milk-bread-r4 | retrieve milk and bread with honest source limits |
+| 145 | 25 | PA-R25-friend-family-r4 | retrieve friend and family with distinct source stories |
+| 146 | 25 | PA-R25-kin-eye-r4 | retrieve brother, sister, and eye with tone and doubling contrasts |
 
-After session 138, the track continues through the dependency-linked backlog;
+After session 146, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

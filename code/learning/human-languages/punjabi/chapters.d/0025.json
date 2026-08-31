@@ -1,0 +1,25 @@
+{
+  "chapter": 25,
+  "title": "Requests, People, and Body Words at R4",
+  "label": "ch:pa-request-people-r4-bridge",
+  "canDo": "I can retrieve old request, food, people, kin, and body-word families at long distance in small spoken and reading passes.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR",
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-R25-kin-eye-r4",
+    "kind": "task",
+    "summary": "The learner closes the moving R4 boundary with a bounded contrast among two low-tone kin words and one doubled-consonant body word, without claiming writing evidence.",
+    "assesses": [
+      "PA-LEX-BHARA",
+      "PA-ETYMON-BHARA-BROTHER",
+      "PA-SOUND-TONE-LOW",
+      "PA-LEX-BHAIN",
+      "PA-ETYMON-BHAIN-BHAGA",
+      "PA-LEX-AKKH",
+      "PA-ETYMON-AKKH-EYE"
+    ]
+  }
+}

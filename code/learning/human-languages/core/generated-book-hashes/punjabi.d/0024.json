@@ -1,0 +1,12 @@
+{
+  "language": "punjabi",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:3f97dbde9346a892",
+  "lessonIds": [
+    "PA-R24-know-think-r4",
+    "PA-R24-understand-read-r4",
+    "PA-R24-write-take-ask-r4",
+    "PA-R24-help-like-r4"
+  ],
+  "tex": "punjabi/book/chapters/ch24-action-r4-bridge.tex"
+}

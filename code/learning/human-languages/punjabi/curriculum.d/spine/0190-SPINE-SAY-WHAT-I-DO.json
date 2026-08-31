@@ -4,7 +4,8 @@
     "PA-PATH-011-C",
     "PA-PATH-012",
     "PA-PATH-013",
-    "PA-PATH-013-C"
+    "PA-PATH-013-C",
+    "PA-PATH-023"
   ],
   "omits": [
     "VERB-INFINITIVE",

@@ -1,0 +1,452 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 24,
+  "title": "Old Action Families at R4",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:b43cfbbfefef1b7a",
+  "lessons": [
+    {
+      "id": "PA-R24-know-think-r4",
+      "sequence": 1490,
+      "title": "Know and think return at R4",
+      "headword": "ਜਾਣਨਾ · ਸੋਚਣਾ",
+      "romanization": "jāṇnā · sochṇā",
+      "gloss": "retrieve know and think at R4 without adding language",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:342fdf6b77e581a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new language. Hear jāṇnā, “to know,” and sochṇā, “to think.” Say each meaning before reading on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read ਜਾਣਨਾ, ਸੋਚਣਾ once, then give the meanings aloud. This is recognition and speech retrieval. It awards no independent Gurmukhi writing evidence."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R24-know-think-r4-contrast",
+              "prompt": "Say the meanings aloud in order: jāṇā / jāṇnā / sochṇā. Which pair differs by the extra n?",
+              "assesses": [
+                "PA-LEX-JANNA",
+                "PA-CONTRAST-JANA-JANNA",
+                "PA-LEX-SOCHNA"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "to go / to know / to think; jāṇā and jāṇnā",
+                "go / know / think; jaana and jaanna"
+              ],
+              "feedback": {
+                "correct": "The three meanings and the close contrast returned.",
+                "incorrect": "Repair only the missed meaning, then say the three again."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R24-know-think-r4-roots",
+              "prompt": "Match the old root stories: which verb reaches English know, and which began with burn or glow and then grieve?",
+              "assesses": [
+                "PA-ETYMON-JANNA-KNOW",
+                "PA-ETYMON-SOCHNA-SHUC"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "jāṇnā reaches know; sochṇā began with burn or glow, then grieve",
+                "janna - know; sochna - burn then grieve"
+              ],
+              "feedback": {
+                "correct": "Both remembered histories returned at distance.",
+                "incorrect": "Keep only this split: know with jāṇnā; burn and grieve with sochṇā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Without looking, say “to know; to think” in Punjabi."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R24-understand-read-r4",
+      "sequence": 1500,
+      "title": "Understand and read return at R4",
+      "headword": "ਸਮਝਣਾ · ਪੜ੍ਹਨਾ",
+      "romanization": "samajhṇā · paṛhnā",
+      "gloss": "retrieve understand, read, falling tone, and subjoined ha at R4",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c16b142d006b0b86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 6,
+              "perItem": false,
+              "source": "[PAUSE 6s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say samajhṇā and paṛhnā with the already-taught falling pitch. Give their meanings aloud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Script recognition only."
+            },
+            {
+              "kind": "speech",
+              "text": "Recognizing ੜ੍ਹ here is reading evidence only. Do not copy it, and do not count this lesson as independent writing."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R24-understand-read-r4-meaning",
+              "prompt": "Hear samajhṇā / paṛhnā. Say understand / read aloud, keeping the falling pitch in each Punjabi word.",
+              "assesses": [
+                "PA-LEX-SAMAJHNA",
+                "PA-SOUND-TONE-FALLING",
+                "PA-LEX-PARHNA"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "samajhṇā — understand; paṛhnā — read",
+                "samajhna - understand; parhna - read"
+              ],
+              "feedback": {
+                "correct": "Both meanings and the shared falling contour returned.",
+                "incorrect": "Repair one word at a time, then say the pair again."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R24-understand-read-r4-history",
+              "prompt": "Which old image belongs to each verb: wake up; recite or read aloud?",
+              "assesses": [
+                "PA-ETYMON-SAMAJH-BUDH",
+                "PA-ETYMON-PARHNA-PATH"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "samajhṇā — wake up; paṛhnā — recite or read aloud",
+                "understand - wake; read - recite aloud"
+              ],
+              "feedback": {
+                "correct": "The two old images stayed separate.",
+                "incorrect": "Keep wake with understanding and recite aloud with reading."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R24-understand-read-r4-script",
+              "prompt": "In ਪੜ੍ਹਨਾ, identify the small ha tucked under the preceding letter and then read the whole known word aloud.",
+              "assesses": [
+                "PA-SCRIPT-SUBJOINED-HA",
+                "PA-LEX-PARHNA"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "subjoined ha; paṛhnā, to read",
+                "subjoined ha; parhna, read"
+              ],
+              "feedback": {
+                "correct": "You recognized the old subjoined form inside the known word.",
+                "incorrect": "Find only the tucked-under ha, then reread the whole word."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “understand; read” once more from meaning."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R24-write-take-ask-r4",
+      "sequence": 1510,
+      "title": "Write, take, and ask return at R4",
+      "headword": "ਲਿਖਣਾ · ਲੈਣਾ · ਪੁੱਛਣਾ",
+      "romanization": "likhṇā · laiṇā · puchhṇā",
+      "gloss": "retrieve write, take, and ask with their old root stories at R4",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9052e8d298e02ae2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 6,
+              "perItem": false,
+              "source": "[PAUSE 6s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hear likhṇā, laiṇā, puchhṇā. Give the three meanings aloud before looking at the answer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three remembered histories."
+            },
+            {
+              "kind": "speech",
+              "text": "Read ਲਿਖਣਾ, ਲੈਣਾ, ਪੁੱਛਣਾ once. The visible words support recognition; this lesson does not ask for or award independent Gurmukhi writing."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R24-write-take-ask-r4-meaning",
+              "prompt": "Say the meanings aloud in order: likhṇā / laiṇā / puchhṇā.",
+              "assesses": [
+                "PA-LEX-LIKHNA",
+                "PA-LEX-LAINA",
+                "PA-LEX-PUCHHNA"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "to write / to take / to ask",
+                "write / take / ask"
+              ],
+              "feedback": {
+                "correct": "All three action meanings returned.",
+                "incorrect": "Repair only the missed action, then run the three again."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R24-write-take-ask-r4-history",
+              "prompt": "Match each old cue: scratch; labhate with a consonant lost on the way; the prach ask-family.",
+              "assesses": [
+                "PA-ETYMON-LIKH-SCRATCH",
+                "PA-ETYMON-LAINA-LABH",
+                "PA-ETYMON-PUCHHNA-PRACH"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "likhṇā — scratch; laiṇā — labhate and the lost consonant; puchhṇā — the prach ask-family",
+                "write - scratch; take - labh; ask - prach"
+              ],
+              "feedback": {
+                "correct": "Each history stayed attached to its old verb.",
+                "incorrect": "Use one cue at a time: scratch-write, labh-take, prach-ask."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From meaning alone, say “write; take; ask.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R24-help-like-r4",
+      "sequence": 1520,
+      "title": "Help and like return at R4",
+      "headword": "ਮਦਦ ਕਰਨਾ · ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ",
+      "romanization": "madad karnā · mainū̃ panjābī pasand hai",
+      "gloss": "retrieve help and the dative liking frame at R4",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b4065de32018c32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 6,
+              "perItem": false,
+              "source": "[PAUSE 6s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say madad karnā, “to help.” Then say the already-known line mainū̃ panjābī pasand hai, “I like Punjabi.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Liking keeps the liker in the dative."
+            },
+            {
+              "kind": "speech",
+              "text": "Read ਮਦਦ ਕਰਨਾ, ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ once. Romanization records speech retrieval only and earns no Gurmukhi writing credit."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R24-help-like-r4-help",
+              "prompt": "Take apart madad karnā aloud: what does the whole phrase mean, where did madad come from, and what productive pattern does karnā make?",
+              "assesses": [
+                "PA-LEX-MADAD-KARNA",
+                "PA-ETYMON-MADAD-ARABIC",
+                "PA-GRAMMAR-NOUN-PLUS-KARNA"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "to help; madad is arabic through persian; noun plus karnā means to do that noun",
+                "help; arabic; noun plus karna"
+              ],
+              "feedback": {
+                "correct": "Meaning, source, and the old noun-plus-do pattern returned.",
+                "incorrect": "Keep three pieces only: help; Arabic madad; noun plus karnā."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-R24-help-like-r4-like",
+              "prompt": "In mainū̃ panjābī pasand hai, identify the liker form and say why pasand does not behave like an ordinary conjugated verb. Then recall its old look-good image.",
+              "assesses": [
+                "PA-LEX-PASAND",
+                "PA-GRAMMAR-DATIVE-LIKING",
+                "PA-ETYMON-PASAND-SHINE"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "mainū̃ marks to me, the liker; pasand is a persian pleasing noun, not a conjugated verb; its old image is to look good",
+                "mainu is the dative liker; pasand is a noun; look good"
+              ],
+              "feedback": {
+                "correct": "The dative frame, noun behavior, and old image returned together.",
+                "incorrect": "Repair in this order: mainū̃ the liker; pasand a noun; look good."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “to help” and “I like Punjabi” once more without looking."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

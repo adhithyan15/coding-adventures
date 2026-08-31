@@ -1,6 +1,7 @@
 {
   "segments": [
-    "PA-PATH-014"
+    "PA-PATH-014",
+    "PA-PATH-024"
   ],
   "omits": [
     "COURTESY-PLEASE",

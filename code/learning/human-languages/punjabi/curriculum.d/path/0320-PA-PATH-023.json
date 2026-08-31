@@ -1,0 +1,15 @@
+{
+  "id": "PA-PATH-023",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "PA-R24-know-think-r4",
+    "PA-R24-understand-read-r4",
+    "PA-R24-write-take-ask-r4",
+    "PA-R24-help-like-r4"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-028-A1-ACTION-R4"
+  ],
+  "after": []
+}

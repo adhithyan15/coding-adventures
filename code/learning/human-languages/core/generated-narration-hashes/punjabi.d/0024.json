@@ -1,0 +1,18 @@
+{
+  "language": "punjabi",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:b43cfbbfefef1b7a",
+  "lessonIds": [
+    "PA-R24-know-think-r4",
+    "PA-R24-understand-read-r4",
+    "PA-R24-write-take-ask-r4",
+    "PA-R24-help-like-r4"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "punjabi/narration/ch24.txt",
+  "json": "punjabi/narration/ch24.json",
+  "textHash": "fnv1a64:0050ca093dad9199",
+  "jsonHash": "fnv1a64:3f3c393fb1e3351c",
+  "findings": []
+}
