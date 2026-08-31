@@ -12313,6 +12313,18 @@ state has 634 unique owners and 991 dependency edges: 198 merged, 435 pending,
 and exactly this owner in progress. The graph is dependency-complete and
 acyclic.
 
+The four implementation commits then rebased conflict-free onto exact current
+main `b7d58880b4bdbf20d4ba75f6984fd36a7f5e8575`. Intervening PRs #13712
+through #13715 touch existing HTML parser, SPICE parser,
+human-language-data, and Hindi curriculum roots only, with no new package
+identity, build-tool marker, or exact overlap. The collision-checked schema-3
+inventory therefore remains unchanged at 15 established lanes, 1,395
+implementation identities, 4,609 slots, 1,434 all-reported identities, bands
+175/265, 123/934, 170/2,139, and 927/12,978, 738 Rust singletons, zero OCaml
+packages, zero canonical collisions, and zero unknown buckets. The complete
+634-owner/991-edge graph remains dependency-complete, unique, and acyclic at
+198 merged, 435 pending, and exactly this owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

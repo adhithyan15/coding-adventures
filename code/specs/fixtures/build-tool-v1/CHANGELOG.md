@@ -2,6 +2,16 @@
 
 ## 2026-08-31
 
+- Added the closed repository source-input boundary registry for eight reviewed
+  boundaries and fourteen exact tracked inputs. It distinguishes shared
+  ancestors from package-scoped generated-pruning exceptions, pins the
+  language source-input registry digest, and rejects unsafe, colliding,
+  overlapping, ambient, untracked, credential, signing, secret, glob, and
+  suffix authority.
+- Added three source-collection cases for Rust workspace inputs, the shared
+  TypeScript base config, and exact VisiCalc vendor JavaScript plus a
+  tracked-repository projection regression and domain-separated boundary
+  digest validation.
 - Added the closed versioned 23-language source-input registry, its strict
   schema, canonical domain-separated digest, collision and path-safety gates,
   universal BUILD and capability inputs, and reviewed root, recursive,

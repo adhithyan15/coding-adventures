@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Build-tool repository source-input boundary
+
+- Added a closed, versioned repository-relative registry for eight reviewed
+  source boundaries and fourteen exact tracked inputs that package-local
+  selectors cannot represent. Shared Haskell, Lua, Python, Ruby, Rust, and
+  TypeScript ancestors remain exact, while VisiCalc vendor JavaScript is
+  admitted only through package-scoped generated-pruning exceptions.
+- Added canonical collision, containment, scope, role, and tracked-regular-file
+  validation plus a domain-separated registry digest pinned by every boundary
+  source-collection case. Ambient directories, untracked local configuration,
+  credentials, signing material, secrets, broad suffixes, and globs remain
+  outside the contract.
+- Added three language-neutral source-collection cases and a tracked-repository
+  projection regression covering Rust workspace inputs, the TypeScript base
+  config, and the two exact VisiCalc vendor boundaries without granting process
+  or filesystem-discovery authority.
+
 ### Build-tool language source-input registry
 
 - Added a closed versioned source-input registry for all 23 canonical build-
