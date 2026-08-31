@@ -177,7 +177,7 @@ style TaskApp {
     // Keep the native row finite as well. Without an explicit basis the
     // Compose fallback is fillMaxWidth(), which leaves no measured room for
     // the theme, complexity, and view controls that follow it.
-    width : 90 ;
+    width : 150 ;
     flex-shrink : 0 ;
     gap : 10 ;
     align : center-vertical ;
