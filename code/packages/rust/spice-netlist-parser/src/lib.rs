@@ -2466,6 +2466,11 @@ fn parse_element(
                 .or_else(|| model.params.get("BET"))
                 .copied()
                 .unwrap_or(1.0e-4);
+            if !beta.is_finite() || beta <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "JFET BETA must be finite and positive",
+                ));
+            }
             let doping_tail_parameter = *model.params.get("B").unwrap_or(&1.0);
             if !doping_tail_parameter.is_finite() {
                 return Err(NetlistParseError::new("JFET B must be finite"));

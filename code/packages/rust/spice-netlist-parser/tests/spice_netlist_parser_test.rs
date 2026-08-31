@@ -1480,6 +1480,33 @@ Jpull drain gate source pch
 }
 
 #[test]
+fn parses_jfet_beta_with_canonical_precedence() {
+    let parsed =
+        parse_netlist(".model shaped NJF(BETA=2m BET=1m)\nJ1 drain gate source shaped").unwrap();
+
+    let Element::Jfet(jfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected JFET");
+    };
+    assert_close(jfet.beta, 2.0e-3);
+}
+
+#[test]
+fn rejects_invalid_jfet_beta_aliases() {
+    for alias in ["BETA", "BET"] {
+        for value in ["0", "-1", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model bad NJF({alias}={value})\nJ1 drain gate source bad"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("JFET BETA must be finite and positive"));
+        }
+    }
+}
+
+#[test]
 fn parses_jfet_threshold_aliases_with_canonical_precedence() {
     let parsed = parse_netlist(
         r#"
