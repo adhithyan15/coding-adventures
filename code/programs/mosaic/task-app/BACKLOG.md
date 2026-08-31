@@ -20,34 +20,42 @@ links existing Mosaic work instead of duplicating it.
    **Discovered and fixed while validating #13520.**
 4. **P0 — [#13520](https://github.com/adhithyan15/coding-adventures/issues/13520):**
    prove the native simple-todo scheduling flow end to end. **Done in #13575.**
-5. **P1 — [#13543](https://github.com/adhithyan15/coding-adventures/issues/13543):**
+5. **P0 — [#13651](https://github.com/adhithyan15/coding-adventures/issues/13651):**
+   run the exact TaskApp release packaging matrix on release-relevant pull
+   requests without granting publication authority. Discovered while packaging
+   #13613 and resolved in the same validation-critical slice.
+6. **P0 — [#13658](https://github.com/adhithyan15/coding-adventures/issues/13658):**
+   preserve the application PRI and generated XBF files in emitted WinUI
+   `dotnet publish` payloads. Discovered by the exact #13613 release gate and
+   resolved in the same Windows packaging slice.
+7. **P1 — [#13543](https://github.com/adhithyan15/coding-adventures/issues/13543):**
    publish incremental SemVer TaskApp GitHub releases, beginning at
    `task-app-v0.1.0` with only the artifacts that are actually verified. The
    release lane builds a tested web bundle and strict generated native projects;
    installer packaging remains #13522. **Done in #13587, with follow-up clean-
    runner fixes in #13590, #13593, and #13596; `task-app-v0.1.0` published.**
-6. **P1 — [#13565](https://github.com/adhithyan15/coding-adventures/issues/13565):**
+8. **P1 — [#13565](https://github.com/adhithyan15/coding-adventures/issues/13565):**
    keep native completion progress visible in the generated Compose viewport.
    **Done in #13602.**
-7. **P1 — [#13521](https://github.com/adhithyan15/coding-adventures/issues/13521):**
+9. **P1 — [#13521](https://github.com/adhithyan15/coding-adventures/issues/13521):**
    enforce web/native presentation-contract parity. **Done in #13607.**
-8. **P1 — [#13522](https://github.com/adhithyan15/coding-adventures/issues/13522):**
+10. **P1 — [#13522](https://github.com/adhithyan15/coding-adventures/issues/13522):**
    package installable local apps on supported platforms. Decomposed into the
    independently verifiable platform and operations items below.
-9. **P1 — [#13611](https://github.com/adhithyan15/coding-adventures/issues/13611):**
+11. **P1 — [#13611](https://github.com/adhithyan15/coding-adventures/issues/13611):**
    ship verified portable Linux bundles for Qt, Flutter, and Compose Desktop.
    **Done in #13616.**
-10. **P1 — [#13612](https://github.com/adhithyan15/coding-adventures/issues/13612):**
-   package TaskApp as a macOS application bundle.
-11. **P1 — [#13613](https://github.com/adhithyan15/coding-adventures/issues/13613):**
+12. **P1 — [#13612](https://github.com/adhithyan15/coding-adventures/issues/13612):**
+   package TaskApp as a macOS application bundle. **Done in #13627.**
+13. **P1 — [#13613](https://github.com/adhithyan15/coding-adventures/issues/13613):**
    package TaskApp for Windows installation and launch.
-12. **P1 — [#13614](https://github.com/adhithyan15/coding-adventures/issues/13614):**
+14. **P1 — [#13614](https://github.com/adhithyan15/coding-adventures/issues/13614):**
    document and verify upgrade, backup, restore, and manual recovery.
-13. **P1 — [#13523](https://github.com/adhithyan15/coding-adventures/issues/13523):**
+15. **P1 — [#13523](https://github.com/adhithyan15/coding-adventures/issues/13523):**
    audit and refine the first-run simple-todo experience.
-14. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
+16. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
    move the Vitest config to Vite's native ESM loading contract.
-15. **P2 — [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
+17. **P2 — [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
    roll the TaskApp changelog forward after each published product release and
    gate against already-published versions remaining marked Unreleased.
 
