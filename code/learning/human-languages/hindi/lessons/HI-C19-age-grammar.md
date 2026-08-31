@@ -8,7 +8,7 @@ spine_node: SPINE-EXCHANGE-NAMES
 sequence: 670
 chapter: 19
 type: grammar
-headword: कितने साल के हो?
+headword: कितने साल के हो? / मैं … साल का हूँ।
 gloss: Hindi tells age as belonging to a number of years, a fifth cross-language shape
 romanization: "kitne sāl ke ho?"
 prerequisites: [HI-C19-umr]
