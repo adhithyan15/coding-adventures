@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W05-job",
+    "language": "punjabi",
+    "chapter": 20,
+    "sequence": 1300,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:90e8142f35daa529",
+    "detachableSegments": [
+      "Script — one value"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

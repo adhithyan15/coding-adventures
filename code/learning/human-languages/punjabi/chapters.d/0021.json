@@ -1,0 +1,24 @@
+{
+  "chapter": 21,
+  "title": "The Fourth Form Line: Work",
+  "label": "ch:pa-form-work",
+  "canDo": "I can select between two separately practised values and fill one requested Gurmukhi work line from a nonverbal cue with no model.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W05-work-no-model",
+    "kind": "production",
+    "summary": "The learner fills one work field from a nonverbal cue after selection, supported entry, spelling, spacing, field-value agreement, delayed entry, and repair have each received a bounded pass.",
+    "assesses": [
+      "PA-FORM-LABEL-WORK-01",
+      "PA-FORM-WORK-FARMING-01",
+      "PA-FORM-WORK-CUE-MAP-01",
+      "PA-FORM-WORK-SPELLING-CHECK-01",
+      "PA-FORM-WORK-SPACING-01",
+      "PA-FORM-WORK-AGREEMENT-01",
+      "PA-FORM-WORK-REPAIR-01",
+      "PA-FORM-WORK-NO-MODEL-01"
+    ]
+  }
+}

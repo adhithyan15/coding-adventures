@@ -1,0 +1,26 @@
+{
+  "id": "PA-EXT-026-A1-WORK-FIELD",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can recognise the Gurmukhi work label and independently select and write one of two known neutral work values from a nonverbal cue.",
+  "prerequisites": [
+    "PA-EXT-025-A1-RESIDENCE-FIELD"
+  ],
+  "lessons": [
+    "PA-W05-ka",
+    "PA-W05-work-label",
+    "PA-W05-kha",
+    "PA-W05-farming",
+    "PA-W05-au-matra",
+    "PA-W05-job",
+    "PA-W05-work-select",
+    "PA-W05-work-supported",
+    "PA-W05-work-spelling",
+    "PA-W05-work-spacing",
+    "PA-W05-work-agreement",
+    "PA-W05-work-delayed",
+    "PA-W05-work-repair",
+    "PA-W05-work-no-model"
+  ]
+}

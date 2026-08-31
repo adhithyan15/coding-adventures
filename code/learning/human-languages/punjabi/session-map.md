@@ -1,4 +1,4 @@
-# Session Map — Punjabi Chapters 1–15
+# Session Map — Punjabi Chapters 1–21
 
 This is the authoritative book order. Every row is one session of at most five
 minutes. Sound and meaning come before load-bearing decoding; writing grows from
@@ -121,6 +121,20 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 112 | 19 | PA-W04-residence-delayed | hide the bank, then fill one residence line |
 | 113 | 19 | PA-W04-residence-repair | repair one dimension of a residence line |
 | 114 | 19 | PA-W04-residence-no-model | fill one residence line from a nonverbal cue with no model |
+| 115 | 20 | PA-W05-ka | trace ਕ |
+| 116 | 20 | PA-W05-work-label | assemble and copy ਕੰਮ |
+| 117 | 20 | PA-W05-kha | trace ਖ |
+| 118 | 20 | PA-W05-farming | assemble and guided-copy ਖੇਤੀ |
+| 119 | 20 | PA-W05-au-matra | trace and place ੌ |
+| 120 | 20 | PA-W05-job | assemble and guided-copy ਨੌਕਰੀ |
+| 121 | 21 | PA-W05-work-select | select between two known work values |
+| 122 | 21 | PA-W05-work-supported | fill one work line with the bank visible |
+| 123 | 21 | PA-W05-work-spelling | check one work value piece by piece |
+| 124 | 21 | PA-W05-work-spacing | separate the label and value clearly |
+| 125 | 21 | PA-W05-work-agreement | keep a work value on the work field |
+| 126 | 21 | PA-W05-work-delayed | hide the bank, then fill one work line |
+| 127 | 21 | PA-W05-work-repair | repair one dimension of a work line |
+| 128 | 21 | PA-W05-work-no-model | fill one work line from a nonverbal cue with no model |
 
-After session 114, the track continues through the dependency-linked backlog;
+After session 128, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

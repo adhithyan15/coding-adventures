@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:e8a6c285c421413b",
+  "lessonIds": [
+    "PA-W05-ka",
+    "PA-W05-work-label",
+    "PA-W05-kha",
+    "PA-W05-farming",
+    "PA-W05-au-matra",
+    "PA-W05-job"
+  ],
+  "tex": "punjabi/book/chapters/ch20-form-work-runway.tex"
+}

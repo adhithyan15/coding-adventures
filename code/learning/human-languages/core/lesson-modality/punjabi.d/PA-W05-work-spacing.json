@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W05-work-spacing",
+    "language": "punjabi",
+    "chapter": 21,
+    "sequence": 1340,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:78b332e5655c03ae",
+    "detachableSegments": [
+      "Writing — one spacing pass"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

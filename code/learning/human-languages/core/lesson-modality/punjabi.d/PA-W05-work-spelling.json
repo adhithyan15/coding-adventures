@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W05-work-spelling",
+    "language": "punjabi",
+    "chapter": 21,
+    "sequence": 1330,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ba6d6a753b75bf14",
+    "detachableSegments": [
+      "Writing — one spelling pass"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
