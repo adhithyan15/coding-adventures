@@ -482,6 +482,14 @@ option mapping, or judge/evaluation failure.
      output acceptance. The guarantee assumes the guardian and kernel remain alive and
      the trusted helper does not attack the same-UID guardian or delegated cgroup;
      defending against that stronger adversary requires a privilege boundary.
+     These containment gates assert observable invariants, never elapsed wall-clock
+     time: that the descendant is gone, that the raw-close worker had not finished
+     when observation returned, that the call returned rather than hung. Fixtures
+     record a descendant's PID from process creation instead of waiting for it to
+     announce readiness, so "a descendant existed" is a causal fact rather than a
+     race against interpreter startup. Where a bound genuinely is the point it is a
+     hang detector generous by orders of magnitude, because a shared runner's load is
+     not evidence about containment.
 
 ### Wave 2: complete K-8 foundations
 
