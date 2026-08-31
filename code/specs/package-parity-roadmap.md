@@ -12097,6 +12097,162 @@ retroactively blocked. The synchronized state graph contains 609 unique
 owners and 930 dependency edges, is dependency-complete and acyclic, and stands
 at 196 merged, 412 pending, and exactly this owner in progress.
 
+### Post-PR #13647 refresh and source-input registry audit selection
+
+PR #13647 completed all 43 checks on final head
+`1bb2228ece74e136b6fc7f52570d596e9ddb7aef` acceptably: 36 succeeded, six
+were skipped, and one completed neutral. GitHub executed the guarded squash
+auto-merge that had been enabled for that exact head, without a manual merge,
+at 2026-08-31T13:01:27Z. Exact `origin/main` is now
+`138457fbc2ff2ae7c26c5177148f1460938b0d73`.
+
+The collision-checked schema-3 inventory at that revision reports 15
+established lanes, 1,389 implementation identities, 4,603 implementation
+slots, and 1,428 all-reported identities. Its bands are 175 packages with 265
+missing slots, 123/934, 170/2,139, and 921/12,894; Rust has 732 singletons,
+OCaml still has zero packages, and both canonical-collision and unknown-bucket
+counts remain zero. The only new identity is the Rust-only `oauth` package from
+merged PR #13626. The new
+`oauth-authorization-code-pkce-language-neutral-conformance` owner captures its
+pure, provider-neutral Authorization Code plus PKCE behavior. Separate owners
+cover applicable established-lane parity and portable token, refresh, and
+revocation codecs. Host/provider redirect proof and credential-broker or vault
+custody are explicit selection-blocked reviews: scope syntax is not
+authorization, and asserting distinct redirect strings is not provider-
+registry proof. At selection, PR #13650 was not current-main evidence. It and
+later PR #13657 have since merged and are reconciled in the audit section
+below.
+
+The dependency/leverage pass selects
+`build-tool-language-source-input-registry-corpus-and-engine-audit` on clean
+branch `codex/build-tool-language-source-input-registry-corpus-audit` from the
+exact main revision above. Its sole prerequisite is merged, it directly blocks
+seven pending owners, and it reaches 13 pending descendants. Higher-ranked
+nodes are aggregate umbrellas or network, host-security, credential,
+native-runtime, and external-approval work excluded by policy. This tranche
+will define the collision-checked neutral registry and fixtures, exercise the
+schema and corpus runners, audit every build-tool engine, and register concrete
+engine-adoption children before completion. It will not mix those engine
+adoptions or host-native authority into the registry PR. After the OAuth owner
+was added and this owner transitioned from pending to in-progress, the complete
+610-owner/930-edge graph stands at 197 merged, 412 pending, and exactly one
+in-progress owner.
+
+### Language source-input registry contract and engine audit
+
+The neutral corpus now owns one closed, versioned registry for all 23 canonical
+build-tool language keys. Its six roles distinguish recursive suffixes and
+exact metadata, package-root exact and variable manifests, fixed relative
+paths, and reviewed path-scoped native companions or resources. All five BUILD
+fronts remain universal, while root-only `required_capabilities.json` is an
+input for every language because capability-policy changes alter generated
+artifacts. The schema and semantic validator fail closed on unknown fields or
+languages, unsafe or generated scope paths, non-NFC and control/format text,
+UTF-8 ordering drift, full-casefold and cross-role collisions, undeclared case
+aliases, missing ownership, and more than 4,096 selectors. Cases pin the
+domain-separated canonical registry digest rather than choosing allowlists.
+Scoped rules are inclusion-only: generated-component pruning is the sole
+registry exclusion mechanism, so a scoped rule cannot mask a primary source.
+The audit also rejects scoped/global and fixed-path/suffix match-set overlap,
+hostile candidate controls, platform-identity aliases, and file-prefix
+collisions while retaining descendants only below explicitly inert links.
+
+The 122-case process-free corpus adds a Dart hybrid snapshot covering root-only
+metadata, generated-tree pruning, Flutter Android/iOS resources, exact tracked
+Gradle properties, exclusion of local Android signing and SDK properties, Rust
+root and `src` companions, universal BUILD and capability inputs, and exact
+per-file SHA-256 bytes. Declared-source mode continues to use explicit portable
+globs; only BUILD and root-only inputs bypass those globs. Link/reparse and
+generated-component pruning always run first. Neutral fixtures model inert
+candidate records only; every native adoption still owns real symlink,
+junction, reparse, hardlink, and race enforcement.
+
+The complete engine audit found divergent production maps: Swift is the
+strongest existing reference but lacks several reviewed hybrid inputs; Go,
+Ruby, TypeScript, Python, and .NET have smaller partial registries; Haskell and
+Perl use broad global selectors; Elixir has incomplete language coverage and a
+link boundary; Rust is incomplete; and Lua has no hashing/cache layer. Five new
+exact-registry adoption children cover Go, Python, Ruby, TypeScript, and Swift.
+The existing Elixir, Perl, Haskell, shared .NET, Rust, and Lua owners now also
+require complete production equality with the registry. This classifies all
+eleven engines without mixing implementation changes into the neutral PR.
+The final package-root tracked-input pass adds exact BUILD-invoked scripts for
+C, C++, .NET, Dart, Go, Haskell, and Swift plus reviewed Mosaic and Rust
+package build scripts; the shared Unix
+command specification set; Go's root CommonMark metadata; bounded Mosaic
+host/test/token resources; Rust cross-language templates and fixtures; nested
+.NET test and WinUI projects plus application manifests; Kotlin
+Android/wrapper inputs; and reviewed Dart, Elixir, F#, Go, Lua, Perl, Python,
+Ruby, Rust, and TypeScript test or resource families. A repository-projection
+regression proves representative tracked paths select through the canonical
+registry. It deliberately narrows Dart Android properties to the two tracked
+Gradle inputs so ignored `key.properties` and `local.properties` cannot enter
+a source digest. Global role comparison also assigns every matching selector
+set to exactly one role, including recursive exact basenames that overlap a
+primary-language suffix.
+
+The same audit found exact consumed shared ancestors and exact tracked files
+hidden by generated-component pruning that a package-root registry cannot
+safely express: TypeScript's base config, Rust workspace Cargo/config and
+Windows helper inputs, Python's workspace pyproject, Haskell's cabal project,
+Lua's shared configuration and directory registry, Ruby's Gemfile/Rakefile,
+and tracked TypeScript vendor JavaScript loaded by VisiCalc. The new pending
+`build-tool-shared-and-generated-boundary-source-input-contract` owns a
+repository-relative, collision-checked contract for those inputs and explicit
+pruning exceptions. It excludes ambient directories, untracked local config,
+signing material, credentials, and secrets. All eleven engine-adoption leaves
+depend on that contract; no broad selector was added to this registry.
+
+During final validation, current main advanced through merged PR #13650's
+audited token lifecycle codecs and PR #13657's RFC 8414 metadata trust boundary.
+Those same-package extensions create no new inventory identity, but they are
+now durable evidence under separate portable token-wire and authorization-
+server-metadata owners. Metadata HTTP execution, provider-registry ownership,
+redirect uniqueness, credential custody, clocks, and storage remain outside
+the pure metadata contract.
+
+OAuth decomposition therefore records portable core, metadata, token-wire,
+loopback callback, applicable-lane, and focused Rust repair items plus
+selection-blocked host and credential reviews. Host review waits for metadata,
+token-wire, loopback, and audit-continuity contracts, while credential custody
+also waits for the host authority review.
+
+Before publication, the four-commit branch rebased conflict-free onto exact
+`origin/main` `aa1b4e95c3f899412ad866204538ffdb07bb9311`. The final
+intervening merges change only the established `wasm-conformance`,
+`wasm-wast-parser`, and `spice-netlist-parser` roots plus their specs/tests and
+Punjabi curriculum/data with an existing `human-language-data` test. They add
+no package identity or build-tool marker. The refreshed
+collision-checked schema-3 inventory records 15 established lanes, 1,393
+implementation identities, 4,607 implementation slots, and 1,432 all-reported
+identities. Its completion bands are 175 packages with 265 missing slots,
+123/934, 170/2,139, and 925/12,950; Rust has 736 singletons, OCaml remains at
+zero packages, and canonical collisions and unknown buckets remain zero.
+
+Four new Rust-only identities are classified before publication.
+`engram-mosaic-app` is an application-specific native Mosaic ABI and clock
+adapter under a blocked review that depends on the portable runtime, C ABI,
+and generated-binding owners. A second blocked Engram review owns the existing
+file-picker, arbitrary-path APKG/snapshot import/export, sidecar process,
+redaction, archive/SQLite bounds, and currently inaccurate empty capability
+declaration rather than assigning that authority to generic Mosaic owners.
+`upnp-av-protocol` receives an authority-free
+portable codec owner; `smart-home-upnp-media-renderer-integration` is split
+between portable SSDP/endpoint/command-state fixtures and a blocked concrete
+network, CLI, capability, and runtime-mutation review. The reusable protocol
+also becomes a prerequisite of the existing Sonos portable owner, and the
+same audit records the previously missing Sonos native-authority review.
+`oauth-installed-app-host` is split between a portable callback/audit contract,
+applicable-lane parity, and the existing blocked socket/browser/provider host
+review. A focused eligible Rust repair owns the independently reproduced
+post-browser audit failure that currently leaves the loopback listener usable
+despite the documented fail-closed contract.
+
+With the five engine-adoption children, shared/generated boundary child, and
+post-rebase classifications wired, the complete state contains 630 unique
+owners and 987 dependency edges: 197 merged, 432 pending, and exactly this
+registry owner in progress. The graph is dependency-complete and acyclic.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

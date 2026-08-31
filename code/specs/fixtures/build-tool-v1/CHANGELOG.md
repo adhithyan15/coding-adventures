@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-08-31
+
+- Added the closed versioned 23-language source-input registry, its strict
+  schema, canonical domain-separated digest, collision and path-safety gates,
+  universal BUILD and capability inputs, and reviewed root, recursive,
+  resource, and native-companion scopes.
+- Replaced case-supplied extension and metadata allowlists with a language and
+  exact registry digest. Added a Dart hybrid corpus case that proves root-only
+  metadata, generated-tree pruning, Flutter host resources, Rust companions,
+  exact Gradle-property scope, ignored signing/SDK-property exclusion, and
+  capability-file byte sensitivity without filesystem authority.
+- Closed tracked package-root gaps for exact BUILD-invoked scripts, reviewed
+  package build scripts, shared Unix command specifications, Go CommonMark
+  metadata, Mosaic hosts and test
+  fixtures, Rust host and Mosaic companions, .NET tests and WinUI projects,
+  Kotlin, and reviewed Dart, Elixir, F#, Go, Lua, Perl, Python, Ruby, Rust, and
+  TypeScript resources. Added a repository-projection regression, made scoped
+  rules inclusion-only, and added schema-first type rejection, global
+  cross-role match-set collisions, Unicode/platform candidate aliases, and
+  file-prefix collision checks. Shared ancestors and tracked generated-pruned
+  inputs remain explicitly classified under a dependent exact-boundary
+  contract rather than broad package selectors.
+
 ## 2026-08-30
 
 - Added two process-free source-collection cases that pin the complete exact,

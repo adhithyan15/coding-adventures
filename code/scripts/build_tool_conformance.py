@@ -22,10 +22,11 @@ import re
 import stat
 import sys
 import unicodedata
+from collections.abc import Sequence
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
 
 import tracked_artifact_unicode17 as tracked_unicode
 
@@ -37,6 +38,10 @@ MAX_RESULT_BYTES = 16_777_216
 MAX_JSON_DEPTH = 64
 MAX_WORKSPACE_FILES = 4096
 MAX_WORKSPACE_BYTES = 268_435_456
+MAX_SOURCE_INPUT_SELECTORS = 4096
+SOURCE_INPUT_REGISTRY_DOMAIN = (
+    b"coding-adventures/build-tool-language-source-input-registry/v1\0"
+)
 RESERVED_ADAPTER_FLAGS = ("--conformance", "--workspace-root", "--output")
 CLI_MAX_ARGUMENTS = 64
 CLI_MAX_ARGUMENT_CHARACTERS = 256
@@ -209,6 +214,13 @@ SOURCE_COLLECTION_SKIP_COMPONENTS = frozenset(
         ".cargo",
         "cover",
     }
+)
+SOURCE_INPUT_SELECTOR_FIELDS = (
+    "recursive_suffixes",
+    "recursive_exact_basenames",
+    "root_exact_basenames",
+    "root_variable_suffixes",
+    "root_exact_relative_paths",
 )
 TRACKED_ARTIFACT_COMPONENT_IDENTITY = "node_modules"
 TRACKED_ARTIFACT_REDACTED_PATH = "repository"
@@ -562,6 +574,528 @@ def portable_glob_error(value: Any) -> str | None:
             if basename in WINDOWS_RESERVED_BASENAMES:
                 return "glob segment uses a Windows reserved basename"
     return None
+
+
+def _utf8_sorted(values: Sequence[str]) -> list[str]:
+    return sorted(values, key=lambda value: value.encode("utf-8"))
+
+
+def source_input_registry_digest(registry: dict[str, Any]) -> str:
+    """Return the versioned digest that pins a source-input registry snapshot."""
+
+    encoded = json.dumps(
+        registry,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    framed = SOURCE_INPUT_REGISTRY_DOMAIN + len(encoded).to_bytes(8, "big") + encoded
+    return hashlib.sha256(framed).hexdigest()
+
+
+def _source_input_text_error(value: str) -> str | None:
+    if value != unicodedata.normalize("NFC", value):
+        return "value is not NFC-normalized"
+    if any(unicodedata.category(character).startswith("C") for character in value):
+        return "value contains a control, format, surrogate, or private-use character"
+    return None
+
+
+def _source_input_selector_error(value: str, field: str) -> str | None:
+    if error := _source_input_text_error(value):
+        return error
+    if field in {"recursive_suffixes", "root_variable_suffixes", "suffixes"}:
+        if not re.fullmatch(r"\.[A-Za-z0-9][A-Za-z0-9._+-]*", value):
+            return "suffix is not portable"
+        return None
+    if field == "root_exact_relative_paths":
+        return portable_path_error(value)
+    if "/" in value or "\\" in value:
+        return "basename contains a separator"
+    return portable_path_error(value)
+
+
+def _validate_source_input_registry(
+    registry: dict[str, Any],
+    schema: dict[str, Any],
+) -> dict[str, int]:
+    """Validate the closed, canonical registry before any case can consume it."""
+
+    _validate_schema(registry, schema, "SOURCE_INPUT_REGISTRY_SCHEMA_INVALID")
+    languages = registry.get("languages", [])
+    if not isinstance(languages, list):
+        raise TypeError("validated registry languages must be an array")
+
+    names = [
+        entry.get("language")
+        for entry in languages
+        if isinstance(entry, dict) and isinstance(entry.get("language"), str)
+    ]
+    if len(names) != len(set(names)):
+        raise ConformanceError(
+            "SOURCE_INPUT_LANGUAGE_DUPLICATE",
+            "source-input registry language keys must be unique",
+        )
+    expected_languages = set(CLI_LANGUAGES) - {"all"}
+    if set(names) != expected_languages:
+        raise ConformanceError(
+            "SOURCE_INPUT_LANGUAGE_SET",
+            "source-input registry must cover every canonical CLI language exactly once",
+        )
+    if names != _utf8_sorted(names):
+        raise ConformanceError(
+            "SOURCE_INPUT_NOT_CANONICAL",
+            "source-input registry languages are not in UTF-8 byte order",
+        )
+
+    for entry in languages:
+        for field in SOURCE_INPUT_SELECTOR_FIELDS:
+            for value in entry.get(field, []):
+                if isinstance(value, str) and (
+                    error := _source_input_selector_error(value, field)
+                ):
+                    raise ConformanceError(
+                        "SOURCE_INPUT_PATH_UNSAFE",
+                        f"unsafe {entry.get('language')} {field} selector {value!r}: {error}",
+                    )
+        for scoped in entry.get("scoped_inputs", []):
+            if not isinstance(scoped, dict):
+                continue
+            if not scoped.get("owner") or not scoped.get("reason"):
+                raise ConformanceError(
+                    "SOURCE_INPUT_SCOPE_CLASSIFICATION_INVALID",
+                    "scoped source inputs require a durable owner and reason",
+                )
+            prefix = scoped.get("path_prefix")
+            if isinstance(prefix, str) and (error := portable_path_error(prefix)):
+                raise ConformanceError(
+                    "SOURCE_INPUT_PATH_UNSAFE",
+                    f"unsafe scoped source-input prefix {prefix!r}: {error}",
+                )
+
+    universal = registry["universal_inputs"]
+    universal_expected = {
+        "build_filenames": _utf8_sorted(list(ORPHAN_BUILD_NAMES)),
+        "generated_directory_components": _utf8_sorted(
+            list(SOURCE_COLLECTION_SKIP_COMPONENTS)
+        ),
+        "root_exact_basenames": ["required_capabilities.json"],
+    }
+    selector_count = 0
+
+    def enforce_selector_limit() -> None:
+        if selector_count > MAX_SOURCE_INPUT_SELECTORS:
+            raise ConformanceError(
+                "SOURCE_INPUT_SELECTOR_LIMIT",
+                "source-input registry exceeds the aggregate selector limit",
+            )
+
+    for field, values in universal.items():
+        if values != _utf8_sorted(values) or len(values) != len(set(values)):
+            raise ConformanceError(
+                "SOURCE_INPUT_NOT_CANONICAL",
+                f"universal source-input field {field} is not unique UTF-8 byte order",
+            )
+        if field in universal_expected and values != universal_expected[field]:
+            raise ConformanceError(
+                "SOURCE_INPUT_UNIVERSAL_DRIFT",
+                f"universal source-input field {field} drifted from the v1 contract",
+            )
+        for value in values:
+            if error := _source_input_selector_error(
+                value,
+                "recursive_exact_basenames",
+            ):
+                raise ConformanceError(
+                    "SOURCE_INPUT_PATH_UNSAFE",
+                    f"unsafe universal source-input selector {value!r}: {error}",
+                )
+        selector_count += len(values)
+        enforce_selector_limit()
+
+    for entry in languages:
+        language = entry["language"]
+        alias_values: dict[str, frozenset[str]] = {}
+        seen_alias_groups: set[tuple[str, ...]] = set()
+        encoded_alias_groups = [
+            json.dumps(group, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+            for group in entry["case_alias_groups"]
+        ]
+        if encoded_alias_groups != sorted(encoded_alias_groups):
+            raise ConformanceError(
+                "SOURCE_INPUT_NOT_CANONICAL",
+                f"{language} case-alias groups are not in UTF-8 byte order",
+            )
+        for group in entry["case_alias_groups"]:
+            if group != _utf8_sorted(group):
+                raise ConformanceError(
+                    "SOURCE_INPUT_NOT_CANONICAL",
+                    f"{language} case-alias group is not in UTF-8 byte order",
+                )
+            identities = {value.casefold() for value in group}
+            if len(identities) != 1:
+                raise ConformanceError(
+                    "SOURCE_INPUT_ALIAS_INVALID",
+                    f"{language} case-alias group does not identify one portable basename",
+                )
+            identity = tuple(group)
+            if identity in seen_alias_groups:
+                raise ConformanceError(
+                    "SOURCE_INPUT_ALIAS_INVALID",
+                    f"{language} repeats a case-alias group",
+                )
+            seen_alias_groups.add(identity)
+            folded_identity = next(iter(identities))
+            if folded_identity in alias_values:
+                raise ConformanceError(
+                    "SOURCE_INPUT_ALIAS_INVALID",
+                    f"{language} repeats a normalized case-alias identity",
+                )
+            alias_values[folded_identity] = frozenset(group)
+            selector_count += len(group)
+            enforce_selector_limit()
+
+        normalized_roles: dict[str, str] = {}
+        normalized_values: dict[str, set[str]] = {}
+        for value in universal["build_filenames"]:
+            normalized_roles[value.casefold()] = "universal_build_filenames"
+        for value in universal["root_exact_basenames"]:
+            normalized_roles[value.casefold()] = "universal_root_exact_basenames"
+        for field in SOURCE_INPUT_SELECTOR_FIELDS:
+            values = entry[field]
+            if values != _utf8_sorted(values) or len(values) != len(set(values)):
+                raise ConformanceError(
+                    "SOURCE_INPUT_NOT_CANONICAL",
+                    f"{language} {field} is not unique UTF-8 byte order",
+                )
+            selector_count += len(values)
+            enforce_selector_limit()
+            for value in values:
+                identity = unicodedata.normalize("NFC", value).casefold()
+                prior = normalized_roles.get(identity)
+                if prior is not None and prior != field:
+                    raise ConformanceError(
+                        "SOURCE_INPUT_SELECTOR_COLLISION",
+                        f"{language} selector {value!r} collides across {prior} and {field}",
+                    )
+                if prior == field:
+                    observed = normalized_values.get(identity, set()) | {value}
+                    allowed = alias_values.get(identity)
+                    if allowed is None or not observed.issubset(allowed):
+                        raise ConformanceError(
+                            "SOURCE_INPUT_SELECTOR_COLLISION",
+                            f"{language} selector {value!r} collides after case folding",
+                        )
+                normalized_roles[identity] = field
+                normalized_values.setdefault(identity, set()).add(value)
+
+        for identity, allowed in alias_values.items():
+            if normalized_values.get(identity) != set(allowed):
+                raise ConformanceError(
+                    "SOURCE_INPUT_ALIAS_INVALID",
+                    f"{language} case-alias group contains an undeclared selector",
+                )
+
+        paths = entry["root_exact_relative_paths"]
+        for path in paths:
+            if any(
+                component in SOURCE_COLLECTION_SKIP_COMPONENTS
+                for component in path.split("/")
+            ):
+                raise ConformanceError(
+                    "SOURCE_INPUT_PATH_UNSAFE",
+                    f"{language} exact path enters a generated component: {path}",
+                )
+        folded_paths = [path.casefold() for path in paths]
+        for index, path in enumerate(folded_paths):
+            if any(
+                path.startswith(f"{other}/") or other.startswith(f"{path}/")
+                for other in folded_paths[index + 1 :]
+            ):
+                raise ConformanceError(
+                    "SOURCE_INPUT_SELECTOR_COLLISION",
+                    f"{language} exact relative paths have a prefix collision",
+                )
+
+        scoped_ids = [item["id"] for item in entry["scoped_inputs"]]
+        if scoped_ids != _utf8_sorted(scoped_ids) or len(scoped_ids) != len(
+            set(scoped_ids)
+        ):
+            raise ConformanceError(
+                "SOURCE_INPUT_NOT_CANONICAL",
+                f"{language} scoped inputs are not unique id order",
+            )
+        for scoped in entry["scoped_inputs"]:
+            prefix = scoped.get("path_prefix")
+            if prefix is not None:
+                if error := _source_input_text_error(prefix):
+                    raise ConformanceError(
+                        "SOURCE_INPUT_PATH_UNSAFE",
+                        f"unsafe scoped prefix {prefix!r}: {error}",
+                    )
+                if any(
+                    component in SOURCE_COLLECTION_SKIP_COMPONENTS
+                    for component in prefix.split("/")
+                ):
+                    raise ConformanceError(
+                        "SOURCE_INPUT_PATH_UNSAFE",
+                        f"{language} scoped input enters generated component {prefix}",
+                    )
+            for field in ("suffixes", "exact_basenames"):
+                values = scoped[field]
+                if values != _utf8_sorted(values) or len(values) != len(set(values)):
+                    raise ConformanceError(
+                        "SOURCE_INPUT_NOT_CANONICAL",
+                        f"{language} scoped input {scoped['id']} {field} is not canonical",
+                    )
+                for value in values:
+                    if error := _source_input_selector_error(value, field):
+                        raise ConformanceError(
+                            "SOURCE_INPUT_PATH_UNSAFE",
+                            f"unsafe scoped selector {value!r}: {error}",
+                        )
+                selector_count += len(values)
+                enforce_selector_limit()
+            if any(
+                basename.endswith(suffix)
+                for basename in scoped["exact_basenames"]
+                for suffix in scoped["suffixes"]
+            ):
+                raise ConformanceError(
+                    "SOURCE_INPUT_SELECTOR_COLLISION",
+                    f"{language} scoped input {scoped['id']} has redundant exact and suffix selectors",
+                )
+
+        scoped_inputs = entry["scoped_inputs"]
+        for index, scoped in enumerate(scoped_inputs):
+            scoped_prefix = scoped.get("path_prefix", "")
+            scoped_selectors = {
+                value.casefold()
+                for field in ("suffixes", "exact_basenames")
+                for value in scoped[field]
+            }
+            if scoped["scope"] == "root":
+                for value in scoped["exact_basenames"]:
+                    prior = normalized_roles.get(value.casefold())
+                    if prior is not None:
+                        raise ConformanceError(
+                            "SOURCE_INPUT_SELECTOR_COLLISION",
+                            f"{language} root scoped selector {value!r} collides with {prior}",
+                        )
+            for other in scoped_inputs[index + 1 :]:
+                other_prefix = other.get("path_prefix", "")
+                other_selectors = {
+                    value.casefold()
+                    for field in ("suffixes", "exact_basenames")
+                    for value in other[field]
+                }
+                if not scoped_selectors.intersection(other_selectors):
+                    continue
+                same_scope = scoped["scope"] == other["scope"] == "root"
+                overlapping_subtrees = scoped["scope"] == other[
+                    "scope"
+                ] == "subtree" and (
+                    scoped_prefix == other_prefix
+                    or scoped_prefix.startswith(f"{other_prefix}/")
+                    or other_prefix.startswith(f"{scoped_prefix}/")
+                )
+                if same_scope or overlapping_subtrees:
+                    raise ConformanceError(
+                        "SOURCE_INPUT_SELECTOR_COLLISION",
+                        f"{language} scoped inputs {scoped['id']} and {other['id']} overlap",
+                    )
+
+        selectors: list[tuple[str, str, str, str, str]] = []
+
+        def add_selectors(
+            target: list[tuple[str, str, str, str, str]],
+            role: str,
+            scope: str,
+            prefix: str,
+            matcher: str,
+            values: list[str],
+        ) -> None:
+            target.extend((role, scope, prefix, matcher, value) for value in values)
+
+        add_selectors(
+            selectors,
+            "universal_build_filenames",
+            "any",
+            "",
+            "basename",
+            universal["build_filenames"],
+        )
+        add_selectors(
+            selectors,
+            "universal_root_exact_basenames",
+            "root",
+            "",
+            "basename",
+            universal["root_exact_basenames"],
+        )
+        add_selectors(
+            selectors,
+            "recursive_suffixes",
+            "any",
+            "",
+            "suffix",
+            entry["recursive_suffixes"],
+        )
+        add_selectors(
+            selectors,
+            "recursive_exact_basenames",
+            "any",
+            "",
+            "basename",
+            entry["recursive_exact_basenames"],
+        )
+        add_selectors(
+            selectors,
+            "root_exact_basenames",
+            "root",
+            "",
+            "basename",
+            entry["root_exact_basenames"],
+        )
+        add_selectors(
+            selectors,
+            "root_variable_suffixes",
+            "root",
+            "",
+            "suffix",
+            entry["root_variable_suffixes"],
+        )
+        for path in entry["root_exact_relative_paths"]:
+            selectors.append(
+                (
+                    "root_exact_relative_paths",
+                    "exact",
+                    path,
+                    "basename",
+                    posixpath.basename(path),
+                )
+            )
+        for scoped in scoped_inputs:
+            scoped_role = f"scoped_inputs:{scoped['id']}"
+            scope = scoped["scope"]
+            prefix = scoped.get("path_prefix", "")
+            add_selectors(
+                selectors,
+                scoped_role,
+                scope,
+                prefix,
+                "suffix",
+                scoped["suffixes"],
+            )
+            add_selectors(
+                selectors,
+                scoped_role,
+                scope,
+                prefix,
+                "basename",
+                scoped["exact_basenames"],
+            )
+
+        def path_in_scope(path: str, scope: str, prefix: str) -> bool:
+            folded_path = path.casefold()
+            folded_prefix = prefix.casefold()
+            if scope == "any":
+                return True
+            if scope == "root":
+                return "/" not in path
+            if scope == "subtree":
+                return folded_path.startswith(f"{folded_prefix}/")
+            return folded_path == folded_prefix
+
+        def scopes_overlap(
+            left_scope: str,
+            left_prefix: str,
+            right_scope: str,
+            right_prefix: str,
+        ) -> bool:
+            if left_scope == "exact":
+                return path_in_scope(left_prefix, right_scope, right_prefix)
+            if right_scope == "exact":
+                return path_in_scope(right_prefix, left_scope, left_prefix)
+            if left_scope == "any" or right_scope == "any":
+                return True
+            if left_scope == right_scope == "root":
+                return True
+            if "root" in {left_scope, right_scope}:
+                return False
+            left = left_prefix.casefold()
+            right = right_prefix.casefold()
+            return (
+                left == right
+                or left.startswith(f"{right}/")
+                or right.startswith(f"{left}/")
+            )
+
+        def matchers_overlap(
+            left_matcher: str,
+            left_value: str,
+            right_matcher: str,
+            right_value: str,
+        ) -> bool:
+            left = left_value
+            right = right_value
+            if left_matcher == right_matcher == "basename":
+                return left == right
+            if left_matcher == right_matcher == "suffix":
+                return left.endswith(right) or right.endswith(left)
+            if left_matcher == "basename":
+                return left.endswith(right)
+            return right.endswith(left)
+
+        for index, left in enumerate(selectors):
+            left_role, left_scope, left_prefix, left_matcher, left_value = left
+            for right in selectors[index + 1 :]:
+                (
+                    right_role,
+                    right_scope,
+                    right_prefix,
+                    right_matcher,
+                    right_value,
+                ) = right
+                if left_role == right_role:
+                    continue
+                if not scopes_overlap(
+                    left_scope,
+                    left_prefix,
+                    right_scope,
+                    right_prefix,
+                ):
+                    continue
+                if matchers_overlap(
+                    left_matcher,
+                    left_value,
+                    right_matcher,
+                    right_value,
+                ):
+                    raise ConformanceError(
+                        "SOURCE_INPUT_SELECTOR_COLLISION",
+                        f"{language} selectors {left_value!r} and {right_value!r} "
+                        f"overlap across {left_role} and {right_role}",
+                    )
+
+    if selector_count > MAX_SOURCE_INPUT_SELECTORS:
+        raise ConformanceError(
+            "SOURCE_INPUT_SELECTOR_LIMIT",
+            "source-input registry exceeds the bounded selector budget",
+        )
+    return {"language_count": len(languages), "selector_count": selector_count}
+
+
+@lru_cache(maxsize=1)
+def _default_source_input_registry() -> dict[str, Any]:
+    schema = load_document(
+        DEFAULT_FIXTURE_ROOT / "language-source-input-registry.schema.json"
+    )
+    registry = load_document(
+        DEFAULT_FIXTURE_ROOT / "language-source-input-registry.json"
+    )
+    _validate_source_input_registry(registry, schema)
+    return registry
 
 
 def _cli_argument_is_unsafe(argument: str) -> bool:
@@ -1313,6 +1847,7 @@ def _toolchain_for_language(language: str) -> str:
 def _validate_pure_case_semantics(
     case: dict[str, Any],
     staged_files: list[WorkspaceFile],
+    source_input_registry: dict[str, Any] | None = None,
 ) -> None:
     domain = case["domain"]
     if domain not in PURE_DOMAINS:
@@ -1368,20 +1903,45 @@ def _validate_pure_case_semantics(
                 "a package cannot be its own dependent",
             )
     elif domain == "source_collection":
-        candidate_paths: set[str] = set()
+        registry = source_input_registry or _default_source_input_registry()
+        if options["registry_sha256"] != source_input_registry_digest(registry):
+            raise ConformanceError(
+                "CASE_SOURCE_REGISTRY_DIGEST_MISMATCH",
+                "source-collection case does not pin the validated registry snapshot",
+            )
+        if options["language"] not in {
+            entry["language"] for entry in registry["languages"]
+        }:
+            raise ConformanceError(
+                "CASE_SOURCE_LANGUAGE_UNKNOWN",
+                f"source-collection language is not registered: {options['language']}",
+            )
+        candidate_paths: dict[str, tuple[str, str]] = {}
         for candidate in options["candidates"]:
             path = candidate["path"]
-            if portable_path_error(path) or unicodedata.normalize("NFC", path) != path:
+            if portable_path_error(path) or _source_input_text_error(path):
                 raise ConformanceError(
                     "CASE_SOURCE_PATH_UNSAFE",
                     f"source candidate path is not portable NFC: {path!r}",
                 )
-            if path in candidate_paths:
+            identity = path.casefold()
+            if identity in candidate_paths:
                 raise ConformanceError(
                     "CASE_SOURCE_CANDIDATE_DUPLICATE",
-                    f"duplicate source candidate path: {path}",
+                    f"duplicate platform-identity source candidate path: {path}",
                 )
-            candidate_paths.add(path)
+            for other_path, other_kind in candidate_paths.values():
+                folded_other = other_path.casefold()
+                path_below_other = identity.startswith(f"{folded_other}/")
+                other_below_path = folded_other.startswith(f"{identity}/")
+                if (path_below_other and other_kind == "file") or (
+                    other_below_path and candidate["kind"] == "file"
+                ):
+                    raise ConformanceError(
+                        "CASE_SOURCE_CANDIDATE_COLLISION",
+                        f"source candidate file paths cannot be prefixes: {other_path!r}, {path!r}",
+                    )
+            candidate_paths[identity] = (path, candidate["kind"])
         for pattern in options["declared_srcs"]:
             if error := portable_glob_error(pattern):
                 raise ConformanceError(
@@ -1649,14 +2209,47 @@ def _expected_hashes(
     return package_digest.hex(), dependencies_digest.hex(), combined
 
 
-def _expected_source_collection(options: dict[str, Any]) -> list[dict[str, str]]:
+def _source_input_entry(registry: dict[str, Any], language: str) -> dict[str, Any]:
+    for entry in registry["languages"]:
+        if entry["language"] == language:
+            return entry
+    raise ConformanceError(
+        "CASE_SOURCE_LANGUAGE_UNKNOWN",
+        f"source-collection language is not registered: {language}",
+    )
+
+
+def _scoped_source_input_matches(rule: dict[str, Any], path: str) -> bool:
+    basename = posixpath.basename(path)
+    if rule["scope"] == "root":
+        if "/" in path:
+            return False
+    else:
+        prefix = rule["path_prefix"]
+        if not path.startswith(f"{prefix}/"):
+            return False
+    return basename in set(rule["exact_basenames"]) or any(
+        basename.endswith(suffix) for suffix in rule["suffixes"]
+    )
+
+
+def _expected_source_collection(
+    options: dict[str, Any],
+    source_input_registry: dict[str, Any] | None = None,
+) -> list[dict[str, str]]:
+    registry = source_input_registry or _default_source_input_registry()
+    if options["registry_sha256"] != source_input_registry_digest(registry):
+        raise ConformanceError(
+            "CASE_SOURCE_REGISTRY_DIGEST_MISMATCH",
+            "source-collection case does not pin the validated registry snapshot",
+        )
+    language_inputs = _source_input_entry(registry, options["language"])
+    universal = registry["universal_inputs"]
     link_roots = {
         candidate["path"]
         for candidate in options["candidates"]
         if candidate["kind"] != "file"
     }
-    include_extensions = set(options["include_extensions"])
-    special_filenames = set(options["special_filenames"])
     declared_srcs = options["declared_srcs"]
     files: list[dict[str, str]] = []
 
@@ -1667,16 +2260,42 @@ def _expected_source_collection(options: dict[str, Any]) -> list[dict[str, str]]
         if any(path == root or path.startswith(f"{root}/") for root in link_roots):
             continue
         if any(
-            component in SOURCE_COLLECTION_SKIP_COMPONENTS
+            component in set(universal["generated_directory_components"])
             for component in path.split("/")
         ):
             continue
 
         basename = posixpath.basename(path)
-        included = basename in special_filenames
-        if not included and options["mode"] == "extension":
-            included = posixpath.splitext(basename)[1] in include_extensions
-        if not included and options["mode"] == "declared_sources":
+        is_root = "/" not in path
+        included = basename in set(universal["build_filenames"])
+        if is_root and basename in set(universal["root_exact_basenames"]):
+            included = True
+        if is_root and basename in set(language_inputs["root_exact_basenames"]):
+            included = True
+        if is_root and any(
+            basename.endswith(suffix)
+            for suffix in language_inputs["root_variable_suffixes"]
+        ):
+            included = True
+        if path in set(language_inputs["root_exact_relative_paths"]):
+            included = True
+
+        if options["mode"] == "extension":
+            if basename in set(language_inputs["recursive_exact_basenames"]):
+                included = True
+            if any(
+                basename.endswith(suffix)
+                for suffix in language_inputs["recursive_suffixes"]
+            ):
+                included = True
+            scoped_matches = [
+                rule
+                for rule in language_inputs["scoped_inputs"]
+                if _scoped_source_input_matches(rule, path)
+            ]
+            if scoped_matches:
+                included = True
+        elif not included:
             included = any(
                 _portable_glob_matches(pattern, path) for pattern in declared_srcs
             )
@@ -2339,6 +2958,7 @@ def _validate_pure_result_semantics(
     result: dict[str, Any],
     staged_files: list[WorkspaceFile],
     prefix: str,
+    source_input_registry: dict[str, Any] | None = None,
 ) -> None:
     domain = case["domain"]
     if domain not in PURE_DOMAINS:
@@ -2421,7 +3041,7 @@ def _validate_pure_result_semantics(
             )
     elif domain == "source_collection" and outcome == "ok":
         actual_files = sorted(payload["files"], key=lambda item: item["path"])
-        if actual_files != _expected_source_collection(options):
+        if actual_files != _expected_source_collection(options, source_input_registry):
             raise ConformanceError(
                 f"{prefix}_SOURCE_COLLECTION_MISMATCH",
                 "source collection does not match pruning, link, mode, and digest rules",
@@ -2782,6 +3402,7 @@ def assert_result_matches(
     result_schema: dict[str, Any] | None = None,
     plan_schema: dict[str, Any] | None = None,
     pure_domain_schema: dict[str, Any] | None = None,
+    source_input_registry: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     reject_execution_intent(case)
     reject_unmodeled_domain(case)
@@ -2803,12 +3424,13 @@ def assert_result_matches(
         code="RESULT_SCHEMA_INVALID",
     )
     staged_files = preflight_workspace(case)
-    _validate_pure_case_semantics(case, staged_files)
+    _validate_pure_case_semantics(case, staged_files, source_input_registry)
     _validate_pure_result_semantics(
         case,
         actual,
         staged_files,
         "RESULT",
+        source_input_registry,
     )
     canonical_actual = canonicalize_result(actual)
     canonical_expected = canonicalize_result(case["expected"])
@@ -2827,6 +3449,7 @@ def validate_case_document(
     result_schema: dict[str, Any],
     plan_schema: dict[str, Any],
     pure_domain_schema: dict[str, Any] | None = None,
+    source_input_registry: dict[str, Any] | None = None,
 ) -> list[WorkspaceFile]:
     reject_execution_intent(case)
     _validate_schema(case, case_schema, "CASE_SCHEMA_INVALID")
@@ -2838,7 +3461,7 @@ def validate_case_document(
     pure_domain_schema = pure_domain_schema or load_document(
         DEFAULT_FIXTURE_ROOT / "pure-domains.schema.json"
     )
-    _validate_pure_case_semantics(case, staged_files)
+    _validate_pure_case_semantics(case, staged_files, source_input_registry)
     _validate_result_shape(
         case,
         case["expected"],
@@ -2852,6 +3475,7 @@ def validate_case_document(
         case["expected"],
         staged_files,
         "EXPECTED",
+        source_input_registry,
     )
     expected = case["expected"]
     if expected["outcome"] in {"unsupported", "skipped"}:
@@ -2969,10 +3593,19 @@ def validate_corpus(
         DEFAULT_FIXTURE_ROOT / "implementations.schema.json"
     )
     manifest = load_document(fixture_root / "implementations.json")
+    source_input_registry_schema = load_document(
+        DEFAULT_FIXTURE_ROOT / "language-source-input-registry.schema.json"
+    )
+    source_input_registry = load_document(
+        fixture_root / "language-source-input-registry.json"
+    )
     plan_schema = load_document(
         REPO_ROOT / "code" / "specs" / "schemas" / "build-plan-v1.schema.json"
     )
     manifest_summary = _validate_manifest(manifest, manifest_schema)
+    source_input_summary = _validate_source_input_registry(
+        source_input_registry, source_input_registry_schema
+    )
 
     case_paths = sorted((fixture_root / "cases").glob("*.json"))
     if not case_paths:
@@ -2996,6 +3629,7 @@ def validate_corpus(
             result_schema=result_schema,
             plan_schema=plan_schema,
             pure_domain_schema=pure_domain_schema,
+            source_input_registry=source_input_registry,
         )
         case_ids.add(case["id"])
         domains.add(case["domain"])
@@ -3008,6 +3642,10 @@ def validate_corpus(
         "established_languages": manifest_summary["established_languages"],
         "front_door_count": manifest_summary["front_door_count"],
         "adapter_ready_count": manifest_summary["adapter_ready_count"],
+        "source_input_language_count": source_input_summary["language_count"],
+        "source_input_registry_sha256": source_input_registry_digest(
+            source_input_registry
+        ),
         "conformance_run_count": 0,
         "conformance_status": "not-run",
         "execution_case_count": 0,

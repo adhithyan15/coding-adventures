@@ -17,19 +17,9 @@
   "input": {
     "operation": "source_collection",
     "options": {
+      "language": "ocaml",
       "mode": "extension",
-      "include_extensions": [
-        ".ml",
-        ".mli",
-        ".opam"
-      ],
-      "special_filenames": [
-        ".ocamlformat",
-        "BUILD",
-        "BUILD_windows",
-        "dune",
-        "dune-project"
-      ],
+      "registry_sha256": "a64e491e7be2d1e2985cebb7dd1576607c2525ab6590a31af3e98cb2329c55d0",
       "declared_srcs": [],
       "candidates": [
         {"path": ".ocamlformat", "kind": "file", "content_hex": "736f757263650a"},
