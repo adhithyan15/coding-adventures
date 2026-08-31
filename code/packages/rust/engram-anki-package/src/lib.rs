@@ -1758,6 +1758,7 @@ fn v11_export_rows(
 
     // --- revlog --------------------------------------------------------------
     let mut used_review_ids = BTreeSet::new();
+    let mut highest_review_id = 0_i64;
     let mut review_rows: ExportRows = Vec::with_capacity(export.reviews.len());
     for review in &export.reviews {
         let source = anki_source(export, ExternalSourceTarget::Review, &review.id);
@@ -1772,7 +1773,7 @@ fn v11_export_rows(
                     review.id, review.card_id
                 ))
             })?;
-        let review_id = unique_review_id(review, &mut used_review_ids)?;
+        let review_id = unique_review_id(review, &mut used_review_ids, &mut highest_review_id)?;
         review_rows.push((
             review_id,
             vec![
@@ -2794,7 +2795,35 @@ fn is_dynamic_anki_deck(export: &ExportModel, deck_key: &str) -> bool {
             .is_some_and(|dyn_value| dyn_value != 0)
 }
 
-fn unique_review_id(review: &Review, used: &mut BTreeSet<i64>) -> Result<i64, ApkgError> {
+/// Pick a unique revlog id for `review`, preferring its own id when free.
+///
+/// `used` holds every id handed out so far; `highest` is the largest of them, and
+/// is what keeps this O(1).
+///
+/// ## Why this is not a probing loop
+///
+/// It used to resolve collisions by walking `candidate += 1` until the set
+/// accepted it, which had two problems, both reachable from an untrusted file
+/// (review ids are the revlog b-tree's cell rowids, and `walk_table` sorts but
+/// does not deduplicate, so a crafted `.anki2` controls them entirely):
+///
+/// * With `saturating_add` it did not terminate at `i64::MAX` — the add became a
+///   no-op and the loop spun at 100% CPU forever.
+/// * Even with `checked_add`, the probe is **quadratic**. The normalisation below
+///   sends every id `<= 0` to `1`, so N revlog rows with rowid `0` all start at
+///   the same candidate and row *k* probes *k* times: O(N²). Measured at ~91s for
+///   80k rows and roughly an hour at 500k — and because the rows are
+///   near-identical, that collection compresses to tens of kilobytes inside the
+///   `.apkg` zip. A small upload could pin a core for hours.
+///
+/// Since the ids only need to be *unique*, a collision can jump straight past
+/// everything handed out so far instead of walking to it. `highest + 1` is free
+/// by construction, so one step always suffices.
+fn unique_review_id(
+    review: &Review,
+    used: &mut BTreeSet<i64>,
+    highest: &mut i64,
+) -> Result<i64, ApkgError> {
     let mut candidate = review
         .id
         .parse::<i64>()
@@ -2804,22 +2833,16 @@ fn unique_review_id(review: &Review, used: &mut BTreeSet<i64>) -> Result<i64, Ap
     if candidate <= 0 {
         candidate = 1;
     }
-    // `saturating_add` used to sit here, which hangs rather than terminating: at
-    // `i64::MAX` the add is a no-op, `insert` keeps returning false, and the loop
-    // spins forever at 100% CPU. That is reachable from an untrusted file — review
-    // ids come straight from the revlog b-tree's cell rowids, and `walk_table`
-    // sorts but does not deduplicate, so a crafted `.anki2` carrying two rows with
-    // rowid `i64::MAX` is enough to wedge an import-then-export.
-    //
-    // `checked_add` makes exhaustion an error instead of a hang.
-    loop {
-        if used.insert(candidate) {
-            return Ok(candidate);
-        }
-        candidate = candidate
+    if used.contains(&candidate) {
+        // Everything at or below `highest` may be taken; the next slot above it
+        // cannot be. `checked_add` keeps exhaustion an error rather than a hang.
+        candidate = highest
             .checked_add(1)
             .ok_or_else(|| apkg_error("Anki review ids exhaust the addressable id range"))?;
     }
+    used.insert(candidate);
+    *highest = (*highest).max(candidate);
+    Ok(candidate)
 }
 
 fn assign_anki_ids<'a>(
@@ -5344,6 +5367,56 @@ CREATE TABLE graves (
     /// with the same extreme rowid. The old `saturating_add` spun forever on that
     /// input; this asserts it now ends, either by finding a free id or by saying
     /// it cannot.
+    /// A dense run of colliding review ids stays linear.
+    ///
+    /// `unique_review_id` normalises every id `<= 0` to `1`, so a crafted `.anki2`
+    /// whose revlog rows all carry rowid `0` collapses them onto one starting
+    /// candidate. The old linear probe made that quadratic — row *k* walked *k*
+    /// steps — which measured ~91 seconds at 80k rows and about an hour at 500k,
+    /// from an `.apkg` of a few tens of kilobytes once zipped.
+    ///
+    /// 50000 rows is chosen so the old behaviour would not plausibly finish inside
+    /// a CI run while the fixed version is instant, and the assertion is on the
+    /// invariant that matters — every id distinct — rather than on a wall-clock
+    /// threshold, which would be flaky.
+    #[test]
+    fn dense_colliding_review_ids_do_not_go_quadratic() {
+        const ROWS: usize = 50_000;
+        let mut used = BTreeSet::new();
+        let mut highest = 0_i64;
+        let mut assigned = Vec::with_capacity(ROWS);
+
+        for _ in 0..ROWS {
+            // id "0" fails the `> 0` filter, so every row normalises to candidate 1.
+            let review = Review {
+                id: "0".to_string(),
+                session_id: "s".to_string(),
+                card_id: "c".to_string(),
+                rating: Rating::Good,
+                reviewed_at: 0,
+                answer_time_ms: None,
+                leech_event: None,
+                previous_progress: None,
+                resulting_progress: None,
+                previous_active_session: None,
+                sibling_progress_snapshots: Vec::new(),
+            };
+            assigned.push(unique_review_id(&review, &mut used, &mut highest).unwrap());
+        }
+
+        assert_eq!(assigned.len(), ROWS);
+        let distinct: BTreeSet<i64> = assigned.iter().copied().collect();
+        assert_eq!(
+            distinct.len(),
+            ROWS,
+            "every review must receive a distinct id"
+        );
+        assert!(
+            assigned.iter().all(|id| *id > 0),
+            "revlog ids must stay positive"
+        );
+    }
+
     #[test]
     fn duplicate_extreme_review_ids_terminate_instead_of_hanging() {
         let mut used = BTreeSet::new();
@@ -5361,12 +5434,14 @@ CREATE TABLE graves (
             sibling_progress_snapshots: Vec::new(),
         };
 
-        let first = unique_review_id(&review(&i64::MAX.to_string()), &mut used).unwrap();
+        let mut highest = 0_i64;
+        let first =
+            unique_review_id(&review(&i64::MAX.to_string()), &mut used, &mut highest).unwrap();
         assert_eq!(first, i64::MAX);
 
         // The second one cannot be placed: MAX is taken and there is nothing above
         // it. It must return an error rather than loop.
-        let second = unique_review_id(&review(&i64::MAX.to_string()), &mut used);
+        let second = unique_review_id(&review(&i64::MAX.to_string()), &mut used, &mut highest);
         assert!(
             second.is_err(),
             "a second id at i64::MAX must error, not hang or silently collide"

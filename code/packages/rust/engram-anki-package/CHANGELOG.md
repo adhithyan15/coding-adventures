@@ -2,17 +2,30 @@
 
 ## Unreleased
 
-**Fixed a hang on crafted duplicate review ids.** `unique_review_id` resolved
-collisions with `saturating_add`, which does not terminate at `i64::MAX`: the add
-is a no-op, the set insert keeps failing, and the loop spins at 100% CPU forever.
+**Fixed two DoS paths in revlog id assignment, both reachable from an imported
+file.** Review ids come straight from the revlog b-tree's cell rowids, and
+`walk_table` sorts but does not deduplicate, so a crafted `.anki2` controls them
+entirely.
 
-That is reachable from an untrusted file. Review ids come straight from the
-revlog b-tree's cell rowids, and `walk_table` sorts but does not deduplicate, so
-a crafted `.anki2` carrying two rows with rowid `i64::MAX` wedges an
-import-then-export. Now `checked_add`, making exhaustion an error.
+`unique_review_id` resolved collisions by linear probing. That did not terminate
+at `i64::MAX` — `saturating_add` became a no-op and the loop spun at 100% CPU
+forever. It was also **quadratic**: the function normalises every id `<= 0` to
+`1`, so N revlog rows with rowid `0` all start at the same candidate and row *k*
+probes *k* times. Measured at ~91s for 80k rows and about an hour at 500k, from
+an `.apkg` of tens of kilobytes once zipped, since the rows compress well.
 
-Pre-existing rather than introduced by the port, fixed here because the export
-path calls it.
+Since the ids only need to be unique, a collision now jumps past the highest id
+handed out so far rather than walking to it — O(1) per review, one step always
+sufficient because `highest + 1` is free by construction. `checked_add` keeps
+exhaustion an error rather than a hang.
+
+Regression tests cover both: two ids at `i64::MAX` must error rather than loop,
+and 50000 rows all colliding on candidate 1 must produce 50000 distinct ids (that
+test alone would take roughly 35 seconds under the old probe; it now runs in
+0.06s).
+
+Pre-existing rather than introduced by the port, fixed because the export path
+calls it.
 
 **The V11 export no longer uses `rusqlite`.** `write_v11_collection_bytes_from_engram_state`
 built its `.anki2` database by opening an in-memory `rusqlite` connection, running
