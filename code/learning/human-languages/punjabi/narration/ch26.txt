@@ -34,7 +34,8 @@ Script and value recall.
 Trace ੌ once above ਨ, making ਨੌ. Then read the known value ਨੌਕਰੀ once.
 
 Writing — one supported work row.
-The old bank is A — ਖੇਤੀ, B — ਨੌਕਰੀ. For B, complete ਕੰਮ: __________. Keep the bank visible for this one attempt.
+Use the old bank once: A — ਖੇਤੀ and B — ਨੌਕਰੀ.
+Choose B. Complete ਕੰਮ: __________. Keep the bank visible for this one attempt.
 
 Wrap-up recall.
 One supported row is enough. The next lesson removes the bank after a short delay.

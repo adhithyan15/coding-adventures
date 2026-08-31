@@ -48,7 +48,9 @@ Trace **ੌ** once above **ਨ**, making **ਨੌ**. Then read the known value *
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-WORK-CUE-MAP-01, PA-FORM-WORK-SUPPORTED-ENTRY-01] -->
 <!-- hl-writing-stage: controlled-composition -->
 
-The old bank is A — **ਖੇਤੀ**, B — **ਨੌਕਰੀ**. For B, complete **ਕੰਮ: __________**. Keep the bank visible for this one attempt.
+Use the old bank once: **A — ਖੇਤੀ** and **B — ਨੌਕਰੀ**.
+
+Choose B. Complete **ਕੰਮ: __________**. Keep the bank visible for this one attempt.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-AU-MATRA-01, PA-FORM-WORK-JOB-01, PA-FORM-WORK-CUE-MAP-01, PA-FORM-WORK-SUPPORTED-ENTRY-01, PA-FORM-THREE-LABEL-ORDER-01] -->

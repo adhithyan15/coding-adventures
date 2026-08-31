@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Form Retrieval at R2 and R3",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e3ea6cdbaff92aeb",
+  "sourceHash": "fnv1a64:93b840d77bfa3828",
   "lessons": [
     {
       "id": "PA-R26-three-repair-r2",
@@ -115,7 +115,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fc085d19807a31f2",
+      "sourceHash": "fnv1a64:44513b5f31d30b42",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -157,7 +157,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The old bank is A — ਖੇਤੀ, B — ਨੌਕਰੀ. For B, complete ਕੰਮ: __________. Keep the bank visible for this one attempt."
+              "text": "Use the old bank once: A — ਖੇਤੀ and B — ਨੌਕਰੀ."
+            },
+            {
+              "kind": "speech",
+              "text": "Choose B. Complete ਕੰਮ: __________. Keep the bank visible for this one attempt."
             }
           ]
         },
