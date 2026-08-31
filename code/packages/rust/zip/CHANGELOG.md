@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+
+**Checked arithmetic in the reader — a 32-bit overflow was an unrecoverable trap
+on wasm.** `ZipReader::read` computed `data_start + entry.compressed_size` and
+`ZipReader::new` computed `cd_offset + cd_size`, `name_start + name_len`, and the
+CD advance, all unchecked. Every term is an attacker-controlled `u32`/`u16` read
+straight from the archive.
+
+On 64-bit hosts those sums cannot overflow, which is why this went unnoticed. On
+`wasm32` `usize` is 32 bits: the sum wraps, a wrapped-small `data_end` passes the
+bounds check, and `&self.data[data_start..data_end]` panics with `start > end`.
+
+That is not a recoverable error there. `wasm32-unknown-unknown` builds with
+`panic = "abort"`, so a caller's `catch_unwind` never runs — the whole module
+traps and any unsaved in-memory state goes with it.
+
+Verified on the real target, not by inspection: a 135-byte archive with one
+central-directory `compressed_size` field set to `0xFFFFFFD7`, run through a
+wasm32 build under Node. Before: `RuntimeError: unreachable`. After: a clean
+`Err`. Reverting the fix reproduces the trap.
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).

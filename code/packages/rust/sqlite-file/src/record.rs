@@ -67,8 +67,8 @@ pub enum SqlValue {
 }
 
 /// How many payload bytes a column of the given `serial` type occupies.
-fn content_size(serial: u64) -> usize {
-    match serial {
+fn content_size(serial: u64) -> Option<usize> {
+    Some(match serial {
         0 | 8 | 9 | 10 | 11 => 0,
         1 => 1,
         2 => 2,
@@ -78,8 +78,14 @@ fn content_size(serial: u64) -> usize {
         6 | 7 => 8,
         // For N ≥ 12, integer division `(N-12)/2` yields the byte length for
         // both BLOB (even) and TEXT (odd): e.g. 14→1, 15→1, 16→2, 17→2.
-        n => ((n - 12) / 2) as usize,
-    }
+        //
+        // `try_from` rather than `as`, because serial types come from an
+        // untrusted file and `usize` is 32 bits on `wasm32`. A crafted serial of
+        // `2·2³² + 12` truncates to length 0 under `as` — the column would decode
+        // as an empty value and every column after it would read from the wrong
+        // offset, silently. `None` makes it a decode failure instead.
+        n => usize::try_from((n - 12) / 2).ok()?,
+    })
 }
 
 /// Read a big-endian, two's-complement signed integer out of `bytes`
@@ -239,7 +245,7 @@ pub fn decode(record: &[u8]) -> Option<Vec<SqlValue>> {
         let (serial, n) = varint::read(record.get(header_off..)?)?;
         header_off += n;
         let serial = u64::try_from(serial).ok()?;
-        let size = content_size(serial);
+        let size = content_size(serial)?;
         // ...peeling `size` payload bytes off for each, bounds-checked.
         let end = payload_off.checked_add(size)?;
         let content = record.get(payload_off..end)?;

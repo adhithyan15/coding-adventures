@@ -653,18 +653,23 @@ impl<'a> ZipReader<'a> {
         let _num_entries = read_u16(data, eocd_offset + 10)
             .ok_or("zip: EOCD too short")?;
 
-        // Validate CD range.
-        if cd_offset + cd_size > data.len() {
+        // Validate CD range. Checked: both terms are `u32` fields from the
+        // archive, and `usize` is 32 bits on `wasm32`, so an unchecked sum wraps
+        // and the bounds test below passes on a nonsense range.
+        let cd_end = cd_offset
+            .checked_add(cd_size)
+            .ok_or("zip: Central Directory range overflows the address space")?;
+        if cd_end > data.len() {
             return Err(format!(
                 "zip: Central Directory [{}, {}) out of bounds (file size {})",
-                cd_offset, cd_offset + cd_size, data.len()
+                cd_offset, cd_end, data.len()
             ));
         }
 
         // Parse all Central Directory headers.
         let mut entries = Vec::new();
         let mut pos = cd_offset;
-        while pos + 4 <= cd_offset + cd_size {
+        while pos.checked_add(4).is_some_and(|end| end <= cd_end) {
             let sig = read_u32(data, pos).unwrap_or(0);
             if sig != 0x02014B50 {
                 break; // end of CD or padding
@@ -679,8 +684,12 @@ impl<'a> ZipReader<'a> {
             let comment_len      = read_u16(data, pos + 32).ok_or("zip: CD entry truncated")? as usize;
             let local_offset     = read_u32(data, pos + 42).ok_or("zip: CD entry truncated")?;
 
-            let name_start = pos + 46;
-            let name_end   = name_start + name_len;
+            let name_start = pos
+                .checked_add(46)
+                .ok_or("zip: CD entry name offset overflows the address space")?;
+            let name_end = name_start
+                .checked_add(name_len)
+                .ok_or("zip: CD entry name length overflows the address space")?;
             if name_end > data.len() {
                 return Err("zip: CD entry name out of bounds".into());
             }
@@ -691,7 +700,10 @@ impl<'a> ZipReader<'a> {
                 name, size, compressed_size, method, crc32, is_directory, local_offset,
             });
 
-            pos = name_end + extra_len + comment_len;
+            pos = name_end
+                .checked_add(extra_len)
+                .and_then(|value| value.checked_add(comment_len))
+                .ok_or("zip: CD entry advance overflows the address space")?;
         }
 
         Ok(Self { data, entries })
@@ -722,8 +734,25 @@ impl<'a> ZipReader<'a> {
         let lh_off = entry.local_offset as usize;
         let lh_name_len  = read_u16(self.data, lh_off + 26).ok_or("zip: local header truncated")? as usize;
         let lh_extra_len = read_u16(self.data, lh_off + 28).ok_or("zip: local header truncated")? as usize;
-        let data_start   = lh_off + 30 + lh_name_len + lh_extra_len;
-        let data_end     = data_start + entry.compressed_size as usize;
+        // Checked, because `usize` is 32 bits on `wasm32` and every term here is
+        // attacker-controlled: `local_offset` and `compressed_size` are `u32`
+        // fields read straight from the archive. Unchecked `+` wraps, and a
+        // wrapped-small `data_end` sails through the bounds check below only to
+        // panic on `&self.data[data_start..data_end]` with `start > end`.
+        //
+        // A panic is not recoverable here. `wasm32-unknown-unknown` builds with
+        // `panic = "abort"`, so the `catch_unwind` the JSON facade wraps every
+        // call in never runs — the whole module traps and the user's in-memory
+        // collection is lost. On 64-bit hosts these sums cannot overflow, which
+        // is why this went unnoticed while the package layer was native-only.
+        let data_start = lh_off
+            .checked_add(30)
+            .and_then(|value| value.checked_add(lh_name_len))
+            .and_then(|value| value.checked_add(lh_extra_len))
+            .ok_or("zip: local header offset overflows the address space")?;
+        let data_end = data_start
+            .checked_add(entry.compressed_size as usize)
+            .ok_or("zip: entry size overflows the address space")?;
 
         if data_end > self.data.len() {
             return Err(format!(

@@ -478,11 +478,51 @@ pub fn read_media_file(data: &[u8], archive_name: &str) -> Result<ResolvedMediaF
     })
 }
 
+/// Floor for the total decompressed media a package may expand to.
+///
+/// Small packages are still allowed to expand generously; the multiplier below
+/// takes over once the archive itself is large enough for a ratio to be
+/// meaningful.
+const MEDIA_EXPANSION_FLOOR: usize = 16 * 1024 * 1024;
+
+/// How many times its own size a package's media may expand to in total.
+///
+/// Legitimately-compressed media (audio, images) is already compressed and
+/// barely shrinks inside a zip, so a real collection sits near 1x. Fifty leaves
+/// enormous headroom for text-heavy or oddly-packed archives while still bounding
+/// the total.
+const MEDIA_EXPANSION_RATIO: usize = 50;
+
+/// Read and decode every media file a package declares.
+///
+/// ## Why there is a budget
+///
+/// Nothing in the ZIP format stops a central directory from listing thousands of
+/// entries that all point at the *same* local header, and nothing dedupes them
+/// here — each becomes its own `MediaFile`, is read separately, and is **retained**
+/// in the returned vector. A ~1 MB archive can therefore expand to well over a
+/// gigabyte of retained memory before this function returns, and layering a
+/// DEFLATE bomb behind each alias multiplies it further.
+///
+/// That was survivable while this code was native-only: a large allocation fails
+/// as an `Err` and the app carries on. It is not survivable in a browser.
+/// `wasm32-unknown-unknown` builds with `panic = "abort"`, so a failed allocation
+/// aborts the whole module — the `catch_unwind` the JSON facade wraps every call
+/// in never runs, and the user's unsaved collection goes with it. Exposing this
+/// path to the browser is what makes the budget necessary rather than merely
+/// prudent.
+///
+/// The budget is on **total decompressed output**, not entry count, because entry
+/// count is not what exhausts memory.
 pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError> {
+    let archive_len = data.len();
     let reader = ZipReader::new(data).map_err(apkg_error)?;
     let entries = archive_entries(&reader);
     let collection = collection_member(&reader, &entries)?;
     let manifest = media_manifest(&reader, collection.format)?;
+
+    let budget = MEDIA_EXPANSION_FLOOR.max(data.len().saturating_mul(MEDIA_EXPANSION_RATIO));
+    let mut spent: usize = 0;
 
     manifest
         .media_files
@@ -496,6 +536,16 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
                 ))
             })?;
             let data = decode_package_payload(collection.format, "media file", &data)?;
+
+            spent = spent.saturating_add(data.len());
+            if spent > budget {
+                return Err(apkg_error(format!(
+                    "media in this package expands to more than {budget} bytes, \
+                     past the limit for an archive of {archive_len} bytes; \
+                     refusing to continue"
+                )));
+            }
+
             Ok(ResolvedMediaFile {
                 archive_name: media.archive_name,
                 filename: media.filename,
@@ -504,6 +554,7 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
         })
         .collect()
 }
+
 
 fn media_matches_archive_name(media: &MediaFile, archive_name: &str) -> bool {
     media.archive_name == archive_name

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+**Media expansion is now budgeted.** Nothing in the ZIP format stops a central
+directory from listing thousands of entries pointing at the *same* local header,
+and `read_media_files` read and **retained** each one. A ~1 MB archive was measured
+expanding to over 1.3 GB of retained memory (a 1278x ratio) with plain stored
+members; a DEFLATE bomb behind each alias multiplies that further.
+
+Survivable natively — a failed allocation is an `Err`. Not survivable in a
+browser, where `panic = "abort"` turns it into a module abort that takes the
+user's unsaved collection with it. `read_media_files` now caps total decompressed
+output at `max(16 MiB, 50 x archive size)` and fails with a clear message. The
+budget is on output bytes rather than entry count, because entry count is not
+what exhausts memory.
+
 **Anki packages now work in the browser.** `zstd_crate` moves behind a new
 default-on `modern-format` feature, making it optional. That is what finally lets
 this crate build for `wasm32`.
