@@ -17,6 +17,7 @@ from build_tool.hasher import (
     _collect_source_files,
     _hash_file,
     _update_file_frame,
+    combine_hashes,
     hash_deps,
     hash_package,
 )
@@ -49,6 +50,16 @@ HASHING_CACHE_MISSING_CASE = (
     / "cases"
     / "hashing-cache-missing.json"
 )
+HASHING_CACHE_CASES = tuple(
+    REPO_ROOT
+    / "code"
+    / "specs"
+    / "fixtures"
+    / "build-tool-v1"
+    / "cases"
+    / f"hashing-cache-{state}.json"
+    for state in ("missing", "hit", "corrupt")
+)
 
 
 def _fixture_generated_components(case_path: Path) -> frozenset[str]:
@@ -78,6 +89,28 @@ def _expected_framed_package_hash(
         package_hash.update(len(content).to_bytes(8, "big"))
         package_hash.update(content)
     return package_hash.hexdigest()
+
+
+def _expected_framed_dependency_hash(
+    dependency_digests: dict[str, str],
+) -> str:
+    """Build the hashing-v1 dependency frame independently of production code."""
+    dependency_hash = hashlib.sha256()
+    for package_name in sorted(dependency_digests):
+        name_bytes = package_name.encode("utf-8")
+        digest_bytes = bytes.fromhex(dependency_digests[package_name])
+        dependency_hash.update(len(name_bytes).to_bytes(8, "big"))
+        dependency_hash.update(name_bytes)
+        dependency_hash.update(len(digest_bytes).to_bytes(8, "big"))
+        dependency_hash.update(digest_bytes)
+    return dependency_hash.hexdigest()
+
+
+def _expected_combined_hash(package_digest: str, dependencies_digest: str) -> str:
+    """Combine raw package and dependency digest bytes independently."""
+    return hashlib.sha256(
+        bytes.fromhex(package_digest) + bytes.fromhex(dependencies_digest)
+    ).hexdigest()
 
 
 class TestCollectSourceFiles:
@@ -864,3 +897,113 @@ class TestHashDeps:
         h1 = hash_deps("python/pkg-a", graph, pkg_hashes)
         h2 = hash_deps("python/pkg-a", graph, pkg_hashes)
         assert h1 == h2
+
+    @pytest.mark.parametrize("case_path", HASHING_CACHE_CASES)
+    def test_matches_language_neutral_hashing_cache_oracle(self, case_path):
+        case = json.loads(case_path.read_text(encoding="utf-8"))
+        options = case["input"]["options"]
+        expected = case["expected"]["result"]
+        graph = DirectedGraph()
+        graph.add_node(options["package"])
+        dependency_digests = {
+            entry["package"]: entry["digest"]
+            for entry in options["dependency_digests"]
+        }
+        for dependency_name in reversed(tuple(dependency_digests)):
+            graph.add_edge(dependency_name, options["package"])
+
+        dependencies_digest = hash_deps(
+            options["package"], graph, dependency_digests
+        )
+
+        assert dependencies_digest == expected["dependencies_digest"]
+        assert dependencies_digest == _expected_framed_dependency_hash(
+            dependency_digests
+        )
+        assert (
+            combine_hashes(expected["package_digest"], dependencies_digest)
+            == expected["combined_digest"]
+        )
+        assert expected["combined_digest"] == _expected_combined_hash(
+            expected["package_digest"], dependencies_digest
+        )
+
+    def test_frames_sorted_package_names_and_raw_digest_bytes(self):
+        graph = DirectedGraph()
+        graph.add_edge("python/a", "python/app")
+        graph.add_edge("python/bc", "python/app")
+        digests = {
+            "python/bc": "22" * 32,
+            "python/a": "11" * 32,
+        }
+        original = dict(digests)
+
+        actual = hash_deps("python/app", graph, digests)
+
+        assert actual == _expected_framed_dependency_hash(digests)
+        assert digests == original
+
+    def test_package_identity_participates_in_dependency_hash(self):
+        first = DirectedGraph()
+        first.add_edge("python/a", "python/app")
+        second = DirectedGraph()
+        second.add_edge("python/b", "python/app")
+        digest = "34" * 32
+
+        assert hash_deps("python/app", first, {"python/a": digest}) != hash_deps(
+            "python/app", second, {"python/b": digest}
+        )
+
+    def test_frames_prevent_dependency_boundary_ambiguity(self):
+        first = DirectedGraph()
+        first.add_edge("python/a", "python/app")
+        first.add_edge("python/bc", "python/app")
+        second = DirectedGraph()
+        second.add_edge("python/ab", "python/app")
+        second.add_edge("python/c", "python/app")
+        first_digests = {"python/a": "11" * 32, "python/bc": "22" * 32}
+        second_digests = {"python/ab": "11" * 32, "python/c": "22" * 32}
+
+        assert hash_deps("python/app", first, first_digests) != hash_deps(
+            "python/app", second, second_digests
+        )
+
+    @pytest.mark.parametrize(
+        "digest",
+        (
+            "AB" * 32,
+            "ab" * 31,
+            "gg" * 32,
+            "ab" * 32 + "00",
+        ),
+    )
+    def test_rejects_invalid_dependency_digest_without_echoing_it(self, digest):
+        graph = DirectedGraph()
+        graph.add_edge("python/base", "python/app")
+
+        with pytest.raises(
+            ValueError, match="invalid SHA-256 dependency digest"
+        ) as exc:
+            hash_deps("python/app", graph, {"python/base": digest})
+
+        assert digest not in str(exc.value)
+
+    def test_rejects_missing_dependency_digest(self):
+        graph = DirectedGraph()
+        graph.add_edge("python/base", "python/app")
+
+        with pytest.raises(ValueError, match="missing SHA-256 dependency digest"):
+            hash_deps("python/app", graph, {})
+
+    @pytest.mark.parametrize("invalid_role", ("package", "dependency"))
+    def test_rejects_invalid_combined_digest_input(self, invalid_role):
+        package_digest = "11" * 32
+        dependencies_digest = "22" * 32
+        invalid_digest = "not-a-digest"
+        if invalid_role == "package":
+            package_digest = invalid_digest
+        else:
+            dependencies_digest = invalid_digest
+
+        with pytest.raises(ValueError, match=f"invalid SHA-256 {invalid_role} digest"):
+            combine_hashes(package_digest, dependencies_digest)
