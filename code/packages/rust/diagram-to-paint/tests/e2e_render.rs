@@ -12,8 +12,7 @@ mod apple {
     use std::collections::BTreeSet;
 
     use diagram_ir::{
-        EdgeKind, SequenceBlockKind, SequenceEvent, SequenceLink, SequenceProperty, TemporalBody,
-        TemporalDiagram, TemporalKind,
+        EdgeKind, SequenceBlockKind, SequenceEvent, TemporalBody, TemporalDiagram, TemporalKind,
     };
     use diagram_layout_chart::layout_chart_diagram;
     use diagram_layout_graph::layout_graph_diagram;
@@ -1440,7 +1439,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_sequence_to_png() {
         let mut diagram = parse_sequence_diagram(
-            "---\ntitle: Host-owned front matter title\nconfig:\n  theme: neutral\n---\n%%{init: {'logLevel': 0}}%%\nSeQuEnCeDiAgRaM;%%{wrap}%%\nTiTlE: Native Mermaid sequence;AcCtItLe: Native transfer sequence;AcCdEsCr {\n  Banking transfer\n  interaction\n}\nautonumber\nbox hsl(180, 100%, 50%) wrap: A deliberately detailed client application tier\nactor Banking User-Primary as User # actor comment\nparticipant API@{ \"type\": \"boundary\" } as wrap: A deliberately detailed public application programming interface\nend\nbox Services\nparticipant DB@{ \"type\": \"database\", \"alias\": \"Ledger, \\\"primary\\\"\" }\nend\nalt wrap: Transfer accepted after a deliberately detailed native policy and compliance evaluation\nBanking User-Primary->>+API: wrap: Submit a deliberately detailed native transfer request\nautonumber off\ncreate participant Worker as Audit Worker\nAPI()->>()Worker: Start audit\nactivate Worker\nactivate Worker\nWorker()->>()Worker: Check nested audit state\ndeactivate Worker\ndeactivate Worker\ndeactivate Worker\ndeactivate Worker\ndeactivate Worker\nautonumber 20.05 0.1\ndestroy Worker\nWorker--|\\API: Audit complete\nloop Persist until committed\nautonumber off\nAPI->>DB: Record transaction # persistence comment\nautonumber\nDB-->>API: Committed\nend\npar_over Reconcile with parallel annotations\nAPI->>DB: Reconcile ledger\nnote left of API: Client view\nnote right of DB: Ledger view\nend\nnote right of API: Metal #9829;<br/>native scene # note comment\nAPI-->>-Banking User-Primary: Transfer complete\nelse wrap: Transfer rejected after a deliberately detailed native policy and compliance evaluation\nAPI-->>Banking User-Primary: Validation failed\nend",
+            "---\ntitle: Host-owned front matter title\nconfig:\n  theme: neutral\n---\n%%{init: {'logLevel': 0}}%%\nSeQuEnCeDiAgRaM;%%{wrap}%%\nTiTlE: Native Mermaid sequence;AcCtItLe: Native transfer sequence;AcCdEsCr {\n  Banking transfer\n  interaction\n}\nautonumber\nbox hsl(180, 100%, 50%) wrap: A deliberately detailed client application tier\nactor Banking User-Primary as User # actor comment\nparticipant API@{ \"type\": \"boundary\" } as wrap: A deliberately detailed public application programming interface\nend\nbox Services\nparticipant DB@{ \"type\": \"database\", \"alias\": \"Ledger, \\\"primary\\\"\" }\nend\nlink Banking User-Primary: Dashboard @ https://example.com/dashboard\nproperties Banking User-Primary: {\"role\": \"administrator\", \"icon\": \"@clock\"}\ndetails Banking User-Primary: user-details\nalt wrap: Transfer accepted after a deliberately detailed native policy and compliance evaluation\nBanking User-Primary->>+API: wrap: Submit a deliberately detailed native transfer request\nautonumber off\ncreate participant Worker as Audit Worker\nAPI()->>()Worker: Start audit\nactivate Worker\nactivate Worker\nWorker()->>()Worker: Check nested audit state\ndeactivate Worker\ndeactivate Worker\ndeactivate Worker\ndeactivate Worker\ndeactivate Worker\nautonumber 20.05 0.1\ndestroy Worker\nWorker--|\\API: Audit complete\nloop Persist until committed\nautonumber off\nAPI->>DB: Record transaction # persistence comment\nautonumber\nDB-->>API: Committed\nend\npar_over Reconcile with parallel annotations\nAPI->>DB: Reconcile ledger\nnote left of API: Client view\nnote right of DB: Ledger view\nend\nnote right of API: Metal #9829;<br/>native scene # note comment\nAPI-->>-Banking User-Primary: Transfer complete\nelse wrap: Transfer rejected after a deliberately detailed native policy and compliance evaluation\nAPI-->>Banking User-Primary: Validation failed\nend",
         )
         .expect("Mermaid sequence parse failed");
         diagram.auto_number_start = 10.5;
@@ -1457,19 +1456,6 @@ line "Target" [35, 50, 68, 82]"##,
         diagram.events.push(SequenceEvent::BlockEnd {
             kind: SequenceBlockKind::Rect,
         });
-        diagram.participants[0].links.push(SequenceLink {
-            label: "Dashboard".into(),
-            url: "https://example.com/dashboard".into(),
-        });
-        diagram.participants[0].properties.push(SequenceProperty {
-            name: "role".into(),
-            value_json: "\"administrator\"".into(),
-        });
-        diagram.participants[0].properties.push(SequenceProperty {
-            name: "icon".into(),
-            value_json: "\"@clock\"".into(),
-        });
-        diagram.participants[0].details_reference = Some("user-details".into());
         let layout = layout_sequence_diagram(&diagram);
 
         let shaper = CoreTextShaper;
@@ -1520,6 +1506,16 @@ line "Target" [35, 50, 68, 82]"##,
                 })
                 .map(String::as_str),
             Some("\"administrator\"")
+        );
+        assert_eq!(
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| {
+                    metadata.get("sequence.participant.Banking User-Primary.property.icon")
+                })
+                .map(String::as_str),
+            Some("\"@clock\"")
         );
         assert_eq!(
             scene
