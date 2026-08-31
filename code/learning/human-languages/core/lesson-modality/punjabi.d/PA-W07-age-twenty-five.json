@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W07-age-twenty-five",
+    "language": "punjabi",
+    "chapter": 29,
+    "sequence": 1710,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a46ac24ac06daca7",
+    "detachableSegments": [
+      "Script — reuse the same order rule"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

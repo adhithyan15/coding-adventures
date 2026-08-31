@@ -1,0 +1,22 @@
+{
+  "language": "punjabi",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:b23f5ba11f993b00",
+  "lessonIds": [
+    "PA-W07-independent-u",
+    "PA-W07-age-label",
+    "PA-W07-digit-one",
+    "PA-W07-digit-two",
+    "PA-W07-digit-five",
+    "PA-W07-age-fifteen",
+    "PA-W07-age-twenty-five",
+    "PA-W07-age-select",
+    "PA-W07-age-supported",
+    "PA-W07-age-spacing",
+    "PA-W07-age-delayed",
+    "PA-W07-age-dictation",
+    "PA-W07-age-repair",
+    "PA-W07-age-no-model"
+  ],
+  "tex": "punjabi/book/chapters/ch29-age-field.tex"
+}

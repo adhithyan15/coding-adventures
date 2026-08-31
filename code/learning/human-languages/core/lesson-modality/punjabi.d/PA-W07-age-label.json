@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W07-age-label",
+    "language": "punjabi",
+    "chapter": 29,
+    "sequence": 1660,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d020c46a803d4187",
+    "detachableSegments": [
+      "Script — one label"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

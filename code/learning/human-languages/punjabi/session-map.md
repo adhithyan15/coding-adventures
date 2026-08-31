@@ -161,6 +161,20 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 152 | 27 | PA-R27-nose-heart-r4 | retrieve nose and heart while contrasting inherited and borrowed routes at R4 |
 | 153 | 28 | PA-R28-form-supported-r3 | rebuild the known two-line and three-line supported forms at R3 with answer banks visible |
 | 154 | 28 | PA-R28-head-na-r4 | retrieve head, its horn history, and the na shape at R4 without claiming writing evidence |
+| 155 | 29 | PA-W07-independent-u | trace independent ਉ before assembling the age label |
+| 156 | 29 | PA-W07-age-label | assemble and copy the age label ਉਮਰ |
+| 157 | 29 | PA-W07-digit-one | trace Gurmukhi digit ੧ |
+| 158 | 29 | PA-W07-digit-two | trace Gurmukhi digit ੨ |
+| 159 | 29 | PA-W07-digit-five | trace Gurmukhi digit ੫ |
+| 160 | 29 | PA-W07-age-fifteen | assemble fictional age value ੧੫ |
+| 161 | 29 | PA-W07-age-twenty-five | assemble fictional age value ੨੫ |
+| 162 | 29 | PA-W07-age-select | select between the two taught fictional age values |
+| 163 | 29 | PA-W07-age-supported | fill one age line with the bank visible |
+| 164 | 29 | PA-W07-age-spacing | separate the label and value clearly |
+| 165 | 29 | PA-W07-age-delayed | hide the bank, then fill one requested age line |
+| 166 | 29 | PA-W07-age-dictation | transcribe one heard support-language number into Gurmukhi digits |
+| 167 | 29 | PA-W07-age-repair | repair one age-field dimension at a time |
+| 168 | 29 | PA-W07-age-no-model | fill one fictional age line from a nonverbal cue with no model |
 
-After session 154, the track continues through the dependency-linked backlog;
+After session 168, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

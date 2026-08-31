@@ -1,0 +1,22 @@
+{
+  "chapter": 29,
+  "title": "Build One Fictional Age Field",
+  "label": "ch:pa-form-age-runway",
+  "canDo": "I can recognise the Gurmukhi age label and independently select and write one of two taught fictional age values from a nonverbal cue.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-W07-age-no-model",
+    "kind": "production",
+    "summary": "The learner fills one fictional age line from a remembered cue with no romanization or copyable answer, then checks selection, digit order, spacing, and placement separately.",
+    "assesses": [
+      "PA-FORM-LABEL-AGE-01",
+      "PA-FORM-AGE-FIFTEEN-01",
+      "PA-FORM-AGE-CUE-MAP-01",
+      "PA-FORM-AGE-TWO-DIGIT-ORDER-01",
+      "PA-FORM-AGE-SPACING-01",
+      "PA-FORM-AGE-REPAIR-01"
+    ]
+  }
+}
