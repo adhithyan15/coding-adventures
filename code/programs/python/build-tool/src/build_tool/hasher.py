@@ -435,9 +435,11 @@ def _windows_close_handles(handles: list[int]) -> None:
 def _open_source_no_follow(package_root: Path, filepath: Path) -> int:
     """Open a source without following a linked component or escaping its root."""
     try:
-        filepath.relative_to(package_root)
+        relative_path = filepath.relative_to(package_root)
     except ValueError as error:
         raise OSError("source path is outside its package") from error
+    if any(component in {"", ".", ".."} for component in relative_path.parts):
+        raise OSError("source path is outside its package")
 
     if os.name == "nt":
         directory_handles = _windows_lock_unlinked_directories(filepath.parent)
@@ -463,7 +465,9 @@ def _open_source_no_follow(package_root: Path, filepath: Path) -> int:
 
     absolute_path = filepath.absolute()
     parts = absolute_path.parts
-    no_follow = getattr(os, "O_NOFOLLOW", 0)
+    no_follow = getattr(os, "O_NOFOLLOW", None)
+    if not isinstance(no_follow, int) or no_follow == 0:
+        raise OSError("source no-follow support is unavailable")
     directory_flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | no_follow
     directory = os.open(parts[0], directory_flags)
     try:

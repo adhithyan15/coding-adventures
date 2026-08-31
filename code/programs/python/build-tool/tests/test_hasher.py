@@ -557,6 +557,41 @@ class TestHashFile:
                 package_root,
             )
 
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX no-follow semantics")
+    def test_frame_rejects_lexical_parent_escape(self, tmp_path):
+        package_root = tmp_path / "package"
+        package_root.mkdir()
+        external = tmp_path / "external"
+        external.mkdir()
+        source = external / "source.py"
+        source.write_bytes(b"outside")
+
+        with pytest.raises(OSError, match="source path is outside its package"):
+            _update_file_frame(
+                hashlib.sha256(),
+                "code/packages/python/test/source.py",
+                package_root / ".." / "external" / "source.py",
+                package_root,
+            )
+
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX no-follow semantics")
+    def test_frame_fails_closed_without_no_follow_support(
+        self, tmp_path, monkeypatch
+    ):
+        source = tmp_path / "source.py"
+        source.write_bytes(b"source")
+        monkeypatch.delattr(os, "O_NOFOLLOW", raising=False)
+
+        with pytest.raises(
+            OSError, match="source no-follow support is unavailable"
+        ):
+            _update_file_frame(
+                hashlib.sha256(),
+                "code/packages/python/test/source.py",
+                source,
+                tmp_path,
+            )
+
 
 class TestHashPackage:
     """Tests for hash_package."""
