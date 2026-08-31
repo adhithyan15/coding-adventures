@@ -15,7 +15,9 @@
     "ES-PATH-405-IMAGES",
     "ES-PATH-405-IMAGE-REVIEWS",
     "ES-PATH-406-DOCUMENTS",
-    "ES-PATH-406-REVIEWS"
+    "ES-PATH-406-REVIEWS",
+    "ES-PATH-408-HEALTH",
+    "ES-PATH-408-REVIEWS"
   ],
   "omits": [],
   "relocates": {}

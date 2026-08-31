@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:5c94c478d58606d6",
+  "lessonIds": [
+    "ES-C408-doctor",
+    "ES-C408-pastilla",
+    "ES-C408-health-recall-1",
+    "ES-C408-health-recall-2"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch408.txt",
+  "json": "spanish/narration/ch408.json",
+  "textHash": "fnv1a64:8b93ede5b5f3d85b",
+  "jsonHash": "fnv1a64:7234a126efe1936c",
+  "findings": []
+}
