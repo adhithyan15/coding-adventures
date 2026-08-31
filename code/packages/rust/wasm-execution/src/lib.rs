@@ -59,7 +59,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 use virtual_machine::{
     CodeObject, GenericVM, Instruction, Operand, TypedVMValue, VMError, VMResult, Value,
 };
-use wasm_leb128::{decode_signed, decode_unsigned};
+use wasm_leb128::{decode_signed, decode_unsigned, decode_unsigned_bounded};
 use wasm_opcodes::get_opcode;
 use wasm_types::{FuncType, FunctionBody, GlobalType, ValueType};
 
@@ -2055,19 +2055,35 @@ pub fn evaluate_const_expr(
             // `global.get` just above, which HAS a `globals` slice to
             // check against, this function is given no function-count
             // parameter (adding one would ripple across every one of its
-            // ~28 call sites for a redundant check: `wasm-validator`'s own
+            // ~28 call sites). CORRECTION (security review, W32 second
+            // slice): this arm previously claimed "`wasm-validator`'s own
             // structural pass already bounds-checks every `ref.func`
-            // funcidx, including inside global init expressions, before
-            // instantiation runs this evaluator at all). An out-of-range
-            // index here produces a `Ref(Some(huge_index))` that a LATER
-            // real use (`call_ref`, a table read, ...) still safely
-            // rejects via its own `.get()`-shaped bounds check -- no
-            // panic, same "checked at the point of use" contract
-            // `ref.null`'s unchecked concrete-type-index skip just above
-            // already relies on.
+            // funcidx, including inside global init expressions" -- that
+            // claim was independently verified FALSE (zero production
+            // reads of `globals[..].init_expr`/`elements[..].offset_expr`
+            // exist in `wasm-validator` outside test fixtures; its `0xD2`
+            // bounds check only ever runs on function BODIES). A
+            // 32-bit-representable out-of-range index here still produces
+            // a `Ref(Some(idx))` that a LATER real use (`call_ref`, a
+            // table read, ...) safely rejects via its own `.get()`-shaped
+            // bounds check -- no panic, same "checked at the point of
+            // use" contract `ref.null`'s unchecked concrete-type-index
+            // skip just above already relies on. What WAS a real bug:
+            // this arm used the raw, unbounded `decode_unsigned` (a `u64`
+            // decoder) then narrowed with `idx as u32`, which SILENTLY
+            // TRUNCATES instead of rejecting -- a crafted funcidx like
+            // `0x1_0000_0003` decoded to `Ref(Some(3))`, i.e. an
+            // out-of-range reference silently ALIASED a real, different,
+            // legitimate function 3 instead of being cleanly rejected as
+            // out of range. `decode_unsigned_bounded(.., 32)` closes that:
+            // any encoding whose true value doesn't fit in 32 bits (or is
+            // overlong) is now a clean `Err`, matching every other index
+            // space this crate decodes (see `wasm-module-parser::
+            // read_u32leb`'s own doc comment for the same "overlong /
+            // out-of-range" rule).
             0xD2 => {
-                let (idx, consumed) =
-                    decode_unsigned(expr, pos).map_err(|e| TrapError::new(e.message))?;
+                let (idx, consumed) = decode_unsigned_bounded(expr, pos, 32)
+                    .map_err(|e| TrapError::new(e.message))?;
                 pos += consumed;
                 stack.push(WasmValue::Ref(Some(idx as u32)));
             }
@@ -10733,11 +10749,24 @@ fn register_control(vm: &mut GenericVM) {
         // own tests (and any embedder) can construct a context that skips
         // validation entirely, so the runtime value is still DATA, not
         // something this handler may assume matches `type_idx` unchecked.
+        //
+        // SECURITY REVIEW FIX (W32 second slice): this callee-existence
+        // check used to live INSIDE the `if let Some(expected) = ...`
+        // block below, so an unresolvable `type_idx` (out of range, or an
+        // engine built with no type section at all -- exactly what the
+        // sibling `return_call_ref` (0x15) and this crate's own
+        // `engine_from_wat` test helper construct) silently skipped BOTH
+        // the existence check and the signature comparison, falling
+        // through to `call_function` with a stack-derived index that had
+        // never been validated at all. `return_call_ref` already ran this
+        // exact check unconditionally; `call_ref` is now consistent with
+        // it -- hoisted out so it always runs regardless of whether
+        // `type_idx` resolves.
+        let actual = ctx
+            .func_types
+            .get(func_index)
+            .ok_or_else(|| VMError::GenericError("call_ref: reference names an undefined function".into()))?;
         if let Some(expected) = ctx.types.get(type_idx) {
-            let actual = ctx
-                .func_types
-                .get(func_index)
-                .ok_or_else(|| VMError::GenericError("call_ref: reference names an undefined function".into()))?;
             if expected.params != actual.params || expected.results != actual.results {
                 return Err(VMError::GenericError("call_ref type mismatch".into()));
             }
@@ -12272,6 +12301,26 @@ mod tests {
         let expr = vec![0xD2, 0xC8, 0x01, 0x0B];
         let result = evaluate_const_expr(&expr, &[], &mut Vec::new()).unwrap();
         assert_eq!(result, WasmValue::Ref(Some(200)));
+    }
+
+    /// Security-review regression (W32 second slice follow-up): `ref.func`'s
+    /// funcidx used the raw, unbounded `decode_unsigned` (a `u64` decoder)
+    /// then narrowed with `idx as u32`, which SILENTLY TRUNCATES rather
+    /// than rejecting. A crafted funcidx of `0x1_0000_0003` (one bit past
+    /// `u32::MAX`) used to decode to `Ref(Some(3))` -- an out-of-range
+    /// reference silently ALIASING a real, different, legitimate function
+    /// 3 instead of being cleanly rejected as malformed. Must now be a
+    /// clean `Err`, matching every other index space this crate decodes.
+    #[test]
+    fn test_evaluate_const_expr_ref_func_rejects_out_of_range_funcidx_instead_of_truncating() {
+        // ref.func 0x1_0000_0003 (LEB128: 0x83 0x80 0x80 0x80 0x10); end
+        let expr = vec![0xD2, 0x83, 0x80, 0x80, 0x80, 0x10, 0x0B];
+        let result = evaluate_const_expr(&expr, &[], &mut Vec::new());
+        assert!(
+            result.is_err(),
+            "expected an out-of-range funcidx to be rejected, got {:?}",
+            result
+        );
     }
 
     #[test]

@@ -2,6 +2,68 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.13] — 2026-08-31 — security review follow-up: `read_expr` byte-stream desync fix
+
+### Fixed
+
+- `read_expr` (used for every `global`/`data`/`element` constant/offset
+  expression) had no immediate-skipping arm for `ref.func` (`0xD2`) or
+  `ref.null` (`0xD0`) — its catch-all just kept scanning for the next
+  `0x0B` byte, so either instruction's own immediate bytes were
+  misinterpreted as the START of the next "instruction" instead of being
+  consumed as part of the current one. Found by a security review of the
+  W32 second slice (which is what first made `ref.func`/`ref.null`
+  reachable inside a constant expression at all — before that slice they
+  simply trapped at instantiation with "illegal opcode", so the bug was
+  real but unreachable). Demonstrated two concrete failure modes:
+  - A funcidx or concrete type-index whose LEB128 encoding happens to
+    include the byte `0x0B` (e.g. funcidx 11) is misread as an early
+    `end`, so a spec-valid module like `(global funcref (ref.func 11))`
+    is rejected with a bogus "section size mismatch" error instead of
+    parsing.
+  - Worse: the genuinely leftover trailing byte(s) can be silently
+    absorbed into whatever data follows the expression in the same
+    section (e.g. a data segment's payload), producing a **different**,
+    still-successfully-parsed result than a spec-conformant parser would
+    read from the identical input bytes — a differential-parsing
+    vulnerability, not merely a spurious rejection.
+
+  Fixed by adding real immediate-consuming arms for both opcodes: `0xD2`
+  reuses `read_u32leb` (bounded, overlong/out-of-range-rejecting, same as
+  `global.get`'s existing `0x23` arm); `0xD0` reuses `read_value_type`
+  (already correctly handles both the 1-byte abstract-heap-type form and
+  the 2-byte `0x63`/`0x64 <typeidx>` concrete-type form). New regression
+  tests reproduce both the funcidx and the concrete-typeidx variant of
+  the byte-`0x0B`-collision case directly against `parse_global_section`.
+- `evaluate_const_expr`'s `ref.func` (`0xD2`) arm (`wasm-execution`) used
+  the raw, unbounded `decode_unsigned` (a `u64` decoder) then narrowed
+  with `idx as u32`, which silently truncates rather than rejecting: a
+  crafted funcidx like `0x1_0000_0003` decoded to `Ref(Some(3))` — an
+  out-of-range reference silently *aliasing* a real, different,
+  legitimate function 3, instead of being cleanly rejected as malformed.
+  The arm's own comment also incorrectly claimed `wasm-validator`
+  already bounds-checks every `ref.func` funcidx inside global init
+  expressions — independently verified false (zero production reads of
+  `globals[..].init_expr`/`elements[..].offset_expr` exist in
+  `wasm-validator` outside test fixtures) and corrected. Fixed by
+  switching to `decode_unsigned_bounded(.., 32)`, matching every other
+  32-bit index space this crate decodes; a downstream `.get()`-shaped
+  bounds check at the point of use (`call_ref`, a table read, …) still
+  safely rejects any resulting out-of-range-but-32-bit-representable
+  index — this fix closes the *silent truncation*, not a missing
+  bounds check that was never this function's job to begin with.
+- `call_ref`'s (`0x14`) callee-existence check (`wasm-execution`) lived
+  inside the `if let Some(expected) = ctx.types.get(type_idx)` block, so
+  an unresolvable `type_idx` (out of range, or an engine built with no
+  type section — exactly what this crate's own `engine_from_wat` test
+  helper constructs) silently skipped it entirely, falling through to
+  `call_function` with an unvalidated function index. The sibling
+  `return_call_ref` (`0x15`) already ran the equivalent check
+  unconditionally; `call_ref` is now consistent with it. No panic
+  either way (`call_function_inner` independently re-checks), but the
+  skip meant `call_ref` was silently weaker than its own tail-call
+  twin for no reason.
+
 ## [0.2.12] — 2026-08-31 — W32 second slice: non-null concrete ref decoding
 
 ### Added

@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.79] - 2026-08-31 (security review follow-up to W32 second slice)
+
+### Fixed
+
+- `evaluate_const_expr`'s `ref.func` (`0xD2`) arm used the raw, unbounded
+  `decode_unsigned` then narrowed the result with `idx as u32`, silently
+  truncating instead of rejecting: a crafted funcidx like
+  `0x1_0000_0003` decoded to `Ref(Some(3))`, aliasing a real, different,
+  legitimate function 3 rather than being cleanly rejected as malformed.
+  The arm's own comment also claimed `wasm-validator` already
+  bounds-checks every `ref.func` funcidx inside global init expressions
+  — independently verified false (that crate's own type-checker only
+  ever runs its `0xD2` bounds check on function bodies, never on
+  `globals[..].init_expr`/`elements[..].offset_expr`) and corrected.
+  Fixed with `decode_unsigned_bounded(.., 32)`, the same bounded decoder
+  every other 32-bit index space in this crate already uses; new
+  regression test `test_evaluate_const_expr_ref_func_rejects_out_of_range_funcidx_instead_of_truncating`.
+- `call_ref` (`0x14`)'s callee-existence check lived inside the
+  `if let Some(expected) = ctx.types.get(type_idx)` block, so an
+  unresolvable `type_idx` silently skipped it entirely, falling through
+  to `call_function` with an unvalidated function index — no panic
+  either way, but silently weaker than the sibling `return_call_ref`
+  (`0x15`), which already ran the equivalent check unconditionally.
+  Hoisted `call_ref`'s check out to match.
+
 ## [0.9.78] - 2026-08-31 (W32 second slice — non-null concrete reference types)
 
 ### Added

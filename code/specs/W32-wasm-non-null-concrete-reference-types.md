@@ -437,3 +437,32 @@ confirmed (not guessed).
   (`ref_cast.wast`/`ref_test.wast`/`br_on_cast*.wast`/
   `br_on_non_null.wast`) — still blocked, exactly as this spec's
   "Purpose" section described.
+
+### Security review follow-up (same slice, before merge)
+
+A nested security-review sub-agent found and, per this repo's standard
+process, three real issues were fixed before merge (all with new
+regression tests, zero conformance-corpus regressions):
+
+- `wasm-module-parser::read_expr` (the generic reader for every
+  `global`/`data`/`element` constant/offset expression) had no
+  immediate-skipping arm for `ref.func` (`0xD2`) or `ref.null` (`0xD0`) —
+  a genuine byte-stream desync, demonstrated to both spuriously reject a
+  valid module and to silently misparse trailing section data
+  differently than a spec-conformant parser would. This slice is what
+  first made `ref.func`/`ref.null` reachable inside a constant
+  expression at all (previously they simply trapped at instantiation),
+  so the bug was real but dormant before this PR. Fixed with real
+  immediate-consuming arms reusing `read_u32leb`/`read_value_type`.
+- `wasm-execution::evaluate_const_expr`'s `ref.func` arm silently
+  truncated an out-of-range 64-bit-decoded funcidx to `u32`, aliasing a
+  real different function instead of rejecting — fixed with
+  `decode_unsigned_bounded(.., 32)`. Its own comment's claim that
+  `wasm-validator` already bounds-checks this case was independently
+  verified false and corrected.
+- `call_ref`'s callee-existence check was gated on `type_idx` resolving,
+  unlike its sibling `return_call_ref`'s unconditional check — hoisted
+  to match (no panic either way; a consistency/hardening fix).
+
+See `wasm-module-parser`'s and `wasm-execution`'s own CHANGELOGs for the
+full technical writeup of each fix.
