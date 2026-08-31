@@ -11898,6 +11898,48 @@ reports the PR non-draft, mergeable, and conflict-free with CI and CodeQL
 checks queued or running. Auto-merge remains disabled until every final-head
 check is terminal and acceptable and no merge conflict exists.
 
+### Post-PR #13604 refresh and Go portable source-hashing selection
+
+PR #13604 completed all 41 final-head checks acceptably with 34 successes, six
+expected skips, and one neutral result. GitHub reported final head
+`ad5b8663043782dc7d1b235244b6777cbf619493` conflict-free before guarded
+squash auto-merge was enabled with an exact head lease. GitHub merged it as
+`696e750fc40fc1082ae88a19498e9baf81996b87` at 2026-08-31T08:47:48Z
+without a plain manual merge command. The Ruby source-hashing owner therefore
+advances from `pr-open` to `merged`, and the active parity PR is cleared.
+
+The collision-checked exact-main schema-3 inventory is structurally unchanged:
+15 established lanes, 1,388 implementation identities, 4,602 slots, 1,427
+all-reported identities, bands 175/265, 123/934, 170/2,139, and 920/12,880,
+731 Rust singletons, zero OCaml packages, zero canonical collisions, and zero
+unknown buckets. The merged Spanish planning-frame and Ruby hashing changes add
+no package root, BUILD front, recognized manifest, dependency, lockfile, or
+identity. The six live PRs inspected during the refresh own no unclassified
+portable gap and have zero exact overlap with the next seven-path tranche.
+
+The production-path audit did find one newly unowned prerequisite before
+selection. The Rust build tool's `Package` record does not carry Starlark or
+declared-source metadata, production hashing always receives an empty declared
+pattern set, the evaluator is not registered in the live module graph, and the
+Cargo manifest lacks its repository-local interpreter dependency. New pending
+owner `build-tool-rust-declared-source-metadata-plumbing` captures that bounded
+work and is now a prerequisite of Rust portable source hashing. With that owner
+and its two dependency edges, the complete state graph has 607 owners and 919
+edges and must remain unique, dependency-complete, and acyclic.
+
+The dependency/leverage pass selects
+`build-tool-go-portable-source-hashing-conformance` on branch
+`codex/build-tool-go-portable-source-hashing-conformance`. Go already carries
+`DeclaredSrcs` from production discovery into `HashPackage`, recognizes OCaml
+source and metadata names, and uses standard-library SHA-256. Rust first needs
+the newly recorded plumbing owner, while Swift retains a non-SHA-256 Windows
+fallback. The Go tranche is limited to hasher source and tests, the package and
+root changelogs, the package README, state, and this roadmap; it changes no
+module metadata, lockfile, BUILD front, workflow, dependency, process,
+environment, network, credential, or new filesystem authority. Reconciliation,
+discovery, and selection leave 195 merged, 411 pending, and exactly this owner
+in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
