@@ -91,7 +91,7 @@ describe("the chapter-owned real book-generation ledger", () => {
     expect(readdirSync(join(directory, "glossaries.d"))).toHaveLength(23);
     expect(readdirSync(join(directory, "answer-keys.d"))).toHaveLength(23);
     expect(readdirSync(join(directory, "indexes.d"))).toHaveLength(23);
-    expect(readdirSync(join(directory, "targets.d"))).toHaveLength(1_108);
+    expect(readdirSync(join(directory, "targets.d"))).toHaveLength(1_109);
     expect(readdirSync(join(directory, "handwritten.d"))).toHaveLength(69);
   });
 
@@ -114,9 +114,9 @@ describe("the chapter-owned real book-generation ledger", () => {
     const identities = bookGenerationIdentitySets(
       readBookGenerationOwners(root).document,
     );
-    expect(identities.targets.size).toBe(1_108);
+    expect(identities.targets.size).toBe(1_109);
     expect(identities.handwritten.size).toBe(69);
-    expect(identities.combined.size).toBe(1_177);
+    expect(identities.combined.size).toBe(1_178);
     expect(identities.languages.size).toBe(23);
   });
 });
