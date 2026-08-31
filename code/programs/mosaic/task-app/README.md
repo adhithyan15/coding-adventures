@@ -114,24 +114,30 @@ The workflow rejects invalid, mismatched, or previously published identifiers
 before it builds artifacts. It tests the Rust/WASM web inputs and production Vite
 bundle, generates every native project under the strict `native-complete` profile
 with the platform's real `task-mosaic-app` runtime, and checks each emitted-control
-contract. One publisher job then creates checksums, a source-commit manifest,
-product-scoped notes from merged `task-app` pull requests, and one GitHub Release.
+contract. On Linux it also builds Qt, Flutter, and Compose Desktop release trees,
+compares their installed Rust runtime byte-for-byte with the selected build, and
+launches the archived bundle from `/` without a runtime override. One publisher
+job then creates checksums, a source-commit manifest, product-scoped notes from
+merged `task-app` pull requests, and one GitHub Release.
 
-Initial releases deliberately contain generated projects rather than installers:
+Release payloads distinguish directly runnable archives from generated projects:
 
 | Artifact | Platform | What it is |
 | --- | --- | --- |
 | Web ZIP | Modern browsers | Tested, ready-to-serve production bundle |
+| Qt, Flutter, Compose TAR.GZ files | Linux x86_64 | Verified portable bundles with a `launch-trestle` entrypoint |
 | Qt, Flutter, Compose ZIPs | Linux x86_64 | Native-complete generated projects with the Rust runtime |
 | SwiftUI ZIP | macOS | Native-complete generated project with the Rust runtime |
 | XAML ZIP | Windows | Native-complete generated WinUI project with the Rust runtime |
 
-Installer packaging is tracked separately in
+The Linux archives are unpack-and-run bundles for compatible x86_64 systems, not
+signed distribution packages. Each includes exact prerequisites and a launcher
+that takes one version-specific pre-upgrade snapshot of existing local state.
+macOS and Windows packaging remains tracked in
 [#13522](https://github.com/adhithyan15/coding-adventures/issues/13522), so release
-notes never imply that these project archives install themselves. To cut the next
-release, first move the relevant entries into this changelog's version section,
-choose the SemVer bump from the policy above, and dispatch the workflow with a new
-matching version and tag.
+notes never imply broader platform coverage. To cut the next release, first move
+the relevant entries into this changelog's version section, choose the SemVer bump
+from the policy above, and dispatch the workflow with a new matching version and tag.
 
 ## Files
 

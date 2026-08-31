@@ -59,9 +59,9 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 924,
-  "taughtForms": 1549,
-  "objectiveFailed": 5,
+  "lessonCount": 928,
+  "taughtForms": 1553,
+  "objectiveFailed": 4,
   "mocks": [
     {
       "mock": 1,
@@ -72,9 +72,9 @@
     },
     {
       "mock": 2,
-      "reading": 22,
+      "reading": 23,
       "listening": 23,
-      "objectiveFailed": 5,
+      "objectiveFailed": 4,
       "failed": [
         {
           "paper": 1,
@@ -83,14 +83,6 @@
             "curso",
             "nadar",
             "adulto"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 14,
-          "missing": [
-            "música",
-            "concierto"
           ]
         },
         {
@@ -123,11 +115,9 @@
   "missingObjectiveLexemes": [
     "adulto",
     "apuntarse",
-    "concierto",
     "curso",
     "extranjero",
     "mayo",
-    "música",
     "nadar",
     "paquete",
     "quedarse",
@@ -143,10 +133,6 @@
       "count": 1
     },
     {
-      "lexeme": "concierto",
-      "count": 1
-    },
-    {
       "lexeme": "curso",
       "count": 1
     },
@@ -156,10 +142,6 @@
     },
     {
       "lexeme": "mayo",
-      "count": 1
-    },
-    {
-      "lexeme": "música",
       "count": 1
     },
     {

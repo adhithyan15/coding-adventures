@@ -4,6 +4,18 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - verified portable Linux release bundles (#13611)
+
+The product-scoped release lane now builds runnable Qt, Flutter, and Compose
+Desktop Linux x86_64 trees in addition to retaining their generated-project
+archives. Each `.tar.gz` contains source provenance, machine-readable bundle
+metadata, exact prerequisites, and a `launch-trestle` entrypoint that preserves
+one version-and-backend-specific pre-upgrade state snapshot. CI compares the
+installed Rust engine byte-for-byte with the selected release build, extracts the
+actual archive, and launches it from `/` without `MOSAIC_APP_LIBRARY`. The release
+manifest and notes call these compatible-system portable bundles rather than
+distribution-native installers.
+
 ### Added - shared web/native presentation contract (#13521)
 
 A single data-driven fixture now runs through both the real web/WASM controller

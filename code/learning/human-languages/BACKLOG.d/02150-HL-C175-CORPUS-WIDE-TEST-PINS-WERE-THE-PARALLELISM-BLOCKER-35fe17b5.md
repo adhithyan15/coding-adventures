@@ -1,4 +1,4 @@
-## HL-C174 — Corpus-wide test pins were the parallelism blocker
+## HL-C175 — Corpus-wide test pins were the parallelism blocker
 
 Measuring before fanning out changed the plan. Per-language sharding is already
 thorough — `curriculum.d`, `chapters.d`, `gentle-ramp-snapshots/<lang>.d/`,

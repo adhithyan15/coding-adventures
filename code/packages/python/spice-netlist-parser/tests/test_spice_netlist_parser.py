@@ -2130,8 +2130,18 @@ def test_parse_jfet_bet_alias_with_canonical_precedence() -> None:
     canonical, aliased = parsed.circuit.elements
     assert isinstance(canonical, JFET)
     assert canonical.beta == 2.0e-3
+    assert canonical.B == 500.0e-6
     assert isinstance(aliased, JFET)
     assert aliased.beta == 900.0e-6
+
+
+def test_parse_jfet_b_as_doping_tail_parameter_not_beta_alias() -> None:
+    parsed = parse_netlist(".model shaped NJF(B=1.1)\nJ1 drain gate source shaped")
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.beta == 1.0e-4
+    assert jfet.B == 1.1
 
 
 @pytest.mark.parametrize("parameter", ["BETA", "BET"])
@@ -2141,6 +2151,11 @@ def test_rejects_invalid_jfet_transconductance(parameter: str, value: str) -> No
         NetlistParseError, match="JFET BETA must be finite and positive"
     ):
         parse_netlist(f".model fast NJF({parameter}={value})")
+
+
+def test_rejects_non_finite_jfet_doping_tail_parameter() -> None:
+    with pytest.raises(NetlistParseError, match="JFET B must be finite"):
+        parse_netlist(".model fast NJF(B=1e999)")
 
 
 def test_parse_jfet_threshold_aliases_with_canonical_precedence() -> None:
@@ -2640,7 +2655,7 @@ def test_rejects_non_finite_jfet_alternative_mobility_temperature_coefficient() 
 def test_parse_pjf_model_aliases_beta() -> None:
     parsed = parse_netlist(
         """
-.model pslow PJF(B=750u)
+.model pslow PJF(BET=750u)
 Jp drain gate source pslow
 """
     )

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower JFET `B` into the Parker-Skellern doping-tail field instead of treating
+  it as a beta alias, while retaining `BETA` and `BET` transconductance inputs.
 - Give canonical MOS Level-1 `CBD` precedence over the `CJD` alias.
 - Give canonical MOS Level-1 `CBS` precedence over the `CJS` alias.
 - Give canonical MOS Level-1 `N_SUB` precedence over the `NSUB` and `N` aliases.

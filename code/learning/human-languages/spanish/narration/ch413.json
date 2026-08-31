@@ -1,0 +1,430 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 413,
+  "title": "Music and Concert",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:964887341ab0346c",
+  "lessons": [
+    {
+      "id": "ES-C413-musica",
+      "sequence": 9470,
+      "title": "la música — another art of the Muses",
+      "headword": "la música",
+      "romanization": "la música",
+      "gloss": "music",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5983b525cc5a4c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall el museo, a place whose name once meant a seat of the Muses. Their art also gives Spanish la música."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Greek mousikḗ, the art of the Muses, travelled into Latin mūsica and then Spanish música. English music followed the same road through French. The root is already anchored in museo, so this lesson extends that family rather than assigning it a second owner."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the written accent",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The stress falls on the first beat: MÚ-si-ca. Spanish writes the accent because that antepenultimate stress must always be marked. The noun is feminine: la música, música clásica."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la música",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la música*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "música clásica",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *música clásica*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me gusta la música",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *me gusta la música*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Music? (La música.) Classical music? (Música clásica.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: música."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C413-concierto",
+      "sequence": 9480,
+      "title": "el concierto — music brought together",
+      "headword": "el concierto",
+      "romanization": "el concierto",
+      "gloss": "concert",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d05a6a4502048c0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall la música. A scheduled event where people perform music is el concierto."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Concierto belongs to concertar, to bring things into agreement, from Latin concertāre. Italian and French helped the musical event-sense travel, and English concert is a close relative. Think of performers bringing their parts together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: concert of what?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Use de to name the kind: un concierto de música clásica. The event is masculine: el concierto, un concierto."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el concierto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el concierto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un concierto de música",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un concierto de música*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un concierto de música clásica",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un concierto de música clásica*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Concert? (El concierto.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: DLE: concierto."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C413-music-recall-1",
+      "sequence": 9490,
+      "title": "music recall one — preference and event",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "first retrieval of music and concert",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69f69e650fbbde62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the art and the event. (Música, concierto.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me gusta la música",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *me gusta la música*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un concierto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un concierto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un concierto de música clásica",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un concierto de música clásica*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Music, concert? (Música, concierto.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C413-music-recall-2",
+      "sequence": 9500,
+      "title": "music recall two — choose the Saturday-night event",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "second retrieval of music and concert",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0bbd23a99f039098",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Someone likes music and wants to go out on Saturday night."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "“Jorge likes music.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "A Jorge le gusta la música.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *A Jorge le gusta la música.*]"
+            },
+            {
+              "kind": "speech",
+              "text": "“There is a classical music concert on Saturday.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Hay un concierto de música clásica el sábado.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Hay un concierto de música clásica el sábado.*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which event matches the Saturday-night plan? (El concierto de música clásica.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

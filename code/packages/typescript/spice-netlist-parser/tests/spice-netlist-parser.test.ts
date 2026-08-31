@@ -2208,10 +2208,21 @@ J1 drain gate source fast
     expect(parsed.circuit.elements()[0]).toMatchObject({
       kind: "jfet",
       beta: 2.0e-3,
+      dopingTailParameter: 500.0e-6,
     });
     expect(parsed.circuit.elements()[1]).toMatchObject({
       kind: "jfet",
       beta: 900.0e-6,
+    });
+  });
+
+  it("parses JFET B as a doping-tail parameter rather than a beta alias", () => {
+    const parsed = parseNetlist(".model shaped NJF(B=1.1)\nJ1 drain gate source shaped");
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      beta: 1.0e-4,
+      dopingTailParameter: 1.1,
     });
   });
 
@@ -2225,6 +2236,12 @@ J1 drain gate source fast
   ])("rejects invalid JFET transconductance %s=%s", (parameter, value) => {
     expect(() => parseNetlist(`.model fast NJF(${parameter}=${value})`)).toThrow(
       "JFET BETA must be finite and positive",
+    );
+  });
+
+  it("rejects a non-finite JFET B doping-tail parameter", () => {
+    expect(() => parseNetlist(".model fast NJF(B=1e999)")).toThrow(
+      "JFET B must be finite",
     );
   });
 
@@ -2760,7 +2777,7 @@ J1 drain gate source fast
 
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
-.model pslow PJF(B=750u)
+.model pslow PJF(BET=750u)
 Jp drain gate source pslow
 `);
 
