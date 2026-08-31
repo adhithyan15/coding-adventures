@@ -63,7 +63,7 @@ links existing Mosaic work instead of duplicating it.
    surface composer validation errors with useful focus behavior. **Done in
    #13719.**
 18. **P1 — [#13688](https://github.com/adhithyan15/coding-adventures/issues/13688):**
-   edit task names and due dates directly from List.
+   edit task names and due dates directly from List. **In review in #13740.**
 19. **P1 — [#13691](https://github.com/adhithyan15/coding-adventures/issues/13691):**
    give completion controls descriptive accessible names.
 20. **P1 — [#13717](https://github.com/adhithyan15/coding-adventures/issues/13717):**
