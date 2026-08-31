@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import plistlib
+import struct
 import sys
 import tarfile
 import zipfile
@@ -12,6 +13,7 @@ import pytest
 SCRIPTS = Path(__file__).resolve().parents[1]
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKFLOW = REPOSITORY_ROOT / ".github" / "workflows" / "release-task-app.yml"
+WINDOWS_SMOKE = REPOSITORY_ROOT / "code" / "scripts" / "taskapp-xaml-smoke.ps1"
 WEB_LOCK = (
     REPOSITORY_ROOT
     / "code"
@@ -31,10 +33,12 @@ from taskapp_release import (
     archive_macos_app,
     archive_native,
     archive_web,
+    archive_windows_app,
     artifact_names,
     build_manifest,
     render_notes,
     validate_identifiers,
+    write_windows_icon,
 )
 
 COMMIT = "0123456789abcdef0123456789abcdef01234567"
@@ -238,6 +242,43 @@ def test_archives_unsigned_macos_app_with_stable_identity(tmp_path: Path) -> Non
         )
 
 
+def test_archives_self_contained_windows_app_with_stable_identity(tmp_path: Path) -> None:
+    source = tmp_path / "publish"
+    source.mkdir()
+    executable = source / "Trestle.exe"
+    executable.write_bytes(b"pe-app")
+    runtime = source / "mosaic_app.dll"
+    runtime.write_bytes(b"rust-runtime")
+    expected_runtime = tmp_path / "task_mosaic_app.dll"
+    expected_runtime.write_bytes(b"rust-runtime")
+    (source / "Trestle.dll").write_bytes(b"managed-app")
+    icon_path = write_windows_icon(tmp_path / "Trestle.ico")
+
+    payload = archive_windows_app(
+        "0.2.0",
+        COMMIT,
+        source,
+        executable,
+        runtime,
+        expected_runtime,
+        tmp_path / "assets",
+    )
+
+    root = "Trestle-windows-x64-v0.2.0"
+    with zipfile.ZipFile(payload) as archive:
+        metadata = json.loads(archive.read(f"{root}/BUNDLE.json"))
+        icon = archive.read(f"{root}/Trestle.ico")
+        names = archive.namelist()
+    assert f"{root}/Trestle.exe" in names
+    assert f"{root}/mosaic_app.dll" in names
+    assert metadata["applicationIdentity"] == "org.codingadventures.trestle"
+    assert metadata["statePath"] == "%LOCALAPPDATA%\\task-app\\mosaic-state.v1.json"
+    assert metadata["dotnetSelfContained"] is True
+    assert metadata["msix"] is False
+    assert icon == icon_path.read_bytes()
+    assert icon[:6] == struct.pack("<HHH", 0, 1, 6)
+
+
 def test_manifest_requires_the_exact_release_payload_set(tmp_path: Path) -> None:
     for name in artifact_names("0.1.0"):
         (tmp_path / name).write_bytes(b"payload")
@@ -266,10 +307,15 @@ def test_manifest_requires_the_exact_release_payload_set(tmp_path: Path) -> None
         target["toolkit"] for target in NATIVE_TARGETS.values()
     }
     assert {artifact["backend"] for artifact in bundle_artifacts} == set(LINUX_BUNDLES)
-    macos_artifact = manifest["artifacts"][-1]
+    macos_artifact = manifest["artifacts"][-2]
     assert macos_artifact["kind"] == "unsigned-macos-application"
     assert macos_artifact["runnable"] is True
     assert macos_artifact["signed"] is False
+    windows_artifact = manifest["artifacts"][-1]
+    assert windows_artifact["kind"] == "portable-windows-application"
+    assert windows_artifact["runnable"] is True
+    assert windows_artifact["signed"] is False
+    assert windows_artifact["msix"] is False
 
     (tmp_path / "unexpected.zip").write_bytes(b"unexpected")
     with pytest.raises(ValueError, match="payload mismatch"):
@@ -308,6 +354,7 @@ def test_release_notes_are_product_scoped_and_filter_previous_history() -> None:
     assert "portable bundle" in notes.lower()
     assert "task-app-compose-linux-bundle-v0.1.0.tar.gz" in notes
     assert "task-app-swiftui-macos-bundle-v0.1.0.zip" in notes
+    assert "task-app-xaml-windows-bundle-v0.1.0.zip" in notes
     assert "not notarized" in notes.lower()
     assert "issues/13522" in notes
     assert "SHA256SUMS" in notes
@@ -317,6 +364,8 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     workflow = WORKFLOW.read_text(encoding="utf-8")
 
     assert "workflow_dispatch:" in workflow
+    assert "pull_request:" in workflow
+    assert "task-app-v0.0.0-ci" in workflow
     assert "version:" in workflow
     assert "tag:" in workflow
     assert "TaskApp releases must be dispatched from main" in workflow
@@ -324,6 +373,7 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "Release $RELEASE_TAG is already published" in workflow
     assert "needs: validate" in workflow
     assert "needs: [validate, build-web, build-native]" in workflow
+    assert "if: github.event_name == 'workflow_dispatch'" in workflow
     assert workflow.count('gh release create "$RELEASE_TAG"') == 1
     assert "sha256sum --check SHA256SUMS" in workflow
     assert "--latest=false" in workflow
@@ -339,7 +389,20 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "*.tar.gz" in workflow
     assert "archive-macos-app" in workflow
     assert "Trestle.app/Contents/Info.plist" in workflow
+    assert "archive-windows-app" in workflow
+    assert "write-windows-icon" in workflow
+    assert "-p:SelfContained=true" in workflow
+    assert "-RestartExePath $replacementExecutable" in workflow
     assert "code/packages/rust/task-wasm/pkg/task_engine.wasm" in workflow
     assert "host/web/public/task_engine.wasm" in workflow
     assert "':(exclude)code/packages/rust/task-wasm/pkg/task_engine.wasm'" in workflow
     assert WEB_LOCK.is_file()
+
+
+def test_windows_ui_smoke_can_restart_through_a_replacement_package() -> None:
+    smoke = WINDOWS_SMOKE.read_text(encoding="utf-8")
+
+    assert "[string]$RestartExePath = ''" in smoke
+    assert "$effectiveRestartExePath" in smoke
+    assert "Start-Process -FilePath $ExePath" in smoke
+    assert "Start-Process -FilePath $effectiveRestartExePath" in smoke

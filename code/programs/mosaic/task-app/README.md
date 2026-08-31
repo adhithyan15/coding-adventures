@@ -111,7 +111,9 @@ gh workflow run release-task-app.yml --ref main \
 ```
 
 The workflow rejects invalid, mismatched, or previously published identifiers
-before it builds artifacts. It tests the Rust/WASM web inputs and production Vite
+before it builds artifacts. Release-relevant pull requests run the same artifact
+matrix with a reserved CI-only SemVer identity, while the publisher remains
+manual-`main`-dispatch-only. The lane tests the Rust/WASM web inputs and production Vite
 bundle, generates every native project under the strict `native-complete` profile
 with the platform's real `task-mosaic-app` runtime, and checks each emitted-control
 contract. On Linux it also builds Qt, Flutter, and Compose Desktop release trees,
@@ -121,7 +123,9 @@ assembles the release-runner architecture into an unsigned `Trestle.app`, valida
 its stable metadata and bundled dylib, and checks state restoration across a
 replacement-style second extraction. One publisher job then creates checksums, a
 source-commit manifest, product-scoped notes from merged `task-app` pull requests,
-and one GitHub Release.
+and one GitHub Release. On Windows it publishes a self-contained x64 folder,
+drives the original and replacement `Trestle.exe` copies through UI Automation,
+and verifies the stable LocalApplicationData state plus console binding contract.
 
 Release payloads distinguish directly runnable archives from generated projects:
 
@@ -132,17 +136,19 @@ Release payloads distinguish directly runnable archives from generated projects:
 | Qt, Flutter, Compose ZIPs | Linux x86_64 | Native-complete generated projects with the Rust runtime |
 | Trestle.app ZIP | macOS 13+ | Verified unsigned SwiftUI app for the architecture recorded in `BUNDLE.json` |
 | SwiftUI ZIP | macOS | Native-complete generated project with the Rust runtime |
+| Trestle.exe ZIP | Windows 10 2004+ / x64 | Verified self-contained portable app; unsigned and unpackaged |
 | XAML ZIP | Windows | Native-complete generated WinUI project with the Rust runtime |
 
 The Linux archives are unpack-and-run bundles for compatible x86_64 systems, not
 signed distribution packages. Each includes exact prerequisites and a launcher
 that takes one version-specific pre-upgrade snapshot of existing local state. The
 macOS app is neither Developer ID signed nor notarized, and its bundled dylib is
-not an iOS artifact. Windows packaging remains tracked in
+not an iOS artifact. The Windows folder is self-contained but unsigned and is not
+an MSIX installer. Signing and installation lifecycle work remains tracked under
 [#13522](https://github.com/adhithyan15/coding-adventures/issues/13522), so release
-notes never imply broader platform coverage. To cut the next release, first move
-the relevant entries into this changelog's version section, choose the SemVer bump
-from the policy above, and dispatch the workflow with a new matching version and tag.
+notes never imply broader coverage. To cut the next release, first move the relevant
+entries into this changelog's version section, choose the SemVer bump from the policy
+above, and dispatch the workflow with a new matching version and tag.
 
 ## Files
 
