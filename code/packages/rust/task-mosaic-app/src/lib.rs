@@ -1446,8 +1446,16 @@ mod tests {
         let added = runtime.dispatch(event(3, "addTask", json!({}))).unwrap();
         assert_eq!(added.props["task-rows"][0][1], "Ship native TaskApp");
         assert_eq!(added.props["task-rows"][0][2], "due 2026-01-09");
+        assert_eq!(added.props["task-rows"][0][3], "");
+        let scheduled = runtime
+            .dispatch(event(4, "toggleProjectComplexity", json!({})))
+            .unwrap();
+        assert_eq!(
+            scheduled.props["task-rows"][0][3],
+            "2026-01-05 → 2026-01-05"
+        );
         let completed = runtime
-            .dispatch(event(4, "toggleTask", json!({"index":0.0})))
+            .dispatch(event(5, "toggleTask", json!({"index":0.0})))
             .unwrap();
         assert_eq!(completed.props["task-rows"][0][0], "✓");
         assert_eq!(completed.props["ring-percent"], "100%");
@@ -1455,8 +1463,13 @@ mod tests {
         // pre-formatted caption string — this is what a future native
         // rendering of the progress ring would consume.
         assert_eq!(completed.props["ring-percent-value"], 100);
+        let reopened = runtime
+            .dispatch(event(6, "toggleTask", json!({"index":0})))
+            .unwrap();
+        assert_eq!(reopened.props["task-rows"][0][0], "○");
+        assert_eq!(reopened.props["ring-percent"], "0%");
         let deleted = runtime
-            .dispatch(event(5, "deleteTask", json!({"index":0.0})))
+            .dispatch(event(7, "deleteTask", json!({"index":0.0})))
             .unwrap();
         assert_eq!(deleted.props["task-rows"], json!([]));
     }

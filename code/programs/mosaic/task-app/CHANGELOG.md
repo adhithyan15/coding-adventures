@@ -4,6 +4,17 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - native emitted-control scheduling acceptance (#13520)
+
+CI now exercises the simple TaskApp lifecycle through generated Qt, Flutter,
+Compose Desktop, SwiftUI/macOS, and XAML controls rather than accepting a build
+or stay-alive launch as functional evidence. Each supported native lane creates a
+task with an optional due date, observes the Rust CPM schedule, completes and
+reopens it, deletes it, verifies malformed input is rejected without mutation,
+and launches a second process against the same application-data snapshot to prove
+restart restoration. A shared structural contract also rejects frozen controls,
+sample-runtime fallbacks, and missing runtime wiring before platform execution.
+
 ### Fixed - Compose scheduling-view lifecycle assertion (#13559)
 
 The generated Compose UI acceptance follows the actual selected view and checks
