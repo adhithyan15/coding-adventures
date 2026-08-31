@@ -1426,6 +1426,164 @@ class CorpusTests(unittest.TestCase):
             )
         )
 
+        duplicate_package_id = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in duplicate_package_id["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"].append(
+            copy.deepcopy(rust_entry["package_exact_inputs"][0])
+        )
+        mutations.append(
+            (
+                "duplicate-package-id",
+                duplicate_package_id,
+                "SOURCE_INPUT_NOT_CANONICAL",
+            )
+        )
+
+        unsafe_package_root = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in unsafe_package_root["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["package_root"] = (
+            "code/packages/rust/engram-wasm."
+        )
+        mutations.append(
+            (
+                "unsafe-package-root",
+                unsafe_package_root,
+                "SOURCE_INPUT_PATH_UNSAFE",
+            )
+        )
+
+        duplicate_package_root = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in duplicate_package_root["languages"]
+            if entry["language"] == "rust"
+        )
+        second_rule = copy.deepcopy(rust_entry["package_exact_inputs"][0])
+        second_rule["id"] = "rust-engram-wasm-second-inputs"
+        rust_entry["package_exact_inputs"].append(second_rule)
+        rust_entry["package_exact_inputs"].sort(
+            key=lambda item: item["id"].encode("utf-8")
+        )
+        mutations.append(
+            (
+                "duplicate-package-root",
+                duplicate_package_root,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        unsorted_package_paths = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in unsorted_package_paths["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"].reverse()
+        mutations.append(
+            (
+                "unsorted-package-paths",
+                unsorted_package_paths,
+                "SOURCE_INPUT_NOT_CANONICAL",
+            )
+        )
+
+        unsafe_package_path = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in unsafe_package_path["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"].append("js/smoke.mjs.")
+        rust_entry["package_exact_inputs"][0]["paths"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "unsafe-package-path",
+                unsafe_package_path,
+                "SOURCE_INPUT_PATH_UNSAFE",
+            )
+        )
+
+        generated_package_path = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in generated_package_path["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"].append(
+            ".build/generated.wasm"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "generated-package-path",
+                generated_package_path,
+                "SOURCE_INPUT_PATH_UNSAFE",
+            )
+        )
+
+        package_prefix_collision = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in package_prefix_collision["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"] = ["a", "a/b"]
+        mutations.append(
+            (
+                "package-prefix-collision",
+                package_prefix_collision,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        package_global_prefix_collision = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in package_global_prefix_collision["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["root_exact_relative_paths"].append("js")
+        rust_entry["root_exact_relative_paths"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "package-global-prefix-collision",
+                package_global_prefix_collision,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        for index, sensitive_package_path in enumerate(
+            (
+                ".env",
+                "credentials.json",
+                "local.properties",
+                "secrets/data.json",
+                "signing.key",
+                "token.txt",
+            )
+        ):
+            sensitive_package_input = copy.deepcopy(canonical)
+            rust_entry = next(
+                entry for entry in sensitive_package_input["languages"]
+                if entry["language"] == "rust"
+            )
+            rust_entry["package_exact_inputs"][0]["paths"] = [
+                sensitive_package_path
+            ]
+            mutations.append(
+                (
+                    f"sensitive-package-path-{index}",
+                    sensitive_package_input,
+                    "SOURCE_INPUT_SENSITIVE_PATH",
+                )
+            )
+
         package_global_collision = copy.deepcopy(canonical)
         rust_entry = next(
             entry for entry in package_global_collision["languages"]
@@ -1439,6 +1597,23 @@ class CorpusTests(unittest.TestCase):
             (
                 "package-global-collision",
                 package_global_collision,
+                "SOURCE_INPUT_SELECTOR_COLLISION",
+            )
+        )
+
+        package_global_casefold_collision = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in package_global_casefold_collision["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["root_exact_relative_paths"].append("js/Smoke.mjs")
+        rust_entry["root_exact_relative_paths"].sort(
+            key=lambda value: value.encode("utf-8")
+        )
+        mutations.append(
+            (
+                "package-global-casefold-collision",
+                package_global_casefold_collision,
                 "SOURCE_INPUT_SELECTOR_COLLISION",
             )
         )
@@ -1617,6 +1792,29 @@ class CorpusTests(unittest.TestCase):
             ):
                 runner._validate_source_input_registry(registry, schema)
             self.assertEqual(raised.exception.code, expected_code)
+
+        allowed_near_names = copy.deepcopy(canonical)
+        rust_entry = next(
+            entry for entry in allowed_near_names["languages"]
+            if entry["language"] == "rust"
+        )
+        rust_entry["package_exact_inputs"][0]["paths"] = sorted(
+            [
+                ".env-example",
+                "credentials-guide.json",
+                "localization.properties",
+                "secretary-notes.txt",
+                "signature-guide.md",
+                "tokenizer.json",
+            ],
+            key=lambda value: value.encode("utf-8"),
+        )
+        self.assertEqual(
+            runner._validate_source_input_registry(allowed_near_names, schema)[
+                "language_count"
+            ],
+            23,
+        )
 
     def test_expected_results_are_checked_in_canonical_order(self) -> None:
         for case_path in sorted(CASES_ROOT.glob("*.json")):

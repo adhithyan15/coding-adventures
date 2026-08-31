@@ -946,6 +946,16 @@ def _validate_source_input_registry(
                     "SOURCE_INPUT_SELECTOR_COLLISION",
                     f"{language} package-exact input {item['id']} paths collide after case folding",
                 )
+            folded_item_paths = [path.casefold() for path in item_paths]
+            for index, path in enumerate(folded_item_paths):
+                if any(
+                    path.startswith(f"{other}/") or other.startswith(f"{path}/")
+                    for other in folded_item_paths[index + 1 :]
+                ):
+                    raise ConformanceError(
+                        "SOURCE_INPUT_SELECTOR_COLLISION",
+                        f"{language} package-exact input {item['id']} paths have a prefix collision",
+                    )
             for path in item_paths:
                 if error := _source_input_selector_error(
                     path,
@@ -962,6 +972,21 @@ def _validate_source_input_registry(
                     raise ConformanceError(
                         "SOURCE_INPUT_PATH_UNSAFE",
                         f"{language} package-exact path enters a generated component: {path}",
+                    )
+                if _repository_source_sensitive_path(f"{package_root}/{path}"):
+                    raise ConformanceError(
+                        "SOURCE_INPUT_SENSITIVE_PATH",
+                        "package-exact source inputs cannot authorize credentials, secrets, signing material, or machine-local configuration",
+                    )
+                folded_path = path.casefold()
+                if any(
+                    folded_path.startswith(f"{global_path.casefold()}/")
+                    or global_path.casefold().startswith(f"{folded_path}/")
+                    for global_path in paths
+                ):
+                    raise ConformanceError(
+                        "SOURCE_INPUT_SELECTOR_COLLISION",
+                        f"{language} package-exact path {path!r} has a prefix collision with a language-wide exact path",
                     )
             selector_count += len(item_paths)
             enforce_selector_limit()
