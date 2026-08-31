@@ -11284,14 +11284,19 @@ nested `.opam` inputs still require a declared match. Package hashes use the
 shared hashing-v1 frame over normalized repository-relative UTF-8 path length,
 path bytes, unsigned 64-bit content length, and exact streamed raw bytes. A
 direct regression materializes the language-neutral hashing-cache fixture and
-matches its package digest. The source handle uses no-follow where available,
-then proves regular-file and path/handle identity before reading and rejects
-replacement or same-size mutation through before/after descriptor signatures
-without exposing the checkout path.
+matches its package digest. POSIX opens every lexical directory component and
+the leaf with no-follow semantics. Windows retains non-delete-sharing handles
+for every directory component through the source parent, rejects reparse
+attributes including at the package root, opens the leaf while ancestry stays
+locked, and requires the final opened-handle path to equal the lexical source
+path. Both platforms then prove regular-file and path/handle identity and
+reject replacement or same-size mutation through before/after descriptor
+signatures without exposing the checkout path.
 
-The focused suite passes 31 tests with one Windows platform skip. The complete
-package and literal generic/Windows BUILD recipe each pass 474 tests with one
-skip at 91.34% coverage, with `hasher.py` at 96%. Changed source/tests pass
+The focused suite passes 35 tests with four expected platform skips. The
+complete package and literal generic/Windows BUILD recipe each pass 478 tests
+with four skips at 90.80% coverage, with `hasher.py` at 89%. Changed
+source/tests pass
 Ruff, direct MyPy, compileall, and Bandit; package-wide Ruff and broad fixture
 MyPy retain only inherited baseline findings outside this seven-path diff. The
 neutral schema/runner suite passes 85 tests and 132 subtests, `validate-corpus`
@@ -11303,6 +11308,14 @@ exemptions, forces all 495 Python packages, and selects exactly
 `python/programs/build-tool` for the branch diff. Isolated sdist/wheel builds,
 uv dependency compatibility, pip audit, schema-3 collision inventory, the
 595-owner/896-edge DAG, and diff hygiene pass.
+
+Independent adversarial review first reproduced an external read by replacing
+a collected ancestor with an NTFS junction, then found same-package,
+package-root, post-lock FSCTL mutation, and toggle-back variants. Exact opened-
+handle path binding rejects all real probes while an ordinary nested source
+remains accepted. POSIX review also found and verified closure of a lexical
+parent escape plus the missing-`O_NOFOLLOW` fallback. No remaining entire-path
+no-follow or authority blocker was found.
 
 Before publication, the branch rebased conflict-free onto exact `origin/main`
 `ca32b94c6df4331068d786e70684d7e9384eecb9` after PRs #13561 and #13562 added

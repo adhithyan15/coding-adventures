@@ -36,7 +36,12 @@ repository-relative paths, encode each path as UTF-8 with an explicit byte-
 length frame, then append an unsigned 64-bit content length and the file's
 exact raw bytes. A same-content rename therefore invalidates the cache without
 leaking an absolute checkout path, host metadata, or locale-dependent decoding
-into the digest.
+into the digest. POSIX opens every lexical directory component and the leaf
+with no-follow semantics. Windows retains non-delete-sharing handles for every
+directory component, rejects reparse attributes including at the package root,
+then requires the opened leaf's final path to equal its lexical source path.
+The file descriptor's identity and mutation signature are checked before and
+after streaming on both platforms.
 
 ## Usage
 

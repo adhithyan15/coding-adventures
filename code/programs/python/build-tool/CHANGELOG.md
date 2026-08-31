@@ -16,6 +16,11 @@ All notable changes to this project will be documented in this file.
   exact raw bytes, so they match the shared hashing-v1 oracle and same-content
   renames invalidate caches without incorporating absolute paths or host
   metadata.
+- **Race-resistant source reads**: hashing now rejects linked components across
+  the complete lexical path. POSIX uses retained no-follow directory opens;
+  Windows retains non-delete-sharing component handles, rejects reparse
+  attributes through the package root, and binds the final handle to the exact
+  lexical source path.
 
 ## [0.3.14] - 2026-08-30
 
