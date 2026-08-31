@@ -91,9 +91,20 @@ void settle()
     }
 }
 
+QObject *findVisualObject(QObject *root, const QString &name)
+{
+    if (root->objectName() == name) return root;
+    auto *item = qobject_cast<QQuickItem *>(root);
+    if (item == nullptr) return nullptr;
+    for (auto *child : item->childItems()) {
+        if (auto *result = findVisualObject(child, name)) return result;
+    }
+    return nullptr;
+}
+
 QObject *control(QObject *root, const char *name)
 {
-    auto *result = root->findChild<QObject *>(QString::fromLatin1(name));
+    auto *result = findVisualObject(root, QString::fromLatin1(name));
     require(result != nullptr, name);
     return result;
 }
