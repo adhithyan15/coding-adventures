@@ -1,0 +1,21 @@
+{
+  "chapter": 409,
+  "title": "Finish, Prepare and Plan the Weekend",
+  "label": "ch:terminar-preparar-fin-semana-reservar-incluir",
+  "canDo": "I can understand five common words used to finish, prepare and book a simple plan.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C409-planning-recall-2",
+    "kind": "production",
+    "summary": "Retrieve five planning words across work, food, weekend and hotel messages.",
+    "assesses": [
+      "ES-LEX-TERMINAR",
+      "ES-LEX-PREPARAR",
+      "ES-LEX-FIN-DE-SEMANA",
+      "ES-LEX-RESERVAR",
+      "ES-LEX-INCLUIR"
+    ]
+  }
+}

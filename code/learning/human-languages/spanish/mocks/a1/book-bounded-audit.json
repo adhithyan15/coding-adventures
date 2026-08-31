@@ -59,9 +59,9 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 904,
-  "taughtForms": 1530,
-  "objectiveFailed": 15,
+  "lessonCount": 911,
+  "taughtForms": 1536,
+  "objectiveFailed": 10,
   "mocks": [
     {
       "mock": 1,
@@ -104,8 +104,8 @@
     {
       "mock": 2,
       "reading": 22,
-      "listening": 17,
-      "objectiveFailed": 11,
+      "listening": 22,
+      "objectiveFailed": 6,
       "failed": [
         {
           "paper": 1,
@@ -149,45 +149,10 @@
         },
         {
           "paper": 2,
-          "item": 39,
-          "missing": [
-            "terminar"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 41,
-          "missing": [
-            "preparar"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 42,
-          "missing": [
-            "fin de semana"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 44,
-          "missing": [
-            "reservar"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 45,
           "missing": [
             "quedarse",
             "mayo"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 47,
-          "missing": [
-            "incluir"
           ]
         }
       ]
@@ -203,20 +168,15 @@
     "estudiante",
     "examen",
     "extranjero",
-    "fin de semana",
     "francés",
     "gimnasio",
     "helado",
-    "incluir",
     "mayo",
     "música",
     "nadar",
     "paquete",
-    "preparar",
     "quedarse",
-    "recepción",
-    "reservar",
-    "terminar"
+    "recepción"
   ],
   "missingFrequency": [
     {
@@ -256,10 +216,6 @@
       "count": 1
     },
     {
-      "lexeme": "fin de semana",
-      "count": 1
-    },
-    {
       "lexeme": "francés",
       "count": 1
     },
@@ -269,10 +225,6 @@
     },
     {
       "lexeme": "helado",
-      "count": 1
-    },
-    {
-      "lexeme": "incluir",
       "count": 1
     },
     {
@@ -292,23 +244,11 @@
       "count": 1
     },
     {
-      "lexeme": "preparar",
-      "count": 1
-    },
-    {
       "lexeme": "quedarse",
       "count": 1
     },
     {
       "lexeme": "recepción",
-      "count": 1
-    },
-    {
-      "lexeme": "reservar",
-      "count": 1
-    },
-    {
-      "lexeme": "terminar",
       "count": 1
     }
   ]
