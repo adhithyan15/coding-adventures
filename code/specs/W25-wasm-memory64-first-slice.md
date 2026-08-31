@@ -309,3 +309,116 @@ instead of aborting the whole conformance-test process.
 - Docker (`linux/amd64`) verification of every touched crate's test suite
   plus `wasm-conformance --test testsuite_conformance
   corpus_matches_the_committed_baseline` before pushing.
+
+## Addendum: real memory64 bulk operations (W30 follow-up)
+
+This slice's own "Explicitly out of scope" section deferred `memory.copy`/
+`memory.fill`/`memory.init` against an `is64` memory — every one still
+assumed an `i32` operand unconditionally. This follow-up implements all
+three, vendoring the 12 real `*64.wast` corpus files that exercise them or
+were otherwise never fetched (`bulk64.wast`, `memory_copy64.wast`,
+`memory_fill64.wast`, `memory_init64.wast`, `memory_grow64.wast`,
+`memory_redundancy64.wast`, `memory_trap64.wast`, `address64.wast`,
+`align64.wast`, `endianness64.wast`, `load64.wast`, `float_memory64.wast`)
+at the same pinned SHA, plus one unrelated census-flagged file
+(`bulk.wast`, the plain is32 bulk-memory proposal file, already fully
+implemented, simply never fetched).
+
+### Operand-width rules (verified against the real corpus, not assumed)
+
+Mirrors this slice's own `pop_effective_addr` is64/is32 branch — and the
+table64 follow-up's identical `pop_table_operand` shape (W26) — one level
+down, for `LinearMemory`'s bulk-op dest/src/len operands instead of a
+load/store address or a table index:
+
+- **`memory.fill`**: `dest`/`len` are `i64` for an `is64` memory (`value`,
+  the fill byte, stays a plain `i32` — only its low 8 bits are ever used,
+  unaffected by `is64`). Verified against `bulk64.wast`'s own `fill`
+  function: `(memory.fill (local.get 0) (local.get 1) (local.get 2))`
+  with params `(i64 i32 i64)`.
+- **`memory.init`**: only `dest` (into the target MEMORY) widens to `i64`
+  for an `is64` target memory. `src`/`len` (positions within the PASSIVE
+  DATA SEGMENT) always stay `i32` — a segment isn't itself address-typed.
+  Verified against `bulk64.wast`'s own `init` function: `(memory.init 0
+  (local.get 0) (local.get 1) (local.get 2))` with params `(i64 i32 i32)`.
+- **`memory.copy`**: `dest` follows the DESTINATION memory's own `is64`,
+  `src` follows the SOURCE memory's own `is64`, independently — the same
+  "each side widens per its own memory" rule `table.copy` established for
+  a mixed is64/is32 table (W26 / `table_copy_mixed.wast`). `len`'s width
+  is `i64` ONLY when BOTH memories are `is64` — otherwise `i32`, even
+  when exactly one side is `is64`. No real vendored corpus file exercises
+  the mixed-memory case directly (`memory_copy64.wast` declares only one,
+  `is64`, memory per module — its own `assert_invalid` cases only ever
+  confirm that a PLAIN `i32` operand against that one `is64` memory is a
+  type mismatch, for each of dest/src/len independently), so the mixed
+  rule itself is this follow-up's own defense-in-depth application of the
+  general rule the combined memory64/table64 proposal defines, exercised
+  by dedicated binary-encoded unit tests in both `wasm-execution` and
+  `wasm-validator` instead.
+- **`memory.grow`/`memory.size`**: unchanged — already `is64`-aware since
+  this slice's own first pass (see "In scope" §5/§6 above). Re-confirmed
+  by reading `register_memory`'s existing `0x3F`/`0x40` handlers directly
+  before assuming otherwise; `memory_grow64.wast` vendors with 100% pass
+  and required zero code changes.
+
+### Implementation shape
+
+- **`wasm-execution`**: `LinearMemory`'s own storage stays `usize`-
+  addressed (unchanged from the first slice); only the operand WIDTH
+  popped off the WASM value stack changes. New `pop_bulk_memory_operand`
+  helper (pops `i64` or `i32` per a `bool is64`). Unlike table64's
+  `pop_table_operand`, no `u64`-to-`u32` narrowing sentinel is needed:
+  `LinearMemory`'s `copy`/`copy_between`/`fill` methods already
+  bounds-check every range via `usize::checked_add`, independent of
+  `is64`, and `u64 as usize` is a lossless identity cast on the 64-bit
+  hosts this interpreter targets — a huge, adversarial `i64` operand
+  (e.g. `bulk64.wast`'s own `(i64.const -1)` length) reaches that
+  existing bounds check as the same huge value and traps cleanly.
+- **`wasm-validator`**: the `0xFC` sub-opcode `0x08`/`0x0A`/`0x0B`
+  type-check arms now read the already-existing per-memory
+  `memory_is64: Vec<bool>` (populated since this slice's own first pass)
+  to pick `I64` vs. `I32` for each operand, the same way `table_is64`
+  (W26) is already read for the analogous table ops.
+- **`wasm-wast-parser`/`wasm-module-parser`/`wasm-module-encoder`/
+  `wasm-runtime`**: no changes needed. Unlike the table64 follow-up (which
+  found and fixed a real active-element-segment `is64` bug in
+  `wasm-runtime` and a matching text-encoder bug in `wasm-wast-parser`),
+  memory's active DATA segment offset evaluation was already correctly
+  `is64`-aware from this slice's own first pass (see "In scope" §7
+  above), and no real corpus file needed a new text-form shape these bulk
+  ops don't already support. One PRE-EXISTING, unrelated gap was found
+  and left as-is (not fixed, since no real corpus file needs it):
+  `wasm-wast-parser`'s `memory.copy` text encoder has no leading-memidx-
+  token support at all (unlike `memory.fill`/`memory.init`, which both
+  already support one) — it always emits the implicit `dst_memidx=0,
+  src_memidx=0` byte pair regardless of source text, so a genuinely
+  two-memory `memory.copy` can currently only be constructed via the
+  binary encoding, not WAT text.
+
+### Real corpus, measured
+
+All 13 files (12 memory64-family + `bulk.wast`) vendor with real,
+non-trivial pass numbers and ZERO `fail` anywhere (`cargo run --bin
+wasm_conformance_report -- --write-baseline`, diffed programmatically
+against the pre-change baseline — confirmed zero existing file's tally
+changed, zero new `parse_failures`). See `wasm-conformance`'s own
+CHANGELOG for the full per-file, per-directive-kind table.
+
+### Investigated and deliberately not vendored: `extern.wast`
+
+The other census-flagged file (alongside `bulk.wast`) was tried and
+found to be genuinely blocked, not a small fix: every directive uses real
+WasmGC surface this crate has none of (`anyref`, `any.convert_extern`/
+`extern.convert_any`, `struct.new_default`, `array.new_default`, `ref.i31`
+interop, `(elem declare func ...)` declarative segments), and its
+`assert_return` expected-value position uses a `ref.host N` literal this
+crate's constant-expression parser doesn't recognize at all — confirmed
+live: `FAILED TO PARSE SCRIPT: at byte 1150: expected a *.const
+expression, found "ref.host"`. Unlike the existing GC-proposal batch
+(`ref.wast`, `call_ref.wast`, etc.), which all gracefully degrade to
+all-`not_yet_supported` at the directive level, this file fails to parse
+as a whole SCRIPT — this crate's own baseline has zero pre-existing
+`parse_failures` entries, a real policy this file would be the first
+exception to. The same "non-null concrete reference types" wall three
+independent prior sessions (W20/W23/W24) already found genuinely blocked,
+reached from yet another direction.
