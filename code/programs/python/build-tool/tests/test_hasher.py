@@ -15,6 +15,7 @@ from build_tool.hasher import (
     GENERATED_DIRECTORY_COMPONENTS,
     _collect_source_files,
     _hash_file,
+    _update_file_frame,
     hash_deps,
     hash_package,
 )
@@ -183,6 +184,9 @@ class TestCollectSourceFiles:
         (pkg_dir / "BUILD").write_text("ocaml_library(name='test')")
         (pkg_dir / "test-pkg.opam").write_text('opam-version: "2.0"')
         (pkg_dir / "main.ml").write_text("let answer = 42")
+        nested_opam = pkg_dir / "nested" / "unrelated.opam"
+        nested_opam.parent.mkdir()
+        nested_opam.write_text('opam-version: "2.0"')
 
         pkg = Package(
             name="ocaml/test-pkg",
@@ -380,6 +384,46 @@ class TestHashFile:
         expected = hashlib.sha256(b"").hexdigest()
         assert _hash_file(f) == expected
 
+    def test_frame_rejects_path_swapped_after_open(self, tmp_path, monkeypatch):
+        source = tmp_path / "source.py"
+        replacement = tmp_path / "replacement.py"
+        source.write_bytes(b"source")
+        replacement.write_bytes(b"replacement")
+        real_lstat = os.lstat
+
+        def mismatched_lstat(path):
+            if Path(path) == source:
+                return real_lstat(replacement)
+            return real_lstat(path)
+
+        monkeypatch.setattr(os, "lstat", mismatched_lstat)
+
+        with pytest.raises(
+            OSError, match="source path changed or is not a regular file"
+        ):
+            _update_file_frame(hashlib.sha256(), "code/source.py", source)
+
+    def test_frame_rejects_same_size_mutation_metadata(self, tmp_path, monkeypatch):
+        source = tmp_path / "source.py"
+        source.write_bytes(b"source")
+        real_fstat = os.fstat
+        calls = 0
+
+        def changing_fstat(descriptor):
+            nonlocal calls
+            calls += 1
+            source_stat = real_fstat(descriptor)
+            if calls == 1:
+                return source_stat
+            fields = list(source_stat)
+            fields[8] += 1
+            return os.stat_result(fields)
+
+        monkeypatch.setattr(os, "fstat", changing_fstat)
+
+        with pytest.raises(OSError, match="source changed while hashing"):
+            _update_file_frame(hashlib.sha256(), "code/source.py", source)
+
 
 class TestHashPackage:
     """Tests for hash_package."""
@@ -479,6 +523,31 @@ class TestHashPackage:
         )
 
         assert hash_package(pkg) == expected
+
+    @pytest.mark.parametrize("package_basename", ("packages", "programs"))
+    def test_repository_path_anchor_ignores_later_bucket_names(
+        self, tmp_path, package_basename
+    ):
+        repository_root = tmp_path / "repository"
+        pkg_dir = (
+            repository_root
+            / "code"
+            / "packages"
+            / "python"
+            / package_basename
+        )
+        pkg_dir.mkdir(parents=True)
+        (pkg_dir / "BUILD").write_bytes(b"echo build\n")
+        pkg = Package(
+            name=f"python/{package_basename}",
+            path=pkg_dir,
+            language="python",
+        )
+
+        assert hash_package(pkg) == _expected_framed_package_hash(
+            repository_root,
+            (f"code/packages/python/{package_basename}/BUILD",),
+        )
 
     def test_empty_package_hash(self, tmp_path):
         pkg_dir = tmp_path / "packages" / "python" / "empty"

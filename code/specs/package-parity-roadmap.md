@@ -11255,17 +11255,27 @@ The dependency/leverage pass selects
 `build-tool-python-portable-source-hashing-conformance` on branch
 `codex/build-tool-python-portable-source-hashing-conformance`. Both
 prerequisites are merged. This bounded continuation closes the Python engine's
-two remaining portable hashing-contract holes: applicable OCaml source and
-metadata recognition plus normalized relative-path framing that makes same-
-content renames observable while preserving raw source bytes and file
-boundaries. It directly advances the eleven-engine portable-source-hashing
+two remaining portable source/package-hashing contract holes: applicable OCaml
+source and metadata recognition plus normalized relative-path framing that
+makes same-content renames observable while preserving raw source bytes and
+file boundaries. It directly advances the eleven-engine portable-source-hashing
 aggregate across the 503-package Python lane and therefore outranks independent
 ready leaves. Six live PRs have zero exact overlap with the expected hasher,
 tests, README, changelog, state, roadmap, and root-changelog paths; the branch,
 remote branch, and prior PR were absent before the fresh clean worktree was
-created. Reconciliation and selection leave the complete 594-owner/895-edge
+created. At selection, reconciliation left the complete 594-owner/895-edge
 graph unique, dependency-complete, and acyclic at 187 merged, 406 pending, and
 exactly one `in-progress` owner.
+
+Independent implementation review then found a distinct dependency-hashing
+gap before publication. Python still concatenates transitive dependency digest
+hex strings without hashing-v1 frames for the sorted package identity and
+decoded 32-byte digest. That behavior is now classified as the separate
+pending `build-tool-python-portable-dependency-hashing-conformance` owner,
+dependent on this source/package-hashing slice; this tranche makes no complete
+hashing-v1 or combined-cache claim. The complete graph therefore expands to
+595 owners/896 edges with 187 merged, 407 pending, and exactly one
+`in-progress` owner.
 
 ## Autonomous Loop Protocol
 

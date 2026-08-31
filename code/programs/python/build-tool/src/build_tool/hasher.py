@@ -202,9 +202,9 @@ def _collect_source_files(package: Package) -> list[Path]:
                 # Manifests affect the package even when a Starlark target's
                 # declared source globs omit them. This is especially visible
                 # for OCaml's exact ``dune-project`` and ``.ocamlformat`` names.
-                if (
-                    filename in special_names
-                    or Path(filename).suffix in manifest_extensions
+                if filename in special_names or (
+                    abs_path.parent == package.path
+                    and Path(filename).suffix in manifest_extensions
                 ):
                     files.append(abs_path)
                     continue
@@ -271,9 +271,12 @@ def _repository_relative_package_path(package: Package) -> str:
     path. The identity fallback keeps isolated unit fixtures deterministic.
     """
     parts = package.path.parts
-    for index in range(len(parts) - 1, -1, -1):
-        if parts[index] in {"packages", "programs"}:
-            return "/".join(("code", *parts[index:]))
+    for index in range(len(parts) - 2, -1, -1):
+        if parts[index] == "code" and parts[index + 1] in {
+            "packages",
+            "programs",
+        }:
+            return "/".join(parts[index:])
 
     identity = package.name.split("/")
     if len(identity) == 3 and identity[1] == "programs":
@@ -281,6 +284,32 @@ def _repository_relative_package_path(package: Package) -> str:
     if len(identity) == 2:
         return "/".join(("code", "packages", *identity))
     raise ValueError(f"cannot derive repository path for package {package.name!r}")
+
+
+def _source_signature(source_stat: os.stat_result) -> tuple[int, int, int, int, int]:
+    """Return identity and mutation-sensitive fields for an opened source."""
+    return (
+        source_stat.st_dev,
+        source_stat.st_ino,
+        source_stat.st_size,
+        source_stat.st_mtime_ns,
+        source_stat.st_ctime_ns,
+    )
+
+
+def _validate_open_source(filepath: Path, source_stat: os.stat_result) -> None:
+    """Reject linked, replaced, or non-regular paths after opening a handle."""
+    path_stat = os.lstat(filepath)
+    attributes = getattr(path_stat, "st_file_attributes", 0)
+    reparse_flag = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0)
+    is_reparse = bool(attributes & reparse_flag)
+    if (
+        not stat.S_ISREG(source_stat.st_mode)
+        or not stat.S_ISREG(path_stat.st_mode)
+        or is_reparse
+        or not os.path.samestat(source_stat, path_stat)
+    ):
+        raise OSError("source path changed or is not a regular file")
 
 
 def _update_file_frame(
@@ -291,10 +320,14 @@ def _update_file_frame(
     package_hash.update(len(path_bytes).to_bytes(8, "big"))
     package_hash.update(path_bytes)
 
-    with open(filepath, "rb") as source:
-        source.seek(0, os.SEEK_END)
-        content_length = source.tell()
-        source.seek(0)
+    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0)
+    flags |= getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(filepath, flags)
+    with os.fdopen(descriptor, "rb") as source:
+        before = os.fstat(source.fileno())
+        _validate_open_source(filepath, before)
+        before_signature = _source_signature(before)
+        content_length = before.st_size
         package_hash.update(content_length.to_bytes(8, "big"))
 
         bytes_read = 0
@@ -302,8 +335,11 @@ def _update_file_frame(
             package_hash.update(chunk)
             bytes_read += len(chunk)
 
-    if bytes_read != content_length:
-        raise OSError(f"source changed while hashing: {filepath}")
+        after = os.fstat(source.fileno())
+        _validate_open_source(filepath, after)
+
+    if bytes_read != content_length or _source_signature(after) != before_signature:
+        raise OSError("source changed while hashing")
 
 
 def hash_package(package: Package) -> str:
